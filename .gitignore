@@ -2,6 +2,9 @@
 node_modules
 /dist
 
+# Manually importing AVAJS
+avajs
+
 # local env files
 .env.local
 .env.*.local

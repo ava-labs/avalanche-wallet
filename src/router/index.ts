@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
+import Ava from '../views/wallet/Ava.vue';
+import Assets from '../views/wallet/Assets.vue';
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -19,15 +22,20 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
     },
     {
-        path: '/login',
-        name: 'login',
-        component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+        path: '/wallet',
+        name: 'wallet',
+        children: [
+            {
+                path: 'ava',
+                component: Ava
+            },
+            {
+                path: 'assets',
+                component: Assets
+            }
+        ],
+        component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue')
     },
-    {
-        path: '/register',
-        name: 'register',
-        component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
-    }
 ]
 
 const router = new VueRouter({
