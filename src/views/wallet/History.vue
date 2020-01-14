@@ -62,22 +62,22 @@
 </script>
 <style scoped>
     .history_main{
-        padding: 50px;
+        /*padding: 50px;*/
         display: grid;
         grid-template-columns: auto auto;
         color: #d2d2d2;
     }
 
     h4{
-        font-size: 22px;
+        font-size: 18px;
         /*text-align: left;*/
         margin-bottom: 15px;
     }
 
     .history_col{
-        background-color: #292929;
+        background-color: #353535;
         padding: 15px 0px;
-        margin: 15px;
+        margin: 0px 15px;
         border-radius: 5px;
     }
     table{
@@ -100,5 +100,31 @@
     table tbody td{
         padding: 15px;
         border-bottom: 1px solid #353535;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        .history_main{
+            display: block;
+        }
+
+        h4{
+            font-size: 12px;
+        }
+
+        th{
+            font-size: 11px;
+        }
+        table tbody td{
+            font-size: 11px;
+            padding: 5px 0px;
+            border-bottom: 1px solid #404040;
+            word-break: break-all;
+        }
+
+        .history_col{
+            margin: 10px;
+            padding: 5px;
+        }
     }
 </style>

@@ -1,9 +1,18 @@
 export interface RootState {
-    modals: Object,
+    modals: ModalDict,
     assets: AssetType[],
     tx_history: Transaction[]
 }
 
+
+interface Modal {
+    open(): void,
+    close(): void
+}
+
+interface ModalDict {
+    [key: string]: Modal
+}
 
 export interface AssetType {
     title: string,

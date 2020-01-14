@@ -5,6 +5,8 @@ import Home from '../views/Home.vue'
 import Ava from '../views/wallet/Ava.vue';
 import Assets from '../views/wallet/Assets.vue';
 import History from '../views/wallet/History.vue';
+import Transfer from '../views/wallet/Transfer.vue';
+import Advanced from '../views/wallet/Advanced.vue';
 
 Vue.use(VueRouter)
 
@@ -37,6 +39,14 @@ const routes = [
             {
                 path: 'history',
                 component: History
+            },
+            {
+                path: 'transfer',
+                component: Transfer
+            },
+            {
+                path: 'advanced',
+                component: Advanced
             }
         ],
         component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue')
@@ -47,6 +57,6 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
-})
+});
 
 export default router

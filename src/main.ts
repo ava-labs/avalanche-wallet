@@ -12,11 +12,11 @@ import vuetify from './plugins/vuetify';
 
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown } from '@fortawesome/free-solid-svg-icons'
+import { faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { faBtc} from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown);
+library.add(faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle);
 Vue.component('fa', FontAwesomeIcon);
 
 

@@ -12,10 +12,6 @@
             </div>
         </div>
         <assets class="assets floater"></assets>
-
-        <!--        <div class="floaters">-->
-<!--            <send-receive class="send_receive"></send-receive>-->
-<!--        </div>-->
     </div>
 </template>
 <script>
@@ -40,7 +36,7 @@
 </script>
 <style scoped>
     .ava_view{
-        padding: 50px;
+        /*padding: 50px;*/
     }
 
     /*.floaters{*/
@@ -59,11 +55,6 @@
         /*background-color: #fff;*/
     }
 
-    /*.send_receive{*/
-    /*    flex-basis: 320px;*/
-    /*    display: flex;*/
-    /*    flex-direction: column;*/
-    /*}*/
 </style>
 <style>
     .floater{
@@ -99,5 +90,29 @@
 
     .values p span{
         font-size: 45px;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        .wallet_info{
+            padding: 15px 0px;
+        }
+        .wallet_info h4 {
+            text-align: center;
+        }
+        .values{
+            display: block;
+        }
+        .values p {
+            margin: 5px 0px !important;
+            display: block;
+            font-size: 12px;
+        }
+        .values p span {
+            font-size: 22px;
+        }
+        .floater{
+            margin: 10px;
+        }
     }
 </style>

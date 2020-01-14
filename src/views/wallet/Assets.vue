@@ -57,8 +57,9 @@
 </script>
 <style scoped>
     .assets_view{
-        padding: 20px 0px;
+        /*padding: 20px 0px;*/
     }
+    
     #asset_cards{
         display: flex;
         flex-wrap: wrap;

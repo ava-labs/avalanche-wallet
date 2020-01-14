@@ -8,7 +8,7 @@
                     <th>Balance</th>
                     <th>USD Total</th>
                     <th>BTC Total</th>
-                    <th></th>
+                    <th class="buts"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -17,9 +17,11 @@
                         <td>{{asset.balance}}</td>
                         <td>{{(asset.balance * asset.usd_price).toFixed(4)}}</td>
                         <td>{{(asset.balance * asset.btc_price).toFixed(4)}}</td>
-                        <td>
-                            <button @click="openSendReceive">Send</button>
-                            <button @click="openSendReceive">Receive</button>
+                        <td class="buts">
+                            <v-btn :to="'/wallet/transfer?asset='+asset.key" color="transparent" depressed height="28">Send</v-btn>
+                            <v-btn :to="'/wallet/transfer?asset='+asset.key" color="transparent" depressed height="28">Receive</v-btn>
+<!--                            <button @click="openSendReceive">Send</button>-->
+<!--                            <button @click="openSendReceive">Receive</button>-->
                         </td>
                     </tr>
                 </tbody>
@@ -70,9 +72,6 @@
 
     }
 
-    table tbody tr{
-    }
-
     td button{
         outline: none;
         border: 1px solid #a0a0a0;
@@ -84,5 +83,32 @@
     td button:hover{
         border-color: #fff;
         color: #fff;
+    }
+
+    .buts a{
+        color: #ddd;
+        border: 1px solid #a0a0a0 !important;
+        margin: 4px;
+        font-size: 11px;
+        background-color: transparent;
+    }
+
+    @media only screen and (max-width: 600px) {
+        table th {
+            font-size: 12px;
+            text-align: center;
+        }
+        table tbody td {
+            font-size: 12px;
+            padding: 8px 0px;
+            text-align: center;
+        }
+
+
+        th.buts,td.buts{
+            padding: 0;
+            display: none;
+            /*display: block;*/
+        }
     }
 </style>
