@@ -1,20 +1,27 @@
 <template>
     <div>
-            <h3>Assets</h3>
+<!--            <h3>Assets</h3>-->
             <table>
                 <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Title</th>
+                    <th>Asset</th>
                     <th>Balance</th>
+                    <th>USD Total</th>
+                    <th>BTC Total</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="asset in assets" :key="asset.key">
-                    <td>{{asset.key}}</td>
-                    <td>{{asset.title}}</td>
-                    <td>{{asset.balance}}</td>
-                </tr>
+                    <tr v-for="asset in assets" :key="asset.key">
+                        <td>{{asset.key}} {{asset.title}}</td>
+                        <td>{{asset.balance}}</td>
+                        <td>{{(asset.balance * asset.usd_price).toFixed(4)}}</td>
+                        <td>{{(asset.balance * asset.btc_price).toFixed(4)}}</td>
+                        <td>
+                            <button @click="openSendReceive">Send</button>
+                            <button @click="openSendReceive">Receive</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
     </div>
@@ -29,12 +36,21 @@
             assets(){
                 return this.$store.state.assets;
             }
+        },
+        methods: {
+            openSendReceive(){
+                this.$store.dispatch('openModal', 'send_receive');
+            }
         }
     }
 </script>
 <style scoped>
     table{
-        width: 100%;
+        /*width: 100%;*/
+        min-width: 50%;
+        background-color: #303030;
+        color: #d2d2d2;
+        border-collapse: collapse;
     }
 
     table th{
@@ -42,8 +58,31 @@
         text-align: left;
     }
 
+    table thead{
+        border-bottom: 1px solid #909090;
+    }
+
     table tbody td{
         padding: 20px 20px;
         text-align: left;
+        font-size: 14px;
+        border-bottom: 1px solid #3a3a3a;
+
+    }
+
+    table tbody tr{
+    }
+
+    td button{
+        outline: none;
+        border: 1px solid #a0a0a0;
+        color: #a0a0a0;
+        margin: 4px;
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+    td button:hover{
+        border-color: #fff;
+        color: #fff;
     }
 </style>

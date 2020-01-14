@@ -1,15 +1,16 @@
 <template>
     <v-app>
       <v-content>
+          <navbar></navbar>
         <router-view id="router_view"/>
       </v-content>
     </v-app>
 </template>
 <script>
-  // import Navbar from './components/Navbar';
+  import Navbar from './components/Navbar';
   export default {
     components: {
-      // Navbar
+      Navbar
     }
   }
 </script>
@@ -29,7 +30,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: #f2f2f2;
+  background-color: #303030;
 }
 
 #nav {
@@ -38,12 +39,13 @@
   justify-content: center;
   align-items: center;
   /*padding: 30px;*/
-  background-color: #fff;
+  background-color: #232323;
   /*height: 60px;*/
 
   a {
+      margin: 20px;
     font-weight: bold;
-    color: #2c3e50;
+    color: #d2d2d2;
 
     &.router-link-exact-active {
       color: #42b983;

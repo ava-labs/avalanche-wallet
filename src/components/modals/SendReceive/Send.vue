@@ -1,53 +1,55 @@
 <template>
-    <div>
-        <h3>Send</h3>
-        <div class="send_body">
-            <div>
-                <label>Asset:</label>
-                <v-menu offset-y>
-                    <template v-slot:activator="{ on }">
-                        <v-btn color="accent" dark v-on="on" block :height="30" depressed>
-                            {{dropdown_title}}
-                        </v-btn>
-                    </template>
-                    <v-list :dense="true">
-                        <v-list-item v-for="(asset) in assets" :key="asset.key" @click="select(asset)" :ripple="false" :dense="true">
-                            <v-list-item-title>{{ asset.title }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-                <label>Amount:</label>
-                <currency-input class='amount_in' v-model="amountIn" :currency="currency_title" :max-val="currency_max"></currency-input>
-<!--                <input class='amount_in' type="number" placeholder="0.00" v-model="amountIn">-->
-                <v-btn color="accent" @click="addToOrder(selected, amountIn)" block :height="30" depressed>Add to order</v-btn>
-            </div>
-            <hr>
-            <div>
-                <p v-if="orders.length===0">No orders given to send</p>
-                <div v-else class="order_list">
-                    <div v-for="order in orders" :key="order.asset.key">
-                        <p>{{order.asset.title}}</p>
-                        <span>{{order.amount}}</span>
-                        <button @click="removeOrder(order)">X</button>
-                    </div>
+    <div class="send_body">
+        <div>
+            <label>Asset:</label>
+            <v-overflow-btn
+                    class="dropdown"
+                    :items="dropdown_items"
+                    label="Overflow Btn"
+                    color="#d2d2d2"
+            ></v-overflow-btn>
+<!--            <v-menu offset-y>-->
+<!--                <template v-slot:activator="{ on }">-->
+<!--                    <v-btn color="#413e44" dark v-on="on" block :height="30" depressed :ripple="false">-->
+<!--                        {{dropdown_title}} <fa icon="caret-down"></fa>-->
+<!--                    </v-btn>-->
+<!--                </template>-->
+<!--                <v-list :dense="true">-->
+<!--                    <v-list-item v-for="(asset) in assets" :key="asset.key" @click="select(asset)" :ripple="false" :dense="true">-->
+<!--                        <v-list-item-title>{{ asset.title }}</v-list-item-title>-->
+<!--                    </v-list-item>-->
+<!--                </v-list>-->
+<!--            </v-menu>-->
+            <label>Amount:</label>
+            <currency-input class='amount_in' v-model="amountIn" :currency="currency_title" :max-val="currency_max"></currency-input>
+            <!--                <input class='amount_in' type="number" placeholder="0.00" v-model="amountIn">-->
+            <v-btn color="accent" @click="addToOrder(selected, amountIn)" block :height="30" depressed>Add to order</v-btn>
+        </div>
+        <hr>
+        <div>
+            <p v-if="orders.length===0">No orders given to send</p>
+            <div v-else class="order_list">
+                <div v-for="order in orders" :key="order.asset.key">
+                    <p>{{order.asset.title}}</p>
+                    <span>{{order.amount}}</span>
+                    <button @click="removeOrder(order)"><fa icon="times-circle"></fa></button>
                 </div>
             </div>
-            <hr>
-            <div>
-                <label>Send to</label>
-                <v-text-field placeholder="Enter destination address"></v-text-field>
-                <v-btn block color="primary">Send</v-btn>
-            </div>
         </div>
-
+        <hr>
+        <div>
+            <label>Send to</label>
+            <v-text-field placeholder="Enter destination address" color="#d2d2d2"></v-text-field>
+            <v-btn block color="primary">Send</v-btn>
+        </div>
     </div>
 </template>
 <script>
     import CurrencyInput from "@/components/misc/CurrencyInput";
 
     export default {
-        components: {
-            CurrencyInput,
+        components:{
+            CurrencyInput
         },
         data(){
             return{
@@ -92,10 +94,17 @@
                 }
             }
         },
-        props:{
-            assets: Array
-        },
         computed:{
+            assets(){
+                return this.$store.state.assets;
+            },
+            dropdown_items(){
+                let res = [];
+                for(var i=0; i<this.assets.length; i++){
+                    res.push(this.assets[i].title);
+                }
+                return res;
+            },
             dropdown_title(){
                 if(!this.selected) return 'Select an asset';
                 else{
@@ -111,21 +120,26 @@
                 return this.selected.balance;
             }
         }
-
     }
 </script>
 <style scoped>
     label{
         width: 100%;
+        color: #d2d2d2;
         display: block;
         text-align: left;
         font-weight: bold;
         font-size: 12px;
+        margin-top: 8px;
     }
 
     hr{
         margin: 15px 0px;
         opacity: 0.4;
+    }
+
+    .dropdown{
+        color: #d2d2d2;
     }
 
     .amount_in{
@@ -137,6 +151,8 @@
 
     .send_body{
         padding: 12px;
+        color: #d2d2d2;
+        background-color: #333333 !important;
     }
 
     .order_list div{
@@ -152,10 +168,12 @@
         flex-grow: 1;
     }
     .order_list button{
-
-        /*float: right;*/
+        margin-left: 10px;
+        opacity: 0.4;
+    }
+    .order_list button:hover{
+        opacity: 1;
     }
     .order_list span{
-        /*float: right;*/
     }
 </style>

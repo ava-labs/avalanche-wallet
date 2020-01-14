@@ -12,7 +12,7 @@ interface registerInput {
     passwordConfirm: string,
 }
 
-const auth_module: Module<RootState, AuthState> = {
+const auth_module: Module<AuthState, RootState> = {
     namespaced: true,
     state: {
 

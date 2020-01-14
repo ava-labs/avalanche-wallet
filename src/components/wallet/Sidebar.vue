@@ -1,7 +1,8 @@
 <template>
     <div class="wallet_sidebar">
         <router-link to="/wallet/ava">AVA</router-link>
-        <router-link to="/wallet/assets">Assets</router-link>
+<!--        <router-link to="/wallet/assets">Assets</router-link>-->
+        <router-link to="/wallet/history">Transaction History</router-link>
 
 <!--        <button>AVA</button>-->
 <!--        <button>Assets</button>-->

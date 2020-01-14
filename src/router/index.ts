@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 
 import Ava from '../views/wallet/Ava.vue';
 import Assets from '../views/wallet/Assets.vue';
+import History from '../views/wallet/History.vue';
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,10 @@ const routes = [
             {
                 path: 'assets',
                 component: Assets
+            },
+            {
+                path: 'history',
+                component: History
             }
         ],
         component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue')

@@ -1,14 +1,11 @@
 <template>
-    <div>
-        <h3>Receive</h3>
-        <div class="receive_body">
-            <div>
-                <canvas ref="qr"></canvas>
-            </div>
-            <div>
-                <label>Send funds to:</label>
-                <p class="receive_address">{{address}}</p>
-            </div>
+    <div class="receive_body">
+        <div>
+            <canvas ref="qr"></canvas>
+        </div>
+        <div>
+            <label>Send funds to:</label>
+            <p class="receive_address">{{address}}</p>
         </div>
     </div>
 </template>
@@ -56,7 +53,7 @@
 <style scoped>
     .receive_body{
         padding: 15px;
-
+        background-color: #333333 !important;
     }
     .receive_address{
         background-color: #303030;
@@ -67,6 +64,7 @@
     }
 
     label{
+        color: #d2d2d2;
         text-align: left;
         font-weight: bold;
     }

@@ -1,6 +1,5 @@
 module.exports = {
-    // parallel: false,
-    "transpileDependencies": [
-        "vuetify"
-    ],
-};
+  "transpileDependencies": [
+    "vuetify"
+  ]
+}
