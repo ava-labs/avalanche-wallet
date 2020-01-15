@@ -6,9 +6,9 @@
                 <tr>
                     <th>Asset</th>
                     <th>Balance</th>
-                    <th>USD Total</th>
-                    <th>BTC Total</th>
-                    <th>AVA Total</th>
+                    <th>USD</th>
+                    <th>BTC</th>
+                    <th>AVA</th>
                     <th class="buts"></th>
                 </tr>
                 </thead>

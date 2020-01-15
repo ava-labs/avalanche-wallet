@@ -45,6 +45,16 @@
             margin: 10px;
         }
     }
+
+    @media only screen and (max-width: 1400px) {
+        .transfer_main{
+            display: block;
+        }
+
+        .transfer_col{
+            margin: 10px;
+        }
+    }
 </style>
 
 <style>

@@ -4,19 +4,22 @@
             <h4>Wallet value</h4>
             <div class="values">
                 <p>
+                    <span class="currency">USD</span>
                     <span>
-                        USD {{Math.floor(total_usd).toLocaleString()}}.
+                         {{Math.floor(total_usd).toLocaleString()}}.
                     </span>
-                    {{ Math.round((total_usd%1)*100000) }}
+                    {{ Math.round((total_usd%1)*100) }}
                 </p>
                 <p>
+                    <span class="currency">BTC</span>
                     <span>
-                        BTC {{Math.floor(total_btc).toLocaleString()}}.
+                         {{Math.floor(total_btc).toLocaleString()}}.
                     </span>{{ Math.round((total_btc%1)*100000) }}
                 </p>
                 <p>
+                    <span class="currency">AVA</span>
                     <span>
-                        AVA {{Math.floor(total_ava).toLocaleString()}}.
+                         {{Math.floor(total_ava).toLocaleString()}}.
                     </span>{{ Math.round((total_ava%1)*100000) }}
                 </p>
             </div>
@@ -87,7 +90,7 @@
     }
 
     .wallet_info{
-        color: #faa;
+        color: #42b983;
     }
 
     .wallet_info h4{
@@ -95,10 +98,12 @@
     }
     .values{
         display: flex;
+        margin-top: 20px;
     }
 
     .values p{
         margin-right: 40px;
+        margin-bottom: 0;
     }
 
     .values p span{
@@ -106,7 +111,9 @@
     }
 
     .values .currency{
-        color: #faa;
+        color: #ddd;
+        display: block;
+        font-size: 16px;
     }
 
 
@@ -128,6 +135,10 @@
         .values p span {
             font-size: 22px;
         }
+        .values .currency{
+            font-size: 12px;
+        }
+
         .floater{
             margin: 10px;
         }
