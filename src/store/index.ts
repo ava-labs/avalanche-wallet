@@ -13,6 +13,14 @@ export default new Vuex.Store({
         modals: {},
         assets: [
             {
+                title: "Avalanche",
+                key: "AVA",
+                balance: 23097.34442,
+                usd_price: 0.08,
+                btc_price: 1,
+                address: 'asdflhjv235adg'
+            },
+            {
                 title: "Bitcoin",
                 key: "BTC",
                 balance: 37.34442,
