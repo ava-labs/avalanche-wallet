@@ -6,11 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>AVA Wallet</title>
+    <style>
+        body{
+          background-color: #303030;
+        }
+
+        #app_loading{
+          text-align: center;
+          color: #d2d2d2;
+          margin-top: 35vh;
+        }
+
+        #app_loading img{
+          width: 120px;
+          object-fit: contain;
+        }
+    </style>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but wallet doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
+    <div id="app_loading">
+      <img src="/gif/loading_0.gif">
+      <p>AVA wallet is loading...</p>
+    </div>
     <div id="app"></div>
     <!-- built files will be auto injected -->
 <!--    <script type="text/javascript" src="avajs.js"></script>-->
