@@ -67,7 +67,7 @@
         mounted(){
             if(this.$route.query.asset){
                 let key = this.$route.query.asset;
-                console.log(key);
+                // console.log(key);
                 for(var i=0;i<this.assets.length;i++){
                     let asset = this.assets[i];
                     if(asset.key === key){
@@ -96,7 +96,7 @@
                 for(var i=0; i<this.orders.length; i++){
                     let order = this.orders[i];
                     if(order.asset === asset){
-                        console.log(order);
+                        // console.log(order);
                         order.amount += parseFloat(amount);
                         if(order.amount > asset.balance){
                             order.amount = asset.balance;

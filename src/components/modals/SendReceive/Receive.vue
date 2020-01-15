@@ -35,8 +35,8 @@
                 QRCode.toCanvas(canvas, this.address, {
                     scale: 8,
                 }, function (error) {
-                    if (error) console.error(error);
-                    console.log('success!');
+                    // if (error) console.error(error);
+                    // console.log('success!');
                 })
             }
         },
