@@ -35,6 +35,8 @@ new Vue({
   mounted(){
     // Hide loader once vue is initialized
     let loader = document.getElementById('app_loading');
-        loader.style.display = 'none';
+    if(loader){
+      loader.style.display = 'none';
+    }
   }
 }).$mount('#app');
