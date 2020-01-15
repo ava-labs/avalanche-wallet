@@ -42,8 +42,8 @@
                         light: "#f2f2f2"
                     }
                 }, function (error) {
-                    if (error) console.error(error);
-                    console.log('success!');
+                    // if (error) console.error(error);
+                    // console.log('success!');
                 })
             }
         },
