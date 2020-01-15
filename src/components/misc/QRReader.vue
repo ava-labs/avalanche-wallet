@@ -7,7 +7,7 @@
                 <v-progress-circular :size="20" indeterminate color="#ffcc66"></v-progress-circular>
                 <p>Waiting for a QR Code</p>
             </div>
-            <button @click="stop"><fa icon="times-circle"></fa></button>
+            <button @click="stop"><fa icon="times"></fa></button>
             <video ref="preview"></video>
         </div>
     </div>
@@ -91,6 +91,18 @@
         top: 6px;
         right: 12px;
         z-index: 2;
+        background-color: #222;
+        color: #fff;
+        border-radius: 25px;
+        width: 25px;
+        line-height: 25px;
+        font-size: 12px;
+        height: 25px;
+        opacity: 0.7;
+    }
+
+    .qr_popup button:hover{
+        opacity: 1;
     }
 
     .clickStart{
