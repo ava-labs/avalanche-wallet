@@ -1,7 +1,7 @@
 <template>
     <div class="wallet_view">
 <!--        <div id="wallet_view">-->
-        <send-receive></send-receive>
+<!--        <send-receive></send-receive>-->
         <sidebar class="wallet_sidebar"></sidebar>
         <router-view id="wallet_router"></router-view>
 <!--        </div>-->
@@ -10,12 +10,12 @@
 </template>
 <script>
     import Sidebar from '../components/wallet/Sidebar'
-    import SendReceive from '../components/modals/SendReceive'
+    // import SendReceive from '../components/modals/SendReceive'
 
     export default {
         components:{
             Sidebar,
-            SendReceive
+            // SendReceive
         },
     }
 </script>
