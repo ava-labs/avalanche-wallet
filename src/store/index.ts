@@ -17,7 +17,8 @@ export default new Vuex.Store({
                 key: "AVA",
                 balance: 23097.34442,
                 usd_price: 0.08,
-                btc_price: 1,
+                btc_price: 0.4311,
+                ava_price: 1,
                 address: 'asdflhjv235adg'
             },
             {
@@ -26,6 +27,7 @@ export default new Vuex.Store({
                 balance: 37.34442,
                 usd_price: 4.8,
                 btc_price: 1,
+                ava_price: 19400,
                 address: 'asdflhjv235adg'
             },
             {
@@ -34,6 +36,7 @@ export default new Vuex.Store({
                 balance: 12.4700,
                 usd_price: 4.8,
                 btc_price: 2.8,
+                ava_price: 1.2,
                 address: 'asdfadsf24'
             },
             {
@@ -42,6 +45,7 @@ export default new Vuex.Store({
                 balance: 32.554,
                 usd_price: 4.8,
                 btc_price: 2.8,
+                ava_price: 1,
                 address: 'klaubl3223rfa'
             },
             {
@@ -50,6 +54,7 @@ export default new Vuex.Store({
                 balance: 499.5,
                 usd_price: 4.8,
                 btc_price: 2.8,
+                ava_price: 1,
                 address: 'fasvnklkdvb;a'
             },
             {
@@ -58,6 +63,7 @@ export default new Vuex.Store({
                 balance: 21.9,
                 usd_price: 4.8,
                 btc_price: 2.8,
+                ava_price: 1,
                 address: 'vadfbhtrsgfbwer'
             },
             {
@@ -66,6 +72,7 @@ export default new Vuex.Store({
                 balance: 12,
                 usd_price: 4.8,
                 btc_price: 2.8,
+                ava_price: 1,
                 address: 'verhsdfgreynrtsd'
             },
             {
@@ -74,6 +81,7 @@ export default new Vuex.Store({
                 balance: 999,
                 usd_price: 0.008,
                 btc_price: 2.8,
+                ava_price: 1,
                 address: 'sldkhfgvoiuglg97i'
             }
         ],
@@ -132,6 +140,13 @@ export default new Vuex.Store({
             let res = 0;
             res = state.assets.reduce((total: number, asset: AssetType) => {
                 return total + (asset.balance*asset.btc_price)
+            }, 0);
+            return res;
+        },
+        wallet_value_ava(state: RootState){
+            let res = 0;
+            res = state.assets.reduce((total: number, asset: AssetType) => {
+                return total + (asset.balance*asset.ava_price)
             }, 0);
             return res;
         }

@@ -4,10 +4,20 @@
             <h4>Wallet value</h4>
             <div class="values">
                 <p>
-                    <span>USD {{Math.floor(total_usd)}}.</span>{{ Math.round((total_usd%1)*100000) }}
+                    <span>
+                        USD {{Math.floor(total_usd).toLocaleString()}}.
+                    </span>
+                    {{ Math.round((total_usd%1)*100000) }}
                 </p>
                 <p>
-                    <span>BTC {{Math.floor(total_btc)}}.</span>{{ Math.round((total_btc%1)*100000) }}
+                    <span>
+                        BTC {{Math.floor(total_btc).toLocaleString()}}.
+                    </span>{{ Math.round((total_btc%1)*100000) }}
+                </p>
+                <p>
+                    <span>
+                        AVA {{Math.floor(total_ava).toLocaleString()}}.
+                    </span>{{ Math.round((total_ava%1)*100000) }}
                 </p>
             </div>
         </div>
@@ -29,6 +39,9 @@
             },
             total_btc(){
                 return this.$store.getters.wallet_value_btc;
+            },
+            total_ava(){
+                return this.$store.getters.wallet_value_ava;
             }
 
         }
@@ -90,6 +103,10 @@
 
     .values p span{
         font-size: 45px;
+    }
+
+    .values .currency{
+        color: #faa;
     }
 
 

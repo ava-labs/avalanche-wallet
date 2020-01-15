@@ -8,6 +8,7 @@
                     <th>Balance</th>
                     <th>USD Total</th>
                     <th>BTC Total</th>
+                    <th>AVA Total</th>
                     <th class="buts"></th>
                 </tr>
                 </thead>
@@ -17,6 +18,7 @@
                         <td>{{asset.balance}}</td>
                         <td>{{(asset.balance * asset.usd_price).toFixed(4)}}</td>
                         <td>{{(asset.balance * asset.btc_price).toFixed(4)}}</td>
+                        <td>{{(asset.balance * asset.ava_price).toFixed(4)}}</td>
                         <td class="buts">
                             <v-btn :to="'/wallet/transfer?asset='+asset.key" color="transparent" depressed height="28">Send</v-btn>
                             <v-btn :to="'/wallet/transfer?asset='+asset.key" color="transparent" depressed height="28">Receive</v-btn>
@@ -48,8 +50,8 @@
 </script>
 <style scoped>
     table{
-        /*width: 100%;*/
-        min-width: 50%;
+        width: 100%;
+        /*min-width: 50%;*/
         background-color: #303030;
         color: #d2d2d2;
         border-collapse: collapse;

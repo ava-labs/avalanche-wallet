@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import Ava from '../views/wallet/Ava.vue';
-import Assets from '../views/wallet/Assets.vue';
+// import Assets from '../views/wallet/Assets.vue';
 import History from '../views/wallet/History.vue';
 import Transfer from '../views/wallet/Transfer.vue';
 import Advanced from '../views/wallet/Advanced.vue';
@@ -31,10 +31,6 @@ const routes = [
             {
                 path: 'ava',
                 component: Ava
-            },
-            {
-                path: 'assets',
-                component: Assets
             },
             {
                 path: 'history',

@@ -34,7 +34,7 @@
     </div>
 </template>
 <script>
-    import { QRCodeReader, BrowserQRCodeReader } from '@zxing/library';
+    import { BrowserQRCodeReader } from '@zxing/library';
 
     export default {
         data(){

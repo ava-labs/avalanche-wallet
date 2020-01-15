@@ -13,7 +13,6 @@
 <script>
     import Send from '@/components/wallet/transfer/Send';
     import Receive from '@/components/wallet/transfer/Receive';
-
     export default {
         components: {
             Send,

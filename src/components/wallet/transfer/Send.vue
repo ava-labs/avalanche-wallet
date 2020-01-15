@@ -30,8 +30,15 @@
                     </div>
                 </div>
                 <div class="checkout">
+
                     <label>Send to:</label>
-                    <v-text-field v-model="addressIn" class="addressIn" color="#d88383" placeholder="####" height="40" background-color="#404040" dense flat :loading="isAjax" hide-details></v-text-field>
+                    <q-r-reader class="readerBut" @change="onQrRead">
+                        <button><fa icon="camera"></fa></button>
+                    </q-r-reader>
+<!--                    <div class="sendToInputs">-->
+
+                        <v-text-field v-model="addressIn" class="addressIn" color="#d88383" placeholder="####" height="40" background-color="#404040" dense flat :loading="isAjax" hide-details></v-text-field>
+<!--                    </div>-->
                     <v-btn block color="#d88383" :loading="isAjax" :ripple="false" @click="send">Send</v-btn>
                 </div>
             </div>
@@ -40,11 +47,13 @@
 </template>
 <script>
     import CurrencyInput from "@/components/misc/CurrencyInput";
+    import QRReader from '@/components/misc/QRReader';
     import router from "@/router";
 
     export default {
         components: {
-            CurrencyInput
+            CurrencyInput,
+            QRReader
         },
         data(){
             return{
@@ -68,6 +77,9 @@
             }
         },
         methods: {
+            onQrRead(value){
+                this.addressIn = value;
+            },
             select(asset){
                 this.selected = asset;
                 this.amountIn = null;
@@ -262,8 +274,21 @@
         flex-grow: 1;
     }
 
-
-
+    .readerBut{
+        margin-top: 4px;
+        display: flex;
+        background-color: #404040;
+        /*cursor: pointer;*/
+    }
+    .readerBut button{
+        opacity: 0.6;
+        outline: none;
+        padding: 6px 12px;
+        margin: 0px auto;
+    }
+    .readerBut:hover button{
+        opacity: 1;
+    }
 
     @media only screen and (max-width: 600px) {
         .order_form{

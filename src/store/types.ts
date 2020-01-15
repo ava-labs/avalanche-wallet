@@ -20,6 +20,7 @@ export interface AssetType {
     balance: number,
     usd_price: number,
     btc_price: number,
+    ava_price: number,
     address: string
 }
 
