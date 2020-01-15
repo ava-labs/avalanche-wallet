@@ -66,7 +66,7 @@
                 }
             },
             onscan(result){
-                console.log(result);
+                // console.log(result);
                 this.scanCode = result.text;
                 this.stopScan();
             }
@@ -86,10 +86,12 @@
                         let camera = videoInputDevices[0];
                         parent.camera = camera;
                     }else{
-                        console.error('No Cameras Found');
+                        // console.error('No Cameras Found');
                     }
                 })
-                .catch(err => console.error(err));
+                .catch((err) => {
+                    // console.error(err)
+                });
 
             this.scanner = codeReader;
         },
