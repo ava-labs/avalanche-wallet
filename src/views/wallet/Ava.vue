@@ -5,22 +5,15 @@
             <div class="values">
                 <p>
                     <span class="currency">USD</span>
-                    <span>
-                         {{Math.floor(total_usd).toLocaleString()}}.
-                    </span>
-                    {{ Math.round((total_usd%1)*100) }}
+                    <span>{{Math.floor(total_usd).toLocaleString()}}.</span>{{ Math.round((total_usd%1)*100) }}
                 </p>
                 <p>
                     <span class="currency">BTC</span>
-                    <span>
-                         {{Math.floor(total_btc).toLocaleString()}}.
-                    </span>{{ Math.round((total_btc%1)*100000) }}
+                    <span>{{Math.floor(total_btc).toLocaleString()}}.</span>{{ Math.round((total_btc%1)*100000) }}
                 </p>
                 <p>
                     <span class="currency">AVA</span>
-                    <span>
-                         {{Math.floor(total_ava).toLocaleString()}}.
-                    </span>{{ Math.round((total_ava%1)*100000) }}
+                    <span>{{Math.floor(total_ava).toLocaleString()}}.</span>{{ Math.round((total_ava%1)*100000) }}
                 </p>
             </div>
         </div>

@@ -14,7 +14,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="asset in assets" :key="asset.key">
-                        <td>{{asset.key}} {{asset.title}}</td>
+                        <td><span class="asset_code">{{asset.key}}</span> - {{asset.title}}</td>
                         <td>{{asset.balance}}</td>
                         <td>{{(asset.balance * asset.usd_price).toFixed(4)}}</td>
                         <td>{{(asset.balance * asset.btc_price).toFixed(4)}}</td>
@@ -85,6 +85,10 @@
     td button:hover{
         border-color: #fff;
         color: #fff;
+    }
+
+    .asset_code{
+        font-weight: bold;
     }
 
     .buts a{
