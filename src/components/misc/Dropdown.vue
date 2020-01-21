@@ -1,0 +1,91 @@
+<template>
+    <div class="custom-select">
+        <select ref="select" @input="oninput">
+            <option v-for="item in items" :key="item">{{item}}</option>
+        </select>
+        <p class="arrow"><fa icon="caret-down"></fa></p>
+    </div>
+</template>
+<script>
+    export default {
+        props: {
+            items: {
+                type: Array,
+                required: true,
+            },
+        },
+        methods: {
+            oninput(){
+                // console.log(val);
+                let val = this.$refs.select.value;
+                this.$emit('change', val);
+            }
+        },
+        computed: {
+            selected(){
+                return 0;
+            }
+        }
+    }
+</script>
+<style scoped>
+    .custom-select{
+        position: relative;
+        width: 90px;
+        padding: 0px 6px;
+        border-radius: 0;
+        text-align: center;
+    }
+
+    .custom-select select{
+        width: 100%;
+        height: 100%;
+        outline: none;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-right: 12px;
+        z-index: 2;
+        /*position: absolute;*/
+        /*display: none;*/
+    }
+
+    .arrow{
+        position: absolute;
+        right: 6px;
+        top: 0;
+        margin: 0;
+        height: 15px;
+        transform: translateY(50%);
+        pointer-events: none;
+    }
+
+    select:active .arrow{
+        transform: rotateX(180deg);
+    }
+
+    select option{
+
+    }
+
+    /*.select-selected:after {*/
+    /*    position: absolute;*/
+    /*    content: "";*/
+    /*    top: 14px;*/
+    /*    right: 10px;*/
+    /*    width: 0;*/
+    /*    height: 0;*/
+    /*    border: 6px solid transparent;*/
+    /*    border-color: #fff transparent transparent transparent;*/
+    /*}*/
+
+    /*.select-selected.select-arrow-active:after {*/
+    /*    border-color: transparent transparent #fff transparent;*/
+    /*    top: 7px;*/
+    /*}*/
+
+
+
+    /*.custom-select:after{*/
+
+    /*}*/
+</style>

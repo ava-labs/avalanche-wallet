@@ -1,4 +1,9 @@
 export interface RootState {
+    isAuth: boolean,
+    privateKey: string,
+    // publicKey: string,
+    address: string,
+    utxos: object,
     modals: ModalDict,
     assets: AssetType[],
     tx_history: Transaction[]

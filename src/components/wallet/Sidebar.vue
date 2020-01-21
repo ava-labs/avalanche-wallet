@@ -64,7 +64,7 @@
             display: flex;
             flex-direction: column;
             text-align: center;
-            justify-content: start;
+            justify-content: flex-start;
             font-size: 12px;
 
             &.router-link-active {

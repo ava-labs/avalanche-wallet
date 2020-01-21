@@ -25,7 +25,6 @@
         },
         data(){
             return{
-                address: "asdbfd236SDFGAGge24",
                 selected: null,
             }
         },
@@ -48,6 +47,9 @@
             }
         },
         computed:{
+            address(){
+                return this.$store.state.address;
+            }
         }
     }
 </script>

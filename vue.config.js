@@ -3,7 +3,7 @@ module.exports = {
     "vuetify"
   ],
   devServer: {
-    https: true
+    https: false
   },
   configureWebpack:{
     optimization: {

@@ -91,7 +91,7 @@
     }
     .values{
         display: flex;
-        margin-top: 20px;
+        /*margin-top: 20px;*/
     }
 
     .values p{
@@ -104,6 +104,7 @@
     }
 
     .values .currency{
+        text-align: left;
         color: #ddd;
         display: block;
         font-size: 16px;

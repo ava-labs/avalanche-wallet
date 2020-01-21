@@ -5,11 +5,20 @@ import Auth from './modules/auth/auth';
 import {AssetType, RootState} from "@/store/types";
 Vue.use(Vuex);
 
+
+import {AVAAssets, binTools} from "@/AVA";
+
+
 export default new Vuex.Store({
     modules:{
         Auth
     },
     state: {
+        utxos: {},
+        isAuth: false,
+        privateKey: '',
+        // publicKey: '',
+        address: '',
         modals: {},
         assets: [
             {
@@ -19,6 +28,15 @@ export default new Vuex.Store({
                 usd_price: 0.08,
                 btc_price: 0.4311,
                 ava_price: 1,
+                address: 'asdflhjv235adg'
+            },
+            {
+                title: "Stephen Coin",
+                key: "SJB",
+                balance: 4782,
+                usd_price: 127.43,
+                btc_price: 0.9311,
+                ava_price: 189,
                 address: 'asdflhjv235adg'
             },
             {
@@ -149,12 +167,80 @@ export default new Vuex.Store({
                 return total + (asset.balance*asset.ava_price)
             }, 0);
             return res;
+        },
+        balance(state: RootState){
+
+            let res = {};
+            for(var id in state.utxos){
+                let utxo = state.utxos[id];
+
+                let asset_id = utxo.getAssetID();
+                    asset_id = binTools.bufferToB58(asset_id);
+
+                let asset_amount = utxo.getAmount();
+                    asset_amount = asset_amount.toNumber()
+
+                if(res[asset_id]){
+                    res[asset_id].balance += asset_amount;
+                }else{
+                    res[asset_id] = {
+                        title: asset_id,
+                        key: asset_id.substr(0,3),
+                        balance: asset_amount,
+                        usd_price: 0.08,
+                        btc_price: 0.4311,
+                        ava_price: 1,
+                    };
+                }
+            }
+
+            return res;
         }
     },
     mutations: {
-
+        setAuth(state,val){
+            state.isAuth = val;
+        },
+        setAddress(state, val){
+            state.address = val;
+        },
+        setPrivateKey(state,val){
+            state.privateKey = val;
+        },
+        setUTXOs(state, val){
+            state.utxos = val;
+        },
+        // setPublicKey(state,val){
+        //     state.publicKey = val;
+        // },
     },
     actions: {
+        // Used in home page to access a user's wallet
+        accessWallet(store, pk: string){
+            console.log(pk);
+            let keyChain = AVAAssets.keyChain();
+            let privateKeyBuf = binTools.avaDeserialize(pk);
+            let address = keyChain.importKey(privateKeyBuf);
+
+            console.log("YO");
+
+            store.commit('setPrivateKey', pk);
+            store.commit('setAddress', address);
+            store.commit('setAuth', true);
+            store.dispatch('onAccess');
+        },
+
+        onAccess(store){
+            console.log("onAccess");
+            console.log(store.state.privateKey);
+
+            AVAAssets.GetUTXOs([store.state.address]).then(res =>{
+                console.log(res);
+                let utxos = res.getAllUTXOs();
+                store.commit('setUTXOs', utxos);
+            });
+        },
+
         openModal(store, id: string){
             let modal = store.state.modals[id];
             if(modal){

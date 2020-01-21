@@ -38,7 +38,8 @@
         },
         computed: {
             assets(){
-                return this.$store.state.assets;
+                return this.$store.getters.balance;
+                // return this.$store.state.assets;
             }
         },
         methods: {
