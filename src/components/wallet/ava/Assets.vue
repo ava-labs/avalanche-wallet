@@ -7,23 +7,19 @@
                     <th>Asset</th>
                     <th>Balance</th>
                     <th>USD</th>
-                    <th>BTC</th>
-                    <th>AVA</th>
+                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>
                     <th class="buts"></th>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="asset in assets" :key="asset.key">
-                        <td><span class="asset_code">{{asset.key}}</span> - {{asset.title}}</td>
-                        <td>{{asset.balance}}</td>
-                        <td>{{(asset.balance * asset.usd_price).toFixed(4)}}</td>
-                        <td>{{(asset.balance * asset.btc_price).toFixed(4)}}</td>
-                        <td>{{(asset.balance * asset.ava_price).toFixed(4)}}</td>
+                    <tr v-for="asset in assets" :key="asset.id">
+                        <td><span class="asset_code">{{asset.code}}</span> - {{asset.title}}</td>
+                        <td>{{asset.balance.toLocaleString()}}</td>
+                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>
+                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>
                         <td class="buts">
-                            <v-btn :to="'/wallet/transfer?asset='+asset.key" color="transparent" depressed height="28">Send</v-btn>
-                            <v-btn :to="'/wallet/transfer?asset='+asset.key" color="transparent" depressed height="28">Receive</v-btn>
-<!--                            <button @click="openSendReceive">Send</button>-->
-<!--                            <button @click="openSendReceive">Receive</button>-->
+                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>
+                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>
                         </td>
                     </tr>
                 </tbody>
@@ -34,15 +30,46 @@
     export default {
         data(){
             return{
+                crypto_view: 'AVA'
             }
         },
         computed: {
             assets(){
-                return this.$store.getters.balance;
-                // return this.$store.state.assets;
+                let balance = this.$store.getters.balance;
+
+                let array = [];
+
+                for(var id in balance){
+                    array.push(balance[id]);
+                }
+
+                array.sort((a,b) => {
+                    let t1 = a.title;
+                    let t2 = b.title;
+                    if(t1<t2){
+                        return -1
+                    }else if(t1>t2){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                });
+                return array;
             }
         },
         methods: {
+            toggleCryptoView(){
+                if(this.crypto_view==='BTC'){
+                    this.crypto_view = 'AVA'
+                }else{
+                    this.crypto_view = 'BTC'
+                }
+            },
+            getCryptoVal(asset){
+                let crypt_val = asset.ava_price;
+                if(this.crypto_view==='BTC') crypt_val=asset.btc_price;
+                return (asset.balance * crypt_val);
+            },
             openSendReceive(){
                 this.$store.dispatch('openModal', 'send_receive');
             }
@@ -88,6 +115,8 @@
         color: #fff;
     }
 
+
+
     .asset_code{
         font-weight: bold;
     }
@@ -99,6 +128,20 @@
         font-size: 11px;
         background-color: transparent;
     }
+
+    .cryptoToggle{
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    @media only screen and (max-width: 1400px) {
+        table tbody td {
+            padding: 8px 10px;
+            max-width: 200px;
+            word-break: break-word;
+        }
+    }
+
 
     @media only screen and (max-width: 600px) {
         table th {

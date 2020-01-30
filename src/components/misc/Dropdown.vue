@@ -1,7 +1,7 @@
 <template>
     <div class="custom-select">
         <select ref="select" @input="oninput">
-            <option v-for="item in items" :key="item">{{item}}</option>
+            <option v-for="item in items" :key="item.label">{{item.label}}</option>
         </select>
         <p class="arrow"><fa icon="caret-down"></fa></p>
     </div>
@@ -16,14 +16,22 @@
         },
         methods: {
             oninput(){
-                // console.log(val);
                 let val = this.$refs.select.value;
-                this.$emit('change', val);
+                let data = this.item_map[val];
+                this.$emit('change', data);
             }
         },
         computed: {
             selected(){
                 return 0;
+            },
+            item_map(){
+                let res = {};
+                for(var i=0;i<this.items.length;i++){
+                    let item = this.items[i];
+                    res[item.label] = item.data;
+                }
+                return res;
             }
         }
     }

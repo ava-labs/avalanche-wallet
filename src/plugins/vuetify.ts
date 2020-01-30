@@ -1,6 +1,20 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 
+
+
+
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus, faSync, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import { faBtc} from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus, faSync, faExclamationTriangle);
+Vue.component('fa', FontAwesomeIcon);
+
+
+
 Vue.use(Vuetify);
 
 export default new Vuetify({
@@ -10,10 +24,10 @@ export default new Vuetify({
         primary: '#ff5e00',
         secondary: '#06f',
         accent: '#82B1FF',
-        error: '#FF5252',
+        error: '#ff9090',
         info: '#2196F3',
         success: '#4CAF50',
-        warning: '#FFC107'
+        warning: '#ecce73'
       },
     },
   },

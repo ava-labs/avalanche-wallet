@@ -7,9 +7,19 @@
                 <h2>Access Wallet</h2>
                 <v-text-field placeholder="Private Key" color="#ddd" v-model="privateKey"></v-text-field>
                 <v-btn block @click="access">Access Wallet</v-btn>
-<!--                <label>Address:</label>-->
-<!--                <p>{{address}}</p>-->
-<!--                <v-btn block @click="getUTXOS">Get UTXOs</v-btn>-->
+                <p>or</p>
+                <v-btn block @click="createKey" v-if="!newPrivateKey">Generate Key Pair</v-btn>
+                <div v-if="newPrivateKey" class="keygen">
+                    <v-alert dense color="warning" text>
+                        <fa icon="exclamation-triangle"></fa>
+                        Do not lose your information or you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>
+                    <label>Private Key</label>
+                    <p>{{newPrivateKey}}</p>
+                    <label>Public Key</label>
+                    <p>{{newPublicKey}}</p>
+                    <label>Address</label>
+                    <p>{{newAddr}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -17,7 +27,11 @@
 
 <script>
 
-    import {AVAAssets, binTools} from "@/AVA";
+    import {avm, bintools, keyChain} from "@/AVA";
+
+
+    // pk1: ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH
+    // pk2: 21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b
 
     // console.log(BinTools)
     // let KeyPair = avajs.TypesLibrary.AssetsAPI.Keychain.AVAKeyPair;
@@ -26,9 +40,13 @@
         name: 'home',
         data(){
             return{
-                privateKey: "2RzAm1vygtZ41JpCSdCL4p5RFFaij22f73Q8WEaEcFGaWdBeav",
-                publicKey: "",
+                privateKey: "ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH",
                 address: "",
+                // If generated...
+                newPrivateKey: "",
+                newPublicKey: "",
+                newAddr: "",
+
             }
         },
         components: {
@@ -43,35 +61,23 @@
                 console.log(address);
             },
             access(){
-
                 this.$store.dispatch('accessWallet', this.privateKey);
+            },
+            createKey(){
+                let addr = keyChain.makeKey();
+                let keypair = keyChain.getKey(addr);
 
-                // console.log(binTools);
-                // let privateKeyBuf = binTools.b58ToBuffer(this.privateKey);
-                // console.log(privateKeyBuf);
-                // let deserial = binTools.avaDeserialize(keyChain);
-                // console.log(deserial)
-                // console.log();
-                // let newKey = keyChain.makeKey();
-                // let otherKey = keyChain.getKey(newKey);
-                // console.log(newKey, otherKey);
-                // let keypair = new KeyPair();
-                // let addr = keypair.importKey(this.privateKey);
-                // console.log(`address: ${addr}`)
+                let pubk = keypair.getPublicKey(); //returns Buffer
+                let pubkstr = keypair.getPublicKeyString(); //returns an AVA serialized string
 
-                // this.publicKey = keypair.getPublicKey();
-                // this.address = keypair.getAddress();
-                //
-                // console.log(keypair.getPublicKeyString())
-                // console.log(this.publicKey);
-                //
-                // // this.address = keypair.addressFromPublicKey(this.publicKey);
-                //
-                // console.log(this.address);
+                let privk = keypair.getPrivateKey(); //returns Buffer
+                let privkstr = keypair.getPrivateKeyString(); //returns an AVA serialized string
 
+                this.newAddr = addr;
+                this.newPrivateKey = privkstr;
+                this.newPublicKey = pubkstr;
             },
             getUTXOS(){
-                console.log("Getting UTXOs from",this.address);
                 AVAAssets.GetUTXOs([this.address]).then(res => {
                     // console.log(res);
                     // console.log(res.getAllUTXOStrings());
@@ -117,5 +123,27 @@
     .auth >>> input{
         text-align: center;
         color: #ddd !important;
+    }
+
+
+    .keygen{
+        text-align: left;
+        color: #f2f2f2;
+        background-color: #3a3a3a;
+        padding: 6px;
+        font-size: 11px;
+    }
+
+    .keygen p{
+        margin-bottom: 12px;
+        word-break: break-all;
+    }
+    .keygen label{
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .v-alert{
+        font-size: 12px;
     }
 </style>

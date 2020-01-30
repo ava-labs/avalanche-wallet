@@ -2,18 +2,34 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Auth from './modules/auth/auth';
-import {AssetType, RootState} from "@/store/types";
+import {AssetNamesDict, AssetType, BalanceDict, RootState, IssueTxInput} from "@/store/types";
 Vue.use(Vuex);
 
+import router from "@/router";
 
-import {AVAAssets, binTools} from "@/AVA";
+import BN from 'bn.js';
 
+import {avm, bintools, getAllUTXOsForAsset, keyChain} from "@/AVA";
+import * as slopes from "slopes";
+
+
+const asset_names:AssetNamesDict = {
+    '1': {
+        title: 'Gun Coin',
+        code: 'GNC'
+    },
+    'AK7fkXX77tp9WaxSJeUWP9Et4H61fWd6DUhVg7egcast': {
+        title: 'AVA Token',
+        code: 'AVA'
+    },
+};
 
 export default new Vuex.Store({
     modules:{
         Auth
     },
     state: {
+        utxo_set: null,
         utxos: {},
         isAuth: false,
         privateKey: '',
@@ -21,137 +37,21 @@ export default new Vuex.Store({
         address: '',
         modals: {},
         assets: [
-            {
-                title: "Avalanche",
-                key: "AVA",
-                balance: 23097.34442,
-                usd_price: 0.08,
-                btc_price: 0.4311,
-                ava_price: 1,
-                address: 'asdflhjv235adg'
-            },
-            {
-                title: "Stephen Coin",
-                key: "SJB",
-                balance: 4782,
-                usd_price: 127.43,
-                btc_price: 0.9311,
-                ava_price: 189,
-                address: 'asdflhjv235adg'
-            },
-            {
-                title: "Bitcoin",
-                key: "BTC",
-                balance: 37.34442,
-                usd_price: 4.8,
-                btc_price: 1,
-                ava_price: 19400,
-                address: 'asdflhjv235adg'
-            },
-            {
-                title: "Tether",
-                key: "TTH",
-                balance: 12.4700,
-                usd_price: 4.8,
-                btc_price: 2.8,
-                ava_price: 1.2,
-                address: 'asdfadsf24'
-            },
-            {
-                title: "Ethereum",
-                key: "ETH",
-                balance: 32.554,
-                usd_price: 4.8,
-                btc_price: 2.8,
-                ava_price: 1,
-                address: 'klaubl3223rfa'
-            },
-            {
-                title: "Doge Coin",
-                key: "DGC",
-                balance: 499.5,
-                usd_price: 4.8,
-                btc_price: 2.8,
-                ava_price: 1,
-                address: 'fasvnklkdvb;a'
-            },
-            {
-                title: "Kyber",
-                key: "KBC",
-                balance: 21.9,
-                usd_price: 4.8,
-                btc_price: 2.8,
-                ava_price: 1,
-                address: 'vadfbhtrsgfbwer'
-            },
-            {
-                title: "Gun Coin",
-                key: "GNC",
-                balance: 12,
-                usd_price: 4.8,
-                btc_price: 2.8,
-                ava_price: 1,
-                address: 'verhsdfgreynrtsd'
-            },
-            {
-                title: "Collin Coin",
-                key: "CLC",
-                balance: 999,
-                usd_price: 0.008,
-                btc_price: 2.8,
-                ava_price: 1,
-                address: 'sldkhfgvoiuglg97i'
-            }
         ],
         tx_history: [
-            {
-                id: "aafjkdbsflkjv34",
-                asset: 'BTC',
-                amount: 2.4,
-                to: 'BKAJVLJK239DSFBBJ',
-                date: new Date(),
-                status: 'complete'
-            },
-            {
-                id: "aljahsvdfljhc34",
-                asset: 'ETH',
-                amount: 2.4,
-                to: 'BKAJVLJK239DSFBBJ',
-                date: new Date(),
-                status: 'complete'
-            },
-            {
-                id: "akasjdvflkhvl23",
-                asset: 'GGC',
-                amount: 2.4,
-                to: 'BKAJVLJK239DSFBBJ',
-                date: new Date(),
-                status: 'complete'
-            },
-            {
-                id: "aaklsdjvflasdvf",
-                asset: 'CKM',
-                amount: 2.4,
-                to: 'BKAJVLJK239DSFBBJ',
-                date: new Date(),
-                status: 'complete'
-            },
-            {
-                id: "savlvhl3h4f3",
-                asset: 'KYB',
-                amount: 2.4,
-                to: 'BKAJVLJK239DSFBBJ',
-                date: new Date(),
-                status: 'complete'
-            },
         ]
     },
     getters: {
+        isAuthenticated(state: RootState){
+            if(state.privateKey != '') return true;
+            else return false;
+        },
         wallet_value_usd(state: RootState){
             let res = 0;
             res = state.assets.reduce((total: number, asset: AssetType) => {
                 return total + (asset.balance*asset.usd_price)
             }, 0);
+
             return res;
         },
         wallet_value_btc(state: RootState){
@@ -168,29 +68,54 @@ export default new Vuex.Store({
             }, 0);
             return res;
         },
+        balanceArray(state, getters){
+            let balances = getters.balance;
+            let res = [];
+            for(var i in balances){
+                let asset = balances[i];
+                res.push(asset);
+            }
+            return res;
+        },
         balance(state: RootState){
+            let utxos = state.utxos;
+            let res:BalanceDict = {};
+            // console.log(utxos);
+            for(var id in utxos){
+                let utxo = utxos[id];
 
-            let res = {};
-            for(var id in state.utxos){
-                let utxo = state.utxos[id];
+                // console.log(utxo);
 
-                let asset_id = utxo.getAssetID();
-                    asset_id = binTools.bufferToB58(asset_id);
+                let asset_id_buffer = utxo.getAssetID();
+                let asset_id = bintools.avaSerialize(asset_id_buffer);
 
-                let asset_amount = utxo.getAmount();
-                    asset_amount = asset_amount.toNumber()
+                let asset_amount_bn = utxo.getAmount();
+                let asset_amount = asset_amount_bn.toNumber();
 
+                // console.log(asset_id,asset_amount);
                 if(res[asset_id]){
                     res[asset_id].balance += asset_amount;
                 }else{
-                    res[asset_id] = {
+
+                    let coin_data = asset_names[asset_id] || {
                         title: asset_id,
-                        key: asset_id.substr(0,3),
+                        code: asset_id.substr(0,3)
+                    };
+
+
+                    let assetObj = {
+                        id: asset_id,
+                        title: '',
+                        code: '',
                         balance: asset_amount,
-                        usd_price: 0.08,
-                        btc_price: 0.4311,
+                        usd_price: 0.008,
+                        btc_price: 0.0004311,
                         ava_price: 1,
                     };
+                    assetObj.title = coin_data.title;
+                    assetObj.code = coin_data.code.toUpperCase();
+
+                    res[asset_id] = assetObj;
                 }
             }
 
@@ -210,32 +135,37 @@ export default new Vuex.Store({
         setUTXOs(state, val){
             state.utxos = val;
         },
-        // setPublicKey(state,val){
-        //     state.publicKey = val;
-        // },
+        setUTXOSet(state,val){
+            state.utxo_set = val;
+        }
     },
     actions: {
         // Used in home page to access a user's wallet
         accessWallet(store, pk: string){
-            console.log(pk);
-            let keyChain = AVAAssets.keyChain();
-            let privateKeyBuf = binTools.avaDeserialize(pk);
+            // console.log(pk);
+            let privateKeyBuf = bintools.avaDeserialize(pk);
             let address = keyChain.importKey(privateKeyBuf);
 
-            console.log("YO");
+            // console.log("YO");
 
             store.commit('setPrivateKey', pk);
             store.commit('setAddress', address);
             store.commit('setAuth', true);
             store.dispatch('onAccess');
+
+            router.push('/wallet/ava');
         },
 
         onAccess(store){
-            console.log("onAccess");
-            console.log(store.state.privateKey);
+            // console.log("onAccess");
+            // console.log(store.state.privateKey);
+            store.dispatch('updateUTXOs')
+        },
 
-            AVAAssets.GetUTXOs([store.state.address]).then(res =>{
-                console.log(res);
+
+        updateUTXOs(store){
+            avm.getUTXOs([store.state.address]).then(res =>{
+                store.commit('setUTXOSet', res);
                 let utxos = res.getAllUTXOs();
                 store.commit('setUTXOs', utxos);
             });
@@ -246,6 +176,78 @@ export default new Vuex.Store({
             if(modal){
                 modal.open();
             }
+        },
+
+        async issueTx(store, data:IssueTxInput){
+
+
+            let myAddresses = [store.state.address];
+            let toAddresses = [data.toAddress];
+
+            let assetId = data.assetId;
+            let utxos = await avm.getUTXOs(myAddresses);
+            // let utxos = getAllUTXOsForAsset(assetId);
+            let sendAmount = new BN(data.amount);
+
+            // console.log("issue tx");
+            console.log( sendAmount.toNumber(), assetId, utxos);
+            // console.log(utxos);
+
+            let unsigned_tx = avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, myAddresses, data.assetId);
+            let signed_tx = avm.signTx(unsigned_tx);
+
+            console.log(signed_tx);
+            console.log(signed_tx.toBuffer().toString('hex'));
+
+
+            let txid = await avm.issueTx(signed_tx);
+            return txid;
+        },
+
+        async issueBatchTx(store, data){
+            // console.log("SENDING BATCH TX");
+            // console.log(data);
+
+            let orders = data.orders;
+            for(var i=0; i<orders.length; i++){
+                let order = orders[i];
+
+                // console.log(order.asset.id, order.amount,data.toAddress);
+                // If no amount to send, skip it
+                if(!order.amount) continue;
+
+                await store.dispatch('issueTx', {
+                    assetId: order.asset.id,
+                    amount: order.amount,
+                    toAddress: data.toAddress
+                }).catch(err => {
+                    alert(err);
+                    return 'error';
+                });
+            }
+
+            setTimeout(() => {
+                store.dispatch('updateUTXOs');
+            }, 5000);
+
+            return 'success';
+        },
+
+        async createAsset(store, amt: number){
+            let amount = new BN(amt);
+
+            let addr1 = store.state.address;
+
+            let output = new slopes.OutCreateAsset(amount, [addr1]);
+            let unsigned = new slopes.TxUnsigned([], [output]);
+            let signed = keyChain.signTx(unsigned);
+
+            let txid = await avm.issueTx(signed); //returns an AVA serialized string for the TxID
+
+            setTimeout(async () => {
+                let status = await avm.getTxStatus(txid);
+                console.log(status);
+            })
         }
     },
 })

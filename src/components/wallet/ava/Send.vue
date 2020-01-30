@@ -11,7 +11,7 @@
                         </v-btn>
                     </template>
                     <v-list :dense="true">
-                        <v-list-item v-for="(asset) in assets" :key="asset.key" @click="select(asset)" :ripple="false" :dense="true">
+                        <v-list-item v-for="(asset) in assets" :key="asset.id" @click="select(asset)" :ripple="false" :dense="true">
                             <v-list-item-title>{{ asset.title }}</v-list-item-title>
                         </v-list-item>
                     </v-list>

@@ -17,6 +17,16 @@
                 </p>
             </div>
         </div>
+<!--        <div class="create_asset">-->
+<!--            <h4>Create new asset</h4>-->
+<!--            <input type="number" value="1000">-->
+<!--            <v-text-field type="number" persistent-hint-->
+<!--                          hint="How many of this asset should exist?"-->
+<!--                          label="Amount"-->
+<!--                          color="#fff"-->
+<!--            ></v-text-field>-->
+<!--            <v-btn @click="createAsset" depressed height="24">Create Asset</v-btn>-->
+<!--        </div>-->
         <assets class="assets floater"></assets>
     </div>
 </template>
@@ -25,43 +35,75 @@
     // import SendReceive from '../../components/wallet/ava/SendReceive';
 
     export default {
+        data(){
+            return {
+                interval_id: null,
+            }
+        },
         components: {
             Assets,
             // SendReceive
         },
         computed: {
             total_usd(){
-                return this.$store.getters.wallet_value_usd;
+                let balances = this.$store.getters.balance;
+
+                let res = 0;
+                for(var i in balances){
+                    let balance = balances[i];
+                    res += balance.balance * balance.usd_price;
+                }
+                return res;
             },
             total_btc(){
-                return this.$store.getters.wallet_value_btc;
+                let balances = this.$store.getters.balance;
+
+                let res = 0;
+                for(var i in balances){
+                    let balance = balances[i];
+                    res += balance.balance * balance.btc_price;
+                }
+                return res;
             },
             total_ava(){
-                return this.$store.getters.wallet_value_ava;
-            }
+                let balances = this.$store.getters.balance;
 
+                let res = 0;
+                for(var i in balances){
+                    let balance = balances[i];
+                    res += balance.balance * balance.ava_price;
+                }
+                return res;
+            }
+        },
+        methods: {
+            createAsset(){
+                this.$store.dispatch('createAsset', 1000);
+            }
+        },
+        mounted(){
+            let parent = this;
+            parent.$store.dispatch('updateUTXOs');
+            this.interval_id = setInterval(() => {
+                parent.$store.dispatch('updateUTXOs');
+            }, 5000);
+        },
+        destroyed() {
+            console.log('DESTRROYY');
+            clearInterval(this.interval_id);
         }
     }
 </script>
 <style scoped>
     .ava_view{
-        /*padding: 50px;*/
     }
-
-    /*.floaters{*/
-    /*    display: flex;*/
-    /*}*/
-
-
 
     .floaters > div{
 
     }
 
     .assets{
-        /*flex-grow: 1;*/
         overflow: hidden;
-        /*background-color: #fff;*/
     }
 
 </style>
@@ -110,6 +152,23 @@
         font-size: 16px;
     }
 
+    .create_asset{
+        text-align: left;
+        width: max-content;
+        color: #d2d2d2;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        margin: 12px 0px;
+        background-color: #3a3a3a;
+
+    }
+
+    @media only screen and (max-width: 1400px) {
+        .values p span {
+            font-size: 22px;
+        }
+    }
 
     @media only screen and (max-width: 600px) {
         .wallet_info{
@@ -130,6 +189,7 @@
             font-size: 22px;
         }
         .values .currency{
+            text-align: center;
             font-size: 12px;
         }
 

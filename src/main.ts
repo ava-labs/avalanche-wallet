@@ -13,15 +13,6 @@ import vuetify from './plugins/vuetify';
 // import AVA from './AVA';
 
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
-import { faBtc} from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-library.add(faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus);
-Vue.component('fa', FontAwesomeIcon);
-
-
 // Install BootstrapVue
 // Vue.use(BootstrapVue);
 // Vue.use(IconsPlugin);

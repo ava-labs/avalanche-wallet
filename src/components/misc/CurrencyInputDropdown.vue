@@ -1,8 +1,13 @@
 <template>
-    <div class="curr_in_drop">
-        <button class="max_but" @click="maxOut">MAX</button>
-        <input type="number" placeholder="0.00" @input="amount_in" ref="amount" v-model="amount">
-        <dropdown :items="dropdown_values" class="dropdown" @change="drop_change"></dropdown>
+    <div>
+        <div class="curr_in_drop">
+            <button class="max_but" @click="maxOut">MAX</button>
+            <input type="number" placeholder="0.00" @input="amount_in" ref="amount" v-model="amount">
+            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change"></dropdown>
+        </div>
+        <div class="bar"><div :style="{
+            width: percFull+'%'
+        }"></div></div>
     </div>
 </template>
 <script>
@@ -24,11 +29,17 @@
             }
         },
         computed: {
+            percFull(){
+                return (this.amount/this.max_amount)*100;
+            },
             dropdown_values(){
                 let res = [];
                 for(var i in this.dropdown_assets){
                     let asset = this.dropdown_assets[i];
-                    res.push(asset.title);
+                    res.push({
+                        label: asset.title,
+                        data: asset,
+                    });
                 }
                 return res;
             },
@@ -47,6 +58,7 @@
         methods: {
             maxOut(){
                 this.amount = this.max_amount;
+                this.onchange();
             },
             amount_in(){
                 let amount = parseFloat(this.$refs.amount.value);
@@ -58,8 +70,7 @@
             },
 
             drop_change(val){
-                let asset = this.dropdown_assets[val];
-                this.asset_now = asset;
+                this.asset_now = val;
                 this.amount_in();
             },
 
@@ -68,12 +79,12 @@
             onchange(){
                 this.$emit('change',{
                     asset: this.asset_now,
-                    amount: this.amount
+                    amount: parseFloat(this.amount)
                 });
             }
         },
         mounted(){
-            this.drop_change(this.dropdown_values[0]);
+            this.drop_change(this.dropdown_values[0].data);
         },
     }
 </script>
@@ -84,7 +95,7 @@
         display: flex;
         background-color: #404040;
         padding: 0px 8px;
-        flex-grow: 1;
+        width: 100%;
         outline: none;
         text-align: right;
     }
@@ -107,5 +118,21 @@
 
     .dropdown{
         border-left: 1px solid #505050;
+    }
+
+    .bar{
+        height: 1px;
+        background-color: #7d7d7d;
+        position: relative;
+    }
+
+    .bar div{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        background-color: #fff;
+        height: 1px;
+        transition-duration: 1s;
     }
 </style>

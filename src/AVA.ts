@@ -1,33 +1,43 @@
-// console.log(avajs.AVAJS);
-//
-// // @ts-ignore
-let AVAJS = new avajs.AVAJS('ava.network', 21015, 'https');
-    // AVAJS.endpoints.assets.setEndpoint('/ext/subnet/avm');
-console.log(avajs);
-console.log(AVAJS);
-console.log(AVAJS.Wallet)
+import {UTXO, UTXOSet} from "slopes";
+import {UTXODict} from 'store/types';
 
-// let WalletAPI = new WalletAPI
-//
-let wallet = AVAJS.Wallet();
-let AVAAssets = AVAJS.AVAAssets();
-    // AVAAssets.setEndpoint('/ext/subnet/avm');
-console.log(AVAAssets);
-console.log(AVAAssets.keyChain());
+console.log(process.env.VUE_AVA_IP);
+import store from './store';
+// @ts-ignore
+import * as slopes from "slopes";
 
-let binTools = avajs.TypesLibrary.BinTools;
 
-export { AVAAssets, binTools };
+let ip = process.env.VUE_AVA_IP || 'localhost';
+let port = process.env.VUE_AVA_PORT || '9650';
+let protocol = process.env.VUE_AVA_PROTOCOL || 'http';
 
-// console.log(wallet);
-//
-// wallet.CreateAccount('wassupsteven', 'randompassword').then((res) => {
-//     console.log(res);
-// });
-// //
-// console.log(wallet);
-// wallet.CreateAccount('testname', 'mypassword').then(res => {
-//     console.log(res);
-// });
-//
-// export default AVAJS
+// @ts-ignore
+let bintools = slopes.BinTools.getInstance();
+// @ts-ignore
+let ava = new slopes.Slopes(ip, parseInt(port), protocol, 12345);
+
+// @ts-ignore
+let avm = ava.AVM();
+let keyChain = avm.keyChain();
+
+
+
+function getAllUTXOsForAsset(assetId: string){
+    let set = new UTXOSet();
+    let utxos:UTXODict = store.state.utxos;
+
+    for(var i=0; i<utxos.length;i++){
+        let utxo = utxos[i];
+        let aId = bintools.avaSerialize(utxo.getAssetID());
+        if(aId===assetId){
+            set.add(utxo);
+        }
+    }
+
+    return set;
+}
+
+
+
+
+export { avm, bintools, keyChain, getAllUTXOsForAsset };

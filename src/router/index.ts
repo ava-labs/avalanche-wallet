@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import VueRouter, {Route} from 'vue-router'
 import Home from '../views/Home.vue'
 
 import Ava from '../views/wallet/Ava.vue';
@@ -8,13 +8,33 @@ import History from '../views/wallet/History.vue';
 import Transfer from '../views/wallet/Transfer.vue';
 import Advanced from '../views/wallet/Advanced.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+
+
+import store from '../store/index' // your vuex store
+
+const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
+    if (!store.getters.isAuthenticated) {
+        next();
+        return
+    }
+    next('/wallet')
+};
+
+const ifAuthenticated = (to: Route, from: Route, next: Function) => {
+    if (store.getters.isAuthenticated) {
+        next();
+        return
+    }
+    next('/')
+};
 
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: Home
+        component: Home,
+        beforeEnter: ifNotAuthenticated
     },
     // {
     //     path: '/about',
@@ -45,7 +65,8 @@ const routes = [
                 component: Advanced
             }
         ],
-        component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue')
+        component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue'),
+        beforeEnter: ifAuthenticated
     },
 ]
 
