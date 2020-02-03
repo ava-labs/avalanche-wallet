@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 import router from "@/router";
 
-import BN from 'bn.js';
+// import BN from 'bn.js';
+const BN = require('bn.js');
 
 import {avm, bintools, getAllUTXOsForAsset, keyChain} from "@/AVA";
 import * as slopes from "slopes";
@@ -173,9 +174,10 @@ export default new Vuex.Store({
                 let utxos = res.getAllUTXOs();
                 // console.log(utxos);
                 // console.log(res.getAssetIDs());
-                console.log(utxos);
-                console.log(utxos[0].toBuffer().toString("hex"));
-                console.log(utxos.toString());
+                // console.log(utxos);
+                // console.log(utxos[0].toBuffer().toString("hex"));
+                // console.log(utxos[5].toBuffer().toString("hex"));
+                // console.log(utxos.toString());
 
                 store.commit('setUTXOs', utxos);
             });
@@ -243,21 +245,21 @@ export default new Vuex.Store({
             return 'success';
         },
 
-        async createAsset(store, amt: number){
-            let amount = new BN(amt);
-
-            let addr1 = store.state.address;
-
-            let output = new slopes.OutCreateAsset(amount, [addr1]);
-            let unsigned = new slopes.TxUnsigned([], [output]);
-            let signed = keyChain.signTx(unsigned);
-
-            let txid = await avm.issueTx(signed); //returns an AVA serialized string for the TxID
-
-            setTimeout(async () => {
-                let status = await avm.getTxStatus(txid);
-                console.log(status);
-            })
-        }
+        // async createAsset(store, amt: number){
+        //     let amount = new BN(amt);
+        //
+        //     let addr1 = store.state.address;
+        //
+        //     let output = new slopes.OutCreateAsset(amount, [addr1]);
+        //     let unsigned = new slopes.TxUnsigned([], [output]);
+        //     let signed = keyChain.signTx(unsigned);
+        //
+        //     let txid = await avm.issueTx(signed); //returns an AVA serialized string for the TxID
+        //
+        //     setTimeout(async () => {
+        //         let status = await avm.getTxStatus(txid);
+        //         console.log(status);
+        //     })
+        // }
     },
 })

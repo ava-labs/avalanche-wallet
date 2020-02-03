@@ -42,7 +42,7 @@
         name: 'home',
         data(){
             return{
-                privateKey: "ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH",
+                privateKey: "",
                 address: "",
                 // If generated...
                 newPrivateKey: "",

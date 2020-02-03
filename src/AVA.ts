@@ -1,8 +1,9 @@
 import {UTXO, UTXOSet} from "slopes";
-import {UTXODict} from 'store/types';
+// import {UTXODict} from './store/types';
 
 console.log(process.env.VUE_AVA_IP);
 import store from './store';
+
 // @ts-ignore
 import * as slopes from "slopes";
 
@@ -24,15 +25,22 @@ let keyChain = avm.keyChain();
 
 function getAllUTXOsForAsset(assetId: string){
     let set = new UTXOSet();
-    let utxos:UTXODict = store.state.utxos;
+    let utxos = store.state.utxos;
 
-    for(var i=0; i<utxos.length;i++){
+    for(var i in utxos){
         let utxo = utxos[i];
         let aId = bintools.avaSerialize(utxo.getAssetID());
         if(aId===assetId){
             set.add(utxo);
         }
     }
+    // for(var i=0; i < utxos.length; i++){
+    //     let utxo = utxos[i];
+    //     let aId = bintools.avaSerialize(utxo.getAssetID());
+    //     if(aId===assetId){
+    //         set.add(utxo);
+    //     }
+    // }
 
     return set;
 }

@@ -78,7 +78,7 @@
         },
         methods: {
             createAsset(){
-                this.$store.dispatch('createAsset', 1000);
+                // this.$store.dispatch('createAsset', 1000);
             }
         },
         mounted(){

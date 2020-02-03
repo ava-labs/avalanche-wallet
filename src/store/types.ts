@@ -1,4 +1,4 @@
-import {UTXO, UTXOSet} from "slopes";
+import {SecpUTXO, UTXO, UTXOSet} from "slopes";
 
 export interface RootState {
     isAuth: boolean,
@@ -17,8 +17,8 @@ interface Modal {
     close(): void
 }
 
-interface UTXODict {
-    [key: string]: UTXO
+export interface UTXODict {
+    [key: string]: SecpUTXO
 }
 
 interface ModalDict {
@@ -51,7 +51,7 @@ export interface AssetType {
     usd_price: number,
     btc_price: number,
     ava_price: number,
-    address: string
+    // address: string
 }
 
 export interface Transaction {
