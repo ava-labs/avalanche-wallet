@@ -2,9 +2,9 @@
     <div class="home">
         <div>
             <img src="/img/ava_logo_white.png">
-            <p>This is a wallet.</p>
-            <p>ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH</p>
-            <p>21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b</p>
+<!--            <p>This is a wallet.</p>-->
+<!--            <p>ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH</p>-->
+<!--            <p>21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b</p>-->
             <div class="auth">
                 <h2>Access Wallet</h2>
                 <v-text-field placeholder="Private Key" color="#ddd" v-model="privateKey"></v-text-field>

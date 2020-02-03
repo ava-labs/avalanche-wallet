@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Auth from './modules/auth/auth';
+import {SecpUTXO, UTXOSet} from "slopes";
 import {AssetNamesDict, AssetType, BalanceDict, RootState, IssueTxInput} from "@/store/types";
 Vue.use(Vuex);
 
@@ -168,7 +169,7 @@ export default new Vuex.Store({
             console.log(store.state.address);
             // let addresses = avm.keyChain().getAddresses();
             // console.log(addresses,store.state.address)
-            avm.getUTXOs([store.state.address]).then(res =>{
+            avm.getUTXOs([store.state.address]).then((res: UTXOSet) =>{
                 store.commit('setUTXOSet', res);
                 // console.log(res);
                 let utxos = res.getAllUTXOs();
