@@ -8,11 +8,11 @@ import store from './store';
 import * as slopes from "slopes";
 
 
-let ip = process.env.VUE_AVA_IP || 'localhost';
-let port = process.env.VUE_AVA_PORT || '9650';
-let protocol = process.env.VUE_AVA_PROTOCOL || 'http';
-let network_id = process.env.VUE_NETWORK_ID || '12345';
-let chain_id = process.env.VUE_CHAIN_ID || '2PfbSxTqpTGFF2xCX2YgrW6ncrksfmEhcNXGv9rE9CgTRqT4hM';
+let ip = process.env.VUE_APP_AVA_IP || 'localhost';
+let port = process.env.VUE_APP_AVA_PORT || '9650';
+let protocol = process.env.VUE_APP_AVA_PROTOCOL || 'http';
+let network_id = process.env.VUE_APP_NETWORK_ID || '12345';
+let chain_id = process.env.VUE_APP_CHAIN_ID || '2PfbSxTqpTGFF2xCX2YgrW6ncrksfmEhcNXGv9rE9CgTRqT4hM';
 
 // @ts-ignore
 let bintools = slopes.BinTools.getInstance();
