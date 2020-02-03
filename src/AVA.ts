@@ -7,6 +7,7 @@ import store from './store';
 // @ts-ignore
 import * as slopes from "slopes";
 
+console.log(process.env);
 
 let ip = process.env.VUE_APP_AVA_IP || 'localhost';
 let port = process.env.VUE_APP_AVA_PORT || '9650';
