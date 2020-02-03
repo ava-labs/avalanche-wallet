@@ -3,7 +3,7 @@
         <div class="curr_in_drop">
             <button class="max_but" @click="maxOut">MAX</button>
             <input type="number" placeholder="0.00" @input="amount_in" ref="amount" v-model="amount">
-            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change"></dropdown>
+            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>
         </div>
         <div class="bar"><div :style="{
             width: percFull+'%'
@@ -23,24 +23,35 @@
             }
         },
         props: {
-            assets: {
+            disabled_assets: {
                 type: Array,
-                default: null,
-            }
+                default: function(){
+                    return [];
+                },
+            },
+            initial: Object,
         },
         computed: {
             percFull(){
                 return (this.amount/this.max_amount)*100;
             },
+
             dropdown_values(){
                 let res = [];
-                for(var i in this.dropdown_assets){
-                    let asset = this.dropdown_assets[i];
+
+                for(var id in this.dropdown_assets){
+                    let asset = this.dropdown_assets[id];
+                    let disabled= false;
+                    if(this.disabled_assets.includes(asset)){
+                        disabled = true;
+                    }
                     res.push({
                         label: asset.title,
                         data: asset,
+                        disabled: disabled
                     });
                 }
+
                 return res;
             },
             dropdown_assets(){
@@ -74,7 +85,6 @@
                 this.amount_in();
             },
 
-
             // onchange event for the Component
             onchange(){
                 this.$emit('change',{
@@ -84,7 +94,17 @@
             }
         },
         mounted(){
-            this.drop_change(this.dropdown_values[0].data);
+            if(this.initial){
+                console.log("initial: ",this.initial);
+                for(var i=0;i<this.dropdown_values.length;i++){
+                    let val = this.dropdown_values[i];
+                    if(val.data === this.initial){
+                        this.drop_change(val.data);
+                    }
+                }
+            }else{
+                this.drop_change(this.dropdown_values[0].data);
+            }
         },
     }
 </script>

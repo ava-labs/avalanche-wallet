@@ -14,7 +14,7 @@ let protocol = process.env.VUE_AVA_PROTOCOL || 'http';
 // @ts-ignore
 let bintools = slopes.BinTools.getInstance();
 // @ts-ignore
-let ava = new slopes.Slopes(ip, parseInt(port), protocol, 12345);
+let ava = new slopes.Slopes(ip, parseInt(port), protocol, 12345, "2PfbSxTqpTGFF2xCX2YgrW6ncrksfmEhcNXGv9rE9CgTRqT4hM");
 
 // @ts-ignore
 let avm = ava.AVM();

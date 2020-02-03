@@ -1,7 +1,7 @@
 <template>
     <div class="custom-select">
         <select ref="select" @input="oninput">
-            <option v-for="item in items" :key="item.label">{{item.label}}</option>
+            <option v-for="item in items" :key="item.label" :disabled="item.disabled">{{item.label}}</option>
         </select>
         <p class="arrow"><fa icon="caret-down"></fa></p>
     </div>
@@ -13,6 +13,9 @@
                 type: Array,
                 required: true,
             },
+            initial: {
+                type: Object,
+            }
         },
         methods: {
             oninput(){
@@ -32,6 +35,15 @@
                     res[item.label] = item.data;
                 }
                 return res;
+            }
+        },
+        mounted() {
+            if(this.initial){
+                for(var i=0; i<this.items.length;i++){
+                    if(this.items[i].data === this.initial){
+                        this.$refs.select.value = this.items[i].label;
+                    }
+                }
             }
         }
     }

@@ -164,9 +164,19 @@ export default new Vuex.Store({
 
 
         updateUTXOs(store){
+            console.log(store.state.address);
+            // let addresses = avm.keyChain().getAddresses();
+            // console.log(addresses,store.state.address)
             avm.getUTXOs([store.state.address]).then(res =>{
                 store.commit('setUTXOSet', res);
+                // console.log(res);
                 let utxos = res.getAllUTXOs();
+                // console.log(utxos);
+                // console.log(res.getAssetIDs());
+                console.log(utxos);
+                console.log(utxos[0].toBuffer().toString("hex"));
+                console.log(utxos.toString());
+
                 store.commit('setUTXOs', utxos);
             });
         },
@@ -185,12 +195,12 @@ export default new Vuex.Store({
             let toAddresses = [data.toAddress];
 
             let assetId = data.assetId;
-            let utxos = await avm.getUTXOs(myAddresses);
-            // let utxos = getAllUTXOsForAsset(assetId);
+            // let utxos = await avm.getUTXOs(myAddresses);
+            let utxos = getAllUTXOsForAsset(assetId);
             let sendAmount = new BN(data.amount);
 
             // console.log("issue tx");
-            console.log( sendAmount.toNumber(), assetId, utxos);
+            console.log( sendAmount.toNumber(), assetId, utxos );
             // console.log(utxos);
 
             let unsigned_tx = avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, myAddresses, data.assetId);
