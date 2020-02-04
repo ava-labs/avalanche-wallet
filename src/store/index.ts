@@ -31,6 +31,7 @@ export default new Vuex.Store({
         Auth
     },
     state: {
+        isUpdateBalance: false,
         utxo_set: null,
         utxos: {},
         isAuth: false,
@@ -169,7 +170,10 @@ export default new Vuex.Store({
             console.log(store.state.address);
             // let addresses = avm.keyChain().getAddresses();
             // console.log(addresses,store.state.address)
+            store.state.isUpdateBalance = true;
             avm.getUTXOs([store.state.address]).then((res: UTXOSet) =>{
+                store.state.isUpdateBalance = false;
+
                 store.commit('setUTXOSet', res);
                 // console.log(res);
                 let utxos = res.getAllUTXOs();
@@ -181,6 +185,9 @@ export default new Vuex.Store({
                 // console.log(utxos.toString());
 
                 store.commit('setUTXOs', utxos);
+            }).catch(err => {
+                console.log(err);
+                store.state.isUpdateBalance = false;
             });
         },
 
@@ -203,14 +210,14 @@ export default new Vuex.Store({
             let sendAmount = new BN(data.amount);
 
             // console.log("issue tx");
-            console.log( sendAmount.toNumber(), assetId, utxos );
+            // console.log( sendAmount.toNumber(), assetId, utxos );
             // console.log(utxos);
 
             let unsigned_tx = avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, myAddresses, data.assetId);
             let signed_tx = avm.signTx(unsigned_tx);
 
-            console.log(signed_tx);
-            console.log(signed_tx.toBuffer().toString('hex'));
+            // console.log(signed_tx);
+            // console.log(signed_tx.toBuffer().toString('hex'));
 
 
             let txid = await avm.issueTx(signed_tx);

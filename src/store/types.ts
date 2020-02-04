@@ -1,6 +1,7 @@
 import {SecpUTXO, UTXO, UTXOSet} from "slopes";
 
 export interface RootState {
+    isUpdateBalance: boolean,
     isAuth: boolean,
     privateKey: string,
     // publicKey: string,

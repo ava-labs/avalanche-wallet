@@ -7,7 +7,7 @@ import store from './store';
 // @ts-ignore
 import * as slopes from "slopes";
 
-console.log(process.env);
+// console.log(process.env);
 
 let ip = process.env.VUE_APP_AVA_IP || 'localhost';
 let port = process.env.VUE_APP_AVA_PORT || '9650';
@@ -18,7 +18,7 @@ let chain_id = process.env.VUE_APP_CHAIN_ID || '2PfbSxTqpTGFF2xCX2YgrW6ncrksfmEh
 // @ts-ignore
 let bintools = slopes.BinTools.getInstance();
 // @ts-ignore
-let ava = new slopes.Slopes(ip, parseInt(port), protocol, network_id, chain_id);
+let ava = new slopes.Slopes(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
 
 // @ts-ignore
 let avm = ava.AVM();

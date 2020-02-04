@@ -8,19 +8,19 @@
         </router-link>
 
 
-        <router-link to="/wallet/transfer">
-            <span>
-                <fa class="icon" icon="exchange-alt"></fa>
-            </span>
-            Transfer
-        </router-link>
+<!--        <router-link to="/wallet/transfer">-->
+<!--            <span>-->
+<!--                <fa class="icon" icon="exchange-alt"></fa>-->
+<!--            </span>-->
+<!--            Transfer-->
+<!--        </router-link>-->
 
-        <router-link to="/wallet/history">
-            <span>
-                <fa class="icon" icon="history"></fa>
-            </span>
-            Transaction History
-        </router-link>
+<!--        <router-link to="/wallet/history">-->
+<!--            <span>-->
+<!--                <fa class="icon" icon="history"></fa>-->
+<!--            </span>-->
+<!--            Transaction History-->
+<!--        </router-link>-->
 
         <router-link to="/wallet/advanced">
             <span>
