@@ -17,14 +17,14 @@
                 </div>
 
                 <div class="checkout">
-                    <label>Send to: {{totalTxSize}}</label>
+                    <label>Send to:</label>
                     <div class="send_to">
                         <q-r-reader class="readerBut" @change="onQrRead">
                             <button><fa icon="camera"></fa></button>
                         </q-r-reader>
-                        <v-text-field v-model="addressIn" class="addressIn" color="#d88383" placeholder="####" height="40" background-color="#404040" dense flat :loading="isAjax" hide-details ></v-text-field>
+                        <v-text-field v-model="addressIn" class="addressIn" color="#d2d2d2" placeholder="####" height="40" background-color="#404040" dense flat :loading="isAjax" hide-details ></v-text-field>
                     </div>
-                    <v-btn block depressed color="#d2d2d2" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
+                    <v-btn block depressed color="#b2b2b2" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
                 </div>
             </div>
         </div>

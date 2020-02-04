@@ -8,7 +8,7 @@
             <div class="auth">
                 <h2>Access Wallet</h2>
                 <div class="private_in">
-                    <QRReader v-model="privateKey"><button>
+                    <QRReader @change="qrchange"><button>
                         <fa icon="qrcode"></fa>
                     </button></QRReader>
                     <v-text-field placeholder="Private Key" color="#ddd" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>
@@ -36,14 +36,7 @@
 <script>
     import QRReader from "@/components/misc/QRReader";
     import {avm, bintools, keyChain} from "@/AVA";
-
-
-    // pk1: ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH
-    // pk2: 21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b
-
-    // console.log(BinTools)
-    // let KeyPair = avajs.TypesLibrary.AssetsAPI.Keychain.AVAKeyPair;
-    // console.log(KeyPair);
+    
     export default {
         name: 'home',
         data(){
@@ -62,6 +55,9 @@
             // HelloWorld
         },
         methods: {
+            qrchange(val){
+                this.privateKey = val;
+            },
             getAddress(){
                 let keyChain = AVAAssets.keyChain();
                 let privateKeyBuf = binTools.avaDeserialize(this.privateKey);

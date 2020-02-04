@@ -1,6 +1,7 @@
 <template>
     <div class="top_cards">
         <q-r-modal ref="qr_modal"></q-r-modal>
+        <paper-wallet ref="print_modal"></paper-wallet>
         <div class="top_card" :style="{backgroundColor: '#6c79a7'}">
             <div class="card_left">
                 <img src="/img/center_focus.png">
@@ -10,7 +11,7 @@
                 <p>{{address}}</p>
                 <div class="buts">
                     <button tooltip="View Adress QR Code" @click="viewQRModal"><fa icon="qrcode"></fa></button>
-<!--                    <button tooltip="Print"><fa icon="print"></fa></button>-->
+                    <button tooltip="Print" @click="viewPrintModal"><fa icon="print"></fa></button>
                     <CopyText tooltip="Copy" :value="address"></CopyText>
                 </div>
             </div>
@@ -42,14 +43,19 @@
 <script>
     import CopyText from "../misc/CopyText";
     import QRModal from "../modals/QRModal";
+    import PaperWallet from "../modals/PaperWallet";
     export default {
         components: {
             CopyText,
+            PaperWallet,
             QRModal
         },
         methods: {
             viewQRModal(){
                 this.$refs.qr_modal.open();
+            },
+            viewPrintModal(){
+                this.$refs.print_modal.open();
             },
             updateBalance(){
                 this.$store.dispatch('updateUTXOs');

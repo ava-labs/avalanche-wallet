@@ -125,12 +125,16 @@
     }
 
     table tbody td{
-        padding: 20px 20px;
+        /*padding: 20px 20px;*/
+        padding: 6px;
         text-align: left;
-        font-size: 14px;
+        font-size: 13px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        word-break: break-all;
+        max-width: 200px;
+
         /*border-bottom: 1px solid #3a3a3a;*/
 
     }
@@ -167,25 +171,17 @@
         text-decoration: underline;
     }
 
-    @media only screen and (max-width: 1400px) {
-        table tbody td {
-            padding: 8px 10px;
-            max-width: 200px;
-            word-break: break-word;
-        }
-    }
-
 
     @media only screen and (max-width: 600px) {
         table th {
             font-size: 12px;
             text-align: center;
         }
-        table tbody td {
-            font-size: 12px;
-            padding: 8px 0px;
-            text-align: center;
-        }
+        /*table tbody td {*/
+        /*    font-size: 12px;*/
+        /*    padding: 8px 0px;*/
+        /*    text-align: center;*/
+        /*}*/
 
 
         th.buts,td.buts{
