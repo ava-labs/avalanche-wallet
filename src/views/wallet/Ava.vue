@@ -1,47 +1,33 @@
 <template>
     <div class="ava_view">
-        <div class="wallet_info">
-            <h4>Wallet value</h4>
-            <div class="values">
-                <p>
-                    <span class="currency">USD</span>
-                    <span>{{Math.floor(total_usd).toLocaleString()}}.</span>{{ Math.round((total_usd%1)*100) }}
-                </p>
-                <p>
-                    <span class="currency">BTC</span>
-                    <span>{{Math.floor(total_btc).toLocaleString()}}.</span>{{ Math.round((total_btc%1)*100000) }}
-                </p>
-                <p>
-                    <span class="currency">AVA</span>
-                    <span>{{Math.floor(total_ava).toLocaleString()}}.</span>{{ Math.round((total_ava%1)*100000) }}
-                </p>
-            </div>
-        </div>
-<!--        <div class="create_asset">-->
-<!--            <h4>Create new asset</h4>-->
-<!--            <input type="number" value="1000">-->
-<!--            <v-text-field type="number" persistent-hint-->
-<!--                          hint="How many of this asset should exist?"-->
-<!--                          label="Amount"-->
-<!--                          color="#fff"-->
-<!--            ></v-text-field>-->
-<!--            <v-btn @click="createAsset" depressed height="24">Create Asset</v-btn>-->
+        <transfer></transfer>
+<!--        <div>-->
+<!--            <div>-->
+<!--                <h4>Transfer</h4>-->
+
+<!--            </div>-->
+<!--            <div>-->
+
+<!--            </div>-->
 <!--        </div>-->
         <assets class="assets floater"></assets>
     </div>
 </template>
 <script>
+    // import TopInfo from '@/components/wallet/ava/TopInfo';
     import Assets from "@/components/wallet/ava/Assets";
+    import Transfer from "@/components/wallet/ava/Transfer";
     // import SendReceive from '../../components/wallet/ava/SendReceive';
 
     export default {
         data(){
             return {
-                interval_id: null,
             }
         },
         components: {
             Assets,
+            Transfer
+            // TopInfo,
             // SendReceive
         },
         computed: {
@@ -84,26 +70,38 @@
         mounted(){
             let parent = this;
             parent.$store.dispatch('updateUTXOs');
-            this.interval_id = setInterval(() => {
-                parent.$store.dispatch('updateUTXOs');
-            }, 5000);
         },
         destroyed() {
-            console.log('DESTRROYY');
-            clearInterval(this.interval_id);
         }
     }
 </script>
 <style scoped>
     .ava_view{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        row-gap: 15px;
+        grid-gap: 15px;
     }
 
+    .ava_view > div{
+        background-color: #505050;
+        border-radius: 6px;
+        /*color: #222;*/
+    }
     .floaters > div{
 
     }
 
     .assets{
         overflow: hidden;
+        background-color: #424242;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .ava_view{
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
     }
 
 </style>
@@ -191,10 +189,6 @@
         .values .currency{
             text-align: center;
             font-size: 12px;
-        }
-
-        .floater{
-            margin: 10px;
         }
     }
 </style>

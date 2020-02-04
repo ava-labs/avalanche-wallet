@@ -2,6 +2,10 @@
     <div class="modal_main" v-show="isActive">
         <div class="modal_bg" @click="close"></div>
         <div class="modal_body">
+            <div class="modal_topbar">
+                <h4 class="modal_title">{{title}}</h4>
+                <button class="modalClose" @click="close"><fa icon="times"></fa></button>
+            </div>
             <slot></slot>
         </div>
     </div>
@@ -11,6 +15,12 @@
         data(){
             return{
                 isActive: false,
+            }
+        },
+        props: {
+            title: {
+                type: String,
+                default: 'Modal Title'
             }
         },
         methods: {
@@ -24,6 +34,25 @@
     }
 </script>
 <style scoped>
+
+    .modal_topbar{
+        background-color: #81a781;
+        color: #fff;
+        position: relative;
+        padding: 10px 22px;
+        display: flex;
+    }
+
+    .modal_title{
+        font-size: 22px;
+        text-align: left;
+        flex-grow: 1;
+    }
+
+    .modalClose{
+        font-size: 22px;
+    }
+
     .modal_main{
         z-index: 3;
         position: fixed;
@@ -32,6 +61,7 @@
         width: 100vw;
         height: 100vh;
         display: flex;
+
 
     }
 
@@ -50,8 +80,10 @@
     .modal_body{
         width: 320px;
         min-height: 30px;
-        background-color: #d2d2d2;
+        background-color: #f2f2f2;
         margin: auto;
         z-index: 2;
+        border-radius: 6px;
+        overflow: hidden;
     }
 </style>

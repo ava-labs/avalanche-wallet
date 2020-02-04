@@ -1,26 +1,31 @@
 <template>
     <div>
 <!--            <h3>Assets</h3>-->
+        <div class="tabletop">
+            <h4>Assets</h4>
+            <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
+            <button v-else @click="updateAssets"><fa icon="sync"></fa></button>
+        </div>
             <table>
                 <thead>
                 <tr>
                     <th>Asset</th>
                     <th>Balance</th>
-                    <th>USD</th>
-                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>
-                    <th class="buts"></th>
+<!--                    <th>USD</th>-->
+<!--                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>-->
+<!--                    <th class="buts"></th>-->
                 </tr>
                 </thead>
                 <tbody>
                     <tr v-for="asset in assets" :key="asset.id">
                         <td><span class="asset_code">{{asset.code}}</span> - {{asset.title}}</td>
                         <td>{{asset.balance.toLocaleString()}}</td>
-                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>
-                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>
-                        <td class="buts">
-                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>
-                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>
-                        </td>
+<!--                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>-->
+<!--                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>-->
+<!--                        <td class="buts">-->
+<!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>-->
+<!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>-->
+<!--                        </td>-->
                     </tr>
                 </tbody>
             </table>
@@ -55,9 +60,15 @@
                     }
                 });
                 return array;
-            }
+            },
+            isUpdateBalance(){
+                return this.$store.state.isUpdateBalance;
+            },
         },
         methods: {
+            updateAssets(){
+                this.$store.dispatch('updateUTXOs');
+            },
             toggleCryptoView(){
                 if(this.crypto_view==='BTC'){
                     this.crypto_view = 'AVA'
@@ -73,14 +84,32 @@
             openSendReceive(){
                 this.$store.dispatch('openModal', 'send_receive');
             }
-        }
+        },
+
     }
 </script>
 <style scoped>
+    .tabletop{
+        text-align: left;
+        padding: 8px 15px;
+        display: flex;
+        background-color: #6ca7a7;
+        color: #fff;
+    }
+
+    .tabletop img{
+        height: 24px;
+        width: 24px;
+        object-fit: contain;
+    }
+    .tabletop h4{
+        flex-grow: 1;
+    }
+
     table{
         width: 100%;
         /*min-width: 50%;*/
-        background-color: #303030;
+        /*background-color: #303030;*/
         color: #d2d2d2;
         border-collapse: collapse;
     }
@@ -91,14 +120,22 @@
     }
 
     table thead{
+        display: none;
         border-bottom: 1px solid #909090;
     }
 
     table tbody td{
-        padding: 20px 20px;
+        /*padding: 20px 20px;*/
+        padding: 6px;
         text-align: left;
-        font-size: 14px;
-        border-bottom: 1px solid #3a3a3a;
+        font-size: 13px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        word-break: break-all;
+        max-width: 200px;
+
+        /*border-bottom: 1px solid #3a3a3a;*/
 
     }
 
@@ -134,25 +171,17 @@
         text-decoration: underline;
     }
 
-    @media only screen and (max-width: 1400px) {
-        table tbody td {
-            padding: 8px 10px;
-            max-width: 200px;
-            word-break: break-word;
-        }
-    }
-
 
     @media only screen and (max-width: 600px) {
         table th {
             font-size: 12px;
             text-align: center;
         }
-        table tbody td {
-            font-size: 12px;
-            padding: 8px 0px;
-            text-align: center;
-        }
+        /*table tbody td {*/
+        /*    font-size: 12px;*/
+        /*    padding: 8px 0px;*/
+        /*    text-align: center;*/
+        /*}*/
 
 
         th.buts,td.buts{

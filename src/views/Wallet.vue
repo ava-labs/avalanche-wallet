@@ -1,20 +1,24 @@
 <template>
     <div class="wallet_view">
-<!--        <div id="wallet_view">-->
-<!--        <send-receive></send-receive>-->
         <sidebar class="wallet_sidebar"></sidebar>
-        <router-view id="wallet_router"></router-view>
-<!--        </div>-->
-
+        <div class="wallet_main">
+            <v-container>
+                <top-info></top-info>
+                <router-view id="wallet_router"></router-view>
+            </v-container>
+        </div>
     </div>
 </template>
 <script>
+    import TopInfo from '@/components/wallet/TopInfo';
+
     import Sidebar from '../components/wallet/Sidebar'
     // import SendReceive from '../components/modals/SendReceive'
 
     export default {
         components:{
             Sidebar,
+            TopInfo
             // SendReceive
         },
     }
@@ -36,6 +40,10 @@
         border-bottom: none;
     }
 
+    .wallet_main{
+        flex-grow: 1;
+        margin: 30px;
+    }
     .wallet_view{
         display: flex;
         flex-grow: 1;
@@ -44,8 +52,9 @@
     }
 
     #wallet_router{
-        margin: 30px;
-        flex-grow: 1;
+        margin-top: 15px;
+        /*margin: 30px;*/
+        /*flex-grow: 1;*/
     }
 
 
@@ -65,7 +74,7 @@
             border: none;
         }
 
-        #wallet_router{
+        .wallet_main{
             margin: unset;
             padding-top: 70px;
         }

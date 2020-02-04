@@ -7,7 +7,13 @@
 <!--            <p>21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b</p>-->
             <div class="auth">
                 <h2>Access Wallet</h2>
-                <v-text-field placeholder="Private Key" color="#ddd" v-model="privateKey"></v-text-field>
+                <div class="private_in">
+                    <QRReader @change="qrchange"><button>
+                        <fa icon="qrcode"></fa>
+                    </button></QRReader>
+                    <v-text-field placeholder="Private Key" color="#ddd" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>
+                </div>
+
                 <v-btn block @click="access">Access Wallet</v-btn>
                 <p>or</p>
                 <v-btn block @click="createKey" v-if="!newPrivateKey">Generate Key Pair</v-btn>
@@ -28,16 +34,9 @@
 </template>
 
 <script>
-
+    import QRReader from "@/components/misc/QRReader";
     import {avm, bintools, keyChain} from "@/AVA";
-
-
-    // pk1: ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH
-    // pk2: 21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b
-
-    // console.log(BinTools)
-    // let KeyPair = avajs.TypesLibrary.AssetsAPI.Keychain.AVAKeyPair;
-    // console.log(KeyPair);
+    
     export default {
         name: 'home',
         data(){
@@ -52,9 +51,13 @@
             }
         },
         components: {
+            QRReader
             // HelloWorld
         },
         methods: {
+            qrchange(val){
+                this.privateKey = val;
+            },
             getAddress(){
                 let keyChain = AVAAssets.keyChain();
                 let privateKeyBuf = binTools.avaDeserialize(this.privateKey);
@@ -103,6 +106,33 @@
     }
 </script>
 <style scoped>
+
+    .private_in{
+        display: flex;
+        align-items: center;
+        color: #d2d2d2;
+        background-color: #404040;
+        margin-bottom: 8px;
+        padding: 0px 12px;
+    }
+
+    .private_in button{
+        font-size: 24px;
+        /*padding: 8px 0;*/
+        padding-right: 12px;
+        /*border-bottom: 1px solid;*/
+    }
+    .pkIn{
+        padding: 0;
+        margin: 0;
+    }
+    .pkIn >>> input::placeholder{
+        color: #a0a0a0 !important;
+    }
+    .pkIn >>> .v-input__slot::before{
+        display: none;
+        border-color: #d2d2d240 !important;
+    }
     .home{
         display: flex;
         align-items: center;
@@ -111,6 +141,7 @@
 
     p{
         color: #d2d2d2;
+        margin: 4px 0 !important;
     }
 
     h2{
@@ -119,7 +150,7 @@
 
     .auth{
         width: 400px;
-        background-color: #303030;
+        /*background-color: #303030;*/
         padding: 30px;
     }
     .auth >>> input{
@@ -133,10 +164,11 @@
         color: #f2f2f2;
         background-color: #3a3a3a;
         padding: 6px;
-        font-size: 11px;
+        font-size: 14px;
     }
 
     .keygen p{
+        margin-top: 0 !important;
         margin-bottom: 12px;
         word-break: break-all;
     }
@@ -147,5 +179,9 @@
 
     .v-alert{
         font-size: 12px;
+    }
+
+    .v-text-field >>> input{
+        border-color: #d2d2d2 !important;
     }
 </style>

@@ -143,6 +143,7 @@
         height: 20px;
         outline: none;
         width: 20px;
+        line-height: 20px;
         flex-basis: 20px;
         margin: auto 8px;
         font-size: 12px;
