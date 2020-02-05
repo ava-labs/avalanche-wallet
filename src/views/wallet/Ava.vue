@@ -74,7 +74,7 @@
 
             this.autoUpdateId = setInterval(()=>{
                 parent.$store.dispatch('updateUTXOs');
-            }, 3000);
+            }, 200);
         },
         destroyed() {
             clearInterval(this.autoUpdateId);

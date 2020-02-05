@@ -24,8 +24,8 @@
                 <h4>Balance</h4>
                 <p>{{avaBalance.toLocaleString()}} AVA</p>
                 <div class="buts">
-                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
-                    <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
+<!--                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">-->
+                    <button @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
             </div>
         </div>
