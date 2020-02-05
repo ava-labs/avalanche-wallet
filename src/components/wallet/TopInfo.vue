@@ -90,7 +90,7 @@
         display: flex;
         background-color: #6ca771;
         /*margin: 12px;*/
-        padding: 18px 8px;
+        padding: 10px 8px;
         border-radius: 5px;
     }
 
@@ -127,7 +127,8 @@
     }
     .top_card .buts button{
         font-size: 22px;
-        margin: 0px 6px;
+        margin: 0px 18px;
+        margin-left: 0px;
         position: relative;
         outline: none;
     }
