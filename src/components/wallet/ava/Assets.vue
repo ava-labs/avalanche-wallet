@@ -52,8 +52,8 @@
                 }
 
                 array.sort((a,b) => {
-                    let t1 = a.title;
-                    let t2 = b.title;
+                    let t1 = a.name;
+                    let t2 = b.name;
                     if(t1<t2){
                         return -1
                     }else if(t1>t2){
