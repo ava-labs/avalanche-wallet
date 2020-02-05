@@ -179,10 +179,14 @@ export default new Vuex.Store({
 
 
                 avm.getAssetDescription(asset_buf).then(res => {
-                    asset_names[asset_id] = {
+                    Vue.set(asset_names, asset_id, {
                         name: res.name.trim(),
                         symbol: res.symbol.trim()
-                    }
+                    });
+                    // asset_names[asset_id] = {
+                    //     name: res.name.trim(),
+                    //     symbol: res.symbol.trim()
+                    // }
                 }).catch(err => {
                     console.log(err);
                 });
