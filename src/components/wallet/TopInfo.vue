@@ -29,15 +29,15 @@
                 </div>
             </div>
         </div>
-        <div class="top_card nonessential" :style="{backgroundColor: '#6ca77e'}">
-            <div class="card_left">
-                <img src="/img/wifi.png">
-            </div>
-            <div class="card_right">
-                <h4>Network</h4>
-                <p>{{network}}</p>
-            </div>
-        </div>
+<!--        <div class="top_card nonessential" :style="{backgroundColor: '#6ca77e'}">-->
+<!--            <div class="card_left">-->
+<!--                <img src="/img/wifi.png">-->
+<!--            </div>-->
+<!--            <div class="card_right">-->
+<!--                <h4>Network</h4>-->
+<!--                <p>{{network}}</p>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </template>
 <script>
@@ -80,7 +80,7 @@
 <style scoped>
     .top_cards{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 2fr 1fr;
         grid-gap: 15px;
     }
     .top_card{
