@@ -15,6 +15,9 @@ import {avm, bintools, getAllUTXOsForAsset, keyChain} from "@/AVA";
 import * as slopes from "slopes";
 
 
+
+const AVA_ASSET_ID = process.env.VUE_APP_AVA_ASSET_ID;
+console.log(AVA_ASSET_ID);
 const asset_names:AssetNamesDict = {
 
 };
@@ -38,6 +41,14 @@ export default new Vuex.Store({
         ]
     },
     getters: {
+        AVABalance(state, getters){
+            if(AVA_ASSET_ID){
+                if(getters.balance[AVA_ASSET_ID]){
+                    return getters.balance[AVA_ASSET_ID].balance;
+                }
+            }
+            return 0;
+        },
         isAuthenticated(state: RootState){
             if(state.privateKey != '') return true;
             else return false;

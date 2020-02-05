@@ -22,7 +22,7 @@
             </div>
             <div class="card_right">
                 <h4>Balance</h4>
-                <p>0 AVA</p>
+                <p>{{avaBalance.toLocaleString()}} AVA</p>
                 <div class="buts">
                     <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
@@ -62,6 +62,9 @@
             }
         },
         computed: {
+            avaBalance(){
+                return this.$store.getters.AVABalance;
+            },
             address(){
                 return this.$store.state.address;
             },
