@@ -1,32 +1,37 @@
 <template>
     <div class="home">
+        <div class="bgdots"></div>
         <div>
-            <img src="/img/ava_logo_white.png">
 <!--            <p>This is a wallet.</p>-->
 <!--            <p>ExgKyqhZ69FhB7jdW3p4oWtaBA9adXSEPTCf1sc9Zw7965NQH</p>-->
 <!--            <p>21Aive7if6sDvhSmQcikqMFrWd8kH2MUJjj9mCTbFdxUAJDT4b</p>-->
             <div class="auth">
-                <h2>Access Wallet</h2>
-                <div class="private_in">
-                    <QRReader @change="qrchange"><button>
-                        <fa icon="qrcode"></fa>
-                    </button></QRReader>
-                    <v-text-field placeholder="Private Key" color="#ddd" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>
+                <div class="imgcover">
+                    <img src="/img/ava_logo_white.png">
                 </div>
+                <div class="auth_body">
+                    <h2>Access Wallet</h2>
+                    <div class="private_in">
+                        <QRReader @change="qrchange"><button>
+                            <fa icon="qrcode"></fa>
+                        </button></QRReader>
+                        <v-text-field placeholder="Private Key" color="#333" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>
+                    </div>
 
-                <v-btn block @click="access">Access Wallet</v-btn>
-                <p>or</p>
-                <v-btn block @click="createKey" v-if="!newPrivateKey">Generate Key Pair</v-btn>
-                <div v-if="newPrivateKey" class="keygen">
-                    <v-alert dense color="warning" text>
-                        <fa icon="exclamation-triangle"></fa>
-                        Do not lose your information or you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>
-                    <label>Private Key</label>
-                    <p>{{newPrivateKey}}</p>
-                    <label>Public Key</label>
-                    <p>{{newPublicKey}}</p>
-                    <label>Address</label>
-                    <p>{{newAddr}}</p>
+                    <v-btn block depressed @click="access">Access Wallet</v-btn>
+                    <p>or</p>
+                    <v-btn block depressed @click="createKey" v-if="!newPrivateKey">Generate Key Pair</v-btn>
+                    <div v-if="newPrivateKey" class="keygen">
+                        <v-alert dense color="warning" >
+                            <fa icon="exclamation-triangle"></fa>
+                            Do not lose your information or you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>
+                        <label>Private Key</label>
+                        <p>{{newPrivateKey}}</p>
+                        <label>Public Key</label>
+                        <p>{{newPublicKey}}</p>
+                        <label>Address</label>
+                        <p>{{newAddr}}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,36 +87,43 @@
                 this.newPrivateKey = privkstr;
                 this.newPublicKey = pubkstr;
             },
-            getUTXOS(){
-                AVAAssets.GetUTXOs([this.address]).then(res => {
-                    // console.log(res);
-                    // console.log(res.getAllUTXOStrings());
-                    // console.log(res.getAllUTXOs());
-                    // console.log(`Balance: ${res.getBalance()}`)
-
-                    let utxos = res.getAllUTXOs();
-
-                    for(var id in utxos){
-                        let utxo = utxos[id];
-                        let asset_id = utxo.getAssetID()
-                            asset_id = binTools.bufferToB58(asset_id);
-                        let asset_amount = utxo.getAmount()
-                        console.log(asset_id,asset_amount.toString(10,0));
-                    }
-                    // console.log(utxos[0].getAssetID());
-                    // console.log(utxos[0].getAmount());
-                })
-            }
+            // getUTXOS(){
+            //     AVAAssets.GetUTXOs([this.address]).then(res => {
+            //         // console.log(res);
+            //         // console.log(res.getAllUTXOStrings());
+            //         // console.log(res.getAllUTXOs());
+            //         // console.log(`Balance: ${res.getBalance()}`)
+            //
+            //         let utxos = res.getAllUTXOs();
+            //
+            //         for(var id in utxos){
+            //             let utxo = utxos[id];
+            //             let asset_id = utxo.getAssetID()
+            //                 asset_id = binTools.bufferToB58(asset_id);
+            //             let asset_amount = utxo.getAmount()
+            //             console.log(asset_id,asset_amount.toString(10,0));
+            //         }
+            //         // console.log(utxos[0].getAssetID());
+            //         // console.log(utxos[0].getAmount());
+            //     })
+            // }
         }
     }
 </script>
 <style scoped>
-
+    .imgcover{
+        padding: 30px;
+        background-color: #3a403d;
+    }
+    img{
+        max-width: 120px;
+        object-fit: contain;
+    }
     .private_in{
         display: flex;
         align-items: center;
-        color: #d2d2d2;
-        background-color: #404040;
+        color: #333;
+        background-color: #a5a5a5;
         margin-bottom: 8px;
         padding: 0px 12px;
     }
@@ -127,7 +139,11 @@
         margin: 0;
     }
     .pkIn >>> input::placeholder{
-        color: #a0a0a0 !important;
+        color: #333 !important;
+    }
+    .pkIn >>> input{
+        color: #333 !important;
+        text-align: center;
     }
     .pkIn >>> .v-input__slot::before{
         display: none;
@@ -137,38 +153,57 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+    }
+
+    .bgdots{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: url('/img/dots_bg.svg');
+        background-repeat: repeat;
+        background-size: 20px;
+        opacity: 0.2;
+        z-index: 0;
     }
 
     p{
-        color: #d2d2d2;
+        color: #333;
         margin: 4px 0 !important;
     }
 
     h2{
-        color: #ddd;
+        color: #333;
     }
 
     .auth{
+        position: relative;
         width: 400px;
-        /*background-color: #303030;*/
+        border-radius: 12px;
+        box-shadow: 3px 4px 20px rgba(0,0,0,0.4);
+        overflow: hidden;
+        background-color: #b7b7b7;
+    }
+    /*.auth >>> input{*/
+    /*    text-align: center;*/
+    /*    color: #ddd !important;*/
+    /*}*/
+
+    .auth_body{
         padding: 30px;
     }
-    .auth >>> input{
-        text-align: center;
-        color: #ddd !important;
-    }
-
 
     .keygen{
         text-align: left;
-        color: #f2f2f2;
-        background-color: #3a3a3a;
+        color: #333;
+        background-color: #a0a0a0;
         padding: 6px;
         font-size: 14px;
     }
 
     .keygen p{
         margin-top: 0 !important;
+        color: #303030;
         margin-bottom: 12px;
         word-break: break-all;
     }
@@ -183,5 +218,27 @@
 
     .v-text-field >>> input{
         border-color: #d2d2d2 !important;
+    }
+
+    @media only screen and (max-width: 600px) {
+        h2{
+            color: #ddd;
+        }
+        .auth{
+            box-shadow: none;
+            background-color: transparent;
+        }
+
+        .imgcover{
+            background-color: transparent;
+        }
+
+        .auth_body{
+            padding: 0px 24px;
+        }
+
+        p{
+            color: #ddd;
+        }
     }
 </style>

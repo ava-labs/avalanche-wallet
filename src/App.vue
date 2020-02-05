@@ -34,13 +34,13 @@
     }
 
     #nav {
-      height: 80px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /*padding: 30px;*/
-      background-color: #232323;
-      /*height: 60px;*/
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        background-color: #232323;
 
         a {
             margin: 20px;

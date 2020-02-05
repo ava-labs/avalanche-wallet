@@ -6,29 +6,32 @@
             <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
             <button v-else @click="updateAssets"><fa icon="sync"></fa></button>
         </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Asset</th>
-                    <th>Balance</th>
+        <div v-if="assets.length === 0" class="noassets">
+            <p>You do not have any assets.</p>
+        </div>
+        <table v-else>
+            <thead>
+            <tr>
+                <th>Asset</th>
+                <th>Balance</th>
 <!--                    <th>USD</th>-->
 <!--                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>-->
 <!--                    <th class="buts"></th>-->
-                </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="asset in assets" :key="asset.id">
-                        <td><span class="asset_code">{{asset.code}}</span> - {{asset.title}}</td>
-                        <td>{{asset.balance.toLocaleString()}}</td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr v-for="asset in assets" :key="asset.id">
+                    <td><span class="asset_code">{{asset.symbol}}</span> - {{asset.name}}</td>
+                    <td>{{asset.balance.toLocaleString()}}</td>
 <!--                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>-->
 <!--                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>-->
 <!--                        <td class="buts">-->
 <!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>-->
 <!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>-->
 <!--                        </td>-->
-                    </tr>
-                </tbody>
-            </table>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 <script>
@@ -104,6 +107,14 @@
     }
     .tabletop h4{
         flex-grow: 1;
+    }
+
+    .noassets{
+        padding: 15px;
+        color: #ddd;
+    }
+    .noassets p{
+        margin: 0;
     }
 
     table{

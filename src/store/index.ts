@@ -16,14 +16,7 @@ import * as slopes from "slopes";
 
 
 const asset_names:AssetNamesDict = {
-    '1': {
-        title: 'Gun Coin',
-        code: 'GNC'
-    },
-    'AK7fkXX77tp9WaxSJeUWP9Et4H61fWd6DUhVg7egcast': {
-        title: 'AVA Token',
-        code: 'AVA'
-    },
+
 };
 
 export default new Vuex.Store({
@@ -99,24 +92,23 @@ export default new Vuex.Store({
                 if(res[asset_id]){
                     res[asset_id].balance += asset_amount;
                 }else{
-
                     let coin_data = asset_names[asset_id] || {
-                        title: asset_id,
-                        code: asset_id.substr(0,3)
+                        name: asset_id,
+                        symbol: asset_id.substr(0,3)
                     };
 
 
                     let assetObj = {
                         id: asset_id,
-                        title: '',
-                        code: '',
+                        name: '',
+                        symbol: '',
                         balance: asset_amount,
                         usd_price: 0.008,
                         btc_price: 0.0004311,
                         ava_price: 1,
                     };
-                    assetObj.title = coin_data.title;
-                    assetObj.code = coin_data.code.toUpperCase();
+                    assetObj.name = coin_data.name;
+                    assetObj.symbol = coin_data.symbol.toUpperCase();
 
                     res[asset_id] = assetObj;
                 }
@@ -166,6 +158,27 @@ export default new Vuex.Store({
         },
 
 
+        updateAssetsData(store){
+            if(!store.state.utxo_set) return;
+            let assets = store.state.utxo_set.getAssetIDs();
+
+            for(var i=0; i<assets.length; i++){
+                let asset_buf = assets[i];
+                let asset_id = bintools.avaSerialize(asset_buf);
+
+
+                avm.getAssetDescription(asset_buf).then(res => {
+                    asset_names[asset_id] = {
+                        name: res.name.trim(),
+                        symbol: res.symbol.trim()
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+        },
+
+
         updateUTXOs(store){
             console.log(store.state.address);
             // let addresses = avm.keyChain().getAddresses();
@@ -175,16 +188,11 @@ export default new Vuex.Store({
                 store.state.isUpdateBalance = false;
 
                 store.commit('setUTXOSet', res);
-                // console.log(res);
-                let utxos = res.getAllUTXOs();
-                // console.log(utxos);
-                // console.log(res.getAssetIDs());
-                // console.log(utxos);
-                // console.log(utxos[0].toBuffer().toString("hex"));
-                // console.log(utxos[5].toBuffer().toString("hex"));
-                // console.log(utxos.toString());
 
+                let utxos = res.getAllUTXOs();
                 store.commit('setUTXOs', utxos);
+
+                store.dispatch('updateAssetsData');
             }).catch(err => {
                 console.log(err);
                 store.state.isUpdateBalance = false;

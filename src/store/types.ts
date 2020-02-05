@@ -41,13 +41,13 @@ export interface AssetNamesDict {
 }
 
 export interface AssetName{
-    title: string,
-    code: string
+    name: string,
+    symbol: string
 }
 
 export interface AssetType {
-    title: string,
-    code: string,
+    name: string,
+    symbol: string,
     balance: number,
     usd_price: number,
     btc_price: number,

@@ -1,19 +1,18 @@
 <template>
     <div class="transfer_card">
         <h4>Send Transaction</h4>
-        <div>
-            <div v-if="assetArray.length===0">
-                YOU HAVE NO ASSETS TO TRANSFER
-            </div>
-            <div v-else class="new_order_Form">
+        <div class="card_body">
+<!--            <div v-if="assetArray.length===0">-->
+<!--                YOU HAVE NO ASSETS TO TRANSFER-->
+<!--            </div>-->
+            <div  class="new_order_Form">
                 <p class="tx_info">Create a transaction by selecting assets from the dropdown list, and entering the amount to send.
                     To add more assets, click the <fa icon="plus"></fa> button.</p>
-                <label>Transaction:</label>
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
 
                 <div class="fees">
                     <label>Fees:</label>
-                    <p>Transaction Fee <span>10 AVA</span></p>
+                    <p>Transaction Fee <span>0 AVA</span></p>
                 </div>
 
                 <div class="checkout">
@@ -99,15 +98,24 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    $padLeft: 15px;
+    $padTop: 8px;
+
     .transfer_card{
         color: #ddd;
-        padding: 8px 15px;
+        padding: $padTop 0px;
+    }
+    .card_body{
+        padding: 0px $padLeft;
     }
 
     h4{
         font-size: 25px;
         text-align: left;
+        border-bottom: 1px solid #707070;
+        margin-bottom: 6px;
+        padding: 0px $padLeft;
     }
 
     label{

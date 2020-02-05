@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="top_card" :style="{backgroundColor: '#6ca7a7'}">
+        <div class="top_card nonessential" :style="{backgroundColor: '#6ca7a7'}">
             <div class="card_left">
                 <img src="/img/account-balance.png">
             </div>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="top_card" :style="{backgroundColor: '#6ca77e'}">
+        <div class="top_card nonessential" :style="{backgroundColor: '#6ca77e'}">
             <div class="card_left">
                 <img src="/img/wifi.png">
             </div>
@@ -150,10 +150,19 @@
         padding: 4px 8px;
     }
 
+
     @media only screen and (max-width: 1200px) {
         .top_cards {
             grid-template-columns: 100%;
             grid-template-rows: min-content min-content min-content;
+        }
+    }
+    @media only screen and (max-width: 600px) {
+        .top_cards{
+            grid-template-rows: min-content;
+        }
+        .top_card.nonessential{
+            display: none;
         }
     }
 </style>

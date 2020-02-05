@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div class="table_title">
+            <p>Amount</p>
+            <p>Type</p>
+        </div>
         <div v-for="(tx, i) in tx_list" :key="tx.uuid" class="list_item">
             <button @click="removeTx(i)"><fa icon="minus"></fa></button>
             <currency-input-dropdown
@@ -132,6 +136,22 @@
     }
 </script>
 <style scoped>
+    .table_title{
+        display: flex;
+        padding-left: 28px;
+    }
+    .table_title p{
+        margin: 0;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: left;
+        padding-right: 70px;
+    }
+    .table_title p:first-of-type{
+        flex-grow: 1;
+    }
+
+
     .list_item{
         position: relative;
         display: flex;
@@ -146,6 +166,7 @@
         line-height: 20px;
         flex-basis: 20px;
         margin: auto 8px;
+        margin-left: 0px;
         font-size: 12px;
         border: 1px solid;
         border-radius: 50%;
@@ -168,7 +189,7 @@
         content: '';
         position: absolute;
         height: 100%;
-        width: 19px;
+        width: 11px;
         border-right: 1px dashed #d2d2d2;
         opacity: 0.4;
     }

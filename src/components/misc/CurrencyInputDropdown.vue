@@ -46,7 +46,7 @@
                         disabled = true;
                     }
                     res.push({
-                        label: asset.title,
+                        label: asset.name,
                         data: asset,
                         disabled: disabled
                     });
@@ -64,6 +64,13 @@
             max_amount(){
                 if(!this.asset_now) return 0;
                 return this.asset_now.balance;
+            },
+            isEmpty(){
+                if(this.dropdown_values.length===0){
+                    return true;
+                }else{
+                    return false;
+                }
             }
         },
         methods: {
@@ -94,8 +101,8 @@
             }
         },
         mounted(){
+            if(this.isEmpty) return;
             if(this.initial){
-                console.log("initial: ",this.initial);
                 for(var i=0;i<this.dropdown_values.length;i++){
                     let val = this.dropdown_values[i];
                     if(val.data === this.initial){

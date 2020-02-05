@@ -14,6 +14,9 @@
     }
 </script>
 <style scoped>
+    #nav{
+        z-index: 2;
+    }
     a{
         text-decoration: none;
     }
