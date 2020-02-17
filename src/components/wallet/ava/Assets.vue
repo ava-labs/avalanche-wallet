@@ -3,8 +3,8 @@
 <!--            <h3>Assets</h3>-->
         <div class="tabletop">
             <h4>Assets</h4>
-<!--            <img v-if="isUpdateBalance" src="/gif/loading_2.gif">-->
-            <button  @click="updateAssets"><fa icon="sync"></fa></button>
+            <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
+            <button v-else @click="updateAssets"><fa icon="sync"></fa></button>
         </div>
         <div v-if="assets.length === 0" class="noassets">
             <p>You do not have any assets.</p>

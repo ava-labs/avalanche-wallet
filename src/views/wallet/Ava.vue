@@ -22,7 +22,6 @@
     export default {
         data(){
             return {
-                autoUpdateId: null,
             }
         },
         components: {
@@ -72,12 +71,11 @@
             let parent = this;
             parent.$store.dispatch('updateUTXOs');
 
-            this.autoUpdateId = setInterval(()=>{
-                parent.$store.dispatch('updateUTXOs');
-            }, 200);
+            // this.autoUpdateId = setInterval(()=>{
+            //     parent.$store.dispatch('updateUTXOs');
+            // }, 200);
         },
         destroyed() {
-            clearInterval(this.autoUpdateId);
         }
     }
 </script>
