@@ -10,14 +10,7 @@ const app = express();
 
 // app.use(morgan('tiny'));
 app.use(cors());
-app.use(history());
 app.use(bodyParser.json());
-
-// app.get('/', (req, res) => {
-//     res.json({
-//         message: 'Behold The MEVN Stack!'
-//     });
-// });
 app.enable('trust proxy');
 
 app.use (function (req, res, next) {
@@ -31,8 +24,9 @@ app.use (function (req, res, next) {
     }
 });
 
-
+// Serving Static Files
 app.use(express.static('dist'));
+app.use(history());
 
 
 

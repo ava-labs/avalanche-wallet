@@ -3,7 +3,7 @@ module.exports = {
     "vuetify"
   ],
   devServer: {
-    https: false
+    https: true
   },
   configureWebpack:{
     optimization: {
@@ -11,6 +11,15 @@ module.exports = {
         minSize: 10000,
         maxSize: 200000,
       }
+    }
+  },
+  pwa: {
+    manifestOptions: {
+      start_url: '/'
+    },
+    iconPaths: {
+      favicon16: 'favicon.ico',
+      favicon32: 'favicon.ico'
     }
   }
 };
