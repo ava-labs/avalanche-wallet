@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 //         message: 'Behold The MEVN Stack!'
 //     });
 // });
-
+app.enable('trust proxy');
 
 app.use (function (req, res, next) {
     if (req.secure) {
