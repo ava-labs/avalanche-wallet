@@ -3,11 +3,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 const path = require('path');
+var history = require('connect-history-api-fallback');
+
 
 const app = express();
 
 // app.use(morgan('tiny'));
 app.use(cors());
+app.use(history());
 app.use(bodyParser.json());
 
 // app.get('/', (req, res) => {
@@ -20,11 +23,10 @@ app.enable('trust proxy');
 app.use (function (req, res, next) {
     if (req.secure) {
         // request was via https, so do no special handling
-        // console.log("request by HTTPS");
         next();
     } else {
         // request was via http, so redirect to https
-        // console.log("redirect HTTPS");
+        // next();
         res.redirect('https://' + req.headers.host + req.url);
     }
 });
