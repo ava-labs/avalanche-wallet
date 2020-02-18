@@ -74,15 +74,21 @@
         position: fixed;
         max-width: 80%;
         overflow: hidden;
-        left: 50%;
-        top: 50%;
+        left: calc(50% - 200px);
+        top: 40%;
+        width: 400px;
         /*transform: translateX(-50%);*/
-        transform: translate(-50%, -50%);
+        /*transform: translate(-50%, -50%);*/
         z-index: 10;
+        background-color: #202020;
+        border: 4px solid;
     }
 
     .qr_popup video{
-        background-color: #202020;
+        width: 100%;
+        /*width: 400px;*/
+        /*height: 100%;*/
+        z-index: 2;
         /*max-width: 100%;*/
     }
 
@@ -96,7 +102,7 @@
         border-radius: 25px;
         width: 25px;
         line-height: 25px;
-        font-size: 12px;
+        font-size: 16px;
         height: 25px;
         opacity: 0.7;
     }
@@ -122,12 +128,38 @@
         bottom: 15px;
         left: 50%;
         transform: translateX(-50%);
+        background-color: #202020;
+        padding: 3px 7px;
     }
     .progress p{
         font-size: 12px;
         margin: 0;
+        color: #fff;
+
+        border-radius: 3px;
     }
     .v-progress-circular{
 
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        .qr_popup{
+            top: 0;
+            left: 0;
+            width: 100vw;
+            max-width: none;
+            height: 100%;
+            /*min-height: 100vh;*/
+            /*min-height: max-content9;*/
+        }
+
+        .qr_popup video{
+            width: auto;
+            /*height: 100%;*/
+            /*width: 100%;*/
+            height: 100%;
+            margin: 0 auto;
+        }
     }
 </style>
