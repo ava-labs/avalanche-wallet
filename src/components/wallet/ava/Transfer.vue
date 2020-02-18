@@ -143,6 +143,10 @@
         color: #909090 !important;
     }
 
+    .addressIn .v-input__slot:before{
+        display: none;
+    }
+
     .readerBut{
         margin-top: 4px;
         display: flex;

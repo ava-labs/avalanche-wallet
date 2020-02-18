@@ -13,7 +13,7 @@ let ip = process.env.VUE_APP_AVA_IP || 'localhost';
 let port = process.env.VUE_APP_AVA_PORT || '9650';
 let protocol = process.env.VUE_APP_AVA_PROTOCOL || 'http';
 let network_id = process.env.VUE_APP_NETWORK_ID || '12345';
-let chain_id = process.env.VUE_APP_CHAIN_ID || '2PfbSxTqpTGFF2xCX2YgrW6ncrksfmEhcNXGv9rE9CgTRqT4hM';
+let chain_id = process.env.VUE_APP_CHAIN_ID || 'GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVeDAXc694wJ5t3zEkhU';
 
 // @ts-ignore
 let bintools = slopes.BinTools.getInstance();

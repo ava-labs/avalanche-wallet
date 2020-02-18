@@ -28,6 +28,8 @@
     "express": "^4.17.1",
     "instascan": "^1.0.0",
     "jspdf": "^1.5.3",
+    "libsodium": "^0.7.6",
+    "libsodium-wrappers": "^0.7.6",
     "morgan": "^1.9.1",
     "pdfjs-dist": "^2.2.228",
     "print-js": "^1.0.63",
