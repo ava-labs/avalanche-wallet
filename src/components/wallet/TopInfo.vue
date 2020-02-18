@@ -1,6 +1,7 @@
 <template>
     <div class="top_cards">
         <q-r-modal ref="qr_modal"></q-r-modal>
+        <key-store ref="keystore_modal"></key-store>
         <paper-wallet ref="print_modal"></paper-wallet>
         <div class="top_card" :style="{backgroundColor: '#6c79a7'}">
             <div class="card_left">
@@ -12,6 +13,7 @@
                 <div class="buts">
                     <button tooltip="View Adress QR Code" @click="viewQRModal"><fa icon="qrcode"></fa></button>
                     <button tooltip="Print" @click="viewPrintModal"><fa icon="print"></fa></button>
+<!--                    <button tooltip="Download Keystore File" @click="viewKeystoreModal"><fa icon="download"></fa></button>-->
                     <CopyText tooltip="Copy" :value="address"></CopyText>
                 </div>
             </div>
@@ -24,31 +26,33 @@
                 <h4>Balance</h4>
                 <p>{{avaBalance.toLocaleString()}} AVA</p>
                 <div class="buts">
-<!--                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">-->
-                    <button @click="updateBalance"><fa icon="sync"></fa></button>
+                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
+                    <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
             </div>
         </div>
-<!--        <div class="top_card nonessential" :style="{backgroundColor: '#6ca77e'}">-->
-<!--            <div class="card_left">-->
-<!--                <img src="/img/wifi.png">-->
-<!--            </div>-->
-<!--            <div class="card_right">-->
-<!--                <h4>Network</h4>-->
-<!--                <p>{{network}}</p>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="top_card nonessential" :style="{backgroundColor: '#6ca77e'}">
+            <div class="card_left">
+                <img src="/img/wifi.png">
+            </div>
+            <div class="card_right">
+                <h4>Network</h4>
+                <p>{{network}}</p>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     import CopyText from "../misc/CopyText";
     import QRModal from "../modals/QRModal";
+    import KeyStore from "../modals/KeyStore";
     import PaperWallet from "../modals/PaperWallet";
     export default {
         components: {
             CopyText,
             PaperWallet,
-            QRModal
+            QRModal,
+            KeyStore
         },
         methods: {
             viewQRModal(){
@@ -56,6 +60,9 @@
             },
             viewPrintModal(){
                 this.$refs.print_modal.open();
+            },
+            viewKeystoreModal(){
+                this.$refs.keystore_modal.open();
             },
             updateBalance(){
                 this.$store.dispatch('updateUTXOs');
@@ -80,7 +87,7 @@
 <style scoped>
     .top_cards{
         display: grid;
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 15px;
     }
     .top_card{

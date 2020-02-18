@@ -6,11 +6,11 @@ import Vuetify from 'vuetify/lib';
 
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel } from '@fortawesome/free-solid-svg-icons'
 import { faBtc} from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy);
+library.add(faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel);
 Vue.component('fa', FontAwesomeIcon);
 
 

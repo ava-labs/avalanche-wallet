@@ -149,13 +149,14 @@ export default new Vuex.Store({
         // Used in home page to access a user's wallet
         accessWallet(store, pk: string){
             // console.log(pk);
-            let privateKeyBuf = bintools.avaDeserialize(pk);
-            let address = keyChain.importKey(privateKeyBuf);
+            // let privateKeyBuf = bintools.avaDeserialize(pk);
+            let address = keyChain.importKey(pk);
+            let keypair = keyChain.getKey(address);
 
             // console.log("YO");
 
             store.commit('setPrivateKey', pk);
-            store.commit('setAddress', address);
+            store.commit('setAddress', keypair.getAddressString());
             store.commit('setAuth', true);
             store.dispatch('onAccess');
 
@@ -236,7 +237,7 @@ export default new Vuex.Store({
             // console.log( sendAmount.toNumber(), assetId, utxos );
             // console.log(utxos);
 
-            let unsigned_tx = avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, myAddresses, data.assetId);
+            let unsigned_tx = await avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, myAddresses, data.assetId);
             let signed_tx = avm.signTx(unsigned_tx);
 
             // console.log(signed_tx);
