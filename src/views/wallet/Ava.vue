@@ -1,23 +1,12 @@
 <template>
     <div class="ava_view">
         <transfer></transfer>
-<!--        <div>-->
-<!--            <div>-->
-<!--                <h4>Transfer</h4>-->
-
-<!--            </div>-->
-<!--            <div>-->
-
-<!--            </div>-->
-<!--        </div>-->
         <assets class="assets floater"></assets>
     </div>
 </template>
 <script>
-    // import TopInfo from '@/components/wallet/ava/TopInfo';
     import Assets from "@/components/wallet/ava/Assets";
     import Transfer from "@/components/wallet/ava/Transfer";
-    // import SendReceive from '../../components/wallet/ava/SendReceive';
 
     export default {
         data(){
@@ -27,53 +16,15 @@
         components: {
             Assets,
             Transfer
-            // TopInfo,
-            // SendReceive
         },
         computed: {
-            total_usd(){
-                let balances = this.$store.getters.balance;
 
-                let res = 0;
-                for(var i in balances){
-                    let balance = balances[i];
-                    res += balance.balance * balance.usd_price;
-                }
-                return res;
-            },
-            total_btc(){
-                let balances = this.$store.getters.balance;
-
-                let res = 0;
-                for(var i in balances){
-                    let balance = balances[i];
-                    res += balance.balance * balance.btc_price;
-                }
-                return res;
-            },
-            total_ava(){
-                let balances = this.$store.getters.balance;
-
-                let res = 0;
-                for(var i in balances){
-                    let balance = balances[i];
-                    res += balance.balance * balance.ava_price;
-                }
-                return res;
-            }
         },
         methods: {
-            createAsset(){
-                // this.$store.dispatch('createAsset', 1000);
-            }
         },
         mounted(){
             let parent = this;
             parent.$store.dispatch('updateUTXOs');
-
-            // this.autoUpdateId = setInterval(()=>{
-            //     parent.$store.dispatch('updateUTXOs');
-            // }, 200);
         },
         destroyed() {
         }
@@ -90,7 +41,6 @@
     .ava_view > div{
         background-color: #505050;
         border-radius: 6px;
-        /*color: #222;*/
     }
     .floaters > div{
 
@@ -113,10 +63,7 @@
     .floater{
         min-height: 20px;
         border-radius: 2px;
-        /*margin: 20px;*/
         height: max-content;
-        /*box-shadow: 9px 6px 10px rgba(0,0,0,0.2);*/
-        /*background-color: #fff;*/
         overflow: hidden;
     }
 

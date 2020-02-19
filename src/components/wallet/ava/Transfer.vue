@@ -10,19 +10,27 @@
                     To add more assets, click the <fa icon="plus"></fa> button.</p>
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
 
+
+
+                <div class="advanced" :active="showAdvanced">
+                    <button class="toggle" @click="toggleAdvanced">Advanced <span><fa icon="caret-down"></fa></span></button>
+                    <div class="advancedBody">
+                        <label>Change Addresses</label>
+                        <address-dropdown :default_val="addresses" @change="changeAddressesChange" multiple></address-dropdown>
+                    </div>
+                </div>
+
+
                 <div class="fees">
                     <label>Fees:</label>
                     <p>Transaction Fee <span>0 AVA</span></p>
                 </div>
 
+
+
                 <div class="checkout">
                     <label>Send to:</label>
-                    <div class="send_to">
-                        <q-r-reader class="readerBut" @change="onQrRead">
-                            <button><fa icon="camera"></fa></button>
-                        </q-r-reader>
-                        <v-text-field v-model="addressIn" class="addressIn" color="#d2d2d2" placeholder="####" height="40" background-color="#404040" dense flat :loading="isAjax" hide-details ></v-text-field>
-                    </div>
+                    <QRInput v-model="addressIn"></QRInput>
                     <v-btn block depressed color="#b2b2b2" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
                 </div>
             </div>
@@ -30,22 +38,35 @@
     </div>
 </template>
 <script>
-    import QRReader from '@/components/misc/QRReader';
+    // import QRReader from '@/components/misc/QRReader';
     import TxList from "@/components/wallet/transfer/TxList";
+    import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
+    import QRInput from "@/components/misc/QRInput";
 
     export default {
         components: {
-            QRReader,
-            TxList
+            // QRReader,
+            TxList,
+            AddressDropdown,
+            QRInput
         },
         data(){
             return{
+                showAdvanced: false,
                 isAjax: false,
                 addressIn: '',
                 orders: [],
+                change_addresses: [],
             }
         },
         methods: {
+            changeAddressesChange(val){
+                this.change_addresses = val;
+                console.log(val);
+            },
+            toggleAdvanced(){
+                this.showAdvanced = !this.showAdvanced;
+            },
             updateTxList(data){
                 this.orders = data;
             },
@@ -57,6 +78,7 @@
                 this.isAjax = true;
 
                 let txList = {
+                    changeAddresses: this.change_addresses,
                     toAddress: this.addressIn,
                     orders: this.orders
                 };
@@ -72,7 +94,7 @@
         },
         computed: {
             canSend(){
-                if(this.addressIn && this.orders.length>0 && this.totalTxSize>0){
+                if(this.addressIn && this.orders.length>0 && this.totalTxSize>0 && this.change_addresses.length > 0){
                     return true;
                 }
                 return false;
@@ -86,6 +108,9 @@
                   }
               }
               return res;
+            },
+            addresses(){
+                return this.$store.state.addresses;
             },
             assets(){
                 return this.$store.getters.balance;
@@ -189,5 +214,33 @@
 
     .fees span{
         float: right;
+    }
+
+
+
+
+    .advanced .toggle{
+        width: 100%;
+        text-align: left;
+        font-size: 13px;
+    }
+
+    .advanced .toggle span{
+        float: right;
+    }
+
+    .advanced .advancedBody{
+        max-height: 0px;
+        transition-duration: 0.2s;
+        overflow: hidden;
+    }
+
+    .advanced[active] .advancedBody{
+        max-height: 500px;
+        overflow: unset;
+
+    }
+    .advanced[active] .toggle span{
+        transform: rotateZ(180deg);
     }
 </style>

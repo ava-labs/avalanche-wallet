@@ -23,30 +23,6 @@
                         </div>
                     </div>
                     <hr>
-<!--                    <div class="private_in">-->
-<!--                        <QRReader @change="qrchange"><button>-->
-<!--                            <fa icon="qrcode"></fa>-->
-<!--                        </button></QRReader>-->
-<!--                        <v-text-field placeholder="Private Key" color="#333" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>-->
-<!--                    </div>-->
-
-<!--                    <v-btn block depressed @click="access">Access Wallet</v-btn>-->
-<!--                    <v-btn block depressed>Use Keystore File</v-btn>-->
-<!--                    <p>or</p>-->
-
-
-<!--                    <v-btn block depressed @click="createKey" v-if="!newPrivateKey">Generate Key Pair</v-btn>-->
-<!--                    <div v-if="newPrivateKey" class="keygen">-->
-<!--                        <v-alert dense color="warning" >-->
-<!--                            <fa icon="exclamation-triangle"></fa>-->
-<!--                            Do not lose your information or you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>-->
-<!--                        <label>Private Key</label>-->
-<!--                        <p>{{newPrivateKey}}</p>-->
-<!--                        <label>Public Key</label>-->
-<!--                        <p>{{newPublicKey}}</p>-->
-<!--                        <label>Address</label>-->
-<!--                        <p>{{newAddr}}</p>-->
-<!--                    </div>-->
                     <component :is="loginComponent"></component>
                 </div>
             </div>
@@ -150,7 +126,6 @@
         display: flex;
         justify-content: center;
         position: relative;
-        /*display: contents;*/
     }
 
     .auth{
@@ -177,6 +152,7 @@
         padding: 4px;
         user-select: none;
         cursor: pointer;
+        text-align: center;
     }
 
     .options div p{
@@ -201,6 +177,7 @@
 
 
     .imgcover{
+        text-align: center;
         padding: 30px;
         background-color: #3a403d;
     }

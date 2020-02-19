@@ -1,8 +1,10 @@
 <template>
     <div class="top_cards">
         <q-r-modal ref="qr_modal"></q-r-modal>
+        <addresses-modal ref="addresses_modal"></addresses-modal>
         <key-store ref="keystore_modal"></key-store>
         <paper-wallet ref="print_modal"></paper-wallet>
+
         <div class="top_card" :style="{backgroundColor: '#6c79a7'}">
             <div class="card_left">
                 <img src="/img/center_focus.png">
@@ -12,6 +14,7 @@
                 <p>{{address}}</p>
                 <div class="buts">
                     <button tooltip="View Adress QR Code" @click="viewQRModal"><fa icon="qrcode"></fa></button>
+                    <button tooltip="My Addresses" @click="viewAddressesModal"><fa icon="list"></fa></button>
                     <button tooltip="Print" @click="viewPrintModal"><fa icon="print"></fa></button>
 <!--                    <button tooltip="Download Keystore File" @click="viewKeystoreModal"><fa icon="download"></fa></button>-->
                     <CopyText tooltip="Copy" :value="address"></CopyText>
@@ -47,12 +50,15 @@
     import QRModal from "../modals/QRModal";
     import KeyStore from "../modals/KeyStore";
     import PaperWallet from "../modals/PaperWallet";
+    import AddressesModal from "../modals/AddressesModal";
+
     export default {
         components: {
             CopyText,
             PaperWallet,
             QRModal,
-            KeyStore
+            KeyStore,
+            AddressesModal
         },
         methods: {
             viewQRModal(){
@@ -64,6 +70,9 @@
             viewKeystoreModal(){
                 this.$refs.keystore_modal.open();
             },
+            viewAddressesModal(){
+                this.$refs.addresses_modal.open();
+            },
             updateBalance(){
                 this.$store.dispatch('updateUTXOs');
             }
@@ -73,7 +82,7 @@
                 return this.$store.getters.AVABalance;
             },
             address(){
-                return this.$store.state.address;
+                return this.$store.state.selectedAddress;
             },
             network(){
                 return process.env.VUE_APP_AVA_IP;

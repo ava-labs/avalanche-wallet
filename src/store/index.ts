@@ -33,7 +33,8 @@ export default new Vuex.Store({
         isAuth: false,
         privateKey: '',
         // publicKey: '',
-        address: '',
+        addresses: [],
+        selectedAddress: '',
         modals: {},
         assets: [
         ],
@@ -132,8 +133,8 @@ export default new Vuex.Store({
         setAuth(state,val){
             state.isAuth = val;
         },
-        setAddress(state, val){
-            state.address = val;
+        selectAddress(state, val){
+            state.selectedAddress = val;
         },
         setPrivateKey(state,val){
             state.privateKey = val;
@@ -146,6 +147,10 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        refreshAddresses(store){
+            store.state.addresses = keyChain.getAddressStrings();
+            store.dispatch('updateUTXOs');
+        },
         // Used in home page to access a user's wallet
         accessWallet(store, pk: string){
             // console.log(pk);
@@ -156,7 +161,7 @@ export default new Vuex.Store({
             // console.log("YO");
 
             store.commit('setPrivateKey', pk);
-            store.commit('setAddress', keypair.getAddressString());
+            store.commit('selectAddress', keypair.getAddressString());
             store.commit('setAuth', true);
             store.dispatch('onAccess');
 
@@ -166,7 +171,8 @@ export default new Vuex.Store({
         onAccess(store){
             // console.log("onAccess");
             // console.log(store.state.privateKey);
-            store.dispatch('updateUTXOs')
+            // store.dispatch('updateUTXOs');
+            store.dispatch('refreshAddresses');
         },
 
 
@@ -196,18 +202,16 @@ export default new Vuex.Store({
 
 
         updateUTXOs(store){
-            console.log(store.state.address);
+            // console.log(store.state.addresses);
             // let addresses = avm.keyChain().getAddresses();
             // console.log(addresses,store.state.address)
             store.state.isUpdateBalance = true;
-            avm.getUTXOs([store.state.address]).then((res: UTXOSet) =>{
+            avm.getUTXOs(store.state.addresses).then((res: UTXOSet) =>{
                 store.state.isUpdateBalance = false;
 
                 store.commit('setUTXOSet', res);
-
                 let utxos = res.getAllUTXOs();
                 store.commit('setUTXOs', utxos);
-
                 store.dispatch('updateAssetsData');
             }).catch(err => {
                 console.log(err);
@@ -225,8 +229,11 @@ export default new Vuex.Store({
         async issueTx(store, data:IssueTxInput){
 
 
-            let myAddresses = [store.state.address];
+            let myAddresses = store.state.addresses;
             let toAddresses = [data.toAddress];
+            let changeAddresses = data.changeAddresses;
+
+            console.log(changeAddresses);
 
             let assetId = data.assetId;
             // let utxos = await avm.getUTXOs(myAddresses);
@@ -237,7 +244,7 @@ export default new Vuex.Store({
             // console.log( sendAmount.toNumber(), assetId, utxos );
             // console.log(utxos);
 
-            let unsigned_tx = await avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, myAddresses, data.assetId);
+            let unsigned_tx = await avm.makeUnsignedTx(utxos, sendAmount, toAddresses, myAddresses, changeAddresses, data.assetId);
             let signed_tx = avm.signTx(unsigned_tx);
 
             // console.log(signed_tx);
@@ -263,7 +270,8 @@ export default new Vuex.Store({
                 await store.dispatch('issueTx', {
                     assetId: order.asset.id,
                     amount: order.amount,
-                    toAddress: data.toAddress
+                    toAddress: data.toAddress,
+                    changeAddresses: data.changeAddresses
                 }).catch(err => {
                     alert(err);
                     return 'error';

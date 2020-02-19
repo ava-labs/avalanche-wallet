@@ -143,7 +143,7 @@
         },
         computed: {
             address(){
-                return this.$store.state.address;
+                return this.$store.state.selectedAddress;
             },
             privateKey(){
                 return this.$store.state.privateKey;

@@ -28,7 +28,7 @@
       font-family: 'Avenir', Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      text-align: center;
+      text-align: left;
       color: #2c3e50;
       background-color: #292929;
     }
@@ -51,6 +51,10 @@
                 color: #42b983;
             }
         }
+    }
+
+    button{
+        outline: none;
     }
 
       #router_view{

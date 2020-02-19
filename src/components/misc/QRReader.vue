@@ -1,7 +1,9 @@
 <template>
     <div class="qr_reader">
-        <div class="clickStart" @click="start"></div>
-        <slot class="qr_slot" ></slot>
+        <div class="buts">
+            <div class="clickStart" @click="start"></div>
+            <slot class="qr_slot"></slot>
+        </div>
         <div class="qr_popup" v-show="isActive">
             <div class="progress">
                 <v-progress-circular :size="20" indeterminate color="#ffcc66"></v-progress-circular>
@@ -111,24 +113,39 @@
         opacity: 1;
     }
 
+    .buts{
+        opacity: 0.8;
+    }
+    .buts:hover{
+        opacity: 1;
+    }
     .clickStart{
+        cursor: pointer;
         position: absolute;
         width: 100%;
         height: 100%;
     }
 
+
     .qr_slot{
+        opacity: 0.1;
         cursor: pointer;
+        pointer-events: none;
         /*user-select: none;*/
         /*pointer-events: none;*/
     }
 
+    .clickStart:hover .qr_slot{
+        opacity: 1;
+    }
+
     .progress{
+        text-align: center;
         position: absolute;
         bottom: 15px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: #202020;
+        background-color: #202020d0;
         padding: 3px 7px;
     }
     .progress p{

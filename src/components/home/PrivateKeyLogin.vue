@@ -7,9 +7,7 @@
             <v-text-field placeholder="Private Key" color="#333" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>
         </div>
         <v-btn block depressed @click="access">Access Wallet</v-btn>
-
     </div>
-
 </template>
 <script>
     import QRReader from "@/components/misc/QRReader";

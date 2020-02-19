@@ -3,7 +3,7 @@
         <div class="qr_body">
             <canvas ref="qr"></canvas>
             <p>{{address}}</p>
-            <copy-text :value="address"></copy-text>
+            <copy-text :value="address" class="copyBut"></copy-text>
         </div>
     </modal>
 </template>
@@ -30,14 +30,14 @@
                         light: "#f2f2f2"
                     }
                 }, function (error) {
-                    // if (error) console.error(error);
+                    if (error) console.error(error);
                     // console.log('success!');
                 })
             }
         },
         computed: {
             address(){
-                return this.$store.state.address;
+                return this.$store.state.selectedAddress;
             },
         },
         mounted() {
@@ -48,13 +48,20 @@
 <style scoped>
     .qr_body{
         padding: 30px;
+        text-align: center;
     }
 
     .qr_body p{
         word-break: break-all;
+        text-align: center;
     }
     canvas{
         width: 220px;
         height: 220px;
+    }
+
+    .copyBut{
+        /*display: block;*/
+        /*margin: 0px auto;*/
     }
 </style>

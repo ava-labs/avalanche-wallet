@@ -5,7 +5,8 @@ export interface RootState {
     isAuth: boolean,
     privateKey: string,
     // publicKey: string,
-    address: string,
+    addresses: string[],
+    selectedAddress: string,
     utxos: UTXODict,
     utxo_set: UTXOSet|null,
     modals: ModalDict,
@@ -71,4 +72,5 @@ export interface IssueTxInput{
     assetId: string,
     amount: number,
     toAddress: string,
+    changeAddresses: string[],
 }
