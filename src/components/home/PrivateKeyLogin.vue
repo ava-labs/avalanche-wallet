@@ -1,19 +1,21 @@
 <template>
     <div>
-        <div class="private_in">
-            <QRReader @change="qrchange"><button>
-                <fa icon="qrcode"></fa>
-            </button></QRReader>
-            <v-text-field placeholder="Private Key" color="#333" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>
-        </div>
+<!--        <div class="private_in">-->
+<!--            <QRReader @change="qrchange"><button>-->
+<!--                <fa icon="qrcode"></fa>-->
+<!--            </button></QRReader>-->
+<!--            <v-text-field placeholder="Private Key" color="#333" v-model="privateKey" class="pkIn" dense height="30" hide-details></v-text-field>-->
+<!--        </div>-->
+        <QRInput v-model="privateKey"></QRInput>
         <v-btn block depressed @click="access">Access Wallet</v-btn>
     </div>
 </template>
 <script>
-    import QRReader from "@/components/misc/QRReader";
+    // import QRReader from "@/components/misc/QRReader";
+    import QRInput from "@/components/misc/QRInput";
     export default {
         components:{
-            QRReader
+            QRInput
         },
         data(){
             return{
