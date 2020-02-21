@@ -1,11 +1,17 @@
 <template>
     <div class="ava_view">
-        <transfer></transfer>
-        <assets class="assets floater"></assets>
+        <div class="tabs">
+
+<!--            <a>Send</a>-->
+<!--            <a>Manage Keys</a>-->
+<!--            <a>Backup Wallet</a>-->
+        </div>
+<!--        <transfer></transfer>-->
+<!--        <assets class="assets floater"></assets>-->
     </div>
 </template>
 <script>
-    import Assets from "@/components/wallet/ava/Assets";
+    // import Assets from "@/components/wallet/ava/Assets";
     import Transfer from "@/components/wallet/ava/Transfer";
 
     export default {
@@ -14,7 +20,7 @@
             }
         },
         components: {
-            Assets,
+            // Assets,
             Transfer
         },
         computed: {
@@ -30,21 +36,24 @@
         }
     }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+
+
     .ava_view{
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        row-gap: 15px;
-        grid-gap: 15px;
+        /*display: grid;*/
+        /*grid-template-columns: 2fr 1fr;*/
+        /*row-gap: 15px;*/
+        /*grid-gap: 15px;*/
     }
 
     .ava_view > div{
-        background-color: #505050;
-        border-radius: 6px;
+        /*background-color: #505050;*/
+        /*border-radius: 6px;*/
     }
     .floaters > div{
 
     }
+
 
     .assets{
         overflow: hidden;
@@ -60,6 +69,10 @@
 
 </style>
 <style>
+
+
+
+
     .floater{
         min-height: 20px;
         border-radius: 2px;

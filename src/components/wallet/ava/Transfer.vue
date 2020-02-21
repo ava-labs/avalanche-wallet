@@ -1,37 +1,44 @@
 <template>
     <div class="transfer_card">
-        <h4>Send Transaction</h4>
+        <h2>Send Transaction</h2>
         <div class="card_body">
 <!--            <div v-if="assetArray.length===0">-->
 <!--                YOU HAVE NO ASSETS TO TRANSFER-->
 <!--            </div>-->
             <div  class="new_order_Form">
-                <p class="tx_info">Create a transaction by selecting assets from the dropdown list, and entering the amount to send.
-                    To add more assets, click the <fa icon="plus"></fa> button.</p>
+<!--                <p class="tx_info">Create a transaction by selecting assets from the dropdown list, and entering the amount to send.-->
+<!--                    To add more assets, click the <fa icon="plus"></fa> button.</p>-->
+<!--                <label>Transaction List</label>-->
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
 
 
+                <div>
+                    <h4>To Address</h4>
+                    <QRInput v-model="addressIn"></QRInput>
+                </div>
 
-                <div class="advanced" :active="showAdvanced">
-                    <button class="toggle" @click="toggleAdvanced">Advanced <span><fa icon="caret-down"></fa></span></button>
+                <div class="fees">
+                    <h4>Fees</h4>
+                    <p>Transaction Fee <span>0 AVA</span></p>
+                </div>
+
+                <div class="advanced">
+                    <h4>Advanced</h4>
+<!--                    <button class="toggle" @click="toggleAdvanced">Advanced <span><fa icon="caret-down"></fa></span></button>-->
                     <div class="advancedBody">
-                        <label>Change Addresses</label>
-                        <address-dropdown :default_val="addresses" @change="changeAddressesChange" multiple></address-dropdown>
+                        <label>Change Address</label>
+                        <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>
                     </div>
                 </div>
 
 
-                <div class="fees">
-                    <label>Fees:</label>
-                    <p>Transaction Fee <span>0 AVA</span></p>
-                </div>
+
+
 
 
 
                 <div class="checkout">
-                    <label>Send to:</label>
-                    <QRInput v-model="addressIn"></QRInput>
-                    <v-btn block depressed color="#b2b2b2" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
+                    <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
                 </div>
             </div>
         </div>
@@ -56,17 +63,17 @@
                 isAjax: false,
                 addressIn: '',
                 orders: [],
-                change_addresses: [],
+                change_address: '',
             }
         },
         methods: {
             changeAddressesChange(val){
-                this.change_addresses = val;
+                this.change_address = val;
                 console.log(val);
             },
-            toggleAdvanced(){
-                this.showAdvanced = !this.showAdvanced;
-            },
+            // toggleAdvanced(){
+            //     this.showAdvanced = !this.showAdvanced;
+            // },
             updateTxList(data){
                 this.orders = data;
             },
@@ -78,7 +85,7 @@
                 this.isAjax = true;
 
                 let txList = {
-                    changeAddresses: this.change_addresses,
+                    changeAddresses: [this.change_address],
                     toAddress: this.addressIn,
                     orders: this.orders
                 };
@@ -94,7 +101,7 @@
         },
         computed: {
             canSend(){
-                if(this.addressIn && this.orders.length>0 && this.totalTxSize>0 && this.change_addresses.length > 0){
+                if(this.addressIn && this.orders.length>0 && this.totalTxSize>0 && this.change_address.length > 0){
                     return true;
                 }
                 return false;
@@ -108,6 +115,9 @@
                   }
               }
               return res;
+            },
+            selectedAddress(){
+                return this.$store.state.selectedAddress;
             },
             addresses(){
                 return this.$store.state.addresses;
@@ -124,31 +134,21 @@
 </script>
 
 <style scoped lang="scss">
-    $padLeft: 15px;
+    $padLeft: 24px;
     $padTop: 8px;
 
     .transfer_card{
-        color: #ddd;
-        padding: $padTop 0px;
+        color: #222;
     }
-    .card_body{
-        padding: 0px $padLeft;
-    }
+
+
 
     h4{
-        font-size: 25px;
-        text-align: left;
-        border-bottom: 1px solid #707070;
-        margin-bottom: 6px;
-        padding: 0px $padLeft;
-    }
-
-    label{
         display: block;
         text-align: left;
-        font-size: 14px;
+        font-size: 17px;
         font-weight: bold;
-        margin-top: 12px;
+        margin-bottom: 8px;
     }
 
     .send_to{
@@ -203,9 +203,13 @@
         font-size: 14px;
     }
 
-    /*.new_order_Form{*/
-    /*    padding: 10px;*/
-    /*}*/
+    .new_order_Form{
+        padding-top: 15px;
+    }
+
+    .new_order_Form > div{
+        padding: 10px 0;
+    }
 
     .fees p{
         text-align: left;
@@ -217,30 +221,43 @@
     }
 
 
-
-
-    .advanced .toggle{
-        width: 100%;
-        text-align: left;
-        font-size: 13px;
+    label{
+        font-size: 12px;
+        font-weight: bold;
     }
 
-    .advanced .toggle span{
-        float: right;
+
+    .advanced{
+        border-top: 1px solid #f2f2f2;
+        border-bottom: 1px solid #f2f2f2;
+        padding: 20px 0px !important;
     }
 
+    /*.advanced .toggle{*/
+    /*    width: 100%;*/
+    /*    text-align: left;*/
+    /*    font-size: 13px;*/
+    /*}*/
+
+    /*.advanced .toggle span{*/
+    /*    float: right;*/
+    /*}*/
+
+    .checkout .v-btn{
+        color: #fff;
+    }
     .advanced .advancedBody{
-        max-height: 0px;
+        /*max-height: 0px;*/
         transition-duration: 0.2s;
-        overflow: hidden;
+        /*overflow: hidden;*/
     }
 
-    .advanced[active] .advancedBody{
-        max-height: 500px;
-        overflow: unset;
+    /*.advanced[active] .advancedBody{*/
+    /*    max-height: 500px;*/
+    /*    overflow: unset;*/
 
-    }
-    .advanced[active] .toggle span{
-        transform: rotateZ(180deg);
-    }
+    /*}*/
+    /*.advanced[active] .toggle span{*/
+    /*    transform: rotateZ(180deg);*/
+    /*}*/
 </style>

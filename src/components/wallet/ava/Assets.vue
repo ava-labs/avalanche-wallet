@@ -1,37 +1,40 @@
 <template>
     <div>
 <!--            <h3>Assets</h3>-->
-        <div class="tabletop">
-            <h4>Assets</h4>
-            <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
-            <button v-else @click="updateAssets"><fa icon="sync"></fa></button>
-        </div>
-        <div v-if="assets.length === 0" class="noassets">
-            <p>You do not have any assets.</p>
-        </div>
-        <table v-else>
-            <thead>
-            <tr>
-                <th>Asset</th>
-                <th>Balance</th>
-<!--                    <th>USD</th>-->
-<!--                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>-->
-<!--                    <th class="buts"></th>-->
-            </tr>
-            </thead>
-            <tbody>
-                <tr v-for="asset in assets" :key="asset.id">
-                    <td><span class="asset_code">{{asset.symbol}}</span> - {{asset.name}}</td>
-                    <td>{{asset.balance.toLocaleString()}}</td>
-<!--                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>-->
-<!--                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>-->
-<!--                        <td class="buts">-->
-<!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>-->
-<!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>-->
-<!--                        </td>-->
+        <div class="table_bg">
+            <div class="tabletop">
+                <h4>Assets</h4>
+                <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
+                <button v-else @click="updateAssets"><fa icon="sync"></fa></button>
+            </div>
+            <div v-if="assets.length === 0" class="noassets">
+                <p>You do not have any assets.</p>
+            </div>
+            <table v-else>
+                <thead>
+                <tr>
+                    <th>Asset</th>
+                    <th>Balance</th>
+                    <!--                    <th>USD</th>-->
+                    <!--                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>-->
+                    <!--                    <th class="buts"></th>-->
                 </tr>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <tr v-for="asset in assets" :key="asset.id">
+                    <td class="col_0"><span class="asset_code">{{asset.symbol}}</span> - {{asset.name}}</td>
+                    <td class="col_1">{{asset.balance.toLocaleString()}}</td>
+                    <!--                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>-->
+                    <!--                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>-->
+                    <!--                        <td class="buts">-->
+                    <!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>-->
+                    <!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>-->
+                    <!--                        </td>-->
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </template>
 <script>
@@ -100,6 +103,11 @@
         color: #fff;
     }
 
+    .table_bg{
+        color: #444;
+        background-color: #fff;
+    }
+
     .tabletop img{
         height: 24px;
         width: 24px;
@@ -111,7 +119,6 @@
 
     .noassets{
         padding: 15px;
-        color: #ddd;
     }
     .noassets p{
         margin: 0;
@@ -120,8 +127,6 @@
     table{
         width: 100%;
         /*min-width: 50%;*/
-        /*background-color: #303030;*/
-        color: #d2d2d2;
         border-collapse: collapse;
     }
 
@@ -137,9 +142,9 @@
 
     table tbody td{
         /*padding: 20px 20px;*/
-        padding: 6px;
+        padding: 8px 6px;
         text-align: left;
-        font-size: 13px;
+        font-size: 15px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -164,6 +169,14 @@
     }
 
 
+    table .col_0{
+        padding-left: 30px;
+    }
+
+    table .col_1{
+        text-align: right;
+        padding-right: 30px;
+    }
 
     .asset_code{
         font-weight: bold;

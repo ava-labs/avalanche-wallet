@@ -135,7 +135,7 @@
         border-radius: 12px;
         box-shadow: 3px 4px 20px rgba(0,0,0,0.4);
         overflow: hidden;
-        background-color: #b7b7b7;
+        background-color: #fff;
         margin: 15vh auto;
     }
 
@@ -224,7 +224,7 @@
         background-image: url('/img/dots_bg.svg');
         background-repeat: repeat;
         background-size: 20px;
-        opacity: 0.2;
+        opacity: 1;
         z-index: 0;
     }
 
@@ -256,7 +256,7 @@
     hr{
         margin: 14px auto;
         border-top: none;
-        border-color: #636363;
+        border-color: #d2d2d2;
     }
 
     @media only screen and (max-width: 600px) {

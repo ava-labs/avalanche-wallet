@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="card_header">
-            <h4>Backup Wallet</h4>
         </div>
     </div>
 </template>

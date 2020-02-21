@@ -5,18 +5,16 @@
             <p>Type</p>
         </div>
         <div v-for="(tx, i) in tx_list" :key="tx.uuid" class="list_item">
-            <button @click="removeTx(i)"><fa icon="minus"></fa></button>
+<!--            <button @click="removeTx(i)"><fa icon="minus"></fa></button>-->
             <currency-input-dropdown
                     class="list_in"
                     @change="oninputchange(i,$event)"
                     :disabled_assets="disabledAssets[i]"
                     :initial="tx.asset"
             ></currency-input-dropdown>
+            <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1">Remove Asset</button>
         </div>
-        <div class="list_item" empty="true">
-            <button @click="addTx()"><fa icon="plus"></fa></button>
-            <currency-input-dropdown class="list_in"></currency-input-dropdown>
-        </div>
+        <v-btn block depressed @click="addTx()" class="add_asset" color="#fafafa" :ripple="false" v-if="showAdd"> <fa icon="plus"></fa></v-btn>
     </div>
 </template>
 <script>
@@ -75,6 +73,7 @@
                 this.$emit('change', this.tx_list);
             },
             removeTx(index){
+                if(this.tx_list.length===1) return;
                 this.tx_list.splice(index,1);
                 this.updateUnavailable();
                 this.$emit('change', this.tx_list);
@@ -104,10 +103,9 @@
             },
             // clears the list and leaves 1 empty order
             clear(){
-                for(var i=this.tx_list.length-1;i>=0;i--){
+                for(var i=this.tx_list.length-1;i>=1;i--){
                     this.removeTx(i);
                 }
-                this.addTx()
             }
         },
         mounted() {
@@ -132,20 +130,26 @@
             assets(){
                 return this.$store.getters.balance;
             },
+            showAdd(){
+                if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){
+                    return false;
+                }
+                return true;
+            }
         }
     }
 </script>
 <style scoped>
     .table_title{
         display: flex;
-        padding-left: 28px;
+        margin-bottom: 5px;
     }
     .table_title p{
         margin: 0;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 18px;
         text-align: left;
-        padding-right: 70px;
+        padding-right: 100px;
     }
     .table_title p:first-of-type{
         flex-grow: 1;
@@ -155,24 +159,10 @@
     .list_item{
         position: relative;
         display: flex;
+        flex-direction: column;
+        /*display: flex;*/
+        margin-bottom: 12px;
         padding: 2px 0px;
-    }
-
-    .list_item button{
-        position: relative;
-        height: 20px;
-        outline: none;
-        width: 20px;
-        line-height: 20px;
-        flex-basis: 20px;
-        margin: auto 8px;
-        margin-left: 0px;
-        font-size: 12px;
-        border: 1px solid;
-        border-radius: 50%;
-        background-color: #303030;
-        transition-duration: 0.2s;
-        flex-shrink: 0;
     }
 
     .list_in{
@@ -180,19 +170,36 @@
 
     }
 
-    .list_item button:hover{
-        background-color: #909090;
-        color: #303030;
+    .list_item button{
+        width: 100%;
+        text-align: right;
+        font-size: 12px;
+        color: #b2b2b2;
     }
 
-    .list_item:before{
-        content: '';
-        position: absolute;
-        height: 100%;
-        width: 11px;
-        border-right: 1px dashed #d2d2d2;
-        opacity: 0.4;
+
+
+    .list_item button:hover{
+        /*background-color: #f2f2f2;*/
+        color: #42b983;
     }
+
+
+    .add_asset{
+        border-radius: 0;
+        color: #505050;
+        background-color: #6ca771;
+    }
+
+
+    /*.list_item:before{*/
+    /*    content: '';*/
+    /*    position: absolute;*/
+    /*    height: 100%;*/
+    /*    width: 11px;*/
+    /*    border-right: 1px dashed #d2d2d2;*/
+    /*    opacity: 0.4;*/
+    /*}*/
 
     .list_item[empty] button{
         opacity: 0.8;

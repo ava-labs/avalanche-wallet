@@ -3,10 +3,13 @@ import VueRouter, {Route} from 'vue-router'
 import Home from '../views/Home.vue'
 
 import Ava from '../views/wallet/Ava.vue';
+
+import Transfer from '@/components/wallet/ava/Transfer.vue';
 // import Assets from '../views/wallet/Assets.vue';
 import History from '../views/wallet/History.vue';
-import Transfer from '../views/wallet/Transfer.vue';
-import Advanced from '../views/wallet/Advanced.vue';
+// import Transfer from '../views/wallet/Transfer.vue';
+import Advanced from '@/components/wallet/advanced/Advanced.vue';
+import ManageKeys from '@/components/wallet/keys/ManageKeys.vue';
 
 Vue.use(VueRouter);
 
@@ -49,16 +52,12 @@ const routes = [
         name: 'wallet',
         children: [
             {
-                path: 'ava',
-                component: Ava
-            },
-            {
-                path: 'history',
-                component: History
-            },
-            {
-                path: 'transfer',
+                path: 'send',
                 component: Transfer
+            },
+            {
+                path: 'keys',
+                component: ManageKeys
             },
             {
                 path: 'advanced',

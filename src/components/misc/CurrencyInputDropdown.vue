@@ -115,13 +115,14 @@
         },
     }
 </script>
-<style scoped>
-
+<style scoped lang="scss">
+    $barH: 2px;
 
     .curr_in_drop{
         display: flex;
-        background-color: #404040;
+        background-color: #f8f8f8;
         padding: 0px 8px;
+        height: 48px;
         width: 100%;
         outline: none;
         text-align: right;
@@ -144,12 +145,13 @@
     }
 
     .dropdown{
-        border-left: 1px solid #505050;
+        flex-basis: 140px;
+        border-left: 1px solid #d2d2d2;
     }
 
     .bar{
-        height: 1px;
-        background-color: #7d7d7d;
+        height: $barH;
+        background-color: #d2d2d2;
         position: relative;
     }
 
@@ -158,8 +160,8 @@
         top: 0;
         left: 0;
         width: 0%;
-        background-color: #fff;
-        height: 1px;
+        background-color: #6bc79d;
+        height: $barH;
         transition-duration: 1s;
     }
 </style>
