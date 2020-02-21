@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Auth from './modules/auth/auth';
+import Notifications from './modules/notifications/notifications';
+
 import {SecpUTXO, UTXOSet} from "slopes";
 import {AssetNamesDict, AssetType, BalanceDict, RootState, IssueTxInput} from "@/store/types";
 Vue.use(Vuex);
@@ -24,7 +26,8 @@ const asset_names:AssetNamesDict = {
 
 export default new Vuex.Store({
     modules:{
-        Auth
+        Auth,
+        Notifications
     },
     state: {
         isUpdateBalance: false,
@@ -153,25 +156,18 @@ export default new Vuex.Store({
         },
         // Used in home page to access a user's wallet
         accessWallet(store, pk: string){
-            // console.log(pk);
-            // let privateKeyBuf = bintools.avaDeserialize(pk);
             let address = keyChain.importKey(pk);
             let keypair = keyChain.getKey(address);
-
-            // console.log("YO");
 
             store.commit('setPrivateKey', pk);
             store.commit('selectAddress', keypair.getAddressString());
             store.commit('setAuth', true);
             store.dispatch('onAccess');
 
-            router.push('/wallet/ava');
+            router.push('/wallet/send');
         },
 
         onAccess(store){
-            // console.log("onAccess");
-            // console.log(store.state.privateKey);
-            // store.dispatch('updateUTXOs');
             store.dispatch('refreshAddresses');
         },
 
@@ -184,12 +180,13 @@ export default new Vuex.Store({
                 let asset_buf = assets[i];
                 let asset_id = bintools.avaSerialize(asset_buf);
 
-
                 avm.getAssetDescription(asset_buf).then(res => {
                     Vue.set(asset_names, asset_id, {
                         name: res.name.trim(),
                         symbol: res.symbol.trim()
                     });
+
+                    console.log(res);
                     // asset_names[asset_id] = {
                     //     name: res.name.trim(),
                     //     symbol: res.symbol.trim()
@@ -255,15 +252,57 @@ export default new Vuex.Store({
             return txid;
         },
 
+
+        removeKey(store, address:string){
+            console.log(address);
+
+            let keyBuff = bintools.stringToAddress(address);
+            // let keyBuff = bintools.avaDeserialize(address);
+            let key = keyChain.getKey(keyBuff);
+            keyChain.removeKey(key);
+
+            console.log(key);
+            let addresses = store.state.addresses;
+
+            if(address === store.state.selectedAddress){
+                for(var i=0; i<addresses.length;i++){
+                    let addr = addresses[i];
+                    if(address !== addr){
+                        store.commit('selectAddress', addr);
+                    }
+                }
+            }
+
+
+            store.dispatch('Notifications/add', {
+                title: 'Key Removed',
+                message: 'The key belonging to this address is removed from your wallet.'
+            });
+
+            store.dispatch('refreshAddresses');
+        },
+
+
+        addKey(store, pk:string){
+
+            let pkBuff = bintools.avaDeserialize(pk);
+            keyChain.importKey(pkBuff);
+
+            store.dispatch('Notifications/add', {
+                title: 'Key Added',
+                message: 'The private key is added to the keychain.'
+            });
+
+            store.dispatch('refreshAddresses');
+            return 'success';
+        },
+
         async issueBatchTx(store, data){
-            // console.log("SENDING BATCH TX");
-            // console.log(data);
 
             let orders = data.orders;
             for(var i=0; i<orders.length; i++){
                 let order = orders[i];
 
-                // console.log(order.asset.id, order.amount,data.toAddress);
                 // If no amount to send, skip it
                 if(!order.amount) continue;
 
@@ -272,8 +311,19 @@ export default new Vuex.Store({
                     amount: order.amount,
                     toAddress: data.toAddress,
                     changeAddresses: data.changeAddresses
+                }).then(()=>{
+                    store.dispatch('Notifications/add', {
+                        title: 'Transaction Sent',
+                        message: 'You have succesfully sent your transaction.'
+                    });
                 }).catch(err => {
-                    alert(err);
+                    // alert(err);
+                    store.dispatch('Notifications/add', {
+                        title: 'Error Sending Transaction',
+                        message: err,
+                        color: '#f13939',
+                        duration: 10000
+                    });
                     return 'error';
                 });
             }
@@ -281,25 +331,7 @@ export default new Vuex.Store({
             setTimeout(() => {
                 store.dispatch('updateUTXOs');
             }, 5000);
-
             return 'success';
         },
-
-        // async createAsset(store, amt: number){
-        //     let amount = new BN(amt);
-        //
-        //     let addr1 = store.state.address;
-        //
-        //     let output = new slopes.OutCreateAsset(amount, [addr1]);
-        //     let unsigned = new slopes.TxUnsigned([], [output]);
-        //     let signed = keyChain.signTx(unsigned);
-        //
-        //     let txid = await avm.issueTx(signed); //returns an AVA serialized string for the TxID
-        //
-        //     setTimeout(async () => {
-        //         let status = await avm.getTxStatus(txid);
-        //         console.log(status);
-        //     })
-        // }
     },
 })

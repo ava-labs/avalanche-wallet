@@ -1,21 +1,21 @@
 <template>
     <div class="qr_input">
-        <QRReader @change="change"><button>
+        <QRReader class="readerIn" @change="change"><button>
                 <fa icon="camera"></fa>
             </button></QRReader>
         <v-text-field
                 class="pk_in"
-                placeholder="00000AVA000"
+                placeholder="00000AVA00000"
                 color="#333"
                 hide-details
                 v-model="pk"
+                autocomplete="off"
                 @input="oninput"
         ></v-text-field>
     </div>
 </template>
 <script>
     import QRReader from "@/components/misc/QRReader";
-
 
     export default {
         components: {
@@ -29,9 +29,17 @@
         props: {
             value: String
         },
+        watch: {
+            value(val){
+                this.pk = val;
+            }
+        },
         model:{
             prop: 'value',
             event: 'change',
+        },
+        mounted() {
+            this.pk = this.value;
         },
         methods: {
             change(val){
@@ -52,25 +60,32 @@
         display: flex;
         align-items: center;
         color: #333;
-        background-color: #a5a5a5;
+        height: 45px;
+        background-color: #f8f8f8;
         margin-bottom: 8px;
         /*padding: 0px 12px;*/
         /*padding-left: 0px;*/
     }
 
     .qr_input button{
-        font-size: 24px;
+        font-size: 19px;
+        height: 100%;
         padding-right: 12px;
         padding-left: 12px;
-        border-right: 1px solid #404040;
+        border-right: 1px solid #d2d2d2;
         text-align: center;
         pointer-events: none;
+        opacity: 0.7;
         /*opacity: 0.7;*/
     }
 
     /*.qr_input button:hover{*/
     /*    opacity: 1;*/
     /*}*/
+
+    .readerIn{
+        height: 100%;
+    }
 
     .pk_in{
         margin: 0;

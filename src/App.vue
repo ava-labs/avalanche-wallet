@@ -1,18 +1,32 @@
 <template>
     <v-app>
-      <v-content>
-          <navbar></navbar>
-          <router-view id="router_view"/>
-      </v-content>
+        <v-content>
+            <navbar></navbar>
+            <router-view id="router_view"/>
+        </v-content>
+        <notifications></notifications>
     </v-app>
 </template>
 <script>
-  import Navbar from './components/Navbar';
-  export default {
-    components: {
-      Navbar
+    import Notifications from '@/components/Notifications';
+    import Navbar from './components/Navbar';
+    export default {
+        components: {
+            Navbar,
+            Notifications
+        },
+        mounted(){
+            // this.$store.dispatch('Notifications/add', {
+            //     title: 'YO',
+            //     message: 'Succesfully sent a transaction.',
+            //     color: '#f13939'
+            // });
+            // this.$store.dispatch('Notifications/add', {
+            //     title: 'YO',
+            //     message: 'nothing to see here'
+            // });
+        }
     }
-  }
 </script>
 
 <style lang="scss">
@@ -30,7 +44,7 @@
       -moz-osx-font-smoothing: grayscale;
       text-align: left;
       color: #2c3e50;
-      background-color: #292929;
+      background-color: #eaeaea;
     }
 
     #nav {
@@ -40,12 +54,12 @@
         align-items: center;
         position: relative;
         z-index: 2;
-        background-color: #232323;
+        background-color: #fff;
 
         a {
             margin: 20px;
             font-weight: bold;
-            color: #d2d2d2;
+            color: #444;
 
             &.router-link-exact-active {
                 color: #42b983;

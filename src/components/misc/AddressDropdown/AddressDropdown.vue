@@ -1,10 +1,13 @@
 <template>
     <div class="address_dropdown">
         <div class="display" @click="toggle">
-            <p class="placeholder" v-if="value.length===0">Select Address</p>
-            <div v-else class="display_val">
+            <p class="placeholder" v-if="!value">Select Address</p>
+            <div v-if="multiple" class="display_val">
                 <p class="chip">{{value[0]}}</p>
                 <p v-if="value.length>1"> and {{ value.length-1 }} others.</p>
+            </div>
+            <div v-else class="display_val">
+                <p class="chip">{{value}}</p>
             </div>
             <p class="caret"><fa icon="caret-down"></fa></p>
         </div>
@@ -39,13 +42,22 @@
                 default: false
             },
             default_val: {
-                type: Array,
+                type: [Array, String],
             }
         },
         mounted() {
             if(this.default_val){
-                console.log("LOAD DEFAULT");
-                this.value = this.default_val.slice();
+                console.log(this.default_val);
+                if(Array.isArray(this.default_val)){
+                    if(this.multiple){
+                        this.value = this.default_val.slice();
+                    }else{
+                        this.value = this.default_val[0];
+                    }
+                }else{
+                    this.value = this.default_val;
+                }
+
                 this.emit();
             }
         },
@@ -81,13 +93,15 @@
 
             toggleItem(val){
                 if(this.value.includes(val)){
-                    let index = this.value.indexOf(val);
-                    this.value.splice(index,1);
+                    if(this.multiple){
+                        let index = this.value.indexOf(val);
+                        this.value.splice(index,1);
+                    }
                 }else{
                     if(this.multiple){
                         this.value.push(val);
                     }else{
-                        this.value = [val];
+                        this.value = val;
                     }
                 }
 
@@ -118,7 +132,7 @@
 <style scoped>
     .address_dropdown{
         position: relative;
-        border: 1px solid #303030;
+        border: 1px solid #fafafa;
         cursor: pointer;
 
     }
@@ -132,7 +146,7 @@
     }
     .display{
         padding: 4px;
-        background-color: #404040;
+        background-color: #f2f2f2;
         display: flex;
         align-items: center;
     }
@@ -156,19 +170,21 @@
 
     .display .chip{
         user-select: none;
-       display: inline-block;
+        display: inline-block;
         font-size: 14px;
-        background-color: #dcdcdc;
-        color: #111;
+        background-color: #61c395;
+        color: #fff;
+        font-weight: bold;
+        letter-spacing: 0.8px;
         margin: 3px;
-        padding: 2px 4px;
+        padding: 5px 15px;
         border-radius: 8px;
     }
 
     .list{
         position: absolute;
-        top: 0;
-        background-color: #303030;
+        top: 46px;
+        background-color: #f2f2f2;
         width: 100%;
         z-index: 2;
         max-height: 200px;
@@ -187,11 +203,11 @@
         list-style: none;
         padding: 4px 14px;
         border: none;
-        border-bottom: 1px solid #404040;
+        border-bottom: 1px solid #d2d2d2;
     }
 
     li:hover{
-        background-color: #404040;
+        background-color: #fafafa;
         cursor: pointer;
     }
     li input{

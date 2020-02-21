@@ -50,7 +50,7 @@
     .keygen{
         text-align: left;
         color: #333;
-        background-color: #a0a0a0;
+        /*background-color: #a0a0a0;*/
         padding: 6px;
         font-size: 14px;
     }
@@ -60,6 +60,8 @@
         color: #303030;
         margin-bottom: 12px;
         word-break: break-all;
+        background-color: #f2f2f2;
+        padding: 8px;
     }
     .keygen label{
         font-size: 13px;

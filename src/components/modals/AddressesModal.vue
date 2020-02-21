@@ -50,37 +50,3 @@
         }
     }
 </script>
-<style scoped>
-    p{
-        margin: 0;
-    }
-    .addressItem{
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px solid #b2b2b2;
-    }
-    .addressItem button{
-        flex-basis: 14px;
-        background-color: #808080;
-        height: 14px;
-        width: 14px;
-        border-radius: 14px;
-    }
-    .addressItem[selected] button{
-        background-color: #42b983;
-    }
-
-    .details{
-        margin-left: 20px;
-    }
-
-    .addressTitle{
-        font-size: 12px;
-        font-weight: bold;
-    }
-    .addressVal{
-        word-break: break-all;
-        font-size: 14px;
-    }
-</style>

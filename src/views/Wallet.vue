@@ -1,43 +1,40 @@
 <template>
     <div class="wallet_view">
-        <sidebar class="wallet_sidebar"></sidebar>
+<!--        <sidebar class="wallet_sidebar"></sidebar>-->
         <div class="wallet_main">
             <v-container>
                 <top-info></top-info>
-                <router-view id="wallet_router"></router-view>
+                <div class="wallet_cols">
+                    <div id="router_col">
+                        <tabs></tabs>
+                        <router-view id="wallet_router"></router-view>
+                    </div>
+                    <assets class="assets_card"></assets>
+                </div>
             </v-container>
         </div>
     </div>
 </template>
 <script>
     import TopInfo from '@/components/wallet/TopInfo';
-
-    import Sidebar from '../components/wallet/Sidebar'
-    // import SendReceive from '../components/modals/SendReceive'
+    import Assets from "../components/wallet/ava/Assets";
+    import Tabs from '@/components/wallet/Tabs';
 
     export default {
         components:{
-            Sidebar,
-            TopInfo
-            // SendReceive
+            TopInfo,
+            Assets,
+            Tabs
         },
     }
 </script>
-<style scoped>
-    .wallet_sidebar{
-        /*position: fixed;*/
-        left: 0;
-        /*height: 100%;*/
-        height: min-content;
-        background-color: #3a3a3a;
-        /*box-shadow: 2px 2px 10px rgba(0,0,0,0.2);*/
-        /*border-right: 1px solid #202020;*/
-        width: 240px;
-        margin: 30px;
-        flex-basis: 240px;
-        flex-shrink: 0;
-        border: 1px solid #39403d;
-        border-bottom: none;
+<style lang="scss" scoped>
+
+    #router_col{
+        background-color: #fff;
+        color: #5a5a5a;
+        border-radius: 5px;
+        overflow: hidden;
     }
 
     .wallet_main{
@@ -47,14 +44,23 @@
     .wallet_view{
         display: flex;
         flex-grow: 1;
-        /*display: grid;*/
-        /*grid-template-columns: min-content auto;*/
     }
 
     #wallet_router{
-        margin-top: 15px;
         /*margin: 30px;*/
         /*flex-grow: 1;*/
+    }
+
+    .wallet_cols{
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-gap: 20px;
+    }
+
+    .assets_card{
+        border-radius: 5px;
+        overflow: hidden;
     }
 
 
@@ -78,5 +84,21 @@
             margin: unset;
             padding-top: 70px;
         }
+    }
+</style>
+
+<style lang="scss">
+    $padLeft: 30px;
+
+    #router_col h2{
+        border-bottom: 1px solid #f2f2f2;
+        padding: 15px $padLeft;
+        color: #404040;
+    }
+
+    #router_col .card_body{
+        color: #222;
+        padding: 0px $padLeft;
+        padding-bottom: 30px;
     }
 </style>
