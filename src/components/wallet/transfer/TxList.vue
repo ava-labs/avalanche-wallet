@@ -14,13 +14,7 @@
             ></currency-input-dropdown>
             <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1">Remove Asset</button>
         </div>
-        {{showAdd}}
-        {{tx_list}}
         <v-btn block depressed @click="addTx()" class="add_asset" color="#fafafa" :ripple="false" v-if="showAdd"> <fa icon="plus"></fa></v-btn>
-<!--        <div class="list_item" empty="true">-->
-<!--            <button @click="addTx()"><fa icon="plus"></fa></button>-->
-<!--            <currency-input-dropdown class="list_in"></currency-input-dropdown>-->
-<!--        </div>-->
     </div>
 </template>
 <script>
@@ -137,7 +131,7 @@
                 return this.$store.getters.balance;
             },
             showAdd(){
-                if(this.tx_list.length === this.assets.length || this.assets.length===0){
+                if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){
                     return false;
                 }
                 return true;
