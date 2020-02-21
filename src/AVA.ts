@@ -1,13 +1,11 @@
-import {UTXO, UTXOSet} from "slopes";
+import {UTXO, UTXOSet, CryptoHelpers} from "slopes";
 // import {UTXODict} from './store/types';
 
-console.log(process.env.VUE_AVA_IP);
-import store from './store';
+// console.log(process.env.VUE_AVA_IP);
 
 // @ts-ignore
 import * as slopes from "slopes";
-
-// console.log(process.env);
+import store from './store';
 
 let ip = process.env.VUE_APP_AVA_IP || 'localhost';
 let port = process.env.VUE_APP_AVA_PORT || '9650';
@@ -17,9 +15,14 @@ let chain_id = process.env.VUE_APP_CHAIN_ID || 'GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVe
 
 // @ts-ignore
 let bintools = slopes.BinTools.getInstance();
+
+
+// console.log(slopes);
+let cryptoHelpers = new slopes.CryptoHelpers();
+// console.log(cryptoHelpers);
+
 // @ts-ignore
 let ava = new slopes.Slopes(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
-
 // @ts-ignore
 let avm = ava.AVM();
 let keyChain = avm.keyChain();
@@ -37,18 +40,10 @@ function getAllUTXOsForAsset(assetId: string){
             set.add(utxo);
         }
     }
-    // for(var i=0; i < utxos.length; i++){
-    //     let utxo = utxos[i];
-    //     let aId = bintools.avaSerialize(utxo.getAssetID());
-    //     if(aId===assetId){
-    //         set.add(utxo);
-    //     }
-    // }
-
     return set;
 }
 
 
 
 
-export { avm, bintools, keyChain, getAllUTXOsForAsset };
+export { avm, bintools, keyChain, getAllUTXOsForAsset, cryptoHelpers};

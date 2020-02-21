@@ -1,8 +1,8 @@
 <template>
     <div class="top_cards">
         <q-r-modal ref="qr_modal"></q-r-modal>
-        <addresses-modal ref="addresses_modal"></addresses-modal>
-        <key-store ref="keystore_modal"></key-store>
+<!--        <addresses-modal ref="addresses_modal"></addresses-modal>-->
+<!--        <key-store ref="keystore_modal"></key-store>-->
         <paper-wallet ref="print_modal"></paper-wallet>
 
         <div class="top_card" :style="{backgroundColor: '#6c79a7'}">
@@ -14,7 +14,7 @@
                 <p>{{address}}</p>
                 <div class="buts">
                     <button tooltip="View Adress QR Code" @click="viewQRModal"><fa icon="qrcode"></fa></button>
-                    <button tooltip="My Addresses" @click="viewAddressesModal"><fa icon="list"></fa></button>
+<!--                    <button tooltip="My Addresses" @click="viewAddressesModal"><fa icon="list"></fa></button>-->
                     <button tooltip="Print" @click="viewPrintModal"><fa icon="print"></fa></button>
 <!--                    <button tooltip="Download Keystore File" @click="viewKeystoreModal"><fa icon="download"></fa></button>-->
                     <CopyText tooltip="Copy" :value="address"></CopyText>
@@ -48,17 +48,17 @@
 <script>
     import CopyText from "../misc/CopyText";
     import QRModal from "../modals/QRModal";
-    import KeyStore from "../modals/KeyStore";
+    // import KeyStore from "../modals/KeyStore";
     import PaperWallet from "../modals/PaperWallet";
-    import AddressesModal from "../modals/AddressesModal";
+    // import AddressesModal from "../modals/AddressesModal";
 
     export default {
         components: {
             CopyText,
             PaperWallet,
             QRModal,
-            KeyStore,
-            AddressesModal
+            // KeyStore,
+            // AddressesModal
         },
         methods: {
             viewQRModal(){

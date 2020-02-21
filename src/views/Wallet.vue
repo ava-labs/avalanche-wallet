@@ -34,7 +34,6 @@
         background-color: #fff;
         color: #5a5a5a;
         border-radius: 5px;
-        overflow: hidden;
     }
 
     .wallet_main{

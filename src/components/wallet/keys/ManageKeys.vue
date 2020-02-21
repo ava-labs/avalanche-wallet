@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-
+<!--        {{addressBalances}}-->
     </div>
 </template>
 <script>
@@ -51,6 +51,10 @@
             selected(){
                 return this.$store.state.selectedAddress;
             },
+            addressBalances(){
+                console.log(this.addresses)
+               return null;
+            }
         }
     }
 </script>

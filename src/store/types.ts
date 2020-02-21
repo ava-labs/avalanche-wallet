@@ -67,6 +67,19 @@ export interface Transaction {
 
 
 
+export interface KeyFile{
+    pass_salt: string,
+    pass_hash: string,
+    keys: KeyFileKey[]
+}
+
+export interface KeyFileKey {
+    key: string,
+    nonce: string,
+    salt: string,
+    address: string
+}
+
 
 export interface IssueTxInput{
     assetId: string,
