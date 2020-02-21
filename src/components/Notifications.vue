@@ -2,8 +2,8 @@
     <div class="notifications">
         <transition-group name="list">
             <div class="notif_item"
-                 v-for="(notif, i) in items"
-                 :key="i"
+                 v-for="notif in items"
+                 :key="notif.id"
             >
                 <p class="notif_title" :style="{
                 backgroundColor: notif.color,
