@@ -68,7 +68,7 @@ export interface Transaction {
 
 
 export interface KeyFile{
-    pass_salt: string,
+    salt: string,
     pass_hash: string,
     keys: KeyFileKey[]
 }
@@ -76,7 +76,6 @@ export interface KeyFile{
 export interface KeyFileKey {
     key: string,
     nonce: string,
-    salt: string,
     address: string
 }
 

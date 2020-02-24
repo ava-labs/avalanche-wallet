@@ -7,23 +7,56 @@
                     <img src="/img/ava_logo_white.png">
                 </div>
                 <div class="auth_body">
-                    <h2>Access with:</h2>
-                    <div class="options">
-                        <div @click="loginType='key'" :active="loginType==='key'">
-                            <p><fa icon="key"></fa></p>
-                            <p>Private Key</p>
+                    <div class="menu" v-show="menu==='main'">
+                        <div class="menu_option">
+                            <h4>Access Wallet</h4>
+                            <p>Access an existing wallet using private key or a key file.</p>
+                            <button @click="menu='access'">Access <fa icon="arrow-right"></fa></button>
                         </div>
-                        <div @click="loginType='new'" :active="loginType==='new'">
-                            <p><fa icon="plus"></fa></p>
-                            <p>Generate <br>Key Pair</p>
-                        </div>
-                        <div @click="loginType='keystore'" :active="loginType==='keystore'">
-                            <p><fa icon="file-excel"></fa></p>
-                            <p>Keystore File</p>
+                        <div class="menu_option">
+                            <h4>Create New Wallet</h4>
+                            <p>Create a new wallet to store your assets.</p>
+                            <button @click="menu='new'">Create New <fa icon="arrow-right"></fa></button>
                         </div>
                     </div>
-                    <hr>
-                    <component :is="loginComponent"></component>
+
+                    <div v-show="menu==='access'">
+                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> go back</button>
+                        <h3>Access Wallet</h3>
+                        <div class="options">
+                            <div @click="loginType='key'" :active="loginType==='key'">
+                                <p><fa icon="key"></fa></p>
+                                <p>Private Key</p>
+                            </div>
+                            <div @click="loginType='keystore'" :active="loginType==='keystore'">
+                                <p><fa icon="file-excel"></fa></p>
+                                <p>Keystore File</p>
+                            </div>
+                        </div>
+                        <component :is="loginComponent"></component>
+                    </div>
+
+                    <div v-show="menu==='new'">
+                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> go back</button>
+                        <h3>Create New Wallet</h3>
+                        <create-new></create-new>
+                    </div>
+<!--                    <div class="options">-->
+<!--                        <div @click="loginType='key'" :active="loginType==='key'">-->
+<!--                            <p><fa icon="key"></fa></p>-->
+<!--                            <p>Private Key</p>-->
+<!--                        </div>-->
+<!--                        <div @click="loginType='new'" :active="loginType==='new'">-->
+<!--                            <p><fa icon="plus"></fa></p>-->
+<!--                            <p>Generate <br>Key Pair</p>-->
+<!--                        </div>-->
+<!--                        <div @click="loginType='keystore'" :active="loginType==='keystore'">-->
+<!--                            <p><fa icon="file-excel"></fa></p>-->
+<!--                            <p>Keystore File</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <hr>-->
+<!--                    <component :is="loginComponent"></component>-->
                 </div>
             </div>
         </div>
@@ -48,8 +81,7 @@
                 newPrivateKey: "",
                 newPublicKey: "",
                 newAddr: "",
-
-
+                menu: 'main', // main | new | access
             }
         },
         components: {
@@ -128,6 +160,7 @@
         position: relative;
     }
 
+
     .auth{
         position: relative;
         width: 460px;
@@ -135,12 +168,43 @@
         border-radius: 12px;
         box-shadow: 3px 4px 20px rgba(0,0,0,0.4);
         overflow: hidden;
-        background-color: #fff;
+        background-color: #fafafa;
         margin: 15vh auto;
+    }
+
+    .menu_option{
+        border: 1px solid #eaeaea;
+        background-color: #fff;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        padding: 12px;
+    }
+
+    .menu_option h4{
+        font-size: 20px;
+    }
+
+    .menu_option button{
+        background-color: #42b983;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 14px;
+        padding: 3px 12px;
+        font-size: 13px;
+        transition-duration: 0.2s;
+    }
+    .menu_option button:hover{
+        transform: translateX(5px);
+    }
+
+    .backBut{
+        font-size: 12px;
+        color: #42b983;
     }
 
     .options{
         display: flex;
+        margin-bottom: 15px;
     }
     .options div{
         border: 1px solid transparent;
@@ -178,11 +242,11 @@
 
     .imgcover{
         text-align: center;
-        padding: 30px;
+        padding: 12px;
         background-color: #3a403d;
     }
     img{
-        max-width: 120px;
+        max-height: 40px;
         object-fit: contain;
     }
     .private_in{

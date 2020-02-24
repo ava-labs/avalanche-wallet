@@ -79,6 +79,41 @@ export default new Vuex.Store({
             }, 0);
             return res;
         },
+
+        // returns a dictionary of balances by key
+        addressUTXOs(state: RootState, getters){
+            if(!state.utxo_set) return {};
+
+            let res = {};
+            let addresses = state.utxo_set.getAddresses();
+            let utxos = state.utxos;
+
+            // console.log(state.utxos);
+            for(var i=0; i < utxos.length; i++){
+                // console.log();
+                let utxo = utxos[i];
+                let addrs = utxo.getAddresses();
+                let amount = utxo.getAmount();
+                let assetIdBuff = utxo.getAssetID();
+                let assetId = bintools.avaSerialize(assetIdBuff);
+
+                for(var  n=0 ;n<addrs.length; n++){
+                    let addr = addrs[n];
+                    let addrString = bintools.avaSerialize(addr);
+                    // console.log(addrString)
+
+                    if(!res[addrString]){
+                        res[addrString] = [utxo]
+                    }else{
+                        res[addrString].push(utxo)
+                    }
+                }
+                // console.log(addrs);
+            }
+            return res;
+        },
+
+
         balanceArray(state, getters){
             let balances = getters.balance;
             let res = [];
@@ -351,20 +386,19 @@ export default new Vuex.Store({
 
                 let pk = key.getPrivateKey();
 
-                let pk_crypt = await cryptoHelpers.encrypt(pass,pk);
+                let pk_crypt = await cryptoHelpers.encrypt(pass,pk,salt);
 
 
                 let key_data:KeyFileKey = {
                     key: bintools.avaSerialize(pk_crypt.ciphertext),
                     nonce: bintools.avaSerialize(pk_crypt.nonce),
-                    salt: bintools.avaSerialize(pk_crypt.salt),
                     address: addr
                 }
                 keys.push(key_data);
             }
 
             let file_data = {
-                pass_salt: bintools.avaSerialize(salt),
+                salt: bintools.avaSerialize(salt),
                 pass_hash: bintools.avaSerialize(passHash.hash),
                 keys: keys
             }
@@ -407,10 +441,10 @@ export default new Vuex.Store({
                         try {
                             let json_data: KeyFile = JSON.parse(res);
                             // Check Password
-                            let pass_salt = bintools.avaDeserialize(json_data.pass_salt);
+                            let salt = bintools.avaDeserialize(json_data.salt);
                             let pass_hash = json_data.pass_hash;
 
-                            let checkHash = await cryptoHelpers.pwhash(pass, pass_salt);
+                            let checkHash = await cryptoHelpers.pwhash(pass, salt);
                             let checkHashString = bintools.avaSerialize(checkHash.hash);
 
                             if (checkHashString !== pass_hash) {
@@ -427,12 +461,12 @@ export default new Vuex.Store({
                             for (var i = 0; i < keys.length; i++) {
                                 let key_data = keys[i];
 
-                                let salt = bintools.avaDeserialize(key_data.salt);
+                                // let salt = bintools.avaDeserialize(key_data.salt);
                                 let key = bintools.avaDeserialize(key_data.key);
                                 let nonce = bintools.avaDeserialize(key_data.nonce);
                                 let address = key_data.address;
 
-                                let key_decrypt = await cryptoHelpers.decrypt(pass,key,salt,nonce)
+                                let key_decrypt = await cryptoHelpers.decrypt(pass,key,salt,nonce);
                                 let key_string = bintools.avaSerialize(key_decrypt);
 
 

@@ -15,21 +15,12 @@
                 <tr>
                     <th>Asset</th>
                     <th>Balance</th>
-                    <!--                    <th>USD</th>-->
-                    <!--                    <th @click="toggleCryptoView" class="cryptoToggle">{{crypto_view}}</th>-->
-                    <!--                    <th class="buts"></th>-->
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="asset in assets" :key="asset.id">
-                    <td class="col_0"><span class="asset_code">{{asset.symbol}}</span> - {{asset.name}}</td>
+                    <td class="col_0">{{asset.symbol}}<br><span>{{asset.name}}</span></td>
                     <td class="col_1">{{asset.balance.toLocaleString()}}</td>
-                    <!--                        <td>{{(asset.balance * asset.usd_price).toFixed(2)}}</td>-->
-                    <!--                        <td>{{getCryptoVal(asset).toFixed(4)}}</td>-->
-                    <!--                        <td class="buts">-->
-                    <!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Send</v-btn>-->
-                    <!--                            <v-btn :to="'/wallet/transfer?asset='+asset.code" color="transparent" depressed height="28">Receive</v-btn>-->
-                    <!--                        </td>-->
                 </tr>
                 </tbody>
             </table>
@@ -142,7 +133,7 @@
 
     table tbody td{
         /*padding: 20px 20px;*/
-        padding: 8px 6px;
+        padding: 4px 6px;
         text-align: left;
         font-size: 15px;
         text-overflow: ellipsis;
@@ -171,6 +162,11 @@
 
     table .col_0{
         padding-left: 30px;
+    }
+
+    .col_0 span{
+        font-size: 12px;
+        font-weight: bold;
     }
 
     table .col_1{

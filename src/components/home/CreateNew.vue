@@ -4,16 +4,12 @@
         <div v-if="newPrivateKey" class="keygen">
             <v-alert dense color="warning" >
                 <fa icon="exclamation-triangle"></fa>
-                Do not lose your information or you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>
+                Do not lose your private key! If you do you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>
             <label>Private Key</label>
             <p>{{newPrivateKey}}</p>
-            <label>Public Key</label>
-            <p>{{newPublicKey}}</p>
-            <label>Address</label>
-            <p>{{newAddr}}</p>
+            <button @click="access" class="access">Access Wallet</button>
         </div>
     </div>
-
 </template>
 <script>
 
@@ -42,6 +38,10 @@
                 this.newAddr = keypair.getAddressString();
                 this.newPrivateKey = privkstr;
                 this.newPublicKey = pubkstr;
+            },
+
+            access(){
+                this.$store.dispatch('accessWallet', this.newPrivateKey);
             }
         }
     }
@@ -66,6 +66,18 @@
     .keygen label{
         font-size: 13px;
         font-weight: bold;
+    }
+
+    .access{
+        display: block;
+        width: 100%;
+        background-color: #42b983;
+        color: #fff;
+        font-size: 18px;
+        padding: 12px;
+        font-weight: bold;
+        border-radius: 8px;
+        text-align: center;
     }
 
     .v-alert{

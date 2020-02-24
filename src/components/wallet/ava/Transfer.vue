@@ -2,10 +2,12 @@
     <div class="transfer_card">
         <h2>Send Transaction</h2>
         <div class="card_body">
-<!--            <div v-if="assetArray.length===0">-->
-<!--                YOU HAVE NO ASSETS TO TRANSFER-->
-<!--            </div>-->
-            <div  class="new_order_Form">
+            <div v-if="assetArray.length===0">
+                <p>You must have an asset in your wallet to issue a transaction.</p>
+                <h4>Have you checked our faucet? <fa icon="tint"></fa></h4>
+                <a href="https://faucet.ava.network" target="_blank">Go to faucet.</a>
+            </div>
+            <div  v-else class="new_order_Form">
 <!--                <p class="tx_info">Create a transaction by selecting assets from the dropdown list, and entering the amount to send.-->
 <!--                    To add more assets, click the <fa icon="plus"></fa> button.</p>-->
 <!--                <label>Transaction List</label>-->
