@@ -7,7 +7,7 @@
 </template>
 <script>
     import Big from 'big.js';
-    // import * as BN from 'bn.js';
+    import * as BN from 'bn.js';
 
     export default {
         data(){
@@ -25,7 +25,10 @@
             },
             bigMax(){
                 if(this.max){
-                    return Big(this.max);
+                    // this.max is a BN in satoshis
+                    let satoshi = Big(this.max);
+                    let divider = Big(10).pow(this.denomination);
+                    return satoshi.div(divider)
                 }
                 return null;
             },
@@ -34,7 +37,7 @@
                     return Big(this.min);
                 }
                 return null;
-            }
+            },
         },
         mounted() {
             this.cleanInput();
@@ -45,7 +48,7 @@
                 default: 0
             },
             max: {
-                type: Number,
+                type: [BN, null],
             },
             min: {
                 type: Number,
@@ -58,9 +61,14 @@
             }
         },
         methods: {
+
+            // Emit in BN as satoshis!
             emit(){
                 console.log(this.value.toString());
-                this.$emit('change', this.value);
+                let tens = Big(10).pow(this.denomination);
+                let satoshis = this.value.times(tens);
+                let bn = new BN(satoshis.toFixed(0));
+                this.$emit('change', bn);
             },
             change(ev){
                 this.cleanInput();

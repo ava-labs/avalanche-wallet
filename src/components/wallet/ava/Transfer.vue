@@ -8,37 +8,22 @@
                 <a href="https://faucet.ava.network" target="_blank">Go to faucet.</a>
             </div>
             <div  v-else class="new_order_Form">
-<!--                <p class="tx_info">Create a transaction by selecting assets from the dropdown list, and entering the amount to send.-->
-<!--                    To add more assets, click the <fa icon="plus"></fa> button.</p>-->
-<!--                <label>Transaction List</label>-->
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
-
-
                 <div>
                     <h4>To Address</h4>
                     <QRInput v-model="addressIn"></QRInput>
                 </div>
-
                 <div class="fees">
                     <h4>Fees</h4>
                     <p>Transaction Fee <span>0 AVA</span></p>
                 </div>
-
                 <div class="advanced">
                     <h4>Advanced</h4>
-<!--                    <button class="toggle" @click="toggleAdvanced">Advanced <span><fa icon="caret-down"></fa></span></button>-->
                     <div class="advancedBody">
                         <label>Change Address</label>
                         <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>
                     </div>
                 </div>
-
-
-
-
-
-
-
                 <div class="checkout">
                     <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
                 </div>
@@ -47,7 +32,6 @@
     </div>
 </template>
 <script>
-    // import QRReader from '@/components/misc/QRReader';
     import TxList from "@/components/wallet/transfer/TxList";
     import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
     import QRInput from "@/components/misc/QRInput";
@@ -124,12 +108,12 @@
             addresses(){
                 return this.$store.state.addresses;
             },
-            assets(){
-                return this.$store.getters.balance;
-                // return this.$store.state.assets;
-            },
+            // assets(){
+            //     return this.$store.getters['Assets/assetsArray'];
+            //     // return this.$store.state.assets;
+            // },
             assetArray(){
-                return this.$store.getters.balanceArray;
+                return this.$store.getters['Assets/assetsArray'];
             }
         }
     }

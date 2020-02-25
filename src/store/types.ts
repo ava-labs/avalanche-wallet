@@ -1,19 +1,18 @@
 import {SecpUTXO, UTXO, UTXOSet} from "slopes";
 import Big from 'big.js';
+import BN from 'bn.js';
+import {Module} from "vuex";
+import {AssetsState} from "@/store/modules/assets/types";
+import AvaAsset from "@/js/AvaAsset";
 
 export interface RootState {
-    asset_meta: AssetMetaDict,
-    isUpdateBalance: boolean,
+    // asset_meta: AssetMetaDict,
+    // Assets: Module<AssetsState,RootState>,
     isAuth: boolean,
     privateKey: string,
-    // publicKey: string,
     addresses: string[],
     selectedAddress: string,
-    utxos: SecpUTXO[],
-    utxo_set: UTXOSet|null,
     modals: ModalDict,
-    assets: AssetType[],
-    tx_history: Transaction[]
 }
 
 interface Modal {
@@ -92,9 +91,9 @@ export interface BatchTxOrder {
 }
 
 export interface IssueTxInput{
-    asset: AssetType,
+    asset: AvaAsset,
     assetId: string,
-    amount: Big,
+    amount: BN,
     toAddress: string,
     changeAddresses: string[],
 }

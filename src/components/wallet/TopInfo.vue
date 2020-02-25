@@ -27,7 +27,8 @@
             </div>
             <div class="card_right">
                 <h4>Balance</h4>
-                <p>{{avaBalance.toLocaleString()}} AVA</p>
+                <p v-if="ava_asset">{{ava_asset.toString()}} AVA</p>
+                <p v-else>0 AVA</p>
                 <div class="buts">
                     <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
@@ -74,12 +75,12 @@
                 this.$refs.addresses_modal.open();
             },
             updateBalance(){
-                this.$store.dispatch('updateUTXOs');
+                this.$store.dispatch('Assets/updateUTXOs');
             }
         },
         computed: {
-            avaBalance(){
-                return this.$store.getters.AVABalance;
+            ava_asset(){
+                return this.$store.getters['Assets/AssetAVA'];
             },
             address(){
                 return this.$store.state.selectedAddress;
@@ -88,7 +89,7 @@
                 return process.env.VUE_APP_AVA_IP;
             },
             isUpdateBalance(){
-                return this.$store.state.isUpdateBalance;
+                return this.$store.state.Assets.isUpdateBalance;
             },
         }
     }

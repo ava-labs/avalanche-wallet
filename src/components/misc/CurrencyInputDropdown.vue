@@ -1,10 +1,8 @@
 <template>
     <div>
-<!--        <big-num-input class="bigIn" :denomination="denomination"></big-num-input>-->
         <div class="curr_in_drop">
             <button class="max_but" @click="maxOut">MAX</button>
             <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
-<!--            <input type="number" :placeholder="placeholder" @input="amount_in" ref="amount" v-model="amount">-->
             <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>
         </div>
         <div class="bar"><div :style="{
@@ -13,7 +11,7 @@
     </div>
 </template>
 <script>
-    // import * as BN from 'bn.js';
+    import * as BN from 'bn.js';
     import Big from 'big.js';
     import Dropdown from "@/components/misc/Dropdown";
     import BigNumInput from "@/components/misc/BigNumInput";
@@ -38,12 +36,6 @@
             },
             initial: Object,
         },
-        // watch: {
-        //     initial(val){
-        //         console.log("INITIAL CHANGE");
-        //         console.log(val);
-        //     }
-        // },
         computed: {
             isEmpty(){
                 if(this.dropdown_values.length===0){
@@ -69,7 +61,7 @@
             },
             percFull(){
                 if(!this.amount || !this.max_amount) return 0;
-                let max = Big(this.max_amount);
+                let max = this.max_amount;
                 return (this.amount.div(max))*100;
             },
 
@@ -97,15 +89,15 @@
                 return res;
             },
             dropdown_assets(){
-                if(this.assets) return this.assets;
+                // if(this.assets) return this.assets;
                 return this.global_assets;
             },
             global_assets(){
-                return this.$store.getters.balance;
+                return this.$store.getters['Assets/assetsArray'];
             },
             max_amount(){
-                if(!this.asset_now) return 0;
-                return this.asset_now.balance;
+                if(!this.asset_now) return null;
+                return this.asset_now.amount;
             }
         },
         methods: {

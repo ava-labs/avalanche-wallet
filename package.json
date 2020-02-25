@@ -21,6 +21,8 @@
     "@fortawesome/free-regular-svg-icons": "^5.12.0",
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/vue-fontawesome": "^0.1.9",
+    "@types/big.js": "^4.0.5",
+    "@types/bn.js": "^4.11.6",
     "@zxing/library": "^0.15.2",
     "big.js": "^5.2.2",
     "bn.js": "^5.1.1",

@@ -31,7 +31,7 @@ let keyChain = avm.keyChain();
 
 function getAllUTXOsForAsset(assetId: string){
     let set = new UTXOSet();
-    let utxos = store.state.utxos;
+    let utxos = store.state.Assets.utxos;
 
     for(var i in utxos){
         let utxo = utxos[i];

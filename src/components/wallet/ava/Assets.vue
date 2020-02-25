@@ -20,7 +20,7 @@
                 <tbody>
                 <tr v-for="asset in assets" :key="asset.id">
                     <td class="col_0">{{asset.symbol}}<br><span>{{asset.name}}</span></td>
-                    <td class="col_1">{{asset.balance.toLocaleString()}}</td>
+                    <td class="col_1">{{asset.toString()}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -37,49 +37,15 @@
         },
         computed: {
             assets(){
-                let balance = this.$store.getters.balance;
-
-                let array = [];
-
-                for(var id in balance){
-                    array.push(balance[id]);
-                }
-
-                array.sort((a,b) => {
-                    let t1 = a.name;
-                    let t2 = b.name;
-                    if(t1<t2){
-                        return -1
-                    }else if(t1>t2){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                });
-                return array;
+                return this.$store.getters['Assets/assetsArray'];
             },
             isUpdateBalance(){
-                return this.$store.state.isUpdateBalance;
+                return this.$store.state.Assets.isUpdateBalance;
             },
         },
         methods: {
             updateAssets(){
-                this.$store.dispatch('updateUTXOs');
-            },
-            toggleCryptoView(){
-                if(this.crypto_view==='BTC'){
-                    this.crypto_view = 'AVA'
-                }else{
-                    this.crypto_view = 'BTC'
-                }
-            },
-            getCryptoVal(asset){
-                let crypt_val = asset.ava_price;
-                if(this.crypto_view==='BTC') crypt_val=asset.btc_price;
-                return (asset.balance * crypt_val);
-            },
-            openSendReceive(){
-                this.$store.dispatch('openModal', 'send_receive');
+                this.$store.dispatch('Assets/updateUTXOs');
             }
         },
 

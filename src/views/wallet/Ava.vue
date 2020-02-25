@@ -30,7 +30,7 @@
         },
         mounted(){
             let parent = this;
-            parent.$store.dispatch('updateUTXOs');
+            parent.$store.dispatch('Assets/updateUTXOs');
         },
         destroyed() {
         }
