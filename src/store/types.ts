@@ -7,7 +7,7 @@ import AvaAsset from "@/js/AvaAsset";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
-    // Assets: Module<AssetsState,RootState>,
+    // Assets?: Module<AssetsState,RootState>,
     isAuth: boolean,
     privateKey: string,
     addresses: string[],
@@ -20,33 +20,33 @@ interface Modal {
     close(): void
 }
 
-export interface UTXODict {
-    [key: string]: SecpUTXO
-}
+// export interface UTXODict {
+//     [key: string]: SecpUTXO
+// }
 
 interface ModalDict {
     [key: string]: Modal
 }
+//
+// export interface BalanceDict {
+//     [key: string]: AssetType
+// }
+//
+// interface AssetBalance {
+//     id: string,
+//     balance: number,
+//     usd_price: number,
+// }
+//
+// export interface AssetMetaDict {
+//     [key: string]: AssetMeta
+// }
 
-export interface BalanceDict {
-    [key: string]: AssetType
-}
-
-interface AssetBalance {
-    id: string,
-    balance: number,
-    usd_price: number,
-}
-
-export interface AssetMetaDict {
-    [key: string]: AssetMeta
-}
-
-export interface AssetMeta{
-    name: string,
-    symbol: string,
-    denomination: number
-}
+// export interface AssetMeta{
+//     name: string,
+//     symbol: string,
+//     denomination: number
+// }
 
 export interface AssetType {
     name: string,
@@ -55,14 +55,14 @@ export interface AssetType {
     denomination: number
 }
 
-export interface Transaction {
-    id: string,
-    asset: string,
-    amount: number,
-    to: string,
-    date: Date,
-    status: string
-}
+// export interface Transaction {
+//     id: string,
+//     asset: string,
+//     amount: number,
+//     to: string,
+//     date: Date,
+//     status: string
+// }
 
 
 
@@ -99,6 +99,6 @@ export interface IssueTxInput{
 }
 
 
-export interface AddressUTXOs{
-    [key:string]: SecpUTXO[]
-}
+// export interface AddressUTXOs{
+//     [key:string]: SecpUTXO[]
+// }

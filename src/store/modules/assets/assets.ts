@@ -72,6 +72,19 @@ const assets_module: Module<AssetsState, RootState> = {
                     });
                 }
             }
+        },
+
+        getAllUTXOsForAsset(store, assetId:string){
+            let set = new UTXOSet();
+            let utxos = store.state.utxos;
+            for(var i in utxos){
+                let utxo = utxos[i];
+                let aId = bintools.avaSerialize(utxo.getAssetID());
+                if(aId===assetId){
+                    set.add(utxo);
+                }
+            }
+            return set;
         }
     },
     getters: {

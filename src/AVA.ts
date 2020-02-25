@@ -5,7 +5,8 @@ import {UTXO, UTXOSet, CryptoHelpers} from "slopes";
 
 // @ts-ignore
 import * as slopes from "slopes";
-import store from './store';
+// import store from './store';
+import assetsStore from './store/modules/assets/assets';
 
 let ip = process.env.VUE_APP_AVA_IP || 'localhost';
 let port = process.env.VUE_APP_AVA_PORT || '9650';
@@ -29,21 +30,22 @@ let keyChain = avm.keyChain();
 
 
 
-function getAllUTXOsForAsset(assetId: string){
-    let set = new UTXOSet();
-    let utxos = store.state.Assets.utxos;
+// function getAllUTXOsForAsset(assetId: string){
+//     let set = new UTXOSet();
+//
+//     let utxos = assetsStore.state.utxos;
+//
+//     for(var i in utxos){
+//         let utxo = utxos[i];
+//         let aId = bintools.avaSerialize(utxo.getAssetID());
+//         if(aId===assetId){
+//             set.add(utxo);
+//         }
+//     }
+//     return set;
+// }
 
-    for(var i in utxos){
-        let utxo = utxos[i];
-        let aId = bintools.avaSerialize(utxo.getAssetID());
-        if(aId===assetId){
-            set.add(utxo);
-        }
-    }
-    return set;
-}
 
 
 
-
-export { avm, bintools, keyChain, getAllUTXOsForAsset, cryptoHelpers};
+export { avm, bintools, keyChain, cryptoHelpers};

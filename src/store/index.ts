@@ -15,7 +15,7 @@ Vue.use(Vuex);
 
 import router from "@/router";
 
-import {avm, bintools, cryptoHelpers, getAllUTXOsForAsset, keyChain} from "@/AVA";
+import {avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
 
 export default new Vuex.Store({
     modules:{
@@ -127,8 +127,8 @@ export default new Vuex.Store({
 
             let assetId = asset.id;
 
-            let utxos = getAllUTXOsForAsset(assetId);
 
+            let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);
             let unsigned_tx = await avm.makeUnsignedTx(utxos, amount, toAddresses, myAddresses, changeAddresses, assetId);
             let signed_tx = avm.signTx(unsigned_tx);
 
