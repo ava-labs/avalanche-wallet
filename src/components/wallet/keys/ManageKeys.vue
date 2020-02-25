@@ -15,7 +15,7 @@
                     <div class="addressBallance">
                         <p v-if="!addressBalances[address]">This address does not have any assets in it.</p>
                         <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">
-                            {{bal.amount.toString()}} <b>{{bal.symbol}}</b>,
+                            {{bal.amount.toString()}} <b>{{bal.symbol}}</b>
                         </p>
                     </div>
 <!--                    <div class="" v-for="bal in addressBalances[address]" :key="bal.symbol">-->
@@ -133,6 +133,7 @@
         height: 14px;
         width: 14px;
         border-radius: 14px;
+        flex-shrink: 0;
     }
     .addressItem[selected] .selBut{
         background-color: #42b983;
@@ -169,9 +170,17 @@
 
     .addressBallance{
         display: flex;
+        white-space: normal;
+        flex-wrap: wrap;
+    }
+
+    .addressBallance p:first-child{
+        padding-left: 0;
     }
     .addressBallance p{
-        padding-right: 5px;
+        padding: 0 5px;
         font-size: 12px;
+        flex-shrink: 0;
+        border-right: 1px solid #dedede;
     }
 </style>

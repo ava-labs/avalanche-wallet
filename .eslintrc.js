@@ -11,6 +11,7 @@ module.exports = {
   rules: {
     'no-console': 'off',
     'vue/no-unused-components': 'off',
+    'no-unreachable': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   },
   parserOptions: {

@@ -3,15 +3,25 @@ import Vuex from 'vuex'
 
 import Auth from './modules/auth/auth';
 import Notifications from './modules/notifications/notifications';
-
+import Big from 'big.js';
 import {SecpUTXO, UTXOSet, AVMKeyPair} from "slopes";
-import {AssetNamesDict, AssetType, BalanceDict, RootState, IssueTxInput, KeyFile, KeyFileKey} from "@/store/types";
+import {
+    AssetType,
+    BalanceDict,
+    RootState,
+    IssueTxInput,
+    KeyFile,
+    KeyFileKey,
+    AssetMeta, IssueBatchTxInput, AddressUTXOs
+} from "@/store/types";
 Vue.use(Vuex);
 
 import router from "@/router";
 
 // import BN from 'bn.js';
 const BN = require('bn.js');
+
+import AvaAsset from '@/js/AvaAsset.ts';
 
 import {avm, bintools, cryptoHelpers, getAllUTXOsForAsset, keyChain} from "@/AVA";
 import * as slopes from "slopes";
@@ -20,9 +30,9 @@ import * as slopes from "slopes";
 
 const AVA_ASSET_ID = process.env.VUE_APP_AVA_ASSET_ID;
 console.log(AVA_ASSET_ID);
-const asset_names:AssetNamesDict = {
-
-};
+// const asset_names:AssetNamesDict = {
+//
+// };
 
 export default new Vuex.Store({
     modules:{
@@ -30,12 +40,12 @@ export default new Vuex.Store({
         Notifications
     },
     state: {
+        asset_meta: {},
         isUpdateBalance: false,
         utxo_set: null,
-        utxos: {},
+        utxos: [],
         isAuth: false,
         privateKey: '',
-        // publicKey: '',
         addresses: [],
         selectedAddress: '',
         modals: {},
@@ -57,34 +67,12 @@ export default new Vuex.Store({
             if(state.privateKey != '') return true;
             else return false;
         },
-        wallet_value_usd(state: RootState){
-            let res = 0;
-            res = state.assets.reduce((total: number, asset: AssetType) => {
-                return total + (asset.balance*asset.usd_price)
-            }, 0);
-
-            return res;
-        },
-        wallet_value_btc(state: RootState){
-            let res = 0;
-            res = state.assets.reduce((total: number, asset: AssetType) => {
-                return total + (asset.balance*asset.btc_price)
-            }, 0);
-            return res;
-        },
-        wallet_value_ava(state: RootState){
-            let res = 0;
-            res = state.assets.reduce((total: number, asset: AssetType) => {
-                return total + (asset.balance*asset.ava_price)
-            }, 0);
-            return res;
-        },
 
         // returns a dictionary of balances by key
-        addressUTXOs(state: RootState, getters){
+        addressUTXOs(state: RootState, getters):AddressUTXOs{
             if(!state.utxo_set) return {};
 
-            let res = {};
+            let res:AddressUTXOs = {};
             let addresses = state.utxo_set.getAddresses();
             let utxos = state.utxos;
 
@@ -123,6 +111,9 @@ export default new Vuex.Store({
             }
             return res;
         },
+
+
+        // Main getter for assets
         balance(state: RootState){
             let utxos = state.utxos;
             let res:BalanceDict = {};
@@ -142,23 +133,24 @@ export default new Vuex.Store({
                 if(res[asset_id]){
                     res[asset_id].balance += asset_amount;
                 }else{
-                    let coin_data = asset_names[asset_id] || {
+                    let default_meta:AssetMeta = {
                         name: asset_id,
-                        symbol: asset_id.substr(0,3)
+                        symbol: asset_id.substr(0,3),
+                        denomination: 0
                     };
 
+                    let coin_data = state.asset_meta[asset_id] || default_meta;
 
                     let assetObj = {
                         id: asset_id,
                         name: '',
                         symbol: '',
                         balance: asset_amount,
-                        usd_price: 0.008,
-                        btc_price: 0.0004311,
-                        ava_price: 1,
+                        denomination: 0
                     };
                     assetObj.name = coin_data.name;
                     assetObj.symbol = coin_data.symbol.toUpperCase();
+                    assetObj.denomination = coin_data.denomination;
 
                     res[asset_id] = assetObj;
                 }
@@ -216,12 +208,20 @@ export default new Vuex.Store({
                 let asset_id = bintools.avaSerialize(asset_buf);
 
                 avm.getAssetDescription(asset_buf).then(res => {
-                    Vue.set(asset_names, asset_id, {
-                        name: res.name.trim(),
-                        symbol: res.symbol.trim()
+                    let name = res.name.trim();
+                    let symbol = res.symbol.trim();
+                    let denomination = res.denomination;
+
+                    Vue.set(store.state.asset_meta, asset_id, {
+                        name: name,
+                        symbol: symbol,
+                        denomination: denomination
                     });
 
-                    console.log(res);
+                    // let asset = new AvaAsset(name, symbol, );
+                    // console.log(asset);
+
+
                     // asset_names[asset_id] = {
                     //     name: res.name.trim(),
                     //     symbol: res.symbol.trim()
@@ -265,12 +265,27 @@ export default new Vuex.Store({
             let toAddresses = [data.toAddress];
             let changeAddresses = data.changeAddresses;
 
+            let asset = data.asset;
+            let amount = data.amount;
+
+            // convert big.js number to bn.js
+            let multiplier = Big(10).pow(asset.denomination);
+            let decimal = amount.times(multiplier);
+            console.log(multiplier.toString());
+            console.log(decimal.toString());
+
+            let sendAmount = new BN(decimal.toFixed(0));
+            // console.log(num.toString(10))
+            //
+            // console.log(num);
+            // continue;
+
             console.log(changeAddresses);
 
-            let assetId = data.assetId;
+            let assetId = asset.id;
             // let utxos = await avm.getUTXOs(myAddresses);
             let utxos = getAllUTXOsForAsset(assetId);
-            let sendAmount = new BN(data.amount);
+            // let sendAmount = new BN(data.amount);
 
             // console.log("issue tx");
             // console.log( sendAmount.toNumber(), assetId, utxos );
@@ -333,8 +348,9 @@ export default new Vuex.Store({
             return keypair;
         },
 
-        async issueBatchTx(store, data){
+        async issueBatchTx(store, data:IssueBatchTxInput){
 
+            console.log(data);
             let orders = data.orders;
             for(var i=0; i<orders.length; i++){
                 let order = orders[i];
@@ -342,8 +358,10 @@ export default new Vuex.Store({
                 // If no amount to send, skip it
                 if(!order.amount) continue;
 
+
                 await store.dispatch('issueTx', {
-                    assetId: order.asset.id,
+                    asset: order.asset,
+                    // assetId: order.asset.id,
                     amount: order.amount,
                     toAddress: data.toAddress,
                     changeAddresses: data.changeAddresses

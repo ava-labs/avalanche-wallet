@@ -135,7 +135,7 @@
         /*padding: 20px 20px;*/
         padding: 4px 6px;
         text-align: left;
-        font-size: 15px;
+        font-size: 13px;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;

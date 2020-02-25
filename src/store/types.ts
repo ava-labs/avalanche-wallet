@@ -1,13 +1,15 @@
 import {SecpUTXO, UTXO, UTXOSet} from "slopes";
+import Big from 'big.js';
 
 export interface RootState {
+    asset_meta: AssetMetaDict,
     isUpdateBalance: boolean,
     isAuth: boolean,
     privateKey: string,
     // publicKey: string,
     addresses: string[],
     selectedAddress: string,
-    utxos: UTXODict,
+    utxos: SecpUTXO[],
     utxo_set: UTXOSet|null,
     modals: ModalDict,
     assets: AssetType[],
@@ -37,23 +39,21 @@ interface AssetBalance {
     usd_price: number,
 }
 
-export interface AssetNamesDict {
-    [key: string]: AssetName
+export interface AssetMetaDict {
+    [key: string]: AssetMeta
 }
 
-export interface AssetName{
+export interface AssetMeta{
     name: string,
-    symbol: string
+    symbol: string,
+    denomination: number
 }
 
 export interface AssetType {
     name: string,
     symbol: string,
     balance: number,
-    usd_price: number,
-    btc_price: number,
-    ava_price: number,
-    // address: string
+    denomination: number
 }
 
 export interface Transaction {
@@ -79,10 +79,27 @@ export interface KeyFileKey {
     address: string
 }
 
+export interface IssueBatchTxInput {
+    changeAddresses: string[],
+    toAddress: string,
+    orders: BatchTxOrder[]
+}
+
+export interface BatchTxOrder {
+    uuid: string,
+    asset: AssetType,
+    amount: Big
+}
 
 export interface IssueTxInput{
+    asset: AssetType,
     assetId: string,
-    amount: number,
+    amount: Big,
     toAddress: string,
     changeAddresses: string[],
+}
+
+
+export interface AddressUTXOs{
+    [key:string]: SecpUTXO[]
 }
