@@ -12,7 +12,7 @@
 </template>
 <script>
     // import Assets from "@/components/wallet/ava/Assets";
-    import Transfer from "@/components/wallet/ava/Transfer";
+    import Transfer from "@/components/wallet/Transfer";
 
     export default {
         data(){

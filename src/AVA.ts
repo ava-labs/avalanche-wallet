@@ -30,22 +30,16 @@ let keyChain = avm.keyChain();
 
 
 
-// function getAllUTXOsForAsset(assetId: string){
-//     let set = new UTXOSet();
-//
-//     let utxos = assetsStore.state.utxos;
-//
-//     for(var i in utxos){
-//         let utxo = utxos[i];
-//         let aId = bintools.avaSerialize(utxo.getAssetID());
-//         if(aId===assetId){
-//             set.add(utxo);
-//         }
-//     }
-//     return set;
-// }
+function isValidAddress(addr:string){
+    try{
+        let res = bintools.stringToAddress(addr);
+        return true;
+    }catch(err){
+        return false;
+    }
+}
 
 
 
 
-export { avm, bintools, keyChain, cryptoHelpers};
+export { avm, bintools, keyChain, cryptoHelpers, isValidAddress};

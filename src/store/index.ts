@@ -127,6 +127,8 @@ export default new Vuex.Store({
 
             let assetId = asset.id;
 
+            console.log(amount.toString(10));
+
 
             let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);
             let unsigned_tx = await avm.makeUnsignedTx(utxos, amount, toAddresses, myAddresses, changeAddresses, assetId);

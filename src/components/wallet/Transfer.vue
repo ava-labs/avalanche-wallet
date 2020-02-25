@@ -25,16 +25,22 @@
                     </div>
                 </div>
                 <div class="checkout">
-                    <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="send" :disabled="!canSend">Send</v-btn>
+                    <v-alert type="error" text dense v-if="errors.length>0">
+                        <ul>
+                            <li v-for="err in errors" :key="err">{{err}}</li>
+                        </ul>
+                    </v-alert>
+                    <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">Send</v-btn>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import TxList from "@/components/wallet/transfer/TxList";
+    import TxList from "@/components/wallet/TxList";
     import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
     import QRInput from "@/components/misc/QRInput";
+    import {isValidAddress} from "../../AVA";
 
     export default {
         components: {
@@ -49,6 +55,7 @@
                 isAjax: false,
                 addressIn: '',
                 orders: [],
+                errors: [],
                 change_address: '',
             }
         },
@@ -65,6 +72,19 @@
             },
             onQrRead(value){
                 this.addressIn = value;
+            },
+            formCheck(){
+                this.errors = [];
+                let err = [];
+                if(!isValidAddress(this.addressIn)){
+                    err.push('Invalid address.')
+                }
+
+
+                this.errors = err;
+                if(err.length===0){
+                    this.send();
+                }
             },
             send(){
                 let parent = this;
