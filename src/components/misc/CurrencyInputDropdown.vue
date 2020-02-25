@@ -2,7 +2,7 @@
     <div>
         <div class="curr_in_drop">
             <button class="max_but" @click="maxOut">MAX</button>
-            <input type="number" placeholder="0.00" @input="amount_in" ref="amount" v-model="amount">
+            <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
             <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>
         </div>
         <div class="bar"><div :style="{
@@ -11,10 +11,15 @@
     </div>
 </template>
 <script>
+    import * as BN from 'bn.js';
+    import Big from 'big.js';
     import Dropdown from "@/components/misc/Dropdown";
+    import BigNumInput from "@/components/misc/BigNumInput";
+
     export default {
         components: {
-            Dropdown
+            Dropdown,
+            BigNumInput
         },
         data(){
             return {
@@ -32,8 +37,37 @@
             initial: Object,
         },
         computed: {
+            isEmpty(){
+                if(this.dropdown_values.length===0){
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            display(){
+                return '';
+            },
+            placeholder(){
+                if(this.isEmpty || !this.asset_now) return '0.00';
+                let deno = this.asset_now.denomination;
+                let res = '0';
+                if(deno > 0){
+                    res += '.'
+                    for(var i=0;i<deno;i++){
+                        res += '0';
+                    }
+                }
+                return res;
+            },
             percFull(){
-                return (this.amount/this.max_amount)*100;
+                if(!this.amount || !this.max_amount) return 0;
+                let max = this.max_amount;
+                return (this.amount.div(max))*100;
+            },
+
+            denomination(){
+                if(!this.asset_now) return 0;
+                return this.asset_now.denomination;
             },
 
             dropdown_values(){
@@ -55,56 +89,57 @@
                 return res;
             },
             dropdown_assets(){
-                if(this.assets) return this.assets;
+                // if(this.assets) return this.assets;
                 return this.global_assets;
             },
             global_assets(){
-                return this.$store.getters.balance;
+                return this.$store.getters['Assets/assetsArray'];
             },
             max_amount(){
-                if(!this.asset_now) return 0;
-                return this.asset_now.balance;
-            },
-            isEmpty(){
-                if(this.dropdown_values.length===0){
-                    return true;
-                }else{
-                    return false;
-                }
+                if(!this.asset_now) return null;
+                return this.asset_now.amount;
             }
         },
         methods: {
             maxOut(){
-                this.amount = this.max_amount;
-                this.onchange();
+                this.$refs.bigIn.maxout();
+                // this.amount = this.max_amount;
+
+                // this.onchange();
             },
-            amount_in(){
-                let amount = parseFloat(this.$refs.amount.value);
-                if(amount > this.max_amount){
-                    amount = this.max_amount;
-                    this.amount = amount;
-                }
+            amount_in(val){
+                console.log(val.toString());
+                // let amount = parseFloat(this.$refs.amount.value);
+                // if(amount > this.max_amount){
+                //     amount = this.max_amount;
+                //     this.amount = amount;
+                // }
+                this.amount = val;
                 this.onchange();
             },
 
             drop_change(val){
                 this.asset_now = val;
-                this.amount_in();
+                this.amount_in(Big(0));
             },
 
             // onchange event for the Component
             onchange(){
                 this.$emit('change',{
                     asset: this.asset_now,
-                    amount: parseFloat(this.amount)
+                    amount: this.amount
                 });
             }
+        },
+        created(){
+            this.amount = new Big(0,10);
         },
         mounted(){
             if(this.isEmpty) return;
             if(this.initial){
                 for(var i=0;i<this.dropdown_values.length;i++){
                     let val = this.dropdown_values[i];
+                    // console.log(val);
                     if(val.data === this.initial){
                         this.drop_change(val.data);
                     }
@@ -118,6 +153,10 @@
 <style scoped lang="scss">
     $barH: 2px;
 
+    .bigIn{
+        width: 100%;
+        /*background-color: #303030;*/
+    }
     .curr_in_drop{
         display: flex;
         background-color: #f8f8f8;

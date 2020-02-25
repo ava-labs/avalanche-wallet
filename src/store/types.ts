@@ -1,17 +1,18 @@
 import {SecpUTXO, UTXO, UTXOSet} from "slopes";
+import Big from 'big.js';
+import BN from 'bn.js';
+import {Module} from "vuex";
+import {AssetsState} from "@/store/modules/assets/types";
+import AvaAsset from "@/js/AvaAsset";
 
 export interface RootState {
-    isUpdateBalance: boolean,
+    // asset_meta: AssetMetaDict,
+    // Assets?: Module<AssetsState,RootState>,
     isAuth: boolean,
     privateKey: string,
-    // publicKey: string,
     addresses: string[],
     selectedAddress: string,
-    utxos: UTXODict,
-    utxo_set: UTXOSet|null,
     modals: ModalDict,
-    assets: AssetType[],
-    tx_history: Transaction[]
 }
 
 interface Modal {
@@ -19,51 +20,49 @@ interface Modal {
     close(): void
 }
 
-export interface UTXODict {
-    [key: string]: SecpUTXO
-}
+// export interface UTXODict {
+//     [key: string]: SecpUTXO
+// }
 
 interface ModalDict {
     [key: string]: Modal
 }
+//
+// export interface BalanceDict {
+//     [key: string]: AssetType
+// }
+//
+// interface AssetBalance {
+//     id: string,
+//     balance: number,
+//     usd_price: number,
+// }
+//
+// export interface AssetMetaDict {
+//     [key: string]: AssetMeta
+// }
 
-export interface BalanceDict {
-    [key: string]: AssetType
-}
-
-interface AssetBalance {
-    id: string,
-    balance: number,
-    usd_price: number,
-}
-
-export interface AssetNamesDict {
-    [key: string]: AssetName
-}
-
-export interface AssetName{
-    name: string,
-    symbol: string
-}
+// export interface AssetMeta{
+//     name: string,
+//     symbol: string,
+//     denomination: number
+// }
 
 export interface AssetType {
     name: string,
     symbol: string,
     balance: number,
-    usd_price: number,
-    btc_price: number,
-    ava_price: number,
-    // address: string
+    denomination: number
 }
 
-export interface Transaction {
-    id: string,
-    asset: string,
-    amount: number,
-    to: string,
-    date: Date,
-    status: string
-}
+// export interface Transaction {
+//     id: string,
+//     asset: string,
+//     amount: number,
+//     to: string,
+//     date: Date,
+//     status: string
+// }
 
 
 
@@ -79,10 +78,27 @@ export interface KeyFileKey {
     address: string
 }
 
+export interface IssueBatchTxInput {
+    changeAddresses: string[],
+    toAddress: string,
+    orders: BatchTxOrder[]
+}
+
+export interface BatchTxOrder {
+    uuid: string,
+    asset: AssetType,
+    amount: Big
+}
 
 export interface IssueTxInput{
+    asset: AvaAsset,
     assetId: string,
-    amount: number,
+    amount: BN,
     toAddress: string,
     changeAddresses: string[],
 }
+
+
+// export interface AddressUTXOs{
+//     [key:string]: SecpUTXO[]
+// }

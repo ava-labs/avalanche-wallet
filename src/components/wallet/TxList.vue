@@ -124,11 +124,11 @@
         },
         computed: {
             assets_list(){
-                return this.$store.getters.balanceArray;
+                return this.$store.getters['Assets/assetsArray'];
 
             },
             assets(){
-                return this.$store.getters.balance;
+                return this.$store.getters['Assets/assetsDict'];
             },
             showAdd(){
                 if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){

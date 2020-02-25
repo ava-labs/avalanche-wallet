@@ -15,13 +15,9 @@
                     <div class="addressBallance">
                         <p v-if="!addressBalances[address]">This address does not have any assets in it.</p>
                         <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">
-                            {{bal.amount.toString()}} <b>{{bal.symbol}}</b>,
+                            {{bal.toString()}} <b>{{bal.symbol}}</b>
                         </p>
                     </div>
-<!--                    <div class="" v-for="bal in addressBalances[address]" :key="bal.symbol">-->
-<!--&lt;!&ndash;                        {{bal}}&ndash;&gt;-->
-<!--                        <p></p>-->
-<!--                    </div>-->
                 </div>
                 <div class="buts" v-if="addresses.length > 1">
                     <button @click="removeKey(address)"><fa icon="trash"></fa></button>
@@ -33,6 +29,7 @@
 </template>
 <script>
     import {bintools} from "@/AVA";
+    import AvaAsset from "@/js/AvaAsset";
 
     export default {
         data(){
@@ -65,11 +62,11 @@
                 return this.$store.state.selectedAddress;
             },
             balance(){
-                return this.$store.getters.balance;
+                return this.$store.getters['Assets/assetsDict'];
             },
             addressBalances(){
-                let utxos =  this.$store.getters.addressUTXOs;
-
+                let utxos =  this.$store.getters['Assets/addressUTXOs'];
+                // console.log(utxos);
                 let res = {};
 
                 for(var i=0;i<this.addresses.length; i++){
@@ -81,8 +78,8 @@
                     if(!addrUtxos) continue;
                     res[addr] = {};
 
-                    console.log(addrStrip);
-                    console.log(addrUtxos);
+                    // console.log(addrStrip);
+                    // console.log(addrUtxos);
 
                     for(var n=0; n<addrUtxos.length; n++){
                         let utxo = addrUtxos[n];
@@ -98,13 +95,23 @@
                         // console.log(asset);
                         // console.log(res);
                         if(!asset){
-                            res[addr][assetId] = {
-                                amount: amount,
-                                name: assetObj.name,
-                                symbol: assetObj.symbol
-                            };
+                            let name = assetObj.name;
+                            let symbol = assetObj.symbol;
+                            let denomination = assetObj.denomination;
+
+                            let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+                                newAsset.addBalance(amount);
+
+                            res[addr][assetId] = newAsset;
+
+                            // res[addr][assetId] = {
+                            //     amount: amount,
+                            //     name: assetObj.name,
+                            //     symbol: assetObj.symbol
+                            // };
                         }else{
-                            asset.amount = asset.amount.add(amount);
+                            asset.addBalance(amount)
+                            // asset.amount = asset.amount.add(amount);
                         }
                     }
                 }
@@ -133,6 +140,7 @@
         height: 14px;
         width: 14px;
         border-radius: 14px;
+        flex-shrink: 0;
     }
     .addressItem[selected] .selBut{
         background-color: #42b983;
@@ -169,9 +177,17 @@
 
     .addressBallance{
         display: flex;
+        white-space: normal;
+        flex-wrap: wrap;
+    }
+
+    .addressBallance p:first-child{
+        padding-left: 0;
     }
     .addressBallance p{
-        padding-right: 5px;
+        padding: 0 5px;
         font-size: 12px;
+        flex-shrink: 0;
+        border-right: 1px solid #dedede;
     }
 </style>

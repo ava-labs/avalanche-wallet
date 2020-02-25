@@ -22,7 +22,10 @@
                     </q-r-reader>
                     <v-text-field v-model="addressIn" class="addressIn" color="#d88383" placeholder="####" height="40" background-color="#404040" dense flat :loading="isAjax" hide-details></v-text-field>
                 </div>
-                <v-btn block color="#d88383" :loading="isAjax" :ripple="false" @click="send">Send</v-btn>
+                <p>
+                    {{errors}}
+                </p>
+                <v-btn block color="#d88383" :loading="isAjax" :ripple="false" @click="formCheck">Send</v-btn>
             </div>
         </div>
     </div>
@@ -31,6 +34,8 @@
     import QRReader from '@/components/misc/QRReader';
     import TxList from "@/components/wallet/transfer/TxList";
     import router from "@/router";
+    import {isValidAddress} from "../../../AVA";
+
 
     export default {
         components: {
@@ -42,7 +47,12 @@
                 isAjax: false,
                 addressIn: '',
                 orders: [],
+                errors: [],
             }
+        },
+        mounted() {
+            console.log("Mounted")
+            console.log(isValidAddress('cyfgvjh'));
         },
         methods: {
             updateTxList(data){
@@ -50,6 +60,20 @@
             },
             onQrRead(value){
                 this.addressIn = value;
+            },
+
+            formCheck(){
+                this.errors = [];
+                let err = [];
+                if(isValidAddress(this.addressIn)){
+                    err.push('Invalid address.')
+                }
+
+
+                this.errors = err;
+                // if(err.length===0){
+                //     this.send();
+                // }
             },
             send(){
                 let parent = this;

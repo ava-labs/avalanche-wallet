@@ -17,7 +17,7 @@
 </template>
 <script>
     import TopInfo from '@/components/wallet/TopInfo';
-    import Assets from "../components/wallet/ava/Assets";
+    import Assets from "../components/wallet/Assets";
     import Tabs from '@/components/wallet/Tabs';
 
     export default {
