@@ -65,4 +65,21 @@
     p{
         margin: 0 !important;
     }
+
+
+
+    @media only screen and (max-width: 600px) {
+
+        .notifications{
+            height: min-content;
+            width: 100%;
+            left: 0;
+            top: 0;
+        }
+
+        .notif_item{
+            max-width: unset;
+            width: 100%;
+        }
+    }
 </style>

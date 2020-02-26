@@ -262,20 +262,37 @@
             color: #ddd;
         }
         .auth{
+            /*height: 100;*/
+            /*margin: 0;*/
+            border-radius: 0;
             box-shadow: none;
-            background-color: transparent;
+            /*background-color: transparent;*/
+        }
+
+        .menu_option{
+            padding: 5vh 12px;
+        }
+        .menu_option button{
+            width: 100%;
+            padding: 8px;
         }
 
         .imgcover{
-            background-color: transparent;
+            display: none;
+            /*background-color: transparent;*/
         }
 
         .auth_body{
-            padding: 0px 24px;
+            padding: 30px 24px;
         }
 
-        p{
-            color: #ddd;
+
+        .options{
+            /*flex-direction: column;*/
         }
+
+        /*p{*/
+        /*    color: #ddd;*/
+        /*}*/
     }
 </style>

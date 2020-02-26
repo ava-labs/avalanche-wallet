@@ -2,8 +2,8 @@
     <div class="wallet_view">
 <!--        <sidebar class="wallet_sidebar"></sidebar>-->
         <div class="wallet_main">
-            <v-container>
-                <top-info></top-info>
+            <v-container class="wallet_container">
+                <top-info class="wallet_top"></top-info>
                 <div class="wallet_cols">
                     <div id="router_col">
                         <tabs></tabs>
@@ -64,6 +64,13 @@
 
 
     @media only screen and (max-width: 600px) {
+        .wallet_container{
+            padding: 0;
+        }
+
+        .wallet_top{
+            margin: 10px;
+        }
         .wallet_view {
             display: block;
         }
@@ -79,9 +86,14 @@
             border: none;
         }
 
+        .wallet_cols{
+            grid-template-columns: 1fr;
+            /*grid-template-rows: 1fr 1fr;*/
+        }
+
         .wallet_main{
             margin: unset;
-            padding-top: 70px;
+            /*padding-top: 70px;*/
         }
     }
 </style>

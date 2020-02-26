@@ -70,6 +70,14 @@
 
     }
 
+    @media only screen and (max-width: 600px) {
+        .sel_locale{
+            width: min-content;
+        }
+        p.selected{
+            display: none;
+        }
+    }
     /*.sel_locale >>> .v-input .sel_outlined{*/
     /*    border: none !important;*/
     /*}*/

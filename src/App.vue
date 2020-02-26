@@ -71,25 +71,25 @@
         outline: none;
     }
 
-      #router_view{
+    #router_view{
         min-height: calc(100vh - 80px);
-      }
+    }
 
-      @media only screen and (max-width: 600px) {
-          #nav{
-              position: fixed;
-              height: 40px;
-              width: 100%;
-              top: 0px;
-              z-index: 2;
+    @media only screen and (max-width: 600px) {
+        #nav{
+            position: fixed;
+            height: 80px;
+            width: 100%;
+            top: 0px;
+            z-index: 2;
 
-              a{
-                  font-size: 12px;
-              }
-          }
+            a{
+                font-size: 12px;
+            }
+        }
 
-          #router_view{
-              padding-top: 40px;
-          }
-      }
+        #router_view{
+            padding-top: 80px;
+        }
+    }
 </style>

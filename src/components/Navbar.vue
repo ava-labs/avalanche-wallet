@@ -2,6 +2,7 @@
     <div id="nav">
 <!--        <router-link v-if="!isAuth" to="/">Home</router-link>-->
 <!--        <router-link v-if="isAuth" to="/wallet/ava">Wallet</router-link>-->
+        <img src="/img/logo_dark.svg">
         <v-spacer></v-spacer>
         <language-select></language-select>
     </div>
@@ -20,7 +21,12 @@
     }
 </script>
 <style scoped>
+    img{
+        max-height: 25px;
+        margin: 0px 30px;
+    }
     #nav{
+        /*display: none;*/
         z-index: 2;
     }
     a{

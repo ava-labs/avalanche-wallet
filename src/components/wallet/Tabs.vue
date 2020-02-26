@@ -49,4 +49,14 @@
             /*border-right: 4px solid #42b983;*/
         }
     }
+
+
+    @media only screen and (max-width: 600px) {
+        .tabs {
+            display: flex;
+        }
+        .tabs a{
+            flex-grow: 1;
+        }
+    }
 </style>
