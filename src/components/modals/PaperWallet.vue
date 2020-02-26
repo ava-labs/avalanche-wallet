@@ -1,11 +1,11 @@
 <template>
-    <modal ref="modal" title="Print Preview" class="print_modal">
+    <modal ref="modal" :title="$t('modal.print.title')" class="print_modal">
         <div class="qr_body">
             <canvas class="pdf_preview" ref="pdf" :style="{
                 height: `${600}px`,
                 width: `${600*aspectRatio}px`
             }"></canvas>
-            <v-btn depressed block @click="print">Print</v-btn>
+            <v-btn depressed block @click="print">{{$t('modal.print.submit')}}</v-btn>
         </div>
     </modal>
 </template>

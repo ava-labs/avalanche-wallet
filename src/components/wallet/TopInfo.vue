@@ -10,14 +10,14 @@
                 <img src="/img/center_focus.png">
             </div>
             <div class="card_right">
-                <h4>My Address</h4>
+                <h4>{{$t('top.title1')}}</h4>
                 <p>{{address}}</p>
                 <div class="buts">
-                    <button tooltip="View Adress QR Code" @click="viewQRModal"><fa icon="qrcode"></fa></button>
+                    <button :tooltip="$t('top.hover1')" @click="viewQRModal"><fa icon="qrcode"></fa></button>
 <!--                    <button tooltip="My Addresses" @click="viewAddressesModal"><fa icon="list"></fa></button>-->
-                    <button tooltip="Print" @click="viewPrintModal"><fa icon="print"></fa></button>
+                    <button :tooltip="$t('top.hover2')" @click="viewPrintModal"><fa icon="print"></fa></button>
 <!--                    <button tooltip="Download Keystore File" @click="viewKeystoreModal"><fa icon="download"></fa></button>-->
-                    <CopyText tooltip="Copy" :value="address"></CopyText>
+                    <CopyText :tooltip="$t('top.hover3')" :value="address"></CopyText>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                 <img src="/img/account-balance.png">
             </div>
             <div class="card_right">
-                <h4>Balance</h4>
+                <h4>{{$t('top.title2')}}</h4>
                 <p v-if="ava_asset">{{ava_asset.toString()}} AVA</p>
                 <p v-else>0 AVA</p>
                 <div class="buts">
@@ -40,7 +40,7 @@
                 <img src="/img/wifi.png">
             </div>
             <div class="card_right">
-                <h4>Network</h4>
+                <h4>{{$t('top.title3')}}</h4>
                 <p>{{network}}</p>
             </div>
         </div>

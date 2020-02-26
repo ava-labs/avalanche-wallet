@@ -1,7 +1,7 @@
 <template>
     <div>
-        <p>Scan the private key from a paper wallet to add to your managed key pairs.</p>
-        <label>Private Key</label>
+        <p>{{$t('advanced.paper.desc')}}</p>
+        <label>{{$t('advanced.paper.pk')}}</label>
         <QRInput @change="qr_change" v-model="pk"></QRInput>
         <v-btn
                 class="addKeyBut"
@@ -9,7 +9,7 @@
                 @click="addKey"
                 color="#42b983"
                 :disabled="!canAdd"
-        >Add to keychain</v-btn>
+        >{{$t('advanced.paper.submit')}}</v-btn>
     </div>
 </template>
 <script>

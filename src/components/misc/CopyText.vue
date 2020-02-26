@@ -18,6 +18,10 @@
                 console.log(copytext);
 
                 document.execCommand("copy");
+                this.$store.dispatch('Notifications/add', {
+                    title: ' Copied',
+                    message: 'Copied to clipoard.'
+                });
             }
         }
     }

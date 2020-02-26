@@ -1,7 +1,7 @@
 <template>
     <div>
         <QRInput v-model="privateKey"></QRInput>
-        <v-btn block depressed @click="access">Access Wallet</v-btn>
+        <v-btn block depressed @click="access">{{$t('home.submit')}}</v-btn>
     </div>
 </template>
 <script>
