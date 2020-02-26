@@ -1,13 +1,13 @@
 <template>
     <div>
-        <v-btn block depressed @click="createKey" v-if="!newPrivateKey">Generate Key Pair</v-btn>
+        <v-btn block depressed @click="createKey" v-if="!newPrivateKey">{{$t('home.create.generate')}}</v-btn>
         <div v-if="newPrivateKey" class="keygen">
             <v-alert dense color="warning" >
                 <fa icon="exclamation-triangle"></fa>
-                Do not lose your private key! If you do you won't be able to access your wallet and funds again. There is no way to recover lost keys.</v-alert>
-            <label>Private Key</label>
+                {{$t('home.create.warning')}}.</v-alert>
+            <label>{{$t('private_key')}}</label>
             <p>{{newPrivateKey}}</p>
-            <button @click="access" class="access">Access Wallet</button>
+            <button @click="access" class="access">{{$t('home.create.submit')}}</button>
         </div>
     </div>
 </template>

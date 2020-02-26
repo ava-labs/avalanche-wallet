@@ -1,6 +1,6 @@
 <template>
     <div class="card_header">
-        <p>Upload a key file to use within your wallet.</p>
+        <p>{{$t('advanced.import.desc')}}</p>
         <v-file-input v-model="file" label="Select Key File" filled
                       color="#42b983"
                       dense
@@ -12,7 +12,7 @@
         <v-alert type="error" outlined v-if="error" dense>{{error}}</v-alert>
         <v-btn depressed :disabled="!isValid" color="#42b983"
                :loading="isLoading"
-               @click="importKeyfile">Import</v-btn>
+               @click="importKeyfile">{{$t('advanced.import.submit')}}</v-btn>
     </div>
 </template>
 <script>

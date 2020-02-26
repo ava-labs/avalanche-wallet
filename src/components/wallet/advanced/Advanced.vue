@@ -1,21 +1,19 @@
 <template>
     <div>
-        <h2>Advanced</h2>
+        <h2>{{$t('advanced.title')}}</h2>
         <div class="card_body">
             <div class="section">
-                <h4>Scan Paper Wallet <span><fa icon="qrcode"></fa></span></h4>
+                <h4>{{$t('advanced.paper.title')}} <span><fa icon="qrcode"></fa></span></h4>
                 <scan-wallet></scan-wallet>
             </div>
             <hr>
             <div class="section">
-                <h4>Export Wallet <span><fa icon="download"></fa></span></h4>
-<!--                <BackupWallet></BackupWallet>-->
+                <h4>{{$t('advanced.export.title')}} <span><fa icon="download"></fa></span></h4>
                 <BackupExport></BackupExport>
             </div>
             <hr>
             <div class="section">
-                <h4>Import Wallet <span><fa icon="upload"></fa></span></h4>
-<!--                <BackupWallet></BackupWallet>-->
+                <h4>{{$t('advanced.import.title')}} <span><fa icon="upload"></fa></span></h4>
                 <BackupImport></BackupImport>
             </div>
 

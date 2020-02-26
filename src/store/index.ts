@@ -139,8 +139,6 @@ export default new Vuex.Store({
         },
 
         async issueBatchTx(store, data:IssueBatchTxInput){
-
-            console.log(data);
             let orders = data.orders;
             for(var i=0; i<orders.length; i++){
                 let order = orders[i];

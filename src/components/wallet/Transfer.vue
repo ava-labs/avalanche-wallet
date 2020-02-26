@@ -1,26 +1,26 @@
 <template>
     <div class="transfer_card">
-        <h2>Send Transaction</h2>
+        <h2>{{$t('transfer.title')}}</h2>
         <div class="card_body">
             <div v-if="assetArray.length===0">
-                <p>You must have an asset in your wallet to issue a transaction.</p>
-                <h4>Have you checked our faucet? <fa icon="tint"></fa></h4>
+                <p>{{$t('transfer.no_cash')}}</p>
+                <h4>{{$t('transfer.faucet')}} <fa icon="tint"></fa></h4>
                 <a href="https://faucet.ava.network" target="_blank">Go to faucet.</a>
             </div>
             <div  v-else class="new_order_Form">
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
                 <div>
-                    <h4>To Address</h4>
+                    <h4>{{$t('transfer.to')}}</h4>
                     <QRInput v-model="addressIn"></QRInput>
                 </div>
                 <div class="fees">
-                    <h4>Fees</h4>
-                    <p>Transaction Fee <span>0 AVA</span></p>
+                    <h4>{{$t('transfer.fees')}}</h4>
+                    <p>{{$t('transfer.fee_tx')}} <span>0 AVA</span></p>
                 </div>
                 <div class="advanced">
-                    <h4>Advanced</h4>
+                    <h4>{{$t('transfer.advanced')}}</h4>
                     <div class="advancedBody">
-                        <label>Change Address</label>
+                        <label>{{$t('transfer.adv_change')}}</label>
                         <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             <li v-for="err in errors" :key="err">{{err}}</li>
                         </ul>
                     </v-alert>
-                    <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">Send</v-btn>
+                    <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">{{$t('transfer.send')}}</v-btn>
                 </div>
             </div>
         </div>

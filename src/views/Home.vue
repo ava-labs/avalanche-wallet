@@ -9,54 +9,38 @@
                 <div class="auth_body">
                     <div class="menu" v-show="menu==='main'">
                         <div class="menu_option">
-                            <h4>Access Wallet</h4>
-                            <p>Access an existing wallet using private key or a key file.</p>
-                            <button @click="menu='access'">Access <fa icon="arrow-right"></fa></button>
+                            <h4>{{ $t('home.access.title') }}</h4>
+                            <p>{{ $t('home.access.desc') }}</p>
+                            <button @click="menu='access'">{{$t('home.but_access')}} <fa icon="arrow-right"></fa></button>
                         </div>
                         <div class="menu_option">
-                            <h4>Create New Wallet</h4>
-                            <p>Create a new wallet to store your assets.</p>
-                            <button @click="menu='new'">Create New <fa icon="arrow-right"></fa></button>
+                            <h4>{{ $t('home.create.title') }}</h4>
+                            <p>{{ $t('home.create.desc') }}</p>
+                            <button @click="menu='new'">{{$t('home.but_create')}} <fa icon="arrow-right"></fa></button>
                         </div>
                     </div>
 
                     <div v-show="menu==='access'">
-                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> go back</button>
-                        <h3>Access Wallet</h3>
+                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> {{$t('home.go_back')}}</button>
+                        <h3>{{ $t('home.access.title')}}</h3>
                         <div class="options">
                             <div @click="loginType='key'" :active="loginType==='key'">
                                 <p><fa icon="key"></fa></p>
-                                <p>Private Key</p>
+                                <p>{{$t('home.access.key.title')}}</p>
                             </div>
                             <div @click="loginType='keystore'" :active="loginType==='keystore'">
                                 <p><fa icon="file-excel"></fa></p>
-                                <p>Keystore File</p>
+                                <p>{{$t('home.access.file.title')}}</p>
                             </div>
                         </div>
                         <component :is="loginComponent"></component>
                     </div>
 
                     <div v-show="menu==='new'">
-                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> go back</button>
-                        <h3>Create New Wallet</h3>
+                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> {{$t('home.go_back')}}</button>
+                        <h3>{{$t('home.create.title')}}</h3>
                         <create-new></create-new>
                     </div>
-<!--                    <div class="options">-->
-<!--                        <div @click="loginType='key'" :active="loginType==='key'">-->
-<!--                            <p><fa icon="key"></fa></p>-->
-<!--                            <p>Private Key</p>-->
-<!--                        </div>-->
-<!--                        <div @click="loginType='new'" :active="loginType==='new'">-->
-<!--                            <p><fa icon="plus"></fa></p>-->
-<!--                            <p>Generate <br>Key Pair</p>-->
-<!--                        </div>-->
-<!--                        <div @click="loginType='keystore'" :active="loginType==='keystore'">-->
-<!--                            <p><fa icon="file-excel"></fa></p>-->
-<!--                            <p>Keystore File</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <hr>-->
-<!--                    <component :is="loginComponent"></component>-->
                 </div>
             </div>
         </div>
@@ -89,56 +73,6 @@
             KeystoreLogin,
             PrivateKeyLogin,
             CreateNew
-        },
-        methods: {
-            // qrchange(val){
-            //     this.privateKey = val;
-            // },
-            getAddress(){
-                let keyChain = AVAAssets.keyChain();
-                let privateKeyBuf = binTools.avaDeserialize(this.privateKey);
-                let address = keyChain.importKey(privateKeyBuf);
-                this.address = address;
-                console.log(address);
-            },
-            // access(){
-            //     this.$store.dispatch('accessWallet', this.privateKey);
-            // },
-            // createKey(){
-            //     let addr = keyChain.makeKey();
-            //     let keypair = keyChain.getKey(addr);
-            //
-            //     let pubk = keypair.getPublicKey(); //returns Buffer
-            //     let pubkstr = keypair.getPublicKeyString(); //returns an AVA serialized string
-            //
-            //     let privk = keypair.getPrivateKey(); //returns Buffer
-            //     let privkstr = keypair.getPrivateKeyString(); //returns an AVA serialized string
-            //
-            //     console.log(keypair.getAddressString());
-            //     this.newAddr = keypair.getAddressString();
-            //     this.newPrivateKey = privkstr;
-            //     this.newPublicKey = pubkstr;
-            // },
-            // getUTXOS(){
-            //     AVAAssets.GetUTXOs([this.address]).then(res => {
-            //         // console.log(res);
-            //         // console.log(res.getAllUTXOStrings());
-            //         // console.log(res.getAllUTXOs());
-            //         // console.log(`Balance: ${res.getBalance()}`)
-            //
-            //         let utxos = res.getAllUTXOs();
-            //
-            //         for(var id in utxos){
-            //             let utxo = utxos[id];
-            //             let asset_id = utxo.getAssetID()
-            //                 asset_id = binTools.bufferToB58(asset_id);
-            //             let asset_amount = utxo.getAmount()
-            //             console.log(asset_id,asset_amount.toString(10,0));
-            //         }
-            //         // console.log(utxos[0].getAssetID());
-            //         // console.log(utxos[0].getAmount());
-            //     })
-            // }
         },
         computed: {
             loginComponent(){

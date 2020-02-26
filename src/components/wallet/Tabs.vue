@@ -4,19 +4,19 @@
                                 <span>
                                     <fa class="icon" icon="exchange-alt"></fa>
                                 </span>
-            Send
+            {{$t('tabs.send')}}
         </router-link>
         <router-link to="/wallet/keys">
                                 <span>
                                     <fa class="icon" icon="key"></fa>
                                 </span>
-            Manage Keys
+            {{$t('tabs.keys')}}
         </router-link>
         <router-link to="/wallet/advanced">
                                 <span>
                                     <fa class="icon" icon="dna"></fa>
                                 </span>
-            Advanced
+            {{$t('tabs.advanced')}}
         </router-link>
     </div>
 </template>

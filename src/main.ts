@@ -11,10 +11,11 @@ import VueI18n from 'vue-i18n'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import vuetify from './plugins/vuetify';
-
+import i18n from "./plugins/i18n.js";
 // import AVA from './AVA';
 
-Vue.use(VueI18n);
+import CountryFlag from 'vue-country-flag'
+Vue.component('country-flag', CountryFlag);
 
 // Install BootstrapVue
 // Vue.use(BootstrapVue);
@@ -26,6 +27,7 @@ new Vue({
   router,
   store,
   vuetify,
+  i18n,
   render: h => h(App),
   mounted(){
     // Hide loader once vue is initialized

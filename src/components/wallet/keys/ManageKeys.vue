@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Manage Keys</h2>
+        <h2>{{$t('keys.title')}}</h2>
         <div class="card_body">
             <div
                     class="addressItem"
@@ -9,11 +9,11 @@
             >
                 <button class="selBut" @click="select(address)"></button>
                 <div class="details">
-                    <p class="addressTitle">Address {{index}}</p>
+                    <p class="addressTitle">{{$t('keys.address')}} {{index}}</p>
                     <p class="addressVal">{{address}}</p>
-                    <p class="addressTitle">Balance</p>
+                    <p class="addressTitle">{{$t('keys.balance')}}</p>
                     <div class="addressBallance">
-                        <p v-if="!addressBalances[address]">This address does not have any assets in it.</p>
+                        <p v-if="!addressBalances[address]">{{$t('keys.empty')}}</p>
                         <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">
                             {{bal.toString()}} <b>{{bal.symbol}}</b>
                         </p>
@@ -24,7 +24,6 @@
                 </div>
             </div>
         </div>
-<!--        {{addressBalances}}-->
     </div>
 </template>
 <script>
@@ -46,7 +45,7 @@
             },
             removeKey(address){
 
-                let msg = 'Are you sure you want to delete this key and address from your wallet? You will not be able to use the funds associated with it anymore.';
+                let msg = this.$t('keys.del_check');
                 let isConfirm = confirm(msg);
 
                 if(isConfirm){
@@ -66,7 +65,6 @@
             },
             addressBalances(){
                 let utxos =  this.$store.getters['Assets/addressUTXOs'];
-                // console.log(utxos);
                 let res = {};
 
                 for(var i=0;i<this.addresses.length; i++){
@@ -78,8 +76,6 @@
                     if(!addrUtxos) continue;
                     res[addr] = {};
 
-                    // console.log(addrStrip);
-                    // console.log(addrUtxos);
 
                     for(var n=0; n<addrUtxos.length; n++){
                         let utxo = addrUtxos[n];
@@ -90,10 +86,7 @@
                         let assetId = bintools.avaSerialize(assetIdBuff);
 
                         let assetObj = this.balance[assetId];
-                        // console.log(assetObj)
                         let asset = res[addr][assetId];
-                        // console.log(asset);
-                        // console.log(res);
                         if(!asset){
                             let name = assetObj.name;
                             let symbol = assetObj.symbol;
@@ -103,22 +96,11 @@
                                 newAsset.addBalance(amount);
 
                             res[addr][assetId] = newAsset;
-
-                            // res[addr][assetId] = {
-                            //     amount: amount,
-                            //     name: assetObj.name,
-                            //     symbol: assetObj.symbol
-                            // };
                         }else{
                             asset.addBalance(amount)
-                            // asset.amount = asset.amount.add(amount);
                         }
                     }
                 }
-
-                // console.log(this.addresses);
-                // console.log(utxos);
-                // console.log(res);
                 return res;
             },
         }

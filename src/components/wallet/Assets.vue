@@ -3,12 +3,12 @@
 <!--            <h3>Assets</h3>-->
         <div class="table_bg">
             <div class="tabletop">
-                <h4>Assets</h4>
+                <h4>{{$t('assets.title')}}</h4>
                 <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
                 <button v-else @click="updateAssets"><fa icon="sync"></fa></button>
             </div>
             <div v-if="assets.length === 0" class="noassets">
-                <p>You do not have any assets.</p>
+                <p>{{$t('assets.empty')}}</p>
             </div>
             <table v-else>
                 <thead>

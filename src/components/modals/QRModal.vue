@@ -1,5 +1,5 @@
 <template>
-    <modal ref="modal" title="Address">
+    <modal ref="modal" :title="$t('modal.qr.title')">
         <div class="qr_body">
             <canvas ref="qr"></canvas>
             <p>{{address}}</p>

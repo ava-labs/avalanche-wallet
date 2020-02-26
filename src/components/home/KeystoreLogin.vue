@@ -6,9 +6,9 @@
                       color="#42b983"
                       dense
                       v-model="file"
-                      label="Select Key File"></v-file-input>
+                      :label="$t('home.access_sel_file')"></v-file-input>
 
-        <v-text-field type="password" label="Password"
+        <v-text-field type="password" :label="$t('password')"
                       persistent-hint color="#42b983" v-model="pass"
         ></v-text-field>
 <!--        <v-btn type="file"></v-btn>-->
@@ -20,7 +20,7 @@
                color="#42b983"
                :loading="isLoading"
                :disabled="!formReady"
-        >Access Wallet</v-btn>
+        >{{$t('home.submit')}}</v-btn>
     </div>
 </template>
 <script>
