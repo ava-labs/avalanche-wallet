@@ -32,8 +32,8 @@ let tr = {
     },
     top: {
         title1: "Adresim",
-        title2: "Bakiye",
-        title3: 'Network',
+        title2: "Toplam",
+        title3: 'Aga',
         hover1: 'Adres QR Kodu',
         hover2: 'Print',
         hover3: 'Kopyala',

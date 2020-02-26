@@ -179,6 +179,7 @@
         margin: 3px;
         padding: 5px 15px;
         border-radius: 8px;
+        word-break: break-all;
     }
 
     .list{

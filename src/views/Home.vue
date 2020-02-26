@@ -218,7 +218,8 @@
     .bgdots{
         position: absolute;
         width: 100%;
-        height: 100%;
+        /*height: 100%;*/
+        min-height: calc(100vh - 80px);
         background-image: url('/img/dots_bg.svg');
         background-repeat: repeat;
         background-size: 20px;

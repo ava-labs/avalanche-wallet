@@ -95,6 +95,12 @@
             margin: unset;
             /*padding-top: 70px;*/
         }
+
+        .assets_card {
+            /*margin: 10px;*/
+            border-radius: 0;
+            max-height: 60vh;
+        }
     }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="notifications">
+    <div class="notifications" v-show="items.length>0">
         <transition-group name="list">
             <div class="notif_item"
                  v-for="notif in items"

@@ -73,6 +73,7 @@
 
     #router_view{
         min-height: calc(100vh - 80px);
+        position: relative;
     }
 
     @media only screen and (max-width: 600px) {

@@ -18,7 +18,6 @@
             Send,
             Receive
         },
-
     }
 </script>
 <style scoped>
