@@ -11,6 +11,8 @@ import VueI18n from 'vue-i18n'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import vuetify from './plugins/vuetify';
+
+// @ts-ignore
 import i18n from "./plugins/i18n.js";
 // import AVA from './AVA';
 
