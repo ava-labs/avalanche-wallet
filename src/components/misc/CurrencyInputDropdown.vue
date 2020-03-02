@@ -54,7 +54,7 @@
                 let deno = this.asset_now.denomination;
                 let res = '0';
                 if(deno > 0){
-                    res += '.'
+                    res += '.';
                     for(var i=0;i<deno;i++){
                         res += '0';
                     }
@@ -99,6 +99,7 @@
             },
             max_amount(){
                 if(!this.asset_now) return null;
+                // console.log(typeof this.asset_now.amount.clone());
                 return this.asset_now.amount;
             }
         },
@@ -110,7 +111,7 @@
                 // this.onchange();
             },
             amount_in(val){
-                console.log(val.toString());
+                // console.log(val.toString());
                 // let amount = parseFloat(this.$refs.amount.value);
                 // if(amount > this.max_amount){
                 //     amount = this.max_amount;
