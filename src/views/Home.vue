@@ -7,6 +7,9 @@
                     <img src="/img/ava_logo_white.png">
                 </div>
                 <div class="auth_body">
+                    <v-alert type="error" :icon="false" text>
+                        This is a <b>Beta Wallet</b> running on our testnet. <br> The tokens you have are not real and will not transfer to the real wallet.
+                    </v-alert>
                     <div class="menu" v-show="menu==='main'">
                         <div class="menu_option">
                             <h4>{{ $t('home.access.title') }}</h4>
@@ -99,7 +102,7 @@
         position: relative;
         width: 460px;
         max-width: 100vw;
-        border-radius: 12px;
+        border-radius: 4px;
         box-shadow: 3px 4px 20px rgba(0,0,0,0.4);
         overflow: hidden;
         background-color: #fafafa;
