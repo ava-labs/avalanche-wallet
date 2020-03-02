@@ -3,6 +3,7 @@
 <!--        <router-link v-if="!isAuth" to="/">Home</router-link>-->
 <!--        <router-link v-if="isAuth" to="/wallet/ava">Wallet</router-link>-->
         <img src="/img/logo_dark.svg">
+        <p class="app_name">TEST WALLET</p>
         <v-spacer></v-spacer>
         <language-select></language-select>
     </div>
@@ -31,5 +32,11 @@
     }
     a{
         text-decoration: none;
+    }
+
+    .app_name{
+        margin: 0;
+        /*font-weight: bold;*/
+        color: #9c9c9c;
     }
 </style>

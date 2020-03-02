@@ -15,7 +15,7 @@
     </div>
 </template>
 <script>
-    import { BrowserQRCodeReader } from '@zxing/library';
+    import * as ZXing from '@zxing/library';
 
     export default {
         data(){
@@ -51,7 +51,7 @@
         mounted(){
             let parent = this;
 
-            const codeReader = new BrowserQRCodeReader();
+            const codeReader = new ZXing.BrowserQRCodeReader();
             codeReader
                 .listVideoInputDevices()
                 .then(videoInputDevices => {

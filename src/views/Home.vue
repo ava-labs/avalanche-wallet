@@ -47,7 +47,7 @@
     </div>
 </template>
 <script>
-    import QRReader from "@/components/misc/QRReader";
+    // import QRReader from "@/components/misc/QRReader";
     import KeystoreLogin from '@/components/home/KeystoreLogin';
     import PrivateKeyLogin from "@/components/home/PrivateKeyLogin";
     import CreateNew from "@/components/home/CreateNew";
@@ -69,7 +69,7 @@
             }
         },
         components: {
-            QRReader,
+            // QRReader,
             KeystoreLogin,
             PrivateKeyLogin,
             CreateNew

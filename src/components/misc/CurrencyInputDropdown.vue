@@ -14,7 +14,9 @@
     import * as BN from 'bn.js';
     import Big from 'big.js';
     import Dropdown from "@/components/misc/Dropdown";
-    import BigNumInput from "@/components/misc/BigNumInput";
+    // import BigNumInput from "@/components/misc/BigNumInput";
+
+    import { BigNumInput } from '@avalabs/vue_components';
 
     export default {
         components: {

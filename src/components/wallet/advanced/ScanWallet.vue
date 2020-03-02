@@ -2,7 +2,7 @@
     <div>
         <p>{{$t('advanced.paper.desc')}}</p>
         <label>{{$t('advanced.paper.pk')}}</label>
-        <QRInput @change="qr_change" v-model="pk"></QRInput>
+        <qr-input @change="qr_change" v-model="pk"></qr-input>
         <v-btn
                 class="addKeyBut"
                 depressed
@@ -13,13 +13,12 @@
     </div>
 </template>
 <script>
-    import QRInput from "@/components/misc/QRInput";
-
+    import { QrInput } from '@avalabs/vue_components';
     import {bintools, keyChain} from "@/AVA";
 
     export default {
         components: {
-            QRInput
+            QrInput
         },
         data(){
             return {

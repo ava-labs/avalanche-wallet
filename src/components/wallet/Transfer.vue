@@ -11,7 +11,7 @@
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
                 <div>
                     <h4>{{$t('transfer.to')}}</h4>
-                    <QRInput v-model="addressIn"></QRInput>
+                    <qr-input v-model="addressIn"></qr-input>
                 </div>
                 <div class="fees">
                     <h4>{{$t('transfer.fees')}}</h4>
@@ -39,7 +39,8 @@
 <script>
     import TxList from "@/components/wallet/TxList";
     import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
-    import QRInput from "@/components/misc/QRInput";
+    // import QRInput from "@/components/misc/QRInput";
+    import { QrInput } from "@avalabs/vue_components";
     import {isValidAddress} from "../../AVA";
 
     export default {
@@ -47,7 +48,7 @@
             // QRReader,
             TxList,
             AddressDropdown,
-            QRInput
+            QrInput
         },
         data(){
             return{

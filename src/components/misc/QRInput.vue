@@ -3,20 +3,25 @@
         <QRReader class="readerIn" @change="change"><button>
                 <fa icon="camera"></fa>
             </button></QRReader>
-        <v-text-field
-                class="pk_in"
-                placeholder="00000AVA00000"
-                color="#333"
-                hide-details
-                v-model="pk"
-                autocomplete="off"
-                @input="oninput"
-        ></v-text-field>
+        <input type="text" class="pk_in" placeholder="00000AVA00000"
+               v-model="pk" @input="oninput">
+<!--        <v-text-field-->
+<!--                class="pk_in"-->
+<!--                placeholder="00000AVA00000"-->
+<!--                color="#333"-->
+<!--                hide-details-->
+<!--                v-model.trim="pk"-->
+<!--                autocomplete="off"-->
+<!--                single-line-->
+<!--                @input="oninput"-->
+<!--        ></v-text-field>-->
     </div>
 </template>
 <script>
-    import QRReader from "@/components/misc/QRReader";
+    // import QRReader from "@/components/misc/QRReader";
+    import QRReader from "@avalabs/qr_reader";
 
+    console.log(QRReader);
     export default {
         components: {
             QRReader
@@ -47,6 +52,7 @@
                 this.emit();
             },
             oninput(){
+                this.pk = this.pk.trim();
                 this.emit();
             },
             emit(){
@@ -88,20 +94,23 @@
     }
 
     .pk_in{
+        outline: none;
+        text-align: center;
+        width: 100%;
         margin: 0;
         padding: 0px 12px;
     }
 
-    .pk_in >>> input::placeholder{
-        color: #3336 !important;
-    }
+    /*.pk_in >>> input::placeholder{*/
+    /*    color: #3336 !important;*/
+    /*}*/
 
-    .pk_in >>> input{
-        color: #333 !important;
-        text-align: center;
-    }
-    .pk_in >>> .v-input__slot::before{
-        display: none;
-        border-color: #d2d2d240 !important;
-    }
+    /*.pk_in >>> input{*/
+    /*    color: #333 !important;*/
+    /*    text-align: center;*/
+    /*}*/
+    /*.pk_in >>> .v-input__slot::before{*/
+    /*    display: none;*/
+    /*    border-color: #d2d2d240 !important;*/
+    /*}*/
 </style>

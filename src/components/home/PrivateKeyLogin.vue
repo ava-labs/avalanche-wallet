@@ -1,14 +1,16 @@
 <template>
     <div>
-        <QRInput v-model="privateKey"></QRInput>
+        <qr-input v-model="privateKey"></qr-input>
         <v-btn block depressed @click="access">{{$t('home.submit')}}</v-btn>
     </div>
 </template>
 <script>
-    import QRInput from "@/components/misc/QRInput";
+    // import QRInput from "@/components/misc/QRInput";
+    import {QrInput} from '@avalabs/vue_components';
+    // import QRInput from "@avalabs/qr_input";
     export default {
         components:{
-            QRInput
+            QrInput
         },
         data(){
             return{
