@@ -21,7 +21,7 @@ Refer to ``.env.example``
 - ``VUE_APP_AVA_IP`` The ip address of the Gecko jrpc node.
 - ``VUE_APP_AVA_PORT`` The  port of the Gecko jrpc node.
 - ``VUE_APP_AVA_PROTOCOL`` Either http or https
-- ``VUE_APP_NETWORK_ID`` What is the network id of the AVA network you are conencting to.
+- ``VUE_APP_NETWORK_ID`` What is the network id of the AVA network you are connecting to.
 - ``VUE_APP_AVA_ASSET_ID`` Which asset id is the actual AVA Token
 - ``VUE_APP_CHAIN_ID`` The blockchain id of the AVA  Network you are connecting to.
 
@@ -34,7 +34,8 @@ able to run a Gecko node properly.
 
 
 ## Deployment
- Compile and minify to have a production ready application with ``npm run build``. Serve from the ``/dist``
- directory..
+ 1) Setup environment variables for production
+ 2) Compile and minify to have a production ready application with ``npm run build``. 
+ 3) Serve from the ``/dist`` directory.
  
 
