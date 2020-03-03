@@ -2,12 +2,17 @@
 This is the frontend Vue.js application for the AVA Wallet. 
 
 
+## Prerequisites
+- Recent version of npm (6.13.4)
+- Node v12.14.1
 
 ## Installation
-
-1) Install javascript dependencies with ``npm install``.
-2) Create a ``.env.local`` file for development that will have your environment variables.
-3) Install Gecko, our AVA node client written in Golang to spin up a network (https://github.com/ava-labs/gecko). 
+1) Clone the repo ``git clone https://github.com/ava-labs/wallet-site.git``
+2) Go to root of the project ``cd wallet-site``
+3) Install javascript dependencies with ``npm install``.
+4) Copy the example file ``.env.example``, and rename it ``.env``. Fill the variables with the correct values. 
+Refer to the ENV FILES section for additional help.
+5) Install Gecko, our AVA node client written in Golang to start a network (https://github.com/ava-labs/gecko). 
 
 
 ## ENV Files

@@ -5,7 +5,7 @@
             <div v-if="assetArray.length===0">
                 <p>{{$t('transfer.no_cash')}}</p>
                 <h4>{{$t('transfer.faucet')}} <fa icon="tint"></fa></h4>
-                <a href="https://faucet.ava.network" target="_blank">Go to faucet.</a>
+                <a href="https://github.com/ava-labs/faucet-site" target="_blank">Go to faucet.</a>
             </div>
             <div  v-else class="new_order_Form">
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
