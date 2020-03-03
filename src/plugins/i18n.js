@@ -15,7 +15,7 @@ const messages = {
     en,
     // fr,
     // ru: ru.default,
-    tr
+    // tr
 };
 
 // Create VueI18n instance with options
