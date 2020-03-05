@@ -27,7 +27,6 @@ Refer to ``.env.example``
 - ``VUE_APP_AVA_PORT`` The  port of the Gecko jrpc node.
 - ``VUE_APP_AVA_PROTOCOL`` Either http or https
 - ``VUE_APP_NETWORK_ID`` What is the network id of the AVA network you are connecting to.
-- ``VUE_APP_AVA_ASSET_ID`` Which asset id is the actual AVA Token
 - ``VUE_APP_CHAIN_ID`` The blockchain id of the AVA  Network you are connecting to.
 
 ## Running The Project
@@ -37,6 +36,8 @@ In order for the wallet to work, it needs the AVA network to operate on.
 able to run a Gecko node properly.
 2) Run the project with hot reloading ``npm run serve``
 
+When you go to the website on your browser, you might get a warning saying 
+'Site is not secure'. This is because we are signing our own SSL Certificates. Please ignore and continue to the website.
 
 ## Deployment
  1) Setup environment variables for production

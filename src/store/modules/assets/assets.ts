@@ -7,7 +7,14 @@ import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 
 
-const AVA_ASSET_ID = process.env.VUE_APP_AVA_ASSET_ID;
+
+let AVA_ASSET_ID:string;
+
+
+avm.getAssetDescription('AVA').then(res => {
+    AVA_ASSET_ID = bintools.avaSerialize(res.assetID);
+});
+
 
 
 const assets_module: Module<AssetsState, RootState> = {

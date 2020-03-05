@@ -30,6 +30,9 @@ let keyChain = avm.keyChain();
 
 
 
+
+
+
 function isValidAddress(addr:string){
     try{
         let res = bintools.stringToAddress(addr);

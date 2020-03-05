@@ -15,7 +15,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
-    "@avalabs/vue_components": "^0.2.4",
+    "@avalabs/vue_components": "^0.3.0",
     "@fortawesome/fontawesome-free": "^5.8.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-brands-svg-icons": "^5.12.0",

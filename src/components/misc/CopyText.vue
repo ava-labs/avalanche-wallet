@@ -12,8 +12,8 @@
         methods: {
             copy(){
                 let copytext = this.$refs.copytext;
-                    copytext.select();
-                    copytext.setSelectionRange(0, 99999);
+                copytext.select();
+                copytext.setSelectionRange(0, 99999);
 
                 console.log(copytext);
 

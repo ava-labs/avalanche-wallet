@@ -1,21 +1,25 @@
 <template>
     <div>
+        <v-alert dense color="error" outlined>
+            <fa icon="exclamation-triangle"></fa>
+            {{$t('home.create.warning')}}.</v-alert>
         <v-btn block depressed @click="createKey" v-if="!newPrivateKey">{{$t('home.create.generate')}}</v-btn>
         <div v-if="newPrivateKey" class="keygen">
-            <v-alert dense color="warning" >
-                <fa icon="exclamation-triangle"></fa>
-                {{$t('home.create.warning')}}.</v-alert>
             <label>{{$t('private_key')}}</label>
-            <p>{{newPrivateKey}}</p>
+            <text-display-copy :value="newPrivateKey"></text-display-copy>
             <button @click="access" class="access">{{$t('home.create.submit')}}</button>
         </div>
     </div>
 </template>
 <script>
 
+    import TextDisplayCopy from "@/components/misc/TextDisplayCopy";
     import {keyChain} from "@/AVA";
 
     export default {
+        components: {
+            TextDisplayCopy
+        },
         data(){
             return{
                 newPrivateKey: null,
@@ -78,9 +82,15 @@
         font-weight: bold;
         border-radius: 8px;
         text-align: center;
+        margin-top: 15px;
     }
 
     .v-alert{
-        font-size: 12px;
+        font-size: 14px;
+    }
+
+    .warning{
+        font-weight: bold;
+        color: #42b983 !important;
     }
 </style>

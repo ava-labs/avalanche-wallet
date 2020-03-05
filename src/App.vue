@@ -10,22 +10,13 @@
 <script>
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
+    import {avm} from './AVA';
+
     export default {
         components: {
             Navbar,
             Notifications
         },
-        mounted(){
-            // this.$store.dispatch('Notifications/add', {
-            //     title: 'YO',
-            //     message: 'Succesfully sent a transaction.',
-            //     color: '#f13939'
-            // });
-            // this.$store.dispatch('Notifications/add', {
-            //     title: 'YO',
-            //     message: 'nothing to see here'
-            // });
-        }
     }
 </script>
 
