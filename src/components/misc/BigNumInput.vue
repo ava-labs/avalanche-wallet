@@ -64,7 +64,7 @@
 
             // Emit in BN as satoshis!
             emit(){
-                console.log(this.value.toString());
+                // console.log(this.value.toString());
                 let tens = Big(10).pow(this.denomination);
                 let satoshis = this.value.times(tens);
                 let bn = new BN(satoshis.toFixed(0));
@@ -86,7 +86,7 @@
             },
             cleanInput(){
                 let rawnum;
-                console.log('Raw:',this.raw);
+                // console.log('Raw:',this.raw);
                 try{
                     if(this.raw === '') this.raw = 0;
                     rawnum = new Big(this.raw);

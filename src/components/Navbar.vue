@@ -6,6 +6,9 @@
         <p class="app_name">BETA WALLET</p>
         <v-spacer></v-spacer>
         <language-select></language-select>
+        <div v-if="isAuth">
+            <button @click="logout">Logout</button>
+        </div>
     </div>
 </template>
 <script>
@@ -18,15 +21,20 @@
             isAuth(){
                 return this.$store.state.isAuth;
             }
+        },
+        methods: {
+            logout(){
+                this.$store.dispatch('logout');
+            }
         }
     }
 </script>
 <style scoped>
     img{
         max-height: 25px;
-        margin: 0px 30px;
     }
     #nav{
+        padding: 0px 30px;
         /*display: none;*/
         z-index: 2;
     }

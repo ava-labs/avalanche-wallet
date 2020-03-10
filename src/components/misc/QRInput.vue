@@ -21,7 +21,7 @@
     // import QRReader from "@/components/misc/QRReader";
     import QRReader from "@avalabs/qr_reader";
 
-    console.log(QRReader);
+    // console.log(QRReader);
     export default {
         components: {
             QRReader

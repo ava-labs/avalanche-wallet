@@ -47,7 +47,7 @@
         },
         mounted() {
             if(this.default_val){
-                console.log(this.default_val);
+                // console.log(this.default_val);
                 if(Array.isArray(this.default_val)){
                     if(this.multiple){
                         this.value = this.default_val.slice();

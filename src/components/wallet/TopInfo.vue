@@ -172,12 +172,12 @@
     }
 
 
-    @media only screen and (max-width: 1200px) {
-        .top_cards {
-            grid-template-columns: 100%;
-            grid-template-rows: min-content min-content min-content;
-        }
-    }
+    /*@media only screen and (max-width: 1200px) {*/
+    /*    .top_cards {*/
+    /*        grid-template-columns: 100%;*/
+    /*        grid-template-rows: min-content min-content min-content;*/
+    /*    }*/
+    /*}*/
     @media only screen and (max-width: 600px) {
         .top_cards{
             grid-template-rows: min-content;

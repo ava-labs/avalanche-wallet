@@ -72,8 +72,39 @@ export default new Vuex.Store({
             store.dispatch('refreshAddresses');
         },
 
+        async logout(store){
 
 
+
+            // Delete keys
+            store.dispatch('removeAllKeys');
+            await store.dispatch('Notifications/add', {
+                title: 'Logout',
+                message: 'You have successfully logged out of your wallet.'
+            });
+
+            // Remove other data
+            store.state.selectedAddress = '';
+            store.state.privateKey =  '';
+            store.state.isAuth = false;
+
+            // Clear Assets
+            await store.dispatch('Assets/onlogout');
+
+            console.log(store.state);
+            console.log(avm)
+            router.push('/');
+        },
+
+
+        // used with logout
+        async removeAllKeys(store){
+            let addrs = store.state.addresses;
+          for(var i=addrs.length-1; i >= 0; i--){
+              let addr = store.state.addresses[i];
+              await store.dispatch('removeKey', addr);
+          }
+        },
 
         removeKey(store, address:string){
 
@@ -88,6 +119,7 @@ export default new Vuex.Store({
                     let addr = addresses[i];
                     if(address !== addr){
                         store.commit('selectAddress', addr);
+                        break;
                     }
                 }
             }

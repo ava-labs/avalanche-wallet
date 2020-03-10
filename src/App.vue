@@ -10,7 +10,6 @@
 <script>
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
-    import {avm} from './AVA';
 
     export default {
         components: {

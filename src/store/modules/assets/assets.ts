@@ -29,6 +29,14 @@ const assets_module: Module<AssetsState, RootState> = {
 
     },
     actions: {
+        // Called on a logout event
+        onlogout({state}){
+            state.isUpdateBalance = false;
+            state.utxo_set = null;
+            state.utxos = [];
+            state.descriptions = {};
+        },
+
         // Fetches UTXOs of the addresses registered to the wallet
         updateUTXOs({state, commit, dispatch, rootState}){
             console.log("UPDATE UTXOS ASSET mod");

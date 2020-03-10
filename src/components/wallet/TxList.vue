@@ -92,7 +92,7 @@
                         amount: 0,
                     });
                 }else{
-                    console.log("initial before: ", this.next_initial);
+                    // console.log("initial before: ", this.next_initial);
                     this.tx_list.push({
                         uuid: uuid,
                         asset: this.next_initial,
