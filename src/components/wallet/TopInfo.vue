@@ -180,6 +180,7 @@
     /*}*/
     @media only screen and (max-width: 600px) {
         .top_cards{
+            grid-template-columns: 100%;
             grid-template-rows: min-content;
         }
         .top_card.nonessential{
