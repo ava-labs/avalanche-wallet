@@ -29,6 +29,8 @@ Refer to ``.env.example``
 - ``VUE_APP_NETWORK_ID`` What is the network id of the AVA network you are connecting to.
 - ``VUE_APP_CHAIN_ID`` The blockchain id of the AVA  Network you are connecting to.
 
+Make sure to rebuild the project using `npm run serve` after changing the `.env` file.
+
 ## Running The Project
 
 In order for the wallet to work, it needs the AVA network to operate on. 
@@ -43,5 +45,29 @@ When you go to the website on your browser, you might get a warning saying
  1) Setup environment variables for production
  2) Compile and minify to have a production ready application with ``npm run build``. 
  3) Serve from the ``/dist`` directory.
+
+
+# Browser Support
+
+We suggest using Google Chrome to view the AVA Wallet website.
+
+## Firefox and https
+Firefox does not allow https requests to localhost. But the AVA Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.json` file in the root directory and change 
+```
+devServer: {
+    https: true
+},
+```
+to
+```
+devServer: {
+    https: false
+},
+```
+
+and run `npm run serve` to reflect the change.
+
+
+
  
 
