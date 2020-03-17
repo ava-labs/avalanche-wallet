@@ -58,7 +58,7 @@ We suggest using Google Chrome to view the AVA Wallet website.
 
 Firefox does not allow https requests to localhost. But the AVA Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.json` file in the root directory and change 
 
-``` json
+```
 devServer: {
     https: true
 },
@@ -66,7 +66,7 @@ devServer: {
 
 to
 
-``` json
+```
 devServer: {
     https: false
 },
