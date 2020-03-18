@@ -17,6 +17,8 @@
     import QRCode from 'qrcode'
     import jsPDF from 'jspdf';
     var pdfjsLib = require("pdfjs-dist");
+    var pdfjsWorker = require('worker-loader!pdfjs-dist/build/pdf.worker.js');
+    pdfjsLib.GlobalWorkerOptions.workerPort = new pdfjsWorker();
     import printjs from 'print-js'
 
     const PDF_W = 8.5;
