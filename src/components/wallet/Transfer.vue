@@ -4,8 +4,10 @@
         <div class="card_body">
             <div v-if="assetArray.length===0">
                 <p>{{$t('transfer.no_cash')}}</p>
-                <h4>{{$t('transfer.faucet')}} <fa icon="tint"></fa></h4>
-                <a href="https://github.com/ava-labs/faucet-site" target="_blank">Go to faucet.</a>
+                <div v-if="faucetLink">
+                    <h4>{{$t('transfer.faucet')}} <fa icon="tint"></fa></h4>
+                    <a :href="faucetLink" target="_blank">Go to faucet.</a>
+                </div>
             </div>
             <div  v-else class="new_order_Form">
                 <tx-list ref="txList" @change="updateTxList"></tx-list>
@@ -107,6 +109,11 @@
             }
         },
         computed: {
+            faucetLink(){
+                let link = process.env.VUE_APP_FAUCET_LINK;
+                if(link) return link;
+                return null;
+            },
             canSend(){
                 if(this.addressIn && this.orders.length>0 && this.totalTxSize>0 && this.change_address.length > 0){
                     return true;
