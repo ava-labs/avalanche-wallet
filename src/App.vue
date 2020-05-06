@@ -20,21 +20,27 @@
 </script>
 
 <style lang="scss">
+    @use "./main";
 
-      html{
+    html{
         height: 100%;
-      }
-      body{
+    }
+
+    body{
         height: 100%;
-      }
+    }
+
+    p{
+        margin: 0px !important;
+    }
     #app {
-      min-height: 100%;
-      font-family: 'Avenir', Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-align: left;
-      color: #2c3e50;
-      background-color: #eaeaea;
+        min-height: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: left;
+        color: #2c3e50;
+        background-color: #fff;
+        font-family: 'Rubik', sans-serif;
     }
 
     #nav {
@@ -44,17 +50,8 @@
         align-items: center;
         position: relative;
         z-index: 2;
-        background-color: #fff;
-
-        a {
-            margin: 20px;
-            font-weight: bold;
-            color: #444;
-
-            &.router-link-exact-active {
-                color: #42b983;
-            }
-        }
+        background-color: transparent;
+        padding: main.$container_padding_m;
     }
 
     button{
@@ -64,8 +61,13 @@
     #router_view{
         min-height: calc(100vh - 80px);
         position: relative;
+        padding: main.$container_padding_m;
     }
 
+    a{
+        color: #000 !important;
+        text-decoration: none !important;
+    }
     @media only screen and (max-width: 600px) {
         #nav{
             position: fixed;
@@ -82,5 +84,16 @@
         #router_view{
             padding-top: 80px;
         }
+    }
+
+
+
+    /*     For vue transitions */
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .2s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
     }
 </style>

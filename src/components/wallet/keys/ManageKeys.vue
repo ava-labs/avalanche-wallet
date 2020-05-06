@@ -1,36 +1,79 @@
 <template>
     <div>
-        <h2>{{$t('keys.title')}}</h2>
-        <div class="card_body">
-            <div
-                    class="addressItem"
-                    v-for="(address, index) in addresses" :key="address"
-                    :selected="selected === address"
-            >
-                <button class="selBut" @click="select(address)"></button>
-                <div class="details">
-                    <p class="addressTitle">{{$t('keys.address')}} {{index}}</p>
-                    <p class="addressVal">{{address}}</p>
-                    <p class="addressTitle">{{$t('keys.balance')}}</p>
-                    <div class="addressBallance">
-                        <p v-if="!addressBalances[address]">{{$t('keys.empty')}}</p>
-                        <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">
-                            {{bal.toString()}} <b>{{bal.symbol}}</b>
-                        </p>
-                    </div>
+        <h1>{{$t('keys.title')}}</h1>
+        <div class="cols">
+            <div class="card_body">
+                <h4>My Keys</h4>
+<!--                <div-->
+<!--                        class="addressItem"-->
+<!--                        v-for="(address, index) in addresses" :key="address"-->
+<!--                        :selected="selected === address"-->
+<!--                >-->
+<!--                    <button class="selBut" @click="select(address)"></button>-->
+<!--                    <div class="details">-->
+<!--                        <p class="addressTitle">{{$t('keys.address')}} {{index}}</p>-->
+<!--                        <p class="addressVal">{{address}}</p>-->
+<!--                        <p class="addressTitle">{{$t('keys.balance')}}</p>-->
+<!--                        <div class="addressBallance">-->
+<!--                            <p v-if="!addressBalances[address]">{{$t('keys.empty')}}</p>-->
+<!--                            <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">-->
+<!--                                {{bal.toString()}} <b>{{bal.symbol}}</b>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="buts" v-if="addresses.length > 1">-->
+<!--                        <button @click="removeKey(address)"><fa icon="trash"></fa></button>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <my-keys></my-keys>
+            </div>
+            <div class="right_side">
+                <div>
+                    <h4>Add Key</h4>
+                    <p>
+                        Add additional private keys to use with your wallet.
+                    </p>
+                    <v-tabs color="#5824CF">
+                        <v-tab>Key String</v-tab>
+                        <v-tab>Key File</v-tab>
+                        <v-tab-item>
+                            <add-key-string></add-key-string>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <add-key-file></add-key-file>
+                        </v-tab-item>
+                    </v-tabs>
+<!--                    <scan-wallet></scan-wallet>-->
                 </div>
-                <div class="buts" v-if="addresses.length > 1">
-                    <button @click="removeKey(address)"><fa icon="trash"></fa></button>
+                <div>
+                    <h4>Export Wallet</h4>
+                    <backup-export></backup-export>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 <script>
     import {bintools} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
-
+    // import BackupImport from "@/components/wallet/advanced/BackupImport";
+    // import BackupWallet from "@/components/wallet/advanced/BackupWallet";
+    import BackupExport from "@/components/wallet/advanced/BackupExport";
+    // import ScanWallet from "@/components/wallet/advanced/ScanWallet";
+    import AddKeyFile from "@/components/wallet/keys/AddKeyFile";
+    import AddKeyString from "@/components/wallet/keys/AddKeyString";
+    import MyKeys from "@/components/wallet/keys/MyKeys";
     export default {
+        components: {
+            // BackupImport,
+            // BackupWallet
+            BackupExport,
+            AddKeyFile,
+            AddKeyString,
+            MyKeys
+            // ScanWallet
+        },
         data(){
             return{
 
@@ -44,7 +87,6 @@
                 this.$refs.modal.open();
             },
             removeKey(address){
-
                 let msg = this.$t('keys.del_check');
                 let isConfirm = confirm(msg);
 
@@ -106,42 +148,29 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+    .cols{
+        display: grid;
+        grid-template-columns: 1fr 460px;
+        grid-gap: 90px;
+    }
+
+
+    .right_side{
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+    }
     p{
         margin: 0 !important;
     }
-    .addressItem{
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px dashed #eaeaea;
-    }
-    .addressItem .selBut{
-        flex-basis: 14px;
-        background-color: #808080;
-        height: 14px;
-        width: 14px;
-        border-radius: 14px;
-        flex-shrink: 0;
-    }
-    .addressItem[selected] .selBut{
-        background-color: #42b983;
+
+
+    h4{
+        font-size: 22px;
+        font-weight: lighter;
     }
 
-    .details{
-        margin-left: 20px;
-        flex-grow: 1;
-    }
 
-    .addressTitle{
-        font-size: 13px;
-        font-weight: bold;
-    }
-    .addressVal{
-        word-break: break-all;
-        font-size: 14px;
-        margin-bottom: 12px !important;
-    }
 
     .buts{
         display: flex;
@@ -171,5 +200,9 @@
         font-size: 12px;
         flex-shrink: 0;
         border-right: 1px solid #dedede;
+
+        &:last-of-type{
+            border: none;
+        }
     }
 </style>

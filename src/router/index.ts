@@ -15,6 +15,8 @@ Vue.use(VueRouter);
 
 
 import store from '../store/index' // your vuex store
+import WalletHome from "@/views/wallet/Home.vue";
+
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
     if (!store.getters.isAuthenticated) {
@@ -51,6 +53,10 @@ const routes = [
         path: '/wallet',
         name: 'wallet',
         children: [
+            {
+                path: '/',
+                component: WalletHome
+            },
             {
                 path: 'send',
                 component: Transfer

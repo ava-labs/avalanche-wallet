@@ -1,11 +1,9 @@
 <template>
     <div class="top_cards">
         <q-r-modal ref="qr_modal"></q-r-modal>
-<!--        <addresses-modal ref="addresses_modal"></addresses-modal>-->
-<!--        <key-store ref="keystore_modal"></key-store>-->
         <paper-wallet ref="print_modal"></paper-wallet>
 
-        <div class="top_card" :style="{backgroundColor: '#6c79a7'}">
+        <div class="top_card">
             <div class="card_left">
                 <img src="/img/center_focus.png">
             </div>
@@ -14,14 +12,12 @@
                 <p>{{address}}</p>
                 <div class="buts">
                     <button :tooltip="$t('top.hover1')" @click="viewQRModal"><fa icon="qrcode"></fa></button>
-<!--                    <button tooltip="My Addresses" @click="viewAddressesModal"><fa icon="list"></fa></button>-->
                     <button :tooltip="$t('top.hover2')" @click="viewPrintModal"><fa icon="print"></fa></button>
-<!--                    <button tooltip="Download Keystore File" @click="viewKeystoreModal"><fa icon="download"></fa></button>-->
                     <CopyText :tooltip="$t('top.hover3')" :value="address"></CopyText>
                 </div>
             </div>
         </div>
-        <div class="top_card nonessential" :style="{backgroundColor: '#6ca7a7'}">
+        <div class="top_card nonessential" >
             <div class="card_left">
                 <img src="/img/account-balance.png">
             </div>
@@ -35,12 +31,21 @@
                 </div>
             </div>
         </div>
-        <div class="top_card nonessential" :style="{backgroundColor: '#6ca77e'}">
+        <div class="top_card nonessential">
             <div class="card_left">
                 <img src="/img/wifi.png">
             </div>
             <div class="card_right">
                 <h4>{{$t('top.title3')}}</h4>
+                <p>{{network}}</p>
+            </div>
+        </div>
+        <div class="top_card nonessential">
+            <div class="card_left">
+                <img src="/img/wifi.png">
+            </div>
+            <div class="card_right">
+                <h4>{{$t('top.title4')}}</h4>
                 <p>{{network}}</p>
             </div>
         </div>
@@ -94,32 +99,40 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .top_cards{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 15px;
     }
     .top_card{
         flex-grow: 1;
-        color: #fff;
+        color: #4A2899;
         flex-shrink: 0;
         display: flex;
-        background-color: #6ca771;
+        background-color: #EBE4FB;
         /*margin: 12px;*/
-        padding: 10px 8px;
+        /*padding: 10px 8px;*/
+        overflow: hidden;
         border-radius: 5px;
+        animation-name: fade;
+        animation-duration: 0.6s;
+        animation-timing-function: ease-out;
     }
 
     .card_left{
+        background-color: #F4EFFF;
         flex-basis: 70px;
         flex-shrink: 0;
+        padding: 5px;
+        border-bottom-right-radius: 5px;
     }
 
     .card_right{
         display: flex;
         flex-direction: column;
-        padding: 0px 18px;
+        padding: 20px 18px;
+        padding-bottom: 8px;
     }
 
     .card_left img{
@@ -128,7 +141,9 @@
         fill: #ddd;
     }
     .top_card h4{
-        font-size: 26px;
+        /*font-size: 26px;*/
+        color: #5824CF;
+        font-weight: bold;
         text-align: left;
     }
     .top_card p{
@@ -136,16 +151,19 @@
         text-align: left;
         flex-grow: 1;
         margin: 0;
-        font-size: 15px;
+        font-size: 14px;
+
+        font-family: Inconsolata, monospace;
     }
 
     .top_card .buts{
-        text-align: left;
+        width: 100%;
+        text-align: right;
     }
     .top_card .buts button{
-        font-size: 22px;
+        font-size: 18px;
         margin: 0px 18px;
-        margin-left: 0px;
+        margin-right: 0px;
         position: relative;
         outline: none;
     }
@@ -185,6 +203,18 @@
         }
         .top_card.nonessential{
             display: none;
+        }
+    }
+
+
+
+    /* The animation code */
+    @keyframes fade {
+        from {
+            opacity: 0.0;
+        }
+        to {
+            opacity: 1;
         }
     }
 </style>

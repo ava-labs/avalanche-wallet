@@ -34,7 +34,8 @@
   "top": {
     "title1": "My Address",
     "title2": "Balance",
-    "title3": "Network",
+    "title3": "Subnet",
+    "title4": "Network",
     "hover1": "View Address QR Code",
     "hover2": "Print",
     "hover3": "Copy"
