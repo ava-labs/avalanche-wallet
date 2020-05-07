@@ -3,7 +3,9 @@
         <sidebar class="wallet_sidebar"></sidebar>
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
-            <router-view id="wallet_router"></router-view>
+            <transition name="page_fade" mode="out-in">
+                <router-view id="wallet_router"></router-view>
+            </transition>
         </div>
     </div>
 </template>
@@ -31,6 +33,14 @@
         grid-template-rows: max-content 1fr;
         grid-gap: 50px;
 
+    }
+
+    .page_fade-enter-active, .page_fade-leave-active {
+        transition: all .2s;
+    }
+    .page_fade-enter, .page_fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+        transform: translateX(30px);
     }
 
 </style>

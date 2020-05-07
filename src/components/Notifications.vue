@@ -28,30 +28,31 @@
         position: fixed;
         display: flex;
         flex-direction: column;
-        bottom: 0;
+        top: 0;
         right: 0;
-        padding: 20px;
+        padding: 30px 3vw;
         z-index: 9;
     }
 
     .notif_item{
-        border-radius: 4px;
+        border-radius: 6px;
         margin-top: 8px;
         overflow: hidden;
-        box-shadow: 2px 0px 5px rgba(0,0,0,0.2);
-        background-color: #fff;
+        box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
+        background-color: #f2f2f2;
         max-width: 195px;
+        font-size: 13px !important;
     }
 
     .notif_title{
-        font-size: 14px;
+        /*font-size: 14px;*/
         color: #fff;
         font-weight: bold;
-        padding: 3px 8px;
+        padding: 6px 14px;
     }
 
     .notif_msg{
-        padding: 3px 8px;
+        padding: 6px 14px;
     }
 
     .list-enter-active, .list-leave-active {

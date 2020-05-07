@@ -2,7 +2,9 @@
     <v-app>
         <v-content>
             <navbar></navbar>
-            <router-view id="router_view"/>
+            <transition name="fade" mode="out-in">
+                <router-view id="router_view"/>
+            </transition>
         </v-content>
         <notifications></notifications>
     </v-app>
@@ -41,6 +43,7 @@
         color: #2c3e50;
         background-color: #fff;
         font-family: 'Rubik', sans-serif;
+        transition-duration: 0.2s;
     }
 
     #nav {
@@ -95,5 +98,38 @@
     }
     .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
         opacity: 0;
+    }
+
+    .float-enter-active, .float-leave-active {
+        transition: all .2s;
+    }
+    .float-enter, .float-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        transform: translateY(30px);
+    }
+
+
+    .but_primary{
+        background-color: #000;
+        color: #fff !important;
+        text-transform: none !important;
+        /*font-size: 13px;*/
+        padding: 8px 18px;
+        border-radius: 6px;
+    }
+
+
+    #app[night_mode=""]{
+        background-color: #000;
+
+
+        a, p, h1, h2, h4{
+            color: #fff !important;
+        }
+
+
+        .but_primary{
+            background-color: #fff !important;
+            color: #000 !important;
+        }
     }
 </style>

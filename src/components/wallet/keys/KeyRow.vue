@@ -5,6 +5,7 @@
     >
         <button class="selBut" @click="select">
             <fa icon="key"></fa>
+            <span v-if="selected">Default</span>
         </button>
         <div class="rows">
             <div class="detail">
@@ -124,10 +125,6 @@
         grid-gap: 15px;
         padding: 15px;
 
-        &:last-of-type{
-            border: none;
-        }
-
         > *{
             align-self: center;
         }
@@ -140,6 +137,11 @@
         /*border-radius: 14px;*/
         color: #ccc;
         flex-shrink: 0;
+
+        span{
+            font-size: 11px;
+            line-height: normal;
+        }
     }
 
     .addressItem[selected] .selBut{
@@ -151,6 +153,7 @@
         /*flex-grow: 1;*/
         display: grid;
         grid-template-columns: 1fr 1fr;
+        column-gap: 15px;
     }
 
     .label{

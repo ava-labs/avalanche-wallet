@@ -65,7 +65,7 @@ export default new Vuex.Store({
             store.commit('setAuth', true);
             store.dispatch('onAccess');
 
-            router.push('/wallet/send');
+            router.push('/wallet');
         },
 
         onAccess(store){
@@ -127,7 +127,7 @@ export default new Vuex.Store({
 
             store.dispatch('Notifications/add', {
                 title: 'Key Removed',
-                message: 'The key belonging to this address is removed from your wallet.'
+                message: 'Private key and assets removed from the wallet.'
             });
 
             store.dispatch('refreshAddresses');
@@ -195,7 +195,7 @@ export default new Vuex.Store({
                     store.dispatch('Notifications/add', {
                         title: 'Error Sending Transaction',
                         message: err,
-                        color: '#f13939',
+                        type: 'error',
                         duration: 10000
                     });
                     return 'error';

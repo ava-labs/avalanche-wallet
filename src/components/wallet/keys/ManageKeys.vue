@@ -1,30 +1,9 @@
 <template>
     <div>
-        <h1>{{$t('keys.title')}}</h1>
+<!--        <h1>{{$t('keys.title')}}</h1>-->
         <div class="cols">
             <div class="card_body">
                 <h4>My Keys</h4>
-<!--                <div-->
-<!--                        class="addressItem"-->
-<!--                        v-for="(address, index) in addresses" :key="address"-->
-<!--                        :selected="selected === address"-->
-<!--                >-->
-<!--                    <button class="selBut" @click="select(address)"></button>-->
-<!--                    <div class="details">-->
-<!--                        <p class="addressTitle">{{$t('keys.address')}} {{index}}</p>-->
-<!--                        <p class="addressVal">{{address}}</p>-->
-<!--                        <p class="addressTitle">{{$t('keys.balance')}}</p>-->
-<!--                        <div class="addressBallance">-->
-<!--                            <p v-if="!addressBalances[address]">{{$t('keys.empty')}}</p>-->
-<!--                            <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">-->
-<!--                                {{bal.toString()}} <b>{{bal.symbol}}</b>-->
-<!--                            </p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="buts" v-if="addresses.length > 1">-->
-<!--                        <button @click="removeKey(address)"><fa icon="trash"></fa></button>-->
-<!--                    </div>-->
-<!--                </div>-->
                 <my-keys></my-keys>
             </div>
             <div class="right_side">
@@ -43,7 +22,6 @@
                             <add-key-file></add-key-file>
                         </v-tab-item>
                     </v-tabs>
-<!--                    <scan-wallet></scan-wallet>-->
                 </div>
                 <div>
                     <h4>Export Wallet</h4>
@@ -57,22 +35,16 @@
 <script>
     import {bintools} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
-    // import BackupImport from "@/components/wallet/advanced/BackupImport";
-    // import BackupWallet from "@/components/wallet/advanced/BackupWallet";
     import BackupExport from "@/components/wallet/advanced/BackupExport";
-    // import ScanWallet from "@/components/wallet/advanced/ScanWallet";
     import AddKeyFile from "@/components/wallet/keys/AddKeyFile";
     import AddKeyString from "@/components/wallet/keys/AddKeyString";
     import MyKeys from "@/components/wallet/keys/MyKeys";
     export default {
         components: {
-            // BackupImport,
-            // BackupWallet
             BackupExport,
             AddKeyFile,
             AddKeyString,
             MyKeys
-            // ScanWallet
         },
         data(){
             return{

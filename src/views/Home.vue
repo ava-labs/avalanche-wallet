@@ -1,51 +1,56 @@
 <template>
     <div class="home">
-        <div class="bgdots"></div>
+<!--        <div class="bgdots"></div>-->
+<!--        <div>-->
+<!--            <div class="auth">-->
+<!--&lt;!&ndash;                <div class="imgcover">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <img src="/img/ava_logo_white.png">&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--                <div class="auth_body">-->
+<!--                    <v-alert type="error" :icon="false" text>-->
+<!--                        This is a <b>Beta Wallet</b> running on our testnet. <br> The tokens you have are not real and will not transfer to the real wallet.-->
+<!--                    </v-alert>-->
+<!--                    <div class="menu" v-show="menu==='main'">-->
+<!--                        <div class="menu_option">-->
+<!--                            <h4>{{ $t('home.access.title') }}</h4>-->
+<!--                            <p>{{ $t('home.access.desc') }}</p>-->
+<!--                            <button @click="menu='access'">{{$t('home.but_access')}} <fa icon="arrow-right"></fa></button>-->
+<!--                        </div>-->
+<!--                        <div class="menu_option">-->
+<!--                            <h4>{{ $t('home.create.title') }}</h4>-->
+<!--                            <p>{{ $t('home.create.desc') }}</p>-->
+<!--                            <button @click="menu='new'">{{$t('home.but_create')}} <fa icon="arrow-right"></fa></button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div v-show="menu==='access'">-->
+<!--                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> {{$t('home.go_back')}}</button>-->
+<!--                        <h3>{{ $t('home.access.title')}}</h3>-->
+<!--                        <div class="options">-->
+<!--                            <div @click="loginType='key'" :active="loginType==='key'">-->
+<!--                                <p><fa icon="key"></fa></p>-->
+<!--                                <p>{{$t('home.access.key.title')}}</p>-->
+<!--                            </div>-->
+<!--                            <div @click="loginType='keystore'" :active="loginType==='keystore'">-->
+<!--                                <p><fa icon="file-excel"></fa></p>-->
+<!--                                <p>{{$t('home.access.file.title')}}</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <component :is="loginComponent"></component>-->
+<!--                    </div>-->
+
+<!--                    <div v-show="menu==='new'">-->
+<!--                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> {{$t('home.go_back')}}</button>-->
+<!--                        <h3>{{$t('home.create.title')}}</h3>-->
+<!--                        <create-new></create-new>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div>
-            <div class="auth">
-                <div class="imgcover">
-                    <img src="/img/ava_logo_white.png">
-                </div>
-                <div class="auth_body">
-                    <v-alert type="error" :icon="false" text>
-                        This is a <b>Beta Wallet</b> running on our testnet. <br> The tokens you have are not real and will not transfer to the real wallet.
-                    </v-alert>
-                    <div class="menu" v-show="menu==='main'">
-                        <div class="menu_option">
-                            <h4>{{ $t('home.access.title') }}</h4>
-                            <p>{{ $t('home.access.desc') }}</p>
-                            <button @click="menu='access'">{{$t('home.but_access')}} <fa icon="arrow-right"></fa></button>
-                        </div>
-                        <div class="menu_option">
-                            <h4>{{ $t('home.create.title') }}</h4>
-                            <p>{{ $t('home.create.desc') }}</p>
-                            <button @click="menu='new'">{{$t('home.but_create')}} <fa icon="arrow-right"></fa></button>
-                        </div>
-                    </div>
-
-                    <div v-show="menu==='access'">
-                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> {{$t('home.go_back')}}</button>
-                        <h3>{{ $t('home.access.title')}}</h3>
-                        <div class="options">
-                            <div @click="loginType='key'" :active="loginType==='key'">
-                                <p><fa icon="key"></fa></p>
-                                <p>{{$t('home.access.key.title')}}</p>
-                            </div>
-                            <div @click="loginType='keystore'" :active="loginType==='keystore'">
-                                <p><fa icon="file-excel"></fa></p>
-                                <p>{{$t('home.access.file.title')}}</p>
-                            </div>
-                        </div>
-                        <component :is="loginComponent"></component>
-                    </div>
-
-                    <div v-show="menu==='new'">
-                        <button @click="menu='main'" class="backBut"><fa icon="arrow-left"></fa> {{$t('home.go_back')}}</button>
-                        <h3>{{$t('home.create.title')}}</h3>
-                        <create-new></create-new>
-                    </div>
-                </div>
-            </div>
+            <img class="logo" src="@/assets/wallet_logo.png">
+            <router-link to="/access">Access Wallet</router-link>
+            <router-link to="/create">Create Wallet</router-link>
         </div>
     </div>
 </template>
@@ -88,12 +93,34 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .home{
         display: flex;
         justify-content: center;
+        align-items: center;
         position: relative;
+
+
+
+        a{
+            margin: 10px;
+            text-align: center;
+            display: block;
+            border-radius: 6px;
+            border: 1px solid #000;
+            padding: 8px 18px;
+
+
+            &:hover{
+                color: #fff !important;
+                background-color: #000;
+            }
+        }
     }
+    .logo{
+        margin-bottom: 30px;
+    }
+
 
 
     .auth{

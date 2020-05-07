@@ -15,5 +15,6 @@ export interface NotificationInput {
     title: string,
     message: string,
     color?: string,
+    type?: string,
     duration?: number
 }

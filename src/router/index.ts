@@ -34,6 +34,7 @@ const ifAuthenticated = (to: Route, from: Route, next: Function) => {
     next('/')
 };
 
+
 const routes = [
     {
         path: '/',
@@ -41,20 +42,38 @@ const routes = [
         component: Home,
         beforeEnter: ifNotAuthenticated
     },
-    // {
-    //     path: '/about',
-    //     name: 'about',
-    //     // route level code-splitting
-    //     // this generates a separate chunk (about.[hash].js) for this route
-    //     // which is lazy-loaded when the route is visited.
-    //     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    // },
     {
-        path: '/wallet',
-        name: 'wallet',
+        path: '/access',
         children: [
             {
                 path: '/',
+                name: 'access',
+                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/Menu.vue'),
+            },
+            {
+                path: 'private_key',
+                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/AccessString.vue'),
+            },
+            {
+                path: 'keystore',
+                component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Keystore.vue'),
+            }
+        ],
+        component: () => import(/* webpackChunkName: "about" */ '../views/access/Access.vue'),
+        beforeEnter: ifNotAuthenticated
+    },
+    {
+        path: '/create',
+        name: 'create',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Create.vue'),
+        beforeEnter: ifNotAuthenticated
+    },
+    {
+        path: '/wallet',
+        children: [
+            {
+                path: '/',
+                name: 'wallet',
                 component: WalletHome
             },
             {

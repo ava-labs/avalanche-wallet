@@ -2,11 +2,11 @@
     <div id="nav">
 <!--        <router-link v-if="!isAuth" to="/">Home</router-link>-->
 <!--        <router-link v-if="isAuth" to="/wallet/ava">Wallet</router-link>-->
-<!--        <img src="/img/logo_dark.svg">-->
-        <router-link to="/" class="logo">AVA Wallet</router-link>
+
+        <router-link to="/" class="logo"><img src="@/assets/wallet_logo.png"> A Wallet by AVA</router-link>
 <!--        <p class="app_name">BETA WALLET</p>-->
         <v-spacer></v-spacer>
-        <language-select></language-select>
+<!--        <language-select></language-select>-->
         <day-night-toggle></day-night-toggle>
         <div v-if="isAuth">
             <button @click="logout">Log out</button>
@@ -18,7 +18,7 @@
     import DayNightToggle from "@/components/misc/DayNightToggle";
     export default {
         components: {
-            LanguageSelect,
+            // LanguageSelect,
             DayNightToggle
         },
         computed: {
@@ -60,6 +60,14 @@
         .logo{
             font-family: Inconsolata;
             color: #000;
+            display: flex;
+            align-items: center;
+
+            img{
+                height: 18px;
+                object-fit: contain;
+                margin-right: 25px;
+            }
         }
         a {
 
