@@ -21,11 +21,12 @@
 
             <div class="addressBallance">
                 <p class="label">{{$t('keys.balance')}}</p>
-                <p v-if="!balances">{{$t('keys.empty')}}</p>
+                <p v-if="Object.keys(balances).length === 0">{{$t('keys.empty')}}</p>
                 <p v-else v-for="bal in balances" :key="bal.symbol">
                     {{bal.toString()}} <b>{{bal.symbol}}</b>
                 </p>
             </div>
+<!--            {{balances}}-->
 
 
         </div>
@@ -63,7 +64,6 @@
                 let utxos =  this.$store.getters['Assets/addressUTXOs'];
                 let addr = this.address;
                 let addrStrip = addr.split('-')[1];
-
 
                 let addrUtxos = utxos[addrStrip];
                 if(addrUtxos){

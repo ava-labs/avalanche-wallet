@@ -57,6 +57,8 @@ export default new Vuex.Store({
 
         // Used in home page to access a user's wallet
         accessWallet(store, pk: string){
+
+
             let address = keyChain.importKey(pk);
             let keypair = keyChain.getKey(address);
 

@@ -47,6 +47,8 @@
 </script>
 <style lang="scss" scoped>
 
+    $flip_dur: 0.6s;
+
     .list{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -64,7 +66,7 @@
             max-height: 220px;
             object-fit: contain;
             border-radius: 4px;
-            transition-duration: 0.6s;
+            transition-duration: $flip_dur;
         }
 
 
@@ -91,7 +93,7 @@
         left: 0;
         z-index: 2;
         opacity: 0;
-        transition-duration: 0.6s;
+        transition-duration: $flip_dur;
         transform: rotateY(180deg);
 
         button{

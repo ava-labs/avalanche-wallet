@@ -7,9 +7,13 @@
 <!--        <p class="app_name">BETA WALLET</p>-->
         <v-spacer></v-spacer>
 <!--        <language-select></language-select>-->
-        <day-night-toggle></day-night-toggle>
+<!--        <day-night-toggle class="daynight"></day-night-toggle>-->
         <div v-if="isAuth">
             <button @click="logout">Log out</button>
+        </div>
+        <div v-else>
+            <router-link to="/access">Access Wallet</router-link>
+            <router-link to="/create" class="action_but">Get Started</router-link>
         </div>
     </div>
 </template>
@@ -19,7 +23,7 @@
     export default {
         components: {
             // LanguageSelect,
-            DayNightToggle
+            // DayNightToggle
         },
         computed: {
             isAuth(){
@@ -44,10 +48,15 @@
     a{
         text-decoration: none;
         font-weight: normal;
+        margin-right: 15px;
     }
 
     button{
         font-weight: normal;
+    }
+
+    .daynight{
+        margin-right: 15px;
     }
     .app_name{
         margin: 0;
@@ -73,10 +82,12 @@
 
         }
     }
-</style>
-<style lang="scss">
-    #app[night_mode=""]{
-        #nav{
-        }
+
+
+    .action_but{
+        background-color: #EBE4FB;
+        color: #4E00FF !important;
+        padding: 6px 18px;
+        border-radius: 4px;
     }
 </style>

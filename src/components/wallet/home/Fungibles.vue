@@ -28,6 +28,16 @@
                 <p class="balance_col">{{asset.toString()}} {{asset.symbol}}</p>
             </div>
         </div>
+        <div v-if="assets.length === 0" class="empty">
+            <p>You do not have any assets</p>
+
+            <div class="faucet">
+                <p class="drop"><fa icon="tint"></fa></p>
+                <p>{{$t('transfer.faucet')}} </p>
+                <a :href="faucetLink" target="_blank" class="but_primary">Go to faucet</a>
+            </div>
+
+        </div>
     </div>
 </template>
 <script>
@@ -38,6 +48,11 @@
             },
             isUpdateBalance(){
                 return this.$store.state.Assets.isUpdateBalance;
+            },
+            faucetLink(){
+                let link = process.env.VUE_APP_FAUCET_LINK;
+                if(link) return link;
+                return null;
             },
         },
     }
@@ -94,5 +109,23 @@
         }
     }
 
+    .empty{
+        padding: 30px;
+        text-align: center;
+    }
+
+    .faucet{
+        width: max-content;
+        /*border: 1px solid #999;*/
+        margin: 0px auto;
+        margin-top: 60px;
+        p{
+            margin: 10px 0px !important;
+        }
+
+        .drop{
+            font-size: 45px;
+        }
+    }
 
 </style>

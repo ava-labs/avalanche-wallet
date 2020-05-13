@@ -24,7 +24,7 @@
     import ScanWallet from "@/components/wallet/advanced/ScanWallet";
     // import BackupWallet from "@/components/wallet/advanced/BackupWallet";
 
-    import BackupExport from "@/components/wallet/advanced/BackupExport";
+    import BackupExport from "@/components/wallet/keys/ExportWallet";
     import BackupImport from "@/components/wallet/advanced/BackupImport";
     export default {
         components: {

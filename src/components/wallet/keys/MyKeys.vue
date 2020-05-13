@@ -1,13 +1,15 @@
 <template>
     <div>
-        <key-row v-for="addr in addresses"
-                 :key="addr"
-                 :address="addr"
-                 :selected="selected === addr"
-                 :can-remove="addresses.length > 1"
-                 @select="selectKey"
-                 @remove="removeKey"
-        ></key-row>
+        <transition-group name="fade">
+            <key-row v-for="addr in addresses"
+                     :key="addr"
+                     :address="addr"
+                     :selected="selected === addr"
+                     :can-remove="addresses.length > 1"
+                     @select="selectKey"
+                     @remove="removeKey"
+            ></key-row>
+        </transition-group>
     </div>
 </template>
 <script>

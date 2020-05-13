@@ -1,6 +1,5 @@
 <template>
     <div>
-<!--        <h1>{{$t('keys.title')}}</h1>-->
         <div class="cols">
             <div class="card_body">
                 <h4>My Keys</h4>
@@ -9,12 +8,12 @@
             <div class="right_side">
                 <div>
                     <h4>Add Key</h4>
-                    <p>
+                    <p class="explain">
                         Add additional private keys to use with your wallet.
                     </p>
-                    <v-tabs color="#5824CF">
-                        <v-tab>Key String</v-tab>
-                        <v-tab>Key File</v-tab>
+                    <v-tabs color="#5824CF" height="25" active-class="tab_active">
+                        <v-tab >Private Key</v-tab>
+                        <v-tab>Keystore File</v-tab>
                         <v-tab-item>
                             <add-key-string></add-key-string>
                         </v-tab-item>
@@ -29,13 +28,12 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 <script>
     import {bintools} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
-    import BackupExport from "@/components/wallet/advanced/BackupExport";
+    import BackupExport from "@/components/wallet/keys/ExportWallet";
     import AddKeyFile from "@/components/wallet/keys/AddKeyFile";
     import AddKeyString from "@/components/wallet/keys/AddKeyString";
     import MyKeys from "@/components/wallet/keys/MyKeys";
@@ -123,14 +121,15 @@
 <style scoped lang="scss">
     .cols{
         display: grid;
-        grid-template-columns: 1fr 460px;
+        grid-template-columns: 1fr 360px;
         grid-gap: 90px;
     }
 
 
     .right_side{
         display: grid;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: max-content max-content;
+        grid-row-gap: 30px;
     }
     p{
         margin: 0 !important;
@@ -142,7 +141,9 @@
         font-weight: lighter;
     }
 
-
+    .explain{
+        font-size: 12px;
+    }
 
     .buts{
         display: flex;
@@ -175,6 +176,29 @@
 
         &:last-of-type{
             border: none;
+        }
+    }
+
+
+    .v-tab{
+        border: 1px solid #999;
+        margin-right: 8px;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+    .tab_active{
+        color: #4A2899;
+        background-color: #EBE4FB !important;
+        border-color: #4A2899 !important;
+    }
+</style>
+<style lang="scss">
+    .cols {
+        .v-tabs-bar{
+            margin: 15px 0px;
+        }
+        .v-tabs-slider-wrapper{
+            display: none;
         }
     }
 </style>

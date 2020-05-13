@@ -2,7 +2,8 @@
     <div class="card">
         <h1>Private Key</h1>
         <qr-input class="key_in" v-model="privateKey"></qr-input>
-        <button class="but_primary" @click="access">Access Wallet</button>
+        <p class="err" v-if="error">{{error}}</p>
+        <v-btn class="but_primary" @click="access" color="#000" depressed>Access Wallet</v-btn>
         <router-link to="/access">Cancel</router-link>
     </div>
 </template>
@@ -15,12 +16,23 @@
         },
         data(){
             return{
-                privateKey: ""
+                isLoading: false,
+                privateKey: "",
+                error: false,
             }
         },
         methods: {
             access(){
-                this.$store.dispatch('accessWallet', this.privateKey);
+                let parent = this;
+                this.isLoading = true;
+                try{
+                    this.$store.dispatch('accessWallet', this.privateKey).then(res => {
+                        parent.isLoading = false;
+                    });
+                }catch (e) {
+                    this.error = 'Invalid Private Key';
+                    this.isLoading = false;
+                }
             }
         }
     }
@@ -40,5 +52,12 @@
     .but_primary{
         margin: 0px auto;
         display: block;
+        margin-bottom: 15px;
+    }
+
+    .err{
+        font-size: 13px;
+        color: #f00;
+        margin: 14px 0px !important;
     }
 </style>

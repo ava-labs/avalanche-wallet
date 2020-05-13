@@ -71,21 +71,17 @@
         color: #000 !important;
         text-decoration: none !important;
     }
-    @media only screen and (max-width: 600px) {
-        #nav{
-            position: fixed;
-            height: 80px;
-            width: 100%;
-            top: 0px;
-            z-index: 2;
 
-            a{
-                font-size: 12px;
-            }
-        }
 
+    @media only screen and (max-width: main.$mobile_width) {
         #router_view{
-            padding-top: 80px;
+            padding: main.$container_padding_mobile;
+        }
+    }
+
+    @media only screen and (max-width: main.$width_s) {
+        #router_view{
+            padding: main.$container_padding_mobile;
         }
     }
 

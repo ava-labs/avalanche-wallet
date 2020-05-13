@@ -12,7 +12,7 @@
     </div>
 </template>
 <script>
-    import BackupExport from './BackupExport';
+    import BackupExport from '../keys/ExportWallet';
     import BackupImport from './BackupImport';
 
     export default {

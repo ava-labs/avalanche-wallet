@@ -2,10 +2,10 @@
     <div class="card">
         <h1>Keystore File</h1>
         <file-input class="file_in" @change="onfile"></file-input>
-        <v-text-field label="Password" outlined dense color="#000" type="password" v-model="pass" v-if="file"></v-text-field>
-        <v-btn class="but_primary" @click="access" color="#000" :loading="isLoading" v-if="file" :disabled="!canSubmit">Access Wallet</v-btn>
+        <v-text-field label="Password" outlined dense color="#000" type="password" v-model="pass" v-if="file" hide-details></v-text-field>
+        <p class="err">{{error}}</p>
+        <v-btn class="but_primary" @click="access" color="#000" :loading="isLoading" v-if="file" :disabled="!canSubmit" depressed>Access Wallet</v-btn>
         <router-link to="/access">Cancel</router-link>
-        {{error}}
     </div>
 </template>
 <script>
@@ -79,5 +79,11 @@
         margin-bottom: 15px;
         /*color: #fff;*/
         /*text-transform: none;*/
+    }
+
+    .err{
+        font-size: 13px;
+        color: #f00;
+        margin: 14px 0px !important;
     }
 </style>

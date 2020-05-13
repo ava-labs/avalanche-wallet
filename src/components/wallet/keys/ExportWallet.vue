@@ -1,15 +1,14 @@
 <template>
     <div>
-        <p>{{$t('advanced.export.desc')}} </p>
+        <p class="explain">{{$t('advanced.export.desc')}} </p>
         <v-text-field type="password" hint="Minimum 9 characters." label="Password"
-                      v-model="pass" persistent-hint color="#42b983"
+                      v-model="pass" persistent-hint outlined dense color="#000"
         ></v-text-field>
         <v-text-field type="password" hint="Minimum 9 characters." label="Confirm Password"
-                      v-model="passConfirm" persistent-hint color="#42b983"
+                      v-model="passConfirm" persistent-hint outlined dense color="#000"
         ></v-text-field>
-        <br>
-        <v-btn depressed :disabled="!isValid" color="#42b983"
-               @click="download" :loading="is_loading">{{$t('advanced.export.submit')}}</v-btn>
+        <v-btn depressed :disabled="!isValid" color="#000"
+               @click="download" :loading="is_loading" class="but_primary">{{$t('advanced.export.submit')}}</v-btn>
     </div>
 </template>
 <script>
@@ -47,3 +46,12 @@
         },
     }
 </script>
+<style scoped lang="scss">
+    .explain{
+        font-size: 12px;
+        margin-bottom: 10px !important;
+    }
+    .but_primary{
+        margin-top: 15px;
+    }
+</style>

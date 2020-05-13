@@ -31,15 +31,15 @@
                 </div>
             </div>
         </div>
-        <div class="top_card nonessential">
-            <div class="card_left">
-                <img src="/img/wifi.png">
-            </div>
-            <div class="card_right">
-                <h4>{{$t('top.title3')}}</h4>
-                <p>{{network}}</p>
-            </div>
-        </div>
+<!--        <div class="top_card nonessential">-->
+<!--            <div class="card_left">-->
+<!--                <img src="/img/wifi.png">-->
+<!--            </div>-->
+<!--            <div class="card_right">-->
+<!--                <h4>{{$t('top.title3')}}</h4>-->
+<!--                <p>{{network}}</p>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="top_card nonessential">
             <div class="card_left">
                 <img src="/img/wifi.png">
@@ -102,7 +102,7 @@
 <style scoped lang="scss">
     .top_cards{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 15px;
     }
     .top_card{
@@ -131,6 +131,7 @@
     .card_right{
         display: flex;
         flex-direction: column;
+        flex-grow: 1;
         padding: 20px 18px;
         padding-bottom: 8px;
     }

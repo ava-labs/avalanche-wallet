@@ -1,7 +1,7 @@
 <template>
     <div>
         <label>{{$t('advanced.paper.pk')}}</label>
-        <qr-input @change="qr_change" v-model="pk"></qr-input>
+        <qr-input @change="qr_change" v-model="pk" class="qrIn"></qr-input>
         <v-btn
                 class="addKeyBut"
                 depressed
@@ -52,5 +52,11 @@
 
     label{
         font-size: 12px;
+    }
+
+    .qrIn{
+        border: 1px solid #888;
+        border-radius: 4px;
+        background-color: #fff;
     }
 </style>

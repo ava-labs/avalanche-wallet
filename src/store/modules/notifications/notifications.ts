@@ -3,7 +3,7 @@ import {RootState} from "@/store/types";
 import {NotifState, Notification, NotificationInput} from "@/store/modules/notifications/types";
 
 const COLOR_SUCCESS:string = '#20C305';
-const COLOR_WARNING:string = '#61c395';
+const COLOR_WARNING:string = '#c39043';
 const COLOR_ERROR:string = '#f13939';
 let notif_id = 0;
 
@@ -30,10 +30,10 @@ const auth_module: Module<NotifState, RootState> = {
                     color = COLOR_SUCCESS;
                     break;
                 case 'error':
-                    color = COLOR_SUCCESS;
+                    color = COLOR_ERROR;
                     break;
                 case 'warning':
-                    color = COLOR_ERROR;
+                    color = COLOR_WARNING;
                     break;
 
             }
