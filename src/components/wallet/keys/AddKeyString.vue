@@ -48,6 +48,7 @@
 <style scoped>
     .addKeyBut{
         color: #fff;
+        text-transform: none;
     }
 
     label{

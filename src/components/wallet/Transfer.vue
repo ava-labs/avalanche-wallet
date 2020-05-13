@@ -1,6 +1,6 @@
 <template>
     <div class="transfer_card">
-        <h2>{{$t('transfer.title')}}</h2>
+        <h1>{{$t('transfer.title')}}</h1>
         <div class="card_body">
             <div v-if="assetArray.length===0">
                 <p>{{$t('transfer.no_cash')}}</p>
@@ -151,9 +151,6 @@
     $padLeft: 24px;
     $padTop: 8px;
 
-    .transfer_card{
-        color: #222;
-    }
 
 
 

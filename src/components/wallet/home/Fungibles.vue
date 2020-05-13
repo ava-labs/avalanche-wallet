@@ -16,13 +16,13 @@
                 </div>
                 <p>{{asset.name}} ({{asset.symbol}})</p>
                 <p>NETWORK ID</p>
-                <router-link :to="`/wallet/send`" class="send_col">
+                <router-link :to="`/wallet/transfer`" class="send_col">
                     <img src="@/assets/sidebar/Transfer.png">
                 </router-link>
-                <router-link :to="`/wallet/send`" class="send_col">
+                <router-link :to="`/wallet/transfer`" class="send_col">
                     <img src="@/assets/sidebar/Transfer.png">
                 </router-link>
-                <router-link :to="`/wallet/send`" class="send_col">
+                <router-link :to="`/wallet/transfer`" class="send_col">
                     <img src="@/assets/sidebar/Transfer.png">
                 </router-link>
                 <p class="balance_col">{{asset.toString()}} {{asset.symbol}}</p>

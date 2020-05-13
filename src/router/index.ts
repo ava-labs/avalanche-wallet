@@ -77,7 +77,7 @@ const routes = [
                 component: WalletHome
             },
             {
-                path: 'send',
+                path: 'transfer',
                 component: Transfer
             },
             {

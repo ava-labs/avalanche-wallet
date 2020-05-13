@@ -9,7 +9,7 @@
 
             Manage Keys
         </router-link>
-        <router-link to="/wallet/send">
+        <router-link to="/wallet/transfer">
             <img src="@/assets/sidebar/Transfer.png">
             Transfer
         </router-link>
