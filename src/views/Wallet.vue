@@ -21,6 +21,7 @@
     }
 </script>
 <style lang="scss" scoped>
+    @use '../main';
 
     .wallet_view{
         display: grid;
@@ -41,6 +42,16 @@
     .page_fade-enter, .page_fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
         opacity: 0;
         transform: translateX(30px);
+    }
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .wallet_view{
+            display: block;
+        }
+
+        .wallet_sidebar{
+            display: none;
+        }
     }
 
 </style>

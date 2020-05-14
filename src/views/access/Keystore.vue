@@ -57,6 +57,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .card{
         width: 420px;
     }
@@ -85,5 +87,11 @@
         font-size: 13px;
         color: #f00;
         margin: 14px 0px !important;
+    }
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .but_primary{
+            width: 100%;
+        }
     }
 </style>

@@ -38,11 +38,16 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .key_in{
         margin: 30px auto;
+        margin-bottom: 6px;
         width: 380px;
         font-size: 13px;
-        background-color: #e2e2e2;
+        background-color: transparent;
+        border: 1px solid #aaa;
+        border-radius: 4px;
     }
 
     a{
@@ -53,11 +58,26 @@
         margin: 0px auto;
         display: block;
         margin-bottom: 15px;
+        width: 100%;
     }
 
     .err{
         font-size: 13px;
         color: #f00;
         margin: 14px 0px !important;
+    }
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .card{
+            overflow: auto;
+            width: 100%;
+        }
+
+        .key_in{
+            width: 100%;
+            margin-bottom: 6px;
+        }
+        .but_primary{
+        }
     }
 </style>

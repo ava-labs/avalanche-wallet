@@ -35,7 +35,7 @@
                             <li v-for="err in errors" :key="err">{{err}}</li>
                         </ul>
                     </v-alert>
-                    <v-btn depressed color="#000" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">{{$t('transfer.send')}}</v-btn>
+                    <v-btn depressed class="but_primary" color="#000" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">{{$t('transfer.send')}}</v-btn>
                 </div>
             </div>
         </div>
@@ -158,6 +158,7 @@
 
 
 <style lang="scss">
+
     .advanced_panel{
         .v-expansion-panel-header{
             padding: 0;
@@ -177,6 +178,8 @@
     }
 </style>
 <style scoped lang="scss">
+    @use '../../main';
+
     $padLeft: 24px;
     $padTop: 8px;
 
@@ -284,27 +287,14 @@
     }
 
     .faucet{
-        /*margin: 20px auto;*/
         margin-top: 20px;
     }
 
     .advanced{
-        /*border-top: 1px solid #f2f2f2;*/
         border-bottom: 1px solid #f2f2f2;
         padding: 20px 0px !important;
     }
 
-
-
-    /*.advanced .toggle{*/
-    /*    width: 100%;*/
-    /*    text-align: left;*/
-    /*    font-size: 13px;*/
-    /*}*/
-
-    /*.advanced .toggle span{*/
-    /*    float: right;*/
-    /*}*/
 
     .checkout .v-btn{
         color: #fff;
@@ -315,12 +305,16 @@
         /*overflow: hidden;*/
     }
 
-    /*.advanced[active] .advancedBody{*/
-    /*    max-height: 500px;*/
-    /*    overflow: unset;*/
 
-    /*}*/
-    /*.advanced[active] .toggle span{*/
-    /*    transform: rotateZ(180deg);*/
-    /*}*/
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .transfer_card {
+            display: block;
+            grid-template-columns: none;
+        }
+
+        .but_primary{
+            width: 100%;
+        }
+    }
 </style>

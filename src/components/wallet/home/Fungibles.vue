@@ -2,11 +2,8 @@
     <div>
         <div class="headers">
             <p></p>
-            <p>Name</p>
-<!--            <p>Network ID</p>-->
+            <p class="name_col">Name</p>
             <p class="send_col">Send</p>
-<!--            <p>Receive</p>-->
-<!--            <p>Swap</p>-->
             <p  class="balance_col">Balance</p>
         </div>
         <div class="scrollable">
@@ -14,18 +11,11 @@
                 <div class="icon">
                     <img src="@/assets/ava_letter_icon.png">
                 </div>
-                <p>{{asset.name}} ({{asset.symbol}})</p>
-<!--                <p>NETWORK ID</p>-->
+                <p class="name_col">{{asset.name}} ({{asset.symbol}})</p>
                 <router-link :to="`/wallet/transfer`" class="send_col">
                     <img src="@/assets/sidebar/Transfer.png">
                 </router-link>
-<!--                <router-link :to="`/wallet/transfer`" class="send_col">-->
-<!--                    <img src="@/assets/sidebar/Transfer.png">-->
-<!--                </router-link>-->
-<!--                <router-link :to="`/wallet/transfer`" class="send_col">-->
-<!--                    <img src="@/assets/sidebar/Transfer.png">-->
-<!--                </router-link>-->
-                <p class="balance_col">{{asset.toString()}} {{asset.symbol}}</p>
+                <p class="balance_col">{{asset.toString()}} <span>{{asset.symbol}}</span></p>
             </div>
         </div>
         <div v-if="assets.length === 0" class="empty">
@@ -57,6 +47,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../../main';
+
     .headers, .asset{
         display: grid;
         grid-template-columns: 50px 1fr 100px 1fr;
@@ -121,5 +113,35 @@
         /*width: max-content;*/
         margin: 0px auto;
         margin-top: 60px;
+    }
+
+    .name_col{
+        white-space: nowrap;
+    }
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .headers, .asset{
+            grid-template-columns: 50px 1fr 1fr 50px;
+        }
+
+        .balance_col{
+            span{
+                display: none;
+            }
+        }
+        .balance_col{
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        .send_col{
+            grid-column: 4;
+        }
+
+        .headers{
+            .send_col{
+                display: none;
+            }
+        }
     }
 </style>

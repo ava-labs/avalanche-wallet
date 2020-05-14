@@ -22,7 +22,9 @@
         },
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+    @use '../../main';
+
     .transfer_main{
         display: grid;
         grid-template-columns: 50% 50%;
@@ -37,25 +39,7 @@
     }
 
 
-    @media only screen and (max-width: 600px) {
-        .transfer_main{
-            display: block;
-        }
 
-        .transfer_col{
-            margin: 10px;
-        }
-    }
-
-    @media only screen and (max-width: 1400px) {
-        .transfer_main{
-            display: block;
-        }
-
-        .transfer_col{
-            margin: 10px;
-        }
-    }
 </style>
 
 <style>

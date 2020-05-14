@@ -18,6 +18,8 @@
     </div>
 </template>
 <style scoped lang="scss">
+    @use '../../main';
+
     $col_w: 240px;
     .options{
         margin: 30px auto;
@@ -64,6 +66,19 @@
         &:hover{
             transform: translateY(-5px);
             box-shadow: 4px 8px 10px rgba(0,0,0,0.2);
+        }
+    }
+
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .options{
+            display: block;
+            grid-template-columns: none;
+        }
+
+        .option{
+            margin-bottom: 30px;
+
         }
     }
 </style>

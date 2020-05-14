@@ -50,7 +50,7 @@
                 // BG
                 console.log(typeof triangles);
                 // Yellow top
-                doc.setFillColor("#FFC700");
+                doc.setFillColor("#EBE4FB");
                 doc.rect(0, 0, PDF_W, 3, 'F');
 
                 // Belons to _______
@@ -59,9 +59,9 @@
 
                 doc.setFontSize(14);
                 doc.setFontStyle('bold');
-                doc.setTextColor('#FF7523');
+                doc.setTextColor('#000');
                 doc.text("This address belongs to", posX, posY);
-                doc.setFillColor("#FF7523");
+                doc.setFillColor("#000");
                 doc.rect( posX+2.4, posY, 3, 0.02, 'F');
 
 
@@ -94,7 +94,7 @@
                 // WARNING #################################
                 posX = PADDING;
                 posY += 1.5;
-                doc.setFontSize(28);
+                doc.setFontSize(22);
                 doc.setFontStyle('bold');
                 doc.text("Always keep your Paper Wallet at a SAFE Place!", posX, posY, {
                     maxWidth: (PDF_W - (PADDING*2))
@@ -108,7 +108,7 @@
                 let rectH = 2;
                 let rectY = 4;
 
-                doc.setFillColor("#FCFCF0");
+                doc.setFillColor("#EBE4FB");
                 doc.rect(posX, posY, PDF_W-(PADDING*2), rectH, 'F');
 
                 // Title
@@ -141,7 +141,7 @@
 
 
                 rectY += rectH+0.2;
-                doc.setFillColor("#FFF3EE");
+                doc.setFillColor("#e4f1fb");
                 doc.rect(posX, posY, PDF_W-(PADDING*2), rectH, 'F');
 
                 // Title

@@ -119,6 +119,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../../main';
+
     .cols{
         display: grid;
         grid-template-columns: 1fr 360px;
@@ -190,6 +192,14 @@
         color: #4A2899;
         background-color: #EBE4FB !important;
         border-color: #4A2899 !important;
+    }
+
+
+    @media only screen and (max-width: main.$mobile_width) {
+       .cols{
+           grid-template-columns: none;
+           display: block;
+       }
     }
 </style>
 <style lang="scss">

@@ -77,6 +77,11 @@
         #router_view{
             padding: main.$container_padding_mobile;
         }
+
+        #nav{
+            padding: main.$container_padding_mobile;
+
+        }
     }
 
     @media only screen and (max-width: main.$width_s) {
