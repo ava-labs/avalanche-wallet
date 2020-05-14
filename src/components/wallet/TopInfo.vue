@@ -31,15 +31,6 @@
                 </div>
             </div>
         </div>
-<!--        <div class="top_card nonessential">-->
-<!--            <div class="card_left">-->
-<!--                <img src="/img/wifi.png">-->
-<!--            </div>-->
-<!--            <div class="card_right">-->
-<!--                <h4>{{$t('top.title3')}}</h4>-->
-<!--                <p>{{network}}</p>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="top_card nonessential">
             <div class="card_left">
                 <img src="/img/wifi.png">
@@ -54,9 +45,7 @@
 <script>
     import CopyText from "../misc/CopyText";
     import QRModal from "../modals/QRModal";
-    // import KeyStore from "../modals/KeyStore";
     import PaperWallet from "../modals/PaperWallet";
-    // import AddressesModal from "../modals/AddressesModal";
 
     export default {
         components: {

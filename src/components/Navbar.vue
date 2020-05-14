@@ -3,7 +3,7 @@
 <!--        <router-link v-if="!isAuth" to="/">Home</router-link>-->
 <!--        <router-link v-if="isAuth" to="/wallet/ava">Wallet</router-link>-->
 
-        <router-link to="/" class="logo"><img src="@/assets/wallet_logo.png"> A Wallet by AVA</router-link>
+        <router-link to="/" class="logo"><img src="@/assets/wallet_logo.png">by AVA</router-link>
 <!--        <p class="app_name">BETA WALLET</p>-->
         <v-spacer></v-spacer>
 <!--        <language-select></language-select>-->
