@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <div class="top_card nonessential" >
+        <div class="top_card" >
             <div class="card_left">
                 <img src="/img/account-balance.png">
             </div>
@@ -100,6 +100,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .top_cards{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -201,7 +203,7 @@
     /*        grid-template-rows: min-content min-content min-content;*/
     /*    }*/
     /*}*/
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: main.$mobile_width) {
         .top_cards{
             grid-template-columns: 100%;
             grid-template-rows: min-content;
