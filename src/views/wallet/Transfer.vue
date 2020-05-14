@@ -1,3 +1,5 @@
+
+<!-- DEPRECIATED -->
 <template>
     <div>
         <div class="transfer_main">

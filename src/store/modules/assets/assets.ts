@@ -53,6 +53,11 @@ const assets_module: Module<AssetsState, RootState> = {
             }).catch(err => {
                 console.log(err);
                 state.isUpdateBalance = false;
+                dispatch('Notifications/add', {
+                    title: "Network Error",
+                    message: "Faield to update UTXOs",
+                    type: 'error'
+                }, {root: true});
             });
         },
 

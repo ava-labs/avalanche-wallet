@@ -118,6 +118,7 @@
 </script>
 <style scoped lang="scss">
     .addressItem{
+        font-size: 12px;
         /*display: flex;*/
         /*align-items: center;*/
         display: grid;
@@ -157,18 +158,16 @@
     }
 
     .label{
-        font-size: 13px;
+        /*font-size: 13px;*/
         font-weight: bold;
     }
     .addressVal{
         word-break: break-all;
-        font-size: 14px;
     }
 
     .del{
         align-self: start;
         opacity: 0.4;
-        font-size: 12px;
 
         &:hover{
             opacity: 1;

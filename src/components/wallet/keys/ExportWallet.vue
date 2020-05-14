@@ -1,11 +1,13 @@
 <template>
-    <div>
+    <div class="export_wallet">
         <p class="explain">{{$t('advanced.export.desc')}} </p>
-        <v-text-field type="password" hint="Minimum 9 characters." label="Password"
-                      v-model="pass" persistent-hint outlined dense color="#000"
+        <label>Password</label>
+        <v-text-field type="password" class="formIn"
+                      v-model="pass" hint="Minimum 9 characters."  placeholder="Password" persistent-hint outlined dense color="#000" height="40"
         ></v-text-field>
-        <v-text-field type="password" hint="Minimum 9 characters." label="Confirm Password"
-                      v-model="passConfirm" persistent-hint outlined dense color="#000"
+        <label>Confirm Password</label>
+        <v-text-field type="password" class="formIn"
+                      v-model="passConfirm" hide-details outlined dense color="#000" height="40" placeholder="Confirm Password"
         ></v-text-field>
         <v-btn depressed :disabled="!isValid" color="#000"
                @click="download" :loading="is_loading" class="but_primary">{{$t('advanced.export.submit')}}</v-btn>
@@ -46,12 +48,44 @@
         },
     }
 </script>
-<style scoped lang="scss">
-    .explain{
-        font-size: 12px;
-        margin-bottom: 10px !important;
+<style lang="scss">
+    .export_wallet{
+        .formIn{
+            .v-input__slot {
+                background-color: #f8f8f8;
+            }
+
+            .v-text-field__details{
+                padding: 0;
+            }
+        }
     }
+</style>
+<style scoped lang="scss">
+    .export_wallet{
+        font-size: 12px;
+    }
+    .explain{
+        /*font-size: 12px;*/
+        margin-bottom: 20px !important;
+    }
+
+    .v-text-field{
+        /*margin-bottom: 8px;*/
+        .v-input__slot {
+            .v-input__slot {
+                /*background-color: #f8f8f8;*/
+            }
+        }
+    }
+
+    .formIn{
+        /*background-color: #f8f8f8;*/
+        font-size: 12px;
+        /*margin-bottom: 6px;*/
+    }
+
     .but_primary{
-        margin-top: 15px;
+        margin-top: 10px;
     }
 </style>

@@ -108,4 +108,11 @@
         color: #f00;
         margin: 4px 0px;
     }
+
+    .formIn{
+        height: 40px;
+        font-size: 12px;
+        border-color: #aaa;
+        background-color: #f8f8f8;
+    }
 </style>

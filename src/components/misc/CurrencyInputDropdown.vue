@@ -154,17 +154,22 @@
     }
 </script>
 <style scoped lang="scss">
-    $barH: 2px;
+    $barH: 1px;
 
     .bigIn{
         width: 100%;
         /*background-color: #303030;*/
     }
     .curr_in_drop{
-        display: flex;
+        display: grid;
+        grid-template-columns: 50px 1fr 140px;
         background-color: #f8f8f8;
+        /*height: 35px;*/
+        /*font-size: 12px;*/
+        border: 1px solid #ddd;
         padding: 0px 8px;
-        height: 48px;
+        font-size: 12px;
+        height: 40px;
         width: 100%;
         outline: none;
         text-align: right;
@@ -187,11 +192,13 @@
     }
 
     .dropdown{
-        flex-basis: 140px;
+        /*flex-basis: 140px;*/
+        width: 100%;
         border-left: 1px solid #d2d2d2;
     }
 
     .bar{
+        display: none;
         height: $barH;
         background-color: #d2d2d2;
         position: relative;
@@ -202,7 +209,7 @@
         top: 0;
         left: 0;
         width: 0%;
-        background-color: #6bc79d;
+        background-color: #8e6fe0;
         height: $barH;
         transition-duration: 1s;
     }

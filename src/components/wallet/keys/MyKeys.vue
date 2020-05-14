@@ -56,6 +56,7 @@
 
         &[selected]{
             border-color: #866FBE;
+            background-color: #EBE4FB;
         }
     }
 

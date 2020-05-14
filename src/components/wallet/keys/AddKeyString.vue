@@ -55,9 +55,17 @@
         font-size: 12px;
     }
 
+    /*.qrIn{*/
+    /*    border: 1px solid #888;*/
+    /*    border-radius: 4px;*/
+    /*    background-color: #fff;*/
+    /*    */
+    /*}*/
+
     .qrIn{
-        border: 1px solid #888;
-        border-radius: 4px;
-        background-color: #fff;
+        border-radius: 3px !important;
+        height: 40px;
+        font-size: 12px;
+        border: 1px solid #ddd;
     }
 </style>

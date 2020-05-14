@@ -139,17 +139,19 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .table_title{
-        display: flex;
-        margin-bottom: 5px;
+        /*display: flex;*/
+        /*margin-bottom: 5px;*/
+        display: grid;
+        grid-template-columns: 1fr 140px;
     }
     .table_title p{
         margin: 0;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 12px;
         text-align: left;
-        padding-right: 100px;
+        /*padding-right: 100px;*/
     }
     .table_title p:first-of-type{
         flex-grow: 1;
@@ -161,13 +163,19 @@
         display: flex;
         flex-direction: column;
         /*display: flex;*/
-        margin-bottom: 12px;
+        margin-bottom: 4px;
         padding: 2px 0px;
+        border-radius: 3px !important;
+
+
+        &:last-of-type{
+            margin-bottom: 0px;
+        }
     }
 
     .list_in{
         flex-grow: 1;
-
+        background-color: transparent !important;
     }
 
     .list_item button{

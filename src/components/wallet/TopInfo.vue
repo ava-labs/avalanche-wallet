@@ -5,7 +5,7 @@
 
         <div class="top_card">
             <div class="card_left">
-                <img src="/img/center_focus.png">
+                <img src="@/assets/QR.png">
             </div>
             <div class="card_right">
                 <h4>{{$t('top.title1')}}</h4>
@@ -124,8 +124,16 @@
         background-color: #F4EFFF;
         flex-basis: 70px;
         flex-shrink: 0;
-        padding: 5px;
+        padding: 15px;
         border-bottom-right-radius: 5px;
+
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            fill: #ddd;
+        }
     }
 
     .card_right{
@@ -136,11 +144,7 @@
         padding-bottom: 8px;
     }
 
-    .card_left img{
-        width: 100%;
-        object-fit: contain;
-        fill: #ddd;
-    }
+
     .top_card h4{
         /*font-size: 26px;*/
         color: #5824CF;
