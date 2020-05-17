@@ -33,6 +33,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .header{
         display: flex;
         align-items: center;
@@ -61,6 +63,24 @@
 
     .pages{
         margin-top: 30px;
+    }
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .header{
+            display: block;
+
+
+            >div{
+                border-radius: 3px;
+                overflow: hidden;
+                display: flex;
+            }
+            button{
+                flex-grow: 1;
+                border-radius: 0px;
+                margin: 0;
+            }
+        }
     }
 
 
