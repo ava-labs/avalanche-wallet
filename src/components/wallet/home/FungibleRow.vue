@@ -49,6 +49,7 @@
     .asset{
         padding: 14px 0px;
         justify-self: center;
+        transition-duration: 1s;
 
 
 
@@ -84,7 +85,7 @@
             border-radius: 30px;
             line-height: 30px;
             text-align: center;
-            transition-duration: 0.2s;
+            transition-duration: 1s;
 
             img{
                 width: 18px;
