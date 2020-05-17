@@ -1,9 +1,12 @@
 <template>
     <div class="card">
         <h1>Private Key</h1>
-        <qr-input class="key_in" v-model="privateKey"></qr-input>
-        <p class="err" v-if="error">{{error}}</p>
-        <v-btn class="but_primary" @click="access" color="#000" depressed>Access Wallet</v-btn>
+        <form @submit.prevent="access">
+            <qr-input class="key_in" v-model="privateKey"></qr-input>
+            <p class="err" v-if="error">{{error}}</p>
+            <v-btn class="but_primary" @click="access" color="#000" depressed>Access Wallet</v-btn>
+        </form>
+
         <router-link to="/access">Cancel</router-link>
     </div>
 </template>

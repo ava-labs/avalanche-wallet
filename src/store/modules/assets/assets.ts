@@ -1,10 +1,11 @@
 import {Module, Store} from "vuex";
-import {AddressUtxoDict, AssetDescription, AssetsDict, AssetsState} from "@/store/modules/assets/types";
+import {AddressUtxoDict, AssetAPI, AssetDescription, AssetsDict, AssetsState} from "@/store/modules/assets/types";
 import {RootState} from "@/store/types";
 import {avm, bintools} from "@/AVA";
 import {UTXOSet} from "slopes";
 import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
+import {explorer_api} from "@/explorer_api";
 
 
 
@@ -23,10 +24,10 @@ const assets_module: Module<AssetsState, RootState> = {
         isUpdateBalance: false,
         utxo_set: null,
         utxos: [],
-        descriptions: {}
+        descriptions: {},
+        assets: [],
     },
     mutations: {
-
     },
     actions: {
         // Called on a logout event
@@ -39,17 +40,20 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Fetches UTXOs of the addresses registered to the wallet
         updateUTXOs({state, commit, dispatch, rootState}){
-            console.log("UPDATE UTXOS ASSET mod");
+            // console.log("UPDATE UTXOS ASSET mod");
             state.isUpdateBalance = true;
             avm.getUTXOs(rootState.addresses).then((res: UTXOSet) =>{
-                console.log("GOT SET");
+                // console.log("GOT SET");
                 let utxos = res.getAllUTXOs();
+
+                // console.log(utxos);
 
                 state.isUpdateBalance = false;
                 state.utxo_set = res;
                 state.utxos = utxos;
 
-                dispatch('updateAssetsData');
+                // dispatch('updateAssetsData');
+                dispatch('updateBalances');
             }).catch(err => {
                 console.log(err);
                 state.isUpdateBalance = false;
@@ -61,6 +65,46 @@ const assets_module: Module<AssetsState, RootState> = {
             });
         },
 
+        // Looks at utxo's and updates balances for each asset
+        async updateBalances({state, getters, dispatch}){
+            // console.log(state.utxos);
+
+            await dispatch('clearBalances');
+
+            let dict:AssetsDict = getters.assetsDict;
+            let utxos = state.utxos;
+            utxos.forEach(utxo => {
+                let assetId:string = bintools.avaSerialize(utxo.getAssetID());
+                let amount = utxo.getAmount();
+                // state.assets[]
+                dict[assetId].addBalance(amount);
+
+                // console.log(dict[assetId].toString());
+            });
+            // console.log(dict);
+            // console.log("end 1")
+        },
+
+        // Sets every balance to 0
+        async clearBalances({state}){
+            state.assets.forEach(asset => {
+                asset.resetBalance();
+            });
+            // console.log("end 2")
+            return;
+        },
+
+        // fetch every asset from the explorer
+        getAllAssets({state}){
+            explorer_api.get('/x/assets').then(res => {
+                let assets:AssetAPI[] = res.data.assets;
+                assets.forEach(asset => {
+                   let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
+                   state.assets.push(newAsset);
+                });
+                // console.log(state.assets);
+            });
+        },
         // Gets meta data for all the assets in the wallet
         updateAssetsData({state, getters}){
             let assetIds = getters.assetIds;
@@ -126,32 +170,36 @@ const assets_module: Module<AssetsState, RootState> = {
         assetsDict(state):AssetsDict{
             let res:AssetsDict = {};
 
-            let utxos = state.utxos;
-            for(let utxoId in utxos) {
-                let utxo = utxos[utxoId];
+            state.assets.forEach(asset => {
+               res[asset.id] = asset;
+            });
 
-                let asset_id_buffer = utxo.getAssetID();
-                let asset_id = bintools.avaSerialize(asset_id_buffer);
-
-                let asset_amount_bn = utxo.getAmount();
-                // let asset_amount = asset_amount_bn.toNumber();
-
-                let asset_desc = state.descriptions[asset_id];
-
-                // The asset must have a description to add to the results
-                if(asset_desc){
-                    // If asset exists add to total balance
-                    if(res[asset_id]){
-                        let asset = res[asset_id];
-                            asset.addBalance(asset_amount_bn);
-                    }else{
-                        let newAsset = new AvaAsset(asset_id, asset_desc.name, asset_desc.symbol, asset_desc.denomination);
-                            newAsset.addBalance(asset_amount_bn);
-                        res[asset_id] = newAsset
-                    }
-                }
-
-            }
+            // let utxos = state.utxos;
+            // for(let utxoId in utxos) {
+            //     let utxo = utxos[utxoId];
+            //
+            //     let asset_id_buffer = utxo.getAssetID();
+            //     let asset_id = bintools.avaSerialize(asset_id_buffer);
+            //
+            //     let asset_amount_bn = utxo.getAmount();
+            //     // let asset_amount = asset_amount_bn.toNumber();
+            //
+            //     let asset_desc = state.descriptions[asset_id];
+            //
+            //     // The asset must have a description to add to the results
+            //     if(asset_desc){
+            //         // If asset exists add to total balance
+            //         if(res[asset_id]){
+            //             let asset = res[asset_id];
+            //                 asset.addBalance(asset_amount_bn);
+            //         }else{
+            //             let newAsset = new AvaAsset(asset_id, asset_desc.name, asset_desc.symbol, asset_desc.denomination);
+            //                 newAsset.addBalance(asset_amount_bn);
+            //             res[asset_id] = newAsset
+            //         }
+            //     }
+            //
+            // }
             return res;
         },
 

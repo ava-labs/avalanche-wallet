@@ -14,7 +14,7 @@
             ></currency-input-dropdown>
             <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1">Remove Asset</button>
         </div>
-        <v-btn block depressed @click="addTx()" class="add_asset" color="#fafafa" :ripple="false" v-if="showAdd"> <fa icon="plus"></fa></v-btn>
+        <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
     </div>
 </template>
 <script>
@@ -183,20 +183,23 @@
         text-align: right;
         font-size: 12px;
         color: #b2b2b2;
+        &:hover{
+            color: #000;
+        }
     }
 
 
 
-    .list_item button:hover{
-        /*background-color: #f2f2f2;*/
-        color: #42b983;
-    }
 
 
     .add_asset{
         border-radius: 0;
-        color: #505050;
-        background-color: #6ca771;
+        color: #4D9EFD;
+        font-size: 12px;
+
+        &:hover{
+            color: #000;
+        }
     }
 
 

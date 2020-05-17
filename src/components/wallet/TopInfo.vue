@@ -23,8 +23,8 @@
             </div>
             <div class="card_right">
                 <h4>{{$t('top.title2')}}</h4>
-                <p v-if="ava_asset">{{ava_asset.toString()}} AVA</p>
-                <p v-else>0 AVA</p>
+                <p v-if="ava_asset" class="balance">{{ava_asset.toString()}} AVA</p>
+                <p v-else class="balance">0 AVA</p>
                 <div class="buts">
                     <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
@@ -127,6 +127,8 @@
         }
     }
 
+
+
     .card_right{
         display: flex;
         flex-direction: column;
@@ -150,6 +152,12 @@
         font-size: 14px;
 
         font-family: Inconsolata, monospace;
+    }
+
+    .balance{
+        font-size: 24px !important;
+        /*font-weight: bold;*/
+        font-family: Rubik !important;
     }
 
     .top_card .buts{

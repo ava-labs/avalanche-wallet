@@ -2,9 +2,11 @@
     <div class="card">
         <h1>Keystore File</h1>
         <file-input class="file_in" @change="onfile"></file-input>
-        <v-text-field label="Password" outlined dense color="#000" type="password" v-model="pass" v-if="file" hide-details></v-text-field>
-        <p class="err">{{error}}</p>
-        <v-btn class="but_primary" @click="access" color="#000" :loading="isLoading" v-if="file" :disabled="!canSubmit" depressed>Access Wallet</v-btn>
+        <form @submit.prevent="access">
+            <v-text-field label="Password" outlined dense color="#000" type="password" v-model="pass" v-if="file" hide-details></v-text-field>
+            <p class="err">{{error}}</p>
+            <v-btn class="but_primary" @click="access" color="#000" :loading="isLoading" v-if="file" :disabled="!canSubmit" depressed>Access Wallet</v-btn>
+        </form>
         <router-link to="/access">Cancel</router-link>
     </div>
 </template>
@@ -29,6 +31,8 @@
                 this.file = val;
             },
             access(){
+                if(!this.canSubmit || this.isLoading) return;
+
                 let parent = this;
                 this.error = '';
                 this.isLoading = true;

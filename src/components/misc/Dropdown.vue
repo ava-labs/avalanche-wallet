@@ -1,7 +1,7 @@
 <template>
     <div class="custom-select">
         <select ref="select" @input="oninput">
-            <option v-for="item in items" :key="item.label" :disabled="item.disabled">{{item.label}}</option>
+            <option v-for="(item,i) in items" :key="item.label+i" :disabled="item.disabled">{{item.label}}</option>
         </select>
         <p class="arrow"><fa icon="caret-down"></fa></p>
     </div>

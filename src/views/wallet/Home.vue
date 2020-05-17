@@ -4,13 +4,13 @@
             <h1>Assets</h1>
             <div>
                 <button @click="tab='fungibles'" :active="tab===`fungibles`">Fungibles</button>
-<!--                <button @click="tab='collectibles'" :active="tab===`collectibles`">Collectibles</button>-->
+                <button @click="tab='collectibles'" :active="tab===`collectibles`">Collectibles</button>
             </div>
         </div>
         <div class="pages">
             <transition name="fade" mode="out-in">
                 <fungibles v-if="tab===`fungibles`" key="fungibles"></fungibles>
-<!--                <collectibles v-else key="fungibles"></collectibles>-->
+                <collectibles v-else key="fungibles"></collectibles>
             </transition>
         </div>
 
@@ -36,6 +36,7 @@
     .header{
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
         h1{
             margin-right: 30px;

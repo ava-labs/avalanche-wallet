@@ -9,7 +9,7 @@ class AvaAsset{
     symbol: string;
     denomination: number;
     amount: BN;
-    pow: Big;
+    private readonly pow: Big;
     constructor(id:string, name:string, symbol:string, denomination: number){
         this.id = id;
         this.name = name;
@@ -20,7 +20,11 @@ class AvaAsset{
     }
 
     addBalance(val:BN):void{
-        this.amount.iadd(val);
+        this.amount = this.amount.add(val);
+    }
+
+    resetBalance(){
+        this.amount = new BN(0, 10);
     }
 
     toString(){

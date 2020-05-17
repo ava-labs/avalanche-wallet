@@ -3,7 +3,7 @@
 <!--        <router-link v-if="!isAuth" to="/">Home</router-link>-->
 <!--        <router-link v-if="isAuth" to="/wallet/ava">Wallet</router-link>-->
 
-        <router-link to="/" class="logo"><img src="@/assets/wallet_logo.png"> <span class="slogan">A Wallet by AVA</span></router-link>
+        <router-link to="/" class="logo"><img src="@/assets/wallet_logo.png"> <span class="slogan">by AVA</span></router-link>
 <!--        <p class="app_name">BETA WALLET</p>-->
         <v-spacer></v-spacer>
 <!--        <language-select></language-select>-->
@@ -107,7 +107,7 @@
             img{
                 height: 18px;
                 object-fit: contain;
-                margin-right: 25px;
+                margin-right: 5px;
             }
         }
         a {
@@ -130,7 +130,7 @@
 
     @media only screen and (max-width: main.$mobile_width) {
         .slogan{
-            display: none;
+            /*display: none;*/
         }
         .buts_right{
             display: none;
@@ -143,7 +143,5 @@
         .mobile_right{
             display: block;
         }
-
-
     }
 </style>

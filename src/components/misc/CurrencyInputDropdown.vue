@@ -64,6 +64,8 @@
             percFull(){
                 if(!this.amount || !this.max_amount) return 0;
                 let max = this.max_amount;
+
+                console.log(max.toString())
                 return (this.amount.div(max))*100;
             },
 
@@ -98,7 +100,9 @@
                 return this.$store.getters['Assets/assetsArray'];
             },
             max_amount(){
+
                 if(!this.asset_now) return null;
+                if(this.asset_now.amount.isZero()) return null;
                 // console.log(typeof this.asset_now.amount.clone());
                 return this.asset_now.amount;
             }

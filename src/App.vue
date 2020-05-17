@@ -18,6 +18,9 @@
             Navbar,
             Notifications
         },
+        created() {
+            this.$store.dispatch('Assets/getAllAssets');
+        }
     }
 </script>
 

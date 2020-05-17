@@ -1,28 +1,31 @@
 <template>
     <div>
-        <div class="list">
-            <div class="item" v-for="(card, i) in cards" :key="i">
-                <img :src="card.url">
-                <p class="collectible_title">{{card.title}}</p>
-                <p class="series">{{card.series}}</p>
-
-                <div class="options">
-                    <button>Send</button>
-                    <button>Swap</button>
-                </div>
-            </div>
-
-            <div class="item missing_item" v-for="i in 2" :key="i">
-                <img src="https://usercontent1.hubstatic.com/14892354_f520.jpg">
-                <p class="collectible_title">Zulgadon of High Castle</p>
-                <p class="series">Pokemon Vol. I</p>
-
-                <div class="options">
-                    <button>Buy</button>
-                    <button>About</button>
-                </div>
-            </div>
+        <div class="coming_soon">
+            <p>NFTs Coming Soon</p>
         </div>
+<!--        <div class="list">-->
+<!--            <div class="item" v-for="(card, i) in cards" :key="i">-->
+<!--                <img :src="card.url">-->
+<!--                <p class="collectible_title">{{card.title}}</p>-->
+<!--                <p class="series">{{card.series}}</p>-->
+
+<!--                <div class="options">-->
+<!--                    <button>Send</button>-->
+<!--                    <button>Swap</button>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <div class="item missing_item" v-for="i in 2" :key="i">-->
+<!--                <img src="https://usercontent1.hubstatic.com/14892354_f520.jpg">-->
+<!--                <p class="collectible_title">Zulgadon of High Castle</p>-->
+<!--                <p class="series">Pokemon Vol. I</p>-->
+
+<!--                <div class="options">-->
+<!--                    <button>Buy</button>-->
+<!--                    <button>About</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </template>
 <script>
@@ -30,16 +33,16 @@
         data(){
             return {
                 cards: [
-                    {
-                        title: "High Priestess of Prophecy",
-                        series: "Pokemon Vol. I",
-                        url: "https://usercontent1.hubstatic.com/14892354_f520.jpg",
-                    },
-                    {
-                        title: "High Priestess of Prophecy",
-                        series: "Pokemon Vol. I",
-                        url: "https://usercontent1.hubstatic.com/13739072_f1024.jpg",
-                    }
+                    // {
+                    //     title: "High Priestess of Prophecy",
+                    //     series: "Pokemon Vol. I",
+                    //     url: "https://usercontent1.hubstatic.com/14892354_f520.jpg",
+                    // },
+                    // {
+                    //     title: "High Priestess of Prophecy",
+                    //     series: "Pokemon Vol. I",
+                    //     url: "https://usercontent1.hubstatic.com/13739072_f1024.jpg",
+                    // }
                 ]
             }
         }
@@ -48,6 +51,14 @@
 <style lang="scss" scoped>
 
     $flip_dur: 0.6s;
+
+
+    .coming_soon{
+
+        p {
+            font-size: 28px;
+        }
+    }
 
     .list{
         display: grid;
