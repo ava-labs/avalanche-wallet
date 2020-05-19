@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 // import Auth from './modules/auth/auth';
 import Assets from './modules/assets/assets';
+import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
 import {
     RootState,
@@ -20,7 +21,8 @@ import {avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
 export default new Vuex.Store({
     modules:{
         Assets,
-        Notifications
+        Notifications,
+        Network
     },
     state: {
         isAuth: false,
@@ -50,9 +52,11 @@ export default new Vuex.Store({
     actions: {
         // Gets addresses from the keys in the keychain,
         // Useful after entering wallet, adding/removing new keys
-        refreshAddresses(store){
+        async refreshAddresses(store){
             store.state.addresses = keyChain.getAddressStrings();
-            store.dispatch('Assets/updateUTXOs');
+
+            console.log(keyChain)
+            await store.dispatch('Assets/updateUTXOs');
         },
 
         // Used in home page to access a user's wallet

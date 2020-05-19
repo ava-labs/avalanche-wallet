@@ -25,6 +25,7 @@
 </script>
 <style scoped>
     .notifications{
+        pointer-events: none;
         position: fixed;
         display: flex;
         flex-direction: column;

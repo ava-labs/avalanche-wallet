@@ -7,6 +7,7 @@ import {UTXO, UTXOSet, CryptoHelpers} from "slopes";
 import * as slopes from "slopes";
 // import store from './store';
 import assetsStore from './store/modules/assets/assets';
+import {NetworkItem} from "@/store/modules/network/types";
 
 let ip = process.env.VUE_APP_AVA_IP || 'localhost';
 let port = process.env.VUE_APP_AVA_PORT || '9650';
@@ -45,4 +46,4 @@ function isValidAddress(addr:string){
 
 
 
-export { avm, bintools, keyChain, cryptoHelpers, isValidAddress};
+export { ava, avm, bintools, keyChain, cryptoHelpers, isValidAddress};

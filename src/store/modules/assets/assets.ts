@@ -1,7 +1,7 @@
 import {Module, Store} from "vuex";
 import {AddressUtxoDict, AssetAPI, AssetDescription, AssetsDict, AssetsState} from "@/store/modules/assets/types";
 import {RootState} from "@/store/types";
-import {avm, bintools} from "@/AVA";
+import {ava, avm, bintools} from "@/AVA";
 import {UTXOSet} from "slopes";
 import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
@@ -39,30 +39,18 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         // Fetches UTXOs of the addresses registered to the wallet
-        updateUTXOs({state, commit, dispatch, rootState}){
+        async updateUTXOs({state, commit, dispatch, rootState}) {
             // console.log("UPDATE UTXOS ASSET mod");
             state.isUpdateBalance = true;
-            avm.getUTXOs(rootState.addresses).then((res: UTXOSet) =>{
-                // console.log("GOT SET");
-                let utxos = res.getAllUTXOs();
+            let res: UTXOSet = await ava.AVM().getUTXOs(rootState.addresses);
+            let utxos = res.getAllUTXOs();
+            state.isUpdateBalance = false;
+            state.utxo_set = res;
+            state.utxos = utxos;
+            // dispatch('updateAssetsData');
 
-                // console.log(utxos);
-
-                state.isUpdateBalance = false;
-                state.utxo_set = res;
-                state.utxos = utxos;
-
-                // dispatch('updateAssetsData');
-                dispatch('updateBalances');
-            }).catch(err => {
-                console.log(err);
-                state.isUpdateBalance = false;
-                dispatch('Notifications/add', {
-                    title: "Network Error",
-                    message: "Faield to update UTXOs",
-                    type: 'error'
-                }, {root: true});
-            });
+            console.log(res,utxos);
+            dispatch('updateBalances');
         },
 
         // Looks at utxo's and updates balances for each asset
@@ -90,7 +78,6 @@ const assets_module: Module<AssetsState, RootState> = {
             state.assets.forEach(asset => {
                 asset.resetBalance();
             });
-            // console.log("end 2")
             return;
         },
 

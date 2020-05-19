@@ -38,7 +38,9 @@
     .header{
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        border-bottom: 2px solid transparent;
+
+        /*justify-content: space-between;*/
 
         h1{
             margin-right: 30px;
@@ -46,16 +48,18 @@
 
         button{
             padding: 8px 24px;
-            border-radius: 4px;
+            /*border-radius: 4px;*/
             font-size: 14px;
-            transition-duration: 0.2s;
-            background-color: #E7E7E7;
+            font-weight: bold;
+            /*transition-duration: 0.2s;*/
+            /*background-color: #E7E7E7;*/
             margin: 0px 5px;
 
 
             &[active]{
-                background-color: #000;
-                color: #fff;
+                /*background-color: #000;*/
+                color: #2960CD;
+                border-bottom: 3px solid #2960CD;
             }
         }
     }
@@ -71,7 +75,6 @@
 
 
             >div{
-                border-radius: 3px;
                 overflow: hidden;
                 display: flex;
             }

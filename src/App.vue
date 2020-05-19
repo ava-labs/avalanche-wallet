@@ -20,6 +20,7 @@
         },
         created() {
             this.$store.dispatch('Assets/getAllAssets');
+            this.$store.dispatch('Network/init');
         }
     }
 </script>

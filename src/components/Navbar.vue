@@ -1,21 +1,18 @@
 <template>
     <div id="nav">
-<!--        <router-link v-if="!isAuth" to="/">Home</router-link>-->
-<!--        <router-link v-if="isAuth" to="/wallet/ava">Wallet</router-link>-->
-
         <router-link to="/" class="logo"><img src="@/assets/wallet_logo.png"> <span class="slogan">by AVA</span></router-link>
-<!--        <p class="app_name">BETA WALLET</p>-->
         <v-spacer></v-spacer>
-<!--        <language-select></language-select>-->
-<!--        <day-night-toggle class="daynight"></day-night-toggle>-->
+
+
         <div class="buts_right">
-            <div v-if="isAuth">
+            <network-menu></network-menu>
+            <template v-if="isAuth">
                 <button @click="logout">Log out</button>
-            </div>
-            <div v-else>
+            </template>
+            <template v-else>
                 <router-link to="/access">Access Wallet</router-link>
                 <router-link to="/create" class="action_but">Get Started</router-link>
-            </div>
+            </template>
         </div>
 
         <div class="mobile_right">
@@ -24,7 +21,7 @@
             </v-btn>
         </div>
 
-
+        <!--   MOBILE MENU     -->
         <v-navigation-drawer v-model="isDrawer" fixed style="z-index: 999;" hide-overlay>
             <v-list dense nav>
                 <v-list-item>
@@ -45,8 +42,10 @@
     </div>
 </template>
 <script>
-    import LanguageSelect from './LanguageSelect';
-    import DayNightToggle from "@/components/misc/DayNightToggle";
+    // import LanguageSelect from './LanguageSelect';
+    // import DayNightToggle from "@/components/misc/DayNightToggle";
+    import NetworkMenu from './NetworkSettings/NetworkMenu';
+
     export default {
         data(){
             return {
@@ -54,6 +53,7 @@
             }
         },
         components: {
+            NetworkMenu,
             // LanguageSelect,
             // DayNightToggle
         },
@@ -115,6 +115,10 @@
         }
     }
 
+    .buts_right{
+        display: flex;
+        align-items: center;
+    }
 
     .action_but{
         background-color: #EBE4FB;
