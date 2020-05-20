@@ -1,7 +1,8 @@
+import {AvaNetwork} from "@/js/AvaNetwork";
 
 export interface NetworkState {
-    networks: NetworkItem[]
-    selectedNetwork: null|NetworkItem
+    networks: AvaNetwork[]
+    selectedNetwork: null|AvaNetwork
 }
 
 

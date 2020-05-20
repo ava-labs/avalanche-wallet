@@ -80,7 +80,7 @@
                 return this.$store.state.selectedAddress;
             },
             network(){
-                return process.env.VUE_APP_AVA_IP;
+                return this.$store.state.Network.selectedNetwork.ip;
             },
             isUpdateBalance(){
                 return this.$store.state.Assets.isUpdateBalance;

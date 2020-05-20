@@ -1,6 +1,6 @@
 <template>
     <div class="custom_network">
-        <form @submit.prevent="submit">
+        <form @submit.prevent="">
             <div>
                 <label>Network Name</label>
                 <input type="text" placeholder="Network Name" v-model="name">
@@ -25,7 +25,8 @@
                 </div>
             </div>
             <p v-if="err" class="form_error">{{err}}</p>
-            <button>Add Network</button>
+            <button @click="saveNetwork">Save Changes</button>
+<!--            <button @click="deleteNetwork" class="del_button">Delete Network</button>-->
         </form>
     </div>
 </template>
@@ -43,6 +44,20 @@
                 err: null,
                 err_url: '',
             }
+        },
+        props: {
+            net: {
+                type: AvaNetwork,
+                required: true
+            }
+        },
+        mounted() {
+            let net = this.net;
+
+            this.name = net.name;
+            this.url = net.getFullURL();
+            this.networkId = net.networkId;
+            this.chainId = net.chainId;
         },
         methods:{
             checkUrl(){
@@ -109,25 +124,18 @@
 
                 return err;
             },
-            submit(){
-                this.err = null;
-                let err = this.errCheck();
+            deleteNetwork(){
+                this.$emit('delete');
+            },
+            saveNetwork(){
+                let net = this.net;
+                net.name = this.name;
+                net.updateURL(this.url);
+                net.networkId =  this.networkId;
+                net.chainId =  this.chainId;
 
-                if(err){
-                    this.err = err;
-                    return;
-                }
-
-                let net = new AvaNetwork(this.name, this.url, this.networkId, this.chainId, this.explorer_api)
-
-                this.$emit('add', net);
-
-                // Clear values
-                this.name = 'My Custom Network';
-                this.url = '';
-                this.networkId = 12345;
-                this.chainId = 'X';
-            }
+                this.$parent.page = 'list';
+            },
         }
     }
 </script>
@@ -179,6 +187,11 @@
         padding: 3px 14px;
         border-radius: 4px;
     }
+
+    .del_button{
+
+    }
+
 
     .rowGroup{
         display: flex;

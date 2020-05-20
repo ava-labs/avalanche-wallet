@@ -10,24 +10,13 @@
             <p class="send_col">Send</p>
             <p  class="balance_col">Balance</p>
         </div>
-        <div class="scrollable">
-            <fungible-row lass="asset" v-for="asset in assets" :key="asset.id" :asset="asset"></fungible-row>
-<!--            <div class="asset" v-for="asset in assets" :key="asset.id">-->
-<!--                <div class="icon">-->
-<!--                    <img src="@/assets/ava_letter_icon.png">-->
-<!--                </div>-->
-<!--                <p class="name_col">{{asset.name}} ({{asset.symbol}})</p>-->
-<!--                <router-link :to="`/wallet/transfer`" class="send_col">-->
-<!--                    <img src="@/assets/sidebar/Transfer.png">-->
-<!--                </router-link>-->
-<!--                <p class="balance_col">{{asset.toString()}} <span>{{asset.symbol}}</span></p>-->
-<!--            </div>-->
-        </div>
         <div v-if="assets.length === 0" class="empty">
             <p>You do not have any assets</p>
-
-            <faucet-link class="faucet"></faucet-link>
         </div>
+        <div class="scrollable" v-else>
+            <fungible-row lass="asset" v-for="asset in assets" :key="asset.id" :asset="asset"></fungible-row>
+        </div>
+
     </div>
 </template>
 <script>
@@ -63,15 +52,15 @@
                     }
 
                     if(amtA.gt(amtB)){
-                        return 1;
-                    }else if(amtA.lt(amtB)){
                         return -1;
+                    }else if(amtA.lt(amtB)){
+                        return 1;
                     }
 
-                    if(symbolA > symbolB){
-                        return 1;
-                    }else if(symbolA < symbolB){
+                    if(symbolA < symbolB){
                         return -1;
+                    }else if(symbolA > symbolB){
+                        return 1;
                     }
                     return 0;
                 });

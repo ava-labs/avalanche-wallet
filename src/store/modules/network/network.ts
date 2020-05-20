@@ -3,6 +3,8 @@ import {RootState} from "@/store/types";
 import {NetworkItem, NetworkState} from "@/store/modules/network/types";
 
 import {ava, avm} from "@/AVA";
+import {AvaNetwork} from "@/js/AvaNetwork";
+import {explorer_api} from "@/explorer_api";
 
 
 const network_module: Module<NetworkState, RootState> = {
@@ -12,67 +14,36 @@ const network_module: Module<NetworkState, RootState> = {
         selectedNetwork: null
     },
     mutations: {
-        addNetwork(state, net: NetworkItem){
+        addNetwork(state, net: AvaNetwork){
             state.networks.push(net);
         },
     },
     actions: {
-        async setNetwork({state, dispatch}, net:NetworkItem){
-            ava.setAddress(net.url,net.port,net.protocol);
+        async setNetwork({state, dispatch}, net:AvaNetwork){
+            ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
+            //@ts-ignore
             ava.AVM().refreshBlockchainID();
 
+            state.selectedNetwork = net;
+            explorer_api.defaults.baseURL = net.explorerUrl;
 
-            console.log(ava.getNetworkID());
-            console.log(ava.AVM().getBlockchainID());
-            console.log(ava.AVM().getBlockchainAlias());
+            await dispatch('Assets/updateAvaAsset', null, {root: true});
+            await dispatch('Assets/updateAssets', null, {root: true});
+            await dispatch('Assets/clearBalances', null, {root: true});
+            await dispatch('Assets/updateUTXOs', null, {root: true});
 
-            try{
-                await dispatch('Assets/clearBalances', null, {root: true});
-                await dispatch('refreshAddresses', null, {root: true})
 
-                dispatch('Notifications/add', {
-                    title: "Network Changed",
-                    message: "Connected to "+net.url,
-                    type: "success"
-                }, {root: true});
-
-                state.selectedNetwork = net;
-            }catch (e) {
-                console.log(e);
-                dispatch('Notifications/add', {
-                    title: "Connection Failed",
-                    message: `${net.url} did not respond.`,
-                    type: "error"
-                }, {root:true});
-
-                state.selectedNetwork = null;
-            }
+            return true;
         },
         init({state, commit, dispatch}){
-            let netTest = {
-                name: 'Gecko Localhost',
-                protocol: 'http',
-                url: 'localhost',
-                port: 9650,
-                networkId: 12345,
-                chainId: 'X'
-            };
-
-
-            let netLocal = {
-                name: 'TestNet',
-                protocol: 'https',
-                url: 'bootstrap.ava.network',
-                port: 21000,
-                networkId: 2,
-                chainId: 'X'
-            };
+            let netTest = new AvaNetwork("TestNet", 'https://bootstrap.ava.network:21000', 2, 'X', 'https://explorerapi.ava.network');
+            let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 2, 'X');
 
 
             commit('addNetwork', netTest);
             commit('addNetwork', netLocal);
-            dispatch('setNetwork', state.networks[1])
+            dispatch('setNetwork', state.networks[0])
         }
 
     },

@@ -41,7 +41,7 @@
                 return this.$store.state.addresses;
             },
             balance(){
-                return this.$store.getters['Assets/assetsDict'];
+                return this.$store.state.Assets.assetsDict;
             },
 
         }

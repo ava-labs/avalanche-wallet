@@ -1,11 +1,7 @@
 <template>
     <div>
-<!--        <div class="header">-->
-<!--            <h4>Networks</h4>-->
-<!--            <button>Add Custom</button>-->
-<!--        </div>-->
         <div class="networks_list">
-            <network-row v-for="net in networks" :key="net.name" class="network_row" :network="net"></network-row>
+            <network-row v-for="net in networks" :key="net.id" class="network_row" :network="net"></network-row>
         </div>
     </div>
 </template>
@@ -23,7 +19,7 @@
             networks(){
                 return this.$store.state.Network.networks;
             }
-        }
+        },
     }
 </script>
 <style scoped lang="scss">

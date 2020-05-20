@@ -7,6 +7,7 @@ export interface AssetsState {
     utxos: SecpUTXO[]
     descriptions: AssetDescriptions
     assets: AvaAsset[]
+    assetsDict: AssetsDict
 }
 
 export interface AssetDescriptions {

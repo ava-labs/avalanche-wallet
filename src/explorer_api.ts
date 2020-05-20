@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const api_url = process.env.VUE_APP_EXPLORER_URL;
-
+// Doesn't really matter what we set, it will change
+const api_url = 'localhost';
 const explorer_api = axios.create({
     baseURL: api_url,
     withCredentials: false,

@@ -73,7 +73,7 @@
                 return this.$store.state.selectedAddress;
             },
             balance(){
-                return this.$store.getters['Assets/assetsDict'];
+                return this.$store.state.Assets.assetsDict;
             },
             addressBalances(){
                 let utxos =  this.$store.getters['Assets/addressUTXOs'];

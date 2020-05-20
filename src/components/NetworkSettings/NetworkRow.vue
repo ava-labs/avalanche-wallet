@@ -4,6 +4,7 @@
         <div class="name_col">
             <p class="name">{{network.name}}</p>
             <p class="url">{{endpoint}}</p>
+            <button class="editBut" @click="edit" v-if="!isSelected"><fa icon="cog"></fa> Edit</button>
         </div>
         <div class="stat_col">
             <button  @click="select" v-if="!isSelected">Select</button>
@@ -22,7 +23,12 @@
         computed:{
             endpoint(){
                 let net = this.network;
-                return `${net.protocol}://${net.url}:${net.port}`
+                let portText = '';
+                if(net.port){
+                    portText = ':'+net.port;
+                }
+
+                return `${net.protocol}://${net.ip}${portText}`
             },
             isSelected(){
                 if(this.network === this.$store.state.Network.selectedNetwork){
@@ -32,20 +38,43 @@
             }
         },
         methods: {
+            edit(){
+                this.$parent.$parent.onedit(this.network);
+            },
             async select(){
-                await this.$store.dispatch('Network/setNetwork', this.network)
+                let net = this.network;
+                try{
+                    let isSel = await this.$store.dispatch('Network/setNetwork', net);
+
+                    this.$store.dispatch('Notifications/add', {
+                        title: "Network Connected",
+                        message: "Connected to "+net.name,
+                        type: "success"
+                    }, {root: true});
+                    this.$parent.$parent.isActive = false;
+                }catch(e){
+                    // console.log(e);
+                    this.$store.state.Network.selectedNetwork = null;
+                    this.$store.dispatch('Notifications/add', {
+                        title: "Connection Failed",
+                        message: `Failed to connect ${net.name}`,
+                        type: "error"
+                    }, {root:true});
+                }
+
             }
         }
     }
 </script>
 <style scoped lang="scss">
     .stat_col{
-        font-size: 12px;
+        font-size: 14px;
         color: #2960CD;
         text-align: right;
     }
 
     .network_row{
+        position: relative;
         padding: 12px 0px;
         display: grid;
         grid-template-columns: 40px 1fr 80px;
@@ -73,7 +102,19 @@
 
     }
 
+    .editBut{
+        color: #000;
+        opacity: 0.4;
+        font-size: 11px;
+        /*position: absolute;*/
+        /*top: 12px;*/
+        /*right: 0px;*/
+        margin-top: 6px;
 
+        &:hover{
+            opacity: 0.8;
+        }
+    }
 
     .url{
         color: #909090;

@@ -13,15 +13,20 @@
                         <h4>Networks</h4>
                         <button @click="viewCustom">Add Custom</button>
                     </template>
-                    <template v-else>
+                    <template v-if="page==='custom'">
                         <h4>Add Custom Network</h4>
-                        <button @click="viewList">cancel</button>
+                        <button @click="viewList" style="background-color: transparent; color: #3a3144">Cancel</button>
+                    </template>
+                    <template v-if="page==='edit'">
+                        <h4>Edit Network</h4>
+                        <button @click="viewList" style="background-color: transparent; color: #3a3144">Cancel</button>
                     </template>
                 </div>
 
                 <transition name="fade" mode="out-in">
                     <ListPage v-if="page==='list'"></ListPage>
-                    <CustomPage v-else></CustomPage>
+                    <CustomPage v-if="page==='custom'" @add="addCustomNetwork"></CustomPage>
+                    <EditPage v-if="page==='edit'" :net="editNetwork" ></EditPage>
                 </transition>
 
             </div>
@@ -32,16 +37,19 @@
     import NetworkRow from './NetworkRow';
     import CustomPage from './CustomPage';
     import ListPage from './ListPage';
+    import EditPage from "@/components/NetworkSettings/EditPage";
     export default {
         components: {
             ListPage,
             NetworkRow,
-            CustomPage
+            CustomPage,
+            EditPage
         },
         data(){
             return{
-                page: 'list',
-                isActive: false
+                page: 'list', // list | custom | edit
+                isActive: false,
+                editNetwork: null,
             }
         },
         methods: {
@@ -53,6 +61,14 @@
             },
             toggleMenu(){
                 this.isActive = !this.isActive;
+            },
+            addCustomNetwork(data){
+                this.$store.commit('Network/addNetwork', data);
+                this.page = 'list';
+            },
+            onedit(network){
+                this.editNetwork = network;
+                this.page = 'edit';
             }
         },
         computed: {
@@ -95,6 +111,7 @@
         right: 0;
         background-color: #fff;
         transform: translateY(100%);
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
     }
 
     .header{

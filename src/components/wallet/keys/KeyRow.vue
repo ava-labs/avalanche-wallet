@@ -56,7 +56,7 @@
         },
         computed: {
             balance(){
-                return this.$store.getters['Assets/assetsDict'];
+                return this.$store.state.Assets.assetsDict;
             },
             balances(){
                 let res = {};

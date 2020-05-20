@@ -55,16 +55,16 @@ export default new Vuex.Store({
         async refreshAddresses(store){
             store.state.addresses = keyChain.getAddressStrings();
 
-            console.log(keyChain)
-            await store.dispatch('Assets/updateUTXOs');
+            // await store.dispatch('Assets/updateUTXOs');
         },
 
         // Used in home page to access a user's wallet
-        accessWallet(store, pk: string){
+        async accessWallet(store, pk: string){
 
+            let keypair = await store.dispatch('addKey', pk);
 
-            let address = keyChain.importKey(pk);
-            let keypair = keyChain.getKey(address);
+            // let address = keyChain.importKey(pk);
+            // let keypair = keyChain.getKey(address);
 
             store.commit('setPrivateKey', pk);
             store.commit('selectAddress', keypair.getAddressString());
@@ -76,6 +76,7 @@ export default new Vuex.Store({
 
         onAccess(store){
             store.dispatch('refreshAddresses');
+            store.dispatch('Assets/updateUTXOs');
         },
 
         async logout(store){
@@ -140,18 +141,23 @@ export default new Vuex.Store({
         },
 
 
-        addKey(store, pk:string){
+        async addKey(store, pk:string){
+            // console.log("ADD KEY: ",pk);
 
             let pkBuff = bintools.avaDeserialize(pk);
             let addrBuf = keyChain.importKey(pkBuff);
             let keypair = keyChain.getKey(addrBuf);
 
-            store.dispatch('Notifications/add', {
-                title: 'Key Added',
-                message: 'The private key is added to the keychain.'
-            });
+            // store.dispatch('Notifications/add', {
+            //     title: 'Key Added',
+            //     message: 'The private key is added to the keychain.'
+            // });
 
-            store.dispatch('refreshAddresses');
+            // await store.dispatch('refreshAddresses');
+
+            store.state.addresses = keyChain.getAddressStrings();
+
+
             return keypair;
         },
 
@@ -165,7 +171,7 @@ export default new Vuex.Store({
 
             let assetId = asset.id;
 
-            console.log(amount.toString(10));
+            // console.log(amount.toString(10));
 
 
             let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);
@@ -342,6 +348,9 @@ export default new Vuex.Store({
                                     }
                                 }
                             }
+
+                            await store.dispatch('refreshAddresses');
+
 
                             resolve({
                                 success: true,

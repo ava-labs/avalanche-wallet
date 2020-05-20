@@ -19,7 +19,7 @@
             Notifications
         },
         created() {
-            this.$store.dispatch('Assets/getAllAssets');
+            // this.$store.dispatch('Assets/getAllAssets');
             this.$store.dispatch('Network/init');
         }
     }
@@ -84,13 +84,15 @@
 
         #nav{
             padding: main.$container_padding_mobile;
-
         }
     }
 
     @media only screen and (max-width: main.$width_s) {
         #router_view{
-            padding: main.$container_padding_mobile;
+            padding: main.$container_padding_s;
+        }
+        #nav{
+            padding: main.$container_padding_s;
         }
     }
 

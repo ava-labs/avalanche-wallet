@@ -8,13 +8,10 @@ import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
 
 
-
 let AVA_ASSET_ID:string;
 
 
-avm.getAssetDescription('AVA').then(res => {
-    AVA_ASSET_ID = bintools.avaSerialize(res.assetID);
-});
+
 
 
 
@@ -26,8 +23,23 @@ const assets_module: Module<AssetsState, RootState> = {
         utxos: [],
         descriptions: {},
         assets: [],
+        assetsDict: {},
     },
     mutations: {
+        addAsset(state, asset:AvaAsset){
+            if(state.assetsDict[asset.id]){
+                console.info(`Failed to add asset. Asset already exists. (${asset.id})`);
+                return;
+            }
+            state.assets.push(asset);
+            Vue.set(state.assetsDict,asset.id,asset);
+            // state.assetsDict[asset.id] = asset;
+            // console.log(`ADDED ${asset.id}`);
+        },
+        removeAllAssets(state){
+            state.assets = [];
+            state.assetsDict = {};
+        }
     },
     actions: {
         // Called on a logout event
@@ -40,37 +52,48 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Fetches UTXOs of the addresses registered to the wallet
         async updateUTXOs({state, commit, dispatch, rootState}) {
-            // console.log("UPDATE UTXOS ASSET mod");
             state.isUpdateBalance = true;
             let res: UTXOSet = await ava.AVM().getUTXOs(rootState.addresses);
             let utxos = res.getAllUTXOs();
             state.isUpdateBalance = false;
             state.utxo_set = res;
             state.utxos = utxos;
-            // dispatch('updateAssetsData');
 
-            console.log(res,utxos);
-            dispatch('updateBalances');
+            await dispatch('updateBalances');
         },
 
         // Looks at utxo's and updates balances for each asset
-        async updateBalances({state, getters, dispatch}){
-            // console.log(state.utxos);
-
+        async updateBalances({state, getters, dispatch, rootState}){
             await dispatch('clearBalances');
 
-            let dict:AssetsDict = getters.assetsDict;
+
             let utxos = state.utxos;
-            utxos.forEach(utxo => {
+
+            for(var i=0;i<utxos.length;i++){
+                let utxo = utxos[i];
                 let assetId:string = bintools.avaSerialize(utxo.getAssetID());
                 let amount = utxo.getAmount();
-                // state.assets[]
-                dict[assetId].addBalance(amount);
+                let dict = state.assetsDict;
 
-                // console.log(dict[assetId].toString());
-            });
-            // console.log(dict);
-            // console.log("end 1")
+                // Because we populate the assets dictionary from the explorer api, we cannot query any other network including localhost
+                // and this causes the assetId to not exist
+                if(dict[assetId]){
+                    dict[assetId].addBalance(amount);
+                }else{
+                    // Add Unknown Asset
+                    await dispatch('addUnknownAsset', assetId);
+                    dict[assetId].addBalance(amount);
+                }
+            }
+        },
+
+        async addUnknownAsset({state, commit}, assetId:string){
+            // get info about the asset
+            let desc = await ava.AVM().getAssetDescription(assetId);
+            let newAsset = new AvaAsset(assetId, desc.name, desc.symbol, desc.denomination);
+
+            await commit('addAsset', newAsset);
+            return desc;
         },
 
         // Sets every balance to 0
@@ -81,17 +104,29 @@ const assets_module: Module<AssetsState, RootState> = {
             return;
         },
 
-        // fetch every asset from the explorer
-        getAllAssets({state}){
-            explorer_api.get('/x/assets').then(res => {
-                let assets:AssetAPI[] = res.data.assets;
-                assets.forEach(asset => {
-                   let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
-                   state.assets.push(newAsset);
-                });
-                // console.log(state.assets);
+        updateAvaAsset(){
+            avm.getAssetDescription('AVA').then(res => {
+                AVA_ASSET_ID = bintools.avaSerialize(res.assetID);
             });
         },
+        // fetch every asset from the explorer, if explorer exists
+        updateAssets({state, rootState, commit}){
+            // console.log(rootState);
+            commit('removeAllAssets');
+
+            //@ts-ignore
+            let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
+            if(explorerApi){
+                explorer_api.get('/x/assets').then(res => {
+                    let assets:AssetAPI[] = res.data.assets;
+                    assets.forEach(asset => {
+                        let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
+                        commit('addAsset', newAsset)
+                    });
+                });
+            }
+        },
+
         // Gets meta data for all the assets in the wallet
         updateAssetsData({state, getters}){
             let assetIds = getters.assetIds;
@@ -141,8 +176,8 @@ const assets_module: Module<AssetsState, RootState> = {
     getters: {
         AssetAVA(state,getters){
             if(AVA_ASSET_ID){
-                if(getters.assetsDict[AVA_ASSET_ID]){
-                    return getters.assetsDict[AVA_ASSET_ID];
+                if(state.assetsDict[AVA_ASSET_ID]){
+                    return state.assetsDict[AVA_ASSET_ID];
                 }
             }
             return null;
@@ -154,41 +189,41 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         // Combine all UTXOs from all addresses to have an overall asset list
-        assetsDict(state):AssetsDict{
-            let res:AssetsDict = {};
-
-            state.assets.forEach(asset => {
-               res[asset.id] = asset;
-            });
-
-            // let utxos = state.utxos;
-            // for(let utxoId in utxos) {
-            //     let utxo = utxos[utxoId];
-            //
-            //     let asset_id_buffer = utxo.getAssetID();
-            //     let asset_id = bintools.avaSerialize(asset_id_buffer);
-            //
-            //     let asset_amount_bn = utxo.getAmount();
-            //     // let asset_amount = asset_amount_bn.toNumber();
-            //
-            //     let asset_desc = state.descriptions[asset_id];
-            //
-            //     // The asset must have a description to add to the results
-            //     if(asset_desc){
-            //         // If asset exists add to total balance
-            //         if(res[asset_id]){
-            //             let asset = res[asset_id];
-            //                 asset.addBalance(asset_amount_bn);
-            //         }else{
-            //             let newAsset = new AvaAsset(asset_id, asset_desc.name, asset_desc.symbol, asset_desc.denomination);
-            //                 newAsset.addBalance(asset_amount_bn);
-            //             res[asset_id] = newAsset
-            //         }
-            //     }
-            //
-            // }
-            return res;
-        },
+        // assetsDict(state):AssetsDict{
+        //     let res:AssetsDict = {};
+        //
+        //     state.assets.forEach(asset => {
+        //        res[asset.id] = asset;
+        //     });
+        //
+        //     // let utxos = state.utxos;
+        //     // for(let utxoId in utxos) {
+        //     //     let utxo = utxos[utxoId];
+        //     //
+        //     //     let asset_id_buffer = utxo.getAssetID();
+        //     //     let asset_id = bintools.avaSerialize(asset_id_buffer);
+        //     //
+        //     //     let asset_amount_bn = utxo.getAmount();
+        //     //     // let asset_amount = asset_amount_bn.toNumber();
+        //     //
+        //     //     let asset_desc = state.descriptions[asset_id];
+        //     //
+        //     //     // The asset must have a description to add to the results
+        //     //     if(asset_desc){
+        //     //         // If asset exists add to total balance
+        //     //         if(res[asset_id]){
+        //     //             let asset = res[asset_id];
+        //     //                 asset.addBalance(asset_amount_bn);
+        //     //         }else{
+        //     //             let newAsset = new AvaAsset(asset_id, asset_desc.name, asset_desc.symbol, asset_desc.denomination);
+        //     //                 newAsset.addBalance(asset_amount_bn);
+        //     //             res[asset_id] = newAsset
+        //     //         }
+        //     //     }
+        //     //
+        //     // }
+        //     return res;
+        // },
 
         addressUTXOs(state):AddressUtxoDict{
             if (!state.utxo_set) return {};
