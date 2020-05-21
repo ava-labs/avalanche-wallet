@@ -10,6 +10,7 @@ import {explorer_api} from "@/explorer_api";
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
+        isConnected: false,
         networks: [],
         selectedNetwork: null
     },
@@ -20,6 +21,7 @@ const network_module: Module<NetworkState, RootState> = {
     },
     actions: {
         async setNetwork({state, dispatch}, net:AvaNetwork){
+            state.isConnected = false;
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
             //@ts-ignore
@@ -33,7 +35,7 @@ const network_module: Module<NetworkState, RootState> = {
             await dispatch('Assets/clearBalances', null, {root: true});
             await dispatch('Assets/updateUTXOs', null, {root: true});
 
-
+            state.isConnected = true;
             return true;
         },
         init({state, commit, dispatch}){

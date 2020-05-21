@@ -1,9 +1,10 @@
 <template>
     <div class="network_menu" :connected="isConnected">
         <div class="toggle_but" @click="toggleMenu">
-            <img src="@/assets/network_off.png" v-if="!isConnected">
+            <img src="@/assets/network_off.png" v-if="!isConnected || isConnecting">
             <img src="@/assets/network_on.png" v-else>
             <button v-if="isConnected">{{activeNetwork.name}}</button>
+            <button v-else-if="isConnecting">Connecting...</button>
             <button v-else>Disconnected</button>
         </div>
         <transition name="fade">
@@ -72,8 +73,11 @@
             }
         },
         computed: {
+            isConnecting(){
+                return this.activeNetwork!==null && !this.$store.state.Network.isConnected;
+            },
             isConnected(){
-                return this.activeNetwork!==null;
+                return this.activeNetwork!==null && this.$store.state.Network.isConnected;
             },
             activeNetwork(){
                 return this.$store.state.Network.selectedNetwork;

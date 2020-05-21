@@ -8,6 +8,7 @@
         </div>
         <div class="stat_col">
             <button  @click="select" v-if="!isSelected">Select</button>
+            <button  v-else-if="!isConnected" class="connecting">Connecting...</button>
             <p v-else>Connected</p>
         </div>
     </div>
@@ -30,8 +31,16 @@
 
                 return `${net.protocol}://${net.ip}${portText}`
             },
+            isConnected(){
+                let state = this.$store.state.Network;
+                if(this.network === state.selectedNetwork && state.isConnected){
+                    return true;
+                }
+                return false;
+            },
             isSelected(){
-                if(this.network === this.$store.state.Network.selectedNetwork){
+                let state = this.$store.state.Network;
+                if(this.network === state.selectedNetwork && !state.isConnected){
                     return true;
                 }
                 return false;
@@ -116,8 +125,20 @@
         }
     }
 
+    .connecting{
+        animation-name: connecting;
+        animation-duration: 0.5s;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+    }
+
     .url{
         color: #909090;
         font-size: 12px;
+    }
+
+    @keyframes connecting {
+        from {color: #2960CD;}
+        to {color: #5ECB08;}
     }
 </style>

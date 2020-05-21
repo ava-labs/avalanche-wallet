@@ -3,6 +3,7 @@ import {AvaNetwork} from "@/js/AvaNetwork";
 export interface NetworkState {
     networks: AvaNetwork[]
     selectedNetwork: null|AvaNetwork
+    isConnected: boolean
 }
 
 

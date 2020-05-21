@@ -104,7 +104,8 @@ const assets_module: Module<AssetsState, RootState> = {
             return;
         },
 
-        updateAvaAsset(){
+        // What is the AVA coin in the network
+        async updateAvaAsset(){
             avm.getAssetDescription('AVA').then(res => {
                 AVA_ASSET_ID = bintools.avaSerialize(res.assetID);
             });
