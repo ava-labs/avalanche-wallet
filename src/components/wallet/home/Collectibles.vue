@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="coming_soon">
+            <img src="@/assets/nft_preview.png">
             <p>NFTs Coming Soon</p>
         </div>
 <!--        <div class="list">-->
@@ -54,9 +55,17 @@
 
 
     .coming_soon{
+        padding-top: 60px;
+        text-align: center;
+        img{
+            width: 100%;
+            max-width: 560px;
+        }
 
         p {
+            font-weight: lighter;
             font-size: 28px;
+            color: #999;
         }
     }
 

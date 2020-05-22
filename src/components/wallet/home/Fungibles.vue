@@ -1,12 +1,12 @@
 <template>
     <div class="fungibles_view">
-        <div class="search">
-            <img src="@/assets/search.png">
-            <input placeholder="Search assets.." v-model="search">
-        </div>
+<!--        <div class="search">-->
+<!--            <img src="@/assets/search.png">-->
+<!--            <input placeholder="Search assets.." v-model="search">-->
+<!--        </div>-->
         <div class="headers">
-            <p></p>
             <p class="name_col">Name</p>
+            <p></p>
             <p class="send_col">Send</p>
             <p  class="balance_col">Balance</p>
         </div>
@@ -25,7 +25,12 @@
     export default {
         data(){
             return {
-                search: '',
+                // search: '',
+            }
+        },
+        props: {
+            search: {
+                type: String
             }
         },
         components: {
@@ -98,6 +103,12 @@
     @use '../../../main';
 
 
+    .fungibles_view{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
     .search{
         height: 20px;
         font-size: 15px;
@@ -120,7 +131,10 @@
 
     .headers{
         border-bottom: 1px solid #E6E6E666;
-        font-size: 13px;
+        font-size: 12px;
+        padding: 14px 0px;
+        color: #909090;
+        font-weight: bold;
     }
 
 
@@ -128,6 +142,7 @@
     .scrollable{
         overflow-y: scroll;
         height: 450px;
+        flex-grow: 1;
     }
 
     .asset{
@@ -153,6 +168,7 @@
     .name_col{
         white-space: nowrap;
     }
+
 
     @media only screen and (max-width: main.$mobile_width) {
         .headers, .asset{

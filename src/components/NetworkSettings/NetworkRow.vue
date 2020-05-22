@@ -40,7 +40,7 @@
             },
             isSelected(){
                 let state = this.$store.state.Network;
-                if(this.network === state.selectedNetwork && !state.isConnected){
+                if(this.network === state.selectedNetwork){
                     return true;
                 }
                 return false;

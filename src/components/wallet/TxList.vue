@@ -10,7 +10,7 @@
                     class="list_in"
                     @change="oninputchange(i,$event)"
                     :disabled_assets="disabledAssets[i]"
-                    :initial="tx.asset"
+                    :initial="tx.asset.id"
             ></currency-input-dropdown>
             <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1">Remove Asset</button>
         </div>
@@ -124,11 +124,11 @@
         },
         computed: {
             assets_list(){
-                return this.$store.getters['Assets/assetsArray'];
+                return this.$store.state.Assets.assets;
 
             },
             assets(){
-                return this.$store.getters['Assets/assetsDict'];
+                return this.$store.state.Assets.assetsDict;
             },
             showAdd(){
                 if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){

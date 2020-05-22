@@ -22,7 +22,7 @@
             <div class="addressBallance">
                 <p class="label">{{$t('keys.balance')}}</p>
                 <p v-if="Object.keys(balances).length === 0">{{$t('keys.empty')}}</p>
-                <p v-else v-for="bal in balances" :key="bal.symbol">
+                <p v-else v-for="bal in balances" :key="bal.id">
                     {{bal.toString()}} <b>{{bal.symbol}}</b>
                 </p>
             </div>

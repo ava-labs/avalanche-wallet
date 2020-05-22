@@ -62,6 +62,10 @@
             },
             toggleMenu(){
                 this.isActive = !this.isActive;
+
+                // if(this.isActive){
+                //
+                // }
             },
             addCustomNetwork(data){
                 this.$store.commit('Network/addNetwork', data);
@@ -107,14 +111,14 @@
     }
 
     .network_body{
-        position: absolute;
+        position: fixed;
+        top: 60px;
+        right: 15vw;;
         border: 1px solid #999;
         border-radius: 4px;
         width: 340px;
-        bottom: -20px;
-        right: 0;
         background-color: #fff;
-        transform: translateY(100%);
+        /*transform: translateY(100%);*/
         box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
     }
 

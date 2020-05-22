@@ -5,6 +5,8 @@ import Vuex from 'vuex'
 import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
+import History from './modules/history/history';
+
 import {
     RootState,
     IssueTxInput,
@@ -22,7 +24,8 @@ export default new Vuex.Store({
     modules:{
         Assets,
         Notifications,
-        Network
+        Network,
+        History
     },
     state: {
         isAuth: false,
@@ -77,6 +80,8 @@ export default new Vuex.Store({
         onAccess(store){
             store.dispatch('refreshAddresses');
             store.dispatch('Assets/updateUTXOs');
+            store.dispatch('History/updateTransactionHistory');
+
         },
 
         async logout(store){
@@ -169,6 +174,8 @@ export default new Vuex.Store({
             let asset = data.asset;
             let amount = data.amount;
 
+            console.log(data);
+
             let assetId = asset.id;
 
             // console.log(amount.toString(10));
@@ -200,10 +207,11 @@ export default new Vuex.Store({
                 }).then(()=>{
                     store.dispatch('Notifications/add', {
                         title: 'Transaction Sent',
-                        message: 'You have succesfully sent your transaction.'
+                        message: 'You have successfully sent your transaction.'
                     });
                 }).catch(err => {
                     // alert(err);
+                    console.error(err);
                     store.dispatch('Notifications/add', {
                         title: 'Error Sending Transaction',
                         message: err,

@@ -6,6 +6,7 @@ import {UTXOSet} from "slopes";
 import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
+// import {tr} from "@/locales/tr";
 
 
 let AVA_ASSET_ID:string;
@@ -52,7 +53,13 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Fetches UTXOs of the addresses registered to the wallet
         async updateUTXOs({state, commit, dispatch, rootState}) {
+            if(!rootState.isAuth){
+                return false;
+            }
             state.isUpdateBalance = true;
+
+            dispatch('History/updateTransactionHistory', null, {root: true});
+
             let res: UTXOSet = await ava.AVM().getUTXOs(rootState.addresses);
             let utxos = res.getAllUTXOs();
             state.isUpdateBalance = false;

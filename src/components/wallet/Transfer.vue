@@ -147,7 +147,7 @@
             //     // return this.$store.state.assets;
             // },
             assetArray(){
-                return this.$store.getters['Assets/assetsArray'];
+                return this.$store.state.Assets.assets;
             }
         },
         created() {

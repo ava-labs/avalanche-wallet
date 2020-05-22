@@ -36,7 +36,7 @@
                     return [];
                 },
             },
-            initial: Object,
+            initial: String,
         },
         computed: {
             isEmpty(){
@@ -65,7 +65,7 @@
                 if(!this.amount || !this.max_amount) return 0;
                 let max = this.max_amount;
 
-                console.log(max.toString())
+                // console.log(max.toString())
                 return (this.amount.div(max))*100;
             },
 
@@ -77,18 +77,31 @@
             dropdown_values(){
                 let res = [];
 
-                for(var id in this.dropdown_assets){
-                    let asset = this.dropdown_assets[id];
+
+                this.dropdown_assets.forEach(asset => {
                     let disabled= false;
                     if(this.disabled_assets.includes(asset)){
                         disabled = true;
                     }
                     res.push({
                         label: asset.name,
+                        key: asset.id,
                         data: asset,
                         disabled: disabled
                     });
-                }
+                });
+                // for(var id in this.dropdown_assets){
+                //     let asset = this.dropdown_assets[id];
+                //     let disabled= false;
+                //     if(this.disabled_assets.includes(asset)){
+                //         disabled = true;
+                //     }
+                //     res.push({
+                //         label: asset.name,
+                //         data: asset,
+                //         disabled: disabled
+                //     });
+                // }
 
                 return res;
             },
@@ -97,7 +110,7 @@
                 return this.global_assets;
             },
             global_assets(){
-                return this.$store.getters['Assets/assetsArray'];
+                return this.$store.state.Assets.assets;
             },
             max_amount(){
 
@@ -115,12 +128,6 @@
                 // this.onchange();
             },
             amount_in(val){
-                // console.log(val.toString());
-                // let amount = parseFloat(this.$refs.amount.value);
-                // if(amount > this.max_amount){
-                //     amount = this.max_amount;
-                //     this.amount = amount;
-                // }
                 this.amount = val;
                 this.onchange();
             },
@@ -146,8 +153,7 @@
             if(this.initial){
                 for(var i=0;i<this.dropdown_values.length;i++){
                     let val = this.dropdown_values[i];
-                    // console.log(val);
-                    if(val.data === this.initial){
+                    if(val.key === this.initial){
                         this.drop_change(val.data);
                     }
                 }

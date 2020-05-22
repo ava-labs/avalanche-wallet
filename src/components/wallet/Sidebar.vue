@@ -19,17 +19,19 @@
     @use '../../main';
 
     .wallet_sidebar{
-        padding: 20px 0px;
+        padding: 20vh 0px !important;
         display: flex;
         flex-direction: column;
 
         a{
-            margin-bottom: 30px;
+            padding: 14px 24px;
+            /*margin-bottom: 30px;*/
             white-space: nowrap;
         }
 
         a.router-link-exact-active{
-            color: #9974f1 !important;
+            /*color: #9974f1 !important;*/
+            background-color: #F5F6FA;
         }
     }
 

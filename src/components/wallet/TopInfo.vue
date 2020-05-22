@@ -1,45 +1,7 @@
 <template>
     <div class="top_cards">
-        <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet ref="print_modal"></paper-wallet>
-
-        <div class="top_card">
-            <div class="card_left">
-                <img src="@/assets/QR.png">
-            </div>
-            <div class="card_right">
-                <h4>{{$t('top.title1')}}</h4>
-                <p>{{address}}</p>
-                <div class="buts">
-                    <button :tooltip="$t('top.hover1')" @click="viewQRModal"><fa icon="qrcode"></fa></button>
-                    <button :tooltip="$t('top.hover2')" @click="viewPrintModal"><fa icon="print"></fa></button>
-                    <CopyText :tooltip="$t('top.hover3')" :value="address"></CopyText>
-                </div>
-            </div>
-        </div>
-        <div class="top_card" >
-            <div class="card_left">
-                <img src="/img/account-balance.png">
-            </div>
-            <div class="card_right">
-                <h4>{{$t('top.title2')}}</h4>
-                <p v-if="ava_asset" class="balance">{{ava_asset.toString()}} AVA</p>
-                <p v-else class="balance">0 AVA</p>
-                <div class="buts">
-                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
-                    <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
-                </div>
-            </div>
-        </div>
-        <div class="top_card nonessential">
-            <div class="card_left">
-                <img src="/img/wifi.png">
-            </div>
-            <div class="card_right">
-                <h4>{{$t('top.title4')}}</h4>
-                <p>{{network}}</p>
-            </div>
-        </div>
+        <balance-card class="top_card balance_card"></balance-card>
+        <address-card class="top_card addr_card"></address-card>
     </div>
 </template>
 <script>
@@ -47,8 +9,13 @@
     import QRModal from "../modals/QRModal";
     import PaperWallet from "../modals/PaperWallet";
 
+    import BalanceCard from "./home/TopCards/BalanceCard";
+    import AddressCard from "./home/TopCards/AddressCard";
+
     export default {
         components: {
+            BalanceCard,
+            AddressCard,
             CopyText,
             PaperWallet,
             QRModal,
@@ -93,15 +60,16 @@
 
     .top_cards{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(5,1fr);
         grid-gap: 15px;
     }
     .top_card{
         flex-grow: 1;
-        color: #4A2899;
+        color: #000;
         flex-shrink: 0;
         display: flex;
-        background-color: #EBE4FB;
+        background-color: #FFF;
+        padding: 22px 12px;
         /*margin: 12px;*/
         /*padding: 10px 8px;*/
         overflow: hidden;
@@ -111,6 +79,13 @@
         animation-timing-function: ease-out;
     }
 
+    .balance_card{
+        grid-column: 1/4;
+    }
+
+    .addr_card{
+        grid-column: 4/6;
+    }
     .card_left{
         background-color: #F4EFFF;
         flex-basis: 70px;
@@ -140,7 +115,7 @@
 
     .top_card h4{
         /*font-size: 26px;*/
-        color: #5824CF;
+        color: #000;
         font-weight: bold;
         text-align: left;
     }

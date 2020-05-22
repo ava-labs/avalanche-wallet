@@ -1,7 +1,7 @@
 <template>
     <div class="custom-select">
         <select ref="select" @input="oninput">
-            <option v-for="(item,i) in items" :key="item.label+i" :disabled="item.disabled">{{item.label}}</option>
+            <option v-for="item in items" :key="item.key" :disabled="item.disabled" :value="item.key">{{item.label}}</option>
         </select>
         <p class="arrow"><fa icon="caret-down"></fa></p>
     </div>
@@ -14,12 +14,14 @@
                 required: true,
             },
             initial: {
-                type: Object,
+                type: String,
             }
         },
         methods: {
-            oninput(){
-                let val = this.$refs.select.value;
+            oninput(ev){
+                let val = ev.target.value;
+                // console.log(ev.target.value);
+
                 let data = this.item_map[val];
                 this.$emit('change', data);
             }
@@ -32,7 +34,7 @@
                 let res = {};
                 for(var i=0;i<this.items.length;i++){
                     let item = this.items[i];
-                    res[item.label] = item.data;
+                    res[item.key] = item.data;
                 }
                 return res;
             }
@@ -40,8 +42,8 @@
         mounted() {
             if(this.initial){
                 for(var i=0; i<this.items.length;i++){
-                    if(this.items[i].data === this.initial){
-                        this.$refs.select.value = this.items[i].label;
+                    if(this.items[i].key === this.initial){
+                        this.$refs.select.value = this.items[i].key;
                     }
                 }
             }
@@ -65,8 +67,6 @@
         overflow: hidden;
         padding-right: 12px;
         z-index: 2;
-        /*position: absolute;*/
-        /*display: none;*/
     }
 
     .arrow{

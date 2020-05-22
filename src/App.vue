@@ -1,10 +1,19 @@
 <template>
     <v-app>
         <v-content>
-            <navbar></navbar>
-            <transition name="fade" mode="out-in">
-                <router-view id="router_view"/>
-            </transition>
+            <navbar v-if="isNavbar"></navbar>
+            <div class="main_cols" :wallet_view="!isNavbar">
+                <transition name="fade" mode="out-in">
+                    <sidebar class="panel" v-if="!isNavbar"></sidebar>
+                </transition>
+                <transition name="fade" mode="out-in">
+                    <router-view id="router_view"/>
+                </transition>
+                <transition name="fade" mode="out-in">
+                    <main-panel class="panel" v-if="!isNavbar"></main-panel>
+                </transition>
+            </div>
+
         </v-content>
         <notifications></notifications>
     </v-app>
@@ -12,18 +21,67 @@
 <script>
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
+    import MainPanel from '@/components/SidePanels/MainPanel';
+    import Sidebar from '@/components/wallet/Sidebar';
+
 
     export default {
         components: {
+            Sidebar,
             Navbar,
-            Notifications
+            Notifications,
+            MainPanel
         },
         created() {
             // this.$store.dispatch('Assets/getAllAssets');
             this.$store.dispatch('Network/init');
+        },
+        computed:{
+            isNavbar(){
+                // console.log(this.$route);
+                // return this.$store.state.is
+                if(this.$route.path.includes('/wallet')){
+                    return false;
+                }
+                return true
+            }
         }
     }
 </script>
+
+<style scoped lang="scss">
+    @use "./main";
+
+    .main_cols{
+        display: grid;
+        grid-template-columns: 1fr;
+
+        &[wallet_view]{
+            grid-template-columns:  240px 1fr 340px;
+            height: 100vh;
+
+            #router_view{
+                overflow: auto;
+                padding: 12px 16px;
+                padding-bottom: 0px;
+            }
+        }
+    }
+
+
+    #router_view{
+        min-height: calc(100vh - 80px);
+        position: relative;
+        padding: main.$container_padding_m;
+    }
+
+    .panel{
+        background-color: #fff;
+        /*padding: 8px 16px;*/
+        overflow: auto;
+        height: 100%;
+    }
+</style>
 
 <style lang="scss">
     @use "./main";
@@ -45,7 +103,7 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: left;
         color: #2c3e50;
-        background-color: #fff;
+        background-color: #F5F6FA;
         font-family: 'Rubik', sans-serif;
         transition-duration: 0.2s;
     }
@@ -65,11 +123,9 @@
         outline: none;
     }
 
-    #router_view{
-        min-height: calc(100vh - 80px);
-        position: relative;
-        padding: main.$container_padding_m;
-    }
+
+
+
 
     a{
         color: #000 !important;
@@ -107,12 +163,23 @@
         opacity: 0;
     }
 
+
     .float-enter-active, .float-leave-active {
         transition: all .2s;
     }
     .float-enter, .float-leave-to /* .fade-leave-active below version 2.1.8 */ {
         transform: translateY(30px);
     }
+
+
+    .slide_right-enter-active, .slide_right-leave-active {
+        transition: opacity .2s;
+    }
+    .slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
 
 
     .but_primary{

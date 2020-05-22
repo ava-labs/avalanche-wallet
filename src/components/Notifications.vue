@@ -40,7 +40,7 @@
         margin-top: 8px;
         overflow: hidden;
         box-shadow: 2px 2px 12px rgba(0,0,0,0.4);
-        background-color: #f2f2f2;
+        background-color: #fff;
         max-width: 195px;
         font-size: 13px !important;
     }
