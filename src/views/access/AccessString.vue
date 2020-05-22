@@ -13,7 +13,7 @@
 </template>
 <script>
     import {QrInput} from '@avalabs/vue_components';
-    import RememberKey from "./RememberKey";
+    import RememberKey from "../../components/misc/RememberKey";
 
     export default {
         components:{

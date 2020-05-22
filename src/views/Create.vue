@@ -12,6 +12,7 @@
                     <h1>Your wallet is ready.</h1>
                     <p>Do not lose your private key! There is no way to recover lost keys.</p>
                     <text-display-copy :value="newPrivateKey" class="key_disp"></text-display-copy>
+                    <remember-key v-model="rememberKey"></remember-key>
                     <button class="generate" @click="access">Access Wallet</button>
                 </div>
             </transition>
@@ -21,13 +22,16 @@
 <script>
     import TextDisplayCopy from "../components/misc/TextDisplayCopy";
     import {keyChain} from "../AVA";
+    import RememberKey from "@/components/misc/RememberKey";
 
     export default {
         components: {
+            RememberKey,
             TextDisplayCopy
         },
         data(){
             return{
+                rememberKey: false,
                 newPrivateKey: null,
                 newPublicKey: null,
                 newAddr: null
@@ -51,6 +55,7 @@
             },
 
             access(){
+                this.$store.state.rememberKey = this.rememberKey;
                 this.$store.dispatch('accessWallet', this.newPrivateKey);
             }
         }

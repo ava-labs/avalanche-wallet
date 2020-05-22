@@ -13,7 +13,7 @@
 </template>
 <script>
     import FileInput from "../../components/misc/FileInput";
-    import RememberKey from "./RememberKey";
+    import RememberKey from "../../components/misc/RememberKey";
 
     export default {
         components:{
