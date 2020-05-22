@@ -5,6 +5,7 @@
         <form @submit.prevent="access">
             <v-text-field label="Password" outlined dense color="#000" type="password" v-model="pass" v-if="file" hide-details></v-text-field>
             <p class="err">{{error}}</p>
+            <remember-key v-model="rememberKey" v-if="file"></remember-key>
             <v-btn class="but_primary" @click="access" color="#000" :loading="isLoading" v-if="file" :disabled="!canSubmit" depressed>Access Wallet</v-btn>
         </form>
         <router-link to="/access">Cancel</router-link>
@@ -12,15 +13,18 @@
 </template>
 <script>
     import FileInput from "../../components/misc/FileInput";
+    import RememberKey from "./RememberKey";
 
     export default {
         components:{
+            RememberKey,
             FileInput
         },
         data(){
             return{
                 pass: "",
                 file: null,
+                rememberKey: false,
                 isLoading: false,
                 error: "",
             }
@@ -40,6 +44,10 @@
                     password: this.pass,
                     file: this.file
                 };
+
+                // Set the key remembering state
+                this.$store.state.rememberKey = this.rememberKey;
+
 
                 setTimeout(function(){
                     parent.$store.dispatch('importKeyfile', data).then( (res) => {

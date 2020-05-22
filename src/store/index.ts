@@ -29,6 +29,7 @@ export default new Vuex.Store({
     },
     state: {
         isAuth: false,
+        rememberKey: false, // if true the keytore will remember keys during browser session
         privateKey: '',
         addresses: [],
         selectedAddress: '',
@@ -103,8 +104,11 @@ export default new Vuex.Store({
             // Clear Assets
             await store.dispatch('Assets/onlogout');
 
-            console.log(store.state);
-            console.log(avm)
+            // Clear session storage
+            sessionStorage.removeItem('pks');
+
+            // console.log(store.state);
+            // console.log(avm);
             router.push('/');
         },
 
@@ -146,7 +150,56 @@ export default new Vuex.Store({
         },
 
 
-        async addKey(store, pk:string){
+        // Saves current keys to browser Session Storage
+        async saveKeys({state, dispatch}){
+            let addresses = keyChain.getAddresses();
+
+            let rawKeys: string[] = [];
+            addresses.forEach(addr => {
+                let key = keyChain.getKey(addr);
+                let raw = key.getPrivateKeyString();
+                rawKeys.push(raw);
+            });
+
+            let saveData = JSON.stringify(rawKeys);
+            sessionStorage.setItem('pks', saveData);
+
+            console.log(saveData);
+
+
+            dispatch('Notifications/add',{
+               title: "Keys saved.",
+               message: "Your keys are saved for easy access to your wallet.",
+                type: 'success'
+            });
+        },
+
+        // Tries to read the session storage and add keys to the wallet
+        async autoAccess({state, dispatch}){
+            let sessionKeys = sessionStorage.getItem('pks');
+            if(!sessionKeys) return;
+
+            try{
+                let rawKeys = JSON.parse(sessionKeys);
+                console.log(rawKeys);
+                for(var i=0;i<rawKeys.length;i++){
+                    let pk = rawKeys[i];
+                    if(i===0){
+                        await dispatch('accessWallet', pk)
+                    }else{
+                        await dispatch('addKey', pk)
+                    }
+                }
+                state.rememberKey = true;
+                return true;
+            }catch (e) {
+                console.log(e);
+                return false;
+            }
+        },
+
+
+        async addKey({state, dispatch}, pk:string){
             // console.log("ADD KEY: ",pk);
 
             let pkBuff = bintools.avaDeserialize(pk);
@@ -160,7 +213,11 @@ export default new Vuex.Store({
 
             // await store.dispatch('refreshAddresses');
 
-            store.state.addresses = keyChain.getAddressStrings();
+            state.addresses = keyChain.getAddressStrings();
+
+            if(state.rememberKey){
+                dispatch('saveKeys');
+            }
 
 
             return keypair;

@@ -13,6 +13,7 @@ export interface RootState {
     addresses: string[],
     selectedAddress: string,
     modals: ModalDict,
+    rememberKey: boolean,
 }
 
 interface Modal {

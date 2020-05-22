@@ -32,9 +32,25 @@
             Notifications,
             MainPanel
         },
-        created() {
+        async created() {
+            let parent = this;
             // this.$store.dispatch('Assets/getAllAssets');
-            this.$store.dispatch('Network/init');
+            await this.$store.dispatch('Network/init');
+
+            // check session storage
+            this.$store.dispatch('autoAccess').then((res) => {
+
+                if(res){
+                    parent.$store.dispatch('Notifications/add', {
+                        title: "Keys Remembered",
+                        message: "Your stored keys are used to log you in.",
+                        type: "success"
+                    })
+                }
+
+            });
+
+
         },
         computed:{
             isNavbar(){
