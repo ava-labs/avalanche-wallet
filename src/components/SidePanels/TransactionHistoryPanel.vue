@@ -45,7 +45,6 @@
             },
             transactions(){
                 let res =  this.$store.state.History.transactions;
-                console.log(res);
                 return res;
             }
         }

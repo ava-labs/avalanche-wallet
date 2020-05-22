@@ -23,6 +23,7 @@ const history_module: Module<HistoryState, RootState> = {
     },
     actions: {
         async updateTransactionHistory({state, rootState}){
+            // @ts-ignore
             let network = rootState.Network.selectedNetwork;
 
             // can't update if there is no explorer
