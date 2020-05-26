@@ -22,14 +22,14 @@ let fr = {
             },
         },
         create: {
-            title: 'Create New Wallet',
-            desc: 'Create a new wallet to store your assets',
-            generate: 'Generate Key Pair',
-            warning: "Do not lose your private key! If you do you won't be able to access your wallet and funds again. There is no way to recover lost keys.",
-            submit: 'Access Wallet'
+            title: 'Créer un nouveau portefeuille',
+            desc: 'Creation d\'un nouveau portfeuille pour stocker vos assets',
+            generate: 'Génération d\'une paire de clés',
+            warning: "Ne perdez pas votre clef privée ! Vous perdriez tout accès à votre portefeuille et fonds ! Il n'y a pas moyen de récupérer votre clef privée en cas de perte .",
+            submit: 'Accéder au portefeuille'
         },
 
-        submit: "Access Wallet",
+        submit: "Accéder au portefeuille",
     },
     top: {
         title1: "My Address",
