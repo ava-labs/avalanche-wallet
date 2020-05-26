@@ -1,24 +1,24 @@
 let fr = {
-    password: 'Password',
-    password_confirm: 'Confirm Password',
-    private_key: "Private Key",
-    address: 'Address',
+    password: 'Mot de passe',
+    password_confirm: 'Confirmer mot de passe',
+    private_key: "Clef privée",
+    address: 'Adresse',
     home: {
-        but_access: "Access",
-        but_create: "Create New",
-        go_back: "go back",
+        but_access: "Accéder",
+        but_create: "Créer",
+        go_back: "Retour en arrière",
 
-        access_opt1: "Private Key",
-        access_opt2: "Keystore File",
-        access_sel_file: "Select Key File",
+        access_opt1: "Clef privée",
+        access_opt2: "Fichier de clés",
+        access_sel_file: "Selectionner le fichier de clés",
         access: {
-            title: 'Access Wallet',
-            desc: 'Access an existing wallet using private key or a key file.',
+            title: 'Accéder au portefeuille',
+            desc: 'Accéder à un portefeuille existant en utilisant un clef privée ou un fichier de clef.',
             key: {
-                title: 'Private Key',
+                title: 'Clef privée',
             },
             file: {
-                title: 'Key File'
+                title: 'Fichier de clés'
             },
         },
         create: {
