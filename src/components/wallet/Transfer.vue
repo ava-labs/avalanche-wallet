@@ -6,7 +6,7 @@
                 <p>{{$t('transfer.no_cash')}}</p>
                 <div v-if="faucetLink">
                     <h4>{{$t('transfer.faucet')}} <fa icon="tint"></fa></h4>
-                    <a :href="faucetLink" target="_blank">Go to faucet.</a>
+                    <a :href="faucetLink" target="_blank">{{$t('transfer.to_faucet')}}</a>
                 </div>
             </div>
             <div  v-else class="new_order_Form">

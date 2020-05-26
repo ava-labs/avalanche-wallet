@@ -13,7 +13,7 @@ let fr = {
         access_sel_file: "Selectionner le fichier de clés",
         access: {
             title: 'Accéder au portefeuille',
-            desc: 'Accéder à un portefeuille existant en utilisant un clef privée ou un fichier de clef.',
+            desc: 'Accéder à un portefeuille existant en utilisant une clef privée ou un fichier de clef.',
             key: {
                 title: 'Clef privée',
             },
@@ -23,82 +23,83 @@ let fr = {
         },
         create: {
             title: 'Créer un nouveau portefeuille',
-            desc: 'Creation d\'un nouveau portfeuille pour stocker vos assets',
+            desc: 'Création d\'un nouveau portfeuille pour stocker vos assets',
             generate: 'Génération d\'une paire de clés',
-            warning: "Ne perdez pas votre clef privée ! Vous perdriez tout accès à votre portefeuille et fonds ! Il n'y a pas moyen de récupérer votre clef privée en cas de perte .",
+            warning: "Ne perdez pas votre clef privée ! Vous perdriez tout accès à votre portefeuille et fonds ! Il n'y a pas moyen de récupérer votre clef privée en cas de perte.",
             submit: 'Accéder au portefeuille'
         },
 
         submit: "Accéder au portefeuille",
     },
     top: {
-        title1: "My Address",
+        title1: "Mon adresse",
         title2: "Balance",
-        title3: 'Network',
-        hover1: 'View Address QR Code',
-        hover2: 'Print',
-        hover3: 'Copy',
+        title3: 'Réseau',
+        hover1: 'Voir le QR Code de l\'adresse',
+        hover2: 'Imprimer',
+        hover3: 'Copier',
     },
     transfer: {
-        title: 'Send Transaction',
-        no_cash: 'You must have an asset in your wallet to issue a transaction.',
-        faucet: 'Have you checked our faucet?',
-        to: 'To Address',
-        fees: 'Fees',
-        fee_tx: 'Transaction Fee',
-        advanced: 'Advanced',
-        adv_change: 'Change Address',
-        send: 'Send'
+        title: 'Envoyer la transaction',
+        no_cash: 'Vous devez avoir un asset dans votre portefeuille avant de pouvoir émettre une transaction.',
+        faucet: 'Avez-vous vu notre faucet ?',
+        to_faucet: 'Aller sur le faucet.',
+        to: 'Vers l\'adresse',
+        fees: 'Frais',
+        fee_tx: 'Frais de transaction',
+        advanced: 'Avancé',
+        adv_change: 'Changer l\'adresse',
+        send: 'Envoyer'
     },
     advanced: {
-        title: 'Advanced',
+        title: 'Avancé',
         paper: {
-            title: 'Scan Paper Wallet',
-            desc: 'Scan the private key from a paper wallet to add to your managed key pairs.',
-            pk: 'Private Key',
-            submit: 'Add To Keychain',
+            title: 'Scanner le portefeuille papier',
+            desc: 'Scanner la clef privée depuis un portefeuille papier pour l\'ajouter a vos paires de clés gérée.',
+            pk: 'Clés privée',
+            submit: 'Ajouter au porte-clés',
         },
         export: {
-            title: 'Export Wallet',
-            desc: 'Download your keys in a password encrypted file.',
-            submit: 'Download',
+            title: 'Exporter le portefeuille',
+            desc: 'Télécharger vos clés dans un fichier protégé par mot de passe.',
+            submit: 'Télécharger',
         },
         import: {
-            title: 'Import Wallet',
-            desc: 'Upload a key file to use within your wallet.',
-            submit: 'Import',
+            title: 'Importer un portefeuille',
+            desc: 'Téléverser un fichier de clef afin de l\'utiliser dans votre portefeuille.',
+            submit: 'Importer',
         }
     },
     assets: {
         title: 'Assets',
-        empty: 'You do not have any assets.',
+        empty: 'Vous n\'avez pas d\'assets.',
     },
     tabs: {
-        send: 'Send',
-        keys: 'Manage Keys',
-        advanced: 'Advanced',
+        send: 'Envoyer',
+        keys: 'Gérer les clefs',
+        advanced: 'Avancé',
     },
     keys: {
-        title: 'Manage Keys',
-        address: 'Address',
+        title: 'Gérer les clefs',
+        address: 'Adresse',
         balance: 'Balance',
-        empty: 'This address does not have any assets in it.',
-        del_check: 'Are you sure you want to delete this key and address from your wallet? You will not be able to use the funds associated with it anymore.',
+        empty: 'Cette adresse ne posséde pas d\'assets.',
+        del_check: 'Êtes-vous sur de vouloir supprimer cette clef et adresse de votre portefeuille? Il ne sera plus possible d\'utiliser les fons qui y sont liés',
     },
     modal: {
         qr: {
-            title: "Address"
+            title: "Adresse"
         },
         print: {
-            title: 'Print Preview',
-            submit: 'Print'
+            title: 'Imprimer l\'aperçu',
+            submit: 'Imprimer'
         }
     },
     // notif: {
     //   tx: {
     //     success: {
-    //       title: 'Transaction Sent',
-    //       msg: 'You have succesfully sent your transaction.'
+    //       title: 'Transaction envoyée',
+    //       msg: 'La transaction a été envoyée avec succés.'
     //     }
     //   },
     //   key: {
