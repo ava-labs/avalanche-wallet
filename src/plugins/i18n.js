@@ -9,11 +9,9 @@ import {tr} from '../locales/tr.js';
 
 import * as ru from '../locales/ru.json';
 
-// console.log(ru.default);
-
 const messages = {
     en,
-    // fr,
+    fr,
     // ru: ru.default,
     // tr
 };
