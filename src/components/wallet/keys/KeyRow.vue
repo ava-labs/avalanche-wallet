@@ -3,10 +3,6 @@
             class="addressItem"
             :selected="selected"
     >
-        <button class="selBut" @click="select">
-            <fa icon="key"></fa>
-            <span v-if="selected">Default</span>
-        </button>
         <div class="rows">
             <div class="detail">
                 <div>
@@ -19,20 +15,27 @@
                 </div>
             </div>
 
-            <div class="addressBallance">
+            <div >
                 <p class="label">{{$t('keys.balance')}}</p>
-                <p v-if="Object.keys(balances).length === 0">{{$t('keys.empty')}}</p>
-                <p v-else v-for="bal in balances" :key="bal.id">
-                    {{bal.toString()}} <b>{{bal.symbol}}</b>
-                </p>
+                <p v-if="Object.keys(balances).length === 0" class="balance_empty">{{$t('keys.empty')}}</p>
+                <div class="addressBalance" v-else>
+                    <p  v-for="bal in balances" :key="bal.id">
+                        {{bal.toString()}} <b>{{bal.symbol}}</b>
+                    </p>
+                </div>
             </div>
-<!--            {{balances}}-->
+        </div>
+        <div class="buts">
+            <button class="selBut" @click="select">
+                <span v-if="selected">Default</span>
+                <span v-else>Make Default</span>
+            </button>
 
+            <button @click="remove" v-if="canRemove"><fa icon="trash"></fa> Remove Key</button>
 
         </div>
-        <div class="del" v-if="canRemove">
-            <button @click="remove"><fa icon="trash"></fa> Remove Key</button>
-        </div>
+<!--        <div class="del" v-if="canRemove">-->
+<!--        </div>-->
     </div>
 </template>
 <script>
@@ -121,16 +124,28 @@
         font-size: 12px;
         /*display: flex;*/
         /*align-items: center;*/
+        border-radius: 2px;
         display: grid;
-        grid-template-columns: 40px 1fr max-content;
+        grid-template-columns: 1fr 30%;
         grid-gap: 15px;
         padding: 15px;
+        background-color: #F5F6FA;
+        overflow: auto;
 
         > *{
             align-self: center;
+            overflow: auto;
         }
     }
 
+    .buts{
+        display: flex;
+        flex-direction: row;
+    }
+
+    .rows{
+        overflow: auto;
+    }
     .addressItem .selBut{
         /*flex-basis: 14px;*/
         /*height: 14px;*/
@@ -140,18 +155,30 @@
         flex-shrink: 0;
 
         span{
-            font-size: 11px;
+            font-size: 12px;
             line-height: normal;
         }
     }
 
-    .addressItem[selected] .selBut{
-        color: #866FBE;
+    .addressItem{
+        &[selected]{
+            .selBut{
+                /*background-color: transparent;*/
+            }
+        }
+        .selBut{
+            flex-grow: 1;
+            background-color: #C0C0CD;
+            color: #fff;
+            padding: 4px 8px;
+            margin-right: 15px;
+        }
     }
 
     .detail{
         /*margin-left: 20px;*/
         /*flex-grow: 1;*/
+        overflow: auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 15px;
@@ -162,7 +189,10 @@
         font-weight: bold;
     }
     .addressVal{
-        word-break: break-all;
+        /*word-break: break-all;*/
+        overflow: auto;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .del{
@@ -173,5 +203,29 @@
             opacity: 1;
         }
     }
+
+    .addressBalance{
+        display: flex;
+        white-space: nowrap;
+        color: #2960CD;
+        p{
+            padding: 2px 8px;
+            /*border: 1px solid #ebedf5;*/
+            background-color: #ebedf5;
+            border-radius: 3px;
+            margin: 2px !important;
+        }
+    }
+
+    .balance_empty{
+        color: #2960CD;
+    }
+    /*.addressItem[selected]{*/
+    /*    .addressBalance{*/
+    /*        p{*/
+    /*            background-color: #b1c9fb;*/
+    /*        }*/
+    /*    }*/
+    /*}*/
 
 </style>

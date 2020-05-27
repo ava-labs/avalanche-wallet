@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="add_key_file">
         <label>Keystore File</label>
         <file-input @change="onfile" class="formIn"></file-input>
         <label>Password</label>
@@ -11,10 +11,11 @@
                 class="addKeyBut but_primary"
                 depressed
                 @click="importKeyfile"
-                color="#000"
+                color="#2960CD"
+                block
                 :disabled="!canSubmit"
                 :loading="isLoading"
-        >Import</v-btn>
+        >Import Wallet</v-btn>
     </div>
 </template>
 <script>
@@ -91,9 +92,18 @@
         }
     }
 </script>
-<style scoped>
+<style lang="scss">
+    .add_key_file{
+        fieldset{
+            border: none !important;
+        }
+    }
+</style>
+<style scoped lang="scss">
     .addKeyBut{
         color: #fff;
+        text-transform: none;
+        border-radius: 2px;
     }
 
     .v-btn{
@@ -102,17 +112,23 @@
 
     label{
         font-size: 12px;
+        color: #909090;
     }
 
     .err{
         color: #f00;
         margin: 4px 0px;
+        font-size: 12px;
     }
 
     .formIn{
+        border: none;
         height: 40px;
         font-size: 12px;
-        border-color: #aaa;
-        background-color: #f8f8f8;
+        /*border-color: #aaa;*/
+        background-color: #F5F6FA;
+        border-radius: 2px;
+
+
     }
 </style>

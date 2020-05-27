@@ -2,7 +2,7 @@
     <div>
         <div class="cols">
             <div class="card_body">
-                <h4>My Keys</h4>
+                <h1>My Keys</h1>
                 <my-keys></my-keys>
             </div>
             <div class="right_side">
@@ -11,7 +11,7 @@
                     <p class="explain">
                         Add additional private keys to use with your wallet.
                     </p>
-                    <v-tabs color="#5824CF" height="25" active-class="tab_active">
+                    <v-tabs color="#2960CD" height="30" active-class="tab_active" :grow="true">
                         <v-tab >Private Key</v-tab>
                         <v-tab>Keystore File</v-tab>
                         <v-tab-item>
@@ -24,7 +24,7 @@
                 </div>
                 <div>
                     <h4>Export Wallet</h4>
-                    <backup-export></backup-export>
+                    <export-wallet></export-wallet>
                 </div>
             </div>
         </div>
@@ -33,13 +33,13 @@
 <script>
     import {bintools} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
-    import BackupExport from "@/components/wallet/keys/ExportWallet";
+    import ExportWallet from "@/components/wallet/keys/ExportWallet";
     import AddKeyFile from "@/components/wallet/keys/AddKeyFile";
     import AddKeyString from "@/components/wallet/keys/AddKeyString";
     import MyKeys from "@/components/wallet/keys/MyKeys";
     export default {
         components: {
-            BackupExport,
+            ExportWallet,
             AddKeyFile,
             AddKeyString,
             MyKeys
@@ -124,27 +124,33 @@
     .cols{
         display: grid;
         grid-template-columns: 1fr 360px;
-        grid-gap: 90px;
+        grid-gap: 45px;
     }
 
 
     .right_side{
         display: grid;
-        grid-template-rows: max-content max-content;
+        grid-template-rows: 1fr 1fr;
         grid-row-gap: 30px;
+        border-left: 1px solid #F5F6FA;
+        padding-left: 45px;
     }
     p{
         margin: 0 !important;
     }
 
 
+    h1{
+        font-weight: lighter;
+    }
     h4{
-        font-size: 22px;
+        font-size: 18px;
         font-weight: lighter;
     }
 
     .explain{
         font-size: 12px;
+        color: #909090;
     }
 
     .buts{
@@ -182,16 +188,17 @@
     }
 
 
+
     .v-tab{
-        border: 1px solid #999;
-        margin-right: 8px;
-        border-radius: 4px;
+        /*border: 1px solid #999;*/
+        /*margin-right: 8px;*/
+        /*border-radius: 4px;*/
         font-size: 12px;
     }
     .tab_active{
-        color: #4A2899;
-        background-color: #EBE4FB !important;
-        border-color: #4A2899 !important;
+        /*color: #2960CD;*/
+        /*background-color: #d6e3ff !important;*/
+        /*border-color: #2960CD !important;*/
     }
 
 
@@ -203,12 +210,18 @@
     }
 </style>
 <style lang="scss">
-    .cols {
+    .cols{
         .v-tabs-bar{
             margin: 15px 0px;
         }
-        .v-tabs-slider-wrapper{
-            display: none;
-        }
     }
+
+    /*.cols {*/
+    /*    .v-tabs-bar{*/
+    /*        margin: 15px 0px;*/
+    /*    }*/
+    /*    .v-tabs-slider-wrapper{*/
+    /*        display: none;*/
+    /*    }*/
+    /*}*/
 </style>

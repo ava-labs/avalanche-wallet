@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="my_keys">
         <transition-group name="fade">
             <key-row v-for="addr in addresses"
                      :key="addr"
@@ -48,15 +48,19 @@
     }
 </script>
 <style scoped lang="scss">
+    .my_keys{
+        padding-top: 15px;
+    }
     .addressItem {
-        border: 1px solid #ddd;
-        margin: 15px 0px;
-        border-radius: 14px;
+        /*border-bottom: 1px solid #EAEDF4;*/
+        /*border-radius: 14px;*/
+        margin-bottom: 10px;
+
         transition-duration: 0.2s;
 
         &[selected]{
-            border-color: #866FBE;
-            background-color: #EBE4FB;
+            /*border-color: #2960CD;*/
+            /*background-color: #edf3ff;*/
         }
     }
 

@@ -1,8 +1,10 @@
 <template>
     <div>
         <div class="curr_in_drop">
-            <button class="max_but" @click="maxOut">MAX</button>
-            <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
+            <div class="max_in_cont">
+                <button class="max_but" @click="maxOut">MAX</button>
+                <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
+            </div>
             <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>
         </div>
         <div class="bar"><div :style="{
@@ -84,7 +86,7 @@
                         disabled = true;
                     }
                     res.push({
-                        label: asset.name,
+                        label: `${asset.name} (${asset.symbol})`,
                         key: asset.id,
                         data: asset,
                         disabled: disabled
@@ -170,20 +172,33 @@
         width: 100%;
         /*background-color: #303030;*/
     }
+
+    .max_in_cont{
+        display: grid;
+        grid-template-columns: 50px 1fr;
+    }
+
+
     .curr_in_drop{
         display: grid;
-        grid-template-columns: 50px 1fr 140px;
-        background-color: #f8f8f8;
+        grid-template-columns: 1fr 140px;
+        background-color: transparent;
         /*height: 35px;*/
         /*font-size: 12px;*/
-        border: 1px solid #ddd;
-        padding: 0px 8px;
+        /*border: 1px solid #ddd;*/
         font-size: 12px;
         height: 40px;
         width: 100%;
         outline: none;
         text-align: right;
+        column-gap: 10px;
+
+        > *{
+            background-color: #F5F6FA;
+            border-radius: 2px;
+        }
     }
+
 
     input{
         padding: 8px;
@@ -199,12 +214,13 @@
         text-decoration: underline;
         text-decoration-style: dashed;
         outline: none;
+        padding-left: 8px;
     }
 
     .dropdown{
         /*flex-basis: 140px;*/
         width: 100%;
-        border-left: 1px solid #d2d2d2;
+        /*border-left: 1px solid #d2d2d2;*/
     }
 
     .bar{

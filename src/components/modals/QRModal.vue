@@ -40,6 +40,11 @@
                 return this.$store.state.selectedAddress;
             },
         },
+        watch: {
+            address(){
+                this.updateQR()
+            }
+        },
         mounted() {
             this.updateQR();
         }

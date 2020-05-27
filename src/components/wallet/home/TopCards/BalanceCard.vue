@@ -22,7 +22,7 @@
                     <p>- AVA</p>
                 </div>
                 <div>
-                    <label>Frozen</label>
+                    <label>Multisig</label>
                     <p>- AVA</p>
                 </div>
             </div>

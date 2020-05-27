@@ -42,18 +42,23 @@
         white-space: nowrap;
         font-size: 12px;
         padding: 4px 14px;
-        border: 1px solid #808080;
+        border: 1px solid transparent;
         color: #808080;
+        background-color: #F5F6FA;
         border-radius: 4px;
-        margin-right: 4px;
-        margin-bottom: 4px;
+        margin-right: 6px;
+        margin-bottom: 6px;
         transition-duration: 0.2s;
         font-family: Inconsolata, monospace;
 
+        &:hover{
+            border-color: #999;
+        }
+
         &[active]{
-            color: #4A2899;
-            border-color: #4A2899;
-            background-color: #ebe4fb;
+            color: #285599;
+            border-color: #285599;
+            background-color: #e4f0fb;
         }
     }
 </style>

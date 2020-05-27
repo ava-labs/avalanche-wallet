@@ -175,11 +175,13 @@
 
     .list_in{
         flex-grow: 1;
-        background-color: transparent !important;
+        /*background-color: #F5F6FA !important;*/
     }
 
     .list_item button{
-        width: 100%;
+        width: max-content;
+        text-align: right;
+        align-self: flex-end;
         text-align: right;
         font-size: 12px;
         color: #b2b2b2;

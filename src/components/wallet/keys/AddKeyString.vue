@@ -6,9 +6,10 @@
                 class="addKeyBut"
                 depressed
                 @click="addKey"
-                color="#000"
+                color="#2960CD"
                 :disabled="!canAdd"
-        >{{$t('advanced.paper.submit')}}</v-btn>
+                block
+        >Add Private Key</v-btn>
     </div>
 </template>
 <script>
@@ -49,9 +50,11 @@
     .addKeyBut{
         color: #fff;
         text-transform: none;
+        border-radius: 2px;
     }
 
     label{
+        color: #909090;
         font-size: 12px;
     }
 
@@ -63,9 +66,10 @@
     /*}*/
 
     .qrIn{
-        border-radius: 3px !important;
+        border-radius: 2px !important;
         height: 40px;
         font-size: 12px;
-        border: 1px solid #ddd;
+        background-color: #F5F6FA;
+        /*border: 1px solid #ddd;*/
     }
 </style>

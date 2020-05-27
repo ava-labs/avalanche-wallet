@@ -4,7 +4,7 @@
         <paper-wallet ref="print_modal"></paper-wallet>
 
 
-        <p class="addr_info">This is your address to receive funds. Your address will change after every successful deposit.</p>
+        <p class="addr_info">This is your address to receive funds.</p>
 <!--        <h4>{{$t('top.title1')}}</h4>-->
         <div class="bottom">
             <canvas ref="qr"></canvas>

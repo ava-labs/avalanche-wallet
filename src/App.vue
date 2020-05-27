@@ -204,7 +204,7 @@
         text-transform: none !important;
         /*font-size: 13px;*/
         padding: 8px 18px;
-        border-radius: 6px;
+        border-radius: 2px;
     }
 
 

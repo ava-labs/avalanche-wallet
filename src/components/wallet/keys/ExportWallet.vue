@@ -9,8 +9,8 @@
         <v-text-field type="password" class="formIn"
                       v-model="passConfirm" hide-details outlined dense color="#000" height="40" placeholder="Confirm Password"
         ></v-text-field>
-        <v-btn depressed :disabled="!isValid" color="#000"
-               @click="download" :loading="is_loading" class="but_primary">{{$t('advanced.export.submit')}}</v-btn>
+        <v-btn depressed :disabled="!isValid" color="#2960CD" block
+               @click="download" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
     </div>
 </template>
 <script>
@@ -52,11 +52,16 @@
     .export_wallet{
         .formIn{
             .v-input__slot {
-                background-color: #f8f8f8;
+                background-color: #F5F6FA;
+                border: none !important;
             }
 
             .v-text-field__details{
                 padding: 0;
+            }
+
+            fieldset{
+                border: none;
             }
         }
     }
@@ -67,6 +72,7 @@
     }
     .explain{
         /*font-size: 12px;*/
+        color: #909090;
         margin-bottom: 20px !important;
     }
 
@@ -79,13 +85,21 @@
         }
     }
 
+    label{
+        color: #909090;
+    }
+
     .formIn{
         /*background-color: #f8f8f8;*/
         font-size: 12px;
+        border-radius: 2px;
         /*margin-bottom: 6px;*/
     }
 
     .but_primary{
         margin-top: 10px;
+        color: #fff;
+        text-transform: none;
+        border-radius: 2px;
     }
 </style>

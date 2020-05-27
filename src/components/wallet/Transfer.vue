@@ -1,41 +1,43 @@
 <template>
     <div class="transfer_card">
+        <h1>{{$t('transfer.title')}}</h1>
         <div class="card_body">
-            <h1>{{$t('transfer.title')}}</h1>
             <div v-if="assetArray.length===0">
                 <p>{{$t('transfer.no_cash')}}</p>
                 <faucet-link v-if="faucetLink" class="faucet"></faucet-link>
             </div>
             <div v-else class="new_order_Form">
-                <tx-list ref="txList" @change="updateTxList"></tx-list>
+                <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                 <div>
-                    <h4>{{$t('transfer.to')}}</h4>
-                    <qr-input v-model="addressIn" class="qrIn"></qr-input>
-                </div>
+                    <div class="fees">
+                        <h4>{{$t('transfer.fees')}}</h4>
+                        <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVA</span></p>
+                    </div>
+                    <div class="advanced">
+                        <v-expansion-panels accordion class="advanced_panel" flat>
+                            <v-expansion-panel>
+                                <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <label>{{$t('transfer.adv_change')}}</label>
+                                    <p class="explain">Where to send the remaining assets after the transaction.</p>
+                                    <radio-buttons class="radio_buttons" :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>
+                                    <!--                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>-->
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </div>
+                    <div>
+                        <label>{{$t('transfer.to')}}</label>
+                        <qr-input v-model="addressIn" class="qrIn"></qr-input>
+                    </div>
 
-                <div class="advanced">
-                    <v-expansion-panels accordion class="advanced_panel" flat>
-                        <v-expansion-panel>
-                            <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                                <label>{{$t('transfer.adv_change')}}</label>
-                                <radio-buttons :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>
-<!--                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>-->
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
-                </div>
-                <div class="fees">
-                    <h4>{{$t('transfer.fees')}}</h4>
-                    <p>{{$t('transfer.fee_tx')}} <span>0 AVA</span></p>
-                </div>
-                <div class="checkout">
-                    <v-alert type="error" text outlined dense v-if="errors.length>0">
-                        <ul>
+
+                    <div class="checkout">
+                        <ul class="err_list" v-if="errors.length>0">
                             <li v-for="err in errors" :key="err">{{err}}</li>
                         </ul>
-                    </v-alert>
-                    <v-btn depressed class="but_primary" color="#000" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">{{$t('transfer.send')}}</v-btn>
+                        <v-btn depressed class="but_primary" color="#2960CD" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,23 +186,28 @@
     $padTop: 8px;
 
     .transfer_card{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        column-gap: 15px;
+
     }
 
     .card_body{
-        grid-column: 1/3;
+        /*display: grid;*/
+        /*grid-template-columns: 1fr 1fr 1fr;*/
+        /*column-gap: 15px;*/
     }
 
+    .explain{
+        font-size: 12px;
+        color: #909090;
+    }
 
     h4{
         display: block;
         text-align: left;
-        font-size: 12px;
+        font-size: 18px;
         font-weight: bold;
         /*margin-bottom: 8px;*/
     }
+
 
     .send_to{
         display: flex;
@@ -216,10 +223,11 @@
     }
 
     .qrIn{
-        border-radius: 3px !important;
+        border-radius: 2px !important;
         height: 40px;
         font-size: 12px;
-        border: 1px solid #ddd;
+        /*border: 1px solid #ddd;*/
+        background-color: #F5F6FA;
     }
 
     .addressIn >>> input::-webkit-input-placeholder{
@@ -246,6 +254,11 @@
         opacity: 1;
     }
 
+
+    .radio_buttons{
+        margin-top: 15px;
+    }
+
     @media only screen and (max-width: 600px) {
         .order_form{
             display: block;
@@ -262,6 +275,9 @@
     }
 
     .new_order_Form{
+        display: grid;
+        grid-template-columns: 1fr 1fr 33%;
+        column-gap: 45px;
         padding-top: 15px;
     }
 
@@ -270,9 +286,16 @@
         margin-bottom: 15px;
     }
 
+    .tx_list{
+        padding-right: 45px;
+        border-right: 1px solid #F5F6FA;
+        grid-column: 1/3;
+    }
+
     .fees p{
         text-align: left;
         font-size: 13px;
+        color: #909090;
     }
 
     .fees span{
@@ -291,8 +314,9 @@
     }
 
     .advanced{
-        border-bottom: 1px solid #f2f2f2;
+        /*border-bottom: 1px solid #f2f2f2;*/
         padding: 20px 0px !important;
+        margin-bottom: 20px;
     }
 
 
@@ -305,6 +329,10 @@
         /*overflow: hidden;*/
     }
 
+
+    .err_list{
+        font-size: 12px;
+    }
 
 
     @media only screen and (max-width: main.$mobile_width) {

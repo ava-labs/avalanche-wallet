@@ -164,7 +164,6 @@ export default new Vuex.Store({
             let saveData = JSON.stringify(rawKeys);
             sessionStorage.setItem('pks', saveData);
 
-            console.log(saveData);
 
 
             dispatch('Notifications/add',{
@@ -181,7 +180,6 @@ export default new Vuex.Store({
 
             try{
                 let rawKeys = JSON.parse(sessionKeys);
-                console.log(rawKeys);
                 for(var i=0;i<rawKeys.length;i++){
                     let pk = rawKeys[i];
                     if(i===0){
@@ -191,6 +189,7 @@ export default new Vuex.Store({
                     }
                 }
                 state.rememberKey = true;
+                dispatch('onAccess');
                 return true;
             }catch (e) {
                 console.log(e);
@@ -231,7 +230,6 @@ export default new Vuex.Store({
             let asset = data.asset;
             let amount = data.amount;
 
-            console.log(data);
 
             let assetId = asset.id;
 

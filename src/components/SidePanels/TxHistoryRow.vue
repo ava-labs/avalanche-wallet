@@ -81,9 +81,9 @@
 
                     if(addrs.includes(addrRaw)){
                         if(res[assetId]){
-                            res[assetId] += amt
+                            res[assetId] += parseInt(amt)
                         }else{
-                            res[assetId] = amt
+                            res[assetId] = parseInt(amt)
                         }
                     }
                 });
@@ -111,9 +111,9 @@
                    if(addrs.includes(addrRaw)){
 
                        if(res[assetId]){
-                           res[assetId] += amt
+                           res[assetId] += parseInt(amt)
                        }else{
-                           res[assetId] = amt
+                           res[assetId] = parseInt(amt)
                        }
                    }
                 });
