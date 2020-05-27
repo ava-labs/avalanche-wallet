@@ -5,7 +5,7 @@
             <p v-else>?</p>
         </div>
         <p class="name_col">{{asset.name}} ({{asset.symbol}})</p>
-        <router-link :to="`/wallet/transfer`" class="send_col" v-if="isBalance">
+        <router-link :to="sendLink" class="send_col" v-if="isBalance">
             <img src="@/assets/sidebar/Transfer.png">
         </router-link>
         <p v-else></p>
@@ -39,6 +39,9 @@
                     return true;
                 }
                 return false;
+            },
+            sendLink(){
+                return `/wallet/transfer?asset=${this.asset.id}`;
             }
         }
     }

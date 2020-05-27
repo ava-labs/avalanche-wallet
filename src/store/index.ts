@@ -18,7 +18,8 @@ Vue.use(Vuex);
 
 import router from "@/router";
 
-import {avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
+import {ava, avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
+import slopes from "slopes/typings/src/slopes";
 
 export default new Vuex.Store({
     modules:{
@@ -82,8 +83,15 @@ export default new Vuex.Store({
             store.dispatch('refreshAddresses');
             store.dispatch('Assets/updateUTXOs');
             store.dispatch('History/updateTransactionHistory');
-
         },
+
+        // async onlogout({state, dispatch}){
+        //     state.privateKey = '';
+        //     state.addresses = [];
+        //     state.selectedAddress = '';
+        //
+        //     await dispatch('Assets/onlogout');
+        // },
 
         async logout(store){
 
@@ -107,8 +115,6 @@ export default new Vuex.Store({
             // Clear session storage
             sessionStorage.removeItem('pks');
 
-            // console.log(store.state);
-            // console.log(avm);
             router.push('/');
         },
 
@@ -234,6 +240,7 @@ export default new Vuex.Store({
             let assetId = asset.id;
 
             // console.log(amount.toString(10));
+            let avm = ava.AVM();
 
 
             let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);

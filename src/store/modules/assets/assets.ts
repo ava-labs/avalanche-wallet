@@ -196,43 +196,6 @@ const assets_module: Module<AssetsState, RootState> = {
             return utxo_set.getAssetIDs();
         },
 
-        // Combine all UTXOs from all addresses to have an overall asset list
-        // assetsDict(state):AssetsDict{
-        //     let res:AssetsDict = {};
-        //
-        //     state.assets.forEach(asset => {
-        //        res[asset.id] = asset;
-        //     });
-        //
-        //     // let utxos = state.utxos;
-        //     // for(let utxoId in utxos) {
-        //     //     let utxo = utxos[utxoId];
-        //     //
-        //     //     let asset_id_buffer = utxo.getAssetID();
-        //     //     let asset_id = bintools.avaSerialize(asset_id_buffer);
-        //     //
-        //     //     let asset_amount_bn = utxo.getAmount();
-        //     //     // let asset_amount = asset_amount_bn.toNumber();
-        //     //
-        //     //     let asset_desc = state.descriptions[asset_id];
-        //     //
-        //     //     // The asset must have a description to add to the results
-        //     //     if(asset_desc){
-        //     //         // If asset exists add to total balance
-        //     //         if(res[asset_id]){
-        //     //             let asset = res[asset_id];
-        //     //                 asset.addBalance(asset_amount_bn);
-        //     //         }else{
-        //     //             let newAsset = new AvaAsset(asset_id, asset_desc.name, asset_desc.symbol, asset_desc.denomination);
-        //     //                 newAsset.addBalance(asset_amount_bn);
-        //     //             res[asset_id] = newAsset
-        //     //         }
-        //     //     }
-        //     //
-        //     // }
-        //     return res;
-        // },
-
         addressUTXOs(state):AddressUtxoDict{
             if (!state.utxo_set) return {};
 
@@ -259,8 +222,6 @@ const assets_module: Module<AssetsState, RootState> = {
                     }
                 }
             }
-
-
 
             return res;
         },

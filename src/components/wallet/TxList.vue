@@ -111,16 +111,19 @@
         mounted() {
             this.next_initial = this.assets_list[0];
             if(this.$route.query.asset){
-                let code = this.$route.query.asset;
-                for(var id in this.assets){
-                    let asset = this.assets[id];
-                    if(asset.code === code){
-                        this.addTx(asset.id);
-                        return;
-                    }
-                }
+                let assetId = this.$route.query.asset;
+                this.addTx(assetId);
+                // this.assets[assetI/d]
+                // for(var id in this.assets){
+                //     let asset = this.assets[id];
+                //     if(asset.code === code){
+                //         this.addTx(asset.id);
+                //         return;
+                //     }
+                // }
+            }else{
+                this.addTx();
             }
-            this.addTx();
         },
         computed: {
             assets_list(){

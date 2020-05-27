@@ -24,7 +24,6 @@ const network_module: Module<NetworkState, RootState> = {
             state.isConnected = false;
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
-            //@ts-ignore
             ava.AVM().refreshBlockchainID();
 
             state.selectedNetwork = net;
