@@ -6,6 +6,8 @@ import {ava, avm} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 
+import axios from 'axios';
+
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
@@ -21,6 +23,8 @@ const network_module: Module<NetworkState, RootState> = {
     },
     actions: {
         async setNetwork({state, dispatch}, net:AvaNetwork){
+            // Query the network to get network id
+
             state.isConnected = false;
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
@@ -39,7 +43,7 @@ const network_module: Module<NetworkState, RootState> = {
         },
         init({state, commit, dispatch}){
             let netTest = new AvaNetwork("TestNet", 'https://bootstrap.ava.network:21000', 2, 'X', 'https://explorerapi.ava.network');
-            let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 2, 'X');
+            let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 12345, 'X');
 
 
             commit('addNetwork', netTest);

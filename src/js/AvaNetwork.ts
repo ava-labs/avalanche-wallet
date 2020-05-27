@@ -8,6 +8,7 @@ class AvaNetwork{
     ip: string;
     networkId: number;
     chainId: string;
+    url: string;
     explorerUrl: string|undefined;
 
     constructor(name: string, url:string, networkId: number, chainId: string, explorerUrl?: string) {
@@ -17,6 +18,7 @@ class AvaNetwork{
         this.protocol = 'http';
         this.port = 9650;
         this.ip='localhost';
+        this.url = url;
 
         this.updateURL(url);
 

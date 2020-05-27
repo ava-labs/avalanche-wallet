@@ -14,34 +14,30 @@
                 <label>Explorer API (optional)</label>
                 <input type="text" placeholder="www" v-model="explorer_api">
             </div>
-            <div class="rowGroup">
-                <div>
-                    <label>Network ID</label>
-                    <input type="number" placeholder="Network ID" v-model="networkId">
-                </div>
-                <div>
-                    <label>Chain ID</label>
-                    <input type="text" placeholder="Chain ID" v-model="chainId">
-                </div>
+            <div>
+                <label>Chain ID</label>
+                <input type="text" placeholder="Chain ID" v-model="chainId">
             </div>
             <p v-if="err" class="form_error">{{err}}</p>
-            <button>Add Network</button>
+<!--            <button>Add Network</button>-->
+            <v-btn :loading="isAjax" height="26" depressed color="#2960CD" type="submit">Add Network</v-btn>
         </form>
     </div>
 </template>
 <script>
     import {AvaNetwork} from "@/js/AvaNetwork";
+    import axios from "axios";
 
     export default {
         data(){
             return {
                 name: "My Custom Network",
                 url: '',
-                networkId: 12345,
                 explorer_api: '',
                 chainId: 'X',
                 err: null,
                 err_url: '',
+                isAjax: false,
             }
         },
         methods:{
@@ -104,12 +100,11 @@
                 if(!this.name) err = "You must give the network a name.";
                 else if(!this.url) err = 'You must set the URL.';
                 else if(!this.chainId) err = 'You must set the chain id.';
-                else if(!this.networkId) err = 'You must set the network id.';
 
 
                 return err;
             },
-            submit(){
+            async submit(){
                 this.err = null;
                 let err = this.errCheck();
 
@@ -118,14 +113,30 @@
                     return;
                 }
 
-                let net = new AvaNetwork(this.name, this.url, this.networkId, this.chainId, this.explorer_api)
+                this.isAjax = true;
+                let netID = null;
+
+                try{
+                    let resp = await axios.post(this.url+'/ext/admin', {
+                        "jsonrpc": "2.0",
+                        "id"     : 1,
+                        "method" : "admin.getNetworkID"
+                    });
+                    netID = resp.data.result.networkID;
+                    this.isAjax = false;
+                }catch(e){
+                    this.isAjax = false;
+                    this.err = "AVA Network Not Found"
+                    return;
+                }
+
+                let net = new AvaNetwork(this.name, this.url,  netID, this.chainId, this.explorer_api);
 
                 this.$emit('add', net);
 
                 // Clear values
                 this.name = 'My Custom Network';
                 this.url = '';
-                this.networkId = 12345;
                 this.chainId = 'X';
             }
         }
@@ -176,8 +187,13 @@
         background-color: #2960CD;
         color: #fff;
         font-size: 12px;
-        padding: 3px 14px;
         border-radius: 4px;
+    }
+
+    .v-btn{
+        text-transform: none;
+        color: #fff !important;
+        font-size: 12px !important;
     }
 
     .rowGroup{

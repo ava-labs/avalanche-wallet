@@ -29,6 +29,8 @@
         },
         computed: {
             isExplorer(){
+                // if(!this.$store.state.Network.selectedNetwork) return false;
+
                 if(this.$store.state.Network.selectedNetwork.explorerUrl){
                     return true;
                 }
