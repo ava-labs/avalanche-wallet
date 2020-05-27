@@ -41,7 +41,7 @@ const assets_module: Module<AssetsState, RootState> = {
         updateUTXOs({state, commit, dispatch, rootState}){
             console.log("UPDATE UTXOS ASSET mod");
             state.isUpdateBalance = true;
-            avm.getUTXOs(rootState.addresses).then((res: UTXOSet) =>{
+            avm.getUTXOs((rootState.addresses).slice(0,5)).then((res: UTXOSet) =>{
                 console.log("GOT SET");
                 let utxos = res.getAllUTXOs();
 
