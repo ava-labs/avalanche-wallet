@@ -12,7 +12,8 @@ import axios from 'axios';
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
-        isConnected: false,
+        status: 'disconnected', // disconnected | connecting | connected
+        // isConnected: false,
         networks: [],
         selectedNetwork: null
     },
@@ -22,10 +23,11 @@ const network_module: Module<NetworkState, RootState> = {
         },
     },
     actions: {
-        async setNetwork({state, dispatch}, net:AvaNetwork){
+        async setNetwork({state, dispatch, commit, rootState}, net:AvaNetwork){
             // Query the network to get network id
 
-            state.isConnected = false;
+            // state.isConnected = false;
+            state.status = 'connecting';
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
             ava.AVM().refreshBlockchainID();
@@ -33,24 +35,38 @@ const network_module: Module<NetworkState, RootState> = {
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
 
+
+            commit('Assets/removeAllAssets', null, {root: true});
             await dispatch('Assets/updateAvaAsset', null, {root: true});
             await dispatch('Assets/updateAssets', null, {root: true});
-            await dispatch('Assets/clearBalances', null, {root: true});
-            await dispatch('Assets/updateUTXOs', null, {root: true});
 
-            state.isConnected = true;
+
+            // If authenticated
+            if(rootState.isAuth){
+                await dispatch('Assets/clearBalances', null, {root: true});
+                await dispatch('Assets/updateUTXOs', null, {root: true});
+            }
+
+            // state.isConnected = true;
+            state.status = 'connected';
             return true;
         },
-        init({state, commit, dispatch}){
+
+        async init({state, commit, dispatch}){
             let netTest = new AvaNetwork("TestNet", 'https://bootstrap.ava.network:21000', 2, 'X', 'https://explorerapi.ava.network');
             let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 12345, 'X');
 
 
             commit('addNetwork', netTest);
             commit('addNetwork', netLocal);
-            dispatch('setNetwork', state.networks[0])
+            try{
+                let res = await dispatch('setNetwork', state.networks[0]);
+                return true;
+            }catch (e) {
+                console.log(e);
+                state.status = 'disconnected';
+            }
         }
-
     },
     getters: {
 

@@ -83,7 +83,7 @@
     "title": "Manage Keys",
     "address": "Address",
     "balance": "Balance",
-    "empty": "This address does not have any assets in it.",
+    "empty": "This address does not contain any assets.",
     "del_check": "Are you sure you want to delete this key and address from your wallet? You will not be able to use the funds associated with it anymore."
   },
   "modal": {

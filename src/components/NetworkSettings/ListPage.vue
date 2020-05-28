@@ -13,9 +13,6 @@
             NetworkRow
         },
         computed: {
-            activeNetwork(){
-                return this.$store.state.Network.selectedNetwork;
-            },
             networks(){
                 return this.$store.state.Network.networks;
             }
@@ -23,8 +20,6 @@
     }
 </script>
 <style scoped lang="scss">
-
-
     .networks_list{
         padding: 0px 15px;
     }

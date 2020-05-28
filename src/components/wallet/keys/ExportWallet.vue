@@ -1,16 +1,19 @@
 <template>
     <div class="export_wallet">
         <p class="explain">{{$t('advanced.export.desc')}} </p>
-        <label>Password</label>
-        <v-text-field type="password" class="formIn"
-                      v-model="pass" hint="Minimum 9 characters."  placeholder="Password" persistent-hint outlined dense color="#000" height="40"
-        ></v-text-field>
-        <label>Confirm Password</label>
-        <v-text-field type="password" class="formIn"
-                      v-model="passConfirm" hide-details outlined dense color="#000" height="40" placeholder="Confirm Password"
-        ></v-text-field>
-        <v-btn depressed :disabled="!isValid" color="#2960CD" block
-               @click="download" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
+        <form @submit.prevent="download">
+            <label>Password</label>
+            <v-text-field type="password" class="formIn"
+                          v-model="pass" hint="Minimum 9 characters."  placeholder="Password" persistent-hint outlined dense color="#000" height="40"
+            ></v-text-field>
+            <label>Confirm Password</label>
+            <v-text-field type="password" class="formIn"
+                          v-model="passConfirm" hide-details outlined dense color="#000" height="40" placeholder="Confirm Password"
+            ></v-text-field>
+            <v-btn depressed :disabled="!isValid" color="#2960CD" block
+                   type="submit" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
+        </form>
+
     </div>
 </template>
 <script>

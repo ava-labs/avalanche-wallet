@@ -37,22 +37,17 @@ export default new Vuex.Store({
         modals: {},
     },
     getters: {
-        isAuthenticated(state: RootState){
-            if(state.privateKey != '') return true;
-            else return false;
-        },
+        appReady(state: RootState, getters){
+            let avaAsset = getters['Assets/AssetAVA'];
 
+            if(!avaAsset) return false;
+            return true;
+        }
     },
     mutations: {
-        setAuth(state,val){
-            state.isAuth = val;
-        },
         selectAddress(state, val){
             state.selectedAddress = val;
         },
-        setPrivateKey(state,val){
-            state.privateKey = val;
-        }
     },
     actions: {
         // Gets addresses from the keys in the keychain,
@@ -64,6 +59,7 @@ export default new Vuex.Store({
         },
 
         // Used in home page to access a user's wallet
+        // Used to access wallet with a single key
         async accessWallet(store, pk: string){
 
             let keypair = await store.dispatch('addKey', pk);
@@ -71,15 +67,29 @@ export default new Vuex.Store({
             // let address = keyChain.importKey(pk);
             // let keypair = keyChain.getKey(address);
 
-            store.commit('setPrivateKey', pk);
-            store.commit('selectAddress', keypair.getAddressString());
-            store.commit('setAuth', true);
+            store.state.privateKey = pk;
+            store.state.selectedAddress = keypair.getAddressString();
+            store.state.isAuth = true;
             store.dispatch('onAccess');
+        },
 
-            router.push('/wallet');
+        async accessWalletMultiple({state, dispatch}, pks: string[]){
+            for(var i=0;i<pks.length;i++){
+                let pk = pks[i];
+                let keypair = await dispatch('addKey', pk);
+
+                if(i==0){
+                    state.privateKey = pk;
+                    state.selectedAddress = keypair.getAddressString();
+                }
+            }
+            state.isAuth = true;
+            dispatch('onAccess');
         },
 
         onAccess(store){
+            router.push('/wallet');
+
             store.dispatch('refreshAddresses');
             store.dispatch('Assets/updateUTXOs');
             store.dispatch('History/updateTransactionHistory');
@@ -94,9 +104,6 @@ export default new Vuex.Store({
         // },
 
         async logout(store){
-
-
-
             // Delete keys
             store.dispatch('removeAllKeys');
             await store.dispatch('Notifications/add', {
@@ -186,16 +193,9 @@ export default new Vuex.Store({
 
             try{
                 let rawKeys = JSON.parse(sessionKeys);
-                for(var i=0;i<rawKeys.length;i++){
-                    let pk = rawKeys[i];
-                    if(i===0){
-                        await dispatch('accessWallet', pk)
-                    }else{
-                        await dispatch('addKey', pk)
-                    }
-                }
+
+                await dispatch('accessWalletMultiple', rawKeys);
                 state.rememberKey = true;
-                dispatch('onAccess');
                 return true;
             }catch (e) {
                 console.log(e);
@@ -286,6 +286,7 @@ export default new Vuex.Store({
 
             setTimeout(() => {
                 store.dispatch('Assets/updateUTXOs');
+                store.dispatch('History/updateTransactionHistory');
             }, 5000);
             return 'success';
         },
@@ -396,26 +397,27 @@ export default new Vuex.Store({
 
                             // If not auth, login user then add keys
                             if(!store.state.isAuth){
-                                store.dispatch('accessWallet', keyStrings[0]).then(async ()=>{
-                                    for(var i=1; i<keyStrings.length;i++){
-                                        let key = keyStrings[i];
-                                        let keypair = await store.dispatch('addKey', key);
-                                        let pairAddress = keypair.getAddressString();
-
-                                        if(pairAddress !== keyAddresses[i]){
-                                            await store.dispatch('removeKey', pairAddress);
-                                        }
-
-                                    }
-                                });
+                                store.dispatch('accessWalletMultiple', keyStrings);
+                                // store.dispatch('accessWallet', keyStrings[0]).then(async ()=>{
+                                //     for(var i=1; i<keyStrings.length;i++){
+                                //         let key = keyStrings[i];
+                                //         let keypair = await store.dispatch('addKey', key);
+                                //         let pairAddress = keypair.getAddressString();
+                                //
+                                //         if(pairAddress !== keyAddresses[i]){
+                                //             await store.dispatch('removeKey', pairAddress);
+                                //         }
+                                //
+                                //     }
+                                // });
                             }else{
                                 for(i=0; i<keyStrings.length;i++){
                                     let key = keyStrings[i];
                                     let keypair = await store.dispatch('addKey', key);
-                                    let pairAddress = keypair.getAddressString();
-                                    if(pairAddress !== keyAddresses[i]){
-                                        await store.dispatch('removeKey', pairAddress);
-                                    }
+                                    // let pairAddress = keypair.getAddressString();
+                                    // if(pairAddress !== keyAddresses[i]){
+                                    //     await store.dispatch('removeKey', pairAddress);
+                                    // }
                                 }
                             }
 

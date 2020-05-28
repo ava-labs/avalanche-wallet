@@ -2,7 +2,7 @@
     <div class="tx_history_panel">
         <div class="header">
             <h2>Transactions</h2>
-            <button>See All</button>
+            <a :href="explorerUrl" target="_blank">See All</a>
         </div>
         <div class="empty" v-if="!isExplorer">
             <h4>Explorer API Not Found</h4>
@@ -17,7 +17,7 @@
         <div class="list" v-else>
             <tx-history-row v-for="tx in transactions" :key="tx.id" :transaction="tx">
             </tx-history-row>
-            <p class="warn">This list might be incomplete.</p>
+            <p class="warn">This list might be incomplete and out of order.</p>
         </div>
     </div>
 </template>
@@ -48,6 +48,10 @@
             transactions(){
                 let res =  this.$store.state.History.transactions;
                 return res;
+            },
+            explorerUrl(){
+                let addr = this.$store.state.selectedAddress.split('-')[1];
+                return `https://explorer.ava.network/address/${addr}`;
             }
         }
     }
@@ -70,9 +74,9 @@
             font-weight: normal;
         }
 
-        button{
+        a{
             background-color: #2960CD;
-            color: #fff;
+            color: #fff !important;
             padding: 4px 18px;
             font-size: 12px;
         }

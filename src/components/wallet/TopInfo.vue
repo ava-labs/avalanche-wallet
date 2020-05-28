@@ -69,7 +69,7 @@
         flex-shrink: 0;
         display: flex;
         background-color: #FFF;
-        padding: 22px 12px;
+        padding: 22px 20px;
         /*margin: 12px;*/
         /*padding: 10px 8px;*/
         overflow: hidden;

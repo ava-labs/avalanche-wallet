@@ -9,8 +9,7 @@
                 <h4>{{$t('top.title2')}}</h4>
             </div>
             <div class="balance_row">
-                <p v-if="ava_asset" class="balance">{{ava_asset.toString()}} AVA</p>
-                <p v-else class="balance">0 AVA</p>
+                <p class="balance">{{balanceText}} AVA</p>
             </div>
             <div class="alt_info">
                 <div>
@@ -38,11 +37,19 @@
         methods: {
             updateBalance(){
                 this.$store.dispatch('Assets/updateUTXOs');
+                this.$store.dispatch('History/updateTransactionHistory');
             }
         },
         computed: {
             ava_asset(){
                 return this.$store.getters['Assets/AssetAVA'];
+            },
+            balanceText(){
+                if(this.ava_asset !== null){
+                    return this.ava_asset.toString();
+                }else{
+                    return '-'
+                }
             },
             isUpdateBalance(){
                 return this.$store.state.Assets.isUpdateBalance;

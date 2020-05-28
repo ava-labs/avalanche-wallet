@@ -199,7 +199,9 @@
         font-size: 12px;
         color: #909090;
     }
-
+    h1{
+        font-weight: normal;
+    }
     h4{
         display: block;
         text-align: left;
@@ -332,6 +334,8 @@
 
     .err_list{
         font-size: 12px;
+        color: #e03737;
+        margin: 6px 0;
     }
 
 

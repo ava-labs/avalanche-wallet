@@ -8,3 +8,97 @@ $container_padding_s: 30px 3vw;
 $container_padding_mobile: 10px 10px;
 
 
+
+
+hr{
+  color: #F5F6FA;
+  border-color: #F5F6FA;
+  border: none;
+  border-top: 1px solid;
+  margin: 10px 0;
+}
+
+
+
+
+
+
+button{
+  outline: none;
+}
+
+
+
+
+
+a{
+  color: #000 !important;
+  text-decoration: none !important;
+}
+
+
+.but_primary{
+  background-color: #000;
+  color: #fff !important;
+  text-transform: none !important;
+  /*font-size: 13px;*/
+  padding: 8px 18px;
+  border-radius: 2px;
+}
+
+
+#app[night_mode=""]{
+  background-color: #000;
+
+
+  a, p, h1, h2, h4{
+    color: #fff !important;
+  }
+
+
+  .but_primary{
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+}
+
+
+
+
+
+
+
+/*     For vue transitions */
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+
+.float-enter-active, .float-leave-active {
+  transition: all .2s;
+}
+.float-enter, .float-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateY(30px);
+}
+
+
+.slide_right-enter-active, .slide_right-leave-active {
+  transition: opacity .2s;
+}
+.slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+
+.shrink-enter-active, .shrink-leave-active {
+  transition: opacity .2s;
+}
+.shrink-enter, .shrink-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: translateX(100%);
+  opacity: 0;
+}

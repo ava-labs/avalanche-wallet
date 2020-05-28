@@ -1,41 +1,36 @@
 <template>
     <div
             class="addressItem"
-            :selected="selected"
+            :selected="is_default"
     >
         <div class="rows">
             <div class="detail">
                 <div>
-                    <p class="label">{{$t('keys.address')}}</p>
-                    <p class="addressVal">{{address}}</p>
-                </div>
-                <div>
-                    <p class="label">Public Key</p>
-                    <p class="addressVal">{{publicKey}}</p>
+                    <p class="addressVal"><span>{{$t('keys.address')}}</span>{{address}}</p>
                 </div>
             </div>
 
             <div >
-                <p class="label">{{$t('keys.balance')}}</p>
                 <p v-if="Object.keys(balances).length === 0" class="balance_empty">{{$t('keys.empty')}}</p>
-                <div class="addressBalance" v-else>
-                    <p  v-for="bal in balances" :key="bal.id">
-                        {{bal.toString()}} <b>{{bal.symbol}}</b>
-                    </p>
+                <div class="addressBalance bal_cols" v-else>
+                    <p>This address has: </p>
+                    <div class="bal_rows">
+                        <p  v-for="bal in balances" :key="bal.id">
+                            {{bal.toString()}} <b>{{bal.symbol}}</b>
+                        </p>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="buts">
-            <button class="selBut" @click="select">
-                <span v-if="selected">Default</span>
-                <span v-else>Make Default</span>
+            <button class="selBut" @click="select"  v-if="!is_default">
+                <span>Make Default</span>
             </button>
 
-            <button @click="remove" v-if="canRemove"><fa icon="trash"></fa> Remove Key</button>
+            <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
 
         </div>
-<!--        <div class="del" v-if="canRemove">-->
-<!--        </div>-->
     </div>
 </template>
 <script>
@@ -48,11 +43,7 @@
                 type: String,
                 required: true
             },
-            selected: {
-                type: Boolean,
-                default: false,
-            },
-            canRemove: {
+            is_default: {
                 type: Boolean,
                 default: false
             }
@@ -124,12 +115,10 @@
         font-size: 12px;
         /*display: flex;*/
         /*align-items: center;*/
-        border-radius: 2px;
         display: grid;
-        grid-template-columns: 1fr 30%;
+        grid-template-columns: 1fr max-content;
         grid-gap: 15px;
-        padding: 15px;
-        background-color: #F5F6FA;
+        /*background-color: #F5F6FA;*/
         overflow: auto;
 
         > *{
@@ -193,6 +182,11 @@
         overflow: auto;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        span{
+            font-weight: normal;
+            margin-right: 8px;
+        }
     }
 
     .del{
@@ -208,13 +202,26 @@
         display: flex;
         white-space: nowrap;
         color: #2960CD;
-        p{
-            padding: 2px 8px;
-            /*border: 1px solid #ebedf5;*/
-            background-color: #ebedf5;
-            border-radius: 3px;
-            margin: 2px !important;
+        .bal_rows p{
+            font-weight: bold;
+            /*background-color: #ebedf5;*/
+            padding: 0px 8px;
+            margin-bottom: 4px;
         }
+        p{
+
+            /*border: 1px solid #ebedf5;*/
+            border-radius: 3px;
+        }
+    }
+
+    .bal_cols{
+        display: flex;
+    }
+
+    .bal_rows{
+        display: flex;
+        flex-direction: column;
     }
 
     .balance_empty{

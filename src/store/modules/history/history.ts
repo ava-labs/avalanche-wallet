@@ -40,6 +40,9 @@ const history_module: Module<HistoryState, RootState> = {
             let offset = 0;
             let limit = 20;
 
+            // TODO: update history collectively for all the addresses
+            // TODO: or just the selected key?
+
             let url = `/x/transactions?address=${addrRaw}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
             let res = await explorer_api.get(url);
 

@@ -41,8 +41,10 @@
             },
         },
         watch: {
-            address(){
-                this.updateQR()
+            address(val){
+                if(val){
+                    this.updateQR()
+                }
             }
         },
         mounted() {

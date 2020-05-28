@@ -71,7 +71,7 @@
     .file_input{
         position: relative;
         border: 1px solid #000;
-        border-radius: 6px;
+        border-radius: 2px;
         padding: 8px 18px;
         cursor: pointer;
     }

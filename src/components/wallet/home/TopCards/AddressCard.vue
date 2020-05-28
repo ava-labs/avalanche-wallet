@@ -62,7 +62,9 @@
         },
         watch: {
             address(val){
-                this.updateQR();
+                if(val){
+                    this.updateQR();
+                }
             }
         },
         computed: {

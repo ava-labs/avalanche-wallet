@@ -31,9 +31,12 @@
 
                 return `${net.protocol}://${net.ip}${portText}`
             },
+            networkStatus(){
+                return this.$store.state.Network.status;
+            },
             isConnected(){
                 let state = this.$store.state.Network;
-                if(this.network === state.selectedNetwork && state.isConnected){
+                if(this.network === state.selectedNetwork && this.networkStatus === 'connected'){
                     return true;
                 }
                 return false;

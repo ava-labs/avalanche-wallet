@@ -1,19 +1,23 @@
 <template>
     <v-app>
         <v-content>
-            <navbar v-if="isNavbar"></navbar>
-            <div class="main_cols" :wallet_view="!isNavbar">
-                <transition name="fade" mode="out-in">
-                    <sidebar class="panel" v-if="!isNavbar"></sidebar>
-                </transition>
-                <transition name="fade" mode="out-in">
-                    <router-view id="router_view"/>
-                </transition>
-                <transition name="fade" mode="out-in">
-                    <main-panel class="panel" v-if="!isNavbar"></main-panel>
-                </transition>
-            </div>
-
+<!--            <transition name="fade">-->
+<!--                <loading-app v-if="!appReady"></loading-app>-->
+<!--            </transition>-->
+            <template>
+                <navbar v-if="isNavbar"></navbar>
+                <div class="main_cols" :wallet_view="!isNavbar">
+                    <transition name="fade" mode="out-in">
+                        <sidebar class="panel" v-if="!isNavbar"></sidebar>
+                    </transition>
+                    <transition name="fade" mode="out-in">
+                        <router-view id="router_view"/>
+                    </transition>
+                    <transition name="fade" mode="out-in">
+                        <main-panel class="panel" v-if="!isNavbar"></main-panel>
+                    </transition>
+                </div>
+            </template>
         </v-content>
         <notifications></notifications>
     </v-app>
@@ -23,14 +27,15 @@
     import Navbar from './components/Navbar';
     import MainPanel from '@/components/SidePanels/MainPanel';
     import Sidebar from '@/components/wallet/Sidebar';
-
+    import LoadingApp from '@/views/LoadingApp';
 
     export default {
         components: {
             Sidebar,
             Navbar,
             Notifications,
-            MainPanel
+            MainPanel,
+            LoadingApp
         },
         async created() {
             let parent = this;
@@ -38,8 +43,8 @@
             await this.$store.dispatch('Network/init');
 
             // check session storage
+            // if Remember Keys was enabled, get keys and access wallet
             this.$store.dispatch('autoAccess').then((res) => {
-
                 if(res){
                     parent.$store.dispatch('Notifications/add', {
                         title: "Keys Remembered",
@@ -47,12 +52,14 @@
                         type: "success"
                     })
                 }
-
             });
 
 
         },
         computed:{
+            appReady(){
+                return this.$store.getters['appReady'];
+            },
             isNavbar(){
                 // console.log(this.$route);
                 // return this.$store.state.is
@@ -135,18 +142,6 @@
         padding: main.$container_padding_m;
     }
 
-    button{
-        outline: none;
-    }
-
-
-
-
-
-    a{
-        color: #000 !important;
-        text-decoration: none !important;
-    }
 
 
     @media only screen and (max-width: main.$mobile_width) {
@@ -169,57 +164,4 @@
     }
 
 
-
-    /*     For vue transitions */
-
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .2s;
-    }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        opacity: 0;
-    }
-
-
-    .float-enter-active, .float-leave-active {
-        transition: all .2s;
-    }
-    .float-enter, .float-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        transform: translateY(30px);
-    }
-
-
-    .slide_right-enter-active, .slide_right-leave-active {
-        transition: opacity .2s;
-    }
-    .slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-
-
-
-    .but_primary{
-        background-color: #000;
-        color: #fff !important;
-        text-transform: none !important;
-        /*font-size: 13px;*/
-        padding: 8px 18px;
-        border-radius: 2px;
-    }
-
-
-    #app[night_mode=""]{
-        background-color: #000;
-
-
-        a, p, h1, h2, h4{
-            color: #fff !important;
-        }
-
-
-        .but_primary{
-            background-color: #fff !important;
-            color: #000 !important;
-        }
-    }
 </style>

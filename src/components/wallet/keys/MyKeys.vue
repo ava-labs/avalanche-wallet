@@ -1,11 +1,15 @@
 <template>
     <div class="my_keys">
+        <key-row :address="selected"
+                 class="key_row"
+                 :is_default="true"
+        ></key-row>
+        <hr>
         <transition-group name="fade">
             <key-row v-for="addr in addresses"
                      :key="addr"
                      :address="addr"
-                     :selected="selected === addr"
-                     :can-remove="addresses.length > 1"
+                     class="key_row"
                      @select="selectKey"
                      @remove="removeKey"
             ></key-row>
@@ -17,7 +21,7 @@
 
     export default {
         components: {
-            KeyRow
+            KeyRow,
         },
         methods: {
             selectKey(addr){
@@ -37,8 +41,18 @@
             selected(){
                 return this.$store.state.selectedAddress;
             },
+            // non default addresses
             addresses(){
-                return this.$store.state.addresses;
+                let res = [];
+                let allAddr = this.$store.state.addresses;
+
+                for(var i=0; i<allAddr.length; i++){
+                    let addr = allAddr[i];
+                    if(addr !== this.selected){
+                        res.push(addr);
+                    }
+                }
+                return res;
             },
             balance(){
                 return this.$store.state.Assets.assetsDict;
@@ -48,15 +62,27 @@
     }
 </script>
 <style scoped lang="scss">
+
+    .default_key{
+
+    }
+
+
+    .key_row{
+        background-color: #F5F6FA;
+        padding: 15px;
+        border-radius: 2px;
+        margin-bottom: 10px;
+        transition-duration: 0.2s;
+    }
+
     .my_keys{
         padding-top: 15px;
     }
     .addressItem {
         /*border-bottom: 1px solid #EAEDF4;*/
         /*border-radius: 14px;*/
-        margin-bottom: 10px;
 
-        transition-duration: 0.2s;
 
         &[selected]{
             /*border-color: #2960CD;*/

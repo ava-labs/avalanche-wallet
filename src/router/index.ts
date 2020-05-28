@@ -19,7 +19,7 @@ import WalletHome from "@/views/wallet/Home.vue";
 
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
-    if (!store.getters.isAuthenticated) {
+    if (!store.state.isAuth) {
         next();
         return
     }
@@ -27,7 +27,7 @@ const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
 };
 
 const ifAuthenticated = (to: Route, from: Route, next: Function) => {
-    if (store.getters.isAuthenticated) {
+    if (store.state.isAuth) {
         next();
         return
     }

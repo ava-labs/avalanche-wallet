@@ -8,6 +8,7 @@ export interface AssetsState {
     descriptions: AssetDescriptions
     assets: AvaAsset[]
     assetsDict: AssetsDict
+    AVA_ASSET_ID: string | null,
 }
 
 export interface AssetDescriptions {

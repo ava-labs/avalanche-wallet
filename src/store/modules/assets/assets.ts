@@ -9,7 +9,7 @@ import {explorer_api} from "@/explorer_api";
 // import {tr} from "@/locales/tr";
 
 
-let AVA_ASSET_ID:string;
+// let AVA_ASSET_ID:string;
 
 
 
@@ -19,6 +19,7 @@ let AVA_ASSET_ID:string;
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
     state: {
+        AVA_ASSET_ID: null,
         isUpdateBalance: false,
         utxo_set: null,
         utxos: [],
@@ -53,12 +54,13 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Fetches UTXOs of the addresses registered to the wallet
         async updateUTXOs({state, commit, dispatch, rootState}) {
+            console.log('update utxos...');
             if(!rootState.isAuth){
                 return false;
             }
             state.isUpdateBalance = true;
 
-            dispatch('History/updateTransactionHistory', null, {root: true});
+            // dispatch('History/updateTransactionHistory', null, {root: true});
 
             let res: UTXOSet = await ava.AVM().getUTXOs(rootState.addresses);
             let utxos = res.getAllUTXOs();
@@ -75,12 +77,15 @@ const assets_module: Module<AssetsState, RootState> = {
 
 
             let utxos = state.utxos;
+            console.log(state.assetsDict);
 
             for(var i=0;i<utxos.length;i++){
                 let utxo = utxos[i];
                 let assetId:string = bintools.avaSerialize(utxo.getAssetID());
                 let amount = utxo.getAmount();
                 let dict = state.assetsDict;
+
+                // console.log(dict);
 
                 // Because we populate the assets dictionary from the explorer api, we cannot query any other network including localhost
                 // and this causes the assetId to not exist
@@ -96,6 +101,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async addUnknownAsset({state, commit}, assetId:string){
             // get info about the asset
+            console.log(`Adding unknown asset ${assetId}..`);
             let desc = await ava.AVM().getAssetDescription(assetId);
             let newAsset = new AvaAsset(assetId, desc.name, desc.symbol, desc.denomination);
 
@@ -112,15 +118,18 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         // What is the AVA coin in the network
-        async updateAvaAsset(){
-            avm.getAssetDescription('AVA').then(res => {
-                AVA_ASSET_ID = bintools.avaSerialize(res.assetID);
-            });
+        async updateAvaAsset({state, commit}){
+            let res = await avm.getAssetDescription('AVA');
+            console.log("Updated AVA Asset");
+            let id = bintools.avaSerialize(res.assetID);
+            state.AVA_ASSET_ID = id;
+            let asset = new AvaAsset(id, res.name, res.symbol, res.denomination);
+            commit('addAsset', asset);
         },
         // fetch every asset from the explorer, if explorer exists
         updateAssets({state, rootState, commit}){
             // console.log(rootState);
-            commit('removeAllAssets');
+            console.log('update assets...')
 
             //@ts-ignore
             let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
@@ -183,6 +192,7 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     getters: {
         AssetAVA(state,getters){
+            let AVA_ASSET_ID = state.AVA_ASSET_ID;
             if(AVA_ASSET_ID){
                 if(state.assetsDict[AVA_ASSET_ID]){
                     return state.assetsDict[AVA_ASSET_ID];
