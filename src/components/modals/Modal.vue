@@ -36,7 +36,7 @@
 <style scoped>
 
     .modal_topbar{
-        background-color: #81a781;
+        background-color: #000;
         color: #fff;
         position: relative;
         padding: 10px 22px;
@@ -84,7 +84,7 @@
         background-color: #f2f2f2;
         margin: auto;
         z-index: 2;
-        border-radius: 6px;
+        border-radius: 2px;
         overflow: hidden;
     }
 </style>

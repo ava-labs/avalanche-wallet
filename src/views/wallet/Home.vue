@@ -142,7 +142,7 @@
 
         .pages{
             /*min-height: 100vh;*/
-            padding-bottom: 30px;
+            /*padding-bottom: 30px;*/
         }
     }
 

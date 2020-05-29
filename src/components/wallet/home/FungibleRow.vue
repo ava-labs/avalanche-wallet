@@ -4,7 +4,8 @@
             <img v-if="iconUrl" :src="iconUrl">
             <p v-else>?</p>
         </div>
-        <p class="name_col">{{asset.name}} ({{asset.symbol}})</p>
+        <p class="name_col not_mobile">{{asset.name}} ({{asset.symbol}})</p>
+        <p class="name_col mobile_only">{{asset.symbol}}</p>
         <router-link :to="sendLink" class="send_col" v-if="isBalance">
             <img src="@/assets/sidebar/Transfer.png">
         </router-link>
@@ -121,6 +122,21 @@
         }
         .balance_col{
             font-size: 14px;
+        }
+    }
+
+    .mobile_only{
+        display: none;
+    }
+
+    @include main.mobile-device{
+        .name_col{
+            display: none;
+        }
+
+
+        .mobile_only{
+            display: initial;
         }
     }
 </style>

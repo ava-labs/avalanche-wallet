@@ -1,9 +1,5 @@
 <template>
     <div class="fungibles_view">
-<!--        <div class="search">-->
-<!--            <img src="@/assets/search.png">-->
-<!--            <input placeholder="Search assets.." v-model="search">-->
-<!--        </div>-->
         <div class="headers">
             <p class="name_col">Name</p>
             <p></p>
@@ -216,7 +212,7 @@
         }
     }
 
-    @media only screen and (max-width: main.$mobile_width) {
+    @include main.mobile-device{
         .fungibles_view{
             .headers, .asset{
                 grid-template-columns: 50px 1fr 1fr 50px;
