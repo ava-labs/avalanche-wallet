@@ -132,7 +132,17 @@
                 flex-grow: 1;
                 border-radius: 0px;
                 margin: 0;
+                font-size: 12px;
             }
+        }
+
+        .search{
+            margin: 15px 0px;
+        }
+
+        .pages{
+            /*min-height: 100vh;*/
+            padding-bottom: 30px;
         }
     }
 

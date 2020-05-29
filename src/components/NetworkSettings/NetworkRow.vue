@@ -79,6 +79,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .stat_col{
         font-size: 14px;
         color: #2960CD;
@@ -143,5 +145,16 @@
     @keyframes connecting {
         from {color: #2960CD;}
         to {color: #5ECB08;}
+    }
+
+
+    @media only screen and (max-width: main.$mobile_width) {
+        img{
+            display: none;
+        }
+        .network_row{
+            grid-template-columns: 1fr max-content;
+            /*grid-template-columns: none;*/
+        }
     }
 </style>

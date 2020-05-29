@@ -13,6 +13,8 @@
                     <template v-if="page==='list'">
                         <h4>Networks</h4>
                         <button @click="viewCustom">Add Custom</button>
+<!--                        <button @click="closeMenu" style="background-color: transparent;-->
+<!-- color: #999;"><fa icon="times"></fa></button>-->
                     </template>
                     <template v-if="page==='custom'">
                         <h4>Add Custom Network</h4>
@@ -60,6 +62,9 @@
             viewList(){
                 this.page = 'list';
             },
+            closeMenu(){
+                this.isActive = false;
+            },
             toggleMenu(){
                 this.isActive = !this.isActive;
 
@@ -96,6 +101,7 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
 
     .network_menu{
         position: relative;
@@ -149,4 +155,15 @@
         }
     }
 
+
+    @media only screen and (max-width: main.$mobile_width) {
+
+        .network_body{
+            position: fixed;
+            width: 100vw;
+            z-index: 2;
+            right: 0 !important;
+            left: 0 !important;
+        }
+    }
 </style>

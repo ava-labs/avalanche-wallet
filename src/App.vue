@@ -5,7 +5,7 @@
 <!--                <loading-app v-if="!appReady"></loading-app>-->
 <!--            </transition>-->
             <template>
-                <navbar v-if="isNavbar"></navbar>
+                <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <transition name="fade" mode="out-in">
                         <sidebar class="panel" v-if="!isNavbar"></sidebar>
@@ -146,12 +146,25 @@
 
     @media only screen and (max-width: main.$mobile_width) {
         #router_view{
-            padding: main.$container_padding_mobile;
+            padding: main.$container_padding_mobile !important;
         }
 
         #nav{
             padding: main.$container_padding_mobile;
+            display: flex !important;
         }
+
+        .main_cols{
+            grid-template-columns: 1fr !important;
+            &[wallet_view] {
+                height: auto !important;
+            }
+        }
+        .panel{
+            display: none !important;
+        }
+
+
     }
 
     @media only screen and (max-width: main.$width_s) {

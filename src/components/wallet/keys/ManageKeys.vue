@@ -207,6 +207,13 @@
            grid-template-columns: none;
            display: block;
        }
+
+
+
+        .right_side{
+            border: none !important;
+            padding: 0 !important;
+        }
     }
 </style>
 <style lang="scss">
@@ -215,6 +222,7 @@
             margin: 15px 0px;
         }
     }
+
 
     /*.cols {*/
     /*    .v-tabs-bar{*/

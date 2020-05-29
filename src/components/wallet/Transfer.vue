@@ -261,15 +261,7 @@
         margin-top: 15px;
     }
 
-    @media only screen and (max-width: 600px) {
-        .order_form{
-            display: block;
-        }
-        .asset_select button{
-            flex-grow: 1;
-            word-break: break-word;
-        }
-    }
+
 
     .tx_info{
         text-align: left;
@@ -326,9 +318,7 @@
         color: #fff;
     }
     .advanced .advancedBody{
-        /*max-height: 0px;*/
         transition-duration: 0.2s;
-        /*overflow: hidden;*/
     }
 
 
@@ -338,6 +328,15 @@
         margin: 6px 0;
     }
 
+    @media only screen and (max-width: 600px) {
+        .order_form{
+            display: block;
+        }
+        .asset_select button{
+            flex-grow: 1;
+            word-break: break-word;
+        }
+    }
 
     @media only screen and (max-width: main.$mobile_width) {
         .transfer_card {
@@ -347,6 +346,16 @@
 
         .but_primary{
             width: 100%;
+        }
+
+        .new_order_Form{
+            display: block;
+            grid-template-columns: none;
+        }
+
+        .tx_list{
+            padding: 0;
+            border: none;
         }
     }
 </style>

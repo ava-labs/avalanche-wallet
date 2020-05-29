@@ -177,23 +177,35 @@
     /*}*/
     @media only screen and (max-width: main.$mobile_width) {
         .top_cards{
-            grid-template-columns: 100%;
+            grid-template-columns: none;
             grid-template-rows: min-content;
+        }
+
+        .top_card{
+            /*padding: ;*/
         }
         .top_card.nonessential{
             display: none;
+        }
+
+        .balance_card{
+            grid-column: unset;
+        }
+
+        .addr_card{
+            grid-column: unset;
         }
     }
 
 
 
     /* The animation code */
-    @keyframes fade {
-        from {
-            opacity: 0.0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
+    /*@keyframes fade {*/
+    /*    from {*/
+    /*        opacity: 0.0;*/
+    /*    }*/
+    /*    to {*/
+    /*        opacity: 1;*/
+    /*    }*/
+    /*}*/
 </style>

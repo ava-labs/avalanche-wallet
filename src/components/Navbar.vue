@@ -24,6 +24,7 @@
         <!--   MOBILE MENU     -->
         <v-navigation-drawer v-model="isDrawer" fixed style="z-index: 999;" hide-overlay>
             <v-list dense nav>
+
                 <v-list-item>
                     <img src="@/assets/wallet_logo.png">
                 </v-list-item>
@@ -37,6 +38,7 @@
                     <v-list-item to="/access">Access Wallet</v-list-item>
                     <v-list-item to="/create" class="action_but">Get Started</v-list-item>
                 </template>
+
             </v-list>
         </v-navigation-drawer>
     </div>

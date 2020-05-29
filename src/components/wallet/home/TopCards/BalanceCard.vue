@@ -58,6 +58,7 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../../../main';
     .balance_card{
         display: grid !important;
         grid-template-columns: 1fr 140px;
@@ -161,6 +162,35 @@
         p{
             font-size: 12px;
             color: #909090;
+        }
+    }
+
+
+    @media only screen and (max-width: main.$mobile_width) {
+        .balance_card{
+            grid-template-columns: none;
+        }
+
+        .nft_card{
+            padding: 0;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #DADCE2;
+            border-left: none;
+        }
+
+        .balance{
+            font-size: 2em !important;
+        }
+
+        .alt_info{
+            grid-template-columns: none;
+            text-align: left;
+
+            >div{
+                padding: 0;
+                border: none;
+            }
         }
     }
 </style>

@@ -73,6 +73,7 @@
 
     .card{
         width: 420px;
+        max-width: 80vw;
     }
     .file_in{
         margin-top: 30px;
