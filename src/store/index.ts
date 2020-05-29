@@ -135,31 +135,32 @@ export default new Vuex.Store({
           }
         },
 
-        removeKey(store, address:string){
+        removeKey({state, dispatch, commit}, address:string){
 
             let keyBuff = bintools.stringToAddress(address);
             let key = keyChain.getKey(keyBuff);
             keyChain.removeKey(key);
 
-            let addresses = store.state.addresses;
+            let addresses = state.addresses;
 
-            if(address === store.state.selectedAddress){
+            if(address === state.selectedAddress){
                 for(var i=0; i<addresses.length;i++){
                     let addr = addresses[i];
                     if(address !== addr){
-                        store.commit('selectAddress', addr);
+                        commit('selectAddress', addr);
                         break;
                     }
                 }
             }
 
 
-            store.dispatch('Notifications/add', {
+            dispatch('Notifications/add', {
                 title: 'Key Removed',
                 message: 'Private key and assets removed from the wallet.'
             });
 
-            store.dispatch('refreshAddresses');
+            dispatch('refreshAddresses');
+            dispatch('Assets/updateUTXOs');
         },
 
 

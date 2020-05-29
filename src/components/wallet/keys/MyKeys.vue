@@ -1,5 +1,8 @@
 <template>
     <div class="my_keys">
+        <v-alert type="info" v-if="rememberKey" text>
+            Your private keys are remembered until you close this tab or logout of your wallet.
+        </v-alert>
         <key-row :address="selected"
                  class="key_row"
                  :is_default="true"
@@ -35,9 +38,16 @@
                 if(isConfirm){
                     this.$store.dispatch('removeKey', addr)
                 }
+
+                if(this.rememberKey){
+                    this.$store.dispatch('saveKeys');
+                }
             }
         },
         computed: {
+            rememberKey(){
+                return this.$store.state.rememberKey;
+            },
             selected(){
                 return this.$store.state.selectedAddress;
             },
