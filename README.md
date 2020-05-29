@@ -18,9 +18,9 @@ This is the frontend Vue.js application for the AVA Wallet.
 
 ## Running The Project
 
-In order for the wallet to work, it needs the AVA network to operate on.
+In order for the wallet to work, it needs the AVA network to operate on. By default the wallet will connect to the AVA test network.
 
-1) Make sure you have installed and able to run a Gecko node properly.
+1) If you want to connect to a local network, make sure you have installed and able to run a Gecko node properly.
 2) Run the project with hot reloading ``npm run serve``
 
 When you go to the website on your browser, you might get a warning saying 
@@ -30,6 +30,17 @@ When you go to the website on your browser, you might get a warning saying
 
  1) Compile and minify to have a production ready application with ``npm run build``. 
  2) Serve from the ``/dist`` directory.
+ 
+ ## Changing the Network
+ 
+ By default the wallet will connect to the AVA test network. You can change to another network by clicking the blue button labeled `TestNet`  on the navigation bar and selecting another network, or add a custom network.
+
+
+## Explorer API
+
+The wallet uses the AVA Explorer API to display wallet transaction history. 
+
+WARNING: This history might be out of order and incomplete.
 
 ## Browser Support
 
