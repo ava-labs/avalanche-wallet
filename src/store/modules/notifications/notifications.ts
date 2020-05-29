@@ -2,7 +2,9 @@ import {Module, Store} from "vuex";
 import {RootState} from "@/store/types";
 import {NotifState, Notification, NotificationInput} from "@/store/modules/notifications/types";
 
-const NOTIF_COLOR:string = '#61c395';
+const COLOR_SUCCESS:string = '#20C305';
+const COLOR_WARNING:string = '#c39043';
+const COLOR_ERROR:string = '#f13939';
 let notif_id = 0;
 
 
@@ -18,8 +20,23 @@ const auth_module: Module<NotifState, RootState> = {
         add(store, data:NotificationInput){
 
             let id = notif_id++;
-            let color = data.color || NOTIF_COLOR;
+            // let color = data.color || NOTIF_COLOR;
+            let type = data.type || 'success';
             let duration = data.duration || 5000;
+            let color = COLOR_SUCCESS;
+
+            switch (type) {
+                case 'success':
+                    color = COLOR_SUCCESS;
+                    break;
+                case 'error':
+                    color = COLOR_ERROR;
+                    break;
+                case 'warning':
+                    color = COLOR_WARNING;
+                    break;
+
+            }
 
             let item:Notification = {
                 id: id,

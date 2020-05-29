@@ -1,3 +1,5 @@
+
+<!-- DEPRECIATED -->
 <template>
     <div>
         <h3>Send</h3>

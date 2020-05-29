@@ -1,3 +1,6 @@
+
+<!-- DEPRECIATED -->
+
 <template>
     <div>
         <h4><fa icon="sign-out-alt"></fa><br>Send</h4>

@@ -1,6 +1,6 @@
 <template>
     <div class="tabs">
-        <router-link to="/wallet/send">
+        <router-link to="/wallet/transfer">
                                 <span>
                                     <fa class="icon" icon="exchange-alt"></fa>
                                 </span>

@@ -1,26 +1,30 @@
 <template>
     <div>
-        <h2>{{$t('keys.title')}}</h2>
-        <div class="card_body">
-            <div
-                    class="addressItem"
-                    v-for="(address, index) in addresses" :key="address"
-                    :selected="selected === address"
-            >
-                <button class="selBut" @click="select(address)"></button>
-                <div class="details">
-                    <p class="addressTitle">{{$t('keys.address')}} {{index}}</p>
-                    <p class="addressVal">{{address}}</p>
-                    <p class="addressTitle">{{$t('keys.balance')}}</p>
-                    <div class="addressBallance">
-                        <p v-if="!addressBalances[address]">{{$t('keys.empty')}}</p>
-                        <p v-else v-for="bal in addressBalances[address]" :key="bal.symbol">
-                            {{bal.toString()}} <b>{{bal.symbol}}</b>
-                        </p>
-                    </div>
+        <div class="cols">
+            <div class="card_body">
+                <h1>My Keys</h1>
+                <my-keys></my-keys>
+            </div>
+            <div class="right_side">
+                <div>
+                    <h4>Add Key</h4>
+                    <p class="explain">
+                        Add additional private keys to use with your wallet.
+                    </p>
+                    <v-tabs color="#2960CD" height="30" active-class="tab_active" :grow="true">
+                        <v-tab >Private Key</v-tab>
+                        <v-tab>Keystore File</v-tab>
+                        <v-tab-item>
+                            <add-key-string></add-key-string>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <add-key-file></add-key-file>
+                        </v-tab-item>
+                    </v-tabs>
                 </div>
-                <div class="buts" v-if="addresses.length > 1">
-                    <button @click="removeKey(address)"><fa icon="trash"></fa></button>
+                <div>
+                    <h4>Export Wallet</h4>
+                    <export-wallet></export-wallet>
                 </div>
             </div>
         </div>
@@ -29,8 +33,17 @@
 <script>
     import {bintools} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
-
+    import ExportWallet from "@/components/wallet/keys/ExportWallet";
+    import AddKeyFile from "@/components/wallet/keys/AddKeyFile";
+    import AddKeyString from "@/components/wallet/keys/AddKeyString";
+    import MyKeys from "@/components/wallet/keys/MyKeys";
     export default {
+        components: {
+            ExportWallet,
+            AddKeyFile,
+            AddKeyString,
+            MyKeys
+        },
         data(){
             return{
 
@@ -44,7 +57,6 @@
                 this.$refs.modal.open();
             },
             removeKey(address){
-
                 let msg = this.$t('keys.del_check');
                 let isConfirm = confirm(msg);
 
@@ -61,7 +73,7 @@
                 return this.$store.state.selectedAddress;
             },
             balance(){
-                return this.$store.getters['Assets/assetsDict'];
+                return this.$store.state.Assets.assetsDict;
             },
             addressBalances(){
                 let utxos =  this.$store.getters['Assets/addressUTXOs'];
@@ -106,41 +118,39 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+    @use '../../../main';
+
+    .cols{
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        grid-gap: 45px;
+    }
+
+
+    .right_side{
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        grid-row-gap: 30px;
+        border-left: 1px solid #F5F6FA;
+        padding-left: 45px;
+    }
     p{
         margin: 0 !important;
     }
-    .addressItem{
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px dashed #eaeaea;
+
+
+    h1{
+        font-weight: lighter;
     }
-    .addressItem .selBut{
-        flex-basis: 14px;
-        background-color: #808080;
-        height: 14px;
-        width: 14px;
-        border-radius: 14px;
-        flex-shrink: 0;
-    }
-    .addressItem[selected] .selBut{
-        background-color: #42b983;
+    h4{
+        font-size: 18px;
+        font-weight: lighter;
     }
 
-    .details{
-        margin-left: 20px;
-        flex-grow: 1;
-    }
-
-    .addressTitle{
-        font-size: 13px;
-        font-weight: bold;
-    }
-    .addressVal{
-        word-break: break-all;
-        font-size: 14px;
-        margin-bottom: 12px !important;
+    .explain{
+        font-size: 12px;
+        color: #909090;
     }
 
     .buts{
@@ -171,5 +181,76 @@
         font-size: 12px;
         flex-shrink: 0;
         border-right: 1px solid #dedede;
+
+        &:last-of-type{
+            border: none;
+        }
     }
+
+
+
+    .v-tab{
+        /*border: 1px solid #999;*/
+        /*margin-right: 8px;*/
+        /*border-radius: 4px;*/
+        font-size: 12px;
+    }
+    .tab_active{
+        /*color: #2960CD;*/
+        /*background-color: #d6e3ff !important;*/
+        /*border-color: #2960CD !important;*/
+    }
+
+
+    @media only screen and (max-width: main.$mobile_width) {
+       .cols{
+           grid-template-columns: none;
+           display: block;
+       }
+
+
+
+        .right_side{
+            border: none !important;
+            padding: 0 !important;
+        }
+    }
+
+    @include main.medium-device{
+        .cols{
+            grid-template-columns: none;
+            display: block;
+        }
+
+        .right_side{
+            border: none !important;
+            padding: 0 !important;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: none;
+            column-gap: 15px;
+        }
+
+        h4{
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #F5F6FA;
+        }
+    }
+</style>
+<style lang="scss">
+    .cols{
+        .v-tabs-bar{
+            margin: 15px 0px;
+        }
+    }
+
+
+    /*.cols {*/
+    /*    .v-tabs-bar{*/
+    /*        margin: 15px 0px;*/
+    /*    }*/
+    /*    .v-tabs-slider-wrapper{*/
+    /*        display: none;*/
+    /*    }*/
+    /*}*/
 </style>

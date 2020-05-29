@@ -6,6 +6,9 @@ export interface AssetsState {
     utxo_set: UTXOSet|null
     utxos: SecpUTXO[]
     descriptions: AssetDescriptions
+    assets: AvaAsset[]
+    assetsDict: AssetsDict
+    AVA_ASSET_ID: string | null,
 }
 
 export interface AssetDescriptions {
@@ -25,4 +28,16 @@ export interface AssetsDict {
 
 export interface AddressUtxoDict {
     [key:string]: [SecpUTXO]
+}
+
+
+export interface AssetAPI {
+    "id": string
+    "chainID": string
+    "name": string
+    "symbol": string
+    "alias": string
+    "denomination": number
+    "currentSupply": string
+    "timestamp": string
 }

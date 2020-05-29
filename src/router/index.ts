@@ -15,9 +15,11 @@ Vue.use(VueRouter);
 
 
 import store from '../store/index' // your vuex store
+import WalletHome from "@/views/wallet/Home.vue";
+
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
-    if (!store.getters.isAuthenticated) {
+    if (!store.state.isAuth) {
         next();
         return
     }
@@ -25,12 +27,13 @@ const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
 };
 
 const ifAuthenticated = (to: Route, from: Route, next: Function) => {
-    if (store.getters.isAuthenticated) {
+    if (store.state.isAuth) {
         next();
         return
     }
     next('/')
 };
+
 
 const routes = [
     {
@@ -39,20 +42,42 @@ const routes = [
         component: Home,
         beforeEnter: ifNotAuthenticated
     },
-    // {
-    //     path: '/about',
-    //     name: 'about',
-    //     // route level code-splitting
-    //     // this generates a separate chunk (about.[hash].js) for this route
-    //     // which is lazy-loaded when the route is visited.
-    //     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    // },
     {
-        path: '/wallet',
-        name: 'wallet',
+        path: '/access',
         children: [
             {
-                path: 'send',
+                path: '/',
+                name: 'access',
+                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/Menu.vue'),
+            },
+            {
+                path: 'private_key',
+                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/AccessString.vue'),
+            },
+            {
+                path: 'keystore',
+                component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Keystore.vue'),
+            }
+        ],
+        component: () => import(/* webpackChunkName: "about" */ '../views/access/Access.vue'),
+        beforeEnter: ifNotAuthenticated
+    },
+    {
+        path: '/create',
+        name: 'create',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Create.vue'),
+        beforeEnter: ifNotAuthenticated
+    },
+    {
+        path: '/wallet',
+        children: [
+            {
+                path: '/',
+                name: 'wallet',
+                component: WalletHome
+            },
+            {
+                path: 'transfer',
                 component: Transfer
             },
             {

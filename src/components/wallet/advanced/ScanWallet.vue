@@ -1,13 +1,12 @@
 <template>
     <div>
-        <p>{{$t('advanced.paper.desc')}}</p>
         <label>{{$t('advanced.paper.pk')}}</label>
         <qr-input @change="qr_change" v-model="pk"></qr-input>
         <v-btn
                 class="addKeyBut"
                 depressed
                 @click="addKey"
-                color="#42b983"
+                color="#000"
                 :disabled="!canAdd"
         >{{$t('advanced.paper.submit')}}</v-btn>
     </div>
@@ -49,5 +48,9 @@
 <style scoped>
     .addKeyBut{
         color: #fff;
+    }
+
+    label{
+        font-size: 12px;
     }
 </style>

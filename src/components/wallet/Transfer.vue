@@ -1,38 +1,43 @@
 <template>
     <div class="transfer_card">
-        <h2>{{$t('transfer.title')}}</h2>
+        <h1>{{$t('transfer.title')}}</h1>
         <div class="card_body">
             <div v-if="assetArray.length===0">
                 <p>{{$t('transfer.no_cash')}}</p>
-                <div v-if="faucetLink">
-                    <h4>{{$t('transfer.faucet')}} <fa icon="tint"></fa></h4>
-                    <a :href="faucetLink" target="_blank">Go to faucet.</a>
-                </div>
+                <faucet-link v-if="faucetLink" class="faucet"></faucet-link>
             </div>
-            <div  v-else class="new_order_Form">
-                <tx-list ref="txList" @change="updateTxList"></tx-list>
+            <div v-else class="new_order_Form">
+                <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                 <div>
-                    <h4>{{$t('transfer.to')}}</h4>
-                    <qr-input v-model="addressIn"></qr-input>
-                </div>
-                <div class="fees">
-                    <h4>{{$t('transfer.fees')}}</h4>
-                    <p>{{$t('transfer.fee_tx')}} <span>0 AVA</span></p>
-                </div>
-                <div class="advanced">
-                    <h4>{{$t('transfer.advanced')}}</h4>
-                    <div class="advancedBody">
-                        <label>{{$t('transfer.adv_change')}}</label>
-                        <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>
+                    <div class="fees">
+                        <h4>{{$t('transfer.fees')}}</h4>
+                        <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVA</span></p>
                     </div>
-                </div>
-                <div class="checkout">
-                    <v-alert type="error" text dense v-if="errors.length>0">
-                        <ul>
+                    <div class="advanced">
+                        <v-expansion-panels accordion class="advanced_panel" flat>
+                            <v-expansion-panel>
+                                <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>
+                                <v-expansion-panel-content>
+                                    <label>{{$t('transfer.adv_change')}}</label>
+                                    <p class="explain">Where to send the remaining assets after the transaction.</p>
+                                    <radio-buttons class="radio_buttons" :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>
+                                    <!--                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>-->
+                                </v-expansion-panel-content>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </div>
+                    <div>
+                        <label>{{$t('transfer.to')}}</label>
+                        <qr-input v-model="addressIn" class="qrIn"></qr-input>
+                    </div>
+
+
+                    <div class="checkout">
+                        <ul class="err_list" v-if="errors.length>0">
                             <li v-for="err in errors" :key="err">{{err}}</li>
                         </ul>
-                    </v-alert>
-                    <v-btn block depressed color="#61c394" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend">{{$t('transfer.send')}}</v-btn>
+                        <v-btn depressed class="but_primary" color="#2960CD" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,16 +45,20 @@
 </template>
 <script>
     import TxList from "@/components/wallet/TxList";
-    import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
+    // import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
+    import RadioButtons from "@/components/misc/RadioButtons";
     // import QRInput from "@/components/misc/QRInput";
     import { QrInput } from "@avalabs/vue_components";
     import {isValidAddress} from "../../AVA";
+    import FaucetLink from "@/components/misc/FaucetLink";
 
     export default {
         components: {
+            FaucetLink,
             // QRReader,
             TxList,
-            AddressDropdown,
+            // AddressDropdown,
+            RadioButtons,
             QrInput
         },
         data(){
@@ -65,7 +74,6 @@
         methods: {
             changeAddressesChange(val){
                 this.change_address = val;
-                console.log(val);
             },
             // toggleAdvanced(){
             //     this.showAdvanced = !this.showAdvanced;
@@ -141,29 +149,67 @@
             //     // return this.$store.state.assets;
             // },
             assetArray(){
-                return this.$store.getters['Assets/assetsArray'];
+                return this.$store.state.Assets.assets;
             }
+        },
+        created() {
+            this.change_address = this.selectedAddress;
         }
     }
 </script>
 
+
+<style lang="scss">
+
+    .advanced_panel{
+        .v-expansion-panel-header{
+            padding: 0;
+            font-size: 12px;
+            font-weight: normal;
+            color: #2c3e50;
+            min-height: auto !important;
+            margin-bottom: 10px;
+        }
+        .v-expansion-panel-content__wrap{
+            padding: 0 !important;
+        }
+
+        .v-icon{
+            font-size: 12px;
+        }
+    }
+</style>
 <style scoped lang="scss">
+    @use '../../main';
+
     $padLeft: 24px;
     $padTop: 8px;
 
     .transfer_card{
-        color: #222;
+
     }
 
+    .card_body{
+        /*display: grid;*/
+        /*grid-template-columns: 1fr 1fr 1fr;*/
+        /*column-gap: 15px;*/
+    }
 
-
+    .explain{
+        font-size: 12px;
+        color: #909090;
+    }
+    h1{
+        font-weight: normal;
+    }
     h4{
         display: block;
         text-align: left;
-        font-size: 17px;
+        font-size: 18px;
         font-weight: bold;
-        margin-bottom: 8px;
+        /*margin-bottom: 8px;*/
     }
+
 
     .send_to{
         display: flex;
@@ -175,7 +221,15 @@
         padding: 5px 6px !important;
         text-align: center;
         letter-spacing: 2px;
-        font-size: 14px;
+        font-size: 12px;
+    }
+
+    .qrIn{
+        border-radius: 2px !important;
+        height: 40px;
+        font-size: 12px;
+        /*border: 1px solid #ddd;*/
+        background-color: #F5F6FA;
     }
 
     .addressIn >>> input::-webkit-input-placeholder{
@@ -202,6 +256,78 @@
         opacity: 1;
     }
 
+
+    .radio_buttons{
+        margin-top: 15px;
+    }
+
+
+
+    .tx_info{
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .new_order_Form{
+        display: grid;
+        grid-template-columns: 1fr 1fr 33%;
+        column-gap: 45px;
+        padding-top: 15px;
+    }
+
+    .new_order_Form > div{
+        /*padding: 10px 0;*/
+        margin-bottom: 15px;
+    }
+
+    .tx_list{
+        padding-right: 45px;
+        border-right: 1px solid #F5F6FA;
+        grid-column: 1/3;
+    }
+
+    .fees p{
+        text-align: left;
+        font-size: 13px;
+        color: #909090;
+    }
+
+    .fees span{
+        float: right;
+    }
+
+
+    label{
+        color: #2c3e50;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .faucet{
+        margin-top: 20px;
+    }
+
+    .advanced{
+        /*border-bottom: 1px solid #f2f2f2;*/
+        padding: 20px 0px !important;
+        margin-bottom: 20px;
+    }
+
+
+    .checkout .v-btn{
+        color: #fff;
+    }
+    .advanced .advancedBody{
+        transition-duration: 0.2s;
+    }
+
+
+    .err_list{
+        font-size: 12px;
+        color: #e03737;
+        margin: 6px 0;
+    }
+
     @media only screen and (max-width: 600px) {
         .order_form{
             display: block;
@@ -212,66 +338,24 @@
         }
     }
 
-    .tx_info{
-        text-align: left;
-        font-size: 14px;
+    @media only screen and (max-width: main.$mobile_width) {
+        .transfer_card {
+            display: block;
+            grid-template-columns: none;
+        }
+
+        .but_primary{
+            width: 100%;
+        }
+
+        .new_order_Form{
+            display: block;
+            grid-template-columns: none;
+        }
+
+        .tx_list{
+            padding: 0;
+            border: none;
+        }
     }
-
-    .new_order_Form{
-        padding-top: 15px;
-    }
-
-    .new_order_Form > div{
-        padding: 10px 0;
-    }
-
-    .fees p{
-        text-align: left;
-        font-size: 13px;
-    }
-
-    .fees span{
-        float: right;
-    }
-
-
-    label{
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-
-    .advanced{
-        border-top: 1px solid #f2f2f2;
-        border-bottom: 1px solid #f2f2f2;
-        padding: 20px 0px !important;
-    }
-
-    /*.advanced .toggle{*/
-    /*    width: 100%;*/
-    /*    text-align: left;*/
-    /*    font-size: 13px;*/
-    /*}*/
-
-    /*.advanced .toggle span{*/
-    /*    float: right;*/
-    /*}*/
-
-    .checkout .v-btn{
-        color: #fff;
-    }
-    .advanced .advancedBody{
-        /*max-height: 0px;*/
-        transition-duration: 0.2s;
-        /*overflow: hidden;*/
-    }
-
-    /*.advanced[active] .advancedBody{*/
-    /*    max-height: 500px;*/
-    /*    overflow: unset;*/
-
-    /*}*/
-    /*.advanced[active] .toggle span{*/
-    /*    transform: rotateZ(180deg);*/
-    /*}*/
 </style>

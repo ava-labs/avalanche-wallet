@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@avalabs/vue_components": "^0.3.0",
-    "@fortawesome/fontawesome-free": "^5.8.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.26",
     "@fortawesome/free-brands-svg-icons": "^5.12.0",
     "@fortawesome/free-regular-svg-icons": "^5.12.0",
@@ -39,6 +38,7 @@
     "jspdf": "^1.5.3",
     "libsodium": "^0.7.6",
     "libsodium-wrappers": "^0.7.6",
+    "moment": "^2.26.0",
     "morgan": "^1.9.1",
     "pdfjs-dist": "^2.2.228",
     "print-js": "^1.0.63",
@@ -47,7 +47,7 @@
     "register-service-worker": "^1.6.2",
     "roboto-fontface": "*",
     "serve": "^11.3.0",
-    "slopes": "^1.4.2",
+    "slopes": "^1.5.1",
     "uuid": "^3.4.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -59,10 +59,11 @@
     "vuex": "^3.1.2"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",
-    "@vue/cli-plugin-typescript": "^4.1.0",
+    "@vue/cli-plugin-typescript": "^4.3.1",
     "@vue/cli-plugin-vuex": "^4.1.0",
     "@vue/cli-service": "^4.2.3",
     "@vue/eslint-config-typescript": "^4.0.0",

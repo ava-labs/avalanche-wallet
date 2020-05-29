@@ -10,11 +10,11 @@
                     class="list_in"
                     @change="oninputchange(i,$event)"
                     :disabled_assets="disabledAssets[i]"
-                    :initial="tx.asset"
+                    :initial="tx.asset.id"
             ></currency-input-dropdown>
             <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1">Remove Asset</button>
         </div>
-        <v-btn block depressed @click="addTx()" class="add_asset" color="#fafafa" :ripple="false" v-if="showAdd"> <fa icon="plus"></fa></v-btn>
+        <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
     </div>
 </template>
 <script>
@@ -111,24 +111,27 @@
         mounted() {
             this.next_initial = this.assets_list[0];
             if(this.$route.query.asset){
-                let code = this.$route.query.asset;
-                for(var id in this.assets){
-                    let asset = this.assets[id];
-                    if(asset.code === code){
-                        this.addTx(asset.id);
-                        return;
-                    }
-                }
+                let assetId = this.$route.query.asset;
+                this.addTx(assetId);
+                // this.assets[assetI/d]
+                // for(var id in this.assets){
+                //     let asset = this.assets[id];
+                //     if(asset.code === code){
+                //         this.addTx(asset.id);
+                //         return;
+                //     }
+                // }
+            }else{
+                this.addTx();
             }
-            this.addTx();
         },
         computed: {
             assets_list(){
-                return this.$store.getters['Assets/assetsArray'];
+                return this.$store.state.Assets.assets;
 
             },
             assets(){
-                return this.$store.getters['Assets/assetsDict'];
+                return this.$store.state.Assets.assetsDict;
             },
             showAdd(){
                 if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){
@@ -139,17 +142,19 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .table_title{
-        display: flex;
-        margin-bottom: 5px;
+        /*display: flex;*/
+        /*margin-bottom: 5px;*/
+        display: grid;
+        grid-template-columns: 1fr 140px;
     }
     .table_title p{
         margin: 0;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 12px;
         text-align: left;
-        padding-right: 100px;
+        /*padding-right: 100px;*/
     }
     .table_title p:first-of-type{
         flex-grow: 1;
@@ -161,34 +166,45 @@
         display: flex;
         flex-direction: column;
         /*display: flex;*/
-        margin-bottom: 12px;
+        margin-bottom: 4px;
         padding: 2px 0px;
+        border-radius: 3px !important;
+
+
+        &:last-of-type{
+            margin-bottom: 0px;
+        }
     }
 
     .list_in{
         flex-grow: 1;
-
+        /*background-color: #F5F6FA !important;*/
     }
 
     .list_item button{
-        width: 100%;
+        width: max-content;
+        text-align: right;
+        align-self: flex-end;
         text-align: right;
         font-size: 12px;
         color: #b2b2b2;
+        &:hover{
+            color: #000;
+        }
     }
 
 
 
-    .list_item button:hover{
-        /*background-color: #f2f2f2;*/
-        color: #42b983;
-    }
 
 
     .add_asset{
         border-radius: 0;
-        color: #505050;
-        background-color: #6ca771;
+        color: #4D9EFD;
+        font-size: 12px;
+
+        &:hover{
+            color: #000;
+        }
     }
 
 

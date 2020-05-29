@@ -1,8 +1,10 @@
 <template>
     <div>
         <div class="curr_in_drop">
-            <button class="max_but" @click="maxOut">MAX</button>
-            <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
+            <div class="max_in_cont">
+                <button class="max_but" @click="maxOut">MAX</button>
+                <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
+            </div>
             <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>
         </div>
         <div class="bar"><div :style="{
@@ -36,7 +38,7 @@
                     return [];
                 },
             },
-            initial: Object,
+            initial: String,
         },
         computed: {
             isEmpty(){
@@ -64,6 +66,8 @@
             percFull(){
                 if(!this.amount || !this.max_amount) return 0;
                 let max = this.max_amount;
+
+                // console.log(max.toString())
                 return (this.amount.div(max))*100;
             },
 
@@ -75,18 +79,31 @@
             dropdown_values(){
                 let res = [];
 
-                for(var id in this.dropdown_assets){
-                    let asset = this.dropdown_assets[id];
+
+                this.dropdown_assets.forEach(asset => {
                     let disabled= false;
                     if(this.disabled_assets.includes(asset)){
                         disabled = true;
                     }
                     res.push({
-                        label: asset.name,
+                        label: `${asset.name} (${asset.symbol})`,
+                        key: asset.id,
                         data: asset,
                         disabled: disabled
                     });
-                }
+                });
+                // for(var id in this.dropdown_assets){
+                //     let asset = this.dropdown_assets[id];
+                //     let disabled= false;
+                //     if(this.disabled_assets.includes(asset)){
+                //         disabled = true;
+                //     }
+                //     res.push({
+                //         label: asset.name,
+                //         data: asset,
+                //         disabled: disabled
+                //     });
+                // }
 
                 return res;
             },
@@ -95,10 +112,12 @@
                 return this.global_assets;
             },
             global_assets(){
-                return this.$store.getters['Assets/assetsArray'];
+                return this.$store.state.Assets.assets;
             },
             max_amount(){
+
                 if(!this.asset_now) return null;
+                if(this.asset_now.amount.isZero()) return null;
                 // console.log(typeof this.asset_now.amount.clone());
                 return this.asset_now.amount;
             }
@@ -111,12 +130,6 @@
                 // this.onchange();
             },
             amount_in(val){
-                // console.log(val.toString());
-                // let amount = parseFloat(this.$refs.amount.value);
-                // if(amount > this.max_amount){
-                //     amount = this.max_amount;
-                //     this.amount = amount;
-                // }
                 this.amount = val;
                 this.onchange();
             },
@@ -142,8 +155,7 @@
             if(this.initial){
                 for(var i=0;i<this.dropdown_values.length;i++){
                     let val = this.dropdown_values[i];
-                    // console.log(val);
-                    if(val.data === this.initial){
+                    if(val.key === this.initial){
                         this.drop_change(val.data);
                     }
                 }
@@ -154,21 +166,39 @@
     }
 </script>
 <style scoped lang="scss">
-    $barH: 2px;
+    $barH: 1px;
 
     .bigIn{
         width: 100%;
         /*background-color: #303030;*/
     }
+
+    .max_in_cont{
+        display: grid;
+        grid-template-columns: 50px 1fr;
+    }
+
+
     .curr_in_drop{
-        display: flex;
-        background-color: #f8f8f8;
-        padding: 0px 8px;
-        height: 48px;
+        display: grid;
+        grid-template-columns: 1fr 140px;
+        background-color: transparent;
+        /*height: 35px;*/
+        /*font-size: 12px;*/
+        /*border: 1px solid #ddd;*/
+        font-size: 12px;
+        height: 40px;
         width: 100%;
         outline: none;
         text-align: right;
+        column-gap: 10px;
+
+        > *{
+            background-color: #F5F6FA;
+            border-radius: 2px;
+        }
     }
+
 
     input{
         padding: 8px;
@@ -184,14 +214,17 @@
         text-decoration: underline;
         text-decoration-style: dashed;
         outline: none;
+        padding-left: 8px;
     }
 
     .dropdown{
-        flex-basis: 140px;
-        border-left: 1px solid #d2d2d2;
+        /*flex-basis: 140px;*/
+        width: 100%;
+        /*border-left: 1px solid #d2d2d2;*/
     }
 
     .bar{
+        display: none;
         height: $barH;
         background-color: #d2d2d2;
         position: relative;
@@ -202,7 +235,7 @@
         top: 0;
         left: 0;
         width: 0%;
-        background-color: #6bc79d;
+        background-color: #8e6fe0;
         height: $barH;
         transition-duration: 1s;
     }

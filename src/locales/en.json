@@ -34,7 +34,8 @@
   "top": {
     "title1": "My Address",
     "title2": "Balance",
-    "title3": "Network",
+    "title3": "Subnet",
+    "title4": "Network",
     "hover1": "View Address QR Code",
     "hover2": "Print",
     "hover3": "Copy"
@@ -82,7 +83,7 @@
     "title": "Manage Keys",
     "address": "Address",
     "balance": "Balance",
-    "empty": "This address does not have any assets in it.",
+    "empty": "This address does not contain any assets.",
     "del_check": "Are you sure you want to delete this key and address from your wallet? You will not be able to use the funds associated with it anymore."
   },
   "modal": {
