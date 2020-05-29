@@ -11,8 +11,8 @@ This is the frontend Vue.js application for the AVA Wallet.
 
 ## Installation
 
-1) Clone the repo ``git clone https://github.com/ava-labs/wallet-site.git``
-2) Go to root of the project ``cd wallet-site``
+1) Clone the repo ``git clone https://github.com/ava-labs/ava-wallet.git``
+2) Go to root of the project ``cd ava-wallet``
 3) Install javascript dependencies with ``npm install``.
 4) Copy the example file ``.env.example``, and rename it ``.env``. Fill the variables with the correct values. 
 Refer to the ENV FILES section for additional help.
