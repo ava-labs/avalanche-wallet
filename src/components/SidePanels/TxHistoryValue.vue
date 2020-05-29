@@ -43,6 +43,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .utxo{
         display: grid;
         grid-template-columns: max-content 1fr;
@@ -63,10 +65,20 @@
     }
     .amount{
         text-align: right;
+        white-space: nowrap;
     }
 
     .name{
 
     }
 
+    @include main.medium-device {
+        .utxo{
+            /*grid-template-columns: none;*/
+            /*text-align: right;*/
+        }
+        .amount{
+            font-size: 14px;
+        }
+    }
 </style>

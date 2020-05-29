@@ -57,6 +57,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .tx_history_panel{
         display: grid;
         grid-template-rows: max-content 1fr;
@@ -98,5 +100,13 @@
         font-size: 12px;
         font-weight: bold;
         padding: 15px;
+    }
+
+
+    @include main.medium-device {
+        .header{
+            flex-direction: column;
+            align-items: flex-start;
+        }
     }
 </style>

@@ -146,5 +146,14 @@
         }
     }
 
+    @include main.medium-device {
+        .header{
+            flex-wrap: wrap;
+        }
 
+        .search{
+            margin: 15px 0px;
+            flex-basis: 100%;
+        }
+    }
 </style>

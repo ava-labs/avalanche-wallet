@@ -184,9 +184,6 @@
         .top_card{
             /*padding: ;*/
         }
-        .top_card.nonessential{
-            display: none;
-        }
 
         .balance_card{
             grid-column: unset;
@@ -197,7 +194,20 @@
         }
     }
 
+    @media only screen and (max-width: main.$width_m) {
+        .top_cards{
+            grid-template-columns: none;
+            grid-template-rows: min-content;
+            /*background-color: #42b983;*/
+        }
+        .balance_card{
+            grid-column: unset;
+        }
 
+        .addr_card{
+            grid-column: unset;
+        }
+    }
 
     /* The animation code */
     /*@keyframes fade {*/

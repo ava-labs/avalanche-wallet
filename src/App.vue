@@ -53,8 +53,6 @@
                     })
                 }
             });
-
-
         },
         computed:{
             appReady(){
@@ -89,6 +87,9 @@
                 padding-bottom: 0px;
             }
         }
+
+
+
     }
 
 
@@ -143,8 +144,7 @@
     }
 
 
-
-    @media only screen and (max-width: main.$mobile_width) {
+    @include main.mobile-device{
         #router_view{
             padding: main.$container_padding_mobile !important;
         }
@@ -163,9 +163,19 @@
         .panel{
             display: none !important;
         }
-
-
     }
+
+    @include main.medium-device{
+        .main_cols{
+
+            &[wallet_view]{
+                grid-template-columns:  180px 1fr 240px !important;
+            }
+        }
+    }
+
+
+
 
     @media only screen and (max-width: main.$width_s) {
         #router_view{
@@ -175,6 +185,13 @@
             padding: main.$container_padding_s;
         }
     }
+
+
+    @media only screen and (max-width: main.$mobile_width) {
+
+    }
+
+
 
 
 </style>

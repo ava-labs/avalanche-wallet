@@ -330,6 +330,7 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
 
     $income_color: #5ECB08;
     $outcome_color: #000;
@@ -367,6 +368,28 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+
+    @include main.medium-device {
+        .icons{
+            justify-self: left;
+            img{
+                width: 14px;
+                height: 14px;
+                object-fit: contain;
+            }
+        }
+
+
+        .tx_history_row{
+            padding: 8px 0px;
+            grid-template-columns: 24px 1fr;
+        }
+        .time{
+            font-size: 14px;
+            text-align: right;
+        }
     }
 
 </style>

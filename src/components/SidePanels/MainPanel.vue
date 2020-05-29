@@ -31,6 +31,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     .main_panel{
         display: grid;
         grid-template-rows: max-content 1fr;
@@ -49,5 +51,11 @@
     .panel_content{
         overflow: auto;
         height: 100%;
+    }
+
+    @include main.medium-device {
+        .panel_nav{
+            padding: 12px 16px;
+        }
     }
 </style>

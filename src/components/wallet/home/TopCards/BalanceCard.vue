@@ -89,7 +89,8 @@
         align-self: center;
     }
     .balance{
-        font-size: 3em !important;
+        font-size: 2.8em !important;
+        white-space: nowrap;
         /*font-weight: bold;*/
         font-family: Rubik !important;
     }

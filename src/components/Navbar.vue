@@ -82,6 +82,7 @@
     a{
         text-decoration: none;
         font-weight: normal;
+        white-space: nowrap;
         margin-right: 15px;
     }
 

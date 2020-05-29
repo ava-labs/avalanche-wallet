@@ -166,4 +166,13 @@
             left: 0 !important;
         }
     }
+
+
+
+    @include main.medium-device {
+
+        .toggle_but{
+            min-width: auto;
+        }
+    }
 </style>

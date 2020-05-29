@@ -10,6 +10,15 @@ $container_padding_mobile: 10px 10px;
 
 
 
+@mixin mobile-device{
+  @media only screen and (max-width: $mobile_width) { @content; }
+}
+
+@mixin medium-device {
+  @media only screen and (min-width: $mobile_width) and (max-width: $width_m) { @content; }
+}
+
+
 hr{
   color: #F5F6FA;
   border-color: #F5F6FA;

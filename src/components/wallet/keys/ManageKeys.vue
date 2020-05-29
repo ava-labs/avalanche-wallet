@@ -215,6 +215,27 @@
             padding: 0 !important;
         }
     }
+
+    @include main.medium-device{
+        .cols{
+            grid-template-columns: none;
+            display: block;
+        }
+
+        .right_side{
+            border: none !important;
+            padding: 0 !important;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: none;
+            column-gap: 15px;
+        }
+
+        h4{
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #F5F6FA;
+        }
+    }
 </style>
 <style lang="scss">
     .cols{
