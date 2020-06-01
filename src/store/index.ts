@@ -245,7 +245,7 @@ export default new Vuex.Store({
 
 
             let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);
-            let unsigned_tx = await avm.makeUnsignedTx(utxos, amount, toAddresses, myAddresses, changeAddresses, assetId);
+            let unsigned_tx = await avm.makeBaseTx(utxos, amount, toAddresses, myAddresses, changeAddresses, assetId);
             let signed_tx = avm.signTx(unsigned_tx);
 
             let txid = await avm.issueTx(signed_tx);

@@ -1,10 +1,10 @@
-import {SecpUTXO, UTXOSet} from "slopes";
+import {UTXO, UTXOSet} from "slopes";
 import AvaAsset from "@/js/AvaAsset";
 
 export interface AssetsState {
     isUpdateBalance: boolean
     utxo_set: UTXOSet|null
-    utxos: SecpUTXO[]
+    utxos: UTXO[]
     descriptions: AssetDescriptions
     assets: AvaAsset[]
     assetsDict: AssetsDict
@@ -27,7 +27,7 @@ export interface AssetsDict {
 }
 
 export interface AddressUtxoDict {
-    [key:string]: [SecpUTXO]
+    [key:string]: [UTXO]
 }
 
 
