@@ -63,9 +63,10 @@
                 if(addrUtxos){
                     for(var n=0; n<addrUtxos.length; n++){
                         let utxo = addrUtxos[n];
+                        let utxoOut = utxo.getOutput();
 
                         // console.log(utxo);
-                        let amount = utxo.getAmount();
+                        let amount = utxoOut.getAmount();
                         let assetIdBuff = utxo.getAssetID();
                         let assetId = bintools.avaSerialize(assetIdBuff);
 

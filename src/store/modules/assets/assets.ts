@@ -2,7 +2,7 @@ import {Module, Store} from "vuex";
 import {AddressUtxoDict, AssetAPI, AssetDescription, AssetsDict, AssetsState} from "@/store/modules/assets/types";
 import {RootState} from "@/store/types";
 import {ava, avm, bintools} from "@/AVA";
-import {UTXOSet} from "slopes";
+import {AmountOutput, UTXOSet} from "slopes";
 import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
@@ -82,7 +82,9 @@ const assets_module: Module<AssetsState, RootState> = {
             for(var i=0;i<utxos.length;i++){
                 let utxo = utxos[i];
                 let assetId:string = bintools.avaSerialize(utxo.getAssetID());
-                let amount = utxo.getAmount();
+                // let amount = utxo.getAmount();
+                let amountOut = utxo.getOutput() as AmountOutput;
+                let amount = amountOut.getAmount();
                 let dict = state.assetsDict;
 
                 // console.log(dict);
@@ -215,8 +217,11 @@ const assets_module: Module<AssetsState, RootState> = {
 
             for(var i=0; i < utxos.length; i++) {
                 let utxo = utxos[i];
-                let addrs = utxo.getAddresses();
-                let amount = utxo.getAmount();
+                let utxoOut = utxo.getOutput() as AmountOutput;
+
+                let addrs = utxoOut.getAddresses();
+
+                let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
                 let assetId = bintools.avaSerialize(assetIdBuff);
 
