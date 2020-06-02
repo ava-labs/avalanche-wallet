@@ -8,8 +8,6 @@
             <div class="utxos">
                 <tx-history-value v-for="(amount, assetId) in valList" :key="assetId" :amount="amount" :asset-id="assetId"></tx-history-value>
             </div>
-<!--            {{inputTotals}}-->
-<!--            {{outputTotals}}-->
         </div>
     </div>
 </template>
