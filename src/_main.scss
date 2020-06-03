@@ -18,10 +18,12 @@ $container_padding_mobile: 10px 10px;
   @media only screen and (min-width: $mobile_width) and (max-width: $width_m) { @content; }
 }
 
-
-@mixin dark-mode {
-
+@mixin night-mode {
+  #app[night_mode=""]{
+    @content
+  }
 }
+
 
 hr{
   color: #F5F6FA;
