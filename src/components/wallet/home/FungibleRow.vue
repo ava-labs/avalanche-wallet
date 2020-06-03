@@ -18,8 +18,9 @@
     </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata'
-    import { Vue, Component, Prop } from 'vue-property-decorator'
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
     import AvaAsset from "../../../js/AvaAsset";
     import Hexagon from "@/components/misc/Hexagon.vue";
 

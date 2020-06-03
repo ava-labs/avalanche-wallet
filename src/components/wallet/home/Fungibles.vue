@@ -15,84 +15,78 @@
 
     </div>
 </template>
-<script>
-    import FaucetLink from "@/components/misc/FaucetLink";
-    import FungibleRow from "@/components/wallet/home/FungibleRow";
-    export default {
-        data(){
-            return {
-                // search: '',
-            }
-        },
-        props: {
-            search: {
-                type: String
-            }
-        },
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
+    import FaucetLink from "@/components/misc/FaucetLink.vue";
+    import FungibleRow from "@/components/wallet/home/FungibleRow.vue";
+    import AvaAsset from "@/js/AvaAsset";
+
+    @Component({
         components: {
             FaucetLink,
             FungibleRow
-        },
-        computed: {
-            assets(){
-                let res = this.$store.state.Assets.assets;
+        }
+    })
+    export default class Fungibles extends Vue{
+        @Prop() search!: string;
 
 
-                // Sort by balance, then name
-                res.sort((a,b) => {
-                    let symbolA = a.symbol.toUpperCase();
-                    let symbolB = b.symbol.toUpperCase();
-                    let amtA = a.getAmount();
-                    let amtB = b.getAmount();
-
-                    // AVA always on top
-                    if(symbolA === 'AVA'){
-                        return -1;
-                    }else if(symbolB === 'AVA'){
-                        return 1;
-                    }
-
-                    if(amtA.gt(amtB)){
-                        return -1;
-                    }else if(amtA.lt(amtB)){
-                        return 1;
-                    }
-
-                    if(symbolA < symbolB){
-                        return -1;
-                    }else if(symbolA > symbolB){
-                        return 1;
-                    }
-                    return 0;
-                });
+        get assets(): AvaAsset[]{
+            let res: AvaAsset[] = this.$store.state.Assets.assets;
 
 
-                if(this.search){
-                    res = res.filter(val => {
-                        let query = this.search.toUpperCase();
+            // Sort by balance, then name
+            res.sort((a,b) => {
+                let symbolA = a.symbol.toUpperCase();
+                let symbolB = b.symbol.toUpperCase();
+                let amtA = a.getAmount();
+                let amtB = b.getAmount();
 
-                        let nameUp = val.name.toUpperCase();
-                        let symbolUp = val.symbol.toUpperCase();
-
-                        if(nameUp.includes(query) || symbolUp.includes(query)){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    });
+                // AVA always on top
+                if(symbolA === 'AVA'){
+                    return -1;
+                }else if(symbolB === 'AVA'){
+                    return 1;
                 }
 
-                return res;
-            },
-            isUpdateBalance(){
-                return this.$store.state.Assets.isUpdateBalance;
-            },
-            faucetLink(){
-                let link = process.env.VUE_APP_FAUCET_LINK;
-                if(link) return link;
-                return null;
-            },
-        },
+                if(amtA.gt(amtB)){
+                    return -1;
+                }else if(amtA.lt(amtB)){
+                    return 1;
+                }
+
+                if(symbolA < symbolB){
+                    return -1;
+                }else if(symbolA > symbolB){
+                    return 1;
+                }
+                return 0;
+            });
+
+
+            if(this.search){
+                res = res.filter(val => {
+                    let query = this.search.toUpperCase();
+
+                    let nameUp = val.name.toUpperCase();
+                    let symbolUp = val.symbol.toUpperCase();
+
+                    if(nameUp.includes(query) || symbolUp.includes(query)){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                });
+            }
+
+            return res;
+        }
+
+        get isUpdateBalance(): boolean{
+            return this.$store.state.Assets.isUpdateBalance;
+        }
     }
 </script>
 <style scoped lang="scss">
@@ -111,8 +105,6 @@
         display: flex;
         align-items: center;
         margin-bottom: 30px;
-        /*display: grid;*/
-        /*grid-template-columns: 50px max-content;*/
         img{
             height: 100%;
             object-fit: contain;
@@ -156,7 +148,6 @@
     }
 
     .faucet{
-        /*width: max-content;*/
         margin: 0px auto;
         margin-top: 60px;
     }

@@ -152,29 +152,7 @@
         width: 20px;
         object-fit: contain;
     }
-    .buts button[tooltip]:hover:before{
-        border-radius: 4px;
-        /*left: 0;*/
-        left: 0;
-        transform: translateX(-50%);
-        content: attr(tooltip);
-        position: absolute;
-        background-color: #303030;
-        bottom: 100%;
-        color: #ddd;
-        width: max-content;
-        max-width: 100px;
-        font-size: 14px;
-        padding: 4px 8px;
-    }
 
-
-    /*@media only screen and (max-width: 1200px) {*/
-    /*    .top_cards {*/
-    /*        grid-template-columns: 100%;*/
-    /*        grid-template-rows: min-content min-content min-content;*/
-    /*    }*/
-    /*}*/
     @media only screen and (max-width: main.$mobile_width) {
         .top_cards{
             grid-template-columns: none;

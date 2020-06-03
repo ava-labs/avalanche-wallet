@@ -3,18 +3,16 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
 
-
         <p class="addr_info">This is your address to receive funds.</p>
-<!--        <h4>{{$t('top.title1')}}</h4>-->
         <div class="bottom">
             <canvas ref="qr"></canvas>
             <div class="bottom_rest">
                 <p class="addr_text">{{address}}</p>
                 <p class="sub">Default wallet address</p>
                 <div class="buts">
-                    <button :tooltip="$t('top.hover1')" @click="viewQRModal"><fa icon="qrcode"></fa></button>
-                    <button :tooltip="$t('top.hover2')" @click="viewPrintModal"><fa icon="print"></fa></button>
-                    <CopyText :tooltip="$t('top.hover3')" :value="address"></CopyText>
+                    <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
+                    <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
+                    <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
                 </div>
             </div>
 
@@ -91,21 +89,43 @@
     .buts{
         width: 100%;
         text-align: right;
-    }
-    .buts button{
-        font-size: 18px;
-        margin: 0px 18px;
-        margin-right: 0px;
-        position: relative;
-        outline: none;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        > *{
+            font-size: 18px;
+            margin: 0px 18px;
+            margin-right: 0px;
+            position: relative;
+            outline: none;
+            width: 18px;
+            height: 18px;
+            opacity: 0.6;
+
+            &:hover{
+                opacity: 1;
+            }
+        }
     }
 
-    .buts img{
-        height: 20px;
-        width: 20px;
-        object-fit: contain;
+    .buts button{
+        width: 18px;
+        height: 18px;
+        background-size: contain;
+        background-position: center;
     }
-    .buts button[tooltip]:hover:before{
+
+    .qr_but{
+        background-image: url("/img/qr_icon.png");
+    }
+    .print_but{
+        background-image: url("/img/faucet_icon.png");
+    }
+    .copy_but{
+    }
+
+    .buts > *[tooltip]:hover:before{
         border-radius: 4px;
         /*left: 0;*/
         left: 0;

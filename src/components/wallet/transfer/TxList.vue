@@ -42,7 +42,6 @@
             let res:AvaAsset[][] = [];
             let allDisabled = [];
 
-
             for(var i=0; i<this.tx_list.length; i++){
                 let localDisabled:AvaAsset[] = [];
 
@@ -124,8 +123,6 @@
                 this.addTx();
             }
         }
-
-
 
         get assets_list(): AvaAsset[]{
             return this.$store.state.Assets.assets;
