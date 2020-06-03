@@ -44,7 +44,7 @@
     </div>
 </template>
 <script>
-    import TxList from "@/components/wallet/TxList";
+    import TxList from "@/components/wallet/transfer/TxList";
     // import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
     import RadioButtons from "@/components/misc/RadioButtons";
     // import QRInput from "@/components/misc/QRInput";

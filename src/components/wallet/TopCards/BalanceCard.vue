@@ -14,7 +14,7 @@
             <div class="alt_info">
                 <div>
                     <label>Available</label>
-                    <p>{{ava_asset.toString()}} AVA</p>
+                    <p>{{balanceText}} AVA</p>
                 </div>
                 <div>
                     <label>Shared</label>
@@ -58,7 +58,7 @@
     }
 </script>
 <style scoped lang="scss">
-    @use '../../../../main';
+    @use '../../../main';
     .balance_card{
         display: grid !important;
         grid-template-columns: 1fr 140px;
@@ -66,7 +66,7 @@
     }
 
     .nft_card{
-        border-left: 1px solid #DADCE2;
+        border-left: 2px solid #F5F6FA;
     }
     .fungible_card{
         display: grid !important;
@@ -167,7 +167,7 @@
     }
 
 
-    @media only screen and (max-width: main.$mobile_width) {
+    @include main.mobile-device{
         .balance_card{
             grid-template-columns: none;
         }
@@ -176,7 +176,7 @@
             padding: 0;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid #DADCE2;
+            border-top: 2px solid #F5F6FA;
             border-left: none;
         }
 

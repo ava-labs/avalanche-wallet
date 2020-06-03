@@ -9,8 +9,8 @@
     import QRModal from "../modals/QRModal";
     import PaperWallet from "../modals/PaperWallet";
 
-    import BalanceCard from "./home/TopCards/BalanceCard";
-    import AddressCard from "./home/TopCards/AddressCard";
+    import BalanceCard from "./TopCards/BalanceCard";
+    import AddressCard from "./TopCards/AddressCard";
 
     export default {
         components: {

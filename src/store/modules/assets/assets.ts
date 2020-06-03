@@ -6,15 +6,6 @@ import {AmountOutput, UTXOSet} from "slopes";
 import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
-// import {tr} from "@/locales/tr";
-
-
-// let AVA_ASSET_ID:string;
-
-
-
-
-
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -35,8 +26,6 @@ const assets_module: Module<AssetsState, RootState> = {
             }
             state.assets.push(asset);
             Vue.set(state.assetsDict,asset.id,asset);
-            // state.assetsDict[asset.id] = asset;
-            // console.log(`ADDED ${asset.id}`);
         },
         removeAllAssets(state){
             state.assets = [];
@@ -54,7 +43,6 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Fetches UTXOs of the addresses registered to the wallet
         async updateUTXOs({state, commit, dispatch, rootState}) {
-            console.log('update utxos...');
             if(!rootState.isAuth){
                 return false;
             }
@@ -77,7 +65,6 @@ const assets_module: Module<AssetsState, RootState> = {
 
 
             let utxos = state.utxos;
-            console.log(state.assetsDict);
 
             for(var i=0;i<utxos.length;i++){
                 let utxo = utxos[i];
@@ -122,7 +109,6 @@ const assets_module: Module<AssetsState, RootState> = {
         // What is the AVA coin in the network
         async updateAvaAsset({state, commit}){
             let res = await avm.getAssetDescription('AVA');
-            console.log("Updated AVA Asset");
             let id = bintools.avaSerialize(res.assetID);
             state.AVA_ASSET_ID = id;
             let asset = new AvaAsset(id, res.name, res.symbol, res.denomination);
@@ -130,9 +116,6 @@ const assets_module: Module<AssetsState, RootState> = {
         },
         // fetch every asset from the explorer, if explorer exists
         updateAssets({state, rootState, commit}){
-            // console.log(rootState);
-            console.log('update assets...')
-
             //@ts-ignore
             let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
             if(explorerApi){
@@ -170,8 +153,6 @@ const assets_module: Module<AssetsState, RootState> = {
                             symbol: symbol,
                             denomination: denomination
                         });
-
-                        // console.log(state)
                     }).catch(err => {
                         console.log(err);
                     });

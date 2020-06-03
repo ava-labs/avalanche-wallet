@@ -5,8 +5,9 @@ function getAssetIcon(id:string){
     let url = "/question-solid.svg";
     let AVA = store.getters['Assets/AssetAVA'];
 
+    if(!AVA) return url;
     if(id === AVA.id){
-        url= "/ava_letter_icon.png";
+        return  "/ava_letter_icon.png";
     }
     return url;
 }

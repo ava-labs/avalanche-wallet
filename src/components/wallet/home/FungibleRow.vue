@@ -22,7 +22,6 @@
     import { Vue, Component, Prop } from 'vue-property-decorator'
     import AvaAsset from "../../../js/AvaAsset";
     import Hexagon from "@/components/misc/Hexagon.vue";
-    import store from "@/store";
 
     @Component({
         components: {
@@ -36,13 +35,17 @@
 
 
         get iconUrl(): string | null{
+            if(!this.asset) return null;
+
             if(this.asset.symbol==='AVA'){
                 return "/ava_letter_icon.png";
             }
+
             return null;
         }
 
         get isBalance(): boolean{
+            if(!this.asset) return  false;
             if(this.asset.getAmount().gt(0)){
                 return true;
             }
@@ -50,6 +53,7 @@
         }
 
         get sendLink(): string{
+            if(!this.asset) return `/wallet/transfer`;
             return `/wallet/transfer?asset=${this.asset.id}`;
         }
 
@@ -58,6 +62,8 @@
         }
 
         get isAvaToken(): boolean{
+            if(!this.asset) return false;
+
             if(this.avaToken.id === this.asset.id){
                 return true;
             }else{
