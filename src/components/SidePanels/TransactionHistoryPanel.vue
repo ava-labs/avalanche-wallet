@@ -21,38 +21,46 @@
         </div>
     </div>
 </template>
-<script>
-    import TxHistoryRow from "@/components/SidePanels/TxHistoryRow";
-    export default {
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
+    import TxHistoryRow from "@/components/SidePanels/TxHistoryRow.vue";
+    import {ITransactionData} from "@/store/modules/history/types";
+    import {AvaNetwork} from "@/js/AvaNetwork";
+
+    @Component({
         components: {
             TxHistoryRow
-        },
-        computed: {
-            isExplorer(){
-                // if(!this.$store.state.Network.selectedNetwork) return false;
+        }
+    })
+    export default class TransactionHistoryPanel extends Vue{
 
-                if(this.$store.state.Network.selectedNetwork.explorerUrl){
-                    return true;
-                }
-                return false
-            },
-            isEmpty(){
-                if(this.transactions.length === 0){
-                    return true;
-                }
-                return false;
-            },
-            isUpdating(){
-                return this.$store.state.History.isUpdating;
-            },
-            transactions(){
-                let res =  this.$store.state.History.transactions;
-                return res;
-            },
-            explorerUrl(){
-                let addr = this.$store.state.selectedAddress.split('-')[1];
-                return `https://explorer.ava.network/address/${addr}`;
+        get isExplorer(): boolean{
+            let network: AvaNetwork|null = this.$store.state.Network.selectedNetwork;
+            if(!network) return false;
+            if(network.explorerUrl){
+                return true;
             }
+            return false;
+        }
+
+        get isEmpty(): boolean{
+            if(this.transactions.length === 0){
+                return true;
+            }
+            return false;
+        }
+        get isUpdating(): boolean{
+            return this.$store.state.History.isUpdating;
+        }
+        get transactions(): ITransactionData[]{
+            let res =  this.$store.state.History.transactions;
+            return res;
+        }
+        get explorerUrl(): string{
+            let addr = this.$store.state.selectedAddress.split('-')[1];
+            return `https://explorer.ava.network/address/${addr}`;
         }
     }
 </script>

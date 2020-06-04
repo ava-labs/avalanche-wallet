@@ -22,12 +22,6 @@
                 this.$store.dispatch('logout');
             },
         },
-        computed: {
-            panelComponent(){
-                let route = this.$route;
-                return true;
-            }
-        }
     }
 </script>
 <style scoped lang="scss">
@@ -44,8 +38,6 @@
         justify-content: space-between;
         padding: 24px 16px;
         font-size: 14px;
-        /*padding: 14px 6px;*/
-        /*margin-bottom: 30px;*/
     }
 
     .panel_content{

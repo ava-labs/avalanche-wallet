@@ -47,8 +47,8 @@ const history_module: Module<HistoryState, RootState> = {
             let res = await explorer_api.get(url);
 
             let transactions = res.data.transactions;
-            state.transactions = transactions;
 
+            state.transactions = transactions;
             state.isUpdating = false;
         }
     },

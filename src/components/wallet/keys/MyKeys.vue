@@ -29,6 +29,7 @@
         methods: {
             selectKey(addr){
                 this.$store.commit('selectAddress', addr);
+                this.$store.dispatch('History/updateTransactionHistory');
             },
             removeKey(addr){
 

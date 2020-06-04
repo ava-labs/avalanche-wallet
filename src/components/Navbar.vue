@@ -43,32 +43,27 @@
         </v-navigation-drawer>
     </div>
 </template>
-<script>
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
     // import LanguageSelect from './LanguageSelect';
     // import DayNightToggle from "@/components/misc/DayNightToggle";
-    import NetworkMenu from './NetworkSettings/NetworkMenu';
+    import NetworkMenu from './NetworkSettings/NetworkMenu.vue';
 
-    export default {
-        data(){
-            return {
-                isDrawer: false,
-            }
-        },
-        components: {
-            NetworkMenu,
-            // LanguageSelect,
-            // DayNightToggle
-        },
-        computed: {
-            isAuth(){
-                return this.$store.state.isAuth;
-            }
-        },
-        methods: {
-            logout(){
-                this.$store.dispatch('logout');
-            },
+    @Component({
+        components:{
+            NetworkMenu
+        }
+    })
+    export default class Navbar extends Vue {
+        isDrawer: boolean = false;
 
+        get isAuth(): boolean{
+            return this.$store.state.isAuth;
+        }
+
+        logout():void{
+            this.$store.dispatch('logout');
         }
     }
 </script>

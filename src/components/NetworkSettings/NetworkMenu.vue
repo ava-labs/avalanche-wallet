@@ -1,5 +1,5 @@
 <template>
-    <div class="network_menu" :connected="status==='connected'">
+    <div class="network_menu" :connected="status==='connected'" @keydown.esc="closeMenu">
         <div class="toggle_but" @click="toggleMenu">
             <img src="@/assets/network_off.png" v-if="status==='disconnected' || status==='connecting'">
             <img src="@/assets/network_on.png" v-else>
@@ -7,14 +7,13 @@
             <button v-else-if="status==='connecting'">Connecting...</button>
             <button v-else>Disconnected</button>
         </div>
-        <transition name="fade">
-            <div class="network_body" v-if="isActive">
+        <transition-group name="fade">
+            <div class="network_dispose_bg" v-if="isActive" key="bg" @click="closeMenu"></div>
+            <div class="network_body" v-if="isActive" key="body">
                 <div class="header">
                     <template v-if="page==='list'">
                         <h4>Networks</h4>
                         <button @click="viewCustom">Add Custom</button>
-<!--                        <button @click="closeMenu" style="background-color: transparent;-->
-<!-- color: #999;"><fa icon="times"></fa></button>-->
                     </template>
                     <template v-if="page==='custom'">
                         <h4>Add Custom Network</h4>
@@ -33,70 +32,62 @@
                 </transition>
 
             </div>
-        </transition>
+        </transition-group>
     </div>
 </template>
-<script>
-    import NetworkRow from './NetworkRow';
-    import CustomPage from './CustomPage';
-    import ListPage from './ListPage';
-    import EditPage from "@/components/NetworkSettings/EditPage";
-    export default {
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
+    import NetworkRow from './NetworkRow.vue';
+    import CustomPage from './CustomPage.vue';
+    import ListPage from './ListPage.vue';
+    import EditPage from "@/components/NetworkSettings/EditPage.vue";
+    import {AvaNetwork} from "@/js/AvaNetwork";
+
+    @Component({
         components: {
             ListPage,
             NetworkRow,
             CustomPage,
             EditPage
-        },
-        data(){
-            return{
-                page: 'list', // list | custom | edit
-                isActive: false,
-                editNetwork: null,
-            }
-        },
-        methods: {
-            viewCustom(){
-                this.page = 'custom';
-            },
-            viewList(){
-                this.page = 'list';
-            },
-            closeMenu(){
-                this.isActive = false;
-            },
-            toggleMenu(){
-                this.isActive = !this.isActive;
+        }
+    })
+    export default class NetworkMenu extends Vue {
+        page: string = 'list';
+        isActive: boolean = false;
+        editNetwork: AvaNetwork|null = null;
 
-                // if(this.isActive){
-                //
-                // }
-            },
-            addCustomNetwork(data){
-                this.$store.commit('Network/addNetwork', data);
-                this.page = 'list';
-            },
-            onedit(network){
-                this.editNetwork = network;
-                this.page = 'edit';
-            }
-        },
-        computed: {
-            status(){
-                return this.$store.state.Network.status;
-            },
-            // isConnecting(){
-            //     return this.activeNetwork!==null && !this.$store.state.Network.isConnected;
-            // },
-            // isConnected(){
-            //     return this.activeNetwork!==null && this.$store.state.Network.isConnected;
-            // },
-            activeNetwork(){
-                return this.$store.state.Network.selectedNetwork;
-            },
-            networks(){
-                return this.$store.state.Network.networks;
-            }
+        viewCustom(): void{
+            this.page = 'custom';
+        }
+        viewList(): void{
+            this.page = 'list';
+        }
+        closeMenu(): void{
+            this.page = 'list';
+            this.isActive = false;
+        }
+        toggleMenu(): void{
+            this.isActive = !this.isActive;
+        }
+        addCustomNetwork(data: AvaNetwork): void{
+            this.$store.commit('Network/addNetwork', data);
+            this.page = 'list';
+        }
+        onedit(network: AvaNetwork): void{
+            this.editNetwork = network;
+            this.page = 'edit';
+        }
+
+        get status(): string{
+            return this.$store.state.Network.status;
+        }
+        get activeNetwork(): null|AvaNetwork{
+            return this.$store.state.Network.selectedNetwork;
+        }
+        get networks(): AvaNetwork{
+            return this.$store.state.Network.networks;
         }
     }
 </script>
@@ -119,8 +110,19 @@
         }
     }
 
+
+    .network_dispose_bg{
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
     .network_body{
         position: fixed;
+        z-index: 2;
         top: 60px;
         right: 15vw;;
         border: 1px solid #999;
