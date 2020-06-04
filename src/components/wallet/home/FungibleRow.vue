@@ -71,11 +71,6 @@
                 return  false
             }
         }
-
-
-        mounted(){
-            console.log(this.asset);
-        }
     }
 </script>
 <style scoped lang="scss">
