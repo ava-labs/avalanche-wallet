@@ -119,8 +119,8 @@
     }
 
     .action_but{
-        background-color: #EBE4FB;
-        color: #4E00FF !important;
+        background-color: #e4edfb;
+        color: #1D82BB !important;
         padding: 6px 18px;
         border-radius: 4px;
     }

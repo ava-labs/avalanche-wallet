@@ -3,7 +3,7 @@
         <div class="qr_body">
             <canvas ref="qr"></canvas>
             <p>{{address}}</p>
-            <CopyText :value="address" class="copyBut"></CopyText>
+            <CopyText :value="address" class="copyBut">Copy Address</CopyText>
         </div>
     </modal>
 </template>
@@ -52,7 +52,7 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
     .qr_body{
         padding: 30px;
         text-align: center;
@@ -68,10 +68,15 @@
     }
 
     .copyBut{
-        width: 20px;
-        height: 20px;
+        /*width: 20px;*/
+        /*height: 20px;*/
         margin: 15px auto;
         margin-bottom: 0;
+        opacity: 0.6;
+
+        &:hover{
+            opacity: 1;
+        }
         /*display: block;*/
         /*margin: 0px auto;*/
     }

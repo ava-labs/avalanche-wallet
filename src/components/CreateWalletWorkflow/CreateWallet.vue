@@ -15,6 +15,9 @@
                             <div class="mnemonic_disp">
                                 <mnemonic-display :phrase="keyPhrase"></mnemonic-display>
                                 <p class="phrase_raw">{{keyPhrase}}</p>
+                                <div>
+                                    <CopyText :value="keyPhrase" class="copy_phrase">Copy Key Phrase</CopyText>
+                                </div>
                                 <button @click="createKey"><fa icon="sync"></fa> Randomize</button>
                             </div>
                         </div>
@@ -42,13 +45,14 @@
     import RememberKey from "@/components/misc/RememberKey.vue";
 
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-
+    import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
 
     console.log(bip39);
 
     @Component({
         components: {
+            CopyText,
             RememberKey,
             TextDisplayCopy,
             MnemonicDisplay
@@ -171,6 +175,7 @@
 
     .access{
         margin: 0px 0px;
+        margin-top: 30px;
     }
 
     .access_cont{
@@ -191,6 +196,12 @@
             margin: 15px auto;
             width: max-content;
         }
+    }
+
+    .copy_phrase{
+        /*width: 20px;*/
+        /*height: 20px;*/
+        margin: 0px auto;
     }
     @include main.mobile-device{
         .access{
