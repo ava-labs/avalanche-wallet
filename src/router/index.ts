@@ -57,6 +57,10 @@ const routes = [
             {
                 path: 'keystore',
                 component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Keystore.vue'),
+            },
+            {
+                path: 'mnemonic',
+                component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Mnemonic.vue'),
             }
         ],
         component: () => import(/* webpackChunkName: "about" */ '../views/access/Access.vue'),

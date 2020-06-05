@@ -9,6 +9,11 @@
                 <router-link to="/access/private_key"></router-link>
             </div>
             <div class="option">
+                <h4>Mnemonic Key Phrase</h4>
+                <p>addict whip secret voice...</p>
+                <router-link to="/access/mnemonic"></router-link>
+            </div>
+            <div class="option">
                 <h4>Keystore File</h4>
                 <p>AVA_ZvtFT.json</p>
                 <router-link to="/access/keystore"></router-link>
@@ -24,7 +29,7 @@
     .options{
         margin: 30px auto;
         display: grid;
-        grid-template-columns: $col_w $col_w;
+        grid-template-columns: repeat(3,$col_w);
         grid-gap: 30px;
 
         >div{
@@ -38,7 +43,7 @@
         p{
             font-size: 13px;
             margin-top: 12px !important;
-            color: #ac65d8;
+            color: #1D82BB;
         }
     }
 
@@ -50,7 +55,8 @@
         position: relative;
         transition-duration: 0.1s;
         transition-timing-function: ease-in;
-        box-shadow: 4px 3px 10px rgba(0,0,0,0.2);
+        border: 1px solid #000;
+        /*box-shadow: 4px 3px 10px rgba(0,0,0,0.2);*/
         border-radius: 4px;
         padding: 30px;
 

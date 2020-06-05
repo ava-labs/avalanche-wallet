@@ -12,12 +12,16 @@
     export default {
         data(){
             return{
-                explain : "Remember private keys.",
+                // explain : "Remember key phrase. Your keys will persist until you close the browser tab.",
                 isRemember: false,
             }
         },
         props: {
-            value: Boolean
+            value: Boolean,
+            explain: {
+                type: String,
+                default: "Remember keys."
+            }
         },
         model: {
             prop: 'value',
