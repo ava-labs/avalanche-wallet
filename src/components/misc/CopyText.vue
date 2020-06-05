@@ -1,6 +1,10 @@
 <template>
-    <div class="copyBut">
-        <button @click="copy"></button>
+    <div class="copyBut" @click="copy">
+<!--        <button @click="copy"></button>-->
+        <img src="/img/copy_icon.png">
+        <p class="text">
+            <slot></slot>
+        </p>
         <input ref="copytext" :value="value">
     </div>
 </template>
@@ -24,9 +28,16 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+    img{
+        width: 20px;
+        object-fit: contain;
+        pointer-events: none;
+    }
     .copyBut{
-        /*display: flex;*/
+        display: flex;
+        width: max-content;
+        cursor: pointer;
         /*align-self: center;*/
         /*justify-content: center;*/
     }
@@ -36,6 +47,17 @@
         opacity: 0;
     }
 
+    .text{
+        user-select: none;
+        pointer-events: none;
+        margin-left: 6px !important;
+    }
+
+    input{
+        pointer-events: none;
+        user-select: none;
+    }
+
     button{
         /*width: 18px;*/
         /*height: 18px;*/
@@ -43,6 +65,5 @@
         height: 100%;
         background-size: contain;
         background-position: center;
-        background-image: url("/img/copy_icon.png");
     }
 </style>

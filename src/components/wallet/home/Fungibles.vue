@@ -6,7 +6,10 @@
             <p class="send_col">Send</p>
             <p  class="balance_col">Balance</p>
         </div>
-        <div v-if="assets.length === 0" class="empty">
+        <div v-if="networkStatus !== 'connected'" class="empty">
+            <p>Unable to display assets. Disconnected from the network.</p>
+        </div>
+        <div v-else-if="assets.length === 0" class="empty">
             <p>You do not have any assets</p>
         </div>
         <div class="scrollable" v-else>
@@ -31,6 +34,11 @@
     })
     export default class Fungibles extends Vue{
         @Prop() search!: string;
+
+        get networkStatus():string{
+            let stat = this.$store.state.Network.status;
+            return stat;
+        }
 
 
         get assets(): AvaAsset[]{

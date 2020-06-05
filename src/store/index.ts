@@ -60,17 +60,19 @@ export default new Vuex.Store({
 
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet(store, pk: string){
+        async accessWallet({state, dispatch}, pk: string){
 
-            let keypair = await store.dispatch('addKey', pk);
+            let keypair = await dispatch('addKey', pk);
+
+            // If the pk is not in keychain add it
 
             // let address = keyChain.importKey(pk);
             // let keypair = keyChain.getKey(address);
 
-            store.state.privateKey = pk;
-            store.state.selectedAddress = keypair.getAddressString();
-            store.state.isAuth = true;
-            store.dispatch('onAccess');
+            state.privateKey = pk;
+            state.selectedAddress = keypair.getAddressString();
+            state.isAuth = true;
+            dispatch('onAccess');
         },
 
         async accessWalletMultiple({state, dispatch}, pks: string[]){
