@@ -1,5 +1,7 @@
 <template>
-    <div class="mnemonic_display">
+    <div class="mnemonic_display" :style="{
+        gridTemplateColumns: `repeat(${rowSize}, 1fr)`
+    }">
         <div v-for="i in wordNum" :key="i" class="word">
             <p class="index">{{i}}</p>
             <p class="phrase_word">{{phraseArray[i-1]}}</p>
@@ -12,6 +14,7 @@
 
     @Component
     export default class MnemonicDisplay extends Vue{
+        @Prop({default: 4}) rowSize!:number;
         wordNum:number = 24;
 
         get phraseArray():string[]{
@@ -33,7 +36,7 @@
 <style scoped lang="scss">
     .mnemonic_display{
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        /*grid-template-columns: repeat(4, 1fr);*/
         grid-gap: 8px;
         row-gap: 16px;
         /*row-gap: 12px;*/

@@ -9,12 +9,7 @@
                     <router-link to="/access">Already have a wallet?</router-link>
                 </div>
 
-
                 <div v-else class="stage_2">
-
-
-
-
                     <div class="cols">
                         <div>
                             <div class="mnemonic_disp">
@@ -33,11 +28,7 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
             </transition>
         </div>
     </div>
@@ -74,6 +65,8 @@
         createKey():void{
             let addr = keyChain.makeKey();
             let keypair = keyChain.getKey(addr);
+
+            keyChain.removeKey(keypair);
 
             let pubk = keypair.getPublicKey(); //returns Buffer
             let pubkstr = keypair.getPublicKeyString(); //returns an AVA serialized string

@@ -34,7 +34,21 @@ hr{
 }
 
 
-
+*[tooltip]:hover:before{
+  border-radius: 4px;
+  /*left: 0;*/
+  left: 0;
+  transform: translateX(-50%);
+  content: attr(tooltip);
+  position: absolute;
+  background-color: #303030;
+  bottom: 100%;
+  color: #ddd;
+  width: max-content;
+  max-width: 100px;
+  font-size: 14px;
+  padding: 4px 8px;
+}
 
 
 
