@@ -4,7 +4,7 @@
         <form @submit.prevent="access">
             <qr-input class="key_in" v-model="privateKey"></qr-input>
             <p class="err" v-if="error">{{error}}</p>
-            <remember-key class="remember" v-model="rememberKey"></remember-key>
+            <remember-key class="remember" v-model="rememberKey" explain="Remember keys for easy access"></remember-key>
             <v-btn class="but_primary" @click="access" color="#000" depressed>Access Wallet</v-btn>
         </form>
 
