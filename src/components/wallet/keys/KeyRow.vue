@@ -3,6 +3,7 @@
             class="addressItem"
             :selected="is_default"
     >
+        <mnemonic-phrase ref="modal" :phrase="mnemonicPhrase"></mnemonic-phrase>
         <div class="rows">
             <div class="detail">
                 <div>
@@ -24,92 +25,173 @@
             </div>
         </div>
         <div class="buts">
+            <button @click="showModal">View Key Phrase</button>
             <button class="selBut" @click="select"  v-if="!is_default">
                 <span>Make Default</span>
             </button>
 
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
-
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
+    import {AssetsDict} from "@/store/modules/assets/types";
+    import {KeyPair} from "slopes";
 
-    export default {
-        props: {
-            address: {
-                type: String,
-                required: true
-            },
-            is_default: {
-                type: Boolean,
-                default: false
-            }
-        },
-        computed: {
-            balance(){
-                return this.$store.state.Assets.assetsDict;
-            },
-            balances(){
-                let res = {};
+    import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
+    import * as bip39 from 'bip39';
 
-                let utxos =  this.$store.getters['Assets/addressUTXOs'];
-                let addr = this.address;
-                let addrStrip = addr.split('-')[1];
+    interface IKeyBalanceDict{
+        [key:string]: AvaAsset
+    }
 
-                let addrUtxos = utxos[addrStrip];
-                if(addrUtxos){
-                    for(var n=0; n<addrUtxos.length; n++){
-                        let utxo = addrUtxos[n];
-                        let utxoOut = utxo.getOutput();
+    @Component({
+        components: {
+            MnemonicPhrase
+        }
+    })
+    export default class KeyRow extends Vue{
+        @Prop() address!:string;
+        @Prop({default: false}) is_default?:boolean;
 
-                        // console.log(utxo);
-                        let amount = utxoOut.getAmount();
-                        let assetIdBuff = utxo.getAssetID();
-                        let assetId = bintools.avaSerialize(assetIdBuff);
+        get balance():AssetsDict{
+            return this.$store.state.Assets.assetsDict;
+        }
 
-                        let assetObj = this.balance[assetId];
-                        let asset = res[assetId];
-                        if(!asset){
-                            let name = assetObj.name;
-                            let symbol = assetObj.symbol;
-                            let denomination = assetObj.denomination;
+        get balances(): IKeyBalanceDict{
+            let res:IKeyBalanceDict = {};
 
-                            let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-                                newAsset.addBalance(amount);
+            let utxos =  this.$store.getters['Assets/addressUTXOs'];
+            let addr = this.address;
+            let addrStrip = addr.split('-')[1];
 
-                            res[assetId] = newAsset;
-                        }else{
-                            asset.addBalance(amount)
-                        }
+            let addrUtxos = utxos[addrStrip];
+            if(addrUtxos){
+                for(var n=0; n<addrUtxos.length; n++){
+                    let utxo = addrUtxos[n];
+                    let utxoOut = utxo.getOutput();
+
+                    // console.log(utxo);
+                    let amount = utxoOut.getAmount();
+                    let assetIdBuff = utxo.getAssetID();
+                    let assetId = bintools.avaSerialize(assetIdBuff);
+
+                    let assetObj = this.balance[assetId];
+                    let asset = res[assetId];
+                    if(!asset){
+                        let name = assetObj.name;
+                        let symbol = assetObj.symbol;
+                        let denomination = assetObj.denomination;
+
+                        let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+                        newAsset.addBalance(amount);
+
+                        res[assetId] = newAsset;
+                    }else{
+                        asset.addBalance(amount)
                     }
                 }
-                return res;
-            },
-            addrRaw(){
-                return this.address.split('-')[1];
-            },
-            keyPair(){
-                return   keyChain.getKey(bintools.parseAddress(this.address, 'X'));
-            },
-            publicKey(){
-                return this.keyPair.getPublicKeyString()
             }
-        },
-        mounted() {
-            // console.log(this.$store.state);
-        },
-        methods: {
-            remove(){
-                this.$emit('remove', this.address);
-            },
-            select(){
-                this.$emit('select', this.address);
-            }
+            return res;
+        }
+
+        get keyPair():KeyPair{
+            return keyChain.getKey(bintools.parseAddress(this.address, 'X'));
+        }
+
+        get mnemonicPhrase():string{
+            let pk = this.keyPair.getPrivateKey();
+            let hex = pk.toString('hex');
+            let mnemonic = bip39.entropyToMnemonic(hex);
+            return mnemonic;
+        }
+
+        remove(){
+            this.$emit('remove', this.address);
+        }
+        select(){
+            this.$emit('select', this.address);
+        }
+
+        showModal(){
+            let modal = this.$refs.modal as MnemonicPhrase;
+            modal.open();
         }
     }
+
+
+    // export default {
+    //     props: {
+    //         address: {
+    //             type: String,
+    //             required: true
+    //         },
+    //         is_default: {
+    //             type: Boolean,
+    //             default: false
+    //         }
+    //     },
+    //     computed: {
+    //         balance(){
+    //             return this.$store.state.Assets.assetsDict;
+    //         },
+    //         balances(){
+    //             let res = {};
+    //
+    //             let utxos =  this.$store.getters['Assets/addressUTXOs'];
+    //             let addr = this.address;
+    //             let addrStrip = addr.split('-')[1];
+    //
+    //             let addrUtxos = utxos[addrStrip];
+    //             if(addrUtxos){
+    //                 for(var n=0; n<addrUtxos.length; n++){
+    //                     let utxo = addrUtxos[n];
+    //                     let utxoOut = utxo.getOutput();
+    //
+    //                     // console.log(utxo);
+    //                     let amount = utxoOut.getAmount();
+    //                     let assetIdBuff = utxo.getAssetID();
+    //                     let assetId = bintools.avaSerialize(assetIdBuff);
+    //
+    //                     let assetObj = this.balance[assetId];
+    //                     let asset = res[assetId];
+    //                     if(!asset){
+    //                         let name = assetObj.name;
+    //                         let symbol = assetObj.symbol;
+    //                         let denomination = assetObj.denomination;
+    //
+    //                         let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+    //                             newAsset.addBalance(amount);
+    //
+    //                         res[assetId] = newAsset;
+    //                     }else{
+    //                         asset.addBalance(amount)
+    //                     }
+    //                 }
+    //             }
+    //             return res;
+    //         },
+    //         keyPair(){
+    //             return   keyChain.getKey(bintools.parseAddress(this.address, 'X'));
+    //         },
+    //     },
+    //     mounted() {
+    //         // console.log(this.$store.state);
+    //     },
+    //     methods: {
+    //         remove(){
+    //             this.$emit('remove', this.address);
+    //         },
+    //         select(){
+    //             this.$emit('select', this.address);
+    //         }
+    //     }
+    // }
 </script>
 <style scoped lang="scss">
     .addressItem{
@@ -131,6 +213,10 @@
     .buts{
         display: flex;
         flex-direction: row;
+
+        > *{
+            margin-left: 15px;
+        }
     }
 
     .rows{
@@ -161,7 +247,7 @@
             background-color: #C0C0CD;
             color: #fff;
             padding: 4px 8px;
-            margin-right: 15px;
+            /*margin-right: 15px;*/
         }
     }
 

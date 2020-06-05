@@ -10,26 +10,21 @@
         </div>
     </div>
 </template>
-<script>
-    export default {
-        data(){
-            return{
-                isActive: false,
-            }
-        },
-        props: {
-            title: {
-                type: String,
-                default: 'Modal Title'
-            }
-        },
-        methods: {
-            open(){
-                this.isActive = true;
-            },
-            close(){
-                this.isActive = false;
-            }
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
+    @Component
+    export default class Modal extends Vue{
+        @Prop({default: "Modal Title"}) title!:string;
+
+        isActive: boolean = false;
+
+        open(){
+            this.isActive = true;
+        }
+        close(){
+            this.isActive = false;
         }
     }
 </script>
@@ -79,7 +74,8 @@
     }
 
     .modal_body{
-        width: 320px;
+        width: max-content;
+        max-width: 100%;
         min-height: 30px;
         background-color: #f2f2f2;
         margin: auto;

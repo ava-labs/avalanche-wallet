@@ -50,7 +50,7 @@ import {Buffer} from "buffer";
             return true;
         }
 
-        access(){
+        async access(){
             let phrase = this.phrase;
 
             this.isLoading = true;
@@ -71,7 +71,7 @@ import {Buffer} from "buffer";
 
                 let pkString = keypair.getPrivateKeyString();
 
-                this.$store.dispatch('accessWallet', pkString);
+                await this.$store.dispatch('accessWallet', pkString);
                 this.isLoading = false;
             }catch(e){
                 this.isLoading = false;

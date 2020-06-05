@@ -56,7 +56,6 @@
         transition-duration: 0.1s;
         transition-timing-function: ease-in;
         border: 1px solid #000;
-        /*box-shadow: 4px 3px 10px rgba(0,0,0,0.2);*/
         border-radius: 4px;
         padding: 30px;
 
@@ -75,8 +74,7 @@
         }
     }
 
-
-    @media only screen and (max-width: main.$mobile_width) {
+    @include main.mobile-device{
         .options{
             display: block;
             grid-template-columns: none;
@@ -84,7 +82,6 @@
 
         .option{
             margin-bottom: 30px;
-
         }
     }
 </style>

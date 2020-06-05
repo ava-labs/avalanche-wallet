@@ -3,7 +3,7 @@
         <div class="qr_body">
             <canvas ref="qr"></canvas>
             <p>{{address}}</p>
-            <copy-text :value="address" class="copyBut"></copy-text>
+            <CopyText :value="address" class="copyBut"></CopyText>
         </div>
     </modal>
 </template>
@@ -68,6 +68,10 @@
     }
 
     .copyBut{
+        width: 20px;
+        height: 20px;
+        margin: 15px auto;
+        margin-bottom: 0;
         /*display: block;*/
         /*margin: 0px auto;*/
     }
