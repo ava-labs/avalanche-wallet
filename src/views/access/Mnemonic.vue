@@ -7,8 +7,10 @@ import {Buffer} from "buffer";
 
         <label>Preview</label>
         <mnemonic-display :phrase="phrase" class="phrase_disp"></mnemonic-display>
+        <p class="err" v-if="err">{{err}}</p>
 
-        <v-btn class="but_primary access" @click="access" color="#000" depressed>Access Wallet</v-btn>
+        <remember-key class="remember" v-model="isRemember" explain="Remember key phrase for easy access"></remember-key>
+        <v-btn class="but_primary access" @click="access" color="#000" depressed :loading="isLoading">Access Wallet</v-btn>
         <router-link to="/access">Cancel</router-link>
     </div>
 </template>
@@ -16,6 +18,7 @@ import {Buffer} from "buffer";
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
+    import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
 
     import * as bip39 from 'bip39';
@@ -23,55 +26,57 @@ import {Buffer} from "buffer";
 
     @Component({
         components: {
-            MnemonicDisplay
+            MnemonicDisplay,
+            RememberKey
         },
     })
     export default class Mnemonic extends Vue{
         phrase:string = "";
+        isLoading:boolean = false;
+        isRemember:boolean = false;
+        err:string = "";
 
-
-        access(){
+        errCheck(){
             let phrase = this.phrase;
             let words = phrase.split(' ');
 
             // not a valid key phrase
             if(words.length !== 24){
+                this.err = "Invalid key phrase. Your phrase must be 24 words separated by a single space.";
+                return false;
+            }
+
+
+            return true;
+        }
+
+        access(){
+            let phrase = this.phrase;
+
+            this.isLoading = true;
+            this.$store.state.rememberKey = this.isRemember;
+
+
+            if(!this.errCheck()) {
+                this.isLoading = false;
                 return;
             }
 
-            let entropy = bip39.mnemonicToEntropy(phrase);
-            let b = new Buffer(entropy, 'hex');
-            // let buf = Buffer.from(entropy) as Buffer;
+            try{
+                let entropy = bip39.mnemonicToEntropy(phrase);
+                let b = new Buffer(entropy, 'hex');
 
-            console.log(b);
-            // let hex = Buffer.from(privk).toString('hex');
-            // let mnemonic = bip39.entropyToMnemonic(hex);
+                let addr = keyChain.importKey(b);
+                let keypair = keyChain.getKey(addr);
 
-            // bintools.
-            // var hex_string = entropy;
-            // var tokens = hex_string.match(/\d\d/gi);
-            // var result = tokens.map(t => parseInt(t, 16));
-            //
-            // let buf = Buffer.from(result);
-            //
-            // bintools.avaSerialize(buf);
-            //
-            // console.log(result)
-            // console.log(buf)
-            let addr = keyChain.importKey(b);
-            let keypair = keyChain.getKey(addr);
+                let pkString = keypair.getPrivateKeyString();
 
-            let pkString = keypair.getPrivateKeyString();
-            // console.log(keypair.getPrivateKeyString())
-
-            this.$store.dispatch('accessWallet', pkString);
-            //
-            // console.log(addr);
-            // parseInt(entropy, 16);
-            //
-            // console.log(parseInt(entropy,16));
-            // // Int8Array.from()
-            // console.log(entropy);
+                this.$store.dispatch('accessWallet', pkString);
+                this.isLoading = false;
+            }catch(e){
+                this.isLoading = false;
+                this.err = 'Invalid key phrase.'
+            }
         }
     }
 </script>
@@ -105,10 +110,21 @@ import {Buffer} from "buffer";
     }
 
     .phrase_disp{
+        margin-bottom: 60px;
+    }
+
+    .remember{
+    }
+
+    .err{
+        font-size: 13px;
+        color: #f00;
+        text-align: center;
+        margin: 14px 0px !important;
     }
 
 
+
     .access{
-        margin-top: 60px;
     }
 </style>
