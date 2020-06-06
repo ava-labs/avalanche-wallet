@@ -41,14 +41,21 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
-    import {keyChain} from "@/AVA";
+    import {bintools, cryptoHelpers, keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
+    import {Buffer} from "buffer/";
 
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
-    import * as bip39 from 'bip39';
 
-    console.log(bip39);
+    import * as bip39 from 'bip39';
+    var HDKey = require('hdkey');
+
+    // import * as bip32 from 'bip32';
+    // import { BIP32Interface } from 'bip32';
+    import AvaHdWallet from "@/js/AvaHdWallet";
+
+    import {KeyPair} from "slopes";
 
     @Component({
         components: {
@@ -61,36 +68,37 @@
     export default class CreateWallet extends Vue{
         rememberKey:boolean = false;
         newPrivateKey: string|null =null;
-        newPublicKey: string|null = null;
-        newAddr: string|null = null;
         keyPhrase: string = "";
+        keyPair: KeyPair|null = null;
 
 
         createKey():void{
-            let addr = keyChain.makeKey();
-            let keypair = keyChain.getKey(addr);
+            let mnemonic = bip39.generateMnemonic(256);
+            let entropy = bip39.mnemonicToEntropy(mnemonic);
+            let b = new Buffer(entropy, 'hex');
 
+            let addr = keyChain.importKey(b);
+            let keypair = keyChain.getKey(addr);
+            let privkstr = keypair.getPrivateKeyString();
+
+            // Remove because it will get added in accessWallet dispatch
             keyChain.removeKey(keypair);
 
-            let pubk = keypair.getPublicKey(); //returns Buffer
-            let pubkstr = keypair.getPublicKeyString(); //returns an AVA serialized string
-
-            let privk = keypair.getPrivateKey(); //returns Buffer
-            let privkstr = keypair.getPrivateKeyString(); //returns an AVA serialized string
-
-
-            let hex = privk.toString('hex');
-            let mnemonic = bip39.entropyToMnemonic(hex);
-
-            console.log(mnemonic);
+            this.keyPair = keypair;
             this.keyPhrase = mnemonic;
-            this.newAddr = keypair.getAddressString();
             this.newPrivateKey = privkstr;
-            this.newPublicKey = pubkstr;
-
         }
 
-        access(): void{
+        async access(): Promise<void>{
+            if(!this.keyPhrase) return;
+
+            // let mnemonic = this.keyPhrase;
+            // let seed = await bip39.mnemonicToSeed(mnemonic);
+            // var hdkey = HDKey.fromMasterSeed(seed);
+            // let node = hdkey.derivePath('m/0/0/0/1');
+            // console.log(node);
+
+            // return;
             this.$store.state.rememberKey = this.rememberKey;
             this.$store.dispatch('accessWallet', this.newPrivateKey);
         }
