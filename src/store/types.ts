@@ -4,6 +4,7 @@ import BN from 'bn.js';
 import {Module} from "vuex";
 import {AssetsState} from "@/store/modules/assets/types";
 import AvaAsset from "@/js/AvaAsset";
+import AvaHdWallet from "@/js/AvaHdWallet";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
@@ -14,6 +15,8 @@ export interface RootState {
     selectedAddress: string,
     modals: ModalDict,
     rememberKey: boolean,
+    activeWallet: null|AvaHdWallet
+    wallets: AvaHdWallet[]
 }
 
 interface Modal {

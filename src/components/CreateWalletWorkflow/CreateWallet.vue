@@ -90,15 +90,8 @@
         }
 
         async access(): Promise<void>{
-            if(!this.keyPhrase) return;
+            if(!this.keyPair) return;
 
-            // let mnemonic = this.keyPhrase;
-            // let seed = await bip39.mnemonicToSeed(mnemonic);
-            // var hdkey = HDKey.fromMasterSeed(seed);
-            // let node = hdkey.derivePath('m/0/0/0/1');
-            // console.log(node);
-
-            // return;
             this.$store.state.rememberKey = this.rememberKey;
             this.$store.dispatch('accessWallet', this.newPrivateKey);
         }

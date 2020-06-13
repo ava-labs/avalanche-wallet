@@ -20,6 +20,8 @@ import router from "@/router";
 
 import {ava, avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
 import slopes from "slopes/typings/src/slopes";
+import AvaHdWallet from "@/js/AvaHdWallet";
+import {AVMKeyPair} from "slopes";
 
 export default new Vuex.Store({
     modules:{
@@ -35,6 +37,8 @@ export default new Vuex.Store({
         addresses: [],
         selectedAddress: '',
         modals: {},
+        activeWallet: null,
+        wallets: [],
     },
     getters: {
         appReady(state: RootState, getters){
@@ -64,9 +68,7 @@ export default new Vuex.Store({
 
             let keypair = await dispatch('addKey', pk);
 
-            // If the pk is not in keychain add it
-
-            // let address = keyChain.importKey(pk);
+            // If the pk is not in keychain add i// let address = keyChain.importKey(pk);
             // let keypair = keyChain.getKey(address);
 
             state.privateKey = pk;
@@ -206,20 +208,17 @@ export default new Vuex.Store({
             }
         },
 
-
-        async addKey({state, dispatch}, pk:string){
+        async addKey({state, dispatch}, pk:string): Promise<AVMKeyPair>{
             // console.log("ADD KEY: ",pk);
 
             let pkBuff = bintools.avaDeserialize(pk);
             let addrBuf = keyChain.importKey(pkBuff);
             let keypair = keyChain.getKey(addrBuf);
 
-            // store.dispatch('Notifications/add', {
-            //     title: 'Key Added',
-            //     message: 'The private key is added to the keychain.'
-            // });
 
-            // await store.dispatch('refreshAddresses');
+            // Create new HD Wallet for the key
+            let hdWallet = new AvaHdWallet(keypair);
+            state.wallets.push(hdWallet);
 
             state.addresses = keyChain.getAddressStrings();
 
