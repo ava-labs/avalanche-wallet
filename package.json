@@ -2,17 +2,22 @@
   "name": "wallet",
   "version": "0.1.0",
   "engines": {
-    "node": "12.13.0"
+    "node": "12.14.1"
   },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "jest --verbose ./tests"
+    "test": "jest --verbose ./tests",
+    "test_watch": "jest --verbose --watch ./tests"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "preset": "ts-jest",
+    "moduleNameMapper": {
+      "@/(.*)$": "<rootDir>/src/$1"
+    }
   },
   "dependencies": {
     "@avalabs/vue_components": "^0.3.0",
@@ -23,6 +28,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "@types/big.js": "^4.0.5",
     "@types/bn.js": "^4.11.6",
+    "@types/hdkey": "^0.7.1",
     "@zxing/library": "^0.15.2",
     "big.js": "^5.2.2",
     "bip32": "^2.0.5",
@@ -66,6 +72,7 @@
     "@babel/plugin-proposal-class-properties": "^7.10.1",
     "@babel/plugin-proposal-decorators": "^7.10.1",
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "@types/jest": "^26.0.0",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-eslint": "^4.1.0",
     "@vue/cli-plugin-router": "^4.1.0",
@@ -81,6 +88,7 @@
     "node-sass": "^4.13.1",
     "sass": "^1.24.4",
     "sass-loader": "^8.0.2",
+    "ts-jest": "^26.1.0",
     "typescript": "~3.5.3",
     "vue-cli-plugin-vuetify": "^2.0.3",
     "vue-template-compiler": "^2.6.10",
