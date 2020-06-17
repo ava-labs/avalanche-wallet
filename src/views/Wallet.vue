@@ -4,7 +4,9 @@
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
             <transition name="page_fade" mode="out-in">
-                <router-view id="wallet_router"></router-view>
+                <keep-alive include="WalletHome">
+                    <router-view id="wallet_router"></router-view>
+                </keep-alive>
             </transition>
         </div>
     </div>

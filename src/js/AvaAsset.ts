@@ -36,6 +36,8 @@ class AvaAsset{
     getAmount():Big{
         return Big(this.amount.toString(10)).div(this.pow);
     }
+
+
 }
 
 

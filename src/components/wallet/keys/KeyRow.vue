@@ -7,7 +7,7 @@
         <div class="rows">
             <div class="detail">
                 <div>
-                    <p class="addressVal"><span>{{$t('keys.address')}}</span>{{address}}</p>
+                    <p class="addressVal"><span>Master Key</span>{{address}}</p>
                 </div>
             </div>
 
@@ -41,10 +41,11 @@
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {KeyPair} from "slopes";
+    import {AmountOutput, KeyPair} from "slopes";
 
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import * as bip39 from 'bip39';
+    import AvaHdWallet from "@/js/AvaHdWallet";
 
     interface IKeyBalanceDict{
         [key:string]: AvaAsset
@@ -56,47 +57,70 @@
         }
     })
     export default class KeyRow extends Vue{
-        @Prop() address!:string;
+        // @Prop() address!:string;
+        @Prop() wallet!:AvaHdWallet;
         @Prop({default: false}) is_default?:boolean;
 
-        get balance():AssetsDict{
+
+        get address(){
+            return this.wallet.masterKey.getAddressString();
+        }
+        get assetsDict():AssetsDict{
             return this.$store.state.Assets.assetsDict;
         }
 
         get balances(): IKeyBalanceDict{
+
+            if(!this.wallet.utxoset) return {};
+
+
+            // let utxos =  this.$store.getters['Assets/addressUTXOs'];
+            // let addr = this.address;
+            // let addrStrip = addr.split('-')[1];
+            //
+            // let addrUtxos = utxos[addrStrip];
             let res:IKeyBalanceDict = {};
 
-            let utxos =  this.$store.getters['Assets/addressUTXOs'];
-            let addr = this.address;
-            let addrStrip = addr.split('-')[1];
 
-            let addrUtxos = utxos[addrStrip];
-            if(addrUtxos){
-                for(var n=0; n<addrUtxos.length; n++){
-                    let utxo = addrUtxos[n];
-                    let utxoOut = utxo.getOutput();
+            let addrUtxos = this.wallet.utxoset.getAllUTXOs();
+            for(var n=0; n<addrUtxos.length; n++){
+                let utxo = addrUtxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
 
-                    // console.log(utxo);
-                    let amount = utxoOut.getAmount();
-                    let assetIdBuff = utxo.getAssetID();
-                    let assetId = bintools.avaSerialize(assetIdBuff);
+                let amount = utxoOut.getAmount();
+                let assetIdBuff = utxo.getAssetID();
+                let assetId = bintools.avaSerialize(assetIdBuff);
 
-                    let assetObj = this.balance[assetId];
-                    let asset = res[assetId];
-                    if(!asset){
-                        let name = assetObj.name;
-                        let symbol = assetObj.symbol;
-                        let denomination = assetObj.denomination;
+                let assetObj:AvaAsset|undefined = this.assetsDict[assetId];
 
-                        let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-                        newAsset.addBalance(amount);
+                if(!assetObj){
+                    let name = '?';
+                    let symbol = '?';
+                    let denomination = 0;
 
-                        res[assetId] = newAsset;
-                    }else{
-                        asset.addBalance(amount)
-                    }
+                    let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+                    newAsset.addBalance(amount);
+
+                    res[assetId] = newAsset;
+                    continue;
+                }
+
+                let asset = res[assetId];
+                if(!asset){
+                    let name = assetObj.name;
+                    let symbol = assetObj.symbol;
+                    let denomination = assetObj.denomination;
+
+                    let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+                    newAsset.addBalance(amount);
+
+                    res[assetId] = newAsset;
+                }else{
+                    asset.addBalance(amount)
                 }
             }
+
+
             return res;
         }
 
@@ -112,10 +136,10 @@
         }
 
         remove(){
-            this.$emit('remove', this.address);
+            this.$emit('remove', this.wallet);
         }
         select(){
-            this.$emit('select', this.address);
+            this.$emit('select', this.wallet);
         }
 
         showModal(){

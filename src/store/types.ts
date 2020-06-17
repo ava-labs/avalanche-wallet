@@ -17,6 +17,7 @@ export interface RootState {
     rememberKey: boolean,
     activeWallet: null|AvaHdWallet
     wallets: AvaHdWallet[]
+    address: String|null
 }
 
 interface Modal {
@@ -27,6 +28,11 @@ interface Modal {
 // export interface UTXODict {
 //     [key: string]: SecpUTXO
 // }
+
+
+export interface IWalletBalanceDict {
+    [assetId: string]: AvaAsset
+}
 
 interface ModalDict {
     [key: string]: Modal

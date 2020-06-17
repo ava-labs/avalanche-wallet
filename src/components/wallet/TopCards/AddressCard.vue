@@ -3,7 +3,7 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
 
-        <p class="addr_info">This is your address to receive funds.</p>
+        <p class="addr_info">This is your address to receive funds. Your address will change after every deposit.</p>
         <div class="bottom">
             <canvas ref="qr"></canvas>
             <div class="bottom_rest">
@@ -20,62 +20,67 @@
 
     </div>
 </template>
-<script>
-    import CopyText from "@/components/misc/CopyText";
-    import QRModal from "@/components/modals/QRModal";
-    import PaperWallet from "@/components/modals/PaperWallet";
-    import QRCode from "qrcode";
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 
-    export default {
+    import CopyText from "@/components/misc/CopyText.vue";
+    import QRModal from "@/components/modals/QRModal.vue";
+    import PaperWallet from "@/components/modals/PaperWallet.vue";
+    // @ts-ignore
+    import QRCode from "qrcode";
+    import {AVMKeyPair} from "slopes";
+
+    @Component({
         components: {
             CopyText,
             PaperWallet,
             QRModal,
-        },
-        methods: {
-            viewQRModal(){
-                this.$refs.qr_modal.open();
-            },
-            viewPrintModal(){
-                this.$refs.print_modal.open();
-            },
+        }
+    })
+    export default class AddressCard extends Vue{
+        $refs!: {
+            qr_modal: QRModal,
+            print_modal: PaperWallet,
+            qr: HTMLCanvasElement
+        };
 
+        get ava_asset(){
+            return this.$store.getters['Assets/AssetAVA'];
+        }
 
-            updateQR(){
-                let canvas = this.$refs.qr;
-                let size = canvas.clientWidth;
-                QRCode.toCanvas(canvas, this.address, {
-
-                    scale: 6,
-                    color: {
-                        light: "#fff"
-                    },
-                    width: size,
-                    height: size,
-                }, function (error) {
-                    if (error) console.error(error);
-                    // console.log('success!');
-                })
+        get address(){
+            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!activeKey){
+                return '-'
             }
-        },
-        watch: {
-            address(val){
-                if(val){
-                    this.updateQR();
-                }
-            }
-        },
-        computed: {
-            ava_asset(){
-                return this.$store.getters['Assets/AssetAVA'];
-            },
-            address(){
-                return this.$store.state.selectedAddress;
-            },
-            isUpdateBalance(){
-                return this.$store.state.Assets.isUpdateBalance;
-            },
-        },
+            return activeKey.getAddressString();
+        }
+
+        viewQRModal(){
+            // @ts-ignore
+            this.$refs.qr_modal.open();
+        }
+        viewPrintModal(){
+            let modal = this.$refs.print_modal;
+            // @ts-ignore
+            modal.open();
+        }
+        updateQR(){
+            let canvas = this.$refs.qr as HTMLCanvasElement;
+            let size = canvas.clientWidth;
+            QRCode.toCanvas(canvas, this.address, {
+                scale: 6,
+                color: {
+                    light: "#fff"
+                },
+                width: size,
+                // height: size,
+            }, function (error:any) {
+                if (error) console.error(error);
+            })
+        }
+
         mounted() {
             this.updateQR();
         }

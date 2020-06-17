@@ -7,50 +7,93 @@
         </div>
     </modal>
 </template>
-<script>
-    import Modal from './Modal';
-    import CopyText from "../misc/CopyText";
+<script lang="ts">
+    import 'reflect-metadata';
+    import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
+
+    import Modal from './Modal.vue';
+    import CopyText from "../misc/CopyText.vue";
     import QRCode from 'qrcode'
 
-
-    export default {
+    @Component({
         components: {
             Modal,
             CopyText
-        },
-        methods: {
-            open(){
-                this.$refs.modal.open();
-            },
-            updateQR(){
-                let canvas = this.$refs.qr;
-                QRCode.toCanvas(canvas, this.address, {
-                    scale: 6,
-                    color: {
-                        light: "#f2f2f2"
-                    }
-                }, function (error) {
-                    if (error) console.error(error);
-                    // console.log('success!');
-                })
+        }
+    })
+    export default class QRModal extends Vue{
+        @Watch('address')
+        onaddrchange(val:string){
+            if(val){
+                this.updateQR()
             }
-        },
-        computed: {
-            address(){
-                return this.$store.state.selectedAddress;
-            },
-        },
-        watch: {
-            address(val){
-                if(val){
-                    this.updateQR()
+        }
+        open(){
+            // @ts-ignore
+            this.$refs.modal.open();
+        }
+        updateQR(){
+            if(!this.address) return;
+            let canvas = this.$refs.qr;
+            QRCode.toCanvas(canvas, this.address, {
+                scale: 6,
+                color: {
+                    light: "#f2f2f2"
                 }
-            }
-        },
+            }, function (error) {
+                if (error) console.error(error);
+                // console.log('success!');
+            })
+        }
+
+        get address(){
+            return this.$store.state.address;
+        }
+
         mounted() {
             this.updateQR();
         }
     }
+    //
+    // export default {
+    //     components: {
+    //         Modal,
+    //         CopyText
+    //     },
+    //     methods: {
+    //         open(){
+    //             this.$refs.modal.open();
+    //         },
+    //         updateQR(){
+    //             if(!this.address) return;
+    //             let canvas = this.$refs.qr;
+    //             QRCode.toCanvas(canvas, this.address, {
+    //                 scale: 6,
+    //                 color: {
+    //                     light: "#f2f2f2"
+    //                 }
+    //             }, function (error) {
+    //                 if (error) console.error(error);
+    //                 // console.log('success!');
+    //             })
+    //         }
+    //     },
+    //     computed: {
+    //         address(){
+    //             return this.$store.state.address;
+    //         },
+    //     },
+    //     watch: {
+    //         address(val){
+    //             if(val){
+    //                 this.updateQR()
+    //             }
+    //         }
+    //     },
+    //     mounted() {
+    //         this.updateQR();
+    //     }
+    // }
 </script>
 <style scoped lang="scss">
     .qr_body{
