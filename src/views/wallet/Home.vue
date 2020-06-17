@@ -26,6 +26,7 @@
     import Fungibles from '@/components/wallet/home/Fungibles';
     import Collectibles from '@/components/wallet/home/Collectibles';
     export default {
+        name: "WalletHome",
         data(){
             return {
                 search: "",

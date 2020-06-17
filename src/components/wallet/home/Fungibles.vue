@@ -40,10 +40,43 @@
             return stat;
         }
 
-
+        // get walletBalance(){
+        //     let balance = this.$store.getters['walletBalance'];
+        //
+        //     var clone:AvaAsset[] = balance.slice(0);
+        //         clone.sort((a,b)=>{
+        //             let symbolA = a.symbol.toUpperCase();
+        //             let symbolB = b.symbol.toUpperCase();
+        //             let amtA = a.getAmount();
+        //             let amtB = b.getAmount();
+        //
+        //             // AVA always on top
+        //             if(symbolA === 'AVA'){
+        //                 return -1;
+        //             }else if(symbolB === 'AVA'){
+        //                 return 1;
+        //             }
+        //
+        //             if(amtA.gt(amtB)){
+        //                 return -1;
+        //             }else if(amtA.lt(amtB)){
+        //                 return 1;
+        //             }
+        //
+        //             if(symbolA < symbolB){
+        //                 return -1;
+        //             }else if(symbolA > symbolB){
+        //                 return 1;
+        //             }
+        //             return 0;
+        //         });
+        //     return clone;
+        //
+        // }
         get assets(): AvaAsset[]{
-            let res: AvaAsset[] = this.$store.state.Assets.assets;
-
+            // return this.$store.getters['walletBalance'];
+            let balance = this.$store.getters['walletBalance'];
+            let res:AvaAsset[] = balance.slice(0);
 
             // Sort by balance, then name
             res.sort((a,b) => {

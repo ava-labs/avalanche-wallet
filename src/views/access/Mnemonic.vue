@@ -17,6 +17,7 @@ import {Buffer} from "buffer";
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
+
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";

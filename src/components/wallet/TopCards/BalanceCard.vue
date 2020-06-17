@@ -32,30 +32,81 @@
         </div>
     </div>
 </template>
-<script>
-    export default {
-        methods: {
-            updateBalance(){
-                this.$store.dispatch('Assets/updateUTXOs');
-                this.$store.dispatch('History/updateTransactionHistory');
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
+    import AvaAsset from "@/js/AvaAsset";
+    import AvaHdWallet from "@/js/AvaHdWallet";
+
+    @Component
+    export default class BalanceCard extends Vue {
+
+        // @Watch('ava_asset', {
+        //     deep: true
+        // })
+        // onassetchange(){
+        //     console.log('ASSET CHANGE')
+        // }
+
+        updateBalance():void{
+            this.$store.dispatch('Assets/updateUTXOs');
+            this.$store.dispatch('History/updateTransactionHistory');
+        }
+
+        get ava_asset():AvaAsset|null{
+            let ava = this.$store.getters['Assets/AssetAVA'];
+            return ava;
+        }
+
+        get balanceText():string{
+            if(this.ava_asset !== null){
+                return this.ava_asset.toString();
+            }else{
+                return '-'
             }
-        },
-        computed: {
-            ava_asset(){
-                return this.$store.getters['Assets/AssetAVA'];
-            },
-            balanceText(){
-                if(this.ava_asset !== null){
-                    return this.ava_asset.toString();
-                }else{
-                    return '-'
-                }
-            },
-            isUpdateBalance(){
-                return this.$store.state.Assets.isUpdateBalance;
-            },
+        }
+
+        get wallet():AvaHdWallet{
+            return this.$store.state.activeWallet;
+        }
+
+        get walletBalance(){
+            let walletBalance = this.$store.getters['walletBalance'];
+            return walletBalance;
+        }
+
+        get isUpdateBalance():boolean{
+            return this.$store.state.Assets.isUpdateBalance;
+        }
+
+
+        mounted(){
+
         }
     }
+    // export default {
+    //     methods: {
+    //         updateBalance(){
+    //             this.$store.dispatch('Assets/updateUTXOs');
+    //             this.$store.dispatch('History/updateTransactionHistory');
+    //         }
+    //     },
+    //     computed: {
+    //         ava_asset(){
+    //             return this.$store.getters['Assets/AssetAVA'];
+    //         },
+    //         balanceText(){
+    //             if(this.ava_asset !== null){
+    //                 return this.ava_asset.toString();
+    //             }else{
+    //                 return '-'
+    //             }
+    //         },
+    //         isUpdateBalance(){
+    //             return this.$store.state.Assets.isUpdateBalance;
+    //         },
+    //     }
+    // }
 </script>
 <style scoped lang="scss">
     @use '../../../main';
