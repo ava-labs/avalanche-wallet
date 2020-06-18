@@ -5,6 +5,7 @@ import {Module} from "vuex";
 import {AssetsState} from "@/store/modules/assets/types";
 import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
+import {ITransaction} from "@/components/wallet/transfer/types";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
@@ -18,6 +19,7 @@ export interface RootState {
     activeWallet: null|AvaHdWallet
     wallets: AvaHdWallet[]
     address: String|null
+    isLoadingPersistKeys: boolean,
 }
 
 interface Modal {
@@ -89,9 +91,8 @@ export interface KeyFileKey {
 }
 
 export interface IssueBatchTxInput {
-    changeAddresses: string[],
     toAddress: string,
-    orders: BatchTxOrder[]
+    orders: ITransaction[]
 }
 
 export interface BatchTxOrder {
