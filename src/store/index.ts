@@ -41,6 +41,7 @@ export default new Vuex.Store({
         activeWallet: null,
         address: null,
         wallets: [],
+        isLoadingPersistKeys: false, // true if currently loading the saved keys
     },
     getters: {
         walletBalanceDict(state: RootState): IWalletBalanceDict{
@@ -51,6 +52,8 @@ export default new Vuex.Store({
 
             let res: IWalletBalanceDict = {};
             let walletBalance:IWalletBalanceDict = {};
+
+            // @ts-ignore
             let assetsDict = state.Assets.assetsDict;
 
             let addrUtxos = wallet.utxoset.getAllUTXOs();
@@ -338,14 +341,21 @@ export default new Vuex.Store({
             let sessionKeys = sessionStorage.getItem('pks');
             if(!sessionKeys) return;
 
+            state.isLoadingPersistKeys = true;
+
+            // await Vue.nextTick();
+
             try{
+
                 let rawKeys = JSON.parse(sessionKeys);
 
                 await dispatch('accessWalletMultiple', rawKeys);
                 state.rememberKey = true;
+                state.isLoadingPersistKeys = false;
                 return true;
             }catch (e) {
                 console.log(e);
+                state.isLoadingPersistKeys = false;
                 return false;
             }
         },
@@ -386,7 +396,6 @@ export default new Vuex.Store({
             // console.log(amount.toString(10));
             let avm = ava.AVM();
 
-
             let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);
             let unsigned_tx = await avm.makeBaseTx(utxos, amount, toAddresses, myAddresses, changeAddresses, assetId);
             let signed_tx = avm.signTx(unsigned_tx);
@@ -395,43 +404,55 @@ export default new Vuex.Store({
             return txid;
         },
 
-        async issueBatchTx(store, data:IssueBatchTxInput){
+        async issueBatchTx({state}, data:IssueBatchTxInput){
+            let wallet = state.activeWallet;
+            if(!wallet) return 'error';
+
+            let toAddr = data.toAddress;
             let orders = data.orders;
-            for(var i=0; i<orders.length; i++){
-                let order = orders[i];
-
-                // If no amount to send, skip it
-                if(!order.amount) continue;
-
-
-                await store.dispatch('issueTx', {
-                    asset: order.asset,
-                    // assetId: order.asset.id,
-                    amount: order.amount,
-                    toAddress: data.toAddress,
-                    changeAddresses: data.changeAddresses
-                }).then(()=>{
-                    store.dispatch('Notifications/add', {
-                        title: 'Transaction Sent',
-                        message: 'You have successfully sent your transaction.'
-                    });
-                }).catch(err => {
-                    // alert(err);
-                    console.error(err);
-                    store.dispatch('Notifications/add', {
-                        title: 'Error Sending Transaction',
-                        message: err,
-                        type: 'error',
-                        duration: 10000
-                    });
-                    return 'error';
-                });
+            try{
+                let txIds = await wallet.issueBatchTx(orders, toAddr);
+                console.log(txIds);
+                return 'success';
+            }catch(e){
+                return 'error';
             }
 
-            setTimeout(() => {
-                // store.dispatch('Assets/updateUTXOs');
-                store.dispatch('History/updateTransactionHistory');
-            }, 5000);
+            // for(var i=0; i<orders.length; i++){
+            //     let order = orders[i];
+            //
+            //     // If no amount to send, skip it
+            //     if(!order.amount) continue;
+            //
+            //
+            //     await store.dispatch('issueTx', {
+            //         asset: order.asset,
+            //         // assetId: order.asset.id,
+            //         amount: order.amount,
+            //         toAddress: data.toAddress,
+            //         changeAddresses: data.changeAddresses
+            //     }).then(()=>{
+            //         store.dispatch('Notifications/add', {
+            //             title: 'Transaction Sent',
+            //             message: 'You have successfully sent your transaction.'
+            //         });
+            //     }).catch(err => {
+            //         // alert(err);
+            //         console.error(err);
+            //         store.dispatch('Notifications/add', {
+            //             title: 'Error Sending Transaction',
+            //             message: err,
+            //             type: 'error',
+            //             duration: 10000
+            //         });
+            //         return 'error';
+            //     });
+            // }
+
+            // setTimeout(() => {
+            //     // store.dispatch('Assets/updateUTXOs');
+            //     dispatch('History/updateTransactionHistory');
+            // }, 5000);
             return 'success';
         },
 

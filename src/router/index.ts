@@ -4,7 +4,7 @@ import Home from '../views/Home.vue'
 
 import Ava from '../views/wallet/Ava.vue';
 
-import Transfer from '@/components/wallet/Transfer.vue';
+import Transfer from '@/components/wallet/transfer/Transfer.vue';
 // import Assets from '../views/wallet/Assets.vue';
 import History from '../views/wallet/History.vue';
 // import Transfer from '../views/wallet/Transfer.vue';

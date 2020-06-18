@@ -14,6 +14,8 @@ import BN from "bn.js";
 
 import store from '@/store';
 import {AssetsDict} from "@/store/modules/assets/types";
+import {BatchTxOrder} from "@/store/types";
+import {ITransaction} from "@/components/wallet/transfer/types";
 
 
 // HD WALLET
@@ -43,6 +45,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     chainId: string;
     utxoset: UTXOSet;
     private indexKeyCache:IIndexKeyCache;
+    private indexChangeKeyCache:IIndexKeyCache;
 
     // The master key from slopes
     constructor(keypair: AVMKeyPair) {
@@ -53,6 +56,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.keyChain = new AVMKeyChain(this.chainId);
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
+        this.indexChangeKeyCache = {};
         let pk = keypair.getPrivateKey();
         let pkHex = pk.toString('hex');
 
@@ -110,14 +114,14 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // Scan for unknown assets and add to store
         let assetIds = result.getAssetIDs();
-        assetIds.forEach((idBuf) => {
-            let assetId = bintools.avaSerialize(idBuf);
-            let storeAsset = store.state.Assets.assetsDict[assetId];
+            assetIds.forEach((idBuf) => {
+                let assetId = bintools.avaSerialize(idBuf);
+                let storeAsset = store.state.Assets.assetsDict[assetId];
 
-            if(!storeAsset){
-                store.dispatch('Assets/addUnknownAsset', assetId);
-            }
-        });
+                if(!storeAsset){
+                    store.dispatch('Assets/addUnknownAsset', assetId);
+                }
+            });
 
 
         let addr_now = this.getCurrentKey();
@@ -129,21 +133,62 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
-    getChangeAddress():string{
-        return 'yolo';
+    getChangeAddress():string|null{
+
+        for(var i=0; i<this.hdIndex;i++){
+            let key = this.getKeyForIndex(i,true);
+
+            let utxoset = this.utxoset.getUTXOIDs([key.getAddress()]);
+            if(utxoset.length===0){
+                return key.getAddressString();
+            }
+        }
+        return null;
     }
 
 
+    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string[]>{
+        let fromAddrs = this.keyChain.getAddressStrings();
+        let changeAddr = this.getChangeAddress();
 
-    async issueTx(amount: BN, to: string[], assetID: string){
+        if(changeAddr === null){
+            alert("Unable to issue transaction. Ran out of change index.");
+            return [];
+        }
 
-        let utxoset = await this.getUTXOs();
+        console.log(fromAddrs, changeAddr);
+        let txIds = [];
 
-        let fromAddresses = this.keyChain.getAddressStrings();
-        let changeAddress = [this.getChangeAddress()];
+        for(var i=0;i<orders.length;i++){
+            let order = orders[i];
+            let amt = new BN(order.amount.toString());
+            let baseTx = await avm.makeBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
 
-        let tx = await avm.makeBaseTx(utxoset, amount, to, fromAddresses, changeAddress, assetID)
+            let signedTx = this.keyChain.signTx(baseTx);
+            // console.log(baseTx)
+            // let signedTx = avm.signTx(baseTx);
+
+            let txid = await avm.issueTx(signedTx);
+            txIds.push(txid);
+        }
+
+        return txIds;
     }
+
+    // async issueTx(amount: BN, to: string[], assetID: string){
+    //
+    //     let utxoset = await this.getUTXOs();
+    //
+    //     let fromAddresses = this.keyChain.getAddressStrings();
+    //     let changeAddress = this.getChangeAddress();
+    //
+    //     console.log(utxoset,fromAddresses,changeAddress)
+    //     if(changeAddress){
+    //         let tx = await avm.makeBaseTx(utxoset, amount, to, fromAddresses, [changeAddress], assetID)
+    //     }else{
+    //
+    //     }
+    // }
 
     // returns a keychain that has all the derived private keys
     getKeyChain(): AVMKeyChain{
@@ -151,7 +196,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         for(var i=0; i<=this.hdIndex; i++){
             let key = this.getKeyForIndex(i);
+            let keyChange = this.getKeyForIndex(i, true);
+
             keychain.addKey(key);
+            keychain.addKey(keyChange);
         }
         return keychain;
     }
@@ -224,18 +272,33 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return utxos.length !== 0;
     }
 
-    getKeyForIndex(index:number): AVMKeyPair{
-        let cache = this.indexKeyCache[index];
-        if(cache) return cache;
+    getKeyForIndex(index:number, isChange=false): AVMKeyPair{
+        if(isChange){
+            let cacheInternal = this.indexChangeKeyCache[index];
+            if(cacheInternal) return cacheInternal;
+        }else{
+            let cacheExternal = this.indexKeyCache[index];
+            if(cacheExternal) return cacheExternal;
+        }
 
-        let key = this.hdKey.derive(AVA_PATH+`/${index}`) as HDKey;
+        let derivationPath = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
+        if(isChange){
+            derivationPath = `m/44'/${AVA_TOKEN_INDEX}'/0'/1`;
+        }
+
+        let key = this.hdKey.derive(derivationPath+`/${index}`) as HDKey;
         let keychain = new AVMKeyChain('X');
         let pkHex = key.privateKey.toString('hex');
         let pkBuf = new Buffer(pkHex, 'hex');
         let addr = keychain.importKey(pkBuf);
 
         let keypair = keychain.getKey(addr);
-        this.indexKeyCache[index] = keypair;
+
+        if(!isChange){
+            this.indexKeyCache[index] = keypair;
+        }else{
+            this.indexChangeKeyCache[index] = keypair;
+        }
         return keypair;
     }
 }
