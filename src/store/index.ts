@@ -469,12 +469,15 @@ export default new Vuex.Store({
                 keys.push(key_data);
             }
 
+            const KEYSTORE_VERSION = '2.0';
+
 
             let file_data = {
                 salt: bintools.avaSerialize(salt),
                 pass_hash: bintools.avaSerialize(passHash.hash),
-                keys: keys
-            }
+                keys: keys,
+                version: KEYSTORE_VERSION
+            };
 
             // Download the file
 
