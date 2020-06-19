@@ -23,6 +23,7 @@ import {ITransaction} from "@/components/wallet/transfer/types";
 // m / purpose' / coin_type' / account' / change / address_index
 
 const AVA_TOKEN_INDEX = '9000';
+const AVA_ACCOUNT_PATH = `m/44'/${AVA_TOKEN_INDEX}'/0'`; // Change and index left out
 const AVA_PATH = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
 
 const INDEX_RANGE = 20; // a gap of at least 20 indexes is needed to claim an index unused
@@ -62,9 +63,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         let mnemonic = bip39.entropyToMnemonic(pkHex);
 
-
-        console.log("Created HD wallet with: ",pkHex);
-
         // Generate Seed
         let seed = bip39.mnemonicToSeedSync(mnemonic);
         this.seed = seed.toString('hex');
@@ -81,7 +79,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
     generateKey(): AVMKeyPair{
-        console.log("INCREMENT INDEX");
         let newIndex = this.hdIndex+1;
         let newKey = this.getKeyForIndex(newIndex);
 
@@ -106,8 +103,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
     async getUTXOs(): Promise<UTXOSet>{
-        console.log("Getting HD UTXOs");
-
         let addrs = this.keyChain.getAddresses();
         let result = await avm.getUTXOs(addrs);
         this.utxoset = result; // we can use local copy of utxos as cache for some functions
@@ -116,6 +111,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let assetIds = result.getAssetIDs();
             assetIds.forEach((idBuf) => {
                 let assetId = bintools.avaSerialize(idBuf);
+                //@ts-ignore
                 let storeAsset = store.state.Assets.assetsDict[assetId];
 
                 if(!storeAsset){
@@ -156,39 +152,19 @@ export default class AvaHdWallet implements IAvaHdWallet{
             return [];
         }
 
-        console.log(fromAddrs, changeAddr);
         let txIds = [];
 
         for(var i=0;i<orders.length;i++){
             let order = orders[i];
             let amt = new BN(order.amount.toString());
             let baseTx = await avm.makeBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
-
             let signedTx = this.keyChain.signTx(baseTx);
-            // console.log(baseTx)
-            // let signedTx = avm.signTx(baseTx);
-
             let txid = await avm.issueTx(signedTx);
             txIds.push(txid);
         }
 
         return txIds;
     }
-
-    // async issueTx(amount: BN, to: string[], assetID: string){
-    //
-    //     let utxoset = await this.getUTXOs();
-    //
-    //     let fromAddresses = this.keyChain.getAddressStrings();
-    //     let changeAddress = this.getChangeAddress();
-    //
-    //     console.log(utxoset,fromAddresses,changeAddress)
-    //     if(changeAddress){
-    //         let tx = await avm.makeBaseTx(utxoset, amount, to, fromAddresses, [changeAddress], assetID)
-    //     }else{
-    //
-    //     }
-    // }
 
     // returns a keychain that has all the derived private keys
     getKeyChain(): AVMKeyChain{
@@ -281,9 +257,12 @@ export default class AvaHdWallet implements IAvaHdWallet{
             if(cacheExternal) return cacheExternal;
         }
 
-        let derivationPath = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
+        let accountPath = AVA_ACCOUNT_PATH;
+
+        // index is left out
+        let derivationPath = accountPath+'/0';
         if(isChange){
-            derivationPath = `m/44'/${AVA_TOKEN_INDEX}'/0'/1`;
+            derivationPath = accountPath+'/1';
         }
 
         let key = this.hdKey.derive(derivationPath+`/${index}`) as HDKey;
