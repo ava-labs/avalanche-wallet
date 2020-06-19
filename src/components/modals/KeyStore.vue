@@ -31,7 +31,7 @@
     (async () => {
        await _sodium.ready;
         sodium = _sodium;
-       console.log(sodium)
+       // console.log(sodium)
     })();
 
     export default {

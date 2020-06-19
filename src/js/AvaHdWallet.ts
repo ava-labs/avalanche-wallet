@@ -136,6 +136,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
             let utxoset = this.utxoset.getUTXOIDs([key.getAddress()]);
             if(utxoset.length===0){
+                // console.log("Change index: ",i)
                 return key.getAddressString();
             }
         }
@@ -222,7 +223,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 }
             }
 
-            console.log(`Gap size ${i}: ${gapSize}`);
+            // console.log(`Gap size ${i}: ${gapSize}`);
             if(gapSize===INDEX_RANGE){
                 return i;
             }
@@ -233,7 +234,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     async lookaheadHasBalance(index: number): Promise<boolean>{
         let keychain = new AVMKeyChain('X');
-        console.log("Scanning for index: ",index);
+        // console.log("Scanning for index: ",index);
 
         for(var i=index;i<index+INDEX_RANGE;i++){
             // Derive Key and add to KeyChain
