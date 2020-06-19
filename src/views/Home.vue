@@ -1,8 +1,5 @@
 <template>
     <div class="home">
-        <div v-if="isLoadingPersistKeys">
-            LOADING KEYS
-        </div>
         <div>
             <img class="logo" src="@/assets/wallet_logo.png">
             <router-link to="/access">Access Wallet</router-link>
@@ -28,60 +25,7 @@
         }
     })
     export default class Home extends Vue{
-        loginType:string = "key"; // key || keystore || new
-        privateKey:string = "";
-        address:string = "";
-
-
-        get isLoadingPersistKeys():boolean{
-            return this.$store.state.isLoadingPersistKeys;
-        }
-
-        // get loginComponent(){
-        //     if(this.loginType === 'key'){
-        //         return PrivateKeyLogin;
-        //     }else if(this.loginType === 'new'){
-        //         return CreateNew;
-        //     }else{
-        //         return KeystoreLogin;
-        //     }
-        // }
     }
-
-    // export default {
-    //     name: 'home',
-    //     data(){
-    //         return{
-    //             loginType: "key", // key || keystore || new
-    //             privateKey: "",
-    //             address: "",
-    //             // If generated...
-    //             newPrivateKey: "",
-    //             newPublicKey: "",
-    //             newAddr: "",
-    //             menu: 'main', // main | new | access
-    //         }
-    //     },
-    //     components: {
-    //         // QRReader,
-    //         KeystoreLogin,
-    //         PrivateKeyLogin,
-    //         CreateNew
-    //     },
-    //     computed: {
-    //         isLoadingPersistKeys(){
-    //         },
-    //         loginComponent(){
-    //             if(this.loginType === 'key'){
-    //                 return PrivateKeyLogin;
-    //             }else if(this.loginType === 'new'){
-    //                 return CreateNew;
-    //             }else{
-    //                 return KeystoreLogin;
-    //             }
-    //         }
-    //     }
-    // }
 </script>
 <style scoped lang="scss">
     .home{

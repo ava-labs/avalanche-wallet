@@ -45,12 +45,13 @@
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { Vue, Component, Ref } from 'vue-property-decorator';
 
     import TxList from "@/components/wallet/transfer/TxList.vue";
-    // import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
     import RadioButtons from "@/components/misc/RadioButtons.vue";
-    // import QRInput from "@/components/misc/QRInput";
+    import Big from "big.js";
+
+    //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
     import {isValidAddress} from "../../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
@@ -107,6 +108,7 @@
                 parent.isAjax = false;
 
                 if(res === 'success'){
+                    // @ts-ignore
                     parent.$refs.txList.clear();
 
                     this.$store.dispatch('Notifications/add', {
@@ -131,17 +133,17 @@
             return null;
         }
         get canSend(){
-            if(this.addressIn && this.orders.length>0 && this.totalTxSize>0){
+            if(this.addressIn && this.orders.length>0 && this.totalTxSize.gt(0)){
                 return true;
             }
             return false;
         }
         get totalTxSize(){
-            let res = 0;
+            let res = Big(0);
             for(var i=0; i<this.orders.length; i++){
                 let order = this.orders[i];
                 if(order.amount){
-                    res += this.orders[i].amount;
+                    res = res.add(this.orders[i].amount);
                 }
             }
             return res;
@@ -156,110 +158,6 @@
             return this.$store.state.Assets.assets;
         }
     }
-    //
-    // export default {
-    //     components: {
-    //         FaucetLink,
-    //         // QRReader,
-    //         TxList,
-    //         // AddressDropdown,
-    //         RadioButtons,
-    //         QrInput
-    //     },
-    //     data(){
-    //         return{
-    //             showAdvanced: false,
-    //             isAjax: false,
-    //             addressIn: '',
-    //             orders: [],
-    //             errors: [],
-    //             change_address: '',
-    //         }
-    //     },
-    //     methods: {
-    //         changeAddressesChange(val){
-    //             this.change_address = val;
-    //         },
-    //         // toggleAdvanced(){
-    //         //     this.showAdvanced = !this.showAdvanced;
-    //         // },
-    //         updateTxList(data){
-    //             this.orders = data;
-    //         },
-    //         onQrRead(value){
-    //             this.addressIn = value;
-    //         },
-    //         formCheck(){
-    //             this.errors = [];
-    //             let err = [];
-    //             if(!isValidAddress(this.addressIn)){
-    //                 err.push('Invalid address.')
-    //             }
-    //
-    //
-    //             this.errors = err;
-    //             if(err.length===0){
-    //                 this.send();
-    //             }
-    //         },
-    //         send(){
-    //             let parent = this;
-    //             this.isAjax = true;
-    //
-    //             let txList = {
-    //                 toAddress: this.addressIn,
-    //                 orders: this.orders
-    //             };
-    //
-    //             this.$store.dispatch('issueBatchTx', txList).then(res => {
-    //                 parent.isAjax = false;
-    //
-    //                 if(res === 'success'){
-    //                     parent.$refs.txList.clear();
-    //                 }
-    //             });
-    //         }
-    //     },
-    //     computed: {
-    //         faucetLink(){
-    //             let link = process.env.VUE_APP_FAUCET_LINK;
-    //             if(link) return link;
-    //             return null;
-    //         },
-    //         canSend(){
-    //             if(this.addressIn && this.orders.length>0 && this.totalTxSize>0 && this.change_address.length > 0){
-    //                 return true;
-    //             }
-    //             return false;
-    //         },
-    //         totalTxSize(){
-    //           let res = 0;
-    //           for(var i=0; i<this.orders.length; i++){
-    //               let order = this.orders[i];
-    //               if(order.amount){
-    //                   res += this.orders[i].amount;
-    //               }
-    //           }
-    //           return res;
-    //         },
-    //         selectedAddress(){
-    //             return this.$store.state.selectedAddress;
-    //         },
-    //         addresses(){
-    //             return this.$store.state.addresses;
-    //         },
-    //         // assets(){
-    //         //     return this.$store.getters['Assets/assetsArray'];
-    //         //     // return this.$store.state.assets;
-    //         // },
-    //         assetArray(){
-    //             return this.$store.state.Assets.assets;
-    //         }
-    //     },
-    //     created() {
-    //         this.change_address = this.selectedAddress;
-    //     }
-    // }
 </script>
 
 

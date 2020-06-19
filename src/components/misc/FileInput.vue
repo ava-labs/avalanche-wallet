@@ -57,10 +57,6 @@
             }
         },
         computed: {
-            // files(){
-            //     let input = this.$refs.input;
-            //     return input.files;
-            // },
             fileNum(){
                 return this.files.length;
             }
@@ -84,5 +80,10 @@
         top: 0;
         left: 0;
         opacity: 0;
+    }
+
+    p{
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
