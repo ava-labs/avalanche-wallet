@@ -34,41 +34,28 @@ const history_module: Module<HistoryState, RootState> = {
             }
 
             state.isUpdating = true;
-            console.log("Updating history...");
-
-            let addr = rootState.address;
-            let addrRaw = addr.split('-')[1];
 
             let offset = 0;
             let limit = 20;
 
             let addresses = rootState.activeWallet.getKeyChain().getAddressStrings();
 
-            console.log("HISTORY ADDR:",addresses.length);
             let query = addresses.map(val => {
                 let raw = val.split('-')[1];
                 return `address=${raw}`;
-            })
+            });
 
 
-            // TODO: update history collectively for all the addresses
-            // TODO: or just the selected key?
-
+            // Get history for all addresses of the active HD wallet
             let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
             let res = await explorer_api.get(url);
 
             let transactions = res.data.transactions;
 
-            console.log(transactions);
-
             state.transactions = transactions;
             state.isUpdating = false;
         }
-    },
-    getters: {
-
     }
-
 };
 
 export default history_module;

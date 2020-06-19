@@ -67,16 +67,6 @@ export default new Vuex.Store({
 
                 let assetObj:AvaAsset|undefined = assetsDict[assetId];
                 if(!assetObj) continue;
-                // if(!assetObj){
-                //                 //
-                //                 // }
-
-                // If this asset is unknown
-                // if(!assetObj){
-                //     let name = assetId.substring(0,4);
-                //     let symbol = assetObj.symbol;
-                //     let denomination = 0;
-                // }
 
                 let asset = walletBalance[assetId];
                 if(!asset){
@@ -106,61 +96,13 @@ export default new Vuex.Store({
             return res;
         },
         walletBalance(state: RootState, getters): AvaAsset[]{
-
-            // if(wallet === null){
-            //     wallet = state.activeWallet;
-            // }
             let balanceDict = getters.walletBalanceDict;
             let res:AvaAsset[] = [];
             for(var id in balanceDict){
                 res.push(balanceDict[id])
             }
             return res;
-            // let wallet = state.activeWallet;
-            //
-            // if(!wallet) return [];
-            // if(!wallet.utxoset) return [];
-            //
-            // let res: AvaAsset[] = [];
-            // let walletBalance:IWalletBalanceDict = {};
-            // let assetsDict = state.Assets.assetsDict;
-            //
-            // let addrUtxos = wallet.utxoset.getAllUTXOs();
-            // for(var n=0; n<addrUtxos.length; n++){
-            //     let utxo = addrUtxos[n];
-            //     let utxoOut = utxo.getOutput() as AmountOutput;
-            //
-            //     let amount = utxoOut.getAmount();
-            //     let assetIdBuff = utxo.getAssetID();
-            //     let assetId = bintools.avaSerialize(assetIdBuff);
-            //
-            //     let assetObj = assetsDict[assetId];
-            //     let asset = walletBalance[assetId];
-            //     if(!asset){
-            //         let name = assetObj.name;
-            //         let symbol = assetObj.symbol;
-            //         let denomination = assetObj.denomination;
-            //
-            //         let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-            //         newAsset.addBalance(amount);
-            //
-            //         walletBalance[assetId] = newAsset;
-            //     }else{
-            //         asset.addBalance(amount)
-            //     }
-            // }
-            //
-            // for(var assetId in assetsDict){
-            //     let asset;
-            //     if(!walletBalance[assetId]){
-            //         asset = assetsDict[assetId];
-            //     }else{
-            //         asset = walletBalance[assetId];
-            //     }
-            //     res.push(asset);
-            // }
-            //
-            // return res;
+
         },
         appReady(state: RootState, getters){
             let avaAsset = getters['Assets/AssetAVA'];
@@ -179,22 +121,6 @@ export default new Vuex.Store({
         selectAddress(state, val){
             state.selectedAddress = val;
         },
-        removeWallet(state, wallet:AvaHdWallet){
-            let wallets = state.wallets;
-
-
-            for(var i=0;i<wallets.length;i++){
-                let w = wallets[i];
-                if(wallet === w){
-                    wallets.splice(i,1);
-                    return;
-                }
-            }
-
-            keyChain.removeKey(wallet.masterKey);
-
-
-        },
         updateActiveAddress(state){
             if(!state.activeWallet){
                 state.address = null;
@@ -205,19 +131,11 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        // Gets addresses from the keys in the keychain,
-        // Useful after entering wallet, adding/removing new keys
-        // async refreshAddresses(store){
-        //     store.state.addresses = keyChain.getAddressStrings();
-        //
-        //     // await store.dispatch('Assets/updateUTXOs');
-        // },
-
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
         async accessWallet({state, dispatch, commit}, pk: string){
 
-            let wallet:AvaHdWallet = await dispatch('addKey', pk);
+            let wallet:AvaHdWallet = await dispatch('addWallet', pk);
 
             await dispatch('activateWallet', wallet);
 
@@ -228,7 +146,7 @@ export default new Vuex.Store({
         async accessWalletMultiple({state, dispatch, commit}, pks: string[]){
             for(var i=0;i<pks.length;i++){
                 let pk = pks[i];
-                let wallet:AvaHdWallet = await dispatch('addKey', pk);
+                let wallet:AvaHdWallet = await dispatch('addWallet', pk);
             }
             await dispatch('activateWallet', state.wallets[0]);
 
@@ -238,19 +156,8 @@ export default new Vuex.Store({
 
         onAccess(store){
             router.push('/wallet');
-
-            // store.dispatch('refreshAddresses');
-            // store.dispatch('Assets/updateUTXOs');
-            // store.dispatch('History/updateTransactionHistory');
         },
 
-        // async onlogout({state, dispatch}){
-        //     state.privateKey = '';
-        //     state.addresses = [];
-        //     state.selectedAddress = '';
-        //
-        //     await dispatch('Assets/onlogout');
-        // },
 
         async logout(store){
             // Delete keys
@@ -276,65 +183,79 @@ export default new Vuex.Store({
 
 
         // used with logout
-        async removeAllKeys(store){
-            let addrs = store.state.addresses;
-          for(var i=addrs.length-1; i >= 0; i--){
-              let addr = store.state.addresses[i];
-              await store.dispatch('removeKey', addr);
-          }
+        async removeAllKeys({state, dispatch}){
+            let wallets = state.wallets;
+
+            for(var i=0; i<wallets.length;i++){
+                let wallet = wallets[i];
+                await dispatch('removeWallet', wallet);
+
+                dispatch('Notifications/add', {
+                    title: 'Key Removed',
+                    message: 'Private key and assets removed from the wallet.'
+                });
+            }
+
+          //   let addrs = state.addresses;
+          // for(var i=addrs.length-1; i >= 0; i--){
+          //     let addr = state.addresses[i];
+          //     await dispatch('removeKey', addr);
+          // }
         },
 
-        removeKey({state, dispatch, commit}, address:string){
+        async addWallet({state, dispatch}, pk:string): Promise<AvaHdWallet>{
 
-            let keyBuff = bintools.stringToAddress(address);
-            let key = keyChain.getKey(keyBuff);
-            keyChain.removeKey(key);
+            let pkBuff = bintools.avaDeserialize(pk);
+            let addrBuf = keyChain.importKey(pkBuff);
+            let keypair = keyChain.getKey(addrBuf);
 
-            let addresses = state.addresses;
 
-            if(address === state.selectedAddress){
-                for(var i=0; i<addresses.length;i++){
-                    let addr = addresses[i];
-                    if(address !== addr){
-                        commit('selectAddress', addr);
-                        break;
-                    }
-                }
+            // Create new HD Wallet for the key
+            let hdWallet = new AvaHdWallet(keypair);
+
+            state.wallets.push(hdWallet);
+
+            // state.addresses = keyChain.getAddressStrings();
+
+            if(state.rememberKey){
+                dispatch('saveKeys');
             }
 
 
-            dispatch('Notifications/add', {
-                title: 'Key Removed',
-                message: 'Private key and assets removed from the wallet.'
-            });
-
-            dispatch('refreshAddresses');
-            // dispatch('Assets/updateUTXOs');
+            return hdWallet;
         },
 
+        removeWallet({state,dispatch}, wallet:AvaHdWallet){
+            let masterKey = wallet.masterKey;
+            keyChain.removeKey(masterKey);
+
+            let index = state.wallets.indexOf(wallet);
+            state.wallets.splice(index,1);
+
+            if(state.rememberKey){
+                dispatch('saveKeys');
+            }
+        },
 
         // Saves current keys to browser Session Storage
         async saveKeys({state, dispatch}){
-            let addresses = keyChain.getAddresses();
+            let wallets = state.wallets;
 
-            let rawKeys: string[] = [];
-            addresses.forEach(addr => {
-                let key = keyChain.getKey(addr);
-                let raw = key.getPrivateKeyString();
-                rawKeys.push(raw);
+            let keys: string[] = [];
+
+
+            wallets.forEach(wallet => {
+               let key = wallet.masterKey;
+               let pk = key.getPrivateKeyString();
+                keys.push(pk);
+
             });
 
-            let saveData = JSON.stringify(rawKeys);
+            let saveData = JSON.stringify(keys);
             sessionStorage.setItem('pks', saveData);
-
-
-
-            dispatch('Notifications/add',{
-               title: "Keys saved.",
-               message: "Your keys are saved for easy access to your wallet.",
-                type: 'success'
-            });
         },
+
+
 
         // Tries to read the session storage and add keys to the wallet
         async autoAccess({state, dispatch}){
@@ -360,50 +281,6 @@ export default new Vuex.Store({
             }
         },
 
-        async addKey({state, dispatch}, pk:string): Promise<AvaHdWallet>{
-
-            let pkBuff = bintools.avaDeserialize(pk);
-            let addrBuf = keyChain.importKey(pkBuff);
-            let keypair = keyChain.getKey(addrBuf);
-
-
-            // Create new HD Wallet for the key
-            let hdWallet = new AvaHdWallet(keypair);
-
-            state.wallets.push(hdWallet);
-
-            // state.addresses = keyChain.getAddressStrings();
-
-            if(state.rememberKey){
-                dispatch('saveKeys');
-            }
-
-
-            return hdWallet;
-        },
-
-        async issueTx(store, data:IssueTxInput){
-            let myAddresses = store.state.addresses;
-            let toAddresses = [data.toAddress];
-            let changeAddresses = data.changeAddresses;
-
-            let asset = data.asset;
-            let amount = data.amount;
-
-
-            let assetId = asset.id;
-
-            // console.log(amount.toString(10));
-            let avm = ava.AVM();
-
-            let utxos = await store.dispatch('Assets/getAllUTXOsForAsset', assetId);
-            let unsigned_tx = await avm.makeBaseTx(utxos, amount, toAddresses, myAddresses, changeAddresses, assetId);
-            let signed_tx = avm.signTx(unsigned_tx);
-
-            let txid = await avm.issueTx(signed_tx);
-            return txid;
-        },
-
         async issueBatchTx({state}, data:IssueBatchTxInput){
             let wallet = state.activeWallet;
             if(!wallet) return 'error';
@@ -412,48 +289,10 @@ export default new Vuex.Store({
             let orders = data.orders;
             try{
                 let txIds = await wallet.issueBatchTx(orders, toAddr);
-                console.log(txIds);
                 return 'success';
-            }catch(e){
+            }catch(e) {
                 return 'error';
             }
-
-            // for(var i=0; i<orders.length; i++){
-            //     let order = orders[i];
-            //
-            //     // If no amount to send, skip it
-            //     if(!order.amount) continue;
-            //
-            //
-            //     await store.dispatch('issueTx', {
-            //         asset: order.asset,
-            //         // assetId: order.asset.id,
-            //         amount: order.amount,
-            //         toAddress: data.toAddress,
-            //         changeAddresses: data.changeAddresses
-            //     }).then(()=>{
-            //         store.dispatch('Notifications/add', {
-            //             title: 'Transaction Sent',
-            //             message: 'You have successfully sent your transaction.'
-            //         });
-            //     }).catch(err => {
-            //         // alert(err);
-            //         console.error(err);
-            //         store.dispatch('Notifications/add', {
-            //             title: 'Error Sending Transaction',
-            //             message: err,
-            //             type: 'error',
-            //             duration: 10000
-            //         });
-            //         return 'error';
-            //     });
-            // }
-
-            // setTimeout(() => {
-            //     // store.dispatch('Assets/updateUTXOs');
-            //     dispatch('History/updateTransactionHistory');
-            // }, 5000);
-            return 'success';
         },
 
 
@@ -462,7 +301,6 @@ export default new Vuex.Store({
             state.selectedAddress = wallet.getCurrentAddress();
 
             commit('updateActiveAddress');
-            // dispatch('Assets/readWalletBalance');
             dispatch('History/updateTransactionHistory');
         },
 
@@ -577,7 +415,7 @@ export default new Vuex.Store({
                             }else{
                                 for(i=0; i<keyStrings.length;i++){
                                     let key = keyStrings[i];
-                                    let keypair = await store.dispatch('addKey', key);
+                                    let keypair = await store.dispatch('addWallet', key);
                                     // let pairAddress = keypair.getAddressString();
                                     // if(pairAddress !== keyAddresses[i]){
                                     //     await store.dispatch('removeKey', pairAddress);

@@ -20,6 +20,7 @@
     import jsPDF from 'jspdf';
     var pdfjsLib = require("pdfjs-dist");
     import printjs from 'print-js'
+    import {AVMKeyPair} from "slopes";
 
     const PDF_W = 8.5;
     const PDF_H = 11;
@@ -208,7 +209,7 @@
                 filename: "avapaperwallet.pdf"
             });
 
-            let pdf = await pdfjsLib.getDocument(pdfData);
+            let pdf = await pdfjsLib.getDocument(pdfData).promise;
 
             const page = await pdf.getPage(1);
 
@@ -224,7 +225,7 @@
                 canvasContext: context,
                 viewport: viewport
             };
-            await page.render(renderContext);
+            await page.render(renderContext).promise;
         }
 
 
@@ -233,14 +234,18 @@
 
 
         get address(){
-            return this.$store.state.address;
+            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!activeKey){
+                return '-'
+            }
+            return activeKey.getAddressString();
         }
 
-        get privateKey(){
+        get privateKey():string{
             return this.$store.state.activeWallet.getCurrentKey().getPrivateKeyString();
         }
 
-        get aspectRatio(){
+        get aspectRatio():number{
             return PDF_W/PDF_H;
         }
 

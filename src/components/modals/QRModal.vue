@@ -14,6 +14,7 @@
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
     import QRCode from 'qrcode'
+    import {AVMKeyPair} from "slopes";
 
     @Component({
         components: {
@@ -22,12 +23,14 @@
         }
     })
     export default class QRModal extends Vue{
-        @Watch('address')
+        @Watch('address', { immediate: true })
         onaddrchange(val:string){
             if(val){
                 this.updateQR()
             }
         }
+
+
         open(){
             // @ts-ignore
             this.$refs.modal.open();
@@ -47,7 +50,11 @@
         }
 
         get address(){
-            return this.$store.state.address;
+            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!activeKey){
+                return '-'
+            }
+            return activeKey.getAddressString();
         }
 
         mounted() {
