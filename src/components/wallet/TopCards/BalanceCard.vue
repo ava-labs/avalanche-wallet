@@ -84,29 +84,6 @@
 
         }
     }
-    // export default {
-    //     methods: {
-    //         updateBalance(){
-    //             this.$store.dispatch('Assets/updateUTXOs');
-    //             this.$store.dispatch('History/updateTransactionHistory');
-    //         }
-    //     },
-    //     computed: {
-    //         ava_asset(){
-    //             return this.$store.getters['Assets/AssetAVA'];
-    //         },
-    //         balanceText(){
-    //             if(this.ava_asset !== null){
-    //                 return this.ava_asset.toString();
-    //             }else{
-    //                 return '-'
-    //             }
-    //         },
-    //         isUpdateBalance(){
-    //             return this.$store.state.Assets.isUpdateBalance;
-    //         },
-    //     }
-    // }
 </script>
 <style scoped lang="scss">
     @use '../../../main';
