@@ -10,22 +10,10 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-
-    // import KeystoreLogin from '@/components/home/KeystoreLogin';
-    // import PrivateKeyLogin from "@/components/home/PrivateKeyLogin";
-    // import CreateNew from "@/components/home/CreateNew";
-
-
     @Component({
         name: 'home',
-        components: {
-            // KeystoreLogin,
-            // PrivateKeyLogin,
-            // CreateNew
-        }
     })
-    export default class Home extends Vue{
-    }
+    export default class Home extends Vue{}
 </script>
 <style scoped lang="scss">
     .home{

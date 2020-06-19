@@ -107,7 +107,7 @@
 
                     // Get froms
 
-                    console.log(diff, inAsset.addresses);
+                    // console.log(diff, inAsset.addresses);
                 }else{
                     // Asset Genesis
                     amount = outVal;
@@ -129,7 +129,7 @@
 
                     // Get froms
 
-                    console.log(diff, inAsset.addresses);
+                    // console.log(diff, inAsset.addresses);
                 }else{
                     // Asset Genesis
                     amount = outVal;
