@@ -53,7 +53,7 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({state, commit, dispatch}){
-            let netTest = new AvaNetwork("Denali TestNet", 'https://bootstrap.ava.network:21000', 3, 'X', 'https://explorerapi.ava.network');
+            let netTest = new AvaNetwork("Denali TestNet", 'https://bootstrap.avax.network:21000', 3, 'X', 'https://explorerapi.avax.network');
             let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 12345, 'X');
 
 
