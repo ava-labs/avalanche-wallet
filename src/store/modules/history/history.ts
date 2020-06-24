@@ -22,7 +22,7 @@ const history_module: Module<HistoryState, RootState> = {
 
     },
     actions: {
-        async updateTransactionHistory({state, rootState}){
+        async updateTransactionHistory({state, rootState, rootGetters}){
             if(!rootState.activeWallet) return;
 
             // @ts-ignore
@@ -38,13 +38,12 @@ const history_module: Module<HistoryState, RootState> = {
             let offset = 0;
             let limit = 20;
 
-            let addresses = rootState.activeWallet.getKeyChain().getAddressStrings();
+            let addresses:string[] = rootGetters.addresses;
 
             let query = addresses.map(val => {
                 let raw = val.split('-')[1];
                 return `address=${raw}`;
             });
-
 
             // Get history for all addresses of the active HD wallet
             let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;

@@ -41,6 +41,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
     hdKey:HDKey;
     hdIndex:number;
     keyChain: AVMKeyChain;
+    // externalKeys: AVMKeyChain;
+    // internalKeys: AVMKeyChain;
     chainId: string;
     utxoset: UTXOSet;
     private indexKeyCache:IIndexKeyCache;
@@ -53,6 +55,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.hdIndex = 0;
         this.seed = null;
         this.keyChain = new AVMKeyChain(this.chainId);
+        // this.externalKeys = new AVMKeyChain(this.chainId);
+        // this.internalKeys = new AVMKeyChain(this.chainId);
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
         this.indexChangeKeyCache = {};
@@ -165,6 +169,15 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return txIds;
     }
 
+    // getExternalKeyChain(): AVMKeyChain{
+    //     let keychain = new AVMKeyChain(this.chainId);
+    //     for(var i=0; i<=this.hdIndex; i++){
+    //         let keyChange = this.getKeyForIndex(i);
+    //         keychain.addKey(keyChange);
+    //     }
+    //     return keychain;
+    // }
+
     // returns a keychain that has all the derived private keys
     getKeyChain(): AVMKeyChain{
         let keychain = new AVMKeyChain(this.chainId);
@@ -188,8 +201,11 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         for(var i=start;i<start+SCAN_SIZE;i++){
             // Derive Key and add to KeyChain
+            // Scan both external and internal addresses
             let key = this.getKeyForIndex(i);
+            let keyInternal = this.getKeyForIndex(i, true);
             keychain.addKey(key);
+            keychain.addKey(keyInternal);
         }
 
         let addresses = keychain.getAddresses();

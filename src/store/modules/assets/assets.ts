@@ -14,6 +14,7 @@ import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
 import AvaHdWallet from "@/js/AvaHdWallet";
+import {tr} from "@/locales/tr";
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -76,6 +77,7 @@ const assets_module: Module<AssetsState, RootState> = {
             commit('setIsUpdateBalance', true);
             await wallet.getUTXOs();
             commit('updateActiveAddress', null, {root: true});
+            dispatch('History/updateTransactionHistory', null, {root: true});
             commit('setIsUpdateBalance', false);
 
 

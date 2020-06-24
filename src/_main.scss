@@ -93,7 +93,19 @@ a{
 
 
 
-
+//*[tooltip]:hover{
+//  position: relative;
+//  &:before{
+//    font-size: 12px;
+//    content: attr(tooltip);
+//    background-color: #000;
+//    color: #fff;
+//    position: absolute;
+//    left: 0px;
+//    height: max-content;
+//    top: 0px;
+//  }
+//}
 
 
 

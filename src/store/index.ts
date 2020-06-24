@@ -104,6 +104,16 @@ export default new Vuex.Store({
             return res;
 
         },
+        // externalAddresses(state: RootState): string[]{
+        //     if(!state.activeWallet) return [];
+        //     let addresses = state.activeWallet.getExternalKeyChain().getAddressStrings();
+        //     return addresses;
+        // },
+        addresses(state: RootState): string[]{
+            if(!state.activeWallet) return [];
+            let addresses = state.activeWallet.getKeyChain().getAddressStrings();
+            return addresses;
+        },
         appReady(state: RootState, getters){
             let avaAsset = getters['Assets/AssetAVA'];
 
@@ -128,6 +138,7 @@ export default new Vuex.Store({
                 let keynow = state.activeWallet.getCurrentKey();
                 state.address = keynow.getAddressString();
             }
+
         }
     },
     actions: {

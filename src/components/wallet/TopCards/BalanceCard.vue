@@ -3,7 +3,8 @@
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
-                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
+                    <Spinner v-if="isUpdateBalance"></Spinner>
+<!--                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">-->
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
@@ -37,8 +38,13 @@
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
     import AvaHdWallet from "@/js/AvaHdWallet";
+    import Spinner from '@/components/misc/Spinner.vue';
 
-    @Component
+    @Component({
+        components: {
+            Spinner
+        }
+    })
     export default class BalanceCard extends Vue {
 
         // @Watch('ava_asset', {
