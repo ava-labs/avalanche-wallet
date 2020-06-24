@@ -19,6 +19,11 @@
     import QRCode from 'qrcode'
     import jsPDF from 'jspdf';
     var pdfjsLib = require("pdfjs-dist");
+    //
+    // The workerSrc property shall be specified.
+    //
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
+
     import printjs from 'print-js'
     import {AVMKeyPair} from "avalanche";
 

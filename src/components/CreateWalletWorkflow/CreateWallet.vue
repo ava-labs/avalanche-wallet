@@ -27,7 +27,12 @@
                             <p class="warn"><b>WARNING</b><br> Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases.</p>
                             <div class="access_cont">
                                 <remember-key v-model="rememberKey" explain="Remember key phrase. Your keys will persist until you close the browser tab."></remember-key>
-                                <button class="access generate" @click="access">Access Wallet</button>
+                                <div class="submit">
+                                    <transition name="fade" mode="out-in">
+                                    <Spinner v-if="isLoad"></Spinner>
+                                    <button v-else class="access generate" @click="access">Access Wallet</button>
+                                    </transition>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -41,6 +46,7 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
+    import Spinner from '@/components/misc/Spinner.vue';
     import {bintools, cryptoHelpers, keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
@@ -62,10 +68,12 @@
             CopyText,
             RememberKey,
             TextDisplayCopy,
-            MnemonicDisplay
+            MnemonicDisplay,
+            Spinner
         }
     })
     export default class CreateWallet extends Vue{
+        isLoad: boolean = false;
         rememberKey:boolean = false;
         newPrivateKey: string|null =null;
         keyPhrase: string = "";
@@ -92,8 +100,12 @@
         async access(): Promise<void>{
             if(!this.keyPair) return;
 
+            this.isLoad = true;
             this.$store.state.rememberKey = this.rememberKey;
-            this.$store.dispatch('accessWallet', this.newPrivateKey);
+            let parent = this;
+            setTimeout(()=>{
+                parent.$store.dispatch('accessWallet', parent.newPrivateKey);
+            }, 500);
         }
     }
 </script>
@@ -176,7 +188,7 @@
 
     .access{
         margin: 0px 0px;
-        margin-top: 30px;
+        /*margin-top: 30px;*/
     }
 
     .access_cont{
@@ -203,6 +215,11 @@
         /*width: 20px;*/
         /*height: 20px;*/
         margin: 0px auto;
+    }
+
+    .submit{
+        display: flex;
+        justify-content: center;
     }
     @include main.mobile-device{
         .access{

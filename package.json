@@ -52,7 +52,7 @@
     "libsodium-wrappers": "^0.7.6",
     "moment": "^2.26.0",
     "morgan": "^1.9.1",
-    "pdfjs-dist": "^2.2.228",
+    "pdfjs-dist": "^2.4.456",
     "print-js": "^1.0.63",
     "qr-scanner": "^1.1.1",
     "qrcode": "^1.4.4",

@@ -15,9 +15,7 @@
                     <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
                 </div>
             </div>
-
         </div>
-
     </div>
 </template>
 <script lang="ts">
