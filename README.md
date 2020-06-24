@@ -5,6 +5,7 @@ This is the frontend Vue.js application for the AVA Wallet.
 
 ## Prerequisites
 
+- Yarn (https://classic.yarnpkg.com/en/docs/install/)
 - Recent version of npm (6.13.4)
 - Node v12.14.1
 - Gecko, AVA client in Golang (https://github.com/ava-labs/gecko)
@@ -13,7 +14,7 @@ This is the frontend Vue.js application for the AVA Wallet.
 
 1) Clone the repo ``git clone https://github.com/ava-labs/ava-wallet.git``
 2) Go to root of the project ``cd ava-wallet``
-3) Install javascript dependencies with ``npm install``.
+3) Install javascript dependencies with ``yarn install``.
 
 
 ## Running The Project
@@ -21,14 +22,14 @@ This is the frontend Vue.js application for the AVA Wallet.
 In order for the wallet to work, it needs the AVA network to operate on. By default the wallet will connect to the AVA test network.
 
 1) If you want to connect to a local network, make sure you have installed and able to run a Gecko node properly.
-2) Run the project with hot reloading ``npm run serve``
+2) Run the project with hot reloading ``yarn serve``
 
 When you go to the website on your browser, you might get a warning saying 
 "Site is not secure". This is because we are signing our own SSL Certificates. Please ignore and continue to the website.
 
 ## Deployment
 
- 1) Compile and minify to have a production ready application with ``npm run build``. 
+ 1) Compile and minify to have a production ready application with ``yarn build``. 
  2) Serve from the ``/dist`` directory.
  
  ## Changing the Network
@@ -64,4 +65,4 @@ devServer: {
 },
 ```
 
-and run `npm run serve` to reflect the change.
+and run `yarn serve` to reflect the change.
