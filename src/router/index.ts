@@ -48,28 +48,28 @@ const routes = [
             {
                 path: '/',
                 name: 'access',
-                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/Menu.vue'),
+                component: () => import(/* webpackChunkName: "menu" */ '../views/access/Menu.vue'),
             },
             {
                 path: 'private_key',
-                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/AccessString.vue'),
+                component: () => import(/* webpackChunkName: "access_string" */ '../views/access/AccessString.vue'),
             },
             {
                 path: 'keystore',
-                component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Keystore.vue'),
+                component: () => import(/* webpackChunkName: "access_keystore" */ '../views/access/Keystore.vue'),
             },
             {
                 path: 'mnemonic',
-                component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Mnemonic.vue'),
+                component: () => import(/* webpackChunkName: "mnemonic" */ '../views/access/Mnemonic.vue'),
             }
         ],
-        component: () => import(/* webpackChunkName: "about" */ '../views/access/Access.vue'),
+        component: () => import(/* webpackChunkName: "access" */ '../views/access/Access.vue'),
         beforeEnter: ifNotAuthenticated
     },
     {
         path: '/create',
         name: 'create',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Create.vue'),
+        component: () => import(/* webpackChunkName: "create" */ '../views/Create.vue'),
         beforeEnter: ifNotAuthenticated
     },
     {
@@ -93,7 +93,7 @@ const routes = [
                 component: Advanced
             }
         ],
-        component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue'),
+        component: () => import(/* webpackChunkName: "wallet" */ '../views/Wallet.vue'),
         beforeEnter: ifAuthenticated
     },
 ]
