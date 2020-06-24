@@ -7,8 +7,16 @@ export interface IIndexKeyCache{
     [index:number]: AVMKeyPair
 }
 
-export interface IAvaHdWallet {
+
+export interface AvaWallet {
     masterKey: AVMKeyPair
+    utxoset: UTXOSet;
+
+    getCurrentKey(): AVMKeyPair;
+    getKeyChain(): AVMKeyChain;
+}
+
+export interface IAvaHdWallet extends AvaWallet{
     seed: string|null;
     hdKey: HDKey;
     hdIndex:number;
@@ -20,11 +28,16 @@ export interface IAvaHdWallet {
 
     // getLastKeyIndex(): number;
     // getCurrentKey(): void;
-    getKeyChain(): AVMKeyChain;
-    getCurrentKey(): AVMKeyPair;
     generateKey(): AVMKeyPair;
     onHdKeyReady(): void;
     onnetworkchange(): void;
     getUTXOs(): Promise<UTXOSet>;
+}
+
+
+export interface IAvaSingletonWallet extends AvaWallet{
 
 }
+
+
+
