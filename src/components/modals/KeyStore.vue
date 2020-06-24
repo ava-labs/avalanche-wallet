@@ -106,8 +106,6 @@
 
                 let url = URL.createObjectURL( blob );
 
-                console.log(url);
-
                 var element = document.createElement('a');
                     element.setAttribute('href', url);
                     element.setAttribute('download', filename);

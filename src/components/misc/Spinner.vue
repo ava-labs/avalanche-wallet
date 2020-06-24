@@ -3,7 +3,7 @@
 </template>
 <style scoped lang="scss">
     img{
-        width: 20px;
+        width: 18px;
         object-fit: contain;
         animation-name: spin;
         animation-duration: 1s;
