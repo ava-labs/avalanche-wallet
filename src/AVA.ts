@@ -1,10 +1,10 @@
-import {UTXO, UTXOSet, CryptoHelpers} from "slopes";
+import {UTXO, UTXOSet, CryptoHelpers} from "avalanche";
 // import {UTXODict} from './store/types';
 
 // console.log(process.env.VUE_AVA_IP);
 
 // @ts-ignore
-import * as slopes from "slopes";
+import * as avalanche from "avalanche";
 // import store from './store';
 import assetsStore from './store/modules/assets/assets';
 import {NetworkItem} from "@/store/modules/network/types";
@@ -25,15 +25,15 @@ let network_id = 2;
 let chain_id = "X";
 
 // @ts-ignore
-let bintools = slopes.BinTools.getInstance();
+let bintools = avalanche.BinTools.getInstance();
 
 
 // console.log(slopes);
-let cryptoHelpers = new slopes.CryptoHelpers();
+let cryptoHelpers = new avalanche.CryptoHelpers();
 // console.log(cryptoHelpers);
 
 // @ts-ignore
-let ava = new slopes.Slopes(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
+let ava = new avalanche.Avalanche(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
 // @ts-ignore
 let avm = ava.AVM();
 let keyChain = avm.keyChain();

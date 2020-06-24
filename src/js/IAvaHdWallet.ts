@@ -1,6 +1,6 @@
 
 import HDKey from 'hdkey';
-import {AVMKeyChain, AVMKeyPair, UTXO, UTXOSet} from "slopes";
+import {AVMKeyChain, AVMKeyPair, UTXO, UTXOSet} from "avalanche";
 
 
 export interface IIndexKeyCache{

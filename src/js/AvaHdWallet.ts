@@ -3,9 +3,9 @@
 
 // A simple wrapper thar combines slopes, bip39 and HDWallet
 
-import {AVMKeyChain, KeyChain, AVMKeyPair, UTXOSet, UTXO, KeyPair, AmountOutput} from "slopes";
+import {AVMKeyChain, KeyChain, AVMKeyPair, UTXOSet, UTXO, KeyPair, AmountOutput} from "avalanche";
 import * as bip39 from "bip39";
-import slopes from "slopes/typings/src/slopes";
+import avalanche from "avalanche/typings/src/avalanche";
 import {ava, avm, bintools, keyChain} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
@@ -156,7 +156,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         for(var i=0;i<orders.length;i++){
             let order = orders[i];
             let amt = new BN(order.amount.toString());
-            let baseTx = await avm.makeBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
+            let baseTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
             let signedTx = this.keyChain.signTx(baseTx);
             let txid = await avm.issueTx(signedTx);
             txIds.push(txid);

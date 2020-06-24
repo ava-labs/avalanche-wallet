@@ -41,7 +41,7 @@
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {AmountOutput, KeyPair} from "slopes";
+    import {AmountOutput, KeyPair} from "avalanche";
 
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import * as bip39 from 'bip39';

@@ -29,7 +29,7 @@
     import PaperWallet from "@/components/modals/PaperWallet.vue";
     // @ts-ignore
     import QRCode from "qrcode";
-    import {AVMKeyPair} from "slopes";
+    import {AVMKeyPair} from "avalanche";
 
     @Component({
         components: {

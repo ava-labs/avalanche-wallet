@@ -1,9 +1,6 @@
 <template>
     <v-app>
-        <v-content>
-<!--            <transition name="fade">-->
-<!--                <loading-app v-if="!appReady"></loading-app>-->
-<!--            </transition>-->
+        <v-main>
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
@@ -18,7 +15,7 @@
                     </transition>
                 </div>
             </template>
-        </v-content>
+        </v-main>
         <notifications></notifications>
     </v-app>
 </template>

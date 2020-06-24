@@ -1,7 +1,7 @@
-const slopes = require("slopes");
+const avalanche = require("avalanche");
 // import * as slopes from "slopes";
 // import {cryptoHelpers} from "../src/AVA";
-let ch = new slopes.CryptoHelpers();
+let ch = new avalanche.CryptoHelpers();
 
 const chain_id = "GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVeDAXc694wJ5t3zEkhU";
 
@@ -12,10 +12,10 @@ let network_id = '12345';
 
 
 
-let ava = new slopes.Slopes(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
+let ava = new avalanche.Avalanche(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
 let avm = ava.AVM();
 let keyChain = avm.keyChain();
-let bintools = slopes.BinTools.getInstance();
+let bintools = avalanche.BinTools.getInstance();
 
 
 let key1 = "2615ZoAYyfNu3sBEGMSBmWP6aNESSQxFxPX2bRsKb8fNbF1RSk";

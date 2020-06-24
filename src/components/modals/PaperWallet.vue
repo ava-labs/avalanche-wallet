@@ -20,7 +20,7 @@
     import jsPDF from 'jspdf';
     var pdfjsLib = require("pdfjs-dist");
     import printjs from 'print-js'
-    import {AVMKeyPair} from "slopes";
+    import {AVMKeyPair} from "avalanche";
 
     const PDF_W = 8.5;
     const PDF_H = 11;
