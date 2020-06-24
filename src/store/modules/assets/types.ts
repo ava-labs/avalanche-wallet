@@ -1,4 +1,4 @@
-import {UTXO, UTXOSet} from "slopes";
+import {UTXO, UTXOSet} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import BN from "bn.js";
 

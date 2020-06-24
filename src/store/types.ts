@@ -1,4 +1,4 @@
-import {UTXO, UTXOSet} from "slopes";
+import {UTXO, UTXOSet} from "avalanche";
 import Big from 'big.js';
 import BN from 'bn.js';
 import {Module} from "vuex";

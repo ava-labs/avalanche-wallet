@@ -14,7 +14,7 @@
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
     import QRCode from 'qrcode'
-    import {AVMKeyPair} from "slopes";
+    import {AVMKeyPair} from "avalanche";
 
     @Component({
         components: {

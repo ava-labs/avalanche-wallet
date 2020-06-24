@@ -55,7 +55,7 @@
     // import { BIP32Interface } from 'bip32';
     import AvaHdWallet from "@/js/AvaHdWallet";
 
-    import {KeyPair} from "slopes";
+    import {KeyPair} from "avalanche";
 
     @Component({
         components: {

@@ -66,3 +66,42 @@ devServer: {
 ```
 
 and run `yarn serve` to reflect the change.
+
+
+
+
+# Keystore File Spec
+
+### v1.0.0 (initial)
+
+```typescript
+interface IKeystoreFile{
+    salt
+    pass_hash
+    keys: [
+        {
+            key,
+            nonce,
+            address
+        }  
+    ]
+}
+```
+
+### v1.1.0
+
+```typescript
+interface IKeystoreFile{
+    version
+    salt
+    pass_hash
+    keys: [
+        {
+            key
+            nonce
+            address
+            type: 'hd' | 'singleton'
+        }  
+    ]
+}
+```

@@ -19,9 +19,9 @@ Vue.use(Vuex);
 import router from "@/router";
 
 import {ava, avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
-import slopes from "slopes/typings/src/slopes";
+import avalanche from "avalanche/typings/src/avalanche";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {AmountOutput, AVMKeyPair} from "slopes";
+import {AmountOutput, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 
 export default new Vuex.Store({
@@ -324,18 +324,18 @@ export default new Vuex.Store({
                     key: bintools.avaSerialize(pk_crypt.ciphertext),
                     nonce: bintools.avaSerialize(pk_crypt.nonce),
                     address: addr
-                }
+                };
                 keys.push(key_data);
             }
 
-            const KEYSTORE_VERSION = '2.0';
+            const KEYSTORE_VERSION = '1.1';
 
 
             let file_data = {
+                version: KEYSTORE_VERSION,
                 salt: bintools.avaSerialize(salt),
                 pass_hash: bintools.avaSerialize(passHash.hash),
-                keys: keys,
-                version: KEYSTORE_VERSION
+                keys: keys
             };
 
             // Download the file
