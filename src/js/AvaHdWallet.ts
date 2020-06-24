@@ -7,7 +7,7 @@ import {AVMKeyChain, KeyChain, AVMKeyPair, UTXOSet, UTXO, KeyPair, AmountOutput}
 import * as bip39 from "bip39";
 import slopes from "slopes/typings/src/slopes";
 import {ava, avm, bintools, keyChain} from "@/AVA";
-import {IAvaHdWallet} from "@/js/IAvaHdWallet";
+import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
@@ -33,9 +33,7 @@ const SCAN_RANGE = SCAN_SIZE - INDEX_RANGE; // How many items are actually scann
 
 // Possible indexes for each request is
 // SCAN_SIZE - INDEX_RANGE
-interface IIndexKeyCache{
-    [index:number]: AVMKeyPair
-}
+
 
 export default class AvaHdWallet implements IAvaHdWallet{
     masterKey: AVMKeyPair;
@@ -185,16 +183,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.getCurrentKey().getAddressString();
     }
 
-    async scanForLastIndex(): Promise<number>{
-        let index = 0;
-
-        while(await this.lookaheadHasBalance(index)){
-            index++;
-        }
-        return index;
-    }
-
-
     async findAvailableIndex(start:number=0):Promise<number>{
         let keychain = new AVMKeyChain('X');
 
@@ -230,23 +218,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         }
 
         return await this.findAvailableIndex(start+SCAN_RANGE)
-    }
-
-    async lookaheadHasBalance(index: number): Promise<boolean>{
-        let keychain = new AVMKeyChain('X');
-        // console.log("Scanning for index: ",index);
-
-        for(var i=index;i<index+INDEX_RANGE;i++){
-            // Derive Key and add to KeyChain
-            let key = this.getKeyForIndex(i);
-            keychain.addKey(key);
-        }
-
-        let addrs = keychain.getAddressStrings();
-        let utxoSet = await avm.getUTXOs(addrs);
-        let utxos = utxoSet.getAllUTXOs();
-
-        return utxos.length !== 0;
     }
 
     getKeyForIndex(index:number, isChange=false): AVMKeyPair{
