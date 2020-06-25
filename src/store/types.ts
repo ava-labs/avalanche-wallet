@@ -6,6 +6,7 @@ import {AssetsState} from "@/store/modules/assets/types";
 import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
+import {wallet_type} from "@/js/IAvaHdWallet";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
@@ -81,13 +82,15 @@ export interface AssetType {
 export interface KeyFile{
     salt: string,
     pass_hash: string,
-    keys: KeyFileKey[]
+    keys: KeyFileKey[],
+    version: string
 }
 
 export interface KeyFileKey {
     key: string,
     nonce: string,
     address: string
+    type: wallet_type
 }
 
 export interface IssueBatchTxInput {

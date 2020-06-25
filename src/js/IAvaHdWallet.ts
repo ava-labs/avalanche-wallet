@@ -2,18 +2,21 @@
 import HDKey from 'hdkey';
 import {AVMKeyChain, AVMKeyPair, UTXO, UTXOSet} from "avalanche";
 
+export type wallet_type = "hd" | "singleton";
+
 
 export interface IIndexKeyCache{
     [index:number]: AVMKeyPair
 }
 
-
+// Every AVA Wallet must implement this.
 export interface AvaWallet {
     masterKey: AVMKeyPair
     utxoset: UTXOSet;
 
     getCurrentKey(): AVMKeyPair;
     getKeyChain(): AVMKeyChain;
+    getCurrentAddress(): string;
 }
 
 export interface IAvaHdWallet extends AvaWallet{

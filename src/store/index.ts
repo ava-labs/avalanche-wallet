@@ -334,7 +334,8 @@ export default new Vuex.Store({
                 let key_data:KeyFileKey = {
                     key: bintools.avaSerialize(pk_crypt.ciphertext),
                     nonce: bintools.avaSerialize(pk_crypt.nonce),
-                    address: addr
+                    address: addr,
+                    type: 'hd'
                 };
                 keys.push(key_data);
             }
