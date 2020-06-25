@@ -14,7 +14,6 @@ import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {tr} from "@/locales/tr";
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
