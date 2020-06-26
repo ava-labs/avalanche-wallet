@@ -313,7 +313,7 @@
                 // ids.push(assetId);
                 urls.push(getAssetIcon(assetId))
             }
-            return urls;
+            return urls.splice(0,1);
         }
     }
 </script>

@@ -2,13 +2,11 @@
     <div class="transfer_card">
         <h1>{{$t('transfer.title')}}</h1>
         <div class="card_body">
-            <div v-if="assetArray.length===0">
-                <p>{{$t('transfer.no_cash')}}</p>
-                <faucet-link v-if="faucetLink" class="faucet"></faucet-link>
-            </div>
-            <div v-else class="new_order_Form">
+            <div class="new_order_Form">
                 <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                 <div>
+<!--                    <BalancePopup :assets="assetArray"></BalancePopup>-->
+
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
                         <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVA</span></p>
@@ -56,13 +54,15 @@
     import {isValidAddress} from "../../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
+    // import BalancePopup from "@/components/misc/BalancePopup/BalancePopup.vue";
 
     @Component({
         components: {
             FaucetLink,
             TxList,
             RadioButtons,
-            QrInput
+            QrInput,
+            // BalancePopup
         }
     })
     export default class Transfer extends Vue{
@@ -155,7 +155,7 @@
             return this.$store.state.addresses;
         }
         get assetArray(){
-            return this.$store.state.Assets.assets;
+            return this.$store.getters.walletAssetsArray;
         }
     }
 </script>
