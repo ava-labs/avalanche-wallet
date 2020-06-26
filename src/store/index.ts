@@ -9,11 +9,14 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueTxInput,
+    IssueBatchTxInput, IWalletBalanceDict, AddWalletInput, SessionPersistFile
+} from "@/store/types";
+
+import {
     KeyFile,
     KeyFileKey,
-    IssueBatchTxInput, IWalletBalanceDict
-} from "@/store/types";
+} from '@/js/IKeystore';
+
 Vue.use(Vuex);
 
 import router from "@/router";
@@ -23,6 +26,10 @@ import avalanche from "avalanche/typings/src/avalanche";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {AmountOutput, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
+import {makeKeyfile, readKeyFile} from "@/js/Keystore";
+import AvaSingletonWallet from "@/js/AvaSingletonWallet";
+import {wallet_type} from "@/js/IAvaHdWallet";
+import {AvaWallet} from "@/js/AvaWallet";
 
 export default new Vuex.Store({
     modules:{
@@ -45,10 +52,10 @@ export default new Vuex.Store({
     },
     getters: {
         walletBalanceDict(state: RootState): IWalletBalanceDict{
-            let wallet = state.activeWallet;
+            let wallet:AvaWallet|null = state.activeWallet;
 
             if(!wallet) return {};
-            if(!wallet.utxoset) return {};
+            if(!wallet.getUTXOSet()) return {};
 
             let res: IWalletBalanceDict = {};
             let walletBalance:IWalletBalanceDict = {};
@@ -56,7 +63,7 @@ export default new Vuex.Store({
             // @ts-ignore
             let assetsDict = state.Assets.assetsDict;
 
-            let addrUtxos = wallet.utxoset.getAllUTXOs();
+            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
@@ -104,6 +111,13 @@ export default new Vuex.Store({
             return res;
 
         },
+
+        walletType(state: RootState): wallet_type|null{
+            if(state.activeWallet){
+                return state.activeWallet.type;
+            }
+            return null;
+        },
         // externalAddresses(state: RootState): string[]{
         //     if(!state.activeWallet) return [];
         //     let addresses = state.activeWallet.getExternalKeyChain().getAddressStrings();
@@ -138,27 +152,26 @@ export default new Vuex.Store({
                 let keynow = state.activeWallet.getCurrentKey();
                 state.address = keynow.getAddressString();
             }
-
         }
     },
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet({state, dispatch, commit}, pk: string){
+        async accessWallet({state, dispatch, commit}, key: AddWalletInput){
 
-            let wallet:AvaHdWallet = await dispatch('addWallet', pk);
-
+            let wallet:AvaHdWallet = await dispatch('addWallet', key);
             await dispatch('activateWallet', wallet);
 
             state.isAuth = true;
             dispatch('onAccess');
         },
 
-        async accessWalletMultiple({state, dispatch, commit}, pks: string[]){
-            for(var i=0;i<pks.length;i++){
-                let pk = pks[i];
-                let wallet:AvaHdWallet = await dispatch('addWallet', pk);
+        async accessWalletMultiple({state, dispatch, commit}, keys: AddWalletInput[]){
+            for(var i=0;i<keys.length;i++){
+                let key = keys[i];
+                let wallet:AvaHdWallet = await dispatch('addWallet', key);
             }
+
             await dispatch('activateWallet', state.wallets[0]);
 
             state.isAuth = true;
@@ -214,17 +227,26 @@ export default new Vuex.Store({
           // }
         },
 
-        async addWallet({state, dispatch}, pk:string): Promise<AvaHdWallet>{
+        async addWallet({state, dispatch}, data:AddWalletInput): Promise<AvaWallet>{
 
+            let pk = data.pk;
+            let walletType = data.type;
             let pkBuff = bintools.avaDeserialize(pk);
             let addrBuf = keyChain.importKey(pkBuff);
             let keypair = keyChain.getKey(addrBuf);
 
 
+            let wallet = new AvaWallet(keypair, walletType);
+            // if(walletType==='hd'){
+            //     wallet = new AvaHdWallet(keypair);
+            // }else{
+            //     wallet = new AvaSingletonWallet(keypair);
+            // }
             // Create new HD Wallet for the key
-            let hdWallet = new AvaHdWallet(keypair);
 
-            state.wallets.push(hdWallet);
+            state.wallets.push(wallet);
+
+            console.log("add wallet",wallet);
 
             // state.addresses = keyChain.getAddressStrings();
 
@@ -232,14 +254,10 @@ export default new Vuex.Store({
                 dispatch('saveKeys');
             }
 
-
-            return hdWallet;
+            return wallet;
         },
 
-        removeWallet({state,dispatch}, wallet:AvaHdWallet){
-            let masterKey = wallet.masterKey;
-            keyChain.removeKey(masterKey);
-
+        removeWallet({state,dispatch}, wallet:AvaWallet){
             let index = state.wallets.indexOf(wallet);
             state.wallets.splice(index,1);
 
@@ -248,21 +266,36 @@ export default new Vuex.Store({
             }
         },
 
+        toggleWalletMode({state,dispatch}){
+            let wallet = state.activeWallet;
+            if(!wallet) return;
+            wallet.toggleMode();
+
+            dispatch('Notifications/add', {
+                title: "Wallet Mode Changed",
+                message: "Your wallet now behaves differently",
+                type: "warning"
+            })
+
+            dispatch('saveKeys');
+        },
         // Saves current keys to browser Session Storage
-        async saveKeys({state, dispatch}){
+        async saveKeys({state}){
             let wallets = state.wallets;
 
-            let keys: string[] = [];
-
+            let sessionData:SessionPersistFile = [];
 
             wallets.forEach(wallet => {
-               let key = wallet.masterKey;
-               let pk = key.getPrivateKeyString();
-                keys.push(pk);
+                let key = wallet.getMasterKey();
+                let pk = key.getPrivateKeyString();
 
+                sessionData.push({
+                    key: pk,
+                    type: wallet.type
+                });
             });
 
-            let saveData = JSON.stringify(keys);
+            let saveData = JSON.stringify(sessionData);
             sessionStorage.setItem('pks', saveData);
         },
 
@@ -273,15 +306,24 @@ export default new Vuex.Store({
             let sessionKeys = sessionStorage.getItem('pks');
             if(!sessionKeys) return;
 
+
             state.isLoadingPersistKeys = true;
 
             // await Vue.nextTick();
 
             try{
+                let rawKeys:SessionPersistFile = JSON.parse(sessionKeys);
 
-                let rawKeys = JSON.parse(sessionKeys);
+                console.log(rawKeys)
 
-                await dispatch('accessWalletMultiple', rawKeys);
+                let inputData:AddWalletInput[] = rawKeys.map(key => {
+                    return {
+                        pk: key.key,
+                        type: key.type
+                    }
+                });
+
+                await dispatch('accessWalletMultiple', inputData);
                 state.rememberKey = true;
                 state.isLoadingPersistKeys = false;
                 return true;
@@ -307,7 +349,7 @@ export default new Vuex.Store({
         },
 
 
-        async activateWallet({state, dispatch, commit}, wallet:AvaHdWallet){
+        async activateWallet({state, dispatch, commit}, wallet:AvaWallet){
             state.activeWallet = wallet;
             state.selectedAddress = wallet.getCurrentAddress();
 
@@ -317,45 +359,47 @@ export default new Vuex.Store({
 
 
         async exportKeyfile({state}, pass){
-            let salt = await cryptoHelpers.makeSalt();
-            let passHash = await cryptoHelpers.pwhash(pass, salt);
+            // let salt = await cryptoHelpers.makeSalt();
+            // let passHash = await cryptoHelpers.pwhash(pass, salt);
 
 
-            // Loop private keys, encrypt them and store in an array
-            let keys = [];
-
-            for(var i=0; i<state.wallets.length;i++){
-                let wallet = state.wallets[i];
-                let pk = wallet.masterKey.getPrivateKey();
-                let addr = wallet.masterKey.getAddressString();
-
-                let pk_crypt = await cryptoHelpers.encrypt(pass,pk,salt);
-
-                let key_data:KeyFileKey = {
-                    key: bintools.avaSerialize(pk_crypt.ciphertext),
-                    nonce: bintools.avaSerialize(pk_crypt.nonce),
-                    address: addr,
-                    type: 'hd'
-                };
-                keys.push(key_data);
-            }
-
-            const KEYSTORE_VERSION = '1.1';
-
-
-            let file_data = {
-                version: KEYSTORE_VERSION,
-                salt: bintools.avaSerialize(salt),
-                pass_hash: bintools.avaSerialize(passHash.hash),
-                keys: keys
-            };
+            let wallets = state.wallets;
+            let file_data = await makeKeyfile(wallets,pass);
+            //
+            //
+            // // Loop private keys, encrypt them and store in an array
+            // let keys = [];
+            //
+            // for(var i=0; i<state.wallets.length;i++){
+            //     let wallet = state.wallets[i];
+            //     let pk = wallet.masterKey.getPrivateKey();
+            //     let addr = wallet.masterKey.getAddressString();
+            //
+            //     let pk_crypt = await cryptoHelpers.encrypt(pass,pk,salt);
+            //
+            //     let key_data:KeyFileKey = {
+            //         key: bintools.avaSerialize(pk_crypt.ciphertext),
+            //         nonce: bintools.avaSerialize(pk_crypt.nonce),
+            //         address: addr,
+            //         type: wallet.type
+            //     };
+            //     keys.push(key_data);
+            // }
+            //
+            // const KEYSTORE_VERSION = '1.1';
+            //
+            //
+            // let file_data:KeyFile = {
+            //     version: KEYSTORE_VERSION,
+            //     salt: bintools.avaSerialize(salt),
+            //     pass_hash: bintools.avaSerialize(passHash.hash),
+            //     keys: keys
+            // };
 
             // Download the file
 
             let text = JSON.stringify(file_data);
-
-
-            let addr = state.selectedAddress.substr(2,5);
+            let addr = file_data.keys[0].address.substr(2,5);
             let filename = `AVA_${addr}`;
 
             var blob = new Blob(
@@ -366,6 +410,7 @@ export default new Vuex.Store({
             );
             let url = URL.createObjectURL( blob );
             var element = document.createElement('a');
+
             element.setAttribute('href', url);
             element.setAttribute('download', filename);
             element.style.display = 'none';
@@ -387,51 +432,80 @@ export default new Vuex.Store({
                         let res = <string>reader.result;
                         try {
                             let json_data: KeyFile = JSON.parse(res);
-                            // Check Password
-                            let salt = bintools.avaDeserialize(json_data.salt);
-                            let pass_hash = json_data.pass_hash;
 
-                            let checkHash = await cryptoHelpers.pwhash(pass, salt);
-                            let checkHashString = bintools.avaSerialize(checkHash.hash);
+                            let keyfile = await readKeyFile(json_data,pass);
 
-                            if (checkHashString !== pass_hash) {
-                                reject({
-                                    success: false,
-                                    message: 'Invalid password.'
-                                });
-                            }
+                            // // Check Password
+                            // let salt = bintools.avaDeserialize(json_data.salt);
+                            // let pass_hash = json_data.pass_hash;
+                            //
+                            // let checkHash = await cryptoHelpers.pwhash(pass, salt);
+                            // let checkHashString = bintools.avaSerialize(checkHash.hash);
+                            //
+                            // if (checkHashString !== pass_hash) {
+                            //     reject({
+                            //         success: false,
+                            //         message: 'Invalid password.'
+                            //     });
+                            // }
+                            //
+                            //
+                            // let keys = json_data.keys;
+                            // let keyStrings:string[] = [];
+                            // let keyAddresses:string[] = [];
+                            // for (var i = 0; i < keys.length; i++) {
+                            //     let key_data = keys[i];
+                            //
+                            //     // let salt = bintools.avaDeserialize(key_data.salt);
+                            //     let key = bintools.avaDeserialize(key_data.key);
+                            //     let nonce = bintools.avaDeserialize(key_data.nonce);
+                            //     let address = key_data.address;
+                            //     let walletType = key_data.type;
+                            //
+                            //     let key_decrypt = await cryptoHelpers.decrypt(pass,key,salt,nonce);
+                            //     let key_string = bintools.avaSerialize(key_decrypt);
+                            //
+                            //
+                            //     keyAddresses.push(address);
+                            //     keyStrings.push(key_string);
+                            // }
 
 
-                            let keys = json_data.keys;
-                            let keyStrings:string[] = [];
-                            let keyAddresses:string[] = [];
-                            for (var i = 0; i < keys.length; i++) {
-                                let key_data = keys[i];
+                            let keys = keyfile.keys;
 
-                                // let salt = bintools.avaDeserialize(key_data.salt);
-                                let key = bintools.avaDeserialize(key_data.key);
-                                let nonce = bintools.avaDeserialize(key_data.nonce);
-                                let address = key_data.address;
-
-                                let key_decrypt = await cryptoHelpers.decrypt(pass,key,salt,nonce);
-                                let key_string = bintools.avaSerialize(key_decrypt);
+                            let inputData: AddWalletInput[] = keys.map(val => {
+                                return {
+                                    pk: val.key,
+                                    type: val.type
+                                }
+                            });
 
 
-                                keyAddresses.push(address);
-                                keyStrings.push(key_string);
-                            }
+                            // for(var i=0; i<keys.length; i++){
+                            //     let key = keys[i];
+                            //
+                            //     let value:AddWalletInput = {
+                            //         pk: key.key,
+                            //         type: key.type
+                            //     };
+                            //     let wallet:AvaHdWallet = await store.dispatch('addWallet', value);
+                            // }
+                            //
+                            // if(!store.state.isAuth){
+                            //     await store.dispatch('activateWallet', store.state.wallets[0]);
+                            //     store.state.isAuth = true;
+                            //     store.dispatch('onAccess');
+                            // }
+
+
 
                             // If not auth, login user then add keys
                             if(!store.state.isAuth){
-                                await store.dispatch('accessWalletMultiple', keyStrings);
+                                await store.dispatch('accessWalletMultiple', inputData);
                             }else{
-                                for(i=0; i<keyStrings.length;i++){
-                                    let key = keyStrings[i];
-                                    let keypair = await store.dispatch('addWallet', key);
-                                    // let pairAddress = keypair.getAddressString();
-                                    // if(pairAddress !== keyAddresses[i]){
-                                    //     await store.dispatch('removeKey', pairAddress);
-                                    // }
+                                for(let i=0; i<inputData.length;i++){
+                                    let key = inputData[i];
+                                    await store.dispatch('addWallet', key);
                                 }
                             }
 

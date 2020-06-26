@@ -7,7 +7,7 @@ import {AVMKeyChain, KeyChain, AVMKeyPair, UTXOSet, UTXO, KeyPair, AmountOutput}
 import * as bip39 from "bip39";
 import avalanche from "avalanche/typings/src/avalanche";
 import {ava, avm, bintools, keyChain} from "@/AVA";
-import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
+import {IAvaHdWallet, IIndexKeyCache, wallet_type} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
@@ -36,6 +36,7 @@ const SCAN_RANGE = SCAN_SIZE - INDEX_RANGE; // How many items are actually scann
 
 
 export default class AvaHdWallet implements IAvaHdWallet{
+    type: wallet_type;
     masterKey: AVMKeyPair;
     seed:string | null;
     hdKey:HDKey;
@@ -50,6 +51,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     // The master key from slopes
     constructor(keypair: AVMKeyPair) {
+        this.type = 'hd';
         this.masterKey = keypair;
         this.chainId = keypair.getChainID();
         this.hdIndex = 0;
@@ -110,16 +112,16 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.utxoset = result; // we can use local copy of utxos as cache for some functions
 
         // Scan for unknown assets and add to store
-        let assetIds = result.getAssetIDs();
-            assetIds.forEach((idBuf) => {
-                let assetId = bintools.avaSerialize(idBuf);
-                //@ts-ignore
-                let storeAsset = store.state.Assets.assetsDict[assetId];
-
-                if(!storeAsset){
-                    store.dispatch('Assets/addUnknownAsset', assetId);
-                }
-            });
+        // let assetIds = result.getAssetIDs();
+        //     assetIds.forEach((idBuf) => {
+        //         let assetId = bintools.avaSerialize(idBuf);
+        //         //@ts-ignore
+        //         let storeAsset = store.state.Assets.assetsDict[assetId];
+        //
+        //         if(!storeAsset){
+        //             store.dispatch('Assets/addUnknownAsset', assetId);
+        //         }
+        //     });
 
 
         let addr_now = this.getCurrentKey();

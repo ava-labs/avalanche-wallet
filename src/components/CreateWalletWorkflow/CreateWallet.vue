@@ -62,6 +62,7 @@
     import AvaHdWallet from "@/js/AvaHdWallet";
 
     import {KeyPair} from "avalanche";
+    import {AddWalletInput} from "@/store/types";
 
     @Component({
         components: {
@@ -103,8 +104,13 @@
             this.isLoad = true;
             this.$store.state.rememberKey = this.rememberKey;
             let parent = this;
+
+            let inData:AddWalletInput = {
+                pk: this.keyPair.getPrivateKeyString(),
+                type: 'hd'
+            }
             setTimeout(()=>{
-                parent.$store.dispatch('accessWallet', parent.newPrivateKey);
+                parent.$store.dispatch('accessWallet', inData);
             }, 500);
         }
     }

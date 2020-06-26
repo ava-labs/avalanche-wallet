@@ -19,6 +19,9 @@ import i18n from "./plugins/i18n.js";
 import CountryFlag from 'vue-country-flag'
 Vue.component('country-flag', CountryFlag);
 
+
+import ToggleButton from 'vue-js-toggle-button';
+Vue.use(ToggleButton)
 // Install BootstrapVue
 // Vue.use(BootstrapVue);
 // Vue.use(IconsPlugin);

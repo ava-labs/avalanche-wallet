@@ -7,6 +7,8 @@ import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {wallet_type} from "@/js/IAvaHdWallet";
+import AvaSingletonWallet from "@/js/AvaSingletonWallet";
+import {AvaWallet} from "@/js/AvaWallet";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
@@ -17,8 +19,8 @@ export interface RootState {
     selectedAddress: string,
     modals: ModalDict,
     rememberKey: boolean,
-    activeWallet: null|AvaHdWallet
-    wallets: AvaHdWallet[]
+    activeWallet: null|AvaWallet
+    wallets: AvaWallet[]
     address: String|null
     isLoadingPersistKeys: boolean,
 }
@@ -79,19 +81,7 @@ export interface AssetType {
 
 
 
-export interface KeyFile{
-    salt: string,
-    pass_hash: string,
-    keys: KeyFileKey[],
-    version: string
-}
 
-export interface KeyFileKey {
-    key: string,
-    nonce: string,
-    address: string
-    type: wallet_type
-}
 
 export interface IssueBatchTxInput {
     toAddress: string,
@@ -113,6 +103,18 @@ export interface IssueTxInput{
 }
 
 
+export interface AddWalletInput {
+    pk: string,
+    type: wallet_type
+}
+
+
+export type SessionPersistFile = SessionPersistKey[];
+
+export interface SessionPersistKey {
+    key: string,
+    type: wallet_type
+}
 // export interface AddressUTXOs{
 //     [key:string]: SecpUTXO[]
 // }

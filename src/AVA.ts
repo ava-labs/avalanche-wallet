@@ -6,8 +6,8 @@ import {UTXO, UTXOSet, CryptoHelpers} from "avalanche";
 // @ts-ignore
 import * as avalanche from "avalanche";
 // import store from './store';
-import assetsStore from './store/modules/assets/assets';
-import {NetworkItem} from "@/store/modules/network/types";
+// import assetsStore from './store/modules/assets/assets';
+// import {NetworkItem} from "@/store/modules/network/types";
 
 
 // let ip = process.env.VUE_APP_AVA_IP || 'localhost';

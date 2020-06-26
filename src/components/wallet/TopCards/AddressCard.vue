@@ -3,16 +3,23 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
 
-        <p class="addr_info">This is your address to receive funds. Your address will change after every deposit.</p>
+        <p class="addr_info">{{warningText}}</p>
         <div class="bottom">
-            <canvas ref="qr"></canvas>
+            <div>
+                <canvas ref="qr"></canvas>
+                <p class="sub">{{walletTypeText}} Address</p>
+            </div>
             <div class="bottom_rest">
                 <p class="addr_text">{{address}}</p>
-                <p class="sub">Default wallet address</p>
-                <div class="buts">
-                    <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
-                    <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
-                    <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
+                <div style="display: flex; margin-top: 10px;">
+                    <div>
+                        <toggle-button :labels="{checked: 'HD', unchecked: 'Static'}" :value="switchVal" :sync="true" @change="onswitch" :width="60"></toggle-button>
+                    </div>
+                    <div class="buts">
+                        <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
+                        <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
+                        <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,6 +62,35 @@
             return activeKey.getAddressString();
         }
 
+        get warningText():string{
+            if(this.walletType==='hd'){
+                return "This is your address to receive funds. Your address will change after every deposit.";
+            }else{
+                return "This is your address to receive funds."
+            }
+        }
+
+        get walletType(){
+            return this.$store.getters['walletType'];
+        }
+
+        get walletTypeText(){
+            if(this.walletType === 'hd'){
+                return 'HD'
+            }else{
+                return 'Static';
+            }
+        }
+
+        get switchVal():boolean{
+            return this.walletType==='hd';
+        }
+
+        onswitch(){
+            console.log("Switching modes:");
+            this.$store.dispatch('toggleWalletMode');
+            // this.$store.state.activeWallet.toggleMode();
+        }
         viewQRModal(){
             // @ts-ignore
             this.$refs.qr_modal.open();
@@ -174,18 +210,25 @@
             flex-direction: column;
         }
 
-        .sub{
-            color: #909090;
-            font-size: 13px;
-            flex-grow: 1;
-        }
+
     }
 
-
+    .sub{
+        margin: 0px 10px !important;
+        /*width: 100%;*/
+        text-align: center;
+        /*color: #999;*/
+        font-size: 0.7rem;
+        background-color: #42b983;
+        color: #fff;
+        padding: 3px 6px;
+        border-radius: 3px;
+    }
 
 
     .addr_text{
         font-size: 16px;
         word-break: break-all;
+        flex-grow: 1;
     }
 </style>
