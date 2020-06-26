@@ -2,13 +2,8 @@
 import {AvaWalletCore, IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
 import {AVMKeyChain, AVMKeyPair, UTXOSet} from "avalanche";
 import {avm, bintools} from "@/AVA";
-import store from "@/store";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import BN from "bn.js";
-// import avalanche from "avalanche/typings/src/avalanche";
-
-
-// const avm = avalanche.
 
 export default class AvaSingletonWallet implements IAvaSingletonWallet {
     masterKey: AVMKeyPair;
@@ -51,16 +46,6 @@ export default class AvaSingletonWallet implements IAvaSingletonWallet {
         let result = await avm.getUTXOs(addrs);
         this.utxoset = result; // we can use local copy of utxos as cache for some functions
 
-        // let assetIds = result.getAssetIDs();
-        // assetIds.forEach((idBuf) => {
-        //     let assetId = bintools.avaSerialize(idBuf);
-        //     //@ts-ignore
-        //     let storeAsset = store.state.Assets.assetsDict[assetId];
-        //     if(!storeAsset){
-        //         store.dispatch('Assets/addUnknownAsset', assetId);
-        //     }
-        // });
-
         return result;
     }
 
@@ -79,5 +64,6 @@ export default class AvaSingletonWallet implements IAvaSingletonWallet {
             txIds.push(txid);
         }
 
-        return txIds;    }
+        return txIds;
+    }
 }

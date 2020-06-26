@@ -9,7 +9,7 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueBatchTxInput, IWalletBalanceDict, AddWalletInput, SessionPersistFile
+    IssueBatchTxInput, IWalletBalanceDict, AddWalletInput, SessionPersistFile, IWalletBalanceItem, IWalletAssetsDict
 } from "@/store/types";
 
 import {
@@ -30,6 +30,7 @@ import {makeKeyfile, readKeyFile} from "@/js/Keystore";
 import AvaSingletonWallet from "@/js/AvaSingletonWallet";
 import {wallet_type} from "@/js/IAvaHdWallet";
 import {AvaWallet} from "@/js/AvaWallet";
+import {AssetsDict} from "@/store/modules/assets/types";
 
 export default new Vuex.Store({
     modules:{
@@ -57,13 +58,10 @@ export default new Vuex.Store({
             if(!wallet) return {};
             if(!wallet.getUTXOSet()) return {};
 
-            let res: IWalletBalanceDict = {};
-            let walletBalance:IWalletBalanceDict = {};
-
-            // @ts-ignore
-            let assetsDict = state.Assets.assetsDict;
+            let dict:IWalletBalanceDict = {};
 
             let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
@@ -72,44 +70,63 @@ export default new Vuex.Store({
                 let assetIdBuff = utxo.getAssetID();
                 let assetId = bintools.avaSerialize(assetIdBuff);
 
-                let assetObj:AvaAsset|undefined = assetsDict[assetId];
-                if(!assetObj) continue;
-
-                let asset = walletBalance[assetId];
-                if(!asset){
-                    let name = assetObj.name;
-                    let symbol = assetObj.symbol;
-                    let denomination = assetObj.denomination;
-
-                    let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-                    newAsset.addBalance(amount);
-
-                    walletBalance[assetId] = newAsset;
+                if(!dict[assetId]){
+                    dict[assetId] = amount.clone();
                 }else{
-                    asset.addBalance(amount)
+                    let amt = dict[assetId];
+                    dict[assetId] = amt.add(amount)
                 }
             }
+            return dict;
+        },
+        walletBalance(state: RootState, getters): IWalletBalanceItem[]{
+            let balanceDict = getters.walletBalanceDict;
+            let res:IWalletBalanceItem[] = [];
+            for(var id in balanceDict){
+                let amt = balanceDict[id]
+                let item:IWalletBalanceItem = {
+                    id: id,
+                    amount: amt.clone()
+                }
+                res.push(item)
+            }
+            return res;
+        },
+
+        // Get the balance dict, combine it with existing assets and return a new dict
+        walletAssetsDict(state: RootState, getters): IWalletAssetsDict{
+            let balanceDict:IWalletBalanceDict = getters.walletBalanceDict;
+
+            // @ts-ignore
+            let assetsDict:AssetsDict = state.Assets.assetsDict;
+            let res:IWalletAssetsDict = {};
 
             for(var assetId in assetsDict){
-                let asset;
-                if(!walletBalance[assetId]){
+                let balanceAmt = balanceDict[assetId];
+
+                let asset:AvaAsset;
+                if(!balanceAmt){
                     asset = assetsDict[assetId];
+                    asset.resetBalance();
                 }else{
-                    asset = walletBalance[assetId];
+                    asset = assetsDict[assetId];
+                    asset.resetBalance();
+                    asset.addBalance(balanceAmt)
                 }
                 res[assetId] = asset;
             }
-
             return res;
         },
-        walletBalance(state: RootState, getters): AvaAsset[]{
-            let balanceDict = getters.walletBalanceDict;
+
+        walletAssetsArray(state:RootState, getters):AvaAsset[]{
+            let assetsDict:IWalletAssetsDict = getters.walletAssetsDict;
             let res:AvaAsset[] = [];
-            for(var id in balanceDict){
-                res.push(balanceDict[id])
+
+            for(var id in assetsDict){
+                let asset = assetsDict[id];
+                res.push(asset)
             }
             return res;
-
         },
 
         walletType(state: RootState): wallet_type|null{
@@ -364,42 +381,8 @@ export default new Vuex.Store({
 
 
         async exportKeyfile({state}, pass){
-            // let salt = await cryptoHelpers.makeSalt();
-            // let passHash = await cryptoHelpers.pwhash(pass, salt);
-
-
             let wallets = state.wallets;
             let file_data = await makeKeyfile(wallets,pass);
-            //
-            //
-            // // Loop private keys, encrypt them and store in an array
-            // let keys = [];
-            //
-            // for(var i=0; i<state.wallets.length;i++){
-            //     let wallet = state.wallets[i];
-            //     let pk = wallet.masterKey.getPrivateKey();
-            //     let addr = wallet.masterKey.getAddressString();
-            //
-            //     let pk_crypt = await cryptoHelpers.encrypt(pass,pk,salt);
-            //
-            //     let key_data:KeyFileKey = {
-            //         key: bintools.avaSerialize(pk_crypt.ciphertext),
-            //         nonce: bintools.avaSerialize(pk_crypt.nonce),
-            //         address: addr,
-            //         type: wallet.type
-            //     };
-            //     keys.push(key_data);
-            // }
-            //
-            // const KEYSTORE_VERSION = '1.1';
-            //
-            //
-            // let file_data:KeyFile = {
-            //     version: KEYSTORE_VERSION,
-            //     salt: bintools.avaSerialize(salt),
-            //     pass_hash: bintools.avaSerialize(passHash.hash),
-            //     keys: keys
-            // };
 
             // Download the file
 
@@ -440,42 +423,6 @@ export default new Vuex.Store({
 
                             let keyfile = await readKeyFile(json_data,pass);
 
-                            // // Check Password
-                            // let salt = bintools.avaDeserialize(json_data.salt);
-                            // let pass_hash = json_data.pass_hash;
-                            //
-                            // let checkHash = await cryptoHelpers.pwhash(pass, salt);
-                            // let checkHashString = bintools.avaSerialize(checkHash.hash);
-                            //
-                            // if (checkHashString !== pass_hash) {
-                            //     reject({
-                            //         success: false,
-                            //         message: 'Invalid password.'
-                            //     });
-                            // }
-                            //
-                            //
-                            // let keys = json_data.keys;
-                            // let keyStrings:string[] = [];
-                            // let keyAddresses:string[] = [];
-                            // for (var i = 0; i < keys.length; i++) {
-                            //     let key_data = keys[i];
-                            //
-                            //     // let salt = bintools.avaDeserialize(key_data.salt);
-                            //     let key = bintools.avaDeserialize(key_data.key);
-                            //     let nonce = bintools.avaDeserialize(key_data.nonce);
-                            //     let address = key_data.address;
-                            //     let walletType = key_data.type;
-                            //
-                            //     let key_decrypt = await cryptoHelpers.decrypt(pass,key,salt,nonce);
-                            //     let key_string = bintools.avaSerialize(key_decrypt);
-                            //
-                            //
-                            //     keyAddresses.push(address);
-                            //     keyStrings.push(key_string);
-                            // }
-
-
                             let keys = keyfile.keys;
 
                             let inputData: AddWalletInput[] = keys.map(val => {
@@ -484,25 +431,6 @@ export default new Vuex.Store({
                                     type: val.type
                                 }
                             });
-
-
-                            // for(var i=0; i<keys.length; i++){
-                            //     let key = keys[i];
-                            //
-                            //     let value:AddWalletInput = {
-                            //         pk: key.key,
-                            //         type: key.type
-                            //     };
-                            //     let wallet:AvaHdWallet = await store.dispatch('addWallet', value);
-                            // }
-                            //
-                            // if(!store.state.isAuth){
-                            //     await store.dispatch('activateWallet', store.state.wallets[0]);
-                            //     store.state.isAuth = true;
-                            //     store.dispatch('onAccess');
-                            // }
-
-
 
                             // If not auth, login user then add keys
                             if(!store.state.isAuth){

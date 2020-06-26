@@ -7,7 +7,7 @@ import {
     AssetsState,
     IBalanceDict
 } from "@/store/modules/assets/types";
-import {RootState} from "@/store/types";
+import {IWalletBalanceDict, RootState} from "@/store/types";
 import {ava, avm, bintools} from "@/AVA";
 import {AmountOutput, UTXOSet} from "avalanche";
 import Vue from "vue";
@@ -53,20 +53,16 @@ const assets_module: Module<AssetsState, RootState> = {
             state.descriptions = {};
         },
 
+        // Gets the balances of the active wallet and gets descriptions for unknown asset ids
+        addUnknownAssets({state, getters, rootGetters, dispatch}){
+            let balanceDict:IWalletBalanceDict = rootGetters.walletBalanceDict
 
-        // syncAssets({state, rootState}){
-        //     let assetsDict = state.assetsDict;
-        //     let wallet = rootState.activeWallet;
-        //
-        //     let assetIds = wallet.utxoset.getAssetIDs();
-        //         assetIds =
-        // },
-
-        // Gets UTXOs from the active HD wallet
-        // async syncAssets(){
-        //
-        // }
-        //
+            for(var id in balanceDict){
+                if(!state.assetsDict[id]){
+                    dispatch('addUnknownAsset', id);
+                }
+            }
+        },
 
         async updateUTXOs({state, commit, dispatch, rootState}) {
             let wallet = rootState.activeWallet;
@@ -79,69 +75,13 @@ const assets_module: Module<AssetsState, RootState> = {
                 await wallet.getUTXOs();
                 commit('updateActiveAddress', null, {root: true});
                 dispatch('History/updateTransactionHistory', null, {root: true});
+                dispatch('addUnknownAssets');
                 commit('setIsUpdateBalance', false);
             }catch(e){
                 commit('setIsUpdateBalance', false);
                 return false;
             }
-
-
-            //
-        //     // let set = await rootState.activeWallet.getUTXOs();
-        //
-        //     rootState.activeWallet.getUTXOs().then(set => {
-        //         let utxos = set.getAllUTXOs();
-        //         commit('setIsUpdateBalance', false);
-        //
-        //         let assetIds = set.getAssetIDs();
-        //         console.log(assetIds);
-        //         console.log("UTXOS");
-        //
-        //         state.utxo_set = set;
-        //         state.utxos = utxos;
-        //         commit('updateActiveAddress', null, {root: true});
-        //         // dispatch('updateBalances');
-        //     })
         },
-
-        // async readWalletBalance({state,rootState,dispatch}){
-        //     await dispatch('clearBalances');
-        //
-        //     if(!rootState.activeWallet) return;
-        //     if(!rootState.activeWallet.utxoset) return;
-        // },
-
-        // Scan the UTXOs, create a assetId -> balance dict and update assetsDict
-        // async readWalletBalance({state, getters, dispatch, rootState}){
-        //     await dispatch('clearBalances');
-        //
-        //     if(!rootState.activeWallet) return;
-        //     if(!rootState.activeWallet.utxoset) return;
-        //
-        //     let utxos = await rootState.activeWallet.utxoset.getAllUTXOs();
-        //     let dict:IBalanceDict = {};
-        //     for(var i=0;i<utxos.length;i++){
-        //         let utxo = utxos[i];
-        //         let assetId:string = bintools.avaSerialize(utxo.getAssetID());
-        //         // let amount = utxo.getAmount();
-        //         let amountOut = utxo.getOutput() as AmountOutput;
-        //         let amount = amountOut.getAmount();
-        //         let assetsDict = state.assetsDict;
-        //
-        //         if(!assetsDict[assetId]){
-        //             dispatch('addUnknownAsset', assetId);
-        //         }
-        //
-        //         if(dict[assetId]){
-        //             dict[assetId].add(amount)
-        //         }else{
-        //             dict[assetId] = amount;
-        //         }
-        //     }
-        //     state.balanceDict = dict;
-        // },
-
-
 
         // Sets every balance to 0
         async clearBalances({state}){
@@ -186,37 +126,6 @@ const assets_module: Module<AssetsState, RootState> = {
             return desc;
         },
 
-        // Gets meta data for all the assets in the wallet
-        // updateAssetsData({state, getters}){
-        //     let assetIds = getters.assetIds;
-        //
-        //     for(var i=0; i<assetIds.length; i++) {
-        //         let id_buf = assetIds[i];
-        //         let id = bintools.avaSerialize(id_buf);
-        //
-        //         // See if description already exists
-        //         if(state.descriptions[id]){
-        //             console.log("Description Exists");
-        //         }
-        //         // Fetch Description
-        //         else{
-        //             avm.getAssetDescription(id_buf).then((res:AssetDescription) => {
-        //                 let name = res.name.trim();
-        //                 let symbol = res.symbol.trim();
-        //                 let denomination = res.denomination;
-        //
-        //                 Vue.set(state.descriptions, id, {
-        //                     name: name,
-        //                     symbol: symbol,
-        //                     denomination: denomination
-        //                 });
-        //             }).catch(err => {
-        //                 console.log(err);
-        //             });
-        //         }
-        //     }
-        // },
-
         getAllUTXOsForAsset(store, assetId:string){
             let set = new UTXOSet();
             let utxos = store.state.utxos;
@@ -232,7 +141,7 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     getters: {
         AssetAVA(state,getters, rootState, rootGetters): AvaAsset|null{
-            let walletBalanceDict = rootGetters.walletBalanceDict;
+            let walletBalanceDict = rootGetters.walletAssetsDict;
             let AVA_ASSET_ID = state.AVA_ASSET_ID;
             if(AVA_ASSET_ID){
                 if(walletBalanceDict[AVA_ASSET_ID]){

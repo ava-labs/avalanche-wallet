@@ -5,16 +5,12 @@
 
 import {AVMKeyChain, KeyChain, AVMKeyPair, UTXOSet, UTXO, KeyPair, AmountOutput} from "avalanche";
 import * as bip39 from "bip39";
-import avalanche from "avalanche/typings/src/avalanche";
-import {ava, avm, bintools, keyChain} from "@/AVA";
+import {avm} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache, wallet_type} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 
-import store from '@/store';
-import {AssetsDict} from "@/store/modules/assets/types";
-import {BatchTxOrder} from "@/store/types";
 import {ITransaction} from "@/components/wallet/transfer/types";
 
 
@@ -111,19 +107,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let result = await avm.getUTXOs(addrs);
         this.utxoset = result; // we can use local copy of utxos as cache for some functions
 
-        // Scan for unknown assets and add to store
-        // let assetIds = result.getAssetIDs();
-        //     assetIds.forEach((idBuf) => {
-        //         let assetId = bintools.avaSerialize(idBuf);
-        //         //@ts-ignore
-        //         let storeAsset = store.state.Assets.assetsDict[assetId];
-        //
-        //         if(!storeAsset){
-        //             store.dispatch('Assets/addUnknownAsset', assetId);
-        //         }
-        //     });
-
-
+        // If last address has a utxo increment index
         let addr_now = this.getCurrentKey();
         let lastIndexUtxos = result.getUTXOIDs([addr_now.getAddress()])
         if(lastIndexUtxos.length > 0){

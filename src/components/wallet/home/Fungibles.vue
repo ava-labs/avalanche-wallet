@@ -9,11 +9,11 @@
         <div v-if="networkStatus !== 'connected'" class="empty">
             <p>Unable to display assets. Disconnected from the network.</p>
         </div>
-        <div v-else-if="assets.length === 0" class="empty">
+        <div v-else-if="walletBalances.length === 0" class="empty">
             <p>You do not have any assets</p>
         </div>
         <div class="scrollable" v-else>
-            <fungible-row lass="asset" v-for="asset in assets" :key="asset.id" :asset="asset"></fungible-row>
+            <fungible-row lass="asset" v-for="asset in walletBalances" :key="asset.id" :asset="asset"></fungible-row>
         </div>
 
     </div>
@@ -25,6 +25,7 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import FungibleRow from "@/components/wallet/home/FungibleRow.vue";
     import AvaAsset from "@/js/AvaAsset";
+    import {IWalletBalanceItem} from "@/store/types";
 
     @Component({
         components: {
@@ -40,46 +41,11 @@
             return stat;
         }
 
-        // get walletBalance(){
-        //     let balance = this.$store.getters['walletBalance'];
-        //
-        //     var clone:AvaAsset[] = balance.slice(0);
-        //         clone.sort((a,b)=>{
-        //             let symbolA = a.symbol.toUpperCase();
-        //             let symbolB = b.symbol.toUpperCase();
-        //             let amtA = a.getAmount();
-        //             let amtB = b.getAmount();
-        //
-        //             // AVA always on top
-        //             if(symbolA === 'AVA'){
-        //                 return -1;
-        //             }else if(symbolB === 'AVA'){
-        //                 return 1;
-        //             }
-        //
-        //             if(amtA.gt(amtB)){
-        //                 return -1;
-        //             }else if(amtA.lt(amtB)){
-        //                 return 1;
-        //             }
-        //
-        //             if(symbolA < symbolB){
-        //                 return -1;
-        //             }else if(symbolA > symbolB){
-        //                 return 1;
-        //             }
-        //             return 0;
-        //         });
-        //     return clone;
-        //
-        // }
-        get assets(): AvaAsset[]{
-            // return this.$store.getters['walletBalance'];
-            let balance = this.$store.getters['walletBalance'];
-            let res:AvaAsset[] = balance.slice(0);
+        get walletBalances(): AvaAsset[]{
+            let balance:AvaAsset[] = this.$store.getters['walletAssetsArray'];
 
             // Sort by balance, then name
-            res.sort((a,b) => {
+            balance.sort((a,b) => {
                 let symbolA = a.symbol.toUpperCase();
                 let symbolB = b.symbol.toUpperCase();
                 let amtA = a.getAmount();
@@ -108,7 +74,7 @@
 
 
             if(this.search){
-                res = res.filter(val => {
+                balance = balance.filter(val => {
                     let query = this.search.toUpperCase();
 
                     let nameUp = val.name.toUpperCase();
@@ -122,7 +88,7 @@
                 });
             }
 
-            return res;
+            return balance;
         }
 
         get isUpdateBalance(): boolean{

@@ -36,8 +36,18 @@ interface Modal {
 
 
 export interface IWalletBalanceDict {
+    [assetId: string]: BN
+}
+
+export interface IWalletBalanceItem{
+    id: string,
+    amount: BN
+}
+
+export interface IWalletAssetsDict {
     [assetId: string]: AvaAsset
 }
+
 
 interface ModalDict {
     [key: string]: Modal

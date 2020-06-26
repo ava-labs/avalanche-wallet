@@ -40,7 +40,7 @@
 
 
         get explorerUrl(): string{
-            return `https://explorer.ava.network/tx/${this.transaction.id}`;
+            return `https://explorer.avax.network/tx/${this.transaction.id}`;
         }
         get assetsDict(): AssetsDict {
             return this.$store.state.Assets.assetsDict;
