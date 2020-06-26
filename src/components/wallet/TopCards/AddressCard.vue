@@ -93,9 +93,7 @@
         }
 
         onswitch(){
-            console.log("Switching modes:");
             this.$store.dispatch('toggleWalletMode');
-            // this.$store.state.activeWallet.toggleMode();
         }
         viewQRModal(){
             // @ts-ignore

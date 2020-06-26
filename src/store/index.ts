@@ -299,6 +299,7 @@ export default new Vuex.Store({
                 type: "info"
             });
 
+            dispatch('History/updateTransactionHistory', null);
             dispatch('saveKeys');
         },
         // Saves current keys to browser Session Storage

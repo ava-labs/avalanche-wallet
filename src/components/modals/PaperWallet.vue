@@ -48,7 +48,14 @@
 
         @Watch('address')
         onAddressChange() {
-            this.refreshPDF();
+            let parent = this;
+            try{
+                this.refreshPDF();
+            }catch(e){
+                setTimeout(()=>{
+                    parent.onAddressChange()
+                }, 500);
+            }
         }
 
         open(){
@@ -230,6 +237,7 @@
                 canvasContext: context,
                 viewport: viewport
             };
+
             await page.render(renderContext).promise;
         }
 

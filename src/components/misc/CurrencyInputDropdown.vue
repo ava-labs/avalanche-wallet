@@ -22,7 +22,7 @@
     import { BigNumInput } from '@avalabs/vue_components';
     import AvaAsset from "@/js/AvaAsset";
     import {ICurrencyInputDropdownValue} from "@/components/wallet/transfer/types";
-    import {IWalletBalanceDict} from "@/store/types";
+    import {IWalletAssetsDict, IWalletBalanceDict} from "@/store/types";
 
     interface IDropdownValue {
         label: string,
@@ -154,14 +154,14 @@
             if(!this.asset_now) return null;
 
             let assetId = this.asset_now.id;
-            let balance = this.walletBalanceDict[assetId];
+            let balance = this.walletAssetsDict[assetId];
 
             if(balance.amount.isZero()) return null;
             return balance.amount;
         }
 
-        get walletBalanceDict():IWalletBalanceDict{
-            return this.$store.getters['walletBalanceDict'];
+        get walletAssetsDict():IWalletAssetsDict{
+            return this.$store.getters['walletAssetsDict'];
         }
     }
 

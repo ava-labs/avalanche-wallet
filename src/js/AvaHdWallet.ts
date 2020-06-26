@@ -152,6 +152,12 @@ export default class AvaHdWallet implements IAvaHdWallet{
             txIds.push(txid);
         }
 
+        // TODO: Must update index after sending a tx
+        // TODO: Index will not increase but it could decrease.
+        // TODO: With the current setup this can lead to gaps in index space greater than scan size.
+        this.hdIndex = await this.findAvailableIndex();
+        this.keyChain = this.getKeyChain();
+
         return txIds;
     }
 
@@ -213,7 +219,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 }
             }
 
-            // console.log(`Gap size ${i}: ${gapSize}`);
+            console.log(`Gap size ${i}: ${gapSize}`);
             if(gapSize===INDEX_RANGE){
                 return i;
             }
@@ -239,6 +245,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
             derivationPath = accountPath+'/1';
         }
 
+        // TODO: This is a bottleneck
         let key = this.hdKey.derive(derivationPath+`/${index}`) as HDKey;
         let keychain = new AVMKeyChain('X');
         let pkHex = key.privateKey.toString('hex');
