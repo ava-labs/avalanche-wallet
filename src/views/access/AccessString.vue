@@ -15,6 +15,7 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 
+    // @ts-ignore
     import {QrInput} from '@avalabs/vue_components';
     import RememberKey from "../../components/misc/RememberKey.vue";
     import {AddWalletInput} from "@/store/types";
