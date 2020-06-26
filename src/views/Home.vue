@@ -7,44 +7,13 @@
         </div>
     </div>
 </template>
-<script>
-    import KeystoreLogin from '@/components/home/KeystoreLogin';
-    import PrivateKeyLogin from "@/components/home/PrivateKeyLogin";
-    import CreateNew from "@/components/home/CreateNew";
-
-
-    export default {
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+    @Component({
         name: 'home',
-        data(){
-            return{
-                loginType: "key", // key || keystore || new
-                privateKey: "",
-                address: "",
-                // If generated...
-                newPrivateKey: "",
-                newPublicKey: "",
-                newAddr: "",
-                menu: 'main', // main | new | access
-            }
-        },
-        components: {
-            // QRReader,
-            KeystoreLogin,
-            PrivateKeyLogin,
-            CreateNew
-        },
-        computed: {
-            loginComponent(){
-                if(this.loginType === 'key'){
-                    return PrivateKeyLogin;
-                }else if(this.loginType === 'new'){
-                    return CreateNew;
-                }else{
-                    return KeystoreLogin;
-                }
-            }
-        }
-    }
+    })
+    export default class Home extends Vue{}
 </script>
 <style scoped lang="scss">
     .home{

@@ -2,30 +2,28 @@
     <div class="transfer_card">
         <h1>{{$t('transfer.title')}}</h1>
         <div class="card_body">
-            <div v-if="assetArray.length===0">
-                <p>{{$t('transfer.no_cash')}}</p>
-                <faucet-link v-if="faucetLink" class="faucet"></faucet-link>
-            </div>
-            <div v-else class="new_order_Form">
+            <div class="new_order_Form">
                 <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                 <div>
+<!--                    <BalancePopup :assets="assetArray"></BalancePopup>-->
+
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
                         <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVA</span></p>
                     </div>
-                    <div class="advanced">
-                        <v-expansion-panels accordion class="advanced_panel" flat>
-                            <v-expansion-panel>
-                                <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>
-                                <v-expansion-panel-content>
-                                    <label>{{$t('transfer.adv_change')}}</label>
-                                    <p class="explain">Where to send the remaining assets after the transaction.</p>
-                                    <radio-buttons class="radio_buttons" :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>
-                                    <!--                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>-->
-                                </v-expansion-panel-content>
-                            </v-expansion-panel>
-                        </v-expansion-panels>
-                    </div>
+<!--                    <div class="advanced">-->
+<!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->
+<!--                            <v-expansion-panel>-->
+<!--                                <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>-->
+<!--                                <v-expansion-panel-content>-->
+<!--                                    <label>{{$t('transfer.adv_change')}}</label>-->
+<!--                                    <p class="explain">Where to send the remaining assets after the transaction.</p>-->
+<!--                                    <radio-buttons class="radio_buttons" :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>-->
+<!--                                    &lt;!&ndash;                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>&ndash;&gt;-->
+<!--                                </v-expansion-panel-content>-->
+<!--                            </v-expansion-panel>-->
+<!--                        </v-expansion-panels>-->
+<!--                    </div>-->
                     <div>
                         <label>{{$t('transfer.to')}}</label>
                         <qr-input v-model="addressIn" class="qrIn"></qr-input>
@@ -43,117 +41,121 @@
         </div>
     </div>
 </template>
-<script>
-    import TxList from "@/components/wallet/transfer/TxList";
-    // import AddressDropdown from "@/components/misc/AddressDropdown/AddressDropdown";
-    import RadioButtons from "@/components/misc/RadioButtons";
-    // import QRInput from "@/components/misc/QRInput";
-    import { QrInput } from "@avalabs/vue_components";
-    import {isValidAddress} from "../../AVA";
-    import FaucetLink from "@/components/misc/FaucetLink";
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Ref } from 'vue-property-decorator';
 
-    export default {
+    import TxList from "@/components/wallet/transfer/TxList.vue";
+    import RadioButtons from "@/components/misc/RadioButtons.vue";
+    import Big from "big.js";
+
+    //@ts-ignore
+    import { QrInput } from "@avalabs/vue_components";
+    import {isValidAddress} from "../../../AVA";
+    import FaucetLink from "@/components/misc/FaucetLink.vue";
+    import {ITransaction} from "@/components/wallet/transfer/types";
+    // import BalancePopup from "@/components/misc/BalancePopup/BalancePopup.vue";
+
+    @Component({
         components: {
             FaucetLink,
-            // QRReader,
             TxList,
-            // AddressDropdown,
             RadioButtons,
-            QrInput
-        },
-        data(){
-            return{
-                showAdvanced: false,
-                isAjax: false,
-                addressIn: '',
-                orders: [],
-                errors: [],
-                change_address: '',
+            QrInput,
+            // BalancePopup
+        }
+    })
+    export default class Transfer extends Vue{
+        showAdvanced:boolean = false;
+        isAjax:boolean = false;
+        addressIn:string = '';
+        orders:ITransaction[] = [];
+        errors:string[] = [];
+        // change_address:string = '';
+
+        // changeAddressesChange(val){
+        //     this.change_address = val;
+        // }
+        // toggleAdvanced(){
+        //     this.showAdvanced = !this.showAdvanced;
+        // },
+        updateTxList(data:ITransaction[]){
+            this.orders = data;
+        }
+        formCheck(){
+            this.errors = [];
+            let err = [];
+            if(!isValidAddress(this.addressIn)){
+                err.push('Invalid address.')
             }
-        },
-        methods: {
-            changeAddressesChange(val){
-                this.change_address = val;
-            },
-            // toggleAdvanced(){
-            //     this.showAdvanced = !this.showAdvanced;
-            // },
-            updateTxList(data){
-                this.orders = data;
-            },
-            onQrRead(value){
-                this.addressIn = value;
-            },
-            formCheck(){
-                this.errors = [];
-                let err = [];
-                if(!isValidAddress(this.addressIn)){
-                    err.push('Invalid address.')
-                }
 
 
-                this.errors = err;
-                if(err.length===0){
-                    this.send();
-                }
-            },
-            send(){
-                let parent = this;
-                this.isAjax = true;
-
-                let txList = {
-                    changeAddresses: [this.change_address],
-                    toAddress: this.addressIn,
-                    orders: this.orders
-                };
-
-                this.$store.dispatch('issueBatchTx', txList).then(res => {
-                    parent.isAjax = false;
-
-                    if(res === 'success'){
-                        parent.$refs.txList.clear();
-                    }
-                });
+            this.errors = err;
+            if(err.length===0){
+                this.send();
             }
-        },
-        computed: {
-            faucetLink(){
-                let link = process.env.VUE_APP_FAUCET_LINK;
-                if(link) return link;
-                return null;
-            },
-            canSend(){
-                if(this.addressIn && this.orders.length>0 && this.totalTxSize>0 && this.change_address.length > 0){
-                    return true;
+        }
+        send(){
+            let parent = this;
+            this.isAjax = true;
+
+            let txList = {
+                toAddress: this.addressIn,
+                orders: this.orders
+            };
+
+            this.$store.dispatch('issueBatchTx', txList).then(res => {
+                parent.isAjax = false;
+
+                if(res === 'success'){
+                    // @ts-ignore
+                    parent.$refs.txList.clear();
+
+                    this.$store.dispatch('Notifications/add', {
+                        title: 'Transaction Sent',
+                        message: 'You have successfully sent your transaction.',
+                        type:'success',
+                    });
+                }else{
+                    this.$store.dispatch('Notifications/add', {
+                        title: 'Error Sending Transaction',
+                        message: 'Failed to send transaction.',
+                        type:'error',
+                    });
                 }
-                return false;
-            },
-            totalTxSize(){
-              let res = 0;
-              for(var i=0; i<this.orders.length; i++){
-                  let order = this.orders[i];
-                  if(order.amount){
-                      res += this.orders[i].amount;
-                  }
-              }
-              return res;
-            },
-            selectedAddress(){
-                return this.$store.state.selectedAddress;
-            },
-            addresses(){
-                return this.$store.state.addresses;
-            },
-            // assets(){
-            //     return this.$store.getters['Assets/assetsArray'];
-            //     // return this.$store.state.assets;
-            // },
-            assetArray(){
-                return this.$store.state.Assets.assets;
+            });
+        }
+
+
+        get faucetLink(){
+            let link = process.env.VUE_APP_FAUCET_LINK;
+            if(link) return link;
+            return null;
+        }
+        get canSend(){
+            if(this.addressIn && this.orders.length>0 && this.totalTxSize.gt(0)){
+                return true;
             }
-        },
-        created() {
-            this.change_address = this.selectedAddress;
+            return false;
+        }
+        get totalTxSize(){
+            let res = Big(0);
+            for(var i=0; i<this.orders.length; i++){
+                let order = this.orders[i];
+                if(order.amount){
+                    res = res.add(this.orders[i].amount);
+                }
+            }
+            return res;
+        }
+        get selectedAddress(){
+            return this.$store.state.selectedAddress;
+        }
+        get addresses(){
+            return this.$store.state.addresses;
+        }
+        get assetArray(){
+            return this.$store.getters.walletAssetsArray;
         }
     }
 </script>
@@ -180,7 +182,7 @@
     }
 </style>
 <style scoped lang="scss">
-    @use '../../main';
+    @use '../../../main';
 
     $padLeft: 24px;
     $padTop: 8px;

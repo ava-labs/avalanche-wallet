@@ -7,14 +7,15 @@
         <div class="rows">
             <div class="detail">
                 <div>
-                    <p class="addressVal"><span>{{$t('keys.address')}}</span>{{address}}</p>
+                    <p class="addressVal"><b>{{walletTitle}}</b></p>
+                    <p>{{type}}</p>
                 </div>
             </div>
 
             <div >
                 <p v-if="Object.keys(balances).length === 0" class="balance_empty">{{$t('keys.empty')}}</p>
                 <div class="addressBalance bal_cols" v-else>
-                    <p>This address has: </p>
+                    <p>This key has: </p>
                     <div class="bal_rows">
                         <p  v-for="bal in balances" :key="bal.id">
                             {{bal.toString()}} <b>{{bal.symbol}}</b>
@@ -27,7 +28,7 @@
         <div class="buts">
             <button @click="showModal">View Key Phrase</button>
             <button class="selBut" @click="select"  v-if="!is_default">
-                <span>Make Default</span>
+                <span>Activate Key</span>
             </button>
 
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
@@ -41,10 +42,12 @@
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {KeyPair} from "slopes";
+    import {AmountOutput, KeyPair} from "avalanche";
 
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import * as bip39 from 'bip39';
+    import AvaHdWallet from "@/js/AvaHdWallet";
+    import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
         [key:string]: AvaAsset
@@ -56,47 +59,73 @@
         }
     })
     export default class KeyRow extends Vue{
-        @Prop() address!:string;
+        // @Prop() address!:string;
+        @Prop() wallet!:AvaWallet;
         @Prop({default: false}) is_default?:boolean;
 
-        get balance():AssetsDict{
+
+        get walletTitle(){
+            return this.address.split('-')[1].substring(0,4);
+        }
+        get address(){
+            return this.wallet.masterKey.getAddressString();
+        }
+        get assetsDict():AssetsDict{
             return this.$store.state.Assets.assetsDict;
         }
 
         get balances(): IKeyBalanceDict{
+
+            if(!this.wallet.getUTXOSet()) return {};
+
+
+            // let utxos =  this.$store.getters['Assets/addressUTXOs'];
+            // let addr = this.address;
+            // let addrStrip = addr.split('-')[1];
+            //
+            // let addrUtxos = utxos[addrStrip];
             let res:IKeyBalanceDict = {};
 
-            let utxos =  this.$store.getters['Assets/addressUTXOs'];
-            let addr = this.address;
-            let addrStrip = addr.split('-')[1];
 
-            let addrUtxos = utxos[addrStrip];
-            if(addrUtxos){
-                for(var n=0; n<addrUtxos.length; n++){
-                    let utxo = addrUtxos[n];
-                    let utxoOut = utxo.getOutput();
+            let addrUtxos = this.wallet.getUTXOSet().getAllUTXOs();
+            for(var n=0; n<addrUtxos.length; n++){
+                let utxo = addrUtxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
 
-                    // console.log(utxo);
-                    let amount = utxoOut.getAmount();
-                    let assetIdBuff = utxo.getAssetID();
-                    let assetId = bintools.avaSerialize(assetIdBuff);
+                let amount = utxoOut.getAmount();
+                let assetIdBuff = utxo.getAssetID();
+                let assetId = bintools.avaSerialize(assetIdBuff);
 
-                    let assetObj = this.balance[assetId];
-                    let asset = res[assetId];
-                    if(!asset){
-                        let name = assetObj.name;
-                        let symbol = assetObj.symbol;
-                        let denomination = assetObj.denomination;
+                let assetObj:AvaAsset|undefined = this.assetsDict[assetId];
 
-                        let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-                        newAsset.addBalance(amount);
+                if(!assetObj){
+                    let name = '?';
+                    let symbol = '?';
+                    let denomination = 0;
 
-                        res[assetId] = newAsset;
-                    }else{
-                        asset.addBalance(amount)
-                    }
+                    let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+                    newAsset.addBalance(amount);
+
+                    res[assetId] = newAsset;
+                    continue;
+                }
+
+                let asset = res[assetId];
+                if(!asset){
+                    let name = assetObj.name;
+                    let symbol = assetObj.symbol;
+                    let denomination = assetObj.denomination;
+
+                    let newAsset = new AvaAsset(assetId,name,symbol,denomination);
+                    newAsset.addBalance(amount);
+
+                    res[assetId] = newAsset;
+                }else{
+                    asset.addBalance(amount)
                 }
             }
+
+
             return res;
         }
 
@@ -111,87 +140,23 @@
             return mnemonic;
         }
 
+        get type(){
+           return this.wallet.type;
+        }
+
         remove(){
-            this.$emit('remove', this.address);
+            this.$emit('remove', this.wallet);
         }
         select(){
-            this.$emit('select', this.address);
+            this.$emit('select', this.wallet);
         }
 
         showModal(){
             let modal = this.$refs.modal as MnemonicPhrase;
+            //@ts-ignore
             modal.open();
         }
     }
-
-
-    // export default {
-    //     props: {
-    //         address: {
-    //             type: String,
-    //             required: true
-    //         },
-    //         is_default: {
-    //             type: Boolean,
-    //             default: false
-    //         }
-    //     },
-    //     computed: {
-    //         balance(){
-    //             return this.$store.state.Assets.assetsDict;
-    //         },
-    //         balances(){
-    //             let res = {};
-    //
-    //             let utxos =  this.$store.getters['Assets/addressUTXOs'];
-    //             let addr = this.address;
-    //             let addrStrip = addr.split('-')[1];
-    //
-    //             let addrUtxos = utxos[addrStrip];
-    //             if(addrUtxos){
-    //                 for(var n=0; n<addrUtxos.length; n++){
-    //                     let utxo = addrUtxos[n];
-    //                     let utxoOut = utxo.getOutput();
-    //
-    //                     // console.log(utxo);
-    //                     let amount = utxoOut.getAmount();
-    //                     let assetIdBuff = utxo.getAssetID();
-    //                     let assetId = bintools.avaSerialize(assetIdBuff);
-    //
-    //                     let assetObj = this.balance[assetId];
-    //                     let asset = res[assetId];
-    //                     if(!asset){
-    //                         let name = assetObj.name;
-    //                         let symbol = assetObj.symbol;
-    //                         let denomination = assetObj.denomination;
-    //
-    //                         let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-    //                             newAsset.addBalance(amount);
-    //
-    //                         res[assetId] = newAsset;
-    //                     }else{
-    //                         asset.addBalance(amount)
-    //                     }
-    //                 }
-    //             }
-    //             return res;
-    //         },
-    //         keyPair(){
-    //             return   keyChain.getKey(bintools.parseAddress(this.address, 'X'));
-    //         },
-    //     },
-    //     mounted() {
-    //         // console.log(this.$store.state);
-    //     },
-    //     methods: {
-    //         remove(){
-    //             this.$emit('remove', this.address);
-    //         },
-    //         select(){
-    //             this.$emit('select', this.address);
-    //         }
-    //     }
-    // }
 </script>
 <style scoped lang="scss">
     .addressItem{

@@ -3,79 +3,122 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
 
-        <p class="addr_info">This is your address to receive funds.</p>
+        <p class="addr_info">{{warningText}}</p>
         <div class="bottom">
-            <canvas ref="qr"></canvas>
+            <div>
+                <canvas ref="qr"></canvas>
+                <p class="sub">{{walletTypeText}} Address</p>
+            </div>
             <div class="bottom_rest">
                 <p class="addr_text">{{address}}</p>
-                <p class="sub">Default wallet address</p>
-                <div class="buts">
-                    <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
-                    <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
-                    <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
+                <div style="display: flex; margin-top: 10px;">
+                    <div>
+                        <toggle-button color="#2b60cd" :labels="{checked: 'HD', unchecked: 'Static'}" :value="switchVal" :sync="true" @change="onswitch" :width="60"></toggle-button>
+                    </div>
+                    <div class="buts">
+                        <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
+                        <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
+                        <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
+                    </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </template>
-<script>
-    import CopyText from "@/components/misc/CopyText";
-    import QRModal from "@/components/modals/QRModal";
-    import PaperWallet from "@/components/modals/PaperWallet";
-    import QRCode from "qrcode";
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 
-    export default {
+    import CopyText from "@/components/misc/CopyText.vue";
+    import QRModal from "@/components/modals/QRModal.vue";
+    import PaperWallet from "@/components/modals/PaperWallet.vue";
+    // @ts-ignore
+    import QRCode from "qrcode";
+    import {AVMKeyPair} from "avalanche";
+
+    @Component({
         components: {
             CopyText,
             PaperWallet,
             QRModal,
-        },
-        methods: {
-            viewQRModal(){
-                this.$refs.qr_modal.open();
-            },
-            viewPrintModal(){
-                this.$refs.print_modal.open();
-            },
+        }
+    })
+    export default class AddressCard extends Vue{
+        $refs!: {
+            qr_modal: QRModal,
+            print_modal: PaperWallet,
+            qr: HTMLCanvasElement
+        };
 
 
-            updateQR(){
-                let canvas = this.$refs.qr;
-                let size = canvas.clientWidth;
-                QRCode.toCanvas(canvas, this.address, {
+        @Watch('address')
+        onaddrchange(){
+            this.updateQR()
+        }
 
-                    scale: 6,
-                    color: {
-                        light: "#fff"
-                    },
-                    width: size,
-                    height: size,
-                }, function (error) {
-                    if (error) console.error(error);
-                    // console.log('success!');
-                })
+        get ava_asset(){
+            return this.$store.getters['Assets/AssetAVA'];
+        }
+
+        get address(){
+            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!activeKey){
+                return '-'
             }
-        },
-        watch: {
-            address(val){
-                if(val){
-                    this.updateQR();
-                }
+            return activeKey.getAddressString();
+        }
+
+        get warningText():string{
+            if(this.walletType==='hd'){
+                return "This is your address to receive funds. Your address will change after every deposit.";
+            }else{
+                return "This is your address to receive funds."
             }
-        },
-        computed: {
-            ava_asset(){
-                return this.$store.getters['Assets/AssetAVA'];
-            },
-            address(){
-                return this.$store.state.selectedAddress;
-            },
-            isUpdateBalance(){
-                return this.$store.state.Assets.isUpdateBalance;
-            },
-        },
+        }
+
+        get walletType(){
+            return this.$store.getters['walletType'];
+        }
+
+        get walletTypeText(){
+            if(this.walletType === 'hd'){
+                return 'HD'
+            }else{
+                return 'Static';
+            }
+        }
+
+        get switchVal():boolean{
+            return this.walletType==='hd';
+        }
+
+        onswitch(){
+            this.$store.dispatch('toggleWalletMode');
+        }
+        viewQRModal(){
+            // @ts-ignore
+            this.$refs.qr_modal.open();
+        }
+        viewPrintModal(){
+            let modal = this.$refs.print_modal;
+            // @ts-ignore
+            modal.open();
+        }
+        updateQR(){
+            let canvas = this.$refs.qr as HTMLCanvasElement;
+            let size = canvas.clientWidth;
+            QRCode.toCanvas(canvas, this.address, {
+                scale: 6,
+                color: {
+                    light: "#fff"
+                },
+                width: size,
+                // height: size,
+            }, function (error:any) {
+                if (error) console.error(error);
+            })
+        }
+
         mounted() {
             this.updateQR();
         }
@@ -171,18 +214,25 @@
             flex-direction: column;
         }
 
-        .sub{
-            color: #909090;
-            font-size: 13px;
-            flex-grow: 1;
-        }
+
     }
 
-
+    .sub{
+        margin: 0px 10px !important;
+        /*width: 100%;*/
+        text-align: center;
+        /*color: #999;*/
+        font-size: 0.7rem;
+        background-color: #2b60cd;
+        color: #fff;
+        padding: 3px 6px;
+        border-radius: 3px;
+    }
 
 
     .addr_text{
         font-size: 16px;
         word-break: break-all;
+        flex-grow: 1;
     }
 </style>

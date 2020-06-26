@@ -31,7 +31,7 @@
     (async () => {
        await _sodium.ready;
         sodium = _sodium;
-       console.log(sodium)
+       // console.log(sodium)
     })();
 
     export default {
@@ -105,8 +105,6 @@
                 );
 
                 let url = URL.createObjectURL( blob );
-
-                console.log(url);
 
                 var element = document.createElement('a');
                     element.setAttribute('href', url);

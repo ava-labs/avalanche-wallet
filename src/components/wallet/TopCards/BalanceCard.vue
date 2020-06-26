@@ -3,7 +3,8 @@
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
-                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">
+                    <Spinner v-if="isUpdateBalance"></Spinner>
+<!--                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">-->
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
@@ -32,28 +33,61 @@
         </div>
     </div>
 </template>
-<script>
-    export default {
-        methods: {
-            updateBalance(){
-                this.$store.dispatch('Assets/updateUTXOs');
-                this.$store.dispatch('History/updateTransactionHistory');
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
+    import AvaAsset from "@/js/AvaAsset";
+    import AvaHdWallet from "@/js/AvaHdWallet";
+    import Spinner from '@/components/misc/Spinner.vue';
+
+    @Component({
+        components: {
+            Spinner
+        }
+    })
+    export default class BalanceCard extends Vue {
+
+        // @Watch('ava_asset', {
+        //     deep: true
+        // })
+        // onassetchange(){
+        //     console.log('ASSET CHANGE')
+        // }
+
+        updateBalance():void{
+            this.$store.dispatch('Assets/updateUTXOs');
+            this.$store.dispatch('History/updateTransactionHistory');
+        }
+
+        get ava_asset():AvaAsset|null{
+            let ava = this.$store.getters['Assets/AssetAVA'];
+            return ava;
+        }
+
+        get balanceText():string{
+            if(this.ava_asset !== null){
+                return this.ava_asset.toString();
+            }else{
+                return '-'
             }
-        },
-        computed: {
-            ava_asset(){
-                return this.$store.getters['Assets/AssetAVA'];
-            },
-            balanceText(){
-                if(this.ava_asset !== null){
-                    return this.ava_asset.toString();
-                }else{
-                    return '-'
-                }
-            },
-            isUpdateBalance(){
-                return this.$store.state.Assets.isUpdateBalance;
-            },
+        }
+
+        get wallet():AvaHdWallet{
+            return this.$store.state.activeWallet;
+        }
+
+        get walletBalance(){
+            let walletBalance = this.$store.getters['walletBalance'];
+            return walletBalance;
+        }
+
+        get isUpdateBalance():boolean{
+            return this.$store.state.Assets.isUpdateBalance;
+        }
+
+
+        mounted(){
+
         }
     }
 </script>

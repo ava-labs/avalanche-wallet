@@ -20,7 +20,7 @@
 
         isActive: boolean = false;
 
-        open(){
+        public open(){
             this.isActive = true;
         }
         close(){

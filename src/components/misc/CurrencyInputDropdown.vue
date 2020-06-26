@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import { Vue, Component, Prop, Emit } from 'vue-property-decorator';
 
     import * as BN from 'bn.js';
     import Big from 'big.js';
@@ -21,6 +21,8 @@
     // @ts-ignore
     import { BigNumInput } from '@avalabs/vue_components';
     import AvaAsset from "@/js/AvaAsset";
+    import {ICurrencyInputDropdownValue} from "@/components/wallet/transfer/types";
+    import {IWalletAssetsDict, IWalletBalanceDict} from "@/store/types";
 
     interface IDropdownValue {
         label: string,
@@ -75,11 +77,16 @@
 
 
         // onchange event for the Component
-        onchange(){
-            this.$emit('change',{
+        @Emit('change')
+        onchange(): ICurrencyInputDropdownValue{
+            return {
                 asset: this.asset_now,
                 amount: this.amount
-            });
+            }
+            // this.$emit('change',{
+            //     asset: this.asset_now,
+            //     amount: this.amount
+            // });
         }
 
 
@@ -145,8 +152,16 @@
 
         get max_amount(): null | BN{
             if(!this.asset_now) return null;
-            if(this.asset_now.amount.isZero()) return null;
-            return this.asset_now.amount;
+
+            let assetId = this.asset_now.id;
+            let balance = this.walletAssetsDict[assetId];
+
+            if(balance.amount.isZero()) return null;
+            return balance.amount;
+        }
+
+        get walletAssetsDict():IWalletAssetsDict{
+            return this.$store.getters['walletAssetsDict'];
         }
     }
 

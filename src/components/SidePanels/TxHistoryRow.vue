@@ -6,10 +6,11 @@
         <div>
             <p class="time">
                 {{timeText}}
-                <a :href="explorerUrl" target="_blank"><fa icon="arrow-right"></fa></a>
+                <a :href="explorerUrl" target="_blank" tooltip="View in Explorer"><fa icon="search"></fa></a>
             </p>
             <div class="utxos">
-                <tx-history-value v-for="(amount, assetId) in valList" :key="assetId" :amount="amount" :asset-id="assetId"></tx-history-value>
+                <tx-history-value v-for="(amount, assetId) in valList" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="false"></tx-history-value>
+<!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
         </div>
     </div>
@@ -26,11 +27,12 @@
     import {TransactionAssetsDict, TransactionValueDict} from "@/components/SidePanels/types";
     import {AssetsDict} from "@/store/modules/assets/types";
     import {AvaNetwork} from "@/js/AvaNetwork";
+    import store from '@/store';
 
 
     @Component({
         components: {
-            TxHistoryValue
+            TxHistoryValue,
         }
     })
     export default class TxHistoryRow extends Vue {
@@ -38,7 +40,7 @@
 
 
         get explorerUrl(): string{
-            return `https://explorer.ava.network/tx/${this.transaction.id}`;
+            return `https://explorer.avax.network/tx/${this.transaction.id}`;
         }
         get assetsDict(): AssetsDict {
             return this.$store.state.Assets.assetsDict;
@@ -69,14 +71,12 @@
 
             for(var assetId in ins){
                 let inAmount = ins[assetId] || 0;
-
                 if(res[assetId]){
                     res[assetId] -= inAmount;
                 }else {
                     res[assetId] = -1 * inAmount;
                 }
             }
-
 
             return res;
         }
@@ -107,7 +107,7 @@
 
                     // Get froms
 
-                    console.log(diff, inAsset.addresses);
+                    // console.log(diff, inAsset.addresses);
                 }else{
                     // Asset Genesis
                     amount = outVal;
@@ -129,7 +129,7 @@
 
                     // Get froms
 
-                    console.log(diff, inAsset.addresses);
+                    // console.log(diff, inAsset.addresses);
                 }else{
                     // Asset Genesis
                     amount = outVal;
@@ -165,10 +165,7 @@
                     amount: BN
                     addresses: string[]
                 }
-
              */
-
-
             ins.forEach(inputUtxo => {
                 let out = inputUtxo.output;
                 let addrs = out.addresses;
@@ -235,8 +232,11 @@
 
         // What did I loose?
         get inValues(){
-            let myAddr = this.$store.state.selectedAddress;
-            let addrRaw = myAddr.split('-')[1];
+            let addrs:string[] = store.getters.addresses;
+            let addrsRaw = addrs.map(addr => addr.split('-')[1]);
+
+            // let myAddr = this.$store.state.selectedAddress;
+            // let addrRaw = myAddr.split('-')[1];
             let ins = this.transaction.inputs;
             let res:TransactionValueDict = {}; // asset id -> value dict
 
@@ -245,24 +245,17 @@
                 return res;
             }
 
-            // Order by ASSET ID
-            /*
-                id: {
-                    amount: BN
-                    addresses: string[]
-                }
-             */
-
-
             ins.forEach(inputUtxo => {
                 let out = inputUtxo.output;
-                let addrs = out.addresses;
+                let utxoAddrs = out.addresses;
                 let assetId = out.assetID;
                 let amt = out.amount;
-                let amtBN = new BN(out.amount, 10)
+                let amtBN = new BN(out.amount, 10);
 
+                let intersection =  utxoAddrs.filter(value => addrsRaw.includes(value));
+                let isIncludes = intersection.length > 0;
 
-                if(addrs.includes(addrRaw)){
+                if(isIncludes){
                     if(res[assetId]){
                         res[assetId] += parseInt(amt)
                     }else{
@@ -277,8 +270,8 @@
 
         // what did I gain?
         get outValues(){
-            let myAddr = this.$store.state.selectedAddress;
-            let addrRaw = myAddr.split('-')[1];
+            let addrs:string[] = store.getters.addresses;
+            let addrsRaw = addrs.map(addr => addr.split('-')[1]);
             let outs = this.transaction.outputs;
             let res:TransactionValueDict = {}; // asset id -> value dict
 
@@ -288,11 +281,14 @@
             }
 
             outs.forEach(utxoOut => {
-                let addrs = utxoOut.addresses;
+                let utxoAddrs = utxoOut.addresses;
                 let assetId = utxoOut.assetID;
                 let amt = utxoOut.amount;
 
-                if(addrs.includes(addrRaw)){
+                let intersection =  utxoAddrs.filter(value => addrsRaw.includes(value));
+                let isIncludes = intersection.length > 0;
+
+                if(isIncludes){
 
                     if(res[assetId]){
                         res[assetId] += parseInt(amt)
@@ -317,7 +313,7 @@
                 // ids.push(assetId);
                 urls.push(getAssetIcon(assetId))
             }
-            return urls;
+            return urls.splice(0,1);
         }
     }
 </script>
@@ -390,7 +386,7 @@
         }
         .time{
             font-size: 14px;
-            text-align: right;
+            text-align: left;
         }
     }
 

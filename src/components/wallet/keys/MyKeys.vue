@@ -3,74 +3,81 @@
         <v-alert type="info" v-if="rememberKey" text>
             Your private keys are remembered until you close this tab or logout of your wallet.
         </v-alert>
-        <key-row :address="selected"
+        <p class="label">Active Key</p>
+        <key-row :wallet="activeWallet"
                  class="key_row"
                  :is_default="true"
         ></key-row>
         <hr>
+        <p class="label" v-if="wallets.length>0">Other Keys</p>
         <transition-group name="fade">
-            <key-row v-for="addr in addresses"
-                     :key="addr"
-                     :address="addr"
+            <key-row v-for="wallet in wallets"
+                     :wallet="wallet"
+                     :key="wallet.masterKey.getAddressString()"
                      class="key_row"
-                     @select="selectKey"
-                     @remove="removeKey"
+                     @select="selectWallet"
+                     @remove="removeWallet"
             ></key-row>
         </transition-group>
     </div>
 </template>
-<script>
-    import KeyRow from "@/components/wallet/keys/KeyRow";
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    export default {
+    import KeyRow from "@/components/wallet/keys/KeyRow.vue";
+    import AvaHdWallet from "@/js/AvaHdWallet";
+    import {AvaWallet} from "@/js/AvaWallet";
+
+
+    @Component({
         components: {
-            KeyRow,
-        },
-        methods: {
-            selectKey(addr){
-                this.$store.commit('selectAddress', addr);
-                this.$store.dispatch('History/updateTransactionHistory');
-            },
-            removeKey(addr){
+            KeyRow
+        }
+    })
+    export default class MyKeys extends Vue{
+        selectWallet(wallet: AvaHdWallet){
+            this.$store.dispatch('activateWallet', wallet);
+            this.$store.dispatch('History/updateTransactionHistory');
+        }
+        async removeWallet(wallet: AvaHdWallet){
 
-                let msg = this.$t('keys.del_check');
-                let isConfirm = confirm(msg);
+            let msg = this.$t('keys.del_check') as string;
+            let isConfirm = confirm(msg);
 
-                if(isConfirm){
-                    this.$store.dispatch('removeKey', addr)
-                }
-
-                if(this.rememberKey){
-                    this.$store.dispatch('saveKeys');
-                }
+            if(isConfirm){
+                await this.$store.dispatch('removeWallet', wallet);
+                this.$store.dispatch('Notifications/add', {
+                    title: 'Key Removed',
+                    message: 'Private key and assets removed from the wallet.'
+                });
             }
-        },
-        computed: {
-            rememberKey(){
-                return this.$store.state.rememberKey;
-            },
-            selected(){
-                return this.$store.state.selectedAddress;
-            },
-            // non default addresses
-            addresses(){
-                let res = [];
-                let allAddr = this.$store.state.addresses;
+        }
 
-                for(var i=0; i<allAddr.length; i++){
-                    let addr = allAddr[i];
-                    if(addr !== this.selected){
-                        res.push(addr);
-                    }
-                }
-                return res;
-            },
-            balance(){
-                return this.$store.state.Assets.assetsDict;
-            },
+        get rememberKey(){
+            return this.$store.state.rememberKey;
+        }
 
+        get wallets():AvaWallet[]{
+            let wallets:AvaWallet[] = this.$store.state.wallets;
+
+            let res = wallets.filter(wallet => {
+                if(this.activeWallet === wallet) return false;
+                return true;
+            });
+
+            return res;
+        }
+
+        get activeWallet(){
+            return this.$store.state.activeWallet;
+        }
+
+        get balance(){
+            return this.$store.state.Assets.assetsDict;
         }
     }
+
 </script>
 <style scoped lang="scss">
 
@@ -78,7 +85,12 @@
 
     }
 
-
+    .label{
+        font-size: 13px;
+        color: #999;
+        font-weight: bold;
+        padding: 2px 10px;
+    }
     .key_row{
         background-color: #F5F6FA;
         padding: 15px;
@@ -91,13 +103,7 @@
         padding-top: 15px;
     }
     .addressItem {
-        /*border-bottom: 1px solid #EAEDF4;*/
-        /*border-radius: 14px;*/
-
-
         &[selected]{
-            /*border-color: #2960CD;*/
-            /*background-color: #edf3ff;*/
         }
     }
 

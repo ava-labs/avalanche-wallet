@@ -27,7 +27,12 @@
                             <p class="warn"><b>WARNING</b><br> Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases.</p>
                             <div class="access_cont">
                                 <remember-key v-model="rememberKey" explain="Remember key phrase. Your keys will persist until you close the browser tab."></remember-key>
-                                <button class="access generate" @click="access">Access Wallet</button>
+                                <div class="submit">
+                                    <transition name="fade" mode="out-in">
+                                    <Spinner v-if="isLoad"></Spinner>
+                                    <button v-else class="access generate" @click="access">Access Wallet</button>
+                                    </transition>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -41,58 +46,72 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
-    import {keyChain} from "@/AVA";
+    import Spinner from '@/components/misc/Spinner.vue';
+    import {bintools, cryptoHelpers, keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
+    import {Buffer} from "buffer/";
 
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
-    import * as bip39 from 'bip39';
 
-    console.log(bip39);
+    import * as bip39 from 'bip39';
+    var HDKey = require('hdkey');
+
+    // import * as bip32 from 'bip32';
+    // import { BIP32Interface } from 'bip32';
+    import AvaHdWallet from "@/js/AvaHdWallet";
+
+    import {KeyPair} from "avalanche";
+    import {AddWalletInput} from "@/store/types";
 
     @Component({
         components: {
             CopyText,
             RememberKey,
             TextDisplayCopy,
-            MnemonicDisplay
+            MnemonicDisplay,
+            Spinner
         }
     })
     export default class CreateWallet extends Vue{
+        isLoad: boolean = false;
         rememberKey:boolean = false;
         newPrivateKey: string|null =null;
-        newPublicKey: string|null = null;
-        newAddr: string|null = null;
         keyPhrase: string = "";
+        keyPair: KeyPair|null = null;
 
 
         createKey():void{
-            let addr = keyChain.makeKey();
-            let keypair = keyChain.getKey(addr);
+            let mnemonic = bip39.generateMnemonic(256);
+            let entropy = bip39.mnemonicToEntropy(mnemonic);
+            let b = new Buffer(entropy, 'hex');
 
+            let addr = keyChain.importKey(b);
+            let keypair = keyChain.getKey(addr);
+            let privkstr = keypair.getPrivateKeyString();
+
+            // Remove because it will get added in accessWallet dispatch
             keyChain.removeKey(keypair);
 
-            let pubk = keypair.getPublicKey(); //returns Buffer
-            let pubkstr = keypair.getPublicKeyString(); //returns an AVA serialized string
-
-            let privk = keypair.getPrivateKey(); //returns Buffer
-            let privkstr = keypair.getPrivateKeyString(); //returns an AVA serialized string
-
-
-            let hex = privk.toString('hex');
-            let mnemonic = bip39.entropyToMnemonic(hex);
-
-            console.log(mnemonic);
+            this.keyPair = keypair;
             this.keyPhrase = mnemonic;
-            this.newAddr = keypair.getAddressString();
             this.newPrivateKey = privkstr;
-            this.newPublicKey = pubkstr;
-
         }
 
-        access(): void{
+        async access(): Promise<void>{
+            if(!this.keyPair) return;
+
+            this.isLoad = true;
             this.$store.state.rememberKey = this.rememberKey;
-            this.$store.dispatch('accessWallet', this.newPrivateKey);
+            let parent = this;
+
+            let inData:AddWalletInput = {
+                pk: this.keyPair.getPrivateKeyString(),
+                type: 'hd'
+            }
+            setTimeout(()=>{
+                parent.$store.dispatch('accessWallet', inData);
+            }, 500);
         }
     }
 </script>
@@ -175,7 +194,7 @@
 
     .access{
         margin: 0px 0px;
-        margin-top: 30px;
+        /*margin-top: 30px;*/
     }
 
     .access_cont{
@@ -202,6 +221,11 @@
         /*width: 20px;*/
         /*height: 20px;*/
         margin: 0px auto;
+    }
+
+    .submit{
+        display: flex;
+        justify-content: center;
     }
     @include main.mobile-device{
         .access{

@@ -9,11 +9,11 @@
         <div v-if="networkStatus !== 'connected'" class="empty">
             <p>Unable to display assets. Disconnected from the network.</p>
         </div>
-        <div v-else-if="assets.length === 0" class="empty">
+        <div v-else-if="walletBalances.length === 0" class="empty">
             <p>You do not have any assets</p>
         </div>
         <div class="scrollable" v-else>
-            <fungible-row lass="asset" v-for="asset in assets" :key="asset.id" :asset="asset"></fungible-row>
+            <fungible-row lass="asset" v-for="asset in walletBalances" :key="asset.id" :asset="asset"></fungible-row>
         </div>
 
     </div>
@@ -25,6 +25,7 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import FungibleRow from "@/components/wallet/home/FungibleRow.vue";
     import AvaAsset from "@/js/AvaAsset";
+    import {IWalletBalanceItem} from "@/store/types";
 
     @Component({
         components: {
@@ -40,13 +41,11 @@
             return stat;
         }
 
-
-        get assets(): AvaAsset[]{
-            let res: AvaAsset[] = this.$store.state.Assets.assets;
-
+        get walletBalances(): AvaAsset[]{
+            let balance:AvaAsset[] = this.$store.getters['walletAssetsArray'];
 
             // Sort by balance, then name
-            res.sort((a,b) => {
+            balance.sort((a,b) => {
                 let symbolA = a.symbol.toUpperCase();
                 let symbolB = b.symbol.toUpperCase();
                 let amtA = a.getAmount();
@@ -75,7 +74,7 @@
 
 
             if(this.search){
-                res = res.filter(val => {
+                balance = balance.filter(val => {
                     let query = this.search.toUpperCase();
 
                     let nameUp = val.name.toUpperCase();
@@ -89,7 +88,7 @@
                 });
             }
 
-            return res;
+            return balance;
         }
 
         get isUpdateBalance(): boolean{

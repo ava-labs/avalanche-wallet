@@ -1,9 +1,6 @@
 <template>
     <v-app>
-        <v-content>
-<!--            <transition name="fade">-->
-<!--                <loading-app v-if="!appReady"></loading-app>-->
-<!--            </transition>-->
+        <v-main>
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
@@ -18,7 +15,7 @@
                     </transition>
                 </div>
             </template>
-        </v-content>
+        </v-main>
         <notifications></notifications>
     </v-app>
 </template>
@@ -42,17 +39,21 @@
             // this.$store.dispatch('Assets/getAllAssets');
             await this.$store.dispatch('Network/init');
 
+
             // check session storage
             // if Remember Keys was enabled, get keys and access wallet
-            this.$store.dispatch('autoAccess').then((res) => {
-                if(res){
-                    parent.$store.dispatch('Notifications/add', {
-                        title: "Keys Remembered",
-                        message: "Your stored keys are used to log you in.",
-                        type: "success"
-                    })
-                }
-            });
+            this.$nextTick(() => {
+                parent.$store.dispatch('autoAccess').then((res) => {
+                    if(res){
+                        parent.$store.dispatch('Notifications/add', {
+                            title: "Keys Remembered",
+                            message: "Your stored keys are used to log you in.",
+                            type: "success"
+                        })
+                    }
+                });
+            })
+
         },
         computed:{
             appReady(){

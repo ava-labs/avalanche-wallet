@@ -11,42 +11,80 @@
         <router-link to="/access">Cancel</router-link>
     </div>
 </template>
-<script>
-    import {QrInput} from '@avalabs/vue_components';
-    import RememberKey from "../../components/misc/RememberKey";
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 
-    export default {
-        components:{
+    // @ts-ignore
+    import {QrInput} from '@avalabs/vue_components';
+    import RememberKey from "../../components/misc/RememberKey.vue";
+    import {AddWalletInput} from "@/store/types";
+
+    @Component({
+        components: {
             QrInput,
             RememberKey
-        },
-        data(){
-            return{
-                isLoading: false,
-                privateKey: "",
-                rememberKey: false,
-                error: false,
-            }
-        },
-        methods: {
-            async access(){
-                let parent = this;
-                this.isLoading = true;
-                this.$store.state.rememberKey = this.rememberKey;
+        }
+    })
+    export default class AccessString extends Vue{
+        isLoading:boolean = false;
+        privateKey:string = "";
+        rememberKey:boolean = false;
+        error:string = "";
 
-                console.log(this.rememberKey);
 
-                try{
-                    let res = await this.$store.dispatch('accessWallet', this.privateKey);
-                    parent.isLoading = false;
+        async access(){
+            let parent = this;
+            this.isLoading = true;
+            this.$store.state.rememberKey = this.rememberKey;
 
-                }catch (e) {
-                    this.error = 'Invalid Private Key';
-                    this.isLoading = false;
-                }
+            let inData:AddWalletInput = {
+                pk: this.privateKey,
+                type: 'hd'
+            };
+
+            try{
+                let res = await this.$store.dispatch('accessWallet', inData);
+                parent.isLoading = false;
+            }catch (e) {
+                this.error = 'Invalid Private Key';
+                this.isLoading = false;
             }
         }
     }
+    // export default {
+    //     components:{
+    //         QrInput,
+    //         RememberKey
+    //     },
+    //     data(){
+    //         return{
+    //             isLoading: false,
+    //             privateKey: "",
+    //             rememberKey: false,
+    //             error: false,
+    //         }
+    //     },
+    //     methods: {
+    //         async access(){
+    //             let parent = this;
+    //             this.isLoading = true;
+    //             this.$store.state.rememberKey = this.rememberKey;
+    //
+    //             console.log(this.rememberKey);
+    //
+    //
+    //             try{
+    //                 let res = await this.$store.dispatch('accessWallet', this.privateKey);
+    //                 parent.isLoading = false;
+    //
+    //             }catch (e) {
+    //                 this.error = 'Invalid Private Key';
+    //                 this.isLoading = false;
+    //             }
+    //         }
+    //     }
+    // }
 </script>
 <style scoped lang="scss">
     @use '../../main';
