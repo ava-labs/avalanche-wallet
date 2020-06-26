@@ -3,9 +3,19 @@
 
 // A simple wrapper thar combines slopes, bip39 and HDWallet
 
-import {AVMKeyChain, KeyChain, AVMKeyPair, UTXOSet, UTXO, KeyPair, AmountOutput} from "avalanche";
+import {
+    AVMKeyChain,
+    KeyChain,
+    AVMKeyPair,
+    UTXOSet,
+    UTXO,
+    KeyPair,
+    AmountOutput,
+    TransferableInput,
+    TransferableOutput, BaseTx, UnsignedTx, Tx
+} from "avalanche";
 import * as bip39 from "bip39";
-import {avm} from "@/AVA";
+import {ava, avm, bintools} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache, wallet_type} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
@@ -117,40 +127,56 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
-    getChangeAddress():string|null{
+    // Scan internal indices and find a spot with no utxo
+    getChangeAddress():string{
+        let index = 0;
+        let foundAddress = null;
 
-        for(var i=0; i<this.hdIndex;i++){
-            let key = this.getKeyForIndex(i,true);
+        while(foundAddress===null){
+            let key = this.getKeyForIndex(index,true);
 
             let utxoset = this.utxoset.getUTXOIDs([key.getAddress()]);
             if(utxoset.length===0){
-                // console.log("Change index: ",i)
-                return key.getAddressString();
+                foundAddress = key.getAddressString();
             }
+            index++;
         }
-        return null;
+
+        return foundAddress;
     }
 
 
-    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string[]>{
+    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string>{
         let fromAddrs = this.keyChain.getAddressStrings();
         let changeAddr = this.getChangeAddress();
 
         if(changeAddr === null){
-            alert("Unable to issue transaction. Ran out of change index.");
-            return [];
+            throw "Unable to issue transaction. Ran out of change index.";
         }
 
-        let txIds = [];
+        let ins:Array<TransferableInput> = [];
+        let outs:Array<TransferableOutput> = [];
+
 
         for(var i=0;i<orders.length;i++){
             let order = orders[i];
             let amt = new BN(order.amount.toString());
             let baseTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
-            let signedTx = this.keyChain.signTx(baseTx);
-            let txid = await avm.issueTx(signedTx);
-            txIds.push(txid);
+            let rawTx = baseTx.getTransaction();
+
+            ins = ins.concat(rawTx.getIns());
+            outs = outs.concat(rawTx.getOuts());
+            // let signedTx = this.keyChain.signTx(baseTx);
+            // let txid = await avm.issueTx(signedTx);
+            // txIds.push(txid);
         }
+
+        let chainId = bintools.avaDeserialize(avm.getBlockchainID());
+        let networkId = ava.getNetworkID();
+        let baseTx = new BaseTx(networkId, chainId, outs, ins);
+        const unsignedTx: UnsignedTx = new UnsignedTx(baseTx);
+        const tx: Tx = unsignedTx.sign(this.keyChain);
+        const txId: string = await avm.issueTx(tx);
 
         // TODO: Must update index after sending a tx
         // TODO: Index will not increase but it could decrease.
@@ -158,7 +184,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.hdIndex = await this.findAvailableIndex();
         this.keyChain = this.getKeyChain();
 
-        return txIds;
+        return txId;
     }
 
     // getExternalKeyChain(): AVMKeyChain{

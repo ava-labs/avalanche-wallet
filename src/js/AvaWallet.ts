@@ -55,7 +55,7 @@ export class AvaWallet implements AvaWalletCore{
         return this.wallet.utxoset;
     }
 
-    issueBatchTx(orders: ITransaction[], addr: string): Promise<string[]> {
+    issueBatchTx(orders: ITransaction[], addr: string): Promise<string> {
         return this.wallet.issueBatchTx(orders,addr)
     }
 

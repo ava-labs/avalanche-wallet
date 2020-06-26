@@ -19,7 +19,7 @@ export interface AvaWalletCore {
     getCurrentAddress(): string;
     onnetworkchange(): void;
     getUTXOs(): Promise<UTXOSet>;
-    issueBatchTx(orders: ITransaction[], addr: string): Promise<string[]>;
+    issueBatchTx(orders: ITransaction[], addr: string): Promise<string>;
 }
 
 export interface IAvaHdWallet extends AvaWalletCore{

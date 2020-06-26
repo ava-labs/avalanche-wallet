@@ -1,7 +1,16 @@
 
 import {AvaWalletCore, IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
-import {AVMKeyChain, AVMKeyPair, UTXOSet} from "avalanche";
-import {avm, bintools} from "@/AVA";
+import {
+    AmountOutput,
+    AVMKeyChain,
+    AVMKeyPair, BaseTx,
+    SecpInput,
+    SecpOutput,
+    TransferableInput,
+    TransferableOutput, Tx, UnixNow, UnsignedTx, UTXO,
+    UTXOSet
+} from "avalanche";
+import {ava, avm, bintools} from "@/AVA";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import BN from "bn.js";
 
@@ -49,21 +58,32 @@ export default class AvaSingletonWallet implements IAvaSingletonWallet {
         return result;
     }
 
-    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string[]> {
-        let fromAddrs = [this.address];
+    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string> {
+        let fromAddrsStr = this.keyChain.getAddressStrings();
         let changeAddr = this.address;
 
-        let txIds = [];
+        let ins:Array<TransferableInput> = [];
+        let outs:Array<TransferableOutput> = [];
 
         for(var i=0;i<orders.length;i++){
             let order = orders[i];
             let amt = new BN(order.amount.toString());
-            let baseTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
-            let signedTx = this.keyChain.signTx(baseTx);
-            let txid = await avm.issueTx(signedTx);
-            txIds.push(txid);
+            let assetId = order.asset.id;
+
+            let baseTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrsStr, [changeAddr], assetId);
+            let rawTx = baseTx.getTransaction();
+
+            ins = ins.concat(rawTx.getIns());
+            outs = outs.concat(rawTx.getOuts());
         }
 
-        return txIds;
+        let chainId = bintools.avaDeserialize(avm.getBlockchainID());
+        let networkId = ava.getNetworkID();
+        let baseTx = new BaseTx(networkId, chainId, outs, ins);
+        const unsignedTx: UnsignedTx = new UnsignedTx(baseTx);
+        const tx: Tx = unsignedTx.sign(this.keyChain);
+        const txId: string = await avm.issueTx(tx);
+
+        return txId;
     }
 }
