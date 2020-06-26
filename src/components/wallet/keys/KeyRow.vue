@@ -7,7 +7,8 @@
         <div class="rows">
             <div class="detail">
                 <div>
-                    <p class="addressVal">{{address}}</p>
+                    <p class="addressVal"><b>{{walletTitle}}</b></p>
+                    <p>{{type}}</p>
                 </div>
             </div>
 
@@ -46,6 +47,7 @@
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
+    import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
         [key:string]: AvaAsset
@@ -58,10 +60,13 @@
     })
     export default class KeyRow extends Vue{
         // @Prop() address!:string;
-        @Prop() wallet!:AvaHdWallet;
+        @Prop() wallet!:AvaWallet;
         @Prop({default: false}) is_default?:boolean;
 
 
+        get walletTitle(){
+            return this.address.split('-')[1].substring(0,4);
+        }
         get address(){
             return this.wallet.masterKey.getAddressString();
         }
@@ -71,7 +76,7 @@
 
         get balances(): IKeyBalanceDict{
 
-            if(!this.wallet.utxoset) return {};
+            if(!this.wallet.getUTXOSet()) return {};
 
 
             // let utxos =  this.$store.getters['Assets/addressUTXOs'];
@@ -82,7 +87,7 @@
             let res:IKeyBalanceDict = {};
 
 
-            let addrUtxos = this.wallet.utxoset.getAllUTXOs();
+            let addrUtxos = this.wallet.getUTXOSet().getAllUTXOs();
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
@@ -133,6 +138,10 @@
             let hex = pk.toString('hex');
             let mnemonic = bip39.entropyToMnemonic(hex);
             return mnemonic;
+        }
+
+        get type(){
+           return this.wallet.type;
         }
 
         remove(){

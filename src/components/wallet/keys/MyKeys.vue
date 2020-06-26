@@ -27,6 +27,7 @@
 
     import KeyRow from "@/components/wallet/keys/KeyRow.vue";
     import AvaHdWallet from "@/js/AvaHdWallet";
+    import {AvaWallet} from "@/js/AvaWallet";
 
 
     @Component({
@@ -57,16 +58,14 @@
             return this.$store.state.rememberKey;
         }
 
-        get wallets():AvaHdWallet[]{
-            let res = [];
-            let wallets =  this.$store.state.wallets;
+        get wallets():AvaWallet[]{
+            let wallets:AvaWallet[] = this.$store.state.wallets;
 
-            for(var i=0;i<wallets.length;i++){
-                let wallet = wallets[i];
-                if(wallet !== this.activeWallet){
-                    res.push(wallet)
-                }
-            }
+            let res = wallets.filter(wallet => {
+                if(this.activeWallet === wallet) return false;
+                return true;
+            });
+
             return res;
         }
 

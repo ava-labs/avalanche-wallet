@@ -4,6 +4,8 @@ import AvaSingletonWallet from "@/js/AvaSingletonWallet";
 import {AvaWalletCore, wallet_type} from './IAvaHdWallet';
 import {ITransaction} from "@/components/wallet/transfer/types";
 
+
+// A wrapper class that join HD and Singleton wallets with the ability to switch between.
 export class AvaWallet implements AvaWalletCore{
     type: wallet_type;
     wallet: AvaHdWallet|AvaSingletonWallet;

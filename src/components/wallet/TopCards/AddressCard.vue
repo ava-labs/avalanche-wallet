@@ -13,7 +13,7 @@
                 <p class="addr_text">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div>
-                        <toggle-button :labels="{checked: 'HD', unchecked: 'Static'}" :value="switchVal" :sync="true" @change="onswitch" :width="60"></toggle-button>
+                        <toggle-button color="#2b60cd" :labels="{checked: 'HD', unchecked: 'Static'}" :value="switchVal" :sync="true" @change="onswitch" :width="60"></toggle-button>
                     </div>
                     <div class="buts">
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
@@ -27,7 +27,7 @@
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
+    import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 
     import CopyText from "@/components/misc/CopyText.vue";
     import QRModal from "@/components/modals/QRModal.vue";
@@ -49,6 +49,12 @@
             print_modal: PaperWallet,
             qr: HTMLCanvasElement
         };
+
+
+        @Watch('address')
+        onaddrchange(){
+            this.updateQR()
+        }
 
         get ava_asset(){
             return this.$store.getters['Assets/AssetAVA'];
@@ -219,7 +225,7 @@
         text-align: center;
         /*color: #999;*/
         font-size: 0.7rem;
-        background-color: #42b983;
+        background-color: #2b60cd;
         color: #fff;
         padding: 3px 6px;
         border-radius: 3px;

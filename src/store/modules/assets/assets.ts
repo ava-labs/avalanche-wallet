@@ -69,15 +69,21 @@ const assets_module: Module<AssetsState, RootState> = {
         //
 
         async updateUTXOs({state, commit, dispatch, rootState}) {
-            let wallet = rootState.activeWallet
+            let wallet = rootState.activeWallet;
             if(!wallet){
                 return false;
             }
             commit('setIsUpdateBalance', true);
-            await wallet.getUTXOs();
-            commit('updateActiveAddress', null, {root: true});
-            dispatch('History/updateTransactionHistory', null, {root: true});
-            commit('setIsUpdateBalance', false);
+
+            try{
+                await wallet.getUTXOs();
+                commit('updateActiveAddress', null, {root: true});
+                dispatch('History/updateTransactionHistory', null, {root: true});
+                commit('setIsUpdateBalance', false);
+            }catch(e){
+                commit('setIsUpdateBalance', false);
+                return false;
+            }
 
 
             //

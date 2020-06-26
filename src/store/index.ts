@@ -271,11 +271,16 @@ export default new Vuex.Store({
             if(!wallet) return;
             wallet.toggleMode();
 
+            let mode = wallet.type;
+
+            let msg = "Your address will now change after every deposit.";
+            if(mode !== 'hd') msg = "Your address is now static and will never change.";
+
             dispatch('Notifications/add', {
                 title: "Wallet Mode Changed",
-                message: "Your wallet now behaves differently",
-                type: "warning"
-            })
+                message: msg,
+                type: "info"
+            });
 
             dispatch('saveKeys');
         },
