@@ -18,6 +18,9 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../../main';
+
+
     .symbol{
         background-color: #eee;
         border-radius: 6px;
@@ -38,5 +41,9 @@
 
     .amt{
         text-align: right;
+    }
+
+    @include main.mobile-device {
+
     }
 </style>

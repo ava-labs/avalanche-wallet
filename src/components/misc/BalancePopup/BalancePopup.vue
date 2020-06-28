@@ -2,7 +2,7 @@
     <div class="balance_popup" v-if="isActive">
         <div class="bg" @click="closePopup"></div>
         <div class="popup_body">
-            <p class="desc">Select an asset</p>
+            <p class="desc">Select an asset <button class="close" @click="closePopup" style="float: right"><fa icon="times"></fa></button></p>
             <div class="rows">
                 <BalanceRow class="bal_row" v-for="asset in assets" :key="asset.id" :zero="asset.amount.isZero()" @click.native="select(asset)" :disabled="isDisabled(asset)" :asset="asset"></BalanceRow>
             </div>
@@ -44,12 +44,10 @@
         closePopup(){
             this.isActive = false;
         }
-
-
-
     }
 </script>
 <style scoped lang="scss">
+    @use '../../../main';
     .bg{
         position: fixed;
         z-index: 2;
@@ -72,7 +70,6 @@
 
     .popup_body{
         position: relative;
-        border: 1px solid #f2f2f2;
         box-shadow: 2px 0px 6px rgba(0,0,0,0.2);
         max-height: 340px;
         height: 340px;
@@ -118,5 +115,36 @@
         text-decoration: line-through;
     }
 
+    .close{
+        opacity: 0.3;
 
+        &:hover{
+            opacity: 1;
+        }
+    }
+
+    @include main.mobile-device{
+        .bg{
+            background-color: rgba(0,0,0,0.4);
+        }
+        .popup_body{
+            box-shadow: 0px 0px 14px rgba(0,0,0,0.4);
+            max-height: none;
+            border: none;
+            position: fixed;
+            width: 100%;
+            height: 66vh !important;
+            bottom: 0;
+            left: 0;
+        }
+
+        .desc{
+            font-size: 1.2rem;
+        }
+
+        .bal_row{
+            padding: 12px 14px;
+            font-size: 0.9rem;
+        }
+    }
 </style>
