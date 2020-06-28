@@ -2,7 +2,7 @@
     <div class="bal_row">
         <p class="symbol">{{asset.symbol}}</p>
         <p class="name">{{asset.name}}</p>
-        <p class="amt">{{amtBig.toLocaleString(asset.denomination)}}</p>
+        <p class="amt">{{asset.toString()}}</p>
     </div>
 </template>
 <script lang="ts">
@@ -15,11 +15,6 @@
     @Component
     export default class BalanceRow extends Vue{
         @Prop() asset!: AvaAsset
-
-        get amtBig(): Big{
-            let big = Big(this.asset.amount.toString());
-            return  big.div(Math.pow(10,this.asset.denomination));
-        }
     }
 </script>
 <style scoped lang="scss">
