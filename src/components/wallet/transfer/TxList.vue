@@ -132,10 +132,10 @@
         }
 
         get assets_list(): AvaAsset[]{
-            return this.$store.state.Assets.assets;
+            return this.$store.getters.walletAssetsArray;
         }
         get assets(): AssetsDict{
-            return this.$store.state.Assets.assetsDict;
+            return this.$store.getters.walletAssetsDict;
         }
         get showAdd(): boolean{
             if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){

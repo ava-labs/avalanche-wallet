@@ -36,11 +36,11 @@
         }
     })
     export default class MyKeys extends Vue{
-        selectWallet(wallet: AvaHdWallet){
+        selectWallet(wallet: AvaWallet){
             this.$store.dispatch('activateWallet', wallet);
             this.$store.dispatch('History/updateTransactionHistory');
         }
-        async removeWallet(wallet: AvaHdWallet){
+        async removeWallet(wallet: AvaWallet){
 
             let msg = this.$t('keys.del_check') as string;
             let isConfirm = confirm(msg);
@@ -73,9 +73,9 @@
             return this.$store.state.activeWallet;
         }
 
-        get balance(){
-            return this.$store.state.Assets.assetsDict;
-        }
+        // get balance(){
+        //     return this.$store.state.Assets.assetsDict;
+        // }
     }
 
 </script>

@@ -22,7 +22,6 @@ Vue.use(Vuex);
 import router from "@/router";
 
 import {ava, avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
-import avalanche from "avalanche/typings/src/avalanche";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {AmountOutput, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
@@ -79,19 +78,19 @@ export default new Vuex.Store({
             }
             return dict;
         },
-        walletBalance(state: RootState, getters): IWalletBalanceItem[]{
-            let balanceDict = getters.walletBalanceDict;
-            let res:IWalletBalanceItem[] = [];
-            for(var id in balanceDict){
-                let amt = balanceDict[id]
-                let item:IWalletBalanceItem = {
-                    id: id,
-                    amount: amt.clone()
-                }
-                res.push(item)
-            }
-            return res;
-        },
+        // walletBalance(state: RootState, getters): IWalletBalanceItem[]{
+        //     let balanceDict = getters.walletBalanceDict;
+        //     let res:IWalletBalanceItem[] = [];
+        //     for(var id in balanceDict){
+        //         let amt = balanceDict[id]
+        //         let item:IWalletBalanceItem = {
+        //             id: id,
+        //             amount: amt.clone()
+        //         }
+        //         res.push(item)
+        //     }
+        //     return res;
+        // },
 
         // Get the balance dict, combine it with existing assets and return a new dict
         walletAssetsDict(state: RootState, getters): IWalletAssetsDict{
