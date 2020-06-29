@@ -7,10 +7,7 @@ $container_padding_m: 30px 160px;
 $container_padding_s: 30px 3vw;
 $container_padding_mobile: 10px 10px;
 
-
-
-
-@mixin mobile-device{
+@mixin mobile-device {
   @media only screen and (max-width: $mobile_width) { @content; }
 }
 
@@ -25,7 +22,30 @@ $container_padding_mobile: 10px 10px;
 }
 
 
-hr{
+$purple: #4C2E56;
+$purple-light: #867E89;
+$pink: #E84970;
+$pink-light: #FF8080;
+$gray: #F5F6FA;
+$white: #FFF;
+
+$vertical-padding: 40px;
+$container-padding: 40px;
+
+$xl-size: 61.44px;  // 192
+
+$l-size: 28.8px;    // 90
+$m-size: 16px;      // 50
+
+$primary-color: $purple;
+$primary-color-light: $purple-light;
+
+$secondary-color: $pink;
+$secondary-color-light: $pink-light;
+
+$background-color: $gray;
+
+hr {
   color: #F5F6FA;
   border-color: #F5F6FA;
   border: none;
@@ -34,7 +54,7 @@ hr{
 }
 
 
-*[tooltip]:hover:before{
+*[tooltip]:hover:before {
   border-radius: 4px;
   /*left: 0;*/
   left: 0;
@@ -50,23 +70,16 @@ hr{
   padding: 4px 8px;
 }
 
-
-
-button, textarea, input{
+button, textarea, input {
   outline: none;
 }
 
-
-
-
-
-a{
+a {
   color: #000 !important;
   text-decoration: none !important;
 }
 
-
-.but_primary{
+.but_primary {
   background-color: #000;
   color: #fff !important;
   text-transform: none !important;
@@ -76,22 +89,20 @@ a{
 }
 
 
-#app[night_mode=""]{
+#app[night_mode=""] {
   background-color: #000;
 
 
-  a, p, h1, h2, h4{
+  a, p, h1, h2, h4 {
     color: #fff !important;
   }
 
 
-  .but_primary{
+  .but_primary {
     background-color: #fff !important;
     color: #000 !important;
   }
 }
-
-
 
 //*[tooltip]:hover{
 //  position: relative;
@@ -107,9 +118,7 @@ a{
 //  }
 //}
 
-
-
-/*     For vue transitions */
+/* For vue transitions */
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity .2s;

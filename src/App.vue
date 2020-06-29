@@ -127,7 +127,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: left;
-        color: #2c3e50;
+        color: main.$primary-color;
         background-color: #F5F6FA;
         font-family: 'Rubik', sans-serif;
         transition-duration: 0.2s;
