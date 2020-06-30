@@ -1,4 +1,4 @@
-// A simple wrapper thar combines slopes, bip39 and HDWallet
+// A simple wrapper thar combines avalanche.js, bip39 and HDWallet
 
 import {
     AVMKeyChain,
@@ -52,7 +52,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     private indexKeyCache:IIndexKeyCache;
     private indexChangeKeyCache:IIndexKeyCache;
 
-    // The master key from slopes
+    // The master key from avalanche.js
     constructor(keypair: AVMKeyPair) {
         this.type = 'hd';
         this.masterKey = keypair;
