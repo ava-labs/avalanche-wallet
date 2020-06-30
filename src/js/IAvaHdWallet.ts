@@ -28,11 +28,6 @@ export interface IAvaHdWallet extends AvaWalletCore{
     hdIndex:number;
     keyChain: AVMKeyChain;
     chainId: string;
-    // indexKeyCache:IIndexKeyCache;
-    // indexChangeKeyCache:IIndexKeyCache;
-
-    // getLastKeyIndex(): number;
-    // getCurrentKey(): void;
     generateKey(): AVMKeyPair;
     onHdKeyReady(): void;
 }

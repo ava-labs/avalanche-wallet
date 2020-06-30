@@ -2,17 +2,30 @@
 import {KeyFile, KeyFileDecrypted, KeyFileKey, KeyFileKeyDecrypted} from "./IKeystore";
 import {bintools, cryptoHelpers} from "@/AVA";
 import {AvaWallet} from "@/js/AvaWallet";
+import {Buffer} from "buffer/";
+import { wallet_type } from './IAvaHdWallet';
 
 const KEYSTORE_VERSION: string = '1.1';
+
+interface IHash {
+    salt: Buffer;
+    hash: Buffer;
+}
+
+interface PKCrypt {
+    salt: Buffer;
+    nonce: Buffer;
+    ciphertext: Buffer;
+}
 
 async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted>{
     const version: string = data.version || KEYSTORE_VERSION;
 
-    let salt = bintools.avaDeserialize(data.salt);
-    let pass_hash = data.pass_hash;
+    let salt: Buffer = bintools.avaDeserialize(data.salt);
+    let pass_hash: string = data.pass_hash;
 
-    let checkHash = await cryptoHelpers.pwhash(pass, salt);
-    let checkHashString = bintools.avaSerialize(checkHash.hash);
+    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt);
+    let checkHashString: string = bintools.avaSerialize(checkHash.hash);
 
     if (checkHashString !== pass_hash) {
         throw "INVALID_PASS";
@@ -20,19 +33,19 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
 
 
 
-    let keys = data.keys;
+    let keys: KeyFileKey[] = data.keys;
     let keysDecrypt: KeyFileKeyDecrypted[] = [];
 
-    for (var i = 0; i < keys.length; i++) {
-        let key_data = keys[i];
+    for (let i:number = 0; i < keys.length; i++) {
+        let key_data: KeyFileKey = keys[i];
 
-        let key = bintools.avaDeserialize(key_data.key);
-        let nonce = bintools.avaDeserialize(key_data.nonce);
-        let address = key_data.address;
-        let walletType = key_data.type || 'hd';
+        let key: Buffer = bintools.avaDeserialize(key_data.key);
+        let nonce: Buffer = bintools.avaDeserialize(key_data.nonce);
+        let address: string = key_data.address;
+        let walletType: wallet_type = key_data.type || 'hd';
 
-        let key_decrypt = await cryptoHelpers.decrypt(pass,key,salt,nonce);
-        let key_string = bintools.avaSerialize(key_decrypt);
+        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass,key,salt,nonce);
+        let key_string: string = bintools.avaSerialize(key_decrypt);
 
         keysDecrypt.push({
             key: key_string,
@@ -50,19 +63,19 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
 
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
 async function makeKeyfile(wallets: AvaWallet[], pass:string): Promise<KeyFile>{
-    let salt = await cryptoHelpers.makeSalt();
-    let passHash = await cryptoHelpers.pwhash(pass, salt);
+    let salt: Buffer = await cryptoHelpers.makeSalt();
+    let passHash: IHash = await cryptoHelpers.pwhash(pass, salt);
 
     let keys:KeyFileKey[] = [];
 
-    for(var i=0; i<wallets.length;i++){
-        let wallet = wallets[i];
-        let pk = wallet.getMasterKey().getPrivateKey();
-        let addr = wallet.getMasterKey().getAddressString();
+    for(let i:number=0; i<wallets.length;i++){
+        let wallet: AvaWallet = wallets[i];
+        let pk: Buffer = wallet.getMasterKey().getPrivateKey();
+        let addr: string = wallet.getMasterKey().getAddressString();
 
-        let pk_crypt = await cryptoHelpers.encrypt(pass,pk,salt);
+        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,pk,salt);
 
-        let key_data:KeyFileKey = {
+        let key_data: KeyFileKey = {
             key: bintools.avaSerialize(pk_crypt.ciphertext),
             nonce: bintools.avaSerialize(pk_crypt.nonce),
             address: addr,
@@ -71,7 +84,7 @@ async function makeKeyfile(wallets: AvaWallet[], pass:string): Promise<KeyFile>{
         keys.push(key_data);
     }
 
-    let file_data:KeyFile = {
+    let file_data: KeyFile = {
         version: KEYSTORE_VERSION,
         salt: bintools.avaSerialize(salt),
         pass_hash: bintools.avaSerialize(passHash.hash),
@@ -79,8 +92,6 @@ async function makeKeyfile(wallets: AvaWallet[], pass:string): Promise<KeyFile>{
     };
     return file_data;
 }
-
-
 
 export {
     readKeyFile,
