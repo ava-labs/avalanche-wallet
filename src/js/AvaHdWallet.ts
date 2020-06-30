@@ -63,7 +63,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.seed = seed.toString('hex');
 
         // Generate hd key from seed
-        let hdkey = HDKey.fromMasterSeed(seed);
+        let hdkey: HDKey = HDKey.fromMasterSeed(seed);
         this.hdKey = hdkey;
         this.onHdKeyReady();
     }
