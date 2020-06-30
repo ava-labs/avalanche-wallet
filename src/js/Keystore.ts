@@ -1,18 +1,12 @@
 // Functions to manage import/export of keystore files
-
-
-import AvaHdWallet from "@/js/AvaHdWallet";
-import AvaSingletonWallet from "@/js/AvaSingletonWallet";
 import {KeyFile, KeyFileDecrypted, KeyFileKey, KeyFileKeyDecrypted} from "./IKeystore";
 import {bintools, cryptoHelpers} from "@/AVA";
 import {AvaWallet} from "@/js/AvaWallet";
 
-const KEYSTORE_VERSION = '1.1';
-
-
+const KEYSTORE_VERSION: string = '1.1';
 
 async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted>{
-    const version = data.version || KEYSTORE_VERSION;
+    const version: string = data.version || KEYSTORE_VERSION;
 
     let salt = bintools.avaDeserialize(data.salt);
     let pass_hash = data.pass_hash;

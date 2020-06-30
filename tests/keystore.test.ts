@@ -4,7 +4,6 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 import {AvaWallet} from "@/js/AvaWallet";
 
 const avalanche = require("avalanche");
-// import * as slopes from "slopes";
 // import {cryptoHelpers} from "../src/AVA";
 let ch = new avalanche.CryptoHelpers();
 

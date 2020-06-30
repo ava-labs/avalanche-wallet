@@ -14,8 +14,6 @@ export interface KeyFileKey {
     type: wallet_type
 }
 
-
-
 export interface KeyFileDecrypted {
     version: string,
     keys: KeyFileKeyDecrypted[]
