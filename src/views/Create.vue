@@ -4,45 +4,46 @@
     </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+import "reflect-metadata";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-    import CreateWallet from '@/components/CreateWalletWorkflow/CreateWallet.vue';
-    @Component({
-        components: {
-            CreateWallet,
-        }
-    })
-    export default class Create extends Vue{
-
+import CreateWallet from "@/components/CreateWalletWorkflow/CreateWallet.vue";
+@Component({
+    components: {
+        CreateWallet
     }
+})
+export default class Create extends Vue {}
 </script>
 <style scoped lang="scss">
-    .access_view{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+@use '../main';
 
-    .card{
-        text-align: center;
-    }
+.access_view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: main.$white;
+}
 
-    .generate{
-        display: block;
-        margin: 30px auto;
-        background-color: #000;
-        padding: 8px 18px;
-        border-radius: 6px;
-        color: #fff !important;
-    }
+.card {
+    text-align: center;
+}
 
-    .key_disp{
-        margin: 30px auto;
-        font-size: 12px;
-    }
+.generate {
+    display: block;
+    margin: 30px auto;
+    background-color: #000;
+    padding: 8px 18px;
+    border-radius: 6px;
+    color: #fff !important;
+}
 
-    a{
-        color: #1D82BB !important;
-    }
+.key_disp {
+    margin: 30px auto;
+    font-size: 12px;
+}
+
+a {
+    color: #1d82bb !important;
+}
 </style>

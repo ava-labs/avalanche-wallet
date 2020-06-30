@@ -12,7 +12,7 @@
                         <h3>Welcome Back!</h3>
                         <p>You can 'Access' your existing AVA wallet here.</p>
                     </header>
-                    <router-link to="/access" class="primary">Access</router-link>
+                    <router-link to="/access" class="ava_button primary">Access</router-link>
                 </div>
                 <div class="login_option">
                     <header>
@@ -22,7 +22,7 @@
                         <h3>Hi! Are you new to Avalanche?</h3>
                         <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
                     </header>
-                    <router-link to="/create" class="secondary">Create New Wallet</router-link>
+                    <router-link to="/create" class="ava_button secondary">Create New Wallet</router-link>
                 </div>
             </div>
         </div>
@@ -54,16 +54,7 @@ export default class Home extends Vue {}
         margin: 10px;
         text-align: center;
         display: block;
-        border-radius: 6px;
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
-        text-transform: uppercase;
         color: main.$white !important;
-        padding: 8px 18px;
-
-        &:hover {
-            opacity: 0.7;
-        }
 
         &.primary {
             background-color: main.$primary-color !important;
@@ -109,9 +100,9 @@ export default class Home extends Vue {}
                 }
 
                 h3 {
-                    padding-top: main.$m-size;
+                    padding-top: main.$s-size;
                     font-family: "DM Sans", sans-serif;
-                    font-size: main.$m-size;
+                    font-size: main.$s-size;
                     text-transform: uppercase;
                     color: main.$primary-color-light;
                 }

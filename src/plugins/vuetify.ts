@@ -13,13 +13,13 @@ import {
   faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel, faList, faTrash, faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown, faBars, faCog, faSearch
 } from '@fortawesome/free-solid-svg-icons'
 
-import { faBtc} from '@fortawesome/free-brands-svg-icons'
+import { faBtc } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
-    faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory,
-    faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus,
-    faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel, faList, faTrash, faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown, faBars, faCog, faSearch
+  faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory,
+  faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus,
+  faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel, faList, faTrash, faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown, faBars, faCog, faSearch
 );
 
 Vue.component('fa', FontAwesomeIcon);

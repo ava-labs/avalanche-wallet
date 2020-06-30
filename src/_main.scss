@@ -21,29 +21,34 @@ $container_padding_mobile: 10px 10px;
   }
 }
 
-
 $purple: #4C2E56;
 $purple-light: #867E89;
 $pink: #E84970;
 $pink-light: #FF8080;
+$pink-extra-light: #ffe6e6;
 $gray: #F5F6FA;
 $white: #FFF;
 
 $vertical-padding: 40px;
 $container-padding: 40px;
 
-$xl-size: 61.44px;  // 192
-
-$l-size: 28.8px;    // 90
-$m-size: 16px;      // 50
-
 $primary-color: $purple;
 $primary-color-light: $purple-light;
-
 $secondary-color: $pink;
 $secondary-color-light: $pink-light;
-
+$secondary-color-extra-light: $pink-extra-light;
 $background-color: $gray;
+
+/* ==========================================
+   font sizes inferred from Figma
+   ========================================== */
+
+//img size: 102.8px    319
+$xl-size: 54px;     // 192 (resized)
+$l-size: 28.8px;    // 90
+$m-size: 24.32px;   // 76
+$s-size: 16px;      // 50
+
 
 hr {
   color: #F5F6FA;
