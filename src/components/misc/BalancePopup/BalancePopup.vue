@@ -43,6 +43,7 @@
 
         closePopup(){
             this.isActive = false;
+            this.$emit('close');
         }
     }
 </script>

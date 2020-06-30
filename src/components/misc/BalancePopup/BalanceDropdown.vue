@@ -1,7 +1,10 @@
 <template>
-    <div class="dropdown">
-        <button @click="showPopup">{{asset.symbol}}</button>
-        <BalancePopup :assets="assetArray" ref="popup" class="popup" @select="onselect" :disabled-ids="disabledIds"></BalancePopup>
+    <div class="dropdown" :active="isPopup">
+        <button @click="showPopup">
+            {{asset.symbol}}
+            <fa icon="caret-down" style="float: right"></fa>
+        </button>
+        <BalancePopup :assets="assetArray" ref="popup" class="popup" @select="onselect" :disabled-ids="disabledIds" @close="onclose"></BalancePopup>
     </div>
 </template>
 <script lang="ts">
@@ -18,14 +21,10 @@
         }
     })
     export default class BalanceDropdown extends Vue{
+        isPopup:boolean = false;
+
         @Prop({default: () => []}) disabled_assets!: AvaAsset[];
-
-        // @Prop() asset!: AvaAsset;
-
         @Model('change', { type: AvaAsset }) readonly asset!: AvaAsset
-
-
-        // selected:AvaAsset = this.assetArray[0];
 
         get assetArray():AvaAsset[]{
             return this.$store.getters.walletAssetsArray;
@@ -39,11 +38,10 @@
             let disabledIds = this.disabled_assets.map(a => a.id);
             return disabledIds;
         }
-        // isAssetDisabled(asset:AvaAsset):boolean{
-        //     let id = asset.id;
-        //     let disabledIds = this.disabled_assets.map(a => a.id);
-        //     if(disabledIds.includes(id)){
-        //         return true;
+
+        // get isPopup(){
+        //     if(this.balancePopup){
+        //         return this.balancePopup.isActive;
         //     }
         //     return false;
         // }
@@ -51,11 +49,17 @@
 
         showPopup(){
             this.balancePopup.isActive = true;
+            this.isPopup = true;
+        }
+
+        onclose(){
+            this.isPopup = false;
         }
 
         onselect(asset: AvaAsset){
             // this.selected = asset;
             this.balancePopup.isActive = false;
+            this.isPopup = false;
 
             this.$emit('change', asset);
         }
@@ -67,12 +71,23 @@
         width: 100%;
         height: 100%;
         text-align: left;
+
+        svg{
+            transition-duration: 0.2s;
+        }
     }
 
     .dropdown{
         position: relative;
     }
 
+    .dropdown[active]{
+        button{
+            svg{
+                transform: rotateZ(180deg);
+            }
+        }
+    }
     .popup{
         position: absolute;
     }
