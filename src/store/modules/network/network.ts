@@ -43,18 +43,10 @@ const network_module: Module<NetworkState, RootState> = {
 
             // If authenticated
             if(rootState.isAuth){
-                // await dispatch('Assets/clearBalances', null, {root: true});
-
-
                 for(var i=0; i<rootState.wallets.length;i++){
                     let w = rootState.wallets[i];
                         w.onnetworkchange();
                 }
-                // if(rootState.activeWallet){
-                //     await rootState.activeWallet.onnetworkchange();
-                // }
-
-                // await dispatch('Assets/readWalletBalance', null, {root: true});
             }
 
             // state.isConnected = true;
@@ -63,7 +55,7 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({state, commit, dispatch}){
-            let netTest = new AvaNetwork("Denali TestNet", 'https://bootstrap.avax.network:21000', 3, 'X', 'https://explorerapi.avax.network');
+            let netTest = new AvaNetwork("Denali TestNet", 'https://test.api.avax.network:443', 3, 'X', 'https://explorerapi.avax.network');
             let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 12345, 'X');
 
 

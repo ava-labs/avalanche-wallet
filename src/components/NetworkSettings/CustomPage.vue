@@ -117,16 +117,16 @@
                 let netID = null;
 
                 try{
-                    let resp = await axios.post(this.url+'/ext/admin', {
+                    let resp = await axios.post(this.url+'/ext/info', {
                         "jsonrpc": "2.0",
                         "id"     : 1,
-                        "method" : "admin.getNetworkID"
+                        "method" : "info.getNetworkID"
                     });
                     netID = resp.data.result.networkID;
                     this.isAjax = false;
                 }catch(e){
                     this.isAjax = false;
-                    this.err = "AVA Network Not Found"
+                    this.err = "AVA Network Not Found";
                     return;
                 }
 
