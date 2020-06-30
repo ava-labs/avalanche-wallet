@@ -2,14 +2,14 @@
     <div class="home">
         <div class="home_wrapper">
             <img class="logo" src="@/assets/wallet_logo.png" />
-            <h2>Our Asset Wallet is Bold and Secure.</h2>
+            <h1>Our Asset Wallet is Bold and Secure.</h1>
             <div class="login_wrapper">
                 <div class="login_option">
                     <header>
                         <div class="img_container">
                             <img src="@/assets/diamond-primary.png" alt />
                         </div>
-                        <h3>Welcome Back!</h3>
+                        <h2>Welcome Back!</h2>
                         <p>You can 'Access' your existing AVA wallet here.</p>
                     </header>
                     <router-link to="/access" class="ava_button primary">Access</router-link>
@@ -19,7 +19,7 @@
                         <div class="img_container">
                             <img src="@/assets/diamond-secondary.png" alt />
                         </div>
-                        <h3>Hi! Are you new to Avalanche?</h3>
+                        <h2>Hi! Are you new to Avalanche?</h2>
                         <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
                     </header>
                     <router-link to="/create" class="ava_button secondary">Create New Wallet</router-link>
@@ -71,7 +71,7 @@ export default class Home extends Vue {}
         align-content: center;
         justify-content: center;
 
-        h2 {
+        h1 {
             text-align: center;
             font-size: main.$xl-size;
             font-weight: 400;
@@ -82,7 +82,7 @@ export default class Home extends Vue {}
             display: grid;
             grid-template-columns: 540px 540px;
             grid-template-rows: 540px;
-            column-gap: 40px;
+            column-gap: 60px;
 
             .login_option {
                 display: flex;
@@ -99,7 +99,7 @@ export default class Home extends Vue {}
                     max-height: none;
                 }
 
-                h3 {
+                h2 {
                     padding-top: main.$s-size;
                     font-family: "DM Sans", sans-serif;
                     font-size: main.$s-size;

@@ -261,7 +261,6 @@ a {
     }
 
     img {
-        margin-top: main.$vertical-padding;
         width: 100px;
         height: 100px;
         max-height: none;
