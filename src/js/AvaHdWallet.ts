@@ -1,6 +1,3 @@
-
-
-
 // A simple wrapper thar combines slopes, bip39 and HDWallet
 
 import {
