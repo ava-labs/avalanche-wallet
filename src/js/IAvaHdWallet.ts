@@ -1,10 +1,8 @@
-
 import HDKey from 'hdkey';
 import {AVMKeyChain, AVMKeyPair, UTXO, UTXOSet} from "avalanche";
 import {ITransaction} from "@/components/wallet/transfer/types";
 
 export type wallet_type = "hd" | "singleton";
-
 
 export interface IIndexKeyCache{
     [index:number]: AVMKeyPair

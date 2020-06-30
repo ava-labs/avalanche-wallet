@@ -4,7 +4,6 @@ import AvaSingletonWallet from "@/js/AvaSingletonWallet";
 import {AvaWalletCore, wallet_type} from './IAvaHdWallet';
 import {ITransaction} from "@/components/wallet/transfer/types";
 
-
 // A wrapper class that join HD and Singleton wallets with the ability to switch between.
 export class AvaWallet implements AvaWalletCore{
     type: wallet_type;
@@ -19,7 +18,7 @@ export class AvaWallet implements AvaWalletCore{
         this.cacheSingleton = null;
         this.cacheHD = null;
 
-        let wallet;
+        let wallet: AvaHdWallet|AvaSingletonWallet;
         if(type==='hd'){
             wallet = new AvaHdWallet(keypair);
             this.cacheHD = wallet;
@@ -68,12 +67,12 @@ export class AvaWallet implements AvaWalletCore{
     }
 
     toggleMode(){
-        let keypair = this.masterKey;
+        let keypair: AVMKeyPair = this.masterKey;
 
-        let type:wallet_type;
+        let type: wallet_type;
         if(this.type==='hd') type='singleton';
         else type='hd';
-        let wallet;
+        let wallet: AvaHdWallet|AvaSingletonWallet;
 
         if(type==='hd'){
             wallet = this.cacheHD || new AvaHdWallet(keypair);
