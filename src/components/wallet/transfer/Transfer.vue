@@ -5,8 +5,6 @@
             <div class="new_order_Form">
                 <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                 <div>
-<!--                    <BalancePopup :assets="assetArray"></BalancePopup>-->
-
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
                         <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVA</span></p>
@@ -54,7 +52,6 @@
     import {isValidAddress} from "../../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
-    // import BalancePopup from "@/components/misc/BalancePopup/BalancePopup.vue";
 
     @Component({
         components: {
@@ -62,7 +59,6 @@
             TxList,
             RadioButtons,
             QrInput,
-            // BalancePopup
         }
     })
     export default class Transfer extends Vue{
@@ -153,9 +149,6 @@
         }
         get addresses(){
             return this.$store.state.addresses;
-        }
-        get assetArray(){
-            return this.$store.getters.walletAssetsArray;
         }
     }
 </script>

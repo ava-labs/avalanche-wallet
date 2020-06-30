@@ -50,8 +50,9 @@
             if(!asset) return this.amount.toString();
 
             let val = Big(this.amount).div(Math.pow(10,asset.denomination));
-            return val.toFixed(asset.denomination);
+            return val.toLocaleString(asset.denomination);
         }
+
         get symbolText(): string{
             let asset = this.asset;
 

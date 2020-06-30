@@ -76,10 +76,10 @@
             return this.$store.state.activeWallet;
         }
 
-        get walletBalance(){
-            let walletBalance = this.$store.getters['walletBalance'];
-            return walletBalance;
-        }
+        // get walletBalance(){
+        //     let walletBalance = this.$store.getters['walletBalance'];
+        //     return walletBalance;
+        // }
 
         get isUpdateBalance():boolean{
             return this.$store.state.Assets.isUpdateBalance;
