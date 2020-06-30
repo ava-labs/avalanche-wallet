@@ -1,4 +1,3 @@
-
 // Manages BigNumber and Ava conversion and arithmetic
 import BN from 'bn.js';
 import Big from 'big.js';
@@ -28,17 +27,13 @@ class AvaAsset{
     }
 
     toString(){
-        let big = Big(this.amount.toString(10)).div(this.pow);
+        let big: Big = Big(this.amount.toString(10)).div(this.pow);
         return big.toFixed(this.denomination);
-        // return this.bn.toString(10);
     }
 
     getAmount():Big{
         return Big(this.amount.toString(10)).div(this.pow);
     }
-
-
 }
-
 
 export default AvaAsset;

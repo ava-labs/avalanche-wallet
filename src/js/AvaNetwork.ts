@@ -1,4 +1,4 @@
-let network_id = 0;
+let network_id: number = 0;
 
 class AvaNetwork{
     name: string;
@@ -19,43 +19,21 @@ class AvaNetwork{
         this.port = 9650;
         this.ip='localhost';
         this.url = url;
-
         this.updateURL(url);
-
-        // let split = url.split('://');
-        //
-        // this.protocol = split[0];
-        //
-        // // port is set
-        // if(split[1].includes(':')){
-        //     let urlSplit = split[1].split(':');
-        //     let ip = urlSplit[0];
-        //     let port = urlSplit[1];
-        //
-        //     this.ip = ip;
-        //     this.port = parseInt(port);
-        // }else{
-        //     this.ip = split[1];
-        //     if(this.protocol === 'http'){
-        //         this.port = 80;
-        //     }else{
-        //         this.port = 443;
-        //     }
-        // }
         this.networkId = networkId;
         this.chainId = chainId;
     }
 
     updateURL(url: string){
-        let split = url.split('://');
+        let split: string[] = url.split('://');
 
         this.protocol = split[0];
 
         // port is set
         if(split[1].includes(':')){
-            let urlSplit = split[1].split(':');
-            let ip = urlSplit[0];
-            let port = urlSplit[1];
+            let urlSplit: string[] = split[1].split(':');
+            let ip: string = urlSplit[0];
+            let port: string = urlSplit[1];
 
             this.ip = ip;
             this.port = parseInt(port);
@@ -72,6 +50,5 @@ class AvaNetwork{
         return `${this.protocol}://${this.ip}:${this.port}`;
     }
 }
-
 
 export {AvaNetwork};
