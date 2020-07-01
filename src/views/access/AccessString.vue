@@ -9,9 +9,9 @@
                 v-model="rememberKey"
                 explain="Remember keys for easy access"
             ></remember-key>
-            <router-link to="/access">Cancel</router-link>
-            <hr>
             <v-btn class="ava_button but_primary" @click="access" color="#000" depressed>Access Wallet</v-btn>
+            <hr>
+            <router-link to="/access" class="link">Cancel</router-link>
         </form>
     </div>
 </template>
@@ -72,6 +72,7 @@ export default class AccessString extends Vue {
 
 h1 {
     margin-top: main.$vertical-padding;
+    font-size: main.$l-size;
     font-weight: 400;
 }
 
@@ -87,8 +88,8 @@ form {
 }
 
 .remember {
-    margin-top: -20px;
-    font-size: .75em;
+    margin-top: -10px;
+    font-size: main.$s-size;
 }
 
 .key_in {
@@ -103,7 +104,6 @@ form {
 a {
     color: main.$primary-color-light !important;
     text-decoration: underline !important;
-    margin: 10px 0 20px;
 }
 
 .but_primary {
@@ -111,6 +111,11 @@ a {
     display: block;
     margin-top: 20px;
     margin-bottom: 15px;
+    background-color: main.$primary-color !important;
+    border-radius: 6px;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase !important;
 }
 
 .err {
@@ -120,15 +125,40 @@ a {
     margin: 14px 0px !important;
 }
 
+.link {
+    margin-top: 10px;
+}
+
 @media only screen and (max-width: main.$mobile_width) {
     .card {
         overflow: auto;
         width: 100%;
+        padding: main.$container-padding-mobile;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .key_in {
         width: 100%;
         margin-bottom: 6px;
+    }
+
+    .but_primary {
+        width: 100%;
+        margin-bottom: main.$vertical-padding-mobile;
+    }
+
+    hr {
+        display: none;
+    }
+
+    .link {
+        margin-top: 0;
+        width: 100%;
     }
 }
 </style>

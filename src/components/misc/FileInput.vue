@@ -78,6 +78,7 @@ export default {
     font-weight: 700;
     text-transform: uppercase !important;
 }
+
 input {
     z-index: 2;
     cursor: pointer;

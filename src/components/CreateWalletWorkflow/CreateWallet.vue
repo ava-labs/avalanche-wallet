@@ -7,8 +7,9 @@
                         <img src="@/assets/diamond-secondary.png" alt />
                     </div>
                     <h1>Generate a new key phrase to use with your wallet.</h1>
-                    <router-link to="/access">Already have a wallet?</router-link>
+                    <router-link to="/access" class="link">Already have a wallet?</router-link>
                     <button class="ava_button but_generate" @click="createKey">Generate Key Phrase</button>
+                    <router-link to="/" class="link">Cancel</router-link>
                 </div>
 
                 <div v-else class="stage_2">
@@ -18,9 +19,13 @@
                                 <mnemonic-display :phrase="keyPhrase" :bgColor="'#F5F6FA'"></mnemonic-display>
                                 <p class="phrase_raw">{{keyPhrase}}</p>
                                 <div class="mneumonic_button_container">
-                                    <CopyText :value="keyPhrase" class="ava_button copy_phrase">Copy Key Phrase</CopyText>
+                                    <CopyText
+                                        :value="keyPhrase"
+                                        class="ava_button copy_phrase"
+                                    >Copy Key Phrase</CopyText>
                                     <button @click="createKey" class="ava_button but_randomize">
-                                        <fa icon="sync"></fa> <span>Randomize</span>
+                                        <fa icon="sync"></fa>
+                                        <span>Randomize</span>
                                     </button>
                                 </div>
                             </div>
@@ -34,9 +39,7 @@
                             </header>
                             <p class="warn">
                                 <span class="label">Attention!</span>
-                                <span
-                                    class="description"
-                                >Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
+                                <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
                             </p>
                             <div class="access_cont">
                                 <remember-key
@@ -46,11 +49,13 @@
                                 <div class="submit">
                                     <transition name="fade" mode="out-in">
                                         <Spinner v-if="isLoad"></Spinner>
-                                        <button
-                                            v-else
-                                            class="ava_button access generate"
-                                            @click="access"
-                                        >Access Wallet</button>
+                                        <div v-else>
+                                            <button
+                                                class="ava_button access generate"
+                                                @click="access"
+                                            >Access Wallet</button>
+                                            <router-link to="/" class="link">Cancel</router-link>
+                                        </div>
                                     </transition>
                                 </div>
                             </div>
@@ -159,8 +164,8 @@ export default class CreateWallet extends Vue {
 
     img {
         margin-top: main.$vertical-padding;
-        width: 100px;
-        height: 100px;
+        width: 89px;
+        height: 89px;
         max-height: none;
     }
 
@@ -173,7 +178,7 @@ export default class CreateWallet extends Vue {
 
     .but_generate {
         display: block;
-        margin: main.$vertical-padding auto;
+        margin: main.$vertical-padding 0;
         height: max-content;
         background-color: main.$secondary-color;
     }
@@ -187,7 +192,7 @@ export default class CreateWallet extends Vue {
 a {
     color: main.$primary-color-light !important;
     text-decoration: underline !important;
-    margin: 10px 0 20px;
+    margin-top: 10px;
 }
 
 /* ==========================================
@@ -213,7 +218,6 @@ a {
         justify-self: center;
         display: flex;
         flex-direction: column;
-
     }
 
     .phrase_raw {
@@ -239,12 +243,11 @@ a {
             width: max-content;
             color: main.$secondary-color-light !important;
             background-color: main.$white;
-            
+
             span {
                 margin-left: 12px;
             }
         }
-
     }
 }
 
@@ -261,8 +264,8 @@ a {
     }
 
     img {
-        width: 100px;
-        height: 100px;
+        width: main.$img-size;
+        height: main.$img-size;
         max-height: none;
     }
 
@@ -305,33 +308,111 @@ a {
 
         .submit {
             display: flex;
+            flex-direction: row;
             justify-content: flex-start;
 
             .access {
                 background-color: main.$primary-color !important;
             }
+
+            .link {
+                margin-left: 40px;
+            }
         }
     }
 }
 
+@include main.medium-device {
+    .stage_1 {
+        min-width: unset;
+    }
+}
+
 @include main.mobile-device {
+    .stage_1 {
+        padding: 0;
+        min-width: unset;
+    }
+
+    .stage_2 {
+        padding: 0;
+        min-width: unset;
+    }
+
     .access {
         margin: 30px auto;
         width: 100%;
     }
-    .stage_2 {
-        padding: main.$container_padding_mobile;
-    }
+
     .cols {
         display: block;
     }
-    .phrase_disp_col {
-        /*display: none;*/
-        padding: 30px 0px;
+
+    .mneumonic_disp_col {
+        .mnemonic_disp {
+            margin: 0 auto;
+        }
+
+        .mneumonic_button_container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .copy_phrase {
+                margin-right: 0;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .but_randomize {
+                margin-top: 10px;
+
+                span {
+                    margin-left: 12px;
+                }
+            }
+        }
     }
 
-    .mnemonic_disp {
-        margin: 0px auto;
+    .phrase_disp_col {
+        padding: 30px 0;
+        align-items: center;
+
+        img {
+            width: main.$img-size-mobile;
+            height: main.$img-size-mobile;
+        }
+
+        header {
+            h1 {
+                font-size: main.$xl-size-mobile;
+            }
+        }
+
+        .warn {
+            margin-top: main.$vertical-padding-mobile !important;
+        }
+
+        .access_cont {
+            .submit {
+                flex-direction: column;
+                justify-content: center;
+
+                > div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .link {
+                    margin: auto;
+                }
+            }
+        }
     }
 }
 </style>

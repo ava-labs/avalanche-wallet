@@ -140,25 +140,6 @@ p {
     padding: main.$container_padding_m;
 }
 
-/* ==========================================
-   global UI
-   ========================================== */
-
-.ava_button {
-    color: main.$white !important;
-    padding: 8px 30px;
-    min-width: 190px;
-    border-radius: 6px;
-    font-family: "DM Sans", sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase !important;
-
-    &:hover {
-        opacity: 0.7;
-    }
-}
-
 @include main.mobile-device {
     #router_view {
         padding: main.$container_padding_mobile !important;

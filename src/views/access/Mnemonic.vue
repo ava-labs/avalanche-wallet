@@ -9,13 +9,12 @@ import {Buffer} from "buffer";
             <textarea v-model="phrase"></textarea>
             <div class="button_container">
                 <v-btn
-                    class="but_primary access"
+                    class="ava_button but_primary access"
                     @click="access"
-                    color="#000"
                     depressed
                     :loading="isLoading"
                 >Access Wallet</v-btn>
-                <router-link to="/access">Cancel</router-link>
+                <router-link to="/access" class="link">Cancel</router-link>
             </div>
         </div>
         <div class="right">
@@ -113,13 +112,13 @@ export default class Mnemonic extends Vue {
     width: 100%;
     max-width: 1200px;
 
-.left, 
-.right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
+    .left,
+    .right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
     > * {
         width: 100%;
     }
@@ -166,7 +165,7 @@ textarea {
 
 .remember {
     margin-top: -20px;
-    font-size: .75em;
+    font-size: 0.75em;
 }
 
 .key_in {
@@ -176,12 +175,6 @@ textarea {
     font-size: 13px;
     background-color: main.$white;
     border-radius: 4px;
-}
-
-a {
-    color: main.$primary-color-light !important;
-    text-decoration: underline !important;
-    margin: 10px 0 20px;
 }
 
 .but_primary {
@@ -201,5 +194,87 @@ a {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+}
+
+@include main.mobile_device {
+    .mnemonic_auth {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        padding: main.$container-padding-mobile;
+
+        .left,
+        .right {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .left {
+            order: 2;
+        }
+
+        .right {
+            order: 1;
+            margin-bottom: main.$vertical-padding-mobile;
+        }
+
+        > * {
+            width: 100%;
+        }
+    }
+
+    h1 {
+        text-align: center;
+        font-size: main.$m-size-mobile;
+    }
+
+    label {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    textarea {
+        margin-bottom: main.$vertical-padding-mobile;
+    }
+
+    .phrase_disp {
+        width: 100%;
+        max-width: 560px;
+        margin-bottom: main.$vertical-padding-mobile;
+    }
+
+    .err {
+        font-size: 13px;
+        margin: 14px 0px !important;
+    }
+
+    .remember {
+        margin-top: -20px;
+        font-size: 0.75em;
+    }
+
+    .key_in {
+        margin: 30px auto;
+        margin-bottom: 6px;
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .but_primary {
+        margin: 0px auto;
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .button_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
 }
 </style>

@@ -25,7 +25,7 @@
                 depressed
             >Access Wallet</v-btn>
         </form>
-        <router-link to="/access">Cancel</router-link>
+        <router-link to="/access" class="link">Cancel</router-link>
     </div>
 </template>
 <script>
@@ -87,20 +87,22 @@ export default {
 </script>
 <style scoped lang="scss">
 @use '../../main';
-h1 {
-    font-weight: 400;
-}
 
 .card {
-    width: 420px;
     max-width: 80vw;
     background-color: main.$background-color;
     padding: main.$container-padding;
-    min-width: 1000px;
+    width: 100%;
+    max-width: 1000px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border-radius: 6px;
+}
+
+h1 {
+    font-size: main.$m-size;
+    font-weight: 400;
 }
 
 .file_in {
@@ -136,6 +138,11 @@ a {
 }
 
 @media only screen and (max-width: main.$mobile_width) {
+
+    h1 {
+        font-size: main.$m-size-mobile;
+    }
+
     .but_primary {
         width: 100%;
     }

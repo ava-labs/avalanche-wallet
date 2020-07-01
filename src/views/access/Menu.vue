@@ -4,50 +4,51 @@
             <img src="@/assets/diamond-primary.png" alt />
         </div>
         <h1>How do you want to access your wallet?</h1>
-        <router-link to="/create" class="no_wallet">Don't have a wallet?</router-link>
-        <hr>
+        <router-link to="/create" class="link">Don't have a wallet?</router-link>
+        <hr />
         <div class="options">
             <div class="option">
-                <h4>Private Key</h4>
-                <!-- <p>ZvtFTgZjuVvrNrdBcfqFozx...</p> -->
+                <h2>Private Key</h2>
                 <router-link to="/access/private_key"></router-link>
             </div>
             <div class="option">
-                <h4>Mnemonic Key Phrase</h4>
-                <!-- <p>addict whip secret voice...</p> -->
+                <h2>Mnemonic Key Phrase</h2>
                 <router-link to="/access/mnemonic"></router-link>
             </div>
             <div class="option">
-                <h4>Keystore File</h4>
-                <!-- <p>AVA_ZvtFT.json</p> -->
+                <h2>Keystore File</h2>
                 <router-link to="/access/keystore"></router-link>
             </div>
         </div>
+        <router-link to="/" class="link">Cancel</router-link>
     </div>
 </template>
 <style scoped lang="scss">
-@use '../../main';
+@use "../../main";
 
 $col_w: 240px;
+
 .card {
     background-color: main.$background-color !important;
     padding: main.$container-padding;
 }
 
-h1 {
-    font-weight: 400;
-}
-
 img {
-    width: 100px;
-    height: 100px;
-    max-height: none;
+    width: main.$img-size;
+    height: main.$img-size;
     margin-bottom: main.$vertical-padding;
 }
 
+h1 {
+    font-size: main.$l-size;
+    font-weight: 400;
+}
+
 hr {
+    max-width: 67% !important;
+    margin: main.$vertical-padding auto 0;
     color: main.$primary-color-light;
-    margin-top: main.$vertical-padding;
+    opacity: 0.2;
 }
 
 .options {
@@ -56,62 +57,65 @@ hr {
     grid-template-columns: repeat(3, $col_w);
     grid-gap: 30px;
 
-    h4 {
-        font-size: 18px;
-    }
+    .option {
+        position: relative;
+        transition-duration: 0.1s;
+        transition-timing-function: ease-in;
+        border-radius: 4px;
+        padding: 30px;
+        color: main.$white;
+        background-color: main.$primary-color;
+        border-radius: 6px;
+        font-family: "DM Sans", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 8px 18px;
 
-    p {
-        font-size: 13px;
-        margin-top: 12px !important;
-        color: #1d82bb;
-    }
-}
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
+        }
 
-a {
-    color: main.$primary-color-light !important;
-}
+        h2 {
+            font-size: main.$s-size;
+        }
 
-.no_wallet {
-    text-decoration: underline !important;
-}
-
-.option {
-    position: relative;
-    transition-duration: 0.1s;
-    transition-timing-function: ease-in;
-    /* border: 1px solid #000; */
-    border-radius: 4px;
-    padding: 30px;
-    color: main.$white;
-    background-color: main.$primary-color;
-    border-radius: 6px;
-    font-family: "DM Sans", sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    padding: 8px 18px;
-
-    a {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
+        a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 
 @include main.mobile-device {
+    img {
+        width: main.$img-size-mobile;
+        height: main.$img-size-mobile;
+        margin-bottom: main.$vertical-padding-mobile;
+    }
+
+    h1 {
+        font-size: main.$l-size-mobile;
+    }
+
+    .card {
+        padding: main.$container-padding-mobile;
+    }
+
     .options {
         display: block;
         grid-template-columns: none;
-    }
 
-    .option {
-        margin-bottom: 30px;
+        .option {
+            margin-bottom: 15px;
+
+            h2 {
+                font-size: main.$s-size-mobile;
+            }
+        }
     }
 }
 </style>

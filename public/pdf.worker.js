@@ -392,7 +392,7 @@ var WorkerMessageHandler = {
       });
 
       cancelXHRs = function (reason) {
-        pdfStream.cancelAllRequests(reason);
+        pdfStream.linkAllRequests(reason);
       };
 
       return pdfManagerCapability.promise;
@@ -2619,7 +2619,7 @@ class ChunkedStreamManager {
     this.aborted = true;
 
     if (this.pdfNetworkStream) {
-      this.pdfNetworkStream.cancelAllRequests(reason);
+      this.pdfNetworkStream.linkAllRequests(reason);
     }
 
     for (const requestId in this.promisesByRequest) {
@@ -45494,12 +45494,12 @@ class MessageHandler {
       cancel: reason => {
         (0, _util.assert)(reason instanceof Error, "cancel must have a valid reason");
         const cancelCapability = (0, _util.createPromiseCapability)();
-        this.streamControllers[streamId].cancelCall = cancelCapability;
+        this.streamControllers[streamId].linkCall = cancelCapability;
         this.streamControllers[streamId].isClosed = true;
         comObj.postMessage({
           sourceName,
           targetName,
-          stream: StreamKind.CANCEL,
+          stream: StreamKind.link,
           streamId,
           reason: wrapReason(reason)
         });
@@ -45699,18 +45699,18 @@ class MessageHandler {
 
         break;
 
-      case StreamKind.CANCEL_COMPLETE:
+      case StreamKind.link_COMPLETE:
         if (data.success) {
-          this.streamControllers[streamId].cancelCall.resolve();
+          this.streamControllers[streamId].linkCall.resolve();
         } else {
-          this.streamControllers[streamId].cancelCall.reject(wrapReason(data.reason));
+          this.streamControllers[streamId].linkCall.reject(wrapReason(data.reason));
         }
 
         this._deleteStreamController(streamId);
 
         break;
 
-      case StreamKind.CANCEL:
+      case StreamKind.link:
         if (!this.streamSinks[streamId]) {
           break;
         }
@@ -45724,7 +45724,7 @@ class MessageHandler {
           comObj.postMessage({
             sourceName,
             targetName,
-            stream: StreamKind.CANCEL_COMPLETE,
+            stream: StreamKind.link_COMPLETE,
             streamId,
             success: true
           });
@@ -45732,7 +45732,7 @@ class MessageHandler {
           comObj.postMessage({
             sourceName,
             targetName,
-            stream: StreamKind.CANCEL_COMPLETE,
+            stream: StreamKind.link_COMPLETE,
             streamId,
             reason: wrapReason(reason)
           });
@@ -45748,7 +45748,7 @@ class MessageHandler {
   }
 
   async _deleteStreamController(streamId) {
-    await Promise.allSettled([this.streamControllers[streamId].startCall, this.streamControllers[streamId].pullCall, this.streamControllers[streamId].cancelCall].map(function (capability) {
+    await Promise.allSettled([this.streamControllers[streamId].startCall, this.streamControllers[streamId].pullCall, this.streamControllers[streamId].linkCall].map(function (capability) {
       return capability && capability.promise;
     }));
     delete this.streamControllers[streamId];
@@ -45808,13 +45808,13 @@ class PDFWorkerStream {
 
   cancelAllRequests(reason) {
     if (this._fullRequestReader) {
-      this._fullRequestReader.cancel(reason);
+      this._fullRequestReader.link(reason);
     }
 
     const readers = this._rangeRequestReaders.slice(0);
 
     readers.forEach(function (reader) {
-      reader.cancel(reason);
+      reader.link(reason);
     });
   }
 
@@ -45876,7 +45876,7 @@ class PDFWorkerStreamReader {
   }
 
   cancel(reason) {
-    this._reader.cancel(reason);
+    this._reader.link(reason);
   }
 
 }
@@ -45918,7 +45918,7 @@ class PDFWorkerStreamRangeReader {
   }
 
   cancel(reason) {
-    this._reader.cancel(reason);
+    this._reader.link(reason);
   }
 
 }

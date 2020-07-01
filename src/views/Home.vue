@@ -19,7 +19,7 @@
                         <div class="img_container">
                             <img src="@/assets/diamond-secondary.png" alt />
                         </div>
-                        <h2>Hi! Are you new to Avalanche?</h2>
+                        <h2>Are you new to Avalanche?</h2>
                         <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
                     </header>
                     <router-link to="/create" class="ava_button secondary">Create New Wallet</router-link>
@@ -78,11 +78,10 @@ export default class Home extends Vue {}
         }
 
         .login_wrapper {
-            margin-top: main.$vertical-padding;
+            margin-top: 60px;
             display: grid;
-            grid-template-columns: 540px 540px;
-            grid-template-rows: 540px;
-            column-gap: 60px;
+            grid-template-columns: 500px 500px;
+            column-gap: main.$container-padding;
 
             .login_option {
                 display: flex;
@@ -90,25 +89,30 @@ export default class Home extends Vue {}
                 align-items: flex-start;
                 justify-content: space-between;
                 background-color: main.$background-color;
-                padding: main.$container-padding;
-                padding-top: 60px;
+                padding: 60px 90px main.$container-padding
+                    main.$container-padding;
 
-                img {
-                    width: 100px;
-                    height: 100px;
-                    max-height: none;
-                }
+                header {
+                    margin-bottom: 60px;
 
-                h2 {
-                    padding-top: main.$s-size;
-                    font-family: "DM Sans", sans-serif;
-                    font-size: main.$s-size;
-                    text-transform: uppercase;
-                    color: main.$primary-color-light;
-                }
+                    img {
+                        width: 89px;
+                        height: 89px;
+                        max-height: none;
+                    }
 
-                p {
-                    font-size: main.$l-size;
+                    h2 {
+                        padding-top: main.$s-size;
+                        font-family: "DM Sans", sans-serif;
+                        font-size: main.$s-size;
+                        text-transform: uppercase;
+                        color: main.$primary-color-light;
+                    }
+
+                    p {
+                        margin-top: 10px !important;
+                        font-size: main.$l-size;
+                    }
                 }
 
                 a {
@@ -118,6 +122,10 @@ export default class Home extends Vue {}
         }
     }
 }
+
+/* ==========================================
+   Nav
+   ========================================== */
 
 .logo {
     margin-bottom: 30px;
@@ -221,9 +229,7 @@ img {
 
 .private_in button {
     font-size: 24px;
-    /*padding: 8px 0;*/
     padding-right: 12px;
-    /*border-bottom: 1px solid;*/
 }
 .pkIn {
     padding: 0;
@@ -244,7 +250,6 @@ img {
 .bgdots {
     position: absolute;
     width: 100%;
-    /*height: 100%;*/
     min-height: calc(100vh - 80px);
     background-image: url("/img/dots_bg.svg");
     background-repeat: repeat;
@@ -257,11 +262,6 @@ p {
     color: #333;
     margin: 4px 0 !important;
 }
-
-/*.auth >>> input{*/
-/*    text-align: center;*/
-/*    color: #ddd !important;*/
-/*}*/
 
 .auth_body {
     padding: 30px;
@@ -278,15 +278,9 @@ hr {
 }
 
 @media only screen and (max-width: 600px) {
-    h2 {
-        color: #ddd;
-    }
     .auth {
-        /*height: 100;*/
-        /*margin: 0;*/
         border-radius: 0;
         box-shadow: none;
-        /*background-color: transparent;*/
     }
 
     .menu_option {
@@ -299,25 +293,57 @@ hr {
 
     .imgcover {
         display: none;
-        /*background-color: transparent;*/
     }
 
     .auth_body {
         padding: 30px 24px;
     }
 
-    .options {
-        /*flex-direction: column;*/
-    }
-
-    /*p{*/
-    /*    color: #ddd;*/
-    /*}*/
-
     .home {
         .home_wrapper {
+
+            h1 {
+                font-size: main.$xl-size-mobile;
+            }
+            
             .login_wrapper {
                 grid-template-columns: none;
+                display: flex;
+                flex-direction: column;
+
+                .login_option {
+                    margin-bottom: main.$vertical-padding;
+                    padding: 30px 15px;
+                    align-items: center;
+
+                    header {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+
+                        margin-bottom: 30px;
+
+                        img {
+                            width: 40px;
+                            height: 40px;
+                        }
+
+                        h2 {
+                            padding-top: main.$s-size-mobile;
+                            font-size: main.$s-size-mobile;
+                        }
+
+                        p {
+                            margin-top: 10px !important;
+                            font-size: main.$l-size-mobile;
+                            text-align: center;
+                        }
+                    }
+
+                    a {
+                        margin: 0;
+                    }
+                }
             }
         }
     }
