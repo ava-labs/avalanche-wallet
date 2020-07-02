@@ -18,7 +18,9 @@
     // @ts-ignore
     import {QrInput} from '@avalabs/vue_components';
     import RememberKey from "../../components/misc/RememberKey.vue";
-    import {AddWalletInput} from "@/store/types";
+    import {keyToKeypair} from "@/helpers/helper";
+    import {avm} from "@/AVA";
+    // import {AddWalletInput} from "@/store/types";
 
     @Component({
         components: {
@@ -38,13 +40,16 @@
             this.isLoading = true;
             this.$store.state.rememberKey = this.rememberKey;
 
-            let inData:AddWalletInput = {
-                pk: this.privateKey,
-                type: 'hd'
-            };
+            // let inData:AddWalletInput = {
+            //     pk: this.privateKey,
+            //     type: 'hd'
+            // };
+
+
 
             try{
-                let res = await this.$store.dispatch('accessWallet', inData);
+                let keyPair = keyToKeypair(this.privateKey, avm.getBlockchainID());
+                let res = await this.$store.dispatch('accessWallet', keyPair);
                 parent.isLoading = false;
             }catch (e) {
                 this.error = 'Invalid Private Key';

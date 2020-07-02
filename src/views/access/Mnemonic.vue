@@ -24,7 +24,7 @@ import {Buffer} from "buffer";
 
     import * as bip39 from 'bip39';
     import {bintools, keyChain} from "@/AVA";
-    import {AddWalletInput} from "@/store/types";
+    // import {AddWalletInput} from "@/store/types";
 
     @Component({
         components: {
@@ -71,13 +71,13 @@ import {Buffer} from "buffer";
                 let addr = keyChain.importKey(b);
                 let keypair = keyChain.getKey(addr);
 
-                let pkString = keypair.getPrivateKeyString();
-                let inVal:AddWalletInput = {
-                    pk: pkString,
-                    type: 'hd'
-                };
+                // let pkString = keypair.getPrivateKeyString();
+                // let inVal:AddWalletInput = {
+                //     pk: pkString,
+                //     type: 'hd'
+                // };
 
-                await this.$store.dispatch('accessWallet', inVal);
+                await this.$store.dispatch('accessWallet', keypair);
                 this.isLoading = false;
             }catch(e){
                 this.isLoading = false;

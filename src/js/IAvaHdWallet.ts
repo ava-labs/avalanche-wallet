@@ -10,7 +10,7 @@ export interface IIndexKeyCache{
 
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
-    type: wallet_type;
+    // type: wallet_type;
 
     getCurrentKey(): AVMKeyPair;
     getKeyChain(): AVMKeyChain;
@@ -30,6 +30,8 @@ export interface IAvaHdWallet extends AvaWalletCore{
     chainId: string;
     generateKey(): AVMKeyPair;
     onHdKeyReady(): void;
+    getUTXOSet(): UTXOSet;
+    getMasterKey(): AVMKeyPair;
 }
 
 

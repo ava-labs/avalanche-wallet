@@ -47,7 +47,7 @@
 
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    import {bintools, cryptoHelpers, keyChain} from "@/AVA";
+    import {bintools, cryptoHelpers, keyChain, avm} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
 
@@ -61,8 +61,8 @@
     // import { BIP32Interface } from 'bip32';
     import AvaHdWallet from "@/js/AvaHdWallet";
 
-    import {KeyPair} from "avalanche";
-    import {AddWalletInput} from "@/store/types";
+    import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    import {keyToKeypair} from "@/helpers/helper";
 
     @Component({
         components: {
@@ -105,12 +105,17 @@
             this.$store.state.rememberKey = this.rememberKey;
             let parent = this;
 
-            let inData:AddWalletInput = {
-                pk: this.keyPair.getPrivateKeyString(),
-                type: 'hd'
-            }
+            // let keychain = new AVMKeyChain(avm.getBlockchainID());
+                // keychain.addKey()
+
+            // let inData:AVMKeyPair = {
+            //     pk: this.keyPair.getPrivateKeyString(),
+            //     type: 'hd'
+            // }
+            // let chainID = avm.getBlockchainID();
+            // let key = keyToKeypair(this.keyPair.get)
             setTimeout(()=>{
-                parent.$store.dispatch('accessWallet', inData);
+                parent.$store.dispatch('accessWallet', this.keyPair);
             }, 500);
         }
     }

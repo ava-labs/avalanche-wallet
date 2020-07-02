@@ -4,6 +4,7 @@ import {bintools, cryptoHelpers} from "@/AVA";
 import {AvaWallet} from "@/js/AvaWallet";
 import {Buffer} from "buffer/";
 import { wallet_type } from './IAvaHdWallet';
+import AvaHdWallet from "@/js/AvaHdWallet";
 
 const KEYSTORE_VERSION: string = '1.1';
 
@@ -42,14 +43,13 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
         let key: Buffer = bintools.avaDeserialize(key_data.key);
         let nonce: Buffer = bintools.avaDeserialize(key_data.nonce);
         let address: string = key_data.address;
-        let walletType: wallet_type = key_data.type || 'hd';
+        // let walletType: wallet_type = key_data.type || 'hd';
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass,key,salt,nonce);
         let key_string: string = bintools.avaSerialize(key_decrypt);
 
         keysDecrypt.push({
             key: key_string,
-            type: walletType,
             address: address
         });
     }
@@ -62,14 +62,14 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
 
 
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
-async function makeKeyfile(wallets: AvaWallet[], pass:string): Promise<KeyFile>{
+async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile>{
     let salt: Buffer = await cryptoHelpers.makeSalt();
     let passHash: IHash = await cryptoHelpers.pwhash(pass, salt);
 
     let keys:KeyFileKey[] = [];
 
     for(let i:number=0; i<wallets.length;i++){
-        let wallet: AvaWallet = wallets[i];
+        let wallet: AvaHdWallet = wallets[i];
         let pk: Buffer = wallet.getMasterKey().getPrivateKey();
         let addr: string = wallet.getMasterKey().getAddressString();
 
@@ -79,7 +79,6 @@ async function makeKeyfile(wallets: AvaWallet[], pass:string): Promise<KeyFile>{
             key: bintools.avaSerialize(pk_crypt.ciphertext),
             nonce: bintools.avaSerialize(pk_crypt.nonce),
             address: addr,
-            type: wallet.type
         };
         keys.push(key_data);
     }

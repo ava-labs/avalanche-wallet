@@ -1,5 +1,6 @@
 
 import store from '@/store/index';
+import {AVMKeyChain, AVMKeyPair} from "avalanche";
 
 function getAssetIcon(id:string){
     let url = "/question-solid.svg";
@@ -13,4 +14,11 @@ function getAssetIcon(id:string){
 }
 
 
-export {getAssetIcon};
+function keyToKeypair(key: string, chainID: string='X'): AVMKeyPair{
+    let keychain = new AVMKeyChain(chainID);
+    let addr = keychain.importKey(key);
+    return keychain.getKey(addr);
+}
+
+
+export {getAssetIcon, keyToKeypair};

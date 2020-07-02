@@ -31,7 +31,7 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 // SCAN_SIZE - INDEX_RANGE
 
 export default class AvaHdWallet implements IAvaHdWallet{
-    type: wallet_type;
+    // type: wallet_type;
     masterKey: AVMKeyPair;
     seed:string | null;
     hdKey:HDKey;
@@ -44,7 +44,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     // The master key from avalanche.js
     constructor(keypair: AVMKeyPair) {
-        this.type = 'hd';
+        // this.type = 'hd';
         this.masterKey = keypair;
         this.chainId = keypair.getChainID();
         this.hdIndex = 0;
@@ -110,6 +110,23 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return result;
     }
 
+    getUTXOSet(): UTXOSet {
+        return this.utxoset;
+    }
+
+    getAllDerivedKeys(): AVMKeyPair[]{
+        let set: AVMKeyPair[] = [];
+
+        for(var i=0; i<this.hdIndex;i++){
+            let key = this.getKeyForIndex(i);
+            set.push(key);
+        }
+        return set;
+    }
+
+    getMasterKey(): AVMKeyPair {
+        return this.masterKey;
+    }
 
     // Scan internal indices and find a spot with no utxo
     getChangeAddress():string{
@@ -186,34 +203,48 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
     async findAvailableIndex(start:number=0):Promise<number>{
-        let keychain: AVMKeyChain = new AVMKeyChain('X');
+        let keychainExternal: AVMKeyChain = new AVMKeyChain('X');
+        let keychainInternal: AVMKeyChain = new AVMKeyChain('X');
 
         for(let i:number=start;i<start+SCAN_SIZE;i++){
             // Derive Key and add to KeyChain
             // Scan both external and internal addresses
             let key: AVMKeyPair = this.getKeyForIndex(i);
             let keyInternal: AVMKeyPair = this.getKeyForIndex(i, true);
-            keychain.addKey(key);
-            keychain.addKey(keyInternal);
+            keychainExternal.addKey(key);
+            keychainInternal.addKey(keyInternal);
         }
 
-        let addresses: Buffer[] = keychain.getAddresses();
+        let externalAddrs: Buffer[] = keychainExternal.getAddresses();
+        let internalAddrs: Buffer[] = keychainInternal.getAddresses();
 
-        let utxoSet: UTXOSet = await avm.getUTXOs(addresses);
+        let utxoSetExternal: UTXOSet = await avm.getUTXOs(externalAddrs);
+        let utxoSetInternal: UTXOSet = await avm.getUTXOs(internalAddrs);
 
-        for(let i:number=0; i<addresses.length-INDEX_RANGE; i++){
+
+
+        for(let i:number=0; i<externalAddrs.length-INDEX_RANGE; i++){
             let gapSize: number = 0;
 
             for(let n:number=0;n<0+INDEX_RANGE;n++){
                 let scanIndex: number = i+n;
-                let addr: Buffer = addresses[scanIndex];
-                let addrUTXOs: string[] = utxoSet.getUTXOIDs([addr]);
-                if(addrUTXOs.length === 0){
+
+
+                let addrIn: Buffer = internalAddrs[scanIndex];
+                let addrEx: Buffer = externalAddrs[scanIndex];
+
+                let addrUTXOsIn: string[] = utxoSetInternal.getUTXOIDs([addrIn]);
+                let addrUTXOsEx: string[] = utxoSetExternal.getUTXOIDs([addrEx]);
+
+
+                if(addrUTXOsIn.length === 0 && addrUTXOsEx.length === 0){
                     gapSize++
                 }else{
                     break;
                 }
             }
+
+            console.log(i, gapSize);
 
             if(gapSize===INDEX_RANGE){
                 return i;
