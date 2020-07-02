@@ -10,7 +10,7 @@
             ></HdDerivationListRow>
         </div>
         <div v-else>
-            <p>You have no past addresses.</p>
+            <p class="empty">You have no past addresses.</p>
         </div>
     </div>
 </template>
@@ -122,4 +122,10 @@
         padding-right: 15px;
     }
 
+
+    .empty{
+        width: 100%;
+        text-align: center;
+        padding: 30px;
+    }
 </style>
