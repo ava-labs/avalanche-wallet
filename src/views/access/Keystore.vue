@@ -31,7 +31,6 @@
         },
         methods: {
             onfile(val){
-                console.log(val);
                 this.file = val;
             },
             access(){

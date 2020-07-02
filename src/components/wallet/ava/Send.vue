@@ -71,7 +71,6 @@
                 for(var i=0; i<this.orders.length; i++){
                     let order = this.orders[i];
                     if(order.asset === asset){
-                        console.log(order);
                         order.amount += parseFloat(amount);
                         if(order.amount > asset.balance){
                             order.amount = asset.balance;

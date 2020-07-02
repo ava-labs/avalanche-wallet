@@ -14,6 +14,7 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
+import {tr} from "@/locales/tr";
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -114,11 +115,17 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.utxoset;
     }
 
-    getAllDerivedKeys(): AVMKeyPair[]{
+    getAllDerivedKeys(isInternal = false): AVMKeyPair[]{
         let set: AVMKeyPair[] = [];
 
         for(var i=0; i<this.hdIndex;i++){
-            let key = this.getKeyForIndex(i);
+            let key;
+
+            if(isInternal){
+                key = this.getKeyForIndex(i, true);
+            }else{
+               key = this.getKeyForIndex(i);
+            }
             set.push(key);
         }
         return set;
@@ -243,8 +250,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
                     break;
                 }
             }
-
-            console.log(i, gapSize);
 
             if(gapSize===INDEX_RANGE){
                 return i;

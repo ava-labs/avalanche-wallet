@@ -49,7 +49,6 @@
         },
         methods: {
             onfile(val){
-                console.log(val)
                 this.keyfile = val;
             },
             qr_change(val){
@@ -72,7 +71,6 @@
                     }).then(res => {
                         parent.isLoading = false;
                         parent.clear();
-                        console.log(res);
                     }).catch(err => {
                         parent.isLoading = false;
                         this.err = err.message;

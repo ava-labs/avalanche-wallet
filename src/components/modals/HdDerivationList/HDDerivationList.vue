@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="list_cont">
         <div v-if="derivedKeys.length>0" class="list">
             <div class="headers">
                 <p style="text-align: center">#</p>
@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import AvaHdWallet from "@/js/AvaHdWallet";
     import {AVMKeyPair, UTXOSet} from "avalanche";
@@ -34,12 +34,14 @@
     export default class HDDerivationList extends Vue{
         @Prop() wallet!: AvaHdWallet;
 
+        derivedKeys: AVMKeyPair[] = [];
 
-        get derivedKeys(): AVMKeyPair[]{
-            let hdIndex = this.wallet.hdIndex;
-            console.log(hdIndex);
-            return this.wallet.getAllDerivedKeys();
+
+        @Watch('wallet.hdIndex', {immediate: true})
+        onIndexChange(){
+            this.derivedKeys = this.wallet.getAllDerivedKeys();
         }
+
 
         get assetsDict(){
             return this.$store.state.Assets.assetsDict;
@@ -84,17 +86,13 @@
     }
 </script>
 <style scoped lang="scss">
-    /*table{*/
-    /*    width: 100%;*/
-    /*    border-spacing: 5px;*/
-    /*}*/
-
-    .list{
+    .list_cont{
         max-height: 60vh;
         height: 290px;
         position: relative;
         overflow: scroll;
     }
+
     .list_row{
         border-bottom: 1px solid #ddd;
 

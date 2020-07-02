@@ -16,7 +16,7 @@
     // import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     // import CopyText from "@/components/misc/CopyText.vue";
     import AvaHdWallet from "@/js/AvaHdWallet";
-    import HDDerivationList from "@/components/misc/HDDerivationList.vue";
+    import HDDerivationList from "@/components/modals/HdDerivationList/HDDerivationList.vue";
 
     @Component({
         components: {

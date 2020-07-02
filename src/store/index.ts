@@ -264,9 +264,6 @@ export default new Vuex.Store({
 
             state.wallets.push(wallet);
 
-            console.log("add wallet",wallet);
-
-            // state.addresses = keyChain.getAddressStrings();
 
             if(state.rememberKey){
                 dispatch('saveKeys');
@@ -431,7 +428,6 @@ export default new Vuex.Store({
                             // });
 
                             let chainID = avm.getBlockchainAlias();
-                            console.log(chainID)
                             let inputData:AVMKeyPair[] = keys.map(key => {
                                 return keyToKeypair(key.key,chainID);
                                 // let addr = keychain.importKey(key.key);

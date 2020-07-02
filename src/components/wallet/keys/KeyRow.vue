@@ -27,7 +27,7 @@
         </div>
         <div class="buts">
             <button @click="showModal">View Key Phrase</button>
-            <button @click="showPastAddresses">View Past Addrse</button>
+            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>
             <button class="selBut" @click="select"  v-if="!is_default">
                 <span>Activate Key</span>
             </button>
