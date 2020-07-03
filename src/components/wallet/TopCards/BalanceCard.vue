@@ -219,6 +219,7 @@
         }
 
         .alt_info{
+            display: none;
             grid-template-columns: none;
             text-align: left;
 

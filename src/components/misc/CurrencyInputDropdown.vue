@@ -167,6 +167,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     $barH: 1px;
 
     .bigIn{
@@ -222,5 +224,12 @@
         /*flex-basis: 140px;*/
         width: 100%;
         /*border-left: 1px solid #d2d2d2;*/
+    }
+
+
+    @include main.mobile-device{
+        .curr_in_drop{
+            grid-template-columns: 1fr 70px;
+        }
     }
 </style>

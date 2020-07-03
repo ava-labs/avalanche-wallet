@@ -110,7 +110,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        color: main.$primary-color;
+        color: #000;
 
         > *{
             font-size: 18px;
@@ -122,18 +122,14 @@
             height: 18px;
             opacity: 0.6;
 
+            background-size: contain;
+            background-position: center;
             &:hover{
                 opacity: 1;
             }
         }
     }
 
-    .buts button{
-        width: 18px;
-        height: 18px;
-        background-size: contain;
-        background-position: center;
-    }
 
     .qr_but{
         background-image: url("/img/qr_icon.png");
@@ -145,20 +141,7 @@
     }
 
 
-    .buts > *[tooltip]:hover:before{
-        border-radius: 4px;
-        left: 0;
-        transform: translateX(-50%);
-        content: attr(tooltip);
-        position: absolute;
-        background-color: main.$primary-color;
-        bottom: 100%;
-        color: #ddd;
-        width: max-content;
-        max-width: 100px;
-        font-size: 14px;
-        padding: 4px 8px;
-    }
+
 
 
 

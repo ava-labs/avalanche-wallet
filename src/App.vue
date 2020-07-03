@@ -5,13 +5,7 @@
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <transition name="fade" mode="out-in">
-                        <sidebar class="panel" v-if="!isNavbar"></sidebar>
-                    </transition>
-                    <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
-                    </transition>
-                    <transition name="fade" mode="out-in">
-                        <main-panel class="panel" v-if="!isNavbar"></main-panel>
                     </transition>
                 </div>
             </template>
@@ -24,16 +18,13 @@
 
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
-    import MainPanel from '@/components/SidePanels/MainPanel';
-    import Sidebar from '@/components/wallet/Sidebar';
     import LoadingApp from '@/views/LoadingApp';
 
     export default {
         components: {
-            Sidebar,
+
             Navbar,
             Notifications,
-            MainPanel,
             LoadingApp
         },
         async created() {
@@ -77,20 +68,14 @@
 @use "./main";
 
 .main_cols {
-    display: grid;
-    grid-template-columns: 1fr;
-
     &[wallet_view] {
-        grid-template-columns: 240px 1fr 340px;
         height: 100vh;
 
         #router_view {
             overflow: auto;
-            padding: 12px 16px;
+            padding: 0;
             padding-bottom: 0px;
         }
-
-
     }
 
 
@@ -99,20 +84,13 @@
         position: relative;
         padding: main.$container_padding_m;
     }
-
-    .panel{
-        background-color: #fff;
-        /*padding: 8px 16px;*/
-        overflow: auto;
-        height: 100%;
-
-    }
 }
 
 #router_view {
     min-height: calc(100vh - 80px);
     position: relative;
     padding: main.$container_padding_m;
+    overflow: auto;
 }
 
 .panel {

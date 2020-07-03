@@ -2,7 +2,8 @@
     <div class="home">
         <div class="home_wrapper">
             <img class="logo" src="@/assets/wallet_logo.svg" />
-            <h1>Our Asset Wallet is Bold and Secure.</h1>
+<!--            <h1>Our Asset Wallet is Bold and Secure.</h1>-->
+            <h1>The AVAX Wallet</h1>
             <div class="login_wrapper">
                 <div class="login_option">
                     <header>
@@ -10,7 +11,7 @@
                             <img src="@/assets/diamond-primary.svg" alt />
                         </div>
                         <h2>Welcome Back!</h2>
-                        <p>You can 'Access' your existing AVA wallet here.</p>
+                        <p>You can 'Access' your existing AVAX wallet here.</p>
                     </header>
                     <router-link to="/access" class="ava_button primary">Access</router-link>
                 </div>
@@ -305,7 +306,7 @@ hr {
             h1 {
                 font-size: main.$xl-size-mobile;
             }
-            
+
             .login_wrapper {
                 grid-template-columns: none;
                 display: flex;
