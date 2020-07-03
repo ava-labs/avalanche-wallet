@@ -46,13 +46,6 @@
             this.isLoading = true;
             this.$store.state.rememberKey = this.rememberKey;
 
-            // let inData:AddWalletInput = {
-            //     pk: this.privateKey,
-            //     type: 'hd'
-            // };
-
-
-
             try{
                 let keyPair = keyToKeypair(this.privateKey, avm.getBlockchainID());
                 let res = await this.$store.dispatch('accessWallet', keyPair);
@@ -149,6 +142,7 @@ a {
     form {
         display: flex;
         flex-direction: column;
+        width: 100%;
         align-items: flex-start;
     }
 

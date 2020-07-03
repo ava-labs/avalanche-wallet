@@ -48,7 +48,7 @@
                                 ></remember-key>
                                 <div class="submit">
                                     <transition name="fade" mode="out-in">
-                                        <Spinner v-if="isLoad"></Spinner>
+                                        <Spinner v-if="isLoad" class="spinner"></Spinner>
                                         <div v-else>
                                             <button
                                                 class="ava_button access generate"
@@ -82,14 +82,9 @@
     import CopyText from "@/components/misc/CopyText.vue";
 
     import * as bip39 from 'bip39';
-    var HDKey = require('hdkey');
 
-    // import * as bip32 from 'bip32';
-    // import { BIP32Interface } from 'bip32';
-    import AvaHdWallet from "@/js/AvaHdWallet";
 
     import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
-    import {keyToKeypair} from "@/helpers/helper";
 
     @Component({
         components: {
@@ -213,6 +208,11 @@ a {
     column-gap: 60px;
 }
 
+
+.stage_1, .stage_2{
+    /*padding: 30px;*/
+}
+
 .mneumonic_disp_col {
     .mnemonic_disp {
         max-width: 560px;
@@ -323,6 +323,11 @@ a {
     }
 }
 
+.spinner{
+    width: 26px !important;
+    margin: 0px auto;
+}
+
 @include main.medium-device {
     .stage_1 {
         min-width: unset;
@@ -331,12 +336,12 @@ a {
 
 @include main.mobile-device {
     .stage_1 {
-        padding: 0;
+        /*padding: 0;*/
         min-width: unset;
     }
 
     .stage_2 {
-        padding: 0;
+        /*padding: 0;*/
         min-width: unset;
     }
 

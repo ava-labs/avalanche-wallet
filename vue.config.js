@@ -15,7 +15,7 @@ module.exports = {
         }
     },
     pwa: {
-        name: "AVA Wallet",
+        name: "AVAX Wallet",
         manifestOptions: {
             start_url: '/'
         },

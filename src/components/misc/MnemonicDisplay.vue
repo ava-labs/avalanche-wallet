@@ -36,6 +36,7 @@ export default class MnemonicDisplay extends Vue {
 
 .mnemonic_display {
     display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 6px;
     row-gap: 6px;
     font-size: 12px;
@@ -72,4 +73,19 @@ p {
 span {
     text-align: center;
 }
+
+@include main.mobile-device{
+    .word{
+        *{
+            padding: 4px 2px;
+        }
+    }
+
+    .mnemonic_display{
+        grid-template-columns: 1fr 1fr 1fr !important;
+    }
+
+    .phrase_word{}
+}
+
 </style>

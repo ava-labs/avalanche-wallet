@@ -68,13 +68,14 @@ export default {
 
 .file_input {
     position: relative;
-    border-radius: 2px;
     padding: 8px 18px;
     cursor: pointer;
     /* color: main.$primary-color; */
     color: rgb(118, 118, 118);
     background-color: main.$background-color !important;
+    border: 1px solid;
     border-radius: 6px;
+    max-width: 100%;
     border-color: main.$primary-color;
     font-family: "DM Sans", sans-serif;
     font-weight: 700;

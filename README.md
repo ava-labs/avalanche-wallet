@@ -1,6 +1,6 @@
-# AVA Wallet
+# AVAX Wallet
 
-This is the frontend Vue.js application for the AVA Wallet. 
+This is the frontend Vue.js application for the AVAX Wallet. 
 
 
 ## Prerequisites
@@ -45,11 +45,11 @@ WARNING: This history might be out of order and incomplete.
 
 ## Browser Support
 
-We suggest using Google Chrome to view the AVA Wallet website.
+We suggest using Google Chrome to view the AVAX Wallet website.
 
 ### Firefox and https
 
-Firefox does not allow https requests to localhost. But the AVA Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.js` file in the root directory and change 
+Firefox does not allow https requests to localhost. But the AVAX Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.js` file in the root directory and change 
 
 ```
 devServer: {
