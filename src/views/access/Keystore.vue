@@ -51,8 +51,12 @@ export default {
             console.log(val);
             this.file = val;
         },
+
         access() {
             if (!this.canSubmit || this.isLoading) return;
+
+      
+
 
             let parent = this;
             this.error = '';

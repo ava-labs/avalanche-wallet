@@ -4,11 +4,11 @@
             :selected="is_default"
     >
         <mnemonic-phrase ref="modal" :phrase="mnemonicPhrase"></mnemonic-phrase>
+        <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <div class="rows">
             <div class="detail">
                 <div>
                     <p class="addressVal"><b>{{walletTitle}}</b></p>
-                    <p>{{type}}</p>
                 </div>
             </div>
 
@@ -27,12 +27,14 @@
         </div>
         <div class="buts">
             <button @click="showModal">View Key Phrase</button>
+            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>
             <button class="selBut" @click="select"  v-if="!is_default">
                 <span>Activate Key</span>
             </button>
 
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
         </div>
+<!--        <HDDerivationList :wallet="wallet" class="hdlist"></HDDerivationList>-->
     </div>
 </template>
 <script lang="ts">
@@ -45,6 +47,7 @@
     import {AmountOutput, KeyPair} from "avalanche";
 
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
+    import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
     import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
     import {AvaWallet} from "@/js/AvaWallet";
@@ -55,12 +58,13 @@
 
     @Component({
         components: {
-            MnemonicPhrase
+            MnemonicPhrase,
+            HdDerivationListModal
         }
     })
     export default class KeyRow extends Vue{
         // @Prop() address!:string;
-        @Prop() wallet!:AvaWallet;
+        @Prop() wallet!:AvaHdWallet;
         @Prop({default: false}) is_default?:boolean;
 
 
@@ -130,7 +134,8 @@
         }
 
         get keyPair():KeyPair{
-            return keyChain.getKey(bintools.parseAddress(this.address, 'X'));
+            return this.wallet.masterKey;
+            // return keyChain.getKey(bintools.parseAddress(this.address, 'X'));
         }
 
         get mnemonicPhrase():string{
@@ -140,9 +145,9 @@
             return mnemonic;
         }
 
-        get type(){
-           return this.wallet.type;
-        }
+        // get type(){
+        //    return this.wallet.type;
+        // }
 
         remove(){
             this.$emit('remove', this.wallet);
@@ -153,6 +158,12 @@
 
         showModal(){
             let modal = this.$refs.modal as MnemonicPhrase;
+            //@ts-ignore
+            modal.open();
+        }
+
+        showPastAddresses(){
+            let modal = this.$refs.modal_hd as MnemonicPhrase;
             //@ts-ignore
             modal.open();
         }
@@ -176,6 +187,11 @@
             overflow: auto;
         }
     }
+
+    .hdlist{
+        grid-column: 1/3;
+    }
+
 
     .buts{
         display: flex;

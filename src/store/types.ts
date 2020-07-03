@@ -6,9 +6,9 @@ import {AssetsState} from "@/store/modules/assets/types";
 import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
-import {wallet_type} from "@/js/IAvaHdWallet";
-import AvaSingletonWallet from "@/js/AvaSingletonWallet";
-import {AvaWallet} from "@/js/AvaWallet";
+// import {wallet_type} from "@/js/IAvaHdWallet";
+// import AvaSingletonWallet from "@/js/AvaSingletonWallet";
+// import {AvaWallet} from "@/js/AvaWallet";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
@@ -19,8 +19,8 @@ export interface RootState {
     selectedAddress: string,
     modals: ModalDict,
     rememberKey: boolean,
-    activeWallet: null|AvaWallet
-    wallets: AvaWallet[]
+    activeWallet: null|AvaHdWallet
+    wallets: AvaHdWallet[]
     address: String|null
     isLoadingPersistKeys: boolean,
 }
@@ -113,17 +113,16 @@ export interface IssueTxInput{
 }
 
 
-export interface AddWalletInput {
-    pk: string,
-    type: wallet_type
-}
+// export interface AddWalletInput {
+//     pk: string,
+//     type: wallet_type
+// }
 
 
 export type SessionPersistFile = SessionPersistKey[];
 
 export interface SessionPersistKey {
     key: string,
-    type: wallet_type
 }
 // export interface AddressUTXOs{
 //     [key:string]: SecpUTXO[]

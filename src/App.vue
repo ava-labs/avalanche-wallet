@@ -20,39 +20,41 @@
     </v-app>
 </template>
 <script>
-import Notifications from '@/components/Notifications';
-import Navbar from './components/Navbar';
-import MainPanel from '@/components/SidePanels/MainPanel';
-import Sidebar from '@/components/wallet/Sidebar';
-import LoadingApp from '@/views/LoadingApp';
-
-export default {
-    components: {
-        Sidebar,
-        Navbar,
-        Notifications,
-        MainPanel,
-        LoadingApp
-    },
-    async created() {
-        let parent = this;
-        // this.$store.dispatch('Assets/getAllAssets');
-        await this.$store.dispatch('Network/init');
 
 
-        // check session storage
-        // if Remember Keys was enabled, get keys and access wallet
-        this.$nextTick(() => {
-            parent.$store.dispatch('autoAccess').then((res) => {
-                if (res) {
-                    parent.$store.dispatch('Notifications/add', {
-                        title: "Keys Remembered",
-                        message: "Your stored keys are used to log you in.",
-                        type: "success"
-                    })
-                }
-            });
-        })
+    import Notifications from '@/components/Notifications';
+    import Navbar from './components/Navbar';
+    import MainPanel from '@/components/SidePanels/MainPanel';
+    import Sidebar from '@/components/wallet/Sidebar';
+    import LoadingApp from '@/views/LoadingApp';
+
+    export default {
+        components: {
+            Sidebar,
+            Navbar,
+            Notifications,
+            MainPanel,
+            LoadingApp
+        },
+        async created() {
+            let parent = this;
+            await this.$store.dispatch('Network/init');
+
+
+            // check session storage
+            // if Remember Keys was enabled, get keys and access wallet
+            this.$nextTick(() => {
+                parent.$store.dispatch('autoAccess').then((res) => {
+                    if(res){
+                        parent.$store.dispatch('Notifications/add', {
+                            title: "Keys Remembered",
+                            message: "Your stored keys are used to log you in.",
+                            type: "success"
+                        })
+                    }
+                });
+            })
+
 
     },
     computed: {
@@ -87,6 +89,23 @@ export default {
             padding: 12px 16px;
             padding-bottom: 0px;
         }
+
+
+    }
+
+
+    #router_view{
+        min-height: calc(100vh - 80px);
+        position: relative;
+        padding: main.$container_padding_m;
+    }
+
+    .panel{
+        background-color: #fff;
+        /*padding: 8px 16px;*/
+        overflow: auto;
+        height: 100%;
+
     }
 }
 

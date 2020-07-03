@@ -6,14 +6,11 @@
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
-                <p class="sub">{{walletTypeText}} Address</p>
+<!--                <p class="sub">{{walletTypeText}} Address</p>-->
             </div>
             <div class="bottom_rest">
                 <p class="addr_text">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
-                    <div>
-                        <toggle-button color="#E84970" :labels="{checked: 'HD', unchecked: 'Static'}" :value="switchVal" :sync="true" @change="onswitch" :width="60"></toggle-button>
-                    </div>
                     <div class="buts">
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
                         <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
@@ -68,32 +65,9 @@
         }
 
         get warningText():string{
-            if(this.walletType==='hd'){
-                return "This is your address to receive funds. Your address will change after every deposit.";
-            }else{
-                return "This is your address to receive funds."
-            }
+            return "This is your address to receive funds. Your address will change after every deposit.";
         }
 
-        get walletType(){
-            return this.$store.getters['walletType'];
-        }
-
-        get walletTypeText(){
-            if(this.walletType === 'hd'){
-                return 'HD'
-            }else{
-                return 'Static';
-            }
-        }
-
-        get switchVal():boolean{
-            return this.walletType==='hd';
-        }
-
-        onswitch(){
-            this.$store.dispatch('toggleWalletMode');
-        }
         viewQRModal(){
             // @ts-ignore
             this.$refs.qr_modal.open();
@@ -170,6 +144,7 @@
     .copy_but{
     }
 
+
     .buts > *[tooltip]:hover:before{
         border-radius: 4px;
         left: 0;
@@ -184,6 +159,8 @@
         font-size: 14px;
         padding: 4px 8px;
     }
+
+
 
     .addr_info{
         background-color: #F5F6FA;

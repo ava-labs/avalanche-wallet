@@ -37,7 +37,6 @@
             },
             addKey(){
                 let parent = this;
-                console.log("adding key: ",this.pk);
 
                 this.$store.dispatch('addWallet', this.pk).then(() => {
                     parent.pk = "";

@@ -30,38 +30,42 @@ import {Buffer} from "buffer";
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
 
-import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-import RememberKey from "@/components/misc/RememberKey.vue";
-import { Buffer } from "buffer/";
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
 
-import * as bip39 from "bip39";
-import { bintools, keyChain } from "@/AVA";
-import { AddWalletInput } from "@/store/types";
+    import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
+    import RememberKey from "@/components/misc/RememberKey.vue";
+    import {Buffer} from "buffer/";
 
-@Component({
-    components: {
-        MnemonicDisplay,
-        RememberKey
-    }
-})
-export default class Mnemonic extends Vue {
-    phrase: string = "";
-    isLoading: boolean = false;
-    isRemember: boolean = false;
-    err: string = "";
+    import * as bip39 from 'bip39';
+    import {bintools, keyChain} from "@/AVA";
+    // import {AddWalletInput} from "@/store/types";
 
-    errCheck() {
-        let phrase = this.phrase;
-        let words = phrase.split(" ");
+    @Component({
+        components: {
+            MnemonicDisplay,
+            RememberKey
+        },
+    })
+    export default class Mnemonic extends Vue{
+        phrase:string = "";
+        isLoading:boolean = false;
+        isRemember:boolean = false;
+        err:string = "";
 
-        // not a valid key phrase
-        if (words.length !== 24) {
-            this.err =
-                "Invalid key phrase. Your phrase must be 24 words separated by a single space.";
-            return false;
+        errCheck(){
+            let phrase = this.phrase;
+            let words = phrase.split(' ');
+
+            // not a valid key phrase
+            if(words.length !== 24){
+                this.err = "Invalid key phrase. Your phrase must be 24 words separated by a single space.";
+                return false;
+            }
+
+
+            return true;
         }
 
         return true;
@@ -85,17 +89,20 @@ export default class Mnemonic extends Vue {
             let addr = keyChain.importKey(b);
             let keypair = keyChain.getKey(addr);
 
-            let pkString = keypair.getPrivateKeyString();
-            let inVal: AddWalletInput = {
-                pk: pkString,
-                type: "hd"
-            };
 
-            await this.$store.dispatch("accessWallet", inVal);
-            this.isLoading = false;
-        } catch (e) {
-            this.isLoading = false;
-            this.err = "Invalid key phrase.";
+                // let pkString = keypair.getPrivateKeyString();
+                // let inVal:AddWalletInput = {
+                //     pk: pkString,
+                //     type: 'hd'
+                // };
+
+                await this.$store.dispatch('accessWallet', keypair);
+                this.isLoading = false;
+            }catch(e){
+                this.isLoading = false;
+                this.err = 'Invalid key phrase.'
+            }
+
         }
     }
 }

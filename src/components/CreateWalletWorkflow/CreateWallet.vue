@@ -67,60 +67,64 @@
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
 
-import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
-import Spinner from "@/components/misc/Spinner.vue";
-import { bintools, cryptoHelpers, keyChain } from "@/AVA";
-import RememberKey from "@/components/misc/RememberKey.vue";
-import { Buffer } from "buffer/";
 
-import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-import CopyText from "@/components/misc/CopyText.vue";
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
 
-import * as bip39 from "bip39";
-var HDKey = require("hdkey");
+    import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
+    import Spinner from '@/components/misc/Spinner.vue';
+    import {bintools, cryptoHelpers, keyChain, avm} from "@/AVA";
+    import RememberKey from "@/components/misc/RememberKey.vue";
+    import {Buffer} from "buffer/";
 
-// import * as bip32 from 'bip32';
-// import { BIP32Interface } from 'bip32';
-import AvaHdWallet from "@/js/AvaHdWallet";
+    import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
+    import CopyText from "@/components/misc/CopyText.vue";
 
-import { KeyPair } from "avalanche";
-import { AddWalletInput } from "@/store/types";
+    import * as bip39 from 'bip39';
+    var HDKey = require('hdkey');
 
-@Component({
-    components: {
-        CopyText,
-        RememberKey,
-        TextDisplayCopy,
-        MnemonicDisplay,
-        Spinner
-    }
-})
-export default class CreateWallet extends Vue {
-    isLoad: boolean = false;
-    rememberKey: boolean = false;
-    newPrivateKey: string | null = null;
-    keyPhrase: string = "";
-    keyPair: KeyPair | null = null;
+    // import * as bip32 from 'bip32';
+    // import { BIP32Interface } from 'bip32';
+    import AvaHdWallet from "@/js/AvaHdWallet";
 
-    createKey(): void {
-        let mnemonic = bip39.generateMnemonic(256);
-        let entropy = bip39.mnemonicToEntropy(mnemonic);
-        let b = new Buffer(entropy, "hex");
+    import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    import {keyToKeypair} from "@/helpers/helper";
 
-        let addr = keyChain.importKey(b);
-        let keypair = keyChain.getKey(addr);
-        let privkstr = keypair.getPrivateKeyString();
+    @Component({
+        components: {
+            CopyText,
+            RememberKey,
+            TextDisplayCopy,
+            MnemonicDisplay,
+            Spinner
+        }
+    })
+    export default class CreateWallet extends Vue{
+        isLoad: boolean = false;
+        rememberKey:boolean = false;
+        newPrivateKey: string|null =null;
+        keyPhrase: string = "";
+        keyPair: KeyPair|null = null;
 
-        // Remove because it will get added in accessWallet dispatch
-        keyChain.removeKey(keypair);
 
-        this.keyPair = keypair;
-        this.keyPhrase = mnemonic;
-        this.newPrivateKey = privkstr;
-    }
+        createKey():void{
+            let mnemonic = bip39.generateMnemonic(256);
+            let entropy = bip39.mnemonicToEntropy(mnemonic);
+            let b = new Buffer(entropy, 'hex');
+
+            let addr = keyChain.importKey(b);
+            let keypair = keyChain.getKey(addr);
+            let privkstr = keypair.getPrivateKeyString();
+
+            // Remove because it will get added in accessWallet dispatch
+            keyChain.removeKey(keypair);
+
+            this.keyPair = keypair;
+            this.keyPhrase = mnemonic;
+            this.newPrivateKey = privkstr;
+        }
+
 
     async access(): Promise<void> {
         if (!this.keyPair) return;
@@ -129,13 +133,19 @@ export default class CreateWallet extends Vue {
         this.$store.state.rememberKey = this.rememberKey;
         let parent = this;
 
-        let inData: AddWalletInput = {
-            pk: this.keyPair.getPrivateKeyString(),
-            type: "hd"
-        };
-        setTimeout(() => {
-            parent.$store.dispatch("accessWallet", inData);
-        }, 500);
+            // let keychain = new AVMKeyChain(avm.getBlockchainID());
+                // keychain.addKey()
+
+            // let inData:AVMKeyPair = {
+            //     pk: this.keyPair.getPrivateKeyString(),
+            //     type: 'hd'
+            // }
+            // let chainID = avm.getBlockchainID();
+            // let key = keyToKeypair(this.keyPair.get)
+            setTimeout(()=>{
+                parent.$store.dispatch('accessWallet', this.keyPair);
+            }, 500);
+        }
     }
 }
 </script>

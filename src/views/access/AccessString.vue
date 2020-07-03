@@ -16,42 +16,52 @@
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop, Ref } from "vue-property-decorator";
 
-// @ts-ignore
-import { QrInput } from "@avalabs/vue_components";
-import RememberKey from "../../components/misc/RememberKey.vue";
-import { AddWalletInput } from "@/store/types";
 
-@Component({
-    components: {
-        QrInput,
-        RememberKey
-    }
-})
-export default class AccessString extends Vue {
-    isLoading: boolean = false;
-    privateKey: string = "";
-    rememberKey: boolean = false;
-    error: string = "";
+    import 'reflect-metadata';
+    import { Vue, Component, Prop, Ref } from 'vue-property-decorator';
 
-    async access() {
-        let parent = this;
-        this.isLoading = true;
-        this.$store.state.rememberKey = this.rememberKey;
+    // @ts-ignore
+    import {QrInput} from '@avalabs/vue_components';
+    import RememberKey from "../../components/misc/RememberKey.vue";
+    import {keyToKeypair} from "@/helpers/helper";
+    import {avm} from "@/AVA";
+    // import {AddWalletInput} from "@/store/types";
 
-        let inData: AddWalletInput = {
-            pk: this.privateKey,
-            type: "hd"
-        };
+    @Component({
+        components: {
+            QrInput,
+            RememberKey
+        }
+    })
+    export default class AccessString extends Vue{
+        isLoading:boolean = false;
+        privateKey:string = "";
+        rememberKey:boolean = false;
+        error:string = "";
 
-        try {
-            let res = await this.$store.dispatch("accessWallet", inData);
-            parent.isLoading = false;
-        } catch (e) {
-            this.error = "Invalid Private Key";
-            this.isLoading = false;
+
+        async access(){
+            let parent = this;
+            this.isLoading = true;
+            this.$store.state.rememberKey = this.rememberKey;
+
+            // let inData:AddWalletInput = {
+            //     pk: this.privateKey,
+            //     type: 'hd'
+            // };
+
+
+
+            try{
+                let keyPair = keyToKeypair(this.privateKey, avm.getBlockchainID());
+                let res = await this.$store.dispatch('accessWallet', keyPair);
+                parent.isLoading = false;
+            }catch (e) {
+                this.error = 'Invalid Private Key';
+                this.isLoading = false;
+            }
+
         }
     }
 }

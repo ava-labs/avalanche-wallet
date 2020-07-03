@@ -56,6 +56,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "hdkey": "^2.0.1",
+    "helmet": "^3.23.3",
     "instascan": "^1.0.0",
     "jspdf": "^1.5.3",
     "libsodium": "^0.7.6",
