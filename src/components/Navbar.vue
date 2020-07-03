@@ -1,7 +1,7 @@
 <template>
     <div id="nav">
         <router-link to="/" class="logo">
-            <img src="@/assets/wallet_logo.png" />
+            <img src="@/assets/wallet_logo.svg" />
             <span class="slogan">by Avalanche</span>
         </router-link>
         <v-spacer></v-spacer>
@@ -27,7 +27,7 @@
         <v-navigation-drawer v-model="isDrawer" fixed style="z-index: 999;" hide-overlay>
             <v-list dense nav>
                 <v-list-item>
-                    <img src="@/assets/wallet_logo.png" />
+                    <img src="@/assets/wallet_logo.svg" />
                 </v-list-item>
                 <template v-if="isAuth">
                     <v-list-item to="/wallet/">Home</v-list-item>

@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="img_container">
-            <img src="@/assets/diamond-primary.png" alt />
+            <img src="@/assets/diamond-primary.svg" alt />
         </div>
         <h1>How do you want to access your wallet?</h1>
         <router-link to="/create" class="link">Don't have a wallet?</router-link>

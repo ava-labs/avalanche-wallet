@@ -1,13 +1,13 @@
 <template>
     <div class="home">
         <div class="home_wrapper">
-            <img class="logo" src="@/assets/wallet_logo.png" />
+            <img class="logo" src="@/assets/wallet_logo.svg" />
             <h1>Our Asset Wallet is Bold and Secure.</h1>
             <div class="login_wrapper">
                 <div class="login_option">
                     <header>
                         <div class="img_container">
-                            <img src="@/assets/diamond-primary.png" alt />
+                            <img src="@/assets/diamond-primary.svg" alt />
                         </div>
                         <h2>Welcome Back!</h2>
                         <p>You can 'Access' your existing AVA wallet here.</p>

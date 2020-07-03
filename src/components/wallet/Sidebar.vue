@@ -1,7 +1,7 @@
 <template>
     <div class="wallet_sidebar">
         <div class="brand">
-            <img src="@/assets/wallet_logo.png" />
+            <img src="@/assets/wallet_logo.svg" />
         </div>
         <div class="links">
             <router-link to="/wallet">
