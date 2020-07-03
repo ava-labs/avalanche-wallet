@@ -9,12 +9,13 @@ import {
 } from "avalanche";
 import * as bip39 from "bip39";
 import {ava, avm, bintools} from "@/AVA";
-import {IAvaHdWallet, IIndexKeyCache, wallet_type} from "@/js/IAvaHdWallet";
+import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
-import {tr} from "@/locales/tr";
+
+
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -22,7 +23,7 @@ import {tr} from "@/locales/tr";
 
 const AVA_TOKEN_INDEX: string = '9000';
 const AVA_ACCOUNT_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'`; // Change and index left out
-const AVA_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
+// const AVA_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
 const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
@@ -213,6 +214,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let keychainExternal: AVMKeyChain = new AVMKeyChain('X');
         let keychainInternal: AVMKeyChain = new AVMKeyChain('X');
 
+
+        // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
             // Derive Key and add to KeyChain
             // Scan both external and internal addresses
@@ -229,7 +232,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let utxoSetInternal: UTXOSet = await avm.getUTXOs(internalAddrs);
 
 
-
+        // let indexNow = start;
+        // Scan UTXOs of these indexes and try to find a gao if INDEX_RANGE
         for(let i:number=0; i<externalAddrs.length-INDEX_RANGE; i++){
             let gapSize: number = 0;
 
@@ -252,7 +256,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
             }
 
             if(gapSize===INDEX_RANGE){
-                return i;
+                return start+i;
             }
         }
 

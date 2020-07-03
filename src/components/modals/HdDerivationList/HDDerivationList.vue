@@ -25,6 +25,7 @@
     import Big from 'big.js';
     import AvaAsset from "@/js/AvaAsset";
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
+    import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
 
     @Component({
         components: {
@@ -47,7 +48,7 @@
             return this.$store.state.Assets.assetsDict;
         }
 
-        get keyBalances(): string{
+        get keyBalances(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
             let utxoSet = wallet.utxoset;
             let assetsDict = this.assetsDict;
@@ -61,7 +62,7 @@
                     newSet.addArray(utxos);
                 let assetIds = newSet.getAssetIDs();
 
-                let balDict = {};
+                let balDict:DerivationListBalanceDict = {};
                 for(var i=0; i<assetIds.length; i++){
                     let assetId = assetIds[i];
                     let balance = newSet.getBalance([addr], assetId);
