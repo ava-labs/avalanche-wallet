@@ -91,14 +91,14 @@
             doc.setFontStyle('bold');
             doc.setTextColor('#000');
             doc.text("This address belongs to", posX, posY);
-            doc.setFillColor("#000");
+            doc.setFillColor("#4C2E56");
             doc.rect( posX+2.4, posY, 3, 0.02, 'F');
 
 
             // YELLOW QR
             posX = posX+5.6;
             posY = 0.2;
-            doc.setFillColor("#000");
+            doc.setFillColor("#4C2E56");
             doc.rect( posX, posY, 0.02, 2.5, 'F');
             posX += 0.2;
 
@@ -302,14 +302,14 @@
     //             doc.setFontStyle('bold');
     //             doc.setTextColor('#000');
     //             doc.text("This address belongs to", posX, posY);
-    //             doc.setFillColor("#000");
+    //             doc.setFillColor("#4C2E56");
     //             doc.rect( posX+2.4, posY, 3, 0.02, 'F');
     //
     //
     //             // YELLOW QR
     //             posX = posX+5.6;
     //             posY = 0.2;
-    //             doc.setFillColor("#000");
+    //             doc.setFillColor("#4C2E56");
     //             doc.rect( posX, posY, 0.02, 2.5, 'F');
     //             posX += 0.2
     //             QRCode.toDataURL(this.address, function (err, url) {

@@ -127,8 +127,8 @@
     .headers{
         border-bottom: 1px solid #E6E6E666;
         font-size: 12px;
-        padding: 14px 0px;
-        color: #909090;
+        padding: 53.76px 0 14px;
+        color: main.$primary-color-light;
         font-weight: bold;
     }
 
@@ -184,6 +184,7 @@
         }
 
         .headers{
+            padding: 14px 0;
             .send_col{
                 display: none;
             }

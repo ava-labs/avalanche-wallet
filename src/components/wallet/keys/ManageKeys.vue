@@ -11,7 +11,7 @@
                     <p class="explain">
                         Add additional private keys to use with your wallet.
                     </p>
-                    <v-tabs color="#2960CD" height="30" active-class="tab_active" :grow="true">
+                    <v-tabs color="#4C2E56" height="30" active-class="tab_active" :grow="true">
                         <v-tab >Private Key</v-tab>
                         <v-tab>Keystore File</v-tab>
                         <v-tab-item>
@@ -83,7 +83,7 @@
 
     .explain{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
 
     .buts{
@@ -119,8 +119,6 @@
             border: none;
         }
     }
-
-
 
     .v-tab{
         /*border: 1px solid #999;*/
@@ -171,12 +169,22 @@
     }
 </style>
 <style lang="scss">
+@use '../../../main';
     .cols{
         .v-tabs-bar{
             margin: 15px 0px;
         }
     }
 
+    .v-tab.v-tab {
+        font-weight: bold;
+    }
+
+    .v-tabs-slider-wrapper {
+        color: main.$secondary-color;
+        caret-color: main.$secondary-color;
+        height: 3px !important;
+    }
 
     /*.cols {*/
     /*    .v-tabs-bar{*/

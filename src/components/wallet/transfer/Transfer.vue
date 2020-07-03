@@ -22,7 +22,7 @@
 <!--                            </v-expansion-panel>-->
 <!--                        </v-expansion-panels>-->
 <!--                    </div>-->
-                    <div>
+                    <div class="to_address">
                         <label>{{$t('transfer.to')}}</label>
                         <qr-input v-model="addressIn" class="qrIn"></qr-input>
                     </div>
@@ -32,7 +32,7 @@
                         <ul class="err_list" v-if="errors.length>0">
                             <li v-for="err in errors" :key="err">{{err}}</li>
                         </ul>
-                        <v-btn depressed class="but_primary" color="#2960CD" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
+                        <v-btn depressed class="but_primary" color="#4C2E56" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
                     </div>
                 </div>
             </div>
@@ -192,7 +192,7 @@
 
     .explain{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
     h1{
         font-weight: normal;
@@ -200,7 +200,7 @@
     h4{
         display: block;
         text-align: left;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         /*margin-bottom: 8px;*/
     }
@@ -228,7 +228,7 @@
     }
 
     .addressIn >>> input::-webkit-input-placeholder{
-        color: #909090 !important;
+        color: main.$primary-color-light !important;
     }
 
     .addressIn .v-input__slot:before{
@@ -277,23 +277,28 @@
 
     .tx_list{
         padding-right: 45px;
-        border-right: 1px solid #F5F6FA;
+        border-right: 1px solid main.$background-color;
         grid-column: 1/3;
     }
 
     .fees p{
         text-align: left;
         font-size: 13px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
 
     .fees span{
         float: right;
     }
 
+    .to_address {
+        margin-top: main.$vertical-padding;
+        border-top: 1px solid main.$background-color;
+        padding-top: main.$vertical-padding;
+    }
 
     label{
-        color: #2c3e50;
+        color: main.$primary-color-light;
         font-size: 12px;
         font-weight: bold;
     }
@@ -303,7 +308,6 @@
     }
 
     .advanced{
-        /*border-bottom: 1px solid #f2f2f2;*/
         padding: 20px 0px !important;
         margin-bottom: 20px;
     }

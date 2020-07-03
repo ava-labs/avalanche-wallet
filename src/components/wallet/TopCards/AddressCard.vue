@@ -2,7 +2,6 @@
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
-
         <p class="addr_info">{{warningText}}</p>
         <div class="bottom">
             <div>
@@ -12,9 +11,6 @@
             <div class="bottom_rest">
                 <p class="addr_text">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
-<!--                    <div>-->
-<!--                        <toggle-button color="#2b60cd" :labels="{checked: 'HD', unchecked: 'Static'}" :value="switchVal" :sync="true" @change="onswitch" :width="60"></toggle-button>-->
-<!--                    </div>-->
                     <div class="buts">
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
                         <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
@@ -102,6 +98,8 @@
     }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
     .addr_card{
         display: flex;
         flex-direction: column;
@@ -112,6 +110,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        color: main.$primary-color;
 
         > *{
             font-size: 18px;
@@ -146,6 +145,23 @@
     }
 
 
+    .buts > *[tooltip]:hover:before{
+        border-radius: 4px;
+        left: 0;
+        transform: translateX(-50%);
+        content: attr(tooltip);
+        position: absolute;
+        background-color: main.$primary-color;
+        bottom: 100%;
+        color: #ddd;
+        width: max-content;
+        max-width: 100px;
+        font-size: 14px;
+        padding: 4px 8px;
+    }
+
+
+
     .addr_info{
         background-color: #F5F6FA;
         font-size: 13px;
@@ -157,9 +173,6 @@
     $qr_width: 110px;
 
     .bottom{
-        /*margin-top: 15px;*/
-        /*padding: 4px 8px;*/
-        /*padding-bottom: 0;*/
         display: grid;
         grid-template-columns: $qr_width 1fr;
         column-gap: 6px;
@@ -175,22 +188,17 @@
             display: flex;
             flex-direction: column;
         }
-
-
     }
 
     .sub{
         margin: 0px 10px !important;
-        /*width: 100%;*/
         text-align: center;
-        /*color: #999;*/
         font-size: 0.7rem;
-        background-color: #2b60cd;
+        background-color: main.$secondary-color;
         color: #fff;
         padding: 3px 6px;
         border-radius: 3px;
     }
-
 
     .addr_text{
         font-size: 16px;

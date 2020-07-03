@@ -4,14 +4,14 @@
         <file-input @change="onfile" class="formIn"></file-input>
         <label>Password</label>
         <v-text-field class="formIn" placeholder="Password" dense
-                      outlined color="#000" hide-details
+                      outlined color="#4C2E56" hide-details
                       type="password" v-model="pass"></v-text-field>
         <p v-if="err" class="err">{{err}}</p>
         <v-btn
                 class="addKeyBut but_primary"
                 depressed
                 @click="importKeyfile"
-                color="#2960CD"
+                color="#4C2E56"
                 block
                 :disabled="!canSubmit"
                 :loading="isLoading"
@@ -98,6 +98,8 @@
     }
 </style>
 <style scoped lang="scss">
+@use '../../../main';
+
     .addKeyBut{
         color: #fff;
         text-transform: none;
@@ -110,7 +112,7 @@
 
     label{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
 
     .err{

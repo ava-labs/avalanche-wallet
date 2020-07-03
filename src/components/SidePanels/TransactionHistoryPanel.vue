@@ -90,7 +90,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #EAEDF4;
+        border-bottom: 1px solid main.$background-color;
         padding: 8px 16px;
 
         h2{
@@ -98,7 +98,7 @@
         }
 
         a{
-            background-color: #2960CD;
+            background-color: main.$primary-color;
             color: #fff !important;
             padding: 4px 18px;
             font-size: 12px;
@@ -121,7 +121,7 @@
     }
 
     .warn{
-        background-color: #EAEDF4;
+        background-color: main.$background-color;
         text-align: center;
         font-size: 12px;
         font-weight: bold;

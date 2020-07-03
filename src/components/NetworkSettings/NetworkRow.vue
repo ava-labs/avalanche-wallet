@@ -83,7 +83,7 @@
 
     .stat_col{
         font-size: 14px;
-        color: #2960CD;
+        color: main.$primary-color;
         text-align: right;
     }
 
@@ -93,7 +93,7 @@
         display: grid;
         grid-template-columns: 40px 1fr 80px;
         column-gap: 15px;
-        border-bottom: 1px solid #EAEDF4;
+        border-bottom: 1px solid main.$background-color;
 
         > *{
             align-self: center;
@@ -105,7 +105,7 @@
     }
     .network_row[active]{
         .stat_col{
-            color: #5ECB08 !important;
+            color: main.$green !important;
         }
     }
     .name_col{
@@ -117,7 +117,7 @@
     }
 
     .editBut{
-        color: #000;
+        color: main.$primary-color;
         opacity: 0.4;
         font-size: 11px;
         /*position: absolute;*/
@@ -138,13 +138,13 @@
     }
 
     .url{
-        color: #909090;
+        color: main.$primary-color-light;
         font-size: 12px;
     }
 
     @keyframes connecting {
-        from {color: #2960CD;}
-        to {color: #5ECB08;}
+        from {color: main.$primary-color;}
+        to {color: main.$green;}
     }
 
 

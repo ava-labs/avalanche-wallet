@@ -1,7 +1,6 @@
 <template>
     <div class="copyBut" @click="copy">
-<!--        <button @click="copy"></button>-->
-        <img src="/img/copy_icon.png">
+        <fa icon="copy"></fa>
         <p class="text">
             <slot></slot>
         </p>
@@ -29,38 +28,27 @@
     }
 </script>
 <style scoped lang="scss">
-    img{
-        width: 20px;
-        object-fit: contain;
-        pointer-events: none;
-    }
-    .copyBut{
+    .copyBut {
         display: flex;
         width: max-content;
+        align-items: center;
         cursor: pointer;
-        /*align-self: center;*/
-        /*justify-content: center;*/
     }
     .copyBut input{
         width: 1px;
         position: absolute;
         opacity: 0;
     }
-
     .text{
         user-select: none;
         pointer-events: none;
-        margin-left: 6px !important;
+        margin-left: 12px !important;
     }
-
     input{
         pointer-events: none;
         user-select: none;
     }
-
-    button{
-        /*width: 18px;*/
-        /*height: 18px;*/
+    button{ 
         width: 100%;
         height: 100%;
         background-size: contain;
