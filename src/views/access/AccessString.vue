@@ -64,7 +64,7 @@
 
         }
     }
-}
+
 </script>
 <style scoped lang="scss">
 @use '../../main';

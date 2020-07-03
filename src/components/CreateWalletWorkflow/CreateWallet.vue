@@ -126,28 +126,19 @@
         }
 
 
-    async access(): Promise<void> {
-        if (!this.keyPair) return;
+        async access(): Promise<void> {
+            if (!this.keyPair) return;
 
-        this.isLoad = true;
-        this.$store.state.rememberKey = this.rememberKey;
-        let parent = this;
+            this.isLoad = true;
+            this.$store.state.rememberKey = this.rememberKey;
+            let parent = this;
 
-            // let keychain = new AVMKeyChain(avm.getBlockchainID());
-                // keychain.addKey()
-
-            // let inData:AVMKeyPair = {
-            //     pk: this.keyPair.getPrivateKeyString(),
-            //     type: 'hd'
-            // }
-            // let chainID = avm.getBlockchainID();
-            // let key = keyToKeypair(this.keyPair.get)
             setTimeout(()=>{
                 parent.$store.dispatch('accessWallet', this.keyPair);
             }, 500);
+
         }
     }
-}
 </script>
 <style scoped lang="scss">
 @use '../../main';
