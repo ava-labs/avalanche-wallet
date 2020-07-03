@@ -315,8 +315,6 @@ export default new Vuex.Store({
                 });
             });
 
-            console.log(sessionData);
-
             let saveData = JSON.stringify(sessionData);
             sessionStorage.setItem('pks', saveData);
         },
@@ -333,8 +331,6 @@ export default new Vuex.Store({
 
             try{
                 let sessionData:SessionPersistFile = JSON.parse(sessionKeys);
-
-                console.log(sessionData)
 
                 let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
                 // console.log()
