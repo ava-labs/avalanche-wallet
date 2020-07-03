@@ -67,6 +67,10 @@
         grid-row-gap: 30px;
         border-left: 1px solid #F5F6FA;
         padding-left: 45px;
+
+        > * {
+            overflow: auto;
+        }
     }
     p{
         margin: 0 !important;

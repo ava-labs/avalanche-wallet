@@ -93,6 +93,7 @@ input {
 }
 
 p {
+    text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
 }

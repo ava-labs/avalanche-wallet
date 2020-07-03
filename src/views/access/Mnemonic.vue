@@ -68,26 +68,23 @@ import {Buffer} from "buffer";
             return true;
         }
 
-        return true;
-    }
+        async access() {
+            let phrase = this.phrase;
 
-    async access() {
-        let phrase = this.phrase;
+            this.isLoading = true;
+            this.$store.state.rememberKey = this.isRemember;
 
-        this.isLoading = true;
-        this.$store.state.rememberKey = this.isRemember;
+            if (!this.errCheck()) {
+                this.isLoading = false;
+                return;
+            }
 
-        if (!this.errCheck()) {
-            this.isLoading = false;
-            return;
-        }
+            try {
+                let entropy = bip39.mnemonicToEntropy(phrase);
+                let b = new Buffer(entropy, "hex");
 
-        try {
-            let entropy = bip39.mnemonicToEntropy(phrase);
-            let b = new Buffer(entropy, "hex");
-
-            let addr = keyChain.importKey(b);
-            let keypair = keyChain.getKey(addr);
+                let addr = keyChain.importKey(b);
+                let keypair = keyChain.getKey(addr);
 
 
                 // let pkString = keypair.getPrivateKeyString();
@@ -105,7 +102,6 @@ import {Buffer} from "buffer";
 
         }
     }
-}
 </script>
 <style scoped lang="scss">
 @use '../../main';

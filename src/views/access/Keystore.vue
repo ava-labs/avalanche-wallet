@@ -55,9 +55,6 @@ export default {
         access() {
             if (!this.canSubmit || this.isLoading) return;
 
-      
-
-
             let parent = this;
             this.error = '';
             this.isLoading = true;
