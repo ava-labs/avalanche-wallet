@@ -36,11 +36,13 @@
         @Prop() wallet!: AvaHdWallet;
 
         derivedKeys: AVMKeyPair[] = [];
+        derivedKeysInternal: AVMKeyPair[] = [];
 
 
         @Watch('wallet.hdIndex', {immediate: true})
         onIndexChange(){
             this.derivedKeys = this.wallet.getAllDerivedKeys();
+            this.derivedKeysInternal = this.wallet.getAllDerivedKeys(true);
         }
 
 
@@ -49,17 +51,87 @@
         }
 
         get keyBalances(): DerivationListBalanceDict[]{
+            let externalBals = this.keyBalancesExternal;
+            let internalBals = this.keyBalancesInternal;
+
+            let sum:DerivationListBalanceDict[] = [];
+
+
+            for(var i=0;i<externalBals.length;i++){
+                let balEx = externalBals[i];
+                let balIn = internalBals[i];
+
+                let joined:DerivationListBalanceDict = {}
+
+                for(var id in balEx){
+                    let amt = balEx[id];
+                    joined[id] = amt;
+                }
+
+                for(id in balIn){
+                    let amt = balIn[id];
+                    if(joined[id]){
+                        joined[id].add(amt)
+                    }else{
+                        joined[id] = amt;
+                    }
+                }
+
+                sum.push(joined);
+            }
+
+            return sum;
+        }
+
+        get keyBalancesExternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
             let utxoSet = wallet.utxoset;
             let assetsDict = this.assetsDict;
 
-            let balances = this.derivedKeys.map(key => {
+            let balances: DerivationListBalanceDict[] = this.derivedKeys.map(key => {
                 let addr = key.getAddress();
                 let utxoIds =  utxoSet.getUTXOIDs([addr]);
                 let utxos = utxoSet.getAllUTXOs(utxoIds);
 
                 let newSet = new UTXOSet();
                     newSet.addArray(utxos);
+                let assetIds = newSet.getAssetIDs();
+
+                let balDict:DerivationListBalanceDict = {};
+                for(var i=0; i<assetIds.length; i++){
+                    let assetId = assetIds[i];
+                    let balance = newSet.getBalance([addr], assetId);
+                    let assetIdSerial = bintools.avaSerialize(assetId);
+
+                    let target:Big = balDict[assetIdSerial];
+                    let asset:AvaAsset = assetsDict[assetIdSerial];
+
+                    if(!asset) continue;
+
+                    if(target){
+                        target = target.add(balance.toString());
+                    }else{
+                        balDict[assetIdSerial] = Big(balance.toString()).div(Math.pow(10,asset.denomination));
+                    }
+                }
+                return balDict;
+            });
+
+            return balances;
+        }
+
+        get keyBalancesInternal(): DerivationListBalanceDict[]{
+            let wallet = this.wallet;
+            let utxoSet = wallet.utxoset;
+            let assetsDict = this.assetsDict;
+
+            let balances: DerivationListBalanceDict[] = this.derivedKeysInternal.map(key => {
+                let addr = key.getAddress();
+                let utxoIds =  utxoSet.getUTXOIDs([addr]);
+                let utxos = utxoSet.getAllUTXOs(utxoIds);
+
+                let newSet = new UTXOSet();
+                newSet.addArray(utxos);
                 let assetIds = newSet.getAssetIDs();
 
                 let balDict:DerivationListBalanceDict = {};

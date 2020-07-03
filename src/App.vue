@@ -36,7 +36,6 @@
         },
         async created() {
             let parent = this;
-            // this.$store.dispatch('Assets/getAllAssets');
             await this.$store.dispatch('Network/init');
 
 
@@ -88,9 +87,6 @@
                 padding-bottom: 0px;
             }
         }
-
-
-
     }
 
 

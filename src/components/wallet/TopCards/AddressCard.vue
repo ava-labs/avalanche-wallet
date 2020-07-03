@@ -70,33 +70,8 @@
 
         get warningText():string{
             return "This is your address to receive funds. Your address will change after every deposit.";
-
-            // if(this.walletType==='hd'){
-            //     return "This is your address to receive funds. Your address will change after every deposit.";
-            // }else{
-            //     return "This is your address to receive funds."
-            // }
         }
 
-        // get walletType(){
-        //     return this.$store.getters['walletType'];
-        // }
-
-        // get walletTypeText(){
-        //     if(this.walletType === 'hd'){
-        //         return 'HD'
-        //     }else{
-        //         return 'Static';
-        //     }
-        // }
-
-        // get switchVal():boolean{
-        //     return this.walletType==='hd';
-        // }
-
-        onswitch(){
-            this.$store.dispatch('toggleWalletMode');
-        }
         viewQRModal(){
             // @ts-ignore
             this.$refs.qr_modal.open();
@@ -170,21 +145,6 @@
     .copy_but{
     }
 
-    .buts > *[tooltip]:hover:before{
-        border-radius: 4px;
-        /*left: 0;*/
-        left: 0;
-        transform: translateX(-50%);
-        content: attr(tooltip);
-        position: absolute;
-        background-color: #303030;
-        bottom: 100%;
-        color: #ddd;
-        width: max-content;
-        max-width: 100px;
-        font-size: 14px;
-        padding: 4px 8px;
-    }
 
     .addr_info{
         background-color: #F5F6FA;

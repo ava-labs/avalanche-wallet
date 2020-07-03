@@ -29,7 +29,7 @@ class AvaAsset{
     toString(){
 
         let big: Big = Big(this.amount.toString(10)).div(this.pow);
-        return big.toFixed(this.denomination);
+        return big.toLocaleString(this.denomination);
     }
 
     getAmount():Big{
