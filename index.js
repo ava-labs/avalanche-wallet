@@ -4,9 +4,11 @@ const bodyParser = require('body-parser');
 // const morgan = require('morgan');
 const path = require('path');
 var history = require('connect-history-api-fallback');
+const helmet = require("helmet");
 
 
 const app = express();
+app.use(helmet());
 
 // app.use(morgan('tiny'));
 app.use(cors());
@@ -23,6 +25,8 @@ app.use (function (req, res, next) {
         res.redirect('https://' + req.headers.host + req.url);
     }
 });
+app.use(helmet.xssFilter());
+app.use(helmet.frameguard());
 app.use(history());
 
 // Serving Static Files
