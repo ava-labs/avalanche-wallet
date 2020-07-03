@@ -95,7 +95,7 @@
                 let addr = this.address;
                     addr = addr.substring(addr.length-5);
 
-                let filename = `AVA_${addr}`;
+                let filename = `AVAX_${addr}`;
 
                 var blob = new Blob(
                     [ text ],

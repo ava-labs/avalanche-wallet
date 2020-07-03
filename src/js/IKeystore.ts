@@ -11,7 +11,6 @@ export interface KeyFileKey {
     key: string,
     nonce: string,
     address: string
-    type: wallet_type
 }
 
 export interface KeyFileDecrypted {
@@ -22,5 +21,4 @@ export interface KeyFileDecrypted {
 export interface KeyFileKeyDecrypted {
     key: string
     address: string,
-    type: wallet_type
 }

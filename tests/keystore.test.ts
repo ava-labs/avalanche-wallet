@@ -52,32 +52,29 @@ describe("Export/Import Keystore", () => {
    let addr2 = keyChain.makeKey();
    let key2 = keyChain.getKey(addr2);
 
-   test('can encrypt/decrypt singleton',  async () => {
-
-      let w1 = new AvaWallet(key1, 'singleton');
-      let w2 = new AvaWallet(key2, 'singleton');
-
-      let keyfile = await makeKeyfile([w1,w2],pass);
-      let rawData = await readKeyFile(keyfile, pass);
-
-      expect(rawData.keys[0].type).toEqual('singleton');
-      expect(rawData.keys[0].key).toEqual(key1.getPrivateKeyString());
-
-      expect(rawData.keys[1].type).toEqual('singleton');
-      expect(rawData.keys[1].key).toEqual(key2.getPrivateKeyString());
-   });
+   // test('can encrypt/decrypt singleton',  async () => {
+   //
+   //    let w1 = new AvaWallet(key1, 'singleton');
+   //    let w2 = new AvaWallet(key2, 'singleton');
+   //
+   //    let keyfile = await makeKeyfile([w1,w2],pass);
+   //    let rawData = await readKeyFile(keyfile, pass);
+   //
+   //    expect(rawData.keys[0].type).toEqual('singleton');
+   //    expect(rawData.keys[0].key).toEqual(key1.getPrivateKeyString());
+   //
+   //    expect(rawData.keys[1].type).toEqual('singleton');
+   //    expect(rawData.keys[1].key).toEqual(key2.getPrivateKeyString());
+   // });
 
    test('can encrypt/decrypt hd', async () => {
-      let w1 = new AvaWallet(key1, 'hd');
-      let w2 = new AvaWallet(key2, 'hd');
+      let w1 = new AvaHdWallet(key1);
+      let w2 = new AvaHdWallet(key2);
 
       let keyfile = await makeKeyfile([w1,w2],pass);
       let rawData = await readKeyFile(keyfile, pass);
 
-      expect(rawData.keys[0].type).toEqual('hd');
       expect(rawData.keys[0].key).toEqual(key1.getPrivateKeyString());
-
-      expect(rawData.keys[1].type).toEqual('hd');
       expect(rawData.keys[1].key).toEqual(key2.getPrivateKeyString());
    });
 });
