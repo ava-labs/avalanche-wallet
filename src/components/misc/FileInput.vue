@@ -71,9 +71,11 @@ export default {
     border-radius: 2px;
     padding: 8px 18px;
     cursor: pointer;
-    color: main.$white;
-    background-color: main.$primary-color !important;
+    /* color: main.$primary-color; */
+    color: rgb(118, 118, 118);
+    background-color: main.$background-color !important;
     border-radius: 6px;
+    border-color: main.$primary-color;
     font-family: "DM Sans", sans-serif;
     font-weight: 700;
     text-transform: uppercase !important;

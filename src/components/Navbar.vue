@@ -118,8 +118,8 @@ button {
 }
 
 .action_but {
-    background-color: #e4edfb;
-    color: #1d82bb !important;
+    background-color: main.$background-color;
+    color: main.$primary-color !important;
     padding: 6px 18px;
     border-radius: 4px;
 }

@@ -190,7 +190,7 @@ export default class Home extends Vue {}
 }
 
 .options div p {
-    color: #333;
+    color: main.$primary-color;
 }
 .options div[active] {
     border-color: #42b983;
@@ -221,7 +221,7 @@ img {
 .private_in {
     display: flex;
     align-items: center;
-    color: #333;
+    color: main.$primary-color;
     background-color: #a5a5a5;
     margin-bottom: 8px;
     padding: 0px 12px;
@@ -236,10 +236,10 @@ img {
     margin: 0;
 }
 .pkIn >>> input::placeholder {
-    color: #333 !important;
+    color: main.$primary-color !important;
 }
 .pkIn >>> input {
-    color: #333 !important;
+    color: main.$primary-color !important;
     text-align: center;
 }
 .pkIn >>> .v-input__slot::before {
@@ -259,7 +259,7 @@ img {
 }
 
 p {
-    color: #333;
+    color: main.$primary-color;
     margin: 4px 0 !important;
 }
 

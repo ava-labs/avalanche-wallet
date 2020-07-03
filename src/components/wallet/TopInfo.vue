@@ -25,7 +25,7 @@
     }
     .top_card{
         flex-grow: 1;
-        color: #000;
+        color: main.$primary-color;
         flex-shrink: 0;
         display: flex;
         background-color: #FFF;
@@ -72,8 +72,7 @@
 
 
     .top_card h4{
-        /*font-size: 26px;*/
-        color: #000;
+        color: main.$primary-color;
         font-weight: bold;
         text-align: left;
     }
@@ -83,13 +82,11 @@
         flex-grow: 1;
         margin: 0;
         font-size: 14px;
-
         font-family: Inconsolata, monospace;
     }
 
     .balance{
         font-size: 24px !important;
-        /*font-weight: bold;*/
         font-family: Rubik !important;
     }
 
@@ -134,7 +131,6 @@
         .top_cards{
             grid-template-columns: none;
             grid-template-rows: min-content;
-            /*background-color: #42b983;*/
         }
         .balance_card{
             grid-column: unset;

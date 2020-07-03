@@ -100,7 +100,7 @@
 
     .toggle_but{
         display: flex;
-        color: #C4C4C4;
+        color: main.$primary-color-light;
         min-width: 140px;
         margin-right: 30px;
         img{
@@ -125,16 +125,15 @@
         z-index: 2;
         top: 60px;
         right: 15vw;;
-        border: 1px solid #999;
+        border: 1px solid main.$primary-color-light;
         border-radius: 4px;
         width: 340px;
         background-color: #fff;
-        /*transform: translateY(100%);*/
         box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
     }
 
     .header{
-        border-bottom: 1px solid #EAEDF4;
+        border-bottom: 1px solid main.$background-color;
         padding: 10px 15px;
         display: flex;
         h4{
@@ -142,7 +141,7 @@
         }
 
         button{
-            background-color: #2960CD;
+            background-color: main.$primary-color;
             color: #fff;
             font-size: 12px;
             padding: 3px 14px;
@@ -153,7 +152,7 @@
 
     .network_menu[connected]{
         .toggle_but{
-            color: #2960CD;
+            color: main.$primary-color;
         }
     }
 

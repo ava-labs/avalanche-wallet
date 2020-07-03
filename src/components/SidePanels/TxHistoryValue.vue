@@ -24,7 +24,7 @@
         }
         get color():string{
             if(this.amount > 0){
-                return "#5ECB08"
+                return "#6BC688"
             }else if(this.amount===0){
                 return "#999";
             }else{
@@ -71,7 +71,7 @@
         /*color: #ff2626;*/
 
         &[income]{
-            /*color: #5ECB08;*/
+            /*color: main.$green;*/
         }
 
         > *{
@@ -81,7 +81,7 @@
 
     .action{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
     .amount{
         text-align: right;

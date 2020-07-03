@@ -10,7 +10,7 @@
             <v-text-field type="password" class="formIn"
                           v-model="passConfirm" hide-details outlined dense height="40" placeholder="Confirm Password"
             ></v-text-field>
-            <v-btn depressed :disabled="!isValid" color="#2960CD" block
+            <v-btn depressed :disabled="!isValid" color="#4C2E56" block
                    type="submit" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
         </form>
 
@@ -75,17 +75,19 @@
     }
 </style>
 <style scoped lang="scss">
+@use '../../../main';
+
     .export_wallet{
         font-size: 12px;
     }
     .explain{
-        color: #909090;
+        color: main.$primary-color-light;
         margin-bottom: 20px !important;
     }
 
 
     label{
-        color: #909090;
+        color: main.$primary-color-light;
     }
 
     .formIn{

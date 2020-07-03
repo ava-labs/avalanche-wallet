@@ -6,7 +6,7 @@
                 class="addKeyBut"
                 depressed
                 @click="addKey"
-                color="#000"
+                color="#4C2E56"
                 :disabled="!canAdd"
         >{{$t('advanced.paper.submit')}}</v-btn>
     </div>

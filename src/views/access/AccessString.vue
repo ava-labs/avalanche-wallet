@@ -9,7 +9,7 @@
                 v-model="rememberKey"
                 explain="Remember keys for easy access"
             ></remember-key>
-            <v-btn class="ava_button but_primary" @click="access" color="#000" depressed>Access Wallet</v-btn>
+            <v-btn class="ava_button but_primary" @click="access" color="#4C2E56" depressed>Access Wallet</v-btn>
             <hr>
             <router-link to="/access" class="link">Cancel</router-link>
         </form>

@@ -221,7 +221,7 @@ a {
     }
 
     .phrase_raw {
-        color: #000;
+        color: main.$primary-color;
         background-color: main.$secondary-color-extra-light;
         padding: 14px 24px;
         text-align: justify;

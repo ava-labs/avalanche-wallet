@@ -159,6 +159,8 @@
     }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
     .addressItem{
         font-size: 12px;
         /*display: flex;*/
@@ -253,7 +255,7 @@
     .addressBalance{
         display: flex;
         white-space: nowrap;
-        color: #2960CD;
+        color: main.$primary-color;
         .bal_rows p{
             font-weight: bold;
             /*background-color: #ebedf5;*/
@@ -277,7 +279,7 @@
     }
 
     .balance_empty{
-        color: #2960CD;
+        color: main.$primary-color;
     }
     /*.addressItem[selected]{*/
     /*    .addressBalance{*/

@@ -7,7 +7,7 @@
                 label="Password"
                 outlined
                 dense
-                color="#000"
+                color="#4C2E56"
                 type="password"
                 v-model="pass"
                 v-if="file"
@@ -18,7 +18,7 @@
             <v-btn
                 class="but_primary"
                 @click="access"
-                color="#000"
+                color="#4C2E56"
                 :loading="isLoading"
                 v-if="file"
                 :disabled="!canSubmit"

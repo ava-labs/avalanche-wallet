@@ -320,8 +320,8 @@
 <style scoped lang="scss">
     @use '../../main';
 
-    $income_color: #5ECB08;
-    $outcome_color: #000;
+    $income_color: main.$green;
+    $outcome_color: main.$primary-color;
 
     .icons{
         justify-self: center;
@@ -337,7 +337,7 @@
         /*padding-right: 0;*/
         display: grid;
         grid-template-columns: 40px 1fr;
-        border-bottom: 1px solid #EAEDF4;
+        border-bottom: 1px solid main.$background-color;
 
         > div{
             align-self: center;
@@ -361,7 +361,7 @@
 
     .from{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
         word-break: keep-all;
         overflow: hidden;
         text-overflow: ellipsis;

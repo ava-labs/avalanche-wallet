@@ -28,6 +28,7 @@ $pink-light: #FF8080;
 $pink-extra-light: #ffe6e6;
 $gray: #F5F6FA;
 $white: #FFF;
+$green: #6BC688;
 
 $primary-color: $purple;
 $primary-color-light: $purple-light;
@@ -89,12 +90,12 @@ button, textarea, input {
 }
 
 a {
-  color: #000 !important;
+  color: #4C2E56 !important;
   text-decoration: none !important;
 }
 
 .but_primary {
-  background-color: #000;
+  background-color: #4C2E56;
   color: #fff !important;
   text-transform: none !important;
   /*font-size: 13px;*/
@@ -104,7 +105,7 @@ a {
 
 
 #app[night_mode=""] {
-  background-color: #000;
+  background-color: #4C2E56;
 
 
   a, p, h1, h2, h4 {
@@ -114,7 +115,7 @@ a {
 
   .but_primary {
     background-color: #fff !important;
-    color: #000 !important;
+    color: #4C2E56 !important;
   }
 }
 
@@ -123,7 +124,7 @@ a {
 //  &:before{
 //    font-size: 12px;
 //    content: attr(tooltip);
-//    background-color: #000;
+//    background-color: #4C2E56;
 //    color: #fff;
 //    position: absolute;
 //    left: 0px;

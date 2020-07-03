@@ -146,6 +146,8 @@
     }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
     .table_title{
         display: grid;
         grid-template-columns: 1fr 140px;
@@ -185,9 +187,12 @@
         align-self: flex-end;
         text-align: right;
         font-size: 12px;
-        color: #b2b2b2;
+        color: main.$primary-color-light;
+        margin-top: 6px;
+        margin-bottom: 10px;
+        
         &:hover{
-            color: #000;
+            opacity: 0.7;
         }
     }
 
@@ -196,12 +201,13 @@
 
 
     .add_asset{
+        margin-top: 16px;
         border-radius: 0;
-        color: #4D9EFD;
-        font-size: 12px;
+        color: main.$primary-color;
+        font-size: 14px;
 
         &:hover{
-            color: #000;
+            opacity: 0.7;
         }
     }
 

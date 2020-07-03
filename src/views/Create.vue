@@ -32,7 +32,7 @@ export default class Create extends Vue {}
 .generate {
     display: block;
     margin: 30px auto;
-    background-color: #000;
+    background-color: main.$primary-color;
     padding: 8px 18px;
     border-radius: 6px;
     color: #fff !important;

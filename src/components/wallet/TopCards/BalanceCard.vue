@@ -4,7 +4,6 @@
             <div class="header">
                 <div class="refresh">
                     <Spinner v-if="isUpdateBalance"></Spinner>
-<!--                    <img v-if="isUpdateBalance" src="/gif/loading_2.gif">-->
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
@@ -132,6 +131,7 @@
     .refresh{
         width: 20px;
         height: 20px;
+        color: main.$primary-color;
 
         img{
             object-fit: contain;
@@ -185,7 +185,7 @@
 
         label{
             font-size: 12px;
-            color: #909090;
+            color: main.$primary-color-light;
         }
     }
 
@@ -196,7 +196,7 @@
 
         p{
             font-size: 12px;
-            color: #909090;
+            color: main.$primary-color-light;
         }
     }
 
