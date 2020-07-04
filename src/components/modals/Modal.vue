@@ -42,6 +42,7 @@
         font-size: 22px;
         text-align: left;
         flex-grow: 1;
+        margin: 0;
     }
 
     .modalClose{
