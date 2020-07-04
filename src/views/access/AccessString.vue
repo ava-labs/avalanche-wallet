@@ -26,6 +26,7 @@
     import RememberKey from "../../components/misc/RememberKey.vue";
     import {keyToKeypair} from "@/helpers/helper";
     import {avm} from "@/AVA";
+    import {AVMKeyPair} from "avalanche";
     // import {AddWalletInput} from "@/store/types";
 
     @Component({
@@ -47,7 +48,9 @@
             this.$store.state.rememberKey = this.rememberKey;
 
             try{
-                let keyPair = keyToKeypair(this.privateKey, avm.getBlockchainID());
+                let chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
+                let keyPair:AVMKeyPair = keyToKeypair(this.privateKey, chainId);
+                console.log(keyPair)
                 let res = await this.$store.dispatch('accessWallet', keyPair);
                 parent.isLoading = false;
             }catch (e) {
