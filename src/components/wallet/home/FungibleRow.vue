@@ -148,6 +148,9 @@
             display: none;
         }
 
+        .balance_col{
+            font-size: 1rem !important;
+        }
 
         .mobile_only{
             display: initial;

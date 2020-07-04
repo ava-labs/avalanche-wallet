@@ -7,6 +7,11 @@ import {Buffer} from "buffer";
             </header>
             <label>Hit ‘SPACE’ after every successful word entry.</label>
             <textarea v-model="phrase"></textarea>
+            <remember-key
+                    class="remember"
+                    v-model="isRemember"
+                    explain="Remember key phrase for easy access"
+            ></remember-key>
             <div class="button_container">
                 <v-btn
                     class="ava_button but_primary access"
@@ -19,13 +24,9 @@ import {Buffer} from "buffer";
         </div>
         <div class="right">
             <label>Preview</label>
-            <mnemonic-display :phrase="phrase" class="phrase_disp"></mnemonic-display>
+            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
             <p class="err" v-if="err">{{err}}</p>
-            <remember-key
-                class="remember"
-                v-model="isRemember"
-                explain="Remember key phrase for easy access"
-            ></remember-key>
+
         </div>
     </div>
 </template>
@@ -127,6 +128,7 @@ h1 {
 }
 
 textarea {
+    margin: 20px 0;
     width: 100%;
     background-color: main.$white !important;
 }

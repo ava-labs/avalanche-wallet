@@ -2609,7 +2609,7 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-vue@^2.2.0:
+bootstrap-vue@^2.15.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.15.0.tgz#0dfc12c054496c0f10efed510da1def41697cf3c"
   integrity sha512-ncxWkDG0mKFVot314wWKJELi+ESO7k6ngV//qvJFs9iVzlFI8Hx3rBVbpcPW2vrJ+0vitH8N2SOwn4fdQ3frMQ==
@@ -2620,7 +2620,7 @@ bootstrap-vue@^2.2.0:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.1.0"
 
-"bootstrap@>=4.5.0 <5.0.0", bootstrap@^4.4.1:
+"bootstrap@>=4.5.0 <5.0.0", bootstrap@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.0.tgz#97d9dbcb5a8972f8722c9962483543b907d9b9ec"
   integrity sha512-Z93QoXvodoVslA+PWNdk23Hze4RBYIkpb5h8I2HY2Tu2h7A0LpAgLcyrhrSUyo2/Oxm2l1fRZPs1e5hnxnliXA==

@@ -1,32 +1,39 @@
 <template>
     <div class="home">
-        <div class="home_wrapper">
-            <img class="logo" src="@/assets/wallet_logo.svg" />
-<!--            <h1>Our Asset Wallet is Bold and Secure.</h1>-->
-            <h1>The AVAX Wallet</h1>
-            <div class="login_wrapper">
-                <div class="login_option">
-                    <header>
-                        <div class="img_container">
-                            <img src="@/assets/diamond-primary.svg" alt />
+        <b-container>
+            <b-row>
+                <b-col>
+                    <div class="home_wrapper">
+                        <img class="logo" src="@/assets/wallet_logo.svg" />
+                        <!--            <h1>Our Asset Wallet is Bold and Secure.</h1>-->
+                        <h1>The AVAX Wallet</h1>
+                        <div class="login_wrapper">
+                            <div class="login_option">
+                                <header>
+                                    <div class="img_container">
+                                        <img src="@/assets/diamond-primary.svg" alt />
+                                    </div>
+                                    <h2>Welcome Back!</h2>
+                                    <p>You can 'Access' your existing AVAX wallet here.</p>
+                                </header>
+                                <router-link to="/access" class="ava_button primary">Access</router-link>
+                            </div>
+                            <div class="login_option">
+                                <header>
+                                    <div class="img_container">
+                                        <img src="@/assets/diamond-secondary.png" alt />
+                                    </div>
+                                    <h2>Are you new to Avalanche?</h2>
+                                    <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
+                                </header>
+                                <router-link to="/create" class="ava_button secondary">Create New Wallet</router-link>
+                            </div>
                         </div>
-                        <h2>Welcome Back!</h2>
-                        <p>You can 'Access' your existing AVAX wallet here.</p>
-                    </header>
-                    <router-link to="/access" class="ava_button primary">Access</router-link>
-                </div>
-                <div class="login_option">
-                    <header>
-                        <div class="img_container">
-                            <img src="@/assets/diamond-secondary.png" alt />
-                        </div>
-                        <h2>Are you new to Avalanche?</h2>
-                        <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
-                    </header>
-                    <router-link to="/create" class="ava_button secondary">Create New Wallet</router-link>
-                </div>
-            </div>
-        </div>
+                    </div>
+                </b-col>
+            </b-row>
+        </b-container>
+
     </div>
 </template>
 

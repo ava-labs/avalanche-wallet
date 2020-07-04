@@ -1,31 +1,34 @@
 <template>
-    <div class="card">
-        <h1>Keystore File</h1>
-        <file-input class="file_in" @change="onfile"></file-input>
-        <form @submit.prevent="access">
-            <v-text-field
-                label="Password"
-                outlined
-                dense
-                color="#4C2E56"
-                type="password"
-                v-model="pass"
-                v-if="file"
-                hide-details
-            ></v-text-field>
-            <p class="err">{{error}}</p>
-            <remember-key v-model="rememberKey" v-if="file"></remember-key>
-            <v-btn
-                class="but_primary"
-                @click="access"
-                color="#4C2E56"
-                :loading="isLoading"
-                v-if="file"
-                :disabled="!canSubmit"
-                depressed
-            >Access Wallet</v-btn>
-        </form>
-        <router-link to="/access" class="link">Cancel</router-link>
+    <div class="access_card">
+        <div class="content">
+            <h1>Keystore File</h1>
+            <file-input class="file_in" @change="onfile"></file-input>
+            <form @submit.prevent="access">
+                <v-text-field
+                        class="pass"
+                        label="Password"
+                        outlined
+                        dense
+                        color="#4C2E56"
+                        type="password"
+                        v-model="pass"
+                        v-if="file"
+                        hide-details
+                ></v-text-field>
+                <p class="err">{{error}}</p>
+                <remember-key v-model="rememberKey" v-if="file"></remember-key>
+                <v-btn
+                        class="ava_button"
+                        @click="access"
+                        color="#4C2E56"
+                        :loading="isLoading"
+                        v-if="file"
+                        :disabled="!canSubmit"
+                        depressed
+                >Access Wallet</v-btn>
+            </form>
+            <router-link to="/access" class="link">Cancel</router-link>
+        </div>
     </div>
 </template>
 <script>
@@ -89,16 +92,29 @@ export default {
 <style scoped lang="scss">
 @use '../../main';
 
-.card {
-    max-width: 80vw;
+
+.ava_button{
+    width: 100%;
+    margin-bottom: 22px;
+}
+.access_card {
+    /*max-width: 80vw;*/
     background-color: main.$background-color;
     padding: main.$container-padding;
     width: 100%;
-    max-width: 1000px;
+    /*max-width: 240px;*/
+    /*max-width: 1000px;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     border-radius: 6px;
+}
+
+.content{
+    width: 100%;
+    max-width: 240px;
+    margin: 0px auto;
 }
 
 h1 {
@@ -110,7 +126,7 @@ h1 {
     margin: 30px auto 10px;
     font-size: 13px;
     background-color: transparent;
-    min-width: 200px
+    /*min-width: 200px*/
 }
 
 a {
@@ -119,18 +135,6 @@ a {
     margin: 10px 0 20px;
 }
 
-.but_primary {
-    display: block;
-    margin-top: main.$vertical-padding;
-    margin-bottom: 15px;
-    background-color: main.$primary-color !important;
-    border-radius: 6px;
-    font-family: "DM Sans", sans-serif;
-    font-weight: 700;
-    letter-spacing: .5px;
-    text-transform: uppercase !important;
-    min-width: 190px;
-}
 
 .err {
     font-size: 13px;

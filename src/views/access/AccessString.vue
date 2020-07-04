@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="access_card">
         <h1>Private Key</h1>
         <form @submit.prevent="access">
             <qr-input class="key_in" v-model="privateKey"></qr-input>
@@ -26,6 +26,7 @@
     import RememberKey from "../../components/misc/RememberKey.vue";
     import {keyToKeypair} from "@/helpers/helper";
     import {avm} from "@/AVA";
+    import {AVMKeyPair} from "avalanche";
     // import {AddWalletInput} from "@/store/types";
 
     @Component({
@@ -47,7 +48,9 @@
             this.$store.state.rememberKey = this.rememberKey;
 
             try{
-                let keyPair = keyToKeypair(this.privateKey, avm.getBlockchainID());
+                let chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
+                let keyPair:AVMKeyPair = keyToKeypair(this.privateKey, chainId);
+                console.log(keyPair)
                 let res = await this.$store.dispatch('accessWallet', keyPair);
                 parent.isLoading = false;
             }catch (e) {
@@ -62,11 +65,11 @@
 <style scoped lang="scss">
 @use '../../main';
 
-.card {
+.access_card {
     background-color: main.$background-color;
     padding: main.$container-padding;
-    width: 100%;
-    max-width: 1000px;
+    /*width: 100%;*/
+    /*max-width: 1000px;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -100,7 +103,7 @@ form {
     margin-bottom: 6px;
     width: 100%;
     font-size: 13px;
-    background-color: main.$white;
+    background-color: main.$white !important;
     border-radius: 4px;
 }
 

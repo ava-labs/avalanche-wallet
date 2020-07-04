@@ -41,6 +41,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     keyChain: AVMKeyChain;
     chainId: string;
     utxoset: UTXOSet;
+    mnemonic: string;
     private indexKeyCache:IIndexKeyCache;
     private indexChangeKeyCache:IIndexKeyCache;
 
@@ -59,7 +60,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let pkHex: string = pk.toString('hex');
 
         let mnemonic: string = bip39.entropyToMnemonic(pkHex);
-
+        this.mnemonic = mnemonic;
         // Generate Seed
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
         this.seed = seed.toString('hex');

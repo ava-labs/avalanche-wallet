@@ -41,7 +41,8 @@
             return stat;
         }
 
-        get walletBalances(): AvaAsset[]{
+
+        get walletBalancesSorted(): AvaAsset[]{
             let balance:AvaAsset[] = this.$store.getters['walletAssetsArray'];
 
             // Sort by balance, then name
@@ -71,6 +72,13 @@
                 }
                 return 0;
             });
+
+            return balance;
+        }
+
+        get walletBalances(): AvaAsset[]{
+
+            let balance = this.walletBalancesSorted;
 
 
             if(this.search){
