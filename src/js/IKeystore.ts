@@ -9,7 +9,7 @@ export interface KeyFile{
 
 export interface KeyFileKey {
     key: string,
-    nonce: string,
+    iv: string,
     address: string
 }
 

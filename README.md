@@ -88,7 +88,7 @@ interface IKeystoreFile{
 }
 ```
 
-### v1.1.0
+### v2.0.0
 
 ```typescript
 interface IKeystoreFile{
@@ -98,9 +98,8 @@ interface IKeystoreFile{
     keys: [
         {
             key
-            nonce
+            iv
             address
-            type: 'hd' | 'singleton'
         }  
     ]
 }

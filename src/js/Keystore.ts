@@ -1,12 +1,16 @@
 // Functions to manage import/export of keystore files
 import {KeyFile, KeyFileDecrypted, KeyFileKey, KeyFileKeyDecrypted} from "./IKeystore";
-import {bintools, cryptoHelpers} from "@/AVA";
+import {bintools} from "@/AVA";
 import {AvaWallet} from "@/js/AvaWallet";
 import {Buffer} from "buffer/";
 import { wallet_type } from './IAvaHdWallet';
 import AvaHdWallet from "@/js/AvaHdWallet";
 
-const KEYSTORE_VERSION: string = '1.1';
+import Crypto from "@/js/Crypto";
+
+const cryptoHelpers = new Crypto();
+
+const KEYSTORE_VERSION: string = '2.0';
 
 interface IHash {
     salt: Buffer;
@@ -15,7 +19,7 @@ interface IHash {
 
 interface PKCrypt {
     salt: Buffer;
-    nonce: Buffer;
+    iv: Buffer;
     ciphertext: Buffer;
 }
 
@@ -41,7 +45,7 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
         let key_data: KeyFileKey = keys[i];
 
         let key: Buffer = bintools.avaDeserialize(key_data.key);
-        let nonce: Buffer = bintools.avaDeserialize(key_data.nonce);
+        let nonce: Buffer = bintools.avaDeserialize(key_data.iv);
         let address: string = key_data.address;
         // let walletType: wallet_type = key_data.type || 'hd';
 
@@ -77,7 +81,7 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
 
         let key_data: KeyFileKey = {
             key: bintools.avaSerialize(pk_crypt.ciphertext),
-            nonce: bintools.avaSerialize(pk_crypt.nonce),
+            iv: bintools.avaSerialize(pk_crypt.iv),
             address: addr,
         };
         keys.push(key_data);

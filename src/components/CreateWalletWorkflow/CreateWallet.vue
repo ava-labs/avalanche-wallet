@@ -74,7 +74,7 @@
 
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    import {bintools, cryptoHelpers, keyChain, avm} from "@/AVA";
+    import {keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
 

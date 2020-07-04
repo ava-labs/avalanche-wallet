@@ -1,4 +1,4 @@
-import {Avalanche, AVM, AVMKeyChain, BinTools, CryptoHelpers} from "avalanche";
+import {Avalanche, AVM, AVMKeyChain, BinTools} from "avalanche";
 
 // Connect to TestNet by default
 // Doesn't really matter how we initialize, it will get changed by the network module later
@@ -8,7 +8,6 @@ let protocol: string = "https";
 let network_id: number = 2;
 let chain_id: string = "X";
 let bintools: BinTools = BinTools.getInstance();
-let cryptoHelpers: CryptoHelpers = new CryptoHelpers();
 let ava: Avalanche = new Avalanche(ip, port, protocol, network_id, chain_id);
 let avm: AVM = ava.AVM();
 let keyChain: AVMKeyChain = avm.keyChain();
@@ -22,4 +21,4 @@ function isValidAddress(addr:string){
     }
 }
 
-export { ava, avm, bintools, cryptoHelpers, isValidAddress, keyChain};
+export { ava, avm, bintools, isValidAddress, keyChain};

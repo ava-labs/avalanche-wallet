@@ -21,7 +21,7 @@ Vue.use(Vuex);
 
 import router from "@/router";
 
-import {ava, avm, bintools, cryptoHelpers, keyChain} from "@/AVA";
+import {ava, avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {AmountOutput, AVMKeyChain, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
