@@ -81,15 +81,12 @@
         justify-self: center;
         transition-duration: 1s;
 
-
-
         > * {
             align-self: center;
         }
 
         .balance_col{
             font-size: 24px;
-            font-family: Inconsolata;
             text-align: right;
             transition-duration: 0.2s;
         }
@@ -113,7 +110,6 @@
     }
 
     .icon{
-        /*background-color: #303030;*/
         position: relative;
         width: 100%;
         height: 100%;
@@ -123,9 +119,6 @@
         align-items: center;
         justify-content: center;
         transition-duration: 1s;
-        /*display: grid;*/
-        /*grid-template-rows: 1fr;*/
-        /*grid-template-columns: 1fr;*/
 
         p{
             color: #aaa;
@@ -134,8 +127,7 @@
 
     .icon_img{
         position: absolute;
-        /*top: 50%;*/
-        /*left: 50%;*/
+        
         img{
             width: 18px;
             object-fit: contain;
@@ -156,6 +148,9 @@
             display: none;
         }
 
+        .balance_col{
+            font-size: 1rem !important;
+        }
 
         .mobile_only{
             display: initial;

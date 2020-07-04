@@ -4,12 +4,19 @@ import Home from '../views/Home.vue'
 
 import Ava from '../views/wallet/Ava.vue';
 
-import Transfer from '@/components/wallet/Transfer.vue';
+import Transfer from '@/components/wallet/transfer/Transfer.vue';
 // import Assets from '../views/wallet/Assets.vue';
 import History from '../views/wallet/History.vue';
 // import Transfer from '../views/wallet/Transfer.vue';
 import Advanced from '@/components/wallet/advanced/Advanced.vue';
 import ManageKeys from '@/components/wallet/keys/ManageKeys.vue';
+import Menu from '../views/access/Menu.vue';
+import AccessString from '../views/access/AccessString.vue';
+import Keystore from '../views/access/Keystore.vue';
+import Mnemonic from "@/views/access/Mnemonic.vue";
+import Access from '../views/access/Access.vue';
+import Create from "@/views/Create.vue";
+import Wallet from "@/views/Wallet.vue";
 
 Vue.use(VueRouter);
 
@@ -48,24 +55,28 @@ const routes = [
             {
                 path: '/',
                 name: 'access',
-                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/Menu.vue'),
+                component: Menu,
             },
             {
                 path: 'private_key',
-                component: () => import(/* webpackChunkName: "access_pk" */ '../views/access/AccessString.vue'),
+                component: AccessString,
             },
             {
                 path: 'keystore',
-                component: () => import(/* webpackChunkName: "access_file" */ '../views/access/Keystore.vue'),
+                component: Keystore,
+            },
+            {
+                path: 'mnemonic',
+                component: Mnemonic,
             }
         ],
-        component: () => import(/* webpackChunkName: "about" */ '../views/access/Access.vue'),
+        component: Access,
         beforeEnter: ifNotAuthenticated
     },
     {
         path: '/create',
         name: 'create',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Create.vue'),
+        component:  Create,
         beforeEnter: ifNotAuthenticated
     },
     {
@@ -89,7 +100,7 @@ const routes = [
                 component: Advanced
             }
         ],
-        component: () => import(/* webpackChunkName: "login" */ '../views/Wallet.vue'),
+        component: Wallet,
         beforeEnter: ifAuthenticated
     },
 ]

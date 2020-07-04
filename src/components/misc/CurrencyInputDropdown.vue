@@ -5,13 +5,14 @@
                 <button class="max_but" @click="maxOut">MAX</button>
                 <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
             </div>
-            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>
+<!--            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>-->
+            <BalanceDropdown :disabled_assets="disabled_assets" v-model="asset_now"></BalanceDropdown>
         </div>
     </div>
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import {Vue, Component, Prop, Emit, Watch} from 'vue-property-decorator';
 
     import * as BN from 'bn.js';
     import Big from 'big.js';
@@ -21,7 +22,10 @@
     // @ts-ignore
     import { BigNumInput } from '@avalabs/vue_components';
     import AvaAsset from "@/js/AvaAsset";
+    import {ICurrencyInputDropdownValue} from "@/components/wallet/transfer/types";
+    import {IWalletAssetsDict, IWalletBalanceDict} from "@/store/types";
 
+    import BalanceDropdown from "@/components/misc/BalancePopup/BalanceDropdown.vue";
     interface IDropdownValue {
         label: string,
         key: string,
@@ -32,12 +36,13 @@
     @Component({
         components: {
             Dropdown,
-            BigNumInput
+            BigNumInput,
+            BalanceDropdown
         }
     })
     export default class CurrencyInputDropdown extends Vue{
         amount: Big = new Big(0);
-        asset_now: AvaAsset|null = null;
+        asset_now: AvaAsset = this.walletAssetsArray[0];
 
         @Prop({default: () => []}) disabled_assets!: AvaAsset[];
         @Prop({default: ''}) initial!: string;
@@ -45,15 +50,18 @@
         mounted(){
             if(this.isEmpty) return;
             if(this.initial){
-                for(var i=0;i<this.dropdown_values.length;i++){
-                    let val = this.dropdown_values[i];
-                    if(val.key === this.initial){
-                        this.drop_change(val.data);
-                    }
-                }
+                let initialAsset = this.walletAssetsDict[this.initial];
+                this.drop_change(initialAsset);
             }else{
-                this.drop_change(this.dropdown_values[0].data);
+                this.drop_change(this.walletAssetsArray[0]);
             }
+        }
+
+
+        @Watch('asset_now')
+        drop_change(val: AvaAsset){
+            this.asset_now = val;
+            this.amount_in(Big(0));
         }
 
 
@@ -68,25 +76,23 @@
         }
 
 
-        drop_change(val: AvaAsset){
-            this.asset_now = val;
-            this.amount_in(Big(0));
-        }
+
 
 
         // onchange event for the Component
-        onchange(){
-            this.$emit('change',{
+        @Emit('change')
+        onchange(): ICurrencyInputDropdownValue{
+            return {
                 asset: this.asset_now,
                 amount: this.amount
-            });
+            }
         }
 
 
 
 
         get isEmpty():boolean{
-            if(this.dropdown_values.length===0){
+            if(this.walletAssetsArray.length===0){
                 return true;
             }else{
                 return false;
@@ -116,186 +122,53 @@
         }
 
 
-        get dropdown_values(){
-            let res: IDropdownValue[] = [];
+        // get disabledAssets(){
+        //     let res = this.walletAssetsArray.filter(asset => {
+        //         return this.dis
+        //     })
+        // }
+        // get dropdown_values(){
+        //     let res: IDropdownValue[] = [];
+        //
+        //     this.walletAssetsArray.forEach(asset => {
+        //         let disabled= false;
+        //         if(this.disabled_assets.includes(asset)){
+        //             disabled = true;
+        //         }
+        //         res.push({
+        //             label: `${asset.name} (${asset.symbol})`,
+        //             key: asset.id,
+        //             data: asset,
+        //             disabled: disabled
+        //         });
+        //     });
+        //     return res;
+        // }
 
-            this.dropdown_assets.forEach(asset => {
-                let disabled= false;
-                if(this.disabled_assets.includes(asset)){
-                    disabled = true;
-                }
-                res.push({
-                    label: `${asset.name} (${asset.symbol})`,
-                    key: asset.id,
-                    data: asset,
-                    disabled: disabled
-                });
-            });
-            return res;
+        get walletAssetsArray():AvaAsset[]{
+            return this.$store.getters.walletAssetsArray;
         }
 
-        get dropdown_assets():AvaAsset[]{
-            // if(this.assets) return this.assets;
-            return this.global_assets;
-        }
-
-        get global_assets():AvaAsset[]{
-            return this.$store.state.Assets.assets;
+        get walletAssetsDict():IWalletAssetsDict{
+            return this.$store.getters['walletAssetsDict'];
         }
 
         get max_amount(): null | BN{
             if(!this.asset_now) return null;
-            if(this.asset_now.amount.isZero()) return null;
-            return this.asset_now.amount;
-        }
-    }
 
-    // export default {
-    //     components: {
-    //         Dropdown,
-    //         BigNumInput
-    //     },
-    //     data(){
-    //         return {
-    //             amount: null,
-    //             asset_now: null,
-    //         }
-    //     },
-    //     props: {
-    //         disabled_assets: {
-    //             type: Array,
-    //             default: function(){
-    //                 return [];
-    //             },
-    //         },
-    //         initial: String,
-    //     },
-    //     computed: {
-    //         isEmpty(){
-    //             if(this.dropdown_values.length===0){
-    //                 return true;
-    //             }else{
-    //                 return false;
-    //             }
-    //         },
-    //         display(){
-    //             return '';
-    //         },
-    //         placeholder(){
-    //             if(this.isEmpty || !this.asset_now) return '0.00';
-    //             let deno = this.asset_now.denomination;
-    //             let res = '0';
-    //             if(deno > 0){
-    //                 res += '.';
-    //                 for(var i=0;i<deno;i++){
-    //                     res += '0';
-    //                 }
-    //             }
-    //             return res;
-    //         },
-    //         percFull(){
-    //             if(!this.amount || !this.max_amount) return 0;
-    //             let max = this.max_amount;
-    //
-    //             // console.log(max.toString())
-    //             return (this.amount.div(max))*100;
-    //         },
-    //
-    //         denomination(){
-    //             if(!this.asset_now) return 0;
-    //             return this.asset_now.denomination;
-    //         },
-    //
-    //         dropdown_values(){
-    //             let res = [];
-    //
-    //
-    //             this.dropdown_assets.forEach(asset => {
-    //                 let disabled= false;
-    //                 if(this.disabled_assets.includes(asset)){
-    //                     disabled = true;
-    //                 }
-    //                 res.push({
-    //                     label: `${asset.name} (${asset.symbol})`,
-    //                     key: asset.id,
-    //                     data: asset,
-    //                     disabled: disabled
-    //                 });
-    //             });
-    //             // for(var id in this.dropdown_assets){
-    //             //     let asset = this.dropdown_assets[id];
-    //             //     let disabled= false;
-    //             //     if(this.disabled_assets.includes(asset)){
-    //             //         disabled = true;
-    //             //     }
-    //             //     res.push({
-    //             //         label: asset.name,
-    //             //         data: asset,
-    //             //         disabled: disabled
-    //             //     });
-    //             // }
-    //
-    //             return res;
-    //         },
-    //         dropdown_assets(){
-    //             // if(this.assets) return this.assets;
-    //             return this.global_assets;
-    //         },
-    //         global_assets(){
-    //             return this.$store.state.Assets.assets;
-    //         },
-    //         max_amount(){
-    //
-    //             if(!this.asset_now) return null;
-    //             if(this.asset_now.amount.isZero()) return null;
-    //             // console.log(typeof this.asset_now.amount.clone());
-    //             return this.asset_now.amount;
-    //         }
-    //     },
-    //     methods: {
-    //         maxOut(){
-    //             this.$refs.bigIn.maxout();
-    //             // this.amount = this.max_amount;
-    //
-    //             // this.onchange();
-    //         },
-    //         amount_in(val){
-    //             this.amount = val;
-    //             this.onchange();
-    //         },
-    //
-    //         drop_change(val){
-    //             this.asset_now = val;
-    //             this.amount_in(Big(0));
-    //         },
-    //
-    //         // onchange event for the Component
-    //         onchange(){
-    //             this.$emit('change',{
-    //                 asset: this.asset_now,
-    //                 amount: this.amount
-    //             });
-    //         }
-    //     },
-    //     created(){
-    //         this.amount = new Big(0,10);
-    //     },
-    //     mounted(){
-    //         if(this.isEmpty) return;
-    //         if(this.initial){
-    //             for(var i=0;i<this.dropdown_values.length;i++){
-    //                 let val = this.dropdown_values[i];
-    //                 if(val.key === this.initial){
-    //                     this.drop_change(val.data);
-    //                 }
-    //             }
-    //         }else{
-    //             this.drop_change(this.dropdown_values[0].data);
-    //         }
-    //     },
-    // }
+            let assetId = this.asset_now.id;
+            let balance = this.walletAssetsDict[assetId];
+
+            if(balance.amount.isZero()) return null;
+            return balance.amount;
+        }
+
+
+    }
 </script>
 <style scoped lang="scss">
+    @use '../../main';
+
     $barH: 1px;
 
     .bigIn{
@@ -351,5 +224,12 @@
         /*flex-basis: 140px;*/
         width: 100%;
         /*border-left: 1px solid #d2d2d2;*/
+    }
+
+
+    @include main.mobile-device{
+        .curr_in_drop{
+            grid-template-columns: 1fr 70px;
+        }
     }
 </style>

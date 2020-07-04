@@ -6,7 +6,7 @@
                 class="addKeyBut"
                 depressed
                 @click="addKey"
-                color="#000"
+                color="#4C2E56"
                 :disabled="!canAdd"
         >{{$t('advanced.paper.submit')}}</v-btn>
     </div>
@@ -38,7 +38,7 @@
                 let parent = this;
                 console.log("adding key: ",this.pk);
 
-                this.$store.dispatch('addKey', this.pk).then(() => {
+                this.$store.dispatch('addWallet', this.pk).then(() => {
                     parent.pk = "";
                 });
             }

@@ -1,9 +1,14 @@
-import {UTXO, UTXOSet} from "slopes";
+import {UTXO, UTXOSet} from "avalanche";
 import Big from 'big.js';
 import BN from 'bn.js';
 import {Module} from "vuex";
 import {AssetsState} from "@/store/modules/assets/types";
 import AvaAsset from "@/js/AvaAsset";
+import AvaHdWallet from "@/js/AvaHdWallet";
+import {ITransaction} from "@/components/wallet/transfer/types";
+// import {wallet_type} from "@/js/IAvaHdWallet";
+// import AvaSingletonWallet from "@/js/AvaSingletonWallet";
+// import {AvaWallet} from "@/js/AvaWallet";
 
 export interface RootState {
     // asset_meta: AssetMetaDict,
@@ -14,6 +19,10 @@ export interface RootState {
     selectedAddress: string,
     modals: ModalDict,
     rememberKey: boolean,
+    activeWallet: null|AvaHdWallet
+    wallets: AvaHdWallet[]
+    address: String|null
+    isLoadingPersistKeys: boolean,
 }
 
 interface Modal {
@@ -24,6 +33,21 @@ interface Modal {
 // export interface UTXODict {
 //     [key: string]: SecpUTXO
 // }
+
+
+export interface IWalletBalanceDict {
+    [assetId: string]: BN
+}
+
+export interface IWalletBalanceItem{
+    id: string,
+    amount: BN
+}
+
+export interface IWalletAssetsDict {
+    [assetId: string]: AvaAsset
+}
+
 
 interface ModalDict {
     [key: string]: Modal
@@ -67,22 +91,11 @@ export interface AssetType {
 
 
 
-export interface KeyFile{
-    salt: string,
-    pass_hash: string,
-    keys: KeyFileKey[]
-}
 
-export interface KeyFileKey {
-    key: string,
-    nonce: string,
-    address: string
-}
 
 export interface IssueBatchTxInput {
-    changeAddresses: string[],
     toAddress: string,
-    orders: BatchTxOrder[]
+    orders: ITransaction[]
 }
 
 export interface BatchTxOrder {
@@ -100,6 +113,17 @@ export interface IssueTxInput{
 }
 
 
+// export interface AddWalletInput {
+//     pk: string,
+//     type: wallet_type
+// }
+
+
+export type SessionPersistFile = SessionPersistKey[];
+
+export interface SessionPersistKey {
+    key: string,
+}
 // export interface AddressUTXOs{
 //     [key:string]: SecpUTXO[]
 // }

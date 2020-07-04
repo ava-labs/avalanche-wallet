@@ -1,5 +1,6 @@
-import {UTXO, UTXOSet} from "slopes";
+import {UTXO, UTXOSet} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
+import BN from "bn.js";
 
 export interface AssetsState {
     isUpdateBalance: boolean
@@ -8,6 +9,7 @@ export interface AssetsState {
     descriptions: AssetDescriptions
     assets: AvaAsset[]
     assetsDict: AssetsDict
+    balanceDict: IBalanceDict
     AVA_ASSET_ID: string | null,
 }
 
@@ -28,6 +30,10 @@ export interface AssetsDict {
 
 export interface AddressUtxoDict {
     [key:string]: [UTXO]
+}
+
+export interface IBalanceDict {
+    [assetId:string]: BN
 }
 
 

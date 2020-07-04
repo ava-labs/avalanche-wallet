@@ -1,7 +1,7 @@
 <template>
     <div class="tx_history_panel">
         <div class="header">
-            <h2>Transactions</h2>
+            <h2>Transactions <Spinner v-if="isUpdating" class="spinner"></Spinner></h2>
             <a :href="explorerUrl" target="_blank">See All</a>
         </div>
         <div class="empty" v-if="!isExplorer">
@@ -11,9 +11,9 @@
         <div class="empty" v-else-if="isEmpty && !isUpdating">
             <p>No transactions found for this address on the explorer.</p>
         </div>
-        <div v-else-if="isUpdating">
-            <p class="empty">Loading transaction history..</p>
-        </div>
+<!--        <div v-else-if="isUpdating">-->
+<!--            <p class="empty">Loading transaction history..</p>-->
+<!--        </div>-->
         <div class="list" v-else>
             <tx-history-row v-for="tx in transactions" :key="tx.id" :transaction="tx">
             </tx-history-row>
@@ -25,13 +25,16 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
+    import Spinner from '@/components/misc/Spinner.vue';
     import TxHistoryRow from "@/components/SidePanels/TxHistoryRow.vue";
     import {ITransactionData} from "@/store/modules/history/types";
     import {AvaNetwork} from "@/js/AvaNetwork";
+    import {ITransaction} from "@/components/wallet/transfer/types";
 
     @Component({
         components: {
-            TxHistoryRow
+            TxHistoryRow,
+            Spinner
         }
     })
     export default class TransactionHistoryPanel extends Vue{
@@ -55,12 +58,22 @@
             return this.$store.state.History.isUpdating;
         }
         get transactions(): ITransactionData[]{
-            let res =  this.$store.state.History.transactions;
-            return res;
+            let res:ITransactionData[] =  this.$store.state.History.transactions;
+
+            let seenId:string[] = [];
+            let r: ITransactionData[] = res.filter(tx => {
+                if(seenId.includes(tx.id)){
+                    return false;
+                }
+                seenId.push(tx.id);
+                return true;
+            });
+            // A simple filter to ignore duplicate transactions (can happen if you send to self)
+            return r;
         }
         get explorerUrl(): string{
             let addr = this.$store.state.selectedAddress.split('-')[1];
-            return `https://explorer.ava.network/address/${addr}`;
+            return `https://explorer.avax.network/address/${addr}`;
         }
     }
 </script>
@@ -77,7 +90,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 1px solid #EAEDF4;
+        border-bottom: 1px solid main.$background-color;
         padding: 8px 16px;
 
         h2{
@@ -85,11 +98,16 @@
         }
 
         a{
-            background-color: #2960CD;
+            background-color: main.$primary-color;
             color: #fff !important;
             padding: 4px 18px;
             font-size: 12px;
         }
+    }
+
+    .spinner{
+        align-self: center;
+        margin-left: 10px;
     }
     .list{
         overflow: scroll;
@@ -103,7 +121,7 @@
     }
 
     .warn{
-        background-color: #EAEDF4;
+        background-color: main.$background-color;
         text-align: center;
         font-size: 12px;
         font-weight: bold;

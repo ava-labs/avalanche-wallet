@@ -5,10 +5,6 @@
     </div>
 </template>
 <script>
-    import CopyText from "../misc/CopyText";
-    import QRModal from "../modals/QRModal";
-    import PaperWallet from "../modals/PaperWallet";
-
     import BalanceCard from "./TopCards/BalanceCard";
     import AddressCard from "./TopCards/AddressCard";
 
@@ -16,43 +12,7 @@
         components: {
             BalanceCard,
             AddressCard,
-            CopyText,
-            PaperWallet,
-            QRModal,
-            // KeyStore,
-            // AddressesModal
         },
-        methods: {
-            viewQRModal(){
-                this.$refs.qr_modal.open();
-            },
-            viewPrintModal(){
-                this.$refs.print_modal.open();
-            },
-            viewKeystoreModal(){
-                this.$refs.keystore_modal.open();
-            },
-            viewAddressesModal(){
-                this.$refs.addresses_modal.open();
-            },
-            updateBalance(){
-                this.$store.dispatch('Assets/updateUTXOs');
-            }
-        },
-        computed: {
-            ava_asset(){
-                return this.$store.getters['Assets/AssetAVA'];
-            },
-            address(){
-                return this.$store.state.selectedAddress;
-            },
-            network(){
-                return this.$store.state.Network.selectedNetwork.ip;
-            },
-            isUpdateBalance(){
-                return this.$store.state.Assets.isUpdateBalance;
-            },
-        }
     }
 </script>
 <style scoped lang="scss">
@@ -65,13 +25,11 @@
     }
     .top_card{
         flex-grow: 1;
-        color: #000;
+        color: main.$primary-color;
         flex-shrink: 0;
         display: flex;
         background-color: #FFF;
         padding: 22px 20px;
-        /*margin: 12px;*/
-        /*padding: 10px 8px;*/
         overflow: hidden;
         border-radius: 5px;
         animation-name: fade;
@@ -114,8 +72,7 @@
 
 
     .top_card h4{
-        /*font-size: 26px;*/
-        color: #000;
+        color: main.$primary-color;
         font-weight: bold;
         text-align: left;
     }
@@ -125,13 +82,11 @@
         flex-grow: 1;
         margin: 0;
         font-size: 14px;
-
         font-family: Inconsolata, monospace;
     }
 
     .balance{
         font-size: 24px !important;
-        /*font-weight: bold;*/
         font-family: Rubik !important;
     }
 
@@ -176,7 +131,6 @@
         .top_cards{
             grid-template-columns: none;
             grid-template-rows: min-content;
-            /*background-color: #42b983;*/
         }
         .balance_card{
             grid-column: unset;
@@ -187,13 +141,4 @@
         }
     }
 
-    /* The animation code */
-    /*@keyframes fade {*/
-    /*    from {*/
-    /*        opacity: 0.0;*/
-    /*    }*/
-    /*    to {*/
-    /*        opacity: 1;*/
-    /*    }*/
-    /*}*/
 </style>

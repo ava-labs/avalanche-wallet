@@ -1,6 +1,6 @@
 <template>
     <div class="loading_app">
-            Loading AVA Wallet...
+            Loading AVAX Wallet...
     </div>
 </template>
 <style scoped lang="scss">

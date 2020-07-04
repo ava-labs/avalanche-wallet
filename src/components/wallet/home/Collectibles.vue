@@ -50,6 +50,7 @@
     }
 </script>
 <style lang="scss" scoped>
+@use '../../../main';
 
     $flip_dur: 0.6s;
 
@@ -65,7 +66,7 @@
         p {
             font-weight: lighter;
             font-size: 28px;
-            color: #999;
+            color: main.$primary-color-light;
         }
     }
 
@@ -77,8 +78,6 @@
     }
     .item{
         height: 220px;
-        /*background-color: #303030;*/
-        /*border-radius: 4px;*/
         position: relative;
 
         img{
@@ -118,7 +117,7 @@
 
         button{
             margin-bottom: 10px;
-            background-color: #000;
+            background-color: main.$primary-color;
             color: #fff;
             width: 80px;
             border-radius: 12px;

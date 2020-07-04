@@ -1,7 +1,9 @@
 <template>
     <div class="utxo" :income="isIncome">
         <p class="action">{{actionText}}</p>
-        <p class="amount">{{amountText}} {{symbolText}}</p>
+        <p class="amount" :style="{
+            color: color
+        }">{{amountText}} {{symbolText}}</p>
     </div>
 </template>
 <script lang="ts">
@@ -15,10 +17,21 @@
     export default class TxHistoryValue extends Vue{
         @Prop() amount!: number|string;
         @Prop() assetId!: string;
+        // @Prop() isIncome!: string;
 
         get asset(): AvaAsset | undefined{
             return this.$store.state.Assets.assetsDict[this.assetId];
         }
+        get color():string{
+            if(this.amount > 0){
+                return "#6BC688"
+            }else if(this.amount===0){
+                return "#999";
+            }else{
+                return "#ff2626"
+            }
+        }
+
         get isIncome(): boolean{
             if(this.amount > 0){
                 return true;
@@ -37,8 +50,9 @@
             if(!asset) return this.amount.toString();
 
             let val = Big(this.amount).div(Math.pow(10,asset.denomination));
-            return val.toFixed(asset.denomination);
+            return val.toLocaleString(asset.denomination);
         }
+
         get symbolText(): string{
             let asset = this.asset;
 
@@ -54,9 +68,10 @@
         display: grid;
         grid-template-columns: max-content 1fr;
         column-gap: 10px;
+        /*color: #ff2626;*/
 
         &[income]{
-            color: #5ECB08;
+            /*color: main.$green;*/
         }
 
         > *{
@@ -66,7 +81,7 @@
 
     .action{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
     .amount{
         text-align: right;

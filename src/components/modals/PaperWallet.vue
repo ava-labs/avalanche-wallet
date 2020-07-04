@@ -9,221 +9,272 @@
         </div>
     </modal>
 </template>
-<script>
-    import triangles from './PaperWallet/triangles.png';
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Watch } from 'vue-property-decorator';
 
-    import Modal from './Modal';
+    // import triangles from './PaperWallet/triangles.png';
+    import Modal from './Modal.vue';
     // import CopyText from "../misc/CopyText";
     import QRCode from 'qrcode'
     import jsPDF from 'jspdf';
     var pdfjsLib = require("pdfjs-dist");
+    //
+    // The workerSrc property shall be specified.
+    //
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
+
     import printjs from 'print-js'
+    import {AVMKeyPair} from "avalanche";
+    import AvaHdWallet from "@/js/AvaHdWallet";
 
     const PDF_W = 8.5;
     const PDF_H = 11;
     const PDF_ASPECT_RATIO = PDF_W/PDF_H;
     const PADDING = 0.5;
 
-    let pdfDoc = null;
+    let pdfDoc:any = null;
     let pdfData = '';
 
-    export default {
+    @Component({
         components: {
-            Modal,
-            // CopyText
-        },
-        methods: {
-            open(){
-                this.$refs.modal.open();
-            },
+            Modal
+        }
+    })
+    export default class PaperWallet extends Vue{
+        $refs!:{
+            modal: Modal
+            pdf: HTMLCanvasElement
+        };
 
-            print(){
-                const pdfBlob = new Blob([pdfDoc.output('blob')], { type: "application/pdf" });
-                const url = URL.createObjectURL(pdfBlob);
-                printjs(url);
-            },
-
-            buildPDF(doc){
-
-                let posX = 0;
-                let posY = 0;
-                // BG
-                console.log(typeof triangles);
-                // Yellow top
-                doc.setFillColor("#EBE4FB");
-                doc.rect(0, 0, PDF_W, 3, 'F');
-
-                // Belons to _______
-                posX = PADDING;
-                posY = 2.5;
-
-                doc.setFontSize(14);
-                doc.setFontStyle('bold');
-                doc.setTextColor('#000');
-                doc.text("This address belongs to", posX, posY);
-                doc.setFillColor("#000");
-                doc.rect( posX+2.4, posY, 3, 0.02, 'F');
-
-
-                // YELLOW QR
-                posX = posX+5.6;
-                posY = 0.2;
-                doc.setFillColor("#000");
-                doc.rect( posX, posY, 0.02, 2.5, 'F');
-                posX += 0.2
-                QRCode.toDataURL(this.address, function (err, url) {
-                    doc.addImage(url, 'PNG', posX, posY, 1.8, 1.8);
-                });
-                doc.setTextColor('#000');
-                doc.setFontSize(11)
-                posY += 2.1;
-                doc.text("My Address:", posX, posY);
-                posY += 0.2
-                doc.setFontStyle('normal');
-                doc.text(this.address, posX, posY, {
-                    maxWidth: 1.8
-                });
-
-
-
-                // Triangle bg
-                // doc.addImage(triangles,'PNG', 10, 10, 200, 200)
-
-
-
-                // WARNING #################################
-                posX = PADDING;
-                posY += 1.5;
-                doc.setFontSize(22);
-                doc.setFontStyle('bold');
-                doc.text("Always keep your Paper Wallet at a SAFE Place!", posX, posY, {
-                    maxWidth: (PDF_W - (PADDING*2))
-                });
-
-                // MY ADDRESS #################################
-
-                posY += 0.9;
-
-
-                let rectH = 2;
-                let rectY = 4;
-
-                doc.setFillColor("#EBE4FB");
-                doc.rect(posX, posY, PDF_W-(PADDING*2), rectH, 'F');
-
-                // Title
-                posX += PADDING;
-                posY += 0.7;
-                doc.setFontSize(20);
-                doc.setFontStyle('bold');
-                doc.text("MY ADDRESS", posX, posY);
-                // Address
-                posY += 0.3;
-                doc.setFontSize(12);
-                doc.setFontStyle('normal');
-                doc.text(this.address, posX,posY);
-                // QR
-                let qrW = 1.6;
-                let qrH = 1.6;
-                let qrX = PDF_W-PADDING - qrW - 0.2;
-                let qrY = rectY+0.2;
-
-                posX = PDF_W-PADDING - qrW - 0.2;
-                posY -= 1 - 0.2;
-                QRCode.toDataURL(this.address, function (err, url) {
-                    doc.addImage(url, 'PNG', posX, posY, qrW, qrH);
-                });
-
-                // MY PRIVATE KEY #################################
-
-                posX = PADDING
-                posY += 2;
-
-
-                rectY += rectH+0.2;
-                doc.setFillColor("#e4f1fb");
-                doc.rect(posX, posY, PDF_W-(PADDING*2), rectH, 'F');
-
-                // Title
-                posX += PADDING;
-                posY += 0.7;
-
-                doc.setTextColor('#ff0000');
-                doc.setFontSize(20);
-                doc.setFontStyle('bold');
-                doc.text("MY PRIVATE KEY", posX, posY);
-                // Address
-                posY += 0.3;
-                doc.setTextColor('#000');
-                doc.setFontSize(12);
-                doc.setFontStyle('normal');
-                doc.text(this.privateKey, posX,posY);
-                // QR
-
-                posX = PDF_W-PADDING - qrW - 0.2;
-                posY -= 1 - 0.2;
-                qrW = 1.6;
-                qrH = 1.6;
-                qrX = PDF_W-PADDING - qrW - 0.2;
-                qrY = rectY+0.2;
-                QRCode.toDataURL(this.privateKey, function (err, url) {
-                    doc.addImage(url, 'PNG', posX, posY, qrW, qrH);
-                });
-            },
-
-            async refreshPDF() {
-                let canvas = this.$refs.pdf;
-                let context = canvas.getContext('2d');
-
-
-                pdfDoc = new jsPDF({
-                    orientation: 'portrait',
-                    unit: 'in',
-                    format: 'letter'
-                });
-
-                this.buildPDF(pdfDoc);
-
-
-               pdfData = pdfDoc.output('dataurlstring', {
-                    filename: "avapaperwallet.pdf"
-                });
-
-                let pdf = await pdfjsLib.getDocument(pdfData);
-
-                const page = await pdf.getPage(1);
-
-                let scale = 2;
-                const viewport = page.getViewport({
-                    scale: scale
-                });
-
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                await page.render(renderContext);
+        @Watch('address')
+        onAddressChange() {
+            let parent = this;
+            try{
+                this.refreshPDF();
+            }catch(e){
+                setTimeout(()=>{
+                    parent.onAddressChange()
+                }, 500);
             }
-        },
-        computed: {
-            address(){
-                return this.$store.state.selectedAddress;
-            },
-            privateKey(){
-                return this.$store.state.privateKey;
-            },
-            aspectRatio(){
-                return PDF_W/PDF_H;
+        }
+
+        open(){
+            let modal = this.$refs.modal;
+            // @ts-ignore
+            modal.open();
+        }
+
+        print(){
+            const pdfBlob = new Blob([pdfDoc.output('blob')], { type: "application/pdf" });
+            const url = URL.createObjectURL(pdfBlob);
+            printjs(url);
+        }
+
+
+
+        buildPDF(doc:any){
+            if(!this.address) return;
+
+            let posX = 0;
+            let posY = 0;
+            // BG
+            // console.log(typeof triangles);
+            // Yellow top
+            doc.setFillColor("#FAFAFA");
+            doc.rect(0, 0, PDF_W, 3, 'F');
+
+            // Belons to _______
+            posX = PADDING;
+            posY = 2.5;
+
+            doc.setFontSize(14);
+            doc.setFontStyle('bold');
+            doc.setTextColor('#000');
+            doc.text("This address belongs to", posX, posY);
+            doc.setFillColor("#000");
+            doc.rect( posX+2.4, posY, 3, 0.02, 'F');
+
+
+            // YELLOW QR
+            posX = posX+5.6;
+            posY = 0.2;
+            doc.setFillColor("#4C2E56");
+            doc.rect( posX, posY, 0.02, 2.5, 'F');
+            posX += 0.2;
+
+
+            QRCode.toDataURL(this.address, function (err, url) {
+                doc.addImage(url, 'PNG', posX, posY, 1.8, 1.8);
+            });
+            doc.setTextColor('#000');
+            doc.setFontSize(11)
+            posY += 2.1;
+            doc.text("My Address:", posX, posY);
+            posY += 0.2
+            doc.setFontStyle('normal');
+            doc.text(this.address, posX, posY, {
+                maxWidth: 1.8
+            });
+
+
+
+            // Triangle bg
+            // doc.addImage(triangles,'PNG', 10, 10, 200, 200)
+
+
+
+            // WARNING #################################
+            posX = PADDING;
+            posY += 1.5;
+            doc.setFontSize(22);
+            doc.setFontStyle('bold');
+            doc.text("Always Keep Your Paper Wallet in a SAFE place.", posX, posY, {
+                maxWidth: (PDF_W - (PADDING*2))
+            });
+
+            // MY ADDRESS #################################
+
+            posY += 0.9;
+
+
+            let rectH = 2;
+            let rectY = 4;
+
+            doc.setFillColor("#FAFAFA");
+            doc.rect(posX, posY, PDF_W-(PADDING*2), rectH, 'F');
+
+            // Title
+            posX += PADDING;
+            posY += 0.7;
+            doc.setFontSize(20);
+            doc.setFontStyle('bold');
+            doc.text("MY ADDRESS", posX, posY);
+            // Address
+            posY += 0.3;
+            doc.setFontSize(12);
+            doc.setFontStyle('normal');
+            doc.text(this.address, posX,posY);
+            // QR
+            let qrW = 1.6;
+            let qrH = 1.6;
+            let qrX = PDF_W-PADDING - qrW - 0.2;
+            let qrY = rectY+0.2;
+
+            posX = PDF_W-PADDING - qrW - 0.2;
+            posY -= 1 - 0.2;
+            QRCode.toDataURL(this.address, function (err, url) {
+                doc.addImage(url, 'PNG', posX, posY, qrW, qrH);
+            });
+
+            // MY PRIVATE KEY #################################
+
+            posX = PADDING
+            posY += 2;
+
+
+            rectY += rectH+0.2;
+            doc.setFillColor("#e4f1fb");
+            doc.rect(posX, posY, PDF_W-(PADDING*2), rectH, 'F');
+
+            // Title
+            posX += PADDING;
+            posY += 0.7;
+
+            doc.setTextColor('#ff0000');
+            doc.setFontSize(20);
+            doc.setFontStyle('bold');
+            doc.text("My Mnemonic Phrase", posX, posY);
+            // Address
+            posY += 0.3;
+            doc.setTextColor('#000');
+            doc.setFontSize(12);
+            doc.setFontStyle('normal');
+            doc.text(this.mnemonic, posX,posY, {
+                maxWidth: "4"
+            });
+
+            // QR
+
+            posX = PDF_W-PADDING - qrW - 0.2;
+            posY -= 1 - 0.2;
+            qrW = 1.6;
+            qrH = 1.6;
+            qrX = PDF_W-PADDING - qrW - 0.2;
+            qrY = rectY+0.2;
+            QRCode.toDataURL(this.privateKey, function (err, url) {
+                doc.addImage(url, 'PNG', posX, posY, qrW, qrH);
+            });
+        }
+
+        async refreshPDF() {
+            let canvas = this.$refs.pdf as HTMLCanvasElement;
+            let context = canvas.getContext('2d');
+
+
+            pdfDoc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'in',
+                format: 'letter'
+            });
+
+            this.buildPDF(pdfDoc);
+
+
+            pdfData = pdfDoc.output('dataurlstring', {
+                filename: "avapaperwallet.pdf"
+            });
+
+            let pdf = await pdfjsLib.getDocument(pdfData).promise;
+
+            const page = await pdf.getPage(1);
+
+            let scale = 2;
+            const viewport = page.getViewport({
+                scale: scale
+            });
+
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+
+            await page.render(renderContext).promise;
+        }
+
+
+
+
+
+
+        get address(){
+            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!activeKey){
+                return '-'
             }
-        },
+            return activeKey.getAddressString();
+        }
+
+        get privateKey():string{
+            let wallet: AvaHdWallet = this.$store.state.activeWallet;
+            return wallet.masterKey.getPrivateKeyString()
+        }
+
+        get mnemonic():string{
+            let wallet: AvaHdWallet = this.$store.state.activeWallet;
+            return wallet.mnemonic;
+        }
+
+        get aspectRatio():number{
+            return PDF_W/PDF_H;
+        }
+
+
         mounted() {
             this.refreshPDF();
-            // this.updateQR();
-
-
         }
     }
 </script>

@@ -20,7 +20,7 @@
             </div>
             <p v-if="err" class="form_error">{{err}}</p>
 <!--            <button>Add Network</button>-->
-            <v-btn :loading="isAjax" height="26" depressed color="#2960CD" type="submit">Add Network</v-btn>
+            <v-btn :loading="isAjax" height="26" depressed color="#4C2E56" type="submit">Add Network</v-btn>
         </form>
     </div>
 </template>
@@ -117,16 +117,16 @@
                 let netID = null;
 
                 try{
-                    let resp = await axios.post(this.url+'/ext/admin', {
+                    let resp = await axios.post(this.url+'/ext/info', {
                         "jsonrpc": "2.0",
                         "id"     : 1,
-                        "method" : "admin.getNetworkID"
+                        "method" : "info.getNetworkID"
                     });
                     netID = resp.data.result.networkID;
                     this.isAjax = false;
                 }catch(e){
                     this.isAjax = false;
-                    this.err = "AVA Network Not Found"
+                    this.err = "AVA Network Not Found";
                     return;
                 }
 
@@ -143,13 +143,15 @@
     }
 </script>
 <style scoped lang="scss">
+@use '../../main';
+
     .custom_network{
         padding: 0px 15px;
         padding-bottom: 15px;
     }
 
     .header{
-        border-bottom: 1px solid #EAEDF4;
+        border-bottom: 1px solid main.$background-color;
         padding: 10px 15px;
         display: flex;
         h4{
@@ -175,7 +177,8 @@
     }
 
     input, select{
-        background-color: #f2f2f2;
+        color: main.$primary-color;
+        background-color: main.$background-color;
         border-radius: 4px;
         padding: 6px 6px;
         font-size: 13px;
@@ -184,7 +187,7 @@
     button{
         margin-top: 10px;
         width: 100%;
-        background-color: #2960CD;
+        background-color: main.$primary-color;
         color: #fff;
         font-size: 12px;
         border-radius: 4px;

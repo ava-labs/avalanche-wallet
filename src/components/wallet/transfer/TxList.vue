@@ -23,10 +23,11 @@
 
     const uuidv1 = require('uuid/v1');
 
+    import Big from 'big.js';
     import CurrencyInputDropdown from "@/components/misc/CurrencyInputDropdown.vue";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {ITransaction} from "@/components/wallet/transfer/types";
+    import {ICurrencyInputDropdownValue, ITransaction} from "@/components/wallet/transfer/types";
 
     @Component({
         components: {
@@ -66,9 +67,15 @@
             this.disabledAssets = res;
         }
 
-        oninputchange(index:number, event:ITransaction):void {
-            this.tx_list[index].asset = event.asset;
-            this.tx_list[index].amount = event.amount;
+        oninputchange(index:number, event:ICurrencyInputDropdownValue):void {
+
+            let asset = event.asset;
+            let amt = event.amount;
+
+            if(!asset) return;
+
+            this.tx_list[index].asset = asset;
+            this.tx_list[index].amount = amt;
 
             this.updateUnavailable();
 
@@ -93,14 +100,14 @@
                 this.tx_list.push({
                     uuid: uuid,
                     asset: this.assets[id],
-                    amount: 0,
+                    amount: Big(0),
                 });
             }else if(this.next_initial){
                 // console.log("initial before: ", this.next_initial);
                 this.tx_list.push({
                     uuid: uuid,
                     asset: this.next_initial,
-                    amount: 0,
+                    amount: Big(0),
                 });
             }
             this.$emit('change', this.tx_list);
@@ -125,10 +132,10 @@
         }
 
         get assets_list(): AvaAsset[]{
-            return this.$store.state.Assets.assets;
+            return this.$store.getters.walletAssetsArray;
         }
         get assets(): AssetsDict{
-            return this.$store.state.Assets.assetsDict;
+            return this.$store.getters.walletAssetsDict;
         }
         get showAdd(): boolean{
             if(this.tx_list.length === this.assets_list.length || this.assets_list.length===0){
@@ -139,6 +146,8 @@
     }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
     .table_title{
         display: grid;
         grid-template-columns: 1fr 140px;
@@ -178,9 +187,12 @@
         align-self: flex-end;
         text-align: right;
         font-size: 12px;
-        color: #b2b2b2;
+        color: main.$primary-color-light;
+        margin-top: 6px;
+        margin-bottom: 10px;
+        
         &:hover{
-            color: #000;
+            opacity: 0.7;
         }
     }
 
@@ -189,12 +201,13 @@
 
 
     .add_asset{
+        margin-top: 16px;
         border-radius: 0;
-        color: #4D9EFD;
-        font-size: 12px;
+        color: main.$primary-color;
+        font-size: 14px;
 
         &:hover{
-            color: #000;
+            opacity: 0.7;
         }
     }
 

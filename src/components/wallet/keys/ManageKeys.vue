@@ -11,7 +11,7 @@
                     <p class="explain">
                         Add additional private keys to use with your wallet.
                     </p>
-                    <v-tabs color="#2960CD" height="30" active-class="tab_active" :grow="true">
+                    <v-tabs color="#4C2E56" height="30" active-class="tab_active" :grow="true">
                         <v-tab >Private Key</v-tab>
                         <v-tab>Keystore File</v-tab>
                         <v-tab-item>
@@ -30,92 +30,25 @@
         </div>
     </div>
 </template>
-<script>
-    import {bintools} from "@/AVA";
-    import AvaAsset from "@/js/AvaAsset";
-    import ExportWallet from "@/components/wallet/keys/ExportWallet";
-    import AddKeyFile from "@/components/wallet/keys/AddKeyFile";
-    import AddKeyString from "@/components/wallet/keys/AddKeyString";
-    import MyKeys from "@/components/wallet/keys/MyKeys";
-    export default {
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+
+    import ExportWallet from "@/components/wallet/keys/ExportWallet.vue";
+    import AddKeyFile from "@/components/wallet/keys/AddKeyFile.vue";
+    import AddKeyString from "@/components/wallet/keys/AddKeyString.vue";
+    import MyKeys from "@/components/wallet/keys/MyKeys.vue";
+
+    @Component({
         components: {
             ExportWallet,
             AddKeyFile,
             AddKeyString,
             MyKeys
-        },
-        data(){
-            return{
-
-            }
-        },
-        methods: {
-            select(val){
-                this.$store.commit('selectAddress', val);
-            },
-            open(){
-                this.$refs.modal.open();
-            },
-            removeKey(address){
-                let msg = this.$t('keys.del_check');
-                let isConfirm = confirm(msg);
-
-                if(isConfirm){
-                    this.$store.dispatch('removeKey', address)
-                }
-            }
-        },
-        computed: {
-            addresses(){
-                return this.$store.state.addresses;
-            },
-            selected(){
-                return this.$store.state.selectedAddress;
-            },
-            balance(){
-                return this.$store.state.Assets.assetsDict;
-            },
-            addressBalances(){
-                let utxos =  this.$store.getters['Assets/addressUTXOs'];
-                let res = {};
-
-                for(var i=0;i<this.addresses.length; i++){
-                    let addr = this.addresses[i];
-                    let addrStrip = addr.split('-')[1];
-
-
-                    let addrUtxos = utxos[addrStrip];
-                    if(!addrUtxos) continue;
-                    res[addr] = {};
-
-
-                    for(var n=0; n<addrUtxos.length; n++){
-                        let utxo = addrUtxos[n];
-
-                        // console.log(utxo);
-                        let amount = utxo.getAmount();
-                        let assetIdBuff = utxo.getAssetID();
-                        let assetId = bintools.avaSerialize(assetIdBuff);
-
-                        let assetObj = this.balance[assetId];
-                        let asset = res[addr][assetId];
-                        if(!asset){
-                            let name = assetObj.name;
-                            let symbol = assetObj.symbol;
-                            let denomination = assetObj.denomination;
-
-                            let newAsset = new AvaAsset(assetId,name,symbol,denomination);
-                                newAsset.addBalance(amount);
-
-                            res[addr][assetId] = newAsset;
-                        }else{
-                            asset.addBalance(amount)
-                        }
-                    }
-                }
-                return res;
-            },
         }
+    })
+    export default class ManageKeys extends Vue{
+
     }
 </script>
 <style scoped lang="scss">
@@ -134,6 +67,10 @@
         grid-row-gap: 30px;
         border-left: 1px solid #F5F6FA;
         padding-left: 45px;
+
+        > * {
+            overflow: auto;
+        }
     }
     p{
         margin: 0 !important;
@@ -150,7 +87,7 @@
 
     .explain{
         font-size: 12px;
-        color: #909090;
+        color: main.$primary-color-light;
     }
 
     .buts{
@@ -186,8 +123,6 @@
             border: none;
         }
     }
-
-
 
     .v-tab{
         /*border: 1px solid #999;*/
@@ -238,12 +173,22 @@
     }
 </style>
 <style lang="scss">
+@use '../../../main';
     .cols{
         .v-tabs-bar{
             margin: 15px 0px;
         }
     }
 
+    .v-tab.v-tab {
+        font-weight: bold;
+    }
+
+    .v-tabs-slider-wrapper {
+        color: main.$secondary-color;
+        caret-color: main.$secondary-color;
+        height: 3px !important;
+    }
 
     /*.cols {*/
     /*    .v-tabs-bar{*/

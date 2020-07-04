@@ -2,15 +2,15 @@
     <div class="export_wallet">
         <p class="explain">{{$t('advanced.export.desc')}} </p>
         <form @submit.prevent="download">
-            <label>Password</label>
+            <label>Password (min 9 characters)</label>
             <v-text-field type="password" class="formIn"
-                          v-model="pass" hint="Minimum 9 characters."  placeholder="Password" persistent-hint outlined dense color="#000" height="40"
+                          v-model="pass" placeholder="Password" hide-details outlined dense  height="40"
             ></v-text-field>
             <label>Confirm Password</label>
             <v-text-field type="password" class="formIn"
-                          v-model="passConfirm" hide-details outlined dense color="#000" height="40" placeholder="Confirm Password"
+                          v-model="passConfirm" hide-details outlined dense height="40" placeholder="Confirm Password"
             ></v-text-field>
-            <v-btn depressed :disabled="!isValid" color="#2960CD" block
+            <v-btn depressed :disabled="!isValid" color="#4C2E56" block
                    type="submit" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
         </form>
 
@@ -48,39 +48,6 @@
             }, 200);
         }
     }
-    // export default {
-    //     data(){
-    //         return {
-    //             is_loading: false,
-    //             pass: '',
-    //             passConfirm: ''
-    //         }
-    //     },
-    //
-    //     computed: {
-    //         isValid(){
-    //             if(this.pass.length >= 9 && this.pass===this.passConfirm) return true;
-    //             return false;
-    //         },
-    //     },
-    //     methods: {
-    //         async download(){
-    //             let parent = this;
-    //             this.is_loading = true;
-    //
-    //             setTimeout(function(){
-    //                 parent.$store.dispatch('exportKeyfile', parent.pass).then( (res) => {
-    //                     parent.is_loading = false;
-    //                     parent.pass = "";
-    //                     parent.$store.dispatch("Notifications/add", {
-    //                         title: "Key File Export" ,
-    //                         message: "Your keys are downloaded."
-    //                     });
-    //                 });
-    //             }, 200);
-    //         }
-    //     },
-    // }
 </script>
 <style lang="scss">
     .export_wallet{
@@ -100,34 +67,34 @@
         }
     }
 </style>
+<style lang="scss">
+    .export_wallet{
+        fieldset{
+            border: none !important;
+        }
+    }
+</style>
 <style scoped lang="scss">
+@use '../../../main';
+
     .export_wallet{
         font-size: 12px;
     }
     .explain{
-        /*font-size: 12px;*/
-        color: #909090;
+        color: main.$primary-color-light;
         margin-bottom: 20px !important;
     }
 
-    .v-text-field{
-        /*margin-bottom: 8px;*/
-        .v-input__slot {
-            .v-input__slot {
-                /*background-color: #f8f8f8;*/
-            }
-        }
-    }
 
     label{
-        color: #909090;
+        color: main.$primary-color-light;
     }
 
     .formIn{
-        /*background-color: #f8f8f8;*/
+        border: none;
+        background-color: #f5f6fa;
         font-size: 12px;
         border-radius: 2px;
-        /*margin-bottom: 6px;*/
     }
 
     .but_primary{

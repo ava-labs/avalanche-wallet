@@ -6,11 +6,14 @@
             <p class="send_col">Send</p>
             <p  class="balance_col">Balance</p>
         </div>
-        <div v-if="assets.length === 0" class="empty">
+        <div v-if="networkStatus !== 'connected'" class="empty">
+            <p>Unable to display assets. Disconnected from the network.</p>
+        </div>
+        <div v-else-if="walletBalances.length === 0" class="empty">
             <p>You do not have any assets</p>
         </div>
         <div class="scrollable" v-else>
-            <fungible-row lass="asset" v-for="asset in assets" :key="asset.id" :asset="asset"></fungible-row>
+            <fungible-row lass="asset" v-for="asset in walletBalances" :key="asset.id" :asset="asset"></fungible-row>
         </div>
 
     </div>
@@ -22,6 +25,7 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import FungibleRow from "@/components/wallet/home/FungibleRow.vue";
     import AvaAsset from "@/js/AvaAsset";
+    import {IWalletBalanceItem} from "@/store/types";
 
     @Component({
         components: {
@@ -32,13 +36,17 @@
     export default class Fungibles extends Vue{
         @Prop() search!: string;
 
+        get networkStatus():string{
+            let stat = this.$store.state.Network.status;
+            return stat;
+        }
 
-        get assets(): AvaAsset[]{
-            let res: AvaAsset[] = this.$store.state.Assets.assets;
 
+        get walletBalancesSorted(): AvaAsset[]{
+            let balance:AvaAsset[] = this.$store.getters['walletAssetsArray'];
 
             // Sort by balance, then name
-            res.sort((a,b) => {
+            balance.sort((a,b) => {
                 let symbolA = a.symbol.toUpperCase();
                 let symbolB = b.symbol.toUpperCase();
                 let amtA = a.getAmount();
@@ -65,9 +73,16 @@
                 return 0;
             });
 
+            return balance;
+        }
+
+        get walletBalances(): AvaAsset[]{
+
+            let balance = this.walletBalancesSorted;
+
 
             if(this.search){
-                res = res.filter(val => {
+                balance = balance.filter(val => {
                     let query = this.search.toUpperCase();
 
                     let nameUp = val.name.toUpperCase();
@@ -81,7 +96,7 @@
                 });
             }
 
-            return res;
+            return balance;
         }
 
         get isUpdateBalance(): boolean{
@@ -120,8 +135,8 @@
     .headers{
         border-bottom: 1px solid #E6E6E666;
         font-size: 12px;
-        padding: 14px 0px;
-        color: #909090;
+        padding: 53.76px 0 14px;
+        color: main.$primary-color-light;
         font-weight: bold;
     }
 
@@ -177,6 +192,7 @@
         }
 
         .headers{
+            padding: 14px 0;
             .send_col{
                 display: none;
             }

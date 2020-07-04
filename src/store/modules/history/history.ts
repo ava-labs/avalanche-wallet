@@ -2,7 +2,7 @@ import {Module, Store} from "vuex";
 import {AddressUtxoDict, AssetAPI, AssetDescription, AssetsDict, AssetsState} from "@/store/modules/assets/types";
 import {RootState} from "@/store/types";
 import {ava, avm, bintools} from "@/AVA";
-import {UTXOSet} from "slopes";
+import {UTXOSet} from "avalanche";
 import Vue from "vue";
 import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
@@ -22,28 +22,31 @@ const history_module: Module<HistoryState, RootState> = {
 
     },
     actions: {
-        async updateTransactionHistory({state, rootState}){
+        async updateTransactionHistory({state, rootState, rootGetters}){
+            if(!rootState.activeWallet) return;
+
             // @ts-ignore
             let network = rootState.Network.selectedNetwork;
 
-            // can't update if there is no explorer
-            if(!network.explorerUrl){
+            // can't update if there is no explorer or no wallet
+            if(!network.explorerUrl || rootState.address===null){
                 return false;
             }
 
             state.isUpdating = true;
-            console.log("Updating history...");
-
-            let addr = rootState.selectedAddress;
-            let addrRaw = addr.split('-')[1];
 
             let offset = 0;
             let limit = 20;
 
-            // TODO: update history collectively for all the addresses
-            // TODO: or just the selected key?
+            let addresses:string[] = rootGetters.addresses;
 
-            let url = `/x/transactions?address=${addrRaw}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
+            let query = addresses.map(val => {
+                let raw = val.split('-')[1];
+                return `address=${raw}`;
+            });
+
+            // Get history for all addresses of the active HD wallet
+            let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
             let res = await explorer_api.get(url);
 
             let transactions = res.data.transactions;
@@ -51,11 +54,7 @@ const history_module: Module<HistoryState, RootState> = {
             state.transactions = transactions;
             state.isUpdating = false;
         }
-    },
-    getters: {
-
     }
-
 };
 
 export default history_module;
