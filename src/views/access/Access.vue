@@ -1,8 +1,15 @@
 <template>
     <div class="access_view">
-        <transition name="fade" mode="out-in">
-            <router-view class="card"></router-view>
-        </transition>
+        <b-container>
+            <b-row align-h="center">
+                <b-col  md="12" lg="10">
+                    <transition name="fade" mode="out-in">
+                        <router-view class="access_card"></router-view>
+                    </transition>
+                </b-col>
+            </b-row>
+        </b-container>
+
     </div>
 </template>
 <style scoped lang="scss">
@@ -15,7 +22,7 @@
         background-color: main.$white;
     }
 
-    .card{
+    .access_card{
         text-align: center;
     }
 </style>

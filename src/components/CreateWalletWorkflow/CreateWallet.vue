@@ -1,68 +1,78 @@
 <template>
     <div class="access_view">
-        <div class="card">
-            <transition name="fade" mode="out-in">
-                <div v-if="!newPrivateKey" class="stage_1">
-                    <div class="img_container">
-                        <img src="@/assets/diamond-secondary.png" alt />
-                    </div>
-                    <h1>Generate a new key phrase to use with your wallet.</h1>
-                    <router-link to="/access" class="link">Already have a wallet?</router-link>
-                    <button class="ava_button but_generate" @click="createKey">Generate Key Phrase</button>
-                    <router-link to="/" class="link">Cancel</router-link>
-                </div>
-
-                <div v-else class="stage_2">
-                    <div class="cols">
-                        <div class="mneumonic_disp_col">
-                            <div class="mnemonic_disp">
-                                <mnemonic-display :phrase="keyPhrase" :bgColor="'#F5F6FA'"></mnemonic-display>
-                                <p class="phrase_raw">{{keyPhrase}}</p>
-                                <div class="mneumonic_button_container">
-                                    <CopyText
-                                        :value="keyPhrase"
-                                        class="ava_button copy_phrase"
-                                    >Copy Key Phrase</CopyText>
-                                    <button @click="createKey" class="ava_button but_randomize">
-                                        <fa icon="sync"></fa>
-                                        <span>Randomize</span>
-                                    </button>
-                                </div>
+        <b-container>
+            <b-row>
+                <b-col>
+                    <transition name="fade" mode="out-in">
+                        <div v-if="!newPrivateKey" class="stage_1">
+                            <div class="img_container">
+                                <img src="@/assets/diamond-secondary.png" alt />
                             </div>
+                            <h1>Generate a new key phrase to use with your wallet.</h1>
+                            <router-link to="/access" class="link">Already have a wallet?</router-link>
+                            <button class="ava_button but_generate" @click="createKey">Generate Key Phrase</button>
+                            <router-link to="/" class="link">Cancel</router-link>
                         </div>
 
-                        <div class="phrase_disp_col">
-                            <img src="@/assets/keyphrase.png" alt />
-                            <header>
-                                <h1>This is your 24 word key phrase.</h1>
-                                <p>You will use these words to access your wallet.</p>
-                            </header>
-                            <p class="warn">
-                                <span class="label">Attention!</span>
-                                <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
-                            </p>
-                            <div class="access_cont">
-                                <remember-key
-                                    v-model="rememberKey"
-                                    explain="Remember key phrase. Your keys will persist until you close the browser tab."
-                                ></remember-key>
-                                <div class="submit">
-                                    <transition name="fade" mode="out-in">
-                                        <Spinner v-if="isLoad" class="spinner"></Spinner>
-                                        <div v-else>
-                                            <button
-                                                class="ava_button access generate"
-                                                @click="access"
-                                            >Access Wallet</button>
-                                            <router-link to="/" class="link">Cancel</router-link>
+                        <div v-else class="stage_2">
+                            <div class="cols">
+                                <div class="mneumonic_disp_col">
+                                    <div class="mnemonic_disp">
+                                        <mnemonic-display :phrase="keyPhrase" :bgColor="'#F5F6FA'"></mnemonic-display>
+                                        <p class="phrase_raw">{{keyPhrase}}</p>
+                                        <div class="mneumonic_button_container">
+                                            <CopyText
+                                                    :value="keyPhrase"
+                                                    class="ava_button copy_phrase"
+                                            >Copy Key Phrase</CopyText>
+                                            <button @click="createKey" class="ava_button but_randomize">
+                                                <fa icon="sync"></fa>
+                                                <span>Randomize</span>
+                                            </button>
                                         </div>
-                                    </transition>
+                                    </div>
+                                </div>
+
+                                <div class="phrase_disp_col">
+                                    <img src="@/assets/keyphrase.png" alt />
+                                    <header>
+                                        <h1>This is your 24 word key phrase.</h1>
+                                        <p>You will use these words to access your wallet.</p>
+                                    </header>
+                                    <p class="warn">
+                                        <span class="label">Attention!</span>
+                                        <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
+                                    </p>
+                                    <div class="access_cont">
+                                        <remember-key
+                                                v-model="rememberKey"
+                                                explain="Remember key phrase. Your keys will persist until you close the browser tab."
+                                        ></remember-key>
+                                        <div class="submit">
+                                            <transition name="fade" mode="out-in">
+                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
+                                                <div v-else>
+                                                    <button
+                                                            class="ava_button access generate"
+                                                            @click="access"
+                                                    >Access Wallet</button>
+                                                    <router-link to="/" class="link">Cancel</router-link>
+                                                </div>
+                                            </transition>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </transition>
+                    </transition>
+                </b-col>
+            </b-row>
+
+
+
+        </b-container>
+
+        <div>
         </div>
     </div>
 </template>
@@ -156,7 +166,7 @@
     background-color: main.$background-color;
     padding: main.$container-padding;
     text-align: center;
-    min-width: 1000px;
+    /*min-width: 1000px;*/
 
     img {
         margin-top: main.$vertical-padding;
@@ -196,7 +206,6 @@ a {
    ========================================== */
 
 .stage_2 {
-    max-width: 1200px;
     margin: 0 auto;
     text-align: left;
     align-items: start;

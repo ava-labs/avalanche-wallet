@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="access_card">
         <h1>Private Key</h1>
         <form @submit.prevent="access">
             <qr-input class="key_in" v-model="privateKey"></qr-input>
@@ -62,11 +62,11 @@
 <style scoped lang="scss">
 @use '../../main';
 
-.card {
+.access_card {
     background-color: main.$background-color;
     padding: main.$container-padding;
-    width: 100%;
-    max-width: 1000px;
+    /*width: 100%;*/
+    /*max-width: 1000px;*/
     display: flex;
     flex-direction: column;
     justify-content: center;

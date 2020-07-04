@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="access_card">
         <div class="img_container">
             <img src="@/assets/diamond-primary.svg" alt />
         </div>
@@ -7,18 +7,19 @@
         <router-link to="/create" class="link">Don't have a wallet?</router-link>
         <hr />
         <div class="options">
-            <div class="option">
-                <h2>Private Key</h2>
-                <router-link to="/access/private_key"></router-link>
-            </div>
-            <div class="option">
-                <h2>Mnemonic Key Phrase</h2>
-                <router-link to="/access/mnemonic"></router-link>
-            </div>
-            <div class="option">
-                <h2>Keystore File</h2>
-                <router-link to="/access/keystore"></router-link>
-            </div>
+            <router-link to="/access/private_key" class="option">Private Key</router-link>
+            <router-link to="/access/mnemonic" class="option">Mnemonic Key Phrase</router-link>
+            <router-link to="/access/keystore" class="option">Keystore File</router-link>
+
+<!--            <div class="option">-->
+<!--                <h2>Private Key</h2>-->
+<!--            </div>-->
+<!--            <div class="option">-->
+<!--                <h2>Mnemonic Key Phrase</h2>-->
+<!--            </div>-->
+<!--            <div class="option">-->
+<!--                <h2>Keystore File</h2>-->
+<!--            </div>-->
         </div>
         <router-link to="/" class="link">Cancel</router-link>
     </div>
@@ -26,9 +27,7 @@
 <style scoped lang="scss">
 @use "../../main";
 
-$col_w: 240px;
-
-.card {
+.access_card {
     background-color: main.$background-color !important;
     padding: main.$container-padding;
 }
@@ -54,41 +53,32 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(3, $col_w);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;
+}
 
-    .option {
-        position: relative;
-        transition-duration: 0.1s;
-        transition-timing-function: ease-in;
-        border-radius: 4px;
-        padding: 30px;
-        color: main.$white;
-        background-color: main.$primary-color;
-        border-radius: 6px;
-        font-family: "DM Sans", sans-serif;
-        font-weight: 700;
-        text-transform: uppercase;
-        padding: 8px 18px;
+.option {
+    position: relative;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in;
+    color: main.$white !important;
+    background-color: main.$primary-color;
+    border-radius: 6px;
+    font-family: "DM Sans", sans-serif;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    font-size: main.$s-size;
 
-        &:hover {
-            transform: translateY(-5px);
-            box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
-        }
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
+    }
 
-        h2 {
-            font-size: main.$s-size;
-        }
-
-        a {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+    h2 {
     }
 }
+
 
 @include main.mobile-device {
     img {
@@ -108,14 +98,11 @@ hr {
     .options {
         display: block;
         grid-template-columns: none;
+    }
 
-        .option {
-            margin-bottom: 15px;
-
-            h2 {
-                font-size: main.$s-size-mobile;
-            }
-        }
+    .option {
+        margin: 12px 0px;
+        display: block;
     }
 }
 </style>

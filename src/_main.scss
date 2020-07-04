@@ -1,3 +1,7 @@
+@import 'node_modules/bootstrap/scss/bootstrap';
+@import 'node_modules/bootstrap-vue/src/index.scss';
+
+
 $mobile_width: 900px;
 $width_s: 1300px;
 $width_m: 1300px;
@@ -88,7 +92,7 @@ hr {
 
 
 button, textarea, input{
-  outline: none;
+  outline: none !important;
 }
 
 a {
@@ -103,6 +107,10 @@ a {
   /*font-size: 13px;*/
   padding: 8px 18px;
   border-radius: 2px;
+}
+
+label{
+  margin-bottom: initial !important;
 }
 
 
