@@ -81,7 +81,7 @@ export default class Home extends Vue {}
         .login_wrapper {
             margin-top: 60px;
             display: grid;
-            grid-template-columns: 500px 500px;
+            grid-template-columns: 1fr 1fr;
             column-gap: main.$container-padding;
 
             .login_option {
