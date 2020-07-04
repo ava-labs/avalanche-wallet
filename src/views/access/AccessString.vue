@@ -103,7 +103,7 @@ form {
     margin-bottom: 6px;
     width: 100%;
     font-size: 13px;
-    background-color: main.$white;
+    background-color: main.$white !important;
     border-radius: 4px;
 }
 
