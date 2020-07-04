@@ -69,7 +69,7 @@ import {Buffer} from "buffer";
         }
 
         async access() {
-            let phrase = this.phrase;
+            let phrase = this.phrase.trim();
 
             this.isLoading = true;
             this.$store.state.rememberKey = this.isRemember;
@@ -86,12 +86,6 @@ import {Buffer} from "buffer";
                 let addr = keyChain.importKey(b);
                 let keypair = keyChain.getKey(addr);
 
-
-                // let pkString = keypair.getPrivateKeyString();
-                // let inVal:AddWalletInput = {
-                //     pk: pkString,
-                //     type: 'hd'
-                // };
 
                 await this.$store.dispatch('accessWallet', keypair);
                 this.isLoading = false;
