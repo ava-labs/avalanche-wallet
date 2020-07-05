@@ -10,7 +10,9 @@
             <router-link to="/access/private_key" class="option">Private Key</router-link>
             <router-link to="/access/mnemonic" class="option">Mnemonic Key Phrase</router-link>
             <router-link to="/access/keystore" class="option">Keystore File</router-link>
-
+            <div class="option" @click="loginWithGoogle">
+                <h4>Google</h4>
+            </div>
 <!--            <div class="option">-->
 <!--                <h2>Private Key</h2>-->
 <!--            </div>-->
@@ -24,6 +26,42 @@
         <router-link to="/" class="link">Cancel</router-link>
     </div>
 </template>
+
+<script>
+import TorusSdk from "@toruslabs/torus-direct-web-sdk";
+
+export default {
+    methods: {
+        async loginWithGoogle() {
+            const torusdirectsdk = new TorusSdk({
+                baseUrl: `${location.origin}/serviceworker`,
+                enableLogging: true,
+                proxyContractAddress: "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183", // details for test net
+                network: "ropsten", // details for test net
+            });
+            
+            await torusdirectsdk.init();
+
+            const loginDetails = await torusdirectsdk.triggerLogin({
+                typeOfLogin: "google",
+                verifier: "ava-google",
+                clientId: "74915647456-4ctjtqo7rb8kgn9qib30dia79a20pvdb.apps.googleusercontent.com",
+            });
+
+            console.log('loginDetails.privateKey', loginDetails)
+
+            try{
+                let res = await this.$store.dispatch('accessWallet', loginDetails.privateKey);
+            }catch (e) {
+                console.error('error', e)
+                // this.error = 'Invalid Private Key';
+                // this.isLoading = false;
+            }
+        }
+    }
+}
+</script>
+
 <style scoped lang="scss">
 @use "../../main";
 
@@ -74,6 +112,7 @@ hr {
         transform: translateY(-5px);
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
     }
+
 
     h2 {
     }
