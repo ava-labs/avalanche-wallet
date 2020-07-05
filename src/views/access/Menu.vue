@@ -10,56 +10,21 @@
             <router-link to="/access/private_key" class="option">Private Key</router-link>
             <router-link to="/access/mnemonic" class="option">Mnemonic Key Phrase</router-link>
             <router-link to="/access/keystore" class="option">Keystore File</router-link>
-            <div class="option" @click="loginWithGoogle">
-                <h4>Google</h4>
-            </div>
-<!--            <div class="option">-->
-<!--                <h2>Private Key</h2>-->
-<!--            </div>-->
-<!--            <div class="option">-->
-<!--                <h2>Mnemonic Key Phrase</h2>-->
-<!--            </div>-->
-<!--            <div class="option">-->
-<!--                <h2>Keystore File</h2>-->
-<!--            </div>-->
+            <TorusGoogle class="option" text="Google"></TorusGoogle>
         </div>
         <router-link to="/" class="link">Cancel</router-link>
     </div>
 </template>
 
 <script>
-import TorusSdk from "@toruslabs/torus-direct-web-sdk";
+    import TorusGoogle from "@/components/Torus/TorusGoogle";
 
-export default {
-    methods: {
-        async loginWithGoogle() {
-            const torusdirectsdk = new TorusSdk({
-                baseUrl: `${location.origin}/serviceworker`,
-                enableLogging: true,
-                proxyContractAddress: "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183", // details for test net
-                network: "ropsten", // details for test net
-            });
-            
-            await torusdirectsdk.init();
-
-            const loginDetails = await torusdirectsdk.triggerLogin({
-                typeOfLogin: "google",
-                verifier: "ava-google",
-                clientId: "74915647456-4ctjtqo7rb8kgn9qib30dia79a20pvdb.apps.googleusercontent.com",
-            });
-
-            console.log('loginDetails.privateKey', loginDetails)
-
-            try{
-                let res = await this.$store.dispatch('accessWallet', loginDetails.privateKey);
-            }catch (e) {
-                console.error('error', e)
-                // this.error = 'Invalid Private Key';
-                // this.isLoading = false;
-            }
+    export default {
+        components: {TorusGoogle},
+        comments: {
+            TorusGoogle
         }
     }
-}
 </script>
 
 <style scoped lang="scss">

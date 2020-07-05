@@ -1,10 +1,20 @@
 <template>
-    <img src="@/assets/spinner-solid.svg">
+    <p class="spinner" :style="{
+        color: color
+    }"><fa icon="spinner"></fa></p>
 </template>
+<script>
+    export default {
+        props: {
+            color: {
+                type: String,
+                default: "#fff"
+            }
+        }
+    }
+</script>
 <style scoped lang="scss">
-    img{
-        width: 18px;
-        object-fit: contain;
+    .spinner{
         animation-name: spin;
         animation-duration: 1s;
         animation-iteration-count: infinite;
