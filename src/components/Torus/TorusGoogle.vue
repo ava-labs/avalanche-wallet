@@ -11,7 +11,8 @@
     import "reflect-metadata";
     import { Vue, Component, Prop } from "vue-property-decorator";
 
-    import TorusSdk from "@toruslabs/torus-direct-web-sdk";
+    // import TorusSdk from "@toruslabs/torus-direct-web-sdk";
+    import {torusdirectsdk} from "@/Torus";
     import {Buffer} from "buffer/";
     import {avm, bintools} from "@/AVA";
     import {keyToKeypair} from "@/helpers/helper";
@@ -31,23 +32,16 @@
 
         async createKeyWithGoogle() {
             this.isLoading = true;
-            const torusdirectsdk = new TorusSdk({
-                baseUrl: `${location.origin}/serviceworker`,
-                enableLogging: true,
-                proxyContractAddress: "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183", // details for test net
-                network: "ropsten", // details for test net
-            });
-
-            await torusdirectsdk.init();
 
             let loginDetails;
             try{
                 loginDetails = await torusdirectsdk.triggerLogin({
                     typeOfLogin: "google",
-                    verifier: "ava2-google",
+                    verifier: "avax-google",
                     clientId: "1070325514010-bd1u2umjanoe6hn6fsqqhquatj5mhc6i.apps.googleusercontent.com",
                 });
             }catch (e) {
+                console.error(e);
                 this.isLoading = false;
                 return;
             }

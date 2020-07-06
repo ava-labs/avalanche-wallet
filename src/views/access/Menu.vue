@@ -105,6 +105,7 @@ hr {
     }
 
     .option {
+        width: 100%;
         margin: 12px 0px;
         display: block;
     }
