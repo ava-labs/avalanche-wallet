@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueI18n from 'vue-i18n'
+import VueAnalytics from 'vue-analytics';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 // Install BootstrapVue
@@ -27,6 +28,11 @@ Vue.use(ToggleButton)
 
 Vue.config.productionTip = false;
 
+// Configuration VueAnalytics
+Vue.use(VueAnalytics, {
+  id: 'UA-126268251-5',
+  router
+});
 
 new Vue({
   router,
