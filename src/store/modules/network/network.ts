@@ -38,7 +38,8 @@ const network_module: Module<NetworkState, RootState> = {
 
             commit('Assets/removeAllAssets', null, {root: true});
             await dispatch('Assets/updateAvaAsset', null, {root: true});
-            await dispatch('Assets/updateAssets', null, {root: true});
+
+            // await dispatch('Assets/updateAssets', null, {root: true});
 
 
             // If authenticated
@@ -48,6 +49,10 @@ const network_module: Module<NetworkState, RootState> = {
                         w.onnetworkchange();
                 }
             }
+
+            setTimeout(() => {
+                dispatch('Assets/updateUTXOs', null, {root: true});
+            }, 1000);
 
             // state.isConnected = true;
             state.status = 'connected';
