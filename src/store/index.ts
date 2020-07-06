@@ -212,6 +212,8 @@ export default new Vuex.Store({
             store.state.selectedAddress = '';
             store.state.privateKey =  '';
             store.state.isAuth = false;
+            store.state.rememberKey = false;
+
 
             // Clear Assets
             await store.dispatch('Assets/onlogout');
@@ -384,7 +386,10 @@ export default new Vuex.Store({
 
             let text = JSON.stringify(file_data);
             let addr = file_data.keys[0].address.substr(2,5);
-            let filename = `AVAX_${addr}`;
+
+            let utcDate = new Date()
+            let dateString = utcDate.toISOString().replace(' ', '_');
+            let filename = `AVAX_${dateString}.json`;
 
             var blob = new Blob(
                 [ text ],
