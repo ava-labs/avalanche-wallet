@@ -1,5 +1,5 @@
 <template>
-    <div class="access_view">
+    <div class="create_wallet">
         <b-container>
             <b-row>
                 <b-col>
@@ -10,7 +10,12 @@
                             </div>
                             <h1>Generate a new key phrase to use with your wallet.</h1>
                             <router-link to="/access" class="link">Already have a wallet?</router-link>
-                            <button class="ava_button but_generate" @click="createKey">Generate Key Phrase</button>
+                            <div class="options">
+                                <button class="ava_button but_generate" @click="createKey">Generate Key Phrase</button>
+                                <p>or</p>
+                                <TorusGoogle class="torus_but"></TorusGoogle>
+                            </div>
+
                             <router-link to="/" class="link">Cancel</router-link>
                         </div>
 
@@ -67,9 +72,6 @@
                     </transition>
                 </b-col>
             </b-row>
-
-
-
         </b-container>
 
         <div>
@@ -88,6 +90,9 @@
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
 
+    import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
+    // import Torus from "@/components/access/Torus.vue";
+
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
 
@@ -102,7 +107,8 @@
             RememberKey,
             TextDisplayCopy,
             MnemonicDisplay,
-            Spinner
+            Spinner,
+            TorusGoogle
         }
     })
     export default class CreateWallet extends Vue{
@@ -148,7 +154,7 @@
 <style scoped lang="scss">
 @use '../../main';
 
-.access_view {
+.create_wallet {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -182,13 +188,32 @@
         font-weight: 400;
     }
 
-    .but_generate {
-        display: block;
-        margin: main.$vertical-padding 0;
-        height: max-content;
-        background-color: main.$secondary-color;
+
+}
+
+.options{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px;
+
+    p{
+        color: #999;
+        margin: 6px !important;
     }
 }
+
+.torus_but{
+    background-color: #db3236;
+}
+
+
+.but_generate {
+    display: block;
+    height: max-content;
+    background-color: main.$secondary-color;
+}
+
 
 .key_disp {
     margin: 30px auto;
@@ -336,6 +361,8 @@ a {
     width: 26px !important;
     margin: 0px auto;
 }
+
+
 
 @include main.medium-device {
     .stage_1 {

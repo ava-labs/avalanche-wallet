@@ -10,20 +10,23 @@
             <router-link to="/access/private_key" class="option">Private Key</router-link>
             <router-link to="/access/mnemonic" class="option">Mnemonic Key Phrase</router-link>
             <router-link to="/access/keystore" class="option">Keystore File</router-link>
-
-<!--            <div class="option">-->
-<!--                <h2>Private Key</h2>-->
-<!--            </div>-->
-<!--            <div class="option">-->
-<!--                <h2>Mnemonic Key Phrase</h2>-->
-<!--            </div>-->
-<!--            <div class="option">-->
-<!--                <h2>Keystore File</h2>-->
-<!--            </div>-->
+            <TorusGoogle class="option" text="Google"></TorusGoogle>
         </div>
         <router-link to="/" class="link">Cancel</router-link>
     </div>
 </template>
+
+<script>
+    import TorusGoogle from "@/components/Torus/TorusGoogle";
+
+    export default {
+        components: {TorusGoogle},
+        comments: {
+            TorusGoogle
+        }
+    }
+</script>
+
 <style scoped lang="scss">
 @use "../../main";
 
@@ -75,6 +78,7 @@ hr {
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
     }
 
+
     h2 {
     }
 }
@@ -101,6 +105,7 @@ hr {
     }
 
     .option {
+        width: 100%;
         margin: 12px 0px;
         display: block;
     }

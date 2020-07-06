@@ -3,7 +3,8 @@ module.exports = {
         "vuetify"
     ],
     devServer: {
-        https: true
+        https: false,
+        port: 8080
     },
     // publicPath: '',
     configureWebpack:{
