@@ -23,7 +23,8 @@
         public open(){
             this.isActive = true;
         }
-        close(){
+        
+        public close(){
             this.isActive = false;
         }
     }

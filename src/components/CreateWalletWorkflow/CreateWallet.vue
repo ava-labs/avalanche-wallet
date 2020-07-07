@@ -4,6 +4,7 @@
             <b-row>
                 <b-col>
                     <transition name="fade" mode="out-in">
+                        <!-- PHASE 1 -->
                         <div v-if="!newPrivateKey" class="stage_1">
                             <div class="img_container">
                                 <img src="@/assets/diamond-secondary.png" alt />
@@ -15,12 +16,12 @@
                                 <p>or</p>
                                 <TorusGoogle class="torus_but"></TorusGoogle>
                             </div>
-
                             <router-link to="/" class="link">Cancel</router-link>
                         </div>
-
+                        <!-- PHASE 2 -->
                         <div v-else class="stage_2">
                             <div class="cols">
+                                <!-- LEFT -->
                                 <div class="mneumonic_disp_col">
                                     <div class="mnemonic_disp">
                                         <mnemonic-display :phrase="keyPhrase" :bgColor="'#F5F6FA'"></mnemonic-display>
@@ -37,7 +38,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <!-- RIGHT -->
                                 <div class="phrase_disp_col">
                                     <img src="@/assets/keyphrase.png" alt />
                                     <header>
@@ -48,7 +49,17 @@
                                         <span class="label">Attention!</span>
                                         <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
                                     </p>
-                                    <div class="access_cont">
+                                    <!-- STEP 2a - VERIFY -->
+                                    <div class="verify_cont" v-if="!isVerified">
+                                        <MnemonicCopied
+                                                v-model="isSecured"
+                                                explain="I wrote down my mnemonic phrase in a secure location."
+                                        ></MnemonicCopied>
+                                        <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
+                                        <button class="but_primary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
+                                    </div>
+                                    <!-- STEP 2b - ACCESS -->
+                                    <div class="access_cont" v-if="isVerified">
                                         <remember-key
                                                 v-model="rememberKey"
                                                 explain="Remember key phrase. Your keys will persist until you close the browser tab."
@@ -79,27 +90,20 @@
     </div>
 </template>
 <script lang="ts">
-
-
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
     import {keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
-
     import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
-    // import Torus from "@/components/access/Torus.vue";
-
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
-
     import * as bip39 from 'bip39';
-
-
     import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
+    import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
 
     @Component({
         components: {
@@ -108,16 +112,26 @@
             TextDisplayCopy,
             MnemonicDisplay,
             Spinner,
-            TorusGoogle
+            TorusGoogle,
+            VerifyMnemonic,
+            MnemonicCopied
         }
     })
     export default class CreateWallet extends Vue{
-        isLoad: boolean = false;
-        rememberKey:boolean = false;
+        // Mnemonic
         newPrivateKey: string|null =null;
         keyPhrase: string = "";
         keyPair: KeyPair|null = null;
+        // Verify Mnemonic
+        isSecured: boolean = false;
+        isVerified: boolean = false;
+        // Access Wallet
+        rememberKey:boolean = false;
+        isLoad: boolean = false;
 
+        get canVerify(){
+            return this.isSecured ? true: false;
+        }
 
         createKey():void{
             let mnemonic = bip39.generateMnemonic(256);
@@ -136,18 +150,24 @@
             this.newPrivateKey = privkstr;
         }
 
+        verifyMnemonic(){
+            // @ts-ignore
+            this.$refs.verify.open();
+        }
 
+        complete(){
+            this.isVerified = true;
+        }
+        
         async access(): Promise<void> {
             if (!this.keyPair) return;
 
             this.isLoad = true;
             this.$store.state.rememberKey = this.rememberKey;
-            let parent = this;
 
-            setTimeout(()=>{
-                parent.$store.dispatch('accessWallet', this.keyPair);
+            setTimeout(() => {
+                this.$store.dispatch('accessWallet', this.keyPair);
             }, 500);
-
         }
     }
 </script>
@@ -240,11 +260,6 @@ a {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 60px;
-}
-
-
-.stage_1, .stage_2{
-    /*padding: 30px;*/
 }
 
 .mneumonic_disp_col {
@@ -362,8 +377,6 @@ a {
     margin: 0px auto;
 }
 
-
-
 @include main.medium-device {
     .stage_1 {
         min-width: unset;
@@ -372,12 +385,10 @@ a {
 
 @include main.mobile-device {
     .stage_1 {
-        /*padding: 0;*/
         min-width: unset;
     }
 
     .stage_2 {
-        /*padding: 0;*/
         min-width: unset;
     }
 
