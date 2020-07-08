@@ -7,16 +7,16 @@
                 <v-text-field
                         class="pass"
                         label="Password"
-                        outlined
                         dense
-                        color="#4C2E56"
+                        solo
+                        flat
                         type="password"
                         v-model="pass"
                         v-if="file"
                         hide-details
                 ></v-text-field>
                 <p class="err">{{error}}</p>
-                <remember-key v-model="rememberKey" v-if="file"></remember-key>
+                <remember-key class="remember" v-model="rememberPass" v-if="file" @is-valid="isRememberValid"></remember-key>
                 <v-btn
                         class="ava_button"
                         @click="access"
@@ -44,47 +44,60 @@ export default {
         return {
             pass: "",
             file: null,
-            rememberKey: false,
+            rememberPass: null,
+            rememberValid: true,
             isLoading: false,
             error: "",
         }
     },
     methods: {
         onfile(val) {
-            console.log(val);
             this.file = val;
         },
 
+        isRememberValid(val){
+            this.rememberValid = val;
+        },
         access() {
             if (!this.canSubmit || this.isLoading) return;
 
             let parent = this;
             this.error = '';
             this.isLoading = true;
+
+            let rememberPass = this.rememberPass;
             let data = {
                 password: this.pass,
                 file: this.file
             };
 
-            // Set the key remembering state
-            this.$store.state.rememberKey = this.rememberKey;
-
-
-            setTimeout(function () {
-                parent.$store.dispatch('importKeyfile', data).then((res) => {
+            setTimeout(() => {
+                this.$store.dispatch('importKeyfile', data).then((res) => {
                     parent.isLoading = false;
+
+                    if(rememberPass){
+                        parent.$store.dispatch('rememberWallets', rememberPass)
+                    }
                 }).catch((err) => {
+                    console.log(err);
+                    if(err === "INVALID_PASS"){
+                        parent.error = "Invalid password."
+                    }else{
+                        parent.error = err.message;
+                    }
                     parent.isLoading = false;
-                    parent.error = err.message;
                 });
-            }, 200);}
+
+            }, 200);
+        }
     },
     computed: {
         canSubmit() {
-            if (this.file && this.pass) {
-                return true;
+            if (!this.file || !this.pass || !this.rememberValid) {
+                return false;
             }
-            return false;
+
+            return true;
         }
     }
 }
@@ -93,6 +106,9 @@ export default {
 @use '../../main';
 
 
+.pass{
+    background-color: #FFF !important;
+}
 .ava_button{
     width: 100%;
     margin-bottom: 22px;
@@ -112,8 +128,8 @@ export default {
 }
 
 .content{
-    width: 100%;
-    max-width: 240px;
+    width: 340px;
+    max-width: 100%;
     margin: 0px auto;
 }
 
@@ -125,7 +141,8 @@ h1 {
 .file_in {
     margin: 30px auto 10px;
     font-size: 13px;
-    background-color: transparent;
+    border: none !important;
+    background-color: #fff !important;
     /*min-width: 200px*/
 }
 
@@ -135,7 +152,9 @@ a {
     margin: 10px 0 20px;
 }
 
-
+.remember{
+    margin: 12px 0;
+}
 .err {
     font-size: 13px;
     color: #f00;

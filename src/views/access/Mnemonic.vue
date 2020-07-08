@@ -9,7 +9,8 @@ import {Buffer} from "buffer";
             <textarea v-model="phrase"></textarea>
             <remember-key
                     class="remember"
-                    v-model="isRemember"
+                    v-model="rememberPass"
+                    @is-valid="isRememberValid"
                     explain="Remember key phrase for easy access"
             ></remember-key>
             <div class="button_container">
@@ -18,6 +19,7 @@ import {Buffer} from "buffer";
                     @click="access"
                     depressed
                     :loading="isLoading"
+                    :disabled="!canSubmit"
                 >Access Wallet</v-btn>
                 <router-link to="/access" class="link">Cancel</router-link>
             </div>
@@ -52,8 +54,9 @@ import {Buffer} from "buffer";
     export default class Mnemonic extends Vue{
         phrase:string = "";
         isLoading:boolean = false;
-        isRemember:boolean = false;
+        rememberPass:string|null = null;
         err:string = "";
+        rememberValid: boolean = true;
 
         errCheck(){
             let phrase = this.phrase;
@@ -69,32 +72,64 @@ import {Buffer} from "buffer";
             return true;
         }
 
+        isRememberValid(val:boolean){
+            this.rememberValid = val;
+        }
+
+
+        get wordCount():number{
+            return this.phrase.trim().split(' ').length;
+        }
+
+        get canSubmit(){
+
+            if(this.wordCount < 24){
+                return false
+            }
+
+            if(!this.rememberValid){
+                return false;
+            }
+
+
+
+
+
+            return true;
+        }
+
         async access() {
             let phrase = this.phrase.trim();
 
             this.isLoading = true;
-            this.$store.state.rememberKey = this.isRemember;
+            // this.$store.state.rememberKey = this.rememberPass;
 
             if (!this.errCheck()) {
                 this.isLoading = false;
                 return;
             }
 
-            try {
-                let entropy = bip39.mnemonicToEntropy(phrase);
-                let b = new Buffer(entropy, "hex");
 
-                let addr = keyChain.importKey(b);
-                let keypair = keyChain.getKey(addr);
+            setTimeout(async () => {
+                try {
+                    let entropy = bip39.mnemonicToEntropy(phrase);
+                    let b = new Buffer(entropy, "hex");
+
+                    let addr = keyChain.importKey(b);
+                    let keypair = keyChain.getKey(addr);
 
 
-                await this.$store.dispatch('accessWallet', keypair);
-                this.isLoading = false;
-            }catch(e){
-                this.isLoading = false;
-                this.err = 'Invalid key phrase.'
-            }
+                    await this.$store.dispatch('accessWallet', keypair);
 
+                    if(this.rememberPass){
+                        this.$store.dispatch('rememberWallets', this.rememberPass);
+                    }
+                    this.isLoading = false;
+                }catch(e){
+                    this.isLoading = false;
+                    this.err = 'Invalid key phrase.'
+                }
+            }, 500)
         }
     }
 </script>

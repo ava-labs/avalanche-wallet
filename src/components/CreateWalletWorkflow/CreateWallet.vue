@@ -66,16 +66,23 @@
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
                                         <remember-key
-                                            v-model="rememberKey"
-                                            explain="Remember key phrase. Your keys will persist until you close the browser tab."
+
+                                                v-model="rememberPassword"
+                                                @is-valid="isRememberValid"
+                                                class="remember_wallet"
+                                                complete="onremember"
+                                                explain="Remember my wallet."
                                         ></remember-key>
+                                       
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
                                                 <Spinner v-if="isLoad" class="spinner" :color="'#4C2E56'"></Spinner>
+
                                                 <div v-else>
                                                     <button
                                                             class="ava_button access generate"
                                                             @click="access"
+                                                            :disabled="!canSubmit"
                                                     >Access Wallet</button>
                                                     <router-link to="/" class="link">Cancel</router-link>
                                                 </div>
@@ -106,9 +113,11 @@
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
+
     import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
     import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
     import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
+
 
     @Component({
         components: {
@@ -123,6 +132,9 @@
         }
     })
     export default class CreateWallet extends Vue{
+        isLoad: boolean = false;
+        rememberPassword:string|null = null;
+        rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
         // Mnemonic
         newPrivateKey: string|null =null;
         keyPhrase: string = "";
@@ -159,6 +171,15 @@
             this.newPrivateKey = privkstr;
         }
 
+        // Will be true if the values in remember wallet checkbox are valid
+        isRememberValid(val: boolean){
+            this.rememberValid = val;
+        }
+
+        get canSubmit():boolean{
+            if(!this.rememberValid) return false;
+            return true;
+        }
         verifyMnemonic(){
             // @ts-ignore
             this.$refs.verify.open();
@@ -172,10 +193,32 @@
             if (!this.keyPair) return;
 
             this.isLoad = true;
-            this.$store.state.rememberKey = this.rememberKey;
 
-            setTimeout(() => {
-                this.$store.dispatch('accessWallet', this.keyPair);
+
+            let parent = this;
+
+            setTimeout(async ()=>{
+                await parent.$store.dispatch('accessWallet', this.keyPair);
+
+                if(this.rememberPassword && this.rememberValid){
+                    console.log("Will remember..");
+                    parent.$store.dispatch('rememberWallets', this.rememberPassword);
+                }
+
+                //@ts-ignore
+                // console.log(parent.$refs)
+                // parent.$refs.remember_wallet.save();
+                // if(password){
+                //     console.log("will remember")
+                //     let payload:rememberWalletIn = {
+                //         wallets: [wallet],
+                //         password: password
+                //     }
+                //     parent.$store.dispatch('rememberWallets', payload);
+                // }
+
+            
+
             }, 500);
         }
     }
@@ -390,6 +433,15 @@ a {
     margin: 0px auto;
 }
 
+
+
+.remember_wallet{
+    margin: 20px 0;
+}
+
+
+
+
 @include main.medium-device {
     .stage_1 {
         min-width: unset;
@@ -412,6 +464,14 @@ a {
 
     .cols {
         display: block;
+    }
+
+    .options{
+        margin: 30px 0px;
+
+        > button{
+            width: 100%;
+        }
     }
 
     .mneumonic_disp_col {
@@ -481,4 +541,13 @@ a {
         }
     }
 }
+</style>
+<style lang="scss">
+    .create_wallet{
+        .remember_wallet{
+            .v-expansion-panel-header, .v-expansion-panel-content__wrap{
+                padding: 6px 0;
+            }
+        }
+    }
 </style>

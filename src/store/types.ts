@@ -14,11 +14,11 @@ export interface RootState {
     // asset_meta: AssetMetaDict,
     // Assets?: Module<AssetsState,RootState>,
     isAuth: boolean,
-    privateKey: string,
+    // privateKey: string,
     addresses: string[],
     selectedAddress: string,
     modals: ModalDict,
-    rememberKey: boolean,
+    // rememberKey: boolean,
     activeWallet: null|AvaHdWallet
     wallets: AvaHdWallet[]
     address: String|null
@@ -116,6 +116,10 @@ export interface IssueTxInput{
 // export interface AddWalletInput {
 //     pk: string,
 //     type: wallet_type
+// }
+// export interface rememberWalletIn {
+//     wallets: AvaHdWallet[],
+//     password: string
 // }
 
 

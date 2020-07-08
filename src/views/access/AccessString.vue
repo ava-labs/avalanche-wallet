@@ -6,10 +6,11 @@
             <p class="err" v-if="error">{{error}}</p>
             <remember-key
                 class="remember"
-                v-model="rememberKey"
+                v-model="rememberPass"
+                @is-valid="isRememberValid"
                 explain="Remember keys for easy access"
             ></remember-key>
-            <v-btn class="ava_button but_primary" @click="access" color="#4C2E56" depressed>Access Wallet</v-btn>
+            <v-btn class="ava_button but_primary" @click="access" color="#4C2E56" depressed :disabled="!canSubmit" :loading="isLoading">Access Wallet</v-btn>
             <hr>
             <router-link to="/access" class="link">Cancel</router-link>
         </form>
@@ -38,26 +39,40 @@
     export default class AccessString extends Vue{
         isLoading:boolean = false;
         privateKey:string = "";
-        rememberKey:boolean = false;
+        rememberValid:boolean = true;
+        rememberPass:string|null = null;
         error:string = "";
 
+        isRememberValid(val:boolean){
+            this.rememberValid = val;
+        }
 
-        async access(){
-            let parent = this;
+        access(){
             this.isLoading = true;
-            this.$store.state.rememberKey = this.rememberKey;
 
-            try{
-                let chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
-                let keyPair:AVMKeyPair = keyToKeypair(this.privateKey, chainId);
-                console.log(keyPair)
-                let res = await this.$store.dispatch('accessWallet', keyPair);
-                parent.isLoading = false;
-            }catch (e) {
-                this.error = 'Invalid Private Key';
-                this.isLoading = false;
-            }
 
+            setTimeout(async () => {
+                try{
+                    let chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
+                    let keyPair:AVMKeyPair = keyToKeypair(this.privateKey, chainId);
+
+                    await this.$store.dispatch('accessWallet', keyPair);
+                    if(this.rememberPass){
+                        this.$store.dispatch('rememberWallets', this.rememberPass);
+                    }
+
+                    this.isLoading = false;
+                }catch (e) {
+                    this.error = 'Invalid Private Key';
+                    this.isLoading = false;
+                }
+            }, 500);
+        }
+
+        get canSubmit(){
+            if(!this.rememberValid) return false;
+
+            return true;
         }
     }
 
@@ -94,7 +109,6 @@ form {
 }
 
 .remember {
-    margin-top: -10px;
     font-size: main.$s-size;
 }
 
