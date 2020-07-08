@@ -37,6 +37,7 @@
         width: 400px;
         max-width: 100%;
         padding: 30px;
+        background-color: #f2f2f2;
     }
 
     .copyBut{
