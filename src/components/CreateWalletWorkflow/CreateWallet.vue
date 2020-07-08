@@ -50,16 +50,19 @@
                                     </p>
                                     <div class="access_cont">
                                         <remember-key
-                                                v-model="rememberKey"
-                                                explain="Remember key phrase. Your keys will persist until you close the browser tab."
+                                                v-model="rememberPassword"
+                                                @is-valid="isRememberValid"
+                                                complete="onremember"
+                                                explain="Remember my wallet."
                                         ></remember-key>
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
-                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
+                                                <Spinner v-if="isLoad" class="spinner" color="#000"></Spinner>
                                                 <div v-else>
                                                     <button
                                                             class="ava_button access generate"
                                                             @click="access"
+                                                            :disabled="!canSubmit"
                                                     >Access Wallet</button>
                                                     <router-link to="/" class="link">Cancel</router-link>
                                                 </div>
@@ -79,8 +82,6 @@
     </div>
 </template>
 <script lang="ts">
-
-
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
@@ -98,8 +99,7 @@
 
     import * as bip39 from 'bip39';
 
-
-    import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    import {KeyPair} from "avalanche";
 
     @Component({
         components: {
@@ -113,7 +113,8 @@
     })
     export default class CreateWallet extends Vue{
         isLoad: boolean = false;
-        rememberKey:boolean = false;
+        rememberPassword:string|null = null;
+        rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
         newPrivateKey: string|null =null;
         keyPhrase: string = "";
         keyPair: KeyPair|null = null;
@@ -136,16 +137,41 @@
             this.newPrivateKey = privkstr;
         }
 
+        // Will be true if the values in remember wallet checkbox are valid
+        isRememberValid(val: boolean){
+            this.rememberValid = val;
+        }
 
+        get canSubmit():boolean{
+            if(!this.rememberValid) return false;
+            return true;
+        }
         async access(): Promise<void> {
             if (!this.keyPair) return;
 
             this.isLoad = true;
-            this.$store.state.rememberKey = this.rememberKey;
+
             let parent = this;
 
-            setTimeout(()=>{
-                parent.$store.dispatch('accessWallet', this.keyPair);
+            setTimeout(async ()=>{
+                await parent.$store.dispatch('accessWallet', this.keyPair);
+
+                if(this.rememberPassword && this.rememberValid){
+                    console.log("Will remember..");
+                    parent.$store.dispatch('rememberWallets', this.rememberPassword);
+                }
+
+                //@ts-ignore
+                // console.log(parent.$refs)
+                // parent.$refs.remember_wallet.save();
+                // if(password){
+                //     console.log("will remember")
+                //     let payload:rememberWalletIn = {
+                //         wallets: [wallet],
+                //         password: password
+                //     }
+                //     parent.$store.dispatch('rememberWallets', payload);
+                // }
             }, 500);
 
         }
@@ -388,6 +414,14 @@ a {
 
     .cols {
         display: block;
+    }
+
+    .options{
+        margin: 30px 0px;
+
+        > button{
+            width: 100%;
+        }
     }
 
     .mneumonic_disp_col {

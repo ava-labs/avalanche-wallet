@@ -41,8 +41,6 @@ export default new Vuex.Store({
     },
     state: {
         isAuth: false,
-        rememberKey: false, // if true the keytore will remember keys during browser session
-        privateKey: '',
         addresses: [],
         selectedAddress: '',
         modals: {},
@@ -174,13 +172,14 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet({state, dispatch, commit}, key: AVMKeyPair){
+        async accessWallet({state, dispatch, commit}, key: AVMKeyPair): Promise<AvaHdWallet>{
 
             let wallet:AvaHdWallet = await dispatch('addWallet', key);
             await dispatch('activateWallet', wallet);
 
             state.isAuth = true;
             dispatch('onAccess');
+            return wallet;
         },
 
         async accessWalletMultiple({state, dispatch, commit}, keys: AVMKeyPair[]){
@@ -210,9 +209,7 @@ export default new Vuex.Store({
 
             // Remove other data
             store.state.selectedAddress = '';
-            store.state.privateKey =  '';
             store.state.isAuth = false;
-            store.state.rememberKey = false;
 
 
             // Clear Assets
@@ -220,6 +217,9 @@ export default new Vuex.Store({
 
             // Clear session storage
             sessionStorage.removeItem('pks');
+
+            // Clear local storage
+            localStorage.removeItem('w');
 
             router.push('/');
         },
@@ -267,9 +267,6 @@ export default new Vuex.Store({
             state.wallets.push(wallet);
 
 
-            if(state.rememberKey){
-                dispatch('saveKeys');
-            }
 
             return wallet;
         },
@@ -278,9 +275,6 @@ export default new Vuex.Store({
             let index = state.wallets.indexOf(wallet);
             state.wallets.splice(index,1);
 
-            if(state.rememberKey){
-                dispatch('saveKeys');
-            }
         },
 
         // toggleWalletMode({state,dispatch}){
@@ -322,36 +316,56 @@ export default new Vuex.Store({
         },
 
 
+        async rememberWallets({state, dispatch}, pass: string|undefined){
+            if(!pass) return;
+
+
+            let wallets = state.wallets;
+
+            let file = await makeKeyfile(wallets,pass);
+            let fileString = JSON.stringify(file);
+            localStorage.setItem('w', fileString);
+
+            console.log('remember', file);
+
+            dispatch('Notifications/add', {
+                title: "Remember Wallet",
+                message: "Wallets are stored securely for easy access.",
+                type: "info"
+            });
+        },
 
         // Tries to read the session storage and add keys to the wallet
-        async autoAccess({state, dispatch}){
-            let sessionKeys = sessionStorage.getItem('pks');
-            if(!sessionKeys) return;
+        // async autoAccess({state, dispatch}){
 
-            state.isLoadingPersistKeys = true;
-
-
-            try{
-                let sessionData:SessionPersistFile = JSON.parse(sessionKeys);
-
-                let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-                // console.log()
-                // console.log(chainID)
-
-                let inputData:AVMKeyPair[] = sessionData.map(key => {
-                    return keyToKeypair(key.key, chainID);
-                });
-
-                await dispatch('accessWalletMultiple', inputData);
-                state.rememberKey = true;
-                state.isLoadingPersistKeys = false;
-                return true;
-            }catch (e) {
-                console.log(e);
-                state.isLoadingPersistKeys = false;
-                return false;
-            }
-        },
+            // return ;
+            // let sessionKeys = sessionStorage.getItem('pks');
+            // if(!sessionKeys) return;
+            //
+            // state.isLoadingPersistKeys = true;
+            //
+            //
+            // try{
+            //     let sessionData:SessionPersistFile = JSON.parse(sessionKeys);
+            //
+            //     let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
+            //     // console.log()
+            //     // console.log(chainID)
+            //
+            //     let inputData:AVMKeyPair[] = sessionData.map(key => {
+            //         return keyToKeypair(key.key, chainID);
+            //     });
+            //
+            //     await dispatch('accessWalletMultiple', inputData);
+            //     state.rememberKey = true;
+            //     state.isLoadingPersistKeys = false;
+            //     return true;
+            // }catch (e) {
+            //     console.log(e);
+            //     state.isLoadingPersistKeys = false;
+            //     return false;
+            // }
+        // },
 
         async issueBatchTx({state}, data:IssueBatchTxInput){
             let wallet = state.activeWallet;
@@ -456,10 +470,11 @@ export default new Vuex.Store({
                             })
 
                         }catch(err){
-                            reject( {
-                                success: false,
-                                message: 'Unable to read key file.'
-                            });
+                            reject(err);
+                            // reject( {
+                            //     success: false,
+                            //     message: 'Unable to read key file.'
+                            // });
                         }
                     });
                 reader.readAsText(file);

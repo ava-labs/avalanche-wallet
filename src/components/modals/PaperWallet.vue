@@ -292,5 +292,6 @@
     .pdf_preview{
         width: 420px;
         height: 320px;
+        border: 1px solid #ddd;
     }
 </style>
