@@ -142,9 +142,6 @@
         // Verify Mnemonic
         isSecured: boolean = false;
         isVerified: boolean = false;
-        // Access Wallet
-        rememberKey:boolean = false;
-        isLoad: boolean = false;
 
         get canVerify(){
             return this.isSecured ? true : false;
