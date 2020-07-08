@@ -23,7 +23,7 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import FaucetLink from "@/components/misc/FaucetLink.vue";
-    import FungibleRow from "@/components/wallet/home/FungibleRow.vue";
+    import FungibleRow from "@/components/wallet/portfolio/FungibleRow.vue";
     import AvaAsset from "@/js/AvaAsset";
     import {IWalletBalanceItem} from "@/store/types";
 

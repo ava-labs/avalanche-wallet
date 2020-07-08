@@ -25,7 +25,7 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    import KeyRow from "@/components/wallet/keys/KeyRow.vue";
+    import KeyRow from "@/components/wallet/manage/KeyRow.vue";
     import AvaHdWallet from "@/js/AvaHdWallet";
     import {AvaWallet} from "@/js/AvaWallet";
 

@@ -34,10 +34,10 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    import ExportWallet from "@/components/wallet/keys/ExportWallet.vue";
-    import AddKeyFile from "@/components/wallet/keys/AddKeyFile.vue";
-    import AddKeyString from "@/components/wallet/keys/AddKeyString.vue";
-    import MyKeys from "@/components/wallet/keys/MyKeys.vue";
+    import ExportWallet from "@/components/wallet/manage/ExportWallet.vue";
+    import AddKeyFile from "@/components/wallet/manage/AddKeyFile.vue";
+    import AddKeyString from "@/components/wallet/manage/AddKeyString.vue";
+    import MyKeys from "@/components/wallet/manage/MyKeys.vue";
 
     @Component({
         components: {
@@ -52,7 +52,7 @@
     }
 </script>
 <style scoped lang="scss">
-    @use '../../../main';
+    @use '../../main';
 
     .cols{
         display: grid;
@@ -173,7 +173,7 @@
     }
 </style>
 <style lang="scss">
-@use '../../../main';
+@use '../../main';
     .cols{
         .v-tabs-bar{
             margin: 15px 0px;

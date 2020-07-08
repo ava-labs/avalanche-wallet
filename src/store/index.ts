@@ -129,12 +129,6 @@ export default new Vuex.Store({
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
             return addresses;
         },
-        appReady(state: RootState, getters){
-            let avaAsset = getters['Assets/AssetAVA'];
-
-            if(!avaAsset) return false;
-            return true;
-        },
         activeKey(state): AVMKeyPair|null{
             if(!state.activeWallet){
                 return null;
