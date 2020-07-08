@@ -4,6 +4,7 @@
             <b-row>
                 <b-col>
                     <transition name="fade" mode="out-in">
+                        <!-- PHASE 1 -->
                         <div v-if="!newPrivateKey" class="stage_1">
                             <div class="img_container">
                                 <img src="@/assets/diamond-secondary.png" alt />
@@ -15,17 +16,17 @@
                                 <p>or</p>
                                 <TorusGoogle class="torus_but"></TorusGoogle>
                             </div>
-
                             <router-link to="/" class="link">Cancel</router-link>
                         </div>
-
+                        <!-- PHASE 2 -->
                         <div v-else class="stage_2">
                             <div class="cols">
+                                <!-- LEFT -->
                                 <div class="mneumonic_disp_col">
                                     <div class="mnemonic_disp">
-                                        <mnemonic-display :phrase="keyPhrase" :bgColor="'#F5F6FA'"></mnemonic-display>
-                                        <p class="phrase_raw">{{keyPhrase}}</p>
-                                        <div class="mneumonic_button_container">
+                                        <mnemonic-display :phrase="keyPhrase" :bgColor="verificatiionColor"></mnemonic-display>
+                                        <p class="phrase_raw" v-bind:class="{ verified: isVerified }">{{keyPhrase}}</p>
+                                        <div class="mneumonic_button_container" v-if="!isVerified">
                                             <CopyText
                                                     :value="keyPhrase"
                                                     class="ava_button copy_phrase"
@@ -37,28 +38,46 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <!-- RIGHT -->
                                 <div class="phrase_disp_col">
-                                    <img src="@/assets/keyphrase.png" alt />
-                                    <header>
+                                    <img src="@/assets/keyphrase.png" alt v-if="!isVerified" />
+                                    <img src="@/assets/success.svg" alt v-else />
+                                    <header v-if="!isVerified">
                                         <h1>This is your 24 word key phrase.</h1>
                                         <p>You will use these words to access your wallet.</p>
                                     </header>
-                                    <p class="warn">
+                                    <header v-else>
+                                        <h1>Congratulations!</h1>
+                                        <p>It's time to open your Avalanche Wallet.</p>
+                                    </header>   
+                                    <p class="warn" v-if="!isVerified">
                                         <span class="label">Attention!</span>
                                         <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
                                     </p>
-                                    <div class="access_cont">
+                                    <!-- STEP 2a - VERIFY -->
+                                    <div class="verify_cont" v-if="!isVerified">
+                                        <MnemonicCopied
+                                                v-model="isSecured"
+                                                explain="I wrote down my mnemonic phrase in a secure location."
+                                        ></MnemonicCopied>
+                                        <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
+                                        <button class="but_primary ava_button" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
+                                    </div>
+                                    <!-- STEP 2b - ACCESS -->
+                                    <div class="access_cont" v-if="isVerified">
                                         <remember-key
+
                                                 v-model="rememberPassword"
                                                 @is-valid="isRememberValid"
                                                 class="remember_wallet"
                                                 complete="onremember"
                                                 explain="Remember my wallet."
                                         ></remember-key>
+                                       
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
-                                                <Spinner v-if="isLoad" class="spinner" color="#000"></Spinner>
+                                                <Spinner v-if="isLoad" class="spinner" :color="'#4C2E56'"></Spinner>
+
                                                 <div v-else>
                                                     <button
                                                             class="ava_button access generate"
@@ -85,22 +104,20 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
     import {keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
     import {Buffer} from "buffer/";
-
     import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
-    // import Torus from "@/components/access/Torus.vue";
-
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
-
     import * as bip39 from 'bip39';
 
-    import {KeyPair} from "avalanche";
+    import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
+    import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
+
 
     @Component({
         components: {
@@ -109,17 +126,33 @@
             TextDisplayCopy,
             MnemonicDisplay,
             Spinner,
-            TorusGoogle
+            TorusGoogle,
+            VerifyMnemonic,
+            MnemonicCopied
         }
     })
     export default class CreateWallet extends Vue{
         isLoad: boolean = false;
         rememberPassword:string|null = null;
         rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
+        // Mnemonic
         newPrivateKey: string|null =null;
         keyPhrase: string = "";
         keyPair: KeyPair|null = null;
+        // Verify Mnemonic
+        isSecured: boolean = false;
+        isVerified: boolean = false;
+        // Access Wallet
+        rememberKey:boolean = false;
+        isLoad: boolean = false;
 
+        get canVerify(){
+            return this.isSecured ? true : false;
+        }
+
+        get verificatiionColor() {
+            return this.isVerified ? '#a9efbf' : '#F5F6FA';
+        }
 
         createKey():void{
             let mnemonic = bip39.generateMnemonic(256);
@@ -147,10 +180,20 @@
             if(!this.rememberValid) return false;
             return true;
         }
+        verifyMnemonic(){
+            // @ts-ignore
+            this.$refs.verify.open();
+        }
+
+        complete(){
+            this.isVerified = true;
+        }
+        
         async access(): Promise<void> {
             if (!this.keyPair) return;
 
             this.isLoad = true;
+
 
             let parent = this;
 
@@ -173,8 +216,10 @@
                 //     }
                 //     parent.$store.dispatch('rememberWallets', payload);
                 // }
-            }, 500);
 
+            
+
+            }, 500);
         }
     }
 </script>
@@ -269,11 +314,6 @@ a {
     column-gap: 60px;
 }
 
-
-.stage_1, .stage_2{
-    /*padding: 30px;*/
-}
-
 .mneumonic_disp_col {
     .mnemonic_disp {
         max-width: 560px;
@@ -289,6 +329,10 @@ a {
         text-align: justify;
         border-radius: 4px;
         margin: 30px 0px !important;
+    }
+
+    .verified {
+        background-color: main.$green-light;
     }
 
     .mneumonic_button_container {
@@ -390,9 +434,11 @@ a {
 }
 
 
+
 .remember_wallet{
     margin: 20px 0;
 }
+
 
 
 
@@ -404,12 +450,10 @@ a {
 
 @include main.mobile-device {
     .stage_1 {
-        /*padding: 0;*/
         min-width: unset;
     }
 
     .stage_2 {
-        /*padding: 0;*/
         min-width: unset;
     }
 

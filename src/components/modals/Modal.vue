@@ -25,20 +25,25 @@
             this.isActive = true;
         }
 
+
         bgclick(){
             if(this.can_close){
                 this.close();
             }
         }
 
-        close(){
+        public close(){
+
+
             this.isActive = false;
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+@use '../../main';
 
     .modal_topbar{
+
         background-color: #f2f2f2;
         border-bottom: 1px solid #ddd;
         color: #444;
@@ -69,11 +74,9 @@
         height: 100vh;
         overflow: scroll;
         display: flex;
-
-
     }
 
-    .modal_bg{
+    .modal_bg {
         position: absolute;
         top: 0;
         left: 0;
