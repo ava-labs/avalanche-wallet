@@ -3,7 +3,6 @@ import VueRouter, {Route} from 'vue-router'
 import Home from '../views/Home.vue'
 
 import Transfer from '@/views/wallet/Transfer.vue';
-import Advanced from '@/components/wallet/advanced/Advanced.vue';
 import ManageKeys from '@/views/wallet/ManageKeys.vue';
 import Menu from '../views/access/Menu.vue';
 import AccessString from '../views/access/AccessString.vue';
