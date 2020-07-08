@@ -4,7 +4,7 @@
             <button @click="close" class="close_but">
                 <fa icon="times"></fa>
             </button>
-            <h4>Fill In Mnemonic Phrase Below</h4>
+            <h3>Fill In Mnemonic Phrase Below</h3>
             <div class="words">
                 <div v-for="i in 24" :key="i" class="mnemonic_in" tabindex="-1">
                     <p>{{i}}.</p>
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <p class="err">{{err}}</p>
-            <button class="but_primary" @click="verify">Verify</button>
+            <button class="but_primary ava_button" @click="verify">Verify</button>
         </div>
     </modal>
 </template>
@@ -108,10 +108,14 @@ export default class VerifyMnemonic extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use "../../main";
+
 .mnemonic_body {
     padding: 30px;
     text-align: center;
+    width: 450px;
 }
+
 .close_but {
     position: absolute;
     top: 12px;
@@ -125,6 +129,7 @@ export default class VerifyMnemonic extends Vue {
         opacity: 1;
     }
 }
+
 .verify {
     position: fixed;
     height: 100%;
@@ -149,16 +154,20 @@ export default class VerifyMnemonic extends Vue {
     background-color: #fff;
     padding: 40px 30px;
     max-width: 100%;
-    width: 420px;
+    width: 700px;
     z-index: 1;
     border-radius: 14px;
+}
+
+h3 {
+    margin-bottom: 30px;
 }
 
 .words {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 14px;
-    font-size: 0.8rem;
+    grid-gap: 20px;
+    font-size: 1rem;
     margin-bottom: 30px;
 }
 
@@ -166,16 +175,18 @@ export default class VerifyMnemonic extends Vue {
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid main.$primary-color-light;
     outline: none;
 
     p {
-        margin: 0;
-        color: #666;
+        margin: 0 5px 0 0 !important;
+        color: main.$primary-color-light;
     }
 
     input {
+        color: main.$primary-color;
         background-color: transparent;
+        font-weight: 700;
         margin: 0;
         border: none;
         width: 40px;
@@ -201,5 +212,16 @@ export default class VerifyMnemonic extends Vue {
     margin: 0px auto;
     text-align: left;
     color: #e84142;
+}
+
+@include main.mobile-device {
+    .mnemonic-body {
+        width: 90vw;
+    }
+
+    .words {
+        font-size: .8rem;
+        grid-gap: 14px;
+    }
 }
 </style>

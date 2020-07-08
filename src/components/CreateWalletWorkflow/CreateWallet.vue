@@ -24,9 +24,9 @@
                                 <!-- LEFT -->
                                 <div class="mneumonic_disp_col">
                                     <div class="mnemonic_disp">
-                                        <mnemonic-display :phrase="keyPhrase" :bgColor="'#F5F6FA'"></mnemonic-display>
-                                        <p class="phrase_raw">{{keyPhrase}}</p>
-                                        <div class="mneumonic_button_container">
+                                        <mnemonic-display :phrase="keyPhrase" :bgColor="verificatiionColor"></mnemonic-display>
+                                        <p class="phrase_raw" v-bind:class="{ verified: isVerified }">{{keyPhrase}}</p>
+                                        <div class="mneumonic_button_container" v-if="!isVerified">
                                             <CopyText
                                                     :value="keyPhrase"
                                                     class="ava_button copy_phrase"
@@ -40,12 +40,17 @@
                                 </div>
                                 <!-- RIGHT -->
                                 <div class="phrase_disp_col">
-                                    <img src="@/assets/keyphrase.png" alt />
-                                    <header>
+                                    <img src="@/assets/keyphrase.png" alt v-if="!isVerified" />
+                                    <img src="@/assets/success.svg" alt v-else />
+                                    <header v-if="!isVerified">
                                         <h1>This is your 24 word key phrase.</h1>
                                         <p>You will use these words to access your wallet.</p>
                                     </header>
-                                    <p class="warn">
+                                    <header v-else>
+                                        <h1>Congratulations!</h1>
+                                        <p>It's time to open your Avalanche Wallet.</p>
+                                    </header>   
+                                    <p class="warn" v-if="!isVerified">
                                         <span class="label">Attention!</span>
                                         <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
                                     </p>
@@ -56,17 +61,17 @@
                                                 explain="I wrote down my mnemonic phrase in a secure location."
                                         ></MnemonicCopied>
                                         <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
-                                        <button class="but_primary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
+                                        <button class="but_primary ava_button" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
                                         <remember-key
-                                                v-model="rememberKey"
-                                                explain="Remember key phrase. Your keys will persist until you close the browser tab."
+                                            v-model="rememberKey"
+                                            explain="Remember key phrase. Your keys will persist until you close the browser tab."
                                         ></remember-key>
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
-                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
+                                                <Spinner v-if="isLoad" class="spinner" :color="'#4C2E56'"></Spinner>
                                                 <div v-else>
                                                     <button
                                                             class="ava_button access generate"
@@ -130,7 +135,11 @@
         isLoad: boolean = false;
 
         get canVerify(){
-            return this.isSecured ? true: false;
+            return this.isSecured ? true : false;
+        }
+
+        get verificatiionColor() {
+            return this.isVerified ? '#a9efbf' : '#F5F6FA';
         }
 
         createKey():void{
@@ -277,6 +286,10 @@ a {
         text-align: justify;
         border-radius: 4px;
         margin: 30px 0px !important;
+    }
+
+    .verified {
+        background-color: main.$green-light;
     }
 
     .mneumonic_button_container {
