@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-// import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import VueI18n from 'vue-i18n'
-import VueAnalytics from 'vue-analytics';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 // Install BootstrapVue
@@ -22,17 +20,9 @@ Vue.component('country-flag', CountryFlag);
 
 import ToggleButton from 'vue-js-toggle-button';
 Vue.use(ToggleButton)
-// Install BootstrapVue
-// Vue.use(BootstrapVue);
-// Vue.use(IconsPlugin);
 
 Vue.config.productionTip = false;
 
-// Configuration VueAnalytics
-Vue.use(VueAnalytics, {
-  id: 'UA-126268251-5',
-  router
-});
 
 new Vue({
   router,

@@ -26,9 +26,6 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 import {AmountOutput, AVMKeyChain, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import {makeKeyfile, readKeyFile} from "@/js/Keystore";
-import AvaSingletonWallet from "@/js/AvaSingletonWallet";
-import {wallet_type} from "@/js/IAvaHdWallet";
-import {AvaWallet} from "@/js/AvaWallet";
 import {AssetsDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 
@@ -238,21 +235,12 @@ export default new Vuex.Store({
                     message: 'Private key and assets removed from the wallet.'
                 });
             }
-
-          //   let addrs = state.addresses;
-          // for(var i=addrs.length-1; i >= 0; i--){
-          //     let addr = state.addresses[i];
-          //     await dispatch('removeKey', addr);
-          // }
         },
 
         async addWallet({state, dispatch}, keypair:AVMKeyPair): Promise<AvaHdWallet>{
             let wallet = new AvaHdWallet(keypair);
 
             state.wallets.push(wallet);
-
-
-
             return wallet;
         },
 
@@ -271,8 +259,6 @@ export default new Vuex.Store({
             let file = await makeKeyfile(wallets,pass);
             let fileString = JSON.stringify(file);
             localStorage.setItem('w', fileString);
-
-            console.log('remember', file);
 
             dispatch('Notifications/add', {
                 title: "Remember Wallet",
@@ -354,18 +340,9 @@ export default new Vuex.Store({
 
                             let keys = keyFile.keys;
 
-                            // let inputData: AVMKeyPair[] = keys.map(val => {
-                            //     return {
-                            //         pk: val.key,
-                            //         type: val.type
-                            //     }
-                            // });
-
                             let chainID = avm.getBlockchainAlias();
                             let inputData:AVMKeyPair[] = keys.map(key => {
                                 return keyToKeypair(key.key,chainID);
-                                // let addr = keychain.importKey(key.key);
-                                // return keychain.getKey(addr);
                             });
 
                             // If not auth, login user then add keys
