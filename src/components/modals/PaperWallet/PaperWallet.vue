@@ -14,7 +14,7 @@
     import { Vue, Component, Watch } from 'vue-property-decorator';
 
     // import triangles from './PaperWallet/triangles.png';
-    import Modal from './Modal.vue';
+    import Modal from '../Modal.vue';
     // import CopyText from "../misc/CopyText";
     import QRCode from 'qrcode'
     import jsPDF from 'jspdf';

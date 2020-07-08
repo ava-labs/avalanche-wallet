@@ -144,9 +144,6 @@
             }
             return res;
         }
-        get selectedAddress(){
-            return this.$store.state.selectedAddress;
-        }
         get addresses(){
             return this.$store.state.addresses;
         }
