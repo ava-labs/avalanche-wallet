@@ -124,17 +124,6 @@ export default new Vuex.Store({
             return res;
         },
 
-        // walletType(state: RootState): wallet_type|null{
-        //     if(state.activeWallet){
-        //         return state.activeWallet.type;
-        //     }
-        //     return null;
-        // },
-        // externalAddresses(state: RootState): string[]{
-        //     if(!state.activeWallet) return [];
-        //     let addresses = state.activeWallet.getExternalKeyChain().getAddressStrings();
-        //     return addresses;
-        // },
         addresses(state: RootState): string[]{
             if(!state.activeWallet) return [];
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
