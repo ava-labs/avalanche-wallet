@@ -6,7 +6,6 @@
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
-<!--                <p class="sub">{{walletTypeText}} Address</p>-->
             </div>
             <div class="bottom_rest">
                 <p class="addr_text">{{address}}</p>
@@ -28,7 +27,6 @@
     import CopyText from "@/components/misc/CopyText.vue";
     import QRModal from "@/components/modals/QRModal.vue";
     import PaperWallet from "@/components/modals/PaperWallet/PaperWallet.vue";
-    // @ts-ignore
     import QRCode from "qrcode";
     import {AVMKeyPair} from "avalanche";
 
@@ -50,10 +48,6 @@
         @Watch('address')
         onaddrchange(){
             this.updateQR()
-        }
-
-        get ava_asset(){
-            return this.$store.getters['Assets/AssetAVA'];
         }
 
         get address(){
