@@ -26,7 +26,7 @@
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/src/$1"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
   },
   "dependencies": {

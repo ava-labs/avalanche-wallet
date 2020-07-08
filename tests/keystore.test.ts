@@ -5,7 +5,9 @@ import {AvaWallet} from "@/js/AvaWallet";
 
 const avalanche = require("avalanche");
 // import {cryptoHelpers} from "../src/AVA";
-let ch = new avalanche.CryptoHelpers();
+// import Crypto from "@/js/Crypto";
+
+// let ch = new avalanche.CryptoHelpers();
 
 const chain_id = "GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVeDAXc694wJ5t3zEkhU";
 
