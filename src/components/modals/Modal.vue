@@ -23,16 +23,18 @@
         public open(){
             this.isActive = true;
         }
-        close(){
+
+        public close(){
             this.isActive = false;
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+@use '../../main';
 
     .modal_topbar{
-        background-color: #000;
-        color: #fff;
+        background-color: main.$primary-color;
+        color: main.$white;
         position: relative;
         padding: 10px 22px;
         display: flex;
@@ -58,11 +60,9 @@
         height: 100vh;
         overflow: scroll;
         display: flex;
-
-
     }
 
-    .modal_bg{
+    .modal_bg {
         position: absolute;
         top: 0;
         left: 0;
