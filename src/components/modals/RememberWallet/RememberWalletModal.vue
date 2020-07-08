@@ -83,6 +83,8 @@
     }
 </script>
 <style scoped lang="scss">
+    @use '../../../main';
+
     .remember_modal{
         padding: 30px;
     }
@@ -108,5 +110,9 @@
 
     .submit{
         margin-top: 30px;
+    }
+
+    .err{
+        color: main.$secondary-color;
     }
 </style>

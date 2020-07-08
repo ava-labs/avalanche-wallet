@@ -52,6 +52,7 @@
                                         <remember-key
                                                 v-model="rememberPassword"
                                                 @is-valid="isRememberValid"
+                                                class="remember_wallet"
                                                 complete="onremember"
                                                 explain="Remember my wallet."
                                         ></remember-key>
@@ -389,6 +390,11 @@ a {
 }
 
 
+.remember_wallet{
+    margin: 20px 0;
+}
+
+
 
 @include main.medium-device {
     .stage_1 {
@@ -491,4 +497,13 @@ a {
         }
     }
 }
+</style>
+<style lang="scss">
+    .create_wallet{
+        .remember_wallet{
+            .v-expansion-panel-header, .v-expansion-panel-content__wrap{
+                padding: 6px 0;
+            }
+        }
+    }
 </style>

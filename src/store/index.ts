@@ -247,22 +247,7 @@ export default new Vuex.Store({
         },
 
         async addWallet({state, dispatch}, keypair:AVMKeyPair): Promise<AvaHdWallet>{
-
-            // let pk = data.pk;
-            // let walletType = data.type;
-            // let pkBuff = bintools.avaDeserialize(pk);
-            // let addrBuf = keyChain.importKey(pkBuff);
-            // let keypair = keyChain.getKey(addrBuf);
-
-
-            // let wallet = new AvaWallet(keypair, walletType);
             let wallet = new AvaHdWallet(keypair);
-            // if(walletType==='hd'){
-            //     wallet = new AvaHdWallet(keypair);
-            // }else{
-            //     wallet = new AvaSingletonWallet(keypair);
-            // }
-            // Create new HD Wallet for the key
 
             state.wallets.push(wallet);
 
@@ -276,45 +261,6 @@ export default new Vuex.Store({
             state.wallets.splice(index,1);
 
         },
-
-        // toggleWalletMode({state,dispatch}){
-        //     let wallet = state.activeWallet;
-        //     if(!wallet) return;
-        //     wallet.toggleMode();
-        //
-        //     let mode = wallet.type;
-        //
-        //     let msg = "Your address will now change after every deposit.";
-        //     if(mode !== 'hd') msg = "Your address is now static and will never change.";
-        //
-        //     dispatch('Notifications/add', {
-        //         title: "Wallet Mode Changed",
-        //         message: msg,
-        //         type: "info"
-        //     });
-        //
-        //     dispatch('History/updateTransactionHistory', null);
-        //     dispatch('saveKeys');
-        // },
-        // Saves current keys to browser Session Storage
-        async saveKeys({state}){
-            let wallets = state.wallets;
-
-            let sessionData:SessionPersistFile = [];
-
-            wallets.forEach(wallet => {
-                let key = wallet.getMasterKey();
-                let pk = key.getPrivateKeyString();
-
-                sessionData.push({
-                    key: pk,
-                });
-            });
-
-            let saveData = JSON.stringify(sessionData);
-            sessionStorage.setItem('pks', saveData);
-        },
-
 
         async rememberWallets({state, dispatch}, pass: string|undefined){
             if(!pass) return;
@@ -334,38 +280,6 @@ export default new Vuex.Store({
                 type: "info"
             });
         },
-
-        // Tries to read the session storage and add keys to the wallet
-        // async autoAccess({state, dispatch}){
-
-            // return ;
-            // let sessionKeys = sessionStorage.getItem('pks');
-            // if(!sessionKeys) return;
-            //
-            // state.isLoadingPersistKeys = true;
-            //
-            //
-            // try{
-            //     let sessionData:SessionPersistFile = JSON.parse(sessionKeys);
-            //
-            //     let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-            //     // console.log()
-            //     // console.log(chainID)
-            //
-            //     let inputData:AVMKeyPair[] = sessionData.map(key => {
-            //         return keyToKeypair(key.key, chainID);
-            //     });
-            //
-            //     await dispatch('accessWalletMultiple', inputData);
-            //     state.rememberKey = true;
-            //     state.isLoadingPersistKeys = false;
-            //     return true;
-            // }catch (e) {
-            //     console.log(e);
-            //     state.isLoadingPersistKeys = false;
-            //     return false;
-            // }
-        // },
 
         async issueBatchTx({state}, data:IssueBatchTxInput){
             let wallet = state.activeWallet;
@@ -471,10 +385,6 @@ export default new Vuex.Store({
 
                         }catch(err){
                             reject(err);
-                            // reject( {
-                            //     success: false,
-                            //     message: 'Unable to read key file.'
-                            // });
                         }
                     });
                 reader.readAsText(file);
