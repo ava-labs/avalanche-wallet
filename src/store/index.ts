@@ -26,9 +26,6 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 import {AmountOutput, AVMKeyChain, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import {makeKeyfile, readKeyFile} from "@/js/Keystore";
-import AvaSingletonWallet from "@/js/AvaSingletonWallet";
-import {wallet_type} from "@/js/IAvaHdWallet";
-import {AvaWallet} from "@/js/AvaWallet";
 import {AssetsDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 
