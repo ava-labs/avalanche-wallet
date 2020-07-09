@@ -11,7 +11,7 @@
                           v-model="passConfirm" hide-details outlined dense height="40" placeholder="Confirm Password"
             ></v-text-field>
             <v-btn depressed :disabled="!isValid" color="#4C2E56" block
-                   type="submit" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
+                   type="submit" :loading="is_loading" class="but_primary ava_button">Export Wallet</v-btn>
         </form>
 
     </div>

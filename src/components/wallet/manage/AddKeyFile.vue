@@ -8,7 +8,7 @@
                       type="password" v-model="pass"></v-text-field>
         <p v-if="err" class="err">{{err}}</p>
         <v-btn
-                class="addKeyBut but_primary"
+                class="addKeyBut but_primary ava_button"
                 depressed
                 @click="importKeyfile"
                 color="#4C2E56"
@@ -125,10 +125,7 @@
         border: none;
         height: 40px;
         font-size: 12px;
-        /*border-color: #aaa;*/
         background-color: #F5F6FA;
         border-radius: 2px;
-
-
     }
 </style>

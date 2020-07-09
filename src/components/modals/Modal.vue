@@ -25,7 +25,6 @@
             this.isActive = true;
         }
 
-
         bgclick(){
             if(this.can_close){
                 this.close();
@@ -33,8 +32,6 @@
         }
 
         public close(){
-
-
             this.isActive = false;
         }
     }
@@ -43,7 +40,6 @@
 @use '../../main';
 
     .modal_topbar{
-
         background-color: #f2f2f2;
         border-bottom: 1px solid #ddd;
         color: #444;
