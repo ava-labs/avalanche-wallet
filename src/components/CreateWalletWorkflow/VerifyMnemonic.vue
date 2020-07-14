@@ -22,8 +22,10 @@
 </template>
 
 <script lang="ts">
+
 import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
+
 import Modal from "@/components/modals/Modal.vue";
 
 @Component({
@@ -40,7 +42,15 @@ export default class VerifyMnemonic extends Vue {
 
     @Prop() mnemonic?: string;
 
+    @Watch('mnemonic')
+    onmnemonicchange(val: string){
+        this.init();
+    }
     created() {
+        this.init();
+    }
+
+    init(){
         const wordsLen = 24;
         this.keysIn = Array(wordsLen).join(".").split(".");
 

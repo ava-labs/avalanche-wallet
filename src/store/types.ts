@@ -7,13 +7,10 @@ import {ITransaction} from "@/components/wallet/transfer/types";
 
 export interface RootState {
     isAuth: boolean,
-    addresses: string[],
-    selectedAddress: string,
-    modals: ModalDict,
+    // selectedAddress: string,
     activeWallet: null|AvaHdWallet
     wallets: AvaHdWallet[]
     address: String|null
-    isLoadingPersistKeys: boolean,
 }
 
 interface Modal {
@@ -35,9 +32,9 @@ export interface IWalletAssetsDict {
 }
 
 
-interface ModalDict {
-    [key: string]: Modal
-}
+// interface ModalDict {
+//     [key: string]: Modal
+// }
 
 
 export interface AssetType {

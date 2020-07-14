@@ -72,7 +72,7 @@
             return r;
         }
         get explorerUrl(): string{
-            let addr = this.$store.state.selectedAddress.split('-')[1];
+            let addr = this.$store.state.address.split('-')[1];
             return `https://explorer.avax.network/address/${addr}`;
         }
     }

@@ -13,8 +13,6 @@ import vuetify from './plugins/vuetify';
 // @ts-ignore
 import i18n from "./plugins/i18n.js";
 
-import ToggleButton from 'vue-js-toggle-button';
-Vue.use(ToggleButton)
 
 Vue.config.productionTip = false;
 

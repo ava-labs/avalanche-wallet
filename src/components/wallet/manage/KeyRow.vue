@@ -82,12 +82,6 @@
 
             if(!this.wallet.getUTXOSet()) return {};
 
-
-            // let utxos =  this.$store.getters['Assets/addressUTXOs'];
-            // let addr = this.address;
-            // let addrStrip = addr.split('-')[1];
-            //
-            // let addrUtxos = utxos[addrStrip];
             let res:IKeyBalanceDict = {};
 
 
@@ -135,7 +129,6 @@
 
         get keyPair():KeyPair{
             return this.wallet.masterKey;
-            // return keyChain.getKey(bintools.parseAddress(this.address, 'X'));
         }
 
         get mnemonicPhrase():string{
@@ -144,10 +137,6 @@
             let mnemonic = bip39.entropyToMnemonic(hex);
             return mnemonic;
         }
-
-        // get type(){
-        //    return this.wallet.type;
-        // }
 
         remove(){
             this.$emit('remove', this.wallet);
@@ -174,12 +163,9 @@
 
     .addressItem{
         font-size: 12px;
-        /*display: flex;*/
-        /*align-items: center;*/
         display: grid;
         grid-template-columns: 1fr max-content;
         grid-gap: 15px;
-        /*background-color: #F5F6FA;*/
         overflow: auto;
 
         > *{
@@ -206,10 +192,6 @@
         overflow: auto;
     }
     .addressItem .selBut{
-        /*flex-basis: 14px;*/
-        /*height: 14px;*/
-        /*width: 14px;*/
-        /*border-radius: 14px;*/
         color: #ccc;
         flex-shrink: 0;
 
@@ -220,23 +202,15 @@
     }
 
     .addressItem{
-        &[selected]{
-            .selBut{
-                /*background-color: transparent;*/
-            }
-        }
         .selBut{
             flex-grow: 1;
             background-color: #C0C0CD;
             color: #fff;
             padding: 4px 8px;
-            /*margin-right: 15px;*/
         }
     }
 
     .detail{
-        /*margin-left: 20px;*/
-        /*flex-grow: 1;*/
         overflow: auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -244,11 +218,9 @@
     }
 
     .label{
-        /*font-size: 13px;*/
         font-weight: bold;
     }
     .addressVal{
-        /*word-break: break-all;*/
         overflow: auto;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -274,13 +246,10 @@
         color: main.$primary-color;
         .bal_rows p{
             font-weight: bold;
-            /*background-color: #ebedf5;*/
             padding: 0px 8px;
             margin-bottom: 4px;
         }
         p{
-
-            /*border: 1px solid #ebedf5;*/
             border-radius: 3px;
         }
     }
@@ -297,12 +266,5 @@
     .balance_empty{
         color: main.$primary-color;
     }
-    /*.addressItem[selected]{*/
-    /*    .addressBalance{*/
-    /*        p{*/
-    /*            background-color: #b1c9fb;*/
-    /*        }*/
-    /*    }*/
-    /*}*/
 
 </style>
