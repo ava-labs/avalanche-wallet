@@ -42,9 +42,6 @@
         get explorerUrl(): string{
             return `https://explorer.avax.network/tx/${this.transaction.id}`;
         }
-        // get assetsDict(): AssetsDict {
-        //     return this.$store.state.Assets.assetsDict;
-        // }
 
         get time(){
             return moment(this.transaction.timestamp);
@@ -81,162 +78,11 @@
             return res;
         }
 
-        // get assetsList(){
-        //     let myAddr = this.$store.state.selectedAddress;
-        //     let inAssets = this.inAssets;
-        //     let outAssets = this.outAssets;
-        //
-        //     let inVals = this.inValues;
-        //     let outVals = this.outValues;
-        //
-        //
-        //     let res = {};
-        //
-        //     // Checking for income
-        //     for(var id in outVals){
-        //         let outVal = outVals[id];
-        //         let inVal = inVals[id];
-        //         let inAsset = inAssets[id];
-        //
-        //
-        //         let amount = 0;
-        //
-        //         if(inVal){
-        //             let diff = inVal - outVal;
-        //             amount = diff;
-        //
-        //             // Get froms
-        //
-        //             // console.log(diff, inAsset.addresses);
-        //         }else{
-        //             // Asset Genesis
-        //             amount = outVal;
-        //         }
-        //     }
-        //
-        //     // Checking for loss
-        //     for(id in inVals){
-        //         let outVal = outVals[id];
-        //         let inVal = inVals[id];
-        //         let inAsset = inAssets[id];
-        //
-        //
-        //         let amount = 0;
-        //
-        //         if(inVal){
-        //             let diff = inVal - outVal;
-        //             amount = diff;
-        //
-        //             // Get froms
-        //
-        //             // console.log(diff, inAsset.addresses);
-        //         }else{
-        //             // Asset Genesis
-        //             amount = outVal;
-        //         }
-        //     }
-        //
-        //
-        //     return res;
-        // }
-
-        // get inputTotals(){
-        //     return this.transaction.inputTotals;
-        // }
-        //
-        // get outputTotals(){
-        //     return this.transaction.inputTotals;
-        // }
-        // // Which assets are input
-        // get inAssets(){
-        //     let myAddr = this.$store.state.selectedAddress;
-        //     let addrRaw = myAddr.split('-')[1];
-        //     let ins = this.transaction.inputs;
-        //     let res:TransactionAssetsDict = {}; // asset id -> value dict
-        //
-        //     // if empty
-        //     if(!ins){
-        //         return res;
-        //     }
-        //
-        //     // Order by ASSET ID
-        //     /*
-        //         id: {
-        //             amount: BN
-        //             addresses: string[]
-        //         }
-        //      */
-        //     ins.forEach(inputUtxo => {
-        //         let out = inputUtxo.output;
-        //         let addrs = out.addresses;
-        //         let assetId = out.assetID;
-        //         let amtBN = new BN(out.amount, 10);
-        //
-        //         if(res[assetId]){
-        //             let prevAddrs = res[assetId].addresses;
-        //
-        //             res[assetId].amount.iadd(amtBN);
-        //             res[assetId].addresses = new Set([...prevAddrs, ...addrs]);
-        //         }else{
-        //             res[assetId] = {
-        //                 amount: amtBN,
-        //                 addresses: new Set(addrs)
-        //             }
-        //         }
-        //     });
-        //
-        //     return res;
-        // }
-        //
-        // get outAssets(){
-        //     let myAddr = this.$store.state.selectedAddress;
-        //     let addrRaw = myAddr.split('-')[1];
-        //     let outs = this.transaction.outputs;
-        //     let res:TransactionAssetsDict = {}; // asset id -> value dict
-        //
-        //     // if empty
-        //     if(!outs){
-        //         return res;
-        //     }
-        //
-        //     // Order by ASSET ID
-        //     /*
-        //         id: {
-        //             amount: BN
-        //             addresses: string[]
-        //         }
-        //
-        //      */
-        //
-        //
-        //     outs.forEach(outputUtxo => {
-        //         let addrs = outputUtxo.addresses;
-        //         let assetId = outputUtxo.assetID;
-        //         let amtBN = new BN(outputUtxo.amount, 10);
-        //
-        //         if(res[assetId]){
-        //             let prevAddrs = res[assetId].addresses;
-        //
-        //             res[assetId].amount.iadd(amtBN);
-        //             res[assetId].addresses = new Set([...prevAddrs, ...addrs]);
-        //         }else{
-        //             res[assetId] = {
-        //                 amount: amtBN,
-        //                 addresses: new Set(addrs)
-        //             }
-        //         }
-        //     });
-        //
-        //     return res;
-        // }
-
         // What did I loose?
         get inValues(){
             let addrs:string[] = store.getters.addresses;
             let addrsRaw = addrs.map(addr => addr.split('-')[1]);
 
-            // let myAddr = this.$store.state.selectedAddress;
-            // let addrRaw = myAddr.split('-')[1];
             let ins = this.transaction.inputs;
             let res:TransactionValueDict = {}; // asset id -> value dict
 

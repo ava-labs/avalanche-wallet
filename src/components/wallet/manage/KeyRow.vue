@@ -7,9 +7,10 @@
         <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <div class="rows">
             <div class="detail">
-                <div>
-                    <p class="addressVal"><b>{{walletTitle}}</b></p>
-                </div>
+                <p class="addressVal"><b>{{walletTitle}}</b></p>
+                <Tooltip text="This key will be forgotten when you refresh the browser." v-if="isVolatile">
+                    <fa icon="exclamation-triangle" class="volatile_alert"></fa>
+                </Tooltip>
             </div>
 
             <div >
@@ -50,6 +51,8 @@
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
     import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
+    import Tooltip from '@/components/misc/Tooltip.vue';
+
     import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
@@ -59,7 +62,8 @@
     @Component({
         components: {
             MnemonicPhrase,
-            HdDerivationListModal
+            HdDerivationListModal,
+            Tooltip
         }
     })
     export default class KeyRow extends Vue{
@@ -67,6 +71,10 @@
         @Prop() wallet!:AvaHdWallet;
         @Prop({default: false}) is_default?:boolean;
 
+
+        get isVolatile(){
+            return this.$store.state.volatileWallets.includes(this.wallet);
+        }
 
         get walletTitle(){
             return this.address.split('-')[1].substring(0,4);
@@ -213,7 +221,7 @@
     .detail{
         overflow: auto;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: max-content max-content;
         column-gap: 15px;
     }
 
@@ -267,4 +275,7 @@
         color: main.$primary-color;
     }
 
+    .volatile_alert{
+        color: #f00;
+    }
 </style>
