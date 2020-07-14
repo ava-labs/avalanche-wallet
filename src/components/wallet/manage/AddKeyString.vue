@@ -1,19 +1,17 @@
 <template>
     <div>
-        <label>{{$t('advanced.paper.privateKey')}}</label>
+        <label>{{$t('advanced.paper.privateKeyInput')}}</label>
         <form @submit.prevent="addKey">
-            <qr-input @change="validateQR" v-model="privateKey" class="qrIn"></qr-input>
+            <qr-input @change="validateQR" v-model="privateKeyInput" class="qrIn"></qr-input>
             <p class="err">{{error}}</p>
             <v-btn 
-                    type="submit"
-                    :loading="isLoading"
-                    class="addKeyBut ava_button"
-                    depressed
-                    :disabled="!canAdd"
-                    color="#4C2E56"
-                    block
-            >Add Private Key
-            </v-btn>
+                type="submit"
+                :loading="isLoading"
+                :disabled="!canAdd"
+                class="addKeyBut ava_button"
+                depressed block
+                color="#4C2E56"
+            >Add Private Key</v-btn>
         </form>
     </div>
 </template>
@@ -34,16 +32,15 @@
         }
     })
     export default class AddKeyString extends Vue {
-        privateKey: string = "";
+        privateKeyInput: string = "";
         canAdd: boolean = false;
         error: string = "";
         isLoading: boolean = false;
 
         validateQR(val: string) {
-            if (this.privateKey.length > 10) {
+            if (this.privateKeyInput.length > 10) {
                 this.canAdd = true
-                // this.isLoading = true;
-            } else if (this.privateKey.length === 0) {
+            } else if (this.privateKeyInput.length === 0) {
                this.error = "";
             } else {
                 this.canAdd = false;
@@ -51,31 +48,29 @@
         }
 
         addKey() {
-            console.log(this.$store.state.activeWallet);
-            console.log("private key", this.$store.state.activeWallet.masterKey.getPrivateKeyString());
-            console.log(this.privateKey);
-            
             this.isLoading = true;
-            console.log("this.isLoading", this.isLoading);
+            this.error = "";
 
             setTimeout(async () => {
                 try {
                     let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-                    let keyPair:AVMKeyPair = keyToKeypair(this.privateKey, chainID);
-                    
-                    console.log(keyPair);
-                    await this.$store.dispatch('addWallet', keyPair);
-                    this.privateKey = "";
+                    let keyPair:AVMKeyPair = keyToKeypair(this.privateKeyInput, chainID);
+                    await this.$store.dispatch("addWallet", keyPair);
                     // @ts-ignore
-                    // this.$emit("success"); 
-                    console.log("done!");
-                    // this.isLoading = false;
-
+                    this.$emit("success"); 
+                    this.clear();
                 } catch (e) {
                     this.isLoading = false;
                     this.error = "Invalid Private Key";
                 }
             }, 200);
+        }
+
+        clear() {
+            this.isLoading = false;
+            this.privateKeyInput = "";
+            this.canAdd = false;
+            this.error = "";
         }
     }
 </script>

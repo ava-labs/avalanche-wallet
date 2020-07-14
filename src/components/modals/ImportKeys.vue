@@ -9,7 +9,7 @@
                     <add-key-string @success="handleImportSuccess"></add-key-string>
                 </v-tab-item>
                 <v-tab-item>
-                    <add-key-file></add-key-file>
+                    <add-key-file @success="handleImportSuccess"></add-key-file>
                 </v-tab-item>
             </v-tabs>
         </div>
@@ -54,9 +54,9 @@ export default class ImportKeys extends Vue {
         // @ts-ignore
         this.$refs.modal.close();
         this.close();
-        this.$store.dispatch('Notifications/add', {
-            title: 'Key Added',
-            message: 'Private key and assets added to the wallet.'
+        this.$store.dispatch("Notifications/add", {
+            title: "Key Added",
+            message: "Private key and assets added to the wallet."
         });
     }
 }
@@ -107,7 +107,7 @@ export default class ImportKeys extends Vue {
 @use '../../main';
 
 .v-tab.v-tab {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .v-tabs-slider-wrapper {
