@@ -68,6 +68,7 @@
     "morgan": "^1.9.1",
     "pdfjs-dist": "^2.4.456",
     "print-js": "^1.0.63",
+    "punycode": "^2.1.1",
     "qr-scanner": "^1.1.1",
     "qrcode": "^1.4.4",
     "reflect-metadata": "^0.1.13",

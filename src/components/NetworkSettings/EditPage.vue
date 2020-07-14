@@ -63,14 +63,14 @@
             checkUrl(){
                 let err = '';
                 let url = this.url;
-
+                // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
+                url = punycode.toASCII(url); 
 
                 // must contain http / https prefix
                 if(url.substr(0,7) !== 'http://' && url.substr(0,8) !== 'https://'){
                     this.err_url = "URLs require the appropriate HTTP/HTTPS prefix."
                     return false;
                 }
-
 
                 let split = url.split('://');
                 let rest = split[1];
@@ -111,6 +111,17 @@
 
                 // check for HTTP HTTPS on url
                 let url = this.url;
+
+                // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
+                url = punycode.toASCII(url); 
+
+                const punycode = require('punycode');
+                let nah = "http://www.ebаy.com/"
+                console.log(nah)
+                let url = punycode.toASCII(url); 
+                console.log('----*****888888888*******---')
+                console.log(url)
+
 
                 if(url.substr(0,7) !== 'http://' && url.substr(0,8) !== 'https://'){
                     err = "URLs require the appropriate HTTP/HTTPS prefix."
