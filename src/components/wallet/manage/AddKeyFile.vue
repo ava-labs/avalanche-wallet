@@ -19,9 +19,8 @@
         </form>
     </div>
 </template>
-<script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+<script lang="ts">    
+    import { Vue, Component } from 'vue-property-decorator';
     import FileInput from "@/components/misc/FileInput.vue";
 
     @Component({

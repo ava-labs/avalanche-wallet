@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label>{{$t('advanced.paper.privateKeyInput')}}</label>
+        <label>{{$t('private_key')}}</label>
         <form @submit.prevent="addKey">
             <qr-input @change="validateQR" v-model="privateKeyInput" class="qrIn"></qr-input>
             <p class="err">{{error}}</p>
