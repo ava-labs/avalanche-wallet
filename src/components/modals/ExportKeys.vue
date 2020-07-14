@@ -1,7 +1,7 @@
 <template>
     <modal ref="modal" :title="title">
         <div class="export_body">
-            <export-wallet></export-wallet>
+            <export-wallet @success="handleExportSuccess"></export-wallet>
         </div>
     </modal>
 </template>
@@ -31,9 +31,10 @@ export default class ExportKeys extends Vue {
         this.isActive = false;
     }
 
-    verify() {
+    handleExportSuccess() {
         // @ts-ignore
         this.$refs.modal.close();
+        this.close();
     }
 }
 </script>
@@ -89,7 +90,7 @@ export default class ExportKeys extends Vue {
 @use '../../main';
 
 .v-tab.v-tab {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .v-tabs-slider-wrapper {
