@@ -85,13 +85,6 @@
                     return false;
                 }
 
-
-                // No trailing slash
-                // if(port.){
-                //     this.err_url = "You should remove any trailing / slashes.";
-                //     return false;
-                // }
-
                 this.err_url = '';
                 return true;
 

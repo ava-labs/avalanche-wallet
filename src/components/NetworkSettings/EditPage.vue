@@ -112,16 +112,6 @@
 
                 // // check for HTTP HTTPS on url
                 let url = this.url;
-                //
-                // // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
-                // url = punycode.toASCII(url);
-                //
-                // const punycode = require('punycode');
-                // let nah = "http://www.ebаy.com/"
-                // console.log(nah)
-                // let url = punycode.toASCII(url);
-                // console.log('----*****888888888*******---')
-                // console.log(url)
 
 
                 if(url.substr(0,7) !== 'http://' && url.substr(0,8) !== 'https://'){
