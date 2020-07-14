@@ -110,7 +110,7 @@
             errCheck(){
                 let err = null;
 
-                // // check for HTTP HTTPS on url
+                // check for HTTP HTTPS on url
                 let url = this.url;
 
 
