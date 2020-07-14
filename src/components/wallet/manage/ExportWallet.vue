@@ -1,49 +1,59 @@
 <template>
     <div class="export_wallet">
-        <p class="explain">{{$t('advanced.export.desc')}} </p>
+        <p class="explain">{{$t("advanced.export.desc")}}</p>
         <form @submit.prevent="download">
             <label>Password (min 9 characters)</label>
-            <v-text-field type="password" class="formIn"
-                          v-model="pass" placeholder="Password" hide-details outlined dense  height="40"
+            <v-text-field
+                type="password" placeholder="Password" 
+                v-model="pass" 
+                hide-details outlined dense 
+                class="formIn" height="40"
             ></v-text-field>
             <label>Confirm Password</label>
-            <v-text-field type="password" class="formIn"
-                          v-model="passConfirm" hide-details outlined dense height="40" placeholder="Confirm Password"
+            <v-text-field 
+                type="password" placeholder="Confirm Password" 
+                v-model="passConfirm" 
+                hide-details outlined dense 
+                class="formIn" height="40" 
             ></v-text-field>
-            <v-btn depressed :disabled="!isValid" color="#4C2E56" block
-                   type="submit" :loading="is_loading" class="but_primary">Export Wallet</v-btn>
+            <v-btn 
+                type="submit"
+                :disabled="!isValid" 
+                :loading="isLoading" 
+                depressed block 
+                color="#4C2E56" 
+                class="but_primary ava_button"
+            >Export Wallet</v-btn>
         </form>
-
     </div>
 </template>
-<script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+<script lang="ts">    
+    import { Vue, Component } from 'vue-property-decorator';
 
     @Component
     export default class ExportWallet extends Vue{
-        is_loading: boolean = false;
-        pass: string = '';
-        passConfirm: string = '';
+        isLoading: boolean = false;
+        pass: string = "";
+        passConfirm: string = "";
 
-        get isValid(): boolean{
-            if(this.pass.length >= 9 && this.pass===this.passConfirm) return true;
-            return false;
+        get isValid(): boolean {
+            return (this.pass.length >= 9 && this.pass===this.passConfirm) ? true : false;
         }
 
+        async download() {
+            this.isLoading = true;
 
-        async download(){
-            let parent = this;
-            this.is_loading = true;
-
-            setTimeout(function(){
-                parent.$store.dispatch('exportKeyfile', parent.pass).then( (res) => {
-                    parent.is_loading = false;
-                    parent.pass = "";
-                    parent.$store.dispatch("Notifications/add", {
+            setTimeout(() => {
+                this.$store.dispatch("exportKeyfile", this.pass).then(res => {
+                    this.isLoading = false;
+                    this.pass = "";
+                    this.passConfirm = "";
+                    this.$store.dispatch("Notifications/add", {
                         title: "Key File Export" ,
                         message: "Your keys are downloaded."
                     });
+                    // @ts-ignore
+                    this.$emit("success"); 
                 });
             }, 200);
         }

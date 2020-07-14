@@ -1,31 +1,23 @@
 <template>
     <div>
-        <div class="cols">
+        <div>
             <div class="card_body">
-                <h1>My Keys</h1>
+                <header>
+                    <h1>My Keys</h1>
+                    <div class="button_container">
+                        <button class="but_primary ava_button_secondary" @click="importKeys">
+                            <fa icon="download"></fa>
+                            Import Keys
+                        </button>
+                        <ImportKeys ref="import"></ImportKeys>
+                        <button class="but_primary ava_button_secondary" @click="exportKeys">
+                            <fa icon="upload"></fa>
+                            Export Keys
+                        </button>
+                        <ExportKeys ref="export"></ExportKeys>
+                    </div>
+                </header>
                 <my-keys></my-keys>
-            </div>
-            <div class="right_side">
-                <div>
-                    <h4>Add Key</h4>
-                    <p class="explain">
-                        Add additional private keys to use with your wallet.
-                    </p>
-                    <v-tabs color="#4C2E56" height="30" active-class="tab_active" :grow="true">
-                        <v-tab >Private Key</v-tab>
-                        <v-tab>Keystore File</v-tab>
-                        <v-tab-item>
-                            <add-key-string></add-key-string>
-                        </v-tab-item>
-                        <v-tab-item>
-                            <add-key-file></add-key-file>
-                        </v-tab-item>
-                    </v-tabs>
-                </div>
-                <div>
-                    <h4>Export Wallet</h4>
-                    <export-wallet></export-wallet>
-                </div>
             </div>
         </div>
     </div>
@@ -33,169 +25,42 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-
-    import ExportWallet from "@/components/wallet/manage/ExportWallet.vue";
-    import AddKeyFile from "@/components/wallet/manage/AddKeyFile.vue";
-    import AddKeyString from "@/components/wallet/manage/AddKeyString.vue";
     import MyKeys from "@/components/wallet/manage/MyKeys.vue";
+    import ImportKeys from "@/components/modals/ImportKeys.vue";
+    import ExportKeys from "@/components/modals/ExportKeys.vue";
 
     @Component({
         components: {
-            ExportWallet,
-            AddKeyFile,
-            AddKeyString,
-            MyKeys
+            MyKeys,
+            ImportKeys,
+            ExportKeys
         }
     })
-    export default class ManageKeys extends Vue{
+    export default class ManageKeys extends Vue {
+
+        importKeys(){
+            // @ts-ignore
+            this.$refs.import.open();
+        }
+
+        exportKeys(){
+            // @ts-ignore
+            this.$refs.export.open();
+        }
 
     }
 </script>
 <style scoped lang="scss">
     @use '../../main';
 
-    .cols{
-        display: grid;
-        grid-template-columns: 1fr 360px;
-        grid-gap: 45px;
-    }
-
-
-    .right_side{
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        grid-row-gap: 30px;
-        border-left: 1px solid #F5F6FA;
-        padding-left: 45px;
-
-        > * {
-            overflow: auto;
-        }
-    }
-    p{
-        margin: 0 !important;
-    }
-
-
-    h1{
-        font-weight: lighter;
-    }
-    h4{
-        font-size: 18px;
-        font-weight: lighter;
-    }
-
-    .explain{
-        font-size: 12px;
-        color: main.$primary-color-light;
-    }
-
-    .buts{
+    header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+
     }
-
-    .buts button{
-        opacity: 0.4;
-        transition-duration: 0.1s;
+    
+    h1 {
+        font-weight: lighter;
     }
-
-    .buts button:hover{
-        opacity: 1;
-    }
-
-    .addressBallance{
-        display: flex;
-        white-space: normal;
-        flex-wrap: wrap;
-    }
-
-    .addressBallance p:first-child{
-        padding-left: 0;
-    }
-    .addressBallance p{
-        padding: 0 5px;
-        font-size: 12px;
-        flex-shrink: 0;
-        border-right: 1px solid #dedede;
-
-        &:last-of-type{
-            border: none;
-        }
-    }
-
-    .v-tab{
-        /*border: 1px solid #999;*/
-        /*margin-right: 8px;*/
-        /*border-radius: 4px;*/
-        font-size: 12px;
-    }
-    .tab_active{
-        /*color: #2960CD;*/
-        /*background-color: #d6e3ff !important;*/
-        /*border-color: #2960CD !important;*/
-    }
-
-
-    @media only screen and (max-width: main.$mobile_width) {
-       .cols{
-           grid-template-columns: none;
-           display: block;
-       }
-
-
-
-        .right_side{
-            border: none !important;
-            padding: 0 !important;
-        }
-    }
-
-    @include main.medium-device{
-        .cols{
-            grid-template-columns: none;
-            display: block;
-        }
-
-        .right_side{
-            border: none !important;
-            padding: 0 !important;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: none;
-            column-gap: 15px;
-        }
-
-        h4{
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #F5F6FA;
-        }
-    }
-</style>
-<style lang="scss">
-@use '../../main';
-    .cols{
-        .v-tabs-bar{
-            margin: 15px 0px;
-        }
-    }
-
-    .v-tab.v-tab {
-        font-weight: bold;
-    }
-
-    .v-tabs-slider-wrapper {
-        color: main.$secondary-color;
-        caret-color: main.$secondary-color;
-        height: 3px !important;
-    }
-
-    /*.cols {*/
-    /*    .v-tabs-bar{*/
-    /*        margin: 15px 0px;*/
-    /*    }*/
-    /*    .v-tabs-slider-wrapper{*/
-    /*        display: none;*/
-    /*    }*/
-    /*}*/
 </style>

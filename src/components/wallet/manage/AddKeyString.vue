@@ -1,74 +1,100 @@
 <template>
     <div>
-        <label>{{$t('advanced.paper.pk')}}</label>
-        <qr-input @change="qr_change" v-model="pk" class="qrIn"></qr-input>
-        <v-btn
-                class="addKeyBut"
-                depressed
-                @click="addKey"
-                color="#2960CD"
+        <label>{{$t('private_key')}}</label>
+        <form @submit.prevent="addKey">
+            <qr-input @change="validateQR" v-model="privateKeyInput" class="qrIn"></qr-input>
+            <p class="err">{{error}}</p>
+            <v-btn 
+                type="submit"
+                :loading="isLoading"
                 :disabled="!canAdd"
-                block
-        >Add Private Key</v-btn>
+                class="addKeyBut ava_button"
+                depressed block
+                color="#4C2E56"
+            >Add Private Key</v-btn>
+        </form>
     </div>
 </template>
-<script>
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+    // @ts-ignore
     import { QrInput } from '@avalabs/vue_components';
-    import {bintools, keyChain} from "@/AVA";
+    import Spinner from '@/components/misc/Spinner.vue';
+    import {avm, bintools, keyChain} from "@/AVA";
+    import {keyToKeypair} from "@/helpers/helper";
+    import { AVMKeyPair } from 'avalanche';
 
-    export default {
+    @Component({
         components: {
-            QrInput
-        },
-        data(){
-            return {
-                pk: "",
-                canAdd: false,
-            }
-        },
-        methods: {
-            qr_change(val){
-                // this.pk = val;
-                if(this.pk.length>10){
-                    this.canAdd = true
-                }else{
-                    this.canAdd = false;
-                }
-            },
-            addKey(){
-                let parent = this;
+            QrInput,
+            Spinner
+        }
+    })
+    export default class AddKeyString extends Vue {
+        privateKeyInput: string = "";
+        canAdd: boolean = false;
+        error: string = "";
+        isLoading: boolean = false;
 
-                this.$store.dispatch('addWallet', this.pk).then(() => {
-                    parent.pk = "";
-                });
+        validateQR(val: string) {
+            if (this.privateKeyInput.length > 10) {
+                this.canAdd = true
+            } else if (this.privateKeyInput.length === 0) {
+               this.error = "";
+            } else {
+                this.canAdd = false;
             }
+        }
+
+        addKey() {
+            this.isLoading = true;
+            this.error = "";
+
+            setTimeout(async () => {
+                try {
+                    let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
+                    let keyPair:AVMKeyPair = keyToKeypair(this.privateKeyInput, chainID);
+                    await this.$store.dispatch("addWallet", keyPair);
+                    // @ts-ignore
+                    this.$emit("success"); 
+                    this.clear();
+                } catch (e) {
+                    this.isLoading = false;
+                    this.error = "Invalid Private Key";
+                }
+            }, 200);
+        }
+
+        clear() {
+            this.isLoading = false;
+            this.privateKeyInput = "";
+            this.canAdd = false;
+            this.error = "";
         }
     }
 </script>
-<style scoped>
-    .addKeyBut{
-        color: #fff;
+<style scoped lang="scss">
+@use '../../../main';
+
+    .addKeyBut {
         text-transform: none;
-        border-radius: 2px;
+        background-color: main.$primary-color !important;
     }
 
-    label{
+    label {
         color: #909090;
         font-size: 12px;
     }
 
-    /*.qrIn{*/
-    /*    border: 1px solid #888;*/
-    /*    border-radius: 4px;*/
-    /*    background-color: #fff;*/
-    /*    */
-    /*}*/
-
-    .qrIn{
+    .qrIn {
         border-radius: 2px !important;
         height: 40px;
         font-size: 12px;
         background-color: #F5F6FA;
-        /*border: 1px solid #ddd;*/
+    }
+
+    .err{
+        color: main.$secondary-color;
     }
 </style>

@@ -1,92 +1,79 @@
 <template>
     <div class="add_key_file">
         <label>Keystore File</label>
-        <file-input @change="onfile" class="formIn"></file-input>
-        <label>Password</label>
-        <v-text-field class="formIn" placeholder="Password" dense
-                      outlined color="#4C2E56" hide-details
-                      type="password" v-model="pass"></v-text-field>
-        <p v-if="err" class="err">{{err}}</p>
-        <v-btn
-                class="addKeyBut but_primary"
-                depressed
-                @click="importKeyfile"
-                color="#4C2E56"
-                block
-                :disabled="!canSubmit"
+        <form @submit.prevent="importKeyfile">
+            <file-input @change="onfile" class="formIn"></file-input>
+            <label>Password</label>
+            <v-text-field class="formIn" placeholder="Password" dense
+                        outlined color="#4C2E56" hide-details
+                        type="password" v-model="pass"></v-text-field>
+            <p v-if="err" class="err">{{err}}</p>
+            <v-btn
+                type="submit"
                 :loading="isLoading"
-        >Import Wallet</v-btn>
+                :disabled="!canSubmit"
+                class="addKeyBut but_primary ava_button"
+                depressed block
+                color="#4C2E56"
+            >Import Wallet</v-btn>
+        </form>
     </div>
 </template>
-<script>
-    import { QrInput } from '@avalabs/vue_components';
-    import {bintools, keyChain} from "@/AVA";
-    import FileInput from "@/components/misc/FileInput";
+<script lang="ts">    
+    import { Vue, Component } from 'vue-property-decorator';
+    import FileInput from "@/components/misc/FileInput.vue";
 
-    export default {
+    @Component({
         components: {
-            QrInput,
             FileInput
-        },
-        data(){
-            return {
-                pass: "",
-                err: null,
-                canAdd: false,
-                keyfile: null,
-                isLoading: false,
-            }
-        },
-        computed: {
-            canSubmit(){
-                let file = this.keyfile;
-                let pass = this.pass;
-                if(file && pass){
-                    return  true;
-                }
-                return false;
-            }
-        },
-        methods: {
-            onfile(val){
-                this.keyfile = val;
-            },
-            qr_change(val){
-                // this.pk = val;
-                if(this.pk.length>10){
-                    this.canAdd = true
-                }else{
-                    this.canAdd = false;
-                }
-            },
-            importKeyfile(){
-                let parent = this;
-                this.isLoading = true;
-                this.err = null;
+        }
+    })
+    export default class AddKeyFile extends Vue {
+        canAdd: boolean = false;
+        pass: string = "";
+        keyfile: File | null = null;
+        isLoading: boolean = false;
+        err: string | null = null;
 
-                setTimeout(()=> {
-                    parent.$store.dispatch('importKeyfile', {
-                        password: parent.pass,
-                        file: parent.keyfile
-                    }).then(res => {
-                        parent.isLoading = false;
-                        parent.clear();
-                    }).catch(err => {
-                        parent.isLoading = false;
-                        this.err = err.message;
-                        parent.$store.dispatch('Notifications/add', {
-                            type: 'error',
-                            title: 'Import Failed',
-                            message: err.message
-                        })
+        get canSubmit(){
+            return (this.keyfile && this.pass) ? true : false;
+        }
+
+        onfile(val: File) {
+            this.keyfile = val;
+        }
+        
+        importKeyfile(){
+            this.isLoading = true;
+            this.err = null;
+
+            setTimeout(async () => {
+                try {
+                    await this.$store.dispatch("importKeyfile", {
+                        password: this.pass,
+                        file: this.keyfile
                     });
-                }, 500)
+                    // @ts-ignore
+                    this.$emit("success");
+                    this.clear();
+                } catch (err) {
+                    this.isLoading = false;
+                    this.err = err.message;
+                    this.$store.dispatch("Notifications/add", {
+                        type: "error",
+                        title: "Import Failed",
+                        message: err.message
+                    });
+                }    
+            }, 200);
+        }
 
-            },
-
-            clear(){
-                this.pass = "";
-            }
+        clear() {
+            this.isLoading = false;
+            this.pass = "";
+            this.keyfile = null;
+            this.canAdd = false;
+            this.err = null;
         }
     }
 </script>
@@ -125,10 +112,7 @@
         border: none;
         height: 40px;
         font-size: 12px;
-        /*border-color: #aaa;*/
         background-color: #F5F6FA;
         border-radius: 2px;
-
-
     }
 </style>
