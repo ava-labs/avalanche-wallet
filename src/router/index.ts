@@ -5,7 +5,6 @@ import Home from '../views/Home.vue'
 import Transfer from '@/views/wallet/Transfer.vue';
 import ManageKeys from '@/views/wallet/ManageKeys.vue';
 import Menu from '../views/access/Menu.vue';
-import AccessString from '../views/access/AccessString.vue';
 import Keystore from '../views/access/Keystore.vue';
 import Mnemonic from "@/views/access/Mnemonic.vue";
 import Access from '../views/access/Access.vue';
@@ -50,10 +49,6 @@ const routes = [
                 path: '/',
                 name: 'access',
                 component: Menu,
-            },
-            {
-                path: 'private_key',
-                component: AccessString,
             },
             {
                 path: 'keystore',
