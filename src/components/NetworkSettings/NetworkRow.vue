@@ -51,7 +51,10 @@
         },
         methods: {
             edit(){
-                this.$parent.$parent.onedit(this.network);
+                // console.log(this.$parent.onedit);
+                // console.log(this.$parent.$parent.onedit);
+                // console.log(this.$parent.$parent.$parent.onedit);
+                this.$parent.$parent.$parent.onedit(this.network);
             },
             async select(){
                 let net = this.network;
