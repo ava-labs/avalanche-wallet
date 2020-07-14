@@ -12,7 +12,7 @@
             </div>
             <div>
                 <label>Explorer API (optional)</label>
-                <input type="text" placeholder="www" v-model="explorer_api">
+                <input type="text" placeholder="www" v-model="explorer_api" @input="cleanExplorerUrl">
             </div>
             <div class="rowGroup">
                 <div>
@@ -32,6 +32,7 @@
 </template>
 <script>
     import {AvaNetwork} from "@/js/AvaNetwork";
+    import punycode from 'punycode';
 
     export default {
         data(){
@@ -60,11 +61,18 @@
             this.chainId = net.chainId;
         },
         methods:{
+            cleanExplorerUrl(){
+                // console.log(val);
+                let url = this.explorer_api;
+                this.explorer_api = punycode.toASCII(url);
+                // console.log(this.explorer_api);
+            },
             checkUrl(){
                 let err = '';
                 let url = this.url;
                 // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
-                url = punycode.toASCII(url); 
+                url = punycode.toASCII(url);
+                this.url = url;
 
                 // must contain http / https prefix
                 if(url.substr(0,7) !== 'http://' && url.substr(0,8) !== 'https://'){
@@ -95,13 +103,6 @@
                     return false;
                 }
 
-
-                // No trailing slash
-                // if(port.){
-                //     this.err_url = "You should remove any trailing / slashes.";
-                //     return false;
-                // }
-
                 this.err_url = '';
                 return true;
 
@@ -109,18 +110,18 @@
             errCheck(){
                 let err = null;
 
-                // check for HTTP HTTPS on url
+                // // check for HTTP HTTPS on url
                 let url = this.url;
-
-                // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
-                url = punycode.toASCII(url); 
-
-                const punycode = require('punycode');
-                let nah = "http://www.ebаy.com/"
-                console.log(nah)
-                let url = punycode.toASCII(url); 
-                console.log('----*****888888888*******---')
-                console.log(url)
+                //
+                // // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
+                // url = punycode.toASCII(url);
+                //
+                // const punycode = require('punycode');
+                // let nah = "http://www.ebаy.com/"
+                // console.log(nah)
+                // let url = punycode.toASCII(url);
+                // console.log('----*****888888888*******---')
+                // console.log(url)
 
 
                 if(url.substr(0,7) !== 'http://' && url.substr(0,8) !== 'https://'){

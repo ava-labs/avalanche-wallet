@@ -12,7 +12,7 @@
             </div>
             <div>
                 <label>Explorer API (optional)</label>
-                <input type="text" placeholder="www" v-model="explorer_api">
+                <input type="text" placeholder="www" v-model="explorer_api" @input="cleanExplorerUrl">
             </div>
             <div>
                 <label>Chain ID</label>
@@ -27,6 +27,8 @@
 <script>
     import {AvaNetwork} from "@/js/AvaNetwork";
     import axios from "axios";
+    import punycode from 'punycode';
+
 
     export default {
         data(){
@@ -41,11 +43,18 @@
             }
         },
         methods:{
+            cleanExplorerUrl(){
+                let url = this.explorer_api;
+                url = punycode.toASCII(url);
+                this.explorer_api = url;
+            },
             checkUrl(){
                 let err = '';
                 let url = this.url;
                 // protect against homograph attack: https://hethical.io/homograph-attack-using-internationalized-domain-name/
-                url = punycode.toASCII(url); 
+
+                url = punycode.toASCII(url);
+                this.url = url;
 
                 // must contain http / https prefix
                 if(url.substr(0,7) !== 'http://' && url.substr(0,8) !== 'https://'){
