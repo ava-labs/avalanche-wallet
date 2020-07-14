@@ -3,11 +3,11 @@
         <div class="add_key_body">
             <p class="explain">Add additional private keys to use with your wallet.</p>
             <v-tabs color="#4C2E56" height="30" :grow="true" v-model="selectedTab">
-                <v-tab key="private">Private Key</v-tab>
+<!--                <v-tab key="private">Private Key</v-tab>-->
                 <v-tab key="keystore">Keystore File</v-tab>
-                <v-tab-item>
-                    <add-key-string @success="handleImportSuccess"></add-key-string>
-                </v-tab-item>
+<!--                <v-tab-item>-->
+<!--                    <add-key-string @success="handleImportSuccess"></add-key-string>-->
+<!--                </v-tab-item>-->
                 <v-tab-item>
                     <add-key-file @success="handleImportSuccess"></add-key-file>
                 </v-tab-item>

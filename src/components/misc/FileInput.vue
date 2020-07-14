@@ -11,15 +11,15 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class FileInput extends Vue {
-    files: File[] = [];
+    files: FileList|null = null;
 
     @Prop({default: false}) multiple!: boolean;
     @Prop({default: "raw"}) read_type!: string;
     
     oninput(val: File) {
         // @ts-ignore
-        let input = this.$refs.input;
-        this.files = input.files;
+        let input = this.$refs.input as HTMLInputElement;
+        this.files = input.files as FileList;
         // console.log(input.files);
         // console.log(val);
         if (this.read_type === "raw") {
@@ -34,7 +34,7 @@ export default class FileInput extends Vue {
     }
         
     read() {
-        if (this.files.length === 0) return;
+        if (!this.files) return;
 
         let parent = this;
 
@@ -52,6 +52,7 @@ export default class FileInput extends Vue {
     }
     
     get fileNum() {
+        if(!this.files) return 0;
         return this.files.length;
     }
     
