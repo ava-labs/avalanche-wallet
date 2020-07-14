@@ -25,8 +25,7 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    import KeyRow from "@/components/wallet/keys/KeyRow.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import KeyRow from "@/components/wallet/manage/KeyRow.vue";
     import {AvaWallet} from "@/js/AvaWallet";
 
 
@@ -72,10 +71,6 @@
         get activeWallet(){
             return this.$store.state.activeWallet;
         }
-
-        // get balance(){
-        //     return this.$store.state.Assets.assetsDict;
-        // }
     }
 
 </script>

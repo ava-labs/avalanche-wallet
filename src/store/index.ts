@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import Auth from './modules/auth/auth';
 import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
@@ -9,21 +8,20 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueBatchTxInput, IWalletBalanceDict, SessionPersistFile, IWalletBalanceItem, IWalletAssetsDict
+    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict
 } from "@/store/types";
 
 import {
     KeyFile, KeyFileDecrypted,
-    KeyFileKey,
 } from '@/js/IKeystore';
 
 Vue.use(Vuex);
 
 import router from "@/router";
 
-import {ava, avm, bintools} from "@/AVA";
+import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {AmountOutput, AVMKeyChain, AVMKeyPair} from "avalanche";
+import {AmountOutput, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import {makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict} from "@/store/modules/assets/types";
@@ -38,15 +36,13 @@ export default new Vuex.Store({
     },
     state: {
         isAuth: false,
-        addresses: [],
-        selectedAddress: '',
-        modals: {},
         activeWallet: null,
-        address: null,
+        address: null, // current active derived address
         wallets: [],
-        isLoadingPersistKeys: false, // true if currently loading the saved keys
     },
     getters: {
+
+        // Creates the asset_id => raw balance dictionary
         walletBalanceDict(state: RootState): IWalletBalanceDict{
             let wallet:AvaHdWallet|null = state.activeWallet;
 
@@ -74,19 +70,7 @@ export default new Vuex.Store({
             }
             return dict;
         },
-        // walletBalance(state: RootState, getters): IWalletBalanceItem[]{
-        //     let balanceDict = getters.walletBalanceDict;
-        //     let res:IWalletBalanceItem[] = [];
-        //     for(var id in balanceDict){
-        //         let amt = balanceDict[id]
-        //         let item:IWalletBalanceItem = {
-        //             id: id,
-        //             amount: amt.clone()
-        //         }
-        //         res.push(item)
-        //     }
-        //     return res;
-        // },
+
 
         // Get the balance dict, combine it with existing assets and return a new dict
         walletAssetsDict(state: RootState, getters): IWalletAssetsDict{
@@ -124,27 +108,10 @@ export default new Vuex.Store({
             return res;
         },
 
-        // walletType(state: RootState): wallet_type|null{
-        //     if(state.activeWallet){
-        //         return state.activeWallet.type;
-        //     }
-        //     return null;
-        // },
-        // externalAddresses(state: RootState): string[]{
-        //     if(!state.activeWallet) return [];
-        //     let addresses = state.activeWallet.getExternalKeyChain().getAddressStrings();
-        //     return addresses;
-        // },
         addresses(state: RootState): string[]{
             if(!state.activeWallet) return [];
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
             return addresses;
-        },
-        appReady(state: RootState, getters){
-            let avaAsset = getters['Assets/AssetAVA'];
-
-            if(!avaAsset) return false;
-            return true;
         },
         activeKey(state): AVMKeyPair|null{
             if(!state.activeWallet){
@@ -154,9 +121,6 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        selectAddress(state, val){
-            state.selectedAddress = val;
-        },
         updateActiveAddress(state){
             if(!state.activeWallet){
                 state.address = null;
@@ -205,15 +169,10 @@ export default new Vuex.Store({
             });
 
             // Remove other data
-            store.state.selectedAddress = '';
             store.state.isAuth = false;
-
 
             // Clear Assets
             await store.dispatch('Assets/onlogout');
-
-            // Clear session storage
-            sessionStorage.removeItem('pks');
 
             // Clear local storage
             localStorage.removeItem('w');
@@ -250,6 +209,8 @@ export default new Vuex.Store({
 
         },
 
+
+        // Creates a keystore file and saves to local storage
         async rememberWallets({state, dispatch}, pass: string|undefined){
             if(!pass) return;
 
@@ -285,7 +246,7 @@ export default new Vuex.Store({
 
         async activateWallet({state, dispatch, commit}, wallet:AvaHdWallet){
             state.activeWallet = wallet;
-            state.selectedAddress = wallet.getCurrentAddress();
+            // state.selectedAddress = wallet.getCurrentAddress();
 
             commit('updateActiveAddress');
             dispatch('History/updateTransactionHistory');
@@ -297,7 +258,6 @@ export default new Vuex.Store({
             let file_data = await makeKeyfile(wallets,pass);
 
             // Download the file
-
             let text = JSON.stringify(file_data);
             let addr = file_data.keys[0].address.substr(2,5);
 

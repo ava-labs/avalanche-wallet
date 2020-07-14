@@ -1,10 +1,5 @@
-import {Module, Store} from "vuex";
-import {AddressUtxoDict, AssetAPI, AssetDescription, AssetsDict, AssetsState} from "@/store/modules/assets/types";
+import {Module} from "vuex";
 import {RootState} from "@/store/types";
-import {ava, avm, bintools} from "@/AVA";
-import {UTXOSet} from "avalanche";
-import Vue from "vue";
-import AvaAsset from "@/js/AvaAsset";
 import {explorer_api} from "@/explorer_api";
 
 

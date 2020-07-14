@@ -23,9 +23,8 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import FaucetLink from "@/components/misc/FaucetLink.vue";
-    import FungibleRow from "@/components/wallet/home/FungibleRow.vue";
+    import FungibleRow from "@/components/wallet/portfolio/FungibleRow.vue";
     import AvaAsset from "@/js/AvaAsset";
-    import {IWalletBalanceItem} from "@/store/types";
 
     @Component({
         components: {
@@ -80,7 +79,6 @@
 
             let balance = this.walletBalancesSorted;
 
-
             if(this.search){
                 balance = balance.filter(val => {
                     let query = this.search.toUpperCase();
@@ -97,10 +95,6 @@
             }
 
             return balance;
-        }
-
-        get isUpdateBalance(): boolean{
-            return this.$store.state.Assets.isUpdateBalance;
         }
     }
 </script>

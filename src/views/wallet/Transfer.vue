@@ -49,7 +49,7 @@
 
     //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
-    import {isValidAddress} from "../../../AVA";
+    import {isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
 
@@ -144,9 +144,6 @@
             }
             return res;
         }
-        get selectedAddress(){
-            return this.$store.state.selectedAddress;
-        }
         get addresses(){
             return this.$store.state.addresses;
         }
@@ -175,7 +172,7 @@
     }
 </style>
 <style scoped lang="scss">
-    @use '../../../main';
+    @use '../../main';
 
     $padLeft: 24px;
     $padTop: 8px;

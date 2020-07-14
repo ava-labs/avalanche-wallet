@@ -45,14 +45,6 @@
         }
     })
     export default class BalanceCard extends Vue {
-
-        // @Watch('ava_asset', {
-        //     deep: true
-        // })
-        // onassetchange(){
-        //     console.log('ASSET CHANGE')
-        // }
-
         updateBalance():void{
             this.$store.dispatch('Assets/updateUTXOs');
             this.$store.dispatch('History/updateTransactionHistory');
@@ -75,18 +67,8 @@
             return this.$store.state.activeWallet;
         }
 
-        // get walletBalance(){
-        //     let walletBalance = this.$store.getters['walletBalance'];
-        //     return walletBalance;
-        // }
-
         get isUpdateBalance():boolean{
             return this.$store.state.Assets.isUpdateBalance;
-        }
-
-
-        mounted(){
-
         }
     }
 </script>
