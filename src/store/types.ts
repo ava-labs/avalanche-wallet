@@ -7,10 +7,10 @@ import {ITransaction} from "@/components/wallet/transfer/types";
 
 export interface RootState {
     isAuth: boolean,
-    // selectedAddress: string,
     activeWallet: null|AvaHdWallet
     wallets: AvaHdWallet[]
     address: String|null
+    volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
 }
 
 interface Modal {

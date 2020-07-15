@@ -39,6 +39,7 @@ export default new Vuex.Store({
         activeWallet: null,
         address: null, // current active derived address
         wallets: [],
+        volatileWallets: [], // will be forgotten when tab is closed
     },
     getters: {
 
@@ -198,8 +199,8 @@ export default new Vuex.Store({
 
         async addWallet({state, dispatch}, keypair:AVMKeyPair): Promise<AvaHdWallet>{
             let wallet = new AvaHdWallet(keypair);
-
-            state.wallets.push(wallet);
+                state.wallets.push(wallet);
+                state.volatileWallets.push(wallet);
             return wallet;
         },
 
@@ -226,6 +227,9 @@ export default new Vuex.Store({
                 message: "Wallets are stored securely for easy access.",
                 type: "info"
             });
+
+            // No more voltile wallets
+            state.volatileWallets = [];
         },
 
         async issueBatchTx({state}, data:IssueBatchTxInput){
@@ -246,7 +250,6 @@ export default new Vuex.Store({
 
         async activateWallet({state, dispatch, commit}, wallet:AvaHdWallet){
             state.activeWallet = wallet;
-            // state.selectedAddress = wallet.getCurrentAddress();
 
             commit('updateActiveAddress');
             dispatch('History/updateTransactionHistory');

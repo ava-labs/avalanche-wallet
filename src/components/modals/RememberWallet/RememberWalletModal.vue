@@ -38,6 +38,7 @@
 
         async onsubmit(){
             this.isLoading = true;
+            this.err = "";
             let w = localStorage.getItem('w');
             if(!w) return;
 
@@ -54,6 +55,9 @@
                     return keyToKeypair(key.key, chainID);
                 });
                 await this.$store.dispatch('accessWalletMultiple', inputData);
+
+                // These are not volatile wallets since they are loaded from storage
+                this.$store.state.volatileWallets = [];
                 this.close();
             }catch(e){
                 this.isLoading = false;

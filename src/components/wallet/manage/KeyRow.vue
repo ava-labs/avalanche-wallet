@@ -7,9 +7,10 @@
         <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <div class="rows">
             <div class="detail">
-                <div>
-                    <p class="addressVal"><b>{{walletTitle}}</b></p>
-                </div>
+                <p class="addressVal"><b>{{walletTitle}}</b></p>
+                <Tooltip text="This key will be forgotten when you refresh the browser." v-if="isVolatile">
+                    <fa icon="exclamation-triangle" class="volatile_alert"></fa>
+                </Tooltip>
             </div>
 
             <div >
@@ -26,13 +27,18 @@
             </div>
         </div>
         <div class="buts">
-            <button @click="showModal">View Key Phrase</button>
-            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>
             <button class="selBut" @click="select"  v-if="!is_default">
                 <span>Activate Key</span>
             </button>
-
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
+            <button @click="showModal">View Key Phrase</button>
+            <Tooltip  text="Past Addresses" class="row_but">
+                <button @click="showPastAddresses">
+                    <fa icon="list-ol"></fa>
+                </button>
+            </Tooltip>
+<!--            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>-->
+
         </div>
 <!--        <HDDerivationList :wallet="wallet" class="hdlist"></HDDerivationList>-->
     </div>
@@ -50,6 +56,8 @@
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
     import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
+    import Tooltip from '@/components/misc/Tooltip.vue';
+
     import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
@@ -59,7 +67,8 @@
     @Component({
         components: {
             MnemonicPhrase,
-            HdDerivationListModal
+            HdDerivationListModal,
+            Tooltip
         }
     })
     export default class KeyRow extends Vue{
@@ -67,6 +76,10 @@
         @Prop() wallet!:AvaHdWallet;
         @Prop({default: false}) is_default?:boolean;
 
+
+        get isVolatile(){
+            return this.$store.state.volatileWallets.includes(this.wallet);
+        }
 
         get walletTitle(){
             return this.address.split('-')[1].substring(0,4);
@@ -184,8 +197,12 @@
         flex-direction: row;
 
         > *{
-            margin-left: 15px;
+            margin: 8px !important;
         }
+    }
+
+    .row_but{
+
     }
 
     .rows{
@@ -213,7 +230,7 @@
     .detail{
         overflow: auto;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: max-content max-content;
         column-gap: 15px;
     }
 
@@ -267,4 +284,7 @@
         color: main.$primary-color;
     }
 
+    .volatile_alert{
+        color: #f00;
+    }
 </style>
