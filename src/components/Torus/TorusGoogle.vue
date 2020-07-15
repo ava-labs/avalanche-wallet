@@ -53,6 +53,7 @@
             let keyPair = keyToKeypair(pk, chainId);
 
             try{
+                this.$store.state.rememberKey = false;
                 let res = await this.$store.dispatch('accessWallet', keyPair);
             }catch (e) {
                 this.isLoading = false;

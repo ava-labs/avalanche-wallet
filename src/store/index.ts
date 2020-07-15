@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// import Auth from './modules/auth/auth';
 import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
@@ -9,26 +8,22 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueBatchTxInput, IWalletBalanceDict, SessionPersistFile, IWalletBalanceItem, IWalletAssetsDict
+    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict
 } from "@/store/types";
 
 import {
     KeyFile, KeyFileDecrypted,
-    KeyFileKey,
 } from '@/js/IKeystore';
 
 Vue.use(Vuex);
 
 import router from "@/router";
 
-import {ava, avm, bintools} from "@/AVA";
+import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {AmountOutput, AVMKeyChain, AVMKeyPair} from "avalanche";
+import {AmountOutput, AVMKeyPair} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import {makeKeyfile, readKeyFile} from "@/js/Keystore";
-import AvaSingletonWallet from "@/js/AvaSingletonWallet";
-import {wallet_type} from "@/js/IAvaHdWallet";
-import {AvaWallet} from "@/js/AvaWallet";
 import {AssetsDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 
@@ -41,17 +36,14 @@ export default new Vuex.Store({
     },
     state: {
         isAuth: false,
-        rememberKey: false, // if true the keytore will remember keys during browser session
-        privateKey: '',
-        addresses: [],
-        selectedAddress: '',
-        modals: {},
         activeWallet: null,
-        address: null,
+        address: null, // current active derived address
         wallets: [],
-        isLoadingPersistKeys: false, // true if currently loading the saved keys
+        volatileWallets: [], // will be forgotten when tab is closed
     },
     getters: {
+
+        // Creates the asset_id => raw balance dictionary
         walletBalanceDict(state: RootState): IWalletBalanceDict{
             let wallet:AvaHdWallet|null = state.activeWallet;
 
@@ -79,19 +71,7 @@ export default new Vuex.Store({
             }
             return dict;
         },
-        // walletBalance(state: RootState, getters): IWalletBalanceItem[]{
-        //     let balanceDict = getters.walletBalanceDict;
-        //     let res:IWalletBalanceItem[] = [];
-        //     for(var id in balanceDict){
-        //         let amt = balanceDict[id]
-        //         let item:IWalletBalanceItem = {
-        //             id: id,
-        //             amount: amt.clone()
-        //         }
-        //         res.push(item)
-        //     }
-        //     return res;
-        // },
+
 
         // Get the balance dict, combine it with existing assets and return a new dict
         walletAssetsDict(state: RootState, getters): IWalletAssetsDict{
@@ -129,27 +109,10 @@ export default new Vuex.Store({
             return res;
         },
 
-        // walletType(state: RootState): wallet_type|null{
-        //     if(state.activeWallet){
-        //         return state.activeWallet.type;
-        //     }
-        //     return null;
-        // },
-        // externalAddresses(state: RootState): string[]{
-        //     if(!state.activeWallet) return [];
-        //     let addresses = state.activeWallet.getExternalKeyChain().getAddressStrings();
-        //     return addresses;
-        // },
         addresses(state: RootState): string[]{
             if(!state.activeWallet) return [];
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
             return addresses;
-        },
-        appReady(state: RootState, getters){
-            let avaAsset = getters['Assets/AssetAVA'];
-
-            if(!avaAsset) return false;
-            return true;
         },
         activeKey(state): AVMKeyPair|null{
             if(!state.activeWallet){
@@ -159,9 +122,6 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        selectAddress(state, val){
-            state.selectedAddress = val;
-        },
         updateActiveAddress(state){
             if(!state.activeWallet){
                 state.address = null;
@@ -174,13 +134,14 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet({state, dispatch, commit}, key: AVMKeyPair){
+        async accessWallet({state, dispatch, commit}, key: AVMKeyPair): Promise<AvaHdWallet>{
 
             let wallet:AvaHdWallet = await dispatch('addWallet', key);
             await dispatch('activateWallet', wallet);
 
             state.isAuth = true;
             dispatch('onAccess');
+            return wallet;
         },
 
         async accessWalletMultiple({state, dispatch, commit}, keys: AVMKeyPair[]){
@@ -209,15 +170,13 @@ export default new Vuex.Store({
             });
 
             // Remove other data
-            store.state.selectedAddress = '';
-            store.state.privateKey =  '';
             store.state.isAuth = false;
 
             // Clear Assets
             await store.dispatch('Assets/onlogout');
 
-            // Clear session storage
-            sessionStorage.removeItem('pks');
+            // Clear local storage
+            localStorage.removeItem('w');
 
             router.push('/');
         },
@@ -236,39 +195,12 @@ export default new Vuex.Store({
                     message: 'Private key and assets removed from the wallet.'
                 });
             }
-
-          //   let addrs = state.addresses;
-          // for(var i=addrs.length-1; i >= 0; i--){
-          //     let addr = state.addresses[i];
-          //     await dispatch('removeKey', addr);
-          // }
         },
 
         async addWallet({state, dispatch}, keypair:AVMKeyPair): Promise<AvaHdWallet>{
-
-            // let pk = data.pk;
-            // let walletType = data.type;
-            // let pkBuff = bintools.avaDeserialize(pk);
-            // let addrBuf = keyChain.importKey(pkBuff);
-            // let keypair = keyChain.getKey(addrBuf);
-
-
-            // let wallet = new AvaWallet(keypair, walletType);
             let wallet = new AvaHdWallet(keypair);
-            // if(walletType==='hd'){
-            //     wallet = new AvaHdWallet(keypair);
-            // }else{
-            //     wallet = new AvaSingletonWallet(keypair);
-            // }
-            // Create new HD Wallet for the key
-
-            state.wallets.push(wallet);
-
-
-            if(state.rememberKey){
-                dispatch('saveKeys');
-            }
-
+                state.wallets.push(wallet);
+                state.volatileWallets.push(wallet);
             return wallet;
         },
 
@@ -276,79 +208,28 @@ export default new Vuex.Store({
             let index = state.wallets.indexOf(wallet);
             state.wallets.splice(index,1);
 
-            if(state.rememberKey){
-                dispatch('saveKeys');
-            }
         },
 
-        // toggleWalletMode({state,dispatch}){
-        //     let wallet = state.activeWallet;
-        //     if(!wallet) return;
-        //     wallet.toggleMode();
-        //
-        //     let mode = wallet.type;
-        //
-        //     let msg = "Your address will now change after every deposit.";
-        //     if(mode !== 'hd') msg = "Your address is now static and will never change.";
-        //
-        //     dispatch('Notifications/add', {
-        //         title: "Wallet Mode Changed",
-        //         message: msg,
-        //         type: "info"
-        //     });
-        //
-        //     dispatch('History/updateTransactionHistory', null);
-        //     dispatch('saveKeys');
-        // },
-        // Saves current keys to browser Session Storage
-        async saveKeys({state}){
+
+        // Creates a keystore file and saves to local storage
+        async rememberWallets({state, dispatch}, pass: string|undefined){
+            if(!pass) return;
+
+
             let wallets = state.wallets;
 
-            let sessionData:SessionPersistFile = [];
+            let file = await makeKeyfile(wallets,pass);
+            let fileString = JSON.stringify(file);
+            localStorage.setItem('w', fileString);
 
-            wallets.forEach(wallet => {
-                let key = wallet.getMasterKey();
-                let pk = key.getPrivateKeyString();
-
-                sessionData.push({
-                    key: pk,
-                });
+            dispatch('Notifications/add', {
+                title: "Remember Wallet",
+                message: "Wallets are stored securely for easy access.",
+                type: "info"
             });
 
-            let saveData = JSON.stringify(sessionData);
-            sessionStorage.setItem('pks', saveData);
-        },
-
-
-
-        // Tries to read the session storage and add keys to the wallet
-        async autoAccess({state, dispatch}){
-            let sessionKeys = sessionStorage.getItem('pks');
-            if(!sessionKeys) return;
-
-            state.isLoadingPersistKeys = true;
-
-
-            try{
-                let sessionData:SessionPersistFile = JSON.parse(sessionKeys);
-
-                let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-                // console.log()
-                // console.log(chainID)
-
-                let inputData:AVMKeyPair[] = sessionData.map(key => {
-                    return keyToKeypair(key.key, chainID);
-                });
-
-                await dispatch('accessWalletMultiple', inputData);
-                state.rememberKey = true;
-                state.isLoadingPersistKeys = false;
-                return true;
-            }catch (e) {
-                console.log(e);
-                state.isLoadingPersistKeys = false;
-                return false;
-            }
+            // No more voltile wallets
+            state.volatileWallets = [];
         },
 
         async issueBatchTx({state}, data:IssueBatchTxInput){
@@ -369,7 +250,6 @@ export default new Vuex.Store({
 
         async activateWallet({state, dispatch, commit}, wallet:AvaHdWallet){
             state.activeWallet = wallet;
-            state.selectedAddress = wallet.getCurrentAddress();
 
             commit('updateActiveAddress');
             dispatch('History/updateTransactionHistory');
@@ -381,10 +261,12 @@ export default new Vuex.Store({
             let file_data = await makeKeyfile(wallets,pass);
 
             // Download the file
-
             let text = JSON.stringify(file_data);
             let addr = file_data.keys[0].address.substr(2,5);
-            let filename = `AVAX_${addr}`;
+
+            let utcDate = new Date()
+            let dateString = utcDate.toISOString().replace(' ', '_');
+            let filename = `AVAX_${dateString}.json`;
 
             var blob = new Blob(
                 [ text ],
@@ -421,18 +303,9 @@ export default new Vuex.Store({
 
                             let keys = keyFile.keys;
 
-                            // let inputData: AVMKeyPair[] = keys.map(val => {
-                            //     return {
-                            //         pk: val.key,
-                            //         type: val.type
-                            //     }
-                            // });
-
                             let chainID = avm.getBlockchainAlias();
                             let inputData:AVMKeyPair[] = keys.map(key => {
                                 return keyToKeypair(key.key,chainID);
-                                // let addr = keychain.importKey(key.key);
-                                // return keychain.getKey(addr);
                             });
 
                             // If not auth, login user then add keys
@@ -451,10 +324,7 @@ export default new Vuex.Store({
                             })
 
                         }catch(err){
-                            reject( {
-                                success: false,
-                                message: 'Unable to read key file.'
-                            });
+                            reject(err);
                         }
                     });
                 reader.readAsText(file);

@@ -1,11 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue'
-// import './registerServiceWorker'
 import router from './router'
 import store from './store'
 import VueI18n from 'vue-i18n'
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue } from 'bootstrap-vue'
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 
@@ -13,20 +12,9 @@ import vuetify from './plugins/vuetify';
 
 // @ts-ignore
 import i18n from "./plugins/i18n.js";
-// import AVA from './AVA';
 
-import CountryFlag from 'vue-country-flag'
-Vue.component('country-flag', CountryFlag);
-
-
-import ToggleButton from 'vue-js-toggle-button';
-Vue.use(ToggleButton)
-// Install BootstrapVue
-// Vue.use(BootstrapVue);
-// Vue.use(IconsPlugin);
 
 Vue.config.productionTip = false;
-
 
 new Vue({
   router,
@@ -45,7 +33,6 @@ new Vue({
 
 
 // Extending Big.js with a helper function
-
 import Big from "big.js";
 
 declare module "big.js" {

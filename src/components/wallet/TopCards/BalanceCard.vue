@@ -3,7 +3,7 @@
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
-                    <Spinner v-if="isUpdateBalance"></Spinner>
+                    <Spinner v-if="isUpdateBalance" color="#000"></Spinner>
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
@@ -45,14 +45,6 @@
         }
     })
     export default class BalanceCard extends Vue {
-
-        // @Watch('ava_asset', {
-        //     deep: true
-        // })
-        // onassetchange(){
-        //     console.log('ASSET CHANGE')
-        // }
-
         updateBalance():void{
             this.$store.dispatch('Assets/updateUTXOs');
             this.$store.dispatch('History/updateTransactionHistory');
@@ -75,18 +67,8 @@
             return this.$store.state.activeWallet;
         }
 
-        // get walletBalance(){
-        //     let walletBalance = this.$store.getters['walletBalance'];
-        //     return walletBalance;
-        // }
-
         get isUpdateBalance():boolean{
             return this.$store.state.Assets.isUpdateBalance;
-        }
-
-
-        mounted(){
-
         }
     }
 </script>

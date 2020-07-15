@@ -48,6 +48,8 @@ $pink-extra-light: #ffe6e6;
 $gray: #F5F6FA;
 $white: #FFF;
 $green: #6BC688;
+$green-light: #83f2a6;
+$green-extra-light: #a9efbf;
 
 $primary-color: $purple;
 $primary-color-light: $purple-light;
@@ -219,6 +221,34 @@ label{
     &:hover {
         opacity: 0.7;
     }
+
+
+    &:disabled {
+      color: $purple-light !important;
+      background-color: $gray !important;
+      opacity: 0.5 !important;
+    }
+}
+
+.ava_button_secondary {
+  color: $primary-color !important;
+  background-color: transparent !important;
+  padding: 10px 24px;
+  min-width: 140px;
+  border-radius: 6px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase !important;
+  font-size: $s-size;
+
+  &:hover {
+      opacity: 0.7;
+  }
+
+  &:disabled {
+    opacity: 0.5 !important;
+  }
 }
 
 .link {

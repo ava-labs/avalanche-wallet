@@ -3,15 +3,16 @@ module.exports = {
         "vuetify"
     ],
     devServer: {
-        https: false,
+        https: true,
         port: 8080
     },
     // publicPath: '',
     configureWebpack:{
         optimization: {
             splitChunks: {
-                minSize: 10000,
-                maxSize: 200000,
+                chunks: "all",
+                minSize: 600 * 1000,
+                maxSize: 2000 * 1000,
             }
         }
     },

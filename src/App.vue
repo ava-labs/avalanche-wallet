@@ -4,6 +4,7 @@
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
+                    <RememberWalletModal></RememberWalletModal>
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
@@ -14,47 +15,21 @@
     </v-app>
 </template>
 <script>
-
-
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
-    import LoadingApp from '@/views/LoadingApp';
+    import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
 
     export default {
         components: {
-
+            RememberWalletModal,
             Navbar,
             Notifications,
-            LoadingApp
         },
         async created() {
-            let parent = this;
             await this.$store.dispatch('Network/init');
-
-
-            // check session storage
-            // if Remember Keys was enabled, get keys and access wallet
-            this.$nextTick(() => {
-                parent.$store.dispatch('autoAccess').then((res) => {
-                    if(res){
-                        parent.$store.dispatch('Notifications/add', {
-                            title: "Keys Remembered",
-                            message: "Your stored keys are used to log you in.",
-                            type: "success"
-                        })
-                    }
-                });
-            })
-
-
     },
     computed: {
-        appReady() {
-            return this.$store.getters['appReady'];
-        },
         isNavbar() {
-            // console.log(this.$route);
-            // return this.$store.state.is
             if (this.$route.path.includes('/wallet')) {
                 return false;
             }

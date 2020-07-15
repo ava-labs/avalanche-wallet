@@ -1,19 +1,15 @@
-import {Module, Store} from "vuex";
+import {Module} from "vuex";
 import {RootState} from "@/store/types";
-import {NetworkItem, NetworkState} from "@/store/modules/network/types";
+import {NetworkState} from "@/store/modules/network/types";
 
 import {ava, avm} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 
-import axios from 'axios';
-
-
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
         status: 'disconnected', // disconnected | connecting | connected
-        // isConnected: false,
         networks: [],
         selectedNetwork: null
     },
@@ -26,7 +22,6 @@ const network_module: Module<NetworkState, RootState> = {
         async setNetwork({state, dispatch, commit, rootState}, net:AvaNetwork){
             // Query the network to get network id
 
-            // state.isConnected = false;
             state.status = 'connecting';
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
@@ -38,8 +33,6 @@ const network_module: Module<NetworkState, RootState> = {
 
             commit('Assets/removeAllAssets', null, {root: true});
             await dispatch('Assets/updateAvaAsset', null, {root: true});
-            await dispatch('Assets/updateAssets', null, {root: true});
-
 
             // If authenticated
             if(rootState.isAuth){
@@ -48,6 +41,10 @@ const network_module: Module<NetworkState, RootState> = {
                         w.onnetworkchange();
                 }
             }
+
+            setTimeout(() => {
+                dispatch('Assets/updateUTXOs', null, {root: true});
+            }, 1000);
 
             // state.isConnected = true;
             state.status = 'connected';

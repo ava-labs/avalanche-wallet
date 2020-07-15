@@ -4,12 +4,8 @@ import BN from "bn.js";
 
 export interface AssetsState {
     isUpdateBalance: boolean
-    utxo_set: UTXOSet|null
-    utxos: UTXO[]
-    descriptions: AssetDescriptions
     assets: AvaAsset[]
     assetsDict: AssetsDict
-    balanceDict: IBalanceDict
     AVA_ASSET_ID: string | null,
 }
 

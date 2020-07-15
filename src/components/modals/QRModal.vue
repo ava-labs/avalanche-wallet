@@ -41,7 +41,7 @@
             QRCode.toCanvas(canvas, this.address, {
                 scale: 6,
                 color: {
-                    light: "#f2f2f2"
+                    light: "#fff"
                 }
             }, function (error) {
                 if (error) console.error(error);

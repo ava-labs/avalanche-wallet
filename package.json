@@ -26,7 +26,8 @@
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/src/$1"
     },
-    "testEnvironment": "node",
+    "testURL": "https://localhost/",
+    "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
   },
   "dependencies": {
@@ -60,14 +61,12 @@
     "express": "^4.17.1",
     "hdkey": "^2.0.1",
     "helmet": "^3.23.3",
-    "instascan": "^1.0.0",
     "jspdf": "^1.5.3",
-    "libsodium": "^0.7.6",
-    "libsodium-wrappers": "^0.7.6",
     "moment": "^2.26.0",
     "morgan": "^1.9.1",
     "pdfjs-dist": "^2.4.456",
     "print-js": "^1.0.63",
+    "punycode": "^2.1.1",
     "qr-scanner": "^1.1.1",
     "qrcode": "^1.4.4",
     "reflect-metadata": "^0.1.13",
@@ -79,7 +78,6 @@
     "vue-class-component": "^7.2.3",
     "vue-country-flag": "^1.3.1",
     "vue-i18n": "^8.15.4",
-    "vue-js-toggle-button": "^1.3.3",
     "vue-property-decorator": "^8.4.2",
     "vue-router": "^3.1.3",
     "vuetify": "^2.2.3",

@@ -15,9 +15,15 @@
 </script>
 <style scoped lang="scss">
     .spinner{
+        width: 20px;
+        height: 20px;
         animation-name: spin;
         animation-duration: 1s;
         animation-iteration-count: infinite;
+        transform-origin: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     @keyframes spin {
         from {transform: rotateZ(0deg);}

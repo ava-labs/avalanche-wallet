@@ -21,8 +21,8 @@
     </div>
 </template>
 <script>
-import Fungibles from '@/components/wallet/home/Fungibles';
-import Collectibles from '@/components/wallet/home/Collectibles';
+import Fungibles from '@/components/wallet/portfolio/Fungibles';
+import Collectibles from '@/components/wallet/portfolio/Collectibles';
 export default {
     name: "WalletHome",
     data() {

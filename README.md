@@ -104,3 +104,14 @@ interface IKeystoreFile{
     ]
 }
 ```
+
+# Local Storage Remember Wallet Spec
+Basically same as storing the keystore file in the browser localstorage.
+
+If there is a remembered wallet it will be the Keystore JSON format.
+```json
+{
+  "w": IKeystoreFile | undefined
+}
+```
+

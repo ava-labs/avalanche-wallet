@@ -1,10 +1,10 @@
 <template>
     <div class="modal_main" v-show="isActive">
-        <div class="modal_bg" @click="close"></div>
+        <div class="modal_bg" @click="bgclick"></div>
         <div class="modal_body">
             <div class="modal_topbar">
                 <h4 class="modal_title">{{title}}</h4>
-                <button class="modalClose" @click="close"><fa icon="times"></fa></button>
+                <button class="modalClose" @click="close" v-if="can_close"><fa icon="times"></fa></button>
             </div>
             <slot></slot>
         </div>
@@ -17,22 +17,32 @@
     @Component
     export default class Modal extends Vue{
         @Prop({default: "Modal Title"}) title!:string;
+        @Prop({default: true}) can_close!:boolean;
 
         isActive: boolean = false;
 
         public open(){
             this.isActive = true;
         }
-        close(){
+
+        bgclick(){
+            if(this.can_close){
+                this.close();
+            }
+        }
+
+        public close(){
             this.isActive = false;
         }
     }
 </script>
-<style scoped>
+<style scoped lang="scss">
+@use '../../main';
 
     .modal_topbar{
-        background-color: #000;
-        color: #fff;
+        background-color: #f2f2f2;
+        border-bottom: 1px solid #ddd;
+        color: #444;
         position: relative;
         padding: 10px 22px;
         display: flex;
@@ -43,10 +53,12 @@
         text-align: left;
         flex-grow: 1;
         margin: 0;
+        font-weight: lighter;
     }
 
     .modalClose{
         font-size: 22px;
+        font-weight: lighter;
     }
 
     .modal_main{
@@ -58,11 +70,9 @@
         height: 100vh;
         overflow: scroll;
         display: flex;
-
-
     }
 
-    .modal_bg{
+    .modal_bg {
         position: absolute;
         top: 0;
         left: 0;
@@ -78,7 +88,7 @@
         width: max-content;
         max-width: 100%;
         min-height: 30px;
-        background-color: #f2f2f2;
+        background-color: #fff;
         margin: auto;
         z-index: 2;
         border-radius: 2px;
