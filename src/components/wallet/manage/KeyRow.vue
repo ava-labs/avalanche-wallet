@@ -27,13 +27,18 @@
             </div>
         </div>
         <div class="buts">
-            <button @click="showModal">View Key Phrase</button>
-            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>
             <button class="selBut" @click="select"  v-if="!is_default">
                 <span>Activate Key</span>
             </button>
-
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
+            <button @click="showModal">View Key Phrase</button>
+            <Tooltip  text="Past Addresses" class="row_but">
+                <button @click="showPastAddresses">
+                    <fa icon="list-ol"></fa>
+                </button>
+            </Tooltip>
+<!--            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>-->
+
         </div>
 <!--        <HDDerivationList :wallet="wallet" class="hdlist"></HDDerivationList>-->
     </div>
@@ -192,8 +197,12 @@
         flex-direction: row;
 
         > *{
-            margin-left: 15px;
+            margin: 8px !important;
         }
+    }
+
+    .row_but{
+
     }
 
     .rows{
