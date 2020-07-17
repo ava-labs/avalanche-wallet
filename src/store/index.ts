@@ -8,7 +8,7 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict
+    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput
 } from "@/store/types";
 
 import {
@@ -256,8 +256,10 @@ export default new Vuex.Store({
         },
 
 
-        async exportKeyfile({state}, pass){
-            let wallets = state.wallets;
+        async exportWallets({state}, input:ExportWalletsInput){
+            let pass = input.password;
+            let wallets = input.wallets;
+
             let file_data = await makeKeyfile(wallets,pass);
 
             // Download the file
@@ -288,47 +290,81 @@ export default new Vuex.Store({
 
         // Given a key file with password, will try to decrypt the file and add keys to user's
         // key chain
-        importKeyfile(store, data){
+        async importKeyfile(store, data: ImportKeyfileInput){
             let pass = data.password;
-            let file = data.file;
+            let fileData = data.data;
 
-            return new Promise((resolve, reject) => {
-                let reader = new FileReader();
-                    reader.addEventListener('load', async () => {
-                        let res = <string>reader.result;
-                        try {
-                            let json_data: KeyFile = JSON.parse(res);
+            try {
+                let keyFile:KeyFileDecrypted = await readKeyFile(fileData,pass);
 
-                            let keyFile:KeyFileDecrypted = await readKeyFile(json_data,pass);
+                let keys = keyFile.keys;
 
-                            let keys = keyFile.keys;
+                let chainID = avm.getBlockchainAlias();
+                let inputData:AVMKeyPair[] = keys.map(key => {
+                    return keyToKeypair(key.key,chainID);
+                });
 
-                            let chainID = avm.getBlockchainAlias();
-                            let inputData:AVMKeyPair[] = keys.map(key => {
-                                return keyToKeypair(key.key,chainID);
-                            });
+                // If not auth, login user then add keys
+                if(!store.state.isAuth){
+                    await store.dispatch('accessWalletMultiple', inputData);
+                }else{
+                    for(let i=0; i<inputData.length;i++){
+                        let key = inputData[i];
+                        await store.dispatch('addWallet', key);
+                    }
+                }
 
-                            // If not auth, login user then add keys
-                            if(!store.state.isAuth){
-                                await store.dispatch('accessWalletMultiple', inputData);
-                            }else{
-                                for(let i=0; i<inputData.length;i++){
-                                    let key = inputData[i];
-                                    await store.dispatch('addWallet', key);
-                                }
-                            }
 
-                            resolve({
-                                success: true,
-                                message: 'success'
-                            })
+                return {
+                    success: true,
+                    message: 'success'
+                };
+                // resolve({
+                //     success: true,
+                //     message: 'success'
+                // })
 
-                        }catch(err){
-                            reject(err);
-                        }
-                    });
-                reader.readAsText(file);
-            });
+            }catch(err){
+                throw(err);
+            }
+
+            // return new Promise((resolve, reject) => {
+            //     let reader = new FileReader();
+            //         reader.addEventListener('load', async () => {
+            //             let res = <string>reader.result;
+            //             try {
+            //                 let json_data: KeyFile = JSON.parse(res);
+            //
+            //                 let keyFile:KeyFileDecrypted = await readKeyFile(json_data,pass);
+            //
+            //                 let keys = keyFile.keys;
+            //
+            //                 let chainID = avm.getBlockchainAlias();
+            //                 let inputData:AVMKeyPair[] = keys.map(key => {
+            //                     return keyToKeypair(key.key,chainID);
+            //                 });
+            //
+            //                 // If not auth, login user then add keys
+            //                 if(!store.state.isAuth){
+            //                     await store.dispatch('accessWalletMultiple', inputData);
+            //                 }else{
+            //                     for(let i=0; i<inputData.length;i++){
+            //                         let key = inputData[i];
+            //                         await store.dispatch('addWallet', key);
+            //                     }
+            //                 }
+            //
+            //                 resolve({
+            //                     success: true,
+            //                     message: 'success'
+            //                 })
+            //
+            //             }catch(err){
+            //                 reject(err);
+            //             }
+                    // });
+                // reader.readAsText(file);
+            // });
         }
     },
 })

@@ -12,14 +12,14 @@ This is the frontend Vue.js application for the AVAX Wallet.
 
 ## Installation
 
-1) Clone the repo ``git clone https://github.com/ava-labs/ava-wallet.git``
-2) Go to root of the project ``cd ava-wallet``
+1) Clone the repo ``git clone https://github.com/ava-labs/avalanche-wallet.git``
+2) Go to root of the project ``cd avalanche-wallet``
 3) Install javascript dependencies with ``yarn install``.
 
 
 ## Running The Project
 
-In order for the wallet to work, it needs the AVA network to operate on. By default the wallet will connect to the AVA test network.
+In order for the wallet to work, it needs the Avalanche network to operate on. By default the wallet will connect to the Avalanche test network.
 
 1) If you want to connect to a local network, make sure you have installed and able to run a Gecko node properly.
 2) Run the project with hot reloading ``yarn serve``

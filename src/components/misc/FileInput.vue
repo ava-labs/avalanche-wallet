@@ -50,6 +50,12 @@ export default class FileInput extends Vue {
             reader.readAsText(this.files[0])
         }
     }
+
+    clear(){
+        let input = this.$refs.input as HTMLInputElement
+        input.value = "";
+        this.files = null;
+    }
     
     get fileNum() {
         if(!this.files) return 0;

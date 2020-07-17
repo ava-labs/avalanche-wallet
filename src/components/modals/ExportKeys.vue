@@ -1,15 +1,17 @@
 <template>
     <modal ref="modal" :title="title">
         <div class="export_body">
-            <export-wallet @success="handleExportSuccess"></export-wallet>
+            <export-wallet @success="handleExportSuccess" :wallets="wallets"></export-wallet>
         </div>
     </modal>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import 'reflect-metadata';
+import { Vue, Component, Prop } from "vue-property-decorator";
 import Modal from "@/components/modals/Modal.vue";
 import ExportWallet from "@/components/wallet/manage/ExportWallet.vue";
+import AvaHdWallet from "@/js/AvaHdWallet";
 
 @Component({
     components: {
@@ -20,6 +22,8 @@ import ExportWallet from "@/components/wallet/manage/ExportWallet.vue";
 export default class ExportKeys extends Vue {
     isActive: boolean = false;
     title: string = "Export Keys";
+
+    @Prop() wallets!: AvaHdWallet[];
 
     open() {
         // @ts-ignore
