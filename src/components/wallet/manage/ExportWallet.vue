@@ -27,14 +27,19 @@
         </form>
     </div>
 </template>
-<script lang="ts">    
-    import { Vue, Component } from 'vue-property-decorator';
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import AvaHdWallet from "@/js/AvaHdWallet";
+    import {ExportWalletsInput} from "@/store/types";
 
     @Component
     export default class ExportWallet extends Vue{
         isLoading: boolean = false;
         pass: string = "";
         passConfirm: string = "";
+
+        @Prop() wallets!: AvaHdWallet[];
 
         get isValid(): boolean {
             return (this.pass.length >= 9 && this.pass===this.passConfirm) ? true : false;
@@ -43,8 +48,12 @@
         async download() {
             this.isLoading = true;
 
+            let input: ExportWalletsInput = {
+                password: this.pass,
+                wallets: this.wallets
+            }
             setTimeout(() => {
-                this.$store.dispatch("exportKeyfile", this.pass).then(res => {
+                this.$store.dispatch("exportWallets", input).then(res => {
                     this.isLoading = false;
                     this.pass = "";
                     this.passConfirm = "";

@@ -4,6 +4,7 @@ import BN from 'bn.js';
 import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
+import {KeyFile} from "@/js/IKeystore";
 
 export interface RootState {
     isAuth: boolean,
@@ -62,6 +63,17 @@ export interface IssueTxInput{
     amount: BN,
     toAddress: string,
     changeAddresses: string[],
+}
+
+
+export interface ImportKeyfileInput {
+    password: string,
+    data: KeyFile
+}
+
+export interface ExportWalletsInput {
+    password: string,
+    wallets: AvaHdWallet[]
 }
 
 

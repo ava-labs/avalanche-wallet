@@ -14,7 +14,7 @@
                             <fa icon="upload"></fa>
                             Export Keys
                         </button>
-                        <ExportKeys ref="export"></ExportKeys>
+                        <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
                 <my-keys></my-keys>
@@ -28,6 +28,7 @@
     import MyKeys from "@/components/wallet/manage/MyKeys.vue";
     import ImportKeys from "@/components/modals/ImportKeys.vue";
     import ExportKeys from "@/components/modals/ExportKeys.vue";
+    import AvaHdWallet from "@/js/AvaHdWallet";
 
     @Component({
         components: {
@@ -48,6 +49,9 @@
             this.$refs.export.open();
         }
 
+        get allWallets(): AvaHdWallet[]{
+            return this.$store.state.wallets;
+        }
     }
 </script>
 <style scoped lang="scss">

@@ -3,6 +3,7 @@
             class="addressItem"
             :selected="is_default"
     >
+        <ExportKeys :wallets="[wallet]" ref="export_wallet"></ExportKeys>
         <mnemonic-phrase ref="modal" :phrase="mnemonicPhrase"></mnemonic-phrase>
         <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <div class="rows">
@@ -22,7 +23,6 @@
                             {{bal.toString()}} <b>{{bal.symbol}}</b>
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -32,15 +32,13 @@
             </button>
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
             <button @click="showModal">View Key Phrase</button>
-            <Tooltip  text="Past Addresses" class="row_but">
-                <button @click="showPastAddresses">
-                    <fa icon="list-ol"></fa>
-                </button>
+            <Tooltip  text="Past Addresses" class="row_but" @click.native="showPastAddresses">
+                <fa icon="list-ol"></fa>
             </Tooltip>
-<!--            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>-->
-
+            <Tooltip  text="Export Key" class="row_but" @click.native="showExportModal">
+                <fa icon="upload"></fa>
+            </Tooltip>
         </div>
-<!--        <HDDerivationList :wallet="wallet" class="hdlist"></HDDerivationList>-->
     </div>
 </template>
 <script lang="ts">
@@ -58,6 +56,8 @@
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Tooltip from '@/components/misc/Tooltip.vue';
 
+    import ExportKeys from "@/components/modals/ExportKeys.vue";
+
     import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
@@ -68,7 +68,8 @@
         components: {
             MnemonicPhrase,
             HdDerivationListModal,
-            Tooltip
+            Tooltip,
+            ExportKeys
         }
     })
     export default class KeyRow extends Vue{
@@ -169,6 +170,11 @@
             //@ts-ignore
             modal.open();
         }
+
+        showExportModal(){
+            //@ts-ignore
+            this.$refs.export_wallet.open()
+        }
     }
 </script>
 <style scoped lang="scss">
@@ -202,7 +208,7 @@
     }
 
     .row_but{
-
+        margin: 0 12px;
     }
 
     .rows{

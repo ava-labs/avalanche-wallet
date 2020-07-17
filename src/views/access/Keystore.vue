@@ -31,76 +31,167 @@
         </div>
     </div>
 </template>
-<script>
-import FileInput from "../../components/misc/FileInput";
-import RememberKey from "../../components/misc/RememberKey";
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
+import FileInput from "../../components/misc/FileInput.vue";
+import RememberKey from "../../components/misc/RememberKey.vue";
+import {ImportKeyfileInput} from "@/store/types";
+import {KeyFile} from "@/js/IKeystore";
+
+
+@Component({
     components: {
         RememberKey,
         FileInput
-    },
-    data() {
-        return {
-            pass: "",
-            file: null,
-            rememberPass: null,
-            rememberValid: true,
-            isLoading: false,
-            error: "",
+    }
+})
+export default class Keystore extends Vue{
+    pass: string = "";
+    file: File|null = null;
+    fileText: string|null = null;
+    rememberPass: string|null = null;
+    rememberValid: boolean = true;
+    isLoading: boolean = false;
+    error: string = "";
+
+
+    onfile(val: File) {
+        this.file = val;
+        let parent = this;
+
+
+        let reader = new FileReader();
+            reader.addEventListener('load', async () => {
+                let res = reader.result as string;
+                parent.fileText = res;
+            });
+            reader.readAsText(val);
+    }
+
+    isRememberValid(val: boolean){
+        this.rememberValid = val;
+    }
+    access() {
+        if (!this.canSubmit || this.isLoading) return;
+
+        let parent = this;
+        this.error = '';
+
+        let fileData:KeyFile;
+        try{
+            fileData = JSON.parse(this.fileText as string);
+        }catch(e){
+            this.error = "Unable to parse JSON file."
+            return;
         }
-    },
-    methods: {
-        onfile(val) {
-            this.file = val;
-        },
 
-        isRememberValid(val){
-            this.rememberValid = val;
-        },
-        access() {
-            if (!this.canSubmit || this.isLoading) return;
+        // console.log(this.fileText);
+        // return;
 
-            let parent = this;
-            this.error = '';
-            this.isLoading = true;
+        let rememberPass = this.rememberPass;
+        let data: ImportKeyfileInput = {
+            password: this.pass,
+            data: fileData
+        };
 
-            let rememberPass = this.rememberPass;
-            let data = {
-                password: this.pass,
-                file: this.file
-            };
+        this.isLoading = true;
 
-            setTimeout(() => {
-                this.$store.dispatch('importKeyfile', data).then((res) => {
-                    parent.isLoading = false;
+        setTimeout(() => {
+            this.$store.dispatch('importKeyfile', data).then((res) => {
+                parent.isLoading = false;
 
-                    if(rememberPass){
-                        parent.$store.dispatch('rememberWallets', rememberPass)
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                    if(err === "INVALID_PASS"){
-                        parent.error = "Invalid password."
-                    }else{
-                        parent.error = err.message;
-                    }
-                    parent.isLoading = false;
-                });
+                if(rememberPass){
+                    parent.$store.dispatch('rememberWallets', rememberPass)
+                }
+            }).catch((err) => {
+                console.log(err);
+                if(err === "INVALID_PASS"){
+                    parent.error = "Invalid password."
+                }else{
+                    parent.error = err.message;
+                }
+                parent.isLoading = false;
+            });
 
-            }, 200);
+        }, 200);
+    }
+
+
+    get canSubmit():boolean {
+        if (!this.file || !this.pass || !this.rememberValid || !this.fileText) {
+            return false;
         }
-    },
-    computed: {
-        canSubmit() {
-            if (!this.file || !this.pass || !this.rememberValid) {
-                return false;
-            }
 
-            return true;
-        }
+        return true;
     }
 }
+// export default {
+//     components: {
+//         RememberKey,
+//         FileInput
+//     },
+//     data() {
+//         return {
+//             pass: "",
+//             file: null,
+//             rememberPass: null,
+//             rememberValid: true,
+//             isLoading: false,
+//             error: "",
+//         }
+//     },
+//     methods: {
+//         onfile(val) {
+//             this.file = val;
+//         },
+//
+//         isRememberValid(val){
+//             this.rememberValid = val;
+//         },
+//         access() {
+//             if (!this.canSubmit || this.isLoading) return;
+//
+//             let parent = this;
+//             this.error = '';
+//             this.isLoading = true;
+//
+//             let rememberPass = this.rememberPass;
+//             let data = {
+//                 password: this.pass,
+//                 file: this.file
+//             };
+//
+//             setTimeout(() => {
+//                 this.$store.dispatch('importKeyfile', data).then((res) => {
+//                     parent.isLoading = false;
+//
+//                     if(rememberPass){
+//                         parent.$store.dispatch('rememberWallets', rememberPass)
+//                     }
+//                 }).catch((err) => {
+//                     console.log(err);
+//                     if(err === "INVALID_PASS"){
+//                         parent.error = "Invalid password."
+//                     }else{
+//                         parent.error = err.message;
+//                     }
+//                     parent.isLoading = false;
+//                 });
+//
+//             }, 200);
+//         }
+//     },
+//     computed: {
+//         canSubmit() {
+//             if (!this.file || !this.pass || !this.rememberValid) {
+//                 return false;
+//             }
+//
+//             return true;
+//         }
+//     }
+// }
 </script>
 <style scoped lang="scss">
 @use '../../main';
