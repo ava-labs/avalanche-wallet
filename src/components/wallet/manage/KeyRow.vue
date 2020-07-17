@@ -32,20 +32,13 @@
             </button>
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
             <button @click="showModal">View Key Phrase</button>
-            <Tooltip  text="Past Addresses" class="row_but">
-                <button @click="showPastAddresses">
-                    <fa icon="list-ol"></fa>
-                </button>
+            <Tooltip  text="Past Addresses" class="row_but" @click.native="showPastAddresses">
+                <fa icon="list-ol"></fa>
             </Tooltip>
-            <Tooltip  text="Export Key" class="row_but">
-                <button @click="showExportModal">
-                    <fa icon="upload"></fa>
-                </button>
+            <Tooltip  text="Export Key" class="row_but" @click.native="showExportModal">
+                <fa icon="upload"></fa>
             </Tooltip>
-<!--            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>-->
-
         </div>
-<!--        <HDDerivationList :wallet="wallet" class="hdlist"></HDDerivationList>-->
     </div>
 </template>
 <script lang="ts">

@@ -1,6 +1,7 @@
 <template>
     <modal ref="modal" :title="title">
         <div class="export_body">
+            <p class="selection_num">Selected {{wallets.length}} keys.</p>
             <export-wallet @success="handleExportSuccess" :wallets="wallets"></export-wallet>
         </div>
     </modal>
@@ -51,36 +52,17 @@ export default class ExportKeys extends Vue {
     min-height: 315px;
 }
 
-.close_but {
-    position: absolute;
-    top: 12px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    opacity: 0.2;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-.bg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+.selection_num{
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    padding-bottom: 14px;
 }
 
 .explain {
     text-align: center;
 }
 
-.but_primary {
-    width: 80%;
-    margin: 0px auto;
-    padding: 8px 30px;
-}
 
 @include main.mobile-device {
     .export_body {
