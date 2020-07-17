@@ -122,12 +122,12 @@ p {
         display: flex !important;
     }
 
-    .main_cols {
-        grid-template-columns: 1fr !important;
-        &[wallet_view] {
-            height: auto !important;
-        }
-    }
+    /*.main_cols {*/
+    /*    grid-template-columns: 1fr !important;*/
+    /*    &[wallet_view] {*/
+    /*        height: auto !important;*/
+    /*    }*/
+    /*}*/
     .panel {
         display: none !important;
     }
@@ -148,8 +148,5 @@ p {
     #nav {
         padding: main.$container_padding_s;
     }
-}
-
-@media only screen and (max-width: main.$mobile_width) {
 }
 </style>
