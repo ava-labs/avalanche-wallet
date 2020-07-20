@@ -27,10 +27,6 @@
                                         <mnemonic-display :phrase="keyPhrase" :bgColor="verificatiionColor"></mnemonic-display>
                                         <p class="phrase_raw" v-bind:class="{ verified: isVerified }">{{keyPhrase}}</p>
                                         <div class="mneumonic_button_container" v-if="!isVerified">
-                                            <CopyText
-                                                    :value="keyPhrase"
-                                                    class="ava_button copy_phrase"
-                                            >Copy Key Phrase</CopyText>
                                             <button @click="createKey" class="ava_button but_randomize">
                                                 <fa icon="sync"></fa>
                                                 <span>Randomize</span>
@@ -335,6 +331,7 @@ a {
     .mneumonic_button_container {
         display: flex;
         flex-direction: row;
+        justify-content: center;
         align-items: flex-start;
 
         .copy_phrase {

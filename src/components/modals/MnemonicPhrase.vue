@@ -3,7 +3,6 @@
         <div class="mnemonic_modal_body">
             <mnemonic-display :phrase="phrase" :row-size="3"></mnemonic-display>
             <p class="phrase_raw">{{phrase}}</p>
-            <copy-text :value="phrase" class="copyBut" tooltip="Copy"></copy-text>
         </div>
     </modal>
 </template>
