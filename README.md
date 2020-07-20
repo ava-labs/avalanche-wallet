@@ -1,6 +1,8 @@
-# Avalanche Wallet
 
-This is the frontend Vue.js application for the AVAX Wallet.
+# Avalanche (AVAX) Wallet
+
+This is the frontend Vue.js application for the Avalanche (AVAX) Wallet. 
+
 
 ## Prerequisites
 
