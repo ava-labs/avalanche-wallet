@@ -9,7 +9,7 @@
                 <h4>{{$t('top.title2')}}</h4>
             </div>
             <div class="balance_row">
-                <p class="balance">{{balanceText}} AVA</p>
+                <p class="balance">{{balanceText}} AVAX</p>
             </div>
             <v-alert type="info" text>
                 <p style="font-size: 14px;">
