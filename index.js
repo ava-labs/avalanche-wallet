@@ -1,8 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-// const morgan = require('morgan');
-const path = require('path');
 var history = require('connect-history-api-fallback');
 const helmet = require("helmet");
 
@@ -10,9 +8,10 @@ const helmet = require("helmet");
 const app = express();
 app.use(helmet());
 
-// app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
+
+// For heroku proxy
 app.enable('trust proxy');
 
 app.use (function (req, res, next) {
@@ -21,7 +20,6 @@ app.use (function (req, res, next) {
         next();
     } else {
         // request was via http, so redirect to https
-        // next();
         res.redirect('https://' + req.headers.host + req.url);
     }
 });
@@ -31,17 +29,6 @@ app.use(history());
 
 // Serving Static Files
 app.use(express.static('dist'));
-
-
-
-// app.get('*', (req, res) => {
-//     console.log("GETTIN");
-//     // console.log(req);
-//     res.json({
-//         message: 'Behold The MEVN Stack!'
-//     });
-//     // res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
-// });
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {

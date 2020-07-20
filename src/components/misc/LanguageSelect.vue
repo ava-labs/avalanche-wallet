@@ -14,8 +14,12 @@
 </template>
 <script>
     import langMap from '@/locales/lang_map';
+    import CountryFlag from 'vue-country-flag'
 
     export default {
+        components: {
+            CountryFlag
+        },
         data(){
             return{
                 selected: 'en',
@@ -78,10 +82,4 @@
             display: none;
         }
     }
-    /*.sel_locale >>> .v-input .sel_outlined{*/
-    /*    border: none !important;*/
-    /*}*/
-    /*.sel_locale >>> div[role='button']{*/
-    /*    box-shadow: none !important;*/
-    /*}*/
 </style>

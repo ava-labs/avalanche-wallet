@@ -9,22 +9,29 @@
                 <h4>{{$t('top.title2')}}</h4>
             </div>
             <div class="balance_row">
-                <p class="balance">{{balanceText}} AVA</p>
+                <p class="balance">{{balanceText}} AVAX</p>
             </div>
-            <div class="alt_info">
-                <div>
-                    <label>Available</label>
-                    <p>{{balanceText}} AVA</p>
-                </div>
-                <div>
-                    <label>Shared</label>
-                    <p>- AVA</p>
-                </div>
-                <div>
-                    <label>Multisig</label>
-                    <p>- AVA</p>
-                </div>
-            </div>
+            <v-alert type="info" text>
+                <p style="font-size: 14px;">
+                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
+                    <br>
+                    This wallet is connected to the Avalanche <i>Denali test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
+                </p>
+            </v-alert>
+<!--            <div class="alt_info">-->
+<!--                <div>-->
+<!--                    <label>Available</label>-->
+<!--                    <p>{{balanceText}} AVA</p>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label>Shared</label>-->
+<!--                    <p>- AVA</p>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label>Multisig</label>-->
+<!--                    <p>- AVA</p>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div class="nft_card">
             <h4>NFTs</h4>
@@ -45,14 +52,6 @@
         }
     })
     export default class BalanceCard extends Vue {
-
-        // @Watch('ava_asset', {
-        //     deep: true
-        // })
-        // onassetchange(){
-        //     console.log('ASSET CHANGE')
-        // }
-
         updateBalance():void{
             this.$store.dispatch('Assets/updateUTXOs');
             this.$store.dispatch('History/updateTransactionHistory');
@@ -75,18 +74,8 @@
             return this.$store.state.activeWallet;
         }
 
-        // get walletBalance(){
-        //     let walletBalance = this.$store.getters['walletBalance'];
-        //     return walletBalance;
-        // }
-
         get isUpdateBalance():boolean{
             return this.$store.state.Assets.isUpdateBalance;
-        }
-
-
-        mounted(){
-
         }
     }
 </script>

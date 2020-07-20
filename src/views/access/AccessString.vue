@@ -1,3 +1,5 @@
+<!-- DEPRECIATED !!-->
+
 <template>
     <div class="access_card">
         <h1>Private Key</h1>

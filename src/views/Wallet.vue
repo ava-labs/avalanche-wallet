@@ -85,4 +85,11 @@ export default class Wallet extends Vue {}
         display: none;
     }
 }
+
+
+@include main.medium-device {
+    .wallet_view {
+        grid-template-columns: 180px 1fr 240px !important;
+    }
+}
 </style>

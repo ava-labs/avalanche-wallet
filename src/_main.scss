@@ -230,6 +230,27 @@ label{
     }
 }
 
+.ava_button_secondary {
+  color: $primary-color !important;
+  background-color: transparent !important;
+  padding: 10px 24px;
+  min-width: 140px;
+  border-radius: 6px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase !important;
+  font-size: $s-size;
+
+  &:hover {
+      opacity: 0.7;
+  }
+
+  &:disabled {
+    opacity: 0.5 !important;
+  }
+}
+
 .link {
     font-size: $s-size;
     color: $primary-color-light !important;

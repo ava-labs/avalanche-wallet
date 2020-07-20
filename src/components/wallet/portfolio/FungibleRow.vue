@@ -7,13 +7,13 @@
                 <p v-else>?</p>
             </div>
         </div>
-        <p class="name_col not_mobile">{{asset.name}} ({{asset.symbol}})</p>
-        <p class="name_col mobile_only">{{asset.symbol}}</p>
+        <p class="name_col not_mobile">{{name}} ({{symbol}})</p>
+        <p class="name_col mobile_only">{{symbol}}</p>
         <router-link :to="sendLink" class="send_col" v-if="isBalance">
             <img src="@/assets/sidebar/Transfer.png">
         </router-link>
         <p v-else></p>
-        <p class="balance_col" v-if="isBalance">{{asset.toString()}} <span>{{asset.symbol}}</span></p>
+        <p class="balance_col" v-if="isBalance">{{asset.toString()}} <span>{{symbol}}</span></p>
         <p class="balance_col" v-else>0 <span>{{asset.symbol}}</span></p>
     </div>
 </template>
@@ -70,6 +70,21 @@
             }else{
                 return  false
             }
+        }
+
+        get name(): string{
+            let name = this.asset.name;
+            // TODO: Remove this hack after network change
+            if(name === 'AVA') return 'AVAX';
+            return name;
+        }
+
+        get symbol(): string{
+            let sym = this.asset.symbol;
+
+            // TODO: Remove this hack after network change
+            if(sym === 'AVA') return 'AVAX';
+            return sym;
         }
     }
 </script>

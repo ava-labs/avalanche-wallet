@@ -1,8 +1,5 @@
 <template>
     <div class="my_keys">
-        <v-alert type="info" v-if="rememberKey" text>
-            Your private keys are remembered until you close this tab or logout of your wallet.
-        </v-alert>
         <p class="label">Active Key</p>
         <key-row :wallet="activeWallet"
                  class="key_row"
@@ -19,23 +16,52 @@
                      @remove="removeWallet"
             ></key-row>
         </transition-group>
+
+        <div v-if="hasVolatile" class="volatile_cont">
+            <v-alert type="error"  text class="alert_box">
+                You have volatile keys in your wallet that will be forgotten when you refresh or close this page.
+                <br><br>
+                If you want the browser to remember all of your keys please click <b>Remember Keys</b> and save your keys with a password.
+            </v-alert>
+            <RememberKey v-model="volatilePass" @is-valid="isVolatileRememberValid" class="remember_comp" ></RememberKey>
+            <v-btn :disabled="!canRememberVolatile" class="ava_button remember_but" color="#4C2E56" depressed @click="rememberVolatile">Save Keys</v-btn>
+        </div>
     </div>
 </template>
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    import KeyRow from "@/components/wallet/keys/KeyRow.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import KeyRow from "@/components/wallet/manage/KeyRow.vue";
+    import RememberKey from "@/components/misc/RememberKey.vue";
     import {AvaWallet} from "@/js/AvaWallet";
 
 
     @Component({
         components: {
-            KeyRow
+            KeyRow,
+            RememberKey
         }
     })
     export default class MyKeys extends Vue{
+        volatilePass: string = "";
+        volatileRememberValid: boolean = false;
+
+        isVolatileRememberValid(val: boolean){
+            this.volatileRememberValid = val;
+        }
+
+        get canRememberVolatile(){
+            if(!this.volatilePass || !this.volatileRememberValid) return false;
+            return true;
+        }
+
+        rememberVolatile(){
+            let pass = this.volatilePass;
+            this.$store.dispatch('rememberWallets', pass)
+        }
+
+
         selectWallet(wallet: AvaWallet){
             this.$store.dispatch('activateWallet', wallet);
             this.$store.dispatch('History/updateTransactionHistory');
@@ -54,8 +80,9 @@
             }
         }
 
-        get rememberKey(){
-            return this.$store.state.rememberKey;
+
+        get hasVolatile(){
+            return this.$store.state.volatileWallets.length > 0;
         }
 
         get wallets():AvaWallet[]{
@@ -72,10 +99,6 @@
         get activeWallet(){
             return this.$store.state.activeWallet;
         }
-
-        // get balance(){
-        //     return this.$store.state.Assets.assetsDict;
-        // }
     }
 
 </script>
@@ -107,5 +130,21 @@
         }
     }
 
+    .volatile_cont{
+        border-top: 1px solid #eee;
+        margin-top: 20px;
+        padding-top: 20px;
+    }
 
+    .remember_but{
+        margin-left: 25px;
+    }
+    .remember_comp{
+        /*padding: 20px 0;*/
+    }
+
+    .alert_box{
+        margin: 0px 25px;
+        font-size: 0.9rem;
+    }
 </style>

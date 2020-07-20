@@ -14,7 +14,7 @@
                 return null;
             },
             selectedAddress(){
-                return this.$store.state.selectedAddress;
+                return this.$store.state.address;
             },
         }
     }

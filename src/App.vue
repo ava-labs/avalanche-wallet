@@ -15,29 +15,20 @@
     </v-app>
 </template>
 <script>
-
-
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
-    import LoadingApp from '@/views/LoadingApp';
     import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
 
     export default {
         components: {
             RememberWalletModal,
-
             Navbar,
             Notifications,
-            LoadingApp
         },
         async created() {
-            let parent = this;
             await this.$store.dispatch('Network/init');
     },
     computed: {
-        appReady() {
-            return this.$store.getters['appReady'];
-        },
         isNavbar() {
             if (this.$route.path.includes('/wallet')) {
                 return false;
@@ -131,12 +122,12 @@ p {
         display: flex !important;
     }
 
-    .main_cols {
-        grid-template-columns: 1fr !important;
-        &[wallet_view] {
-            height: auto !important;
-        }
-    }
+    /*.main_cols {*/
+    /*    grid-template-columns: 1fr !important;*/
+    /*    &[wallet_view] {*/
+    /*        height: auto !important;*/
+    /*    }*/
+    /*}*/
     .panel {
         display: none !important;
     }
@@ -157,8 +148,5 @@ p {
     #nav {
         padding: main.$container_padding_s;
     }
-}
-
-@media only screen and (max-width: main.$mobile_width) {
 }
 </style>

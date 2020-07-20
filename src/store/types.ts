@@ -4,16 +4,14 @@ import BN from 'bn.js';
 import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
+import {KeyFile} from "@/js/IKeystore";
 
 export interface RootState {
     isAuth: boolean,
-    addresses: string[],
-    selectedAddress: string,
-    modals: ModalDict,
     activeWallet: null|AvaHdWallet
     wallets: AvaHdWallet[]
     address: String|null
-    isLoadingPersistKeys: boolean,
+    volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
 }
 
 interface Modal {
@@ -35,9 +33,9 @@ export interface IWalletAssetsDict {
 }
 
 
-interface ModalDict {
-    [key: string]: Modal
-}
+// interface ModalDict {
+//     [key: string]: Modal
+// }
 
 
 export interface AssetType {
@@ -65,6 +63,17 @@ export interface IssueTxInput{
     amount: BN,
     toAddress: string,
     changeAddresses: string[],
+}
+
+
+export interface ImportKeyfileInput {
+    password: string,
+    data: KeyFile
+}
+
+export interface ExportWalletsInput {
+    password: string,
+    wallets: AvaHdWallet[]
 }
 
 

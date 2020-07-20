@@ -7,7 +7,6 @@
         <router-link to="/create" class="link">Don't have a wallet?</router-link>
         <hr />
         <div class="options">
-            <router-link to="/access/private_key" class="option">Private Key</router-link>
             <router-link to="/access/mnemonic" class="option">Mnemonic Key Phrase</router-link>
             <router-link to="/access/keystore" class="option">Keystore File</router-link>
             <TorusGoogle class="option" text="Google"></TorusGoogle>

@@ -3,13 +3,15 @@
             class="addressItem"
             :selected="is_default"
     >
+        <ExportKeys :wallets="[wallet]" ref="export_wallet"></ExportKeys>
         <mnemonic-phrase ref="modal" :phrase="mnemonicPhrase"></mnemonic-phrase>
         <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <div class="rows">
             <div class="detail">
-                <div>
-                    <p class="addressVal"><b>{{walletTitle}}</b></p>
-                </div>
+                <p class="addressVal"><b>{{walletTitle}}</b></p>
+                <Tooltip text="This key will be forgotten when you refresh the browser." v-if="isVolatile">
+                    <fa icon="exclamation-triangle" class="volatile_alert"></fa>
+                </Tooltip>
             </div>
 
             <div >
@@ -21,20 +23,22 @@
                             {{bal.toString()}} <b>{{bal.symbol}}</b>
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>
         <div class="buts">
-            <button @click="showModal">View Key Phrase</button>
-            <button @click="showPastAddresses" tooltip="Previous Addresses"><fa icon="list-ol"></fa></button>
             <button class="selBut" @click="select"  v-if="!is_default">
                 <span>Activate Key</span>
             </button>
-
             <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>
+            <button @click="showModal">View Key Phrase</button>
+            <Tooltip  text="Past Addresses" class="row_but" @click.native="showPastAddresses">
+                <fa icon="list-ol"></fa>
+            </Tooltip>
+            <Tooltip  text="Export Key" class="row_but" @click.native="showExportModal">
+                <fa icon="upload"></fa>
+            </Tooltip>
         </div>
-<!--        <HDDerivationList :wallet="wallet" class="hdlist"></HDDerivationList>-->
     </div>
 </template>
 <script lang="ts">
@@ -50,6 +54,10 @@
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
     import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
+    import Tooltip from '@/components/misc/Tooltip.vue';
+
+    import ExportKeys from "@/components/modals/ExportKeys.vue";
+
     import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
@@ -59,7 +67,9 @@
     @Component({
         components: {
             MnemonicPhrase,
-            HdDerivationListModal
+            HdDerivationListModal,
+            Tooltip,
+            ExportKeys
         }
     })
     export default class KeyRow extends Vue{
@@ -67,6 +77,10 @@
         @Prop() wallet!:AvaHdWallet;
         @Prop({default: false}) is_default?:boolean;
 
+
+        get isVolatile(){
+            return this.$store.state.volatileWallets.includes(this.wallet);
+        }
 
         get walletTitle(){
             return this.address.split('-')[1].substring(0,4);
@@ -82,12 +96,6 @@
 
             if(!this.wallet.getUTXOSet()) return {};
 
-
-            // let utxos =  this.$store.getters['Assets/addressUTXOs'];
-            // let addr = this.address;
-            // let addrStrip = addr.split('-')[1];
-            //
-            // let addrUtxos = utxos[addrStrip];
             let res:IKeyBalanceDict = {};
 
 
@@ -135,7 +143,6 @@
 
         get keyPair():KeyPair{
             return this.wallet.masterKey;
-            // return keyChain.getKey(bintools.parseAddress(this.address, 'X'));
         }
 
         get mnemonicPhrase():string{
@@ -144,10 +151,6 @@
             let mnemonic = bip39.entropyToMnemonic(hex);
             return mnemonic;
         }
-
-        // get type(){
-        //    return this.wallet.type;
-        // }
 
         remove(){
             this.$emit('remove', this.wallet);
@@ -167,6 +170,11 @@
             //@ts-ignore
             modal.open();
         }
+
+        showExportModal(){
+            //@ts-ignore
+            this.$refs.export_wallet.open()
+        }
     }
 </script>
 <style scoped lang="scss">
@@ -174,12 +182,9 @@
 
     .addressItem{
         font-size: 12px;
-        /*display: flex;*/
-        /*align-items: center;*/
         display: grid;
         grid-template-columns: 1fr max-content;
         grid-gap: 15px;
-        /*background-color: #F5F6FA;*/
         overflow: auto;
 
         > *{
@@ -198,18 +203,18 @@
         flex-direction: row;
 
         > *{
-            margin-left: 15px;
+            margin: 8px !important;
         }
+    }
+
+    .row_but{
+        margin: 0 12px;
     }
 
     .rows{
         overflow: auto;
     }
     .addressItem .selBut{
-        /*flex-basis: 14px;*/
-        /*height: 14px;*/
-        /*width: 14px;*/
-        /*border-radius: 14px;*/
         color: #ccc;
         flex-shrink: 0;
 
@@ -220,35 +225,25 @@
     }
 
     .addressItem{
-        &[selected]{
-            .selBut{
-                /*background-color: transparent;*/
-            }
-        }
         .selBut{
             flex-grow: 1;
             background-color: #C0C0CD;
             color: #fff;
             padding: 4px 8px;
-            /*margin-right: 15px;*/
         }
     }
 
     .detail{
-        /*margin-left: 20px;*/
-        /*flex-grow: 1;*/
         overflow: auto;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: max-content max-content;
         column-gap: 15px;
     }
 
     .label{
-        /*font-size: 13px;*/
         font-weight: bold;
     }
     .addressVal{
-        /*word-break: break-all;*/
         overflow: auto;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -274,13 +269,10 @@
         color: main.$primary-color;
         .bal_rows p{
             font-weight: bold;
-            /*background-color: #ebedf5;*/
             padding: 0px 8px;
             margin-bottom: 4px;
         }
         p{
-
-            /*border: 1px solid #ebedf5;*/
             border-radius: 3px;
         }
     }
@@ -297,12 +289,8 @@
     .balance_empty{
         color: main.$primary-color;
     }
-    /*.addressItem[selected]{*/
-    /*    .addressBalance{*/
-    /*        p{*/
-    /*            background-color: #b1c9fb;*/
-    /*        }*/
-    /*    }*/
-    /*}*/
 
+    .volatile_alert{
+        color: #f00;
+    }
 </style>
