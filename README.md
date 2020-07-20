@@ -1,7 +1,6 @@
 # AVAX Wallet
 
-This is the frontend Vue.js application for the AVAX Wallet. 
-
+This is the frontend Vue.js application for the AVAX Wallet.
 
 ## Prerequisites
 
@@ -16,7 +15,6 @@ This is the frontend Vue.js application for the AVAX Wallet.
 2) Go to root of the project ``cd ava-wallet``
 3) Install javascript dependencies with ``yarn install``.
 
-
 ## Running The Project
 
 In order for the wallet to work, it needs the AVA network to operate on. By default the wallet will connect to the AVA test network.
@@ -29,17 +27,16 @@ When you go to the website on your browser, you might get a warning saying
 
 ## Deployment
 
- 1) Compile and minify to have a production ready application with ``yarn build``. 
+ 1) Compile and minify to have a production ready application with ``yarn build``.
  2) Serve from the ``/dist`` directory.
  
  ## Changing the Network
  
  By default the wallet will connect to the AVA test network. You can change to another network by clicking the blue button labeled `TestNet`  on the navigation bar and selecting another network, or add a custom network.
 
-
 ## Explorer API
 
-The wallet uses the AVA Explorer API to display wallet transaction history. 
+The wallet uses the AVA Explorer API to display wallet transaction history.
 
 WARNING: This history might be out of order and incomplete.
 
@@ -49,7 +46,7 @@ We suggest using Google Chrome to view the AVAX Wallet website.
 
 ### Firefox and https
 
-Firefox does not allow https requests to localhost. But the AVAX Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.js` file in the root directory and change 
+Firefox does not allow https requests to localhost. But the AVAX Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.js` file in the root directory and change
 
 ```
 devServer: {
@@ -66,9 +63,6 @@ devServer: {
 ```
 
 and run `yarn serve` to reflect the change.
-
-
-
 
 # Keystore File Spec
 
@@ -95,6 +89,7 @@ interface IKeystoreFile{
     version
     salt
     pass_hash
+    warnings
     keys: [
         {
             key
@@ -109,9 +104,9 @@ interface IKeystoreFile{
 Basically same as storing the keystore file in the browser localstorage.
 
 If there is a remembered wallet it will be the Keystore JSON format.
+
 ```json
 {
   "w": IKeystoreFile | undefined
 }
 ```
-
