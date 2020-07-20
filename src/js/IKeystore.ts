@@ -4,7 +4,8 @@ export interface KeyFile{
     salt: string,
     pass_hash: string,
     keys: KeyFileKey[],
-    version: string
+    version: string,
+    warnings: string[]
 }
 
 export interface KeyFileKey {

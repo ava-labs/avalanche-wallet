@@ -91,7 +91,8 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
         version: KEYSTORE_VERSION,
         salt: bintools.avaSerialize(salt),
         pass_hash: bintools.avaSerialize(passHash.hash),
-        keys: keys
+        keys: keys,
+        warnings: ["This address listed in this file is for internal wallet use only. DO NOT USE THIS ADDRESS"]
     };
     return file_data;
 }
