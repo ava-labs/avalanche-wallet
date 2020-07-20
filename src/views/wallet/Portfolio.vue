@@ -87,11 +87,14 @@ export default {
     flex-basis: 420px;
     flex-shrink: 1;
 
+    $icon_w: 36px;
     img {
         border-radius: 4px;
         padding: 10px 0px;
         background-color: #fff;
-        height: 100%;
+        /*height: 100%;*/
+        height: $icon_w;
+        width: $icon_w;
         object-fit: contain;
     }
 
