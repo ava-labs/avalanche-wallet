@@ -14,7 +14,7 @@
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">{{asset.toString()}} <span>{{symbol}}</span></p>
-        <p class="balance_col" v-else>0 <span>{{asset.symbol}}</span></p>
+        <p class="balance_col" v-else>0 <span>{{symbol}}</span></p>
     </div>
 </template>
 <script lang="ts">

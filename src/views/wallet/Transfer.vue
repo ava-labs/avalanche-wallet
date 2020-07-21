@@ -7,7 +7,7 @@
                 <div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
-                        <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVA</span></p>
+                        <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVAX</span></p>
                     </div>
 <!--                    <div class="advanced">-->
 <!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->

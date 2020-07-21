@@ -1,7 +1,7 @@
 <template>
     <div class="bal_row">
-        <p class="symbol">{{asset.symbol}}</p>
-        <p class="name">{{asset.name}}</p>
+        <p class="symbol">{{symbol}}</p>
+        <p class="name">{{name}}</p>
         <p class="amt">{{asset.toString()}}</p>
     </div>
 </template>
@@ -15,6 +15,20 @@
     @Component
     export default class BalanceRow extends Vue{
         @Prop() asset!: AvaAsset
+
+        get name(){
+            let name = this.asset.name;
+            // TODO: Remove after everest
+            if(name==="AVA") return "AVAX";
+            return name;
+        }
+
+        get symbol(){
+            let sym = this.asset.symbol;
+            // TODO: Remove after everest
+            if(sym==="AVA") return "AVAX";
+            return sym;
+        }
     }
 </script>
 <style scoped lang="scss">

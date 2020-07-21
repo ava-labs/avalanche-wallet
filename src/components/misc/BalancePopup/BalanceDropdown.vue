@@ -1,7 +1,7 @@
 <template>
     <div class="dropdown" :active="isPopup">
         <button @click="showPopup">
-            {{asset.symbol}}
+            {{symbol}}
             <fa icon="caret-down" style="float: right"></fa>
         </button>
         <BalancePopup :assets="assetArray" ref="popup" class="popup" @select="onselect" :disabled-ids="disabledIds" @close="onclose"></BalancePopup>
@@ -37,6 +37,12 @@
         get disabledIds(): string[]{
             let disabledIds = this.disabled_assets.map(a => a.id);
             return disabledIds;
+        }
+
+        get symbol(){
+            let sym = this.asset.symbol;
+            if(sym==='AVA') return 'AVAX';
+            return sym;
         }
 
         // get isPopup(){
