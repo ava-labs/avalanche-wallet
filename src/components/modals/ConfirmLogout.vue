@@ -52,7 +52,7 @@
         width: 400px;
         max-width: 100%;
         padding: 30px;
-        background-color: var(--bg-light);
+        /*background-color: var(--bg-light);*/
     }
 
 </style>
