@@ -64,7 +64,7 @@
 </script>
 <style scoped lang="scss">
     .spinner{
-        width: 100%;
+        width: 100% !important;
         color: var(--bg) !important;
     }
 </style>
