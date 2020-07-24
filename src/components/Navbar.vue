@@ -1,5 +1,6 @@
 <template>
     <div id="nav">
+        <ConfirmLogout ref="logout"></ConfirmLogout>
         <router-link to="/" class="logo">
             <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg"/>
             <img v-else src="@/assets/wallet_logo_dark.svg"/>
@@ -52,11 +53,12 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 // import LanguageSelect from './LanguageSelect';
 import DayNightToggle from "@/components/misc/DayNightToggle.vue";
 import NetworkMenu from "./NetworkSettings/NetworkMenu.vue";
-
+import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
 @Component({
     components: {
         NetworkMenu,
-        DayNightToggle
+        DayNightToggle,
+        ConfirmLogout
     }
 })
 export default class Navbar extends Vue {
@@ -67,7 +69,8 @@ export default class Navbar extends Vue {
     }
 
     logout(): void {
-        this.$store.dispatch("logout");
+        // @ts-ignore
+        this.$refs.logout.open();
     }
 }
 </script>

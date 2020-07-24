@@ -1,5 +1,6 @@
 <template>
     <div class="main_panel">
+        <ConfirmLogout ref="logout"></ConfirmLogout>
         <div class="panel_nav">
             <DayNightToggle class="hover_but"></DayNightToggle>
             <network-menu class="net_menu hover_but"></network-menu>
@@ -14,15 +15,20 @@
     import NetworkMenu from '../NetworkSettings/NetworkMenu';
     import TransactionHistoryPanel from './TransactionHistoryPanel';
     import DayNightToggle from "@/components/misc/DayNightToggle";
+    import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
+
     export default {
         components: {
             NetworkMenu,
             TransactionHistoryPanel,
-            DayNightToggle
+            DayNightToggle,
+            ConfirmLogout
         },
         methods: {
             logout(){
-                this.$store.dispatch('logout');
+                // this.$store.dispatch('logout');
+                // @ts-ignore
+                this.$refs.logout.open();
             },
         },
     }
