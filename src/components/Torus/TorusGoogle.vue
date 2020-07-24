@@ -4,7 +4,7 @@
             <fa :icon="['fab','google']"></fa>
             {{text}}
         </template>
-        <Spinner v-else></Spinner>
+        <Spinner v-else class="spinner"></Spinner>
     </button>
 </template>
 <script lang="ts">
@@ -62,3 +62,9 @@
         }
     }
 </script>
+<style scoped lang="scss">
+    .spinner{
+        width: 100%;
+        color: var(--bg) !important;
+    }
+</style>
