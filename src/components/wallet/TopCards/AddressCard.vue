@@ -39,6 +39,9 @@
         }
     })
     export default class AddressCard extends Vue{
+        colorLight: string = "#FFF";
+        colorDark: string = "#242729";
+
         $refs!: {
             qr_modal: QRModal,
             print_modal: PaperWallet,
@@ -49,6 +52,18 @@
         @Watch('address')
         onaddrchange(){
             this.updateQR()
+        }
+
+        @Watch('$root.theme', {immediate: true})
+        onthemechange(val:string){
+            if(val==='night'){
+                this.colorDark = "#E5E5E5";
+                this.colorLight = "#242729";
+            }else{
+                this.colorDark = "#242729";
+                this.colorLight = "#FFF";
+            }
+            this.updateQR();
         }
 
         get isDayTheme(): boolean{
@@ -82,7 +97,8 @@
             QRCode.toCanvas(canvas, this.address, {
                 scale: 6,
                 color: {
-                    light: "#fff"
+                    light: this.colorLight,
+                    dark: this.colorDark,
                 },
                 width: size,
                 // height: size,

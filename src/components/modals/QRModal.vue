@@ -23,6 +23,9 @@
         }
     })
     export default class QRModal extends Vue{
+        colorDark:string = "#242729";
+        colorLight:string = "#FFF";
+
         @Watch('address', { immediate: true })
         onaddrchange(val:string){
             if(val){
@@ -30,6 +33,18 @@
             }
         }
 
+
+        @Watch('$root.theme', {immediate: true})
+        onthemechange(val:string){
+            if(val==='night'){
+                this.colorDark = "#E5E5E5";
+                this.colorLight = "#242729";
+            }else{
+                this.colorDark = "#242729";
+                this.colorLight = "#FFF";
+            }
+            this.updateQR();
+        }
 
         open(){
             // @ts-ignore
@@ -41,7 +56,8 @@
             QRCode.toCanvas(canvas, this.address, {
                 scale: 6,
                 color: {
-                    light: "#fff"
+                    light: this.colorLight,
+                    dark: this.colorDark
                 }
             }, function (error) {
                 if (error) console.error(error);
