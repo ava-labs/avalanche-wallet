@@ -1,3 +1,5 @@
+// Depreciated
+
 import {AVMKeyChain, AVMKeyPair, UTXOSet} from "avalanche";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import AvaSingletonWallet from "@/js/AvaSingletonWallet";

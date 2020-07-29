@@ -121,6 +121,12 @@
             let addrUtxos = this.wallet.getUTXOSet().getAllUTXOs();
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
+
+                // ignore NFTS
+                //TODO: support nfts
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11) continue;
+
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
                 let amount = utxoOut.getAmount();

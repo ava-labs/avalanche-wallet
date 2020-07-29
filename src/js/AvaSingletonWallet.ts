@@ -1,3 +1,5 @@
+// Depreciated
+
 import {IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
 import {
     AVMKeyChain,
