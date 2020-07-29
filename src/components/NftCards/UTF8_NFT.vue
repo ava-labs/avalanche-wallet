@@ -1,5 +1,5 @@
 <template>
-    <BaseNftCard :mini="mini">
+    <BaseNftCard :mini="mini" :raw-card="rawCard">
         <template v-slot:card>
             <div class="utf8_nft">
                 <p>{{text}}</p>
@@ -26,6 +26,7 @@
     export default class UTF8_NFT extends Vue{
         @Prop() payload!: PayloadBase;
         @Prop({default: false}) mini?: boolean
+        @Prop({default: false}) rawCard?: boolean
 
 
         get text(): string{

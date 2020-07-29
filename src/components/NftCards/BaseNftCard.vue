@@ -8,7 +8,7 @@
                 <slot name="card"></slot>
             </div>
         </div>
-        <div class="deck">
+        <div class="deck" v-if="!rawCard">
             <slot name="deck"></slot>
         </div>
     </div>
@@ -23,13 +23,16 @@
     @Component
     export default class BaseNftCard extends Vue{
         @Prop({default: false}) mini!: boolean;
+        @Prop({default: false}) rawCard!: boolean;
         flipped: boolean = false;
 
-
         mousenter(){
+            if(this.rawCard) return;
             this.flipped = true;
         }
+
         mouseleave(){
+            if(this.rawCard) return;
             this.flipped = false;
         }
     }
@@ -37,7 +40,7 @@
 <style scoped lang="scss">
     .card{
         box-shadow: 1px 0px 4px 1px rgba(0,0,0,0.2);
-        border-radius: 14px;
+        border-radius: 8px;
         overflow: hidden;
         position: relative;
         background-color: var(--bg-light);

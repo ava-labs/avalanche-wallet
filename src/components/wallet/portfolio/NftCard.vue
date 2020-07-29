@@ -1,6 +1,6 @@
 <template>
     <div class="nft_card">
-        <component :is="nftClass" :payload="payloadBase" :mini="mini"></component>
+        <component :is="nftClass" :payload="payloadBase" :mini="mini" :rawCard="rawCard"></component>
     </div>
 </template>
 <script lang="ts">
@@ -21,6 +21,7 @@
     export default class NftCard extends Vue{
         @Prop() utxo!: UTXO
         @Prop({default: false}) mini?: boolean;
+        @Prop({default: false}) rawCard?: boolean;
 
         get payload(){
             let output = this.utxo.getOutput() as NFTTransferOutput;

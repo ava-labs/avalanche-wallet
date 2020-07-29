@@ -3,9 +3,18 @@
         <div class="bg" @click="closePopup"></div>
         <div class="popup_body">
             <p class="desc">Select an asset <button class="close" @click="closePopup" style="float: right"><fa icon="times"></fa></button></p>
-            <div class="rows">
-                <BalanceRow class="bal_row" v-for="asset in assets" :key="asset.id" :zero="asset.amount.isZero()" @click.native="select(asset)" :disabled="isDisabled(asset)" :asset="asset"></BalanceRow>
-            </div>
+            <v-tabs grow height="34">
+                <v-tab>Fungible</v-tab>
+                <v-tab>Collectible</v-tab>
+                <v-tab-item>
+                    <div class="rows">
+                        <BalanceRow class="bal_row" v-for="asset in assets" :key="asset.id" :zero="asset.amount.isZero()" @click.native="select(asset)" :disabled="isDisabled(asset)" :asset="asset"></BalanceRow>
+                    </div>
+                </v-tab-item>
+                <v-tab-item>
+                    <CollectibleTab @select="selectNFT"></CollectibleTab>
+                </v-tab-item>
+            </v-tabs>
         </div>
     </div>
 </template>
@@ -14,10 +23,13 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
     import BalanceRow from './BalanceRow.vue';
+    import CollectibleTab from './CollectibleTab.vue';
+    import {UTXO} from "avalanche";
 
     @Component({
         components: {
-            BalanceRow
+            BalanceRow,
+            CollectibleTab
         }
     })
     export default class BalancePopup extends Vue{
@@ -35,6 +47,10 @@
             this.$emit('select', asset);
         }
 
+        selectNFT(utxo: UTXO){
+            console.log('selected utxo');
+        }
+
         isDisabled(asset:AvaAsset): boolean{
             if(this.disabledIds.includes(asset.id)) return true;
             return false;
@@ -47,6 +63,28 @@
         }
     }
 </script>
+<style lang="scss">
+    .popup_body{
+
+        .v-tabs{
+            overflow: auto;
+        }
+
+        .v-tabs-bar{
+            background-color: var(--bg-light) !important;
+        }
+
+        .v-item-group{
+            overflow: scroll;
+            height: calc(100% - 34px);
+        }
+
+        .v-window .v-tabs-items{
+            overflow: scroll;
+            height: calc(100% - 34px);
+        }
+    }
+</style>
 <style scoped lang="scss">
     @use '../../../main';
     .bg{

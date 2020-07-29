@@ -1,5 +1,5 @@
 <template>
-    <BaseNftCard :mini="mini">
+    <BaseNftCard :mini="mini" :raw-card="rawCard">
         <template v-slot:card>
             <img :src="url" v-if="img_types.includes(fileType)">
             <div v-else-if="fileType==='pdf'" class="pdf">
@@ -44,6 +44,7 @@
         valid_types = this.img_types.concat(['pdf'])
         @Prop() payload!: PayloadBase;
         @Prop({default: false}) mini!: boolean
+        @Prop({default: false}) rawCard!: boolean
 
         get url(): string{
             return this.payload.payload.toString('utf-8');

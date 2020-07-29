@@ -77,11 +77,11 @@
 
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
-                                                <Spinner v-if="isLoad" class="spinner" :color="'#4C2E56'"></Spinner>
+                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
 
                                                 <div v-else>
                                                     <button
-                                                            class="ava_button access generate"
+                                                            class="button_primary ava_button access generate"
                                                             @click="access"
                                                             :disabled="!canSubmit"
                                                     >Access Wallet</button>
@@ -202,21 +202,6 @@
                     console.log("Will remember..");
                     parent.$store.dispatch('rememberWallets', this.rememberPassword);
                 }
-
-                //@ts-ignore
-                // console.log(parent.$refs)
-                // parent.$refs.remember_wallet.save();
-                // if(password){
-                //     console.log("will remember")
-                //     let payload:rememberWalletIn = {
-                //         wallets: [wallet],
-                //         password: password
-                //     }
-                //     parent.$store.dispatch('rememberWallets', payload);
-                // }
-
-
-
             }, 500);
         }
     }
@@ -344,6 +329,7 @@ a {
 
     .verified {
         background-color: main.$green-light;
+        color: #222;
     }
 
     .mneumonic_button_container {
@@ -417,7 +403,7 @@ a {
             justify-content: flex-start;
 
             .access {
-                background-color: main.$primary-color !important;
+
             }
 
             .link {
