@@ -55,6 +55,10 @@
             })
         }
 
+        clear(){
+            this.addedNfts = [];
+        }
+
         addNft(utxo: UTXO){
             this.addedNfts.push(utxo);
         }

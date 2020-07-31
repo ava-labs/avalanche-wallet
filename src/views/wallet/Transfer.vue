@@ -8,7 +8,7 @@
                     <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                     <template v-if="hasNFT">
                         <h4>Collectibles - {{nftOrders.length}} Selected</h4>
-                        <NftList @change="updateNftList"></NftList>
+                        <NftList @change="updateNftList" ref="nftList"></NftList>
                     </template>
                 </div>
                 <div>
@@ -120,6 +120,7 @@
                 if(res === 'success'){
                     // @ts-ignore
                     parent.$refs.txList.clear();
+                    parent.$refs.nftList.clear();
 
                     this.$store.dispatch('Notifications/add', {
                         title: 'Transaction Sent',

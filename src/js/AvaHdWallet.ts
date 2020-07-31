@@ -171,15 +171,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let locktime = new BN(0);
         let threshold = 1;
 
-        let nftUtxos = orders.filter(val => {
-            if(val.asset) return false;
-            return true;
-        });
-
-        console.log(nftUtxos);
-        let nftSet = new UTXOSet();
-            nftSet.addArray(nftUtxos);
-
+        // Aggregate Fungible ins & outs
         for(let i:number=0;i<orders.length;i++){
             let order: ITransaction|UTXO = orders[i];
 
@@ -190,38 +182,58 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
                 ins = ins.concat(rawTx.getIns());
                 outs = outs.concat(rawTx.getOuts());
-            }else{ // if nft
-                console.log("SENDING NFT");
-                let baseTx: UnsignedTx = await avm.buildNFTTransferTx(
-                    nftSet,
-                    order.getUTXOID(),
-                    [addr],
-                    fromAddrs,
-                    fee,
-                    fromAddrs,
-                    UnixNow(),
-                    locktime,
-                    threshold
-                )
-                let rawTx: OperationTx = baseTx.getTransaction();
-
-                // rawTx.
-                // rawTx.
-                console.log(baseTx)
-                console.log(rawTx);
-                ins = ins.concat(rawTx.getIns());
-                outs = outs.concat(rawTx.getOuts());
             }
         }
-        // return;
 
-        // console.log(ins);
-        // console.log(outs);
-        // return;
-        let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
-        let networkId: number = ava.getNetworkID();
-        let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
-        const unsignedTx: UnsignedTx = new UnsignedTx(baseTx);
+        let nftUtxos:UTXO[] = orders.filter(val => {
+            if(val.asset) return false;
+            return true;
+        });
+
+        // If transferring an NFT, build the transaction on top of an NFT tx
+        let unsignedTx: UnsignedTx;
+        if(nftUtxos.length > 0){
+            let nftSet = new UTXOSet();
+                nftSet.addArray(nftUtxos);
+
+            let utxoIds: string[] = nftSet.getUTXOIDs()
+            // Sort nft utxos
+            utxoIds.sort((a,b) => {
+                if(a < b){
+                    return -1;
+                }else if(a > b){
+                    return 1;
+                }
+                return 0;
+            });
+
+
+            unsignedTx = await avm.buildNFTTransferTx(
+                nftSet,
+                // nftSet.getUTXOIDs(),
+                utxoIds,
+                [addr],
+                fromAddrs,
+                fee,
+                fromAddrs,
+                UnixNow(),
+                locktime,
+                threshold
+            )
+
+            let rawTx = unsignedTx.getTransaction();
+            let outsNft = rawTx.getOuts()
+            let insNft = rawTx.getIns()
+
+            rawTx.outs = outsNft.concat(outs);
+            rawTx.ins = insNft.concat(ins);
+        }else{
+            let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
+            let networkId: number = ava.getNetworkID();
+            let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
+            unsignedTx = new UnsignedTx(baseTx);
+        }
+
         const tx: Tx = unsignedTx.sign(this.keyChain);
         const txId: string = await avm.issueTx(tx);
 
