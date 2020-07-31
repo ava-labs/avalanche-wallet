@@ -131,7 +131,7 @@
 
                 let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
-                let assetId = bintools.avaSerialize(assetIdBuff);
+                let assetId = bintools.cb58Encode(assetIdBuff);
 
                 let assetObj:AvaAsset|undefined = this.assetsDict[assetId];
 

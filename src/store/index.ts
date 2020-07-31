@@ -59,7 +59,7 @@ export default new Vuex.Store({
                 let outId = utxo.getOutput().getOutputID();
                 if(outId===11){
                     let assetIdBuff = utxo.getAssetID();
-                    let assetId = bintools.avaSerialize(assetIdBuff);
+                    let assetId = bintools.cb58Encode(assetIdBuff);
 
                     res.push(utxo);
                 }
@@ -84,7 +84,7 @@ export default new Vuex.Store({
                 let outId = utxo.getOutput().getOutputID();
                 if(outId===11){
                     let assetIdBuff = utxo.getAssetID();
-                    let assetId = bintools.avaSerialize(assetIdBuff);
+                    let assetId = bintools.cb58Encode(assetIdBuff);
 
                     if(res[assetId]){
                         res[assetId].push(utxo);
@@ -118,7 +118,7 @@ export default new Vuex.Store({
 
                 let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
-                let assetId = bintools.avaSerialize(assetIdBuff);
+                let assetId = bintools.cb58Encode(assetIdBuff);
 
                 if(!dict[assetId]){
                     dict[assetId] = amount.clone();

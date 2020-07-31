@@ -218,7 +218,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // console.log(ins);
         // console.log(outs);
         // return;
-        let chainId: Buffer = bintools.avaDeserialize(avm.getBlockchainID());
+        let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
         let networkId: number = ava.getNetworkID();
         let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
         const unsignedTx: UnsignedTx = new UnsignedTx(baseTx);
