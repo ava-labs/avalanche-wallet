@@ -54,7 +54,7 @@ export interface AssetType {
 
 export interface IssueBatchTxInput {
     toAddress: string,
-    orders: ITransaction[]
+    orders: (ITransaction|UTXO)[]
 }
 
 export interface BatchTxOrder {

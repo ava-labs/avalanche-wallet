@@ -3,18 +3,10 @@
         <div class="bg" @click="closePopup"></div>
         <div class="popup_body">
             <p class="desc">Select an asset <button class="close" @click="closePopup" style="float: right"><fa icon="times"></fa></button></p>
-            <v-tabs grow height="34">
-                <v-tab>Fungible</v-tab>
-                <v-tab>Collectible</v-tab>
-                <v-tab-item>
-                    <div class="rows">
-                        <BalanceRow class="bal_row" v-for="asset in assets" :key="asset.id" :zero="asset.amount.isZero()" @click.native="select(asset)" :disabled="isDisabled(asset)" :asset="asset"></BalanceRow>
-                    </div>
-                </v-tab-item>
-                <v-tab-item>
-                    <CollectibleTab @select="selectNFT"></CollectibleTab>
-                </v-tab-item>
-            </v-tabs>
+            <div class="rows" v-if="!isNft">
+                <BalanceRow class="bal_row" v-for="asset in assets" :key="asset.id" :zero="asset.amount.isZero()" @click.native="select(asset)" :disabled="isDisabled(asset)" :asset="asset"></BalanceRow>
+            </div>
+            <CollectibleTab class="nfts" @select="selectNFT" :disabled-ids="disabledIds" v-else></CollectibleTab>
         </div>
     </div>
 </template>
@@ -34,7 +26,8 @@
     })
     export default class BalancePopup extends Vue{
         @Prop() assets!: AvaAsset[];
-        @Prop({default: () => []}) disabledIds!: string[];
+        @Prop({default: false}) isNft?: boolean;
+        @Prop({default: () => []}) disabledIds!: string[];        // asset id | if nft the utxo id
 
 
         isActive: boolean = false;
@@ -48,7 +41,8 @@
         }
 
         selectNFT(utxo: UTXO){
-            console.log('selected utxo');
+            this.$emit('select', utxo);
+            this.closePopup()
         }
 
         isDisabled(asset:AvaAsset): boolean{
@@ -120,9 +114,10 @@
         background-color: var(--bg);
     }
 
-    .rows{
+    .rows, .nfts{
         overflow: scroll;
     }
+
 
     .bal_row{
         padding: 6px 14px;

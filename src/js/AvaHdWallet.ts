@@ -5,7 +5,8 @@ import {
     AVMKeyPair,
     UTXOSet,
     TransferableInput,
-    TransferableOutput, BaseTx, UnsignedTx, Tx
+    TransferableOutput, BaseTx, UnsignedTx, Tx, UTXO,
+    UnixNow, OperationTx
 } from "avalanche";
 import * as bip39 from "bip39";
 import {ava, avm, bintools} from "@/AVA";
@@ -156,7 +157,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
-    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string>{
+    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
         let fromAddrs: string[] = this.keyChain.getAddressStrings();
         let changeAddr: string = this.getChangeAddress();
 
@@ -166,17 +167,57 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         let ins: TransferableInput[] = [];
         let outs: TransferableOutput[] = [];
+        let fee = new BN(0);
+        let locktime = new BN(0);
+        let threshold = 1;
+
+        let nftUtxos = orders.filter(val => {
+            if(val.asset) return false;
+            return true;
+        });
+
+        console.log(nftUtxos);
+        let nftSet = new UTXOSet();
+            nftSet.addArray(nftUtxos);
 
         for(let i:number=0;i<orders.length;i++){
-            let order: ITransaction = orders[i];
-            let amt: BN = new BN(order.amount.toString());
-            let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
-            let rawTx: BaseTx = baseTx.getTransaction();
+            let order: ITransaction|UTXO = orders[i];
 
-            ins = ins.concat(rawTx.getIns());
-            outs = outs.concat(rawTx.getOuts());
+            if(order.asset){ // if fungible
+                let amt: BN = new BN(order.amount.toString());
+                let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
+                let rawTx: BaseTx = baseTx.getTransaction();
+
+                ins = ins.concat(rawTx.getIns());
+                outs = outs.concat(rawTx.getOuts());
+            }else{ // if nft
+                console.log("SENDING NFT");
+                let baseTx: UnsignedTx = await avm.buildNFTTransferTx(
+                    nftSet,
+                    order.getUTXOID(),
+                    [addr],
+                    fromAddrs,
+                    fee,
+                    fromAddrs,
+                    UnixNow(),
+                    locktime,
+                    threshold
+                )
+                let rawTx: OperationTx = baseTx.getTransaction();
+
+                // rawTx.
+                // rawTx.
+                console.log(baseTx)
+                console.log(rawTx);
+                ins = ins.concat(rawTx.getIns());
+                outs = outs.concat(rawTx.getOuts());
+            }
         }
+        // return;
 
+        // console.log(ins);
+        // console.log(outs);
+        // return;
         let chainId: Buffer = bintools.avaDeserialize(avm.getBlockchainID());
         let networkId: number = ava.getNetworkID();
         let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);

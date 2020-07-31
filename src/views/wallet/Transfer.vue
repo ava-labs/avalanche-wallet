@@ -3,7 +3,14 @@
         <h1>{{$t('transfer.title')}}</h1>
         <div class="card_body">
             <div class="new_order_Form">
-                <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                <div class="lists">
+                    <h4>Fungibles</h4>
+                    <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                    <template v-if="hasNFT">
+                        <h4>Collectibles - {{nftOrders.length}} Selected</h4>
+                        <NftList @change="updateNftList"></NftList>
+                    </template>
+                </div>
                 <div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
@@ -47,11 +54,14 @@
     import RadioButtons from "@/components/misc/RadioButtons.vue";
     import Big from "big.js";
 
+    import NftList from "@/components/wallet/transfer/NftList.vue";
+
     //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
     import {isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
+    import {UTXO} from "avalanche";
 
     @Component({
         components: {
@@ -59,6 +69,7 @@
             TxList,
             RadioButtons,
             QrInput,
+            NftList
         }
     })
     export default class Transfer extends Vue{
@@ -66,18 +77,18 @@
         isAjax:boolean = false;
         addressIn:string = '';
         orders:ITransaction[] = [];
+        nftOrders: UTXO[] = [];
         errors:string[] = [];
-        // change_address:string = '';
 
-        // changeAddressesChange(val){
-        //     this.change_address = val;
-        // }
-        // toggleAdvanced(){
-        //     this.showAdvanced = !this.showAdvanced;
-        // },
+
         updateTxList(data:ITransaction[]){
             this.orders = data;
         }
+
+        updateNftList(val: UTXO[]){
+            this.nftOrders = val;
+        }
+
         formCheck(){
             this.errors = [];
             let err = [];
@@ -91,13 +102,16 @@
                 this.send();
             }
         }
+
         send(){
             let parent = this;
             this.isAjax = true;
 
+            let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders) as (ITransaction|UTXO)[];
+
             let txList = {
                 toAddress: this.addressIn,
-                orders: this.orders
+                orders: sumArray
             };
 
             this.$store.dispatch('issueBatchTx', txList).then(res => {
@@ -123,16 +137,30 @@
         }
 
 
+        get hasNFT(): boolean{
+            return this.$store.getters.walletNftUTXOs.length > 0;
+        }
+
         get faucetLink(){
             let link = process.env.VUE_APP_FAUCET_LINK;
             if(link) return link;
             return null;
         }
         get canSend(){
-            if(this.addressIn && this.orders.length>0 && this.totalTxSize.gt(0)){
-                return true;
+            if(!this.addressIn) return false;
+
+            if((this.orders.length > 0 && this.totalTxSize.eq(0)) && this.nftOrders.length===0 ){
+                return false;
             }
-            return false;
+
+            if(this.orders.length === 0 && this.nftOrders.length===0) return false;
+
+            // if(((this.orders.length===0 || this.totalTxSize.eq(0)) || this.nftOrders.length>0))
+            //
+            // if(this.addressIn && ((this.orders.length>0 && this.totalTxSize.gt(0)) || this.nftOrders.length>0) ){
+            //     return true;
+            // }
+            return true;
         }
         get totalTxSize(){
             let res = Big(0);
@@ -272,11 +300,14 @@
         /*padding: 10px 0;*/
         margin-bottom: 15px;
     }
-
-    .tx_list{
+    .lists{
         padding-right: 45px;
         border-right: 1px solid var(--bg-light);
         grid-column: 1/3;
+    }
+
+    .tx_list{
+
     }
 
     .fees p{
