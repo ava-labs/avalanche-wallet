@@ -1,13 +1,13 @@
 <template>
     <div>
         <div  v-if="!isEmpty">
-            <div v-for="(utxos, id) in nftDict" :key="id">
+            <div v-for="fam in nftFamsArray" :key="fam.id">
                 <div class="fam_header">
-                    <p class="symbol">{{nftFamsDict[id].symbol}}</p>
-                    <p>{{nftFamsDict[id].name}}</p>
+                    <p class="symbol">{{fam.symbol}}</p>
+                    <p>{{fam.name}}</p>
                 </div>
                 <div class="list">
-                    <NFTCard class="nft_card" v-for="utxo in utxos" :utxo="utxo" :key="utxo.id"></NFTCard>
+                    <NFTCard class="nft_card" v-for="utxo in nftDict[fam.id]" :utxo="utxo" :key="utxo.id"></NFTCard>
                 </div>
             </div>
         </div>
@@ -40,6 +40,22 @@
 
         get nftDict(): IWalletNftDict{
             return this.$store.getters.walletNftDict;
+        }
+
+        get nftFamsArray(){
+            let fams:AvaNftFamily[] = this.$store.state.Assets.nftFams;
+                fams.sort((a,b) => {
+                   let symbolA = a.symbol;
+                   let symbolB = b.symbol;
+
+                    if(symbolA < symbolB){
+                        return -1;
+                    }else if(symbolA > symbolB){
+                        return 1;
+                    }
+                    return 0;
+                });
+            return fams;
         }
 
         get nftFamsDict(): NftFamilyDict{
@@ -78,7 +94,7 @@
 
 
     .nft_card{
-        
+
         transition-duration: 0.3s;
     }
 

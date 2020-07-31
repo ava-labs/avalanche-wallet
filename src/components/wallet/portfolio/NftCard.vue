@@ -6,6 +6,7 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
+    import {Buffer} from "buffer/";
 
     import {NFTTransferOutput, PayloadTypes, UTXO} from "avalanche";
     import * as jdenticon from "jdenticon";
