@@ -207,10 +207,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 return 0;
             });
 
-
             unsignedTx = await avm.buildNFTTransferTx(
                 nftSet,
-                // nftSet.getUTXOIDs(),
                 utxoIds,
                 [addr],
                 fromAddrs,
@@ -236,6 +234,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         const tx: Tx = unsignedTx.sign(this.keyChain);
         const txId: string = await avm.issueTx(tx);
+
 
         // TODO: Must update index after sending a tx
         // TODO: Index will not increase but it could decrease.
