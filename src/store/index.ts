@@ -191,18 +191,17 @@ export default new Vuex.Store({
                 message: 'You have successfully logged out of your wallet.'
             });
 
+            // Clear local storage
+            localStorage.removeItem('w');
+
             // Remove other data
             store.state.isAuth = false;
             store.state.activeWallet = null;
             store.state.address = null;
 
-
             // Clear Assets
             await store.dispatch('Assets/onlogout');
             await store.commit('History/clear');
-
-            // Clear local storage
-            localStorage.removeItem('w');
 
             router.push('/');
         },

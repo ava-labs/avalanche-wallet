@@ -53,7 +53,7 @@
 
             setTimeout(() => {
                 this.initBg();
-            }, 500)
+            }, 200)
         }
 
         get address(){
@@ -61,7 +61,6 @@
             if(!wallet) return  '-';
 
             let key = wallet.getKeyForIndex(0);
-            // let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
             if(!key){
                 return '-'
             }

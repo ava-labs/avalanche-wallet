@@ -89,4 +89,17 @@
     .remember_keys{
         color: var(--warning);
     }
+
+    @include main.mobile-device{
+        header{
+            display: block;
+        }
+
+        .button_container{
+            display: flex;
+
+            button{
+            }
+        }
+    }
 </style>
