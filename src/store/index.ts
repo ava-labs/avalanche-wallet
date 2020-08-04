@@ -162,6 +162,27 @@ export default new Vuex.Store({
         },
 
 
+        // Similar to logout but keeps the Remembered keys.
+        async timeoutLogout(store){
+            store.dispatch('removeAllKeys');
+            await store.dispatch('Notifications/add', {
+                title: 'Session Timeout',
+                message: 'You are logged out due to inactivity.',
+                type: "warning"
+            });
+
+            // Remove other data
+            store.state.isAuth = false;
+            store.state.activeWallet = null;
+            store.state.address = null;
+
+            await store.dispatch('Assets/onlogout');
+            await store.commit('History/clear');
+
+            router.push('/');
+        },
+
+
         async logout(store){
             // Delete keys
             store.dispatch('removeAllKeys');
@@ -178,6 +199,7 @@ export default new Vuex.Store({
 
             // Clear Assets
             await store.dispatch('Assets/onlogout');
+            await store.commit('History/clear');
 
             // Clear local storage
             localStorage.removeItem('w');
@@ -190,8 +212,8 @@ export default new Vuex.Store({
         async removeAllKeys({state, dispatch}){
             let wallets = state.wallets;
 
-            for(var i=0; i<wallets.length;i++){
-                let wallet = wallets[i];
+            while(wallets.length > 0){
+                let wallet = wallets[0];
                 await dispatch('removeWallet', wallet);
 
                 dispatch('Notifications/add', {

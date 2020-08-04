@@ -13,7 +13,7 @@
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import Modal from "../Modal.vue";
     import {KeyFile} from "@/js/IKeystore";
@@ -29,8 +29,18 @@
         isLoading: boolean = false;
         err: string = "";
         mounted(){
-            let w = localStorage.getItem('w');
+            this.openIfValid();
+        }
 
+        @Watch('$store.state.isAuth')
+        onauthchange(val: boolean){
+            if(!val){
+                this.openIfValid();
+            }
+        }
+
+        openIfValid(){
+            let w = localStorage.getItem('w');
             if(w){
                 this.open();
             }
@@ -58,6 +68,7 @@
 
                 // These are not volatile wallets since they are loaded from storage
                 this.$store.state.volatileWallets = [];
+                this.password = '';
                 this.close();
             }catch(e){
                 this.isLoading = false;

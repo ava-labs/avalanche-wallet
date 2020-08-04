@@ -14,7 +14,9 @@ const history_module: Module<HistoryState, RootState> = {
         transactions: [],
     },
     mutations: {
-
+        clear(state){
+            state.transactions = [];
+        }
     },
     actions: {
         async updateTransactionHistory({state, rootState, rootGetters}){
