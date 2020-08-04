@@ -1,5 +1,5 @@
 <template>
-    <div class="wallet_view">
+    <div class="wallet_view" ref="wallet_view">
         <transition name="fade" mode="out-in">
             <sidebar class="panel"></sidebar>
         </transition>
@@ -23,6 +23,9 @@ import TopInfo from "@/components/wallet/TopInfo.vue";
 import Sidebar from '@/components/wallet/Sidebar.vue';
 import MainPanel from '@/components/SidePanels/MainPanel.vue';
 
+
+const TIMEOUT_DURATION = 60 * 7; // in seconds
+
 @Component({
     components: {
         Sidebar,
@@ -30,7 +33,35 @@ import MainPanel from '@/components/SidePanels/MainPanel.vue';
         TopInfo
     }
 })
-export default class Wallet extends Vue {}
+export default class Wallet extends Vue {
+    inactiveDur: number = TIMEOUT_DURATION;
+    intervalId: NodeJS.Timeout|null = null;
+
+    resetTimer(){
+        this.inactiveDur = TIMEOUT_DURATION;
+    }
+
+
+    created(){
+        this.intervalId = setInterval(() => {
+            this.inactiveDur -= 1;
+            if(this.inactiveDur <= 0){
+                this.$store.dispatch('timeoutLogout');
+            }
+        }, 1000)
+    }
+
+    mounted(){
+        let view = this.$refs.wallet_view as HTMLDivElement;
+
+        view.addEventListener('mousemove', this.resetTimer);
+        view.addEventListener('mousedown', this.resetTimer);
+    }
+
+    destroyed(){
+        clearInterval(this.intervalId!);
+    }
+}
 </script>
 
 <style lang="scss" scoped>

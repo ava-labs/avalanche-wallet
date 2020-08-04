@@ -41,8 +41,9 @@
             modal.close();
         }
 
-        submit(){
-            this.$store.dispatch("logout");
+        async submit(){
+            await this.$store.dispatch("logout");
+            this.close();
         }
     }
 </script>
