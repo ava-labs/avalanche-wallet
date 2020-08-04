@@ -93,6 +93,8 @@
         }
         updateQR(){
             let canvas = this.$refs.qr as HTMLCanvasElement;
+            if(!canvas) return;
+
             let size = canvas.clientWidth;
             QRCode.toCanvas(canvas, this.address, {
                 scale: 6,
