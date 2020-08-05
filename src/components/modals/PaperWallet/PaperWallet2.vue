@@ -53,13 +53,14 @@
 
             setTimeout(() => {
                 this.initBg();
-            }, 500)
+            }, 200)
         }
 
         get address(){
             let wallet:AvaHdWallet = this.$store.state.activeWallet;
+            if(!wallet) return  '-';
+
             let key = wallet.getKeyForIndex(0);
-            // let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
             if(!key){
                 return '-'
             }
@@ -68,6 +69,8 @@
 
         get mnemonic():string{
             let wallet: AvaHdWallet = this.$store.state.activeWallet;
+            if(!wallet) return  '-';
+
             return wallet.mnemonic;
         }
 

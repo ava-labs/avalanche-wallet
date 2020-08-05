@@ -1,7 +1,7 @@
 <template>
     <div class="my_keys">
         <p class="label">Active Key</p>
-        <key-row :wallet="activeWallet"
+        <key-row v-if="activeWallet" :wallet="activeWallet"
                  class="key_row"
                  :is_default="true"
         ></key-row>
