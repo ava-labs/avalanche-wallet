@@ -197,7 +197,7 @@
             padding: 0;
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 2px solid #F5F6FA;
+            border-top: 1px solid var(--primary-color-light);
             border-left: none;
         }
 
