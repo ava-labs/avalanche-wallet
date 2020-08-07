@@ -1,52 +1,65 @@
 <template>
     <div>
-        <div class="coming_soon">
+        <div  v-if="!isEmpty">
+            <div v-for="fam in nftFamsArray" :key="fam.id">
+                <div class="fam_header">
+                    <p class="symbol">{{fam.symbol}}</p>
+                    <p>{{fam.name}}</p>
+                </div>
+                <div class="list">
+                    <NFTCard class="nft_card" v-for="utxo in nftDict[fam.id]" :utxo="utxo" :key="utxo.id"></NFTCard>
+                </div>
+            </div>
+        </div>
+        <div class="coming_soon" v-else>
             <img v-if="$root.theme==='day'" src="@/assets/nft_preview.png">
             <img v-else src="@/assets/nft_preview_night.png">
-            <p>NFTs Coming Soon</p>
+            <p>You do not own any NFTs.</p>
         </div>
-<!--        <div class="list">-->
-<!--            <div class="item" v-for="(card, i) in cards" :key="i">-->
-<!--                <img :src="card.url">-->
-<!--                <p class="collectible_title">{{card.title}}</p>-->
-<!--                <p class="series">{{card.series}}</p>-->
-
-<!--                <div class="options">-->
-<!--                    <button>Send</button>-->
-<!--                    <button>Swap</button>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="item missing_item" v-for="i in 2" :key="i">-->
-<!--                <img src="https://usercontent1.hubstatic.com/14892354_f520.jpg">-->
-<!--                <p class="collectible_title">Zulgadon of High Castle</p>-->
-<!--                <p class="series">Pokemon Vol. I</p>-->
-
-<!--                <div class="options">-->
-<!--                    <button>Buy</button>-->
-<!--                    <button>About</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
 </template>
-<script>
-    export default {
-        data(){
-            return {
-                cards: [
-                    // {
-                    //     title: "High Priestess of Prophecy",
-                    //     series: "Pokemon Vol. I",
-                    //     url: "https://usercontent1.hubstatic.com/14892354_f520.jpg",
-                    // },
-                    // {
-                    //     title: "High Priestess of Prophecy",
-                    //     series: "Pokemon Vol. I",
-                    //     url: "https://usercontent1.hubstatic.com/13739072_f1024.jpg",
-                    // }
-                ]
-            }
+<script lang="ts">
+    import NFTCard from './NftCard.vue';
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import {IWalletNftDict} from "@/store/types";
+    import {AvaNftFamily} from "@/js/AvaNftFamily";
+    import {NftFamilyDict} from "@/store/modules/assets/types";
+
+    // const payloadTypes = PayloadTypes.getInstance();
+
+    @Component({
+        components: {
+            NFTCard
+        }
+    })
+    export default class Collectibles extends Vue{
+        get isEmpty(): boolean{
+            return this.$store.getters.walletNftUTXOs.length === 0;
+        }
+
+        get nftDict(): IWalletNftDict{
+            return this.$store.getters.walletNftDict;
+        }
+
+        get nftFamsArray(){
+            let fams:AvaNftFamily[] = this.$store.state.Assets.nftFams;
+                fams.sort((a,b) => {
+                   let symbolA = a.symbol;
+                   let symbolB = b.symbol;
+
+                    if(symbolA < symbolB){
+                        return -1;
+                    }else if(symbolA > symbolB){
+                        return 1;
+                    }
+                    return 0;
+                });
+            return fams;
+        }
+
+        get nftFamsDict(): NftFamilyDict{
+            return this.$store.state.Assets.nftFamsDict;
         }
     }
 </script>
@@ -73,78 +86,52 @@
 
     .list{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        padding: 30px 0;
+        grid-template-columns: repeat(4,1fr);
         grid-row-gap: 15px;
         grid-column-gap: 15px;
     }
-    .item{
-        height: 220px;
-        position: relative;
-
-        img{
-            width: 100%;
-            max-height: 220px;
-            object-fit: contain;
-            border-radius: 4px;
-            transition-duration: $flip_dur;
-        }
 
 
-        .collectible_title, .series{
-            text-align: center;
-            font-size: 12px;
-        }
-        .collectible_title{
-            font-size: 14px;
-        }
+    .nft_card{
+
+        transition-duration: 0.3s;
     }
 
-    .options{
-        background-color: #ddd;
-        padding-top: 30px;
+
+    .fam_header{
         width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-self: center;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-        opacity: 0;
-        transition-duration: $flip_dur;
-        transform: rotateY(180deg);
-
-        button{
-            margin-bottom: 10px;
-            background-color: main.$primary-color;
-            color: #fff;
-            width: 80px;
-            border-radius: 12px;
-            padding: 6px 14px;
-        }
+        /*display: flex;*/
+        margin: 30px 0 8px;
+        /*border-bottom: 1px solid var(--primary-color-light);*/
+        font-size: 1.4rem;
+        display: grid;
+        grid-template-columns: 80px 1fr;
     }
 
-
-    .item:hover{
-        img{
-            transform: rotateY(180deg);
-            opacity: 0;
-        }
-
-        .options{
-            opacity: 1;
-            transform: rotateY(0deg);
-        }
+    .symbol{
+        color: var(--primary-color-light);
     }
 
-
-    .missing_item{
-        opacity: 0.4;
-        filter: grayscale(100%);
+    @include main.mobile-device{
+        .list{
+            grid-template-columns: repeat(2,1fr);
+        }
     }
-
-
+    @include main.large-device{
+        .list{
+            grid-template-columns: repeat(4,1fr);
+        }
+    }
+    @include main.xl-device{
+        .list{
+            grid-template-columns: repeat(4,1fr);
+        }
+    }
+    @include main.largest-device{
+        .list{
+            grid-template-columns: repeat(6,1fr);
+        }
+    }
 
 </style>

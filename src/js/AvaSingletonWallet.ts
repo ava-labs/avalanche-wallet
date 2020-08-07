@@ -1,3 +1,5 @@
+// Depreciated
+
 import {IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
 import {
     AVMKeyChain,
@@ -74,7 +76,7 @@ export default class AvaSingletonWallet implements IAvaSingletonWallet {
             outs = outs.concat(rawTx.getOuts());
         }
 
-        let chainId: Buffer = bintools.avaDeserialize(avm.getBlockchainID());
+        let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
         let networkId: number = ava.getNetworkID();
         let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
         const unsignedTx: UnsignedTx = new UnsignedTx(baseTx);

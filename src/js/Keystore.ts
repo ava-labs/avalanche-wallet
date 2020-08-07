@@ -36,16 +36,16 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
     }
 
 
-    let salt: Buffer = bintools.avaDeserialize(data.salt);
+    let salt: Buffer = bintools.cb58Decode(data.salt);
     let pass_hash: string = data.pass_hash;
 
     let checkHashString:string;
     if(version === '2.0'){
         let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt);
-        checkHashString = bintools.avaSerialize(checkHash);
+        checkHashString = bintools.cb58Encode(checkHash);
     }else{
         let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt);
-        checkHashString = bintools.avaSerialize(checkHash.hash);
+        checkHashString = bintools.cb58Encode(checkHash.hash);
     }
 
 
@@ -61,13 +61,13 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
     for (let i:number = 0; i < keys.length; i++) {
         let key_data: KeyFileKey = keys[i];
 
-        let key: Buffer = bintools.avaDeserialize(key_data.key);
-        let nonce: Buffer = bintools.avaDeserialize(key_data.iv);
+        let key: Buffer = bintools.cb58Decode(key_data.key);
+        let nonce: Buffer = bintools.cb58Decode(key_data.iv);
         let address: string = key_data.address;
         // let walletType: wallet_type = key_data.type || 'hd';
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass,key,salt,nonce);
-        let key_string: string = bintools.avaSerialize(key_decrypt);
+        let key_string: string = bintools.cb58Encode(key_decrypt);
 
         keysDecrypt.push({
             key: key_string,
@@ -100,8 +100,8 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,pk,salt);
 
         let key_data: KeyFileKey = {
-            key: bintools.avaSerialize(pk_crypt.ciphertext),
-            iv: bintools.avaSerialize(pk_crypt.iv),
+            key: bintools.cb58Encode(pk_crypt.ciphertext),
+            iv: bintools.cb58Encode(pk_crypt.iv),
             address: addr,
         };
         keys.push(key_data);
@@ -109,8 +109,8 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
 
     let file_data: KeyFile = {
         version: KEYSTORE_VERSION,
-        salt: bintools.avaSerialize(salt),
-        pass_hash: bintools.avaSerialize(passHash.hash),
+        salt: bintools.cb58Encode(salt),
+        pass_hash: bintools.cb58Encode(passHash.hash),
         keys: keys,
         warnings: ["This address listed in this file is for internal wallet use only. DO NOT USE THIS ADDRESS"]
     };

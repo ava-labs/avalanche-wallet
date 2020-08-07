@@ -33,10 +33,7 @@
 <!--                </div>-->
 <!--            </div>-->
         </div>
-        <div class="nft_card">
-            <h4>NFTs</h4>
-            <p>You have not collected any non fungible tokens.</p>
-        </div>
+        <NftCol class="nft_card"></NftCol>
     </div>
 </template>
 <script lang="ts">
@@ -45,10 +42,12 @@
     import AvaAsset from "@/js/AvaAsset";
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
+    import NftCol from './NftCol.vue';
 
     @Component({
         components: {
-            Spinner
+            Spinner,
+            NftCol
         }
     })
     export default class BalanceCard extends Vue {
@@ -80,10 +79,10 @@
     }
 </script>
 <style scoped lang="scss">
-    @use '../../../main';
+    @use '../../../../main';
     .balance_card{
         display: grid !important;
-        grid-template-columns: 1fr 140px;
+        grid-template-columns: 1fr max-content;
         column-gap: 20px;
     }
 
@@ -186,11 +185,6 @@
 
     .nft_card{
         padding-left: 20px;
-
-        p{
-            font-size: 12px;
-            color: var(--primary-color-light);
-        }
     }
 
 

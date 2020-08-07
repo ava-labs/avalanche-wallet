@@ -70,7 +70,7 @@ export default class Wallet extends Vue {
 .wallet_view {
     padding-bottom: 0;
     display: grid;
-    grid-template-columns: 240px 1fr 340px;
+    grid-template-columns: 200px 1fr 340px;
     column-gap: 15px;
     height: 100%;
     background-color: var(--bg-wallet);

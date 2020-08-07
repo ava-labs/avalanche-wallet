@@ -1,12 +1,15 @@
 import {UTXO, UTXOSet} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import BN from "bn.js";
+import {AvaNftFamily} from "@/js/AvaNftFamily";
 
 export interface AssetsState {
     isUpdateBalance: boolean
     assets: AvaAsset[]
     assetsDict: AssetsDict
     AVA_ASSET_ID: string | null,
+    nftFams: AvaNftFamily[]
+    nftFamsDict: NftFamilyDict
 }
 
 export interface AssetDescriptions {
@@ -19,6 +22,10 @@ export interface AssetDescription {
     denomination: number
 }
 
+
+export interface NftFamilyDict {
+    [id:string]: AvaNftFamily
+}
 
 export interface AssetsDict {
     [key:string]: AvaAsset

@@ -48,7 +48,7 @@
 
             let key = loginDetails.privateKey;
 
-            let pk = bintools.avaSerialize(Buffer.from(key, 'hex'))
+            let pk = bintools.cb58Encode(Buffer.from(key, 'hex'))
             let chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
             let keyPair = keyToKeypair(pk, chainId);
 

@@ -101,7 +101,7 @@
                 for(var i=0; i<assetIds.length; i++){
                     let assetId = assetIds[i];
                     let balance = newSet.getBalance([addr], assetId);
-                    let assetIdSerial = bintools.avaSerialize(assetId);
+                    let assetIdSerial = bintools.cb58Encode(assetId);
 
                     let target:Big = balDict[assetIdSerial];
                     let asset:AvaAsset = assetsDict[assetIdSerial];
@@ -138,7 +138,7 @@
                 for(var i=0; i<assetIds.length; i++){
                     let assetId = assetIds[i];
                     let balance = newSet.getBalance([addr], assetId);
-                    let assetIdSerial = bintools.avaSerialize(assetId);
+                    let assetIdSerial = bintools.cb58Encode(assetId);
 
                     let target:Big = balDict[assetIdSerial];
                     let asset:AvaAsset = assetsDict[assetIdSerial];

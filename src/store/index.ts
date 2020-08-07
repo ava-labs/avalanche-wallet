@@ -8,7 +8,7 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput
+    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput, IWalletNftDict
 } from "@/store/types";
 
 import {
@@ -21,10 +21,10 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {AmountOutput, AVMKeyPair} from "avalanche";
+import {AmountOutput, AVMKeyPair, UTXO} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
-import {AssetsDict} from "@/store/modules/assets/types";
+import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 
 export default new Vuex.Store({
@@ -43,6 +43,58 @@ export default new Vuex.Store({
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
     },
     getters: {
+        walletNftUTXOs(state: RootState){
+            let wallet:AvaHdWallet|null = state.activeWallet;
+
+            if(!wallet) return {};
+            if(!wallet.getUTXOSet()) return {};
+
+
+            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let res: UTXO[] = [];
+            for(var n=0; n<addrUtxos.length; n++){
+                let utxo = addrUtxos[n];
+
+                // Process only non NFT utxos, outputid === 0b
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11){
+                    let assetIdBuff = utxo.getAssetID();
+                    let assetId = bintools.cb58Encode(assetIdBuff);
+
+                    res.push(utxo);
+                }
+            }
+            return res;
+        },
+
+        // assset id -> utxos
+        walletNftDict(state: RootState){
+            let wallet:AvaHdWallet|null = state.activeWallet;
+
+            if(!wallet) return {};
+            if(!wallet.getUTXOSet()) return {};
+
+
+            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let res: IWalletNftDict = {};
+            for(var n=0; n<addrUtxos.length; n++){
+                let utxo = addrUtxos[n];
+
+                // Process only non NFT utxos, outputid === 0b
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11){
+                    let assetIdBuff = utxo.getAssetID();
+                    let assetId = bintools.cb58Encode(assetIdBuff);
+
+                    if(res[assetId]){
+                        res[assetId].push(utxo);
+                    }else{
+                        res[assetId] = [utxo];
+                    }
+                }
+            }
+            return res;
+        },
 
         // Creates the asset_id => raw balance dictionary
         walletBalanceDict(state: RootState): IWalletBalanceDict{
@@ -57,11 +109,16 @@ export default new Vuex.Store({
 
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
+
+                // Process only non NFT utxos, outputid === 0b
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11) continue;
+
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
                 let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
-                let assetId = bintools.avaSerialize(assetIdBuff);
+                let assetId = bintools.cb58Encode(assetIdBuff);
 
                 if(!dict[assetId]){
                     dict[assetId] = amount.clone();
