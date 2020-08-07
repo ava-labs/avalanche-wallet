@@ -3,7 +3,7 @@
 import {IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
 import {
     AVMKeyChain,
-    AVMKeyPair, BaseTx,
+    AVMKeyPair, BaseTx, getPreferredHRP,
     TransferableInput,
     TransferableOutput, Tx, UnsignedTx,
     UTXOSet
@@ -26,7 +26,7 @@ export default class AvaSingletonWallet implements IAvaSingletonWallet {
         this.utxoset = new UTXOSet();
         this.address = keypair.getAddressString();
 
-        this.keyChain = new AVMKeyChain('X');
+        this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()),'X');
         this.keyChain.addKey(keypair);
 
         this.getUTXOs();

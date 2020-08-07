@@ -6,7 +6,7 @@ import {
     UTXOSet,
     TransferableInput,
     TransferableOutput, BaseTx, UnsignedTx, Tx, UTXO,
-    UnixNow, OperationTx
+    UnixNow, OperationTx, getPreferredHRP
 } from "avalanche";
 import * as bip39 from "bip39";
 import {ava, avm, bintools} from "@/AVA";
@@ -53,7 +53,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.chainId = keypair.getChainID();
         this.hdIndex = 0;
         this.seed = null;
-        this.keyChain = new AVMKeyChain(this.chainId);
+        this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
         this.indexChangeKeyCache = {};
@@ -96,6 +96,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     // When the wallet connects to a different network
     async onnetworkchange(){
+        //TODO: Change
+        this.clearCache();
         this.utxoset = new UTXOSet();
         await this.onHdKeyReady();
     }
@@ -176,7 +178,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
             let order: ITransaction|UTXO = orders[i];
 
             if(order.asset){ // if fungible
-                let amt: BN = new BN(order.amount.toString());
+                let tx: ITransaction = order as ITransaction;
+                let amt: BN = new BN(tx.amount.toString());
                 let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
                 let rawTx: BaseTx = baseTx.getTransaction();
 
@@ -214,6 +217,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 fromAddrs,
                 fee,
                 fromAddrs,
+                undefined,
                 UnixNow(),
                 locktime,
                 threshold
@@ -247,7 +251,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     // returns a keychain that has all the derived private keys
     getKeyChain(): AVMKeyChain{
-        let keychain: AVMKeyChain = new AVMKeyChain(this.chainId);
+        let keychain: AVMKeyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
 
         for(let i:number=0; i<=this.hdIndex; i++){
             let key: AVMKeyPair = this.getKeyForIndex(i);
@@ -264,8 +268,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
     async findAvailableIndex(start:number=0):Promise<number>{
-        let keychainExternal: AVMKeyChain = new AVMKeyChain('X');
-        let keychainInternal: AVMKeyChain = new AVMKeyChain('X');
+        let hrp = getPreferredHRP(ava.getNetworkID());
+        let keychainExternal: AVMKeyChain = new AVMKeyChain(hrp,'X');
+        let keychainInternal: AVMKeyChain = new AVMKeyChain(hrp,'X');
 
 
         // Get keys for indexes start to start+scan_size
@@ -316,6 +321,11 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return await this.findAvailableIndex(start+SCAN_RANGE)
     }
 
+    clearCache(){
+        this.indexKeyCache = {};
+        this.indexChangeKeyCache = {};
+    }
+
     getKeyForIndex(index:number, isChange=false): AVMKeyPair{
         if(isChange){
             let cacheInternal: AVMKeyPair = this.indexChangeKeyCache[index];
@@ -335,7 +345,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // TODO: This is a bottleneck
         let key: HDKey = this.hdKey.derive(derivationPath+`/${index}`) as HDKey;
-        let keychain: AVMKeyChain = new AVMKeyChain('X');
+        let hrp = getPreferredHRP(ava.getNetworkID());
+        let keychain: AVMKeyChain = new AVMKeyChain(hrp, 'X');
         let pkHex: string = key.privateKey.toString('hex');
         let pkBuf: Buffer = new Buffer(pkHex, 'hex');
         let addr: Buffer = keychain.importKey(pkBuf);

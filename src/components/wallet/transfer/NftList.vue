@@ -31,6 +31,10 @@
     export default class NftList extends Vue{
         addedNfts: UTXO[] = [];
 
+        $refs!: {
+            popup: BalancePopup
+        }
+
 
         @Watch('addedNfts')
         onlistchange(val: UTXO[]){

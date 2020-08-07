@@ -30,7 +30,7 @@
 
 
         get text(): string{
-            return this.payload.payload.toString("utf-8");
+            return this.payload.getContent().toString("utf-8");
         }
     }
 </script>

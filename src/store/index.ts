@@ -43,11 +43,11 @@ export default new Vuex.Store({
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
     },
     getters: {
-        walletNftUTXOs(state: RootState){
+        walletNftUTXOs(state: RootState): UTXO[]{
             let wallet:AvaHdWallet|null = state.activeWallet;
 
-            if(!wallet) return {};
-            if(!wallet.getUTXOSet()) return {};
+            if(!wallet) return [];
+            if(!wallet.getUTXOSet()) return [];
 
 
             let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
@@ -397,6 +397,8 @@ export default new Vuex.Store({
                 let keyFile:KeyFileDecrypted = await readKeyFile(fileData,pass);
 
                 let keys = keyFile.keys;
+
+                console.log(keys);
 
                 let chainID = avm.getBlockchainAlias();
                 let inputData:AVMKeyPair[] = keys.map(key => {

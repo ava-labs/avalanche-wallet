@@ -107,7 +107,8 @@
             let parent = this;
             this.isAjax = true;
 
-            let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders) as (ITransaction|UTXO)[];
+            // let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders);
+            let sumArray: (ITransaction|UTXO)[] = [...this.orders, ...this.nftOrders];
 
             let txList = {
                 toAddress: this.addressIn,
@@ -120,6 +121,7 @@
                 if(res === 'success'){
                     // @ts-ignore
                     parent.$refs.txList.clear();
+                    // @ts-ignore
                     parent.$refs.nftList.clear();
 
                     this.$store.dispatch('Notifications/add', {

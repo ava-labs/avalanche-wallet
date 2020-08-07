@@ -33,7 +33,7 @@
         get payloadBase(){
             let payload = this.payload;
             let typeId = payloadtypes.getTypeID(payload)
-            let pl: Buffer = payloadtypes.parsePayload(payload)
+            let pl: Buffer = payloadtypes.getContent(payload)
             let payloadbase: PayloadBase = payloadtypes.select(typeId, pl);
 
             return payloadbase;
