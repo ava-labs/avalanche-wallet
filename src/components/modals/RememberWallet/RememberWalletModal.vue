@@ -62,7 +62,9 @@
 
                 let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
                 let inputData:AVMKeyPair[] = keys.map(key => {
-                    return keyToKeypair(key.key, chainID);
+                    // Remembered private keys do not have the prefix
+                    let pk = 'PrivateKey-'+key.key;
+                    return keyToKeypair(pk, chainID);
                 });
                 await this.$store.dispatch('accessWalletMultiple', inputData);
 

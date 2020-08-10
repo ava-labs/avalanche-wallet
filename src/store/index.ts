@@ -402,7 +402,10 @@ export default new Vuex.Store({
 
                 let chainID = avm.getBlockchainAlias();
                 let inputData:AVMKeyPair[] = keys.map(key => {
-                    return keyToKeypair(key.key,chainID);
+                    // Private keys from the keystore file do not have the PrivateKey- prefix
+                    let pk = 'PrivateKey-'+key.key;
+                    console.log(pk);
+                    return keyToKeypair(pk,chainID);
                 });
 
                 // If not auth, login user then add keys
@@ -410,7 +413,9 @@ export default new Vuex.Store({
                     await store.dispatch('accessWalletMultiple', inputData);
                 }else{
                     for(let i=0; i<inputData.length;i++){
-                        let key = inputData[i];
+                        // Private keys from the keystore file do not have the PrivateKey- prefix
+                        let key = 'PrivateKey-'+inputData[i];
+                        console.log(key);
                         await store.dispatch('addWallet', key);
                     }
                 }

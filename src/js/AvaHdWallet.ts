@@ -177,7 +177,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         for(let i:number=0;i<orders.length;i++){
             let order: ITransaction|UTXO = orders[i];
 
-            if(order.asset){ // if fungible
+            if((order as ITransaction).asset){ // if fungible
                 let tx: ITransaction = order as ITransaction;
                 let amt: BN = new BN(tx.amount.toString());
                 let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
@@ -188,8 +188,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
             }
         }
 
+        //@ts-ignore
         let nftUtxos:UTXO[] = orders.filter(val => {
-            if(val.asset) return false;
+            if((val as ITransaction).asset) return false;
             return true;
         });
 
