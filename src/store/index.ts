@@ -357,7 +357,7 @@ export default new Vuex.Store({
 
             // Download the file
             let text = JSON.stringify(file_data);
-            let addr = file_data.keys[0].address.substr(2,5);
+            // let addr = file_data.keys[0].address.substr(2,5);
 
             let utcDate = new Date()
             let dateString = utcDate.toISOString().replace(' ', '_');
@@ -414,8 +414,7 @@ export default new Vuex.Store({
                 }else{
                     for(let i=0; i<inputData.length;i++){
                         // Private keys from the keystore file do not have the PrivateKey- prefix
-                        let key = 'PrivateKey-'+inputData[i];
-                        console.log(key);
+                        let key = inputData[i];
                         await store.dispatch('addWallet', key);
                     }
                 }

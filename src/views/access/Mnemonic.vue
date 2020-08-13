@@ -122,6 +122,7 @@ import {Buffer} from "buffer";
                     this.isLoading = false;
                 }catch(e){
                     this.isLoading = false;
+                    console.log(e);
                     this.err = 'Invalid key phrase.'
                 }
             }, 500)

@@ -8,7 +8,7 @@ import {
    AVM,
    AVMKeyChain,
    AVMKeyPair
- } from "avalanche" 
+ } from "avalanche"
 
 const chain_id:string = "GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVeDAXc694wJ5t3zEkhU";
 const ip:string = 'localhost';
@@ -16,7 +16,7 @@ const port:string = '9650';
 const protocol:string = 'http';
 const network_id:string = '12345';
 const avalanche:Avalanche = new Avalanche(ip, parseInt(port), protocol, parseInt(network_id), chain_id);
-const avm:AVM = avalanche.AVM();
+const avm:AVM = avalanche.XChain();
 
 // A 2.0 and 3.0 Keystore version of the same keys
 // Password is: 111111111

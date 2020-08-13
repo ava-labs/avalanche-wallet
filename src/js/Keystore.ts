@@ -10,10 +10,10 @@ import Crypto from "@/js/Crypto";
 
 const cryptoHelpers = new Crypto();
 
-const KEYSTORE_VERSION: string = '3.0';
+const KEYSTORE_VERSION: string = '4.0';
 
 const ITERATIONS_V2 = 100000;
-const ITERATIONS_V3 = 200000;
+const ITERATIONS_V3 = 200000; // and any version above
 
 interface IHash {
     salt: Buffer;
@@ -102,7 +102,7 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
         let key_data: KeyFileKey = {
             key: bintools.cb58Encode(pk_crypt.ciphertext),
             iv: bintools.cb58Encode(pk_crypt.iv),
-            address: addr,
+            // address: addr,
         };
         keys.push(key_data);
     }
@@ -112,7 +112,7 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
         salt: bintools.cb58Encode(salt),
         pass_hash: bintools.cb58Encode(passHash.hash),
         keys: keys,
-        warnings: ["This address listed in this file is for internal wallet use only. DO NOT USE THIS ADDRESS"]
+        // warnings: ["This address listed in this file is for internal wallet use only. DO NOT USE THIS ADDRESS"]
     };
     return file_data;
 }
