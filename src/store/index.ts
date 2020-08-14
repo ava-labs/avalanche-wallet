@@ -300,9 +300,9 @@ export default new Vuex.Store({
         },
 
         removeWallet({state,dispatch}, wallet:AvaHdWallet){
+            // TODO: This might cause an error use wallet id instead
             let index = state.wallets.indexOf(wallet);
             state.wallets.splice(index,1);
-
         },
 
 

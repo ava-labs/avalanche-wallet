@@ -16,7 +16,7 @@
                      @remove="removeWallet"
             ></key-row>
         </transition-group>
-        getAddressString    </div>
+    </div>
 </template>
 <script lang="ts">
     import 'reflect-metadata';

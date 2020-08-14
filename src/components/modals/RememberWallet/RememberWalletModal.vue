@@ -21,6 +21,7 @@
     import {AVMKeyPair} from "avalanche";
     import {avm} from "@/AVA";
     import {keyToKeypair} from "@/helpers/helper";
+    import * as bip39 from "bip39";
     @Component({
         components: {Modal}
     })
@@ -54,19 +55,46 @@
 
             let pass = this.password;
             let fileData: KeyFile = JSON.parse(w);
+            let version = fileData.version;
 
             try{
                 let rawData = await readKeyFile(fileData, pass);
                 let keys = rawData.keys;
                 this.isLoading = false;
+                let chainID = avm.getBlockchainAlias();
 
-                let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-                let inputData:AVMKeyPair[] = keys.map(key => {
-                    // Remembered private keys do not have the prefix
-                    let pk = 'PrivateKey-'+key.key;
-                    return keyToKeypair(pk, chainID);
-                });
-                await this.$store.dispatch('accessWalletMultiple', inputData);
+                let mnemonics: string[];
+                // Convert old version private keys to mnemonic phrases
+                if(['2.0','3.0','4.0'].includes(version)){
+                    mnemonics = keys.map(key => {
+                        // Private keys from the keystore file do not have the PrivateKey- prefix
+                        let pk = 'PrivateKey-'+key.key;
+                        let keypair = keyToKeypair(pk,chainID);
+
+                        let keyBuf = keypair.getPrivateKey();
+                        let keyHex: string = keyBuf.toString('hex');
+
+                        // There is an edge case that causes an error, handle it
+                        let mnemonic: string;
+                        try{
+                            mnemonic = bip39.entropyToMnemonic(keyHex);
+                        }catch(e){
+                            mnemonic = bip39.entropyToMnemonic('00'+keyHex);
+                        }
+                        return mnemonic;
+                    });
+                }else{
+                    // New versions encrypt the mnemonic so we dont have to do anything
+                    mnemonics = keys.map(key => key.key);
+                }
+
+                // let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
+                // let inputData:AVMKeyPair[] = keys.map(key => {
+                //     // Remembered private keys do not have the prefix
+                //     let pk = 'PrivateKey-'+key.key;
+                //     return keyToKeypair(pk, chainID);
+                // });
+                await this.$store.dispatch('accessWalletMultiple', mnemonics);
 
                 // These are not volatile wallets since they are loaded from storage
                 this.$store.state.volatileWallets = [];
