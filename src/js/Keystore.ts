@@ -65,7 +65,14 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
         let nonce: Buffer = bintools.cb58Decode(key_data.iv);
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass,key,salt,nonce);
-        let key_string: string = bintools.cb58Encode(key_decrypt);
+        let key_string: string;
+
+        //  versions below 5.0 used private key that had to be cb58 encoded
+        if(['2.0', '3.0', '4.0'].includes(version)){
+            key_string = bintools.cb58Encode(key_decrypt);
+        }else{
+            key_string = key_decrypt.toString();
+        }
 
         keysDecrypt.push({
             key: key_string,

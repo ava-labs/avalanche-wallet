@@ -107,14 +107,14 @@ import {Buffer} from "buffer";
 
             setTimeout(async () => {
                 try {
-                    let entropy = bip39.mnemonicToEntropy(phrase);
-                    let b = new Buffer(entropy, "hex");
+                    // let entropy = bip39.mnemonicToEntropy(phrase);
+                    // let b = new Buffer(entropy, "hex");
 
-                    let addr = keyChain.importKey(b);
-                    let keypair = keyChain.getKey(addr);
+                    // let addr = keyChain.importKey(b);
+                    // let keypair = keyChain.getKey(addr);
 
 
-                    await this.$store.dispatch('accessWallet', keypair);
+                    await this.$store.dispatch('accessWallet', phrase);
 
                     if(this.rememberPass){
                         this.$store.dispatch('rememberWallets', this.rememberPass);

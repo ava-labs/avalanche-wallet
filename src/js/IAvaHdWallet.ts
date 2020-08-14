@@ -21,7 +21,7 @@ export interface AvaWalletCore {
 }
 
 export interface IAvaHdWallet extends AvaWalletCore{
-    masterKey: AVMKeyPair
+    // masterKey: AVMKeyPair
     utxoset: UTXOSet;
     seed: string|null;
     hdKey: HDKey;
@@ -31,7 +31,8 @@ export interface IAvaHdWallet extends AvaWalletCore{
     generateKey(): AVMKeyPair;
     onHdKeyReady(): void;
     getUTXOSet(): UTXOSet;
-    getMasterKey(): AVMKeyPair;
+    // getMasterKey(): AVMKeyPair;
+    getMnemonic(): string;
 }
 
 

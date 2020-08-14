@@ -133,6 +133,7 @@
         }
     })
     export default class CreateWallet extends Vue{
+        // TODO: We do not need to create keyPair, only mnemonic is sufficient
         isLoad: boolean = false;
         rememberPassword:string|null = null;
         rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
@@ -143,6 +144,7 @@
         // Verify Mnemonic
         isSecured: boolean = false;
         isVerified: boolean = false;
+
 
         get canVerify(){
             return this.isSecured ? true : false;
@@ -188,7 +190,7 @@
         }
 
         async access(): Promise<void> {
-            if (!this.keyPair) return;
+            if (!this.keyPhrase) return;
 
             this.isLoad = true;
 
@@ -196,7 +198,7 @@
             let parent = this;
 
             setTimeout(async ()=>{
-                await parent.$store.dispatch('accessWallet', this.keyPair);
+                await parent.$store.dispatch('accessWallet', this.keyPhrase);
 
                 if(this.rememberPassword && this.rememberValid){
                     console.log("Will remember..");

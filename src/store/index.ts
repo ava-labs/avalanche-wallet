@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import * as bip39 from "bip39";
+
 import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
@@ -192,9 +194,9 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet({state, dispatch, commit}, key: AVMKeyPair): Promise<AvaHdWallet>{
+        async accessWallet({state, dispatch, commit}, mnemonic: string): Promise<AvaHdWallet>{
 
-            let wallet:AvaHdWallet = await dispatch('addWallet', key);
+            let wallet:AvaHdWallet = await dispatch('addWallet', mnemonic);
             await dispatch('activateWallet', wallet);
 
             state.isAuth = true;
@@ -202,10 +204,10 @@ export default new Vuex.Store({
             return wallet;
         },
 
-        async accessWalletMultiple({state, dispatch, commit}, keys: AVMKeyPair[]){
-            for(var i=0;i<keys.length;i++){
-                let key = keys[i];
-                await dispatch('addWallet', key);
+        async accessWalletMultiple({state, dispatch, commit}, mnemonics: string[]){
+            for(var i=0;i<mnemonics.length;i++){
+                let mnemonic = mnemonics[i];
+                await dispatch('addWallet', mnemonic);
             }
 
             await dispatch('activateWallet', state.wallets[0]);
@@ -281,17 +283,17 @@ export default new Vuex.Store({
             state.volatileWallets = [];
         },
 
-        async addWallet({state, dispatch}, keypair:AVMKeyPair): Promise<AvaHdWallet|null>{
+        async addWallet({state, dispatch}, mnemonic:string): Promise<AvaHdWallet|null>{
 
             // Make sure wallet doesnt exist already
             for(var i=0;i<state.wallets.length;i++){
                 let w = state.wallets[i];
-                if(w.masterKey.getAddressString() === keypair.getAddressString()){
+                if(w.mnemonic === mnemonic){
                     console.error("WALLET ALREADY ADDED")
                     return null;
                 }
             }
-            let wallet = new AvaHdWallet(keypair);
+            let wallet = new AvaHdWallet(mnemonic);
                 state.wallets.push(wallet);
                 state.volatileWallets.push(wallet);
             return wallet;
@@ -394,26 +396,57 @@ export default new Vuex.Store({
             let version = fileData.version;
 
             try {
+                // Decrypt the key file with the password
                 let keyFile:KeyFileDecrypted = await readKeyFile(fileData,pass);
+                console.log(keyFile);
 
+                // Old files have private keys, 5.0 and above has mnemonic phrases
                 let keys = keyFile.keys;
 
                 let chainID = avm.getBlockchainAlias();
-                let inputData:AVMKeyPair[] = keys.map(key => {
-                    // Private keys from the keystore file do not have the PrivateKey- prefix
-                    let pk = 'PrivateKey-'+key.key;
-                    console.log(pk);
-                    return keyToKeypair(pk,chainID);
-                });
+
+                let mnemonics: string[];
+                // Convert old version private keys to mnemonic phrases
+                if(['2.0','3.0','4.0'].includes(version)){
+                    mnemonics = keys.map(key => {
+                        // Private keys from the keystore file do not have the PrivateKey- prefix
+                        let pk = 'PrivateKey-'+key.key;
+                        let keypair = keyToKeypair(pk,chainID);
+
+                        let keyBuf = keypair.getPrivateKey();
+                        let keyHex: string = keyBuf.toString('hex');
+
+                        // There is an edge case that causes an error, handle it
+                        let mnemonic: string;
+                        try{
+                            mnemonic = bip39.entropyToMnemonic(keyHex);
+                        }catch(e){
+                            mnemonic = bip39.entropyToMnemonic('00'+keyHex);
+                        }
+                        return mnemonic;
+                    });
+                }else{
+                    // New versions encrypt the mnemonic so we dont have to do anything
+                    mnemonics = keys.map(key => key.key);
+                }
+
+                console.log(mnemonics);
+
+                // let inputData:AVMKeyPair[] = keys.map(key => {
+                //     // Private keys from the keystore file do not have the PrivateKey- prefix
+                //     let pk = 'PrivateKey-'+key.key;
+                //     console.log(pk);
+                //     return keyToKeypair(pk,chainID);
+                // });
 
                 // If not auth, login user then add keys
                 if(!store.state.isAuth){
-                    await store.dispatch('accessWalletMultiple', inputData);
+                    await store.dispatch('accessWalletMultiple', mnemonics);
                 }else{
-                    for(let i=0; i<inputData.length;i++){
+                    for(let i=0; i<mnemonics.length;i++){
                         // Private keys from the keystore file do not have the PrivateKey- prefix
-                        let key = inputData[i];
-                        await store.dispatch('addWallet', key);
+                        let mnemonic = mnemonics[i];
+                        await store.dispatch('addWallet', mnemonic);
                     }
                 }
 

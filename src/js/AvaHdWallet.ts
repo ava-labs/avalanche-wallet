@@ -35,7 +35,7 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 
 export default class AvaHdWallet implements IAvaHdWallet{
     // type: wallet_type;
-    masterKey: AVMKeyPair;
+    // masterKey: AVMKeyPair;
     seed:string | null;
     hdKey:HDKey;
     hdIndex:number;
@@ -47,27 +47,29 @@ export default class AvaHdWallet implements IAvaHdWallet{
     private indexChangeKeyCache:IIndexKeyCache;
 
     // The master key from avalanche.js
-    constructor(keypair: AVMKeyPair) {
+    constructor(mnemonic: string) {
         // this.type = 'hd';
-        this.masterKey = keypair;
-        this.chainId = keypair.getChainID();
+        // this.masterKey = keypair;
+        // this.chainId = keypair.getChainID();
+        console.log("Generate wallet from: ",mnemonic);
+        this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
         this.hdIndex = 0;
         this.seed = null;
         this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
         this.indexChangeKeyCache = {};
-        let pk: Buffer = keypair.getPrivateKey();
-        let pkHex: string = pk.toString('hex');
+        // let pk: Buffer = keypair.getPrivateKey();
+        // let pkHex: string = pk.toString('hex');
 
-        let mnemonic: string;
+        // let mnemonic: string;
 
         // There is an edge case that causes an error, handle it
-        try{
-            mnemonic = bip39.entropyToMnemonic(pkHex);
-        }catch(e){
-            mnemonic = bip39.entropyToMnemonic('00'+pkHex);
-        }
+        // try{
+        //     mnemonic = bip39.entropyToMnemonic(pkHex);
+        // }catch(e){
+        //     mnemonic = bip39.entropyToMnemonic('00'+pkHex);
+        // }
 
         this.mnemonic = mnemonic;
         // Generate Seed
@@ -144,8 +146,12 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return set;
     }
 
-    getMasterKey(): AVMKeyPair {
-        return this.masterKey;
+    // getMasterKey(): AVMKeyPair {
+    //     return this.masterKey;
+    // }
+
+    getMnemonic(): string {
+        return this.mnemonic;
     }
 
     // Scan internal indices and find a spot with no utxo
