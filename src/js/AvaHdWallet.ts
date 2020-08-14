@@ -60,7 +60,15 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let pk: Buffer = keypair.getPrivateKey();
         let pkHex: string = pk.toString('hex');
 
-        let mnemonic: string = bip39.entropyToMnemonic(pkHex);
+        let mnemonic: string;
+
+        // There is an edge case that causes an error, handle it
+        try{
+            mnemonic = bip39.entropyToMnemonic(pkHex);
+        }catch(e){
+            mnemonic = bip39.entropyToMnemonic('00'+pkHex);
+        }
+
         this.mnemonic = mnemonic;
         // Generate Seed
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
@@ -180,7 +188,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
             if((order as ITransaction).asset){ // if fungible
                 let tx: ITransaction = order as ITransaction;
                 let amt: BN = new BN(tx.amount.toString());
-                let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
+                let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], tx.asset.id);
                 let rawTx: BaseTx = baseTx.getTransaction();
 
                 ins = ins.concat(rawTx.getIns());
@@ -228,7 +236,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
             let outsNft = rawTx.getOuts()
             let insNft = rawTx.getIns()
 
+            // TODO: This is a hackish way of doing this, need methods in avalanche.js
+            //@ts-ignore
             rawTx.outs = outsNft.concat(outs);
+            //@ts-ignore
             rawTx.ins = insNft.concat(ins);
         }else{
             let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());

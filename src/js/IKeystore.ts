@@ -21,5 +21,5 @@ export interface KeyFileDecrypted {
 
 export interface KeyFileKeyDecrypted {
     key: string
-    address: string,
+    // address: string,
 }

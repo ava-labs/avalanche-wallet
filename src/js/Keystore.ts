@@ -10,7 +10,7 @@ import Crypto from "@/js/Crypto";
 
 const cryptoHelpers = new Crypto();
 
-const KEYSTORE_VERSION: string = '4.0';
+const KEYSTORE_VERSION: string = '5.0';
 
 const ITERATIONS_V2 = 100000;
 const ITERATIONS_V3 = 200000; // and any version above
@@ -63,15 +63,12 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
 
         let key: Buffer = bintools.cb58Decode(key_data.key);
         let nonce: Buffer = bintools.cb58Decode(key_data.iv);
-        let address: string = key_data.address;
-        // let walletType: wallet_type = key_data.type || 'hd';
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass,key,salt,nonce);
         let key_string: string = bintools.cb58Encode(key_decrypt);
 
         keysDecrypt.push({
             key: key_string,
-            address: address
         });
     }
 
@@ -94,15 +91,13 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
 
     for(let i:number=0; i<wallets.length;i++){
         let wallet: AvaHdWallet = wallets[i];
-        let pk: Buffer = wallet.getMasterKey().getPrivateKey();
-        let addr: string = wallet.getMasterKey().getAddressString();
-
-        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,pk,salt);
+        // let pk: Buffer = wallet.getMasterKey().getPrivateKey();
+        let mnemonic = wallet.mnemonic;
+        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,mnemonic,salt);
 
         let key_data: KeyFileKey = {
             key: bintools.cb58Encode(pk_crypt.ciphertext),
             iv: bintools.cb58Encode(pk_crypt.iv),
-            // address: addr,
         };
         keys.push(key_data);
     }
