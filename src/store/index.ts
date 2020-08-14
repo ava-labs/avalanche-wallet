@@ -398,8 +398,6 @@ export default new Vuex.Store({
 
                 let keys = keyFile.keys;
 
-                console.log(keys);
-
                 let chainID = avm.getBlockchainAlias();
                 let inputData:AVMKeyPair[] = keys.map(key => {
                     // Private keys from the keystore file do not have the PrivateKey- prefix
