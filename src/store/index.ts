@@ -418,11 +418,18 @@ export default new Vuex.Store({
 
                         // There is an edge case that causes an error, handle it
                         let mnemonic: string;
-                        try{
+
+                        if(keyHex.length===64){
                             mnemonic = bip39.entropyToMnemonic(keyHex);
-                        }catch(e){
-                            mnemonic = bip39.entropyToMnemonic('00'+keyHex);
+                        }else{
+                            let paddedKeyHex = keyHex.padStart(64,'0');
+                            mnemonic = bip39.entropyToMnemonic(paddedKeyHex);
                         }
+                        // try{
+                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
+                        // }catch(e){
+                        //     mnemonic = bip39.entropyToMnemonic('00'+keyHex);
+                        // }
                         return mnemonic;
                     });
                 }else{

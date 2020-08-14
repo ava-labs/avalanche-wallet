@@ -75,6 +75,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
         this.seed = seed.toString('hex');
 
+        console.log(this.seed);
+
         // Generate hd key from seed
         let hdkey: HDKey = HDKey.fromMasterSeed(seed);
         this.hdKey = hdkey;

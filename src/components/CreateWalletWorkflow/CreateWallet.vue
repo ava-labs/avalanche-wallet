@@ -5,7 +5,7 @@
                 <b-col>
                     <transition name="fade" mode="out-in">
                         <!-- PHASE 1 -->
-                        <div v-if="!newPrivateKey" class="stage_1">
+                        <div v-if="!keyPhrase" class="stage_1">
                             <div class="img_container">
                                 <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                 <img v-else src="@/assets/diamond-secondary-night.svg" alt />
@@ -97,7 +97,6 @@
                 </b-col>
             </b-row>
         </b-container>
-
         <div>
         </div>
     </div>
@@ -138,9 +137,9 @@
         rememberPassword:string|null = null;
         rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
         // Mnemonic
-        newPrivateKey: string|null =null;
+        // newPrivateKey: string|null =null;
         keyPhrase: string = "";
-        keyPair: KeyPair|null = null;
+        // keyPair: KeyPair|null = null;
         // Verify Mnemonic
         isSecured: boolean = false;
         isVerified: boolean = false;
@@ -156,19 +155,19 @@
 
         createKey():void{
             let mnemonic = bip39.generateMnemonic(256);
-            let entropy = bip39.mnemonicToEntropy(mnemonic);
-            let b = new Buffer(entropy, 'hex');
+            // let entropy = bip39.mnemonicToEntropy(mnemonic);
+            // let b = new Buffer(entropy, 'hex');
 
-            let addr = keyChain.importKey(b);
-            let keypair = keyChain.getKey(addr);
-            let privkstr = keypair.getPrivateKeyString();
+            // let addr = keyChain.importKey(b);
+            // let keypair = keyChain.getKey(addr);
+            // let privkstr = keypair.getPrivateKeyString();
 
             // Remove because it will get added in accessWallet dispatch
-            keyChain.removeKey(keypair);
+            // keyChain.removeKey(keypair);
 
-            this.keyPair = keypair;
+            // this.keyPair = keypair;
             this.keyPhrase = mnemonic;
-            this.newPrivateKey = privkstr;
+            // this.newPrivateKey = privkstr;
         }
 
         // Will be true if the values in remember wallet checkbox are valid
