@@ -415,16 +415,20 @@ export default new Vuex.Store({
 
                         let keyBuf = keypair.getPrivateKey();
                         let keyHex: string = keyBuf.toString('hex');
+                        let paddedKeyHex = keyHex.padStart(64,'0');
+
 
                         // There is an edge case that causes an error, handle it
-                        let mnemonic: string;
+                        // let mnemonic: string;
+                        let mnemonic:string = bip39.entropyToMnemonic(paddedKeyHex);
 
-                        if(keyHex.length===64){
-                            mnemonic = bip39.entropyToMnemonic(keyHex);
-                        }else{
-                            let paddedKeyHex = keyHex.padStart(64,'0');
-                            mnemonic = bip39.entropyToMnemonic(paddedKeyHex);
-                        }
+
+                        // if(keyHex.length===64){
+                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
+                        // }else{
+                        //     let paddedKeyHex = keyHex.padStart(64,'0');
+                        //     mnemonic = bip39.entropyToMnemonic(paddedKeyHex);
+                        // }
                         // try{
                         //     mnemonic = bip39.entropyToMnemonic(keyHex);
                         // }catch(e){
