@@ -36,7 +36,7 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 export default class AvaHdWallet implements IAvaHdWallet{
     // type: wallet_type;
     // masterKey: AVMKeyPair;
-    seed:string | null;
+    seed:string;
     hdKey:HDKey;
     hdIndex:number;
     keyChain: AVMKeyChain;
@@ -54,7 +54,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         console.log("Generate wallet from: ",mnemonic);
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
         this.hdIndex = 0;
-        this.seed = null;
         this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};

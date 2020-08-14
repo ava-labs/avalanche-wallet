@@ -102,10 +102,10 @@
         }
 
         get walletTitle(){
-            return this.address.split('-')[1].substring(0,4);
+            return this.seed.substring(0,4);
         }
-        get address(){
-            return this.wallet.masterKey.getAddressString();
+        get seed(): string{
+            return this.wallet.seed;
         }
         get assetsDict():AssetsDict{
             return this.$store.state.Assets.assetsDict;
@@ -166,15 +166,16 @@
             return res;
         }
 
-        get keyPair():KeyPair{
-            return this.wallet.masterKey;
-        }
+        // get keyPair():KeyPair{
+        //     return this.wallet.masterKey;
+        // }
 
         get mnemonicPhrase():string{
-            let pk = this.keyPair.getPrivateKey();
-            let hex = pk.toString('hex');
-            let mnemonic = bip39.entropyToMnemonic(hex);
-            return mnemonic;
+            return this.wallet.getMnemonic()
+            // let pk = this.keyPair.getPrivateKey();
+            // let hex = pk.toString('hex');
+            // let mnemonic = bip39.entropyToMnemonic(hex);
+            // return mnemonic;
         }
 
         remove(){
