@@ -6,6 +6,7 @@
             <img v-else src="@/assets/wallet_logo_dark.svg"/>
             <span class="slogan">by Avalanche</span>
         </router-link>
+        <LanguageSelect></LanguageSelect>
         <v-spacer></v-spacer>
 
         <div class="buts_right">
@@ -57,7 +58,7 @@
 <script lang="ts">
 import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
-// import LanguageSelect from './LanguageSelect';
+import LanguageSelect from './misc/LanguageSelect.vue';
 import DayNightToggle from "@/components/misc/DayNightToggle.vue";
 import NetworkMenu from "./NetworkSettings/NetworkMenu.vue";
 import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
@@ -65,7 +66,8 @@ import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
     components: {
         NetworkMenu,
         DayNightToggle,
-        ConfirmLogout
+        ConfirmLogout,
+        LanguageSelect
     }
 })
 export default class Navbar extends Vue {
