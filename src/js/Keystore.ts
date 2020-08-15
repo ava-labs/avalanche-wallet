@@ -15,6 +15,9 @@ const KEYSTORE_VERSION: string = '3.0';
 const ITERATIONS_V2 = 100000;
 const ITERATIONS_V3 = 200000;
 
+
+const SUPPORTED_VERSION = ['2.0','3.0']
+
 interface IHash {
     salt: Buffer;
     hash: Buffer;
@@ -28,6 +31,10 @@ interface PKCrypt {
 
 async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted>{
     const version: string = data.version;
+
+    if(!SUPPORTED_VERSION.includes(version)){
+        throw "INVALID_VERSION"
+    }
 
     if(version === '2.0'){
         cryptoHelpers.keygenIterations = ITERATIONS_V2;
