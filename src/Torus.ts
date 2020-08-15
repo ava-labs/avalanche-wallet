@@ -2,7 +2,7 @@ import TorusSdk from "@toruslabs/torus-direct-web-sdk";
 
 const torusdirectsdk = new TorusSdk({
     baseUrl: `${location.origin}/serviceworker`,
-    enableLogging: true,
+    enableLogging: false,
 });
 torusdirectsdk.init();
 
