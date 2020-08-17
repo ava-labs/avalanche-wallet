@@ -202,9 +202,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         let ins: TransferableInput[] = [];
         let outs: TransferableOutput[] = [];
-        let fee = new BN(0);
-        let locktime = new BN(0);
-        let threshold = 1;
+        // let fee = new BN(0);
+        // let locktime = new BN(0);
+        // let threshold = 1;
 
         // Aggregate Fungible ins & outs
         for(let i:number=0;i<orders.length;i++){
@@ -215,7 +215,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 let amt: BN = new BN(tx.amount.toString());
                 console.log(addr)
                 let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,tx.asset.id,[addr], fromAddrs, [changeAddr]);
-                let rawTx: BaseTx = baseTx.getTransaction();
+                let rawTx = baseTx.getTransaction();
 
                 ins = ins.concat(rawTx.getIns());
                 outs = outs.concat(rawTx.getOuts());
@@ -250,12 +250,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 [addr],
                 fromAddrs,
                 utxoIds,
-                // fee,
-                // fromAddrs,
-                // undefined,
-                // UnixNow(),
-                // locktime,
-                // threshold
             )
 
             let rawTx = unsignedTx.getTransaction();
@@ -281,8 +275,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // TODO: Must update index after sending a tx
         // TODO: Index will not increase but it could decrease.
         // TODO: With the current setup this can lead to gaps in index space greater than scan size.
-        this.hdIndex = await this.findAvailableIndex();
-        this.keyChain = this.getKeyChain();
+        setTimeout(async () => {
+            this.hdIndex = await this.findAvailableIndex();
+            this.keyChain = this.getKeyChain();
+        }, 2000)
 
         return txId;
     }

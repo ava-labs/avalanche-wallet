@@ -98,7 +98,6 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
 
     for(let i:number=0; i<wallets.length;i++){
         let wallet: AvaHdWallet = wallets[i];
-        // let pk: Buffer = wallet.getMasterKey().getPrivateKey();
         let mnemonic = wallet.mnemonic;
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,mnemonic,salt);
 
@@ -114,7 +113,6 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
         salt: bintools.cb58Encode(salt),
         pass_hash: bintools.cb58Encode(passHash.hash),
         keys: keys,
-        // warnings: ["This address listed in this file is for internal wallet use only. DO NOT USE THIS ADDRESS"]
     };
     return file_data;
 }

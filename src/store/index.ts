@@ -23,7 +23,6 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-// import {AmountOutput, AVMKeyPair, UTXO} from "avalanche";
 import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/typings/src/apis/avm";
 
 import AvaAsset from "@/js/AvaAsset";
@@ -412,39 +411,17 @@ export default new Vuex.Store({
 
                         let keyBuf = keypair.getPrivateKey();
                         let keyHex: string = keyBuf.toString('hex');
+
+                        // Entropy must be 64 characters, make sure 0 pad exists
                         let paddedKeyHex = keyHex.padStart(64,'0');
-
-
-                        // There is an edge case that causes an error, handle it
-                        // let mnemonic: string;
                         let mnemonic:string = bip39.entropyToMnemonic(paddedKeyHex);
 
-
-                        // if(keyHex.length===64){
-                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
-                        // }else{
-                        //     let paddedKeyHex = keyHex.padStart(64,'0');
-                        //     mnemonic = bip39.entropyToMnemonic(paddedKeyHex);
-                        // }
-                        // try{
-                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
-                        // }catch(e){
-                        //     mnemonic = bip39.entropyToMnemonic('00'+keyHex);
-                        // }
                         return mnemonic;
                     });
                 }else{
                     // New versions encrypt the mnemonic so we dont have to do anything
                     mnemonics = keys.map(key => key.key);
                 }
-
-
-                // let inputData:AVMKeyPair[] = keys.map(key => {
-                //     // Private keys from the keystore file do not have the PrivateKey- prefix
-                //     let pk = 'PrivateKey-'+key.key;
-                //     console.log(pk);
-                //     return keyToKeypair(pk,chainID);
-                // });
 
                 // If not auth, login user then add keys
                 if(!store.state.isAuth){
