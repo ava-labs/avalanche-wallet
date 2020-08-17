@@ -51,7 +51,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // this.type = 'hd';
         // this.masterKey = keypair;
         // this.chainId = keypair.getChainID();
-        console.log("Generate wallet from: ",mnemonic);
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
         this.hdIndex = 0;
         this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
@@ -75,7 +74,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
         this.seed = seed.toString('hex');
 
-        console.log(this.seed);
 
         // Generate hd key from seed
         let hdkey: HDKey = HDKey.fromMasterSeed(seed);
@@ -195,7 +193,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
             if((order as ITransaction).asset){ // if fungible
                 let tx: ITransaction = order as ITransaction;
                 let amt: BN = new BN(tx.amount.toString());
-                let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], tx.asset.id);
+                console.log(addr)
+                let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,tx.asset.id,[addr], fromAddrs, [changeAddr]);
                 let rawTx: BaseTx = baseTx.getTransaction();
 
                 ins = ins.concat(rawTx.getIns());
@@ -228,15 +227,15 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
             unsignedTx = await avm.buildNFTTransferTx(
                 nftSet,
-                utxoIds,
                 [addr],
                 fromAddrs,
-                fee,
-                fromAddrs,
-                undefined,
-                UnixNow(),
-                locktime,
-                threshold
+                utxoIds,
+                // fee,
+                // fromAddrs,
+                // undefined,
+                // UnixNow(),
+                // locktime,
+                // threshold
             )
 
             let rawTx = unsignedTx.getTransaction();

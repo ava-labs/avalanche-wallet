@@ -24,6 +24,8 @@ import router from "@/router";
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {AmountOutput, AVMKeyPair, UTXO} from "avalanche";
+// import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/typings/src/apis/avm";
+
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
@@ -398,7 +400,6 @@ export default new Vuex.Store({
             try {
                 // Decrypt the key file with the password
                 let keyFile:KeyFileDecrypted = await readKeyFile(fileData,pass);
-                console.log(keyFile);
 
                 // Old files have private keys, 5.0 and above has mnemonic phrases
                 let keys = keyFile.keys;
@@ -441,7 +442,6 @@ export default new Vuex.Store({
                     mnemonics = keys.map(key => key.key);
                 }
 
-                console.log(mnemonics);
 
                 // let inputData:AVMKeyPair[] = keys.map(key => {
                 //     // Private keys from the keystore file do not have the PrivateKey- prefix

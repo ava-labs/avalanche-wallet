@@ -62,6 +62,7 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import {UTXO} from "avalanche";
+    // import {UTXO} from "avalanche/typings/src/apis/avm";
 
     @Component({
         components: {
@@ -119,10 +120,15 @@
                 parent.isAjax = false;
 
                 if(res === 'success'){
+                    // Clear transactions list
                     // @ts-ignore
                     parent.$refs.txList.clear();
-                    // @ts-ignore
-                    parent.$refs.nftList.clear();
+
+                    // Clear NFT list
+                    if(this.hasNFT){
+                        // @ts-ignore
+                        parent.$refs.nftList.clear();
+                    }
 
                     this.$store.dispatch('Notifications/add', {
                         title: 'Transaction Sent',

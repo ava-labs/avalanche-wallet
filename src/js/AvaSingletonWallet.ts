@@ -1,4 +1,5 @@
 // Depreciated
+// @ts-nocheck
 
 import {IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
 import {

@@ -7,6 +7,8 @@ import {ITransaction} from "@/components/wallet/transfer/types";
 import {KeyFile} from "@/js/IKeystore";
 import {UTXO} from "avalanche";
 
+// import {UTXO} from "avalanche/typings/src/apis/avm";
+
 export interface RootState {
     isAuth: boolean,
     activeWallet: null|AvaHdWallet
