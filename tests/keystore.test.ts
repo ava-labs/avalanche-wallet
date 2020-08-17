@@ -7,11 +7,7 @@ import {
    Avalanche,
  } from "avalanche"
 
-// import {AVMKeyPair, AVMKeyChain} from "avalanche";
-import {
-   AVMKeyPair,
-   AVMKeyChain
-} from "avalanche/typings/src/apis/avm";
+import {AVMKeyPair, AVMKeyChain} from "avalanche/dist/apis/avm";
 
 const chain_id:string = "GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVeDAXc694wJ5t3zEkhU";
 const ip:string = 'localhost';

@@ -17,7 +17,7 @@
     import {IWalletNftDict} from "@/store/types";
     import NftCard from "@/components/wallet/portfolio/NftCard.vue";
     import {NftFamilyDict} from "@/store/modules/assets/types";
-    import {UTXO} from "avalanche/typings/src/apis/avm";
+    import {UTXO} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

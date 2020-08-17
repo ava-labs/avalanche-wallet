@@ -19,7 +19,7 @@
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import AvaHdWallet from "@/js/AvaHdWallet";
-    import {AVMKeyPair, UTXOSet} from "avalanche/typings/src/apis/avm";
+    import {AVMKeyPair, UTXOSet} from "avalanche/dist/apis/avm";
     import {bintools} from "@/AVA";
     import Big from 'big.js';
     import AvaAsset from "@/js/AvaAsset";

@@ -14,7 +14,7 @@
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
     import QRCode from 'qrcode'
-    import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
+    import {AVMKeyPair} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

@@ -61,8 +61,7 @@
     import {isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
-    // import {UTXO} from "avalanche";
-    import {UTXO} from "avalanche/typings/src/apis/avm";
+    import { UTXO } from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

@@ -29,7 +29,8 @@
     import QRModal from "@/components/modals/QRModal.vue";
     import PaperWallet from "@/components/modals/PaperWallet/PaperWallet.vue";
     import QRCode from "qrcode";
-    import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
+    // import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
+    import {AVMKeyPair} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

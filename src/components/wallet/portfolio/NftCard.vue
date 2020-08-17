@@ -8,12 +8,9 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import {Buffer} from "buffer/";
 
-    // import {NFTTransferOutput, PayloadTypes, UTXO} from "avalanche";
-    import {NFTTransferOutput, UTXO} from "avalanche/typings/src/apis/avm";
-    import {PayloadTypes, PayloadBase} from "avalanche/typings/src/utils";
-
+    import {NFTTransferOutput, UTXO} from "avalanche/dist/apis/avm";
+    import {PayloadTypes, PayloadBase} from "avalanche/dist/utils";
     import * as jdenticon from "jdenticon";
-    // import {PayloadBase} from "avalanche/src/utils/payload";
 
     const payloadtypes = PayloadTypes.getInstance();
 

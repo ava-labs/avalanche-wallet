@@ -24,7 +24,7 @@
     import {avm, bintools, keyChain} from "@/AVA";
     import {keyToKeypair} from "@/helpers/helper";
     // import { AVMKeyPair } from 'avalanche';
-    import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
+    import {AVMKeyPair} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

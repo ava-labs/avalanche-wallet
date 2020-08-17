@@ -4,12 +4,12 @@ import {ava} from "@/AVA";
 
 import {
     AVMKeyChain,
-    AVMKeyPair,
-} from "avalanche/typings/src/apis/avm";
+    AVMKeyPair
+} from "avalanche/dist/apis/avm";
 
 import {
     getPreferredHRP
-} from "avalanche/typings/src/utils";
+} from "avalanche/dist/utils";
 
 function getAssetIcon(id:string){
     let url = "/question-solid.svg";

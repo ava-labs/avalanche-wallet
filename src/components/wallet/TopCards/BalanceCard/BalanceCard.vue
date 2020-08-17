@@ -11,13 +11,6 @@
             <div class="balance_row">
                 <p class="balance">{{balanceText}} AVAX</p>
             </div>
-            <v-alert type="info" text class="alert_cont">
-                <p style="font-size: 14px;">
-                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
-                    <br>
-                    This wallet is connected to the Avalanche <i>Denali test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
-                </p>
-            </v-alert>
 <!--            <div class="alt_info">-->
 <!--                <div>-->
 <!--                    <label>Available</label>-->
@@ -34,6 +27,15 @@
 <!--            </div>-->
         </div>
         <NftCol class="nft_card"></NftCol>
+        <div class="where_info">
+            <v-alert type="info" text class="alert_cont">
+                <p style="font-size: 14px;">
+                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
+                    <br>
+                    This wallet is connected to the Avalanche <i>Denali test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
+                </p>
+            </v-alert>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -82,7 +84,7 @@
     @use '../../../../main';
     .balance_card{
         display: grid !important;
-        grid-template-columns: 1fr max-content;
+        grid-template-columns: 1fr 190px;
         column-gap: 20px;
     }
 
@@ -95,6 +97,12 @@
         flex-direction: column;
     }
 
+    .where_info{
+        grid-row: 2;
+        grid-column: 1/3;
+        margin-top: 8px;
+        /*max-width: 460px;*/
+    }
     .header{
         display: flex;
 
@@ -191,6 +199,7 @@
     @include main.mobile-device{
         .balance_card{
             grid-template-columns: none;
+            display: block !important;
         }
 
         .nft_card{
@@ -204,6 +213,8 @@
         .balance{
             font-size: 2em !important;
         }
+
+        .where_info{}
 
         .alt_info{
             display: none;

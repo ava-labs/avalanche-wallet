@@ -23,8 +23,7 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/typings/src/apis/avm";
-
+import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/dist/apis/avm";
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
