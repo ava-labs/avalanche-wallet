@@ -1,5 +1,5 @@
-import {UTXO, UTXOSet} from "avalanche";
-// import {UTXO, UTXOSet} from "avalanche/typings/src/apis/avm";
+// import {UTXO, UTXOSet} from "avalanche";
+import {UTXO, UTXOSet} from "avalanche/typings/src/apis/avm";
 
 import AvaAsset from "@/js/AvaAsset";
 import BN from "bn.js";

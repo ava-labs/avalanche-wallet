@@ -1,7 +1,15 @@
 
 import store from '@/store/index';
-import {AVMKeyChain, AVMKeyPair, getPreferredHRP} from "avalanche";
 import {ava} from "@/AVA";
+
+import {
+    AVMKeyChain,
+    AVMKeyPair,
+} from "avalanche/typings/src/apis/avm";
+
+import {
+    getPreferredHRP
+} from "avalanche/typings/src/utils";
 
 function getAssetIcon(id:string){
     let url = "/question-solid.svg";

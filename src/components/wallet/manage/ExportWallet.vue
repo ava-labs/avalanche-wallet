@@ -1,6 +1,6 @@
 <template>
     <div class="export_wallet">
-        <p class="explain">{{$t("advanced.export.desc")}}</p>
+        <p v-if="isDesc" class="explain">{{$t("advanced.export.desc")}}</p>
         <form @submit.prevent="download">
             <label>Password (min 9 characters)</label>
             <v-text-field
@@ -16,6 +16,7 @@
                 hide-details outlined dense
                 class="formIn" height="40"
             ></v-text-field>
+            <p class="err">{{err}}</p>
             <v-btn
                 type="submit"
                 :disabled="!isValid"
@@ -37,8 +38,10 @@
         isLoading: boolean = false;
         pass: string = "";
         passConfirm: string = "";
+        err: string = "";
 
         @Prop() wallets!: AvaHdWallet[];
+        @Prop({default: true}) isDesc!: boolean;
 
         get isValid(): boolean {
             return (this.pass.length >= 9 && this.pass===this.passConfirm) ? true : false;
@@ -46,6 +49,13 @@
 
         async download() {
             this.isLoading = true;
+            this.err = "";
+
+            if(!this.wallets){
+                this.isLoading = false;
+                this.err = "No wallet selected."
+                return;
+            }
 
             let input: ExportWalletsInput = {
                 password: this.pass,
@@ -118,5 +128,10 @@
 
     .button_primary{
         margin-top: 10px;
+    }
+
+    .err{
+        margin: 4px 0 !important;
+        color: var(--error);
     }
 </style>

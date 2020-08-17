@@ -8,9 +8,12 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import {Buffer} from "buffer/";
 
-    import {NFTTransferOutput, PayloadTypes, UTXO} from "avalanche";
+    // import {NFTTransferOutput, PayloadTypes, UTXO} from "avalanche";
+    import {NFTTransferOutput, UTXO} from "avalanche/typings/src/apis/avm";
+    import {PayloadTypes, PayloadBase} from "avalanche/typings/src/utils";
+
     import * as jdenticon from "jdenticon";
-    import {PayloadBase} from "avalanche/src/utils/payload";
+    // import {PayloadBase} from "avalanche/src/utils/payload";
 
     const payloadtypes = PayloadTypes.getInstance();
 
@@ -47,7 +50,7 @@
         }
 
         get nftClass(){
-            let res = UTF8_NFT;
+            let res;
             switch (this.payloadBase.typeID()) {
                 case 1: // UTF 8
                     res = UTF8_NFT;
@@ -55,6 +58,8 @@
                 case 28: // url
                     res = URL_NFT;
                     break;
+                default:
+                    res = UTF8_NFT;
             }
             return res;
         }

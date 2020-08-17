@@ -1,13 +1,33 @@
 // A simple wrapper thar combines avalanche.js, bip39 and HDWallet
 
+// import {
+//     AVMKeyChain,
+//     AVMKeyPair,
+//     UTXOSet,
+//     TransferableInput,
+//     TransferableOutput, BaseTx, UnsignedTx, Tx, UTXO,
+//     UnixNow, OperationTx, getPreferredHRP
+// } from "avalanche";
+
 import {
-    AVMKeyChain,
     AVMKeyPair,
+    AVMKeyChain,
     UTXOSet,
     TransferableInput,
-    TransferableOutput, BaseTx, UnsignedTx, Tx, UTXO,
-    UnixNow, OperationTx, getPreferredHRP
-} from "avalanche";
+    TransferableOutput,
+    BaseTx,
+    UnsignedTx,
+    Tx,
+    UTXO,
+    OperationTx,
+} from "avalanche/typings/src/apis/avm";
+
+import {
+    UnixNow,
+    getPreferredHRP
+} from "avalanche/typings/src/utils";
+
+
 import * as bip39 from "bip39";
 import {ava, avm, bintools} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";

@@ -19,7 +19,7 @@
 
     import 'reflect-metadata';
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
-    import {UTXO} from "avalanche";
+    import { UTXO } from "avalanche/typings/src/apis/avm";
     import NftCard from "@/components/wallet/portfolio/NftCard.vue";
 
     @Component({

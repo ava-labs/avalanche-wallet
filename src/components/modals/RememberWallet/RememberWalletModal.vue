@@ -18,7 +18,8 @@
     import Modal from "../Modal.vue";
     import {KeyFile} from "@/js/IKeystore";
     import {readKeyFile} from "@/js/Keystore";
-    import {AVMKeyPair} from "avalanche";
+    // import {AVMKeyPair} from "avalanche";
+    import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
     import {avm} from "@/AVA";
     import {keyToKeypair} from "@/helpers/helper";
     import * as bip39 from "bip39";

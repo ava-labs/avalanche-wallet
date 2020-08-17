@@ -16,7 +16,7 @@
     import AvaAsset from "@/js/AvaAsset";
     import BalanceRow from './BalanceRow.vue';
     import CollectibleTab from './CollectibleTab.vue';
-    import {UTXO} from "avalanche";
+    import {UTXO} from "avalanche/typings/src/apis/avm";
 
     @Component({
         components: {

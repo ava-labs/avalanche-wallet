@@ -25,45 +25,45 @@
 
 
 
-            <v-alert type="error" style="margin: 8px; font-size: 14px;" dense text v-if="isManageWarning" :icon="false">
-                <h3>Outdated Keystore File</h3>
-                <p>
-                    <br>
-                    We have upgraded the encryption tools used for keystore files.
-                    <br><br>
-                    We recommend everyone to download the new file and delete the old one permanently.
-                </p>
+<!--            <v-alert type="error" style="margin: 8px; font-size: 14px;" dense text v-if="isManageWarning" :icon="false">-->
+<!--                <h3>Outdated Keystore File</h3>-->
+<!--                <p>-->
+<!--                    <br>-->
+<!--                    We have upgraded the encryption tools used for keystore files.-->
+<!--                    <br><br>-->
+<!--                    We recommend everyone to download the new file and delete the old one permanently.-->
+<!--                </p>-->
 
-                <button @click="exportKeys" class="button_primary" style="margin: 10px 0; border-radius: 4px; padding: 6px 12px;">Download New Keystore File</button>
-            </v-alert>
+<!--                <button @click="exportKeys" class="button_primary" style="margin: 10px 0; border-radius: 4px; padding: 6px 12px;">Download New Keystore File</button>-->
+<!--            </v-alert>-->
         </div>
 
-        <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
+<!--        <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>-->
     </div>
 </template>
 <script>
-    import ExportKeys from '@/components/modals/ExportKeys';
+    // import ExportKeys from '@/components/modals/ExportKeys';
 
 
     export default {
-        components: {
-            ExportKeys
-        },
+        // components: {
+        //     ExportKeys
+        // },
         computed: {
-            isManageWarning(){
-                if(this.$store.state.warnUpdateKeyfile){
-                    return true;
-                }
-                return false;
-            },
-            allWallets(){
-                return this.$store.state.wallets;
-            }
+            // isManageWarning(){
+            //     if(this.$store.state.warnUpdateKeyfile){
+            //         return true;
+            //     }
+            //     return false;
+            // },
+            // allWallets(){
+            //     return this.$store.state.wallets;
+            // }
         },
         methods:{
-            exportKeys(){
-                this.$refs.export.open();
-            }
+            // exportKeys(){
+            //     this.$refs.export.open();
+            // }
         }
     }
 </script>

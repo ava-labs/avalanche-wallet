@@ -106,15 +106,15 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    import {keyChain} from "@/AVA";
+    // import {keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
-    import {Buffer} from "buffer/";
+    // import {Buffer} from "buffer/";
     import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
 
-    import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    // import {AVMKeyChain, AVMKeyPair} from "avalanche/typings/src/apis/avm";
     import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
     import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
 
@@ -145,7 +145,7 @@
         isVerified: boolean = false;
 
 
-        get canVerify(){
+        get canVerify(): boolean{
             return this.isSecured ? true : false;
         }
 
@@ -297,7 +297,7 @@ a {
 .stage_2 {
     margin: 0 auto;
     text-align: left;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .cols {
@@ -469,7 +469,7 @@ a {
         .mneumonic_button_container {
             display: flex;
             flex-direction: column;
-            align-items: start;
+            align-items: flex-start;
             justify-content: center;
 
             .copy_phrase {

@@ -23,8 +23,8 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {AmountOutput, AVMKeyPair, UTXO} from "avalanche";
-// import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/typings/src/apis/avm";
+// import {AmountOutput, AVMKeyPair, UTXO} from "avalanche";
+import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/typings/src/apis/avm";
 
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
@@ -382,10 +382,6 @@ export default new Vuex.Store({
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
-
-            if(state.warnUpdateKeyfile){
-                state.warnUpdateKeyfile = false;
-            }
         },
 
 
@@ -462,6 +458,7 @@ export default new Vuex.Store({
                 }
 
                 // Keystore warning flag asking users to update their keystore files;
+                store.state.warnUpdateKeyfile = false;
                 if(version !== KEYSTORE_VERSION){
                     store.state.warnUpdateKeyfile = true;
                 }

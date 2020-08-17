@@ -67,8 +67,8 @@
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {AmountOutput, KeyPair} from "avalanche";
-
+    // import {AmountOutput, KeyPair} from "avalanche";
+    import {AmountOutput, AVMKeyPair} from "avalanche/typings/src/apis/avm";
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
     import * as bip39 from 'bip39';

@@ -23,7 +23,8 @@
     import Spinner from '@/components/misc/Spinner.vue';
     import {avm, bintools, keyChain} from "@/AVA";
     import {keyToKeypair} from "@/helpers/helper";
-    import { AVMKeyPair } from 'avalanche';
+    // import { AVMKeyPair } from 'avalanche';
+    import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
 
     @Component({
         components: {

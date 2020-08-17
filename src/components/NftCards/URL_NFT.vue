@@ -30,7 +30,7 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
-    import {PayloadBase} from "avalanche";
+    import {PayloadBase} from "avalanche/typings/src/utils";
     import BaseNftCard from "@/components/NftCards/BaseNftCard.vue";
 
 
