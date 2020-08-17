@@ -35,7 +35,6 @@ const KEYFILE_5 = `{"version":"5.0","salt":"TEUQMGR1XdHs5wb4SVSA7LriUhR","pass_h
 //    }
 // });
 
-
 describe("Export/Import Keystore", () => {
    const pass:string = "randompasswordofmine";
    const keyChain:AVMKeyChain = avm.keyChain();
@@ -47,8 +46,13 @@ describe("Export/Import Keystore", () => {
    const key2:AVMKeyPair = keyChain.getKey(addr2);
 
    test('can encrypt/decrypt hd', async () => {
-      const w1:AvaHdWallet = new AvaHdWallet(key1);
-      const w2:AvaHdWallet = new AvaHdWallet(key2);
+
+      let mnemonic1 = "lamp horror speak web science kingdom gospel switch exile flash copper file powder stereo fever similar worry silent ecology clap step trick assume genre";
+      let mnemonic2 = "cinnamon embark switch food topic cricket develop tilt champion rough under advice assist layer tell romance stone fringe lava economy friend chase cup laundry";
+
+
+      const w1:AvaHdWallet = new AvaHdWallet(mnemonic1);
+      const w2:AvaHdWallet = new AvaHdWallet(mnemonic2);
 
       const keyfile:KeyFile = await makeKeyfile([w1,w2],pass);
       const rawData:KeyFileDecrypted = await readKeyFile(keyfile, pass);
