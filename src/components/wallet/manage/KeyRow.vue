@@ -70,13 +70,11 @@
     import {AmountOutput, AVMKeyPair} from "avalanche/dist/apis/avm";
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
-    import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Tooltip from '@/components/misc/Tooltip.vue';
 
     import ExportKeys from "@/components/modals/ExportKeys.vue";
 
-    import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
         [key:string]: AvaAsset

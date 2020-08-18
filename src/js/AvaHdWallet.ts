@@ -13,6 +13,11 @@ import {
     OperationTx
 } from "avalanche/dist/apis/avm";
 
+// import {
+//     PlatformVMKeyChain,
+//     PlatformVMKeyPair
+// } from "avalanche/dist/apis/platformvm";
+
 import {
     UnixNow,
     getPreferredHRP
@@ -51,6 +56,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     hdKey:HDKey;
     hdIndex:number;
     keyChain: AVMKeyChain;
+    // platformKeyChain: PlatformVMKeyChain;
     chainId: string;
     utxoset: UTXOSet;
     mnemonic: string;
@@ -64,10 +70,14 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // this.chainId = keypair.getChainID();
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
         this.hdIndex = 0;
-        this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
+        let hrp = getPreferredHRP(ava.getNetworkID());
+        this.keyChain = new AVMKeyChain(hrp , this.chainId);
+        // this.platformKeyChain = new PlatformVMKeyChain(hrp, 'P');
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
         this.indexChangeKeyCache = {};
+
+
         // let pk: Buffer = keypair.getPrivateKey();
         // let pkHex: string = pk.toString('hex');
 
@@ -100,7 +110,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
     generateKey(): AVMKeyPair{
         let newIndex: number = this.hdIndex+1;
         let newKey: AVMKeyPair = this.getKeyForIndex(newIndex);
-
         // Add to keychain
         this.keyChain.addKey(newKey);
         this.hdIndex = newIndex;
