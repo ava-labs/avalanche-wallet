@@ -10,6 +10,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "jest --verbose ./tests",
+    "cypress": "cypress open",
     "test_watch": "jest --verbose --watch ./tests"
   },
   "jest": {
@@ -99,6 +100,7 @@
     "@vue/test-utils": "^1.0.3",
     "babel-core": "^7.0.0-bridge.0",
     "canvas": "^2.6.1",
+    "cypress": "^4.12.1",
     "deepmerge": "^4.2.2",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
