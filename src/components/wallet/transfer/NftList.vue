@@ -79,6 +79,20 @@
         showPopup(){
             this.$refs.popup.isActive = true;
         }
+
+
+        mounted(){
+            if(this.$route.query.nft){
+                let utxoId = this.$route.query.nft as string;
+                // let utxo = this.nftDict[utxoId];
+                console.log(this.nftDict)
+
+                // if(utxo){
+                //     this.addNft(utxo as UTXO);
+                // }
+                // this.addTx(assetId);
+            }
+        }
     }
 </script>
 <style scoped lang="scss">

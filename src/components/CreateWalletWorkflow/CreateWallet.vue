@@ -14,7 +14,7 @@
                             <router-link to="/access" class="link">Already have a wallet?</router-link>
                             <div class="options">
                                 <button class="ava_button but_generate button_secondary" @click="createKey">Generate Key Phrase</button>
-                                <TorusGoogle class="torus_but"></TorusGoogle>
+<!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
                             <router-link to="/" class="link">Cancel</router-link>
                         </div>
@@ -106,10 +106,8 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    // import {keyChain} from "@/AVA";
     import RememberKey from "@/components/misc/RememberKey.vue";
-    // import {Buffer} from "buffer/";
-    import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
+    // import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
@@ -126,7 +124,7 @@
             TextDisplayCopy,
             MnemonicDisplay,
             Spinner,
-            TorusGoogle,
+            // TorusGoogle,
             VerifyMnemonic,
             MnemonicCopied
         }
