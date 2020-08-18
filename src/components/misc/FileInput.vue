@@ -20,8 +20,6 @@ export default class FileInput extends Vue {
         // @ts-ignore
         let input = this.$refs.input as HTMLInputElement;
         this.files = input.files as FileList;
-        // console.log(input.files);
-        // console.log(val);
         if (this.read_type === "raw") {
             if (this.multiple) {
                 this.$emit('change', this.files);

@@ -14,7 +14,8 @@
 <script lang="ts">
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import {IWalletNftDict} from "@/store/types";
-    import {UTXO} from "avalanche";
+    // import {UTXO} from "avalanche";
+    import { UTXO} from "avalanche/dist/apis/avm";
     import NftCard from "@/components/wallet/portfolio/NftCard.vue";
 
     @Component({

@@ -1,4 +1,8 @@
-import {Avalanche, AVM, AVMKeyChain, BinTools} from "avalanche";
+import {AVMKeyChain, AVMAPI} from "avalanche/dist/apis/avm";
+import Avalanche from "avalanche";
+import BinTools from "avalanche/dist/utils/bintools";
+
+
 
 // Connect to TestNet by default
 // Doesn't really matter how we initialize, it will get changed by the network module later
@@ -9,7 +13,7 @@ let network_id: number = 2;
 let chain_id: string = "X";
 let bintools: BinTools = BinTools.getInstance();
 let ava: Avalanche = new Avalanche(ip, port, protocol, network_id, chain_id);
-let avm: AVM = ava.AVM();
+let avm: AVMAPI = ava.XChain();
 let keyChain: AVMKeyChain = avm.keyChain();
 
 function isValidAddress(addr:string){

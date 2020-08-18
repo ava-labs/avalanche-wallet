@@ -61,7 +61,7 @@
     import {isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
-    import {UTXO} from "avalanche";
+    import { UTXO } from "avalanche/dist/apis/avm";
 
     @Component({
         components: {
@@ -107,7 +107,8 @@
             let parent = this;
             this.isAjax = true;
 
-            let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders) as (ITransaction|UTXO)[];
+            // let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders);
+            let sumArray: (ITransaction|UTXO)[] = [...this.orders, ...this.nftOrders];
 
             let txList = {
                 toAddress: this.addressIn,
@@ -118,9 +119,15 @@
                 parent.isAjax = false;
 
                 if(res === 'success'){
+                    // Clear transactions list
                     // @ts-ignore
                     parent.$refs.txList.clear();
-                    parent.$refs.nftList.clear();
+
+                    // Clear NFT list
+                    if(this.hasNFT){
+                        // @ts-ignore
+                        parent.$refs.nftList.clear();
+                    }
 
                     this.$store.dispatch('Notifications/add', {
                         title: 'Transaction Sent',

@@ -1,5 +1,5 @@
 import HDKey from 'hdkey';
-import {AVMKeyChain, AVMKeyPair, UTXO, UTXOSet} from "avalanche";
+import {AVMKeyChain, AVMKeyPair, UTXOSet, UTXO} from "avalanche/dist/apis/avm";
 import {ITransaction} from "@/components/wallet/transfer/types";
 
 export type wallet_type = "hd" | "singleton";
@@ -21,9 +21,9 @@ export interface AvaWalletCore {
 }
 
 export interface IAvaHdWallet extends AvaWalletCore{
-    masterKey: AVMKeyPair
+    // masterKey: AVMKeyPair
     utxoset: UTXOSet;
-    seed: string|null;
+    seed: string;
     hdKey: HDKey;
     hdIndex:number;
     keyChain: AVMKeyChain;
@@ -31,7 +31,8 @@ export interface IAvaHdWallet extends AvaWalletCore{
     generateKey(): AVMKeyPair;
     onHdKeyReady(): void;
     getUTXOSet(): UTXOSet;
-    getMasterKey(): AVMKeyPair;
+    // getMasterKey(): AVMKeyPair;
+    getMnemonic(): string;
 }
 
 

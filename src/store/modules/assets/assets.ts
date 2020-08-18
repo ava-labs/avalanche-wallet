@@ -91,7 +91,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // What is the AVA coin in the network
         async updateAvaAsset({state, commit}){
-            let res = await avm.getAssetDescription('AVA');
+            let res = await avm.getAssetDescription('AVAX');
             let id = bintools.cb58Encode(res.assetID);
             state.AVA_ASSET_ID = id;
             let asset = new AvaAsset(id, res.name, res.symbol, res.denomination);
@@ -117,7 +117,7 @@ const assets_module: Module<AssetsState, RootState> = {
         // Adds an unknown asset id to the assets dictionary
         async addUnknownAsset({state, commit}, assetId:string){
             // get info about the asset
-            let desc = await ava.AVM().getAssetDescription(assetId);
+            let desc = await ava.XChain().getAssetDescription(assetId);
             let newAsset = new AvaAsset(assetId, desc.name, desc.symbol, desc.denomination);
 
             await commit('addAsset', newAsset);
@@ -125,7 +125,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async addUnknownNftFamily({state, commit}, assetId: string){
-            let desc = await ava.AVM().getAssetDescription(assetId);
+            let desc = await ava.XChain().getAssetDescription(assetId);
             let newFam = new AvaNftFamily(assetId, desc.name, desc.symbol);
 
             await commit('addNftFamily', newFam);

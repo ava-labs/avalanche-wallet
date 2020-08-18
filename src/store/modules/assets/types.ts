@@ -1,4 +1,5 @@
-import {UTXO, UTXOSet} from "avalanche";
+import {UTXO, UTXOSet} from "avalanche/dist/apis/avm";
+
 import AvaAsset from "@/js/AvaAsset";
 import BN from "bn.js";
 import {AvaNftFamily} from "@/js/AvaNftFamily";

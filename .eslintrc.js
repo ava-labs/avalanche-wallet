@@ -8,13 +8,13 @@ module.exports = {
     'eslint:recommended',
     '@vue/typescript'
   ],
+  parserOptions: {
+    parser: '@typescript-eslint/parser'
+  },
   rules: {
     'no-console': 'off',
     'vue/no-unused-components': 'off',
     'no-unreachable': 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  },
-  parserOptions: {
-    parser: '@typescript-eslint/parser'
   },
 }

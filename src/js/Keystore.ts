@@ -10,10 +10,10 @@ import Crypto from "@/js/Crypto";
 
 const cryptoHelpers = new Crypto();
 
-const KEYSTORE_VERSION: string = '3.0';
+const KEYSTORE_VERSION: string = '5.0';
 
 const ITERATIONS_V2 = 100000;
-const ITERATIONS_V3 = 200000;
+const ITERATIONS_V3 = 200000; // and any version above
 
 interface IHash {
     salt: Buffer;
@@ -63,15 +63,19 @@ async function readKeyFile(data:KeyFile, pass: string): Promise<KeyFileDecrypted
 
         let key: Buffer = bintools.cb58Decode(key_data.key);
         let nonce: Buffer = bintools.cb58Decode(key_data.iv);
-        let address: string = key_data.address;
-        // let walletType: wallet_type = key_data.type || 'hd';
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass,key,salt,nonce);
-        let key_string: string = bintools.cb58Encode(key_decrypt);
+        let key_string: string;
+
+        //  versions below 5.0 used private key that had to be cb58 encoded
+        if(['2.0', '3.0', '4.0'].includes(version)){
+            key_string = bintools.cb58Encode(key_decrypt);
+        }else{
+            key_string = key_decrypt.toString();
+        }
 
         keysDecrypt.push({
             key: key_string,
-            address: address
         });
     }
 
@@ -94,15 +98,12 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
 
     for(let i:number=0; i<wallets.length;i++){
         let wallet: AvaHdWallet = wallets[i];
-        let pk: Buffer = wallet.getMasterKey().getPrivateKey();
-        let addr: string = wallet.getMasterKey().getAddressString();
-
-        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,pk,salt);
+        let mnemonic = wallet.mnemonic;
+        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass,mnemonic,salt);
 
         let key_data: KeyFileKey = {
             key: bintools.cb58Encode(pk_crypt.ciphertext),
             iv: bintools.cb58Encode(pk_crypt.iv),
-            address: addr,
         };
         keys.push(key_data);
     }
@@ -112,7 +113,6 @@ async function makeKeyfile(wallets: AvaHdWallet[], pass:string): Promise<KeyFile
         salt: bintools.cb58Encode(salt),
         pass_hash: bintools.cb58Encode(passHash.hash),
         keys: keys,
-        warnings: ["This address listed in this file is for internal wallet use only. DO NOT USE THIS ADDRESS"]
     };
     return file_data;
 }

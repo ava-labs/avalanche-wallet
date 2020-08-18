@@ -25,7 +25,7 @@ const network_module: Module<NetworkState, RootState> = {
             state.status = 'connecting';
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
-            ava.AVM().refreshBlockchainID();
+            ava.XChain().refreshBlockchainID();
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;

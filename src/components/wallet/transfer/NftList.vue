@@ -19,7 +19,7 @@
 
     import 'reflect-metadata';
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
-    import {UTXO} from "avalanche";
+    import { UTXO} from "avalanche/dist/apis/avm";
     import NftCard from "@/components/wallet/portfolio/NftCard.vue";
 
     @Component({
@@ -30,6 +30,10 @@
     })
     export default class NftList extends Vue{
         addedNfts: UTXO[] = [];
+
+        $refs!: {
+            popup: BalancePopup
+        }
 
 
         @Watch('addedNfts')

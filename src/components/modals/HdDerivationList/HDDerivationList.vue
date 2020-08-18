@@ -19,9 +19,8 @@
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import AvaHdWallet from "@/js/AvaHdWallet";
-    import {AVMKeyPair, UTXOSet} from "avalanche";
+    import {AVMKeyPair, UTXOSet} from "avalanche/dist/apis/avm";
     import {bintools} from "@/AVA";
-    import BN from "bn.js";
     import Big from 'big.js';
     import AvaAsset from "@/js/AvaAsset";
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";

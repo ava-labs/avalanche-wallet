@@ -15,7 +15,7 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
-    import {PayloadBase} from "avalanche";
+    import {PayloadBase} from "avalanche/dist/utils";
     import BaseNftCard from "@/components/NftCards/BaseNftCard.vue";
 
     @Component({
@@ -30,7 +30,7 @@
 
 
         get text(): string{
-            return this.payload.payload.toString("utf-8");
+            return this.payload.getContent().toString("utf-8");
         }
     }
 </script>

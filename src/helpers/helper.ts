@@ -1,6 +1,15 @@
 
 import store from '@/store/index';
-import {AVMKeyChain, AVMKeyPair} from "avalanche";
+import {ava} from "@/AVA";
+
+import {
+    AVMKeyChain,
+    AVMKeyPair
+} from "avalanche/dist/apis/avm";
+
+import {
+    getPreferredHRP
+} from "avalanche/dist/utils";
 
 function getAssetIcon(id:string){
     let url = "/question-solid.svg";
@@ -15,7 +24,8 @@ function getAssetIcon(id:string){
 
 
 function keyToKeypair(key: string, chainID: string='X'): AVMKeyPair{
-    let keychain = new AVMKeyChain(chainID);
+    let hrp = getPreferredHRP(ava.getNetworkID());
+    let keychain = new AVMKeyChain(hrp, chainID);
     let addr = keychain.importKey(key);
     return keychain.getKey(addr);
 }
