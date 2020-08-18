@@ -84,7 +84,7 @@
     @use '../../../../main';
     .balance_card{
         display: grid !important;
-        grid-template-columns: 1fr 190px;
+        grid-template-columns: 1fr 230px;
         column-gap: 20px;
     }
 

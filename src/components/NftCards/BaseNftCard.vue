@@ -1,6 +1,6 @@
 <template>
     <div v-if="!mini">
-        <div class="card_container" @click="flipCard">
+        <div class="card_container" @click="flipCard" @mouseleave="mouseleave">
             <div class="card" :flipped="flipped">
                 <div class="card_back">
                     <button class="button_secondary" @click="transfer">Transfer</button>
@@ -38,11 +38,10 @@
         }
 
         mouseleave(){
-            if(this.rawCard) return;
             this.flipped = false;
         }
 
-        transfer(ev){
+        transfer(ev: MouseEvent){
             ev.stopPropagation();
             this.$router.push({ path: '/wallet/transfer', query: { nft: this.utxoId } })
         }

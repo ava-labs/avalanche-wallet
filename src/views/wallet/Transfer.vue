@@ -14,7 +14,7 @@
                 <div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
-                        <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVAX</span></p>
+                        <p>{{$t('transfer.fee_tx')}} <span>{{txFee.toLocaleString(9)}} AVAX</span></p>
                     </div>
 <!--                    <div class="advanced">-->
 <!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->
@@ -58,7 +58,7 @@
 
     //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
-    import {isValidAddress} from "../../AVA";
+    import {avm, isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import { UTXO } from "avalanche/dist/apis/avm";
@@ -180,6 +180,13 @@
             }
             return res;
         }
+
+        get txFee(): Big{
+            let fee = avm.getFee();
+            let res = Big(fee.toString()).div(Math.pow(10,9));
+            return res;
+        }
+
         get addresses(){
             return this.$store.state.addresses;
         }

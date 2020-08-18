@@ -10,7 +10,7 @@ import {
     UnsignedTx,
     Tx,
     UTXO,
-    OperationTx
+    OperationTx, AssetAmountDestination
 } from "avalanche/dist/apis/avm";
 
 // import {
@@ -31,6 +31,13 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
+import {
+    Input,
+    Output,
+    StandardAmountOutput,
+    StandardTransferableInput,
+    StandardTransferableOutput
+} from "avalanche/dist/common";
 
 
 
@@ -136,6 +143,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let result: UTXOSet = await avm.getUTXOs(addrs);
         this.utxoset = result; // we can use local copy of utxos as cache for some functions
 
+        console.log(result);
         // If last address has a utxo increment index
         let addr_now: AVMKeyPair = this.getCurrentKey();
         let lastIndexUtxos: string[] = result.getUTXOIDs([addr_now.getAddress()])
@@ -193,18 +201,24 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
 
     async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
-        let fromAddrs: string[] = this.keyChain.getAddressStrings();
-        let changeAddr: string = this.getChangeAddress();
-
-        if(changeAddr === null){
+        // TODO: Get new change index.
+        if(this.getChangeAddress() === null){
             throw "Unable to issue transaction. Ran out of change index.";
         }
 
-        let ins: TransferableInput[] = [];
-        let outs: TransferableOutput[] = [];
-        // let fee = new BN(0);
-        // let locktime = new BN(0);
-        // let threshold = 1;
+        let fromAddrs: Buffer[] = this.keyChain.getAddresses();
+        let fromAddrsStr: string[] = this.keyChain.getAddressStrings();
+        let changeAddr: Buffer = bintools.stringToAddress(this.getChangeAddress());
+
+        const AVAX_ID_BUF = await avm.getAVAXAssetID();
+        const AVAX_ID_STR = AVAX_ID_BUF.toString('hex');
+        const TO_BUF = bintools.stringToAddress(addr);
+
+
+
+        const aad:AssetAmountDestination = new AssetAmountDestination([TO_BUF], fromAddrs, [changeAddr]);
+        const ZERO = new BN(0);
+        let isFeeAdded = false;
 
         // Aggregate Fungible ins & outs
         for(let i:number=0;i<orders.length;i++){
@@ -212,13 +226,33 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
             if((order as ITransaction).asset){ // if fungible
                 let tx: ITransaction = order as ITransaction;
-                let amt: BN = new BN(tx.amount.toString());
-                let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,tx.asset.id,[addr], fromAddrs, [changeAddr]);
-                let rawTx = baseTx.getTransaction();
 
-                ins = ins.concat(rawTx.getIns());
-                outs = outs.concat(rawTx.getOuts());
+                let assetId = bintools.cb58Decode(tx.asset.id)
+                let amt: BN = new BN(tx.amount.toString());
+
+                if(assetId.toString('hex') === AVAX_ID_STR){
+                    aad.addAssetAmount(assetId, amt, avm.getFee())
+                    isFeeAdded = true;
+                }else{
+                    aad.addAssetAmount(assetId, amt, ZERO)
+                }
             }
+        }
+
+        // If fee isn't added, add it
+        if(!isFeeAdded){
+            aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+        }
+
+        const success: Error = this.utxoset.getMinimumSpendable(aad);
+
+        let ins: TransferableInput[] = [];
+        let outs: TransferableOutput[] = [];
+        if(typeof success === 'undefined'){
+            ins = aad.getInputs();
+            outs = aad.getAllOutputs();
+        }else{
+            throw success;
         }
 
         //@ts-ignore
@@ -229,11 +263,15 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // If transferring an NFT, build the transaction on top of an NFT tx
         let unsignedTx: UnsignedTx;
+        let networkId: number = ava.getNetworkID();
+        let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
+
         if(nftUtxos.length > 0){
             let nftSet = new UTXOSet();
                 nftSet.addArray(nftUtxos);
 
             let utxoIds: string[] = nftSet.getUTXOIDs()
+
             // Sort nft utxos
             utxoIds.sort((a,b) => {
                 if(a < b){
@@ -244,12 +282,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 return 0;
             });
 
-            unsignedTx = await avm.buildNFTTransferTx(
-                nftSet,
-                [addr],
-                fromAddrs,
-                utxoIds,
-            )
+            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, utxoIds);
 
             let rawTx = unsignedTx.getTransaction();
             let outsNft = rawTx.getOuts()
@@ -261,15 +294,12 @@ export default class AvaHdWallet implements IAvaHdWallet{
             //@ts-ignore
             rawTx.ins = insNft.concat(ins);
         }else{
-            let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
-            let networkId: number = ava.getNetworkID();
             let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
             unsignedTx = new UnsignedTx(baseTx);
         }
 
         const tx: Tx = unsignedTx.sign(this.keyChain);
         const txId: string = await avm.issueTx(tx);
-
 
         // TODO: Must update index after sending a tx
         // TODO: Index will not increase but it could decrease.
