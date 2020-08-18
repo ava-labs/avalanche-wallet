@@ -213,7 +213,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
             if((order as ITransaction).asset){ // if fungible
                 let tx: ITransaction = order as ITransaction;
                 let amt: BN = new BN(tx.amount.toString());
-                console.log(addr)
                 let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,tx.asset.id,[addr], fromAddrs, [changeAddr]);
                 let rawTx = baseTx.getTransaction();
 

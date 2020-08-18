@@ -123,7 +123,7 @@
     }
     .balance{
         font-size: 2.8em !important;
-        white-space: nowrap;
+        white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
     }

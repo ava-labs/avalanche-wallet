@@ -3,8 +3,8 @@
         <div  v-if="!isEmpty">
             <div v-for="fam in nftFamsArray" :key="fam.id">
                 <div class="fam_header">
+                    <p class="name">{{fam.name}}</p>
                     <p class="symbol">{{fam.symbol}}</p>
-                    <p>{{fam.name}}</p>
                 </div>
                 <div class="list">
                     <NFTCard class="nft_card" v-for="utxo in nftDict[fam.id]" :utxo="utxo" :key="utxo.id"></NFTCard>
@@ -104,13 +104,18 @@
         /*display: flex;*/
         margin: 30px 0 8px;
         /*border-bottom: 1px solid var(--primary-color-light);*/
-        font-size: 1.4rem;
+        font-size: 18px;
         display: grid;
-        grid-template-columns: 80px 1fr;
+        grid-template-columns: max-content 1fr;
     }
 
+    .name{
+        padding-right: 10px;
+    }
     .symbol{
+        padding-left: 10px;
         color: var(--primary-color-light);
+        border-left: 1px solid var(--primary-color-light);
     }
 
     @include main.mobile-device{

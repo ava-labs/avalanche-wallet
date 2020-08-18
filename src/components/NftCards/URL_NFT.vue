@@ -1,5 +1,5 @@
 <template>
-    <BaseNftCard :mini="mini" :raw-card="rawCard">
+    <BaseNftCard :mini="mini" :raw-card="rawCard" :utxo-id="utxo.getUTXOID()">
         <template v-slot:card>
             <img :src="url" v-if="img_types.includes(fileType)">
             <div v-else-if="fileType==='pdf'" class="pdf">
@@ -32,6 +32,7 @@
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import {PayloadBase} from "avalanche/dist/utils";
     import BaseNftCard from "@/components/NftCards/BaseNftCard.vue";
+    import {UTXO} from "avalanche/dist/apis/avm";
 
 
     @Component({
@@ -45,6 +46,7 @@
         @Prop() payload!: PayloadBase;
         @Prop({default: false}) mini!: boolean
         @Prop({default: false}) rawCard!: boolean
+        @Prop() utxo!: UTXO
 
         get url(): string{
             return this.payload.getContent().toString('utf-8');

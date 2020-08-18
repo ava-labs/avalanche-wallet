@@ -1,6 +1,6 @@
 <template>
     <div class="nft_card">
-        <component :is="nftClass" :payload="payloadBase" :mini="mini" :rawCard="rawCard"></component>
+        <component :is="nftClass" :payload="payloadBase" :mini="mini" :rawCard="rawCard" :utxo="utxo"></component>
     </div>
 </template>
 <script lang="ts">
@@ -52,7 +52,7 @@
                 case 1: // UTF 8
                     res = UTF8_NFT;
                     break;
-                case 28: // url
+                case 27: // url
                     res = URL_NFT;
                     break;
                 default:
