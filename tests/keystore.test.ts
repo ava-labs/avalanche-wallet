@@ -38,11 +38,11 @@ describe("Export/Import Keystore", () => {
    const pass:string = "randompasswordofmine";
    const keyChain:AVMKeyChain = avm.keyChain();
 
-   const addr1:Buffer = keyChain.makeKey();
-   const key1:AVMKeyPair = keyChain.getKey(addr1);
+   const key1:AVMKeyPair = keyChain.makeKey();
+   // const key1:AVMKeyPair = keyChain.getKey(addr1);
 
-   const addr2:Buffer = keyChain.makeKey();
-   const key2:AVMKeyPair = keyChain.getKey(addr2);
+   const key2:AVMKeyPair = keyChain.makeKey();
+   // const key2:AVMKeyPair = keyChain.getKey(addr2);
 
    test('can encrypt/decrypt hd', async () => {
 

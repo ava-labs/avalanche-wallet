@@ -1,3 +1,4 @@
 {
-  "baseUrl": "https://localhost:8081"
+  "baseUrl": "https://localhost:8081",
+  "nodeVersion": "system"
 }

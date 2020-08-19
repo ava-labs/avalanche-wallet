@@ -26,8 +26,7 @@ function getAssetIcon(id:string){
 function keyToKeypair(key: string, chainID: string='X'): AVMKeyPair{
     let hrp = getPreferredHRP(ava.getNetworkID());
     let keychain = new AVMKeyChain(hrp, chainID);
-    let addr = keychain.importKey(key);
-    return keychain.getKey(addr);
+    return keychain.importKey(key);
 }
 
 

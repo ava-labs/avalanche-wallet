@@ -10,16 +10,10 @@ import {
     UnsignedTx,
     Tx,
     UTXO,
-    OperationTx, AssetAmountDestination
+    AssetAmountDestination
 } from "avalanche/dist/apis/avm";
 
-// import {
-//     PlatformVMKeyChain,
-//     PlatformVMKeyPair
-// } from "avalanche/dist/apis/platformvm";
-
 import {
-    UnixNow,
     getPreferredHRP
 } from "avalanche/dist/utils";
 
@@ -31,13 +25,6 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
-import {
-    Input,
-    Output,
-    StandardAmountOutput,
-    StandardTransferableInput,
-    StandardTransferableOutput
-} from "avalanche/dist/common";
 
 
 
@@ -47,7 +34,6 @@ import {
 
 const AVA_TOKEN_INDEX: string = '9000';
 const AVA_ACCOUNT_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'`; // Change and index left out
-// const AVA_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
 const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
@@ -57,13 +43,10 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 // SCAN_SIZE - INDEX_RANGE
 
 export default class AvaHdWallet implements IAvaHdWallet{
-    // type: wallet_type;
-    // masterKey: AVMKeyPair;
     seed:string;
     hdKey:HDKey;
     hdIndex:number;
     keyChain: AVMKeyChain;
-    // platformKeyChain: PlatformVMKeyChain;
     chainId: string;
     utxoset: UTXOSet;
     mnemonic: string;
@@ -72,36 +55,19 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {
-        // this.type = 'hd';
-        // this.masterKey = keypair;
-        // this.chainId = keypair.getChainID();
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
         this.hdIndex = 0;
         let hrp = getPreferredHRP(ava.getNetworkID());
         this.keyChain = new AVMKeyChain(hrp , this.chainId);
-        // this.platformKeyChain = new PlatformVMKeyChain(hrp, 'P');
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
         this.indexChangeKeyCache = {};
 
-
-        // let pk: Buffer = keypair.getPrivateKey();
-        // let pkHex: string = pk.toString('hex');
-
-        // let mnemonic: string;
-
-        // There is an edge case that causes an error, handle it
-        // try{
-        //     mnemonic = bip39.entropyToMnemonic(pkHex);
-        // }catch(e){
-        //     mnemonic = bip39.entropyToMnemonic('00'+pkHex);
-        // }
-
         this.mnemonic = mnemonic;
+
         // Generate Seed
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
         this.seed = seed.toString('hex');
-
 
         // Generate hd key from seed
         let hdkey: HDKey = HDKey.fromMasterSeed(seed);
@@ -143,7 +109,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let result: UTXOSet = await avm.getUTXOs(addrs);
         this.utxoset = result; // we can use local copy of utxos as cache for some functions
 
-        console.log(result);
         // If last address has a utxo increment index
         let addr_now: AVMKeyPair = this.getCurrentKey();
         let lastIndexUtxos: string[] = result.getUTXOIDs([addr_now.getAddress()])
@@ -412,9 +377,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let keychain: AVMKeyChain = new AVMKeyChain(hrp, 'X');
         let pkHex: string = key.privateKey.toString('hex');
         let pkBuf: Buffer = new Buffer(pkHex, 'hex');
-        let addr: Buffer = keychain.importKey(pkBuf);
-
-        let keypair: AVMKeyPair = keychain.getKey(addr);
+        // let addr: Buffer = keychain.importKey(pkBuf);
+        let keypair = keychain.importKey(pkBuf)
 
         if(!isChange){
             this.indexKeyCache[index] = keypair;

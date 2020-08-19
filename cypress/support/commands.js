@@ -27,38 +27,8 @@ import 'cypress-file-upload';
 import {Avalanche} from "avalanche/dist";
 const BN = require('bn.js');
 
-import {getPreferredHRP} from "avalanche/dist/utils";
-import {bintools} from "../../src/AVA";
-import {AVMKeyChain} from "avalanche/dist/apis/avm";
+import {ZERO, xChain, userKey0, faucetAddress, faucetKeychain, userKeychain, TEST_MNEMONIC} from "./keyChains";
 
-
-const AVAX_IP = 'localhost';
-const AVAX_PORT = '9650';
-const AVAX_PROTOCOL = 'http';
-const NETWORK_ID = '12345';
-
-const FAUCET_KEY = "PrivateKey-ewoqjP7PxY4yr3iLTpLisriqt94hdyDFNgchSxGGztUrTXtNN";
-
-const USER_ADDR = "X-local12rgpghg6gqt23uxqmkcjte0462jjalujg3e5ca";
-const USER_PK = ""
-
-
-
-let avalanche = new Avalanche(AVAX_IP, AVAX_PORT, AVAX_PROTOCOL, parseInt(NETWORK_ID), 'X')
-let xChain = avalanche.XChain();
-let keychain = xChain.keyChain();
-
-const HRP = getPreferredHRP(NETWORK_ID);
-const KEY_0 = "PrivateKey-4KsTvehZjr5VKMz9cq9pZQj7i12T8dqW4oz9ZwsTZBujLuYtn";
-let userKeychain = new AVMKeyChain(HRP,'X');
-    userKeychain.importKey(KEY_0);
-
-let faucetAddressBuf = keychain.importKey(FAUCET_KEY);
-let faucetKey = keychain.getKey(faucetAddressBuf);
-let faucetAddress = faucetKey.getAddressString()
-
-const TEST_MNEMONIC = "lamp horror speak web science kingdom gospel switch exile flash copper file powder stereo fever similar worry silent ecology clap step trick assume genre";
-// const TEST_MNEMONIC2 = "shoulder swarm reward catch ready obtain surprise flame repeat stadium mutual enlist lucky bless zoo glance craft swarm slam fiction virus dream escape early"
 
 Cypress.Commands.add('connectLocalhost', () => {
     // cy.visit('/')
@@ -80,9 +50,11 @@ Cypress.Commands.add('send_avax', async (address, amount) => {
     let utxoSet = await xChain.getUTXOs([faucetAddress])
     let assetId = await xChain.getAVAXAssetID();
 
+    console.log(assetId);
+
     let sendAmount = new BN(amount);
     let unsigned_tx =  await xChain.buildBaseTx(utxoSet, sendAmount, assetId,[address], [faucetAddress], [faucetAddress] );
-    let signed_tx = unsigned_tx.sign(keychain);
+    let signed_tx = unsigned_tx.sign(faucetKeychain);
 
     await xChain.issueTx(signed_tx)
 });
@@ -93,14 +65,23 @@ Cypress.Commands.add('enterWallet', ()=>{
     cy.access_mnemonic(TEST_MNEMONIC);
 })
 
-
+// Send the user's balance back to the faucet
 Cypress.Commands.add('clearBalance', async ()=>{
-    let utxoSet = await xChain.getUTXOs([USER_ADDR])
+    let usrAddr = userKey0.getAddressString();
 
-    let sendAmount = new BN(amount);
-    let unsigned_tx =  await xChain.buildBaseTx(utxoSet, sendAmount, assetId,[address], [faucetAddress], [faucetAddress] );
-    let signed_tx = unsigned_tx.sign(keychain);
+    let utxoSet = await xChain.getUTXOs([usrAddr])
+    let assetId = await xChain.getAVAXAssetID();
 
-    await xChain.issueTx(signed_tx)
+    console.log(usrAddr);
+
+    let balance = utxoSet.getBalance([userKey0.getAddress()], assetId);
+
+    console.log(balance.toString())
+    if(balance.gt(ZERO)){
+        let unsigned_tx =  await xChain.buildBaseTx(utxoSet, balance, assetId,[faucetAddress], [usrAddr], [usrAddr] );
+        let signed_tx = unsigned_tx.sign(userKeychain);
+
+        await xChain.issueTx(signed_tx)
+    }
 })
 
