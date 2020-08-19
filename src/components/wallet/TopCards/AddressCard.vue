@@ -8,7 +8,7 @@
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="addr_text">{{address}}</p>
+                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <p class="subtitle">Derived AVAX Wallet Address</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">

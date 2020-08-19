@@ -9,7 +9,7 @@
                 <h4>{{$t('top.title2')}}</h4>
             </div>
             <div class="balance_row">
-                <p class="balance">{{balanceText}} AVAX</p>
+                <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
 <!--            <div class="alt_info">-->
 <!--                <div>-->
