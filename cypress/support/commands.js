@@ -50,8 +50,6 @@ Cypress.Commands.add('send_avax', async (address, amount) => {
     let utxoSet = await xChain.getUTXOs([faucetAddress])
     let assetId = await xChain.getAVAXAssetID();
 
-    console.log(assetId);
-
     let sendAmount = new BN(amount);
     let unsigned_tx =  await xChain.buildBaseTx(utxoSet, sendAmount, assetId,[address], [faucetAddress], [faucetAddress] );
     let signed_tx = unsigned_tx.sign(faucetKeychain);
@@ -72,11 +70,9 @@ Cypress.Commands.add('clearBalance', async ()=>{
     let utxoSet = await xChain.getUTXOs([usrAddr])
     let assetId = await xChain.getAVAXAssetID();
 
-    console.log(usrAddr);
 
     let balance = utxoSet.getBalance([userKey0.getAddress()], assetId);
 
-    console.log(balance.toString())
     if(balance.gt(ZERO)){
         let unsigned_tx =  await xChain.buildBaseTx(utxoSet, balance, assetId,[faucetAddress], [usrAddr], [usrAddr] );
         let signed_tx = unsigned_tx.sign(userKeychain);
