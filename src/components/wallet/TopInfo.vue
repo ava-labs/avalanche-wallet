@@ -5,7 +5,7 @@
     </div>
 </template>
 <script>
-    import BalanceCard from "./TopCards/BalanceCard";
+    import BalanceCard from "./TopCards/BalanceCard/BalanceCard";
     import AddressCard from "./TopCards/AddressCard";
 
     export default {
@@ -20,7 +20,7 @@
 
     .top_cards{
         display: grid;
-        grid-template-columns: repeat(5,1fr);
+        grid-template-columns: 1fr 360px;
         grid-gap: 15px;
     }
     .top_card{
@@ -38,11 +38,9 @@
     }
 
     .balance_card{
-        grid-column: 1/4;
     }
 
     .addr_card{
-        grid-column: 4/6;
     }
     .card_left{
         background-color: #F4EFFF;

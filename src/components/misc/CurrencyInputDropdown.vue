@@ -14,7 +14,7 @@
     import 'reflect-metadata';
     import {Vue, Component, Prop, Emit, Watch} from 'vue-property-decorator';
 
-    import * as BN from 'bn.js';
+    import BN from "bn.js";
     import Big from 'big.js';
     import Dropdown from "@/components/misc/Dropdown.vue";
     // import BigNumInput from "@/components/misc/BigNumInput";
@@ -26,6 +26,7 @@
     import {IWalletAssetsDict, IWalletBalanceDict} from "@/store/types";
 
     import BalanceDropdown from "@/components/misc/BalancePopup/BalanceDropdown.vue";
+    import {avm} from "@/AVA";
     interface IDropdownValue {
         label: string,
         key: string,
@@ -159,11 +160,20 @@
             let assetId = this.asset_now.id;
             let balance = this.walletAssetsDict[assetId];
 
+            // Max amount is BALANCE - FEE
+            if(this.asset_now.symbol === 'AVAX'){
+                let fee = avm.getFee();
+                // console.log(fee);
+                if(fee.gte(balance.amount)){
+                    return null;
+                }else{
+                    return balance.amount.sub(fee);
+                }
+            }
+
             if(balance.amount.isZero()) return null;
             return balance.amount;
         }
-
-
     }
 </script>
 <style scoped lang="scss">
