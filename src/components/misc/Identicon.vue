@@ -13,7 +13,7 @@
         },
         methods: {
             generateIdenticon(){
-                let canv = this.$refs['canvas'] as HTMLCanvasElement;
+                let canv = this.$refs['canvas'];
                 let cont = canv.getContext('2d');
                 let text = this.payload.toString('hex');
                 jdenticon.drawIcon(cont, text, canv.width);
