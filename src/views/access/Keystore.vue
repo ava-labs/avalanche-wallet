@@ -108,6 +108,8 @@ export default class Keystore extends Vue{
                 console.log(err);
                 if(err === "INVALID_PASS"){
                     parent.error = "Invalid password."
+                }else if(err === "INVALID_VERSION"){
+                    parent.error = "This keystore version is not supported."
                 }else{
                     parent.error = err.message;
                 }
