@@ -16,7 +16,7 @@ const ITERATIONS_V2 = 100000;
 const ITERATIONS_V3 = 200000; // and any version above
 
 
-const SUPPORTED_VERSION = ['2.0','3.0']
+const SUPPORTED_VERSION = ['2.0','3.0','4.0','5.0'];
 
 interface IHash {
     salt: Buffer;
