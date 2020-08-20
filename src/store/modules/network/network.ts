@@ -2,16 +2,18 @@ import {Module} from "vuex";
 import {RootState} from "@/store/types";
 import {NetworkState} from "@/store/modules/network/types";
 
-import {ava, avm} from "@/AVA";
+import {ava, avm, infoApi} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
+import BN from "bn.js";
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
         status: 'disconnected', // disconnected | connecting | connected
         networks: [],
-        selectedNetwork: null
+        selectedNetwork: null,
+        txFee: new BN(0)
     },
     mutations: {
         addNetwork(state, net: AvaNetwork){
@@ -44,6 +46,7 @@ const network_module: Module<NetworkState, RootState> = {
 
             setTimeout(() => {
                 dispatch('Assets/updateUTXOs', null, {root: true});
+                dispatch('updateTxFee');
             }, 1000);
 
             // state.isConnected = true;
@@ -51,8 +54,14 @@ const network_module: Module<NetworkState, RootState> = {
             return true;
         },
 
+        async updateTxFee({state}){
+            let txFee = await infoApi.getTxFee();
+            state.txFee = txFee;
+            avm.setFee(txFee);
+        },
+
         async init({state, commit, dispatch}){
-            let netTest = new AvaNetwork("Denali TestNet", 'https://testapi.avax.network:443', 3, 'X', 'https://explorerapi.avax.network');
+            let netTest = new AvaNetwork("Everest TestNet", 'https://testapi.avax.network:443', 4, 'X', 'https://explorerapi.avax.network');
             let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 12345, 'X');
 
 

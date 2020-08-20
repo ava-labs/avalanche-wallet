@@ -361,9 +361,6 @@
     }
 
 
-    /*.checkout .v-btn{*/
-    /*    color: #fff;*/
-    /*}*/
     .advanced .advancedBody{
         transition-duration: 0.2s;
     }

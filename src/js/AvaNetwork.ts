@@ -1,3 +1,4 @@
+
 let network_id: number = 0;
 
 class AvaNetwork{
@@ -10,6 +11,7 @@ class AvaNetwork{
     chainId: string;
     url: string;
     explorerUrl: string|undefined;
+    // fee: BN
 
     constructor(name: string, url:string, networkId: number, chainId: string, explorerUrl?: string) {
         this.id = network_id++;
@@ -22,6 +24,7 @@ class AvaNetwork{
         this.updateURL(url);
         this.networkId = networkId;
         this.chainId = chainId;
+        // this.fee = new BN(0);
     }
 
     updateURL(url: string){
