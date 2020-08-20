@@ -62,7 +62,7 @@ const network_module: Module<NetworkState, RootState> = {
 
         async init({state, commit, dispatch}){
             let netTest = new AvaNetwork("Everest TestNet", 'https://testapi.avax.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let netLocal = new AvaNetwork("Gecko Localhost",'http://localhost:9650', 12345, 'X');
+            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
 
 
             commit('addNetwork', netTest);
