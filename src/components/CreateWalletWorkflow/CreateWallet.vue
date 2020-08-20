@@ -66,14 +66,14 @@
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
-                                        <remember-key
+<!--                                        <remember-key-->
 
-                                                v-model="rememberPassword"
-                                                @is-valid="isRememberValid"
-                                                class="remember_wallet"
-                                                complete="onremember"
-                                                explain="Remember my wallet."
-                                        ></remember-key>
+<!--                                                v-model="rememberPassword"-->
+<!--                                                @is-valid="isRememberValid"-->
+<!--                                                class="remember_wallet"-->
+<!--                                                complete="onremember"-->
+<!--                                                explain="Remember my wallet."-->
+<!--                                        ></remember-key>-->
 
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
@@ -106,7 +106,7 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    import RememberKey from "@/components/misc/RememberKey.vue";
+    // import RememberKey from "@/components/misc/RememberKey.vue";
     // import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
@@ -120,7 +120,7 @@
     @Component({
         components: {
             CopyText,
-            RememberKey,
+            // RememberKey,
             TextDisplayCopy,
             MnemonicDisplay,
             Spinner,
@@ -132,8 +132,8 @@
     export default class CreateWallet extends Vue{
         // TODO: We do not need to create keyPair, only mnemonic is sufficient
         isLoad: boolean = false;
-        rememberPassword:string|null = null;
-        rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
+        // rememberPassword:string|null = null;
+        // rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
         // Mnemonic
         // newPrivateKey: string|null =null;
         keyPhrase: string = "";
@@ -158,12 +158,12 @@
         }
 
         // Will be true if the values in remember wallet checkbox are valid
-        isRememberValid(val: boolean){
-            this.rememberValid = val;
-        }
+        // isRememberValid(val: boolean){
+        //     this.rememberValid = val;
+        // }
 
         get canSubmit():boolean{
-            if(!this.rememberValid) return false;
+            // if(!this.rememberValid) return false;
             return true;
         }
         verifyMnemonic(){
@@ -186,10 +186,10 @@
             setTimeout(async ()=>{
                 await parent.$store.dispatch('accessWallet', this.keyPhrase);
 
-                if(this.rememberPassword && this.rememberValid){
-                    console.log("Will remember..");
-                    parent.$store.dispatch('rememberWallets', this.rememberPassword);
-                }
+                // if(this.rememberPassword && this.rememberValid){
+                //     // console.log("Will remember..");
+                //     parent.$store.dispatch('rememberWallets', this.rememberPassword);
+                // }
             }, 500);
         }
     }

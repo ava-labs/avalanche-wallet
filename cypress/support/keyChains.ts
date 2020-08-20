@@ -50,8 +50,6 @@ let key0 = HD.derive(AVA_CHANGE_PATH+'/0');
 let userKeychain = new AVMKeyChain(HRP,'X');
 let userKey0 = userKeychain.importKey(key0.privateKey);
 
-console.log(userKey0.getAddressString());
-
 
 async function sendAvax(address:string, amount:number){
     let utxoSet = await xChain.getUTXOs([faucetAddress])

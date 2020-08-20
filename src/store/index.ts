@@ -60,9 +60,6 @@ export default new Vuex.Store({
                 // Process only non NFT utxos, outputid === 0b
                 let outId = utxo.getOutput().getOutputID();
                 if(outId===11){
-                    let assetIdBuff = utxo.getAssetID();
-                    let assetId = bintools.cb58Encode(assetIdBuff);
-
                     res.push(utxo);
                 }
             }

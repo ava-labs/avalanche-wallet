@@ -15,7 +15,6 @@
         <div class="scrollable" v-else>
             <fungible-row lass="asset" v-for="asset in walletBalances" :key="asset.id" :asset="asset"></fungible-row>
         </div>
-
     </div>
 </template>
 <script lang="ts">

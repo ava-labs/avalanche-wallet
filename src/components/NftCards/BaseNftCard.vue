@@ -3,7 +3,7 @@
         <div class="card_container" @click="flipCard" @mouseleave="mouseleave">
             <div class="card" :flipped="flipped">
                 <div class="card_back">
-                    <button class="button_secondary" @click="transfer">Transfer</button>
+                    <button class="button_secondary" @click="transfer">Send</button>
                 </div>
                 <div class="card_front">
                     <slot name="card"></slot>

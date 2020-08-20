@@ -1,7 +1,10 @@
 <template>
     <div class="transfer_card">
         <h1>{{$t('transfer.title')}}</h1>
-        <div class="card_body">
+        <div v-if="networkStatus !== 'connected'" class="disconnected">
+            <p>Unable to send assets. Disconnected from the network.</p>
+        </div>
+        <div class="card_body" v-else>
             <div class="new_order_Form">
                 <div class="lists">
                     <h4>Fungibles</h4>
@@ -145,6 +148,11 @@
         }
 
 
+        get networkStatus():string{
+            let stat = this.$store.state.Network.status;
+            return stat;
+        }
+
         get hasNFT(): boolean{
             return this.$store.getters.walletNftUTXOs.length > 0;
         }
@@ -220,14 +228,10 @@
     $padLeft: 24px;
     $padTop: 8px;
 
-    .transfer_card{
-
-    }
-
-    .card_body{
-        /*display: grid;*/
-        /*grid-template-columns: 1fr 1fr 1fr;*/
-        /*column-gap: 15px;*/
+    .disconnected{
+        padding: 30px;
+        text-align: center;
+        background-color: var(--bg-light);
     }
 
     .explain{
@@ -242,7 +246,7 @@
         text-align: left;
         font-size: 16px;
         font-weight: bold;
-        /*margin-bottom: 8px;*/
+        margin: 12px 0;
     }
 
 

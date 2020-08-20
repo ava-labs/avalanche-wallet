@@ -42,7 +42,11 @@
         }
 
         get isEmpty(): boolean{
-            return this.$store.getters.walletNftUTXOs.length === 0;
+            return this.nftUTXOs.length === 0;
+        }
+
+        get nftUTXOs(): UTXO[]{
+            return this.$store.getters.walletNftUTXOs;
         }
 
         get nftDict(): IWalletNftDict{
@@ -84,13 +88,13 @@
         mounted(){
             if(this.$route.query.nft){
                 let utxoId = this.$route.query.nft as string;
-                // let utxo = this.nftDict[utxoId];
-                console.log(this.nftDict)
+                let target = this.nftUTXOs.find(el => {
+                    return el.getUTXOID() === utxoId
+                })
 
-                // if(utxo){
-                //     this.addNft(utxo as UTXO);
-                // }
-                // this.addTx(assetId);
+                if(target){
+                    this.addNft(target);
+                }
             }
         }
     }
