@@ -8,7 +8,7 @@
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="addr_text">{{address}}</p>
+                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <p class="subtitle">Derived AVAX Wallet Address</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">
@@ -27,9 +27,10 @@
 
     import CopyText from "@/components/misc/CopyText.vue";
     import QRModal from "@/components/modals/QRModal.vue";
-    import PaperWallet from "@/components/modals/PaperWallet/PaperWallet2.vue";
+    import PaperWallet from "@/components/modals/PaperWallet/PaperWallet.vue";
     import QRCode from "qrcode";
-    import {AVMKeyPair} from "avalanche";
+    // import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
+    import {AVMKeyPair} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

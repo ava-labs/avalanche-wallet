@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import * as bip39 from "bip39";
+
 import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
@@ -8,7 +10,7 @@ import History from './modules/history/history';
 
 import {
     RootState,
-    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput
+    IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput, IWalletNftDict
 } from "@/store/types";
 
 import {
@@ -21,10 +23,10 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {AmountOutput, AVMKeyPair} from "avalanche";
+import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/dist/apis/avm";
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
-import {AssetsDict} from "@/store/modules/assets/types";
+import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 
 export default new Vuex.Store({
@@ -43,6 +45,55 @@ export default new Vuex.Store({
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
     },
     getters: {
+        walletNftUTXOs(state: RootState): UTXO[]{
+            let wallet:AvaHdWallet|null = state.activeWallet;
+
+            if(!wallet) return [];
+            if(!wallet.getUTXOSet()) return [];
+
+
+            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let res: UTXO[] = [];
+            for(var n=0; n<addrUtxos.length; n++){
+                let utxo = addrUtxos[n];
+
+                // Process only non NFT utxos, outputid === 0b
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11){
+                    res.push(utxo);
+                }
+            }
+            return res;
+        },
+
+        // assset id -> utxos
+        walletNftDict(state: RootState){
+            let wallet:AvaHdWallet|null = state.activeWallet;
+
+            if(!wallet) return {};
+            if(!wallet.getUTXOSet()) return {};
+
+
+            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let res: IWalletNftDict = {};
+            for(var n=0; n<addrUtxos.length; n++){
+                let utxo = addrUtxos[n];
+
+                // Process only non NFT utxos, outputid === 0b
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11){
+                    let assetIdBuff = utxo.getAssetID();
+                    let assetId = bintools.cb58Encode(assetIdBuff);
+
+                    if(res[assetId]){
+                        res[assetId].push(utxo);
+                    }else{
+                        res[assetId] = [utxo];
+                    }
+                }
+            }
+            return res;
+        },
 
         // Creates the asset_id => raw balance dictionary
         walletBalanceDict(state: RootState): IWalletBalanceDict{
@@ -57,11 +108,16 @@ export default new Vuex.Store({
 
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
+
+                // Process only non NFT utxos, outputid === 0b
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11) continue;
+
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
                 let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
-                let assetId = bintools.avaSerialize(assetIdBuff);
+                let assetId = bintools.cb58Encode(assetIdBuff);
 
                 if(!dict[assetId]){
                     dict[assetId] = amount.clone();
@@ -135,9 +191,9 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet({state, dispatch, commit}, key: AVMKeyPair): Promise<AvaHdWallet>{
+        async accessWallet({state, dispatch, commit}, mnemonic: string): Promise<AvaHdWallet>{
 
-            let wallet:AvaHdWallet = await dispatch('addWallet', key);
+            let wallet:AvaHdWallet = await dispatch('addWallet', mnemonic);
             await dispatch('activateWallet', wallet);
 
             state.isAuth = true;
@@ -145,10 +201,10 @@ export default new Vuex.Store({
             return wallet;
         },
 
-        async accessWalletMultiple({state, dispatch, commit}, keys: AVMKeyPair[]){
-            for(var i=0;i<keys.length;i++){
-                let key = keys[i];
-                await dispatch('addWallet', key);
+        async accessWalletMultiple({state, dispatch, commit}, mnemonics: string[]){
+            for(var i=0;i<mnemonics.length;i++){
+                let mnemonic = mnemonics[i];
+                await dispatch('addWallet', mnemonic);
             }
 
             await dispatch('activateWallet', state.wallets[0]);
@@ -224,26 +280,26 @@ export default new Vuex.Store({
             state.volatileWallets = [];
         },
 
-        async addWallet({state, dispatch}, keypair:AVMKeyPair): Promise<AvaHdWallet|null>{
+        async addWallet({state, dispatch}, mnemonic:string): Promise<AvaHdWallet|null>{
 
             // Make sure wallet doesnt exist already
             for(var i=0;i<state.wallets.length;i++){
                 let w = state.wallets[i];
-                if(w.masterKey.getAddressString() === keypair.getAddressString()){
+                if(w.mnemonic === mnemonic){
                     console.error("WALLET ALREADY ADDED")
                     return null;
                 }
             }
-            let wallet = new AvaHdWallet(keypair);
+            let wallet = new AvaHdWallet(mnemonic);
                 state.wallets.push(wallet);
                 state.volatileWallets.push(wallet);
             return wallet;
         },
 
         removeWallet({state,dispatch}, wallet:AvaHdWallet){
+            // TODO: This might cause an error use wallet id instead
             let index = state.wallets.indexOf(wallet);
             state.wallets.splice(index,1);
-
         },
 
 
@@ -278,7 +334,7 @@ export default new Vuex.Store({
                 let txId:string = await wallet.issueBatchTx(orders, toAddr);
                 return 'success';
             }catch(e) {
-                console.log(e);
+                console.error(e);
                 return 'error';
             }
         },
@@ -300,7 +356,7 @@ export default new Vuex.Store({
 
             // Download the file
             let text = JSON.stringify(file_data);
-            let addr = file_data.keys[0].address.substr(2,5);
+            // let addr = file_data.keys[0].address.substr(2,5);
 
             let utcDate = new Date()
             let dateString = utcDate.toISOString().replace(' ', '_');
@@ -321,10 +377,6 @@ export default new Vuex.Store({
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
-
-            if(state.warnUpdateKeyfile){
-                state.warnUpdateKeyfile = false;
-            }
         },
 
 
@@ -337,26 +389,49 @@ export default new Vuex.Store({
             let version = fileData.version;
 
             try {
+                // Decrypt the key file with the password
                 let keyFile:KeyFileDecrypted = await readKeyFile(fileData,pass);
 
+                // Old files have private keys, 5.0 and above has mnemonic phrases
                 let keys = keyFile.keys;
 
                 let chainID = avm.getBlockchainAlias();
-                let inputData:AVMKeyPair[] = keys.map(key => {
-                    return keyToKeypair(key.key,chainID);
-                });
+
+                let mnemonics: string[];
+                // Convert old version private keys to mnemonic phrases
+                if(['2.0','3.0','4.0'].includes(version)){
+                    mnemonics = keys.map(key => {
+                        // Private keys from the keystore file do not have the PrivateKey- prefix
+                        let pk = 'PrivateKey-'+key.key;
+                        let keypair = keyToKeypair(pk,chainID);
+
+                        let keyBuf = keypair.getPrivateKey();
+                        let keyHex: string = keyBuf.toString('hex');
+
+                        // Entropy must be 64 characters, make sure 0 pad exists
+                        let paddedKeyHex = keyHex.padStart(64,'0');
+                        let mnemonic:string = bip39.entropyToMnemonic(paddedKeyHex);
+
+                        return mnemonic;
+                    });
+                }else{
+                    // New versions encrypt the mnemonic so we dont have to do anything
+                    mnemonics = keys.map(key => key.key);
+                }
 
                 // If not auth, login user then add keys
                 if(!store.state.isAuth){
-                    await store.dispatch('accessWalletMultiple', inputData);
+                    await store.dispatch('accessWalletMultiple', mnemonics);
                 }else{
-                    for(let i=0; i<inputData.length;i++){
-                        let key = inputData[i];
-                        await store.dispatch('addWallet', key);
+                    for(let i=0; i<mnemonics.length;i++){
+                        // Private keys from the keystore file do not have the PrivateKey- prefix
+                        let mnemonic = mnemonics[i];
+                        await store.dispatch('addWallet', mnemonic);
                     }
                 }
 
                 // Keystore warning flag asking users to update their keystore files;
+                store.state.warnUpdateKeyfile = false;
                 if(version !== KEYSTORE_VERSION){
                     store.state.warnUpdateKeyfile = true;
                 }

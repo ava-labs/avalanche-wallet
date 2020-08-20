@@ -5,6 +5,7 @@ import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {KeyFile} from "@/js/IKeystore";
+import {UTXO} from "avalanche/dist/apis/avm";
 
 export interface RootState {
     isAuth: boolean,
@@ -18,6 +19,10 @@ export interface RootState {
 interface Modal {
     open(): void,
     close(): void
+}
+
+export interface IWalletNftDict {
+    [assetId: string]: UTXO[]
 }
 
 export interface IWalletBalanceDict {
@@ -49,7 +54,7 @@ export interface AssetType {
 
 export interface IssueBatchTxInput {
     toAddress: string,
-    orders: ITransaction[]
+    orders: (ITransaction|UTXO)[]
 }
 
 export interface BatchTxOrder {

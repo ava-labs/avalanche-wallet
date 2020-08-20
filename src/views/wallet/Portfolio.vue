@@ -3,8 +3,8 @@
         <div class="header">
             <h1>Assets</h1>
             <div>
-                <button @click="tab='fungibles'" :active="tab===`fungibles`">Fungibles</button>
-                <button @click="tab='collectibles'" :active="tab===`collectibles`">Collectibles</button>
+                <button @click="tab='fungibles'" :active="tab===`fungibles`" data-cy="wallet_fungible">Fungibles</button>
+                <button @click="tab='collectibles'" :active="tab===`collectibles`" data-cy="wallet_nft">Collectibles</button>
             </div>
             <div style="flex-grow: 1"></div>
             <div class="search">

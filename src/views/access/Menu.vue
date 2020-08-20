@@ -10,20 +10,20 @@
         <div class="options">
             <router-link to="/access/mnemonic" class="option button_primary">Mnemonic Key Phrase</router-link>
             <router-link to="/access/keystore" class="option button_primary">Keystore File</router-link>
-            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>
+<!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
         <router-link to="/" class="link">Cancel</router-link>
     </div>
 </template>
 
 <script>
-    import TorusGoogle from "@/components/Torus/TorusGoogle";
+    // import TorusGoogle from "@/components/Torus/TorusGoogle";
 
     export default {
-        components: {TorusGoogle},
-        comments: {
-            TorusGoogle
-        }
+        // components: {TorusGoogle},
+        // comments: {
+        //     TorusGoogle
+        // }
     }
 </script>
 
@@ -56,7 +56,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 30px;
 }
 

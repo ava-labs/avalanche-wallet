@@ -51,13 +51,7 @@
 
             setTimeout(async () => {
                 try {
-                    let entropy = bip39.mnemonicToEntropy(phrase);
-                    let b = new Buffer(entropy, "hex");
-
-                    let addr = keyChain.importKey(b);
-                    let keypair = keyChain.getKey(addr);
-
-                    await this.$store.dispatch('addWallet', keypair);
+                    await this.$store.dispatch('addWallet', phrase);
                     this.isLoading = false;
                     this.handleImportSuccess();
                 }catch(e){
