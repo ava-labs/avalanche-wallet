@@ -88,6 +88,7 @@ export default class Home extends Vue {}
             .login_option {
                 display: flex;
                 flex-direction: column;
+                border-radius: 2px;
                 align-items: flex-start;
                 justify-content: space-between;
                 background-color: var(--bg-light);
