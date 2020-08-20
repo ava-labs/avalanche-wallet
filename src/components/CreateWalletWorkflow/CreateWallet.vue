@@ -27,9 +27,9 @@
                                         <mnemonic-display :phrase="keyPhrase" :bgColor="verificatiionColor" class="mnemonic_display"></mnemonic-display>
                                         <p class="phrase_raw" v-bind:class="{ verified: isVerified }">{{keyPhrase}}</p>
                                         <div class="mneumonic_button_container" v-if="!isVerified">
-                                            <button @click="createKey" class="ava_button but_randomize button_secondary ">
+                                            <button @click="createKey" class="ava_button but_randomize button_primary ">
                                                 <fa icon="sync"></fa>
-                                                <span>Randomize</span>
+                                                <span>Regenerate</span>
                                             </button>
                                         </div>
                                     </div>
@@ -62,7 +62,7 @@
                                                 explain="I wrote down my mnemonic phrase in a secure location."
                                         ></MnemonicCopied>
                                         <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
-                                        <button class="but_primary ava_button button_primary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
+                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
@@ -152,20 +152,9 @@
         }
 
         createKey():void{
+            this.isSecured = false;
             let mnemonic = bip39.generateMnemonic(256);
-            // let entropy = bip39.mnemonicToEntropy(mnemonic);
-            // let b = new Buffer(entropy, 'hex');
-
-            // let addr = keyChain.importKey(b);
-            // let keypair = keyChain.getKey(addr);
-            // let privkstr = keypair.getPrivateKeyString();
-
-            // Remove because it will get added in accessWallet dispatch
-            // keyChain.removeKey(keypair);
-
-            // this.keyPair = keypair;
             this.keyPhrase = mnemonic;
-            // this.newPrivateKey = privkstr;
         }
 
         // Will be true if the values in remember wallet checkbox are valid
