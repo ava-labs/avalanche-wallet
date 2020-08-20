@@ -32,7 +32,7 @@
                 <p style="font-size: 14px;">
                     <b>I bought coins in the Token Sale. Where are my AVAX?</b>
                     <br>
-                    This wallet is connected to the Avalanche <i>Denali test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
+                    This wallet is connected to the Avalanche <i>Everest test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
                 </p>
             </v-alert>
         </div>
