@@ -52,9 +52,9 @@
                 let amtB = b.getAmount();
 
                 // AVA always on top
-                if(symbolA === 'AVA'){
+                if(symbolA === 'AVAX'){
                     return -1;
-                }else if(symbolB === 'AVA'){
+                }else if(symbolB === 'AVAX'){
                     return 1;
                 }
 
