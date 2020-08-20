@@ -7,12 +7,12 @@ import {Buffer} from "buffer";
             </header>
             <label>Hit ‘SPACE’ after every successful word entry.</label>
             <textarea v-model="phrase"></textarea>
-            <remember-key
-                    class="remember"
-                    v-model="rememberPass"
-                    @is-valid="isRememberValid"
-                    explain="Remember key phrase for easy access"
-            ></remember-key>
+<!--            <remember-key-->
+<!--                    class="remember"-->
+<!--                    v-model="rememberPass"-->
+<!--                    @is-valid="isRememberValid"-->
+<!--                    explain="Remember key phrase for easy access"-->
+<!--            ></remember-key>-->
             <div class="button_container">
                 <v-btn
                     class="ava_button but_primary button_primary access"
@@ -38,25 +38,25 @@ import {Buffer} from "buffer";
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-    import RememberKey from "@/components/misc/RememberKey.vue";
-    import {Buffer} from "buffer/";
+    // import RememberKey from "@/components/misc/RememberKey.vue";
+    // import {Buffer} from "buffer/";
 
-    import * as bip39 from 'bip39';
-    import {bintools, keyChain} from "@/AVA";
+    // import * as bip39 from 'bip39';
+    // import {bintools, keyChain} from "@/AVA";
     // import {AddWalletInput} from "@/store/types";
 
     @Component({
         components: {
             MnemonicDisplay,
-            RememberKey
+            // RememberKey
         },
     })
     export default class Mnemonic extends Vue{
         phrase:string = "";
         isLoading:boolean = false;
-        rememberPass:string|null = null;
+        // rememberPass:string|null = null;
         err:string = "";
-        rememberValid: boolean = true;
+        // rememberValid: boolean = true;
 
         errCheck(){
             let phrase = this.phrase;
@@ -71,9 +71,9 @@ import {Buffer} from "buffer";
             return true;
         }
 
-        isRememberValid(val:boolean){
-            this.rememberValid = val;
-        }
+        // isRememberValid(val:boolean){
+        //     this.rememberValid = val;
+        // }
 
 
         get wordCount():number{
@@ -86,9 +86,9 @@ import {Buffer} from "buffer";
                 return false
             }
 
-            if(!this.rememberValid){
-                return false;
-            }
+            // if(!this.rememberValid){
+            //     return false;
+            // }
 
             return true;
         }
@@ -107,21 +107,22 @@ import {Buffer} from "buffer";
 
             setTimeout(async () => {
                 try {
-                    let entropy = bip39.mnemonicToEntropy(phrase);
-                    let b = new Buffer(entropy, "hex");
+                    // let entropy = bip39.mnemonicToEntropy(phrase);
+                    // let b = new Buffer(entropy, "hex");
 
-                    let addr = keyChain.importKey(b);
-                    let keypair = keyChain.getKey(addr);
+                    // let addr = keyChain.importKey(b);
+                    // let keypair = keyChain.getKey(addr);
 
 
-                    await this.$store.dispatch('accessWallet', keypair);
+                    await this.$store.dispatch('accessWallet', phrase);
 
-                    if(this.rememberPass){
-                        this.$store.dispatch('rememberWallets', this.rememberPass);
-                    }
+                    // if(this.rememberPass){
+                    //     this.$store.dispatch('rememberWallets', this.rememberPass);
+                    // }
                     this.isLoading = false;
                 }catch(e){
                     this.isLoading = false;
+                    console.log(e);
                     this.err = 'Invalid key phrase.'
                 }
             }, 500)
@@ -257,10 +258,6 @@ textarea {
     label {
         text-align: center;
         margin-bottom: 20px;
-    }
-
-    textarea {
-        margin-bottom: main.$vertical-padding-mobile;
     }
 
     .phrase_disp {

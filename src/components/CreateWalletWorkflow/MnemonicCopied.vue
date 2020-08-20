@@ -1,15 +1,10 @@
 <template>
     <div>
-        <v-checkbox :label="explain" v-model="isSecured" @change="change" class="checkbox"></v-checkbox>
+        <v-checkbox :label="explain" v-model="value" @change="change" class="checkbox"></v-checkbox>
     </div>
 </template>
 <script>
 export default {
-    data() {
-        return {
-            isSecured: false,
-        }
-    },
     props: {
         value: Boolean,
         explain: {
@@ -23,7 +18,7 @@ export default {
     },
     methods: {
         change() {
-            this.$emit("change", this.isSecured);
+            this.$emit("change", this.value);
         }
     }
 }

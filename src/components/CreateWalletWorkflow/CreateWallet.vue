@@ -5,7 +5,7 @@
                 <b-col>
                     <transition name="fade" mode="out-in">
                         <!-- PHASE 1 -->
-                        <div v-if="!newPrivateKey" class="stage_1">
+                        <div v-if="!keyPhrase" class="stage_1">
                             <div class="img_container">
                                 <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                 <img v-else src="@/assets/diamond-secondary-night.svg" alt />
@@ -14,7 +14,7 @@
                             <router-link to="/access" class="link">Already have a wallet?</router-link>
                             <div class="options">
                                 <button class="ava_button but_generate button_secondary" @click="createKey">Generate Key Phrase</button>
-                                <TorusGoogle class="torus_but"></TorusGoogle>
+<!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
                             <router-link to="/" class="link">Cancel</router-link>
                         </div>
@@ -27,9 +27,9 @@
                                         <mnemonic-display :phrase="keyPhrase" :bgColor="verificatiionColor" class="mnemonic_display"></mnemonic-display>
                                         <p class="phrase_raw" v-bind:class="{ verified: isVerified }">{{keyPhrase}}</p>
                                         <div class="mneumonic_button_container" v-if="!isVerified">
-                                            <button @click="createKey" class="ava_button but_randomize button_secondary ">
+                                            <button @click="createKey" class="ava_button but_randomize button_primary ">
                                                 <fa icon="sync"></fa>
-                                                <span>Randomize</span>
+                                                <span>Regenerate</span>
                                             </button>
                                         </div>
                                     </div>
@@ -62,26 +62,26 @@
                                                 explain="I wrote down my mnemonic phrase in a secure location."
                                         ></MnemonicCopied>
                                         <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
-                                        <button class="but_primary ava_button button_primary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
+                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
-                                        <remember-key
+<!--                                        <remember-key-->
 
-                                                v-model="rememberPassword"
-                                                @is-valid="isRememberValid"
-                                                class="remember_wallet"
-                                                complete="onremember"
-                                                explain="Remember my wallet."
-                                        ></remember-key>
+<!--                                                v-model="rememberPassword"-->
+<!--                                                @is-valid="isRememberValid"-->
+<!--                                                class="remember_wallet"-->
+<!--                                                complete="onremember"-->
+<!--                                                explain="Remember my wallet."-->
+<!--                                        ></remember-key>-->
 
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
-                                                <Spinner v-if="isLoad" class="spinner" :color="'#4C2E56'"></Spinner>
+                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
 
                                                 <div v-else>
                                                     <button
-                                                            class="ava_button access generate"
+                                                            class="button_primary ava_button access generate"
                                                             @click="access"
                                                             :disabled="!canSubmit"
                                                     >Access Wallet</button>
@@ -97,7 +97,6 @@
                 </b-col>
             </b-row>
         </b-container>
-
         <div>
         </div>
     </div>
@@ -107,15 +106,13 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    import {keyChain} from "@/AVA";
-    import RememberKey from "@/components/misc/RememberKey.vue";
-    import {Buffer} from "buffer/";
-    import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
+    // import RememberKey from "@/components/misc/RememberKey.vue";
+    // import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
 
-    import {AVMKeyChain, AVMKeyPair, KeyPair} from "avalanche";
+    // import {AVMKeyChain, AVMKeyPair} from "avalanche/typings/src/apis/avm";
     import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
     import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
 
@@ -123,28 +120,30 @@
     @Component({
         components: {
             CopyText,
-            RememberKey,
+            // RememberKey,
             TextDisplayCopy,
             MnemonicDisplay,
             Spinner,
-            TorusGoogle,
+            // TorusGoogle,
             VerifyMnemonic,
             MnemonicCopied
         }
     })
     export default class CreateWallet extends Vue{
+        // TODO: We do not need to create keyPair, only mnemonic is sufficient
         isLoad: boolean = false;
-        rememberPassword:string|null = null;
-        rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
+        // rememberPassword:string|null = null;
+        // rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
         // Mnemonic
-        newPrivateKey: string|null =null;
+        // newPrivateKey: string|null =null;
         keyPhrase: string = "";
-        keyPair: KeyPair|null = null;
+        // keyPair: KeyPair|null = null;
         // Verify Mnemonic
         isSecured: boolean = false;
         isVerified: boolean = false;
 
-        get canVerify(){
+
+        get canVerify(): boolean{
             return this.isSecured ? true : false;
         }
 
@@ -153,29 +152,18 @@
         }
 
         createKey():void{
+            this.isSecured = false;
             let mnemonic = bip39.generateMnemonic(256);
-            let entropy = bip39.mnemonicToEntropy(mnemonic);
-            let b = new Buffer(entropy, 'hex');
-
-            let addr = keyChain.importKey(b);
-            let keypair = keyChain.getKey(addr);
-            let privkstr = keypair.getPrivateKeyString();
-
-            // Remove because it will get added in accessWallet dispatch
-            keyChain.removeKey(keypair);
-
-            this.keyPair = keypair;
             this.keyPhrase = mnemonic;
-            this.newPrivateKey = privkstr;
         }
 
         // Will be true if the values in remember wallet checkbox are valid
-        isRememberValid(val: boolean){
-            this.rememberValid = val;
-        }
+        // isRememberValid(val: boolean){
+        //     this.rememberValid = val;
+        // }
 
         get canSubmit():boolean{
-            if(!this.rememberValid) return false;
+            // if(!this.rememberValid) return false;
             return true;
         }
         verifyMnemonic(){
@@ -188,7 +176,7 @@
         }
 
         async access(): Promise<void> {
-            if (!this.keyPair) return;
+            if (!this.keyPhrase) return;
 
             this.isLoad = true;
 
@@ -196,27 +184,12 @@
             let parent = this;
 
             setTimeout(async ()=>{
-                await parent.$store.dispatch('accessWallet', this.keyPair);
+                await parent.$store.dispatch('accessWallet', this.keyPhrase);
 
-                if(this.rememberPassword && this.rememberValid){
-                    console.log("Will remember..");
-                    parent.$store.dispatch('rememberWallets', this.rememberPassword);
-                }
-
-                //@ts-ignore
-                // console.log(parent.$refs)
-                // parent.$refs.remember_wallet.save();
-                // if(password){
-                //     console.log("will remember")
-                //     let payload:rememberWalletIn = {
-                //         wallets: [wallet],
-                //         password: password
-                //     }
-                //     parent.$store.dispatch('rememberWallets', payload);
+                // if(this.rememberPassword && this.rememberValid){
+                //     // console.log("Will remember..");
+                //     parent.$store.dispatch('rememberWallets', this.rememberPassword);
                 // }
-
-
-
             }, 500);
         }
     }
@@ -311,7 +284,7 @@ a {
 .stage_2 {
     margin: 0 auto;
     text-align: left;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .cols {
@@ -344,6 +317,7 @@ a {
 
     .verified {
         background-color: main.$green-light;
+        color: #222;
     }
 
     .mneumonic_button_container {
@@ -417,7 +391,7 @@ a {
             justify-content: flex-start;
 
             .access {
-                background-color: main.$primary-color !important;
+
             }
 
             .link {
@@ -482,7 +456,7 @@ a {
         .mneumonic_button_container {
             display: flex;
             flex-direction: column;
-            align-items: start;
+            align-items: flex-start;
             justify-content: center;
 
             .copy_phrase {

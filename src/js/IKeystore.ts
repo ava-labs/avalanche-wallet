@@ -5,13 +5,13 @@ export interface KeyFile{
     pass_hash: string,
     keys: KeyFileKey[],
     version: string,
-    warnings: string[]
+    // warnings: string[]
 }
 
 export interface KeyFileKey {
     key: string,
     iv: string,
-    address: string
+    // address: string
 }
 
 export interface KeyFileDecrypted {
@@ -21,5 +21,5 @@ export interface KeyFileDecrypted {
 
 export interface KeyFileKeyDecrypted {
     key: string
-    address: string,
+    // address: string,
 }

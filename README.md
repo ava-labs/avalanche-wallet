@@ -122,6 +122,41 @@ interface IKeystoreFile{
 }
 ```
 
+### v4.0.0
+Avalanche uses bech32 addresses. Removed address field from keys and the warning message.
+```typescript
+interface IKeystoreFile{
+    version
+    salt
+    pass_hash
+    keys: [
+        {
+            key
+            iv
+        }  
+    ]
+}
+```
+
+
+### v5.0.0
+Encodes mnemonic phrase as the key.
+```typescript
+interface IKeystoreFile{
+    version
+    salt
+    pass_hash
+    keys: [
+        {
+            key
+            iv
+        }  
+    ]
+}
+```
+
+
+
 # Local Storage Remember Wallet Spec
 Basically same as storing the keystore file in the browser localstorage.
 

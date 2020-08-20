@@ -15,7 +15,6 @@
         <div class="scrollable" v-else>
             <fungible-row lass="asset" v-for="asset in walletBalances" :key="asset.id" :asset="asset"></fungible-row>
         </div>
-
     </div>
 </template>
 <script lang="ts">
@@ -52,9 +51,9 @@
                 let amtB = b.getAmount();
 
                 // AVA always on top
-                if(symbolA === 'AVA'){
+                if(symbolA === 'AVAX'){
                     return -1;
-                }else if(symbolB === 'AVA'){
+                }else if(symbolB === 'AVAX'){
                     return 1;
                 }
 

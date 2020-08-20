@@ -19,9 +19,8 @@
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import AvaHdWallet from "@/js/AvaHdWallet";
-    import {AVMKeyPair, UTXOSet} from "avalanche";
+    import {AVMKeyPair, UTXOSet} from "avalanche/dist/apis/avm";
     import {bintools} from "@/AVA";
-    import BN from "bn.js";
     import Big from 'big.js';
     import AvaAsset from "@/js/AvaAsset";
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
@@ -90,18 +89,15 @@
 
             let balances: DerivationListBalanceDict[] = this.derivedKeys.map(key => {
                 let addr = key.getAddress();
-                let utxoIds =  utxoSet.getUTXOIDs([addr]);
-                let utxos = utxoSet.getAllUTXOs(utxoIds);
 
-                let newSet = new UTXOSet();
-                    newSet.addArray(utxos);
+                let newSet = utxoSet.clone();
                 let assetIds = newSet.getAssetIDs();
 
                 let balDict:DerivationListBalanceDict = {};
                 for(var i=0; i<assetIds.length; i++){
                     let assetId = assetIds[i];
                     let balance = newSet.getBalance([addr], assetId);
-                    let assetIdSerial = bintools.avaSerialize(assetId);
+                    let assetIdSerial = bintools.cb58Encode(assetId);
 
                     let target:Big = balDict[assetIdSerial];
                     let asset:AvaAsset = assetsDict[assetIdSerial];
@@ -127,18 +123,17 @@
 
             let balances: DerivationListBalanceDict[] = this.derivedKeysInternal.map(key => {
                 let addr = key.getAddress();
-                let utxoIds =  utxoSet.getUTXOIDs([addr]);
-                let utxos = utxoSet.getAllUTXOs(utxoIds);
 
-                let newSet = new UTXOSet();
-                newSet.addArray(utxos);
+
+                let newSet = utxoSet.clone();
+
                 let assetIds = newSet.getAssetIDs();
 
                 let balDict:DerivationListBalanceDict = {};
                 for(var i=0; i<assetIds.length; i++){
                     let assetId = assetIds[i];
                     let balance = newSet.getBalance([addr], assetId);
-                    let assetIdSerial = bintools.avaSerialize(assetId);
+                    let assetIdSerial = bintools.cb58Encode(assetId);
 
                     let target:Big = balDict[assetIdSerial];
                     let asset:AvaAsset = assetsDict[assetIdSerial];

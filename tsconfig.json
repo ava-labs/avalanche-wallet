@@ -20,7 +20,8 @@
     "types": [
       "webpack-env",
       "vuetify",
-      "ts-jest"
+      "ts-jest",
+      "cypress"
     ],
     "paths": {
       "@/*": [
@@ -42,6 +43,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "../avalanche.js"
   ]
 }
