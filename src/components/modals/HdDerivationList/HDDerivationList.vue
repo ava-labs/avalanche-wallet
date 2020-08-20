@@ -89,11 +89,8 @@
 
             let balances: DerivationListBalanceDict[] = this.derivedKeys.map(key => {
                 let addr = key.getAddress();
-                let utxoIds =  utxoSet.getUTXOIDs([addr]);
-                let utxos = utxoSet.getAllUTXOs(utxoIds);
 
-                let newSet = new UTXOSet();
-                    newSet.addArray(utxos);
+                let newSet = utxoSet.clone();
                 let assetIds = newSet.getAssetIDs();
 
                 let balDict:DerivationListBalanceDict = {};
@@ -126,11 +123,10 @@
 
             let balances: DerivationListBalanceDict[] = this.derivedKeysInternal.map(key => {
                 let addr = key.getAddress();
-                let utxoIds =  utxoSet.getUTXOIDs([addr]);
-                let utxos = utxoSet.getAllUTXOs(utxoIds);
 
-                let newSet = new UTXOSet();
-                newSet.addArray(utxos);
+
+                let newSet = utxoSet.clone();
+
                 let assetIds = newSet.getAssetIDs();
 
                 let balDict:DerivationListBalanceDict = {};
