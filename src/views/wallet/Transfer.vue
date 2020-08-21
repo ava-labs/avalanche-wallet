@@ -162,7 +162,7 @@
                 if(res === 'success'){
                     this.onsuccess();
                 }else{
-                    this.onerror(res);
+                    this.onerror();
                 }
             }).catch(err => {
                 console.log(err);
