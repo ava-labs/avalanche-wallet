@@ -31,6 +31,7 @@
         err: string = "";
 
         $refs!:{
+            //@ts-ignore
             rememberForm: RememberKey
         }
 
