@@ -63,14 +63,14 @@ async function sendAvax(address:string, amount:number){
 }
 
 
-async function createFixedCapAsset(name: string, symbol: string, address: string, amount: number){
+async function createFixedCapAsset(name: string, symbol: string, address: string, amount: number, denomination: number = 2){
 
     let holders = [{
         "address": address,
         "amount": amount
     }]
 
-    await xChain.createFixedCapAsset(geckoUsername,geckoPass,name,symbol,2,holders)
+    await xChain.createFixedCapAsset(geckoUsername,geckoPass,name,symbol,denomination,holders)
 }
 
 export {

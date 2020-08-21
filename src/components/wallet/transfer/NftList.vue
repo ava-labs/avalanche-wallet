@@ -6,7 +6,7 @@
                 <NftCard  :utxo="utxo" :mini="true" style="height: 100%; width: 100%; overflow: hidden;"></NftCard>
             </div>
             <button @click="showPopup" class="nft_icon card add_but">
-                +<br>Add
+                +<br>Add NFT
             </button>
         </div>
         <BalancePopup ref="popup" :is-nft="true" @select="addNft" :disabled-ids="usedNftIds" class="bal_popup"></BalancePopup>

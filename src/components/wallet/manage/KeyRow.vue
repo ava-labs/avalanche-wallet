@@ -27,7 +27,7 @@
                             <span>Activate Key</span>
                         </button>
                         <Tooltip text="Remove Key" class="row_but" @click.native="remove" v-if="!is_default">
-                            <img src="@/assets/trash_can.svg" style="height: 16px;">
+                            <img src="@/assets/trash_can_dark.svg" style="height: 16px;">
                         </Tooltip>
 <!--                        <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>-->
                         <Tooltip  text="Past Addresses" class="row_but" @click.native="showPastAddresses">

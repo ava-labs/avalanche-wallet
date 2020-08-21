@@ -1,5 +1,6 @@
 import AvaAsset from "@/js/AvaAsset";
 import Big from "big.js";
+import BN from "bn.js";
 // import {UTXO} from "avalanche";
 
 // type AssetType = "fungible" | "collectible"
@@ -7,7 +8,7 @@ import Big from "big.js";
 export interface ITransaction {
     uuid: string,
     asset: AvaAsset
-    amount: Big
+    amount: BN
 }
 
 export interface INftTransaction {
@@ -17,5 +18,5 @@ export interface INftTransaction {
 
 export interface ICurrencyInputDropdownValue {
     asset: AvaAsset|null,
-    amount: Big
+    amount: BN
 }

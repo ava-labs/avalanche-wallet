@@ -7,14 +7,18 @@
         <div class="card_body" v-else>
             <div class="new_order_Form">
                 <div class="lists">
-                    <h4>Fungibles</h4>
+<!--                    <h4>Fungibles</h4>-->
                     <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                     <template v-if="hasNFT">
-                        <h4>Collectibles - {{nftOrders.length}} Selected</h4>
+<!--                        <h4>Collectibles - {{nftOrders.length}} Selected</h4>-->
                         <NftList @change="updateNftList" ref="nftList"></NftList>
                     </template>
                 </div>
                 <div>
+                    <div class="fees">
+                        <h4>Transaction Summary</h4>
+                        <TxSummary :orders="orders" :nft-orders="nftOrders"></TxSummary>
+                    </div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
                         <p>{{$t('transfer.fee_tx')}} <span>{{txFee.toLocaleString(9)}} AVAX</span></p>
@@ -34,7 +38,7 @@
 <!--                    </div>-->
                     <div class="to_address">
                         <label>{{$t('transfer.to')}}</label>
-                        <qr-input v-model="addressIn" class="qrIn"></qr-input>
+                        <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                     </div>
 
 
@@ -65,6 +69,10 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import { UTXO } from "avalanche/dist/apis/avm";
+    import BN from "bn.js";
+    import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
+
+
 
     @Component({
         components: {
@@ -72,7 +80,8 @@
             TxList,
             RadioButtons,
             QrInput,
-            NftList
+            NftList,
+            TxSummary
         }
     })
     export default class Transfer extends Vue{
@@ -106,6 +115,34 @@
             }
         }
 
+        onsuccess(){
+            this.addressIn = "";
+            // Clear transactions list
+            // @ts-ignore
+            this.$refs.txList.clear();
+
+            // Clear NFT list
+            if(this.hasNFT){
+                // @ts-ignore
+                this.$refs.nftList.clear();
+            }
+
+            this.$store.dispatch('Notifications/add', {
+                title: 'Transaction Sent',
+                message: 'You have successfully sent your transaction.',
+                type:'success',
+            });
+        }
+
+        onerror(){
+            this.$store.dispatch('Notifications/add', {
+                title: 'Error Sending Transaction',
+                message: 'Failed to send transaction.',
+                type:'error',
+            });
+        }
+
+
         send(){
             let parent = this;
             this.isAjax = true;
@@ -118,35 +155,19 @@
                 orders: sumArray
             };
 
+
             this.$store.dispatch('issueBatchTx', txList).then(res => {
                 parent.isAjax = false;
 
                 if(res === 'success'){
-                    // Clear transactions list
-                    // @ts-ignore
-                    parent.$refs.txList.clear();
-
-                    // Clear NFT list
-                    if(this.hasNFT){
-                        // @ts-ignore
-                        parent.$refs.nftList.clear();
-                    }
-
-                    this.$store.dispatch('Notifications/add', {
-                        title: 'Transaction Sent',
-                        message: 'You have successfully sent your transaction.',
-                        type:'success',
-                    });
+                    this.onsuccess();
                 }else{
-                    this.$store.dispatch('Notifications/add', {
-                        title: 'Error Sending Transaction',
-                        message: 'Failed to send transaction.',
-                        type:'error',
-                    });
+                    this.onerror();
                 }
+            }).catch(err => {
+                console.log(err);
             });
         }
-
 
         get networkStatus():string{
             let stat = this.$store.state.Network.status;
@@ -165,7 +186,7 @@
         get canSend(){
             if(!this.addressIn) return false;
 
-            if((this.orders.length > 0 && this.totalTxSize.eq(0)) && this.nftOrders.length===0 ){
+            if((this.orders.length > 0 && this.totalTxSize.eq(new BN(0))) && this.nftOrders.length===0 ){
                 return false;
             }
 
@@ -179,7 +200,7 @@
             return true;
         }
         get totalTxSize(){
-            let res = Big(0);
+            let res = new BN(0);
             for(var i=0; i<this.orders.length; i++){
                 let order = this.orders[i];
                 if(order.amount){
@@ -320,13 +341,17 @@
         margin-bottom: 15px;
     }
     .lists{
-        padding-right: 45px;
+        /*padding-right: 45px;*/
         border-right: 1px solid var(--bg-light);
         grid-column: 1/3;
+
+        /*> div{*/
+        /*    margin: 14px 0;*/
+        /*}*/
     }
 
     .tx_list{
-
+        margin-bottom: 14px;
     }
 
     .fees p{

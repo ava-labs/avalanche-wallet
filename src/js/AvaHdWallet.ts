@@ -50,6 +50,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     chainId: string;
     utxoset: UTXOSet;
     mnemonic: string;
+    isLoading: boolean;
     private indexKeyCache:IIndexKeyCache;
     private indexChangeKeyCache:IIndexKeyCache;
 
@@ -62,6 +63,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.utxoset = new UTXOSet();
         this.indexKeyCache = {};
         this.indexChangeKeyCache = {};
+        this.isLoading = false;
 
         this.mnemonic = mnemonic;
 
@@ -206,7 +208,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // If fee isn't added, add it
         if(!isFeeAdded){
-            aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+            if(avm.getFee().gt(ZERO)){
+                aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+            }
         }
 
         const success: Error = this.utxoset.getMinimumSpendable(aad);
@@ -326,6 +330,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
             for(let n:number=0;n<0+INDEX_RANGE;n++){
                 let scanIndex: number = i+n;
 
+                // TODO: Scan internal and external seperately, the both sould have different indeces
 
                 let addrIn: Buffer = internalAddrs[scanIndex];
                 let addrEx: Buffer = externalAddrs[scanIndex];

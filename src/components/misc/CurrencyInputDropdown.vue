@@ -3,7 +3,7 @@
         <div class="curr_in_drop">
             <div class="max_in_cont">
                 <button class="max_but" @click="maxOut">MAX</button>
-                <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination"></big-num-input>
+                <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination" :step="stepSize" :placeholder="placeholder"></big-num-input>
             </div>
 <!--            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>-->
             <BalanceDropdown :disabled_assets="disabled_assets" v-model="asset_now"></BalanceDropdown>
@@ -15,7 +15,7 @@
     import {Vue, Component, Prop, Emit, Watch} from 'vue-property-decorator';
 
     import BN from "bn.js";
-    import Big from 'big.js';
+    // import Big from 'big.js';
     import Dropdown from "@/components/misc/Dropdown.vue";
     // import BigNumInput from "@/components/misc/BigNumInput";
 
@@ -42,7 +42,7 @@
         }
     })
     export default class CurrencyInputDropdown extends Vue{
-        amount: Big = new Big(0);
+        amount: BN = new BN(0);
         asset_now: AvaAsset = this.walletAssetsArray[0];
 
         @Prop({default: () => []}) disabled_assets!: AvaAsset[];
@@ -62,16 +62,19 @@
         @Watch('asset_now')
         drop_change(val: AvaAsset){
             this.asset_now = val;
-            this.amount_in(Big(0));
+            this.amount_in(new BN(0));
         }
 
 
+        get stepSize(){
+            return new BN(1);
+        }
         maxOut(){
             // @ts-ignore
             this.$refs.bigIn.maxout();
         }
 
-        amount_in(val: Big){
+        amount_in(val: BN){
             this.amount = val;
             this.onchange();
         }
@@ -89,7 +92,12 @@
             }
         }
 
-
+        // get placeholder(): string{
+        //     let denom = this.denomination;
+        //
+        //     let res = '0';
+        //     return res;
+        // }
 
 
         get isEmpty():boolean{
@@ -165,7 +173,7 @@
                 let fee = avm.getFee();
                 // console.log(fee);
                 if(fee.gte(balance.amount)){
-                    return null;
+                    return new BN(0);
                 }else{
                     return balance.amount.sub(fee);
                 }
