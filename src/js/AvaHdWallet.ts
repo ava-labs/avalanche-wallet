@@ -206,7 +206,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // If fee isn't added, add it
         if(!isFeeAdded){
-            aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+            if(avm.getFee().gt(ZERO)){
+                aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+            }
         }
 
         const success: Error = this.utxoset.getMinimumSpendable(aad);

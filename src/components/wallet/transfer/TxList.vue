@@ -11,7 +11,9 @@
                     :disabled_assets="disabledAssets[i]"
                     :initial="tx.asset.id"
             ></currency-input-dropdown>
-            <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1">Remove Asset</button>
+            <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length>1" class="remove_but">
+                <img src="@/assets/trash_can_dark.svg">
+            </button>
         </div>
         <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
     </div>
@@ -23,7 +25,7 @@
 
     const uuidv1 = require('uuid/v1');
 
-    import Big from 'big.js';
+    import BN from 'bn.js';
     import CurrencyInputDropdown from "@/components/misc/CurrencyInputDropdown.vue";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
@@ -100,13 +102,13 @@
                 this.tx_list.push({
                     uuid: uuid,
                     asset: this.assets[id],
-                    amount: Big(0),
+                    amount: new BN(0),
                 });
             }else if(this.next_initial){
                 this.tx_list.push({
                     uuid: uuid,
                     asset: this.next_initial,
-                    amount: Big(0),
+                    amount: new BN(0),
                 });
             }
             this.$emit('change', this.tx_list);
@@ -164,8 +166,9 @@
 
     .list_item{
         position: relative;
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: 1fr 80px;
+        /*flex-direction: column;*/
         margin-bottom: 4px;
         padding: 2px 0px;
         border-radius: 3px !important;
@@ -173,6 +176,20 @@
 
         &:last-of-type{
             margin-bottom: 0px;
+        }
+
+        .remove_but{
+            height: 20px;
+            opacity: 0.6;
+            justify-self: center;
+
+            &:hover{
+                opacity: 1;
+            }
+            img{
+                height: 100%;
+                object-fit: contain;
+            }
         }
     }
 
@@ -202,11 +219,12 @@
     .add_asset{
         margin-top: 16px;
         border-radius: 0;
-        color: var(--primary-color);
+        color: var(--primary-color-light);
         font-size: 14px;
 
         &:hover{
             opacity: 0.7;
+            color: var(--primary-color);
         }
     }
 
