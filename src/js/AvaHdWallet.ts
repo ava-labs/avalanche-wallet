@@ -195,7 +195,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 let tx: ITransaction = order as ITransaction;
 
                 let assetId = bintools.cb58Decode(tx.asset.id)
-                let amt: BN = new BN(tx.amount.toString());
+                let amt: BN = tx.amount;
 
                 if(assetId.toString('hex') === AVAX_ID_STR){
                     aad.addAssetAmount(assetId, amt, avm.getFee())
