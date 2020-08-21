@@ -1,7 +1,7 @@
 <template>
     <div>
         <p v-if="isCollectibleEmpty && isFungibleEmpty">
-            Nothing to send
+            Empty
         </p>
         <template v-else>
             <div>
