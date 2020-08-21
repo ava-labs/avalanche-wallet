@@ -20,7 +20,7 @@
 </template>
 <script lang="ts">
     import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+    import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
 
     const uuidv1 = require('uuid/v1');
@@ -92,6 +92,7 @@
         }
 
         addTx(id?:string): void{
+            console.log(this.tx_list,this.assets_list);
             if(this.tx_list.length >= this.assets_list.length){
                 return;
             }
@@ -130,6 +131,11 @@
             }else{
                 this.addTx();
             }
+        }
+
+        @Watch('assets_list')
+        onAssetListChange(){
+            this.updateUnavailable();
         }
 
         get assets_list(): AvaAsset[]{

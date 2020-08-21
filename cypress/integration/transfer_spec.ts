@@ -22,4 +22,16 @@ describe('Wallet', () => {
         cy.get('.refresh button').click();
         cy.get('[data-cy=wallet_balance]').should('have.text', '0 AVAX')
     })
+
+
+    it('can send multiple assets', async () => {
+        cy.get("[data-cy=wallet_transfer]").click();
+        let address = userKey0.getAddressString();
+        await createFixedCapAsset('temp1', "TEMA", address, 4000, 4);
+        await createFixedCapAsset('temp2', "TEMB", address, 1234, 4);
+        await createFixedCapAsset('temp3', "TEMC", address, 1234, 12);
+        cy.wait(1000);
+        cy.get('.refresh button').click();
+
+    });
 });
