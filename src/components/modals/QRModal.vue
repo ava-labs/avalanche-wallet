@@ -77,46 +77,6 @@
             this.updateQR();
         }
     }
-    //
-    // export default {
-    //     components: {
-    //         Modal,
-    //         CopyText
-    //     },
-    //     methods: {
-    //         open(){
-    //             this.$refs.modal.open();
-    //         },
-    //         updateQR(){
-    //             if(!this.address) return;
-    //             let canvas = this.$refs.qr;
-    //             QRCode.toCanvas(canvas, this.address, {
-    //                 scale: 6,
-    //                 color: {
-    //                     light: "#f2f2f2"
-    //                 }
-    //             }, function (error) {
-    //                 if (error) console.error(error);
-    //                 // console.log('success!');
-    //             })
-    //         }
-    //     },
-    //     computed: {
-    //         address(){
-    //             return this.$store.state.address;
-    //         },
-    //     },
-    //     watch: {
-    //         address(val){
-    //             if(val){
-    //                 this.updateQR()
-    //             }
-    //         }
-    //     },
-    //     mounted() {
-    //         this.updateQR();
-    //     }
-    // }
 </script>
 <style scoped lang="scss">
     .qr_body{
