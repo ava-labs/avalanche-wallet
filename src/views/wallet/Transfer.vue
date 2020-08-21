@@ -38,7 +38,7 @@
 <!--                    </div>-->
                     <div class="to_address">
                         <label>{{$t('transfer.to')}}</label>
-                        <qr-input v-model="addressIn" class="qrIn" placeholder="Address"></qr-input>
+                        <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                     </div>
 
 
@@ -115,6 +115,34 @@
             }
         }
 
+        onsuccess(){
+            this.addressIn = "";
+            // Clear transactions list
+            // @ts-ignore
+            this.$refs.txList.clear();
+
+            // Clear NFT list
+            if(this.hasNFT){
+                // @ts-ignore
+                this.$refs.nftList.clear();
+            }
+
+            this.$store.dispatch('Notifications/add', {
+                title: 'Transaction Sent',
+                message: 'You have successfully sent your transaction.',
+                type:'success',
+            });
+        }
+
+        onerror(){
+            this.$store.dispatch('Notifications/add', {
+                title: 'Error Sending Transaction',
+                message: 'Failed to send transaction.',
+                type:'error',
+            });
+        }
+
+
         send(){
             let parent = this;
             this.isAjax = true;
@@ -127,47 +155,20 @@
                 orders: sumArray
             };
 
+
             this.$store.dispatch('issueBatchTx', txList).then(res => {
                 parent.isAjax = false;
 
                 if(res === 'success'){
-                    // Clear transactions list
-                    // @ts-ignore
-                    parent.$refs.txList.clear();
-
-                    // Clear NFT list
-                    if(this.hasNFT){
-                        // @ts-ignore
-                        parent.$refs.nftList.clear();
-                    }
-
-                    this.$store.dispatch('Notifications/add', {
-                        title: 'Transaction Sent',
-                        message: 'You have successfully sent your transaction.',
-                        type:'success',
-                    });
+                    this.onsuccess();
                 }else{
-                    this.$store.dispatch('Notifications/add', {
-                        title: 'Error Sending Transaction',
-                        message: 'Failed to send transaction.',
-                        type:'error',
-                    });
+                    this.onerror();
                 }
+            }).catch(err => {
+                console.log(err);
             });
         }
 
-
-        // get summary(): string{
-        //     let orders = this.orders;
-        //     if(orders.length===0){
-        //         return "Nothing to send"
-        //     }
-        //
-        //     let res = "";
-        //     for(var i=0;i<orders.length; i++){
-        //
-        //     }
-        // }
         get networkStatus():string{
             let stat = this.$store.state.Network.status;
             return stat;
