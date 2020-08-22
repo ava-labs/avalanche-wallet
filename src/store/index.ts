@@ -46,13 +46,16 @@ export default new Vuex.Store({
     },
     getters: {
         walletNftUTXOs(state: RootState): UTXO[]{
+            // return [];
             let wallet:AvaHdWallet|null = state.activeWallet;
 
+
             if(!wallet) return [];
-            if(!wallet.getUTXOSet()) return [];
 
+            let utxoSet = wallet.getUTXOSet()
+            if(!utxoSet) return [];
 
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let addrUtxos = utxoSet.getAllUTXOs();
             let res: UTXO[] = [];
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];

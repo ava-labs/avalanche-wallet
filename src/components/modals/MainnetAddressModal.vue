@@ -33,7 +33,7 @@
             if(!wallet){
                 return '-'
             }
-            let key = wallet.getKeyForIndex(0);
+            let key = wallet.externalHelper.getKeyForIndex(0);
 
             let keychain = new AVMKeyChain(getPreferredHRP(1),'X');
             let mainnetKey = keychain.importKey(key.getPrivateKey());

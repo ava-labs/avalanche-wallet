@@ -60,7 +60,7 @@
             let wallet:AvaHdWallet = this.$store.state.activeWallet;
             if(!wallet) return  '-';
 
-            let key = wallet.getKeyForIndex(0);
+            let key = wallet.externalHelper.getKeyForIndex(0);
             if(!key){
                 return '-'
             }

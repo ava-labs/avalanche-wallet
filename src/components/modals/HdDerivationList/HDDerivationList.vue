@@ -84,7 +84,7 @@
 
         get keyBalancesExternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
-            let utxoSet = wallet.utxoset;
+            let utxoSet = wallet.getUTXOSet();
             let assetsDict = this.assetsDict;
 
             let balances: DerivationListBalanceDict[] = this.derivedKeys.map(key => {
@@ -118,7 +118,7 @@
 
         get keyBalancesInternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
-            let utxoSet = wallet.utxoset;
+            let utxoSet = wallet.getUTXOSet();
             let assetsDict = this.assetsDict;
 
             let balances: DerivationListBalanceDict[] = this.derivedKeysInternal.map(key => {
