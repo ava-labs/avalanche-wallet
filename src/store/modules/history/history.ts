@@ -43,7 +43,7 @@ const history_module: Module<HistoryState, RootState> = {
                 return;
             }
 
-            console.log(addresses);
+            // console.log(addresses);
             let query = addresses.map(val => {
                 let raw = val.split('-')[1];
                 return `address=${raw}`;

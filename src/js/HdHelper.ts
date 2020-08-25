@@ -47,6 +47,8 @@ class HdHelper {
     async onNetworkChange(){
         this.clearCache();
         this.utxoSet = new UTXOSet();
+        let hrp = getPreferredHRP(ava.getNetworkID());
+        this.keyChain = new AVMKeyChain(hrp, this.chainId);
         this.hdIndex = 0;
         await this.oninit();
     }
@@ -59,6 +61,11 @@ class HdHelper {
         this.keyChain.addKey(newKey);
         this.hdIndex = newIndex;
         return newKey;
+    }
+
+    async updateHdIndex(){
+        this.hdIndex = await this.findAvailableIndex();
+        this.updateKeychain();
     }
 
 
@@ -106,7 +113,7 @@ class HdHelper {
     // Returns all key pairs up to hd index
     getAllDerivedKeys(): AVMKeyPair[]{
         let set: AVMKeyPair[] = [];
-        for(var i=0; i<this.hdIndex;i++){
+        for(var i=0; i<=this.hdIndex;i++){
             let key = this.getKeyForIndex(i);
             set.push(key);
         }
@@ -118,6 +125,7 @@ class HdHelper {
         this.keyCache = {};
     }
 
+    // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
         let hrp = getPreferredHRP(ava.getNetworkID());
         let tempKeychain = new AVMKeyChain(hrp,this.chainId);

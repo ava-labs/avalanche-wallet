@@ -45,26 +45,17 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 export default class AvaHdWallet implements IAvaHdWallet{
     seed:string;
     hdKey:HDKey;
-    // hdIndex:number;
-    // keyChain: AVMKeyChain;
     chainId: string;
     utxoset: UTXOSet;
     mnemonic: string;
     isLoading: boolean;
     internalHelper: HdHelper;
     externalHelper: HdHelper;
-    // private indexKeyCache:IIndexKeyCache;
-    // private indexChangeKeyCache:IIndexKeyCache;
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
-        // this.hdIndex = 0;
-        // let hrp = getPreferredHRP(ava.getNetworkID());
-        // this.keyChain = new AVMKeyChain(hrp , this.chainId);
         this.utxoset = new UTXOSet();
-        // this.indexKeyCache = {};
-        // this.indexChangeKeyCache = {};
         this.isLoading = false;
 
         this.mnemonic = mnemonic;
@@ -79,43 +70,17 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         this.externalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey)
         this.internalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/1', hdkey)
-
-
-        // this.onHdKeyReady();
     }
 
     getCurrentKey():AVMKeyPair {
         return this.externalHelper.getCurrentKey()
-        // let index: number = this.hdIndex;
-        // return this.getKeyForIndex(index);
     }
 
-
-    // generateKey(): AVMKeyPair{
-    //     let newIndex: number = this.hdIndex+1;
-    //     let newKey: AVMKeyPair = this.getKeyForIndex(newIndex);
-    //     // Add to keychain
-    //     this.keyChain.addKey(newKey);
-    //     this.hdIndex = newIndex;
-    //     return newKey;
-    // }
-
-    // // Called once master HD key is created.
-    async onHdKeyReady(){
-    //     this.hdIndex = await this.findAvailableIndex();
-    //     this.keyChain = this.getKeyChain();
-    //     this.getUTXOs();
-    }
 
     // When the wallet connects to a different network
     async onnetworkchange(){
         this.externalHelper.onNetworkChange();
         this.internalHelper.onNetworkChange();
-        //TODO: Change
-
-        // this.clearCache();
-        // this.utxoset = new UTXOSet();
-        // await this.onHdKeyReady();
     }
 
 
@@ -127,27 +92,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let joined = setInternal.merge(setExternal);
         this.utxoset = joined;
         return joined;
-
-        // let addrs: Buffer[] = this.keyChain.getAddresses();
-        // let result: UTXOSet = await avm.getUTXOs(addrs);
-        // this.utxoset = result; // we can use local copy of utxos as cache for some functions
-        //
-        // // If last address has a utxo increment index
-        // let addr_now: AVMKeyPair = this.getCurrentKey();
-        // let lastIndexUtxos: string[] = result.getUTXOIDs([addr_now.getAddress()])
-        // if(lastIndexUtxos.length > 0){
-        //     this.generateKey();
-        // }
-        // return result;
     }
 
     getUTXOSet(): UTXOSet {
         return this.utxoset;
-        // let setInternal = this.internalHelper.getUtxos();
-        // let setExternal = this.externalHelper.getUtxos();
-        //
-        // let joined = setInternal.merge(setExternal);
-        // return joined;
     }
 
     getAllDerivedKeys(isInternal = false): AVMKeyPair[]{
@@ -156,22 +104,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         }else{
             return this.externalHelper.getAllDerivedKeys();
         }
-        // for(var i=0; i<this.hdIndex;i++){
-        //     let key;
-        //
-        //     if(isInternal){
-        //         key = this.getKeyForIndex(i, true);
-        //     }else{
-        //        key = this.getKeyForIndex(i);
-        //     }
-        //     set.push(key);
-        // }
-        // return set;
     }
-
-    // getMasterKey(): AVMKeyPair {
-    //     return this.masterKey;
-    // }
 
     getMnemonic(): string {
         return this.mnemonic;
@@ -180,20 +113,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
     // Scan internal indices and find a spot with no utxo
     getChangeAddress():string{
         return this.internalHelper.getCurrentAddress();
-        // let index: number = 0;
-        // let foundAddress: string|null = null;
-        //
-        // while(foundAddress===null){
-        //     let key = this.getKeyForIndex(index,true);
-        //
-        //     let utxoset = this.utxoset.getUTXOIDs([key.getAddress()]);
-        //     if(utxoset.length===0){
-        //         foundAddress = key.getAddressString();
-        //     }
-        //     index++;
-        // }
-        //
-        // return foundAddress;
     }
 
 
@@ -306,10 +225,13 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // TODO: Index will not increase but it could decrease.
         // TODO: With the current setup this can lead to gaps in index space greater than scan size.
         setTimeout(async () => {
-            // this.hdIndex = await this.findAvailableIndex();
-            this.internalHelper.findAvailableIndex()
-            this.externalHelper.findAvailableIndex()
-            // this.keyChain = this.getKeyChain();
+            // Find the new HD index
+            this.internalHelper.updateHdIndex()
+            this.externalHelper.updateHdIndex()
+
+            // Update UTXOs
+            this.internalHelper.updateUtxos();
+            this.externalHelper.updateUtxos();
         }, 2000)
 
         return txId;
@@ -327,112 +249,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
             keychain.addKey(allKeys[i]);
         }
         return keychain;
-        // let internalKeys = internal
-        // for(let i:number=0; i<=this.hdIndex; i++){
-        //     let key: AVMKeyPair = this.getKeyForIndex(i);
-        //     let keyChange: AVMKeyPair = this.getKeyForIndex(i, true);
-        //
-        //     keychain.addKey(key);
-        //     keychain.addKey(keyChange);
-        // }
-        // return keychain;
     }
 
     getCurrentAddress(): string{
         return this.externalHelper.getCurrentAddress();
     }
 
-    // async findAvailableIndex(start:number=0):Promise<number>{
-    //     let hrp = getPreferredHRP(ava.getNetworkID());
-    //     let keychainExternal: AVMKeyChain = new AVMKeyChain(hrp,'X');
-    //     let keychainInternal: AVMKeyChain = new AVMKeyChain(hrp,'X');
-    //
-    //
-    //     // Get keys for indexes start to start+scan_size
-    //     for(let i:number=start;i<start+SCAN_SIZE;i++){
-    //         // Derive Key and add to KeyChain
-    //         // Scan both external and internal addresses
-    //         let key: AVMKeyPair = this.getKeyForIndex(i);
-    //         let keyInternal: AVMKeyPair = this.getKeyForIndex(i, true);
-    //         keychainExternal.addKey(key);
-    //         keychainInternal.addKey(keyInternal);
-    //     }
-    //
-    //     let externalAddrs: Buffer[] = keychainExternal.getAddresses();
-    //     let internalAddrs: Buffer[] = keychainInternal.getAddresses();
-    //
-    //     let utxoSetExternal: UTXOSet = await avm.getUTXOs(externalAddrs);
-    //     let utxoSetInternal: UTXOSet = await avm.getUTXOs(internalAddrs);
-    //
-    //
-    //     // let indexNow = start;
-    //     // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE
-    //     for(let i:number=0; i<externalAddrs.length-INDEX_RANGE; i++){
-    //         let gapSize: number = 0;
-    //
-    //         for(let n:number=0;n<0+INDEX_RANGE;n++){
-    //             let scanIndex: number = i+n;
-    //
-    //             // TODO: Scan internal and external seperately, the both sould have different indeces
-    //
-    //             let addrIn: Buffer = internalAddrs[scanIndex];
-    //             let addrEx: Buffer = externalAddrs[scanIndex];
-    //
-    //             let addrUTXOsIn: string[] = utxoSetInternal.getUTXOIDs([addrIn]);
-    //             let addrUTXOsEx: string[] = utxoSetExternal.getUTXOIDs([addrEx]);
-    //
-    //
-    //             if(addrUTXOsIn.length === 0 && addrUTXOsEx.length === 0){
-    //                 gapSize++
-    //             }else{
-    //                 break;
-    //             }
-    //         }
-    //
-    //         if(gapSize===INDEX_RANGE){
-    //             return start+i;
-    //         }
-    //     }
-    //
-    //     return await this.findAvailableIndex(start+SCAN_RANGE)
-    // }
-
-    // clearCache(){
-    //     this.indexKeyCache = {};
-    //     this.indexChangeKeyCache = {};
-    // }
-
-    // getKeyForIndex(index:number, isChange=false): AVMKeyPair{
-    //     if(isChange){
-    //         let cacheInternal: AVMKeyPair = this.indexChangeKeyCache[index];
-    //         if(cacheInternal) return cacheInternal;
-    //     }else{
-    //         let cacheExternal: AVMKeyPair = this.indexKeyCache[index];
-    //         if(cacheExternal) return cacheExternal;
-    //     }
-    //
-    //     let accountPath: string = AVA_ACCOUNT_PATH;
-    //
-    //     // index is left out
-    //     let derivationPath: string = accountPath+'/0';
-    //     if(isChange){
-    //         derivationPath = accountPath+'/1';
-    //     }
-    //
-    //     // TODO: This is a bottleneck
-    //     let key: HDKey = this.hdKey.derive(derivationPath+`/${index}`) as HDKey;
-    //     let hrp = getPreferredHRP(ava.getNetworkID());
-    //     let keychain: AVMKeyChain = new AVMKeyChain(hrp, 'X');
-    //     let pkHex: string = key.privateKey.toString('hex');
-    //     let pkBuf: Buffer = new Buffer(pkHex, 'hex');
-    //     // let addr: Buffer = keychain.importKey(pkBuf);
-    //     let keypair = keychain.importKey(pkBuf)
-    //
-    //     if(!isChange){
-    //         this.indexKeyCache[index] = keypair;
-    //     }else{
-    //         this.indexChangeKeyCache[index] = keypair;
-    //     }
-    //     return keypair;
-    // }
 }

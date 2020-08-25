@@ -174,11 +174,13 @@ export default new Vuex.Store({
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
             return addresses;
         },
+
         activeKey(state): AVMKeyPair|null{
             if(!state.activeWallet){
                 return null;
             }
-            return state.activeWallet.getCurrentKey();
+            let hdIndex = state.activeWallet.externalHelper.hdIndex;
+            return state.activeWallet.externalHelper.getKeyForIndex(hdIndex);
         }
     },
     mutations: {
@@ -187,6 +189,7 @@ export default new Vuex.Store({
                 state.address = null;
             }else{
                 let keynow = state.activeWallet.getCurrentKey();
+                console.log(keynow)
                 state.address = keynow.getAddressString();
             }
         }

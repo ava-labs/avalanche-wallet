@@ -80,6 +80,7 @@
             if(!activeKey){
                 return '-'
             }
+            // return this.$store.state.address;
             return activeKey.getAddressString();
         }
 

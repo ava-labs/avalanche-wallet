@@ -1,17 +1,38 @@
 <template>
     <div class="list_cont">
-        <div v-if="derivedKeys.length>0" class="list">
-            <div class="headers">
-                <p style="text-align: center">#</p>
-                <p>Address</p>
-                <p class="col_bal">Balance</p>
-            </div>
-            <HdDerivationListRow v-for="(key,i) in derivedKeys" :key="i" :index="i" :key-pair="key" :balance="keyBalances[i]" class="list_row"
-            ></HdDerivationListRow>
-        </div>
-        <div v-else>
-            <p class="empty">You have no past addresses.</p>
-        </div>
+        <v-tabs grow>
+            <v-tab>Internal</v-tab>
+            <v-tab>External</v-tab>
+            <v-tab-item>
+                <div v-if="numInternalKeys>0" class="list">
+                    <div class="headers">
+                        <p style="text-align: center">#</p>
+                        <p>Address</p>
+                        <p class="col_bal">Balance</p>
+                    </div>
+                    <HdDerivationListRow v-for="(key,i) in keysInternal" :key="key.getAddressString()" :index="i" :key-pair="key" :balance="keyBalancesInternal[i]" class="list_row"
+                    ></HdDerivationListRow>
+                </div>
+                <div v-else>
+                    <p class="empty">You do not have any past addresses.</p>
+                </div>
+            </v-tab-item>
+            <v-tab-item>
+                <div v-if="numExternalKeys>0" class="list">
+                    <div class="headers">
+                        <p style="text-align: center">#</p>
+                        <p>Address</p>
+                        <p class="col_bal">Balance</p>
+                    </div>
+                    <HdDerivationListRow v-for="(key,i) in keysExternal" :key="key.getAddressString()" :index="i" :key-pair="key" :balance="keyBalancesExternal[i]" class="list_row"
+                    ></HdDerivationListRow>
+                </div>
+                <div v-else>
+                    <p class="empty">You do not have any past addresses.</p>
+                </div>
+            </v-tab-item>
+        </v-tabs>
+
     </div>
 </template>
 <script lang="ts">
@@ -34,14 +55,26 @@
     export default class HDDerivationList extends Vue{
         @Prop() wallet!: AvaHdWallet;
 
-        derivedKeys: AVMKeyPair[] = [];
-        derivedKeysInternal: AVMKeyPair[] = [];
+        keysExternal: AVMKeyPair[] = [];
+        keysInternal: AVMKeyPair[] = [];
 
 
-        @Watch('wallet.hdIndex', {immediate: true})
-        onIndexChange(){
-            this.derivedKeys = this.wallet.getAllDerivedKeys();
-            this.derivedKeysInternal = this.wallet.getAllDerivedKeys(true);
+        // TODO: this is breaking reactivity
+        // @Watch('wallet.hdIndex', {immediate: true})
+        // onIndexChange(){
+        //     this.derivedKeys = this.wallet.getAllDerivedKeys();
+        //     this.derivedKeysInternal = this.wallet.getAllDerivedKeys(true);
+        // }
+
+
+        @Watch('wallet.internalHelper.utxoSet', {immediate: true})
+        onInternalUtxoChange(){
+            this.keysInternal = this.wallet.internalHelper.getAllDerivedKeys();
+        }
+
+        @Watch('wallet.externalHelper.utxoSet', {immediate: true})
+        onExternalUtxoChange(){
+            this.keysExternal = this.wallet.externalHelper.getAllDerivedKeys();
         }
 
 
@@ -49,51 +82,58 @@
             return this.$store.state.Assets.assetsDict;
         }
 
-        get keyBalances(): DerivationListBalanceDict[]{
-            let externalBals = this.keyBalancesExternal;
-            let internalBals = this.keyBalancesInternal;
-
-            let sum:DerivationListBalanceDict[] = [];
-
-
-            for(var i=0;i<externalBals.length;i++){
-                let balEx = externalBals[i];
-                let balIn = internalBals[i];
-
-                let joined:DerivationListBalanceDict = {}
-
-                for(var id in balEx){
-                    let amt = balEx[id];
-                    joined[id] = amt;
-                }
-
-                for(id in balIn){
-                    let amt = balIn[id];
-                    if(joined[id]){
-                        joined[id].add(amt)
-                    }else{
-                        joined[id] = amt;
-                    }
-                }
-
-                sum.push(joined);
-            }
-
-            return sum;
-        }
+        // get keyBalances(): DerivationListBalanceDict[]{
+        //     let externalBals = this.keyBalancesExternal;
+        //     let internalBals = this.keyBalancesInternal;
+        //
+        //     let sum:DerivationListBalanceDict[] = [];
+        //
+        //     console.log(externalBals, internalBals);
+        //
+        //     for(var i=0;i<externalBals.length;i++){
+        //         let balEx = externalBals[i];
+        //         let balIn = internalBals[i];
+        //
+        //         let joined:DerivationListBalanceDict = {}
+        //
+        //         for(var id in balEx){
+        //             let amt = balEx[id];
+        //             joined[id] = amt;
+        //         }
+        //
+        //         for(id in balIn){
+        //             let amt = balIn[id];
+        //             if(joined[id]){
+        //                 joined[id].add(amt)
+        //             }else{
+        //                 joined[id] = amt;
+        //             }
+        //         }
+        //
+        //         sum.push(joined);
+        //     }
+        //
+        //     return sum;
+        // }
 
         get keyBalancesExternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
-            let utxoSet = wallet.getUTXOSet();
+            let utxoSet = wallet.externalHelper.utxoSet;
             let assetsDict = this.assetsDict;
 
-            let balances: DerivationListBalanceDict[] = this.derivedKeys.map(key => {
-                let addr = key.getAddress();
 
+            let keys = this.keysExternal;
+
+            let balances: DerivationListBalanceDict[] = keys.map(key => {
+                let addr = key.getAddress();
                 let newSet = utxoSet.clone();
+
+                // get asset ids owned by this key
                 let assetIds = newSet.getAssetIDs();
 
                 let balDict:DerivationListBalanceDict = {};
+
+                // Loop through assets ids and sum the utxos
                 for(var i=0; i<assetIds.length; i++){
                     let assetId = assetIds[i];
                     let balance = newSet.getBalance([addr], assetId);
@@ -104,6 +144,7 @@
 
                     if(!asset) continue;
 
+                    // if asset id exists in the balance dict, add to it
                     if(target){
                         target = target.add(balance.toString());
                     }else{
@@ -116,12 +157,23 @@
             return balances;
         }
 
+        get numExternalKeys(){
+            return this.keysExternal.length;
+        }
+
+        get numInternalKeys(){
+            return this.keysInternal.length;
+        }
+
         get keyBalancesInternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
-            let utxoSet = wallet.getUTXOSet();
+            let utxoSet = wallet.internalHelper.utxoSet;
+
+            let keys = this.keysInternal;
+
             let assetsDict = this.assetsDict;
 
-            let balances: DerivationListBalanceDict[] = this.derivedKeysInternal.map(key => {
+            let balances: DerivationListBalanceDict[] = keys.map(key => {
                 let addr = key.getAddress();
 
 
@@ -153,6 +205,13 @@
         }
     }
 </script>
+<style lang="scss">
+    .list_cont{
+        .v-tabs-bar{
+            background-color: var(--bg-light) !important;
+        }
+    }
+</style>
 <style scoped lang="scss">
     .list_cont{
         max-height: 60vh;
@@ -196,4 +255,6 @@
         text-align: center;
         padding: 30px;
     }
+
+
 </style>

@@ -70,6 +70,7 @@ const assets_module: Module<AssetsState, RootState> = {
             }
         },
 
+        // Update the utxos for the current active wallet
         async updateUTXOs({state, commit, dispatch, rootState}) {
             let wallet = rootState.activeWallet;
             if(!wallet){
