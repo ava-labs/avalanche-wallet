@@ -189,7 +189,6 @@ export default new Vuex.Store({
                 state.address = null;
             }else{
                 let keynow = state.activeWallet.getCurrentKey();
-                console.log(keynow)
                 state.address = keynow.getAddressString();
             }
         }
