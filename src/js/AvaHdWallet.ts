@@ -51,6 +51,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     isLoading: boolean;
     internalHelper: HdHelper;
     externalHelper: HdHelper;
+    platformHelper: HdHelper;
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {
@@ -68,8 +69,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let hdkey: HDKey = HDKey.fromMasterSeed(seed);
         this.hdKey = hdkey;
 
+
         this.externalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey)
         this.internalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/1', hdkey)
+        this.platformHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey, 'P')
     }
 
     getCurrentKey():AVMKeyPair {

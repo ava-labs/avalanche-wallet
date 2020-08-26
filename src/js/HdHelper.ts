@@ -3,6 +3,7 @@ import {getPreferredHRP} from "avalanche/dist/utils";
 import {ava, avm} from "@/AVA";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
+import {PlatformVMKeyChain, PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
@@ -13,9 +14,9 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 
 class HdHelper {
     chainId: string;
-    keyChain: AVMKeyChain;
+    keyChain: AVMKeyChain|PlatformVMKeyChain;
     keyCache: {
-        [index: number]: AVMKeyPair
+        [index: number]: AVMKeyPair|PlatformVMKeyPair
     }
     changePath: string
     masterKey: HDKey;
@@ -26,7 +27,11 @@ class HdHelper {
         this.changePath = changePath;
         this.chainId = chainId;
         let hrp = getPreferredHRP(ava.getNetworkID());
-        this.keyChain = new AVMKeyChain(hrp, chainId);
+        if(chainId==='X'){
+            this.keyChain = new AVMKeyChain(hrp, chainId);
+        }else{
+            this.keyChain = new PlatformVMKeyChain(hrp, chainId);
+        }
         this.keyCache = {};
         this.masterKey = masterKey;
         this.hdIndex = 0;
@@ -55,9 +60,15 @@ class HdHelper {
 
     // Increments the hd index by one and adds the key
     // returns the new keypair
-    incrementIndex(): AVMKeyPair{
+    incrementIndex(): AVMKeyPair|PlatformVMKeyPair{
         let newIndex: number = this.hdIndex+1;
-        let newKey: AVMKeyPair = this.getKeyForIndex(newIndex);
+
+        let newKey;
+        if(this.chainId==='X'){
+            newKey = this.getKeyForIndex(newIndex) as AVMKeyPair;
+        }else{
+            newKey = this.getKeyForIndex(newIndex) as PlatformVMKeyPair;
+        }
         this.keyChain.addKey(newKey);
         this.hdIndex = newIndex;
         return newKey;
@@ -111,8 +122,8 @@ class HdHelper {
     }
 
     // Returns all key pairs up to hd index
-    getAllDerivedKeys(): AVMKeyPair[]{
-        let set: AVMKeyPair[] = [];
+    getAllDerivedKeys(): (AVMKeyPair|PlatformVMKeyPair)[]{
+        let set: (AVMKeyPair|PlatformVMKeyPair)[] = [];
         for(var i=0; i<=this.hdIndex;i++){
             let key = this.getKeyForIndex(i);
             set.push(key);
@@ -128,11 +139,17 @@ class HdHelper {
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
         let hrp = getPreferredHRP(ava.getNetworkID());
-        let tempKeychain = new AVMKeyChain(hrp,this.chainId);
+        let tempKeychain;
+
+        if(this.chainId==='X'){
+            tempKeychain = new AVMKeyChain(hrp,this.chainId);
+        }else{
+            tempKeychain = new PlatformVMKeyChain(hrp,this.chainId);
+        }
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
-            let key: AVMKeyPair = this.getKeyForIndex(i);
+            let key = this.getKeyForIndex(i);
             tempKeychain.addKey(key);
         }
 
@@ -163,7 +180,7 @@ class HdHelper {
         return await this.findAvailableIndex(start+SCAN_RANGE)
     }
 
-    getCurrentKey():AVMKeyPair {
+    getCurrentKey():AVMKeyPair|PlatformVMKeyPair {
         let index: number = this.hdIndex;
         return this.getKeyForIndex(index);
     }
@@ -172,9 +189,16 @@ class HdHelper {
         return this.getCurrentKey().getAddressString();
     }
 
-    getKeyForIndex(index: number): AVMKeyPair {
+    getKeyForIndex(index: number): AVMKeyPair|PlatformVMKeyPair {
         // If key is cached return that
-        let cacheExternal: AVMKeyPair = this.keyCache[index];
+        let cacheExternal: AVMKeyPair|PlatformVMKeyPair;
+
+        if(this.chainId==='X'){
+            cacheExternal = this.keyCache[index] as AVMKeyPair;
+        }else{
+            cacheExternal = this.keyCache[index] as PlatformVMKeyPair;
+        }
+
         if(cacheExternal) return cacheExternal;
 
         let derivationPath: string = `${this.changePath}/${index.toString()}`;
@@ -190,7 +214,6 @@ class HdHelper {
         // console.log(keypair.getAddressString())
         // save to cache
         this.keyCache[index] = keypair;
-
         return keypair;
     }
 }
