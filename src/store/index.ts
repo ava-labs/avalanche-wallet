@@ -79,7 +79,7 @@ export default new Vuex.Store({
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
 
-                // Process only non NFT utxos, outputid === 0b
+                // Process only NFT utxos, outputid === 0b
                 let outId = utxo.getOutput().getOutputID();
                 if(outId===11){
                     let assetIdBuff = utxo.getAssetID();
@@ -109,9 +109,9 @@ export default new Vuex.Store({
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
 
-                // Process only non NFT utxos, outputid === 0b
+                // Process only SECP256K1 Transfer Output utxos, outputid === 07
                 let outId = utxo.getOutput().getOutputID();
-                if(outId===11) continue;
+                if(outId!==7) continue;
 
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
