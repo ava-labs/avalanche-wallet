@@ -3,6 +3,7 @@
         <v-tabs grow>
             <v-tab>Internal</v-tab>
             <v-tab>External</v-tab>
+            <v-tab>Platform</v-tab>
             <v-tab-item>
                 <div v-if="numInternalKeys>0" class="list">
                     <div class="headers">
@@ -31,6 +32,15 @@
                     <p class="empty">You do not have any past addresses.</p>
                 </div>
             </v-tab-item>
+            <v-tab-item>
+                <div class="headers">
+                    <p style="text-align: center">#</p>
+                    <p>Address</p>
+                    <p class="col_bal">Balance</p>
+                </div>
+                <HdDerivationListRow v-for="(key,i) in keysPlatform" :key="key.getAddressString()" :index="i" :key-pair="key" :balance="keyBalancesPlatform[i]" class="list_row"
+                ></HdDerivationListRow>
+            </v-tab-item>
         </v-tabs>
 
     </div>
@@ -40,12 +50,14 @@
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import AvaHdWallet from "@/js/AvaHdWallet";
-    import {AVMKeyPair, UTXOSet} from "avalanche/dist/apis/avm";
+    import {AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
+    import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
     import {bintools} from "@/AVA";
     import Big from 'big.js';
     import AvaAsset from "@/js/AvaAsset";
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
     import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
+    import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
     @Component({
         components: {
@@ -57,6 +69,7 @@
 
         keysExternal: AVMKeyPair[] = [];
         keysInternal: AVMKeyPair[] = [];
+        keysPlatform: PlatformVMKeyPair[] = [];
 
 
         // TODO: this is breaking reactivity
@@ -69,12 +82,17 @@
 
         @Watch('wallet.internalHelper.utxoSet', {immediate: true})
         onInternalUtxoChange(){
-            this.keysInternal = this.wallet.internalHelper.getAllDerivedKeys();
+            this.keysInternal = this.wallet.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
         }
 
         @Watch('wallet.externalHelper.utxoSet', {immediate: true})
         onExternalUtxoChange(){
-            this.keysExternal = this.wallet.externalHelper.getAllDerivedKeys();
+            this.keysExternal = this.wallet.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
+        }
+
+        @Watch('wallet.platformHelper.utxoSet', {immediate: true})
+        onPlatformUtxoChange(){
+            this.keysPlatform = this.wallet.platformHelper.getAllDerivedKeys() as PlatformVMKeyPair[];
         }
 
 
@@ -118,15 +136,19 @@
 
         get keyBalancesExternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
-            let utxoSet = wallet.externalHelper.utxoSet;
-            let assetsDict = this.assetsDict;
-
-
+            let utxoSet = wallet.externalHelper.utxoSet as AVMUTXOSet;
             let keys = this.keysExternal;
+            return  this.utxoSetToBalanceDict(utxoSet, keys);
+        }
+
+
+        utxoSetToBalanceDict(set: AVMUTXOSet|PlatformUTXOSet, keys: AVMKeyPair[]): DerivationListBalanceDict[]{
+            let assetsDict = this.assetsDict;
+            // let keys = this.keysExternal;
 
             let balances: DerivationListBalanceDict[] = keys.map(key => {
                 let addr = key.getAddress();
-                let newSet = utxoSet.clone();
+                let newSet = set.clone();
 
                 // get asset ids owned by this key
                 let assetIds = newSet.getAssetIDs();
@@ -168,40 +190,13 @@
         get keyBalancesInternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;
             let utxoSet = wallet.internalHelper.utxoSet;
-
             let keys = this.keysInternal;
-
-            let assetsDict = this.assetsDict;
-
-            let balances: DerivationListBalanceDict[] = keys.map(key => {
-                let addr = key.getAddress();
+            return this.utxoSetToBalanceDict(utxoSet,keys);
+        }
 
 
-                let newSet = utxoSet.clone();
-
-                let assetIds = newSet.getAssetIDs();
-
-                let balDict:DerivationListBalanceDict = {};
-                for(var i=0; i<assetIds.length; i++){
-                    let assetId = assetIds[i];
-                    let balance = newSet.getBalance([addr], assetId);
-                    let assetIdSerial = bintools.cb58Encode(assetId);
-
-                    let target:Big = balDict[assetIdSerial];
-                    let asset:AvaAsset = assetsDict[assetIdSerial];
-
-                    if(!asset) continue;
-
-                    if(target){
-                        target = target.add(balance.toString());
-                    }else{
-                        balDict[assetIdSerial] = Big(balance.toString()).div(Math.pow(10,asset.denomination));
-                    }
-                }
-                return balDict;
-            });
-
-            return balances;
+        get keyBalancesPlatform(): DerivationListBalanceDict[]{
+            return [];
         }
     }
 </script>

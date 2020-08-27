@@ -1,6 +1,7 @@
-import {AVMKeyChain, AVMKeyPair, UTXOSet} from "avalanche/dist/apis/avm";
+import {AVMKeyChain, AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
+import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
 import {getPreferredHRP} from "avalanche/dist/utils";
-import {ava, avm} from "@/AVA";
+import {ava, avm, pChain} from "@/AVA";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import {PlatformVMKeyChain, PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
@@ -11,9 +12,9 @@ const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to cla
 const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
 const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned
 
-
+type HelperChainId =  'X' | 'P';
 class HdHelper {
-    chainId: string;
+    chainId: HelperChainId;
     keyChain: AVMKeyChain|PlatformVMKeyChain;
     keyCache: {
         [index: number]: AVMKeyPair|PlatformVMKeyPair
@@ -21,21 +22,22 @@ class HdHelper {
     changePath: string
     masterKey: HDKey;
     hdIndex: number;
-    utxoSet: UTXOSet;
+    utxoSet: AVMUTXOSet | PlatformUTXOSet;
 
-    constructor(changePath: string, masterKey: HDKey, chainId: string = 'X') {
+    constructor(changePath: string, masterKey: HDKey, chainId: HelperChainId = 'X') {
         this.changePath = changePath;
         this.chainId = chainId;
         let hrp = getPreferredHRP(ava.getNetworkID());
         if(chainId==='X'){
             this.keyChain = new AVMKeyChain(hrp, chainId);
+            this.utxoSet = new AVMUTXOSet();
         }else{
             this.keyChain = new PlatformVMKeyChain(hrp, chainId);
+            this.utxoSet = new PlatformUTXOSet();
         }
         this.keyCache = {};
         this.masterKey = masterKey;
         this.hdIndex = 0;
-        this.utxoSet = new UTXOSet();
         this.oninit();
     }
 
@@ -51,9 +53,14 @@ class HdHelper {
     // Clear internal data and scan again
     async onNetworkChange(){
         this.clearCache();
-        this.utxoSet = new UTXOSet();
         let hrp = getPreferredHRP(ava.getNetworkID());
-        this.keyChain = new AVMKeyChain(hrp, this.chainId);
+        if(this.chainId === 'X'){
+            this.keyChain = new AVMKeyChain(hrp, this.chainId);
+            this.utxoSet = new AVMUTXOSet();
+        }else{
+            this.keyChain = new PlatformVMKeyChain(hrp, this.chainId);
+            this.utxoSet = new PlatformUTXOSet();
+        }
         this.hdIndex = 0;
         await this.oninit();
     }
@@ -65,11 +72,15 @@ class HdHelper {
 
         let newKey;
         if(this.chainId==='X'){
+            let keychain = this.keyChain as AVMKeyChain;
             newKey = this.getKeyForIndex(newIndex) as AVMKeyPair;
+            keychain.addKey(newKey);
         }else{
+            let keychain = this.keyChain as PlatformVMKeyChain;
             newKey = this.getKeyForIndex(newIndex) as PlatformVMKeyPair;
+            keychain.addKey(newKey);
         }
-        this.keyChain.addKey(newKey);
+
         this.hdIndex = newIndex;
         return newKey;
     }
@@ -82,9 +93,15 @@ class HdHelper {
 
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
-    async updateUtxos(): Promise<UTXOSet>{
+    async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
         let addrs: Buffer[] = this.keyChain.getAddresses();
-        let result: UTXOSet = await avm.getUTXOs(addrs);
+        let result: AVMUTXOSet|PlatformUTXOSet;
+
+        if(this.chainId==='X'){
+            result = await avm.getUTXOs(addrs);
+        }else{
+            result = await pChain.getUTXOs(addrs);
+        }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
 
@@ -99,19 +116,31 @@ class HdHelper {
         return result;
     }
 
-    getUtxos(): UTXOSet{
+    getUtxos(): AVMUTXOSet|PlatformUTXOSet{
         return this.utxoSet;
     }
 
 
     // Updates the helper keychain to contain keys upto the HD Index
-    updateKeychain(): AVMKeyChain{
+    updateKeychain(): AVMKeyChain|PlatformVMKeyChain{
         let hrp = getPreferredHRP(ava.getNetworkID())
-        let keychain: AVMKeyChain = new AVMKeyChain(hrp, this.chainId);
+        let keychain: AVMKeyChain | PlatformVMKeyChain;
+
+        if(this.chainId==='X'){
+            keychain = new AVMKeyChain(hrp, this.chainId);
+        }else{
+            keychain = new PlatformVMKeyChain(hrp, this.chainId);
+        }
 
         for(let i:number=0; i<=this.hdIndex; i++){
-            let key: AVMKeyPair = this.getKeyForIndex(i);
-            keychain.addKey(key);
+            let key : AVMKeyPair | PlatformVMKeyPair;
+            if(this.chainId==='X') {
+                key = this.getKeyForIndex(i) as AVMKeyPair;
+                (keychain as AVMKeyChain).addKey(key);
+            }else{
+                key = this.getKeyForIndex(i) as PlatformVMKeyPair;
+                (keychain as PlatformVMKeyChain).addKey(key);
+            }
         }
         this.keyChain = keychain;
         return keychain;
@@ -122,11 +151,16 @@ class HdHelper {
     }
 
     // Returns all key pairs up to hd index
-    getAllDerivedKeys(): (AVMKeyPair|PlatformVMKeyPair)[]{
-        let set: (AVMKeyPair|PlatformVMKeyPair)[] = [];
+    getAllDerivedKeys(): AVMKeyPair[] | PlatformVMKeyPair[]{
+        let set: AVMKeyPair[] | PlatformVMKeyPair[] = [];
         for(var i=0; i<=this.hdIndex;i++){
-            let key = this.getKeyForIndex(i);
-            set.push(key);
+            if(this.chainId==='X'){
+                let key = this.getKeyForIndex(i) as AVMKeyPair;
+                (set as AVMKeyPair[]).push(key);
+            }else{
+                let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
+                (set as PlatformVMKeyPair[]).push(key);
+            }
         }
         return set;
     }
@@ -139,8 +173,8 @@ class HdHelper {
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
         let hrp = getPreferredHRP(ava.getNetworkID());
-        let tempKeychain;
 
+        let tempKeychain : AVMKeyChain | PlatformVMKeyChain;
         if(this.chainId==='X'){
             tempKeychain = new AVMKeyChain(hrp,this.chainId);
         }else{
@@ -149,12 +183,25 @@ class HdHelper {
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
-            let key = this.getKeyForIndex(i);
-            tempKeychain.addKey(key);
+            if(this.chainId==='X'){
+                let key = this.getKeyForIndex(i) as AVMKeyPair;
+                (tempKeychain as AVMKeyChain).addKey(key);
+            }else{
+                let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
+                (tempKeychain as PlatformVMKeyChain).addKey(key);
+            }
+
         }
 
         let addrs: Buffer[] = tempKeychain.getAddresses();
-        let utxoSet: UTXOSet = await avm.getUTXOs(addrs);
+        let utxoSet;
+
+        if(this.chainId==='X'){
+            utxoSet = await avm.getUTXOs(addrs);
+        }else{
+            utxoSet = await pChain.getUTXOs(addrs);
+        }
+
 
         // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE
         for(let i:number=0; i<addrs.length-INDEX_RANGE; i++) {

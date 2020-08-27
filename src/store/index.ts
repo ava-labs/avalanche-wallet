@@ -180,7 +180,7 @@ export default new Vuex.Store({
                 return null;
             }
             let hdIndex = state.activeWallet.externalHelper.hdIndex;
-            return state.activeWallet.externalHelper.getKeyForIndex(hdIndex);
+            return state.activeWallet.externalHelper.getKeyForIndex(hdIndex) as AVMKeyPair;
         }
     },
     mutations: {

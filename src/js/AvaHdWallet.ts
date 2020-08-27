@@ -3,7 +3,7 @@
 import {
     AVMKeyPair,
     AVMKeyChain,
-    UTXOSet,
+    UTXOSet as AVMUTXOSet,
     TransferableInput,
     TransferableOutput,
     BaseTx,
@@ -13,6 +13,9 @@ import {
     AssetAmountDestination
 } from "avalanche/dist/apis/avm";
 
+import {
+    UTXOSet as PlatformUTXOSet
+} from "avalanche/dist/apis/platformvm";
 import {
     getPreferredHRP
 } from "avalanche/dist/utils";
@@ -26,6 +29,7 @@ import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {HdHelper} from "@/js/HdHelper";
+import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 // HD WALLET
@@ -46,7 +50,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     seed:string;
     hdKey:HDKey;
     chainId: string;
-    utxoset: UTXOSet;
+    utxoset: AVMUTXOSet;
     mnemonic: string;
     isLoading: boolean;
     internalHelper: HdHelper;
@@ -56,7 +60,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     // The master key from avalanche.js
     constructor(mnemonic: string) {
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
-        this.utxoset = new UTXOSet();
+        this.utxoset = new AVMUTXOSet();
         this.isLoading = false;
 
         this.mnemonic = mnemonic;
@@ -76,7 +80,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
     getCurrentKey():AVMKeyPair {
-        return this.externalHelper.getCurrentKey()
+        return (this.externalHelper.getCurrentKey() as AVMKeyPair);
     }
 
 
@@ -88,20 +92,20 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
 
 
-    async getUTXOs(): Promise<UTXOSet>{
-        let setInternal = await this.internalHelper.updateUtxos();
-        let setExternal = await this.externalHelper.updateUtxos();
+    async getUTXOs(): Promise<AVMUTXOSet>{
+        let setInternal = await this.internalHelper.updateUtxos() as AVMUTXOSet;
+        let setExternal = await this.externalHelper.updateUtxos() as AVMUTXOSet;
 
         let joined = setInternal.merge(setExternal);
         this.utxoset = joined;
         return joined;
     }
 
-    getUTXOSet(): UTXOSet {
+    getUTXOSet(): AVMUTXOSet {
         return this.utxoset;
     }
 
-    getAllDerivedKeys(isInternal = false): AVMKeyPair[]{
+    getAllDerivedKeys(isInternal = false): AVMKeyPair[] | PlatformVMKeyPair[]{
         if(isInternal){
             return this.internalHelper.getAllDerivedKeys();
         }else{
@@ -190,7 +194,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
 
         if(nftUtxos.length > 0){
-            let nftSet = new UTXOSet();
+            let nftSet = new AVMUTXOSet();
                 nftSet.addArray(nftUtxos);
 
             let utxoIds: string[] = nftSet.getUTXOIDs()
@@ -242,8 +246,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
     // returns a keychain that has all the derived private keys
     getKeyChain(): AVMKeyChain{
-        let internal = this.internalHelper.getAllDerivedKeys();
-        let external = this.externalHelper.getAllDerivedKeys();
+        let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
+        let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
 
         let allKeys = internal.concat(external);
         let keychain: AVMKeyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
