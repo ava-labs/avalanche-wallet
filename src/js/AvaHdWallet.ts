@@ -88,6 +88,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     async onnetworkchange(){
         this.externalHelper.onNetworkChange();
         this.internalHelper.onNetworkChange();
+        this.platformHelper.onNetworkChange();
     }
 
 
@@ -95,6 +96,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     async getUTXOs(): Promise<AVMUTXOSet>{
         let setInternal = await this.internalHelper.updateUtxos() as AVMUTXOSet;
         let setExternal = await this.externalHelper.updateUtxos() as AVMUTXOSet;
+        let setPlatform = await this.platformHelper.updateUtxos() as PlatformUTXOSet;
 
         let joined = setInternal.merge(setExternal);
         this.utxoset = joined;
@@ -235,10 +237,12 @@ export default class AvaHdWallet implements IAvaHdWallet{
             // Find the new HD index
             this.internalHelper.updateHdIndex()
             this.externalHelper.updateHdIndex()
+            this.platformHelper.updateHdIndex()
 
             // Update UTXOs
             this.internalHelper.updateUtxos();
             this.externalHelper.updateUtxos();
+            this.platformHelper.updateUtxos();
         }, 2000)
 
         return txId;
