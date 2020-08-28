@@ -58,6 +58,7 @@
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
     import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
     import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+    import {SECP256k1KeyPair} from "avalanche/src/common/secp256k1";
 
     @Component({
         components: {
@@ -138,15 +139,14 @@
             let wallet = this.wallet;
             let utxoSet = wallet.externalHelper.utxoSet as AVMUTXOSet;
             let keys = this.keysExternal;
-            return  this.utxoSetToBalanceDict(utxoSet, keys);
+            return  this.utxoSetToBalanceDict<AVMKeyPair>(utxoSet, keys);
         }
 
 
-        utxoSetToBalanceDict(set: AVMUTXOSet|PlatformUTXOSet, keys: AVMKeyPair[]|PlatformVMKeyPair[]): DerivationListBalanceDict[]{
+        utxoSetToBalanceDict<KeyType extends AVMKeyPair|PlatformVMKeyPair>(set: AVMUTXOSet|PlatformUTXOSet, keys: KeyType[]): DerivationListBalanceDict[]{
             let assetsDict = this.assetsDict;
-            // let keys = this.keysExternal;
 
-            let balances: DerivationListBalanceDict[] = keys.map((key: AVMKeyPair|PlatformVMKeyPair) => {
+            let balances: DerivationListBalanceDict[] = keys.map(key => {
                 let addr = key.getAddress();
                 let newSet = set.clone();
 
@@ -191,7 +191,7 @@
             let wallet = this.wallet;
             let utxoSet = wallet.internalHelper.utxoSet;
             let keys = this.keysInternal;
-            return this.utxoSetToBalanceDict(utxoSet,keys);
+            return this.utxoSetToBalanceDict<AVMKeyPair>(utxoSet,keys);
         }
 
 
@@ -199,7 +199,7 @@
             let wallet = this.wallet;
             let utxoSet = wallet.platformHelper.utxoSet;
             let keys = this.keysPlatform;
-            return this.utxoSetToBalanceDict(utxoSet,keys);
+            return this.utxoSetToBalanceDict<PlatformVMKeyPair>(utxoSet,keys);
         }
     }
 </script>

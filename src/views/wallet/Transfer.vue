@@ -132,6 +132,12 @@
                 message: 'You have successfully sent your transaction.',
                 type:'success',
             });
+
+
+            // Update the user's balance
+            setTimeout(()=>{
+                this.$store.dispatch('Assets/updateUTXOs');
+            }, 3000);
         }
 
         onerror(){
@@ -331,7 +337,7 @@
 
     .new_order_Form{
         display: grid;
-        grid-template-columns: 1fr 1fr 33%;
+        grid-template-columns: 1fr 1fr 300px;
         column-gap: 45px;
         padding-top: 15px;
     }

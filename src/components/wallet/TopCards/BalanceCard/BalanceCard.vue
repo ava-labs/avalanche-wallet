@@ -69,7 +69,11 @@
         get balanceText():string{
             if(this.ava_asset !== null){
                 let amt = this.ava_asset.getAmount();
-                return amt.toString();
+                if(amt.lt(Big('0.00001'))){
+                    return amt.toLocaleString(this.ava_asset.denomination);
+                }else{
+                    return amt.toString();
+                }
             }else{
                 return '-'
             }
@@ -80,7 +84,7 @@
 
             let denom = this.ava_asset.denomination;
             let bal = this.$store.getters.walletPlatformBalance;
-            let bigBal = new Big(bal.toString())
+            let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
             return bigBal.toString();
         }
