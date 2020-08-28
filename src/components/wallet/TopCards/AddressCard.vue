@@ -232,12 +232,12 @@
     .subtitle{
         font-size: 0.7rem;
         color: var(--primary-color-light);
-        flex-grow: 1;
     }
 
     .addr_text{
         font-size: 16px;
         word-break: break-all;
         color: var(--primary-color);
+        flex-grow: 1;
     }
 </style>
