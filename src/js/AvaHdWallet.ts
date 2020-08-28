@@ -77,6 +77,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.externalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey)
         this.internalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/1', hdkey)
         this.platformHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey, 'P')
+
+        console.log(this.platformHelper.getKeyForIndex(0).getPrivateKeyString());
     }
 
     getCurrentKey():AVMKeyPair {

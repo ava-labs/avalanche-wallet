@@ -28,6 +28,7 @@ import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
+import BN from "bn.js";
 
 export default new Vuex.Store({
     modules:{
@@ -69,6 +70,24 @@ export default new Vuex.Store({
             return res;
         },
 
+        walletPlatformBalance(state: RootState): BN | null{
+            let wallet:AvaHdWallet|null = state.activeWallet;
+            if(!wallet) return null;
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN('0');
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                amt.iadd(utxoOut.getAmount());
+            }
+
+            return amt;
+        },
         // assset id -> utxos
         walletNftDict(state: RootState){
             let wallet:AvaHdWallet|null = state.activeWallet;

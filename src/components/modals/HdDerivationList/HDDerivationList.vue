@@ -142,11 +142,11 @@
         }
 
 
-        utxoSetToBalanceDict(set: AVMUTXOSet|PlatformUTXOSet, keys: AVMKeyPair[]): DerivationListBalanceDict[]{
+        utxoSetToBalanceDict(set: AVMUTXOSet|PlatformUTXOSet, keys: AVMKeyPair[]|PlatformVMKeyPair[]): DerivationListBalanceDict[]{
             let assetsDict = this.assetsDict;
             // let keys = this.keysExternal;
 
-            let balances: DerivationListBalanceDict[] = keys.map(key => {
+            let balances: DerivationListBalanceDict[] = keys.map((key: AVMKeyPair|PlatformVMKeyPair) => {
                 let addr = key.getAddress();
                 let newSet = set.clone();
 
@@ -196,7 +196,10 @@
 
 
         get keyBalancesPlatform(): DerivationListBalanceDict[]{
-            return [];
+            let wallet = this.wallet;
+            let utxoSet = wallet.platformHelper.utxoSet;
+            let keys = this.keysPlatform;
+            return this.utxoSetToBalanceDict(utxoSet,keys);
         }
     }
 </script>
