@@ -11,7 +11,7 @@
             <div class="balance_row">
                 <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
-<!--            <div class="alt_info">-->
+            <div class="alt_info">
 <!--                <div>-->
 <!--                    <label>Available</label>-->
 <!--                    <p>{{balanceText}} AVA</p>-->
@@ -20,11 +20,11 @@
 <!--                    <label>Shared</label>-->
 <!--                    <p>- AVA</p>-->
 <!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Multisig</label>-->
-<!--                    <p>- AVA</p>-->
-<!--                </div>-->
-<!--            </div>-->
+                <div>
+                    <label>P-Chain</label>
+                    <p>{{pBalanceText}} AVAX</p>
+                </div>
+            </div>
         </div>
         <NftCol class="nft_card"></NftCol>
         <div class="where_info">
@@ -39,12 +39,15 @@
     </div>
 </template>
 <script lang="ts">
+
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
     import NftCol from './NftCol.vue';
+
+    import Big from 'big.js';
 
     @Component({
         components: {
@@ -65,10 +68,21 @@
 
         get balanceText():string{
             if(this.ava_asset !== null){
-                return this.ava_asset.toString();
+                let amt = this.ava_asset.getAmount();
+                return amt.toString();
             }else{
                 return '-'
             }
+        }
+
+        get pBalanceText(){
+            if(!this.ava_asset) return  '?';
+
+            let denom = this.ava_asset.denomination;
+            let bal = this.$store.getters.walletPlatformBalance;
+            let bigBal = new Big(bal.toString())
+                bigBal = bigBal.div(Math.pow(10,denom))
+            return bigBal.toString();
         }
 
         get wallet():AvaHdWallet{
@@ -177,7 +191,7 @@
         column-gap: 10px;
         > div{
             padding-right: 30px;
-            border-right: 2px solid #F5F6FA;
+            border-right: 2px solid var(--bg-light);
             &:last-of-type{
                 border: none;
             }

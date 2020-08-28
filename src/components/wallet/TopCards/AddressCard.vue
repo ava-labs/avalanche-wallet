@@ -9,8 +9,8 @@
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <p class="subtitle">Derived AVAX Wallet Address</p>
+                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">
                         <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>
@@ -80,6 +80,7 @@
             if(!activeKey){
                 return '-'
             }
+            // return this.$store.state.address;
             return activeKey.getAddressString();
         }
 
@@ -231,12 +232,12 @@
     .subtitle{
         font-size: 0.7rem;
         color: var(--primary-color-light);
-        flex-grow: 1;
     }
 
     .addr_text{
         font-size: 16px;
         word-break: break-all;
-        color: var(--primary-color-light);
+        color: var(--primary-color);
+        flex-grow: 1;
     }
 </style>

@@ -9,7 +9,7 @@ describe('Wallet', () => {
         cy.enterWallet(TEST_MNEMONIC);
         const ADDR_0 = userKey0.getAddressString();
         sendAvax(ADDR_0, 1)
-        cy.wait(1000);
+        cy.wait(4000);
     })
 
 

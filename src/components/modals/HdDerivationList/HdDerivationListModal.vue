@@ -1,5 +1,5 @@
 <template>
-    <modal ref="modal" title="Past Addresses" class="modal_main">
+    <modal ref="modal" title="HD Addresses" class="modal_main">
         <div class="hd_deriv_modal_body">
             <HDDerivationList :wallet="wallet"></HDDerivationList>
 <!--            <mnemonic-display :phrase="phrase" :row-size="3"></mnemonic-display>-->

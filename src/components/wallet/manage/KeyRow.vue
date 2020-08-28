@@ -30,7 +30,7 @@
                             <img src="@/assets/trash_can_dark.svg" style="height: 16px;">
                         </Tooltip>
 <!--                        <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>-->
-                        <Tooltip  text="Past Addresses" class="row_but" @click.native="showPastAddresses">
+                        <Tooltip  text="HD Addresses" class="row_but" @click.native="showPastAddresses">
                             <fa icon="list-ol"></fa>
                         </Tooltip>
                         <Tooltip  text="Export Key" class="row_but" @click.native="showExportModal">

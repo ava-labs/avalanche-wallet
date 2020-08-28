@@ -28,6 +28,7 @@ import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
+import BN from "bn.js";
 
 export default new Vuex.Store({
     modules:{
@@ -46,13 +47,16 @@ export default new Vuex.Store({
     },
     getters: {
         walletNftUTXOs(state: RootState): UTXO[]{
+            // return [];
             let wallet:AvaHdWallet|null = state.activeWallet;
 
+
             if(!wallet) return [];
-            if(!wallet.getUTXOSet()) return [];
 
+            let utxoSet = wallet.getUTXOSet()
+            if(!utxoSet) return [];
 
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let addrUtxos = utxoSet.getAllUTXOs();
             let res: UTXO[] = [];
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
@@ -66,6 +70,24 @@ export default new Vuex.Store({
             return res;
         },
 
+        walletPlatformBalance(state: RootState): BN | null{
+            let wallet:AvaHdWallet|null = state.activeWallet;
+            if(!wallet) return null;
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN('0');
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                amt.iadd(utxoOut.getAmount());
+            }
+
+            return amt;
+        },
         // assset id -> utxos
         walletNftDict(state: RootState){
             let wallet:AvaHdWallet|null = state.activeWallet;
@@ -171,11 +193,13 @@ export default new Vuex.Store({
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
             return addresses;
         },
+
         activeKey(state): AVMKeyPair|null{
             if(!state.activeWallet){
                 return null;
             }
-            return state.activeWallet.getCurrentKey();
+            let hdIndex = state.activeWallet.externalHelper.hdIndex;
+            return state.activeWallet.externalHelper.getKeyForIndex(hdIndex) as AVMKeyPair;
         }
     },
     mutations: {
