@@ -29,6 +29,7 @@ import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
+import {UnixNow} from "avalanche/dist/utils";
 
 export default new Vuex.Store({
     modules:{
@@ -76,6 +77,9 @@ export default new Vuex.Store({
 
             let utxoSet = wallet.platformHelper.utxoSet;
 
+
+            let now = UnixNow();
+
             // The only type of asset is AVAX on the P chain
             let amt = new BN('0');
 
@@ -83,7 +87,38 @@ export default new Vuex.Store({
             for(var n=0; n<utxos.length; n++) {
                 let utxo = utxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
-                amt.iadd(utxoOut.getAmount());
+                let locktime = utxoOut.getLocktime();
+
+                // Filter out locked tokens
+                if(locktime.lte(now)){
+                    amt.iadd(utxoOut.getAmount());
+                }
+            }
+
+            return amt;
+        },
+
+        walletPlatformBalanceLocked(state: RootState): BN | null{
+            let wallet:AvaHdWallet|null = state.activeWallet;
+            if(!wallet) return null;
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+            let now = UnixNow();
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN('0');
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                let locktime = utxoOut.getLocktime();
+
+                // Filter unlocked tokens
+                if(locktime.gt(now)){
+                    amt.iadd(utxoOut.getAmount());
+                }
             }
 
             return amt;

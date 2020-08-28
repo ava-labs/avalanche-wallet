@@ -48,6 +48,7 @@
     import NftCol from './NftCol.vue';
 
     import Big from 'big.js';
+    import {BN} from "avalanche/dist";
 
     @Component({
         components: {
@@ -79,11 +80,19 @@
             }
         }
 
+        get platformUnlocked(): BN{
+            return this.$store.getters.walletPlatformBalance;
+        }
+
+        get platformLocked(): BN{
+            return this.$store.getters.walletPlatformBalanceLocked;
+        }
+
         get pBalanceText(){
             if(!this.ava_asset) return  '?';
 
             let denom = this.ava_asset.denomination;
-            let bal = this.$store.getters.walletPlatformBalance;
+            let bal = this.platformUnlocked.add(this.platformLocked);
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
             return bigBal.toString();
