@@ -92,7 +92,6 @@
         }
 
         addTx(id?:string): void{
-            console.log(this.tx_list,this.assets_list);
             if(this.tx_list.length >= this.assets_list.length){
                 return;
             }

@@ -9,8 +9,8 @@
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <p class="subtitle">Derived AVAX Wallet Address</p>
+                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">
                         <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>
@@ -238,6 +238,6 @@
     .addr_text{
         font-size: 16px;
         word-break: break-all;
-        color: var(--primary-color-light);
+        color: var(--primary-color);
     }
 </style>

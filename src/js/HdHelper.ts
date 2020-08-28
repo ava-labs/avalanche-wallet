@@ -45,8 +45,6 @@ class HdHelper {
         this.hdIndex = await this.findAvailableIndex();
         this.updateKeychain();
         this.updateUtxos();
-
-        console.log("Hellper index: ",this.hdIndex);
     }
 
     // When the wallet connects to a different network
@@ -249,7 +247,6 @@ class HdHelper {
         if(cacheExternal) return cacheExternal;
 
         let derivationPath: string = `${this.changePath}/${index.toString()}`;
-        // console.log(derivationPath);
         let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
 
         let pkHex: string = key.privateKey.toString('hex');
@@ -257,8 +254,6 @@ class HdHelper {
 
         let keypair = this.keyChain.importKey(pkBuf)
 
-
-        // console.log(keypair.getAddressString())
         // save to cache
         this.keyCache[index] = keypair;
         return keypair;
