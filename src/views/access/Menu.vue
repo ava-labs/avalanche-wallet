@@ -8,8 +8,8 @@
         <router-link to="/create" class="link">{{$t('access.create')}}</router-link>
         <hr />
         <div class="options">
-            <router-link to="/access/mnemonic" class="option button_primary">{{$t('access.mnemonic')}}</router-link>
-            <router-link to="/access/keystore" class="option button_primary">{{$t('access.keystore')}}</router-link>
+            <router-link to="/access/mnemonic" class="option button_primary">{{$t('access.but_mnemonic')}}</router-link>
+            <router-link to="/access/keystore" class="option button_primary">{{$t('access.but_keystore')}}</router-link>
 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
         <router-link to="/" class="link">{{$t('access.cancel')}}</router-link>

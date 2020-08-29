@@ -18,9 +18,15 @@ let en = {
     access: {
         title: 'How do you want to access your wallet?',
         create: 'Don\'t have a wallet?',
-        mnemonic: 'Mnemonic Key Phrase',
-        keystore: 'Keystore File',
-        cancel: 'Cancel'
+        but_mnemonic: 'Mnemonic Key Phrase',
+        but_keystore: 'Keystore File',
+        cancel: 'Cancel',
+        mnemonic: {
+            title: "Enter your MNEMONIC phrase\n",
+            subtitle: "Hit ‘SPACE’ after every successful word entry.",
+            submit: "Access Wallet",
+            cancel: "Cancel"
+        }
     },
     top: {
         title1: "My Address",

@@ -3,9 +3,9 @@ import {Buffer} from "buffer";
     <div class="mnemonic_auth">
         <div class="left">
             <header>
-                <h1>Enter your MNEMONIC phrase</h1>
+                <h1>{{$t('access.mnemonic.title')}}</h1>
             </header>
-            <label>Hit ‘SPACE’ after every successful word entry.</label>
+            <label>{{$t('access.mnemonic.subtitle')}}</label>
             <textarea v-model="phrase"></textarea>
 <!--            <remember-key-->
 <!--                    class="remember"-->
@@ -20,8 +20,8 @@ import {Buffer} from "buffer";
                     depressed
                     :loading="isLoading"
                     :disabled="!canSubmit"
-                >Access Wallet</v-btn>
-                <router-link to="/access" class="link">Cancel</router-link>
+                >{{$t('access.mnemonic.submit')}}</v-btn>
+                <router-link to="/access" class="link">{{$t('access.mnemonic.cancel')}}</router-link>
             </div>
         </div>
         <div class="right">

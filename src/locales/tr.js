@@ -11,14 +11,17 @@ let tr = {
         access_opt2: "Anahtar Dosyasi",
         access_sel_file: "Anahtar Dosyasi Sec",
         access: {
-            title: 'Cuzdana Git',
-            desc: 'Gizli anahtarinizi kullanarak cuzdaniniza giris yapiniz.',
-            key: {
-                title: 'Gizli Anahtar',
-            },
-            file: {
-                title: 'Anahtar Dosyasi'
-            },
+            title: 'How do you want to access your wallet?',
+            create: 'Don\'t have a wallet?',
+            but_mnemonic: 'Mnemonic Key Phrase',
+            but_keystore: 'Keystore File',
+            cancel: 'Cancel',
+            mnemonic: {
+                title: "Enter your MNEMONIC phrase\n",
+                subtitle: "Hit ‘SPACE’ after every successful word entry.",
+                submit: "Access Wallet",
+                cancel: "Iptal"
+            }
         },
         create: {
             title: 'Yeni Cuzdan Olustur',
