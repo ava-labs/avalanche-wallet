@@ -23,6 +23,7 @@
         @Prop() balance!:{[key:string]: Big};
 
 
+
         get assetsDict(){
             return this.$store.state.Assets.assetsDict;
         }

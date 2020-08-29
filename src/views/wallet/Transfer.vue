@@ -272,7 +272,7 @@
     h4{
         display: block;
         text-align: left;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: bold;
         margin: 12px 0;
     }

@@ -253,6 +253,4 @@
         text-align: center;
         padding: 30px;
     }
-
-
 </style>

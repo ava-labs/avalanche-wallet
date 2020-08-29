@@ -241,9 +241,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
             this.platformHelper.updateHdIndex()
 
             // Update UTXOs
-            this.internalHelper.updateUtxos();
-            this.externalHelper.updateUtxos();
-            this.platformHelper.updateUtxos();
+            // this.internalHelper.updateUtxos();
+            // this.externalHelper.updateUtxos();
+            // this.platformHelper.updateUtxos();
         }, 2000)
 
         return txId;

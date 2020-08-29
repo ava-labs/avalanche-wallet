@@ -16,10 +16,10 @@
 <!--                    <label>Available</label>-->
 <!--                    <p>{{balanceText}} AVA</p>-->
 <!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Shared</label>-->
-<!--                    <p>- AVA</p>-->
-<!--                </div>-->
+                <div>
+                    <label>Locked</label>
+                    <p>{{balanceTextLocked}} AVAX</p>
+                </div>
                 <div>
                     <label>P-Chain</label>
                     <p>{{pBalanceText}} AVAX</p>
@@ -76,7 +76,20 @@
                     return amt.toString();
                 }
             }else{
-                return '-'
+                return '?'
+            }
+        }
+
+        get balanceTextLocked():string{
+            if(this.ava_asset !== null){
+                let amt = this.ava_asset.getAmount(true);
+                if(amt.lt(Big('0.00001'))){
+                    return amt.toLocaleString(this.ava_asset.denomination);
+                }else{
+                    return amt.toString();
+                }
+            }else{
+                return '?'
             }
         }
 
@@ -95,7 +108,12 @@
             let bal = this.platformUnlocked.add(this.platformLocked);
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
-            return bigBal.toString();
+
+            if(bigBal.lt(Big('0.00001'))){
+                return bigBal.toLocaleString(denom);
+            }else{
+                return bigBal.toString();
+            }
         }
 
         get wallet():AvaHdWallet{
@@ -149,7 +167,7 @@
         align-self: center;
     }
     .balance{
-        font-size: 2.8em !important;
+        font-size: 2.4em !important;
         white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
@@ -201,10 +219,13 @@
     .alt_info{
         display: grid;
         grid-template-columns: repeat(3, max-content);
-        column-gap: 10px;
+        column-gap: 00px;
         > div{
-            padding-right: 30px;
+            padding: 0 24px;
             border-right: 2px solid var(--bg-light);
+            &:first-of-type{
+                padding-left: 0;
+            }
             &:last-of-type{
                 border: none;
             }

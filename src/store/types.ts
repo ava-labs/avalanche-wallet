@@ -26,7 +26,10 @@ export interface IWalletNftDict {
 }
 
 export interface IWalletBalanceDict {
-    [assetId: string]: BN
+    [assetId: string]: {
+        available: BN,
+        locked: BN
+    }
 }
 
 export interface IWalletBalanceItem{
