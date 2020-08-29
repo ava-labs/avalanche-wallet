@@ -69,7 +69,7 @@
     p{
         width: 100%;
         color: var(--primary-color-light);
-        /*font-size: 13px;*/
+        font-size: 13px;
         font-family: Helvetica, monospace;
     }
     .amt{

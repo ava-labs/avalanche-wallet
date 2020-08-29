@@ -11,20 +11,20 @@
             <div class="balance_row">
                 <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
-<!--            <div class="alt_info">-->
+            <div class="alt_info">
 <!--                <div>-->
 <!--                    <label>Available</label>-->
 <!--                    <p>{{balanceText}} AVA</p>-->
 <!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Shared</label>-->
-<!--                    <p>- AVA</p>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Multisig</label>-->
-<!--                    <p>- AVA</p>-->
-<!--                </div>-->
-<!--            </div>-->
+                <div>
+                    <label>Locked</label>
+                    <p>{{balanceTextLocked}} AVAX</p>
+                </div>
+                <div>
+                    <label>P-Chain</label>
+                    <p>{{pBalanceText}} AVAX</p>
+                </div>
+            </div>
         </div>
         <NftCol class="nft_card"></NftCol>
         <div class="where_info">
@@ -39,12 +39,16 @@
     </div>
 </template>
 <script lang="ts">
+
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
     import NftCol from './NftCol.vue';
+
+    import Big from 'big.js';
+    import {BN} from "avalanche/dist";
 
     @Component({
         components: {
@@ -65,9 +69,50 @@
 
         get balanceText():string{
             if(this.ava_asset !== null){
-                return this.ava_asset.toString();
+                let amt = this.ava_asset.getAmount();
+                if(amt.lt(Big('0.00001'))){
+                    return amt.toLocaleString(this.ava_asset.denomination);
+                }else{
+                    return amt.toString();
+                }
             }else{
-                return '-'
+                return '?'
+            }
+        }
+
+        get balanceTextLocked():string{
+            if(this.ava_asset !== null){
+                let amt = this.ava_asset.getAmount(true);
+                if(amt.lt(Big('0.00001'))){
+                    return amt.toLocaleString(this.ava_asset.denomination);
+                }else{
+                    return amt.toString();
+                }
+            }else{
+                return '?'
+            }
+        }
+
+        get platformUnlocked(): BN{
+            return this.$store.getters.walletPlatformBalance;
+        }
+
+        get platformLocked(): BN{
+            return this.$store.getters.walletPlatformBalanceLocked;
+        }
+
+        get pBalanceText(){
+            if(!this.ava_asset) return  '?';
+
+            let denom = this.ava_asset.denomination;
+            let bal = this.platformUnlocked.add(this.platformLocked);
+            let bigBal = Big(bal.toString())
+                bigBal = bigBal.div(Math.pow(10,denom))
+
+            if(bigBal.lt(Big('0.00001'))){
+                return bigBal.toLocaleString(denom);
+            }else{
+                return bigBal.toString();
             }
         }
 
@@ -122,7 +167,7 @@
         align-self: center;
     }
     .balance{
-        font-size: 2.8em !important;
+        font-size: 2.4em !important;
         white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
@@ -174,10 +219,13 @@
     .alt_info{
         display: grid;
         grid-template-columns: repeat(3, max-content);
-        column-gap: 10px;
+        column-gap: 00px;
         > div{
-            padding-right: 30px;
-            border-right: 2px solid #F5F6FA;
+            padding: 0 24px;
+            border-right: 2px solid var(--bg-light);
+            &:first-of-type{
+                padding-left: 0;
+            }
             &:last-of-type{
                 border: none;
             }

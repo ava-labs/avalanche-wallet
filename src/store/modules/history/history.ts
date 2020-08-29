@@ -37,6 +37,13 @@ const history_module: Module<HistoryState, RootState> = {
 
             let addresses:string[] = rootGetters.addresses;
 
+            // this hsouldnt ever happen, but to avoid getting every transaction...
+            if(addresses.length === 0){
+                state.isUpdating = false;
+                return;
+            }
+
+            // console.log(addresses);
             let query = addresses.map(val => {
                 let raw = val.split('-')[1];
                 return `address=${raw}`;

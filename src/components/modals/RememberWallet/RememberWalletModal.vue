@@ -6,7 +6,7 @@
                 <input type="password" placeholder="Password" v-model="password" class="password">
                 <p class="err">{{err}}</p>
                 <v-btn type="submit" :loading="isLoading" depressed color="#4C2E56" class="ava_button button_primary submit">Access Wallet</v-btn>
-                <button @click="cancel" class="cancel_but ava_button_secondary">Access another wallet<br>(Previous wallet will be lost.)</button>
+                <button @click="cancel" class="cancel_but ava_button_secondary">Access another wallet<br>(Previous wallet will be forgotten.)</button>
             </form>
         </div>
     </Modal>

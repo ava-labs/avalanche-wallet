@@ -23,11 +23,13 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {UTXO, AVMKeyPair, AmountOutput} from "avalanche/dist/apis/avm";
+import {UTXO, AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
+import BN from "bn.js";
+import {UnixNow} from "avalanche/dist/utils";
 
 export default new Vuex.Store({
     modules:{
@@ -46,13 +48,16 @@ export default new Vuex.Store({
     },
     getters: {
         walletNftUTXOs(state: RootState): UTXO[]{
+            // return [];
             let wallet:AvaHdWallet|null = state.activeWallet;
 
+
             if(!wallet) return [];
-            if(!wallet.getUTXOSet()) return [];
 
+            let utxoSet = wallet.getUTXOSet()
+            if(!utxoSet) return [];
 
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
+            let addrUtxos = utxoSet.getAllUTXOs();
             let res: UTXO[] = [];
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
@@ -79,7 +84,7 @@ export default new Vuex.Store({
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
 
-                // Process only non NFT utxos, outputid === 0b
+                // Process only NFT utxos, outputid === 0b
                 let outId = utxo.getOutput().getOutputID();
                 if(outId===11){
                     let assetIdBuff = utxo.getAssetID();
@@ -104,31 +109,109 @@ export default new Vuex.Store({
 
             let dict:IWalletBalanceDict = {};
 
+            let unixNox = UnixNow();
+            const ZERO = new BN(0);
+
             let addrUtxos = wallet.getUTXOSet().getAllUTXOs();
 
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
 
-                // Process only non NFT utxos, outputid === 0b
+                // Process only SECP256K1 Transfer Output utxos, outputid === 07
                 let outId = utxo.getOutput().getOutputID();
-                if(outId===11) continue;
+                if(outId!==7) continue;
 
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
+                let locktime = utxoOut.getLocktime();
                 let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
                 let assetId = bintools.cb58Encode(assetIdBuff);
 
-                if(!dict[assetId]){
-                    dict[assetId] = amount.clone();
-                }else{
-                    let amt = dict[assetId];
-                    dict[assetId] = amt.add(amount)
+                // if not locked
+                if(locktime.lte(unixNox)){
+                    if(!dict[assetId]){
+                        dict[assetId] = {
+                            locked: ZERO,
+                            available: amount.clone()
+                        }
+                    }else{
+                        let amt = dict[assetId].available;
+                        dict[assetId].available = amt.add(amount)
+                    }
+                }else{ // If locked
+                    if(!dict[assetId]){
+                        dict[assetId] = {
+                            locked: amount.clone(),
+                            available: ZERO
+                        };
+                    }else{
+                        let amt = dict[assetId].locked;
+                        dict[assetId].locked = amt.add(amount)
+                    }
                 }
+
+
             }
             return dict;
         },
 
+        // walletAVMBalance(state: RootState): BN | null{
+        //
+        // },
+
+        walletPlatformBalance(state: RootState): BN | null{
+            let wallet:AvaHdWallet|null = state.activeWallet;
+            if(!wallet) return null;
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+
+            let now = UnixNow();
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN('0');
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                let locktime = utxoOut.getLocktime();
+
+                // Filter out locked tokens
+                if(locktime.lte(now)){
+                    amt.iadd(utxoOut.getAmount());
+                }
+            }
+
+            return amt;
+        },
+
+        walletPlatformBalanceLocked(state: RootState): BN | null{
+            let wallet:AvaHdWallet|null = state.activeWallet;
+            if(!wallet) return null;
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+            let now = UnixNow();
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN('0');
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                let locktime = utxoOut.getLocktime();
+
+                // Filter unlocked tokens
+                if(locktime.gt(now)){
+                    amt.iadd(utxoOut.getAmount());
+                }
+            }
+
+            return amt;
+        },
 
         // Get the balance dict, combine it with existing assets and return a new dict
         walletAssetsDict(state: RootState, getters): IWalletAssetsDict{
@@ -148,7 +231,9 @@ export default new Vuex.Store({
                 }else{
                     asset = assetsDict[assetId];
                     asset.resetBalance();
-                    asset.addBalance(balanceAmt)
+                    asset.addBalance(balanceAmt.available)
+                    asset.addBalanceLocked(balanceAmt.locked)
+
                 }
                 res[assetId] = asset;
             }
@@ -171,11 +256,13 @@ export default new Vuex.Store({
             let addresses = state.activeWallet.getKeyChain().getAddressStrings();
             return addresses;
         },
+
         activeKey(state): AVMKeyPair|null{
             if(!state.activeWallet){
                 return null;
             }
-            return state.activeWallet.getCurrentKey();
+            let hdIndex = state.activeWallet.externalHelper.hdIndex;
+            return state.activeWallet.externalHelper.getKeyForIndex(hdIndex) as AVMKeyPair;
         }
     },
     mutations: {
@@ -215,6 +302,7 @@ export default new Vuex.Store({
 
         onAccess(store){
             router.push('/wallet');
+            store.dispatch('Assets/updateUTXOs');
         },
 
 

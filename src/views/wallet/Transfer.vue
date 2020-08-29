@@ -15,6 +15,10 @@
                     </template>
                 </div>
                 <div>
+                    <div class="to_address">
+                        <label>{{$t('transfer.to')}}</label>
+                        <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
+                    </div>
                     <div class="fees">
                         <h4>Transaction Summary</h4>
                         <TxSummary :orders="orders" :nft-orders="nftOrders"></TxSummary>
@@ -36,10 +40,7 @@
 <!--                            </v-expansion-panel>-->
 <!--                        </v-expansion-panels>-->
 <!--                    </div>-->
-                    <div class="to_address">
-                        <label>{{$t('transfer.to')}}</label>
-                        <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
-                    </div>
+
 
 
                     <div class="checkout">
@@ -132,6 +133,12 @@
                 message: 'You have successfully sent your transaction.',
                 type:'success',
             });
+
+
+            // Update the user's balance
+            setTimeout(()=>{
+                this.$store.dispatch('Assets/updateUTXOs');
+            }, 3000);
         }
 
         onerror(){
@@ -265,7 +272,7 @@
     h4{
         display: block;
         text-align: left;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: bold;
         margin: 12px 0;
     }
@@ -331,7 +338,7 @@
 
     .new_order_Form{
         display: grid;
-        grid-template-columns: 1fr 1fr 33%;
+        grid-template-columns: 1fr 1fr 300px;
         column-gap: 45px;
         padding-top: 15px;
     }
@@ -365,9 +372,9 @@
     }
 
     .to_address {
-        margin-top: main.$vertical-padding;
-        border-top: 1px solid var(--bg-light);
-        padding-top: main.$vertical-padding;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--bg-light);
+        padding-bottom: 14px;
     }
 
     label{
@@ -395,6 +402,10 @@
         font-size: 12px;
         color: var(--error);
         margin: 6px 0;
+    }
+
+    .checkout{
+        margin-top: 14px;
     }
 
     @media only screen and (max-width: 600px) {
