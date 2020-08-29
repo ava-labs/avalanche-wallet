@@ -58,7 +58,6 @@
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
     import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
     import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
-    import {SECP256k1KeyPair} from "avalanche/src/common/secp256k1";
 
     @Component({
         components: {
