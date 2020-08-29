@@ -9,46 +9,51 @@
                 <h4>{{$t('top.title2')}}</h4>
             </div>
             <div class="balance_row">
-                <p class="balance">{{balanceText}} AVAX</p>
+                <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
-            <v-alert type="info" text class="alert_cont">
-                <p style="font-size: 14px;">
-                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
-                    <br>
-                    This wallet is connected to the Avalanche <i>Denali test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
-                </p>
-            </v-alert>
-<!--            <div class="alt_info">-->
+            <div class="alt_info">
 <!--                <div>-->
 <!--                    <label>Available</label>-->
 <!--                    <p>{{balanceText}} AVA</p>-->
 <!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Shared</label>-->
-<!--                    <p>- AVA</p>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Multisig</label>-->
-<!--                    <p>- AVA</p>-->
-<!--                </div>-->
-<!--            </div>-->
+                <div>
+                    <label>Locked</label>
+                    <p>{{balanceTextLocked}} AVAX</p>
+                </div>
+                <div>
+                    <label>P-Chain</label>
+                    <p>{{pBalanceText}} AVAX</p>
+                </div>
+            </div>
         </div>
-        <div class="nft_card">
-            <h4>NFTs</h4>
-            <p>You have not collected any non fungible tokens.</p>
+        <NftCol class="nft_card"></NftCol>
+        <div class="where_info">
+            <v-alert type="info" text class="alert_cont">
+                <p style="font-size: 14px;">
+                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
+                    <br>
+                    This wallet is connected to the Avalanche <i>Everest test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
+                </p>
+            </v-alert>
         </div>
     </div>
 </template>
 <script lang="ts">
+
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
+    import NftCol from './NftCol.vue';
+
+    import Big from 'big.js';
+    import {BN} from "avalanche/dist";
 
     @Component({
         components: {
-            Spinner
+            Spinner,
+            NftCol
         }
     })
     export default class BalanceCard extends Vue {
@@ -64,9 +69,50 @@
 
         get balanceText():string{
             if(this.ava_asset !== null){
-                return this.ava_asset.toString();
+                let amt = this.ava_asset.getAmount();
+                if(amt.lt(Big('0.00001'))){
+                    return amt.toLocaleString(this.ava_asset.denomination);
+                }else{
+                    return amt.toString();
+                }
             }else{
-                return '-'
+                return '?'
+            }
+        }
+
+        get balanceTextLocked():string{
+            if(this.ava_asset !== null){
+                let amt = this.ava_asset.getAmount(true);
+                if(amt.lt(Big('0.00001'))){
+                    return amt.toLocaleString(this.ava_asset.denomination);
+                }else{
+                    return amt.toString();
+                }
+            }else{
+                return '?'
+            }
+        }
+
+        get platformUnlocked(): BN{
+            return this.$store.getters.walletPlatformBalance;
+        }
+
+        get platformLocked(): BN{
+            return this.$store.getters.walletPlatformBalanceLocked;
+        }
+
+        get pBalanceText(){
+            if(!this.ava_asset) return  '?';
+
+            let denom = this.ava_asset.denomination;
+            let bal = this.platformUnlocked.add(this.platformLocked);
+            let bigBal = Big(bal.toString())
+                bigBal = bigBal.div(Math.pow(10,denom))
+
+            if(bigBal.lt(Big('0.00001'))){
+                return bigBal.toLocaleString(denom);
+            }else{
+                return bigBal.toString();
             }
         }
 
@@ -80,10 +126,10 @@
     }
 </script>
 <style scoped lang="scss">
-    @use '../../../main';
+    @use '../../../../main';
     .balance_card{
         display: grid !important;
-        grid-template-columns: 1fr 140px;
+        grid-template-columns: 1fr 230px;
         column-gap: 20px;
     }
 
@@ -96,6 +142,12 @@
         flex-direction: column;
     }
 
+    .where_info{
+        grid-row: 2;
+        grid-column: 1/3;
+        margin-top: 8px;
+        /*max-width: 460px;*/
+    }
     .header{
         display: flex;
 
@@ -115,8 +167,8 @@
         align-self: center;
     }
     .balance{
-        font-size: 2.8em !important;
-        white-space: nowrap;
+        font-size: 2.4em !important;
+        white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
     }
@@ -167,10 +219,13 @@
     .alt_info{
         display: grid;
         grid-template-columns: repeat(3, max-content);
-        column-gap: 10px;
+        column-gap: 00px;
         > div{
-            padding-right: 30px;
-            border-right: 2px solid #F5F6FA;
+            padding: 0 24px;
+            border-right: 2px solid var(--bg-light);
+            &:first-of-type{
+                padding-left: 0;
+            }
             &:last-of-type{
                 border: none;
             }
@@ -186,17 +241,13 @@
 
     .nft_card{
         padding-left: 20px;
-
-        p{
-            font-size: 12px;
-            color: var(--primary-color-light);
-        }
     }
 
 
     @include main.mobile-device{
         .balance_card{
             grid-template-columns: none;
+            display: block !important;
         }
 
         .nft_card{
@@ -210,6 +261,8 @@
         .balance{
             font-size: 2em !important;
         }
+
+        .where_info{}
 
         .alt_info{
             display: none;

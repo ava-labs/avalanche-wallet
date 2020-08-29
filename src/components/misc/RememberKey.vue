@@ -52,6 +52,11 @@ export default {
         // change() {
         //     this.$emit("change", this.isRemember);
         // },
+        clear(){
+            this.password = "";
+            this.password_confirm = "";
+            this.isRemember = false;
+        },
         expansion_change(val){
             if(val===0){
                 this.$emit('checked', true);

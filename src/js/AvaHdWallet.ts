@@ -1,12 +1,26 @@
 // A simple wrapper thar combines avalanche.js, bip39 and HDWallet
 
 import {
-    AVMKeyChain,
     AVMKeyPair,
-    UTXOSet,
+    AVMKeyChain,
+    UTXOSet as AVMUTXOSet,
     TransferableInput,
-    TransferableOutput, BaseTx, UnsignedTx, Tx
-} from "avalanche";
+    TransferableOutput,
+    BaseTx,
+    UnsignedTx,
+    Tx,
+    UTXO,
+    AssetAmountDestination
+} from "avalanche/dist/apis/avm";
+
+import {
+    UTXOSet as PlatformUTXOSet
+} from "avalanche/dist/apis/platformvm";
+import {
+    getPreferredHRP
+} from "avalanche/dist/utils";
+
+
 import * as bip39 from "bip39";
 import {ava, avm, bintools} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
@@ -14,7 +28,8 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
-
+import {HdHelper} from "@/js/HdHelper";
+import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 // HD WALLET
@@ -23,7 +38,6 @@ import {ITransaction} from "@/components/wallet/transfer/types";
 
 const AVA_TOKEN_INDEX: string = '9000';
 const AVA_ACCOUNT_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'`; // Change and index left out
-// const AVA_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'/0`;  // address_index is left out
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
 const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
@@ -33,34 +47,24 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actual
 // SCAN_SIZE - INDEX_RANGE
 
 export default class AvaHdWallet implements IAvaHdWallet{
-    // type: wallet_type;
-    masterKey: AVMKeyPair;
-    seed:string | null;
+    seed:string;
     hdKey:HDKey;
-    hdIndex:number;
-    keyChain: AVMKeyChain;
     chainId: string;
-    utxoset: UTXOSet;
+    utxoset: AVMUTXOSet;
     mnemonic: string;
-    private indexKeyCache:IIndexKeyCache;
-    private indexChangeKeyCache:IIndexKeyCache;
+    isLoading: boolean;
+    internalHelper: HdHelper;
+    externalHelper: HdHelper;
+    platformHelper: HdHelper;
 
     // The master key from avalanche.js
-    constructor(keypair: AVMKeyPair) {
-        // this.type = 'hd';
-        this.masterKey = keypair;
-        this.chainId = keypair.getChainID();
-        this.hdIndex = 0;
-        this.seed = null;
-        this.keyChain = new AVMKeyChain(this.chainId);
-        this.utxoset = new UTXOSet();
-        this.indexKeyCache = {};
-        this.indexChangeKeyCache = {};
-        let pk: Buffer = keypair.getPrivateKey();
-        let pkHex: string = pk.toString('hex');
+    constructor(mnemonic: string) {
+        this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID();
+        this.utxoset = new AVMUTXOSet();
+        this.isLoading = false;
 
-        let mnemonic: string = bip39.entropyToMnemonic(pkHex);
         this.mnemonic = mnemonic;
+
         // Generate Seed
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
         this.seed = seed.toString('hex');
@@ -68,233 +72,199 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // Generate hd key from seed
         let hdkey: HDKey = HDKey.fromMasterSeed(seed);
         this.hdKey = hdkey;
-        this.onHdKeyReady();
+
+
+        this.externalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey)
+        this.internalHelper = new HdHelper(AVA_ACCOUNT_PATH+'/1', hdkey)
+        this.platformHelper = new HdHelper(AVA_ACCOUNT_PATH+'/0', hdkey, 'P')
+
     }
 
     getCurrentKey():AVMKeyPair {
-        let index: number = this.hdIndex;
-        return this.getKeyForIndex(index);
+        return (this.externalHelper.getCurrentKey() as AVMKeyPair);
     }
 
-    generateKey(): AVMKeyPair{
-        let newIndex: number = this.hdIndex+1;
-        let newKey: AVMKeyPair = this.getKeyForIndex(newIndex);
-
-        // Add to keychain
-        this.keyChain.addKey(newKey);
-        this.hdIndex = newIndex;
-        return newKey;
-    }
-
-    // Called once master HD key is created.
-    async onHdKeyReady(){
-        this.hdIndex = await this.findAvailableIndex();
-        this.keyChain = this.getKeyChain();
-        this.getUTXOs();
-    }
 
     // When the wallet connects to a different network
     async onnetworkchange(){
-        this.utxoset = new UTXOSet();
-        await this.onHdKeyReady();
+        this.externalHelper.onNetworkChange();
+        this.internalHelper.onNetworkChange();
+        this.platformHelper.onNetworkChange();
     }
 
-    async getUTXOs(): Promise<UTXOSet>{
-        let addrs: Buffer[] = this.keyChain.getAddresses();
-        let result: UTXOSet = await avm.getUTXOs(addrs);
-        this.utxoset = result; // we can use local copy of utxos as cache for some functions
 
-        // If last address has a utxo increment index
-        let addr_now: AVMKeyPair = this.getCurrentKey();
-        let lastIndexUtxos: string[] = result.getUTXOIDs([addr_now.getAddress()])
-        if(lastIndexUtxos.length > 0){
-            this.generateKey();
-        }
-        return result;
+
+    async getUTXOs(): Promise<AVMUTXOSet>{
+        let setInternal = await this.internalHelper.updateUtxos() as AVMUTXOSet;
+        let setExternal = await this.externalHelper.updateUtxos() as AVMUTXOSet;
+        let setPlatform = await this.platformHelper.updateUtxos() as PlatformUTXOSet;
+
+        let joined = setInternal.merge(setExternal);
+        this.utxoset = joined;
+        return joined;
     }
 
-    getUTXOSet(): UTXOSet {
+    getUTXOSet(): AVMUTXOSet {
         return this.utxoset;
     }
 
-    getAllDerivedKeys(isInternal = false): AVMKeyPair[]{
-        let set: AVMKeyPair[] = [];
-
-        for(var i=0; i<this.hdIndex;i++){
-            let key;
-
-            if(isInternal){
-                key = this.getKeyForIndex(i, true);
-            }else{
-               key = this.getKeyForIndex(i);
-            }
-            set.push(key);
+    getAllDerivedKeys(isInternal = false): AVMKeyPair[] | PlatformVMKeyPair[]{
+        if(isInternal){
+            return this.internalHelper.getAllDerivedKeys();
+        }else{
+            return this.externalHelper.getAllDerivedKeys();
         }
-        return set;
     }
 
-    getMasterKey(): AVMKeyPair {
-        return this.masterKey;
+    getMnemonic(): string {
+        return this.mnemonic;
     }
 
     // Scan internal indices and find a spot with no utxo
     getChangeAddress():string{
-        let index: number = 0;
-        let foundAddress: string|null = null;
-
-        while(foundAddress===null){
-            let key = this.getKeyForIndex(index,true);
-
-            let utxoset = this.utxoset.getUTXOIDs([key.getAddress()]);
-            if(utxoset.length===0){
-                foundAddress = key.getAddressString();
-            }
-            index++;
-        }
-
-        return foundAddress;
+        return this.internalHelper.getCurrentAddress();
     }
 
 
-    async issueBatchTx(orders: ITransaction[], addr: string): Promise<string>{
-        let fromAddrs: string[] = this.keyChain.getAddressStrings();
-        let changeAddr: string = this.getChangeAddress();
-
-        if(changeAddr === null){
+    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
+        // TODO: Get new change index.
+        if(this.getChangeAddress() === null){
             throw "Unable to issue transaction. Ran out of change index.";
         }
 
-        let ins: TransferableInput[] = [];
-        let outs: TransferableOutput[] = [];
+        let keychain = this.getKeyChain();
 
+        let fromAddrs: Buffer[] = keychain.getAddresses();
+        let fromAddrsStr: string[] = keychain.getAddressStrings();
+        let changeAddr: Buffer = bintools.stringToAddress(this.getChangeAddress());
+
+        const AVAX_ID_BUF = await avm.getAVAXAssetID();
+        const AVAX_ID_STR = AVAX_ID_BUF.toString('hex');
+        const TO_BUF = bintools.stringToAddress(addr);
+
+
+
+        const aad:AssetAmountDestination = new AssetAmountDestination([TO_BUF], fromAddrs, [changeAddr]);
+        const ZERO = new BN(0);
+        let isFeeAdded = false;
+
+        // Aggregate Fungible ins & outs
         for(let i:number=0;i<orders.length;i++){
-            let order: ITransaction = orders[i];
-            let amt: BN = new BN(order.amount.toString());
-            let baseTx: UnsignedTx = await avm.buildBaseTx(this.utxoset, amt,[addr], fromAddrs, [changeAddr], order.asset.id);
-            let rawTx: BaseTx = baseTx.getTransaction();
+            let order: ITransaction|UTXO = orders[i];
 
-            ins = ins.concat(rawTx.getIns());
-            outs = outs.concat(rawTx.getOuts());
+            if((order as ITransaction).asset){ // if fungible
+                let tx: ITransaction = order as ITransaction;
+
+                let assetId = bintools.cb58Decode(tx.asset.id)
+                let amt: BN = tx.amount;
+
+                if(assetId.toString('hex') === AVAX_ID_STR){
+                    aad.addAssetAmount(assetId, amt, avm.getFee())
+                    isFeeAdded = true;
+                }else{
+                    aad.addAssetAmount(assetId, amt, ZERO)
+                }
+            }
         }
 
-        let chainId: Buffer = bintools.avaDeserialize(avm.getBlockchainID());
+        // If fee isn't added, add it
+        if(!isFeeAdded){
+            if(avm.getFee().gt(ZERO)){
+                aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+            }
+        }
+
+        const success: Error = this.getUTXOSet().getMinimumSpendable(aad);
+
+        let ins: TransferableInput[] = [];
+        let outs: TransferableOutput[] = [];
+        if(typeof success === 'undefined'){
+            ins = aad.getInputs();
+            outs = aad.getAllOutputs();
+        }else{
+            throw success;
+        }
+
+        //@ts-ignore
+        let nftUtxos:UTXO[] = orders.filter(val => {
+            if((val as ITransaction).asset) return false;
+            return true;
+        });
+
+        // If transferring an NFT, build the transaction on top of an NFT tx
+        let unsignedTx: UnsignedTx;
         let networkId: number = ava.getNetworkID();
-        let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
-        const unsignedTx: UnsignedTx = new UnsignedTx(baseTx);
-        const tx: Tx = unsignedTx.sign(this.keyChain);
+        let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
+
+        if(nftUtxos.length > 0){
+            let nftSet = new AVMUTXOSet();
+                nftSet.addArray(nftUtxos);
+
+            let utxoIds: string[] = nftSet.getUTXOIDs()
+
+            // Sort nft utxos
+            utxoIds.sort((a,b) => {
+                if(a < b){
+                    return -1;
+                }else if(a > b){
+                    return 1;
+                }
+                return 0;
+            });
+
+            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, utxoIds);
+
+            let rawTx = unsignedTx.getTransaction();
+            let outsNft = rawTx.getOuts()
+            let insNft = rawTx.getIns()
+
+            // TODO: This is a hackish way of doing this, need methods in avalanche.js
+            //@ts-ignore
+            rawTx.outs = outsNft.concat(outs);
+            //@ts-ignore
+            rawTx.ins = insNft.concat(ins);
+        }else{
+            let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
+            unsignedTx = new UnsignedTx(baseTx);
+        }
+
+        const tx: Tx = unsignedTx.sign(keychain);
         const txId: string = await avm.issueTx(tx);
 
         // TODO: Must update index after sending a tx
         // TODO: Index will not increase but it could decrease.
         // TODO: With the current setup this can lead to gaps in index space greater than scan size.
-        this.hdIndex = await this.findAvailableIndex();
-        this.keyChain = this.getKeyChain();
+        setTimeout(async () => {
+            // Find the new HD index
+            this.internalHelper.updateHdIndex()
+            this.externalHelper.updateHdIndex()
+            this.platformHelper.updateHdIndex()
+
+            // Update UTXOs
+            // this.internalHelper.updateUtxos();
+            // this.externalHelper.updateUtxos();
+            // this.platformHelper.updateUtxos();
+        }, 2000)
 
         return txId;
     }
 
     // returns a keychain that has all the derived private keys
     getKeyChain(): AVMKeyChain{
-        let keychain: AVMKeyChain = new AVMKeyChain(this.chainId);
+        let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
+        let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
 
-        for(let i:number=0; i<=this.hdIndex; i++){
-            let key: AVMKeyPair = this.getKeyForIndex(i);
-            let keyChange: AVMKeyPair = this.getKeyForIndex(i, true);
+        let allKeys = internal.concat(external);
+        let keychain: AVMKeyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
 
-            keychain.addKey(key);
-            keychain.addKey(keyChange);
+        for(var i=0; i<allKeys.length;i ++){
+            keychain.addKey(allKeys[i]);
         }
         return keychain;
     }
 
     getCurrentAddress(): string{
-        return this.getCurrentKey().getAddressString();
+        return this.externalHelper.getCurrentAddress();
     }
 
-    async findAvailableIndex(start:number=0):Promise<number>{
-        let keychainExternal: AVMKeyChain = new AVMKeyChain('X');
-        let keychainInternal: AVMKeyChain = new AVMKeyChain('X');
-
-
-        // Get keys for indexes start to start+scan_size
-        for(let i:number=start;i<start+SCAN_SIZE;i++){
-            // Derive Key and add to KeyChain
-            // Scan both external and internal addresses
-            let key: AVMKeyPair = this.getKeyForIndex(i);
-            let keyInternal: AVMKeyPair = this.getKeyForIndex(i, true);
-            keychainExternal.addKey(key);
-            keychainInternal.addKey(keyInternal);
-        }
-
-        let externalAddrs: Buffer[] = keychainExternal.getAddresses();
-        let internalAddrs: Buffer[] = keychainInternal.getAddresses();
-
-        let utxoSetExternal: UTXOSet = await avm.getUTXOs(externalAddrs);
-        let utxoSetInternal: UTXOSet = await avm.getUTXOs(internalAddrs);
-
-
-        // let indexNow = start;
-        // Scan UTXOs of these indexes and try to find a gao if INDEX_RANGE
-        for(let i:number=0; i<externalAddrs.length-INDEX_RANGE; i++){
-            let gapSize: number = 0;
-
-            for(let n:number=0;n<0+INDEX_RANGE;n++){
-                let scanIndex: number = i+n;
-
-
-                let addrIn: Buffer = internalAddrs[scanIndex];
-                let addrEx: Buffer = externalAddrs[scanIndex];
-
-                let addrUTXOsIn: string[] = utxoSetInternal.getUTXOIDs([addrIn]);
-                let addrUTXOsEx: string[] = utxoSetExternal.getUTXOIDs([addrEx]);
-
-
-                if(addrUTXOsIn.length === 0 && addrUTXOsEx.length === 0){
-                    gapSize++
-                }else{
-                    break;
-                }
-            }
-
-            if(gapSize===INDEX_RANGE){
-                return start+i;
-            }
-        }
-
-        return await this.findAvailableIndex(start+SCAN_RANGE)
-    }
-
-    getKeyForIndex(index:number, isChange=false): AVMKeyPair{
-        if(isChange){
-            let cacheInternal: AVMKeyPair = this.indexChangeKeyCache[index];
-            if(cacheInternal) return cacheInternal;
-        }else{
-            let cacheExternal: AVMKeyPair = this.indexKeyCache[index];
-            if(cacheExternal) return cacheExternal;
-        }
-
-        let accountPath: string = AVA_ACCOUNT_PATH;
-
-        // index is left out
-        let derivationPath: string = accountPath+'/0';
-        if(isChange){
-            derivationPath = accountPath+'/1';
-        }
-
-        // TODO: This is a bottleneck
-        let key: HDKey = this.hdKey.derive(derivationPath+`/${index}`) as HDKey;
-        let keychain: AVMKeyChain = new AVMKeyChain('X');
-        let pkHex: string = key.privateKey.toString('hex');
-        let pkBuf: Buffer = new Buffer(pkHex, 'hex');
-        let addr: Buffer = keychain.importKey(pkBuf);
-
-        let keypair: AVMKeyPair = keychain.getKey(addr);
-
-        if(!isChange){
-            this.indexKeyCache[index] = keypair;
-        }else{
-            this.indexChangeKeyCache[index] = keypair;
-        }
-        return keypair;
-    }
 }

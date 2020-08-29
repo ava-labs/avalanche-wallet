@@ -16,7 +16,7 @@ import i18n from "./plugins/i18n.js";
 
 Vue.config.productionTip = false;
 
-new Vue({
+const app = new Vue({
   router,
   store,
   vuetify,
@@ -34,6 +34,13 @@ new Vue({
   }
 }).$mount('#app');
 
+
+// @ts-ignore
+if (window.Cypress) {
+  // only available during E2E tests
+  // @ts-ignore
+  window.app = app
+}
 
 // Extending Big.js with a helper function
 import Big from "big.js";

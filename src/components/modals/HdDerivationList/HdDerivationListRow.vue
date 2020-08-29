@@ -13,7 +13,7 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import {AVMKeyPair} from "avalanche";
+    import {AVMKeyPair} from "avalanche/dist/apis/avm";
     import Big from "big.js";
 
     @Component
@@ -21,6 +21,7 @@
         @Prop() index!: number;
         @Prop() keyPair!:AVMKeyPair;
         @Prop() balance!:{[key:string]: Big};
+
 
 
         get assetsDict(){

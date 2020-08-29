@@ -27,10 +27,10 @@
                             <span>Activate Key</span>
                         </button>
                         <Tooltip text="Remove Key" class="row_but" @click.native="remove" v-if="!is_default">
-                            <img src="@/assets/trash_can.svg" style="height: 16px;">
+                            <img src="@/assets/trash_can_dark.svg" style="height: 16px;">
                         </Tooltip>
 <!--                        <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>-->
-                        <Tooltip  text="Past Addresses" class="row_but" @click.native="showPastAddresses">
+                        <Tooltip  text="HD Addresses" class="row_but" @click.native="showPastAddresses">
                             <fa icon="list-ol"></fa>
                         </Tooltip>
                         <Tooltip  text="Export Key" class="row_but" @click.native="showExportModal">
@@ -67,17 +67,14 @@
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {AmountOutput, KeyPair} from "avalanche";
-
+    import {AmountOutput, AVMKeyPair} from "avalanche/dist/apis/avm";
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
-    import * as bip39 from 'bip39';
     import AvaHdWallet from "@/js/AvaHdWallet";
     import Tooltip from '@/components/misc/Tooltip.vue';
 
     import ExportKeys from "@/components/modals/ExportKeys.vue";
 
-    import {AvaWallet} from "@/js/AvaWallet";
 
     interface IKeyBalanceDict{
         [key:string]: AvaAsset
@@ -102,10 +99,10 @@
         }
 
         get walletTitle(){
-            return this.address.split('-')[1].substring(0,4);
+            return this.seed.substring(0,4);
         }
-        get address(){
-            return this.wallet.masterKey.getAddressString();
+        get seed(): string{
+            return this.wallet.seed;
         }
         get assetsDict():AssetsDict{
             return this.$store.state.Assets.assetsDict;
@@ -121,11 +118,17 @@
             let addrUtxos = this.wallet.getUTXOSet().getAllUTXOs();
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
+
+                // ignore NFTS
+                //TODO: support nfts
+                let outId = utxo.getOutput().getOutputID();
+                if(outId===11) continue;
+
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
                 let amount = utxoOut.getAmount();
                 let assetIdBuff = utxo.getAssetID();
-                let assetId = bintools.avaSerialize(assetIdBuff);
+                let assetId = bintools.cb58Encode(assetIdBuff);
 
                 let assetObj:AvaAsset|undefined = this.assetsDict[assetId];
 
@@ -160,15 +163,16 @@
             return res;
         }
 
-        get keyPair():KeyPair{
-            return this.wallet.masterKey;
-        }
+        // get keyPair():KeyPair{
+        //     return this.wallet.masterKey;
+        // }
 
         get mnemonicPhrase():string{
-            let pk = this.keyPair.getPrivateKey();
-            let hex = pk.toString('hex');
-            let mnemonic = bip39.entropyToMnemonic(hex);
-            return mnemonic;
+            return this.wallet.getMnemonic()
+            // let pk = this.keyPair.getPrivateKey();
+            // let hex = pk.toString('hex');
+            // let mnemonic = bip39.entropyToMnemonic(hex);
+            // return mnemonic;
         }
 
         remove(){

@@ -10,7 +10,7 @@
         <transition-group name="fade">
             <key-row v-for="wallet in wallets"
                      :wallet="wallet"
-                     :key="wallet.masterKey.getAddressString()"
+                     :key="wallet.seed.substr(0,4)"
                      class="key_row"
                      @select="selectWallet"
                      @remove="removeWallet"

@@ -24,6 +24,7 @@
     import FileInput from "@/components/misc/FileInput.vue";
     import {ImportKeyfileInput} from "@/store/types";
     import {KeyFile} from "@/js/IKeystore";
+    import {KEYSTORE_VERSION} from "@/js/Keystore";
 
     @Component({
         components: {
@@ -59,6 +60,8 @@
 
         importKeyfile(){
             let fileData:KeyFile;
+            this.err = null;
+
             try{
                 fileData = JSON.parse(this.fileText as string);
             }catch(e){
@@ -66,9 +69,12 @@
                 return;
             }
 
+            if(fileData.version != KEYSTORE_VERSION){
+                this.err = "Tried to import an old keystore version. Please update your keystore file before importing."
+                return;
+            }
 
             this.isLoading = true;
-            this.err = null;
 
             setTimeout(async () => {
                 let input: ImportKeyfileInput = {

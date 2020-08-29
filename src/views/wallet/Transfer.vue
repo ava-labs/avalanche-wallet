@@ -1,13 +1,31 @@
 <template>
     <div class="transfer_card">
         <h1>{{$t('transfer.title')}}</h1>
-        <div class="card_body">
+        <div v-if="networkStatus !== 'connected'" class="disconnected">
+            <p>Unable to send assets. Disconnected from the network.</p>
+        </div>
+        <div class="card_body" v-else>
             <div class="new_order_Form">
-                <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                <div class="lists">
+<!--                    <h4>Fungibles</h4>-->
+                    <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                    <template v-if="hasNFT">
+<!--                        <h4>Collectibles - {{nftOrders.length}} Selected</h4>-->
+                        <NftList @change="updateNftList" ref="nftList"></NftList>
+                    </template>
+                </div>
                 <div>
+                    <div class="to_address">
+                        <label>{{$t('transfer.to')}}</label>
+                        <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
+                    </div>
+                    <div class="fees">
+                        <h4>Transaction Summary</h4>
+                        <TxSummary :orders="orders" :nft-orders="nftOrders"></TxSummary>
+                    </div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
-                        <p>{{$t('transfer.fee_tx')}} <span>0.000000000 AVAX</span></p>
+                        <p>{{$t('transfer.fee_tx')}} <span>{{txFee.toLocaleString(9)}} AVAX</span></p>
                     </div>
 <!--                    <div class="advanced">-->
 <!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->
@@ -22,10 +40,7 @@
 <!--                            </v-expansion-panel>-->
 <!--                        </v-expansion-panels>-->
 <!--                    </div>-->
-                    <div class="to_address">
-                        <label>{{$t('transfer.to')}}</label>
-                        <qr-input v-model="addressIn" class="qrIn"></qr-input>
-                    </div>
+
 
 
                     <div class="checkout">
@@ -47,11 +62,18 @@
     import RadioButtons from "@/components/misc/RadioButtons.vue";
     import Big from "big.js";
 
+    import NftList from "@/components/wallet/transfer/NftList.vue";
+
     //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
-    import {isValidAddress} from "../../AVA";
+    import {avm, isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
+    import { UTXO } from "avalanche/dist/apis/avm";
+    import BN from "bn.js";
+    import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
+
+
 
     @Component({
         components: {
@@ -59,6 +81,8 @@
             TxList,
             RadioButtons,
             QrInput,
+            NftList,
+            TxSummary
         }
     })
     export default class Transfer extends Vue{
@@ -66,18 +90,18 @@
         isAjax:boolean = false;
         addressIn:string = '';
         orders:ITransaction[] = [];
+        nftOrders: UTXO[] = [];
         errors:string[] = [];
-        // change_address:string = '';
 
-        // changeAddressesChange(val){
-        //     this.change_address = val;
-        // }
-        // toggleAdvanced(){
-        //     this.showAdvanced = !this.showAdvanced;
-        // },
+
         updateTxList(data:ITransaction[]){
             this.orders = data;
         }
+
+        updateNftList(val: UTXO[]){
+            this.nftOrders = val;
+        }
+
         formCheck(){
             this.errors = [];
             let err = [];
@@ -91,37 +115,75 @@
                 this.send();
             }
         }
+
+        onsuccess(){
+            this.addressIn = "";
+            // Clear transactions list
+            // @ts-ignore
+            this.$refs.txList.clear();
+
+            // Clear NFT list
+            if(this.hasNFT){
+                // @ts-ignore
+                this.$refs.nftList.clear();
+            }
+
+            this.$store.dispatch('Notifications/add', {
+                title: 'Transaction Sent',
+                message: 'You have successfully sent your transaction.',
+                type:'success',
+            });
+
+
+            // Update the user's balance
+            setTimeout(()=>{
+                this.$store.dispatch('Assets/updateUTXOs');
+            }, 3000);
+        }
+
+        onerror(){
+            this.$store.dispatch('Notifications/add', {
+                title: 'Error Sending Transaction',
+                message: 'Failed to send transaction.',
+                type:'error',
+            });
+        }
+
+
         send(){
             let parent = this;
             this.isAjax = true;
 
+            // let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders);
+            let sumArray: (ITransaction|UTXO)[] = [...this.orders, ...this.nftOrders];
+
             let txList = {
                 toAddress: this.addressIn,
-                orders: this.orders
+                orders: sumArray
             };
+
 
             this.$store.dispatch('issueBatchTx', txList).then(res => {
                 parent.isAjax = false;
 
                 if(res === 'success'){
-                    // @ts-ignore
-                    parent.$refs.txList.clear();
-
-                    this.$store.dispatch('Notifications/add', {
-                        title: 'Transaction Sent',
-                        message: 'You have successfully sent your transaction.',
-                        type:'success',
-                    });
+                    this.onsuccess();
                 }else{
-                    this.$store.dispatch('Notifications/add', {
-                        title: 'Error Sending Transaction',
-                        message: 'Failed to send transaction.',
-                        type:'error',
-                    });
+                    this.onerror();
                 }
+            }).catch(err => {
+                console.log(err);
             });
         }
 
+        get networkStatus():string{
+            let stat = this.$store.state.Network.status;
+            return stat;
+        }
+
+        get hasNFT(): boolean{
+            return this.$store.getters.walletNftUTXOs.length > 0;
+        }
 
         get faucetLink(){
             let link = process.env.VUE_APP_FAUCET_LINK;
@@ -129,13 +191,23 @@
             return null;
         }
         get canSend(){
-            if(this.addressIn && this.orders.length>0 && this.totalTxSize.gt(0)){
-                return true;
+            if(!this.addressIn) return false;
+
+            if((this.orders.length > 0 && this.totalTxSize.eq(new BN(0))) && this.nftOrders.length===0 ){
+                return false;
             }
-            return false;
+
+            if(this.orders.length === 0 && this.nftOrders.length===0) return false;
+
+            // if(((this.orders.length===0 || this.totalTxSize.eq(0)) || this.nftOrders.length>0))
+            //
+            // if(this.addressIn && ((this.orders.length>0 && this.totalTxSize.gt(0)) || this.nftOrders.length>0) ){
+            //     return true;
+            // }
+            return true;
         }
         get totalTxSize(){
-            let res = Big(0);
+            let res = new BN(0);
             for(var i=0; i<this.orders.length; i++){
                 let order = this.orders[i];
                 if(order.amount){
@@ -144,6 +216,13 @@
             }
             return res;
         }
+
+        get txFee(): Big{
+            let fee = avm.getFee();
+            let res = Big(fee.toString()).div(Math.pow(10,9));
+            return res;
+        }
+
         get addresses(){
             return this.$store.state.addresses;
         }
@@ -177,14 +256,10 @@
     $padLeft: 24px;
     $padTop: 8px;
 
-    .transfer_card{
-
-    }
-
-    .card_body{
-        /*display: grid;*/
-        /*grid-template-columns: 1fr 1fr 1fr;*/
-        /*column-gap: 15px;*/
+    .disconnected{
+        padding: 30px;
+        text-align: center;
+        background-color: var(--bg-light);
     }
 
     .explain{
@@ -197,9 +272,9 @@
     h4{
         display: block;
         text-align: left;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: bold;
-        /*margin-bottom: 8px;*/
+        margin: 12px 0;
     }
 
 
@@ -263,7 +338,7 @@
 
     .new_order_Form{
         display: grid;
-        grid-template-columns: 1fr 1fr 33%;
+        grid-template-columns: 1fr 1fr 300px;
         column-gap: 45px;
         padding-top: 15px;
     }
@@ -272,11 +347,18 @@
         /*padding: 10px 0;*/
         margin-bottom: 15px;
     }
-
-    .tx_list{
-        padding-right: 45px;
+    .lists{
+        /*padding-right: 45px;*/
         border-right: 1px solid var(--bg-light);
         grid-column: 1/3;
+
+        /*> div{*/
+        /*    margin: 14px 0;*/
+        /*}*/
+    }
+
+    .tx_list{
+        margin-bottom: 14px;
     }
 
     .fees p{
@@ -290,9 +372,9 @@
     }
 
     .to_address {
-        margin-top: main.$vertical-padding;
-        border-top: 1px solid var(--bg-light);
-        padding-top: main.$vertical-padding;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--bg-light);
+        padding-bottom: 14px;
     }
 
     label{
@@ -311,9 +393,6 @@
     }
 
 
-    /*.checkout .v-btn{*/
-    /*    color: #fff;*/
-    /*}*/
     .advanced .advancedBody{
         transition-duration: 0.2s;
     }
@@ -323,6 +402,10 @@
         font-size: 12px;
         color: var(--error);
         margin: 6px 0;
+    }
+
+    .checkout{
+        margin-top: 14px;
     }
 
     @media only screen and (max-width: 600px) {

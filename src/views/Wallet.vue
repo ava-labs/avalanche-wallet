@@ -1,5 +1,6 @@
 <template>
     <div class="wallet_view" ref="wallet_view">
+        <UpdateKeystoreModal v-if="isManageWarning"></UpdateKeystoreModal>
         <transition name="fade" mode="out-in">
             <sidebar class="panel"></sidebar>
         </transition>
@@ -22,7 +23,7 @@ import { Vue, Component } from "vue-property-decorator";
 import TopInfo from "@/components/wallet/TopInfo.vue";
 import Sidebar from '@/components/wallet/Sidebar.vue';
 import MainPanel from '@/components/SidePanels/MainPanel.vue';
-
+import UpdateKeystoreModal from "@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue";
 
 const TIMEOUT_DURATION = 60 * 7; // in seconds
 
@@ -30,7 +31,8 @@ const TIMEOUT_DURATION = 60 * 7; // in seconds
     components: {
         Sidebar,
         MainPanel,
-        TopInfo
+        TopInfo,
+        UpdateKeystoreModal
     }
 })
 export default class Wallet extends Vue {
@@ -61,6 +63,13 @@ export default class Wallet extends Vue {
     destroyed(){
         clearInterval(this.intervalId!);
     }
+
+    get isManageWarning(): boolean{
+        if(this.$store.state.warnUpdateKeyfile){
+            return true;
+        }
+        return false;
+    }
 }
 </script>
 
@@ -70,7 +79,7 @@ export default class Wallet extends Vue {
 .wallet_view {
     padding-bottom: 0;
     display: grid;
-    grid-template-columns: 240px 1fr 340px;
+    grid-template-columns: 200px 1fr 340px;
     column-gap: 15px;
     height: 100%;
     background-color: var(--bg-wallet);

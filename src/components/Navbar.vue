@@ -16,8 +16,8 @@
                 <button @click="logout">Log out</button>
             </template>
             <template v-else>
-                <router-link to="/access" class="action_but">Access Wallet</router-link>
-                <router-link to="/create" class="action_but">Get Started</router-link>
+                <router-link to="/access" class="action_but" data-cy="access">Access Wallet</router-link>
+                <router-link to="/create" class="action_but" data-cy="create">Get Started</router-link>
             </template>
         </div>
 

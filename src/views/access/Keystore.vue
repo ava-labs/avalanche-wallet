@@ -16,7 +16,7 @@
                         hide-details
                 ></v-text-field>
                 <p class="err">{{error}}</p>
-                <remember-key class="remember" v-model="rememberPass" v-if="file" @is-valid="isRememberValid"></remember-key>
+<!--                <remember-key class="remember" v-model="rememberPass" v-if="file" @is-valid="isRememberValid"></remember-key>-->
                 <v-btn
                         class="ava_button button_primary"
                         @click="access"
@@ -35,14 +35,14 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import FileInput from "../../components/misc/FileInput.vue";
-import RememberKey from "../../components/misc/RememberKey.vue";
+// import RememberKey from "../../components/misc/RememberKey.vue";
 import {ImportKeyfileInput} from "@/store/types";
 import {KeyFile} from "@/js/IKeystore";
 
 
 @Component({
     components: {
-        RememberKey,
+        // RememberKey,
         FileInput
     }
 })
@@ -50,8 +50,8 @@ export default class Keystore extends Vue{
     pass: string = "";
     file: File|null = null;
     fileText: string|null = null;
-    rememberPass: string|null = null;
-    rememberValid: boolean = true;
+    // rememberPass: string|null = null;
+    // rememberValid: boolean = true;
     isLoading: boolean = false;
     error: string = "";
 
@@ -69,9 +69,9 @@ export default class Keystore extends Vue{
             reader.readAsText(val);
     }
 
-    isRememberValid(val: boolean){
-        this.rememberValid = val;
-    }
+    // isRememberValid(val: boolean){
+    //     this.rememberValid = val;
+    // }
     access() {
         if (!this.canSubmit || this.isLoading) return;
 
@@ -89,7 +89,7 @@ export default class Keystore extends Vue{
         // console.log(this.fileText);
         // return;
 
-        let rememberPass = this.rememberPass;
+        // let rememberPass = this.rememberPass;
         let data: ImportKeyfileInput = {
             password: this.pass,
             data: fileData
@@ -101,13 +101,15 @@ export default class Keystore extends Vue{
             this.$store.dispatch('importKeyfile', data).then((res) => {
                 parent.isLoading = false;
 
-                if(rememberPass){
-                    parent.$store.dispatch('rememberWallets', rememberPass)
-                }
+                // if(rememberPass){
+                //     parent.$store.dispatch('rememberWallets', rememberPass)
+                // }
             }).catch((err) => {
                 console.log(err);
                 if(err === "INVALID_PASS"){
                     parent.error = "Invalid password."
+                }else if(err === "INVALID_VERSION"){
+                    parent.error = "This keystore version is not supported."
                 }else{
                     parent.error = err.message;
                 }
@@ -119,7 +121,7 @@ export default class Keystore extends Vue{
 
 
     get canSubmit():boolean {
-        if (!this.file || !this.pass || !this.rememberValid || !this.fileText) {
+        if (!this.file || !this.pass || !this.fileText) {
             return false;
         }
 

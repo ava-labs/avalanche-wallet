@@ -1,9 +1,11 @@
 <template>
     <Modal ref="modal" title="Remember Keys">
         <div class="remember_modal">
-            <p>Encode your wallet with a password and store securely on this browser.</p>
-            <RememberKey v-model="rememberPass" @checked="isChecked" @is-valid="isVolatileRememberValid" ref="rememberForm"></RememberKey>
-            <v-btn class="button_primary" :disabled="!canSubmit" @click="submit">Remember</v-btn>
+            <form @submit.prevent="submit">
+                <p>Encode your wallet with a password and store securely on this browser.</p>
+                <RememberKey v-model="rememberPass" @checked="isChecked" @is-valid="isVolatileRememberValid" ref="rememberForm"></RememberKey>
+                <v-btn class="button_primary" :disabled="!canSubmit" type="submit" :loading="isLoading">Remember</v-btn>
+            </form>
         </div>
     </Modal>
 </template>
@@ -28,6 +30,11 @@
         isLoading: boolean = false;
         err: string = "";
 
+        $refs!:{
+            //@ts-ignore
+            rememberForm: RememberKey
+        }
+
 
         get canSubmit(){
             if(!this.rememberPass) return false;
@@ -50,10 +57,26 @@
             let pass = this.rememberPass;
             await this.$store.dispatch('rememberWallets', pass)
             this.isLoading = false;
+            this.onsuccess();
             this.close();
         }
 
+        onsuccess(){
+            this.clear();
+            // @ts-ignore
+            this.$refs.rememberForm.clear();
+        }
+
+        clear(){
+            this.rememberChecked = false;
+            this.rememberPass = "";
+            this.rememberPassValid = false;
+            this.password = "";
+        }
         close(){
+            this.clear();
+            // @ts-ignore
+            this.$refs.rememberForm.clear();
             //@ts-ignore
             this.$refs.modal.close();
         }

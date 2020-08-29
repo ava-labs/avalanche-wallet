@@ -2,16 +2,18 @@
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
+        <MainnetAddressModal ref="mainnet_modal"></MainnetAddressModal>
         <p class="addr_info">{{warningText}}</p>
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="addr_text">{{address}}</p>
                 <p class="subtitle">Derived AVAX Wallet Address</p>
+                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">
+                        <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
                         <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
                         <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
@@ -27,15 +29,18 @@
 
     import CopyText from "@/components/misc/CopyText.vue";
     import QRModal from "@/components/modals/QRModal.vue";
-    import PaperWallet from "@/components/modals/PaperWallet/PaperWallet2.vue";
+    import PaperWallet from "@/components/modals/PaperWallet/PaperWallet.vue";
     import QRCode from "qrcode";
-    import {AVMKeyPair} from "avalanche";
+    import MainnetAddressModal from "@/components/modals/MainnetAddressModal.vue";
+    // import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
+    import {AVMKeyPair} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {
             CopyText,
             PaperWallet,
             QRModal,
+            MainnetAddressModal
         }
     })
     export default class AddressCard extends Vue{
@@ -75,11 +80,17 @@
             if(!activeKey){
                 return '-'
             }
+            // return this.$store.state.address;
             return activeKey.getAddressString();
         }
 
         get warningText():string{
             return "This is your address to receive funds. Your address will change after every deposit.";
+        }
+
+        viewMainnetModal(){
+            // @ts-ignore
+            this.$refs.mainnet_modal.open();
         }
 
         viewQRModal(){
@@ -158,6 +169,10 @@
         color: var(--primary-color);
     }
 
+    .mainnet_but{
+        background-image: url("/img/modal_icons/mainnet_addr.svg");
+    }
+
 
 
     @include main.night-mode{
@@ -166,6 +181,10 @@
         }
         .print_but{
             background-image: url("/img/print_icon_night.svg");
+        }
+
+        .mainnet_but{
+            background-image: url("/img/modal_icons/mainnet_addr_night.svg");
         }
     }
 
@@ -213,12 +232,12 @@
     .subtitle{
         font-size: 0.7rem;
         color: var(--primary-color-light);
-        flex-grow: 1;
     }
 
     .addr_text{
         font-size: 16px;
         word-break: break-all;
-        color: var(--primary-color-light);
+        color: var(--primary-color);
+        flex-grow: 1;
     }
 </style>

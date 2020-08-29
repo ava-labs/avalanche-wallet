@@ -96,7 +96,7 @@ export default class VerifyMnemonic extends Vue {
             let trueWord = this.words[i].trim();
 
             if (userWord.length === 0) {
-                this.err = `Oops looks like you forgot to fill number ${i + 1}`;
+                this.err = `Oops, looks like you forgot to fill number ${i + 1}`;
                 return false;
             }
 
