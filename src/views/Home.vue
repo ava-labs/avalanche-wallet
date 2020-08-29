@@ -15,10 +15,10 @@
                                         <img v-if="$root.theme === 'day'" src="@/assets/diamond-primary.svg" alt />
                                         <img v-else src="@/assets/diamond-primary-night.svg" alt />
                                     </div>
-                                    <h2>Welcome Back!</h2>
-                                    <p>You can 'Access' your existing AVAX wallet here.</p>
+                                    <h2>{{$t('home.access.title')}}</h2>
+                                    <p>{{$t('home.access.desc')}}</p>
                                 </header>
-                                <router-link to="/access" class="ava_button button_primary">Access</router-link>
+                                <router-link to="/access" class="ava_button button_primary">{{$t('home.access.submit')}}</router-link>
                             </div>
                             <div class="login_option">
                                 <header>
@@ -26,10 +26,10 @@
                                         <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                         <img v-else src="@/assets/diamond-secondary-night.svg" alt />
                                     </div>
-                                    <h2>Are you new to Avalanche?</h2>
-                                    <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
+                                    <h2>{{$t('home.create.title')}}</h2>
+                                    <p>{{$t('home.create.desc')}}</p>
                                 </header>
-                                <router-link to="/create" class="ava_button button_secondary">Create New Wallet</router-link>
+                                <router-link to="/create" class="ava_button button_secondary">{{$t('home.create.submit')}}</router-link>
                             </div>
                         </div>
                     </div>

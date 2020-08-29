@@ -1,16 +1,15 @@
 <template>
     <div class="sel_locale">
-        <v-select class="sel_outlined" :items="items"
-                  dense outlined hide-details flat
-                  item-text="name"
-                  item-value="code"
-                  :height="10"
-                  @change="select" v-model="selected">
-            <template v-slot:selection="{item, index}">
-                <country-flag :country='flag' size='small'/>
-                <p class="selected">{{item.name}}</p>
+        <vue-select :options="items" label="name" v-model="selected" @input="select">
+            <template #selected-option="{ code, name }">
+                <div style="display: flex; align-items: baseline;">
+                    {{ name }}
+                </div>
             </template>
-        </v-select>
+            <template v-slot:option="option">
+                {{ option.name }}
+            </template>
+        </vue-select>
     </div>
 </template>
 <script>
@@ -23,13 +22,17 @@
         },
         data(){
             return{
-                selected: 'en',
+                selected: {
+                    code: 'en',
+                    name: 'English'
+                },
                 locale: 'en',
             }
         },
         methods: {
             select(){
-                this.$root.$i18n.locale = this.selected;
+                console.log(this.selected);
+                this.$root.$i18n.locale = this.selected.code;
             }
         },
         computed: {

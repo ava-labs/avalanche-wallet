@@ -4,32 +4,23 @@ let en = {
     private_key: "Private Key",
     address: 'Address',
     home: {
-        but_access: "Access",
-        but_create: "Create New",
-        go_back: "go back",
-
-        access_opt1: "Private Key",
-        access_opt2: "Keystore File",
-        access_sel_file: "Select Key File",
         access: {
-            title: 'Access Wallet',
-            desc: 'Access an existing wallet using private key or a key file.',
-            key: {
-                title: 'Private Key',
-            },
-            file: {
-                title: 'Key File'
-            },
+            title: 'Welcome Back!',
+            desc: 'You can \'Access\' your existing AVAX wallet here.',
+            submit: 'Access',
         },
         create: {
-            title: 'Create New Wallet',
-            desc: 'Create a new wallet to store your assets',
-            generate: 'Generate Key Pair',
-            warning: "Do not lose your private key! If you do you won't be able to access your wallet and funds again. There is no way to recover lost keys.",
-            submit: 'Access Wallet'
+            title: 'Are you new to Avalanche?',
+            desc: '\'Create\' a new wallet to send, receive and SWAP all your assets.',
+            submit: 'Create New Wallet',
         },
-
-        submit: "Access Wallet",
+    },
+    access: {
+        title: 'How do you want to access your wallet?',
+        create: 'Don\'t have a wallet?',
+        mnemonic: 'Mnemonic Key Phrase',
+        keystore: 'Keystore File',
+        cancel: 'Cancel'
     },
     top: {
         title1: "My Address",
@@ -51,41 +42,6 @@ let en = {
         adv_change: 'Change Address',
         send: 'Send Transaction'
     },
-    advanced: {
-        title: 'Advanced',
-        paper: {
-            title: 'Add Key',
-            desc: 'Add additional private keys to use with your wallet.',
-            pk: 'Private Key',
-            submit: 'Add',
-        },
-        export: {
-            title: 'Export Wallet',
-            desc: 'Enter a password to encode your private keys into a file.  You can later use this file and your password to access your wallet.',
-            submit: 'Export',
-        },
-        import: {
-            title: 'Import Wallet',
-            desc: 'Upload a key file to use within your wallet.',
-            submit: 'Import',
-        }
-    },
-    assets: {
-        title: 'Assets',
-        empty: 'You do not have any assets.',
-    },
-    tabs: {
-        send: 'Send',
-        keys: 'Manage Keys',
-        advanced: 'Advanced',
-    },
-    keys: {
-        title: 'Manage Keys',
-        address: 'Address',
-        balance: 'Balance',
-        empty: 'This key and its wallet do not contain any assets.',
-        del_check: 'Are you sure you want to delete this key and its wallet?',
-    },
     modal: {
         qr: {
             title: "Address"
@@ -95,17 +51,5 @@ let en = {
             submit: 'Print'
         }
     },
-    // notif: {
-    //   tx: {
-    //     success: {
-    //       title: 'Transaction Sent',
-    //       msg: 'You have succesfully sent your transaction.'
-    //     }
-    //   },
-    //   key: {
-    //
-    //   }
-    // }
 };
-
 export {en};

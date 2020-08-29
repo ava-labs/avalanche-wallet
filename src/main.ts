@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueI18n from 'vue-i18n'
+import vSelect from 'vue-select'
 
 import { BootstrapVue } from 'bootstrap-vue'
 // Install BootstrapVue
@@ -12,6 +13,9 @@ import vuetify from './plugins/vuetify';
 
 // @ts-ignore
 import i18n from "./plugins/i18n.js";
+
+
+Vue.component('vue-select', vSelect)
 
 
 Vue.config.productionTip = false;

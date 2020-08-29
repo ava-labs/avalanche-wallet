@@ -26,7 +26,7 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 import {UTXO, AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
-import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
+import {AssetsDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
 import {UnixNow} from "avalanche/dist/utils";
