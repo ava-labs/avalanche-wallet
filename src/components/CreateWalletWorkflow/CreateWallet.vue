@@ -10,13 +10,13 @@
                                 <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                 <img v-else src="@/assets/diamond-secondary-night.svg" alt />
                             </div>
-                            <h1>Generate a new key phrase to use with your wallet.</h1>
-                            <router-link to="/access" class="link">Already have a wallet?</router-link>
+                            <h1>{{$t('home.create.generate')}}</h1>
+                            <router-link to="/access" class="link">{{$t('home.create.but_have')}}</router-link>
                             <div class="options">
                                 <button class="ava_button but_generate button_secondary" @click="createKey">Generate Key Phrase</button>
 <!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
-                            <router-link to="/" class="link">Cancel</router-link>
+                            <router-link to="/" class="link">{{$t('home.create.cancel')}}</router-link>
                         </div>
                         <!-- PHASE 2 -->
                         <div v-else class="stage_2">
@@ -29,7 +29,7 @@
                                         <div class="mneumonic_button_container" v-if="!isVerified">
                                             <button @click="createKey" class="ava_button but_randomize button_primary ">
                                                 <fa icon="sync"></fa>
-                                                <span>Regenerate</span>
+                                                <span>{{$t('home.create.regenerate')}}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -44,16 +44,16 @@
                                         <img src="@/assets/success.svg" alt />
                                     </template>
                                     <header v-if="!isVerified">
-                                        <h1>This is your 24 word key phrase.</h1>
-                                        <p>You will use these words to access your wallet.</p>
+                                        <h1>{{$t('home.create.mnemonic_title')}}</h1>
+                                        <p>{{$t('home.create.mnemonic_desc')}}</p>
                                     </header>
                                     <header v-else>
-                                        <h1>Congratulations!</h1>
-                                        <p>It's time to open your Avalanche Wallet.</p>
+                                        <h1>{{$t('home.create.success_title')}}</h1>
+                                        <p>{{$t('home.create.success_desc')}}</p>
                                     </header>
                                     <p class="warn" v-if="!isVerified">
-                                        <span class="label">Attention!</span>
-                                        <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
+                                        <span class="label">{{$t('home.create.attention')}}</span>
+                                        <span class="description">{{$t('home.create.warning')}}</span>
                                     </p>
                                     <!-- STEP 2a - VERIFY -->
                                     <div class="verify_cont" v-if="!isVerified">
@@ -62,7 +62,7 @@
                                                 explain="I wrote down my mnemonic phrase in a secure location."
                                         ></MnemonicCopied>
                                         <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
-                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
+                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">{{$t('home.create.success_submit')}}</button>
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
@@ -84,7 +84,7 @@
                                                             class="button_primary ava_button access generate"
                                                             @click="access"
                                                             :disabled="!canSubmit"
-                                                    >Access Wallet</button>
+                                                    >{{$t('home.create.success_submit')}}</button>
                                                     <router-link to="/" class="link">Cancel</router-link>
                                                 </div>
                                             </transition>

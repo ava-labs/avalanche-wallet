@@ -4,7 +4,7 @@
         <div class="panel_nav">
             <DayNightToggle class="hover_but"></DayNightToggle>
             <network-menu class="net_menu hover_but"></network-menu>
-            <button @click="logout" class="logout">Log out</button>
+            <button @click="logout" class="logout">{{$t('logout.button')}}</button>
         </div>
         <transition name="fade" mode="out-in">
             <transaction-history-panel class="panel_content"></transaction-history-panel>

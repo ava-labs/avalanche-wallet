@@ -1,16 +1,16 @@
 <template>
     <div class="fungibles_view">
         <div class="headers">
-            <p class="name_col">Name</p>
+            <p class="name_col">{{$t('portfolio.name')}}</p>
             <p></p>
-            <p class="send_col">Send</p>
-            <p  class="balance_col">Balance</p>
+            <p class="send_col">{{$t('portfolio.send')}}</p>
+            <p  class="balance_col">{{$t('portfolio.balance')}}</p>
         </div>
         <div v-if="networkStatus !== 'connected'" class="empty">
-            <p>Unable to display assets. Disconnected from the network.</p>
+            <p>{{$t('portfolio.error_network')}}</p>
         </div>
         <div v-else-if="walletBalances.length === 0" class="empty">
-            <p>You do not have any assets</p>
+            <p>{{$t('portfolio.nobalance')}}</p>
         </div>
         <div class="scrollable" v-else>
             <fungible-row lass="asset" v-for="asset in walletBalances" :key="asset.id" :asset="asset"></fungible-row>

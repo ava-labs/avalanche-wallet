@@ -85,7 +85,7 @@
         }
 
         get warningText():string{
-            return "This is your address to receive funds. Your address will change after every deposit.";
+            return `${this.$t('top.info1')}`;
         }
 
         viewMainnetModal(){

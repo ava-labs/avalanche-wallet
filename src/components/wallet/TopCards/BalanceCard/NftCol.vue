@@ -1,7 +1,7 @@
 <template>
     <div class="nft_col">
         <h4>NFTs</h4>
-        <p v-if="isEmpty">You have not collected any non fungible tokens.</p>
+        <p v-if="isEmpty">{{$t('top.nftempty')}}</p>
         <div v-else>
             <p>{{statusText}}</p>
             <div class="nft_list">

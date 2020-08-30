@@ -6,19 +6,19 @@
 <!--            <a :href="explorerUrl" target="_blank" class="button_primary">See All</a>-->
         </div>
         <div class="empty" v-if="!isExplorer">
-            <h4>Explorer API Not Found</h4>
-            <p>You must provide an AVA Explorer API for this network to view transaction history.</p>
+            <h4>{{$t('transactions.error_api')}}</h4>
+            <p>{{$t('transactions.error_api_desc')}}</p>
         </div>
         <div class="empty" v-else-if="isEmpty && !isUpdating">
-            <p>No transactions found for this address on the explorer.</p>
+            <p>{{$t('transactions.notx')}}</p>
         </div>
 <!--        <div v-else-if="isUpdating">-->
-<!--            <p class="empty">Loading transaction history..</p>-->
+<!--            <p class="empty">{{$t('transactions.loading')}}</p>-->
 <!--        </div>-->
         <div class="list" v-else>
             <tx-history-row v-for="tx in transactions" :key="tx.id" :transaction="tx" class="tx_row">
             </tx-history-row>
-            <p class="warn">This list might be incomplete and out of order.</p>
+            <p class="warn">{{$t('transactions.warn_loading')}}</p>
         </div>
     </div>
 </template>

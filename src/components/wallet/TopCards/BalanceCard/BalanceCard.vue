@@ -17,7 +17,7 @@
 <!--                    <p>{{balanceText}} AVA</p>-->
 <!--                </div>-->
                 <div>
-                    <label>Locked</label>
+                    <label>{{$t('top.locked')}}</label>
                     <p>{{balanceTextLocked}} AVAX</p>
                 </div>
                 <div>
@@ -30,9 +30,9 @@
         <div class="where_info">
             <v-alert type="info" text class="alert_cont">
                 <p style="font-size: 14px;">
-                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
+                    <b>{{$t('top.info2')}}</b>
                     <br>
-                    This wallet is connected to the Avalanche <i>Everest test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
+                    {{$t('top.info2_desc')}}
                 </p>
             </v-alert>
         </div>

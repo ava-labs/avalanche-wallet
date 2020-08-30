@@ -13,7 +13,7 @@
             <DayNightToggle class="action_but"></DayNightToggle>
             <network-menu></network-menu>
             <template v-if="isAuth">
-                <button @click="logout">Log out</button>
+                <button @click="logout">{{$t('logout.button')}}</button>
             </template>
             <template v-else>
                 <router-link to="/access" class="action_but" data-cy="access">Access Wallet</router-link>
@@ -43,7 +43,7 @@
 <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
 <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
 <!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
-<!--                    <v-list-item @click="logout">Log out</v-list-item>-->
+<!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
                 </template>
                 <template v-else>
                     <router-link to="/access">Access Wallet</router-link>
