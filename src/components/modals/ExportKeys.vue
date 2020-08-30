@@ -1,7 +1,7 @@
 <template>
     <modal ref="modal" :title="title">
         <div class="export_body">
-            <p class="selection_num">Selected {{wallets.length}} keys.</p>
+            <p class="selection_num">{{$t('keys.export_key_info',[wallets.length])}}</p>
             <export-wallet @success="handleExportSuccess" :wallets="wallets"></export-wallet>
         </div>
     </modal>

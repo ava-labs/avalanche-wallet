@@ -2,7 +2,7 @@
     <div class="transfer_card">
         <h1>{{$t('transfer.title')}}</h1>
         <div v-if="networkStatus !== 'connected'" class="disconnected">
-            <p>Unable to send assets. Disconnected from the network.</p>
+            <p>{{$t('transfer.disconnected')}}</p>
         </div>
         <div class="card_body" v-else>
             <div class="new_order_Form">
@@ -129,8 +129,8 @@
             }
 
             this.$store.dispatch('Notifications/add', {
-                title: 'Transaction Sent',
-                message: 'You have successfully sent your transaction.',
+                title: this.$t('transfer.success_title'),
+                message: this.$t('transfer.success_msg'),
                 type:'success',
             });
 
@@ -143,8 +143,8 @@
 
         onerror(){
             this.$store.dispatch('Notifications/add', {
-                title: 'Error Sending Transaction',
-                message: 'Failed to send transaction.',
+                title: this.$t('transfer.error_title'),
+                message: this.$t('transfer.error_msg'),
                 type:'error',
             });
         }

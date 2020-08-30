@@ -1,10 +1,10 @@
 <template>
     <div class="add_key_file">
-        <label>Keystore File</label>
+        <label>{{$t('keystore.title')}}</label>
         <form @submit.prevent="importKeyfile">
             <file-input @change="onfile" class="formIn" ref="fileIn"></file-input>
-            <label>Password</label>
-            <v-text-field class="formIn" placeholder="Password" dense
+            <label>{{$t('keys.export_placeholder1')}}</label>
+            <v-text-field class="formIn" :placeholder="$t('keys.export_placeholder1')" dense
                         outlined color="#4C2E56" hide-details
                         type="password" v-model="pass"></v-text-field>
             <p v-if="err" class="err">{{err}}</p>
@@ -15,7 +15,7 @@
                 class="addKeyBut button_primary ava_button"
                 depressed block
                 color="#4C2E56"
-            >Import Wallet</v-btn>
+            >{{$t('keys.import_key_button')}}</v-btn>
         </form>
     </div>
 </template>

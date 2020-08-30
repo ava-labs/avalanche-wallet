@@ -9,7 +9,7 @@
                     <div class="headers">
                         <p style="text-align: center">#</p>
                         <p>Address</p>
-                        <p class="col_bal">Balance</p>
+                        <p class="col_bal">{{$t('portfolio.balance')}}</p>
                     </div>
                     <HdDerivationListRow v-for="(key,i) in keysInternal" :key="key.getAddressString()" :index="i" :key-pair="key" :balance="keyBalancesInternal[i]" class="list_row"
                     ></HdDerivationListRow>
@@ -23,20 +23,20 @@
                     <div class="headers">
                         <p style="text-align: center">#</p>
                         <p>Address</p>
-                        <p class="col_bal">Balance</p>
+                        <p class="col_bal">{{$t('portfolio.balance')}}</p>
                     </div>
                     <HdDerivationListRow v-for="(key,i) in keysExternal" :key="key.getAddressString()" :index="i" :key-pair="key" :balance="keyBalancesExternal[i]" class="list_row"
                     ></HdDerivationListRow>
                 </div>
                 <div v-else>
-                    <p class="empty">You do not have any past addresses.</p>
+                    <p class="empty">{{$t('portfolio.noaddresses')}}</p>
                 </div>
             </v-tab-item>
             <v-tab-item>
                 <div class="headers">
                     <p style="text-align: center">#</p>
                     <p>Address</p>
-                    <p class="col_bal">Balance</p>
+                    <p class="col_bal">{{$t('portfolio.balance')}}e</p>
                 </div>
                 <HdDerivationListRow v-for="(key,i) in keysPlatform" :key="key.getAddressString()" :index="i" :key-pair="key" :balance="keyBalancesPlatform[i]" class="list_row"
                 ></HdDerivationListRow>

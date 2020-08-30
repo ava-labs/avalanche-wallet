@@ -64,7 +64,7 @@ import {Buffer} from "buffer";
 
             // not a valid key phrase
             if(words.length !== 24){
-                this.err = "Invalid key phrase. Your phrase must be 24 words separated by a single space.";
+                this.err = `${this.$t('access.mnemonic.error')}`;
                 return false;
             }
 
@@ -123,7 +123,7 @@ import {Buffer} from "buffer";
                 }catch(e){
                     this.isLoading = false;
                     console.log(e);
-                    this.err = 'Invalid key phrase.'
+                    this.err = `${this.$t('access.mnemonic.error')}`
                 }
             }, 500)
         }

@@ -7,8 +7,8 @@
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
                     <div class="passwords" :active="isRemember">
-                        <input type="password" placeholder="Password" v-model="password">
-                        <input type="password" placeholder="Confirm Password" v-model="password_confirm">
+                        <input type="password" :placeholder="$t('keys.export_placeholder1')" v-model="password">
+                        <input type="password" :placeholder="$t('keys.export_placeholder2')" v-model="password_confirm">
                         <p class="err">{{err}}</p>
                     </div>
                 </v-expansion-panel-content>
@@ -17,8 +17,8 @@
 
 <!--        <v-checkbox :label="explain" v-model="isRemember" :hint="hint" :persistent-hint="true" :hide-details="false" :color="color" dense></v-checkbox>-->
 <!--        <div class="passwords" :active="isRemember">-->
-<!--            <input type="password" placeholder="Password" v-model="password">-->
-<!--            <input type="password" placeholder="Confirm Password" v-model="password_confirm">-->
+<!--            <input type="password" :placeholder="$t('keys.export_placeholder1')" v-model="password">-->
+<!--            <input type="password" :placeholder="$t('keys.export_placeholder2')" v-model="password_confirm">-->
 <!--            <p class="err">{{err}}</p>-->
 <!--        </div>-->
     </div>
@@ -29,7 +29,7 @@ export default {
         return {
             password: "",
             password_confirm: "",
-            hint: "You can later access your wallet on this browser with a password.",
+            hint: this.$t('keys.remember_key_info'),
             isRemember: false,
         }
     },
@@ -41,7 +41,9 @@ export default {
         },
         explain: {
             type: String,
-            default: "Remember keys."
+            default: function () {
+             return this.$t('keys.remember_key_check')
+            }
         }
     },
     model: {
@@ -93,11 +95,11 @@ export default {
           let pass = this.password;
           let pass_confirm = this.password_confirm;
           if(pass.length < 9){
-              return "Password must be at least 9 characters long."
+              return this.$t('keys.passowrd_validation');
           }
 
           if(pass !== pass_confirm){
-              return "Passwords do not match.";
+              return this.$t('keys.passowrd_validation2');
           }
           return null;
         },

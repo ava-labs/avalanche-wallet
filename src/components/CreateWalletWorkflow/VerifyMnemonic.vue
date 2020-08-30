@@ -48,7 +48,7 @@ export default class VerifyMnemonic extends Vue {
     }
     created() {
         this.init();
-        this.title = this.$t('home.create.verifytitle')
+        this.title =`${this.$t('home.create.verifytitle')}`
     }
 
     init(){

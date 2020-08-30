@@ -2,13 +2,13 @@
     <modal ref="modal" title="Confirm Logout" class="modal_main" :can_close="false">
         <div class="confirm_body">
             <p style="text-align: center">
-                Are you sure you want to log out?
+               {{$t('logout.confirmation')}}
                 <br>
-                This wallet and its keys will be forgotten.
+                {{$t('logout.confirmation_message')}}
             </p>
             <div style="display: flex;flex-direction: column; align-items: center; margin-top: 14px;">
-                <button class="ava_button button_primary" @click="submit">Logout</button>
-                <button class="ava_button_secondary" @click="close">Cancel</button>
+                <button class="ava_button button_primary" @click="submit">{{$t('logout.button_conf')}}</button>
+                <button class="ava_button_secondary" @click="close">{{$t('logout.button_cancel')}}</button>
             </div>
         </div>
     </modal>

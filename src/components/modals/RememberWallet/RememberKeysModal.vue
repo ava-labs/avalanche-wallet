@@ -2,9 +2,9 @@
     <Modal ref="modal" title="Remember Keys">
         <div class="remember_modal">
             <form @submit.prevent="submit">
-                <p>Encode your wallet with a password and store securely on this browser.</p>
+                <p>{{$t('keys.remember_key_desc')}}</p>
                 <RememberKey v-model="rememberPass" @checked="isChecked" @is-valid="isVolatileRememberValid" ref="rememberForm"></RememberKey>
-                <v-btn class="button_primary" :disabled="!canSubmit" type="submit" :loading="isLoading">Remember</v-btn>
+                <v-btn class="button_primary" :disabled="!canSubmit" type="submit" :loading="isLoading">{{$t('keys.remember_key_button')}}</v-btn>
             </form>
         </div>
     </Modal>

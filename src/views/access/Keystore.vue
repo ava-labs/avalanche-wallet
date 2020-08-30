@@ -1,12 +1,12 @@
 <template>
     <div class="access_card">
         <div class="content">
-            <h1>Keystore File</h1>
+            <h1>{{$t('keystore.title')}}</h1>
             <file-input class="file_in" @change="onfile"></file-input>
             <form @submit.prevent="access">
                 <v-text-field
                         class="pass"
-                        label="Password"
+                        :label="$t('password')"
                         dense
                         solo
                         flat
@@ -25,9 +25,9 @@
                         v-if="file"
                         :disabled="!canSubmit"
                         depressed
-                >Access Wallet</v-btn>
+                >{{$t('access.submit')}}</v-btn>
             </form>
-            <router-link to="/access" class="link">Cancel</router-link>
+            <router-link to="/access" class="link">{{$t('access.cancel')}}</router-link>
         </div>
     </div>
 </template>
@@ -82,7 +82,7 @@ export default class Keystore extends Vue{
         try{
             fileData = JSON.parse(this.fileText as string);
         }catch(e){
-            this.error = "Unable to parse JSON file."
+            this.error = `${this.$t('access.json_error')}`
             return;
         }
 
@@ -107,9 +107,9 @@ export default class Keystore extends Vue{
             }).catch((err) => {
                 console.log(err);
                 if(err === "INVALID_PASS"){
-                    parent.error = "Invalid password."
+                    parent.error = this.$t('access.password_error').toString()
                 }else if(err === "INVALID_VERSION"){
-                    parent.error = "This keystore version is not supported."
+                    parent.error = this.$t('access.keystore_error').toString()
                 }else{
                     parent.error = err.message;
                 }
