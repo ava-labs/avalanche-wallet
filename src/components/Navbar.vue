@@ -6,7 +6,7 @@
             <img v-else src="@/assets/wallet_logo_dark.svg"/>
             <span class="slogan">by Avalanche</span>
         </router-link>
-        <LanguageSelect></LanguageSelect>
+        <LanguageSelect class="lang_web"></LanguageSelect>
         <v-spacer></v-spacer>
 
         <div class="buts_right">
@@ -40,6 +40,7 @@
                     <router-link to="/wallet/keys">Manage Keys</router-link>
                     <router-link to="/wallet/transfer">Transfer</router-link>
                     <button class="logout" @click="logout">Logout</button>
+
 <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
 <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
 <!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
@@ -51,6 +52,8 @@
 <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
 <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>
+                <LanguageSelect class="lang_mobile"></LanguageSelect>
+
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -142,7 +145,15 @@ button {
     display: none;
 }
 
+.lang_mobile, .lang_web{
+    width: max-content;
+}
+
 @media only screen and (max-width: main.$mobile_width) {
+    .lang_web{
+        display: none;
+    }
+
     .buts_right {
         display: none;
 
@@ -168,6 +179,7 @@ button {
 
     .mobile_menu{
         background-color: var(--bg-light) !important;
+
 
 
         .v-list-item, .v-list-item--link{
