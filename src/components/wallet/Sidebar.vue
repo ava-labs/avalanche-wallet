@@ -9,17 +9,17 @@
                 <router-link to="/wallet">
                     <img v-if="$root.theme==='day'" src="@/assets/sidebar/portfolio_nav.png" />
                     <img v-else src="@/assets/sidebar/portfolio_nav_night.png" />
-                    Portfolio
+                    {{$t('wallet.sidebar.portfolio')}}
                 </router-link>
                 <router-link to="/wallet/keys" data-cy="wallet_manage">
                     <img v-if="$root.theme==='day'" src="@/assets/sidebar/manage_nav.png" />
                     <img v-else src="@/assets/sidebar/manage_nav_night.svg" />
-                    Manage
+                    {{$t('wallet.sidebar.manage')}}
                 </router-link>
                 <router-link to="/wallet/transfer" data-cy="wallet_transfer">
                     <img v-if="$root.theme==='day'" src="@/assets/sidebar/transfer_nav.png" />
                     <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
-                    Send
+                    {{$t('wallet.sidebar.send')}}
                 </router-link>
             </div>
         </div>

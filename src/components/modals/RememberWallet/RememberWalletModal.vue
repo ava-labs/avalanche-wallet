@@ -1,12 +1,12 @@
 <template>
-    <Modal ref="modal" :can_close="false" title="Activate Wallet">
+    <Modal ref="modal" :can_close="false" :title="$t('modal.activateWallet.title')">
         <div class="remember_modal">
-            <p>There is an active wallet. Enter your password to access it. </p>
-            <form @submit.prevent="onsubmit">
+            <p>{{$t('modal.activateWallet.desc')}}</p>
+            <form @submit.prevent="onsubmit" autocomplete="off">
                 <input type="password" placeholder="Password" v-model="password" class="password">
                 <p class="err">{{err}}</p>
-                <v-btn type="submit" :loading="isLoading" depressed color="#4C2E56" class="ava_button button_primary submit">Access Wallet</v-btn>
-                <button @click="cancel" class="cancel_but ava_button_secondary">Access another wallet<br>(Previous wallet will be forgotten.)</button>
+                <v-btn type="submit" :loading="isLoading" depressed color="#4C2E56" class="ava_button button_primary submit">{{$t('modal.activateWallet.submit')}}</v-btn>
+                <button @click="cancel" class="cancel_but ava_button_secondary">{{$t('modal.activateWallet.cancel')}}<br>{{$t('modal.activateWallet.cancel2')}}</button>
             </form>
         </div>
     </Modal>
@@ -77,19 +77,6 @@
                         let paddedKeyHex = keyHex.padStart(64,'0');
                         let mnemonic:string = bip39.entropyToMnemonic(paddedKeyHex);
 
-                        // There is an edge case that causes an error, handle it
-                        // let mnemonic: string;
-                        // if(keyHex.length===64){
-                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
-                        // }else{
-                        //     let paddedKeyHex = keyHex.padStart(64,'0');
-                        //     mnemonic = bip39.entropyToMnemonic(paddedKeyHex);
-                        // }
-                        // try{
-                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
-                        // }catch(e){
-                        //     mnemonic = bip39.entropyToMnemonic('00'+keyHex);
-                        // }
                         return mnemonic;
                     });
                 }else{
@@ -97,12 +84,6 @@
                     mnemonics = keys.map(key => key.key);
                 }
 
-                // let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-                // let inputData:AVMKeyPair[] = keys.map(key => {
-                //     // Remembered private keys do not have the prefix
-                //     let pk = 'PrivateKey-'+key.key;
-                //     return keyToKeypair(pk, chainID);
-                // });
                 await this.$store.dispatch('accessWalletMultiple', mnemonics);
 
                 // These are not volatile wallets since they are loaded from storage
@@ -112,9 +93,9 @@
             }catch(e){
                 this.isLoading = false;
                 if(e === "INVALID_PASS"){
-                    this.err = "Invalid password."
+                    this.err = this.$t('modal.activateWallet.err1') as string;
                 }else{
-                    this.err = "Unable to read wallet data."
+                    this.err = this.$t('modal.activateWallet.err2') as string;
                 }
                 return;
             }

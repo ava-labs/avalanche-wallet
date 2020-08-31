@@ -1,5 +1,5 @@
 <template>
-    <modal ref="modal" title="Key Phrase" class="modal_main">
+    <modal ref="modal" :title="$t('modal.mnemonic.title')" class="modal_main">
         <div class="mnemonic_modal_body">
             <mnemonic-display :phrase="phrase" :row-size="3"></mnemonic-display>
             <p class="phrase_raw">{{phrase}}</p>

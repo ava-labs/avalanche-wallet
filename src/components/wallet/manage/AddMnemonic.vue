@@ -8,7 +8,7 @@
             depressed block
             @click="access"
             class="but_submit"
-        >{{$t('import_key_button')}}</v-btn>
+        >{{$t('keys.import_key_button')}}</v-btn>
     </div>
 </template>
 <script lang="ts">

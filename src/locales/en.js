@@ -14,26 +14,17 @@ let en = {
             title: 'Are you new to Avalanche?',
             desc: '\'Create\' a new wallet to send, receive and SWAP all your assets.',
             submit: 'Create New Wallet',
-            generate: 'Generate a new key phrase to use with your wallet.',
-            but_have: 'Already have a wallet?',
-            cancel: 'Cancel',
-            mnemonic_title: 'This is your 24 word key phrase.',
-            mnemonic_desc: 'You will use these words to access your wallet.',
-            attention: 'Attention!',
-            warning: 'STORE THIS KEY PHRASE IN A SECURE LOCATION. ANYONE WITH THIS KEY PHRASE CAN ACCESS YOUR WALLET. THERE IS NO WAY TO RECOVER LOST KEY PHRASES!',
-            confirm: 'I wrote down my mnemonic phrase in a secure location.',
-            regenerate: 'Regenerate',
-            success_title: 'Congratulations!',
-            success_desc: 'It`s time to open your Avalanche Wallet',
-            success_submit: 'Access Wallet',
-            verify: 'Verify',
-            verifytitle: 'Verify Mnemonic',
-            verify_desc: 'Fill In Mnemonic Phrase Below',
-            error_number: 'Oops, looks like you forgot to fill number',
-            error_word: 'The mnemonic phrase you entered for word not match the actual phrase.',
-
-
         },
+    },
+    network: {
+        status1: "Connecting ...",
+        status2: "Disconnected",
+        title: "Networks",
+        title2: "Add Custom Network",
+        title3: "Edit Network",
+        custom: "Add Custom",
+        cancel: "Cancel",
+        add: "Add Network"
     },
     access: {
         title: 'How do you want to access your wallet?',
@@ -52,6 +43,40 @@ let en = {
             error: 'Invalid key phrase. Your phrase must be 24 words separated by a single space.',
         }
     },
+    wallet: {
+        sidebar: {
+            portfolio: 'Portfolio',
+            manage: 'Manage',
+            send: 'Send'
+        },
+        address_card: {
+            desc: 'This is your address to receive funds. Your address will change after every deposit.',
+            sub: 'Derived AVAX Wallet Address',
+        },
+        collectibles: {
+            empty: "You do not own any collectibles."
+        }
+    },
+    create: {
+        generate: 'Generate a new key phrase to use with your wallet.',
+        but_have: 'Already have a wallet?',
+        submit: 'Generate Key Phrase',
+        cancel: 'Cancel',
+        mnemonic_title: 'This is your 24 word key phrase.',
+        mnemonic_desc: 'You will use these words to access your wallet.',
+        attention: 'Attention!',
+        warning: 'STORE THIS KEY PHRASE IN A SECURE LOCATION. ANYONE WITH THIS KEY PHRASE CAN ACCESS YOUR WALLET. THERE IS NO WAY TO RECOVER LOST KEY PHRASES!',
+        confirm: 'I wrote down my mnemonic phrase in a secure location.',
+        regenerate: 'Regenerate',
+        success_title: 'Congratulations!',
+        success_desc: 'It`s time to open your Avalanche Wallet',
+        success_submit: 'Access Wallet',
+        verify: 'Verify',
+        verifytitle: 'Verify Mnemonic',
+        verify_desc: 'Fill In Mnemonic Phrase Below',
+        error_number: 'Oops, looks like you forgot to fill number',
+        error_word: 'The mnemonic phrase you entered for word not match the actual phrase.',
+    },
     top: {
         title1: 'Derived AVAX Wallet Address',
         title2: 'Balance',
@@ -60,7 +85,6 @@ let en = {
         nftcol: 'NFTs',
         nftempty: 'You have not collected any non fungible tokens.',
         locked: 'Locked',
-        info1: 'This is your address to receive funds. Your address will change after every deposit.',
         info2: 'I bought coins in the Token Sale. Where are my AVAX?',
         info2_desc: 'This wallet is connected to the Avalanche Everest test network. Your purchase will appear in the wallet after the Avalanche Mainnet launch.',
         hover1: 'View Address QR Code',
@@ -78,6 +102,7 @@ let en = {
         advanced: 'Advanced',
         adv_change: 'Change Address',
         send: 'Send Transaction',
+        summary: "Transaction Summary",
         disconnected: 'Unable to send assets. Disconnected from the network.',
         success_title: 'Transaction Sent',
         success_msg: 'You have succesfully sent your transaction.',
@@ -100,7 +125,8 @@ let en = {
         export_key_info: `Selected {0} keys.`,
         export_placeholder1: 'Password',
         export_placeholder2: 'Confirm Password',
-        import_key_button: 'IMPORT WALLET',
+        empty: 'This key does not have a balance.',
+        import_key_button: 'IMPORT KEY',
         import_key_title: 'Import Keys',
         import_key_desc: 'Add additional keys to use with your wallet.',
         import_key_option1: 'MNEMONIC PHRASE',
@@ -117,8 +143,6 @@ let en = {
         remove_success_msg: 'Private key and assets removed from the wallet.',  
         password_validation: 'Password must be at least 9 characters long.',
         password_validation2: 'Password do not match.',     
-
-        
     },
     portfolio: {
         assets: 'Assets',
@@ -159,11 +183,33 @@ let en = {
     },
     modal: {
         qr: {
-            title: 'Address'
+            title: 'Address',
+            copy: 'Copy Address'
         },
         print: {
             title: 'Print Preview',
             submit: 'Print'
+        },
+        keystore: {
+            title: "Update Keystore File",
+            desc: `We have upgraded the keystore files. Please download your new keystore file and access the wallet again.`,
+            logout: 'Logout & Access Again'
+        },
+        mainnet: {
+            title: 'Mainnet Address',
+            desc: 'Your mainnet address is:'
+        },
+        mnemonic: {
+            title: 'Key Phrase'
+        },
+        activateWallet: {
+            title: "Activate Wallet",
+            desc: "There is an active wallet. Enter your password to access it.",
+            submit: 'Access Wallet',
+            cancel: 'Access another wallet',
+            cancel2: '(Previous wallet will be forgotten.)',
+            err1: 'Invalid password.',
+            err2: 'Unable to read wallet data.'
         }
     },
 };

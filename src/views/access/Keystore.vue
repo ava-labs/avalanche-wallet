@@ -25,7 +25,7 @@
                         v-if="file"
                         :disabled="!canSubmit"
                         depressed
-                >{{$t('access.submit')}}</v-btn>
+                >{{$t('access.mnemonic.submit')}}</v-btn>
             </form>
             <router-link to="/access" class="link">{{$t('access.cancel')}}</router-link>
         </div>

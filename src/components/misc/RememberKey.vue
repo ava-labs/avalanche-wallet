@@ -95,11 +95,11 @@ export default {
           let pass = this.password;
           let pass_confirm = this.password_confirm;
           if(pass.length < 9){
-              return this.$t('keys.passowrd_validation');
+              return this.$t('keys.password_validation');
           }
 
           if(pass !== pass_confirm){
-              return this.$t('keys.passowrd_validation2');
+              return this.$t('keys.password_validation2');
           }
           return null;
         },

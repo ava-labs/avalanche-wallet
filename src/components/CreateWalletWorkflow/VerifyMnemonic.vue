@@ -4,7 +4,7 @@
             <button @click="close" class="close_but">
                 <fa icon="times"></fa>
             </button>
-            <h3>{{$t('home.create.verify_desc')}}</h3>
+            <h3>{{$t('create.verify_desc')}}</h3>
             <div class="words">
                 <div v-for="i in 24" :key="i" class="mnemonic_in" tabindex="-1">
                     <p>{{i}}.</p>
@@ -48,7 +48,7 @@ export default class VerifyMnemonic extends Vue {
     }
     created() {
         this.init();
-        this.title =`${this.$t('home.create.verifytitle')}`
+        this.title =`${this.$t('create.verifytitle')}`
     }
 
     init(){

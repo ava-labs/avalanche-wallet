@@ -3,7 +3,7 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal"></paper-wallet>
         <MainnetAddressModal ref="mainnet_modal"></MainnetAddressModal>
-        <p class="addr_info">{{warningText}}</p>
+        <p class="addr_info">{{$t('wallet.address_card.desc')}}</p>
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
@@ -84,9 +84,6 @@
             return activeKey.getAddressString();
         }
 
-        get warningText():string{
-            return `${this.$t('top.info1')}`;
-        }
 
         viewMainnetModal(){
             // @ts-ignore

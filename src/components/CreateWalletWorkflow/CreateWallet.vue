@@ -10,13 +10,13 @@
                                 <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                 <img v-else src="@/assets/diamond-secondary-night.svg" alt />
                             </div>
-                            <h1>{{$t('home.create.generate')}}</h1>
-                            <router-link to="/access" class="link">{{$t('home.create.but_have')}}</router-link>
+                            <h1>{{$t('create.generate')}}</h1>
+                            <router-link to="/access" class="link">{{$t('create.but_have')}}</router-link>
                             <div class="options">
-                                <button class="ava_button but_generate button_secondary" @click="createKey">Generate Key Phrase</button>
+                                <button class="ava_button but_generate button_secondary" @click="createKey">{{$t('create.submit')}}</button>
 <!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
-                            <router-link to="/" class="link">{{$t('home.create.cancel')}}</router-link>
+                            <router-link to="/" class="link">{{$t('create.cancel')}}</router-link>
                         </div>
                         <!-- PHASE 2 -->
                         <div v-else class="stage_2">
@@ -29,7 +29,7 @@
                                         <div class="mneumonic_button_container" v-if="!isVerified">
                                             <button @click="createKey" class="ava_button but_randomize button_primary ">
                                                 <fa icon="sync"></fa>
-                                                <span>{{$t('home.create.regenerate')}}</span>
+                                                <span>{{$t('create.regenerate')}}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -44,37 +44,28 @@
                                         <img src="@/assets/success.svg" alt />
                                     </template>
                                     <header v-if="!isVerified">
-                                        <h1>{{$t('home.create.mnemonic_title')}}</h1>
-                                        <p>{{$t('home.create.mnemonic_desc')}}</p>
+                                        <h1>{{$t('create.mnemonic_title')}}</h1>
+                                        <p>{{$t('create.mnemonic_desc')}}</p>
                                     </header>
                                     <header v-else>
-                                        <h1>{{$t('home.create.success_title')}}</h1>
-                                        <p>{{$t('home.create.success_desc')}}</p>
+                                        <h1>{{$t('create.success_title')}}</h1>
+                                        <p>{{$t('create.success_desc')}}</p>
                                     </header>
                                     <p class="warn" v-if="!isVerified">
-                                        <span class="label">{{$t('home.create.attention')}}</span>
-                                        <span class="description">{{$t('home.create.warning')}}</span>
+                                        <span class="label">{{$t('create.attention')}}</span>
+                                        <span class="description">{{$t('create.warning')}}</span>
                                     </p>
                                     <!-- STEP 2a - VERIFY -->
                                     <div class="verify_cont" v-if="!isVerified">
                                         <MnemonicCopied
                                                 v-model="isSecured"
-                                                explain="I wrote down my mnemonic phrase in a secure location."
+                                                :explain="$t('create.confirm')"
                                         ></MnemonicCopied>
                                         <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
-                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">{{$t('home.create.success_submit')}}</button>
+                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">{{$t('create.success_submit')}}</button>
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
-<!--                                        <remember-key-->
-
-<!--                                                v-model="rememberPassword"-->
-<!--                                                @is-valid="isRememberValid"-->
-<!--                                                class="remember_wallet"-->
-<!--                                                complete="onremember"-->
-<!--                                                explain="Remember my wallet."-->
-<!--                                        ></remember-key>-->
-
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
                                                 <Spinner v-if="isLoad" class="spinner"></Spinner>
@@ -84,7 +75,7 @@
                                                             class="button_primary ava_button access generate"
                                                             @click="access"
                                                             :disabled="!canSubmit"
-                                                    >{{$t('home.create.success_submit')}}</button>
+                                                    >{{$t('create.success_submit')}}</button>
                                                     <router-link to="/" class="link">Cancel</router-link>
                                                 </div>
                                             </transition>
@@ -106,13 +97,11 @@
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
     import Spinner from '@/components/misc/Spinner.vue';
-    // import RememberKey from "@/components/misc/RememberKey.vue";
     // import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
 
-    // import {AVMKeyChain, AVMKeyPair} from "avalanche/typings/src/apis/avm";
     import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
     import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
 

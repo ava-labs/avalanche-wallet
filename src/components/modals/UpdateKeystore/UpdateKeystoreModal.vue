@@ -1,9 +1,9 @@
 <template>
-    <modal ref="modal" title="Update Keystore File" class="modal_main" :can_close="false">
+    <modal ref="modal" :title="$t('modal.keystore.title')" class="modal_main" :can_close="false">
         <div class="update_keystore_modal_body">
-            <p>We have upgraded the keystore files. Please download your new keystore file and access the wallet again.</p>
+            <p>{{$t('modal.keystore.desc')}}</p>
             <ExportWallet v-if="!isSuccess" @success="success" :is-desc="false" class="export_wallet" :wallets="allWallets"></ExportWallet>
-            <v-btn v-else class="ava_button button_primary" @click="logout">Logout & Access Again</v-btn>
+            <v-btn v-else class="ava_button button_primary" @click="logout">{{$t('modal.keystore.logout')}}</v-btn>
         </div>
     </modal>
 </template>

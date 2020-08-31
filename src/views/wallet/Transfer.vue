@@ -20,7 +20,7 @@
                         <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                     </div>
                     <div class="fees">
-                        <h4>Transaction Summary</h4>
+                        <h4>{{$t('transfer.summary')}}</h4>
                         <TxSummary :orders="orders" :nft-orders="nftOrders"></TxSummary>
                     </div>
                     <div class="fees">
