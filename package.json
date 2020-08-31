@@ -38,6 +38,8 @@
     "@fortawesome/free-regular-svg-icons": "5.12.0",
     "@fortawesome/free-solid-svg-icons": "5.12.0",
     "@fortawesome/vue-fontawesome": "0.1.9",
+    "@ledgerhq/hw-app-btc": "^5.22.0",
+    "@ledgerhq/hw-transport-webusb": "^5.22.0",
     "@toruslabs/torus-direct-web-sdk": "3.1.0",
     "@types/big.js": "4.0.5",
     "@types/bn.js": "4.11.6",
