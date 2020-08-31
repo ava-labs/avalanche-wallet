@@ -4,7 +4,7 @@
         <router-link to="/" class="logo">
             <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg"/>
             <img v-else src="@/assets/wallet_logo_dark.svg"/>
-            <span class="slogan">by Avalanche</span>
+<!--            <span class="slogan">by Avalanche</span>-->
         </router-link>
         <v-spacer></v-spacer>
 
