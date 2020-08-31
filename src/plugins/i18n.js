@@ -3,13 +3,9 @@ import Vue from 'vue';
 
 Vue.use(VueI18n);
 
-import {en} from '../locales/en.js';
-// import {fr} from '../locales/fr.js';
-// import {tr} from '../locales/tr.js';
+import en from '../locales/en.json';
 let tr = {}
-// import * as ru from '../locales/ru.json';
 
-// console.log(ru.default);
 
 const messages = {
     en,
