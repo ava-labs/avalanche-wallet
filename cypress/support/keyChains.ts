@@ -21,6 +21,7 @@ const ZERO = new BN(0);
 
 let avalanche = new Avalanche(AVAX_IP, AVAX_PORT, AVAX_PROTOCOL, NETWORK_ID, 'X')
 let xChain = avalanche.XChain();
+    xChain.setFee(new BN('1000000'))
 let nodeKeys = avalanche.NodeKeys();
 
 
@@ -28,15 +29,23 @@ let nodeKeys = avalanche.NodeKeys();
 let geckoUsername = 'root';
 let geckoPass = 'bababak1234!hadiama';
 
+// Create user in gecko node
 try {
     nodeKeys.createUser(geckoUsername, geckoPass);
-}catch (e) {}
+    console.log("Created keystore user.")
+}catch (e) {
+
+}
 
 const HRP = getPreferredHRP(NETWORK_ID);
 
 let faucetKeychain = new AVMKeyChain(HRP,'X');
 let faucetKey = faucetKeychain.importKey(FAUCET_KEY);
 let faucetAddress = faucetKey.getAddressString()
+xChain.importKey(geckoUsername, geckoPass, faucetKey.getPrivateKeyString()).then(async (res) => {
+    let bal = await xChain.getAllBalances(faucetAddress);
+    console.log(bal);
+});
 
 
 const AVA_CHANGE_PATH = `m/44'/9000'/0'/0`;

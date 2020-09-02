@@ -31,7 +31,9 @@ describe('Wallet', () => {
         cy.wait(2000);
         let address = userKey0.getAddressString();
         createFixedCapAsset('temp1', "TEMA", address, 4000, 4);
+        cy.wait(2000);
         createFixedCapAsset('temp2', "TEMB", address, 1234, 4);
+        cy.wait(2000);
         createFixedCapAsset('temp3', "TEMC", address, 1234, 12);
         cy.wait(3000);
         cy.get('.refresh button').click();
