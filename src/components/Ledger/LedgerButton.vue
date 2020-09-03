@@ -2,16 +2,21 @@
     <button class="ava_button" @click="submit">Ledger</button>
 </template>
 <script>
-    import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+    // import TransportWebHID from "@ledgerhq/hw-transport-webhid";
+    import TransportU2F from "@ledgerhq/hw-transport-u2f";
+
+    // import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
+    // import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
     import {LedgerWallet} from "@/js/LedgerWallet";
 
     export default {
         methods:{
-            submit(){
-                console.log("LEDGER")
-                TransportWebUSB.create().then(transport => {
+            async submit(){
+                // let transport = await TransportNodeHid.create();
+                // let wallet = new LedgerWallet(transport)
+                TransportU2F.create().then(transport => {
+                    // console.log(transport)
                     let wallet = new LedgerWallet(transport)
-                    console.log(wallet);
                 })
             }
         }

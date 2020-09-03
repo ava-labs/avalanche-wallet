@@ -22,10 +22,9 @@
     import LedgerButton from "@/components/Ledger/LedgerButton";
 
     export default {
-        components: {LedgerButton},
-        comments: {
-            LedgerButton
-        }
+        components: {
+          LedgerButton
+        },
     }
 </script>
 
