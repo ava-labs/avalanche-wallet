@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h1>Earn <span></span></h1>
+        <div class="header">
+            <h1>Earn </h1>
+            <h1 class="subtitle" v-if="pageNow">{{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
+        </div>
         <transition name="fade" mode="out-in">
             <div v-if="!pageNow">
                 <p>You can earn more AVAX by staking your existing tokens.</p>
@@ -15,10 +18,14 @@
                         <p style="flex-grow: 1">You do not own an Avalanche node, but you want to stake using another node.</p>
                         <v-btn class="button_secondary" @click="addDelegator" depressed small>Add Delegator</v-btn>
                     </div>
+                    <div>
+                        <p class="title">Cross Chain Transfer</p>
+                        <p style="flex-grow: 1">Staking requires AVAX on the P chain. Transfer tokens between X and P.</p>
+                        <v-btn class="button_secondary" @click="transfer" depressed small>Transfer</v-btn>
+                    </div>
                 </div>
             </div>
             <div v-else>
-                <button @click="pageNow=null" class="cancel">Cancel</button>
                 <component  :is="pageNow" class="comp"></component>
             </div>
         </transition>
@@ -30,25 +37,59 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import AddValidator from "@/components/wallet/earn/AddValidator.vue";
 import AddDelegator from "@/components/wallet/earn/AddDelegator.vue";
+import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
+
 @Component({
     name: "earn",
     components: {
         AddValidator,
-        AddDelegator
+        AddDelegator,
+        ChainTransfer
     }
 })
 export default class Earn extends Vue{
     pageNow: any = null;
+    subtitle: string = '';
 
     addValidator(){
         this.pageNow = AddValidator;
+        this.subtitle = "Add Validator"
     }
     addDelegator(){
         this.pageNow = AddDelegator;
+        this.subtitle = "Add Delegator"
+    }
+    transfer(){
+        this.pageNow = ChainTransfer;
+        this.subtitle = "Chain Transfer"
+    }
+    cancel(){
+        this.pageNow = null;
+        this.subtitle = '';
     }
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .subtitle{
+        color: var(--primary-color-light);
+        font-weight: lighter;
+    }
+
+    span{
+        margin-left: 1em;
+
+        &:hover{
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+    }
+}
     .options{
         margin: 30px 0;
         display: grid;
@@ -76,6 +117,13 @@ export default class Earn extends Vue{
         }
     }
 
+    span{
+        color: var(--primary-color-light);
+        opacity: 0.5;
+        float: right;
+        font-weight: lighter;
+    }
+
 
     .title{
         font-weight: bold;
@@ -84,9 +132,18 @@ export default class Earn extends Vue{
     .cancel{
         font-size: 13px;
         color: var(--secondary-color);
+        justify-self: flex-end;
     }
 
     .comp{
         margin-top: 14px;
+    }
+
+
+    @include main.mobile-device{
+        .options{
+            grid-template-columns: none;
+            grid-row: 15px;
+        }
     }
 </style>

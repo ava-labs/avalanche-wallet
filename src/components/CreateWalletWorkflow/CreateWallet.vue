@@ -112,7 +112,6 @@
     import CopyText from "@/components/misc/CopyText.vue";
     import * as bip39 from 'bip39';
 
-    // import {AVMKeyChain, AVMKeyPair} from "avalanche/typings/src/apis/avm";
     import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
     import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
 

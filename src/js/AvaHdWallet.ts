@@ -14,6 +14,7 @@ import {
 } from "avalanche/dist/apis/avm";
 
 import {
+    PlatformVMKeyChain,
     UTXOSet as PlatformUTXOSet
 } from "avalanche/dist/apis/platformvm";
 import {
@@ -22,7 +23,7 @@ import {
 
 
 import * as bip39 from "bip39";
-import {ava, avm, bintools} from "@/AVA";
+import {ava, avm, bintools, pChain} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
@@ -125,6 +126,101 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.internalHelper.getCurrentAddress();
     }
 
+
+
+    async chainTransfer(amt: BN, sourceChain: string = 'X'){
+        let fee = avm.getFee();
+        let amtFee = amt.add(fee);
+
+
+        // EXPORT
+        let pId = pChain.getBlockchainID();
+        let txId;
+        if(sourceChain === 'X'){
+            let keychain = this.getKeyChain();
+            let toAddress = this.platformHelper.getCurrentAddress();
+            let xChangeAddr = this.internalHelper.getCurrentAddress();
+            let fromAddrs = keychain.getAddressStrings();
+
+            console.log("export to: ",toAddress)
+            let exportTx = await avm.buildExportTx(
+                this.utxoset,
+                amtFee,
+                pId,
+                [toAddress],
+                fromAddrs,
+                [xChangeAddr] // TODO: Use change address
+            );
+            let tx = exportTx.sign(keychain);
+            txId = await avm.issueTx(tx);
+        }else if(sourceChain === 'P'){
+            let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+            let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+            let toAddress = this.externalHelper.getCurrentAddress();
+            let fromAddrs = keychain.getAddressStrings();
+            let exportTx = await pChain.buildExportTx(
+                utxoSet,
+                amtFee,
+                pId,// TODO: Make this x id
+                [toAddress],
+                fromAddrs,
+                fromAddrs
+            );
+            let tx = exportTx.sign(keychain);
+            txId = await pChain.issueTx(tx);
+        }else{
+            throw 'Invalid source chain.'
+        }
+
+        // Update UTXOS
+        setTimeout(async () => {
+            await this.getUTXOs()
+            await this.importToPlatformChain();
+        },3000);
+
+        console.log("Export Success: ",txId)
+        return txId;
+    }
+
+
+    async importToPlatformChain(){
+        const utxoSet = await this.platformHelper.getAtomicUTXOs();
+        // const utxoSet = await this.platformHelper.updateUtxos() as PlatformUTXOSet;
+        let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        let pAddrs = keyChain.getAddressStrings();
+        // let pAddrsConverted = pAddrs.map(addrBuf => {
+        //     return bintools.addressToString(getPreferredHRP(ava.getNetworkID()), 'X', addrBuf );
+        // })
+
+        console.log(utxoSet.getAllUTXOStrings());
+        let pToAddr = this.platformHelper.getCurrentAddress();
+
+        let xAddrs = this.getKeyChain().getAddresses();
+        let xAddrsConverted = xAddrs.map(addrBuf => {
+            return bintools.addressToString(getPreferredHRP(ava.getNetworkID()), 'P', addrBuf );
+        })
+        let xChange = this.internalHelper.getCurrentAddress();
+
+        // Owner addresses, the addresses we exported to
+
+        const unsignedTx = await pChain.buildImportTx(
+            utxoSet,
+            pAddrs,
+            avm.getBlockchainID(),
+            [pToAddr],
+            [pToAddr],
+            [pToAddr],
+        );
+        const tx = unsignedTx.sign(keyChain);
+        const txid: string = await pChain.issueTx(tx);
+        console.log("Import success");
+        console.log(txid)
+
+        // Update UTXOS
+        setTimeout(async () => {
+            await this.getUTXOs()
+        },3000);
+    }
 
     async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
         // TODO: Get new change index.

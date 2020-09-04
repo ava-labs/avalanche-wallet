@@ -38,6 +38,7 @@
                     <router-link to="/wallet">Portfolio</router-link>
                     <router-link to="/wallet/keys">Manage Keys</router-link>
                     <router-link to="/wallet/transfer">Transfer</router-link>
+                    <router-link to="/wallet/earn">Earn</router-link>
                     <button class="logout" @click="logout">Logout</button>
 <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
 <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
