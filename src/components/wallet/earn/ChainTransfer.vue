@@ -44,7 +44,8 @@
 <!--            </div>-->
             <div>
                 <p class="err">{{err}}</p>
-                <v-btn class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
+                <p v-if="maxAmt.isZero()" class="err">Insufficient funds to create the transactions.</p>
+                <v-btn v-else class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
             </div>
         </div>
 

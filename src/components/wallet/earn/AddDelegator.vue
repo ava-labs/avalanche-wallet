@@ -7,8 +7,8 @@
             </div>
             <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
         </div>
-        <div v-else>
-            <form>
+        <div v-else class="form">
+            <form  @submit.prevent="submit">
                 <div class="selected">
                     <button @click="selected = null">
                         <fa icon="times"></fa>
@@ -22,23 +22,31 @@
                     <label>Staking Period</label>
                     <p class="desc">The duration in which your tokens will be locked for staking.</p>
                     <div class="dates">
-                        <VuetifyDateInput label="Start Date"></VuetifyDateInput>
-                        <VuetifyDateInput label="End Date"></VuetifyDateInput>
+                        <VuetifyDateInput label="Start Date" v-model="startDate"></VuetifyDateInput>
+                        <VuetifyDateInput label="End Date" v-model="endDate"></VuetifyDateInput>
                     </div>
                 </div>
                 <div style="margin: 30px 0;">
                     <label>Stake Amount</label>
                     <p class="desc">The amount of AVAX to lock for staking.</p>
-                    <AvaxInput></AvaxInput>
+                    <AvaxInput v-model="stakeAmt"></AvaxInput>
                 </div>
                 <div style="margin: 30px 0;">
                     <label>Reward Address</label>
                     <p class="desc">Staking rewards will be sent to this address.</p>
-                    <QrInput style="height: 40px; border-radius: 2px;"></QrInput>
+                    <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardAddr"></QrInput>
                 </div>
             </form>
             <div class="calculator">
-
+                <div>
+                    <label>Balance</label>
+                    <p>{{platformUnlocked.toString()}}</p>
+                </div>
+                <div>
+                    <label>Fee</label>
+                    <p>{{fee.toString()}}</p>
+                </div>
+                <v-btn @click="submit">Submit</v-btn>
             </div>
 
 
@@ -56,24 +64,63 @@ import { QrInput } from "@avalabs/vue_components";
 import ValidatorsList from "@/components/misc/ValidatorList/ValidatorsList.vue";
 import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 import VuetifyDateInput from "@/components/misc/VuetifyDateInput.vue";
+import StakingCalculator from "@/components/wallet/earn/StakingCalculator.vue";
+
+import {BN} from 'avalanche';
+import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
+import {pChain} from "@/AVA";
 @Component({
-    name: "add_validator",
     components: {
         AvaxInput,
         VuetifyDateInput,
         ValidatorsList,
+        StakingCalculator,
         QrInput,
     }
 })
-export default class AddValidator extends Vue{
-    search: string = ""
+export default class AddDelegator extends Vue{
+    search: string = "";
     selected: ValidatorRaw|null = null;
+    stakeAmt: BN = new BN(0);
+    startDate = null;
+    endDate = null;
+    rewardAddr: string = "";
 
     onselect(val: ValidatorRaw){
         this.search = "";
         this.selected = val;
     }
 
+    submit(){
+        console.log(this.selected);
+        console.log(this.startDate)
+        console.log(this.endDate);
+        console.log(this.stakeAmt.toString());
+    }
+
+
+    get minStake(): BN{
+        return  PlatformVMConstants.MINSTAKE;
+    }
+
+    get fee(): BN{
+        return  pChain.getFee();
+    }
+
+    get minAmt(): BN{
+        return this.minStake.add(this.fee)
+    }
+
+    get maxAmt(): BN{
+        let zero = new BN(0);
+
+        let max = this.platformUnlocked.sub
+        return zero;
+    }
+
+    get platformUnlocked(): BN{
+        return this.$store.getters.walletPlatformBalance;
+    }
     // get maxEndDate(){
     //
     // }
@@ -88,6 +135,11 @@ export default class AddValidator extends Vue{
     overflow: scroll;
     max-height: 450px;
     margin-top: 14px;
+}
+
+.form{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 .search{
@@ -141,4 +193,17 @@ form{
     margin-bottom: 8px !important;
     color: var(--primary-color-light);
 }
+
+.calculator{
+    label{
+        color: var(--primary-color-light);
+        font-weight: lighter;
+    }
+
+    p{
+        font-size: 24px;
+    }
+}
+
+
 </style>

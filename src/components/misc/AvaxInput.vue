@@ -27,7 +27,9 @@ export default class AvaxInput extends Vue{
 
     @Prop() max?: BN|null
 
-    maxOut(){
+    maxOut(ev: MouseEvent){
+        ev.preventDefault();
+        ev.stopPropagation();
         //@ts-ignore
         this.$refs.amt_in.maxout();
     }
