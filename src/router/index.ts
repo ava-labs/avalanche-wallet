@@ -11,6 +11,7 @@ import Access from '../views/access/Access.vue';
 import Create from "@/views/Create.vue";
 import Wallet from "@/views/Wallet.vue";
 import WalletHome from "@/views/wallet/Portfolio.vue";
+import Earn from "@/views/wallet/Earn.vue";
 
 Vue.use(VueRouter);
 
@@ -83,6 +84,10 @@ const routes = [
             {
                 path: 'keys',
                 component: ManageKeys
+            },
+            {
+                path: 'earn',
+                component: Earn
             }
         ],
         component: Wallet,
