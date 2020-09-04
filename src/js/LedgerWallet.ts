@@ -28,8 +28,11 @@ class LedgerWallet {
     }
 
     async getMasterPublicKey(){
-        const { bitcoinAddress } = await this.app.getWalletPublicKey();
-        return bitcoinAddress;
+        const pubExt = await this.app.getWalletExtendedPublicKey();
+        // const pubKey = await this.app.getWalletPublicKey("44'/9000'/0'/1/0");
+        // console.log(pubKey)
+        console.log(pubExt)
+        return pubExt;
     }
     async getKeyForIndex(i: number){
         const address = await this.app.getWalletAddress(`44'/9000'/0'/0/${i}`);
@@ -39,7 +42,8 @@ class LedgerWallet {
 
     async init(){
         console.log(await this.app.getAppConfiguration());
-
+        // await this.getKeyForIndex(0);
+        let key = await this.getMasterPublicKey();
         // let id = await this.app.getWalletId();
         // console.log(id);
     }
@@ -50,8 +54,7 @@ class LedgerWallet {
         console.log("Created Ledger Wallet", app)
 
         this.init();
-        // this.getKeyForIndex(0);
-        // let key = this.getPubKey();
+
 
         // transport.setDebugMode(true);
         // console.log(transport)
