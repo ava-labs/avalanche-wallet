@@ -44,7 +44,6 @@ let faucetKey = faucetKeychain.importKey(FAUCET_KEY);
 let faucetAddress = faucetKey.getAddressString()
 xChain.importKey(geckoUsername, geckoPass, faucetKey.getPrivateKeyString()).then(async (res) => {
     let bal = await xChain.getAllBalances(faucetAddress);
-    console.log(bal);
 });
 
 

@@ -348,3 +348,9 @@ html[data-theme='night']{
 
   --warning: #d49534;
 }
+
+p.err{
+  color: var(--error);
+  font-size: 0.9rem;
+  margin: 4px 0;
+}

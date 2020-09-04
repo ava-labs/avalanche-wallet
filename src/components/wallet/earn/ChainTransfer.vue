@@ -23,6 +23,7 @@
                     <label>Fee</label>
                     <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
                 </div>
+
             </div>
             <div>
 <!--                <label>Total Size</label>-->
@@ -31,14 +32,19 @@
                 <label>Transfer Amount</label>
                 <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
             </div>
+<!--            <div class="meta">-->
+<!--                <div>-->
+<!--                    <label>Fee</label>-->
+<!--                    <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label>Total Cost</label>-->
+<!--                    <p style="font-size: 22px;">{{amtTotalCost.toString()}} AVAX</p>-->
+<!--                </div>-->
+<!--            </div>-->
             <div>
-                <div>
-                    <label>Total Cost</label>
-                    <p style="font-size: 22px;">{{(fee).toString()}} AVAX</p>
-                </div>
-            </div>
-            <div>
-                <v-btn class="button_secondary" @click="submit" :disabled="!canSubmit">Transfer</v-btn>
+                <p class="err">{{err}}</p>
+                <v-btn class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
             </div>
         </div>
 
@@ -66,7 +72,9 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 export default class ChainTransfer extends Vue{
     sourceChain = 'X';
     targetChain = 'P';
+    isLoading = false;
     amt: BN = new BN(0);
+    err: string = "";
 
     switchChain(){
         let temp = this.sourceChain;
@@ -106,16 +114,6 @@ export default class ChainTransfer extends Vue{
         let feePBig = Big(feeP.toString()).div(Math.pow(10,9));
         let feeXBig = Big(feeX.toString()).div(Math.pow(10,9));
 
-        // if(this.sourceChain === 'P'){
-        //     let bn = pChain.getFee();
-        //     let big = Big(bn.toString()).div(Math.pow(10,9));
-        //     return big;
-        // }else{
-        //     let bn = avm.getFee();
-        //     let big = Big(bn.toString()).div(Math.pow(10,9));
-        //     return big;
-        // }
-
         return feePBig.add(feeXBig)
     }
 
@@ -130,14 +128,94 @@ export default class ChainTransfer extends Vue{
         }
     }
 
-    async submit(){
-        let wallet: AvaHdWallet = this.$store.state.activeWallet;
-        let txId = await wallet.chainTransfer(this.amt,'X');
+    get amtTotalCost(): Big{
+        let amt = this.amtBig;
+        let fee = this.fee;
+        return amt.add(fee);
     }
+
+    get amtBig(): Big{
+        let bn = this.amt;
+        let big = Big(bn.toString()).div(Math.pow(10,9));
+        return big;
+    }
+
+    async submit(){
+        this.err = "";
+        this.isLoading = true;
+
+        try{
+            let wallet: AvaHdWallet = this.$store.state.activeWallet;
+
+            if(this.sourceChain==='X'){
+                // First do the export
+                let txId = await wallet.chainTransfer(this.amt,'X')
+                await wallet.getUTXOs();
+                this.$store.dispatch('Notifications/add', {
+                    type: 'success',
+                    title: 'Export Success',
+                    message: 'Transaction id '+txId
+                });
+
+                setTimeout(async () => {
+                    let importTxId = await wallet.importToPlatformChain();
+                    this.isLoading = false;
+                    this.$store.dispatch('Notifications/add', {
+                        type: 'success',
+                        title: 'Import Success',
+                        message: 'Transaction id '+importTxId
+                    });
+                    this.onsuccess();
+                }, 3000);
+
+            }else{
+                // First do the export
+                let txId = await wallet.chainTransfer(this.amt,'P')
+                await wallet.getUTXOs();
+                this.$store.dispatch('Notifications/add', {
+                    type: 'success',
+                    title: 'Export Success',
+                    message: 'Transaction id '+txId
+                });
+
+                setTimeout(async () => {
+                    let importTxId = await wallet.importToXChain();
+                    this.isLoading = false;
+                    this.$store.dispatch('Notifications/add', {
+                        type: 'success',
+                        title: 'Import Success',
+                        message: 'Transaction id '+importTxId
+                    });
+                    this.onsuccess();
+                }, 3000)
+            }
+
+
+        }catch(err){
+            this.isLoading = false;
+            this.err = err;
+            this.$store.dispatch('Notifications/add', {
+                type: 'error',
+                title: 'Transfer Failed',
+                message: err
+            });
+        }
+    }
+
+    onsuccess(){
+        // Clear Form
+    }
+
+
     get canSubmit(){
         if(this.amt.eq(new BN(0))){
             return false;
         }
+
+        if(this.amt.gt(this.maxAmt)){
+            return false;
+        }
+
         return true;
     }
 }

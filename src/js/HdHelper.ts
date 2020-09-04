@@ -92,6 +92,8 @@ class HdHelper {
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
+        await this.updateHdIndex()
+
         let addrs: string[] = this.keyChain.getAddressStrings();
         let result: AVMUTXOSet|PlatformUTXOSet;
 
@@ -101,6 +103,7 @@ class HdHelper {
             result = await pChain.getUTXOs(addrs);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
+
 
 
         // If the hd index is full, increment
@@ -258,6 +261,11 @@ class HdHelper {
         }
         return await this.findAvailableIndex(start+SCAN_RANGE)
     }
+
+    // Returns the key of the first index that has no utxos
+    // getFirstAvailableKey(){
+    //
+    // }
 
     getCurrentKey():AVMKeyPair|PlatformVMKeyPair {
         let index: number = this.hdIndex;

@@ -127,7 +127,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
-
     async chainTransfer(amt: BN, sourceChain: string = 'X'){
         let fee = avm.getFee();
         let amtFee = amt.add(fee);
@@ -135,6 +134,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // EXPORT
         let pId = pChain.getBlockchainID();
+        let xId = avm.getBlockchainID();
         let txId;
         if(sourceChain === 'X'){
             let keychain = this.getKeyChain();
@@ -142,14 +142,13 @@ export default class AvaHdWallet implements IAvaHdWallet{
             let xChangeAddr = this.internalHelper.getCurrentAddress();
             let fromAddrs = keychain.getAddressStrings();
 
-            console.log("export to: ",toAddress)
             let exportTx = await avm.buildExportTx(
                 this.utxoset,
                 amtFee,
                 pId,
                 [toAddress],
                 fromAddrs,
-                [xChangeAddr] // TODO: Use change address
+                [xChangeAddr]
             );
             let tx = exportTx.sign(keychain);
             txId = await avm.issueTx(tx);
@@ -157,14 +156,17 @@ export default class AvaHdWallet implements IAvaHdWallet{
             let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet;
             let toAddress = this.externalHelper.getCurrentAddress();
+            let pChangeAddr = this.platformHelper.getCurrentAddress();
             let fromAddrs = keychain.getAddressStrings();
+
+
             let exportTx = await pChain.buildExportTx(
                 utxoSet,
                 amtFee,
-                pId,// TODO: Make this x id
+                xId,
                 [toAddress],
                 fromAddrs,
-                fromAddrs
+                [pChangeAddr]
             );
             let tx = exportTx.sign(keychain);
             txId = await pChain.issueTx(tx);
@@ -172,37 +174,19 @@ export default class AvaHdWallet implements IAvaHdWallet{
             throw 'Invalid source chain.'
         }
 
-        // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-            await this.importToPlatformChain();
-        },3000);
-
-        console.log("Export Success: ",txId)
+        // console.log("Export Success: ",txId)
         return txId;
     }
 
 
     async importToPlatformChain(){
-        const utxoSet = await this.platformHelper.getAtomicUTXOs();
-        // const utxoSet = await this.platformHelper.updateUtxos() as PlatformUTXOSet;
+        await this.platformHelper.updateHdIndex();
+        const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
         let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         let pAddrs = keyChain.getAddressStrings();
-        // let pAddrsConverted = pAddrs.map(addrBuf => {
-        //     return bintools.addressToString(getPreferredHRP(ava.getNetworkID()), 'X', addrBuf );
-        // })
-
-        console.log(utxoSet.getAllUTXOStrings());
         let pToAddr = this.platformHelper.getCurrentAddress();
 
-        let xAddrs = this.getKeyChain().getAddresses();
-        let xAddrsConverted = xAddrs.map(addrBuf => {
-            return bintools.addressToString(getPreferredHRP(ava.getNetworkID()), 'P', addrBuf );
-        })
-        let xChange = this.internalHelper.getCurrentAddress();
-
         // Owner addresses, the addresses we exported to
-
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
             pAddrs,
@@ -213,13 +197,39 @@ export default class AvaHdWallet implements IAvaHdWallet{
         );
         const tx = unsignedTx.sign(keyChain);
         const txid: string = await pChain.issueTx(tx);
-        console.log("Import success");
-        console.log(txid)
 
-        // Update UTXOS
+        // // Update UTXOS
         setTimeout(async () => {
             await this.getUTXOs()
         },3000);
+
+        return txid;
+    }
+
+    async importToXChain(){
+        const utxoSet = await this.externalHelper.getAtomicUTXOs() as AVMUTXOSet;
+        let keyChain = this.getKeyChain() as AVMKeyChain;
+        let xAddrs = keyChain.getAddressStrings();
+        let xToAddr = this.externalHelper.getCurrentAddress();
+
+        // Owner addresses, the addresses we exported to
+        const unsignedTx = await avm.buildImportTx(
+            utxoSet,
+            xAddrs,
+            pChain.getBlockchainID(),
+            [xToAddr],
+            [xToAddr],
+            [xToAddr],
+        );
+        const tx = unsignedTx.sign(keyChain);
+        const txid: string = await avm.issueTx(tx);
+
+        // // Update UTXOS
+        setTimeout(async () => {
+            await this.getUTXOs()
+        },3000);
+
+        return txid;
     }
 
     async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
