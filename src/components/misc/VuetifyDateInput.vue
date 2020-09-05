@@ -19,10 +19,9 @@
                 locale="en-in"
                 :min="minDate"
                 :max="maxDate"
-                v-model="fromDateVal"
+                v-model="dateVal"
                 no-title
-                @input="fromDateMenu = false"
-
+                @input="dateIn"
             ></v-date-picker>
         </v-menu>
     </v-layout>
@@ -38,7 +37,7 @@ export default {
     data() {
         return {
             fromDateMenu: false,
-            fromDateVal: null,
+            dateVal: null,
 
             // minDate: "2019-07-04",
             // maxDate: "2019-08-30",
@@ -46,11 +45,23 @@ export default {
     },
     computed: {
         fromDateDisp() {
-            return this.fromDateVal;
+            return this.dateVal;
             // format date, apply validations, etc. Example below.
             // return this.fromDateVal ? this.formatDate(this.fromDateVal) : "";
         },
     },
+    methods: {
+        dateIn(){
+            this.fromDateMenu = false
+            // console.log(this.dateVal);
+        }
+    },
+    watch: {
+        dateVal(val){
+            // console.log(val);
+            this.$emit('change', val);
+        }
+    }
 };
 </script>
 <style scoped lang="scss">

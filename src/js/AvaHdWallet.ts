@@ -126,6 +126,51 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.internalHelper.getCurrentAddress();
     }
 
+    // Delegates AVAX to the given node ID
+    async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string){
+        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+        let pAddressStrings = keychain.getAddressStrings();
+        let stakeAmount = amt;
+
+        // If reward address isnt given use index 0 address
+        if(!rewardAddress){
+            rewardAddress = this.platformHelper.getKeyForIndex(0).getAddressString();
+        }
+
+        // For change address use first available on the platform chain
+        let changeKey = this.platformHelper.getFirstAvailableKey();
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000));
+        let endTime = new BN(Math.round(end.getTime() / 1000));
+
+        console.log(nodeID);
+        console.log(amt.toString());
+        console.log(rewardAddress);
+        console.log(startTime.toString());
+        console.log(endTime.toString());
+
+        const unsignedTx = await pChain.buildAddDelegatorTx(
+            utxoSet,
+            pAddressStrings,
+            [changeKey.getAddressString()],
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress], // reward address
+        );
+        const tx =  unsignedTx.sign(keychain);
+        let txId = await pChain.issueTx(tx);
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        },3000);
+
+
+        return txId;
+    }
 
     async chainTransfer(amt: BN, sourceChain: string = 'X'){
         let fee = avm.getFee();
@@ -198,7 +243,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         const tx = unsignedTx.sign(keyChain);
         const txid: string = await pChain.issueTx(tx);
 
-        // // Update UTXOS
+        // Update UTXOS
         setTimeout(async () => {
             await this.getUTXOs()
         },3000);

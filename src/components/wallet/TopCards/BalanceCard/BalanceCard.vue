@@ -80,11 +80,18 @@
             }
         }
 
+
+        // Locked balance is the sum of locked AVAX tokens on X and P chain
         get balanceTextLocked():string{
             if(this.ava_asset !== null){
+                let denom = this.ava_asset.denomination;
+                let pLocked = Big(this.platformLocked.toString()).div(Math.pow(10,denom))
                 let amt = this.ava_asset.getAmount(true);
+                    amt = amt.add(pLocked);
+
+
                 if(amt.lt(Big('0.00001'))){
-                    return amt.toLocaleString(this.ava_asset.denomination);
+                    return amt.toLocaleString(denom);
                 }else{
                     return amt.toString();
                 }
@@ -105,7 +112,7 @@
             if(!this.ava_asset) return  '?';
 
             let denom = this.ava_asset.denomination;
-            let bal = this.platformUnlocked.add(this.platformLocked);
+            let bal = this.platformUnlocked;
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 

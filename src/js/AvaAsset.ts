@@ -45,6 +45,14 @@ class AvaAsset{
             return Big(this.amountLocked.toString(10)).div(this.pow);
         }
     }
+
+    getAmountBN(locked:boolean = false): BN{
+        if(!locked){
+            return this.amount;
+        }else{
+            return this.amountLocked;
+        }
+    }
 }
 
 export default AvaAsset;

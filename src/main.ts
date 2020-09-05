@@ -3,10 +3,16 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueI18n from 'vue-i18n'
+//@ts-ignore
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css'
 
 import { BootstrapVue } from 'bootstrap-vue'
 // Install BootstrapVue
 Vue.use(BootstrapVue)
+
+Vue.component('datetime', Datetime);
+
 
 import vuetify from './plugins/vuetify';
 
@@ -47,7 +53,7 @@ import Big from "big.js";
 
 declare module "big.js" {
   interface Big {
-    toLocaleString(toFixed: number): string;
+    toLocaleString(toFixed?: number): string;
   }
 }
 

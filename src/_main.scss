@@ -247,7 +247,7 @@ h1{
 
 .button_primary{
   background-color: var(--primary-color) !important;
-  color: var(--bg);
+  color: var(--bg) !important;
   text-decoration: none;
   &:hover {
     opacity: 0.7;
@@ -308,6 +308,33 @@ textarea{
   .v-input__slot:before{
     border-color: var(--primary-color-light) !important;
     color: var(--primary-color-light) !important;
+  }
+}
+
+.v-chip{
+  background-color: var(--bg-light) !important;
+  color: var(--primary-color) !important;
+}
+.v-chip--active{
+  background-color: var(--primary-color) !important;
+  color: var(--bg-wallet) !important;
+}
+
+.vue__time-picker{
+  color: var(--primary-color);
+
+  input{
+    border: none !important;
+    background-color: var(--bg-light) !important;
+    color: var(--primary-color) !important;
+  }
+}
+
+.vdatetime{
+  background-color: var(--bg-light) !important;
+  padding: 6px 12px !important;
+  input{
+    color: var(--primary-color) !important;
   }
 }
 

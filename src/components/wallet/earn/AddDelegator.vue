@@ -8,7 +8,7 @@
             <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
         </div>
         <div v-else class="form">
-            <form  @submit.prevent="submit">
+            <form>
                 <div class="selected">
                     <button @click="selected = null">
                         <fa icon="times"></fa>
@@ -19,34 +19,43 @@
                     </div>
                 </div>
                 <div style="margin: 30px 0;">
-                    <label>Staking Period</label>
+                    <h4>Staking Period</h4>
                     <p class="desc">The duration in which your tokens will be locked for staking.</p>
                     <div class="dates">
-                        <VuetifyDateInput label="Start Date" v-model="startDate"></VuetifyDateInput>
-                        <VuetifyDateInput label="End Date" v-model="endDate"></VuetifyDateInput>
+                        <label>Start Date & Time</label>
+                        <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
+                        <label>End Date & Time</label>
+                        <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
                     </div>
                 </div>
                 <div style="margin: 30px 0;">
-                    <label>Stake Amount</label>
+                    <h4>Stake Amount</h4>
                     <p class="desc">The amount of AVAX to lock for staking.</p>
-                    <AvaxInput v-model="stakeAmt"></AvaxInput>
+                    <AvaxInput v-model="stakeAmt" :max="maxAmt"></AvaxInput>
                 </div>
                 <div style="margin: 30px 0;">
-                    <label>Reward Address</label>
-                    <p class="desc">Staking rewards will be sent to this address.</p>
-                    <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardAddr"></QrInput>
+                    <h4>Reward Address</h4>
+                    <p class="desc">Where to send the staking rewards.</p>
+                    <v-chip-group mandatory @change="rewardSelect">
+                        <v-chip small value="local">Use this wallet</v-chip>
+                        <v-chip small value="custom">Custom Address</v-chip>
+                    </v-chip-group>
+                    <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" v-if="rewardDestination==='custom'" placeholder="Reward Address"></QrInput>
                 </div>
             </form>
             <div class="calculator">
+                <label>Staking Duration</label>
+                <p>{{stakingDurationText}}</p>
                 <div>
-                    <label>Balance</label>
-                    <p>{{platformUnlocked.toString()}}</p>
+                    <label>Stake Amount</label>
+                    <p>{{stakeAmtText}} AVAX</p>
                 </div>
                 <div>
                     <label>Fee</label>
-                    <p>{{fee.toString()}}</p>
+                    <p>{{feeText}} AVAX</p>
                 </div>
-                <v-btn @click="submit">Submit</v-btn>
+                <p class="err">{{err}}</p>
+                <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading">Submit</v-btn>
             </div>
 
 
@@ -56,7 +65,7 @@
 </template>
 <script lang="ts">
 import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import {Vue, Component, Prop, Watch} from "vue-property-decorator";
 
 import AvaxInput from '@/components/misc/AvaxInput.vue';
 //@ts-ignore
@@ -66,9 +75,14 @@ import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 import VuetifyDateInput from "@/components/misc/VuetifyDateInput.vue";
 import StakingCalculator from "@/components/wallet/earn/StakingCalculator.vue";
 
+import Big from 'big.js';
+import moment from "moment";
+
+
 import {BN} from 'avalanche';
 import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
 import {pChain} from "@/AVA";
+import AvaHdWallet from "@/js/AvaHdWallet";
 @Component({
     components: {
         AvaxInput,
@@ -82,22 +96,126 @@ export default class AddDelegator extends Vue{
     search: string = "";
     selected: ValidatorRaw|null = null;
     stakeAmt: BN = new BN(0);
-    startDate = null;
-    endDate = null;
-    rewardAddr: string = "";
+    startDate: string = (new Date()).toISOString();
+    endDate: string = (new Date()).toISOString();
+    rewardIn: string = "";
+    rewardDestination = 'local'; // local || custom
+    err: string = "";
+    isLoading = false;
 
     onselect(val: ValidatorRaw){
         this.search = "";
         this.selected = val;
     }
 
-    submit(){
-        console.log(this.selected);
-        console.log(this.startDate)
-        console.log(this.endDate);
-        console.log(this.stakeAmt.toString());
+    async submit(){
+        this.isLoading = true;
+        this.err = "";
+
+        let nodeId = this.selected!.nodeID;
+        let stakeAmt = this.stakeAmt;
+        let start = new Date(this.startDate);
+        let end = new Date(this.endDate);
+        let rewardAddr = undefined;
+        if(this.rewardDestination === 'custom'){
+            rewardAddr = this.rewardIn;
+        }
+
+        let wallet: AvaHdWallet = this.$store.state.activeWallet;
+
+        try{
+            this.isLoading = false;
+            let txId = await wallet.delegate(nodeId, stakeAmt, start, end, rewardAddr);
+            console.log(txId);
+            this.$store.dispatch('Notifications/add', {
+                type: 'success',
+                title: 'Delegator Added',
+                message: 'Your tokens will now be delegated for staking.'
+            })
+        }catch(e){
+            this.isLoading = false;
+            let msg:string = e.message;
+
+            if(msg.includes('startTime')){
+                this.err = "Start date must be in the future and end date must be after start date."
+            }else{
+                this.err = e.message;
+            }
+            this.$store.dispatch('Notifications/add', {
+                type: 'error',
+                title: 'Delegation Failed',
+                message: 'Failed to delegate tokens.'
+            })
+        }
     }
 
+    onStartChange(val: any){
+        this.startDate = val;
+    }
+    onEndChange(val: any){
+        this.endDate = val;
+    }
+
+    rewardSelect(val: 'local'|'custom'){
+        this.rewardDestination = val;
+    }
+
+    // ISOS string
+    // Earliest date is now.
+    get startMinDate(): string{
+        return (new Date()).toISOString();
+    }
+
+    // Max date is end time -1 day
+    get startMaxDate(): string{
+        if(!this.selected) return (new Date()).toISOString();
+        let nodeEndTime = parseInt(this.selected.endTime);
+            nodeEndTime = nodeEndTime*1000;
+
+        let nodeEndDate = new Date(nodeEndTime - (1000*60*60*24));
+        return nodeEndDate.toISOString()
+    }
+
+    get endMinDate(): string{
+        let startDate = new Date(this.startDate);
+        let endTime = startDate.getTime() + (1000 * 60 * 60 * 24);
+        let endDate = new Date(endTime);
+        return endDate.toISOString();
+    }
+
+    get endMaxDate(): string{
+        if(!this.selected) return (new Date()).toISOString();
+        let nodeEndTime = parseInt(this.selected.endTime);
+            nodeEndTime = nodeEndTime*1000;
+        return (new Date(nodeEndTime)).toISOString();
+    }
+
+    get stakingDuration(): number{
+        let start = new Date(this.startDate);
+        let end = new Date(this.endDate);
+        let dur = end.getTime() - start.getTime()
+        return dur;
+    }
+
+    @Watch('stakingDuration')
+    durChange(val: number){
+        if(val < (60000*60*24)){
+            this.endDate = this.endMinDate;
+        }
+    }
+
+    @Watch('selected')
+    onValidatorChange(val: ValidatorRaw){
+        this.endDate = this.endMinDate;
+    }
+
+    get stakingDurationText(): string{
+        let dur = this.stakingDuration;
+        let d = moment.duration(dur, 'milliseconds')
+        // return d.humanize()
+        let days = Math.floor(d.asDays());
+        return `${days} days ${d.hours()} hours ${d.minutes()} minutes`;
+    }
 
     get minStake(): BN{
         return  PlatformVMConstants.MINSTAKE;
@@ -107,6 +225,12 @@ export default class AddDelegator extends Vue{
         return  pChain.getFee();
     }
 
+    get feeText(): string{
+        let amt = this.fee;
+        let big = Big(amt.toString()).div(Math.pow(10,9));
+        return big.toString()
+    }
+
     get minAmt(): BN{
         return this.minStake.add(this.fee)
     }
@@ -114,20 +238,25 @@ export default class AddDelegator extends Vue{
     get maxAmt(): BN{
         let zero = new BN(0);
 
-        let max = this.platformUnlocked.sub
-        return zero;
+        let max = this.platformUnlocked.sub(this.fee)
+
+        if(zero.gt(max)) return zero;
+        return max;
+    }
+
+    get stakeAmtText(){
+        let amt = this.stakeAmt;
+        let big = Big(amt.toString()).div(Math.pow(10,9));
+
+        if(big.lte(Big('0.0001'))){
+            return big.toLocaleString(9)
+        }
+        return big.toString()
     }
 
     get platformUnlocked(): BN{
         return this.$store.getters.walletPlatformBalance;
     }
-    // get maxEndDate(){
-    //
-    // }
-    //
-    // get minStartDate(){
-    //
-    // }
 }
 </script>
 <style scoped lang="scss">
@@ -149,9 +278,16 @@ export default class AddDelegator extends Vue{
     margin-left: 30px;
     color: var(--primary-color);
 }
-label{
+h4{
     margin: 14px 0px 4px;
     font-weight: bold;
+}
+
+label{
+    margin-top: 6px;
+    color: var(--primary-color-light);
+    font-size: 14px;
+    margin-bottom: 3px;
 }
 .selected{
     display: grid;
@@ -172,9 +308,6 @@ label{
 
 .dates{
     display: grid;
-    grid-template-columns: max-content max-content;
-    grid-gap: 30px;
-    margin-top: 0px;
 }
 
 form{
@@ -195,6 +328,8 @@ form{
 }
 
 .calculator{
+    //text-align: right;
+    padding-left: 30px;
     label{
         color: var(--primary-color-light);
         font-weight: lighter;

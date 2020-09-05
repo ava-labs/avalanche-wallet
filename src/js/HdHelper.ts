@@ -263,9 +263,16 @@ class HdHelper {
     }
 
     // Returns the key of the first index that has no utxos
-    // getFirstAvailableKey(){
-    //
-    // }
+    getFirstAvailableKey(){
+        for(var i=0; i<this.hdIndex; i++){
+            let key = this.getKeyForIndex(i);
+            let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
+            if(utxoIds.length === 0){
+                return key;
+            }
+        }
+        return this.getCurrentKey();
+    }
 
     getCurrentKey():AVMKeyPair|PlatformVMKeyPair {
         let index: number = this.hdIndex;
