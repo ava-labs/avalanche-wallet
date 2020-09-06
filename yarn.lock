@@ -1654,7 +1654,7 @@
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
 
-"@types/vue-datetime@^1.0.0":
+"@types/vue-datetime@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/vue-datetime/-/vue-datetime-1.0.0.tgz#e7c08ab2e608498f2001d31da35248ea6759c084"
   integrity sha512-2cq6OU0GyAirjd7vkZEbTk7bYrgcBNcMpa5tcAQLnXIW0Gg+zkED0siwuHWSI+qlrry3N+XnHJjdj+jQyvMGJA==
@@ -8029,7 +8029,7 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
-luxon@^1.25.0:
+luxon@1.25.0:
   version "1.25.0"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.25.0.tgz#d86219e90bc0102c0eb299d65b2f5e95efe1fe72"
   integrity sha512-hEgLurSH8kQRjY6i4YLey+mcKVAWXbDNlZRmM6AgWDJ1cY3atl8Ztf5wEY7VBReFbmGnwQPz7KYJblL8B2k0jQ==
@@ -8383,7 +8383,7 @@ mkdirp@1.x, mkdirp@~1.0.3:
   dependencies:
     minimist "^1.2.5"
 
-moment@^2.27.0:
+moment@2.27.0, moment@^2.27.0:
   version "2.27.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
   integrity sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
@@ -12206,7 +12206,7 @@ vue-currency-input@^1.21.0:
   resolved "https://registry.yarnpkg.com/vue-currency-input/-/vue-currency-input-1.21.0.tgz#b886584e08ef3840875ff9125abff29fa7b3517d"
   integrity sha512-MSMPj/ASZ1ZeovJs+hc59Xw9ST0BlYSkxF1SuOPkkX2eOPLp3/a/Qrbd/IpC0Oke+zlT4P1/2gL9U0sSivh2aQ==
 
-vue-datetime@^1.0.0-beta.14:
+vue-datetime@1.0.0-beta.14:
   version "1.0.0-beta.14"
   resolved "https://registry.yarnpkg.com/vue-datetime/-/vue-datetime-1.0.0-beta.14.tgz#791e724500929cdfeb31395154d9a26fd27ffb46"
   integrity sha512-n25LqldE1xryeoweohiqlxy8iUsi+UwZnKLaN4gXjk7xxGL6rUl1y/GGvkoMwJUzRKttw+QnQV4oFAYupUQdug==
@@ -12298,11 +12298,6 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
-
-vue2-timepicker@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/vue2-timepicker/-/vue2-timepicker-1.1.4.tgz#57eb8a461052461c3d6503ca861bc671e181c39b"
-  integrity sha512-v3ceIfiNN+lhBQcjIbG3CV0wC0dxSRt/P6Eqo35ZkrQfUjWrrpHkqL1dP2vYKZNkwYvYkAK/CKtYHl7QV8ToGQ==
 
 vue@2.6.10:
   version "2.6.10"
@@ -12722,7 +12717,7 @@ websocket@^1.0.31:
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"
 
-weekstart@^1.0.1:
+weekstart@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/weekstart/-/weekstart-1.0.1.tgz#950970b48e5797e06fc1a762f3d0f013312321e1"
   integrity sha512-h6B1HSJxg7sZEXqIpDqAtwiDBp3x5y2jY8WYcUSBhLTcTCy7laQzBmamqMuQM5fpvo1pgpma0OCRpE2W8xrA9A==
