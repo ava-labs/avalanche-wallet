@@ -35,7 +35,12 @@ class AvaAsset{
 
     toString(){
         let big: Big = Big(this.amount.toString(10)).div(this.pow);
-        return big.toLocaleString(this.denomination);
+        if(big.lt(Big('0.001'))){
+            return big.toLocaleString(this.denomination);
+        }else{
+            let min = Math.min(this.denomination, 2);
+            return big.toLocaleString(min);
+        }
     }
 
     getAmount(locked:boolean = false):Big{
