@@ -73,7 +73,7 @@
                 if(amt.lt(Big('0.00001'))){
                     return amt.toLocaleString(this.ava_asset.denomination);
                 }else{
-                    return amt.toString();
+                    return amt.toLocaleString(2);
                 }
             }else{
                 return '?'
@@ -93,7 +93,7 @@
                 if(amt.lt(Big('0.00001'))){
                     return amt.toLocaleString(denom);
                 }else{
-                    return amt.toString();
+                    return amt.toLocaleString(2);
                 }
             }else{
                 return '?'
@@ -116,10 +116,10 @@
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 
-            if(bigBal.lt(Big('0.00001'))){
+            if(bigBal.lt(Big('0.0001'))){
                 return bigBal.toLocaleString(denom);
             }else{
-                return bigBal.toString();
+                return bigBal.toLocaleString(2);
             }
         }
 

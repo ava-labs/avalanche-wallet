@@ -3,6 +3,7 @@
         <td class="id">{{validator.nodeID}}</td>
         <td class="amount">{{amtText}}</td>
         <td>{{remainingText}}</td>
+        <td>{{uptimeText}}</td>
         <td>
             <button class="button_secondary" @click="select">Select</button>
         </td>
@@ -41,6 +42,14 @@ export default class ValidatorsList extends Vue{
             big = big.div(Math.pow(10,9));
 
         return big.toLocaleString(4);
+    }
+
+    get uptimeText(): string{
+        let uptime = parseFloat(this.validator.uptime) * 100;
+
+        if(!uptime) return '?';
+
+        return uptime.toFixed(2) + ' %';
     }
 
     select(){

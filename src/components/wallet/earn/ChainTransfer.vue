@@ -1,6 +1,24 @@
 <template>
     <div>
-        <div class="form">
+        <div v-if="isImportErr" class="import_err">
+            <h2>Import Failed</h2>
+            <p>There was a problem importing you tokens into the destination chain. Please try again later by doing another transfer. </p>
+            <v-btn depressed class="button_primary" small @click="$emit('cancel')">Back to Earn</v-btn>
+        </div>
+        <div v-else-if="isSuccess" class="complete">
+            <h2>Transfer Completed</h2>
+            <div>
+                <label>Export Transaction ID:</label>
+                <p>{{exportId}}</p>
+            </div>
+            <div>
+                <label>Import Transaction ID:</label>
+                <p>{{importId}}</p>
+            </div>
+            <p class="desc">You have successfully transferred between chains.</p>
+            <v-btn depressed class="button_primary" small @click="$emit('cancel')">Back to Earn</v-btn>
+        </div>
+        <div class="form" v-else>
             <div class="chains">
                 <div>
                     <label>Source Chain</label>
@@ -26,28 +44,17 @@
 
             </div>
             <div>
-<!--                <label>Total Size</label>-->
-<!--                <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>-->
-
                 <label>Transfer Amount</label>
                 <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
             </div>
-<!--            <div class="meta">-->
-<!--                <div>-->
-<!--                    <label>Fee</label>-->
-<!--                    <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label>Total Cost</label>-->
-<!--                    <p style="font-size: 22px;">{{amtTotalCost.toString()}} AVAX</p>-->
-<!--                </div>-->
-<!--            </div>-->
             <div>
                 <p class="err">{{err}}</p>
                 <p v-if="maxAmt.isZero()" class="err">Insufficient funds to create the transactions.</p>
                 <v-btn v-else class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
             </div>
         </div>
+
+
 
     </div>
 </template>
@@ -76,6 +83,12 @@ export default class ChainTransfer extends Vue{
     isLoading = false;
     amt: BN = new BN(0);
     err: string = "";
+    isImportErr = false;
+    isSuccess = false;
+
+    // Transaction ids
+    exportId: string = '';
+    importId: string = '';
 
     switchChain(){
         let temp = this.sourceChain;
@@ -141,70 +154,122 @@ export default class ChainTransfer extends Vue{
         return big;
     }
 
+    async forceImport(){
+        try{
+            let wallet: AvaHdWallet = this.$store.state.activeWallet;
+            let importTxId = await wallet.importToPlatformChain();
+        }catch(e){
+            this.onerror(e);
+        }
+    }
     async submit(){
         this.err = "";
         this.isLoading = true;
+        this.isImportErr = false;
 
         try{
             let wallet: AvaHdWallet = this.$store.state.activeWallet;
 
-            if(this.sourceChain==='X'){
-                // First do the export
-                let txId = await wallet.chainTransfer(this.amt,'X')
-                await wallet.getUTXOs();
+            let exportTxId = await wallet.chainTransfer(this.amt,this.sourceChain)
+            await wallet.getUTXOs();
+            this.$store.dispatch('Notifications/add', {
+                type: 'success',
+                title: 'Export Success',
+                message: `Tokens exported from the ${this.sourceChain} chain.`
+            });
+
+            setTimeout(async () => {
+                let importTxId;
+                if(this.sourceChain === 'X'){
+                    importTxId = await wallet.importToPlatformChain();
+                }else{
+                    importTxId = await wallet.importToXChain();
+                }
+                this.isLoading = false;
                 this.$store.dispatch('Notifications/add', {
                     type: 'success',
-                    title: 'Export Success',
-                    message: 'Transaction id '+txId
+                    title: 'Import Success',
+                    message: `Tokens imported to the ${this.targetChain} chain.`
                 });
+                this.onsuccess(exportTxId,importTxId);
+            }, 3000);
 
-                setTimeout(async () => {
-                    let importTxId = await wallet.importToPlatformChain();
-                    this.isLoading = false;
-                    this.$store.dispatch('Notifications/add', {
-                        type: 'success',
-                        title: 'Import Success',
-                        message: 'Transaction id '+importTxId
-                    });
-                    this.onsuccess();
-                }, 3000);
-
-            }else{
-                // First do the export
-                let txId = await wallet.chainTransfer(this.amt,'P')
-                await wallet.getUTXOs();
-                this.$store.dispatch('Notifications/add', {
-                    type: 'success',
-                    title: 'Export Success',
-                    message: 'Transaction id '+txId
-                });
-
-                setTimeout(async () => {
-                    let importTxId = await wallet.importToXChain();
-                    this.isLoading = false;
-                    this.$store.dispatch('Notifications/add', {
-                        type: 'success',
-                        title: 'Import Success',
-                        message: 'Transaction id '+importTxId
-                    });
-                    this.onsuccess();
-                }, 3000)
-            }
-
+            // if(this.sourceChain==='X'){
+            //     // First do the export
+            //     let exportTxId = await wallet.chainTransfer(this.amt,'X')
+            //     await wallet.getUTXOs();
+            //     this.$store.dispatch('Notifications/add', {
+            //         type: 'success',
+            //         title: 'Export Success',
+            //         message: `Tokens exported from the ${this.sourceChain} chain.`
+            //     });
+            //
+            //     setTimeout(async () => {
+            //         try{
+            //             let importTxId = await wallet.importToPlatformChain();
+            //             this.isLoading = false;
+            //             this.$store.dispatch('Notifications/add', {
+            //                 type: 'success',
+            //                 title: 'Import Success',
+            //                 message: `Tokens imported to the ${this.targetChain} chain.`
+            //             });
+            //             this.onsuccess(exportTxId,importTxId);
+            //         }catch(err){
+            //             this.isImportErr = true;
+            //             this.onerror(err);
+            //         }
+            //
+            //     }, 3000);
+            //
+            // }else{
+            //     // First do the export
+            //     let exportTxId = await wallet.chainTransfer(this.amt,'P')
+            //     await wallet.getUTXOs();
+            //     this.$store.dispatch('Notifications/add', {
+            //         type: 'success',
+            //         title: 'Export Success',
+            //         message: 'Transaction id '
+            //     });
+            //
+            //     setTimeout(async () => {
+            //         let importTxId = await wallet.importToXChain();
+            //         this.isLoading = false;
+            //         this.$store.dispatch('Notifications/add', {
+            //             type: 'success',
+            //             title: 'Import Success',
+            //             message: 'Transaction id '+importTxId
+            //         });
+            //         this.onsuccess(exportTxId, importTxId);
+            //     }, 3000)
+            // }
 
         }catch(err){
-            this.isLoading = false;
-            this.err = err;
-            this.$store.dispatch('Notifications/add', {
-                type: 'error',
-                title: 'Transfer Failed',
-                message: err
-            });
+            this.onerror(err);
+            // this.isLoading = false;
+            // this.err = err;
+            // this.$store.dispatch('Notifications/add', {
+            //     type: 'error',
+            //     title: 'Transfer Failed',
+            //     message: err
+            // });
         }
     }
 
-    onsuccess(){
+    onerror(err: any){
+        this.isLoading = false;
+        this.err = err;
+        this.$store.dispatch('Notifications/add', {
+            type: 'error',
+            title: 'Transfer Failed',
+            message: err
+        });
+    }
+
+    onsuccess(exportId: string, importId: string){
         // Clear Form
+        this.isSuccess = true;
+        this.exportId = exportId;
+        this.importId = importId;
     }
 
 
@@ -226,7 +291,7 @@ export default class ChainTransfer extends Vue{
     justify-self: center;
     margin: 0px auto;
     width: max-content;
-
+    max-width: 420px;
     > div{
         margin: 14px 0;
     }
@@ -237,14 +302,15 @@ export default class ChainTransfer extends Vue{
 
 .chain{
     font-size: 32px;
-    text-align: left;
+    text-align: center;
     justify-content: center;
 }
 .chains{
+    text-align: center;
     padding: 30px 0;
     display: grid;
     column-gap: 30px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr max-content 1fr;
 
     .v-btn{
         justify-self: center;
@@ -259,5 +325,39 @@ label{
     display: grid;
     grid-template-columns: max-content max-content;
     column-gap: 2em;
+}
+
+
+h2{
+    font-weight: lighter;
+    font-size: 2em;
+}
+.import_err{
+    max-width: 320px;
+    margin: 10vh auto;
+    color: var(--primary-color);
+
+    p{
+        margin: 6px 0 !important;
+        margin-bottom: 14px !important;
+        color: var(--primary-color-light);
+    }
+}
+
+.complete{
+    max-width: 320px;
+    margin: 10vh auto;
+
+    > div{
+        background-color: var(--bg-light);
+        padding: 14px;
+        margin: 4px 0;
+        word-break: break-all;
+    }
+
+    .desc{
+        margin: 6px 0 !important;
+        color: var(--primary-color-light);
+    }
 }
 </style>

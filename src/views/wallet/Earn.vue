@@ -2,31 +2,33 @@
     <div>
         <div class="header">
             <h1>Earn </h1>
-            <h1 class="subtitle" v-if="pageNow">{{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
+            <h1 class="subtitle" v-if="pageNow">/{{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
         </div>
         <transition name="fade" mode="out-in">
             <div v-if="!pageNow">
                 <p>You can earn more AVAX by staking your existing tokens.</p>
                 <div class="options">
                     <div>
-                        <p class="title">Validator</p>
+                        <h4 class="title">Validator</h4>
                         <p style="flex-grow: 1">You have an Avalanche node that you want to stake with.</p>
-                        <v-btn class="button_secondary" @click="addValidator" depressed small>Add Validator</v-btn>
+                        <p v-if="pNoBalance" class="no_balance">You must have AVAX on the P chain to add a validator.</p>
+                        <v-btn class="button_secondary" @click="addValidator" depressed small :disabled="pNoBalance">Add Validator</v-btn>
                     </div>
                     <div>
-                        <p class="title">Delegator</p>
+                        <h4 class="title">Delegator</h4>
                         <p style="flex-grow: 1">You do not own an Avalanche node, but you want to stake using another node.</p>
-                        <v-btn class="button_secondary" @click="addDelegator" depressed small>Add Delegator</v-btn>
+                        <p v-if="pNoBalance" class="no_balance">You must have AVAX on the P chain to become a delegator.</p>
+                        <v-btn class="button_secondary" @click="addDelegator" depressed small :disabled="pNoBalance">Add Delegator</v-btn>
                     </div>
                     <div>
-                        <p class="title">Cross Chain Transfer</p>
+                        <h4 class="title">Cross Chain Transfer</h4>
                         <p style="flex-grow: 1">Staking requires AVAX on the P chain. Transfer tokens between X and P.</p>
                         <v-btn class="button_secondary" @click="transfer" depressed small>Transfer</v-btn>
                     </div>
                 </div>
             </div>
             <div v-else>
-                <component  :is="pageNow" class="comp"></component>
+                <component  :is="pageNow" class="comp" @cancel="cancel"></component>
             </div>
         </transition>
     </div>
@@ -38,6 +40,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import AddValidator from "@/components/wallet/earn/AddValidator.vue";
 import AddDelegator from "@/components/wallet/earn/AddDelegator.vue";
 import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
+import {BN} from "avalanche/dist";
 
 @Component({
     name: "earn",
@@ -67,16 +70,26 @@ export default class Earn extends Vue{
         this.pageNow = null;
         this.subtitle = '';
     }
+    get platformUnlocked(): BN{
+        return this.$store.getters.walletPlatformBalance;
+    }
+
+    get pNoBalance(){
+        return this.platformUnlocked.isZero();
+    }
 }
 </script>
 <style scoped lang="scss">
 @use '../../main';
 .header{
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
     align-items: center;
 
     .subtitle{
+        margin-left: 0.5em;
+        /*font-size: 20px;*/
         color: var(--primary-color-light);
         font-weight: lighter;
     }
@@ -112,6 +125,21 @@ export default class Earn extends Vue{
             background-color: var(--bg-light);
         }
 
+        h4{
+            font-size: 32px !important;
+            font-weight: lighter;
+            color: var(--primary-color-light)
+        }
+
+        p{
+            /*color: var(--primary-color-light);*/
+            margin: 14px 0 !important;
+        }
+
+        .no_balance{
+            color: var(--secondary-color);
+        }
+
         .v-btn{
             margin-top: 14px;
         }
@@ -122,11 +150,6 @@ export default class Earn extends Vue{
         opacity: 0.5;
         float: right;
         font-weight: lighter;
-    }
-
-
-    .title{
-        font-weight: bold;
     }
 
     .cancel{
@@ -143,7 +166,7 @@ export default class Earn extends Vue{
     @include main.mobile-device{
         .options{
             grid-template-columns: none;
-            grid-row: 15px;
+            grid-row-gap: 15px;
         }
     }
 </style>

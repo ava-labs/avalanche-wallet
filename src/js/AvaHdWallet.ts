@@ -133,7 +133,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let pAddressStrings = keychain.getAddressStrings();
         let stakeAmount = amt;
 
-        // If reward address isnt given use index 0 address
+        // If reward address isn't given use index 0 address
         if(!rewardAddress){
             rewardAddress = this.platformHelper.getKeyForIndex(0).getAddressString();
         }
@@ -229,9 +229,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
         const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
         let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         let pAddrs = keyChain.getAddressStrings();
+        // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress();
 
-        // Owner addresses, the addresses we exported to
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
             pAddrs,

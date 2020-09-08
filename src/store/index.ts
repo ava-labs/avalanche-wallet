@@ -23,13 +23,15 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
+
+import {UnixNow} from "avalanche/dist/utils";
 import {UTXO, AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
+
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
-import {UnixNow} from "avalanche/dist/utils";
 
 export default new Vuex.Store({
     modules:{
@@ -176,6 +178,9 @@ export default new Vuex.Store({
             for(var n=0; n<utxos.length; n++) {
                 let utxo = utxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
+                let outId = utxoOut.getOutputID();
+
+                console.log(outId);
                 let locktime = utxoOut.getLocktime();
 
                 // Filter out locked tokens

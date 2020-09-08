@@ -3,4 +3,5 @@ export interface ValidatorRaw{
     nodeID: string
     stakeAmount: string
     startTime: string
+    uptime: string
 }

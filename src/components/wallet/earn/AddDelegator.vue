@@ -8,7 +8,7 @@
             <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
         </div>
         <div v-else class="form">
-            <form>
+            <form @submit.prevent="">
                 <div class="selected">
                     <button @click="selected = null">
                         <fa icon="times"></fa>
@@ -72,7 +72,6 @@ import AvaxInput from '@/components/misc/AvaxInput.vue';
 import { QrInput } from "@avalabs/vue_components";
 import ValidatorsList from "@/components/misc/ValidatorList/ValidatorsList.vue";
 import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
-import VuetifyDateInput from "@/components/misc/VuetifyDateInput.vue";
 import StakingCalculator from "@/components/wallet/earn/StakingCalculator.vue";
 
 import Big from 'big.js';
@@ -86,7 +85,6 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 @Component({
     components: {
         AvaxInput,
-        VuetifyDateInput,
         ValidatorsList,
         StakingCalculator,
         QrInput,
@@ -96,12 +94,17 @@ export default class AddDelegator extends Vue{
     search: string = "";
     selected: ValidatorRaw|null = null;
     stakeAmt: BN = new BN(0);
-    startDate: string = (new Date()).toISOString();
-    endDate: string = (new Date()).toISOString();
+    startDate: string = '';
+    endDate: string = '';
     rewardIn: string = "";
     rewardDestination = 'local'; // local || custom
     err: string = "";
     isLoading = false;
+
+    created(){
+        this.startDate = this.startMinDate;
+        this.endDate = this.endMaxDate;
+    }
 
     onselect(val: ValidatorRaw){
         this.search = "";
@@ -161,9 +164,12 @@ export default class AddDelegator extends Vue{
     }
 
     // ISOS string
-    // Earliest date is now.
+    // Earliest date is now + 5min.
     get startMinDate(): string{
-        return (new Date()).toISOString();
+        let now = Date.now();
+        let res = now + (60000 * 5);
+
+        return (new Date(res)).toISOString();
     }
 
     // Max date is end time -1 day
@@ -251,7 +257,7 @@ export default class AddDelegator extends Vue{
         if(big.lte(Big('0.0001'))){
             return big.toLocaleString(9)
         }
-        return big.toString()
+        return big.toLocaleString(2)
     }
 
     get platformUnlocked(): BN{

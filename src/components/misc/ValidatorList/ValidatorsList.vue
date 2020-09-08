@@ -6,6 +6,7 @@
                 <th>Node ID</th>
                 <th style="text-align: right;">Stake Amount (AVAX)</th>
                 <th>End Time</th>
+                <th>Uptime</th>
                 <th></th>
             </tr>
             </thead>
