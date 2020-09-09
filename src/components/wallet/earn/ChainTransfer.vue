@@ -43,7 +43,7 @@
                 </div>
 
             </div>
-            <div>
+            <div v-if="!maxAmt.isZero()">
                 <label>Transfer Amount</label>
                 <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
             </div>

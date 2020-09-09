@@ -1,18 +1,35 @@
 <template>
-    <div>
+    <div class="confirmation">
         <div>
             <label>Node ID</label>
-            <p>{{nodeID}}</p>
+            <p style="word-break: break-all;">{{nodeID}}</p>
         </div>
-        <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading">Submit</v-btn>
+        <div>
+            <label>Staking Amount</label>
+            <p>{{amtText}} AVAX</p>
+        </div>
+        <div>
+            <label>Start Date</label>
+            <p>{{startDate.toLocaleString()}}</p>
+        </div>
+        <div>
+            <label>End Date</label>
+            <p>{{endDate.toLocaleString()}}</p>
+        </div>
+        <div>
+            <label>Delegation Fee</label>
+            <p>{{delegationFee}} %</p>
+        </div>
+        <div>
+            <label>Reward Address ({{walletType}})</label>
+            <p style="word-break: break-all;">{{rewardAddress}}</p>
+        </div>
     </div>
 </template>
 <script lang="ts">
     import "reflect-metadata";
     import { Vue, Component, Prop } from "vue-property-decorator";
     import {BN} from "avalanche/dist";
-    import AvaHdWallet from "@/js/AvaHdWallet";
-    import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
     import Big from "big.js";
 
     @Component
@@ -22,77 +39,54 @@
         @Prop() end!: string;
         @Prop() delegationFee!: number;
         @Prop() amount!: BN
-        @Prop() rewardAddress?: string;
+        @Prop() rewardAddress!: string;
+        @Prop() rewardDestination!: string;
 
-        isLoading = false;
-        err = '';
-
-        txId = '';
-        isSuccess = false;
 
         get startDate(){
             return new Date(this.start);
         }
 
         get endDate(){
-            return new Date(this.start);
+            return new Date(this.end);
         }
 
-        async submit(){
-            console.log("ADD VALIDATOR");
+        get amtBig(): Big{
+            let stakeAmt = Big(this.amount.toString()).div(Math.pow(10,9));
+            return stakeAmt;
+        }
 
-            let nodeId = this.nodeID;
-            let startDate = new Date(this.startDate);
-            let endDate = new Date(this.endDate);
-            let stakeAmt = this.amount;
-            let fee = this.delegationFee;
-            let rewardAddr = this.rewardAddress;
-
-            let wallet: AvaHdWallet = this.$store.state.activeWallet;
-            try{
-                this.isLoading = true;
-                this.err = "";
-                let txId = await wallet.validate(nodeId,stakeAmt,startDate,endDate,fee,rewardAddr);
-                this.isLoading = false;
-                this.onsuccess(txId);
-            }catch(err){
-                this.isLoading = false;
-                this.onerror(err);
+        get walletType(){
+            if(this.rewardDestination === 'local'){
+                return "This wallet";
             }
+            return 'Custom'
         }
 
-        onsuccess(txId: string){
-            this.txId = txId;
-            this.isSuccess = true;
-            this.$store.dispatch('Notifications/add', {
-                type: 'success',
-                title: 'Validator Added',
-                message: 'Your tokens are now used to validate the network and earn rewards.'
-            })
-        }
-
-        onerror(err: any){
-            let msg:string = err.message;
-
-            if(msg.includes('startTime')){
-                this.err = "Start date must be in the future and end date must be after start date."
-            }else if(msg.includes('must be at least')){
-                let minAmt = PlatformVMConstants.MINSTAKE;
-                let big = Big(minAmt.toString()).div(Math.pow(10,9));
-
-                this.err = `Stake amount must be at least ${big.toString()} AVAX`;
-            }else{
-                this.err = err.message;
-            }
-            this.$store.dispatch('Notifications/add', {
-                type: 'error',
-                title: 'Validation Failed',
-                message: 'Failed to add validator.'
-            })
-        }
-
-        cancel(){
-            this.$emit('cancel');
+        get amtText():string{
+            let amt = this.amtBig;
+            return amt.toLocaleString();
         }
     }
 </script>
+<style scoped lang="scss">
+    .confirmation{
+        > div{
+            background-color: var(--bg-light);
+            margin: 14px 0;
+            padding: 6px 14px;
+
+            label{
+                font-size: 14px;
+                color: var(--primary-color-light);
+            }
+            p{
+                font-size: 18px;
+            }
+        }
+
+        .err{
+            font-size: 14px;
+        }
+    }
+</style>

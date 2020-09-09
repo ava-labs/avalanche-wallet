@@ -211,7 +211,7 @@ export default class AddDelegator extends Vue{
         let durationYears = duration / (60000*60*24*365);
 
         let inflationRate = this.inflation;
-        let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(9,10));
+        let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(10,9));
 
         let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
             value = value.sub(stakeAmt);

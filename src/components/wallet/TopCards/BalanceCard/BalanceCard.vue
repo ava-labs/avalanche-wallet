@@ -116,8 +116,8 @@
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 
-            if(bigBal.lt(Big('0.0001'))){
-                return bigBal.toLocaleString(denom);
+            if(bigBal.lt(Big('1'))){
+                return bigBal.toString();
             }else{
                 return bigBal.toLocaleString(2);
             }
