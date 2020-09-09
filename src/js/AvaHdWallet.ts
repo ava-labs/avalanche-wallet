@@ -136,7 +136,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // If reward address isn't given use index 0 address
         if(!rewardAddress){
-            rewardAddress = this.platformHelper.getKeyForIndex(0).getAddressString();
+            rewardAddress = this.getPlatformRewardAddress();
         }
 
         // For change address use first available on the platform chain
@@ -168,6 +168,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return txId;
     }
 
+    getPlatformRewardAddress(): string{
+        return this.platformHelper.getKeyForIndex(0).getAddressString();
+    }
+
     // Delegates AVAX to the given node ID
     async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string){
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
@@ -177,7 +181,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         // If reward address isn't given use index 0 address
         if(!rewardAddress){
-            rewardAddress = this.platformHelper.getKeyForIndex(0).getAddressString();
+            rewardAddress = this.getPlatformRewardAddress();
         }
 
         // For change address use first available on the platform chain

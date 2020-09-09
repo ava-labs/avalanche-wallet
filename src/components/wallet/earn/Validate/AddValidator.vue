@@ -128,7 +128,7 @@ export default class AddValidator extends Vue{
 
     get rewardAddressLocal(){
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
-        return wallet.platformHelper.getCurrentAddress();
+        return wallet.getPlatformRewardAddress();
     }
 
     rewardSelect(val: 'local'|'custom'){

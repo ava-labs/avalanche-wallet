@@ -40,7 +40,7 @@ import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 import AddValidator from "@/components/wallet/earn/Validate/AddValidator.vue";
-import AddDelegator from "@/components/wallet/earn/AddDelegator.vue";
+import AddDelegator from "@/components/wallet/earn/Delegate/AddDelegator.vue";
 import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
 import {BN} from "avalanche/dist";
 

@@ -1,87 +1,89 @@
 <template>
     <div>
-        <transition name="fade" mode="out-in">
-            <div v-if="isSuccess" key="success">
-                <h2>You are now delegating.</h2>
-                <label>Node ID</label>
-                <p>{{selected.nodeID}}</p>
-                <label>Transaction ID</label>
-                <p>{{txId}}</p>
+        <div v-if="!selected">
+            <div style="display: flex; align-items: center">
+                <p>Select a node to delegate:</p>
+                <input class="search" type="text" placeholder="Search Node ID" v-model="search">
             </div>
-            <div v-else-if="!selected && !isSuccess" key="validator_list">
-                <div style="display: flex; align-items: center">
-                    <p>Select a node to delegate:</p>
-                    <input class="search" type="text" placeholder="Search Node ID" v-model="search">
+            <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
+        </div>
+        <div class="cols" v-else>
+            <transition-group name="fade" mode="out-in">
+                <div class="ins_col" key="form" v-show="!isConfirm">
+                    <form  @submit.prevent="" >
+                        <div class="selected">
+                            <button @click="selected = null">
+                                <fa icon="times"></fa>
+                            </button>
+                            <div>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">Selected Node</p>
+                                <p class="node_id">{{selected.nodeID}}</p>
+                            </div>
+                        </div>
+                        <div style="margin: 30px 0;">
+                            <h4>Staking Period</h4>
+                            <p class="desc">The duration in which your tokens will be locked for staking.</p>
+                            <div class="dates">
+                                <div>
+                                    <label>Start Date & Time</label>
+                                    <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
+                                </div>
+                                <div>
+                                    <label>End Date & Time</label>
+                                    <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div style="margin: 30px 0;">
+                            <h4>Stake Amount</h4>
+                            <p class="desc">The amount of AVAX to lock for staking.</p>
+                            <AvaxInput v-model="stakeAmt" :max="maxAmt" class="amt_in"></AvaxInput>
+                        </div>
+                        <div class="reward_in" style="margin: 30px 0;"  :type="rewardDestination">
+                            <h4>Reward Address</h4>
+                            <p class="desc">Where to send the staking rewards.</p>
+                            <v-chip-group mandatory @change="rewardSelect">
+                                <v-chip small value="local">Use this wallet</v-chip>
+                                <v-chip small value="custom">Custom Address</v-chip>
+                            </v-chip-group>
+                            <QrInput  v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
+                        </div>
+                    </form>
                 </div>
-                <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
-            </div>
-            <div v-else class="form" key="form">
-                <form @submit.prevent="">
-                    <div class="selected">
-                        <button @click="selected = null">
-                            <fa icon="times"></fa>
-                        </button>
-                        <div>
-                            <p style="font-size: 13px; color: var(--primary-color-light)">Selected Node</p>
-                            <p class="node_id">{{selected.nodeID}}</p>
-                        </div>
-                    </div>
-                    <div style="margin: 30px 0;">
-                        <h4>Staking Period</h4>
-                        <p class="desc">The duration in which your tokens will be locked for staking.</p>
-                        <div class="dates">
-                            <label>Start Date & Time</label>
-                            <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
-                            <label>End Date & Time</label>
-                            <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
-                        </div>
-                    </div>
-                    <div style="margin: 30px 0;">
-                        <h4>Stake Amount</h4>
-                        <p class="desc">The amount of AVAX to lock for staking.</p>
-                        <AvaxInput v-model="stakeAmt" :max="maxAmt"></AvaxInput>
-                    </div>
-                    <div class="reward_in" style="margin: 30px 0;"  :type="rewardDestination">
-                        <h4>Reward Address</h4>
-                        <p class="desc">Where to send the staking rewards.</p>
-                        <v-chip-group mandatory @change="rewardSelect">
-                            <v-chip small value="local">Use this wallet</v-chip>
-                            <v-chip small value="custom">Custom Address</v-chip>
-                        </v-chip-group>
-                        <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
-                    </div>
-                </form>
-                <div class="calculator">
+                <ConfirmPage v-show="isConfirm" key="confirm" :start="startDate" :end="endDate" :amount="stakeAmt" :reward-destination="rewardDestination" :reward-address="rewardIn" :node-i-d="selected.nodeID"></ConfirmPage>
+            </transition-group>
+            <div>
+                <div v-if="!isSuccess" class="summary">
                     <div>
                         <label>Staking Duration</label>
                         <p>{{stakingDurationText}}</p>
-                    </div>
-
-                    <div>
-                        <label>Stake Amount</label>
-                        <p>{{stakeAmtText}} AVAX</p>
                     </div>
                     <div>
                         <label>Fee</label>
                         <p>{{feeText}} AVAX</p>
                     </div>
                     <div>
-                        <label>Estimated Reward ({{inflation.toFixed(1)}}% Inflation)</label>
+                        <label>Estimated Reward ({{((inflation-1)*100).toFixed(1)}}% Inflation)</label>
                         <p>{{estimatedReward}} AVAX</p>
                     </div>
                     <div>
                         <p class="err">{{err}}</p>
-                        <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit">Submit</v-btn>
+                        <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>Confirm</v-btn>
+                        <template v-else>
+                            <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" block>Submit</v-btn>
+                            <v-btn text @click="cancelConfirm" block style="color:var(--primary-color); margin-top: 20px;">Cancel</v-btn>
+                        </template>
                     </div>
                 </div>
-
-
-                <!--            <v-text-field label="Selected Node" :value="selected.nodeID" disabled></v-text-field>-->
+                <div v-else class="success_cont">
+                    <p class="check"><fa icon="check-circle"></fa></p>
+                    <h2>You are now delegating.</h2>
+                    <p>Your tokens are locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                </div>
             </div>
-<!--            <div v-else key="form">-->
-<!--                -->
-<!--            </div>-->
-        </transition>
+        </div>
+
 
     </div>
 </template>
@@ -95,7 +97,7 @@ import { QrInput } from "@avalabs/vue_components";
 import ValidatorsList from "@/components/misc/ValidatorList/ValidatorsList.vue";
 import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 import StakingCalculator from "@/components/wallet/earn/StakingCalculator.vue";
-
+import ConfirmPage from "@/components/wallet/earn/Delegate/ConfirmPage.vue";
 import Big from 'big.js';
 import moment from "moment";
 
@@ -110,6 +112,7 @@ import AvaHdWallet from "@/js/AvaHdWallet";
         ValidatorsList,
         StakingCalculator,
         QrInput,
+        ConfirmPage
     }
 })
 export default class AddDelegator extends Vue{
@@ -122,6 +125,7 @@ export default class AddDelegator extends Vue{
     rewardDestination = 'local'; // local || custom
     err: string = "";
     isLoading = false;
+    isConfirm = false;
     isSuccess = false;
     txId = "";
 
@@ -201,7 +205,7 @@ export default class AddDelegator extends Vue{
     }
 
     get inflation(): number{
-        return 12.11;
+        return 1.12;
     }
 
     get estimatedReward(): string{
@@ -230,7 +234,7 @@ export default class AddDelegator extends Vue{
 
     get rewardAddressLocal(){
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
-        return wallet.platformHelper.getCurrentAddress();
+        return wallet.getPlatformRewardAddress();
     }
 
     formCheck(): boolean{
@@ -286,6 +290,14 @@ export default class AddDelegator extends Vue{
 
 
         return true;
+    }
+
+    confirm(){
+        if(!this.formCheck()) return;
+        this.isConfirm = true;
+    }
+    cancelConfirm(){
+        this.isConfirm = false;
     }
 
     get canSubmit(): boolean{
@@ -404,10 +416,14 @@ export default class AddDelegator extends Vue{
     max-height: 450px;
     margin-top: 14px;
 }
-
-.form{
+.cols{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 340px;
+    column-gap: 90px;
+}
+
+form{
+    width: 100%;
 }
 
 .search{
@@ -445,20 +461,23 @@ label{
     }
 }
 
-.dates{
-    display: grid;
-}
-
-form{
+.amt_in{
     width: max-content;
 }
 
-.amt_in{
-    background-color: var(--bg-light);
-    color: var(--primary-color);
-    padding: 8px 14px;
-    width: 100%;
+.dates{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
 }
+
+
+/*.amt_in{*/
+/*    background-color: var(--bg-light);*/
+/*    color: var(--primary-color);*/
+/*    padding: 8px 14px;*/
+/*    width: 100%;*/
+/*}*/
 
 .reward_in{
     transition-duration: 0.2s;
@@ -468,6 +487,9 @@ form{
             user-select: none;
             cursor: not-allowed;
             pointer-events: none;
+            width: 100%;
+            height: 40px;
+            border-radius: 2px;
         }
     }
 }
@@ -478,27 +500,26 @@ form{
     color: var(--primary-color-light);
 }
 
-.calculator{
-    //text-align: right;
+.summary{
+    border-left: 2px solid var(--bg-light);
     padding-left: 30px;
-    label{
-        color: var(--primary-color-light);
-        font-weight: lighter;
-    }
-
-    >div{
+    > div{
+        margin: 14px 0;
         p{
             font-size: 24px;
         }
-        margin-bottom: 12px;
     }
-
 
     .err{
+        margin: 14px 0 !important;
         font-size: 14px;
     }
-
 }
 
-
+.success_cont{
+    .check{
+        font-size: 4em;
+        color: var(--success);
+    }
+}
 </style>
