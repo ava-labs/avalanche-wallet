@@ -7,6 +7,7 @@ import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
 import History from './modules/history/history';
+import Platform from './modules/platform/platform';
 
 import {
     RootState,
@@ -38,7 +39,8 @@ export default new Vuex.Store({
         Assets,
         Notifications,
         Network,
-        History
+        History,
+        Platform
     },
     state: {
         isAuth: false,
@@ -180,7 +182,6 @@ export default new Vuex.Store({
                 let utxoOut = utxo.getOutput() as AmountOutput;
                 let outId = utxoOut.getOutputID();
 
-                console.log(outId);
                 let locktime = utxoOut.getLocktime();
 
                 // Filter out locked tokens

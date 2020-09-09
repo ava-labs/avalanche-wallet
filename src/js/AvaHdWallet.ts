@@ -126,6 +126,48 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.internalHelper.getCurrentAddress();
     }
 
+
+    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number, rewardAddress?: string){
+        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+        let pAddressStrings = keychain.getAddressStrings();
+
+        let stakeAmount = amt;
+
+        // If reward address isn't given use index 0 address
+        if(!rewardAddress){
+            rewardAddress = this.platformHelper.getKeyForIndex(0).getAddressString();
+        }
+
+        // For change address use first available on the platform chain
+        let changeKey = this.platformHelper.getFirstAvailableKey();
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000));
+        let endTime = new BN(Math.round(end.getTime() / 1000));
+
+        const unsignedTx = await pChain.buildAddValidatorTx(
+            utxoSet,
+            pAddressStrings, // from
+            [changeKey.getAddressString()], // change
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress],
+            delegationFee,
+        );
+        let tx = unsignedTx.sign(keychain);
+        let txId = await pChain.issueTx(tx);
+
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        },3000);
+
+        return txId;
+    }
+
     // Delegates AVAX to the given node ID
     async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string){
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
@@ -144,12 +186,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
-
-        console.log(nodeID);
-        console.log(amt.toString());
-        console.log(rewardAddress);
-        console.log(startTime.toString());
-        console.log(endTime.toString());
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,

@@ -41,7 +41,7 @@ export default class ValidatorsList extends Vue{
         let big = Big(amt);
             big = big.div(Math.pow(10,9));
 
-        return big.toLocaleString(4);
+        return big.toLocaleString(2);
     }
 
     get uptimeText(): string{

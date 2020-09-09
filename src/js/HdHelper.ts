@@ -120,7 +120,6 @@ class HdHelper {
 
     async getAtomicUTXOs(){
         let addrs: string[] = this.keyChain.getAddressStrings();
-        console.log(addrs);
         // console.log(avm.getBlockchainID());
         if(this.chainId === 'P'){
             let result: PlatformUTXOSet = await pChain.getUTXOs(addrs, avm.getBlockchainID());

@@ -1,66 +1,88 @@
 <template>
     <div>
-        <div v-if="!selected">
-            <div style="display: flex; align-items: center">
-                <p>Select a node to delegate:</p>
-                <input class="search" type="text" placeholder="Search Node ID" v-model="search">
+        <transition name="fade" mode="out-in">
+            <div v-if="isSuccess" key="success">
+                <h2>You are now delegating.</h2>
+                <label>Node ID</label>
+                <p>{{selected.nodeID}}</p>
+                <label>Transaction ID</label>
+                <p>{{txId}}</p>
             </div>
-            <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
-        </div>
-        <div v-else class="form">
-            <form @submit.prevent="">
-                <div class="selected">
-                    <button @click="selected = null">
-                        <fa icon="times"></fa>
-                    </button>
+            <div v-else-if="!selected && !isSuccess" key="validator_list">
+                <div style="display: flex; align-items: center">
+                    <p>Select a node to delegate:</p>
+                    <input class="search" type="text" placeholder="Search Node ID" v-model="search">
+                </div>
+                <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
+            </div>
+            <div v-else class="form" key="form">
+                <form @submit.prevent="">
+                    <div class="selected">
+                        <button @click="selected = null">
+                            <fa icon="times"></fa>
+                        </button>
+                        <div>
+                            <p style="font-size: 13px; color: var(--primary-color-light)">Selected Node</p>
+                            <p class="node_id">{{selected.nodeID}}</p>
+                        </div>
+                    </div>
+                    <div style="margin: 30px 0;">
+                        <h4>Staking Period</h4>
+                        <p class="desc">The duration in which your tokens will be locked for staking.</p>
+                        <div class="dates">
+                            <label>Start Date & Time</label>
+                            <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
+                            <label>End Date & Time</label>
+                            <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
+                        </div>
+                    </div>
+                    <div style="margin: 30px 0;">
+                        <h4>Stake Amount</h4>
+                        <p class="desc">The amount of AVAX to lock for staking.</p>
+                        <AvaxInput v-model="stakeAmt" :max="maxAmt"></AvaxInput>
+                    </div>
+                    <div class="reward_in" style="margin: 30px 0;"  :type="rewardDestination">
+                        <h4>Reward Address</h4>
+                        <p class="desc">Where to send the staking rewards.</p>
+                        <v-chip-group mandatory @change="rewardSelect">
+                            <v-chip small value="local">Use this wallet</v-chip>
+                            <v-chip small value="custom">Custom Address</v-chip>
+                        </v-chip-group>
+                        <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
+                    </div>
+                </form>
+                <div class="calculator">
                     <div>
-                        <p style="font-size: 13px; color: var(--primary-color-light)">Selected Node</p>
-                        <p class="node_id">{{selected.nodeID}}</p>
+                        <label>Staking Duration</label>
+                        <p>{{stakingDurationText}}</p>
+                    </div>
+
+                    <div>
+                        <label>Stake Amount</label>
+                        <p>{{stakeAmtText}} AVAX</p>
+                    </div>
+                    <div>
+                        <label>Fee</label>
+                        <p>{{feeText}} AVAX</p>
+                    </div>
+                    <div>
+                        <label>Estimated Reward ({{inflation.toFixed(1)}}% Inflation)</label>
+                        <p>{{estimatedReward}} AVAX</p>
+                    </div>
+                    <div>
+                        <p class="err">{{err}}</p>
+                        <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit">Submit</v-btn>
                     </div>
                 </div>
-                <div style="margin: 30px 0;">
-                    <h4>Staking Period</h4>
-                    <p class="desc">The duration in which your tokens will be locked for staking.</p>
-                    <div class="dates">
-                        <label>Start Date & Time</label>
-                        <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
-                        <label>End Date & Time</label>
-                        <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
-                    </div>
-                </div>
-                <div style="margin: 30px 0;">
-                    <h4>Stake Amount</h4>
-                    <p class="desc">The amount of AVAX to lock for staking.</p>
-                    <AvaxInput v-model="stakeAmt" :max="maxAmt"></AvaxInput>
-                </div>
-                <div style="margin: 30px 0;">
-                    <h4>Reward Address</h4>
-                    <p class="desc">Where to send the staking rewards.</p>
-                    <v-chip-group mandatory @change="rewardSelect">
-                        <v-chip small value="local">Use this wallet</v-chip>
-                        <v-chip small value="custom">Custom Address</v-chip>
-                    </v-chip-group>
-                    <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" v-if="rewardDestination==='custom'" placeholder="Reward Address"></QrInput>
-                </div>
-            </form>
-            <div class="calculator">
-                <label>Staking Duration</label>
-                <p>{{stakingDurationText}}</p>
-                <div>
-                    <label>Stake Amount</label>
-                    <p>{{stakeAmtText}} AVAX</p>
-                </div>
-                <div>
-                    <label>Fee</label>
-                    <p>{{feeText}} AVAX</p>
-                </div>
-                <p class="err">{{err}}</p>
-                <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading">Submit</v-btn>
+
+
+                <!--            <v-text-field label="Selected Node" :value="selected.nodeID" disabled></v-text-field>-->
             </div>
+<!--            <div v-else key="form">-->
+<!--                -->
+<!--            </div>-->
+        </transition>
 
-
-<!--            <v-text-field label="Selected Node" :value="selected.nodeID" disabled></v-text-field>-->
-        </div>
     </div>
 </template>
 <script lang="ts">
@@ -100,6 +122,8 @@ export default class AddDelegator extends Vue{
     rewardDestination = 'local'; // local || custom
     err: string = "";
     isLoading = false;
+    isSuccess = false;
+    txId = "";
 
     created(){
         this.startDate = this.startMinDate;
@@ -112,6 +136,10 @@ export default class AddDelegator extends Vue{
     }
 
     async submit(){
+        if(!this.formCheck()){
+            return;
+        }
+
         this.isLoading = true;
         this.err = "";
 
@@ -129,27 +157,40 @@ export default class AddDelegator extends Vue{
         try{
             this.isLoading = false;
             let txId = await wallet.delegate(nodeId, stakeAmt, start, end, rewardAddr);
-            console.log(txId);
-            this.$store.dispatch('Notifications/add', {
-                type: 'success',
-                title: 'Delegator Added',
-                message: 'Your tokens will now be delegated for staking.'
-            })
-        }catch(e){
-            this.isLoading = false;
-            let msg:string = e.message;
+            this.onsuccess(txId);
 
-            if(msg.includes('startTime')){
-                this.err = "Start date must be in the future and end date must be after start date."
-            }else{
-                this.err = e.message;
-            }
-            this.$store.dispatch('Notifications/add', {
-                type: 'error',
-                title: 'Delegation Failed',
-                message: 'Failed to delegate tokens.'
-            })
+        }catch(e){
+            this.onerror(e);
+            this.isLoading = false;
+
         }
+    }
+
+    onsuccess(txId: string){
+        this.txId = txId;
+        this.isSuccess = true;
+        this.$store.dispatch('Notifications/add', {
+            type: 'success',
+            title: 'Delegator Added',
+            message: 'Your tokens will now be delegated for staking.'
+        })
+    }
+
+    onerror(e: any){
+        let msg:string = e.message;
+
+        if(msg.includes('startTime')){
+            this.err = "Start date must be in the future and end date must be after start date."
+        }else if(msg.includes('address format')){
+            this.err = "Invalid address format. Your address must start with \"P-\"";
+        }else{
+            this.err = e.message;
+        }
+        this.$store.dispatch('Notifications/add', {
+            type: 'error',
+            title: 'Delegation Failed',
+            message: 'Failed to delegate tokens.'
+        })
     }
 
     onStartChange(val: any){
@@ -159,8 +200,99 @@ export default class AddDelegator extends Vue{
         this.endDate = val;
     }
 
+    get inflation(): number{
+        return 12.11;
+    }
+
+    get estimatedReward(): string{
+        let start = new Date(this.startDate);
+        let end = new Date(this.endDate);
+        let duration = end.getTime() - start.getTime(); // in ms
+        let durationYears = duration / (60000*60*24*365);
+
+        let inflationRate = this.inflation;
+        let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(9,10));
+
+        let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
+            value = value.sub(stakeAmt);
+
+        return value.toLocaleString(2);
+    }
+
     rewardSelect(val: 'local'|'custom'){
+        if(val==='local'){
+            this.rewardIn = this.rewardAddressLocal;
+        }else{
+            this.rewardIn = "";
+        }
         this.rewardDestination = val;
+    }
+
+    get rewardAddressLocal(){
+        let wallet: AvaHdWallet = this.$store.state.activeWallet;
+        return wallet.platformHelper.getCurrentAddress();
+    }
+
+    formCheck(): boolean{
+        this.err = "";
+
+        if(!this.selected){
+            this.err = "You must specify a validator."
+            return false;
+        }
+
+        // let minStakeAmt = this.minStake;
+        // if(this.stakeAmt.lt(minStakeAmt)){
+        //     let big = Big(minStakeAmt.toString()).div(Math.pow(10,9));
+        //     this.err = `Minimum staking amount is ${big.toLocaleString(0)} AVAX`;
+        //     return false;
+        // }
+
+        let startTime = (new Date(this.startDate)).getTime();
+        let endTime = (new Date(this.endDate)).getTime();
+        let now = Date.now();
+        let diffTime = endTime-startTime;
+        let dur24 = (60000*60*24);
+        let durYear = dur24*365;
+
+
+        if(startTime <= now){
+            this.err = `Start time must be after current time.`;
+            return false;
+        }
+
+        if(diffTime < dur24){
+            this.err = `Minimum staking duration is 24 hours.`;
+            return false;
+        }
+
+        if(diffTime > durYear){
+            this.err = `Maximum staking duration is 1 year.`;
+            return false;
+        }
+
+        let validatorEndtime = parseInt(this.selected.endTime)*1000;
+
+        if(endTime > validatorEndtime){
+            this.err = `Delegation end date can not be longer than the validator's end date.`;
+            return false;
+        }
+
+        // Reward address check
+        if(this.rewardDestination!='local' && !this.rewardIn){
+            this.err = "You must give an address to receive delegation rewards."
+            return false;
+        }
+
+
+        return true;
+    }
+
+    get canSubmit(): boolean{
+        if(this.stakeAmt.isZero()){
+            return false;
+        }
+        return true
     }
 
     // ISOS string
@@ -191,8 +323,9 @@ export default class AddDelegator extends Vue{
 
     get endMaxDate(): string{
         if(!this.selected) return (new Date()).toISOString();
-        let nodeEndTime = parseInt(this.selected.endTime);
-            nodeEndTime = nodeEndTime*1000;
+
+        let nodeEndTime = parseInt(this.selected.endTime) * 1000;
+            nodeEndTime -= 60000;
         return (new Date(nodeEndTime)).toISOString();
     }
 
@@ -327,6 +460,18 @@ form{
     width: 100%;
 }
 
+.reward_in{
+    transition-duration: 0.2s;
+    &[type="local"]{
+        .reward_addr_in{
+            opacity: 0.3;
+            user-select: none;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    }
+}
+
 .desc{
     font-size: 13px;
     margin-bottom: 8px !important;
@@ -341,9 +486,18 @@ form{
         font-weight: lighter;
     }
 
-    p{
-        font-size: 24px;
+    >div{
+        p{
+            font-size: 24px;
+        }
+        margin-bottom: 12px;
     }
+
+
+    .err{
+        font-size: 14px;
+    }
+
 }
 
 

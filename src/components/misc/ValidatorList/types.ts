@@ -5,3 +5,7 @@ export interface ValidatorRaw{
     startTime: string
     uptime: string
 }
+
+export interface ValidatorDict {
+    [nodeId: string]: ValidatorRaw
+}

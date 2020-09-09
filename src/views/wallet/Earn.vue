@@ -2,23 +2,25 @@
     <div>
         <div class="header">
             <h1>Earn </h1>
-            <h1 class="subtitle" v-if="pageNow">/{{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
+            <h1 class="subtitle" v-if="pageNow">/ {{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
         </div>
         <transition name="fade" mode="out-in">
             <div v-if="!pageNow">
                 <p>You can earn more AVAX by staking your existing tokens.</p>
                 <div class="options">
                     <div>
-                        <h4 class="title">Validator</h4>
+                        <h4 class="title">Validate</h4>
                         <p style="flex-grow: 1">You have an Avalanche node that you want to stake with.</p>
                         <p v-if="pNoBalance" class="no_balance">You must have AVAX on the P chain to add a validator.</p>
                         <v-btn class="button_secondary" @click="addValidator" depressed small :disabled="pNoBalance">Add Validator</v-btn>
+<!--                        <v-btn class="button_secondary" depressed small disabled>Coming Soon</v-btn>-->
                     </div>
                     <div>
-                        <h4 class="title">Delegator</h4>
+                        <h4 class="title">Delegate</h4>
                         <p style="flex-grow: 1">You do not own an Avalanche node, but you want to stake using another node.</p>
                         <p v-if="pNoBalance" class="no_balance">You must have AVAX on the P chain to become a delegator.</p>
                         <v-btn class="button_secondary" @click="addDelegator" depressed small :disabled="pNoBalance">Add Delegator</v-btn>
+<!--                        <v-btn class="button_secondary" depressed small disabled>Coming Soon</v-btn>-->
                     </div>
                     <div>
                         <h4 class="title">Cross Chain Transfer</h4>
@@ -37,7 +39,7 @@
 import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-import AddValidator from "@/components/wallet/earn/AddValidator.vue";
+import AddValidator from "@/components/wallet/earn/Validate/AddValidator.vue";
 import AddDelegator from "@/components/wallet/earn/AddDelegator.vue";
 import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
 import {BN} from "avalanche/dist";
@@ -56,15 +58,15 @@ export default class Earn extends Vue{
 
     addValidator(){
         this.pageNow = AddValidator;
-        this.subtitle = "Add Validator"
+        this.subtitle = "Validate"
     }
     addDelegator(){
         this.pageNow = AddDelegator;
-        this.subtitle = "Add Delegator"
+        this.subtitle = "Delegate"
     }
     transfer(){
         this.pageNow = ChainTransfer;
-        this.subtitle = "Chain Transfer"
+        this.subtitle = "Cross Chain Transfer"
     }
     cancel(){
         this.pageNow = null;
@@ -106,7 +108,7 @@ export default class Earn extends Vue{
     .options{
         margin: 30px 0;
         display: grid;
-        grid-template-columns: 1fr 1fr ;
+        grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 14px;
         //display: flex;
         //justify-content: space-evenly;
