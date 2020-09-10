@@ -172,8 +172,6 @@ export default new Vuex.Store({
             let pKeychain = wallet.platformHelper.keyChain;
             let addrs = pKeychain.getAddressStrings();
 
-            console.log(state)
-
             //@ts-ignore
             let validators: ValidatorRaw[] = state.Platform.validators;
             //@ts-ignore

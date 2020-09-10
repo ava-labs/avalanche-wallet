@@ -28,7 +28,6 @@ const platform_module: Module<PlatformState, RootState> = {
 
         async updateValidators({state, commit}){
             let res = await pChain.getCurrentValidators() as GetValdiatorsResponse;
-            console.log(res);
             let validators = res.validators;
             commit('setValidators', validators)
         },
