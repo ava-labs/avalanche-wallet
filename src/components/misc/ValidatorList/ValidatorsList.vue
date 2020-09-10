@@ -7,6 +7,7 @@
                 <th style="text-align: right;">Stake Amount (AVAX)</th>
                 <th>End Time</th>
                 <th>Uptime</th>
+                <th>Fee</th>
                 <th></th>
             </tr>
             </thead>
@@ -37,7 +38,7 @@ export default class ValidatorsList extends Vue{
     @Prop() search!: string;
 
     updateValidators(){
-        this.$store.dispatch('Platform/updateValidators')
+        this.$store.dispatch('Platform/update')
     }
 
     get validators(){

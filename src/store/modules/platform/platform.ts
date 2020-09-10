@@ -6,19 +6,36 @@ import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
 import {PlatformState, ValidatorDict} from "@/store/modules/platform/types";
-import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
+import {GetValdiatorsResponse, ValidatorRaw} from "@/components/misc/ValidatorList/types";
 
 const platform_module: Module<PlatformState, RootState> = {
     namespaced: true,
     state: {
         validators: [],
+        validatorsPending: [],
     },
     mutations: {
+        setValdiators(state, validators: ValidatorRaw[]){
+            state.validators = validators;
+        }
     },
     actions: {
-        async updateValidators({state}){
-            let validators = await pChain.getCurrentValidators() as ValidatorRaw[];
-            state.validators = validators;
+
+        async update({dispatch}){
+            dispatch('updateValidators');
+            dispatch('updateValidatorsPending');
+        },
+
+        async updateValidators({state, commit}){
+            let res = await pChain.getCurrentValidators() as GetValdiatorsResponse;
+            let validators = res.validators;
+            commit('setValdiators', validators)
+        },
+
+        async updateValidatorsPending({state, commit}){
+            let res = await pChain.getPendingValidators() as GetValdiatorsResponse;
+            let validators = res.validators;
+            state.validatorsPending = validators;
         }
     },
     getters: {
@@ -36,6 +53,8 @@ const platform_module: Module<PlatformState, RootState> = {
                         target.startTime = v.startTime;
                         target.endTime = v.endTime;
                         target.uptime = v.uptime;
+                        target.rewardAddress = v.rewardAddress;
+                        target.delegationFeeRate = v.delegationFeeRate;
                     }
 
                     let targetAmt = new BN(target.stakeAmount);
@@ -48,7 +67,9 @@ const platform_module: Module<PlatformState, RootState> = {
                         startTime: v.startTime,
                         endTime: v.endTime,
                         nodeID: v.nodeID,
-                        uptime: v.uptime
+                        uptime: v.uptime,
+                        rewardAddress: v.rewardAddress,
+                        delegationFeeRate: v.delegationFeeRate
                     }
                 }
             }

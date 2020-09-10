@@ -10,7 +10,7 @@
         <div class="cols" v-else>
             <transition-group name="fade" mode="out-in">
                 <div class="ins_col" key="form" v-show="!isConfirm">
-                    <form  @submit.prevent="" >
+                    <div>
                         <div class="selected">
                             <button @click="selected = null">
                                 <fa icon="times"></fa>
@@ -49,7 +49,7 @@
                             </v-chip-group>
                             <QrInput  v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
                         </div>
-                    </form>
+                    </div>
                 </div>
                 <ConfirmPage v-show="isConfirm" key="confirm" :start="startDate" :end="endDate" :amount="stakeAmt" :reward-destination="rewardDestination" :reward-address="rewardIn" :node-i-d="selected.nodeID"></ConfirmPage>
             </transition-group>
@@ -411,6 +411,8 @@ export default class AddDelegator extends Vue{
 }
 </script>
 <style scoped lang="scss">
+@use "../../../../main";
+
 .val_list{
     overflow: scroll;
     max-height: 450px;
@@ -520,6 +522,27 @@ label{
     .check{
         font-size: 4em;
         color: var(--success);
+    }
+}
+
+@include main.mobile-device{
+    .cols{
+        grid-template-columns: 1fr;
+    }
+
+    .dates{
+        grid-template-columns: 1fr;
+    }
+
+    .amt_in{
+        width: 100%;
+    }
+
+    .summary{
+        border-left: none;
+        border-top: 2px solid var(--bg-light);
+        padding-left: 0;
+        padding-top: 30px;
     }
 }
 </style>

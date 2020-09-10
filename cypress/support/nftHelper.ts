@@ -132,6 +132,7 @@ async function transferNFT(utxoId: string, toAddresses: string[]): Promise<strin
         utxos,
         toAddresses,
         fromAddrsStr,
+        fromAddrsStr,
         sourceTxId,
         // fee,
         // fromAddrsStr,

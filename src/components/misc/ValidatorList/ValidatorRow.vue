@@ -4,6 +4,7 @@
         <td class="amount">{{amtText}}</td>
         <td>{{remainingText}}</td>
         <td>{{uptimeText}}</td>
+        <td>{{feeText}}%</td>
         <td>
             <button class="button_secondary" @click="select">Select</button>
         </td>
@@ -50,6 +51,10 @@ export default class ValidatorsList extends Vue{
         if(!uptime) return '?';
 
         return uptime.toFixed(2) + ' %';
+    }
+
+    get feeText(){
+        return this.validator.delegationFeeRate;
     }
 
     select(){

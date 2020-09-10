@@ -403,7 +403,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 return 0;
             });
 
-            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, utxoIds);
+            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, fromAddrs, utxoIds);
 
             let rawTx = unsignedTx.getTransaction();
             let outsNft = rawTx.getOuts()

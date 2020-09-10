@@ -46,6 +46,7 @@ const network_module: Module<NetworkState, RootState> = {
 
             setTimeout(() => {
                 dispatch('Assets/updateUTXOs', null, {root: true});
+                dispatch('Platform/update', null, {root: true});
                 dispatch('updateTxFee');
             }, 2000);
 

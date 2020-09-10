@@ -24,6 +24,10 @@
                     <label>P-Chain</label>
                     <p>{{pBalanceText}} AVAX</p>
                 </div>
+                <div>
+                    <label>Staking</label>
+                    <p>{{stakingText}} AVAX</p>
+                </div>
             </div>
         </div>
         <NftCol class="nft_card"></NftCol>
@@ -114,6 +118,21 @@
             let denom = this.ava_asset.denomination;
             let bal = this.platformUnlocked;
             let bigBal = Big(bal.toString())
+                bigBal = bigBal.div(Math.pow(10,denom))
+
+            if(bigBal.lt(Big('1'))){
+                return bigBal.toString();
+            }else{
+                return bigBal.toLocaleString(2);
+            }
+        }
+
+        get stakingText(){
+            let balance = this.$store.getters.walletStakingBalance;
+            if(!balance) return '0';
+
+            let denom = 9;
+            let bigBal = Big(balance.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 
             if(bigBal.lt(Big('1'))){

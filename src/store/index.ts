@@ -33,6 +33,7 @@ import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
+import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 
 export default new Vuex.Store({
     modules:{
@@ -40,7 +41,7 @@ export default new Vuex.Store({
         Notifications,
         Network,
         History,
-        Platform
+        platform: Platform
     },
     state: {
         isAuth: false,
@@ -163,6 +164,33 @@ export default new Vuex.Store({
         // walletAVMBalance(state: RootState): BN | null{
         //
         // },
+
+        walletStakingBalance(state: RootState): BN | null{
+            let wallet = state.activeWallet;
+            if(!wallet) return null;
+
+            let pKeychain = wallet.platformHelper.keyChain;
+            let addrs = pKeychain.getAddressStrings();
+
+            //@ts-ignore
+            let validators: ValidatorRaw[] = state.platform.validators;
+            //@ts-ignore
+            let pendings: ValidatorRaw[] = state.platform.validatorsPending;
+
+            // console.log(pendings, validators)
+            // console.log(addrs);
+            let totStake = new BN(0);
+
+            for(var i=0;i<validators.length;i++){
+                let v = validators[i];
+                if(addrs.includes(v.rewardAddress)){
+                    let val = new BN(v.stakeAmount);
+                    totStake = totStake.add(val);
+                }
+            }
+
+            return totStake;
+        },
 
         walletPlatformBalance(state: RootState): BN | null{
             let wallet:AvaHdWallet|null = state.activeWallet;
@@ -309,6 +337,7 @@ export default new Vuex.Store({
         onAccess(store){
             router.push('/wallet');
             store.dispatch('Assets/updateUTXOs');
+            store.dispatch('Platform/update');
         },
 
 

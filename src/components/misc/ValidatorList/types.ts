@@ -4,6 +4,13 @@ export interface ValidatorRaw{
     stakeAmount: string
     startTime: string
     uptime: string
+    delegationFeeRate: string
+    rewardAddress: string
+}
+
+export interface GetValdiatorsResponse{
+    validators: ValidatorRaw[]
+    delegators?: ValidatorRaw[]
 }
 
 export interface ValidatorDict {
