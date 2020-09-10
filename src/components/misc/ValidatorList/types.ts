@@ -13,11 +13,6 @@ export interface GetValdiatorsResponse{
     delegators?: ValidatorRaw[]
 }
 
-export interface GetValidatorsResponse{
-    validators: ValidatorRaw[],
-    delegators?: ValidatorRaw[]
-}
-
 export interface ValidatorDict {
     [nodeId: string]: ValidatorRaw
 }

@@ -6,7 +6,7 @@ import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
 import {PlatformState, ValidatorDict} from "@/store/modules/platform/types";
-import {GetValidatorsResponse, ValidatorRaw} from "@/components/misc/ValidatorList/types";
+import {GetValdiatorsResponse, ValidatorRaw} from "@/components/misc/ValidatorList/types";
 
 const platform_module: Module<PlatformState, RootState> = {
     namespaced: true,
@@ -27,17 +27,17 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         async updateValidators({state, commit}){
-            let res = await pChain.getCurrentValidators() as GetValidatorsResponse;
+            let res = await pChain.getCurrentValidators() as GetValdiatorsResponse;
             console.log(res);
             let validators = res.validators;
-            commit('setValidators', res)
+            commit('setValidators', validators)
         },
 
         async updateValidatorsPending({state, commit}){
-            let res = await pChain.getPendingValidators() as GetValidatorsResponse;
+            let res = await pChain.getPendingValidators() as GetValdiatorsResponse;
             let validators = res.validators;
             //@ts-ignore
-            state.validatorsPending = res;
+            state.validatorsPending = validators;
         }
     },
     getters: {
