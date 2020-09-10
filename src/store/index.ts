@@ -41,7 +41,7 @@ export default new Vuex.Store({
         Notifications,
         Network,
         History,
-        platform: Platform
+        Platform
     },
     state: {
         isAuth: false,
@@ -172,10 +172,13 @@ export default new Vuex.Store({
             let pKeychain = wallet.platformHelper.keyChain;
             let addrs = pKeychain.getAddressStrings();
 
+            console.log(state)
+
             //@ts-ignore
-            let validators: ValidatorRaw[] = state.platform.validators;
+            let validators: ValidatorRaw[] = state.Platform.validators;
             //@ts-ignore
-            let pendings: ValidatorRaw[] = state.platform.validatorsPending;
+            let pendings: ValidatorRaw[] = state.Platform.validatorsPending;
+
 
             // console.log(pendings, validators)
             // console.log(addrs);

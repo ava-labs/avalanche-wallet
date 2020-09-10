@@ -74,10 +74,10 @@
         get balanceText():string{
             if(this.ava_asset !== null){
                 let amt = this.ava_asset.getAmount();
-                if(amt.lt(Big('0.00001'))){
+                if(amt.lt(Big('0.0001'))){
                     return amt.toLocaleString(this.ava_asset.denomination);
                 }else{
-                    return amt.toLocaleString(2);
+                    return amt.toLocaleString(3);
                 }
             }else{
                 return '?'
@@ -94,10 +94,10 @@
                     amt = amt.add(pLocked);
 
 
-                if(amt.lt(Big('0.00001'))){
+                if(amt.lt(Big('0.0001'))){
                     return amt.toLocaleString(denom);
                 }else{
-                    return amt.toLocaleString(2);
+                    return amt.toLocaleString(3);
                 }
             }else{
                 return '?'
@@ -123,7 +123,7 @@
             if(bigBal.lt(Big('1'))){
                 return bigBal.toString();
             }else{
-                return bigBal.toLocaleString(2);
+                return bigBal.toLocaleString(3);
             }
         }
 
