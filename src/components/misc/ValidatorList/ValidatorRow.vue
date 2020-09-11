@@ -83,6 +83,7 @@ button{
 }
 
 .id{
+    word-break: break-all;
 }
 td{
     padding: 6px 14px;

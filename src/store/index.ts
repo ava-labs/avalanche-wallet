@@ -53,7 +53,6 @@ export default new Vuex.Store({
     },
     getters: {
         walletNftUTXOs(state: RootState): UTXO[]{
-            // return [];
             let wallet:AvaHdWallet|null = state.activeWallet;
 
 
@@ -161,37 +160,11 @@ export default new Vuex.Store({
             return dict;
         },
 
-        // walletAVMBalance(state: RootState): BN | null{
-        //
-        // },
-
         walletStakingBalance(state: RootState): BN | null{
             let wallet = state.activeWallet;
             if(!wallet) return null;
 
             return wallet.stakeAmount;
-            // let pKeychain = wallet.platformHelper.keyChain;
-            // let addrs = pKeychain.getAddressStrings();
-            //
-            // //@ts-ignore
-            // let validators: ValidatorRaw[] = state.Platform.validators;
-            // //@ts-ignore
-            // let pendings: ValidatorRaw[] = state.Platform.validatorsPending;
-            //
-            //
-            // // console.log(pendings, validators)
-            // // console.log(addrs);
-            // let totStake = new BN(0);
-            //
-            // for(var i=0;i<validators.length;i++){
-            //     let v = validators[i];
-            //     if(addrs.includes(v.rewardAddress)){
-            //         let val = new BN(v.stakeAmount);
-            //         totStake = totStake.add(val);
-            //     }
-            // }
-            //
-            // return totStake;
         },
 
         walletPlatformBalance(state: RootState): BN | null{

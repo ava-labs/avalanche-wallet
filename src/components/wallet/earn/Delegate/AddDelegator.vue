@@ -12,12 +12,12 @@
                 <div class="ins_col" key="form" v-show="!isConfirm">
                     <div>
                         <div class="selected">
-                            <button @click="selected = null">
+                            <button @click="selected = null" class="close_but">
                                 <fa icon="times"></fa>
                             </button>
-                            <div>
+                            <div class="id_box">
                                 <p style="font-size: 13px; color: var(--primary-color-light)">Selected Node</p>
-                                <p class="node_id">{{selected.nodeID}}</p>
+                                <p class="node_id" style="word-break: break-all;">{{selected.nodeID}}</p>
                             </div>
                             <div>
                                 <p style="font-size: 13px; color: var(--primary-color-light)">Fee</p>
@@ -445,7 +445,7 @@ export default class AddDelegator extends Vue{
 .cols{
     display: grid;
     grid-template-columns: 1fr 340px;
-    column-gap: 90px;
+    column-gap: 2vw;
 }
 
 form{
@@ -471,14 +471,27 @@ label{
     margin-bottom: 3px;
 }
 .selected{
-    display: grid;
-    width: max-content;
-    grid-template-columns: 40px 1fr max-content max-content;
+    display: flex;
+    flex-wrap: wrap;
+    //width: max-content;
+    //display: grid;
+    position: relative;
+    grid-template-columns: max-content max-content max-content;
     column-gap: 14px;
     background-color: var(--bg-light);
     border-radius: 6px;
     padding: 4px 0;
+    padding-left: 34px;
     padding-right: 14px;
+
+    .id_box{
+        //grid-column: 1/3;
+    }
+    .close_but{
+        position: absolute;
+        top: 6px;
+        left: 12px;
+    }
 
     button{
         opacity: 0.4;
@@ -493,9 +506,13 @@ label{
 }
 
 .dates{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 15px;
+    //display: grid;
+    //grid-template-columns: 1fr 1fr;
+    //grid-gap: 15px;
+    display: flex;
+    >div{
+        margin-right: 15px;
+    }
 }
 
 
@@ -540,6 +557,10 @@ label{
     .err{
         margin: 14px 0 !important;
         font-size: 14px;
+    }
+
+    .v-btn{
+        margin-top: 14px;
     }
 }
 
