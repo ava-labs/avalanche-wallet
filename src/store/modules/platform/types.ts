@@ -1,10 +1,12 @@
 import {DelegatorRaw, ValidatorRaw} from "@/components/misc/ValidatorList/types";
+import {BN} from "avalanche";
 
 export interface PlatformState {
     validators: ValidatorRaw[];
     validatorsPending: ValidatorRaw[];
     delegators: DelegatorRaw[];
     delegatorsPending: DelegatorRaw[];
+    minStake: BN
 }
 
 export interface GetValidatorsResponse {

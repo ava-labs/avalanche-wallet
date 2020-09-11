@@ -15,6 +15,7 @@ const platform_module: Module<PlatformState, RootState> = {
         validatorsPending: [],
         delegators: [],
         delegatorsPending: [],
+        minStake: new BN(0),
     },
     mutations: {
         setValidators(state, validators: ValidatorRaw[]){
@@ -22,6 +23,10 @@ const platform_module: Module<PlatformState, RootState> = {
         }
     },
     actions: {
+
+        async updateMinStakeAmount({state}){
+            state.minStake = await pChain.getMinStake(true);
+        },
 
         async update({dispatch}){
             dispatch('updateValidators');

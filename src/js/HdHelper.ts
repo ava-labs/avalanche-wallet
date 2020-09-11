@@ -1,10 +1,10 @@
-import {AVMKeyChain, AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
+import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
 import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
 import {getPreferredHRP} from "avalanche/dist/utils";
 import {ava, avm, bintools, pChain} from "@/AVA";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
-import {PlatformVMKeyChain, PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused

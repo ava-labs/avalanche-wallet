@@ -3,8 +3,8 @@ const BN = require('bn.js');
 
 import {getPreferredHRP} from "avalanche/dist/utils";
 import {ava, bintools} from "../../src/AVA";
-import {AVMKeyChain} from "avalanche/dist/apis/avm";
-// import {Buffer} from 'avalanche';
+import {KeyChain as AVMKeyChain} from "avalanche/dist/apis/avm";
+import {Buffer} from 'avalanche';
 import * as bip39 from 'bip39';
 import HDKey from 'hdkey';
 
@@ -54,6 +54,7 @@ const seed = bip39.mnemonicToSeedSync(TEST_MNEMONIC);
 let HD = HDKey.fromMasterSeed(seed);
 
 let key0 = HD.derive(AVA_CHANGE_PATH+'/0') ;
+//@ts-ignore
 let pk = key0.privateKey as Buffer;
 
 let userKeychain = new AVMKeyChain(HRP,'X');

@@ -68,7 +68,7 @@
                         <p>{{stakingDurationText}}</p>
                     </div>
                     <div>
-                        <label>Estimated Reward ({{((inflation-1)*100).toFixed(1)}}% Inflation)</label>
+                        <label>Estimated Reward</label>
                         <p>{{estimatedReward.toLocaleString(0)}} AVAX</p>
                     </div>
                     <div>
@@ -114,8 +114,10 @@ import moment from "moment";
 
 import {BN} from 'avalanche';
 import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
-import {pChain} from "@/AVA";
+import {avm, infoApi, pChain} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
+import {calculateStakingReward} from "@/helpers/helper";
+import {ONEAVAX} from "avalanche/dist/utils";
 @Component({
     components: {
         AvaxInput,
@@ -139,6 +141,9 @@ export default class AddDelegator extends Vue{
     isSuccess = false;
     txId = "";
 
+    // TODO: Make this value dynamic form the node
+    currentSupply = (new BN(360000000)).mul(ONEAVAX);
+
     formNodeID = "";
     formAmt = new BN(0);
     formStart: Date = new Date(this.startMinDate);
@@ -148,6 +153,8 @@ export default class AddDelegator extends Vue{
     created(){
         this.startDate = this.startMinDate;
         this.endDate = this.endMaxDate;
+
+        // avm.
     }
 
     onselect(val: ValidatorRaw){
@@ -162,6 +169,7 @@ export default class AddDelegator extends Vue{
 
         this.isLoading = true;
         this.err = "";
+
 
         // let nodeId = this.selected!.nodeID;
         // let stakeAmt = this.stakeAmt;
@@ -220,25 +228,14 @@ export default class AddDelegator extends Vue{
         this.endDate = val;
     }
 
-    get inflation(): number{
-        return 1.12;
-    }
-
-
     get estimatedReward(): Big{
         let start = new Date(this.startDate);
         let end = new Date(this.endDate);
         let duration = end.getTime() - start.getTime(); // in ms
-        let durationYears = duration / (60000*60*24*365);
 
-        let inflationRate = this.inflation;
-        let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(10,9));
-
-        let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
-            value = value.sub(stakeAmt);
-
-        return value;
-        // return value.toLocaleString(2);
+        let estimation = calculateStakingReward(this.stakeAmt,duration/1000,this.currentSupply)
+        let res = Big(estimation.toString()).div(Math.pow(10,9));
+        return res;
     }
 
 
@@ -399,7 +396,7 @@ export default class AddDelegator extends Vue{
     }
 
     get minStake(): BN{
-        return  PlatformVMConstants.MINSTAKE;
+        return  this.$store.state.Platform.minStake;
     }
 
     get delegationFee(): number{

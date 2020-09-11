@@ -32,7 +32,7 @@
     import PaperWallet from "@/components/modals/PaperWallet/PaperWallet.vue";
     import QRCode from "qrcode";
     import MainnetAddressModal from "@/components/modals/MainnetAddressModal.vue";
-    import {AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
 
     @Component({
         components: {

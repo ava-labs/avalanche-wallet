@@ -1,8 +1,8 @@
 // A simple wrapper thar combines avalanche.js, bip39 and HDWallet
 
 import {
-    AVMKeyPair,
-    AVMKeyChain,
+    KeyPair as AVMKeyPair,
+    KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     TransferableInput,
     TransferableOutput,
@@ -14,7 +14,7 @@ import {
 } from "avalanche/dist/apis/avm";
 
 import {
-    PlatformVMKeyChain,
+    KeyChain as PlatformVMKeyChain,
     UTXOSet as PlatformUTXOSet
 } from "avalanche/dist/apis/platformvm";
 import {
@@ -30,7 +30,7 @@ import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {HdHelper} from "@/js/HdHelper";
-import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 // HD WALLET

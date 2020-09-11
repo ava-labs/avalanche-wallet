@@ -12,9 +12,13 @@
             </tr>
             </thead>
             <tbody>
-            <ValidatorRow v-for="v in validators" :key="v.nodeID+v.endTime" :validator="v" @select="onselect"></ValidatorRow>
+                <ValidatorRow v-for="v in validators" :key="v.nodeID+v.endTime" :validator="v" @select="onselect"></ValidatorRow>
             </tbody>
         </table>
+        <div v-if="validators.length===0" class="empty_list">
+            <h4>No Validators Found</h4>
+            <p>Validators need to be actively staking to be found.</p>
+        </div>
     </div>
 
 </template>
@@ -126,5 +130,10 @@ export default class ValidatorsList extends Vue{
         top: 0;
         padding: 2px 14px;
         background-color: var(--bg-wallet-light);
+    }
+
+    .empty_list{
+        padding: 30px;
+        text-align: center;
     }
 </style>

@@ -6,7 +6,7 @@
                     <div v-show="!isConfirm" key="form">
                         <div style="margin: 30px 0;">
                             <h4>Node ID</h4>
-                            <input type="text" v-model="nodeId" style="width: 100%">
+                            <input type="text" v-model="nodeId" style="width: 100%" label="NodeID-XXXXXXX">
                         </div>
                         <div style="margin: 30px 0;">
                             <h4>Staking Period</h4>
@@ -88,9 +88,10 @@ import Big from 'big.js';
 import { QrInput } from "@avalabs/vue_components";
 import {bintools, pChain} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
 import ConfirmPage from "@/components/wallet/earn/Validate/ConfirmPage.vue";
 import moment from "moment";
+import {calculateStakingReward} from "@/helpers/helper";
+import {ONEAVAX} from "avalanche/dist/utils";
 
 let dayMs = 1000 * 60 * 60 * 24;
 @Component({
@@ -120,6 +121,8 @@ export default class AddValidator extends Vue{
     formFee: number = 0;
     formRewardAddr = "";
 
+    // TODO: Make this value dynamic form the node
+    currentSupply = (new BN(360000000)).mul(ONEAVAX);
 
     txId = "";
     isSuccess = false;
@@ -265,15 +268,18 @@ export default class AddValidator extends Vue{
         let start = new Date(this.startDate);
         let end = new Date(this.endDate);
         let duration = end.getTime() - start.getTime(); // in ms
-        let durationYears = duration / (60000*60*24*365);
+        // let durationYears = duration / (60000*60*24*365);
+        //
+        // let inflationRate = this.inflation;
+        // let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(10,9));
 
-        let inflationRate = this.inflation;
-        let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(10,9));
+        let estimation = calculateStakingReward(this.stakeAmt,duration/1000,this.currentSupply)
+        let res = Big(estimation.toString()).div(Math.pow(10,9));
 
-        let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
-        value = value.sub(stakeAmt);
+        // let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
+        // value = value.sub(stakeAmt);
 
-        return value.toLocaleString(2);
+        return res.toLocaleString(2);
     }
 
     updateFormData(){
@@ -366,13 +372,17 @@ export default class AddValidator extends Vue{
         })
     }
 
+    get minStakeAmt(): BN{
+        return this.$store.state.Platform.minStake;
+    }
+
     onerror(err: any){
         let msg:string = err.message;
 
         if(msg.includes('startTime')){
             this.err = "Start date must be in the future and end date must be after start date."
         }else if(msg.includes('must be at least')){
-            let minAmt = PlatformVMConstants.MINSTAKE;
+            let minAmt = this.minStakeAmt;
             let big = Big(minAmt.toString()).div(Math.pow(10,9));
 
             this.err = `Stake amount must be at least ${big.toString()} AVAX`;

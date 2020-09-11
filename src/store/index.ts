@@ -26,7 +26,7 @@ import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
 
 import {UnixNow} from "avalanche/dist/utils";
-import {UTXO, AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
+import {UTXO, KeyPair as AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
 
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
@@ -412,6 +412,7 @@ export default new Vuex.Store({
             let fileString = JSON.stringify(file);
             localStorage.setItem('w', fileString);
 
+
             dispatch('Notifications/add', {
                 title: "Remember Wallet",
                 message: "Wallets are stored securely for easy access.",
@@ -441,6 +442,7 @@ export default new Vuex.Store({
         async activateWallet({state, dispatch, commit}, wallet:AvaHdWallet){
             state.activeWallet = wallet;
 
+            dispatch('Assets/updateAvaAsset');
             commit('updateActiveAddress');
             dispatch('History/updateTransactionHistory');
         },

@@ -1,6 +1,6 @@
 import Avalanche from "avalanche/dist";
 import BinTools from "avalanche/dist/utils/bintools";
-import {AVMAPI, AVMKeyChain, MinterSet, UTXOSet, UnsignedTx, Tx} from "avalanche/dist/apis/avm";
+import {AVMAPI, KeyChain as AVMKeyChain, MinterSet, UTXOSet, UnsignedTx, Tx} from "avalanche/dist/apis/avm";
 import {UnixNow, UTF8Payload, URLPayload} from "avalanche/dist/utils";
 import {OutputOwners} from "avalanche/dist/common";
 
