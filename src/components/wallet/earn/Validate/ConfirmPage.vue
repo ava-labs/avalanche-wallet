@@ -10,11 +10,11 @@
         </div>
         <div>
             <label>Start Date</label>
-            <p>{{startDate.toLocaleString()}}</p>
+            <p>{{start.toLocaleString()}}</p>
         </div>
         <div>
             <label>End Date</label>
-            <p>{{endDate.toLocaleString()}}</p>
+            <p>{{end.toLocaleString()}}</p>
         </div>
         <div>
             <label>Delegation Fee</label>
@@ -35,8 +35,8 @@
     @Component
     export default class ConfirmPage extends Vue{
         @Prop() nodeID!: string;
-        @Prop() start!: string;
-        @Prop() end!: string;
+        @Prop() start!: Date;
+        @Prop() end!: Date;
         @Prop() delegationFee!: number;
         @Prop() amount!: BN
         @Prop() rewardAddress!: string;
@@ -52,13 +52,13 @@
         //     this.amountCopy = val.
         // }
 
-        get startDate(){
-            return new Date(this.start);
-        }
-
-        get endDate(){
-            return new Date(this.end);
-        }
+        // get startDate(){
+        //     return new Date(this.start);
+        // }
+        //
+        // get endDate(){
+        //     return new Date(this.end);
+        // }
 
         get amtBig(): Big{
             let stakeAmt = Big(this.amount.toString()).div(Math.pow(10,9));

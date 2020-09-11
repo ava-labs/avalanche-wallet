@@ -102,9 +102,9 @@ let dayMs = 1000 * 60 * 60 * 24;
     }
 })
 export default class AddValidator extends Vue{
-    startDate: string = "";
+    startDate: string = (new Date()).toISOString();
     endDate: string = "";
-    delegationFee: string = '3.0';
+    delegationFee: string = '0.0';
     nodeId = "";
     rewardIn: string = "";
     rewardDestination = 'local'; // local || custom
@@ -113,7 +113,13 @@ export default class AddValidator extends Vue{
     err:string = "";
     stakeAmt: BN = new BN(0);
 
+    formNodeId = "";
     formAmt: BN = new BN(0);
+    formStart: Date = new Date(this.startDateMin);
+    formEnd: Date = new Date(this.endDateMax);
+    formFee: number = 0;
+    formRewardAddr = "";
+
 
     txId = "";
     isSuccess = false;
@@ -270,10 +276,18 @@ export default class AddValidator extends Vue{
         return value.toLocaleString(2);
     }
 
+    updateFormData(){
+        this.formNodeId = this.nodeId;
+        this.formAmt = this.stakeAmt;
+        this.formStart = new Date(this.startDate);
+        this.formEnd = new Date(this.endDate);
+        this.formRewardAddr = this.rewardIn;
+        this.formFee = parseFloat(this.delegationFee);
+    }
+
     confirm(){
         if(!this.formCheck()) return;
-
-        this.formAmt = this.stakeAmt.clone();
+        this.updateFormData();
         this.isConfirm = true;
     }
     cancelConfirm(){
@@ -318,22 +332,22 @@ export default class AddValidator extends Vue{
     async submit(){
         if(!this.formCheck()) return;
 
-        let nodeId = this.nodeId;
-        let startDate = new Date(this.startDate);
-        let endDate = new Date(this.endDate);
-        let stakeAmt = this.stakeAmt;
-        let fee = parseFloat(this.delegationFee);
-        let rewardAddr = undefined;
-
-        if(this.rewardDestination === 'custom'){
-            rewardAddr = this.rewardIn;
-        }
+        // let nodeId = this.nodeId;
+        // let startDate = new Date(this.startDate);
+        // let endDate = new Date(this.endDate);
+        // let stakeAmt = this.stakeAmt;
+        // let fee = parseFloat(this.delegationFee);
+        // let rewardAddr = undefined;
+        //
+        // if(this.rewardDestination === 'custom'){
+        //     rewardAddr = this.rewardIn;
+        // }
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
 
         try{
             this.isLoading = true;
             this.err = "";
-            let txId = await wallet.validate(nodeId,stakeAmt,startDate,endDate,fee,rewardAddr);
+            let txId = await wallet.validate(this.formNodeId,this.formAmt,this.formStart,this.formEnd,this.formFee,this.formRewardAddr);
             this.isLoading = false;
             this.onsuccess(txId);
         }catch(err){

@@ -319,6 +319,7 @@ export default class AddDelegator extends Vue{
         this.formRewardAddr = this.rewardIn;
     }
 
+
     confirm(){
         if(!this.formCheck()) return;
         this.updateFormData();
