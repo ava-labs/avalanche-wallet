@@ -28,8 +28,8 @@
 </template>
 <script lang="ts">
     import "reflect-metadata";
-    import { Vue, Component, Prop } from "vue-property-decorator";
-    import {BN} from "avalanche/dist";
+    import {Vue, Component, Prop, Watch} from "vue-property-decorator";
+    import {BN} from "avalanche";
     import Big from "big.js";
 
     @Component
@@ -42,6 +42,15 @@
         @Prop() rewardAddress!: string;
         @Prop() rewardDestination!: string;
 
+        // amountCopy: BN = new BN(0);
+
+
+        // @Watch('amount')
+        // onAmountChange(val: BN){
+        //     console.log(val.toString(), val);
+        //     this.amountCopy = val.clone()
+        //     this.amountCopy = val.
+        // }
 
         get startDate(){
             return new Date(this.start);

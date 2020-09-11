@@ -169,28 +169,29 @@ export default new Vuex.Store({
             let wallet = state.activeWallet;
             if(!wallet) return null;
 
-            let pKeychain = wallet.platformHelper.keyChain;
-            let addrs = pKeychain.getAddressStrings();
-
-            //@ts-ignore
-            let validators: ValidatorRaw[] = state.Platform.validators;
-            //@ts-ignore
-            let pendings: ValidatorRaw[] = state.Platform.validatorsPending;
-
-
-            // console.log(pendings, validators)
-            // console.log(addrs);
-            let totStake = new BN(0);
-
-            for(var i=0;i<validators.length;i++){
-                let v = validators[i];
-                if(addrs.includes(v.rewardAddress)){
-                    let val = new BN(v.stakeAmount);
-                    totStake = totStake.add(val);
-                }
-            }
-
-            return totStake;
+            return wallet.stakeAmount;
+            // let pKeychain = wallet.platformHelper.keyChain;
+            // let addrs = pKeychain.getAddressStrings();
+            //
+            // //@ts-ignore
+            // let validators: ValidatorRaw[] = state.Platform.validators;
+            // //@ts-ignore
+            // let pendings: ValidatorRaw[] = state.Platform.validatorsPending;
+            //
+            //
+            // // console.log(pendings, validators)
+            // // console.log(addrs);
+            // let totStake = new BN(0);
+            //
+            // for(var i=0;i<validators.length;i++){
+            //     let v = validators[i];
+            //     if(addrs.includes(v.rewardAddress)){
+            //         let val = new BN(v.stakeAmount);
+            //         totStake = totStake.add(val);
+            //     }
+            // }
+            //
+            // return totStake;
         },
 
         walletPlatformBalance(state: RootState): BN | null{

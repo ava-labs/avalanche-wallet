@@ -54,6 +54,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     utxoset: AVMUTXOSet;
     mnemonic: string;
     isLoading: boolean;
+    stakeAmount: BN;
     internalHelper: HdHelper;
     externalHelper: HdHelper;
     platformHelper: HdHelper;
@@ -65,6 +66,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.isLoading = false;
 
         this.mnemonic = mnemonic;
+        this.stakeAmount = new BN(0);
 
         // Generate Seed
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
@@ -100,6 +102,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let setExternal = await this.externalHelper.updateUtxos() as AVMUTXOSet;
         let setPlatform = await this.platformHelper.updateUtxos() as PlatformUTXOSet;
 
+        this.getStake();
+
         let joined = setInternal.merge(setExternal);
         this.utxoset = joined;
         return joined;
@@ -121,13 +125,21 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.mnemonic;
     }
 
+
+    async getStake(){
+        let keyChain = this.platformHelper.keyChain;
+        let addrs = keyChain.getAddressStrings();
+        let res = await pChain.getStake(addrs);
+        this.stakeAmount = res;
+    }
+
     // Scan internal indices and find a spot with no utxo
     getChangeAddress():string{
         return this.internalHelper.getCurrentAddress();
     }
 
 
-    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number, rewardAddress?: string){
+    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number=0, rewardAddress?: string){
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
         let pAddressStrings = keychain.getAddressStrings();
@@ -146,6 +158,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
+        console.log(delegationFee);
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
             pAddressStrings, // from
@@ -158,6 +171,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
             delegationFee,
         );
         let tx = unsignedTx.sign(keychain);
+        console.log(unsignedTx);
+        // return ;
         let txId = await pChain.issueTx(tx);
 
         // Update UTXOS
@@ -279,6 +294,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
             [pToAddr],
             [pToAddr],
             [pToAddr],
+            undefined,
+            undefined,
+
         );
         const tx = unsignedTx.sign(keyChain);
         const txid: string = await pChain.issueTx(tx);

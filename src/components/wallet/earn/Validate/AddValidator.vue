@@ -43,7 +43,7 @@
                             <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
                         </div>
                     </div>
-                    <ConfirmPage key="confirm" v-show="isConfirm" :node-i-d="nodeId" :start="startDate" :end="endDate" :amount="stakeAmt" :delegation-fee="delegationFee" :reward-address="rewardIn" :reward-destination="rewardDestination"></ConfirmPage>
+                    <ConfirmPage key="confirm" v-show="isConfirm" :node-i-d="nodeId" :start="startDate" :end="endDate" :amount="formAmt" :delegation-fee="delegationFee" :reward-address="rewardIn" :reward-destination="rewardDestination"></ConfirmPage>
                 </transition-group>
                 <div>
                     <div class="summary" v-if="!isSuccess">
@@ -79,7 +79,7 @@
 </template>
 <script lang="ts">
 import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import {Vue, Component, Prop, Watch} from "vue-property-decorator";
 //@ts-ignore
 import AvaxInput from "@/components/misc/AvaxInput.vue";
 import {BN} from "avalanche";
@@ -104,7 +104,7 @@ let dayMs = 1000 * 60 * 60 * 24;
 export default class AddValidator extends Vue{
     startDate: string = "";
     endDate: string = "";
-    delegationFee: number = 3.0;
+    delegationFee: string = '3.0';
     nodeId = "";
     rewardIn: string = "";
     rewardDestination = 'local'; // local || custom
@@ -113,8 +113,22 @@ export default class AddValidator extends Vue{
     err:string = "";
     stakeAmt: BN = new BN(0);
 
+    formAmt: BN = new BN(0);
+
     txId = "";
     isSuccess = false;
+
+
+    @Watch('delegationFee')
+    onFeeChange(val: string){
+        let num = parseFloat(val);
+        if(num < 0){
+            this.delegationFee = '0';
+        }else if(num>100){
+            this.delegationFee = '100';
+        }
+    }
+
 
     created(){
         this.startDate = this.startDateMin;
@@ -258,6 +272,8 @@ export default class AddValidator extends Vue{
 
     confirm(){
         if(!this.formCheck()) return;
+
+        this.formAmt = this.stakeAmt.clone();
         this.isConfirm = true;
     }
     cancelConfirm(){
@@ -306,7 +322,7 @@ export default class AddValidator extends Vue{
         let startDate = new Date(this.startDate);
         let endDate = new Date(this.endDate);
         let stakeAmt = this.stakeAmt;
-        let fee = this.delegationFee;
+        let fee = parseFloat(this.delegationFee);
         let rewardAddr = undefined;
 
         if(this.rewardDestination === 'custom'){

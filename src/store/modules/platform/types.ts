@@ -1,13 +1,15 @@
-import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
+import {DelegatorRaw, ValidatorRaw} from "@/components/misc/ValidatorList/types";
 
 export interface PlatformState {
     validators: ValidatorRaw[];
     validatorsPending: ValidatorRaw[];
+    delegators: DelegatorRaw[];
+    delegatorsPending: DelegatorRaw[];
 }
 
-export interface GetValdiatorsResponse {
+export interface GetValidatorsResponse {
     validators: ValidatorRaw[],
-    delegators? : ValidatorRaw[],
+    delegators : DelegatorRaw[],
 }
 
 export interface ValidatorDict {

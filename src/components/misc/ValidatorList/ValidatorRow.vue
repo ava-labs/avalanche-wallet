@@ -54,7 +54,7 @@ export default class ValidatorsList extends Vue{
     }
 
     get feeText(){
-        return this.validator.delegationFeeRate;
+        return parseFloat(this.validator.delegationFee);
     }
 
     select(){

@@ -138,7 +138,7 @@
             if(bigBal.lt(Big('1'))){
                 return bigBal.toString();
             }else{
-                return bigBal.toLocaleString(2);
+                return bigBal.toLocaleString(3);
             }
         }
 
@@ -258,7 +258,7 @@
         }
 
         label{
-            font-size: 12px;
+            font-size: 13px;
             color: main.$primary-color-light;
         }
     }

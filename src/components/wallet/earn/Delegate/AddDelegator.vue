@@ -19,6 +19,14 @@
                                 <p style="font-size: 13px; color: var(--primary-color-light)">Selected Node</p>
                                 <p class="node_id">{{selected.nodeID}}</p>
                             </div>
+                            <div>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">Fee</p>
+                                <p class="node_id">{{delegationFee}} %</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">End Date</p>
+                                <p class="node_id">{{(new Date(parseInt(selected.endTime)*1000)).toLocaleString()}}</p>
+                            </div>
                         </div>
                         <div style="margin: 30px 0;">
                             <h4>Staking Period</h4>
@@ -56,19 +64,21 @@
             <div>
                 <div v-if="!isSuccess" class="summary">
                     <div>
-                        <label>Staking Duration</label>
+                        <label>Staking Duration *</label>
                         <p>{{stakingDurationText}}</p>
+                    </div>
+                    <div>
+                        <label>Estimated Reward ({{((inflation-1)*100).toFixed(1)}}% Inflation)</label>
+                        <p>{{estimatedReward.toLocaleString(0)}} AVAX</p>
                     </div>
                     <div>
                         <label>Fee</label>
                         <p>{{feeText}} AVAX</p>
                     </div>
-                    <div>
-                        <label>Estimated Reward ({{((inflation-1)*100).toFixed(1)}}% Inflation)</label>
-                        <p>{{estimatedReward}} AVAX</p>
-                    </div>
+
                     <div>
                         <p class="err">{{err}}</p>
+                        <label style="margin: 8px 0 !important;">* If it is your first time staking, start small. Staked tokens are locked until the end of the staking period.</label>
                         <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>Confirm</v-btn>
                         <template v-else>
                             <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" block>Submit</v-btn>
@@ -208,7 +218,8 @@ export default class AddDelegator extends Vue{
         return 1.12;
     }
 
-    get estimatedReward(): string{
+
+    get estimatedReward(): Big{
         let start = new Date(this.startDate);
         let end = new Date(this.endDate);
         let duration = end.getTime() - start.getTime(); // in ms
@@ -220,8 +231,10 @@ export default class AddDelegator extends Vue{
         let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
             value = value.sub(stakeAmt);
 
-        return value.toLocaleString(2);
+        return value;
+        // return value.toLocaleString(2);
     }
+
 
     rewardSelect(val: 'local'|'custom'){
         if(val==='local'){
@@ -372,14 +385,25 @@ export default class AddDelegator extends Vue{
         return  PlatformVMConstants.MINSTAKE;
     }
 
+    get delegationFee(): number{
+        if(!this.selected) return 0;
+        return  parseFloat(this.selected.delegationFee);
+    }
+
     get fee(): BN{
-        return  pChain.getFee();
+        let delegationFee = Big(this.delegationFee).div(Big(100));
+        let cut = this.estimatedReward.times(delegationFee)
+
+        let txFee:BN = pChain.getFee();
+        let cutBN = new BN(cut.times(Math.pow(10,9)).toFixed(0))
+        let totFee = txFee.add(cutBN);
+        return  totFee;
     }
 
     get feeText(): string{
         let amt = this.fee;
         let big = Big(amt.toString()).div(Math.pow(10,9));
-        return big.toString()
+        return big.toLocaleString(0)
     }
 
     get minAmt(): BN{
@@ -449,7 +473,8 @@ label{
 .selected{
     display: grid;
     width: max-content;
-    grid-template-columns: 40px 1fr;
+    grid-template-columns: 40px 1fr max-content max-content;
+    column-gap: 14px;
     background-color: var(--bg-light);
     border-radius: 6px;
     padding: 4px 0;
