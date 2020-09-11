@@ -50,12 +50,9 @@
             <div>
                 <p class="err">{{err}}</p>
                 <p v-if="maxAmt.isZero()" class="err">Insufficient funds to create the transactions.</p>
-                <v-btn v-else class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
+                <v-btn v-else data-cy="submit" class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
             </div>
         </div>
-
-
-
     </div>
 </template>
 <script lang="ts">
