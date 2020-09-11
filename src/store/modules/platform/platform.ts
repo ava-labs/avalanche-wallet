@@ -48,6 +48,7 @@ const platform_module: Module<PlatformState, RootState> = {
         }
     },
     getters: {
+
         validatorsDict(state): ValidatorDict{
             let validators = state.validators;
             let delegators = state.delegators;

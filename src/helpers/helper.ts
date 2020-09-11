@@ -3,6 +3,7 @@ import store from '@/store/index';
 import {ava} from "@/AVA";
 
 import {
+    AVMConstants,
     AVMKeyChain,
     AVMKeyPair
 } from "avalanche/dist/apis/avm";
@@ -10,6 +11,8 @@ import {
 import {
     getPreferredHRP
 } from "avalanche/dist/utils";
+import {BN} from "avalanche/dist";
+import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
 
 function getAssetIcon(id:string){
     let url = "/question-solid.svg";
@@ -27,6 +30,10 @@ function keyToKeypair(key: string, chainID: string='X'): AVMKeyPair{
     let hrp = getPreferredHRP(ava.getNetworkID());
     let keychain = new AVMKeyChain(hrp, chainID);
     return keychain.importKey(key);
+}
+
+function calculateStakingReward(amount: BN, duration: number, currentSupply: BN){
+    // PlatformVMConstants.
 }
 
 
