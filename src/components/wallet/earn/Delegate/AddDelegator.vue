@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                <ConfirmPage v-show="isConfirm" key="confirm" :start="startDate" :end="endDate" :amount="stakeAmt" :reward-destination="rewardDestination" :reward-address="rewardIn" :node-i-d="selected.nodeID"></ConfirmPage>
+                <ConfirmPage v-show="isConfirm" key="confirm" :start="formStart" :end="formEnd" :amount="formAmt" :reward-destination="rewardDestination" :reward-address="formRewardAddr" :node-i-d="formNodeID"></ConfirmPage>
             </transition-group>
             <div>
                 <div v-if="!isSuccess" class="summary">
@@ -139,6 +139,12 @@ export default class AddDelegator extends Vue{
     isSuccess = false;
     txId = "";
 
+    formNodeID = "";
+    formAmt = new BN(0);
+    formStart: Date = new Date(this.startMinDate);
+    formEnd: Date = new Date(this.endMaxDate);
+    formRewardAddr = "";
+
     created(){
         this.startDate = this.startMinDate;
         this.endDate = this.endMaxDate;
@@ -157,20 +163,20 @@ export default class AddDelegator extends Vue{
         this.isLoading = true;
         this.err = "";
 
-        let nodeId = this.selected!.nodeID;
-        let stakeAmt = this.stakeAmt;
-        let start = new Date(this.startDate);
-        let end = new Date(this.endDate);
-        let rewardAddr = undefined;
-        if(this.rewardDestination === 'custom'){
-            rewardAddr = this.rewardIn;
-        }
+        // let nodeId = this.selected!.nodeID;
+        // let stakeAmt = this.stakeAmt;
+        // let start = new Date(this.startDate);
+        // let end = new Date(this.endDate);
+        // let rewardAddr = undefined;
+        // if(this.rewardDestination === 'custom'){
+        //     rewardAddr = this.rewardIn;
+        // }
 
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
 
         try{
             this.isLoading = false;
-            let txId = await wallet.delegate(nodeId, stakeAmt, start, end, rewardAddr);
+            let txId = await wallet.delegate(this.formNodeID, this.formAmt, this.formStart, this.formEnd, this.formRewardAddr);
             this.onsuccess(txId);
 
         }catch(e){
@@ -305,9 +311,19 @@ export default class AddDelegator extends Vue{
         return true;
     }
 
+    updateFormData(){
+        this.formNodeID = this.selected!.nodeID;
+        this.formAmt = this.stakeAmt;
+        this.formStart = new Date(this.startDate);
+        this.formEnd = new Date(this.endDate);
+        this.formRewardAddr = this.rewardIn;
+    }
+
     confirm(){
         if(!this.formCheck()) return;
+        this.updateFormData();
         this.isConfirm = true;
+
     }
     cancelConfirm(){
         this.isConfirm = false;

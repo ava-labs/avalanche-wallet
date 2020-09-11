@@ -7,7 +7,6 @@
                         <div style="margin: 30px 0;">
                             <h4>Node ID</h4>
                             <input type="text" v-model="nodeId" style="width: 100%">
-                            <!--                        <v-text-field label="Node ID" v-model="nodeId" hide-details filled flat></v-text-field>-->
                         </div>
                         <div style="margin: 30px 0;">
                             <h4>Staking Period</h4>
