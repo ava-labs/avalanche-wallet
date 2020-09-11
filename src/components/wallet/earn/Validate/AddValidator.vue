@@ -48,14 +48,15 @@
                 <div>
                     <div class="summary" v-if="!isSuccess">
                         <div>
-                            <label>Staking Duration</label>
+                            <label>Staking Duration *</label>
                             <p>{{durationText}}</p>
                         </div>
                         <div>
                             <label>Estimated Rewards ({{((inflation-1)*100).toFixed(1)}}% Inflation)</label>
                             <p>{{estimatedReward}} AVAX</p>
                         </div>
-                        <div style="margin: 30px 0;">
+                        <div class="submit_box">
+                            <label style="margin: 8px 0 !important;">* If it is your first time staking, start small. Staked tokens are locked until the end of the staking period.</label>
                             <p class="err">{{err}}</p>
                             <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>Confirm</v-btn>
                             <template v-else>
@@ -433,6 +434,12 @@ label{
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
+}
+
+.submit_box{
+    .v-btn{
+        margin-top: 14px;
+    }
 }
 
 .summary{

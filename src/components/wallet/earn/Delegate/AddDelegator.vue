@@ -77,8 +77,8 @@
                     </div>
 
                     <div>
-                        <p class="err">{{err}}</p>
                         <label style="margin: 8px 0 !important;">* If it is your first time staking, start small. Staked tokens are locked until the end of the staking period.</label>
+                        <p class="err">{{err}}</p>
                         <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>Confirm</v-btn>
                         <template v-else>
                             <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" block>Submit</v-btn>
