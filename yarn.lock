@@ -1654,6 +1654,13 @@
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
 
+"@types/vue-datetime@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/vue-datetime/-/vue-datetime-1.0.0.tgz#e7c08ab2e608498f2001d31da35248ea6759c084"
+  integrity sha512-2cq6OU0GyAirjd7vkZEbTk7bYrgcBNcMpa5tcAQLnXIW0Gg+zkED0siwuHWSI+qlrry3N+XnHJjdj+jQyvMGJA==
+  dependencies:
+    vue ">=2.0.0"
+
 "@types/webpack-env@^1.15.2":
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.15.2.tgz#927997342bb9f4a5185a86e6579a0a18afc33b0a"
@@ -2527,10 +2534,10 @@ autoprefixer@^9.8.0:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-avalanche@2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-2.4.3.tgz#1e748fa005b82c45e376848f9cc6e82473ceff08"
-  integrity sha512-eoKmPWyAO4UICAf+OmwUmQuVHjAgWIXoJaC7H6E3KIdblF98wzSGtR85zqNr9NIapWdlVeYqkKut96sDJQrmjA==
+avalanche@2.5.3:
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-2.5.3.tgz#ef8df64eb637a7c0c01b401fe6e34d7644e4cae6"
+  integrity sha512-6s4wvrveQIavEJgz1Xskhv5xV0ZuYTtMeaNJbkB87o9DnHrpp84xehx/rnWJai0dT0NyPjKRoH9xA5APlZ0MiQ==
   dependencies:
     axios "0.19.2"
     bech32 "1.1.4"
@@ -8022,6 +8029,11 @@ lru-cache@^5.1.1:
   dependencies:
     yallist "^3.0.2"
 
+luxon@1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.25.0.tgz#d86219e90bc0102c0eb299d65b2f5e95efe1fe72"
+  integrity sha512-hEgLurSH8kQRjY6i4YLey+mcKVAWXbDNlZRmM6AgWDJ1cY3atl8Ztf5wEY7VBReFbmGnwQPz7KYJblL8B2k0jQ==
+
 make-dir@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -8371,12 +8383,7 @@ mkdirp@1.x, mkdirp@~1.0.3:
   dependencies:
     minimist "^1.2.5"
 
-moment@2.26.0:
-  version "2.26.0"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.26.0.tgz#5e1f82c6bafca6e83e808b30c8705eed0dcbd39a"
-  integrity sha512-oIixUO+OamkUkwjhAVE18rAMfRJNsNe/Stid/gwHSOfHrOtw9EhAY2AHvdKZ/k/MggcYELFCJz/Sn2pL8b8JMw==
-
-moment@^2.27.0:
+moment@2.27.0, moment@^2.27.0:
   version "2.27.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
   integrity sha512-al0MUK7cpIcglMv3YF13qSgdAIqxHTO7brRtaz3DlSULbqfazqkc5kEjNrLDOM7fsjshoFIihnU8snrP7zUvhQ==
@@ -12199,6 +12206,11 @@ vue-currency-input@^1.21.0:
   resolved "https://registry.yarnpkg.com/vue-currency-input/-/vue-currency-input-1.21.0.tgz#b886584e08ef3840875ff9125abff29fa7b3517d"
   integrity sha512-MSMPj/ASZ1ZeovJs+hc59Xw9ST0BlYSkxF1SuOPkkX2eOPLp3/a/Qrbd/IpC0Oke+zlT4P1/2gL9U0sSivh2aQ==
 
+vue-datetime@1.0.0-beta.14:
+  version "1.0.0-beta.14"
+  resolved "https://registry.yarnpkg.com/vue-datetime/-/vue-datetime-1.0.0-beta.14.tgz#791e724500929cdfeb31395154d9a26fd27ffb46"
+  integrity sha512-n25LqldE1xryeoweohiqlxy8iUsi+UwZnKLaN4gXjk7xxGL6rUl1y/GGvkoMwJUzRKttw+QnQV4oFAYupUQdug==
+
 vue-eslint-parser@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-5.0.0.tgz#00f4e4da94ec974b821a26ff0ed0f7a78402b8a1"
@@ -12291,6 +12303,11 @@ vue@2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
+
+vue@>=2.0.0:
+  version "2.6.12"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
+  integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
 
 vue@^2.6.11:
   version "2.6.11"
@@ -12699,6 +12716,11 @@ websocket@^1.0.31:
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"
+
+weekstart@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/weekstart/-/weekstart-1.0.1.tgz#950970b48e5797e06fc1a762f3d0f013312321e1"
+  integrity sha512-h6B1HSJxg7sZEXqIpDqAtwiDBp3x5y2jY8WYcUSBhLTcTCy7laQzBmamqMuQM5fpvo1pgpma0OCRpE2W8xrA9A==
 
 whatwg-encoding@^1.0.5:
   version "1.0.5"

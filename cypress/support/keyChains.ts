@@ -3,8 +3,8 @@ const BN = require('bn.js');
 
 import {getPreferredHRP} from "avalanche/dist/utils";
 import {ava, bintools} from "../../src/AVA";
-import {AVMKeyChain} from "avalanche/dist/apis/avm";
-
+import {KeyChain as AVMKeyChain} from "avalanche/dist/apis/avm";
+import {Buffer} from 'avalanche';
 import * as bip39 from 'bip39';
 import HDKey from 'hdkey';
 
@@ -44,7 +44,6 @@ let faucetKey = faucetKeychain.importKey(FAUCET_KEY);
 let faucetAddress = faucetKey.getAddressString()
 xChain.importKey(geckoUsername, geckoPass, faucetKey.getPrivateKeyString()).then(async (res) => {
     let bal = await xChain.getAllBalances(faucetAddress);
-    console.log(bal);
 });
 
 
@@ -54,10 +53,12 @@ const TEST_MNEMONIC = bip39.generateMnemonic(256);
 const seed = bip39.mnemonicToSeedSync(TEST_MNEMONIC);
 let HD = HDKey.fromMasterSeed(seed);
 
-let key0 = HD.derive(AVA_CHANGE_PATH+'/0');
+let key0 = HD.derive(AVA_CHANGE_PATH+'/0') ;
+//@ts-ignore
+let pk = key0.privateKey as Buffer;
 
 let userKeychain = new AVMKeyChain(HRP,'X');
-let userKey0 = userKeychain.importKey(key0.privateKey);
+let userKey0 = userKeychain.importKey(pk);
 
 
 async function sendAvax(address:string, amount:number){

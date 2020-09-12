@@ -295,9 +295,6 @@
         border-radius: 2px !important;
         height: 40px;
         font-size: 12px;
-        /*border: 1px solid #ddd;*/
-        background-color: var(--bg-light) !important;
-        color: var(--primary-color) !important;
     }
 
     .addressIn >>> input::-webkit-input-placeholder{

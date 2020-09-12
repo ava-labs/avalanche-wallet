@@ -74,8 +74,8 @@
         right: 6px;
         top: 0;
         margin: 0;
-        height: 15px;
-        transform: translateY(50%);
+        height: 100%;
+        /*transform: translateY(50%);*/
         pointer-events: none;
     }
 

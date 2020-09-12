@@ -247,7 +247,7 @@ h1{
 
 .button_primary{
   background-color: var(--primary-color) !important;
-  color: var(--bg);
+  color: var(--bg) !important;
   text-decoration: none;
   &:hover {
     opacity: 0.7;
@@ -261,8 +261,8 @@ h1{
   }
 }
 .button_secondary{
-  background-color: var(--secondary-color);
-  color: #FFF;
+  background-color: var(--secondary-color) !important;
+  color: #FFF !important;
   text-decoration: none;
   &:hover {
     opacity: 0.7;
@@ -299,6 +299,50 @@ textarea{
   color: var(--primary-color) !important;
 }
 
+.v-text-field{
+  color: var(--primary-color) !important;
+  label{
+    color: var(--primary-color-light) !important;
+  }
+
+  .v-input__slot:before{
+    border-color: var(--primary-color-light) !important;
+    color: var(--primary-color-light) !important;
+  }
+}
+
+.v-chip{
+  background-color: var(--bg-light) !important;
+  color: var(--primary-color) !important;
+}
+.v-chip--active{
+  background-color: var(--primary-color) !important;
+  color: var(--bg-wallet) !important;
+}
+
+.vue__time-picker{
+  color: var(--primary-color);
+
+  input{
+    border: none !important;
+    background-color: var(--bg-light) !important;
+    color: var(--primary-color) !important;
+  }
+}
+
+.vdatetime{
+  background-color: var(--bg-light) !important;
+  padding: 6px 12px !important;
+  input{
+    color: var(--primary-color) !important;
+  }
+}
+
+.qr_input{
+  background-color: var(--bg-light) !important;
+  color: var(--primary-color) !important;
+}
+
 
 html[data-theme='day']{
   --bg: #FFF;
@@ -309,6 +353,7 @@ html[data-theme='day']{
 
   --link-secondary: #6E7479;
   --error:#f00;
+  --success: #6BC688;
 
   --bg-wallet: #F5F6FA;
   --bg-wallet-light: #FFF;
@@ -325,9 +370,16 @@ html[data-theme='night']{
 
   --link-secondary: #6E7479;
   --error:#E84970;
+  --success: #6BC688;
 
   --bg-wallet: #181B1D;
   --bg-wallet-light: #242729;
 
   --warning: #d49534;
+}
+
+p.err{
+  color: var(--error);
+  font-size: 0.9rem;
+  margin: 4px 0;
 }
