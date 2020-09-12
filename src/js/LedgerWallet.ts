@@ -1,6 +1,6 @@
 // import AppBtc from "@ledgerhq/hw-app-btc";
 //@ts-ignore
-import AppAvax from "@ledgerhq/hw-app-avalanche";
+import AppAvax from "@obsidiansystems/hw-app-avalanche";
 
 import * as bip39 from 'bip39';
 import HDKey from 'hdkey';
@@ -41,9 +41,9 @@ class LedgerWallet {
     }
 
     async init(){
-        console.log(await this.app.getAppConfiguration());
+        // console.log(await this.app.getAppConfiguration());
         // await this.getKeyForIndex(0);
-        let key = await this.getMasterPublicKey();
+        // let key = await this.getMasterPublicKey();
         // let id = await this.app.getWalletId();
         // console.log(id);
     }
