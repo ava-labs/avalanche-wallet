@@ -60,7 +60,7 @@
 
         get amtText():string{
             let amt = this.amtBig;
-            return amt.toLocaleString();
+            return amt.toLocaleString(9);
         }
     }
 </script>

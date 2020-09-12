@@ -121,7 +121,7 @@
                 bigBal = bigBal.div(Math.pow(10,denom))
 
             if(bigBal.lt(Big('1'))){
-                return bigBal.toString();
+                return bigBal.toLocaleString(9);
             }else{
                 return bigBal.toLocaleString(3);
             }
