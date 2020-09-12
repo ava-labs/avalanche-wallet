@@ -42,7 +42,7 @@
                             <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
                         </div>
                     </div>
-                    <ConfirmPage key="confirm" v-show="isConfirm" :node-i-d="nodeId" :start="startDate" :end="endDate" :amount="formAmt" :delegation-fee="delegationFee" :reward-address="rewardIn" :reward-destination="rewardDestination"></ConfirmPage>
+                    <ConfirmPage key="confirm" v-show="isConfirm" :node-i-d="nodeId" :start="formStart" :end="formEnd" :amount="formAmt" :delegation-fee="delegationFee" :reward-address="rewardIn" :reward-destination="rewardDestination"></ConfirmPage>
                 </transition-group>
                 <div>
                     <div class="summary" v-if="!isSuccess">
@@ -51,7 +51,7 @@
                             <p>{{durationText}}</p>
                         </div>
                         <div>
-                            <label>Estimated Rewards ({{((inflation-1)*100).toFixed(1)}}% Inflation)</label>
+                            <label>Estimated Rewards</label>
                             <p>{{estimatedReward}} AVAX</p>
                         </div>
                         <div class="submit_box">
@@ -120,9 +120,6 @@ export default class AddValidator extends Vue{
     formEnd: Date = new Date(this.endDateMax);
     formFee: number = 0;
     formRewardAddr = "";
-
-    // TODO: Make this value dynamic form the node
-    currentSupply = (new BN(360000000)).mul(ONEAVAX);
 
     txId = "";
     isSuccess = false;
@@ -260,9 +257,6 @@ export default class AddValidator extends Vue{
         }
     }
 
-    get inflation(): number{
-        return 1.12;
-    }
 
     get estimatedReward(): string{
         let start = new Date(this.startDate);
@@ -273,7 +267,8 @@ export default class AddValidator extends Vue{
         // let inflationRate = this.inflation;
         // let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(10,9));
 
-        let estimation = calculateStakingReward(this.stakeAmt,duration/1000,this.currentSupply)
+        let currentSupply = this.$store.state.Platform.currentSupply;
+        let estimation = calculateStakingReward(this.stakeAmt,duration/1000, currentSupply);
         let res = Big(estimation.toString()).div(Math.pow(10,9));
 
         // let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
@@ -337,17 +332,6 @@ export default class AddValidator extends Vue{
 
     async submit(){
         if(!this.formCheck()) return;
-
-        // let nodeId = this.nodeId;
-        // let startDate = new Date(this.startDate);
-        // let endDate = new Date(this.endDate);
-        // let stakeAmt = this.stakeAmt;
-        // let fee = parseFloat(this.delegationFee);
-        // let rewardAddr = undefined;
-        //
-        // if(this.rewardDestination === 'custom'){
-        //     rewardAddr = this.rewardIn;
-        // }
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
 
         try{

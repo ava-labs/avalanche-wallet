@@ -141,9 +141,6 @@ export default class AddDelegator extends Vue{
     isSuccess = false;
     txId = "";
 
-    // TODO: Make this value dynamic form the node
-    currentSupply = (new BN(360000000)).mul(ONEAVAX);
-
     formNodeID = "";
     formAmt = new BN(0);
     formStart: Date = new Date(this.startMinDate);
@@ -233,7 +230,9 @@ export default class AddDelegator extends Vue{
         let end = new Date(this.endDate);
         let duration = end.getTime() - start.getTime(); // in ms
 
-        let estimation = calculateStakingReward(this.stakeAmt,duration/1000,this.currentSupply)
+        let currentSupply = this.$store.state.Platform.currentSupply;
+
+        let estimation = calculateStakingReward(this.stakeAmt,duration/1000, currentSupply)
         let res = Big(estimation.toString()).div(Math.pow(10,9));
         return res;
     }
@@ -260,13 +259,6 @@ export default class AddDelegator extends Vue{
             this.err = "You must specify a validator."
             return false;
         }
-
-        // let minStakeAmt = this.minStake;
-        // if(this.stakeAmt.lt(minStakeAmt)){
-        //     let big = Big(minStakeAmt.toString()).div(Math.pow(10,9));
-        //     this.err = `Minimum staking amount is ${big.toLocaleString(0)} AVAX`;
-        //     return false;
-        // }
 
         let startTime = (new Date(this.startDate)).getTime();
         let endTime = (new Date(this.endDate)).getTime();

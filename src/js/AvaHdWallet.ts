@@ -158,7 +158,6 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
-        console.log(delegationFee);
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
             pAddressStrings, // from
