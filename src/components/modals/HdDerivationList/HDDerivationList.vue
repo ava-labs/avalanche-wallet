@@ -50,14 +50,14 @@
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
     import AvaHdWallet from "@/js/AvaHdWallet";
-    import {AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
+    import {KeyPair as AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
     import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
     import {bintools} from "@/AVA";
     import Big from 'big.js';
     import AvaAsset from "@/js/AvaAsset";
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
     import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
-    import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+    import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
     @Component({
         components: {

@@ -8,7 +8,7 @@ const COLOR_ERROR:string = '#E84970';
 let notif_id = 0;
 
 
-const auth_module: Module<NotifState, RootState> = {
+const notifications_module: Module<NotifState, RootState> = {
     namespaced: true,
     state: {
         items: []
@@ -63,4 +63,4 @@ const auth_module: Module<NotifState, RootState> = {
     }
 };
 
-export default auth_module;
+export default notifications_module;

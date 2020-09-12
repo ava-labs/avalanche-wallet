@@ -41,6 +41,8 @@ const assets_module: Module<AssetsState, RootState> = {
         removeAllAssets(state){
             state.assets = [];
             state.assetsDict = {};
+            state.nftFams = [];
+            state.nftFamsDict = {};
         },
         setIsUpdateBalance(state, val){
             state.isUpdateBalance = val;
@@ -48,8 +50,9 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     actions: {
         // Called on a logout event
-        onlogout({state}){
+        onlogout({state, commit}){
             state.isUpdateBalance = false;
+            commit('removeAllAssets');
         },
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids

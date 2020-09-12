@@ -1,4 +1,4 @@
-import {AVMKeyChain, AVMAPI} from "avalanche/dist/apis/avm";
+import {KeyChain as AVMKeyChain, AVMAPI} from "avalanche/dist/apis/avm";
 import {InfoAPI} from "avalanche/dist/apis/info";
 import Avalanche from "avalanche";
 import BinTools from "avalanche/dist/utils/bintools";

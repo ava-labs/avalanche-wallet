@@ -13,7 +13,7 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import {AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import Big from "big.js";
 
     @Component

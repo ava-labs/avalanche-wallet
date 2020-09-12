@@ -24,6 +24,10 @@
                     <label>P-Chain</label>
                     <p>{{pBalanceText}} AVAX</p>
                 </div>
+                <div>
+                    <label>Staking</label>
+                    <p>{{stakingText}} AVAX</p>
+                </div>
             </div>
         </div>
         <NftCol class="nft_card"></NftCol>
@@ -70,23 +74,30 @@
         get balanceText():string{
             if(this.ava_asset !== null){
                 let amt = this.ava_asset.getAmount();
-                if(amt.lt(Big('0.00001'))){
+                if(amt.lt(Big('0.0001'))){
                     return amt.toLocaleString(this.ava_asset.denomination);
                 }else{
-                    return amt.toString();
+                    return amt.toLocaleString(3);
                 }
             }else{
                 return '?'
             }
         }
 
+
+        // Locked balance is the sum of locked AVAX tokens on X and P chain
         get balanceTextLocked():string{
             if(this.ava_asset !== null){
+                let denom = this.ava_asset.denomination;
+                let pLocked = Big(this.platformLocked.toString()).div(Math.pow(10,denom))
                 let amt = this.ava_asset.getAmount(true);
-                if(amt.lt(Big('0.00001'))){
-                    return amt.toLocaleString(this.ava_asset.denomination);
+                    amt = amt.add(pLocked);
+
+
+                if(amt.lt(Big('0.0001'))){
+                    return amt.toLocaleString(denom);
                 }else{
-                    return amt.toString();
+                    return amt.toLocaleString(3);
                 }
             }else{
                 return '?'
@@ -105,14 +116,29 @@
             if(!this.ava_asset) return  '?';
 
             let denom = this.ava_asset.denomination;
-            let bal = this.platformUnlocked.add(this.platformLocked);
+            let bal = this.platformUnlocked;
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 
-            if(bigBal.lt(Big('0.00001'))){
-                return bigBal.toLocaleString(denom);
+            if(bigBal.lt(Big('1'))){
+                return bigBal.toLocaleString(9);
             }else{
+                return bigBal.toLocaleString(3);
+            }
+        }
+
+        get stakingText(){
+            let balance = this.$store.getters.walletStakingBalance;
+            if(!balance) return '0';
+
+            let denom = 9;
+            let bigBal = Big(balance.toString())
+                bigBal = bigBal.div(Math.pow(10,denom))
+
+            if(bigBal.lt(Big('1'))){
                 return bigBal.toString();
+            }else{
+                return bigBal.toLocaleString(3);
             }
         }
 
@@ -232,7 +258,7 @@
         }
 
         label{
-            font-size: 12px;
+            font-size: 13px;
             color: main.$primary-color-light;
         }
     }

@@ -1,7 +1,7 @@
 import {faucetAddress, userKey0, sendAvax, TEST_MNEMONIC, createFixedCapAsset} from '../support/keyChains';
 import {getNFT} from "../support/nftHelper";
 
-describe('Wallet', () => {
+describe('Wallet Portfolio', () => {
 
     before(()=>{
         cy.wait(1000);

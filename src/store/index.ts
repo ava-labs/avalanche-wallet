@@ -7,6 +7,7 @@ import Assets from './modules/assets/assets';
 import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
 import History from './modules/history/history';
+import Platform from './modules/platform/platform';
 
 import {
     RootState,
@@ -23,20 +24,24 @@ import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/AvaHdWallet";
-import {UTXO, AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
+
+import {UnixNow} from "avalanche/dist/utils";
+import {UTXO, KeyPair as AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
+
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
-import {UnixNow} from "avalanche/dist/utils";
+import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 
 export default new Vuex.Store({
     modules:{
         Assets,
         Notifications,
         Network,
-        History
+        History,
+        Platform
     },
     state: {
         isAuth: false,
@@ -48,7 +53,6 @@ export default new Vuex.Store({
     },
     getters: {
         walletNftUTXOs(state: RootState): UTXO[]{
-            // return [];
             let wallet:AvaHdWallet|null = state.activeWallet;
 
 
@@ -156,9 +160,12 @@ export default new Vuex.Store({
             return dict;
         },
 
-        // walletAVMBalance(state: RootState): BN | null{
-        //
-        // },
+        walletStakingBalance(state: RootState): BN | null{
+            let wallet = state.activeWallet;
+            if(!wallet) return null;
+
+            return wallet.stakeAmount;
+        },
 
         walletPlatformBalance(state: RootState): BN | null{
             let wallet:AvaHdWallet|null = state.activeWallet;
@@ -176,6 +183,8 @@ export default new Vuex.Store({
             for(var n=0; n<utxos.length; n++) {
                 let utxo = utxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
+                let outId = utxoOut.getOutputID();
+
                 let locktime = utxoOut.getLocktime();
 
                 // Filter out locked tokens
@@ -303,6 +312,7 @@ export default new Vuex.Store({
         onAccess(store){
             router.push('/wallet');
             store.dispatch('Assets/updateUTXOs');
+            store.dispatch('Platform/update');
         },
 
 
@@ -402,6 +412,7 @@ export default new Vuex.Store({
             let fileString = JSON.stringify(file);
             localStorage.setItem('w', fileString);
 
+
             dispatch('Notifications/add', {
                 title: "Remember Wallet",
                 message: "Wallets are stored securely for easy access.",
@@ -431,6 +442,7 @@ export default new Vuex.Store({
         async activateWallet({state, dispatch, commit}, wallet:AvaHdWallet){
             state.activeWallet = wallet;
 
+            dispatch('Assets/updateAvaAsset');
             commit('updateActiveAddress');
             dispatch('History/updateTransactionHistory');
         },

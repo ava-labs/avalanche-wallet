@@ -20,7 +20,7 @@
 
     import Modal from '../Modal.vue';
 
-    import {AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import AvaHdWallet from "@/js/AvaHdWallet";
 
     import QRCode from 'qrcode'
