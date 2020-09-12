@@ -1,8 +1,8 @@
 // A simple wrapper thar combines avalanche.js, bip39 and HDWallet
 
 import {
-    AVMKeyPair,
-    AVMKeyChain,
+    KeyPair as AVMKeyPair,
+    KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     TransferableInput,
     TransferableOutput,
@@ -14,6 +14,7 @@ import {
 } from "avalanche/dist/apis/avm";
 
 import {
+    KeyChain as PlatformVMKeyChain,
     UTXOSet as PlatformUTXOSet
 } from "avalanche/dist/apis/platformvm";
 import {
@@ -22,14 +23,14 @@ import {
 
 
 import * as bip39 from "bip39";
-import {ava, avm, bintools} from "@/AVA";
+import {ava, avm, bintools, pChain} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {HdHelper} from "@/js/HdHelper";
-import {PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 // HD WALLET
@@ -53,6 +54,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     utxoset: AVMUTXOSet;
     mnemonic: string;
     isLoading: boolean;
+    stakeAmount: BN;
     internalHelper: HdHelper;
     externalHelper: HdHelper;
     platformHelper: HdHelper;
@@ -64,6 +66,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         this.isLoading = false;
 
         this.mnemonic = mnemonic;
+        this.stakeAmount = new BN(0);
 
         // Generate Seed
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic);
@@ -99,6 +102,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let setExternal = await this.externalHelper.updateUtxos() as AVMUTXOSet;
         let setPlatform = await this.platformHelper.updateUtxos() as PlatformUTXOSet;
 
+        this.getStake();
+
         let joined = setInternal.merge(setExternal);
         this.utxoset = joined;
         return joined;
@@ -120,11 +125,214 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return this.mnemonic;
     }
 
+
+    async getStake(){
+        let keyChain = this.platformHelper.keyChain;
+        let addrs = keyChain.getAddressStrings();
+        let res = await pChain.getStake(addrs);
+        this.stakeAmount = res;
+    }
+
     // Scan internal indices and find a spot with no utxo
     getChangeAddress():string{
         return this.internalHelper.getCurrentAddress();
     }
 
+
+    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number=0, rewardAddress?: string){
+        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+        let pAddressStrings = keychain.getAddressStrings();
+
+        let stakeAmount = amt;
+
+        // If reward address isn't given use index 0 address
+        if(!rewardAddress){
+            rewardAddress = this.getPlatformRewardAddress();
+        }
+
+        // For change address use first available on the platform chain
+        let changeKey = this.platformHelper.getFirstAvailableKey();
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000));
+        let endTime = new BN(Math.round(end.getTime() / 1000));
+
+        const unsignedTx = await pChain.buildAddValidatorTx(
+            utxoSet,
+            pAddressStrings, // from
+            [changeKey.getAddressString()], // change
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress],
+            delegationFee,
+        );
+        let tx = unsignedTx.sign(keychain);
+        console.log(unsignedTx);
+        // return ;
+        let txId = await pChain.issueTx(tx);
+
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        },3000);
+
+        return txId;
+    }
+
+    getPlatformRewardAddress(): string{
+        return this.platformHelper.getKeyForIndex(0).getAddressString();
+    }
+
+    // Delegates AVAX to the given node ID
+    async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string){
+        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+        let pAddressStrings = keychain.getAddressStrings();
+        let stakeAmount = amt;
+
+        // If reward address isn't given use index 0 address
+        if(!rewardAddress){
+            rewardAddress = this.getPlatformRewardAddress();
+        }
+
+        // For change address use first available on the platform chain
+        let changeKey = this.platformHelper.getFirstAvailableKey();
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000));
+        let endTime = new BN(Math.round(end.getTime() / 1000));
+
+        const unsignedTx = await pChain.buildAddDelegatorTx(
+            utxoSet,
+            pAddressStrings,
+            [changeKey.getAddressString()],
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress], // reward address
+        );
+        const tx =  unsignedTx.sign(keychain);
+        let txId = await pChain.issueTx(tx);
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        },3000);
+
+
+        return txId;
+    }
+
+    async chainTransfer(amt: BN, sourceChain: string = 'X'){
+        let fee = avm.getFee();
+        let amtFee = amt.add(fee);
+
+
+        // EXPORT
+        let pId = pChain.getBlockchainID();
+        let xId = avm.getBlockchainID();
+        let txId;
+        if(sourceChain === 'X'){
+            let keychain = this.getKeyChain();
+            let toAddress = this.platformHelper.getCurrentAddress();
+            let xChangeAddr = this.internalHelper.getCurrentAddress();
+            let fromAddrs = keychain.getAddressStrings();
+
+            let exportTx = await avm.buildExportTx(
+                this.utxoset,
+                amtFee,
+                pId,
+                [toAddress],
+                fromAddrs,
+                [xChangeAddr]
+            );
+            let tx = exportTx.sign(keychain);
+            txId = await avm.issueTx(tx);
+        }else if(sourceChain === 'P'){
+            let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+            let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+            let toAddress = this.externalHelper.getCurrentAddress();
+            let pChangeAddr = this.platformHelper.getCurrentAddress();
+            let fromAddrs = keychain.getAddressStrings();
+
+
+            let exportTx = await pChain.buildExportTx(
+                utxoSet,
+                amtFee,
+                xId,
+                [toAddress],
+                fromAddrs,
+                [pChangeAddr]
+            );
+            let tx = exportTx.sign(keychain);
+            txId = await pChain.issueTx(tx);
+        }else{
+            throw 'Invalid source chain.'
+        }
+
+        // console.log("Export Success: ",txId)
+        return txId;
+    }
+
+
+    async importToPlatformChain(){
+        await this.platformHelper.updateHdIndex();
+        const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
+        let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        let pAddrs = keyChain.getAddressStrings();
+        // Owner addresses, the addresses we exported to
+        let pToAddr = this.platformHelper.getCurrentAddress();
+
+        const unsignedTx = await pChain.buildImportTx(
+            utxoSet,
+            pAddrs,
+            avm.getBlockchainID(),
+            [pToAddr],
+            [pToAddr],
+            [pToAddr],
+            undefined,
+            undefined,
+
+        );
+        const tx = unsignedTx.sign(keyChain);
+        const txid: string = await pChain.issueTx(tx);
+
+        // Update UTXOS
+        setTimeout(async () => {
+            await this.getUTXOs()
+        },3000);
+
+        return txid;
+    }
+
+    async importToXChain(){
+        const utxoSet = await this.externalHelper.getAtomicUTXOs() as AVMUTXOSet;
+        let keyChain = this.getKeyChain() as AVMKeyChain;
+        let xAddrs = keyChain.getAddressStrings();
+        let xToAddr = this.externalHelper.getCurrentAddress();
+
+        // Owner addresses, the addresses we exported to
+        const unsignedTx = await avm.buildImportTx(
+            utxoSet,
+            xAddrs,
+            pChain.getBlockchainID(),
+            [xToAddr],
+            [xToAddr],
+            [xToAddr],
+        );
+        const tx = unsignedTx.sign(keyChain);
+        const txid: string = await avm.issueTx(tx);
+
+        // // Update UTXOS
+        setTimeout(async () => {
+            await this.getUTXOs()
+        },3000);
+
+        return txid;
+    }
 
     async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
         // TODO: Get new change index.
@@ -212,7 +420,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 return 0;
             });
 
-            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, utxoIds);
+            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, fromAddrs, utxoIds);
 
             let rawTx = unsignedTx.getTransaction();
             let outsNft = rawTx.getOuts()

@@ -12,7 +12,7 @@
 
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
-    import {AVMKeyChain, AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import AvaHdWallet from "@/js/AvaHdWallet";
     import {getPreferredHRP} from "avalanche/dist/utils";
 

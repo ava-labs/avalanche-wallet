@@ -67,7 +67,7 @@
     import {bintools, keyChain} from "@/AVA";
     import AvaAsset from "@/js/AvaAsset";
     import {AssetsDict} from "@/store/modules/assets/types";
-    import {AmountOutput, AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {AmountOutput, KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
     import AvaHdWallet from "@/js/AvaHdWallet";

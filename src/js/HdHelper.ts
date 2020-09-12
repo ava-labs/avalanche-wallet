@@ -1,10 +1,10 @@
-import {AVMKeyChain, AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
+import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
 import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
 import {getPreferredHRP} from "avalanche/dist/utils";
-import {ava, avm, pChain} from "@/AVA";
+import {ava, avm, bintools, pChain} from "@/AVA";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
-import {PlatformVMKeyChain, PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
@@ -92,7 +92,9 @@ class HdHelper {
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
-        let addrs: Buffer[] = this.keyChain.getAddresses();
+        await this.updateHdIndex()
+
+        let addrs: string[] = this.keyChain.getAddressStrings();
         let result: AVMUTXOSet|PlatformUTXOSet;
 
         if(this.chainId==='X'){
@@ -101,6 +103,7 @@ class HdHelper {
             result = await pChain.getUTXOs(addrs);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
+
 
 
         // If the hd index is full, increment
@@ -112,6 +115,38 @@ class HdHelper {
             this.incrementIndex();
         }
         return result;
+    }
+
+
+    async getAtomicUTXOs(){
+        let addrs: string[] = this.keyChain.getAddressStrings();
+        // console.log(avm.getBlockchainID());
+        if(this.chainId === 'P'){
+            let result: PlatformUTXOSet = await pChain.getUTXOs(addrs, avm.getBlockchainID());
+            return result;
+        }else{
+            let result: AVMUTXOSet = await avm.getUTXOs(addrs, pChain.getBlockchainID());
+            return result;
+        }
+
+
+        // if(this.chainId==='X'){
+        //     result = await avm.getUTXOs(addrs);
+        // }else{
+        //     result = await pChain.getUTXOs(addrs);
+        // }
+        // this.utxoSet = result; // we can use local copy of utxos as cache for some functions
+
+
+        // If the hd index is full, increment
+        // let currentKey = this.getCurrentKey();
+        // let currentAddr = currentKey.getAddress();
+        // let curentUtxos = result.getUTXOIDs([currentAddr])
+        //
+        // if(curentUtxos.length>0){
+        //     this.incrementIndex();
+        // }
+        // return result;
     }
 
     getUtxos(): AVMUTXOSet|PlatformUTXOSet{
@@ -191,7 +226,7 @@ class HdHelper {
 
         }
 
-        let addrs: Buffer[] = tempKeychain.getAddresses();
+        let addrs: string[] = tempKeychain.getAddressStrings();
         let utxoSet;
 
         if(this.chainId==='X'){
@@ -206,8 +241,9 @@ class HdHelper {
             let gapSize: number = 0;
             for(let n:number=0;n<INDEX_RANGE;n++) {
                 let scanIndex: number = i + n;
-                let addr: Buffer = addrs[scanIndex];
-                let addrUTXOs: string[] = utxoSet.getUTXOIDs([addr]);
+                let addr: string = addrs[scanIndex];
+                let addrBuf = bintools.parseAddress(addr, this.chainId);
+                let addrUTXOs: string[] = utxoSet.getUTXOIDs([addrBuf]);
                 if(addrUTXOs.length === 0){
                     gapSize++
                 }else{
@@ -223,6 +259,18 @@ class HdHelper {
             }
         }
         return await this.findAvailableIndex(start+SCAN_RANGE)
+    }
+
+    // Returns the key of the first index that has no utxos
+    getFirstAvailableKey(){
+        for(var i=0; i<this.hdIndex; i++){
+            let key = this.getKeyForIndex(i);
+            let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
+            if(utxoIds.length === 0){
+                return key;
+            }
+        }
+        return this.getCurrentKey();
     }
 
     getCurrentKey():AVMKeyPair|PlatformVMKeyPair {
