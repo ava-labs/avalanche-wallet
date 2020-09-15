@@ -1,7 +1,7 @@
 <template>
     <div class="list_row">
         <p style="text-align: center;">{{index}}</p>
-        <p class="col_addr">{{keyPair.getAddressString()}}</p>
+        <p class="col_addr">{{address}}</p>
         <div class="col_bal">
             <p v-for="(bal, assetId) in balance" :key="assetId">
                 {{bal.toLocaleString(assetsDict[assetId].denomination)}}
@@ -19,7 +19,8 @@
     @Component
     export default class HdDerivationListRow extends Vue{
         @Prop() index!: number;
-        @Prop() keyPair!:AVMKeyPair;
+        // @Prop() keyPair!:AVMKeyPair;
+        @Prop() address!: string;
         @Prop() balance!:{[key:string]: Big};
 
 

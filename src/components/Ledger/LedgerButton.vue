@@ -67,6 +67,12 @@
             onerror(err){
                 this.isLoading = false;
                 console.error(err);
+
+                this.$store.dispatch('Notifications/add', {
+                    type: 'error',
+                    title: 'Ledger Access Failed',
+                    message: "Failed to get public key from ledger device."
+                });
             }
         }
     }

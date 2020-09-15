@@ -8,7 +8,7 @@ import Network from './modules/network/network';
 import Notifications from './modules/notifications/notifications';
 import History from './modules/history/history';
 import Platform from './modules/platform/platform';
-
+import Ledger from './modules/ledger/ledger';
 import {
     RootState,
     IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput, IWalletNftDict
@@ -42,7 +42,8 @@ export default new Vuex.Store({
         Notifications,
         Network,
         History,
-        Platform
+        Platform,
+        Ledger
     },
     state: {
         walletType: null,
