@@ -437,12 +437,8 @@ export default class AvaHdWallet implements IAvaHdWallet{
             let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
             unsignedTx = new UnsignedTx(baseTx);
         }
-        // const msg:Buffer = Buffer.from(createHash('sha256').update(unsignedTx.getTransaction().toBuffer()).digest());
-        // console.log(msg.toString('hex'))
         const tx: Tx = unsignedTx.sign(keychain);
 
-        // console.log(tx.toBuffer().toString('hex'))
-        // throw "STOP";
 
         const txId: string = await avm.issueTx(tx);
 
