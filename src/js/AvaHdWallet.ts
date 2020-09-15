@@ -17,17 +17,18 @@ import {
     KeyChain as PlatformVMKeyChain,
     UTXOSet as PlatformUTXOSet
 } from "avalanche/dist/apis/platformvm";
+
 import {
     getPreferredHRP
 } from "avalanche/dist/utils";
 
 
 import * as bip39 from "bip39";
+import {BN} from 'avalanche';
 import {ava, avm, bintools, pChain} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/IAvaHdWallet";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
-import BN from "bn.js";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {HdHelper} from "@/js/HdHelper";
 import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
@@ -96,6 +97,11 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
+    getDerivedAddresses(): string[] {
+        let internal = this.internalHelper.getAllDerivedAddresses();
+        let external = this.externalHelper.getAllDerivedAddresses();
+        return internal.concat(external);
+    }
 
     async getUTXOs(): Promise<AVMUTXOSet>{
         let setInternal = await this.internalHelper.updateUtxos() as AVMUTXOSet;
@@ -126,11 +132,10 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
-    async getStake(){
+    async getStake(): Promise<BN>{
         let keyChain = this.platformHelper.keyChain;
         let addrs = keyChain.getAddressStrings();
-        let res = await pChain.getStake(addrs);
-        this.stakeAmount = res;
+        return  pChain.getStake(addrs);
     }
 
     // Scan internal indices and find a spot with no utxo
@@ -139,7 +144,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
 
-    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number=0, rewardAddress?: string){
+    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number=0, rewardAddress?: string): Promise<string>{
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
         let pAddressStrings = keychain.getAddressStrings();
@@ -172,14 +177,15 @@ export default class AvaHdWallet implements IAvaHdWallet{
         let tx = unsignedTx.sign(keychain);
         console.log(unsignedTx);
         // return ;
-        let txId = await pChain.issueTx(tx);
+        // let txId = await pChain.issueTx(tx);
 
         // Update UTXOS
         setTimeout(async () => {
             this.getUTXOs()
         },3000);
+        return pChain.issueTx(tx);
 
-        return txId;
+        // return txId;
     }
 
     getPlatformRewardAddress(): string{
@@ -187,7 +193,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
     }
 
     // Delegates AVAX to the given node ID
-    async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string){
+    async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string): Promise<string>{
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
         let pAddressStrings = keychain.getAddressStrings();
@@ -216,17 +222,15 @@ export default class AvaHdWallet implements IAvaHdWallet{
             [rewardAddress], // reward address
         );
         const tx =  unsignedTx.sign(keychain);
-        let txId = await pChain.issueTx(tx);
         // Update UTXOS
         setTimeout(async () => {
             this.getUTXOs()
         },3000);
 
-
-        return txId;
+        return  pChain.issueTx(tx);
     }
 
-    async chainTransfer(amt: BN, sourceChain: string = 'X'){
+    async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string>{
         let fee = avm.getFee();
         let amtFee = amt.add(fee);
 
@@ -250,7 +254,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 [xChangeAddr]
             );
             let tx = exportTx.sign(keychain);
-            txId = await avm.issueTx(tx);
+            return  avm.issueTx(tx);
         }else if(sourceChain === 'P'){
             let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet;
@@ -268,17 +272,16 @@ export default class AvaHdWallet implements IAvaHdWallet{
                 [pChangeAddr]
             );
             let tx = exportTx.sign(keychain);
-            txId = await pChain.issueTx(tx);
+            return  pChain.issueTx(tx);
         }else{
             throw 'Invalid source chain.'
         }
 
         // console.log("Export Success: ",txId)
-        return txId;
     }
 
 
-    async importToPlatformChain(){
+    async importToPlatformChain(): Promise<string>{
         await this.platformHelper.updateHdIndex();
         const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
         let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
@@ -298,14 +301,13 @@ export default class AvaHdWallet implements IAvaHdWallet{
 
         );
         const tx = unsignedTx.sign(keyChain);
-        const txid: string = await pChain.issueTx(tx);
 
         // Update UTXOS
         setTimeout(async () => {
             await this.getUTXOs()
         },3000);
 
-        return txid;
+        return  pChain.issueTx(tx);
     }
 
     async importToXChain(){
@@ -324,14 +326,13 @@ export default class AvaHdWallet implements IAvaHdWallet{
             [xToAddr],
         );
         const tx = unsignedTx.sign(keyChain);
-        const txid: string = await avm.issueTx(tx);
 
         // // Update UTXOS
         setTimeout(async () => {
             await this.getUTXOs()
         },3000);
 
-        return txid;
+        return avm.issueTx(tx);
     }
 
     async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
@@ -457,7 +458,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         return txId;
     }
 
-    // returns a keychain that has all the derived private keys
+    // returns a keychain that has all the derived private/public keys for X chain
     getKeyChain(): AVMKeyChain{
         let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
         let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[];

@@ -1,7 +1,7 @@
 <template>
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet ref="print_modal"></paper-wallet>
+        <paper-wallet ref="print_modal" v-if="walletType!=='ledger'"></paper-wallet>
         <MainnetAddressModal ref="mainnet_modal"></MainnetAddressModal>
         <p class="addr_info">{{warningText}}</p>
         <div class="bottom">
@@ -15,7 +15,7 @@
                     <div class="buts">
                         <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
-                        <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
+                        <button v-if="walletType!=='ledger'" :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
                         <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
                     </div>
                 </div>
@@ -33,6 +33,9 @@
     import QRCode from "qrcode";
     import MainnetAddressModal from "@/components/modals/MainnetAddressModal.vue";
     import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {WalletType} from "@/store/types";
+    import AvaHdWallet from "@/js/AvaHdWallet";
+    import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
 
     @Component({
         components: {
@@ -74,13 +77,21 @@
             //@ts-ignore
             return this.$root.theme === 'day';
         }
+
+        get walletType(): WalletType{
+            return this.$store.state.walletType;
+        }
+
         get address(){
-            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
-            if(!activeKey){
+            let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
+
+
+            // let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!wallet){
                 return '-'
             }
             // return this.$store.state.address;
-            return activeKey.getAddressString();
+            return wallet.getCurrentAddress();
         }
 
         get warningText():string{

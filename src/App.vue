@@ -5,6 +5,7 @@
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <RememberWalletModal></RememberWalletModal>
+                    <LedgerBlock ref="ledger_block"></LedgerBlock>
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
@@ -18,9 +19,11 @@
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
     import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
+    import LedgerBlock from "@/components/modals/LedgerBlock";
 
     export default {
         components: {
+            LedgerBlock,
             RememberWalletModal,
             Navbar,
             Notifications,

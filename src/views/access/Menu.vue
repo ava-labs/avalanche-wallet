@@ -73,7 +73,7 @@ hr {
     font-size: main.$s-size;
 
     &:hover {
-        transform: translateY(-5px);
+        //transform: translateY(-5px);
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
     }
 

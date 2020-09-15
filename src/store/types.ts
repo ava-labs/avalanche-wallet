@@ -6,15 +6,20 @@ import AvaHdWallet from "@/js/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {KeyFile} from "@/js/IKeystore";
 import {UTXO} from "avalanche/dist/apis/avm";
+import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
 
 export interface RootState {
+    walletType: null|WalletType,
     isAuth: boolean,
-    activeWallet: null|AvaHdWallet
-    wallets: AvaHdWallet[]
+    activeWallet: null|AvaHdWallet|LedgerWallet
+    wallets: (LedgerWallet|AvaHdWallet)[] // TODO: these should not co exist
     address: String|null
     volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
 }
+
+
+export type WalletType = "mnemonic" | "ledger"
 
 interface Modal {
     open(): void,
