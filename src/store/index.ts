@@ -9,6 +9,7 @@ import Notifications from './modules/notifications/notifications';
 import History from './modules/history/history';
 import Platform from './modules/platform/platform';
 import Ledger from './modules/ledger/ledger';
+
 import {
     RootState,
     IssueBatchTxInput, IWalletBalanceDict, IWalletAssetsDict, ImportKeyfileInput, ExportWalletsInput, IWalletNftDict

@@ -29,26 +29,26 @@
         },
         watch: {
             isLoading(val){
-                // if(val){
-                //     this.$refs.ledger_block.open();
-                // }else{
-                //     this.$refs.ledger_block.close();
-                // }
+                if(val){
+                    this.$store.commit("Ledger/openModal", {
+                        title: "Get extended public key",
+                        info: "44'/9000'/0'"
+                    });
+                }else{
+                    this.$store.commit("Ledger/closeModal");
+                }
             }
+        },
+        destroyed() {
+            this.$store.commit("Ledger/closeModal");
         },
         methods:{
             async submit(){
-                // let transport = await TransportNodeHid.create();
-                // let wallet = new LedgerWallet(transport)
                 this.isLoading = true;
 
                 try{
                     let transport = await TransportU2F.create()
                     let app = new AppAvax(transport);
-
-                    // This is a dummy key for testing
-                    // This key is ledger  m/44'/9000'/0'/0
-                    // let pubKeyStr = "xpub661MyMwAqRbcExL37Rz8w2Pe7LhLhj4bZPfK8vLuQSMTXj1zfoGTenTF1n7aWP2x2dmRSjmoy69vcdydraE3PC5UZpZNFSrZdTRrGQZXVy5";
                     let wallet = await LedgerWallet.fromApp(app);
                     try{
                         await this.$store.dispatch('accessWalletLedger', wallet);

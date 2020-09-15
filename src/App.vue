@@ -5,13 +5,13 @@
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <RememberWalletModal></RememberWalletModal>
-                    <LedgerBlock ref="ledger_block"></LedgerBlock>
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
                 </div>
             </template>
         </v-main>
+        <LedgerBlock ref="ledger_block"></LedgerBlock>
         <notifications></notifications>
     </v-app>
 </template>

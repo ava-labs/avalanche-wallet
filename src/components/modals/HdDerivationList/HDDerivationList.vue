@@ -58,7 +58,6 @@
     import HdDerivationListRow from "@/components/modals/HdDerivationList/HdDerivationListRow.vue";
     import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
     import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
-    import {getPreferredHRP} from "avalanche/dist/utils";
 
     @Component({
         components: {
@@ -72,34 +71,18 @@
         addrsInternal: string[] = [];
         addrsPlatform: string[] = [];
 
-        // keysExternal: AVMKeyPair[] = [];
-        // keysInternal: AVMKeyPair[] = [];
-        // keysPlatform: PlatformVMKeyPair[] = [];
-
-
-        // TODO: this is breaking reactivity
-        // @Watch('wallet.hdIndex', {immediate: true})
-        // onIndexChange(){
-        //     this.derivedKeys = this.wallet.getAllDerivedKeys();
-        //     this.derivedKeysInternal = this.wallet.getAllDerivedKeys(true);
-        // }
-
-
         @Watch('wallet.internalHelper.utxoSet', {immediate: true})
         onInternalUtxoChange(){
-            // this.keysInternal = this.wallet.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
             this.addrsInternal = this.wallet.internalHelper.getAllDerivedAddresses();
         }
 
         @Watch('wallet.externalHelper.utxoSet', {immediate: true})
         onExternalUtxoChange(){
-            // this.keysExternal = this.wallet.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
             this.addrsExternal = this.wallet.externalHelper.getAllDerivedAddresses();
         }
 
         @Watch('wallet.platformHelper.utxoSet', {immediate: true})
         onPlatformUtxoChange(){
-            // this.keysPlatform = this.wallet.platformHelper.getAllDerivedKeys() as PlatformVMKeyPair[];
             this.addrsPlatform = this.wallet.platformHelper.getAllDerivedAddresses();
         }
 
@@ -107,40 +90,6 @@
         get assetsDict(){
             return this.$store.state.Assets.assetsDict;
         }
-
-        // get keyBalances(): DerivationListBalanceDict[]{
-        //     let externalBals = this.keyBalancesExternal;
-        //     let internalBals = this.keyBalancesInternal;
-        //
-        //     let sum:DerivationListBalanceDict[] = [];
-        //
-        //     console.log(externalBals, internalBals);
-        //
-        //     for(var i=0;i<externalBals.length;i++){
-        //         let balEx = externalBals[i];
-        //         let balIn = internalBals[i];
-        //
-        //         let joined:DerivationListBalanceDict = {}
-        //
-        //         for(var id in balEx){
-        //             let amt = balEx[id];
-        //             joined[id] = amt;
-        //         }
-        //
-        //         for(id in balIn){
-        //             let amt = balIn[id];
-        //             if(joined[id]){
-        //                 joined[id].add(amt)
-        //             }else{
-        //                 joined[id] = amt;
-        //             }
-        //         }
-        //
-        //         sum.push(joined);
-        //     }
-        //
-        //     return sum;
-        // }
 
         get keyBalancesExternal(): DerivationListBalanceDict[]{
             let wallet = this.wallet;

@@ -13,13 +13,11 @@
 <script lang="ts">
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
-    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import Big from "big.js";
 
     @Component
     export default class HdDerivationListRow extends Vue{
         @Prop() index!: number;
-        // @Prop() keyPair!:AVMKeyPair;
         @Prop() address!: string;
         @Prop() balance!:{[key:string]: Big};
 
