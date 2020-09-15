@@ -96,8 +96,8 @@ class LedgerWallet implements AvaWalletCore{
         let ins = tx.getIns();
 
         const msg:Buffer = Buffer.from(createHash('sha256').update(txbuff).digest());
-        let paths = [];
-        let pathsStr: string[] = [];
+        let paths: string[] = [];
+        // let pathsStr: string[] = [];
 
         // Collect paths, and then ask ledger to sign
         for (let i = 0; i < ins.length; i++) {
@@ -109,15 +109,10 @@ class LedgerWallet implements AvaWalletCore{
                 let hrp = getPreferredHRP(ava.getNetworkID());
                 let srcAddr = bintools.addressToString(hrp, 'X', srcAddrBuf);
                 let pathStr = this.getPathFromAddress(srcAddr); // returns change/index
-                let path = bippath.fromString(pathStr, false)
 
-                if(pathsStr.includes(pathStr)) continue;
-
-                pathsStr.push(pathStr)
-                paths.push(path)
+                paths.push(pathStr)
             }
         }
-
 
         // Open the ledger modal to block view
         try{
@@ -126,7 +121,15 @@ class LedgerWallet implements AvaWalletCore{
                 info: msg.toString('hex').toUpperCase()
             })
 
-            let sigMap = await this.app.signHash(accountPath, paths, msg)
+            let uniquePaths = paths.filter((val: any, i: number) => {
+                return paths.indexOf(val) === i;
+            })
+
+            let bip32Paths = uniquePaths.map(path => {
+                return bippath.fromString(path, false)
+            })
+
+            let sigMap = await this.app.signHash(accountPath, bip32Paths, msg)
             store.commit('Ledger/closeModal')
 
             const sigs:Credential[] = [];
@@ -137,7 +140,7 @@ class LedgerWallet implements AvaWalletCore{
 
                 for (let j = 0; j < sigidxs.length; j++) {
                     let pathIndex = i+j;
-                    let pathStr = paths[pathIndex].toString(true);
+                    let pathStr = paths[pathIndex];
 
                     let sigRaw = sigMap.get(pathStr);
                     let sigBuff = Buffer.from(sigRaw);
@@ -183,8 +186,6 @@ class LedgerWallet implements AvaWalletCore{
         let fromAddrs = fromAddrsStr.map(addrStr => {
             return bintools.parseAddress(addrStr, 'X');
         })
-        // let fromAddrs: Buffer[] = keychain.getAddresses();
-        // let fromAddrsStr: string[] = keychain.getAddressStrings();
         let changeAddr: Buffer = bintools.stringToAddress(this.getChangeAddress());
 
         const AVAX_ID_BUF = await avm.getAVAXAssetID();
@@ -277,36 +278,7 @@ class LedgerWallet implements AvaWalletCore{
             unsignedTx = new UnsignedTx(baseTx);
         }
 
-
-        // Loop each input and sign with the Ledger
-
-        console.log(unsignedTx.toBuffer().toString('hex'))
-
-        // let customRaw = "0000000000000000000461258421397c0235bd6d67812a8b2c1cf33929500a7f6916bb2fc4ac646ac091000000026870b7d66ac32540311379e5b5dbad28ec7eb8ddbfc8f4d67299ebb48475907a00000007000000000000000100000000000000000000000100000001a172b1d4b09c7163dc09b2cb502966f8a7ecdcbf6870b7d66ac32540311379e5b5dbad28ec7eb8ddbfc8f4d67299ebb48475907a00000007000000003b4e7ebf00000000000000000000000100000001731a05fce8a4a4c50e83b1c02459692d8c5a4cc7000000012b945ba90bd7b22d3c5ccc6946881e951d238334a7da8987a38936ffa5accd28000000006870b7d66ac32540311379e5b5dbad28ec7eb8ddbfc8f4d67299ebb48475907a00000005000000003b5dc10000000001000000000000000400000000";
-        // let customTx = new UnsignedTx();
-        // customTx.fromBuffer(Buffer.from(customRaw,'hex'))
-
-        // con
-
         let tx = await this.sign(unsignedTx)
-        // let tx = await this.sign(customTx)
-        console.log(tx);
-
-        // let txRaw = unsignedTx.getTransaction();
-        // let txbuff = txRaw.toBuffer();
-        // const msg:Buffer = Buffer.from(createHash('sha256').update(txbuff).digest());
-        //
-        //
-        // console.log(msg);
-        // console.log(txRaw)
-        // let hash = txRaw.toBuffer();
-        // console.log(hash.toString('hex'))
-        // let tx = await this.sign(msg);
-
-
-        console.log(tx);
-        // let keychain = this.getKeyChain();
-        // const tx: Tx = unsignedTx.sign(keychain);
 
         const txId: string = await avm.issueTx(tx);
 
@@ -318,11 +290,6 @@ class LedgerWallet implements AvaWalletCore{
             this.internalHelper.updateHdIndex()
             this.externalHelper.updateHdIndex()
             this.platformHelper.updateHdIndex()
-
-            // Update UTXOs
-            // this.internalHelper.updateUtxos();
-            // this.externalHelper.updateUtxos();
-            // this.platformHelper.updateUtxos();
         }, 2000)
 
         return txId;
