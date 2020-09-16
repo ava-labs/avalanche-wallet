@@ -61,7 +61,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<StandardTx<any, any, any>>{
 
-        let accountPath = bippath.fromString(`m/44'/9000'/0'`);
+        const accountPath = bippath.fromString(`m/44'/9000'/0'`);
 
         let tx = unsignedTx.getTransaction();
         let txType = tx.getTxType();
@@ -71,6 +71,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
 
         let operations: TransferableOperation[] = []
+
+        // Try to get operations, it will fail if there are non, ignore and continue
         try{
             operations = tx.getOperations();
         }catch (e) {console.error(e)}
@@ -85,14 +87,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
         let chainId = isAVM ? 'X':'P';
 
-        console.log(txType, chainId, items)
+        console.log(txType, chainId, items, operations)
 
         const msg:Buffer = Buffer.from(createHash('sha256').update(txbuff).digest());
         let paths: string[] = [];
 
 
 
-        // Collect paths, and then ask ledger to sign
+        // Collect paths derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
 
@@ -132,6 +134,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         // Open the ledger modal to block view
+        // and ask user to sign with device
         try{
             store.commit('Ledger/openModal',{
                 title: `Sign Hash`,
@@ -174,7 +177,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const cred:Credential = SelectCredentialClass(op.getCredentialID());
 
                 for (let j = 0; j < sigidxs.length; j++) {
-                    let pathIndex = i+j;
+                    let pathIndex = items.length+i+j;
                     let pathStr = paths[pathIndex];
 
                     let sigRaw = sigMap.get(pathStr);
