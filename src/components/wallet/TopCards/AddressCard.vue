@@ -34,8 +34,8 @@
     import MainnetAddressModal from "@/components/modals/MainnetAddressModal.vue";
     import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import {WalletType} from "@/store/types";
-    import AvaHdWallet from "@/js/AvaHdWallet";
-    import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
     @Component({
         components: {

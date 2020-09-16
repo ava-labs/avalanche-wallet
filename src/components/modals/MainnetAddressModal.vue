@@ -13,9 +13,9 @@
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
     import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import {getPreferredHRP} from "avalanche/dist/utils";
-    import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
     import {avm, bintools} from "@/AVA";
 
     @Component({

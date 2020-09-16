@@ -24,7 +24,7 @@ Vue.use(Vuex);
 import router from "@/router";
 
 import { avm, bintools} from "@/AVA";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
 import {UnixNow} from "avalanche/dist/utils";
 import {UTXO, KeyPair as AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
@@ -35,7 +35,7 @@ import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
 import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
-import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
+import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
 export default new Vuex.Store({
     modules:{

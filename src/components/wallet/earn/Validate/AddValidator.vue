@@ -87,7 +87,7 @@ import Big from 'big.js';
 //@ts-ignore
 import { QrInput } from "@avalabs/vue_components";
 import {bintools, pChain} from "@/AVA";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import ConfirmPage from "@/components/wallet/earn/Validate/ConfirmPage.vue";
 import moment from "moment";
 import {calculateStakingReward} from "@/helpers/helper";

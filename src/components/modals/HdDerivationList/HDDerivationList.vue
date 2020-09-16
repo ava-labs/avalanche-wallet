@@ -49,7 +49,7 @@
     import 'reflect-metadata';
     import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import {KeyPair as AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
     import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
     import {ava, bintools} from "@/AVA";
