@@ -35,6 +35,7 @@ import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 import createHash from "create-hash";
 import {HdWalletCore} from "@/js/wallets/HdWalletCore";
 import {WalletType} from "@/store/types";
+import {StandardTx, StandardUnsignedTx} from "avalanche/dist/common";
 
 
 // HD WALLET
@@ -311,5 +312,12 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
             keychain.addKey(allKeys[i]);
         }
         return keychain;
+    }
+
+    sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(unsignedTx: UnsignedTx): Promise<StandardTx<any, any, any>> {
+        let keychain = this.getKeyChain();
+        const tx: Tx = unsignedTx.sign(keychain);
+        let promise = new Promise<StandardTx<any, any, any>>(resolve => tx);
+        return promise;
     }
 }
