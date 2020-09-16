@@ -281,6 +281,19 @@ class HdHelper {
         return this.getCurrentKey();
     }
 
+    // Returns the key of the first index that has no utxos
+    getFirstAvailableAddress(): string{
+        for(var i=0; i<this.hdIndex; i++){
+            let addr = this.getAddressForIndex(i);
+            let addrBuf = bintools.parseAddress(addr,this.chainId);
+            let utxoIds = this.utxoSet.getUTXOIDs([addrBuf]);
+            if(utxoIds.length === 0){
+                return addr;
+            }
+        }
+        return this.getCurrentAddress();
+    }
+
     getCurrentKey():AVMKeyPair|PlatformVMKeyPair {
         let index: number = this.hdIndex;
         return this.getKeyForIndex(index);

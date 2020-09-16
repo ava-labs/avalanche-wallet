@@ -136,7 +136,9 @@ export default class AvaHdWallet implements IAvaHdWallet{
     async getStake(): Promise<BN>{
         let keyChain = this.platformHelper.keyChain;
         let addrs = keyChain.getAddressStrings();
-        return  pChain.getStake(addrs);
+        let res = await pChain.getStake(addrs);
+        this.stakeAmount = res;
+        return res
     }
 
     // Scan internal indices and find a spot with no utxo
@@ -158,7 +160,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         }
 
         // For change address use first available on the platform chain
-        let changeKey = this.platformHelper.getFirstAvailableKey();
+        let changeAddress = this.platformHelper.getFirstAvailableAddress();
 
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
@@ -167,7 +169,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
             pAddressStrings, // from
-            [changeKey.getAddressString()], // change
+            [changeAddress], // change
             nodeID,
             startTime,
             endTime,
@@ -206,7 +208,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         }
 
         // For change address use first available on the platform chain
-        let changeKey = this.platformHelper.getFirstAvailableKey();
+        let changeAddr = this.platformHelper.getFirstAvailableAddress();
 
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
@@ -215,7 +217,7 @@ export default class AvaHdWallet implements IAvaHdWallet{
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
             pAddressStrings,
-            [changeKey.getAddressString()],
+            [changeAddr],
             nodeID,
             startTime,
             endTime,

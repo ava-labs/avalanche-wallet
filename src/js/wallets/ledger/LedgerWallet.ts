@@ -20,9 +20,9 @@ import {AvaWalletCore} from "@/js/IAvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {
     BaseTx,
-    KeyPair,
+    KeyPair, NFTCredential, OperationTx,
     SelectCredentialClass,
-    TransferableInput,
+    TransferableInput, TransferableOperation,
     TransferableOutput,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx
@@ -104,6 +104,15 @@ class LedgerWallet implements AvaWalletCore{
         let txbuff = unsignedTx.toBuffer();
         let ins = tx.getIns();
 
+
+        let operations: TransferableOperation[] = []
+        try{
+            operations = tx.getOperations();
+        }catch (e) {console.error(e)}
+
+        // tx.ge
+        console.log(unsignedTx);
+
         let items = ins;
         // If tx type is 17, sign ImportInputs instead
         if(txType===17 || txType===3){
@@ -117,11 +126,31 @@ class LedgerWallet implements AvaWalletCore{
         let paths: string[] = [];
 
 
+
         // Collect paths, and then ask ledger to sign
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
 
             let sigidxs: SigIdx[] = item.getInput().getSigIdxs();
+            let sources = sigidxs.map(sigidx => sigidx.getSource());
+            let addrs:string[] = sources.map(source => {
+                let hrp = getPreferredHRP(ava.getNetworkID());
+                return  bintools.addressToString(hrp, chainId, source);
+            })
+
+            for (let j = 0; j < addrs.length; j++) {
+                let srcAddr = addrs[j];
+                let pathStr = this.getPathFromAddress(srcAddr); // returns change/index
+
+                console.log(srcAddr);
+                paths.push(pathStr)
+            }
+        }
+
+        // Do the Same for operational inputs, if there are any...
+        for(var i=0;i<operations.length;i++){
+            let op = operations[i];
+            let sigidxs: SigIdx[] = op.getOperation().getSigIdxs();
             let sources = sigidxs.map(sigidx => sigidx.getSource());
             let addrs:string[] = sources.map(source => {
                 let hrp = getPreferredHRP(ava.getNetworkID());
@@ -160,6 +189,24 @@ class LedgerWallet implements AvaWalletCore{
             for (let i = 0; i < items.length; i++) {
                 const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs();
                 const cred:Credential = SelectCredentialClass(items[i].getInput().getCredentialID());
+
+                for (let j = 0; j < sigidxs.length; j++) {
+                    let pathIndex = i+j;
+                    let pathStr = paths[pathIndex];
+
+                    let sigRaw = sigMap.get(pathStr);
+                    let sigBuff = Buffer.from(sigRaw);
+                    const sig:Signature = new Signature();
+                    sig.fromBuffer(sigBuff);
+                    cred.addSignature(sig);
+                }
+                sigs.push(cred);
+            }
+
+            for (let i = 0; i < operations.length; i++) {
+                let op = operations[i].getOperation();
+                const sigidxs: SigIdx[] = op.getSigIdxs();
+                const cred:Credential = SelectCredentialClass(op.getCredentialID());
 
                 for (let j = 0; j < sigidxs.length; j++) {
                     let pathIndex = i+j;
@@ -333,7 +380,6 @@ class LedgerWallet implements AvaWalletCore{
         this.platformHelper.onNetworkChange();
     }
 
-    //TODO
     async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string> {
         let fee = avm.getFee();
         let amtFee = amt.add(fee);
@@ -382,9 +428,43 @@ class LedgerWallet implements AvaWalletCore{
         }
     }
 
-    //TODO
-    delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string): Promise<string> {
-        return Promise.resolve("");
+    async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string): Promise<string> {
+        // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+        let pAddressStrings = this.platformHelper.getAllDerivedAddresses();
+        let stakeAmount = amt;
+
+        // If reward address isn't given use index 0 address
+        if(!rewardAddress){
+            rewardAddress = this.getPlatformRewardAddress();
+        }
+
+        // For change address use first available on the platform chain
+        let changeAddr = this.platformHelper.getFirstAvailableAddress();
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000));
+        let endTime = new BN(Math.round(end.getTime() / 1000));
+
+        const unsignedTx = await pChain.buildAddDelegatorTx(
+            utxoSet,
+            pAddressStrings,
+            [changeAddr],
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress], // reward address
+        );
+
+        const tx = await this.sign<PlatformUnsignedTx>(unsignedTx, false)
+        // const tx =  unsignedTx.sign(keychain);
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        },3000);
+
+        return  pChain.issueTx(tx);
     }
 
     getChangeAddress(): string {
@@ -397,8 +477,9 @@ class LedgerWallet implements AvaWalletCore{
 
     async getStake(): Promise<BN> {
         let addrs = this.platformHelper.getAllDerivedAddresses();
-        return  pChain.getStake(addrs);
-    }
+        let res = await pChain.getStake(addrs);
+        this.stakeAmount = res;
+        return res    }
 
     async importToPlatformChain(): Promise<string> {
         await this.platformHelper.updateHdIndex();
@@ -456,8 +537,46 @@ class LedgerWallet implements AvaWalletCore{
     }
 
     //TODO
-    validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee: number, rewardAddress?: string): Promise<string> {
-        return Promise.resolve("");
+    async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee: number, rewardAddress?: string): Promise<string> {
+        // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+        let pAddressStrings = this.platformHelper.getAllDerivedAddresses();
+
+        let stakeAmount = amt;
+
+        // If reward address isn't given use index 0 address
+        if(!rewardAddress){
+            rewardAddress = this.getPlatformRewardAddress();
+        }
+
+        // For change address use first available on the platform chain
+        let changeAddress = this.platformHelper.getFirstAvailableAddress();
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000));
+        let endTime = new BN(Math.round(end.getTime() / 1000));
+
+        const unsignedTx = await pChain.buildAddValidatorTx(
+            utxoSet,
+            pAddressStrings, // from
+            [changeAddress], // change
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress],
+            delegationFee,
+        );
+
+
+        let tx = await this.sign<PlatformUnsignedTx>(unsignedTx, false);
+        // let tx = unsignedTx.sign(keychain);
+
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        },3000);
+        return pChain.issueTx(tx);
     }
 
 }
