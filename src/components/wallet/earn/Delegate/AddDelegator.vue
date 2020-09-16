@@ -115,7 +115,7 @@ import moment from "moment";
 import {BN} from 'avalanche';
 import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
 import {avm, infoApi, pChain} from "@/AVA";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {calculateStakingReward} from "@/helpers/helper";
 import {ONEAVAX} from "avalanche/dist/utils";
 @Component({

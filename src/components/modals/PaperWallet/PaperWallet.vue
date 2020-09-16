@@ -21,7 +21,7 @@
     import Modal from '../Modal.vue';
 
     import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
     import QRCode from 'qrcode'
     import printjs from 'print-js'

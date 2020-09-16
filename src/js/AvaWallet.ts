@@ -2,9 +2,9 @@
 // @ts-nocheck
 
 import {AVMKeyChain, AVMKeyPair, UTXOSet} from "avalanche";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import AvaSingletonWallet from "@/js/AvaSingletonWallet";
-import {AvaWalletCore, wallet_type} from './IAvaHdWallet';
+import {AvaWalletCore, wallet_type} from './wallets/IAvaHdWallet';
 import {ITransaction} from "@/components/wallet/transfer/types";
 
 // A wrapper class that join HD and Singleton wallets with the ability to switch between.

@@ -13,8 +13,10 @@
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
     import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import {getPreferredHRP} from "avalanche/dist/utils";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
+    import {avm, bintools} from "@/AVA";
 
     @Component({
         components: {
@@ -29,15 +31,17 @@
         }
 
         get address(){
-            let wallet: AvaHdWallet = this.$store.state.activeWallet;
+            let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
             if(!wallet){
                 return '-'
             }
-            let key = wallet.externalHelper.getKeyForIndex(0);
+            let hrp = getPreferredHRP(1)
+            let address = wallet.externalHelper.getAddressForIndex(0);
+            let addrRaw = bintools.parseAddress(address,'X');
+            let addrMainnet = bintools.addressToString(hrp,'X', addrRaw);
 
-            let keychain = new AVMKeyChain(getPreferredHRP(1),'X');
-            let mainnetKey = keychain.importKey(key.getPrivateKey());
-            return mainnetKey.getAddressString();
+
+            return addrMainnet;
         }
 
     }

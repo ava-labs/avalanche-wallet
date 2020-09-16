@@ -3,8 +3,8 @@
             class="addressItem"
             :selected="is_default"
     >
-        <ExportKeys :wallets="[wallet]" ref="export_wallet"></ExportKeys>
-        <mnemonic-phrase ref="modal" :phrase="mnemonicPhrase"></mnemonic-phrase>
+        <ExportKeys v-if="walletType!=='ledger'" :wallets="[wallet]" ref="export_wallet"></ExportKeys>
+        <mnemonic-phrase v-if="walletType!=='ledger'" ref="modal" :phrase="mnemonicPhrase"></mnemonic-phrase>
         <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <div class="rows">
             <div class="header">
@@ -33,10 +33,10 @@
                         <Tooltip  text="HD Addresses" class="row_but" @click.native="showPastAddresses">
                             <fa icon="list-ol"></fa>
                         </Tooltip>
-                        <Tooltip  text="Export Key" class="row_but" @click.native="showExportModal">
+                        <Tooltip  v-if="walletType!=='ledger'" text="Export Key" class="row_but" @click.native="showExportModal">
                             <fa icon="upload"></fa>
                         </Tooltip>
-                        <button @click="showModal">View Key Phrase</button>
+                        <button v-if="walletType!=='ledger'" @click="showModal">View Key Phrase</button>
                     </div>
                 </div>
             </div>
@@ -70,10 +70,12 @@
     import {AmountOutput, KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import Tooltip from '@/components/misc/Tooltip.vue';
 
     import ExportKeys from "@/components/modals/ExportKeys.vue";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
+    import {WalletType} from "@/store/types";
 
 
     interface IKeyBalanceDict{
@@ -90,7 +92,7 @@
     })
     export default class KeyRow extends Vue{
         // @Prop() address!:string;
-        @Prop() wallet!:AvaHdWallet;
+        @Prop() wallet!:AvaHdWallet|LedgerWallet;
         @Prop({default: false}) is_default?:boolean;
 
 
@@ -99,11 +101,12 @@
         }
 
         get walletTitle(){
-            return this.seed.substring(0,4);
+            return this.wallet.externalHelper.getAddressForIndex(0)
+            // return this.seed.substring(0,4);
         }
-        get seed(): string{
-            return this.wallet.seed;
-        }
+        // get seed(): string{
+        //     return this.wallet.seed;
+        // }
         get assetsDict():AssetsDict{
             return this.$store.state.Assets.assetsDict;
         }
@@ -167,8 +170,13 @@
         //     return this.wallet.masterKey;
         // }
 
+        get walletType(): WalletType{
+            return this.$store.state.walletType;
+        }
         get mnemonicPhrase():string{
-            return this.wallet.getMnemonic()
+            if(this.walletType==='ledger') return '?';
+            let wallet = this.wallet as AvaHdWallet;
+            return wallet.getMnemonic()
             // let pk = this.keyPair.getPrivateKey();
             // let hex = pk.toString('hex');
             // let mnemonic = bip39.entropyToMnemonic(hex);
