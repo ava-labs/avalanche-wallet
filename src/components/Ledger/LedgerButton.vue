@@ -8,12 +8,9 @@
 
 </template>
 <script>
-    // import TransportWebHID from "@ledgerhq/hw-transport-webhid";
     import TransportU2F from "@ledgerhq/hw-transport-u2f";
     import Spinner from "@/components/misc/Spinner.vue";
     import LedgerBlock from "@/components/modals/LedgerBlock";
-    // import TransportWebUSB from "@ledgerhq/hw-transport-webusb";
-    // import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
     import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
     import AppAvax from "@obsidiansystems/hw-app-avalanche";
 

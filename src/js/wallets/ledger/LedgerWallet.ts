@@ -389,7 +389,6 @@ class LedgerWallet implements AvaWalletCore{
         let xId = avm.getBlockchainID();
         let txId;
         if(sourceChain === 'X'){
-            // let keychain = this.getKeyChain();
             let toAddress = this.platformHelper.getCurrentAddress();
             let xChangeAddr = this.internalHelper.getCurrentAddress();
             let fromAddrs = this.getDerivedAddresses()
@@ -405,7 +404,6 @@ class LedgerWallet implements AvaWalletCore{
             let tx = await this.sign<AVMUnsignedTx>(exportTx);
             return  avm.issueTx(tx);
         }else if(sourceChain === 'P'){
-            // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet;
             let toAddress = this.externalHelper.getCurrentAddress();
             let pChangeAddr = this.platformHelper.getCurrentAddress();
@@ -526,7 +524,6 @@ class LedgerWallet implements AvaWalletCore{
             [xToAddr],
         );
         let tx = await this.sign<AVMUnsignedTx>(unsignedTx);
-        // const tx = unsignedTx.sign(keyChain);
 
         // // Update UTXOS
         setTimeout(async () => {
@@ -536,7 +533,6 @@ class LedgerWallet implements AvaWalletCore{
         return avm.issueTx(tx);
     }
 
-    //TODO
     async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee: number, rewardAddress?: string): Promise<string> {
         // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
