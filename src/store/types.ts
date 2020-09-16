@@ -2,11 +2,11 @@ import Big from 'big.js';
 import BN from 'bn.js';
 
 import AvaAsset from "@/js/AvaAsset";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {KeyFile} from "@/js/IKeystore";
 import {UTXO} from "avalanche/dist/apis/avm";
-import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
+import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
 export interface RootState {
     walletType: null|WalletType,

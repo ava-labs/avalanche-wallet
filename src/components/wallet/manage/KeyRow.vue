@@ -70,11 +70,11 @@
     import {AmountOutput, KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue';
     import HdDerivationListModal from "@/components/modals/HdDerivationList/HdDerivationListModal.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import Tooltip from '@/components/misc/Tooltip.vue';
 
     import ExportKeys from "@/components/modals/ExportKeys.vue";
-    import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
     import {WalletType} from "@/store/types";
 
 

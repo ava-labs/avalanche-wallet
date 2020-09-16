@@ -47,7 +47,7 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
     import NftCol from './NftCol.vue';
 

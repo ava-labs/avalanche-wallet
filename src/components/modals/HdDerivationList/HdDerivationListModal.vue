@@ -15,7 +15,7 @@
     import Modal from '@/components/modals/Modal.vue';
     // import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     // import CopyText from "@/components/misc/CopyText.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import HDDerivationList from "@/components/modals/HdDerivationList/HDDerivationList.vue";
 
     @Component({

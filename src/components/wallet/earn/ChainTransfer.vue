@@ -64,7 +64,7 @@ import Big from "big.js";
 import AvaAsset from "@/js/AvaAsset";
 import {BN} from "avalanche";
 import {pChain, avm} from "@/AVA";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
 
 @Component({

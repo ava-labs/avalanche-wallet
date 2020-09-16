@@ -1,4 +1,4 @@
-import {wallet_type} from "@/js/IAvaHdWallet";
+import {WalletType} from "@/store/types";
 
 export interface KeyFile{
     salt: string,

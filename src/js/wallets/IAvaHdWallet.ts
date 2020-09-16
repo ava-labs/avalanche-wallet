@@ -2,8 +2,9 @@ import HDKey from 'hdkey';
 import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair, UTXOSet, UTXO} from "avalanche/dist/apis/avm";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {BN} from "avalanche";
+import {WalletType} from "@/store/types";
 
-export type wallet_type = "hd" | "singleton";
+// export type wallet_type = "hd" | "singleton";
 
 export interface IIndexKeyCache{
     [index:number]: AVMKeyPair
@@ -11,7 +12,7 @@ export interface IIndexKeyCache{
 
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
-    // type: wallet_type;
+    type: WalletType;
     chainId: string;
     utxoset: UTXOSet;
     stakeAmount: BN;

@@ -1,5 +1,5 @@
 import {makeKeyfile, readKeyFile} from "../src/js/Keystore";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
 import { Buffer } from 'buffer/';
 import { KeyFile, KeyFileDecrypted } from '../src/js/IKeystore';

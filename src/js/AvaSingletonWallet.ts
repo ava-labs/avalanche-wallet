@@ -1,7 +1,7 @@
 // Depreciated
 // @ts-nocheck
 
-import {IAvaSingletonWallet, wallet_type} from './IAvaHdWallet';
+import {IAvaSingletonWallet, wallet_type} from './wallets/IAvaHdWallet';
 import {
     AVMKeyChain,
     AVMKeyPair, BaseTx, getPreferredHRP,

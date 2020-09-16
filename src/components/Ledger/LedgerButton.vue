@@ -11,7 +11,7 @@
     import TransportU2F from "@ledgerhq/hw-transport-u2f";
     import Spinner from "@/components/misc/Spinner.vue";
     import LedgerBlock from "@/components/modals/LedgerBlock";
-    import {LedgerWallet} from "@/js/wallets/ledger/LedgerWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
     import AppAvax from "@obsidiansystems/hw-app-avalanche";
 
     export default {
