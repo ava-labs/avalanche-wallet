@@ -2,25 +2,18 @@
 //@ts-ignore
 import AppAvax from "@obsidiansystems/hw-app-avalanche";
 
-import * as bip39 from 'bip39';
 import {Buffer, BN} from "avalanche";
 import HDKey from 'hdkey';
 import {ava, avm, bintools, pChain} from "@/AVA";
-var bs58check = require('bs58check')
-const bs58 = require('bs58')
 var bippath = require('bip32-path')
 import createHash from "create-hash";
 import store from '@/store';
 
-import bip32 from 'bip32';
-import {HdHelper} from "@/js/HdHelper";
 import {AssetAmountDestination, UTXO, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm/utxos";
 import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm/utxos";
 import {AvaWalletCore} from "@/js/wallets/IAvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {
-    BaseTx,
-    KeyPair, NFTCredential, OperationTx,
     SelectCredentialClass,
     TransferableInput, TransferableOperation,
     TransferableOutput,
@@ -35,8 +28,6 @@ import {
 
 import {Credential, SigIdx, Signature, StandardTx, StandardUnsignedTx} from "avalanche/dist/common";
 import {getPreferredHRP} from "avalanche/dist/utils";
-import {KeyChain as PlatformVMKeyChain} from "avalanche/dist/apis/platformvm/keychain";
-import {KeyChain as AVMKeyChain} from "avalanche/dist/apis/avm/keychain";
 import {HdWalletCore} from "@/js/wallets/HdWalletCore";
 import {WalletType} from "@/store/types";
 
@@ -351,7 +342,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async importToXChain(): Promise<string> {
         const utxoSet = await this.externalHelper.getAtomicUTXOs() as AVMUTXOSet;
-        // let keyChain = this.getKeyChain() as AVMKeyChain;
         let xAddrs = this.getDerivedAddresses();
         let xToAddr = this.externalHelper.getCurrentAddress();
 
@@ -375,7 +365,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee: number, rewardAddress?: string): Promise<string> {
-        // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses();
 
@@ -407,7 +396,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
 
         let tx = await this.sign<PlatformUnsignedTx>(unsignedTx, false);
-        // let tx = unsignedTx.sign(keychain);
 
         // Update UTXOS
         setTimeout(async () => {

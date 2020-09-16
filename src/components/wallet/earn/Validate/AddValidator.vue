@@ -278,7 +278,7 @@ export default class AddValidator extends Vue{
     }
 
     updateFormData(){
-        this.formNodeId = this.nodeId;
+        this.formNodeId = this.nodeId.trim();
         this.formAmt = this.stakeAmt;
         this.formStart = new Date(this.startDate);
         this.formEnd = new Date(this.endDate);
@@ -362,6 +362,7 @@ export default class AddValidator extends Vue{
 
     onerror(err: any){
         let msg:string = err.message;
+        console.error(err);
 
         if(msg.includes('startTime')){
             this.err = "Start date must be in the future and end date must be after start date."
