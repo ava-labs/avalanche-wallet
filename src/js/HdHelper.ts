@@ -131,7 +131,7 @@ class HdHelper {
 
 
     async getAtomicUTXOs(){
-        let addrs: string[] = this.keyChain.getAddressStrings();
+        let addrs: string[] = this.getAllDerivedAddresses();
         // console.log(avm.getBlockchainID());
         if(this.chainId === 'P'){
             let result: PlatformUTXOSet = await pChain.getUTXOs(addrs, avm.getBlockchainID());
@@ -140,25 +140,6 @@ class HdHelper {
             let result: AVMUTXOSet = await avm.getUTXOs(addrs, pChain.getBlockchainID());
             return result;
         }
-
-
-        // if(this.chainId==='X'){
-        //     result = await avm.getUTXOs(addrs);
-        // }else{
-        //     result = await pChain.getUTXOs(addrs);
-        // }
-        // this.utxoSet = result; // we can use local copy of utxos as cache for some functions
-
-
-        // If the hd index is full, increment
-        // let currentKey = this.getCurrentKey();
-        // let currentAddr = currentKey.getAddress();
-        // let curentUtxos = result.getUTXOIDs([currentAddr])
-        //
-        // if(curentUtxos.length>0){
-        //     this.incrementIndex();
-        // }
-        // return result;
     }
 
     getUtxos(): AVMUTXOSet|PlatformUTXOSet{
