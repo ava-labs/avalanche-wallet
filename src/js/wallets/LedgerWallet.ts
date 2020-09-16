@@ -77,8 +77,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             operations = tx.getOperations();
         }catch (e) {console.error(e)}
 
-        // tx.ge
-        console.log(unsignedTx);
 
         let items = ins;
         // If tx type is 17, sign ImportInputs instead
@@ -87,7 +85,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
         let chainId = isAVM ? 'X':'P';
 
-        console.log(txType, chainId, items, operations)
 
         const msg:Buffer = Buffer.from(createHash('sha256').update(txbuff).digest());
         let paths: string[] = [];
@@ -109,7 +106,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 let srcAddr = addrs[j];
                 let pathStr = this.getPathFromAddress(srcAddr); // returns change/index
 
-                console.log(srcAddr);
                 paths.push(pathStr)
             }
         }
@@ -128,7 +124,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 let srcAddr = addrs[j];
                 let pathStr = this.getPathFromAddress(srcAddr); // returns change/index
 
-                console.log(srcAddr);
                 paths.push(pathStr)
             }
         }
@@ -333,7 +328,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress();
 
-        console.log(utxoSet.getAllUTXOs(), pAddrs, pToAddr)
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
             pAddrs,
