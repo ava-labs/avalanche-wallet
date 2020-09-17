@@ -150,7 +150,7 @@
 <style scoped lang="scss">
     @use '../../../../main';
     .balance_card{
-        display: grid !important;
+        display: grid;
         grid-template-columns: 1fr 230px;
         column-gap: 20px;
     }
@@ -189,7 +189,7 @@
         align-self: center;
     }
     .balance{
-        font-size: 2.4em !important;
+        font-size: 2.4em;
         white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
@@ -241,7 +241,7 @@
     .alt_info{
         display: grid;
         grid-template-columns: repeat(3, max-content);
-        column-gap: 00px;
+        column-gap: 0px;
         > div{
             padding: 0 24px;
             border-right: 2px solid var(--bg-light);
@@ -265,11 +265,34 @@
         padding-left: 20px;
     }
 
+    @include main.medium-device {
+        .balance_card{
+            display: block;
+            //grid-template-columns: 1fr 120px;
+        }
+
+        .balance{
+            font-size: 1.8rem !important;
+        }
+
+        .nft_col{
+            display: none;
+        }
+
+        .alt_info{
+            font-size: 13px
+        }
+    }
+
 
     @include main.mobile-device{
         .balance_card{
             grid-template-columns: none;
             display: block !important;
+        }
+
+        .nft_col{
+            display: none;
         }
 
         .nft_card{
@@ -287,14 +310,7 @@
         .where_info{}
 
         .alt_info{
-            display: none;
-            grid-template-columns: none;
             text-align: left;
-
-            >div{
-                padding: 0;
-                border: none;
-            }
         }
     }
 </style>

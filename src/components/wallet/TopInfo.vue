@@ -27,7 +27,7 @@
         flex-grow: 1;
         color: var(--primary-color);
         flex-shrink: 0;
-        display: flex;
+        //display: flex;
         background-color: var(--bg-wallet-light);
         padding: 12px 20px;
         overflow: hidden;
@@ -107,6 +107,25 @@
     }
 
     @media only screen and (max-width: main.$mobile_width) {
+
+    }
+
+    @include main.medium-device{
+        .top_cards{
+            grid-template-columns: 1fr 320px;
+            //grid-template-columns: none;
+            //grid-template-rows: min-content;
+        }
+        //.balance_card{
+        //    grid-column: unset;
+        //}
+
+        //.addr_card{
+        //    grid-column: unset;
+        //}
+    }
+
+    @include main.mobile-device{
         .top_cards{
             grid-template-columns: none;
             grid-template-rows: min-content;
@@ -125,18 +144,8 @@
         }
     }
 
-    @media only screen and (max-width: main.$width_m) {
-        .top_cards{
-            grid-template-columns: none;
-            grid-template-rows: min-content;
-        }
-        .balance_card{
-            grid-column: unset;
-        }
-
-        .addr_card{
-            grid-column: unset;
-        }
-    }
+    //@media only screen and (max-width: main.$width_m) {
+    //
+    //}
 
 </style>
