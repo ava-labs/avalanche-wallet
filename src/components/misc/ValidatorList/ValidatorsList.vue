@@ -41,10 +41,6 @@ export default class ValidatorsList extends Vue{
     intervalID: any = null;
     @Prop() search!: string;
 
-    updateValidators(){
-        this.$store.dispatch('Platform/update')
-    }
-
     get validators(){
         let res: ValidatorRaw[] = this.$store.getters['Platform/validatorsCleanArray'];
 
@@ -96,16 +92,7 @@ export default class ValidatorsList extends Vue{
         return res;
     }
 
-    created(){
-        this.updateValidators();
-        this.intervalID = setInterval(()=>{
-            this.updateValidators();
-        },15000);
-    }
 
-    destroyed(){
-        clearInterval(this.intervalID);
-    }
 
     onselect(val: ValidatorRaw){
         this.$emit('select', val);

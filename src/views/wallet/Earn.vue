@@ -60,6 +60,7 @@ import UserRewards from "@/components/wallet/earn/UserRewards.vue";
 export default class Earn extends Vue{
     pageNow: any = null;
     subtitle: string = '';
+    intervalID = null;
 
     addValidator(){
         this.pageNow = AddValidator;
@@ -77,6 +78,22 @@ export default class Earn extends Vue{
         this.pageNow = null;
         this.subtitle = '';
     }
+
+    updateValidators(){
+        this.$store.dispatch('Platform/update')
+    }
+
+    created(){
+        this.updateValidators();
+        this.intervalID = setInterval(()=>{
+            this.updateValidators();
+        },15000);
+    }
+
+    destroyed(){
+        clearInterval(this.intervalID);
+    }
+
     get platformUnlocked(): BN{
         return this.$store.getters.walletPlatformBalance;
     }
