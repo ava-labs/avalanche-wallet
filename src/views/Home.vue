@@ -4,8 +4,6 @@
             <b-row>
                 <b-col>
                     <div class="home_wrapper">
-                        <img v-if="$root.theme === 'day'" class="logo" src="@/assets/wallet_logo.svg" />
-                        <img v-else class="logo" src="@/assets/wallet_logo_dark.svg" />
                         <!--            <h1>Our Asset Wallet is Bold and Secure.</h1>-->
                         <h1>Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.</h1>
                         <div class="login_wrapper">
@@ -16,9 +14,9 @@
                                         <img v-else src="@/assets/diamond-primary-night.svg" alt />
                                     </div>
                                     <h2>Welcome Back!</h2>
-                                    <p>You can 'Access' your existing AVAX wallet here.</p>
+                                    <p>'Access' your existing AVAX wallet here.</p>
                                 </header>
-                                <router-link to="/access" class="ava_button button_primary">Access</router-link>
+                                <router-link to="/access" class="ava_button button_primary">Access Wallet</router-link>
                             </div>
                             <div class="login_option">
                                 <header>
@@ -26,8 +24,8 @@
                                         <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                         <img v-else src="@/assets/diamond-secondary-night.svg" alt />
                                     </div>
-                                    <h2>Are you new to Avalanche?</h2>
-                                    <p>'Create' a new wallet to send, receive and SWAP all your assets.</p>
+                                    <h2>New to Avalanche Wallet?</h2>
+                                    <p>'Create' a new wallet to send, receive and swap Avalanche assets.</p>
                                 </header>
                                 <router-link to="/create" class="ava_button button_secondary">Create New Wallet</router-link>
                             </div>
@@ -142,9 +140,16 @@ img {
 }
 
 
+@include main.medium-device{
+    .login_option{
+        padding: 30px 40px !important;
+        p{
+            font-size: 1.4rem !important;
+        }
+    }
+}
 
-
-@media only screen and (max-width: 600px) {
+@include main.mobile-device{
     .auth {
         border-radius: 0;
         box-shadow: none;
@@ -211,5 +216,9 @@ img {
             }
         }
     }
+}
+
+@media only screen and (max-width: 600px) {
+
 }
 </style>

@@ -16,7 +16,7 @@
             </template>
             <template v-else>
                 <router-link to="/access" class="action_but" data-cy="access">Access Wallet</router-link>
-                <router-link to="/create" class="action_but" data-cy="create">Get Started</router-link>
+                <router-link to="/create" class="action_but" data-cy="create">Create New Wallet</router-link>
             </template>
         </div>
 
@@ -47,7 +47,7 @@
                 </template>
                 <template v-else>
                     <router-link to="/access">Access Wallet</router-link>
-                    <router-link to="/create">Get Started</router-link>
+                    <router-link to="/create">Create New Wallet</router-link>
 <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
 <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>

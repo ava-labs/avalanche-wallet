@@ -10,7 +10,7 @@
                                 <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
                                 <img v-else src="@/assets/diamond-secondary-night.svg" alt />
                             </div>
-                            <h1>Generate a new key phrase to use with your wallet.</h1>
+                            <h1>Generate a new key phrase to setup your Avalanche Wallet.</h1>
                             <router-link to="/access" class="link">Already have a wallet?</router-link>
                             <div class="options">
                                 <button class="ava_button but_generate button_secondary" @click="createKey">Generate Key Phrase</button>
@@ -44,22 +44,22 @@
                                         <img src="@/assets/success.svg" alt />
                                     </template>
                                     <header v-if="!isVerified">
-                                        <h1>This is your 24 word key phrase.</h1>
-                                        <p>You will use these words to access your wallet.</p>
+                                        <h1>This is your key phrase.</h1>
+                                        <p>Use these 24 words in sequential order to recover your Avalanche Wallet</p>
                                     </header>
                                     <header v-else>
                                         <h1>Congratulations!</h1>
-                                        <p>It's time to open your Avalanche Wallet.</p>
+                                        <p>It's time to access your Avalanche Wallet.</p>
                                     </header>
                                     <p class="warn" v-if="!isVerified">
                                         <span class="label">Attention!</span>
-                                        <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your wallet. There is no way to recover lost key phrases!</span>
+                                        <span class="description">Store this key phrase in a secure location. Anyone with this key phrase can access your Avalanche Wallet. There is no way to recover lost key phrases.</span>
                                     </p>
                                     <!-- STEP 2a - VERIFY -->
                                     <div class="verify_cont" v-if="!isVerified">
                                         <MnemonicCopied
                                                 v-model="isSecured"
-                                                explain="I wrote down my mnemonic phrase in a secure location."
+                                                explain="I wrote down my key phrase in a secure location."
                                         ></MnemonicCopied>
                                         <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
                                         <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">Verify</button>
