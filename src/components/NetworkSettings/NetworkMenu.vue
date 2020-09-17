@@ -127,7 +127,7 @@
 
         &[testnet]:after{
             position: absolute;
-            content: "NOT MAINNET";
+            content: "TEST";
             background-color: var(--secondary-color);
             color: #fff;
             font-size: 10px;
