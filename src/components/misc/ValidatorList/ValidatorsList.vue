@@ -38,7 +38,6 @@ import {ValidatorRaw, ValidatorDict} from "@/components/misc/ValidatorList/types
     components: {ValidatorRow},
 })
 export default class ValidatorsList extends Vue{
-    intervalID: any = null;
     @Prop() search!: string;
 
     get validators(){

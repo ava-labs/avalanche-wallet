@@ -60,7 +60,7 @@ import UserRewards from "@/components/wallet/earn/UserRewards.vue";
 export default class Earn extends Vue{
     pageNow: any = null;
     subtitle: string = '';
-    intervalID = null;
+    intervalID: any = null;
 
     addValidator(){
         this.pageNow = AddValidator;
