@@ -70,6 +70,13 @@ class HdWalletCore{
         return internal.concat(external);
     }
 
+
+    getExtendedPlatformAddresses(): string[]{
+        let index = this.platformHelper.hdIndex;
+        let addrs = this.platformHelper.getAllDerivedAddresses(index+20);
+        return addrs;
+    }
+
     getCurrentAddress(): string{
         return this.externalHelper.getCurrentAddress();
     }

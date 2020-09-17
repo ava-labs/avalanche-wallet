@@ -1,0 +1,75 @@
+<template>
+    <div v-if="totLength>0">
+        <h2>My Rewards</h2>
+        <div v-if="validators.length > 0">
+            <h4>Validation Rewards</h4>
+            <UserRewardRow v-for="(v, i) in validators" :key="i" :staker="v" class="reward_row"></UserRewardRow>
+        </div>
+        <div v-if="delegators.length > 0">
+            <h4>Delegation Rewards</h4>
+            <UserRewardRow v-for="(d, i) in delegators" :key="i" :staker="d" class="reward_row"></UserRewardRow>
+        </div>
+    </div>
+</template>
+<script lang="ts">
+import "reflect-metadata";
+import { Vue, Component, Prop } from "vue-property-decorator";
+import {AvaWalletCore} from "../../../js/wallets/IAvaHdWallet";
+import {DelegatorRaw, ValidatorRaw} from "@/components/misc/ValidatorList/types";
+import UserRewardRow from "@/components/wallet/earn/UserRewardRow.vue";
+@Component({
+    components:{
+        UserRewardRow
+    }
+})
+export default class UserRewards extends Vue{
+    get userAddresses(){
+        let wallet: AvaWalletCore = this.$store.state.activeWallet;
+        if(!wallet) return [];
+
+        return wallet.getExtendedPlatformAddresses();
+    }
+
+    get validators(): ValidatorRaw[]{
+        let validators: ValidatorRaw[] = this.$store.state.Platform.validators;
+
+        return this.cleanList(validators) as ValidatorRaw[];
+    }
+
+    get delegators(): DelegatorRaw[]{
+        let delegators: DelegatorRaw[] = this.$store.state.Platform.delegators;
+        return this.cleanList(delegators) as DelegatorRaw[];
+    }
+
+    get totLength(){
+        return this.validators.length + this.delegators.length;
+    }
+
+
+    cleanList(list: ValidatorRaw[]|DelegatorRaw[]){
+        let res = list.filter(val => {
+            let rewardAddrs = val.rewardOwner.addresses;
+            let filtered = rewardAddrs.filter(addr => {
+                return this.userAddresses.includes(addr);
+            })
+            return filtered.length > 0;
+        })
+        return res;
+    }
+
+
+    // get allRewards(){
+    //
+    // }
+}
+</script>
+<style scoped lang="scss">
+.reward_row{
+    margin-bottom: 6px;
+}
+
+h4{
+    margin: 12px 0;
+    font-weight: lighter;
+}
+</style>

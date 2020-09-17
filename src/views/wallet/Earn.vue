@@ -28,6 +28,9 @@
                         <v-btn class="button_secondary" data-cy="swap" @click="transfer" depressed small>Transfer</v-btn>
                     </div>
                 </div>
+                <div>
+                    <UserRewards></UserRewards>
+                </div>
             </div>
             <div v-else>
                 <component  :is="pageNow" class="comp" @cancel="cancel"></component>
@@ -43,10 +46,12 @@ import AddValidator from "@/components/wallet/earn/Validate/AddValidator.vue";
 import AddDelegator from "@/components/wallet/earn/Delegate/AddDelegator.vue";
 import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
 import {BN} from "avalanche/dist";
+import UserRewards from "@/components/wallet/earn/UserRewards.vue";
 
 @Component({
     name: "earn",
     components: {
+        UserRewards,
         AddValidator,
         AddDelegator,
         ChainTransfer
