@@ -164,16 +164,16 @@ export default new Vuex.Store({
             return dict;
         },
 
-        walletStakingBalance(state: RootState): BN | null{
+        walletStakingBalance(state: RootState): BN{
             let wallet = state.activeWallet;
-            if(!wallet) return null;
+            if(!wallet) return new BN(0);
 
             return wallet.stakeAmount;
         },
 
-        walletPlatformBalance(state: RootState): BN | null{
+        walletPlatformBalance(state: RootState): BN{
             let wallet = state.activeWallet;
-            if(!wallet) return null;
+            if(!wallet) return new BN(0);
 
             let utxoSet = wallet.platformHelper.utxoSet;
 
@@ -200,16 +200,16 @@ export default new Vuex.Store({
             return amt;
         },
 
-        walletPlatformBalanceLocked(state: RootState): BN | null{
+        walletPlatformBalanceLocked(state: RootState): BN{
             let wallet = state.activeWallet;
-            if(!wallet) return null;
+            if(!wallet) return new BN(0);
 
             let utxoSet = wallet.platformHelper.utxoSet;
 
             let now = UnixNow();
 
             // The only type of asset is AVAX on the P chain
-            let amt = new BN('0');
+            let amt = new BN(0);
 
             let utxos = utxoSet.getAllUTXOs()
             for(var n=0; n<utxos.length; n++) {
@@ -287,18 +287,16 @@ export default new Vuex.Store({
                 let addrNow = state.activeWallet.getCurrentAddress();
                 state.address = addrNow;
             }
-        }
+        },
     },
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
         async accessWallet({state, dispatch, commit}, mnemonic: string): Promise<AvaHdWallet>{
-
             let wallet:AvaHdWallet = await dispatch('addWallet', mnemonic);
             await dispatch('activateWallet', wallet);
 
             state.walletType = "mnemonic";
-            state.isAuth = true;
             dispatch('onAccess');
             return wallet;
         },
@@ -310,9 +308,8 @@ export default new Vuex.Store({
             }
 
             await dispatch('activateWallet', state.wallets[0]);
-
             state.walletType = "mnemonic";
-            state.isAuth = true;
+
             dispatch('onAccess');
         },
 
@@ -320,17 +317,18 @@ export default new Vuex.Store({
             state.wallets = [wallet];
 
             await dispatch('activateWallet', wallet);
-
             state.walletType = "ledger"
-            state.isAuth = true;
 
             dispatch('onAccess');
         },
 
-        onAccess(store){
-            router.push('/wallet');
+        async onAccess(store){
+            store.state.isAuth = true;
+
+            await store.dispatch('Assets/updateAvaAsset');
             store.dispatch('Assets/updateUTXOs');
             store.dispatch('Platform/update');
+            router.push('/wallet');
         },
 
 
@@ -347,6 +345,7 @@ export default new Vuex.Store({
             store.state.isAuth = false;
             store.state.activeWallet = null;
             store.state.address = null;
+            store.state.walletType = null;
 
             await store.dispatch('Assets/onlogout');
             await store.commit('History/clear');
@@ -354,14 +353,9 @@ export default new Vuex.Store({
             router.push('/');
         },
 
-
         async logout(store){
             // Delete keys
             store.dispatch('removeAllKeys');
-            await store.dispatch('Notifications/add', {
-                title: 'Logout',
-                message: 'You have successfully logged out of your wallet.'
-            });
 
             // Clear local storage
             localStorage.removeItem('w');
@@ -370,6 +364,7 @@ export default new Vuex.Store({
             store.state.isAuth = false;
             store.state.activeWallet = null;
             store.state.address = null;
+            store.state.walletType = null;
 
             // Clear Assets
             await store.dispatch('Assets/onlogout');
@@ -377,6 +372,8 @@ export default new Vuex.Store({
 
             router.push('/');
         },
+
+
 
 
         // used with logout
@@ -393,6 +390,7 @@ export default new Vuex.Store({
                 });
             }
 
+            state.wallets = [];
             state.volatileWallets = [];
         },
 

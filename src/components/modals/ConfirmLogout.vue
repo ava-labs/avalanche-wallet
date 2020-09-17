@@ -43,6 +43,10 @@
 
         async submit(){
             await this.$store.dispatch("logout");
+            await this.$store.dispatch('Notifications/add', {
+                title: 'Logout',
+                message: 'You have successfully logged out of your wallet.'
+            });
             this.close();
         }
     }

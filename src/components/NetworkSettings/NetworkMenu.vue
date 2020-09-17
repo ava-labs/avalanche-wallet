@@ -129,7 +129,7 @@
             position: absolute;
             content: "NOT MAINNET";
             background-color: var(--secondary-color);
-            color: var(--primary-color);
+            color: #fff;
             font-size: 10px;
             font-weight: bold;
             padding: 2px 6px;
