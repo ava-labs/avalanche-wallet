@@ -63,10 +63,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let operations: TransferableOperation[] = []
 
-        // Try to get operations, it will fail if there are non, ignore and continue
+        // Try to get operations, it will fail if there are none, ignore and continue
         try{
             operations = tx.getOperations();
-        }catch (e) {console.error(e)}
+        }catch (e) {console.log(e)}
 
 
         let items = ins;

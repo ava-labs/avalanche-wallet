@@ -41,13 +41,14 @@
 
 
                     <div class="checkout">
-                        <ul class="err_list" v-if="errors.length>0">
-                            <li v-for="err in errors" :key="err">{{err}}</li>
+                        <ul class="err_list" v-if="formErrors.length>0">
+                            <li v-for="err in formErrors" :key="err">{{err}}</li>
                         </ul>
                         <template v-if="!isConfirm">
                             <v-btn depressed class="button_primary" color="#4C2E56" :ripple="false" @click="confirm" :disabled="!canSend" block>Confirm</v-btn>
                         </template>
                         <template v-else-if="isConfirm && !isSuccess">
+                            <p class="err">{{err}}</p>
                             <v-btn depressed class="button_primary" color="#4C2E56" :loading="isAjax" :ripple="false" @click="submit" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
                             <v-btn text block small style="margin-top: 20px !important; color: var(--primary-color);" @click="cancelConfirm">Cancel</v-btn>
                         </template>
@@ -99,7 +100,8 @@
         addressIn:string = '';
         orders:ITransaction[] = [];
         nftOrders: UTXO[] = [];
-        errors:string[] = [];
+        formErrors:string[] = [];
+        err = '';
 
         formAddress:string = '';
         formOrders:ITransaction[] = [];
@@ -122,6 +124,7 @@
         }
 
         cancelConfirm(){
+            this.err = '';
             this.formOrders = [];
             this.formNftOrders = [];
             this.formAddress = "";
@@ -137,7 +140,7 @@
         }
 
         formCheck(){
-            this.errors = [];
+            this.formErrors = [];
             let err = [];
 
             let addr = this.addressIn;
@@ -159,7 +162,7 @@
                 err.push('Not a valid address for this network.')
             }
 
-            this.errors = err;
+            this.formErrors = err;
             if(err.length===0){
                 // this.send();
                 return true;
@@ -188,8 +191,8 @@
         }
 
         onsuccess(){
+            this.isAjax = false;
             this.isSuccess = true;
-
             this.clearForm();
 
             this.$store.dispatch('Notifications/add', {
@@ -205,7 +208,9 @@
             }, 3000);
         }
 
-        onerror(){
+        onerror(err: any){
+            this.err = err;
+            this.isAjax = false;
             this.$store.dispatch('Notifications/add', {
                 title: 'Error Sending Transaction',
                 message: 'Failed to send transaction.',
@@ -215,10 +220,9 @@
 
 
         submit(){
-            let parent = this;
             this.isAjax = true;
+            this.err = '';
 
-            // let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders);
             let sumArray: (ITransaction|UTXO)[] = [...this.formOrders, ...this.formNftOrders];
 
             let txList = {
@@ -228,19 +232,12 @@
 
 
             this.$store.dispatch('issueBatchTx', txList).then(res => {
-                parent.isAjax = false;
 
                 console.log(res);
                 this.onsuccess()
                 this.txId = res;
-                // if(res === 'success'){
-                //     this.onsuccess();
-                // }else{
-                //     this.onerror();
-                // }
             }).catch(err => {
-                console.log(err);
-                this.onerror();
+                this.onerror(err);
             });
         }
 
