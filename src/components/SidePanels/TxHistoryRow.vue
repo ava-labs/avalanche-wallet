@@ -28,6 +28,8 @@
     // import {AssetsDict} from "@/store/modules/assets/types";
     // import {AvaNetwork} from "@/js/AvaNetwork";
     import store from '@/store';
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
 
     @Component({
@@ -78,9 +80,16 @@
             return res;
         }
 
+        get addresses(){
+            let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
+            if(!wallet) return [];
+
+            return wallet.getHistoryAddresses();
+        }
+
         // What did I loose?
         get inValues(){
-            let addrs:string[] = store.getters.addresses;
+            let addrs:string[] = this.addresses;
             let addrsRaw = addrs.map(addr => addr.split('-')[1]);
 
             let ins = this.transaction.inputs;
@@ -116,7 +125,7 @@
 
         // what did I gain?
         get outValues(){
-            let addrs:string[] = store.getters.addresses;
+            let addrs:string[] = this.addresses;
             let addrsRaw = addrs.map(addr => addr.split('-')[1]);
             let outs = this.transaction.outputs;
             let res:TransactionValueDict = {}; // asset id -> value dict
