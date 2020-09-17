@@ -14,16 +14,19 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
     import Big from "big.js";
+    import {DerivationListBalanceDict} from "@/components/modals/HdDerivationList/types";
 
     @Component
+
+
     export default class HdDerivationListRow extends Vue{
         @Prop() index!: number;
         @Prop() address!: string;
-        @Prop() balance!:{[key:string]: Big};
+        @Prop() balance!:DerivationListBalanceDict;
 
 
-        get cleanBalance(){
-            let res = {};
+        get cleanBalance(): DerivationListBalanceDict{
+            let res:DerivationListBalanceDict = {};
             for(var bal in this.balance){
                 let balance:Big = this.balance[bal];
                 if(balance.gt(Big(0))){

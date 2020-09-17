@@ -110,7 +110,7 @@ export default new Vuex.Store({
 
         // Creates the asset_id => raw balance dictionary
         walletBalanceDict(state: RootState): IWalletBalanceDict{
-            let wallet:AvaHdWallet|LedgerWallet|null = state.activeWallet;
+            let wallet = state.activeWallet;
 
             if(!wallet) return {};
             if(!wallet.getUTXOSet()) return {};
@@ -265,7 +265,7 @@ export default new Vuex.Store({
         },
 
         addresses(state: RootState): string[]{
-            let wallet: AvaHdWallet|LedgerWallet = state.activeWallet;
+            let wallet = state.activeWallet;
             if(!wallet) return [];
             let addresses = wallet.getDerivedAddresses();
             return addresses;

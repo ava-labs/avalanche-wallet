@@ -22,7 +22,7 @@ const history_module: Module<HistoryState, RootState> = {
     },
     actions: {
         async updateTransactionHistory({state, rootState, rootGetters}){
-            let wallet: AvaHdWallet|LedgerWallet = rootState.activeWallet;
+            let wallet = rootState.activeWallet;
             if(!wallet) return;
 
             // @ts-ignore
