@@ -10,6 +10,7 @@
         <div class="options">
             <router-link to="/access/mnemonic" class="option button_primary">Mnemonic Key Phrase</router-link>
             <router-link to="/access/keystore" class="option button_primary">Keystore File</router-link>
+            <LedgerButton class="option button_primary"></LedgerButton>
 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
         <router-link to="/" class="link">Cancel</router-link>
@@ -18,12 +19,12 @@
 
 <script>
     // import TorusGoogle from "@/components/Torus/TorusGoogle";
+    import LedgerButton from "@/components/Ledger/LedgerButton";
 
     export default {
-        // components: {TorusGoogle},
-        // comments: {
-        //     TorusGoogle
-        // }
+        components: {
+          LedgerButton
+        },
     }
 </script>
 
@@ -56,7 +57,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;
 }
 
@@ -72,7 +73,7 @@ hr {
     font-size: main.$s-size;
 
     &:hover {
-        transform: translateY(-5px);
+        //transform: translateY(-5px);
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
     }
 

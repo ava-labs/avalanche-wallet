@@ -64,7 +64,7 @@ import Big from "big.js";
 import AvaAsset from "@/js/AvaAsset";
 import {BN} from "avalanche";
 import {pChain, avm} from "@/AVA";
-import AvaHdWallet from "@/js/AvaHdWallet";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
 
 @Component({
@@ -177,82 +177,34 @@ export default class ChainTransfer extends Vue{
 
             setTimeout(async () => {
                 let importTxId;
-                if(this.sourceChain === 'X'){
-                    importTxId = await wallet.importToPlatformChain();
-                }else{
-                    importTxId = await wallet.importToXChain();
+                try{
+                    if(this.sourceChain === 'X'){
+                        importTxId = await wallet.importToPlatformChain();
+                    }else{
+                        importTxId = await wallet.importToXChain();
+                    }
+                    this.isLoading = false;
+                    this.$store.dispatch('Notifications/add', {
+                        type: 'success',
+                        title: 'Import Success',
+                        message: `Tokens imported to the ${this.targetChain} chain.`
+                    });
+                    this.onsuccess(exportTxId,importTxId);
+                }catch (e){
+                    this.isImportErr = true;
+                    this.onerror(e);
                 }
-                this.isLoading = false;
-                this.$store.dispatch('Notifications/add', {
-                    type: 'success',
-                    title: 'Import Success',
-                    message: `Tokens imported to the ${this.targetChain} chain.`
-                });
-                this.onsuccess(exportTxId,importTxId);
+
             }, 3000);
 
-            // if(this.sourceChain==='X'){
-            //     // First do the export
-            //     let exportTxId = await wallet.chainTransfer(this.amt,'X')
-            //     await wallet.getUTXOs();
-            //     this.$store.dispatch('Notifications/add', {
-            //         type: 'success',
-            //         title: 'Export Success',
-            //         message: `Tokens exported from the ${this.sourceChain} chain.`
-            //     });
-            //
-            //     setTimeout(async () => {
-            //         try{
-            //             let importTxId = await wallet.importToPlatformChain();
-            //             this.isLoading = false;
-            //             this.$store.dispatch('Notifications/add', {
-            //                 type: 'success',
-            //                 title: 'Import Success',
-            //                 message: `Tokens imported to the ${this.targetChain} chain.`
-            //             });
-            //             this.onsuccess(exportTxId,importTxId);
-            //         }catch(err){
-            //             this.isImportErr = true;
-            //             this.onerror(err);
-            //         }
-            //
-            //     }, 3000);
-            //
-            // }else{
-            //     // First do the export
-            //     let exportTxId = await wallet.chainTransfer(this.amt,'P')
-            //     await wallet.getUTXOs();
-            //     this.$store.dispatch('Notifications/add', {
-            //         type: 'success',
-            //         title: 'Export Success',
-            //         message: 'Transaction id '
-            //     });
-            //
-            //     setTimeout(async () => {
-            //         let importTxId = await wallet.importToXChain();
-            //         this.isLoading = false;
-            //         this.$store.dispatch('Notifications/add', {
-            //             type: 'success',
-            //             title: 'Import Success',
-            //             message: 'Transaction id '+importTxId
-            //         });
-            //         this.onsuccess(exportTxId, importTxId);
-            //     }, 3000)
-            // }
 
         }catch(err){
             this.onerror(err);
-            // this.isLoading = false;
-            // this.err = err;
-            // this.$store.dispatch('Notifications/add', {
-            //     type: 'error',
-            //     title: 'Transfer Failed',
-            //     message: err
-            // });
         }
     }
 
     onerror(err: any){
+        console.error(err);
         this.isLoading = false;
         this.err = err;
         this.$store.dispatch('Notifications/add', {

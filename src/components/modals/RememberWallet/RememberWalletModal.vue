@@ -18,8 +18,6 @@
     import Modal from "../Modal.vue";
     import {KeyFile} from "@/js/IKeystore";
     import {readKeyFile} from "@/js/Keystore";
-    // import {AVMKeyPair} from "avalanche";
-    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
     import {avm} from "@/AVA";
     import {keyToKeypair} from "@/helpers/helper";
     import * as bip39 from "bip39";
@@ -77,19 +75,6 @@
                         let paddedKeyHex = keyHex.padStart(64,'0');
                         let mnemonic:string = bip39.entropyToMnemonic(paddedKeyHex);
 
-                        // There is an edge case that causes an error, handle it
-                        // let mnemonic: string;
-                        // if(keyHex.length===64){
-                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
-                        // }else{
-                        //     let paddedKeyHex = keyHex.padStart(64,'0');
-                        //     mnemonic = bip39.entropyToMnemonic(paddedKeyHex);
-                        // }
-                        // try{
-                        //     mnemonic = bip39.entropyToMnemonic(keyHex);
-                        // }catch(e){
-                        //     mnemonic = bip39.entropyToMnemonic('00'+keyHex);
-                        // }
                         return mnemonic;
                     });
                 }else{
@@ -97,12 +82,6 @@
                     mnemonics = keys.map(key => key.key);
                 }
 
-                // let chainID = avm.getBlockchainAlias() || avm.getBlockchainID();
-                // let inputData:AVMKeyPair[] = keys.map(key => {
-                //     // Remembered private keys do not have the prefix
-                //     let pk = 'PrivateKey-'+key.key;
-                //     return keyToKeypair(pk, chainID);
-                // });
                 await this.$store.dispatch('accessWalletMultiple', mnemonics);
 
                 // These are not volatile wallets since they are loaded from storage

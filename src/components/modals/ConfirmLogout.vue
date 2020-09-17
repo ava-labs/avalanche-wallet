@@ -28,7 +28,7 @@
             CopyText
         }
     })
-    export default class MnemonicPhrase extends Vue{
+    export default class ConfirmLogout extends Vue{
         @Prop({default: ""}) phrase!: string;
 
         open():void{

@@ -11,6 +11,7 @@
                 </div>
             </template>
         </v-main>
+        <LedgerBlock ref="ledger_block"></LedgerBlock>
         <notifications></notifications>
     </v-app>
 </template>
@@ -18,9 +19,11 @@
     import Notifications from '@/components/Notifications';
     import Navbar from './components/Navbar';
     import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
+    import LedgerBlock from "@/components/modals/LedgerBlock";
 
     export default {
         components: {
+            LedgerBlock,
             RememberWalletModal,
             Navbar,
             Notifications,
