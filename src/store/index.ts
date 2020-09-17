@@ -23,7 +23,7 @@ Vue.use(Vuex);
 
 import router from "@/router";
 
-import { avm, bintools} from "@/AVA";
+import {ava, avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
 import {UnixNow} from "avalanche/dist/utils";
@@ -447,6 +447,7 @@ export default new Vuex.Store({
 
             let toAddr = data.toAddress;
             let orders = data.orders;
+
             try{
                 let txId:string = await wallet.issueBatchTx(orders, toAddr);
                 return 'success';

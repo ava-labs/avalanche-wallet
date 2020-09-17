@@ -66,7 +66,7 @@
 
     //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
-    import {avm, isValidAddress} from "../../AVA";
+    import {ava, avm, isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import { UTXO } from "avalanche/dist/apis/avm";
@@ -105,10 +105,19 @@
         formCheck(){
             this.errors = [];
             let err = [];
-            if(!isValidAddress(this.addressIn)){
+
+            let addr = this.addressIn;
+
+            if(!isValidAddress(addr)){
                 err.push('Invalid address.')
             }
 
+
+            // Make sure to address matches the bech32 network hrp
+            let hrp = ava.getHRP();
+            if(!addr.includes(hrp)){
+                err.push('Not a valid address for this network.')
+            }
 
             this.errors = err;
             if(err.length===0){
@@ -199,11 +208,6 @@
 
             if(this.orders.length === 0 && this.nftOrders.length===0) return false;
 
-            // if(((this.orders.length===0 || this.totalTxSize.eq(0)) || this.nftOrders.length>0))
-            //
-            // if(this.addressIn && ((this.orders.length>0 && this.totalTxSize.gt(0)) || this.nftOrders.length>0) ){
-            //     return true;
-            // }
             return true;
         }
         get totalTxSize(){
