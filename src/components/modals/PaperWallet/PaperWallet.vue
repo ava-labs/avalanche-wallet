@@ -105,7 +105,7 @@
             let cont = canv.getContext('2d') as CanvasRenderingContext2D;
 
             // Top Address
-            const wrapChar = 19;
+            const wrapChar = 25;
             let addr = this.address;
             let addr1 = addr.substr(0,wrapChar);
             let addr2 = addr.substr(wrapChar);

@@ -154,15 +154,23 @@
 <style scoped lang="scss">
 @use '../../../main';
 
+$right_pad: 80px;
+
     .table_title{
         display: grid;
         grid-template-columns: 1fr 140px;
+        padding-right: $right_pad;
     }
     .table_title p{
-        margin: 0;
-        font-weight: bold;
-        font-size: 12px;
+        display: block;
         text-align: left;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px 0;
+
+        &:last-of-type{
+            text-align: right;
+        }
     }
     .table_title p:first-of-type{
         flex-grow: 1;
@@ -172,7 +180,7 @@
     .list_item{
         position: relative;
         display: grid;
-        grid-template-columns: 1fr 80px;
+        grid-template-columns: 1fr $right_pad;
         /*flex-direction: column;*/
         margin-bottom: 4px;
         padding: 2px 0px;
@@ -222,7 +230,10 @@
 
 
     .add_asset{
-        margin-top: 16px;
+        width: calc(100% - #{$right_pad});
+        border: 1px dashed var(--primary-color-light);
+        margin-top: 10px;
+        padding: 8px;
         border-radius: 0;
         color: var(--primary-color-light);
         font-size: 14px;

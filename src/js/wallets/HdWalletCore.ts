@@ -60,6 +60,16 @@ class HdWalletCore{
         return internal.concat(external);
     }
 
+    // Returns addresses to check for history
+    getHistoryAddresses(): string[] {
+        let internalIndex = this.internalHelper.hdIndex;
+        let externalIndex  = this.externalHelper.hdIndex;
+
+        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+20);
+        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
+        return internal.concat(external);
+    }
+
     getCurrentAddress(): string{
         return this.externalHelper.getCurrentAddress();
     }
@@ -91,16 +101,16 @@ class HdWalletCore{
             throw "Unable to issue transaction. Ran out of change index.";
         }
 
-        // let keychain = this.getKeyChain();
 
         let fromAddrsStr: string[] = this.getDerivedAddresses();
         let fromAddrs: Buffer[] = fromAddrsStr.map(val => bintools.parseAddress(val, 'X'));
         let changeAddr: Buffer = bintools.stringToAddress(this.getChangeAddress());
 
+        // TODO: use internal asset ID
+        // This does not update on network change, causing issues
         const AVAX_ID_BUF = await avm.getAVAXAssetID();
         const AVAX_ID_STR = AVAX_ID_BUF.toString('hex');
         const TO_BUF = bintools.stringToAddress(addr);
-
 
 
         const aad:AssetAmountDestination = new AssetAmountDestination([TO_BUF], fromAddrs, [changeAddr]);

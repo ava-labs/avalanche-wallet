@@ -1,23 +1,30 @@
 <template>
-    <div>
+    <div class="tx_summary">
         <p v-if="isCollectibleEmpty && isFungibleEmpty">
             Empty
         </p>
         <template v-else>
+            <h4>Assets</h4>
             <div>
-                <p v-for="order in cleanOrders" :key="order.uuid">
-                    {{order.asset.symbol}}
-                    <span class="amt">
-                    {{cleanNum(order.amount, order.asset.denomination)}}
-                    </span>
-                </p>
+                <div v-for="order in cleanOrders" :key="order.uuid" class="fungible_row">
+                    <p>{{order.asset.symbol}}</p>
+                    <p style="color: var(--primary-color);">{{order.asset.name}}</p>
+                    <p style="text-align: right; color: var(--primary-color);">{{cleanNum(order.amount, order.asset.denomination)}}</p>
+                </div>
+<!--                <p v-for="order in cleanOrders" :key="order.uuid" class="fungible_row">-->
+<!--                    {{order.asset.symbol}}-->
+<!--                    <span class="amt">-->
+<!--                    {{cleanNum(order.amount, order.asset.denomination)}}-->
+<!--                    </span>-->
+<!--                </p>-->
             </div>
-            <div class="nfts">
-                <NftCard v-for="order in nftOrders" :utxo="order" :mini="true" :key="order.id"></NftCard>
-            </div>
+            <template v-if="!isCollectibleEmpty">
+                <h4>Collectibles</h4>
+                <div class="nfts">
+                    <NftCard v-for="order in nftOrders" :utxo="order" :mini="true" :key="order.id"></NftCard>
+                </div>
+            </template>
         </template>
-
-
     </div>
 </template>
 <script lang="ts">
@@ -66,26 +73,55 @@
     }
 </script>
 <style scoped lang="scss">
-    p{
-        width: 100%;
-        color: var(--primary-color-light);
-        font-size: 13px;
-        font-family: Helvetica, monospace;
-    }
-    .amt{
-        float: right;
-    }
+.tx_summary{
+    padding-right: 20px;
+}
+.fungible_row{
+    display: grid;
+    grid-template-columns: 50px max-content 1fr;
+    width: 100%;
+    background-color: var(--bg-light);
+    padding: 8px 16px;
+    color: var(--primary-color-light);
+    font-size: 16px;
+    font-family: Helvetica, monospace;
+    margin-bottom: 6px !important;
+}
+.amt{
+    float: right;
+}
 
-    .nfts{
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
+.nfts{
+    display: flex;
+    flex-wrap: wrap;
+    //grid-template-columns: repeat(6, 1fr);
 
-        > div{
-            width: 40px;
-            overflow: auto;
-            border-radius: 3px;
-            height: 40px;
-            background-color: var(--bg-light);
+    $nft_w: 80px;
+    > div{
+        width: $nft_w;
+        overflow: auto;
+        border-radius: 3px;
+        height: $nft_w;
+        background-color: var(--bg-light);
+        margin: 4px;
+
+        &:first-of-type{
+            margin-left: 0;
         }
     }
+}
+h4{
+    display: block;
+    text-align: left;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+label{
+    color: var(--primary-color-light);
+    font-size: 12px;
+    font-weight: bold;
+    margin: 2px 0 !important;
+}
 </style>

@@ -6,22 +6,20 @@
         </div>
         <div class="card_body" v-else>
             <div class="new_order_Form">
-                <div class="lists">
-<!--                    <h4>Fungibles</h4>-->
+                <div class="lists" v-show="!isConfirm">
                     <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                     <template v-if="hasNFT">
-<!--                        <h4>Collectibles - {{nftOrders.length}} Selected</h4>-->
                         <NftList @change="updateNftList" ref="nftList"></NftList>
                     </template>
                 </div>
+                <div v-show="isConfirm" class="lists">
+                    <TxSummary  class="lists" :orders="formOrders" :nft-orders="formNftOrders"></TxSummary>
+                </div>
                 <div>
-                    <div class="to_address">
-                        <label>{{$t('transfer.to')}}</label>
-                        <qr-input v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
-                    </div>
-                    <div class="fees">
-                        <h4>Transaction Summary</h4>
-                        <TxSummary :orders="orders" :nft-orders="nftOrders"></TxSummary>
+                    <div class="to_address" >
+                        <h4>{{$t('transfer.to')}}</h4>
+                        <qr-input v-if="!isConfirm" v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
+                        <p class="confirm_val" v-else>{{formAddress}}</p>
                     </div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
@@ -42,12 +40,23 @@
 <!--                    </div>-->
 
 
-
                     <div class="checkout">
-                        <ul class="err_list" v-if="errors.length>0">
-                            <li v-for="err in errors" :key="err">{{err}}</li>
+                        <ul class="err_list" v-if="formErrors.length>0">
+                            <li v-for="err in formErrors" :key="err">{{err}}</li>
                         </ul>
-                        <v-btn depressed class="button_primary" color="#4C2E56" :loading="isAjax" :ripple="false" @click="formCheck" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
+                        <template v-if="!isConfirm">
+                            <v-btn depressed class="button_primary" color="#4C2E56" :ripple="false" @click="confirm" :disabled="!canSend" block>Confirm</v-btn>
+                        </template>
+                        <template v-else-if="isConfirm && !isSuccess">
+                            <p class="err">{{err}}</p>
+                            <v-btn depressed class="button_primary" color="#4C2E56" :loading="isAjax" :ripple="false" @click="submit" :disabled="!canSend" block>{{$t('transfer.send')}}</v-btn>
+                            <v-btn text block small style="margin-top: 20px !important; color: var(--primary-color);" @click="cancelConfirm">Cancel</v-btn>
+                        </template>
+                        <template v-else-if="isSuccess">
+                            <p style="color: var(--success);"> <fa icon="check-circle"></fa> Transaction Sent </p>
+                            <label style="word-break: break-all;"><b>ID: </b> {{txId}}</label>
+                            <v-btn depressed style="margin-top: 14px;" class="button_primary" color="#4C2E56" :ripple="false" @click="startAgain" block>Start Again</v-btn>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -66,7 +75,7 @@
 
     //@ts-ignore
     import { QrInput } from "@avalabs/vue_components";
-    import {avm, isValidAddress} from "../../AVA";
+    import {ava, avm, isValidAddress} from "../../AVA";
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import { UTXO } from "avalanche/dist/apis/avm";
@@ -91,8 +100,36 @@
         addressIn:string = '';
         orders:ITransaction[] = [];
         nftOrders: UTXO[] = [];
-        errors:string[] = [];
+        formErrors:string[] = [];
+        err = '';
 
+        formAddress:string = '';
+        formOrders:ITransaction[] = [];
+        formNftOrders: UTXO[] = [];
+
+        isConfirm = false;
+        isSuccess = false;
+        txId = "";
+
+        confirm(){
+            let isValid = this.formCheck();
+            if(!isValid) return;
+
+
+            this.formOrders = [...this.orders];
+            this.formNftOrders = [...this.nftOrders];
+            this.formAddress = this.addressIn;
+
+            this.isConfirm = true;
+        }
+
+        cancelConfirm(){
+            this.err = '';
+            this.formOrders = [];
+            this.formNftOrders = [];
+            this.formAddress = "";
+            this.isConfirm = false;
+        }
 
         updateTxList(data:ITransaction[]){
             this.orders = data;
@@ -103,20 +140,44 @@
         }
 
         formCheck(){
-            this.errors = [];
+            this.formErrors = [];
             let err = [];
-            if(!isValidAddress(this.addressIn)){
+
+            let addr = this.addressIn;
+
+            let chain = addr.split('-');
+
+            if(chain[0] !== 'X'){
+                err.push('Invalid address. You can only send to other X addresses.')
+            }
+
+            if(!isValidAddress(addr)){
                 err.push('Invalid address.')
             }
 
 
-            this.errors = err;
+            // Make sure to address matches the bech32 network hrp
+            let hrp = ava.getHRP();
+            if(!addr.includes(hrp)){
+                err.push('Not a valid address for this network.')
+            }
+
+            this.formErrors = err;
             if(err.length===0){
-                this.send();
+                // this.send();
+                return true;
+            }else{
+                return false;
             }
         }
 
-        onsuccess(){
+        startAgain(){
+            this.txId = "";
+            this.isSuccess = false;
+            this.cancelConfirm();
+        }
+
+        clearForm(){
             this.addressIn = "";
             // Clear transactions list
             // @ts-ignore
@@ -127,6 +188,12 @@
                 // @ts-ignore
                 this.$refs.nftList.clear();
             }
+        }
+
+        onsuccess(){
+            this.isAjax = false;
+            this.isSuccess = true;
+            this.clearForm();
 
             this.$store.dispatch('Notifications/add', {
                 title: 'Transaction Sent',
@@ -141,7 +208,9 @@
             }, 3000);
         }
 
-        onerror(){
+        onerror(err: any){
+            this.err = err;
+            this.isAjax = false;
             this.$store.dispatch('Notifications/add', {
                 title: 'Error Sending Transaction',
                 message: 'Failed to send transaction.',
@@ -150,29 +219,25 @@
         }
 
 
-        send(){
-            let parent = this;
+        submit(){
             this.isAjax = true;
+            this.err = '';
 
-            // let sumArray: (ITransaction|UTXO)[] = this.orders.concat(this.nftOrders);
-            let sumArray: (ITransaction|UTXO)[] = [...this.orders, ...this.nftOrders];
+            let sumArray: (ITransaction|UTXO)[] = [...this.formOrders, ...this.formNftOrders];
 
             let txList = {
-                toAddress: this.addressIn,
+                toAddress: this.formAddress,
                 orders: sumArray
             };
 
 
             this.$store.dispatch('issueBatchTx', txList).then(res => {
-                parent.isAjax = false;
 
-                if(res === 'success'){
-                    this.onsuccess();
-                }else{
-                    this.onerror();
-                }
+                console.log(res);
+                this.onsuccess()
+                this.txId = res;
             }).catch(err => {
-                console.log(err);
+                this.onerror(err);
             });
         }
 
@@ -199,11 +264,6 @@
 
             if(this.orders.length === 0 && this.nftOrders.length===0) return false;
 
-            // if(((this.orders.length===0 || this.totalTxSize.eq(0)) || this.nftOrders.length>0))
-            //
-            // if(this.addressIn && ((this.orders.length>0 && this.totalTxSize.gt(0)) || this.nftOrders.length>0) ){
-            //     return true;
-            // }
             return true;
         }
         get totalTxSize(){
@@ -375,9 +435,10 @@
     }
 
     label{
-        color: main.$primary-color-light;
+        color: var(--primary-color-light);
         font-size: 12px;
         font-weight: bold;
+        margin: 2px 0 !important;
     }
 
     .faucet{
@@ -403,6 +464,12 @@
 
     .checkout{
         margin-top: 14px;
+    }
+
+    .confirm_val{
+        background-color: var(--bg-light);
+        word-break: break-all;
+        padding: 8px 16px;
     }
 
     @media only screen and (max-width: 600px) {

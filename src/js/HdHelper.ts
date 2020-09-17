@@ -191,9 +191,9 @@ class HdHelper {
         return set;
     }
 
-    getAllDerivedAddresses(): string[]{
+    getAllDerivedAddresses(limit=this.hdIndex): string[]{
         let res = [];
-        for(var i=0;i<=this.hdIndex;i++){
+        for(var i=0;i<=limit;i++){
             let addr = this.getAddressForIndex(i);
             res.push(addr);
         }

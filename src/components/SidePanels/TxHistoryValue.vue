@@ -28,7 +28,7 @@
             }else if(this.amount===0){
                 return "#999";
             }else{
-                return "#ff2626"
+                return "#d04c4c"
             }
         }
 
@@ -50,7 +50,7 @@
             if(!asset) return this.amount.toString();
 
             let val = Big(this.amount).div(Math.pow(10,asset.denomination));
-            return val.toLocaleString(asset.denomination);
+            return val.toString();
         }
 
         get symbolText(): string{

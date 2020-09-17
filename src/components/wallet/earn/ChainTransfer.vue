@@ -3,7 +3,7 @@
         <div v-if="isImportErr" class="import_err">
             <h2>Import Failed</h2>
             <p>There was a problem importing you tokens into the destination chain. Please try again later by doing another transfer. </p>
-            <v-btn depressed class="button_primary" small @click="$emit('cancel')">Back to Earn</v-btn>
+            <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
         </div>
         <div v-else-if="isSuccess" class="complete">
             <h2>Transfer Completed</h2>
@@ -15,42 +15,51 @@
                 <label>Import Transaction ID:</label>
                 <p>{{importId}}</p>
             </div>
-            <p class="desc">You have successfully transferred between chains.</p>
-            <v-btn depressed class="button_primary" small @click="$emit('cancel')">Back to Earn</v-btn>
+            <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> You have successfully transferred between chains. </p>
+            <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
         </div>
         <div class="form" v-else>
             <div class="chains">
-                <div>
+                <div class="chain_cont">
                     <label>Source Chain</label>
                     <p class="chain">{{sourceChain}}</p>
+                    <div class="chain_info">
+                        <label>Balance</label>
+                        <p>{{balance.toString()}} AVAX</p>
+                    </div>
                 </div>
-                <v-btn icon style="align-self: center;" class="button_primary" @click="switchChain">
-                    <fa icon="exchange-alt"></fa>
+                <v-btn icon style="align-self: center;" class="switch_but button_primary" @click="switchChain">
+                    <fa icon="sync"></fa>
                 </v-btn>
-                <div>
+                <div class="chain_cont">
                     <label>Destination Chain</label>
                     <p class="chain">{{targetChain}}</p>
+                    <div class="chain_info">
+                        <label>Balance</label>
+                        <p>{{destinationBalance.toString()}} AVAX</p>
+                    </div>
                 </div>
             </div>
+            <div v-if="!maxAmt.isZero() || isLoading">
+                <label>Transfer Amount</label>
+                <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
+            </div>
             <div class="meta">
-                <div>
-                    <label>Your Balance</label>
-                    <p style="font-size: 22px;">{{balance.toString()}} AVAX</p>
-                </div>
+<!--                <div>-->
+<!--                    <label>Your Balance</label>-->
+<!--                    <p style="font-size: 22px;">{{balance.toString()}} AVAX</p>-->
+<!--                </div>-->
                 <div>
                     <label>Fee</label>
                     <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
                 </div>
 
             </div>
-            <div v-if="!maxAmt.isZero()">
-                <label>Transfer Amount</label>
-                <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
-            </div>
+
             <div>
                 <p class="err">{{err}}</p>
-                <p v-if="maxAmt.isZero()" class="err">Insufficient funds to create the transactions.</p>
-                <v-btn v-else data-cy="submit" class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
+                <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>
+                <v-btn v-else data-cy="submit" class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading" block>Transfer</v-btn>
             </div>
         </div>
     </div>
@@ -106,16 +115,35 @@ export default class ChainTransfer extends Vue{
         return this.$store.getters.walletPlatformBalanceLocked;
     }
 
+    get avmUnlocked(): BN{
+        if(!this.ava_asset) return new BN(0);
+        return this.ava_asset.amount;
+    }
+
     get balance(): Big{
+        let bal: BN;
         if(this.sourceChain === 'P'){
-            let bal = this.platformUnlocked;
-            let bigBal = Big(bal.toString())
-                bigBal = bigBal.div(Math.pow(10,9))
-            return bigBal;
+            bal = this.platformUnlocked;
         }else{
-            if(!this.ava_asset) return Big(0);
-            return this.ava_asset.getAmount();
+            bal = this.avmUnlocked;
         }
+
+        let bigBal = Big(bal.toString())
+            bigBal = bigBal.div(Math.pow(10,9))
+        return bigBal;
+    }
+
+    get destinationBalance(): Big{
+        let bal: BN;
+        if(this.sourceChain === 'P'){
+            bal = this.avmUnlocked;
+        }else{
+            bal = this.platformUnlocked;
+        }
+
+        let bigBal = Big(bal.toString())
+        bigBal = bigBal.div(Math.pow(10,9))
+        return bigBal;
     }
 
     get fee(): Big{
@@ -238,9 +266,9 @@ export default class ChainTransfer extends Vue{
 <style scoped lang="scss">
 .form{
     justify-self: center;
-    margin: 0px auto;
-    width: max-content;
-    max-width: 420px;
+    margin: 30px auto;
+    width: 100%;
+    max-width: 540px;
     > div{
         margin: 14px 0;
     }
@@ -255,16 +283,27 @@ export default class ChainTransfer extends Vue{
     justify-content: center;
 }
 .chains{
+    position: relative;
     text-align: center;
-    padding: 30px 0;
     display: grid;
-    column-gap: 30px;
-    grid-template-columns: 1fr max-content 1fr;
+    column-gap: 4px;
+    grid-template-columns: 1fr 1fr;
 
-    .v-btn{
-        justify-self: center;
-    }
 }
+
+.chain_cont{
+    background-color: var(--bg-light);
+    padding: 14px;
+}
+
+.switch_but{
+    position: absolute;
+    left: 50%;
+    border: 3px solid var(--bg-wallet-light);
+    transform: translateX(-50%);
+}
+
+
 
 label{
     color: var(--primary-color-light);

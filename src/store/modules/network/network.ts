@@ -6,6 +6,7 @@ import {ava, avm, infoApi} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
+import {getPreferredHRP} from "avalanche/dist/utils";
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,

@@ -168,11 +168,11 @@ export default class AddValidator extends Vue{
         return (new Date(res)).toISOString();
     }
 
-    // 1 year
+    // 2 weeks
     get startDateMax(){
         let startDate = new Date();
-        // add a year
-        let endTime = startDate.getTime() + (60000*60*24*365);
+        // add 2 weeks
+        let endTime = startDate.getTime() + (60000*60*24*14);
         let endDate = new Date(endTime);
         return endDate.toISOString();
     }

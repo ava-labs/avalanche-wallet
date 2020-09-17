@@ -115,6 +115,10 @@
         background-color: var(--bg-light);
         border-radius: 3px;
         margin: 4px;
+
+        &:first-of-type{
+            margin-left: 0;
+        }
     }
 
     .add_but{
