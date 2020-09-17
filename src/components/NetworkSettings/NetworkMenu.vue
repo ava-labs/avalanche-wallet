@@ -1,6 +1,6 @@
 <template>
     <div class="network_menu" :connected="status==='connected'" @keydown.esc="closeMenu">
-        <div class="toggle_but" @click="toggleMenu" :testnet="activeNetwork.networkId!==1">
+        <div class="toggle_but" @click="toggleMenu" :testnet="isTestnet">
             <template v-if="status==='disconnected' || status==='connecting'">
                 <img v-if="$root.theme==='day'" src="@/assets/network_off.png">
                 <img v-else src="@/assets/network_off_night.svg">
@@ -99,7 +99,7 @@
         get isTestnet(): boolean{
             let net = this.activeNetwork;
 
-            if(!net) return true;
+            if(!net) return false;
             if(net.networkId !== 1) return true;
             return false
         }

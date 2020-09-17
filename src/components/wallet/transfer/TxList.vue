@@ -222,7 +222,10 @@
 
 
     .add_asset{
-        margin-top: 16px;
+        width: calc(100% - 80px);
+        border: 1px dashed var(--primary-color-light);
+        margin-top: 10px;
+        padding: 8px;
         border-radius: 0;
         color: var(--primary-color-light);
         font-size: 14px;

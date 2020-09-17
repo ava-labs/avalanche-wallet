@@ -43,6 +43,7 @@ const assets_module: Module<AssetsState, RootState> = {
             state.assetsDict = {};
             state.nftFams = [];
             state.nftFamsDict = {};
+            state.AVA_ASSET_ID = null;
         },
         setIsUpdateBalance(state, val){
             state.isUpdateBalance = val;

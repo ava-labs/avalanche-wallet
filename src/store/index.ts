@@ -450,7 +450,7 @@ export default new Vuex.Store({
 
             try{
                 let txId:string = await wallet.issueBatchTx(orders, toAddr);
-                return 'success';
+                return txId;
             }catch(e) {
                 console.error(e);
                 return 'error';
