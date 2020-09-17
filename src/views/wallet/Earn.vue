@@ -28,9 +28,7 @@
                         <v-btn class="button_secondary" data-cy="swap" @click="transfer" depressed small>Transfer</v-btn>
                     </div>
                 </div>
-                <div>
-                    <UserRewards></UserRewards>
-                </div>
+                <v-btn @click="viewRewards" depressed>My Estimated Rewards</v-btn>
             </div>
             <div v-else>
                 <component  :is="pageNow" class="comp" @cancel="cancel"></component>
@@ -73,6 +71,11 @@ export default class Earn extends Vue{
     transfer(){
         this.pageNow = ChainTransfer;
         this.subtitle = "Cross Chain Transfer"
+    }
+
+    viewRewards(){
+        this.pageNow = UserRewards
+        this.subtitle = "Estimated Rewards";
     }
     cancel(){
         this.pageNow = null;

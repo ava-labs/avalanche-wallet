@@ -10,6 +10,9 @@
             <UserRewardRow v-for="(d, i) in delegators" :key="i" :staker="d" class="reward_row"></UserRewardRow>
         </div>
     </div>
+    <div v-else class="empty">
+        <p>You do not have any pending rewards.</p>
+    </div>
 </template>
 <script lang="ts">
 import "reflect-metadata";
@@ -71,5 +74,9 @@ export default class UserRewards extends Vue{
 h4{
     margin: 12px 0;
     font-weight: lighter;
+}
+
+.empty{
+
 }
 </style>

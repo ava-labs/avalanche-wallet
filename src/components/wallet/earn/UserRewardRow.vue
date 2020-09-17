@@ -99,6 +99,7 @@ export default class UserRewardRow extends Vue{
     border-radius: 4px;
     overflow: hidden;
     font-size: 14px;
+    border: 2px solid var(--bg-light);
 }
 .reward_bar_cont{
     position: relative;
@@ -107,10 +108,14 @@ export default class UserRewardRow extends Vue{
     align-items: center;
     padding: 4px 12px;
     height: 100%;
-    background-color: rgba(0,0,0,0.1);
+    //background-color: rgba(0,0,0,0.1);
 
     p{
         z-index: 1;
+    }
+
+    label{
+        color: var(--primary-color);
     }
 }
 
@@ -132,6 +137,7 @@ export default class UserRewardRow extends Vue{
     text-align: right;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    background-color: var(--bg);
 }
 
 label{
