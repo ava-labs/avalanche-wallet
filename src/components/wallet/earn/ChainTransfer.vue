@@ -43,13 +43,13 @@
                 </div>
 
             </div>
-            <div v-if="!maxAmt.isZero()">
+            <div v-if="!maxAmt.isZero() || isLoading">
                 <label>Transfer Amount</label>
                 <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
             </div>
             <div>
                 <p class="err">{{err}}</p>
-                <p v-if="maxAmt.isZero()" class="err">Insufficient funds to create the transactions.</p>
+                <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>
                 <v-btn v-else data-cy="submit" class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading">Transfer</v-btn>
             </div>
         </div>
