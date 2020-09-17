@@ -103,6 +103,11 @@
         border-radius: 3px;
         height: $nft_w;
         background-color: var(--bg-light);
+        margin: 4px;
+
+        &:first-of-type{
+            margin-left: 0;
+        }
     }
 }
 h4{
