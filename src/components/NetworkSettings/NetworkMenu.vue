@@ -130,12 +130,12 @@
             content: "TEST";
             background-color: var(--secondary-color);
             color: #fff;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
             padding: 2px 6px;
             border-radius: 12px;
-            right: 0;
-            top: 100%;
+            right: -20px;
+            top: -8px;
         }
 
 
