@@ -12,10 +12,6 @@
                 <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
             <div class="alt_info">
-<!--                <div>-->
-<!--                    <label>Available</label>-->
-<!--                    <p>{{balanceText}} AVA</p>-->
-<!--                </div>-->
                 <div>
                     <label>Locked</label>
                     <p>{{balanceTextLocked}} AVAX</p>
