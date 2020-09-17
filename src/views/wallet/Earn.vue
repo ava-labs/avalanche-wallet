@@ -27,8 +27,13 @@
                         <p style="flex-grow: 1">Staking requires AVAX on the P chain. Transfer tokens between X and P.</p>
                         <v-btn class="button_secondary" data-cy="swap" @click="transfer" depressed small>Transfer</v-btn>
                     </div>
+                    <div>
+                        <h4 class="title">Estimated Rewards</h4>
+                        <p style="flex-grow: 1">View staking rewards you will receive.</p>
+                        <v-btn class="button_secondary" data-cy="rewards" @click="viewRewards" depressed small>View Rewards</v-btn>
+                    </div>
                 </div>
-                <v-btn @click="viewRewards" depressed>My Estimated Rewards</v-btn>
+<!--                <v-btn @click="viewRewards" depressed small>View Estimated Rewards</v-btn>-->
             </div>
             <div v-else>
                 <component  :is="pageNow" class="comp" @cancel="cancel"></component>
@@ -133,7 +138,7 @@ export default class Earn extends Vue{
     .options{
         margin: 30px 0;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-gap: 14px;
         //display: flex;
         //justify-content: space-evenly;
@@ -189,6 +194,12 @@ export default class Earn extends Vue{
         margin-top: 14px;
     }
 
+
+    @include main.medium-device{
+        .options{
+            grid-template-columns: 1fr 1fr;
+        }
+    }
 
     @include main.mobile-device{
         .options{

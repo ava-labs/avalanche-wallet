@@ -91,6 +91,8 @@ export default class UserRewardRow extends Vue{
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 .reward_row{
     display: grid;
     grid-template-columns: 1fr 280px;
@@ -137,10 +139,26 @@ export default class UserRewardRow extends Vue{
     text-align: right;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    background-color: var(--bg);
+    border-left: 3px solid var(--bg);
 }
 
 label{
     color: var(--primary-color-light);
+}
+
+@include main.mobile-device{
+    .reward_bar_cont{
+        grid-column: 1/3;
+    }
+
+    .stake_info{
+        grid-column: 1/3;
+        border-left: none;
+        border-top: 3px solid var(--bg);
+
+        > div:first-of-type{
+            text-align: left;
+        }
+    }
 }
 </style>

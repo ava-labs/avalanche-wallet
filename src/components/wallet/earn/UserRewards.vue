@@ -67,8 +67,9 @@ export default class UserRewards extends Vue{
 }
 </script>
 <style scoped lang="scss">
+
 .reward_row{
-    margin-bottom: 6px;
+    margin-bottom: 12px;
 }
 
 h4{
@@ -79,4 +80,6 @@ h4{
 .empty{
 
 }
+
+
 </style>
