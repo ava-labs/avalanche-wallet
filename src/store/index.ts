@@ -265,8 +265,9 @@ export default new Vuex.Store({
         },
 
         addresses(state: RootState): string[]{
-            if(!state.activeWallet) return [];
-            let addresses = state.activeWallet.getDerivedAddresses();
+            let wallet: AvaHdWallet|LedgerWallet = state.activeWallet;
+            if(!wallet) return [];
+            let addresses = wallet.getDerivedAddresses();
             return addresses;
         },
 

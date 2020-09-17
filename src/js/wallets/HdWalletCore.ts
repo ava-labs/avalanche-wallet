@@ -60,6 +60,16 @@ class HdWalletCore{
         return internal.concat(external);
     }
 
+    // Returns addresses to check for history
+    getHistoryAddresses(): string[] {
+        let internalIndex = this.internalHelper.hdIndex;
+        let externalIndex  = this.externalHelper.hdIndex;
+
+        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+20);
+        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
+        return internal.concat(external);
+    }
+
     getCurrentAddress(): string{
         return this.externalHelper.getCurrentAddress();
     }
