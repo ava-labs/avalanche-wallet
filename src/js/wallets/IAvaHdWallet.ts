@@ -21,6 +21,7 @@ export interface AvaWalletCore {
     getCurrentAddress(): string;
     getChangeAddress(): string;
     getDerivedAddresses(): string[];
+    getHistoryAddresses(): string[];
     onnetworkchange(): void;
     getUTXOs(): Promise<UTXOSet>;
     getUTXOSet(): UTXOSet;

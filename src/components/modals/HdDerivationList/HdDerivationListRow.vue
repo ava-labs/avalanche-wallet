@@ -3,7 +3,7 @@
         <p style="text-align: center;">{{index}}</p>
         <p class="col_addr">{{address}}</p>
         <div class="col_bal">
-            <p v-for="(bal, assetId) in balance" :key="assetId">
+            <p v-for="(bal, assetId) in cleanBalance" :key="assetId">
                 {{bal.toLocaleString(assetsDict[assetId].denomination)}}
                 <span>{{assetsDict[assetId].symbol}}</span>
             </p>
@@ -22,6 +22,16 @@
         @Prop() balance!:{[key:string]: Big};
 
 
+        get cleanBalance(){
+            let res = {};
+            for(var bal in this.balance){
+                let balance:Big = this.balance[bal];
+                if(balance.gt(Big(0))){
+                    res[bal] = balance;
+                }
+            }
+            return res;
+        }
 
         get assetsDict(){
             return this.$store.state.Assets.assetsDict;

@@ -1,6 +1,6 @@
 <template>
     <div class="network_menu" :connected="status==='connected'" @keydown.esc="closeMenu">
-        <div class="toggle_but" @click="toggleMenu">
+        <div class="toggle_but" @click="toggleMenu" :testnet="isTestnet">
             <template v-if="status==='disconnected' || status==='connecting'">
                 <img v-if="$root.theme==='day'" src="@/assets/network_off.png">
                 <img v-else src="@/assets/network_off_night.svg">
@@ -95,6 +95,14 @@
         get networks(): AvaNetwork{
             return this.$store.state.Network.networks;
         }
+
+        get isTestnet(): boolean{
+            let net = this.activeNetwork;
+
+            if(!net) return false;
+            if(net.networkId !== 1) return true;
+            return false
+        }
     }
 </script>
 <style scoped lang="scss">
@@ -108,11 +116,26 @@
         display: flex;
         color: var(--primary-color);
         border-radius: 6px;
+        position: relative;
+        align-items: center;
 
         img{
             max-height: 24px;
             object-fit: contain;
             margin-right: 5px;
+        }
+
+        &[testnet]:after{
+            position: absolute;
+            content: "NOT MAINNET";
+            background-color: var(--secondary-color);
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 12px;
+            right: 0;
+            top: 100%;
         }
 
 
