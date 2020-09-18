@@ -21,6 +21,11 @@
                         <qr-input v-if="!isConfirm" v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                         <p class="confirm_val" v-else>{{formAddress}}</p>
                     </div>
+                    <div class="to_address" >
+                        <h4>Memo (Optional)</h4>
+                        <textarea v-if="!isConfirm" class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
+                        <p class="confirm_val" v-else>{{formMemo}}</p>
+                    </div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
                         <p>{{$t('transfer.fee_tx')}} <span>{{txFee.toLocaleString(9)}} AVAX</span></p>
@@ -98,6 +103,7 @@
         showAdvanced:boolean = false;
         isAjax:boolean = false;
         addressIn:string = '';
+        memo: string = "";
         orders:ITransaction[] = [];
         nftOrders: UTXO[] = [];
         formErrors:string[] = [];
@@ -106,6 +112,7 @@
         formAddress:string = '';
         formOrders:ITransaction[] = [];
         formNftOrders: UTXO[] = [];
+        formMemo = "";
 
         isConfirm = false;
         isSuccess = false;
@@ -119,6 +126,7 @@
             this.formOrders = [...this.orders];
             this.formNftOrders = [...this.nftOrders];
             this.formAddress = this.addressIn;
+            this.formMemo = this.memo;
 
             this.isConfirm = true;
         }
@@ -381,6 +389,13 @@
         opacity: 1;
     }
 
+    .memo{
+        background-color: var(--bg-light);
+        resize: none;
+        width: 100%;
+        border-radius: 2px;
+        padding: 4px 12px;
+    }
 
     .radio_buttons{
         margin-top: 15px;
