@@ -28,6 +28,12 @@ const network_module: Module<NetworkState, RootState> = {
             state.status = 'connecting';
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
+
+            // TODO: Remove these constant ids
+            // ava.XChain().refreshBlockchainID('bLTE6Ug1ezC9KGrxBtQwj2jChXX6Yuhbb2LgQTigcsaBZTetC');
+            // ava.PChain().refreshBlockchainID('11111111111111111111111111111111LpoYY');
+            // ava.setHRP('local');
+
             ava.XChain().refreshBlockchainID();
             ava.PChain().refreshBlockchainID();
 
@@ -67,10 +73,12 @@ const network_module: Module<NetworkState, RootState> = {
         async init({state, commit, dispatch}){
             let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
             let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
+            let manhattan = new AvaNetwork("Manhattan",'https://api.avax.network:443', 0, 'X');
 
 
             commit('addNetwork', netTest);
             commit('addNetwork', netLocal);
+            commit('addNetwork', manhattan);
             try{
                 let res = await dispatch('setNetwork', state.networks[0]);
                 return true;

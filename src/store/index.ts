@@ -127,6 +127,9 @@ export default new Vuex.Store({
 
                 // Process only SECP256K1 Transfer Output utxos, outputid === 07
                 let outId = utxo.getOutput().getOutputID();
+
+                console.log(outId,utxo)
+
                 if(outId!==7) continue;
 
                 let utxoOut = utxo.getOutput() as AmountOutput;
@@ -189,6 +192,8 @@ export default new Vuex.Store({
                 let utxoOut = utxo.getOutput() as AmountOutput;
                 let outId = utxoOut.getOutputID();
 
+                console.log(outId,utxo)
+
                 let locktime = utxoOut.getLocktime();
 
                 // Filter out locked tokens
@@ -219,6 +224,33 @@ export default new Vuex.Store({
 
                 // Filter unlocked tokens
                 if(locktime.gt(now)){
+                    amt.iadd(utxoOut.getAmount());
+                }
+            }
+
+            return amt;
+        },
+
+        walletPlatformBalanceLockedStakeable(state: RootState): BN{
+            let wallet = state.activeWallet;
+            if(!wallet) return new BN(0);
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+            let now = UnixNow();
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN(0);
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                let outType = utxoOut.getTypeID();
+                let locktime = utxoOut.getLocktime();
+
+                // Filter unlocked tokens
+                if(locktime.gt(now) && outType===22){
                     amt.iadd(utxoOut.getAmount());
                 }
             }

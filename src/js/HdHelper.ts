@@ -117,7 +117,7 @@ class HdHelper {
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
 
-
+        console.log(result.getAllUTXOs())
         // If the hd index is full, increment
         let currentAddr = this.getCurrentAddress();
         let currentAddrBuf = bintools.parseAddress(currentAddr,this.chainId);
