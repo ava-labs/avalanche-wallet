@@ -34,7 +34,6 @@ const network_module: Module<NetworkState, RootState> = {
             let chainIdP = await  infoApi.getBlockchainID('P');
             // TODO: Remove these constant ids
 
-            console.log(chainIdX, chainIdP);
             ava.XChain().refreshBlockchainID(chainIdX);
             ava.PChain().refreshBlockchainID(chainIdP);
 
