@@ -23,7 +23,7 @@ import {
 } from "avalanche/dist/apis/avm";
 
 import {
-    ImportTx,
+    ImportTx, StakeableLockOut,
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx
 } from "avalanche/dist/apis/platformvm";
@@ -59,6 +59,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction();
         let txType = tx.getTxType();
 
+        console.log(unsignedTx.getTransaction())
+        // console.log(JSON.stringify(unsignedTx.serialize()));
         let txbuff = unsignedTx.toBuffer();
         let ins = tx.getIns();
 
@@ -237,6 +239,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let pId = pChain.getBlockchainID();
         let xId = avm.getBlockchainID();
         let txId;
+
         if(sourceChain === 'X'){
             let toAddress = this.platformHelper.getCurrentAddress();
             let xChangeAddr = this.internalHelper.getCurrentAddress();
@@ -250,6 +253,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 fromAddrs,
                 [xChangeAddr]
             );
+
             let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx);
             return  avm.issueTx(tx);
         }else if(sourceChain === 'P'){
@@ -286,6 +290,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             rewardAddress = this.getPlatformRewardAddress();
         }
 
+        let stakeReturnAddr = this.getPlatformRewardAddress();
+
         // For change address use first available on the platform chain
         let changeAddr = this.platformHelper.getFirstAvailableAddress();
 
@@ -295,6 +301,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
+            [stakeReturnAddr],
             pAddressStrings,
             [changeAddr],
             nodeID,
@@ -306,6 +313,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
         // const tx =  unsignedTx.sign(keychain);
+
+        console.log(tx.serialize());
+        console.log(tx.serialize('display'));
         // Update UTXOS
         setTimeout(async () => {
             this.getUTXOs()
@@ -320,6 +330,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let pAddrs = this.platformHelper.getAllDerivedAddresses();
         // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress();
+
 
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
@@ -380,12 +391,16 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // For change address use first available on the platform chain
         let changeAddress = this.platformHelper.getFirstAvailableAddress();
 
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress();
+
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
+            [stakeReturnAddr],
             pAddressStrings, // from
             [changeAddress], // change
             nodeID,

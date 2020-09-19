@@ -85,6 +85,7 @@
         get balanceTextLocked():string{
             if(this.ava_asset !== null){
                 let denom = this.ava_asset.denomination;
+                // let otherLockedAmt = this.platformLocked.add(this.platformLockedStakeable)
                 let pLocked = Big(this.platformLocked.toString()).div(Math.pow(10,denom))
                 let amt = this.ava_asset.getAmount(true);
                     amt = amt.add(pLocked);
@@ -108,11 +109,15 @@
             return this.$store.getters.walletPlatformBalanceLocked;
         }
 
+        get platformLockedStakeable(): BN{
+            return this.$store.getters.walletPlatformBalanceLockedStakeable;
+        }
+
         get pBalanceText(){
             if(!this.ava_asset) return  '?';
 
             let denom = this.ava_asset.denomination;
-            let bal = this.platformUnlocked;
+            let bal = this.platformUnlocked.add(this.platformLockedStakeable);
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 

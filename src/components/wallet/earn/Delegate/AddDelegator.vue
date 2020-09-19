@@ -202,6 +202,7 @@ export default class AddDelegator extends Vue{
     }
 
     onerror(e: any){
+        console.error(e);
         let msg:string = e.message;
 
         if(msg.includes('startTime')){
@@ -419,7 +420,8 @@ export default class AddDelegator extends Vue{
     get maxAmt(): BN{
         let zero = new BN(0);
 
-        let max = this.platformUnlocked.sub(this.fee)
+        let totAvailable = this.platformUnlocked.add(this.platformLockedStakeable);
+        let max = totAvailable.sub(this.fee)
 
         if(zero.gt(max)) return zero;
         return max;
@@ -437,6 +439,10 @@ export default class AddDelegator extends Vue{
 
     get platformUnlocked(): BN{
         return this.$store.getters.walletPlatformBalance;
+    }
+
+    get platformLockedStakeable(): BN{
+        return this.$store.getters.walletPlatformBalanceLockedStakeable;
     }
 }
 </script>

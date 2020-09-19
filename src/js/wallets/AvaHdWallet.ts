@@ -108,12 +108,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         // For change address use first available on the platform chain
         let changeAddress = this.platformHelper.getFirstAvailableAddress();
 
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress();
+
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
+            [stakeReturnAddr],
             pAddressStrings, // from
             [changeAddress], // change
             nodeID,
@@ -152,12 +156,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         // For change address use first available on the platform chain
         let changeAddr = this.platformHelper.getFirstAvailableAddress();
 
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress();
+
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
+            [stakeReturnAddr],
             pAddressStrings,
             [changeAddr],
             nodeID,
