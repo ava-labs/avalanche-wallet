@@ -59,8 +59,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction();
         let txType = tx.getTxType();
 
-        console.log(unsignedTx.getTransaction())
-        // console.log(JSON.stringify(unsignedTx.serialize()));
         let txbuff = unsignedTx.toBuffer();
         let ins = tx.getIns();
 
@@ -314,6 +312,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
         // const tx =  unsignedTx.sign(keychain);
 
+        console.log(bintools.cb58Encode(tx.toBuffer()));
+
         console.log(tx.serialize());
         console.log(tx.serialize('display'));
         // Update UTXOS
@@ -414,6 +414,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false);
 
+        // console.log(tx.toBuffer().toString('hex'));
+        // console.log((tx.serialize()))
+        // console.log((tx.serialize('display')))
         // Update UTXOS
         setTimeout(async () => {
             this.getUTXOs()

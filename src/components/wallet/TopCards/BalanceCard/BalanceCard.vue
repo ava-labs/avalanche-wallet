@@ -85,8 +85,9 @@
         get balanceTextLocked():string{
             if(this.ava_asset !== null){
                 let denom = this.ava_asset.denomination;
+                let tot = this.platformLocked.add(this.platformLockedStakeable)
                 // let otherLockedAmt = this.platformLocked.add(this.platformLockedStakeable)
-                let pLocked = Big(this.platformLocked.toString()).div(Math.pow(10,denom))
+                let pLocked = Big(tot.toString()).div(Math.pow(10,denom))
                 let amt = this.ava_asset.getAmount(true);
                     amt = amt.add(pLocked);
 
@@ -117,7 +118,7 @@
             if(!this.ava_asset) return  '?';
 
             let denom = this.ava_asset.denomination;
-            let bal = this.platformUnlocked.add(this.platformLockedStakeable);
+            let bal = this.platformUnlocked;
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 

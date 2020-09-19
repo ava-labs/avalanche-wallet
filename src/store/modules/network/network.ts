@@ -7,6 +7,7 @@ import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
 import {getPreferredHRP} from "avalanche/dist/utils";
+import router from "@/router";
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
@@ -30,12 +31,23 @@ const network_module: Module<NetworkState, RootState> = {
             ava.setNetworkID(net.networkId);
 
             // TODO: Remove these constant ids
-            // ava.XChain().refreshBlockchainID('2eNy1mUFdmaxXNj1eQHUe7Np4gju9sJsEtWQ4MX3ToiNKuADed');
-            // ava.PChain().refreshBlockchainID('11111111111111111111111111111111LpoYY');
-            // ava.setHRP('local');
+            ava.XChain().refreshBlockchainID('2eNy1mUFdmaxXNj1eQHUe7Np4gju9sJsEtWQ4MX3ToiNKuADed');
+            ava.PChain().refreshBlockchainID('11111111111111111111111111111111LpoYY');
+            ava.setHRP('local');
 
-            ava.XChain().refreshBlockchainID();
-            ava.PChain().refreshBlockchainID();
+            // ava.XChain().refreshBlockchainID();
+            // ava.PChain().refreshBlockchainID();
+
+            // enter lockdown mode if network id is 0 (Manhattan)
+            if(net.networkId===0){
+                rootState.isMainnetLock = true;
+                router.push('/wallet/mainnet');
+            }else{
+                rootState.isMainnetLock = false;
+                if(state.selectedNetwork?.networkId===0){
+                    router.push('/wallet/');
+                }
+            }
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
@@ -72,13 +84,13 @@ const network_module: Module<NetworkState, RootState> = {
 
         async init({state, commit, dispatch}){
             let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
             let manhattan = new AvaNetwork("Manhattan",'https://api.avax.network:443', 0, 'X');
+            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
 
 
             commit('addNetwork', netTest);
-            commit('addNetwork', netLocal);
             commit('addNetwork', manhattan);
+            commit('addNetwork', netLocal);
             try{
                 let res = await dispatch('setNetwork', state.networks[0]);
                 return true;

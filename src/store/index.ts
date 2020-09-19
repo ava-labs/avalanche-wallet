@@ -34,8 +34,9 @@ import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
-import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 import {LedgerWallet} from "@/js/wallets/LedgerWallet";
+import {NetworkItem} from "@/store/modules/network/types";
+import {AvaNetwork} from "@/js/AvaNetwork";
 
 export default new Vuex.Store({
     modules:{
@@ -47,6 +48,7 @@ export default new Vuex.Store({
         Ledger
     },
     state: {
+        isMainnetLock: false,
         walletType: null,
         isAuth: false,
         activeWallet: null,
@@ -56,6 +58,15 @@ export default new Vuex.Store({
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
     },
     getters: {
+        // isMainnetLock(state: RootState): boolean{
+        //     let net: AvaNetwork = state["Network/selectedNetwork"];
+        //
+        //     if(!net) return false;
+        //     if(net.networkId === 0){
+        //         return true;
+        //     }
+        //     return false;
+        // },
         walletNftUTXOs(state: RootState): UTXO[]{
             let wallet = state.activeWallet;
 

@@ -12,7 +12,7 @@ import Create from "@/views/Create.vue";
 import Wallet from "@/views/Wallet.vue";
 import WalletHome from "@/views/wallet/Portfolio.vue";
 import Earn from "@/views/wallet/Earn.vue";
-
+import Manhattan from "@/views/wallet/Mainnet.vue";
 Vue.use(VueRouter);
 
 
@@ -34,6 +34,16 @@ const ifAuthenticated = (to: Route, from: Route, next: Function) => {
     }
     next('/')
 };
+
+
+
+const ifMainnetNotLock = (to: Route, from: Route, next: Function) => {
+    if(!store.state.isMainnetLock){
+        next();
+        return;
+    }
+    next('/wallet/mainnet')
+}
 
 
 const routes = [
@@ -75,19 +85,28 @@ const routes = [
             {
                 path: '/',
                 name: 'wallet',
-                component: WalletHome
+                component: WalletHome,
+                beforeEnter: ifMainnetNotLock
+
             },
             {
                 path: 'transfer',
-                component: Transfer
+                component: Transfer,
+                beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'keys',
-                component: ManageKeys
+                component: ManageKeys,
+                beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'earn',
-                component: Earn
+                component: Earn,
+                beforeEnter: ifMainnetNotLock
+            },
+            {
+                path: 'mainnet',
+                component: Manhattan,
             }
         ],
         component: Wallet,
