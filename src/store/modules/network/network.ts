@@ -30,12 +30,12 @@ const network_module: Module<NetworkState, RootState> = {
             ava.setNetworkID(net.networkId);
 
             // TODO: Remove these constant ids
-            ava.XChain().refreshBlockchainID('2eNy1mUFdmaxXNj1eQHUe7Np4gju9sJsEtWQ4MX3ToiNKuADed');
-            ava.PChain().refreshBlockchainID('11111111111111111111111111111111LpoYY');
+            // ava.XChain().refreshBlockchainID('2eNy1mUFdmaxXNj1eQHUe7Np4gju9sJsEtWQ4MX3ToiNKuADed');
+            // ava.PChain().refreshBlockchainID('11111111111111111111111111111111LpoYY');
             // ava.setHRP('local');
 
-            // ava.XChain().refreshBlockchainID();
-            // ava.PChain().refreshBlockchainID();
+            ava.XChain().refreshBlockchainID();
+            ava.PChain().refreshBlockchainID();
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
