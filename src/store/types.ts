@@ -9,6 +9,7 @@ import {UTXO} from "avalanche/dist/apis/avm";
 import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
 export interface RootState {
+    isMainnetLock: boolean,
     walletType: null|WalletType,
     isAuth: boolean,
     activeWallet: null|AvaHdWallet|LedgerWallet

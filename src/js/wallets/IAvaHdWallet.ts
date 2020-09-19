@@ -1,5 +1,17 @@
 import HDKey from 'hdkey';
-import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair, UTXOSet, UTXO, UnsignedTx} from "avalanche/dist/apis/avm";
+import {KeyChain as AVMKeyChain,
+    KeyPair as AVMKeyPair,
+    UTXOSet,
+    UTXO,
+    Tx as AVMTx,
+    UnsignedTx as AVMUnsignedTx
+} from "avalanche/dist/apis/avm";
+
+import {
+    UnsignedTx as PlatformUnsignedTx,
+    Tx as PlatformTx
+} from "avalanche/dist/apis/platformvm";
+
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {BN} from "avalanche";
 import {WalletType} from "@/store/types";
@@ -28,7 +40,7 @@ export interface AvaWalletCore {
     getUTXOSet(): UTXOSet;
     getStake(): Promise<BN>;
     getPlatformRewardAddress(): string;
-    sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(unsignedTx: UnsignedTx): Promise<StandardTx<any, any, any>>;
+    sign<UnsignedTx extends (AVMUnsignedTx|PlatformUnsignedTx), SignedTx extends (AVMTx|PlatformTx)>(unsignedTx: UnsignedTx, isAVM: boolean): Promise<StandardTx<any, any, any>>;
     validate(nodeID: string, amt: BN, start: Date, end: Date, delegationFee:number, rewardAddress?: string): Promise<string>;
     delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string): Promise<string>
     chainTransfer(amt: BN, sourceChain: string): Promise<string>;

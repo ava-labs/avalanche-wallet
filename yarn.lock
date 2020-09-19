@@ -2775,10 +2775,10 @@ autoprefixer@^9.8.0:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-avalanche@2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-2.5.3.tgz#ef8df64eb637a7c0c01b401fe6e34d7644e4cae6"
-  integrity sha512-6s4wvrveQIavEJgz1Xskhv5xV0ZuYTtMeaNJbkB87o9DnHrpp84xehx/rnWJai0dT0NyPjKRoH9xA5APlZ0MiQ==
+avalanche@2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-2.6.2.tgz#39ac3a6e83d751615466d81b267691b9400bfe2b"
+  integrity sha512-i0bPlpzMShKk1wop1sMfL03cYoBte6+XEdWBfvqdRYk/dVmJYY3PkCvCeF9y4Kbi1Ma0pyog418VpvRB3mFubg==
   dependencies:
     axios "0.19.2"
     bech32 "1.1.4"
@@ -2786,6 +2786,7 @@ avalanche@2.5.3:
     buffer "5.5.0"
     create-hash "1.2.0"
     elliptic "6.5.3"
+    node-forge "^0.10.0"
     secp256k1 "4.0.2"
     store2 "2.11.0"
     web3-utils "1.2.11"
@@ -9143,6 +9144,11 @@ node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
   integrity sha512-7ASaDa3pD+lJ3WvXFsxekJQelBKRpne+GOVbLbtHYdd7pFspyeuJHnWfLplGf3SwKGbfs/aYl5V/JCIaHVUKKQ==
+
+node-forge@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
+  integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
 
 node-gyp-build@^4.2.0:
   version "4.2.2"

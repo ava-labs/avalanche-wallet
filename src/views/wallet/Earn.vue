@@ -106,8 +106,12 @@ export default class Earn extends Vue{
         return this.$store.getters.walletPlatformBalance;
     }
 
+    get platformLockedStakeable(): BN{
+        return this.$store.getters.walletPlatformBalanceLockedStakeable;
+    }
+
     get pNoBalance(){
-        return this.platformUnlocked.isZero();
+        return this.platformUnlocked.add(this.platformLockedStakeable).isZero();
     }
 }
 </script>
