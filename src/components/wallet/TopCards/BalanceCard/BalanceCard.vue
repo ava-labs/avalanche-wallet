@@ -31,15 +31,15 @@
             </div>
         </div>
         <NftCol class="nft_card"></NftCol>
-        <div class="where_info">
-            <v-alert type="info" text class="alert_cont">
-                <p style="font-size: 14px;">
-                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>
-                    <br>
-                    This wallet is connected to the Avalanche <i>Everest test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.
-                </p>
-            </v-alert>
-        </div>
+<!--        <div class="where_info">-->
+<!--            <v-alert type="info" text class="alert_cont">-->
+<!--                <p style="font-size: 14px;">-->
+<!--                    <b>I bought coins in the Token Sale. Where are my AVAX?</b>-->
+<!--                    <br>-->
+<!--                    This wallet is connected to the Avalanche <i>Everest test network</i>. Your purchase will appear in the wallet after the Avalanche <i>Mainnet</i> launch.-->
+<!--                </p>-->
+<!--            </v-alert>-->
+<!--        </div>-->
     </div>
 </template>
 <script lang="ts">
@@ -205,6 +205,7 @@
         border-left: 2px solid var(--bg-light);
     }
     .fungible_card{
+        height: 100%;
         display: grid !important;
         grid-template-rows: max-content 1fr max-content;
         flex-direction: column;
