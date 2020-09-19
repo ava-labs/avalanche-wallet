@@ -210,8 +210,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string> {
-        let unsignedTx = await this.buildUnsignedTransaction(orders,addr);
+    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string, memo?: Buffer): Promise<string> {
+        let unsignedTx = await this.buildUnsignedTransaction(orders,addr,memo);
 
         let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx);
         const txId: string = await avm.issueTx(tx);

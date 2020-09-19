@@ -26,6 +26,7 @@ import router from "@/router";
 import {ava, avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
+import {Buffer} from "avalanche";
 import {UnixNow} from "avalanche/dist/utils";
 import {UTXO, KeyPair as AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
 
@@ -488,9 +489,10 @@ export default new Vuex.Store({
 
             let toAddr = data.toAddress;
             let orders = data.orders;
+            let memo = data.memo;
 
             try{
-                let txId:string = await wallet.issueBatchTx(orders, toAddr);
+                let txId:string = await wallet.issueBatchTx(orders, toAddr, memo);
                 return txId;
             }catch(e) {
                 throw(e)

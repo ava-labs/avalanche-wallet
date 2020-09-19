@@ -102,7 +102,7 @@ class HdWalletCore{
         this.platformHelper.onNetworkChange();
     }
 
-    async buildUnsignedTransaction(orders: (ITransaction|UTXO)[], addr: string){
+    async buildUnsignedTransaction(orders: (ITransaction|UTXO)[], addr: string, memo?:Buffer){
         // TODO: Get new change index.
         if(this.getChangeAddress() === null){
             throw "Unable to issue transaction. Ran out of change index.";
@@ -188,7 +188,17 @@ class HdWalletCore{
                 return 0;
             });
 
-            unsignedTx = nftSet.buildNFTTransferTx(networkId,chainId,[TO_BUF], fromAddrs, fromAddrs, utxoIds);
+            unsignedTx = nftSet.buildNFTTransferTx(
+                networkId,
+                chainId,
+                [TO_BUF],
+                fromAddrs,
+                fromAddrs, // change address should be something else?
+                utxoIds,
+                undefined,
+                undefined,
+                memo
+                );
 
             let rawTx = unsignedTx.getTransaction();
             let outsNft = rawTx.getOuts()
@@ -200,7 +210,13 @@ class HdWalletCore{
             //@ts-ignore
             rawTx.ins = insNft.concat(ins);
         }else{
-            let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins);
+            let baseTx: BaseTx = new BaseTx(
+                networkId,
+                chainId,
+                outs,
+                ins,
+                memo
+            );
             unsignedTx = new UnsignedTx(baseTx);
         }
         return unsignedTx;

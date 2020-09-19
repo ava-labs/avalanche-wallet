@@ -20,8 +20,6 @@
                         <h4>{{$t('transfer.to')}}</h4>
                         <qr-input v-if="!isConfirm" v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                         <p class="confirm_val" v-else>{{formAddress}}</p>
-                    </div>
-                    <div class="to_address" >
                         <h4>Memo (Optional)</h4>
                         <textarea v-if="!isConfirm" class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
                         <p class="confirm_val" v-else>{{formMemo}}</p>
@@ -84,8 +82,9 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import { UTXO } from "avalanche/dist/apis/avm";
-    import BN from "bn.js";
+    import {Buffer, BN} from "avalanche";
     import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
+    import {IssueBatchTxInput} from "@/store/types";
 
 
 
@@ -133,6 +132,7 @@
 
         cancelConfirm(){
             this.err = '';
+            this.formMemo = "";
             this.formOrders = [];
             this.formNftOrders = [];
             this.formAddress = "";
@@ -163,6 +163,15 @@
                 err.push('Invalid address.')
             }
 
+            let memo = this.memo;
+            if(this.memo){
+                let buff = Buffer.from(memo);
+                let size = buff.length;
+                if(size>256){
+                    err.push('You can have a maximum of 256 characters in your memo.')
+                }
+            }
+
 
             // Make sure to address matches the bech32 network hrp
             let hrp = ava.getHRP();
@@ -187,6 +196,7 @@
 
         clearForm(){
             this.addressIn = "";
+            this.memo = "";
             // Clear transactions list
             // @ts-ignore
             this.$refs.txList.clear();
@@ -233,8 +243,9 @@
 
             let sumArray: (ITransaction|UTXO)[] = [...this.formOrders, ...this.formNftOrders];
 
-            let txList = {
+            let txList: IssueBatchTxInput = {
                 toAddress: this.formAddress,
+                memo: Buffer.from(this.formMemo),
                 orders: sumArray
             };
 

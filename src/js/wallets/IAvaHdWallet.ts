@@ -13,7 +13,7 @@ import {
 } from "avalanche/dist/apis/platformvm";
 
 import {ITransaction} from "@/components/wallet/transfer/types";
-import {BN} from "avalanche";
+import {BN, Buffer} from "avalanche";
 import {WalletType} from "@/store/types";
 import {StandardTx, StandardUnsignedTx} from "avalanche/dist/common";
 
@@ -46,7 +46,7 @@ export interface AvaWalletCore {
     chainTransfer(amt: BN, sourceChain: string): Promise<string>;
     importToPlatformChain(): Promise<string>;
     importToXChain(): Promise<string>;
-    issueBatchTx(orders: (UTXO|ITransaction)[], addr: string): Promise<string>;
+    issueBatchTx(orders: (UTXO|ITransaction)[], addr: string, memo?: Buffer): Promise<string>;
 }
 
 export interface IAvaHdWallet extends AvaWalletCore{

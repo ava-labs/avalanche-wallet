@@ -1,6 +1,6 @@
 import Big from 'big.js';
-import BN from 'bn.js';
 
+import {Buffer, BN} from "avalanche";
 import AvaAsset from "@/js/AvaAsset";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {ITransaction} from "@/components/wallet/transfer/types";
@@ -63,6 +63,7 @@ export interface AssetType {
 
 export interface IssueBatchTxInput {
     toAddress: string,
+    memo?: Buffer,
     orders: (ITransaction|UTXO)[]
 }
 

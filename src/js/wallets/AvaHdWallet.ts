@@ -26,11 +26,10 @@ import {
 
 
 import * as bip39 from "bip39";
-import {BN} from 'avalanche';
+import {BN, Buffer} from 'avalanche';
 import {ava, avm, bintools, pChain} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/wallets/IAvaHdWallet";
 import HDKey from 'hdkey';
-import {Buffer} from "buffer/";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {HdHelper} from "@/js/HdHelper";
 import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
@@ -288,8 +287,8 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         return avm.issueTx(tx);
     }
 
-    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
-        let unsignedTx = await this.buildUnsignedTransaction(orders,addr);
+    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string, memo: Buffer|undefined): Promise<string>{
+        let unsignedTx = await this.buildUnsignedTransaction(orders,addr,memo);
         let keychain = this.getKeyChain();
 
         const tx = unsignedTx.sign(keychain);
