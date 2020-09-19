@@ -20,9 +20,16 @@
                         <h4>{{$t('transfer.to')}}</h4>
                         <qr-input v-if="!isConfirm" v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                         <p class="confirm_val" v-else>{{formAddress}}</p>
-                        <h4>Memo (Optional)</h4>
-                        <textarea v-if="!isConfirm" class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
-                        <p class="confirm_val" v-else>{{formMemo}}</p>
+
+                        <template v-if="isConfirm && formMemo.length>0">
+                            <h4>Memo (Optional)</h4>
+                            <p class="confirm_val">{{formMemo}}</p>
+                        </template>
+                        <template v-else-if="!isConfirm">
+                            <h4>Memo (Optional)</h4>
+                            <textarea class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
+                        </template>
+
                     </div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
@@ -401,9 +408,11 @@
     }
 
     .memo{
+        font-size: 14px;
         background-color: var(--bg-light);
         resize: none;
         width: 100%;
+        height: 80px;
         border-radius: 2px;
         padding: 4px 12px;
     }
