@@ -88,8 +88,9 @@
                 </div>
                 <div v-else class="success_cont">
                     <p class="check"><fa icon="check-circle"></fa></p>
-                    <h2>You are now delegating.</h2>
-                    <p>Your tokens are locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                    <h2>Delegation transaction sent.</h2>
+                    <p>If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                    <p class="tx_id">Tx ID: {{txId}}</p>
                 </div>
             </div>
         </div>
@@ -580,6 +581,14 @@ label{
     .check{
         font-size: 4em;
         color: var(--success);
+    }
+
+    .tx_id{
+        font-size: 13px;
+        color: var(--primary-color-light);
+        word-break: break-all;
+        margin: 14px 0 !important;
+        font-weight: bold;
     }
 }
 
