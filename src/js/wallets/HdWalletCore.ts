@@ -172,6 +172,8 @@ class HdWalletCore{
         let networkId: number = ava.getNetworkID();
         let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID());
 
+        console.log(avm.getBlockchainID())
+        console.log(chainId);
         if(nftUtxos.length > 0){
             let nftSet = new AVMUTXOSet();
             nftSet.addArray(nftUtxos);

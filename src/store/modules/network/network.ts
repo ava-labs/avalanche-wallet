@@ -30,13 +30,18 @@ const network_module: Module<NetworkState, RootState> = {
             ava.setAddress(net.ip,net.port,net.protocol);
             ava.setNetworkID(net.networkId);
 
+            let chainIdX = await infoApi.getBlockchainID('X');
+            let chainIdP = await  infoApi.getBlockchainID('P');
             // TODO: Remove these constant ids
-            // ava.XChain().refreshBlockchainID('2eNy1mUFdmaxXNj1eQHUe7Np4gju9sJsEtWQ4MX3ToiNKuADed');
-            // ava.PChain().refreshBlockchainID('11111111111111111111111111111111LpoYY');
+
+            console.log(chainIdX, chainIdP);
+            ava.XChain().refreshBlockchainID(chainIdX);
+            ava.PChain().refreshBlockchainID(chainIdP);
             // ava.setHRP('local');
 
-            ava.XChain().refreshBlockchainID();
-            ava.PChain().refreshBlockchainID();
+            // ava.XChain().refreshBlockchainID();
+            // ava.PChain().refreshBlockchainID();
+
 
             // TODO: Turn on before manhattan push
             // enter lockdown mode if network id is 0 (Manhattan)
