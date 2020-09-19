@@ -229,7 +229,6 @@ class HdHelper {
             //     let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
             //     (tempKeychain as PlatformVMKeyChain).addKey(key);
             // }
-
         }
 
         // let addrs: string[] = tempKeychain.getAddressStrings();
