@@ -50,6 +50,7 @@ class HdHelper {
 
     async oninit(){
         this.hdIndex = await this.findAvailableIndex();
+        console.log("Found Index: ",this.hdIndex);
         if(!this.isPublic){
             this.updateKeychain();
         }
@@ -206,6 +207,7 @@ class HdHelper {
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
+        console.log("Scan start from: ",start);
         // let hrp = getPreferredHRP(ava.getNetworkID());
 
         // let tempKeychain : AVMKeyChain | PlatformVMKeyChain;
@@ -220,6 +222,7 @@ class HdHelper {
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
+            console.log("Scan index: ",i);
             let address = this.getAddressForIndex(i);
             addrs.push(address);
             // if(this.chainId==='X'){
