@@ -116,7 +116,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
 
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
-            [stakeReturnAddr],
+            // [stakeReturnAddr],
             pAddressStrings, // from
             [changeAddress], // change
             nodeID,
@@ -164,7 +164,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
-            [stakeReturnAddr],
+            // [stakeReturnAddr],
             pAddressStrings,
             [changeAddr],
             nodeID,

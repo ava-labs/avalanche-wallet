@@ -23,7 +23,8 @@ import {
 } from "avalanche/dist/apis/avm";
 
 import {
-    ImportTx, StakeableLockOut,
+    ImportTx,
+    // StakeableLockOut,
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx
 } from "avalanche/dist/apis/platformvm";
@@ -299,7 +300,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
-            [stakeReturnAddr],
+            // [stakeReturnAddr],
             pAddressStrings,
             [changeAddr],
             nodeID,
@@ -400,7 +401,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
-            [stakeReturnAddr],
+            // [stakeReturnAddr],
             pAddressStrings, // from
             [changeAddress], // change
             nodeID,

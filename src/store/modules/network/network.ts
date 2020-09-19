@@ -45,15 +45,15 @@ const network_module: Module<NetworkState, RootState> = {
 
             // TODO: Turn on before manhattan push
             // enter lockdown mode if network id is 0 (Manhattan)
-            // if(net.networkId===0){
-            //     rootState.isMainnetLock = true;
-            //     router.push('/wallet/mainnet');
-            // }else{
-            //     rootState.isMainnetLock = false;
-            //     if(state.selectedNetwork?.networkId===0){
-            //         router.push('/wallet/');
-            //     }
-            // }
+            if(net.networkId===0){
+                rootState.isMainnetLock = true;
+                router.push('/wallet/mainnet');
+            }else{
+                rootState.isMainnetLock = false;
+                if(state.selectedNetwork?.networkId===0){
+                    router.push('/wallet/');
+                }
+            }
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;

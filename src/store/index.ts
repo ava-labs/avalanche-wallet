@@ -256,8 +256,9 @@ export default new Vuex.Store({
             for(var n=0; n<utxos.length; n++) {
                 let utxo = utxos[n];
                 let utxoOut = utxo.getOutput() as AmountOutput;
-                let outType = utxoOut.getTypeID();
-                let locktime = utxoOut.getLocktime();
+                let outType = utxoOut.getOutputID()
+                // let outType = utxoOut.getTypeID();
+                // let locktime = utxoOut.getLocktime();
 
                 // Type ID 22 is stakeable but locked tokens
                 if(outType===22){
