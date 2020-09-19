@@ -32,11 +32,8 @@ const platform_module: Module<PlatformState, RootState> = {
 
         async updateMinStakeAmount({state}){
             let res = await pChain.getMinStake(true);
-            // state.minStake = res.minValidatorStake;
-            // state.minStakeDelegation = res.minDelegatorStake;
-            // TODO: Undo for mainnet
-            state.minStake = res;
-            state.minStakeDelegation = res;
+            state.minStake = res.minValidatorStake;
+            state.minStakeDelegation = res.minDelegatorStake;
         },
 
         async update({dispatch}){

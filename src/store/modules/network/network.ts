@@ -37,10 +37,6 @@ const network_module: Module<NetworkState, RootState> = {
             console.log(chainIdX, chainIdP);
             ava.XChain().refreshBlockchainID(chainIdX);
             ava.PChain().refreshBlockchainID(chainIdP);
-            // ava.setHRP('local');
-
-            // ava.XChain().refreshBlockchainID();
-            // ava.PChain().refreshBlockchainID();
 
 
             // TODO: Turn on before manhattan push

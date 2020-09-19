@@ -13,13 +13,17 @@
             </div>
             <div class="alt_info">
                 <div>
+                    <label>Available</label>
+                    <p>{{unlockedText}} AVAX</p>
+                </div>
+                <div>
                     <label>Locked</label>
                     <p>{{balanceTextLocked}} AVAX</p>
                 </div>
-                <div>
-                    <label>P-Chain</label>
-                    <p>{{pBalanceText}} AVAX</p>
-                </div>
+<!--                <div>-->
+<!--                    <label>P-Chain</label>-->
+<!--                    <p>{{pBalanceText}} AVAX</p>-->
+<!--                </div>-->
                 <div>
                     <label>Staking</label>
                     <p>{{stakingText}} AVAX</p>
@@ -67,13 +71,23 @@
             return ava;
         }
 
+        // should be unlocked (X+P), locked (X+P) and staked
         get balanceText():string{
             if(this.ava_asset !== null){
-                let amt = this.ava_asset.getAmount();
-                if(amt.lt(Big('0.0001'))){
-                    return amt.toLocaleString(this.ava_asset.denomination);
+                let xUnlocked = this.ava_asset.amount;
+                let xLocked = this.ava_asset.amountLocked;
+                let pUnlocked = this.platformUnlocked;
+                let pLocked = this.platformLocked;
+                let staked = this.stakingAmount;
+
+                let denom = this.ava_asset.denomination;
+
+                let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked);
+                let bigTot = Big(tot.toString()).div(Math.pow(10,denom))
+                if(bigTot.lt(Big('1000'))){
+                    return bigTot.toString();
                 }else{
-                    return amt.toLocaleString(3);
+                    return bigTot.toLocaleString(3);
                 }
             }else{
                 return '?'
@@ -114,6 +128,28 @@
             return this.$store.getters.walletPlatformBalanceLockedStakeable;
         }
 
+        get unlockedText(){
+            if(this.ava_asset){
+                let xUnlocked = this.ava_asset.amount;
+                let pUnlocked = this.platformUnlocked;
+
+                let tot = xUnlocked.add(pUnlocked);
+                let amtBig = this.avaxBnToBigAmt(tot);
+                if(amtBig.lt(Big('1'))){
+                    return amtBig.toString();
+                }else{
+                    return amtBig.toLocaleString(3);
+                }
+            }else{
+                return '?'
+            }
+        }
+
+
+        avaxBnToBigAmt(val: BN): Big{
+            return Big(val.toString()).div(Math.pow(10,9));
+        }
+
         get pBalanceText(){
             if(!this.ava_asset) return  '?';
 
@@ -129,8 +165,12 @@
             }
         }
 
+        get stakingAmount(): BN{
+            return this.$store.getters.walletStakingBalance;
+        }
+
         get stakingText(){
-            let balance = this.$store.getters.walletStakingBalance;
+            let balance = this.stakingAmount;
             if(!balance) return '0';
 
             let denom = 9;
