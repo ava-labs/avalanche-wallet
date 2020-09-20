@@ -9,10 +9,10 @@ import {SECP256k1KeyPair} from "avalanche/dist/common";
 
 
 //TODO: Make this normal numbers again!!!
-const INDEX_RANGE: number = 1000; // a gap of at least 20 indexes is needed to claim an index unused
+const INDEX_RANGE: number = 40; // a gap of at least 40 indexes is needed to claim an index unused
 
-const SCAN_SIZE: number = 1024; // the total number of utxos to look at initially to calculate last index
-const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned
+const SCAN_SIZE: number = 100; // the total number of utxos to look at initially to calculate last index
+const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned, the bigger the scan range => faster the process
 
 type HelperChainId =  'X' | 'P';
 class HdHelper {
