@@ -8,9 +8,9 @@ import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "aval
 import {SECP256k1KeyPair} from "avalanche/dist/common";
 
 
-const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
+const INDEX_RANGE: number = 500; // a gap of at least 20 indexes is needed to claim an index unused
 
-const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
+const SCAN_SIZE: number = 700; // the total number of utxos to look at initially to calculate last index
 const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned
 
 type HelperChainId =  'X' | 'P';
