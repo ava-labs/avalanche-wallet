@@ -89,7 +89,7 @@ class HdWalletCore{
         return this.platformHelper.getAddressForIndex(0)
     }
 
-    // helper method to get utxos for more than 1024 addresses
+    // helper method to get all stake for more than 256 addresses
     async getAllStake(addrs: string[]): Promise<BN>{
         if(addrs.length<=256){
             return await pChain.getStake(addrs);

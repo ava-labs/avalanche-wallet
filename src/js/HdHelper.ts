@@ -8,6 +8,7 @@ import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "aval
 import {SECP256k1KeyPair} from "avalanche/dist/common";
 
 
+//TODO: Make this normal numbers again!!!
 const INDEX_RANGE: number = 500; // a gap of at least 20 indexes is needed to claim an index unused
 
 const SCAN_SIZE: number = 700; // the total number of utxos to look at initially to calculate last index

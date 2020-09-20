@@ -86,23 +86,23 @@ const routes = [
                 path: '/',
                 name: 'wallet',
                 component: WalletHome,
-                beforeEnter: ifMainnetNotLock
+                // beforeEnter: ifMainnetNotLock
 
             },
             {
                 path: 'transfer',
                 component: Transfer,
-                beforeEnter: ifMainnetNotLock
+                // beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'keys',
                 component: ManageKeys,
-                beforeEnter: ifMainnetNotLock
+                // beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'earn',
                 component: Earn,
-                beforeEnter: ifMainnetNotLock
+                // beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'mainnet',
