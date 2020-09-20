@@ -278,7 +278,7 @@ class HdHelper {
         // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE
         for(let i:number=0; i<addrs.length-INDEX_RANGE; i++) {
             let gapSize: number = 0;
-            console.log(`Scan index: ${this.chainId} ${this.changePath}/${i+start}`);
+            // console.log(`Scan index: ${this.chainId} ${this.changePath}/${i+start}`);
             for(let n:number=0;n<INDEX_RANGE;n++) {
                 let scanIndex: number = i + n;
                 let addr: string = addrs[scanIndex];
@@ -295,7 +295,7 @@ class HdHelper {
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
-                console.log("Found Index: ",start+i)
+                console.log(`Found Index ${this.chainId} ${this.changePath}: `,start+i)
                 return start+i;
             }
         }
