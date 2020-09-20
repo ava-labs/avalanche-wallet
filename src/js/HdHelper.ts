@@ -238,34 +238,14 @@ class HdHelper {
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
-        console.log("Scan start from: ",start);
-        // let hrp = getPreferredHRP(ava.getNetworkID());
-
-        // let tempKeychain : AVMKeyChain | PlatformVMKeyChain;
-        // if(this.chainId==='X'){
-        //     tempKeychain = new AVMKeyChain(hrp,this.chainId);
-        // }else{
-        //     tempKeychain = new PlatformVMKeyChain(hrp,this.chainId);
-        // }
-
-
         let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
             let address = this.getAddressForIndex(i);
             addrs.push(address);
-            // if(this.chainId==='X'){
-            //     let key = this.getKeyForIndex(i) as AVMKeyPair;
-            //     (tempKeychain as AVMKeyChain).addKey(key);
-            // }else{
-            //     let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
-            //     (tempKeychain as PlatformVMKeyChain).addKey(key);
-            // }
         }
-        console.log(`Will scan ${addrs.length} addresses.`)
 
-        // let addrs: string[] = tempKeychain.getAddressStrings();
         let utxoSet;
 
         if(this.chainId==='X'){
@@ -295,11 +275,9 @@ class HdHelper {
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
-                console.log(`Found Index ${this.chainId} ${this.changePath}: `,start+i)
                 return start+i;
             }
         }
-        console.log("Will scan again from index: ",start+SCAN_RANGE);
         return await this.findAvailableIndex(start+SCAN_RANGE)
     }
 

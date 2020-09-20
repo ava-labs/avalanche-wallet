@@ -65,8 +65,8 @@ class HdWalletCore{
         let internalIndex = this.internalHelper.hdIndex;
         let externalIndex  = this.externalHelper.hdIndex;
 
-        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+20);
-        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
+        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+40);
+        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+40);
         return internal.concat(external);
     }
 
@@ -105,10 +105,10 @@ class HdWalletCore{
 
     async getStake(): Promise<BN> {
         // TODO: THIS IS A HACK
-        let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
-        let pIndex = Math.max(this.platformHelper.hdIndex);
-        let uptoIndex = Math.max(xIndex, pIndex);
-        console.log("Will get stake upto address index: ",uptoIndex);
+        // let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
+        // let pIndex = Math.max(this.platformHelper.hdIndex);
+        // let uptoIndex = Math.max(xIndex, pIndex);
+        let uptoIndex = this.platformHelper.hdIndex+40;
         let addrs = this.platformHelper.getAllDerivedAddresses(uptoIndex);
         let res = await this.getAllStake(addrs);
         this.stakeAmount = res;
