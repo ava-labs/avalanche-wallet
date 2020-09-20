@@ -49,7 +49,6 @@ export default new Vuex.Store({
         Ledger
     },
     state: {
-        isMainnetLock: false,
         walletType: null,
         isAuth: false,
         activeWallet: null,

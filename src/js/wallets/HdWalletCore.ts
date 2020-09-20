@@ -65,8 +65,8 @@ class HdWalletCore{
         let internalIndex = this.internalHelper.hdIndex;
         let externalIndex  = this.externalHelper.hdIndex;
 
-        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+20);
-        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
+        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+40);
+        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+40);
         return internal.concat(external);
     }
 
@@ -89,9 +89,28 @@ class HdWalletCore{
         return this.platformHelper.getAddressForIndex(0)
     }
 
+    // helper method to get all stake for more than 256 addresses
+    async getAllStake(addrs: string[]): Promise<BN>{
+        if(addrs.length<=256){
+            return await pChain.getStake(addrs);
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,256);
+            let remainingChunk = addrs.slice(256);
+
+            let chunkStake = await pChain.getStake(chunk);
+            return chunkStake.add(await this.getAllStake(remainingChunk))
+        }
+    }
+
     async getStake(): Promise<BN> {
-        let addrs = this.platformHelper.getAllDerivedAddresses();
-        let res = await pChain.getStake(addrs);
+        // TODO: THIS IS A HACK
+        // let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
+        // let pIndex = Math.max(this.platformHelper.hdIndex);
+        // let uptoIndex = Math.max(xIndex, pIndex);
+        let uptoIndex = this.platformHelper.hdIndex+40;
+        let addrs = this.platformHelper.getAllDerivedAddresses(uptoIndex);
+        let res = await this.getAllStake(addrs);
         this.stakeAmount = res;
         return res
     }

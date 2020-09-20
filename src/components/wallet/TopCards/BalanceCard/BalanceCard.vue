@@ -3,7 +3,7 @@
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
-                    <Spinner v-if="isUpdateBalance" color="#000"></Spinner>
+                    <Spinner v-if="isUpdateBalance" class="spinner"></Spinner>
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
@@ -250,6 +250,10 @@
         img{
             object-fit: contain;
             width: 100%;
+        }
+
+        .spinner{
+            color: var(--primary-color);
         }
     }
     .buts{

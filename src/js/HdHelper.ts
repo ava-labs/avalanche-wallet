@@ -8,10 +8,11 @@ import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "aval
 import {SECP256k1KeyPair} from "avalanche/dist/common";
 
 
-const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
+//TODO: Make this normal numbers again!!!
+const INDEX_RANGE: number = 40; // a gap of at least 40 indexes is needed to claim an index unused
 
-const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
-const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned
+const SCAN_SIZE: number = 100; // the total number of utxos to look at initially to calculate last index
+const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned, the bigger the scan range => faster the process
 
 type HelperChainId =  'X' | 'P';
 class HdHelper {
@@ -99,10 +100,41 @@ class HdHelper {
         this.updateKeychain();
     }
 
+    // helper method to get utxos for more than 1024 addresses
+    async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
+        if(addrs.length<=1024){
+            return await avm.getUTXOs(addrs);
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = await avm.getUTXOs(chunk);
+
+            return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
+        }
+    }
+
+    // helper method to get utxos for more than 1024 addresses
+    async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
+        if(addrs.length<=1024){
+            return await pChain.getUTXOs(addrs);
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = await pChain.getUTXOs(chunk);
+
+            return newSet.merge(await this.platformGetAllUTXOs(remainingChunk))
+        }
+    }
+
 
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
+        // TODO: Optimize this
         await this.updateHdIndex()
 
         // let addrs: string[] = this.keyChain.getAddressStrings();
@@ -110,9 +142,9 @@ class HdHelper {
         let result: AVMUTXOSet|PlatformUTXOSet;
 
         if(this.chainId==='X'){
-            result = await avm.getUTXOs(addrs);
+            result = await this.avmGetAllUTXOs(addrs);
         }else{
-            result = await pChain.getUTXOs(addrs);
+            result = await this.platformGetAllUTXOs(addrs);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
@@ -206,32 +238,14 @@ class HdHelper {
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
-        // let hrp = getPreferredHRP(ava.getNetworkID());
-
-        // let tempKeychain : AVMKeyChain | PlatformVMKeyChain;
-        // if(this.chainId==='X'){
-        //     tempKeychain = new AVMKeyChain(hrp,this.chainId);
-        // }else{
-        //     tempKeychain = new PlatformVMKeyChain(hrp,this.chainId);
-        // }
-
-
         let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
             let address = this.getAddressForIndex(i);
             addrs.push(address);
-            // if(this.chainId==='X'){
-            //     let key = this.getKeyForIndex(i) as AVMKeyPair;
-            //     (tempKeychain as AVMKeyChain).addKey(key);
-            // }else{
-            //     let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
-            //     (tempKeychain as PlatformVMKeyChain).addKey(key);
-            // }
         }
 
-        // let addrs: string[] = tempKeychain.getAddressStrings();
         let utxoSet;
 
         if(this.chainId==='X'){
@@ -244,6 +258,7 @@ class HdHelper {
         // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE
         for(let i:number=0; i<addrs.length-INDEX_RANGE; i++) {
             let gapSize: number = 0;
+            // console.log(`Scan index: ${this.chainId} ${this.changePath}/${i+start}`);
             for(let n:number=0;n<INDEX_RANGE;n++) {
                 let scanIndex: number = i + n;
                 let addr: string = addrs[scanIndex];
@@ -253,7 +268,7 @@ class HdHelper {
                     gapSize++
                 }else{
                     // Potential improvement
-                    // i = i+n;
+                    i = i+n;
                     break;
                 }
             }
@@ -301,6 +316,7 @@ class HdHelper {
         return this.getAddressForIndex(index);
     }
 
+    // TODO: Public wallet should never be using this
     getKeyForIndex(index: number, isPrivate: boolean = true): AVMKeyPair|PlatformVMKeyPair {
         // If key is cached return that
         let cacheExternal: AVMKeyPair|PlatformVMKeyPair;
@@ -346,7 +362,7 @@ class HdHelper {
 
         let chainId = this.chainId;
 
-
+        // No need for PlatformKeypair because addressToString uses chainID to decode
         let keypair = new AVMKeyPair(hrp, chainId);
         let addrBuf = keypair.addressFromPublicKey(pkBuff);
         let addr = bintools.addressToString(hrp, chainId, addrBuf);
