@@ -108,7 +108,7 @@ class HdWalletCore{
         let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
         let pIndex = Math.max(this.platformHelper.hdIndex);
         let uptoIndex = Math.max(xIndex, pIndex);
-        console.log("Will get stake upto address index: ",uptoIndex)
+        console.log("Will get stake upto address index: ",uptoIndex);
         let addrs = this.platformHelper.getAllDerivedAddresses();
         let res = await this.getAllStake(addrs);
         this.stakeAmount = res;
