@@ -99,10 +99,41 @@ class HdHelper {
         this.updateKeychain();
     }
 
+    // helper method to get utxos for more than 1024 addresses
+    async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
+        if(addrs.length<=1024){
+            return await avm.getUTXOs(addrs);
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = await avm.getUTXOs(chunk);
+
+            return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
+        }
+    }
+
+    // helper method to get utxos for more than 1024 addresses
+    async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
+        if(addrs.length<=1024){
+            return await pChain.getUTXOs(addrs);
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = await pChain.getUTXOs(chunk);
+
+            return newSet.merge(await this.platformGetAllUTXOs(remainingChunk))
+        }
+    }
+
 
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
+        // TODO: Optimize this
         await this.updateHdIndex()
 
         // let addrs: string[] = this.keyChain.getAddressStrings();
@@ -110,9 +141,9 @@ class HdHelper {
         let result: AVMUTXOSet|PlatformUTXOSet;
 
         if(this.chainId==='X'){
-            result = await avm.getUTXOs(addrs);
+            result = await this.avmGetAllUTXOs(addrs);
         }else{
-            result = await pChain.getUTXOs(addrs);
+            result = await this.platformGetAllUTXOs(addrs);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
@@ -306,6 +337,7 @@ class HdHelper {
         return this.getAddressForIndex(index);
     }
 
+    // TODO: Public wallet should never be using this
     getKeyForIndex(index: number, isPrivate: boolean = true): AVMKeyPair|PlatformVMKeyPair {
         // If key is cached return that
         let cacheExternal: AVMKeyPair|PlatformVMKeyPair;
