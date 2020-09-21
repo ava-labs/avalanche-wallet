@@ -7,18 +7,45 @@
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
+                <template v-if="!isBreakdown">
+                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye"></fa> Show Breakdown</button>
+                </template>
+                <template v-else>
+                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye-slash"></fa> Hide Breakdown</button>
+                </template>
             </div>
             <div class="balance_row">
                 <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
+<!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
                 <div>
-                    <label>Available</label>
-                    <p>{{unlockedText}} AVAX</p>
+                    <template v-if="!isBreakdown">
+                        <label>Available</label>
+                        <p>{{unlockedText}} AVAX</p>
+                    </template>
+                    <template v-else>
+                        <label>Available (X)</label>
+                        <p>{{avmUnlocked | cleanAvaxBN}} AVAX</p>
+                        <label>Available (P)</label>
+                        <p>{{platformUnlocked | cleanAvaxBN}} AVAX</p>
+                    </template>
                 </div>
                 <div>
-                    <label>Locked</label>
-                    <p>{{balanceTextLocked}} AVAX</p>
+                    <template v-if="!isBreakdown">
+                        <label>Locked</label>
+                        <p>{{balanceTextLocked}} AVAX</p>
+                    </template>
+                    <template v-else>
+                        <label>Locked (X)</label>
+                        <p>{{avmLocked | cleanAvaxBN}} AVAX</p>
+                        <label>Locked (P)</label>
+                        <p>{{platformLocked | cleanAvaxBN}} AVAX</p>
+                        <label>Locked Stakeable (P)</label>
+                        <p>{{platformLockedStakeable | cleanAvaxBN}} AVAX</p>
+                    </template>
+
+
                 </div>
 <!--                <div>-->
 <!--                    <label>P-Chain</label>-->
@@ -50,17 +77,28 @@
     import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
     import NftCol from './NftCol.vue';
+    import Tooltip from '@/components/misc/Tooltip.vue';
 
     import Big from 'big.js';
     import {BN} from "avalanche/dist";
+    import {ONEAVAX} from "avalanche/dist/utils";
 
     @Component({
         components: {
             Spinner,
-            NftCol
+            NftCol,
+            Tooltip
+        },
+        filters: {
+            cleanAvaxBN(val: BN){
+                let big = Big(val.toString()).div(Big(ONEAVAX.toString()))
+                return big.toLocaleString();
+            }
         }
     })
     export default class BalanceCard extends Vue {
+        isBreakdown = false;
+
         updateBalance():void{
             this.$store.dispatch('Assets/updateUTXOs');
             this.$store.dispatch('History/updateTransactionHistory');
@@ -71,11 +109,27 @@
             return ava;
         }
 
+
+        toggleBreakdown(){
+            this.isBreakdown = !this.isBreakdown;
+        }
+
+
+        get avmUnlocked(): BN{
+            if(!this.ava_asset) return new BN(0);
+            return this.ava_asset.amount;
+        }
+
+        get avmLocked(): BN{
+            if(!this.ava_asset) return new BN(0);
+            return this.ava_asset.amountLocked;
+        }
+
         // should be unlocked (X+P), locked (X+P) and staked
         get balanceText():string{
             if(this.ava_asset !== null){
-                let xUnlocked = this.ava_asset.amount;
-                let xLocked = this.ava_asset.amountLocked;
+                let xUnlocked = this.avmUnlocked;
+                let xLocked = this.avmLocked;
                 let pUnlocked = this.platformUnlocked;
                 let pLocked = this.platformLocked;
                 let staked = this.stakingAmount;
@@ -222,6 +276,7 @@
 
         h4{
             margin-left: 12px;
+            flex-grow: 1;
         }
     }
     h4{
@@ -294,6 +349,7 @@
         grid-template-columns: repeat(3, max-content);
         column-gap: 0px;
         > div{
+            position: relative;
             padding: 0 24px;
             border-right: 2px solid var(--bg-light);
             &:first-of-type{
@@ -315,6 +371,13 @@
     .nft_card{
         padding-left: 20px;
     }
+
+
+    .breakdown_toggle{
+        color: var(--primary-color-light);
+        font-size: 13px;
+    }
+
 
     @include main.medium-device {
         .balance_card{

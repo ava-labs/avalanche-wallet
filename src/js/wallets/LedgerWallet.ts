@@ -230,7 +230,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string> {
-        let fee = avm.getFee();
+        let fee = avm.getTxFee();
         let amtFee = amt.add(fee);
 
         // EXPORT

@@ -304,7 +304,7 @@
         }
 
         get txFee(): Big{
-            let fee = avm.getFee();
+            let fee = avm.getTxFee();
             let res = Big(fee.toString()).div(Math.pow(10,9));
             return res;
         }

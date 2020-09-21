@@ -147,8 +147,8 @@ export default class ChainTransfer extends Vue{
     }
 
     get fee(): Big{
-        let feeP = pChain.getFee();
-        let feeX = avm.getFee();
+        let feeP = pChain.getTxFee();
+        let feeX = avm.getTxFee();
 
         let feePBig = Big(feeP.toString()).div(Math.pow(10,9));
         let feeXBig = Big(feeX.toString()).div(Math.pow(10,9));

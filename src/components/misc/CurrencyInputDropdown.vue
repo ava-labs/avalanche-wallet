@@ -170,7 +170,7 @@
 
             // Max amount is BALANCE - FEE
             if(this.asset_now.symbol === 'AVAX'){
-                let fee = avm.getFee();
+                let fee = avm.getTxFee();
                 // console.log(fee);
                 if(fee.gte(balance.amount)){
                     return new BN(0);

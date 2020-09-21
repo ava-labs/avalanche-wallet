@@ -298,6 +298,12 @@ export default class AddDelegator extends Vue{
             return false;
         }
 
+        // Stake amount check
+        if(this.stakeAmt.lt(this.minStake)){
+            let big = Big(this.minStake.toString()).div(Math.pow(10,9));
+            this.err = `Delegation amount must be at least ${big.toLocaleString()} AVAX.`
+            return false;
+        }
 
         return true;
     }
@@ -390,39 +396,44 @@ export default class AddDelegator extends Vue{
     }
 
     get minStake(): BN{
-        return  this.$store.state.Platform.minStake;
+        return  this.$store.state.Platform.minStakeDelegation;
     }
+
 
     get delegationFee(): number{
         if(!this.selected) return 0;
         return  parseFloat(this.selected.delegationFee);
     }
 
-    get fee(): BN{
+    get totalFee(): BN{
         let delegationFee = Big(this.delegationFee).div(Big(100));
         let cut = this.estimatedReward.times(delegationFee)
 
-        let txFee:BN = pChain.getFee();
+        let txFee:BN = pChain.getTxFee();
         let cutBN = new BN(cut.times(Math.pow(10,9)).toFixed(0))
         let totFee = txFee.add(cutBN);
         return  totFee;
     }
 
+    get txFee(): BN{
+        return pChain.getTxFee();
+    }
+
     get feeText(): string{
-        let amt = this.fee;
+        let amt = this.totalFee;
         let big = Big(amt.toString()).div(Math.pow(10,9));
         return big.toLocaleString(0)
     }
 
     get minAmt(): BN{
-        return this.minStake.add(this.fee)
+        return this.minStake.add(this.txFee)
     }
 
     get maxAmt(): BN{
         let zero = new BN(0);
 
         let totAvailable = this.platformUnlocked.add(this.platformLockedStakeable);
-        let max = totAvailable.sub(this.fee)
+        let max = totAvailable.sub(this.txFee)
 
         if(zero.gt(max)) return zero;
         return max;

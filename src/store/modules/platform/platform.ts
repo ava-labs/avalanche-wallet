@@ -34,6 +34,9 @@ const platform_module: Module<PlatformState, RootState> = {
             let res = await pChain.getMinStake(true);
             state.minStake = res.minValidatorStake;
             state.minStakeDelegation = res.minDelegatorStake;
+
+            console.log(state.minStake.toString())
+            console.log(state.minStakeDelegation.toString())
         },
 
         async update({dispatch}){

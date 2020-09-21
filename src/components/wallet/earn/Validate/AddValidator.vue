@@ -30,7 +30,7 @@
                         <div style="margin: 30px 0;">
                             <h4>Delegation Fee</h4>
                             <p class="desc">You will claim this % of the rewards from the delegators on your node.</p>
-                            <input type="number" min="0" max="100" step="0.1" v-model="delegationFee">
+                            <input type="number" :min="minFee" max="100" step="0.01" v-model="delegationFee">
                         </div>
                         <div class="reward_in" style="margin: 30px 0;" :type="rewardDestination">
                             <h4>Reward Address</h4>
@@ -106,7 +106,7 @@ let dayMs = 1000 * 60 * 60 * 24;
 export default class AddValidator extends Vue{
     startDate: string = (new Date()).toISOString();
     endDate: string = "";
-    delegationFee: string = '0.0';
+    delegationFee: string = '2.0';
     nodeId = "";
     rewardIn: string = "";
     rewardDestination = 'local'; // local || custom
@@ -114,6 +114,8 @@ export default class AddValidator extends Vue{
     isConfirm = false;
     err:string = "";
     stakeAmt: BN = new BN(0);
+
+    minFee = 2;
 
     formNodeId = "";
     formAmt: BN = new BN(0);
@@ -129,8 +131,8 @@ export default class AddValidator extends Vue{
     @Watch('delegationFee')
     onFeeChange(val: string){
         let num = parseFloat(val);
-        if(num < 0){
-            this.delegationFee = '0';
+        if(num < this.minFee){
+            this.delegationFee = this.minFee.toString();
         }else if(num>100){
             this.delegationFee = '100';
         }
@@ -245,7 +247,7 @@ export default class AddValidator extends Vue{
     }
 
     get feeAmt(): BN{
-        return pChain.getFee();
+        return pChain.getTxFee();
     }
 
     get maxAmt(): BN{
@@ -330,6 +332,13 @@ export default class AddValidator extends Vue{
                 this.err = "Invalid reward address."
                 return false;
             }
+        }
+
+        // Stake amount
+        if(this.stakeAmt.lt(this.minStakeAmt)){
+            let big = Big(this.minStakeAmt.toString()).div(Math.pow(10,9));
+            this.err = `Stake amount must be at least ${big.toLocaleString()} AVAX.`
+            return false;
         }
 
         return true;

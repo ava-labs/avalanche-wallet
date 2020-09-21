@@ -2,7 +2,7 @@ import {Module} from "vuex";
 import {RootState} from "@/store/types";
 import {NetworkState} from "@/store/modules/network/types";
 
-import {ava, avm, infoApi} from "@/AVA";
+import {ava, avm, infoApi, pChain} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
@@ -32,27 +32,16 @@ const network_module: Module<NetworkState, RootState> = {
 
             let chainIdX = await infoApi.getBlockchainID('X');
             let chainIdP = await  infoApi.getBlockchainID('P');
-            // TODO: Remove these constant ids
 
-            ava.XChain().refreshBlockchainID(chainIdX);
-            ava.PChain().refreshBlockchainID(chainIdP);
+            avm.refreshBlockchainID(chainIdX);
+            avm.setBlockchainAlias('X');
+            pChain.refreshBlockchainID(chainIdP);
+            pChain.setBlockchainAlias('P');
 
 
-            // TODO: Turn on before manhattan push
-            // enter lockdown mode if network id is 0 (Manhattan)
-            // if(net.networkId===0){
-            //     rootState.isMainnetLock = true;
-            //     router.push('/wallet/mainnet');
-            // }else{
-            //     rootState.isMainnetLock = false;
-            //     if(state.selectedNetwork?.networkId===0){
-            //         router.push('/wallet/');
-            //     }
-            // }
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
-
 
             commit('Assets/removeAllAssets', null, {root: true});
             await dispatch('Assets/updateAvaAsset', null, {root: true});
@@ -79,8 +68,8 @@ const network_module: Module<NetworkState, RootState> = {
 
         async updateTxFee({state}){
             let txFee = await infoApi.getTxFee();
-            state.txFee = txFee;
-            avm.setFee(txFee);
+            state.txFee = txFee.txFee;
+            avm.setTxFee(txFee.txFee);
         },
 
         async init({state, commit, dispatch}){
