@@ -21,7 +21,6 @@
         <div class="right">
             <label>Preview</label>
             <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
-
         </div>
     </div>
 </template>
