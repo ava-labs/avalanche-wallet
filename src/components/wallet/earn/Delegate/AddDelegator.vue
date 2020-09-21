@@ -433,10 +433,10 @@ export default class AddDelegator extends Vue{
         let zero = new BN(0);
 
         let totAvailable = this.platformUnlocked.add(this.platformLockedStakeable);
-        let max = totAvailable.sub(this.txFee)
+        // let max = totAvailable.sub(this.txFee)
 
-        if(zero.gt(max)) return zero;
-        return max;
+        if(zero.gt(totAvailable)) return zero;
+        return totAvailable;
     }
 
     get stakeAmtText(){

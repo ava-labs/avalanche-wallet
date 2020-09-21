@@ -125,7 +125,7 @@
             return this.ava_asset.amountLocked;
         }
 
-        // should be unlocked (X+P), locked (X+P) and staked
+        // should be unlocked (X+P), locked (X+P) and staked and lockedStakeable
         get balanceText():string{
             if(this.ava_asset !== null){
                 let xUnlocked = this.avmUnlocked;
@@ -133,10 +133,11 @@
                 let pUnlocked = this.platformUnlocked;
                 let pLocked = this.platformLocked;
                 let staked = this.stakingAmount;
+                let lockedStakeable = this.platformLockedStakeable;
 
                 let denom = this.ava_asset.denomination;
 
-                let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked);
+                let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked).add(lockedStakeable);
                 let bigTot = Big(tot.toString()).div(Math.pow(10,denom))
                 if(bigTot.lt(Big('1000'))){
                     return bigTot.toString();
