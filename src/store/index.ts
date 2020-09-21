@@ -58,15 +58,6 @@ export default new Vuex.Store({
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
     },
     getters: {
-        // isMainnetLock(state: RootState): boolean{
-        //     let net: AvaNetwork = state["Network/selectedNetwork"];
-        //
-        //     if(!net) return false;
-        //     if(net.networkId === 0){
-        //         return true;
-        //     }
-        //     return false;
-        // },
         walletNftUTXOs(state: RootState): UTXO[]{
             let wallet = state.activeWallet;
 

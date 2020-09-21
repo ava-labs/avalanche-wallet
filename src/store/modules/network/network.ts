@@ -2,7 +2,7 @@ import {Module} from "vuex";
 import {RootState} from "@/store/types";
 import {NetworkState} from "@/store/modules/network/types";
 
-import {ava, avm, infoApi} from "@/AVA";
+import {ava, avm, bintools, infoApi, pChain} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
@@ -32,33 +32,25 @@ const network_module: Module<NetworkState, RootState> = {
 
             let chainIdX = await infoApi.getBlockchainID('X');
             let chainIdP = await  infoApi.getBlockchainID('P');
-            // TODO: Remove these constant ids
 
-            ava.XChain().refreshBlockchainID(chainIdX);
-            ava.PChain().refreshBlockchainID(chainIdP);
+            avm.refreshBlockchainID(chainIdX);
+            avm.setBlockchainAlias('X');
+            pChain.refreshBlockchainID(chainIdP);
+            pChain.setBlockchainAlias('P');
+            // let assetId = await avm.getAVAXAssetID(true);
 
-
-            // TODO: Turn on before manhattan push
-            // enter lockdown mode if network id is 0 (Manhattan)
-            // if(net.networkId===0){
-            //     rootState.isMainnetLock = true;
-            //     router.push('/wallet/mainnet');
-            // }else{
-            //     rootState.isMainnetLock = false;
-            //     if(state.selectedNetwork?.networkId===0){
-            //         router.push('/wallet/');
-            //     }
-            // }
+            // console.log(bintools.cb58Encode(assetId));
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
-
 
             commit('Assets/removeAllAssets', null, {root: true});
             await dispatch('Assets/updateAvaAsset', null, {root: true});
 
             // If authenticated
             if(rootState.isAuth){
+                // Go back to wallet page
+                router.replace('/wallet');
                 for(var i=0; i<rootState.wallets.length;i++){
                     let w = rootState.wallets[i];
                         w.onnetworkchange();
@@ -79,18 +71,20 @@ const network_module: Module<NetworkState, RootState> = {
 
         async updateTxFee({state}){
             let txFee = await infoApi.getTxFee();
-            state.txFee = txFee;
-            avm.setFee(txFee);
+            state.txFee = txFee.txFee;
+            avm.setTxFee(txFee.txFee);
         },
 
         async init({state, commit, dispatch}){
             // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let manhattan = new AvaNetwork("Manhattan",'https://api.avax.network:443', 0, 'X');
+            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1, 'X', "https://explorerapi.avax.network");
+            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5, 'X', "https://explorerapi.avax-test.network");
             let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
 
 
             // commit('addNetwork', netTest);
             commit('addNetwork', manhattan);
+            commit('addNetwork', fuji);
             commit('addNetwork', netLocal);
             try{
                 let res = await dispatch('setNetwork', state.networks[0]);

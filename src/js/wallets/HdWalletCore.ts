@@ -154,7 +154,7 @@ class HdWalletCore{
                 let amt: BN = tx.amount;
 
                 if(assetId.toString('hex') === AVAX_ID_STR){
-                    aad.addAssetAmount(assetId, amt, avm.getFee())
+                    aad.addAssetAmount(assetId, amt, avm.getTxFee())
                     isFeeAdded = true;
                 }else{
                     aad.addAssetAmount(assetId, amt, ZERO)
@@ -164,8 +164,8 @@ class HdWalletCore{
 
         // If fee isn't added, add it
         if(!isFeeAdded){
-            if(avm.getFee().gt(ZERO)){
-                aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getFee())
+            if(avm.getTxFee().gt(ZERO)){
+                aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getTxFee())
             }
         }
 

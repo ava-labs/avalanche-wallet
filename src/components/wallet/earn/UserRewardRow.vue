@@ -20,7 +20,7 @@
                 <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
             </div>
             <div>
-                <label>Reward</label>
+                <label>Potential Reward</label>
                 <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
             </div>
         </div>
@@ -86,7 +86,8 @@ export default class UserRewardRow extends Vue{
 
     get percFull(): number{
         let range = this.endtime - this.startTime;
-        return (this.now - this.startTime)/range;
+        let res = (this.now - this.startTime)/range;
+        return Math.min(res,1);
     }
 }
 </script>
@@ -138,7 +139,8 @@ export default class UserRewardRow extends Vue{
     padding: 4px 12px;
     text-align: right;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content max-content;
+    //grid-template-columns: 1fr 1fr;
     border-left: 3px solid var(--bg);
 }
 

@@ -183,7 +183,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
     }
 
     async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string>{
-        let fee = avm.getFee();
+        let fee = avm.getTxFee();
         let amtFee = amt.add(fee);
 
 
@@ -228,8 +228,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         }else{
             throw 'Invalid source chain.'
         }
-
-        // console.log("Export Success: ",txId)
     }
 
 
@@ -311,6 +309,19 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
 
     // returns a keychain that has all the derived private/public keys for X chain
     getKeyChain(): AVMKeyChain{
+        let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
+        let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
+
+        let allKeys = internal.concat(external);
+        let keychain: AVMKeyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
+
+        for(var i=0; i<allKeys.length;i ++){
+            keychain.addKey(allKeys[i]);
+        }
+        return keychain;
+    }
+
+    getExtendedKeyChain(){
         let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
         let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
 
