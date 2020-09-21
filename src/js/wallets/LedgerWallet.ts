@@ -251,7 +251,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 fromAddrs,
                 [xChangeAddr]
             );
-
             let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx);
             return  avm.issueTx(tx);
         }else if(sourceChain === 'P'){
@@ -260,14 +259,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let pChangeAddr = this.platformHelper.getCurrentAddress();
             let fromAddrs = this.platformHelper.getAllDerivedAddresses();
 
-            // console.log("HEX")
-            // console.log("Export to: ", bintools.stringToAddress(toAddress).toString('hex'))
-            // console.log("Export from: ",fromAddrs.map((addr)=> {return bintools.stringToAddress(addr).toString('hex')}).join(', '))
-            // console.log("Export change: ",bintools.stringToAddress(pChangeAddr).toString('hex'))
-            // console.log("bech32")
-            // console.log("Export to: ",toAddress)
-            // console.log("Export from: ",fromAddrs)
-            // console.log("Export change: ",pChangeAddr)
             let exportTx = await pChain.buildExportTx(
                 utxoSet,
                 amtFee,
@@ -277,11 +268,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 [pChangeAddr]
             );
 
-            // console.log(exportTx.serialize());
-            // console.log(exportTx.serialize('display'));
-            // console.log(exportTx.toBuffer().toString('hex'));
-
-            // let tx = exportTx.sign(keychain);
             let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false);
             return  pChain.issueTx(tx);
         }else{
@@ -321,16 +307,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             [rewardAddress], // reward address
         );
 
-        // console.log(unsignedTx.serialize('display'));
-        // console.log(unsignedTx.toBuffer().toString('hex'))
-
         const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
-        // const tx =  unsignedTx.sign(keychain);
 
-        // console.log(bintools.cb58Encode(tx.toBuffer()));
-        //
-        // console.log(tx.serialize());
-        // console.log(tx.serialize('display'));
         // Update UTXOS
         setTimeout(async () => {
             this.getUTXOs()

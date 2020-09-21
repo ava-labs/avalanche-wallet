@@ -103,28 +103,63 @@ class HdHelper {
     // helper method to get utxos for more than 1024 addresses
     async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
         if(addrs.length<=1024){
-            return await avm.getUTXOs(addrs);
+            let utxos = (await avm.getUTXOs(addrs)).utxos;
+            // console.log(utxos.getAllUTXOs().length);
+            return utxos;
         }else{
             //Break the list in to 1024 chunks
             let chunk = addrs.slice(0,1024);
             let remainingChunk = addrs.slice(1024);
 
-            let newSet = await avm.getUTXOs(chunk);
+            let newSet = (await avm.getUTXOs(chunk)).utxos;
 
             return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
         }
     }
 
+    async platformGetAllUTXOsForAddresses(addrs: string[], endIndex:any = undefined): Promise<PlatformUTXOSet>{
+        let response;
+        if(!endIndex){
+            // console.log("Initial start.")
+            response = await pChain.getUTXOs(addrs);
+        }else{
+            // console.log("Stop index: ", stopIndex);
+            response = await pChain.getUTXOs(addrs, undefined, 0, endIndex);
+        }
+
+        console.log(response);
+
+        let utxoSet = response.utxos;
+        let utxos = utxoSet.getAllUTXOs();
+        let nextEndIndex = response.endIndex;
+        let len = response.numFetched;
+
+        console.log(nextEndIndex.address)
+
+        // console.log("Next stop: ",nextStopIndex);
+
+        if(len >= 1024){
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
+            return utxoSet.merge(subUtxos)
+        }
+
+        return utxoSet;
+
+    }
     // helper method to get utxos for more than 1024 addresses
     async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
+        console.log("Get all platform UTXOs");
+        console.log("getting utxos for: ", addrs);
         if(addrs.length<=1024){
-            return await pChain.getUTXOs(addrs);
+            let newSet = await this.platformGetAllUTXOsForAddresses(addrs);
+            console.log("Got total set: ",newSet.getAllUTXOs().length);
+            return newSet;
         }else{
             //Break the list in to 1024 chunks
             let chunk = addrs.slice(0,1024);
             let remainingChunk = addrs.slice(1024);
 
-            let newSet = await pChain.getUTXOs(chunk);
+            let newSet = await this.platformGetAllUTXOsForAddresses(chunk);
 
             return newSet.merge(await this.platformGetAllUTXOs(remainingChunk))
         }
@@ -145,6 +180,7 @@ class HdHelper {
             result = await this.avmGetAllUTXOs(addrs);
         }else{
             result = await this.platformGetAllUTXOs(addrs);
+            console.log(result);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
@@ -169,10 +205,10 @@ class HdHelper {
         let hdIndex = this.hdIndex;
         let addrs: string[] = this.getAllDerivedAddresses();
         if(this.chainId === 'P'){
-            let result: PlatformUTXOSet = await pChain.getUTXOs(addrs, avm.getBlockchainID());
+            let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID())).utxos;
             return result;
         }else{
-            let result: AVMUTXOSet = await avm.getUTXOs(addrs, pChain.getBlockchainID());
+            let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos;
             return result;
         }
     }
@@ -254,9 +290,9 @@ class HdHelper {
         let utxoSet;
 
         if(this.chainId==='X'){
-            utxoSet = await avm.getUTXOs(addrs);
+            utxoSet = (await avm.getUTXOs(addrs)).utxos;
         }else{
-            utxoSet = await pChain.getUTXOs(addrs);
+            utxoSet = (await pChain.getUTXOs(addrs)).utxos;
         }
 
 

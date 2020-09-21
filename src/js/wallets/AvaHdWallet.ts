@@ -228,8 +228,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         }else{
             throw 'Invalid source chain.'
         }
-
-        // console.log("Export Success: ",txId)
     }
 
 

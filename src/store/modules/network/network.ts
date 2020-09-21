@@ -37,9 +37,9 @@ const network_module: Module<NetworkState, RootState> = {
             avm.setBlockchainAlias('X');
             pChain.refreshBlockchainID(chainIdP);
             pChain.setBlockchainAlias('P');
-            let assetId = await avm.getAVAXAssetID(true);
+            // let assetId = await avm.getAVAXAssetID(true);
 
-            console.log(bintools.cb58Encode(assetId));
+            // console.log(bintools.cb58Encode(assetId));
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
@@ -77,8 +77,8 @@ const network_module: Module<NetworkState, RootState> = {
 
         async init({state, commit, dispatch}){
             // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let manhattan = new AvaNetwork("Manhattan",'https://api.avax.network:443', 0, 'X');
-            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5, 'X');
+            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1, 'X', "https://explorerapi.avax.network");
+            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5, 'X', "https://explorerapi.avax-test.network");
             let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
 
 
