@@ -48,6 +48,8 @@ const network_module: Module<NetworkState, RootState> = {
 
             // If authenticated
             if(rootState.isAuth){
+                // Go back to wallet page
+                router.replace('/wallet');
                 for(var i=0; i<rootState.wallets.length;i++){
                     let w = rootState.wallets[i];
                         w.onnetworkchange();

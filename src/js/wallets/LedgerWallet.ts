@@ -411,6 +411,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             delegationFee,
         );
 
+        console.log(unsignedTx.serialize('display'));
+        console.log(unsignedTx.toBuffer().toString('hex'))
 
         let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false);
 

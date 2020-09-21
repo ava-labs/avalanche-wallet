@@ -69,6 +69,9 @@
                         <h2>Your validation transaction is sent.</h2>
                         <p>If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
                         <p class="tx_id">Tx ID: {{txId}}</p>
+                        <label>Status</label>
+                        <p v-if="!txStatus">Waiting..</p>
+                        <p v-else>{{txStatus}}</p>
                     </div>
                 </div>
 
@@ -125,6 +128,7 @@ export default class AddValidator extends Vue{
     formRewardAddr = "";
 
     txId = "";
+    txStatus: string|null = null;
     isSuccess = false;
 
 
@@ -367,6 +371,13 @@ export default class AddValidator extends Vue{
             title: 'Validator Added',
             message: 'Your tokens are now used to validate the network and earn rewards.'
         })
+
+        // Check tx status
+        setTimeout(async ()=>{
+            let status = await pChain.getTxStatus(txId);
+            console.log(status,txId);
+            this.txStatus = status;
+        },5000)
     }
 
     get minStakeAmt(): BN{
