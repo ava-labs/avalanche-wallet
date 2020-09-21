@@ -275,6 +275,7 @@ export default class AddDelegator extends Vue{
             return false;
         }
 
+        // TODO: UPDATE THIS WITH REAL VALUE
         if(diffTime < dur24){
             this.err = `Minimum staking duration is 24 hours.`;
             return false;
@@ -356,6 +357,7 @@ export default class AddDelegator extends Vue{
     get endMinDate(): string{
         let startDate = new Date(this.startDate);
         let endTime = startDate.getTime() + (1000 * 60 * 60 * 24);
+        // let endTime = startDate.getTime();
         let endDate = new Date(endTime);
         return endDate.toISOString();
     }
@@ -375,6 +377,7 @@ export default class AddDelegator extends Vue{
         return dur;
     }
 
+    //TODO: UNDO
     @Watch('stakingDuration')
     durChange(val: number){
         if(val < (60000*60*24)){

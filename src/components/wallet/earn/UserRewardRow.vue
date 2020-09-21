@@ -86,7 +86,8 @@ export default class UserRewardRow extends Vue{
 
     get percFull(): number{
         let range = this.endtime - this.startTime;
-        return (this.now - this.startTime)/range;
+        let res = (this.now - this.startTime)/range;
+        return Math.min(res,1);
     }
 }
 </script>
