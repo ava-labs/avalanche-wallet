@@ -5,7 +5,7 @@
                 <h1>Enter your MNEMONIC phrase</h1>
             </header>
             <label>Hit ‘SPACE’ after every successful word entry.</label>
-            <textarea v-model="phrase"></textarea>
+            <textarea v-model="phrase" translate="no"></textarea>
             <div class="button_container">
                 <p class="err" v-if="err">{{err}}</p>
                 <v-btn

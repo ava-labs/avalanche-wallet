@@ -376,8 +376,8 @@ export default class AddValidator extends Vue{
         setTimeout(async ()=>{
             let status = await pChain.getTxStatus(txId);
             console.log(status,txId);
-            this.txStatus = status;
-        },5000)
+            this.txStatus = status || 'Unknown';
+        },10000)
     }
 
     get minStakeAmt(): BN{
