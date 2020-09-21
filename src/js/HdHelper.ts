@@ -127,14 +127,14 @@ class HdHelper {
             response = await pChain.getUTXOs(addrs, undefined, 0, endIndex);
         }
 
-        console.log(response);
+        // console.log(response);
 
         let utxoSet = response.utxos;
         let utxos = utxoSet.getAllUTXOs();
         let nextEndIndex = response.endIndex;
         let len = response.numFetched;
 
-        console.log(nextEndIndex.address)
+        // console.log(nextEndIndex.address)
 
         // console.log("Next stop: ",nextStopIndex);
 
@@ -148,11 +148,11 @@ class HdHelper {
     }
     // helper method to get utxos for more than 1024 addresses
     async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
-        console.log("Get all platform UTXOs");
-        console.log("getting utxos for: ", addrs);
+        // console.log("Get all platform UTXOs");
+        // console.log("getting utxos for: ", addrs);
         if(addrs.length<=1024){
             let newSet = await this.platformGetAllUTXOsForAddresses(addrs);
-            console.log("Got total set: ",newSet.getAllUTXOs().length);
+            // console.log("Got total set: ",newSet.getAllUTXOs().length);
             return newSet;
         }else{
             //Break the list in to 1024 chunks
@@ -180,7 +180,7 @@ class HdHelper {
             result = await this.avmGetAllUTXOs(addrs);
         }else{
             result = await this.platformGetAllUTXOs(addrs);
-            console.log(result);
+            // console.log(result);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
