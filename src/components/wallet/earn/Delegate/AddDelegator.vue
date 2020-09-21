@@ -20,7 +20,7 @@
                                 <p class="node_id" style="word-break: break-all;">{{selected.nodeID}}</p>
                             </div>
                             <div>
-                                <p style="font-size: 13px; color: var(--primary-color-light)">Fee</p>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">Delegation Fee</p>
                                 <p class="node_id">{{delegationFee}} %</p>
                             </div>
                             <div>
