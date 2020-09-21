@@ -191,9 +191,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     getPathFromAddress(address: string){
-        let externalAddrs = this.externalHelper.getAllDerivedAddresses();
-        let internalAddrs = this.internalHelper.getAllDerivedAddresses();
-        let platformAddrs = this.platformHelper.getAllDerivedAddresses();
+        let externalAddrs = this.externalHelper.getExtendedAddresses();
+        let internalAddrs = this.internalHelper.getExtendedAddresses();
+        let platformAddrs = this.platformHelper.getExtendedAddresses();
 
         let extIndex = externalAddrs.indexOf(address);
         let intIndex = internalAddrs.indexOf(address);
@@ -260,7 +260,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let pChangeAddr = this.platformHelper.getCurrentAddress();
             let fromAddrs = this.platformHelper.getAllDerivedAddresses();
 
-
+            // console.log("HEX")
+            // console.log("Export to: ", bintools.stringToAddress(toAddress).toString('hex'))
+            // console.log("Export from: ",fromAddrs.map((addr)=> {return bintools.stringToAddress(addr).toString('hex')}).join(', '))
+            // console.log("Export change: ",bintools.stringToAddress(pChangeAddr).toString('hex'))
+            // console.log("bech32")
+            // console.log("Export to: ",toAddress)
+            // console.log("Export from: ",fromAddrs)
+            // console.log("Export change: ",pChangeAddr)
             let exportTx = await pChain.buildExportTx(
                 utxoSet,
                 amtFee,
@@ -269,6 +276,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 fromAddrs,
                 [pChangeAddr]
             );
+
+            // console.log(exportTx.serialize());
+            // console.log(exportTx.serialize('display'));
+            // console.log(exportTx.toBuffer().toString('hex'));
+
             // let tx = exportTx.sign(keychain);
             let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false);
             return  pChain.issueTx(tx);
@@ -308,6 +320,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             stakeAmount,
             [rewardAddress], // reward address
         );
+
+        // console.log(unsignedTx.serialize('display'));
+        // console.log(unsignedTx.toBuffer().toString('hex'))
 
         const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
         // const tx =  unsignedTx.sign(keychain);
@@ -355,18 +370,40 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async importToXChain(): Promise<string> {
         const utxoSet = await this.externalHelper.getAtomicUTXOs() as AVMUTXOSet;
-        let xAddrs = this.getDerivedAddresses();
-        let xToAddr = this.externalHelper.getCurrentAddress();
+        let xUtxoSet = this.getUTXOSet();
 
+        // console.log(utxoSet.getAllUTXOs());
+        // console.log(xUtxoSet.getAllUTXOs());
+
+        let externalIndex = this.externalHelper.hdIndex;
+        // let xAddrs = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
+        let xToAddr = this.externalHelper.getCurrentAddress();
+        let externalAddresses = this.externalHelper.getExtendedAddresses();
+        let xAddrs = this.getDerivedAddresses();
+        // let xToAddr = this.externalHelper.getAllDerivedAddresses(externalIndex+10);
+
+
+        // console.log("Import to: ",xToAddr)
+
+
+        // console.log(utxoSet.getAllUTXOs());
+        // console.log(xUtxoSet.getAllUTXOs());
+        // console.log(xUtxoSet.serialize());
+        // console.log(utxoSet.serialize());
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
-            xAddrs,
+            externalAddresses,
             pChain.getBlockchainID(),
             [xToAddr],
+            externalAddresses,
             [xToAddr],
-            [xToAddr],
+
         );
+
+        // console.log(unsignedTx.toBuffer().toString())
+
+
         let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx);
 
         // // Update UTXOS
@@ -411,8 +448,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             delegationFee,
         );
 
-        console.log(unsignedTx.serialize('display'));
-        console.log(unsignedTx.toBuffer().toString('hex'))
+        // console.log(unsignedTx.serialize('display'));
+        // console.log(unsignedTx.toBuffer().toString('hex'))
 
         let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false);
 

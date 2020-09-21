@@ -160,8 +160,13 @@ class HdHelper {
         return result;
     }
 
-
+    // Returns more addresses than the current index
+    getExtendedAddresses(){
+        let hdIndex = this.hdIndex;
+        return this.getAllDerivedAddresses(hdIndex+INDEX_RANGE);
+    }
     async getAtomicUTXOs(){
+        let hdIndex = this.hdIndex;
         let addrs: string[] = this.getAllDerivedAddresses();
         if(this.chainId === 'P'){
             let result: PlatformUTXOSet = await pChain.getUTXOs(addrs, avm.getBlockchainID());
@@ -207,9 +212,9 @@ class HdHelper {
     }
 
     // Returns all key pairs up to hd index
-    getAllDerivedKeys(): AVMKeyPair[] | PlatformVMKeyPair[]{
+    getAllDerivedKeys(upTo = this.hdIndex): AVMKeyPair[] | PlatformVMKeyPair[]{
         let set: AVMKeyPair[] | PlatformVMKeyPair[] = [];
-        for(var i=0; i<=this.hdIndex;i++){
+        for(var i=0; i<=upTo;i++){
             if(this.chainId==='X'){
                 let key = this.getKeyForIndex(i) as AVMKeyPair;
                 (set as AVMKeyPair[]).push(key);

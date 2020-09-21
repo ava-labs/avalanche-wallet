@@ -2,7 +2,7 @@ import {Module} from "vuex";
 import {RootState} from "@/store/types";
 import {NetworkState} from "@/store/modules/network/types";
 
-import {ava, avm, infoApi, pChain} from "@/AVA";
+import {ava, avm, bintools, infoApi, pChain} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
@@ -37,8 +37,9 @@ const network_module: Module<NetworkState, RootState> = {
             avm.setBlockchainAlias('X');
             pChain.refreshBlockchainID(chainIdP);
             pChain.setBlockchainAlias('P');
+            let assetId = await avm.getAVAXAssetID(true);
 
-
+            console.log(bintools.cb58Encode(assetId));
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
