@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="right_col">
-                <div v-if="!isSuccess">
+                <div v-if="!isSuccess && !isImportErr">
                     <div>
                         <label>Fee</label>
                         <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
@@ -49,8 +49,7 @@
                         </template>
                     </div>
                 </div>
-
-                <div v-if="isImportErr" class="import_err">
+                <div v-else-if="isImportErr" class="import_err">
                     <h2>Import Failed</h2>
                     <p>There was a problem importing you tokens into the destination chain. Please try again later by doing another transfer. </p>
                     <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
@@ -377,7 +376,7 @@ h2{
 }
 .import_err{
     max-width: 320px;
-    margin: 10vh auto;
+    //margin: 10vh auto;
     color: var(--primary-color);
 
     p{

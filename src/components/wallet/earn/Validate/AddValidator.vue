@@ -252,13 +252,12 @@ export default class AddValidator extends Vue{
 
     get maxAmt(): BN{
         let pAmt = this.platformUnlocked.add(this.platformLockedStakeable);
-        let fee = this.feeAmt;
+        // let fee = this.feeAmt;
 
-        let res = pAmt.sub(fee);
+        // let res = pAmt.sub(fee);
         const ZERO = new BN('0');
-
-        if(res.gt(ZERO)){
-            return res;
+        if(pAmt.gt(ZERO)){
+            return pAmt;
         }else{
             return ZERO;
         }
