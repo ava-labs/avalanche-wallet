@@ -309,7 +309,7 @@
         }
 
         .spinner{
-            color: var(--primary-color);
+            color: var(--primary-color) !important;
         }
     }
     .buts{
