@@ -16,6 +16,7 @@ const platform_module: Module<PlatformState, RootState> = {
         delegators: [],
         delegatorsPending: [],
         minStake: new BN(0),
+        minStakeDelegation: new BN(0),
         currentSupply: new BN(1)
     },
     mutations: {
@@ -30,7 +31,12 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         async updateMinStakeAmount({state}){
-            state.minStake = await pChain.getMinStake(true);
+            let res = await pChain.getMinStake(true);
+            state.minStake = res.minValidatorStake;
+            state.minStakeDelegation = res.minDelegatorStake;
+
+            // console.log(state.minStake.toString())
+            // console.log(state.minStakeDelegation.toString())
         },
 
         async update({dispatch}){

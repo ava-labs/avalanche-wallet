@@ -30,7 +30,7 @@
                         <div style="margin: 30px 0;">
                             <h4>Delegation Fee</h4>
                             <p class="desc">You will claim this % of the rewards from the delegators on your node.</p>
-                            <input type="number" min="0" max="100" step="0.1" v-model="delegationFee">
+                            <input type="number" :min="minFee" max="100" step="0.01" v-model="delegationFee">
                         </div>
                         <div class="reward_in" style="margin: 30px 0;" :type="rewardDestination">
                             <h4>Reward Address</h4>
@@ -66,8 +66,12 @@
                     </div>
                     <div class="success_cont" v-else>
                         <p class="check"><fa icon="check-circle"></fa></p>
-                        <h2>You are now validating.</h2>
-                        <p>Your tokens are locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                        <h2>Your validation transaction is sent.</h2>
+                        <p>If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                        <p class="tx_id">Tx ID: {{txId}}</p>
+                        <label>Status</label>
+                        <p v-if="!txStatus">Waiting..</p>
+                        <p v-else>{{txStatus}}</p>
                     </div>
                 </div>
 
@@ -105,7 +109,7 @@ let dayMs = 1000 * 60 * 60 * 24;
 export default class AddValidator extends Vue{
     startDate: string = (new Date()).toISOString();
     endDate: string = "";
-    delegationFee: string = '0.0';
+    delegationFee: string = '2.0';
     nodeId = "";
     rewardIn: string = "";
     rewardDestination = 'local'; // local || custom
@@ -113,6 +117,8 @@ export default class AddValidator extends Vue{
     isConfirm = false;
     err:string = "";
     stakeAmt: BN = new BN(0);
+
+    minFee = 2;
 
     formNodeId = "";
     formAmt: BN = new BN(0);
@@ -122,14 +128,15 @@ export default class AddValidator extends Vue{
     formRewardAddr = "";
 
     txId = "";
+    txStatus: string|null = null;
     isSuccess = false;
 
 
     @Watch('delegationFee')
     onFeeChange(val: string){
         let num = parseFloat(val);
-        if(num < 0){
-            this.delegationFee = '0';
+        if(num < this.minFee){
+            this.delegationFee = this.minFee.toString();
         }else if(num>100){
             this.delegationFee = '100';
         }
@@ -239,19 +246,22 @@ export default class AddValidator extends Vue{
         return this.$store.getters.walletPlatformBalance;
     }
 
+    get platformLockedStakeable(): BN{
+        return this.$store.getters.walletPlatformBalanceLockedStakeable;
+    }
+
     get feeAmt(): BN{
-        return pChain.getFee();
+        return pChain.getTxFee();
     }
 
     get maxAmt(): BN{
-        let pAmt = this.platformUnlocked;
-        let fee = this.feeAmt;
+        let pAmt = this.platformUnlocked.add(this.platformLockedStakeable);
+        // let fee = this.feeAmt;
 
-        let res = pAmt.sub(fee);
+        // let res = pAmt.sub(fee);
         const ZERO = new BN('0');
-
-        if(res.gt(ZERO)){
-            return res;
+        if(pAmt.gt(ZERO)){
+            return pAmt;
         }else{
             return ZERO;
         }
@@ -327,6 +337,13 @@ export default class AddValidator extends Vue{
             }
         }
 
+        // Stake amount
+        if(this.stakeAmt.lt(this.minStakeAmt)){
+            let big = Big(this.minStakeAmt.toString()).div(Math.pow(10,9));
+            this.err = `Stake amount must be at least ${big.toLocaleString()} AVAX.`
+            return false;
+        }
+
         return true;
     }
 
@@ -354,6 +371,13 @@ export default class AddValidator extends Vue{
             title: 'Validator Added',
             message: 'Your tokens are now used to validate the network and earn rewards.'
         })
+
+        // Check tx status
+        setTimeout(async ()=>{
+            let status = await pChain.getTxStatus(txId);
+            console.log(status,txId);
+            this.txStatus = status || 'Unknown';
+        },10000)
     }
 
     get minStakeAmt(): BN{
@@ -470,6 +494,14 @@ label{
     .check{
         font-size: 4em;
         color: var(--success);
+    }
+
+    .tx_id{
+        font-size: 13px;
+        color: var(--primary-color-light);
+        word-break: break-all;
+        margin: 14px 0 !important;
+        font-weight: bold;
     }
 }
 

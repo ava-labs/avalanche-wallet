@@ -20,6 +20,16 @@
                         <h4>{{$t('transfer.to')}}</h4>
                         <qr-input v-if="!isConfirm" v-model="addressIn" class="qrIn" placeholder="xxx"></qr-input>
                         <p class="confirm_val" v-else>{{formAddress}}</p>
+
+                        <template v-if="isConfirm && formMemo.length>0">
+                            <h4>Memo (Optional)</h4>
+                            <p class="confirm_val">{{formMemo}}</p>
+                        </template>
+                        <template v-else-if="!isConfirm">
+                            <h4>Memo (Optional)</h4>
+                            <textarea class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
+                        </template>
+
                     </div>
                     <div class="fees">
                         <h4>{{$t('transfer.fees')}}</h4>
@@ -79,8 +89,10 @@
     import FaucetLink from "@/components/misc/FaucetLink.vue";
     import {ITransaction} from "@/components/wallet/transfer/types";
     import { UTXO } from "avalanche/dist/apis/avm";
-    import BN from "bn.js";
+    import {Buffer, BN} from "avalanche";
     import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
+    import {IssueBatchTxInput} from "@/store/types";
+    import {bnToBig} from "@/helpers/helper";
 
 
 
@@ -98,6 +110,7 @@
         showAdvanced:boolean = false;
         isAjax:boolean = false;
         addressIn:string = '';
+        memo: string = "";
         orders:ITransaction[] = [];
         nftOrders: UTXO[] = [];
         formErrors:string[] = [];
@@ -106,6 +119,7 @@
         formAddress:string = '';
         formOrders:ITransaction[] = [];
         formNftOrders: UTXO[] = [];
+        formMemo = "";
 
         isConfirm = false;
         isSuccess = false;
@@ -119,12 +133,14 @@
             this.formOrders = [...this.orders];
             this.formNftOrders = [...this.nftOrders];
             this.formAddress = this.addressIn;
+            this.formMemo = this.memo;
 
             this.isConfirm = true;
         }
 
         cancelConfirm(){
             this.err = '';
+            this.formMemo = "";
             this.formOrders = [];
             this.formNftOrders = [];
             this.formAddress = "";
@@ -155,6 +171,15 @@
                 err.push('Invalid address.')
             }
 
+            let memo = this.memo;
+            if(this.memo){
+                let buff = Buffer.from(memo);
+                let size = buff.length;
+                if(size>256){
+                    err.push('You can have a maximum of 256 characters in your memo.')
+                }
+            }
+
 
             // Make sure to address matches the bech32 network hrp
             let hrp = ava.getHRP();
@@ -179,6 +204,7 @@
 
         clearForm(){
             this.addressIn = "";
+            this.memo = "";
             // Clear transactions list
             // @ts-ignore
             this.$refs.txList.clear();
@@ -225,8 +251,9 @@
 
             let sumArray: (ITransaction|UTXO)[] = [...this.formOrders, ...this.formNftOrders];
 
-            let txList = {
+            let txList: IssueBatchTxInput = {
                 toAddress: this.formAddress,
+                memo: Buffer.from(this.formMemo),
                 orders: sumArray
             };
 
@@ -278,9 +305,8 @@
         }
 
         get txFee(): Big{
-            let fee = avm.getFee();
-            let res = Big(fee.toString()).div(Math.pow(10,9));
-            return res;
+            let fee = avm.getTxFee();
+            return bnToBig(fee,9)
         }
 
         get addresses(){
@@ -381,6 +407,15 @@
         opacity: 1;
     }
 
+    .memo{
+        font-size: 14px;
+        background-color: var(--bg-light);
+        resize: none;
+        width: 100%;
+        height: 80px;
+        border-radius: 2px;
+        padding: 4px 12px;
+    }
 
     .radio_buttons{
         margin-top: 15px;

@@ -7,15 +7,17 @@ import {
     TransferableInput,
     TransferableOutput,
     BaseTx,
-    UnsignedTx,
-    Tx,
+    UnsignedTx as AVMUnsignedTx,
+    Tx as AVMTx,
     UTXO,
     AssetAmountDestination
 } from "avalanche/dist/apis/avm";
 
 import {
     KeyChain as PlatformVMKeyChain,
-    UTXOSet as PlatformUTXOSet
+    UTXOSet as PlatformUTXOSet,
+    UnsignedTx as PlatformUnsignedTx,
+    Tx as PlatformTx
 } from "avalanche/dist/apis/platformvm";
 
 import {
@@ -24,11 +26,10 @@ import {
 
 
 import * as bip39 from "bip39";
-import {BN} from 'avalanche';
+import {BN, Buffer} from 'avalanche';
 import {ava, avm, bintools, pChain} from "@/AVA";
 import {IAvaHdWallet, IIndexKeyCache} from "@/js/wallets/IAvaHdWallet";
 import HDKey from 'hdkey';
-import {Buffer} from "buffer/";
 import {ITransaction} from "@/components/wallet/transfer/types";
 import {HdHelper} from "@/js/HdHelper";
 import {KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
@@ -106,12 +107,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         // For change address use first available on the platform chain
         let changeAddress = this.platformHelper.getFirstAvailableAddress();
 
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress();
+
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
+            [stakeReturnAddr],
             pAddressStrings, // from
             [changeAddress], // change
             nodeID,
@@ -150,12 +155,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         // For change address use first available on the platform chain
         let changeAddr = this.platformHelper.getFirstAvailableAddress();
 
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress();
+
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000));
         let endTime = new BN(Math.round(end.getTime() / 1000));
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
+            [stakeReturnAddr],
             pAddressStrings,
             [changeAddr],
             nodeID,
@@ -174,7 +183,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
     }
 
     async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string>{
-        let fee = avm.getFee();
+        let fee = avm.getTxFee();
         let amtFee = amt.add(fee);
 
 
@@ -219,8 +228,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         }else{
             throw 'Invalid source chain.'
         }
-
-        // console.log("Export Success: ",txId)
     }
 
 
@@ -278,11 +285,11 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         return avm.issueTx(tx);
     }
 
-    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string): Promise<string>{
-        let unsignedTx = await this.buildUnsignedTransaction(orders,addr);
+    async issueBatchTx(orders: (ITransaction|UTXO)[], addr: string, memo: Buffer|undefined): Promise<string>{
+        let unsignedTx = await this.buildUnsignedTransaction(orders,addr,memo);
         let keychain = this.getKeyChain();
 
-        const tx: Tx = unsignedTx.sign(keychain);
+        const tx = unsignedTx.sign(keychain);
         const txId: string = await avm.issueTx(tx);
 
         // TODO: Must update index after sending a tx
@@ -314,10 +321,29 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         return keychain;
     }
 
-    sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(unsignedTx: UnsignedTx): Promise<StandardTx<any, any, any>> {
+    getExtendedKeyChain(){
+        let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[];
+        let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[];
+
+        let allKeys = internal.concat(external);
+        let keychain: AVMKeyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), this.chainId);
+
+        for(var i=0; i<allKeys.length;i ++){
+            keychain.addKey(allKeys[i]);
+        }
+        return keychain;
+    }
+
+    async sign<UnsignedTx extends (AVMUnsignedTx|PlatformUnsignedTx), SignedTx extends (AVMTx|PlatformTx)>(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
         let keychain = this.getKeyChain();
-        const tx: Tx = unsignedTx.sign(keychain);
-        let promise = new Promise<StandardTx<any, any, any>>(resolve => tx);
-        return promise;
+        let keychainP = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+
+        if(isAVM){
+            const tx = (unsignedTx as AVMUnsignedTx).sign(keychain);
+            return tx as SignedTx;
+        }else{
+            const tx = (unsignedTx as PlatformUnsignedTx).sign(keychainP);
+            return tx as SignedTx;
+        }
     }
 }

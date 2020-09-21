@@ -59,13 +59,14 @@ declare module "big.js" {
 
 Big.prototype.toLocaleString = function(toFixed: number = 2) {
   let value = this;
-  let remainder = value.mod(1);
-  let wholeNums = value.minus(remainder);
-  let wnInt = parseInt(wholeNums.toFixed(0));
 
-  if (toFixed === 0) return wnInt.toLocaleString();
+  let split = value.toString().split('.');
+  let wholeStr = parseInt(split[0]).toLocaleString('en-US');
 
-  return (parseFloat(remainder) === 0) ?
-      wnInt.toLocaleString() :
-      wnInt.toLocaleString() + "." + remainder.toFixed(toFixed).split(".")[1].toString();
+  if(split.length===1){
+    return wholeStr;
+  }else{
+    let remainderStr = split[1];
+    return `${wholeStr}.${remainderStr}`;
+  }
 }

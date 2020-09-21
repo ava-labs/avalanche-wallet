@@ -6,8 +6,9 @@ export interface PlatformState {
     validatorsPending: ValidatorRaw[];
     delegators: DelegatorRaw[];
     delegatorsPending: DelegatorRaw[];
-    minStake: BN
-    currentSupply: BN
+    minStake: BN;
+    minStakeDelegation: BN;
+    currentSupply: BN;
 }
 
 export interface GetValidatorsResponse {

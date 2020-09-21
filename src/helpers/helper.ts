@@ -28,6 +28,9 @@ function getAssetIcon(id:string){
     return url;
 }
 
+function bnToBig(val: BN, denomination= 0): Big{
+    return new Big(val.toString()).div(Math.pow(10,denomination));
+}
 
 function keyToKeypair(key: string, chainID: string='X'): AVMKeyPair{
     let hrp = getPreferredHRP(ava.getNetworkID());
@@ -36,12 +39,10 @@ function keyToKeypair(key: string, chainID: string='X'): AVMKeyPair{
 }
 
 function calculateStakingReward(amount: BN, duration: number, currentSupply: BN): BN{
-    // PlatformVMConstants.
     let networkID = ava.getNetworkID();
 
     //@ts-ignore
     let defValues = Defaults.network[networkID];
-    // console.log(defValues)
 
     if(!defValues){
         console.error("Network default values not found.")
@@ -56,22 +57,15 @@ function calculateStakingReward(amount: BN, duration: number, currentSupply: BN)
     let maxStakingDuration: BN = defValues.maxStakingDuration;
     let remainingSupply = maxSupply.sub(currentSupply)
 
-    // console.log("Estimate");
-    // console.log(amount.toString(), currentSupply.toString(), duration)
-    // console.log(maxConsumption, minConsumption, diffConsumption, maxSupply.toString(), maxStakingDuration.toString())
-
     let amtBig = Big((amount.div(ONEAVAX)).toString())
     let currentSupplyBig = Big((currentSupply.div(ONEAVAX)).toString())
     let remainingSupplyBig = Big((remainingSupply.div(ONEAVAX)).toString())
     let portionOfExistingSupplyBig = amtBig.div(currentSupplyBig);
 
 
-    // let portionOfExistingSupply = amount.div(currentSupply);
     let portionOfStakingDuration = duration / maxStakingDuration.toNumber();
     let mintingRate = minConsumption + (diffConsumption * portionOfStakingDuration);
 
-    // console.log('Bigs: ',amtBig.toString(), currentSupplyBig.toString(), portionOfExistingSupplyBig.toString());
-    // console.log(remainingSupply.toString(), portionOfExistingSupply.toString(), portionOfStakingDuration, mintingRate)
 
     let rewardBig: Big = remainingSupplyBig.times(portionOfExistingSupplyBig);
         rewardBig = rewardBig.times(Big(mintingRate*portionOfStakingDuration));
@@ -80,13 +74,8 @@ function calculateStakingReward(amount: BN, duration: number, currentSupply: BN)
     let rewardBN = new BN(rewardStr);
 
 
-    // console.log("Reward: ",rewardBig.toString());
     return rewardBN;
-
-    // let reward = remainingSupply.mul(portionOfExistingSupply)
-    //     reward = reward.mul(new BN(mintingRate * portionOfStakingDuration));
-    // return reward
 }
 
 
-export {getAssetIcon, keyToKeypair, calculateStakingReward};
+export {getAssetIcon, keyToKeypair, calculateStakingReward, bnToBig};

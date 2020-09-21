@@ -20,7 +20,7 @@
                                 <p class="node_id" style="word-break: break-all;">{{selected.nodeID}}</p>
                             </div>
                             <div>
-                                <p style="font-size: 13px; color: var(--primary-color-light)">Fee</p>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">Delegation Fee</p>
                                 <p class="node_id">{{delegationFee}} %</p>
                             </div>
                             <div>
@@ -88,8 +88,9 @@
                 </div>
                 <div v-else class="success_cont">
                     <p class="check"><fa icon="check-circle"></fa></p>
-                    <h2>You are now delegating.</h2>
-                    <p>Your tokens are locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                    <h2>Delegation transaction sent.</h2>
+                    <p>If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                    <p class="tx_id">Tx ID: {{txId}}</p>
                 </div>
             </div>
         </div>
@@ -202,6 +203,7 @@ export default class AddDelegator extends Vue{
     }
 
     onerror(e: any){
+        console.error(e);
         let msg:string = e.message;
 
         if(msg.includes('startTime')){
@@ -273,6 +275,7 @@ export default class AddDelegator extends Vue{
             return false;
         }
 
+        // TODO: UPDATE THIS WITH REAL VALUE
         if(diffTime < dur24){
             this.err = `Minimum staking duration is 24 hours.`;
             return false;
@@ -296,6 +299,12 @@ export default class AddDelegator extends Vue{
             return false;
         }
 
+        // Stake amount check
+        if(this.stakeAmt.lt(this.minStake)){
+            let big = Big(this.minStake.toString()).div(Math.pow(10,9));
+            this.err = `Delegation amount must be at least ${big.toLocaleString()} AVAX.`
+            return false;
+        }
 
         return true;
     }
@@ -348,6 +357,7 @@ export default class AddDelegator extends Vue{
     get endMinDate(): string{
         let startDate = new Date(this.startDate);
         let endTime = startDate.getTime() + (1000 * 60 * 60 * 24);
+        // let endTime = startDate.getTime();
         let endDate = new Date(endTime);
         return endDate.toISOString();
     }
@@ -367,6 +377,7 @@ export default class AddDelegator extends Vue{
         return dur;
     }
 
+    //TODO: UNDO
     @Watch('stakingDuration')
     durChange(val: number){
         if(val < (60000*60*24)){
@@ -388,41 +399,47 @@ export default class AddDelegator extends Vue{
     }
 
     get minStake(): BN{
-        return  this.$store.state.Platform.minStake;
+        return  this.$store.state.Platform.minStakeDelegation;
     }
+
 
     get delegationFee(): number{
         if(!this.selected) return 0;
         return  parseFloat(this.selected.delegationFee);
     }
 
-    get fee(): BN{
+    get totalFee(): BN{
         let delegationFee = Big(this.delegationFee).div(Big(100));
         let cut = this.estimatedReward.times(delegationFee)
 
-        let txFee:BN = pChain.getFee();
+        let txFee:BN = pChain.getTxFee();
         let cutBN = new BN(cut.times(Math.pow(10,9)).toFixed(0))
         let totFee = txFee.add(cutBN);
         return  totFee;
     }
 
+    get txFee(): BN{
+        return pChain.getTxFee();
+    }
+
     get feeText(): string{
-        let amt = this.fee;
+        let amt = this.totalFee;
         let big = Big(amt.toString()).div(Math.pow(10,9));
         return big.toLocaleString(0)
     }
 
     get minAmt(): BN{
-        return this.minStake.add(this.fee)
+        return this.minStake.add(this.txFee)
     }
 
     get maxAmt(): BN{
         let zero = new BN(0);
 
-        let max = this.platformUnlocked.sub(this.fee)
+        let totAvailable = this.platformUnlocked.add(this.platformLockedStakeable);
+        // let max = totAvailable.sub(this.txFee)
 
-        if(zero.gt(max)) return zero;
-        return max;
+        if(zero.gt(totAvailable)) return zero;
+        return totAvailable;
     }
 
     get stakeAmtText(){
@@ -437,6 +454,10 @@ export default class AddDelegator extends Vue{
 
     get platformUnlocked(): BN{
         return this.$store.getters.walletPlatformBalance;
+    }
+
+    get platformLockedStakeable(): BN{
+        return this.$store.getters.walletPlatformBalanceLockedStakeable;
     }
 }
 </script>
@@ -574,6 +595,14 @@ label{
     .check{
         font-size: 4em;
         color: var(--success);
+    }
+
+    .tx_id{
+        font-size: 13px;
+        color: var(--primary-color-light);
+        word-break: break-all;
+        margin: 14px 0 !important;
+        font-weight: bold;
     }
 }
 

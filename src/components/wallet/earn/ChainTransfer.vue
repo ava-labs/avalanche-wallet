@@ -1,65 +1,72 @@
 <template>
     <div>
-        <div v-if="isImportErr" class="import_err">
-            <h2>Import Failed</h2>
-            <p>There was a problem importing you tokens into the destination chain. Please try again later by doing another transfer. </p>
-            <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
-        </div>
-        <div v-else-if="isSuccess" class="complete">
-            <h2>Transfer Completed</h2>
-            <div>
-                <label>Export Transaction ID:</label>
-                <p>{{exportId}}</p>
-            </div>
-            <div>
-                <label>Import Transaction ID:</label>
-                <p>{{importId}}</p>
-            </div>
-            <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> You have successfully transferred between chains. </p>
-            <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
-        </div>
-        <div class="form" v-else>
-            <div class="chains">
-                <div class="chain_cont">
-                    <label>Source Chain</label>
-                    <p class="chain">{{sourceChain}}</p>
-                    <div class="chain_info">
-                        <label>Balance</label>
-                        <p>{{balance.toString()}} AVAX</p>
+
+        <div class="cols">
+            <div class="form">
+                <div class="chains">
+                    <div class="chain_cont">
+                        <label>Source Chain</label>
+                        <p class="chain">{{sourceChain}}</p>
+                        <div class="chain_info">
+                            <label>Balance</label>
+                            <p>{{balance.toLocaleString()}} AVAX</p>
+                        </div>
+                    </div>
+                    <v-btn icon style="align-self: center;" class="switch_but button_primary" @click="switchChain" v-if="!isConfirm">
+                        <fa icon="sync"></fa>
+                    </v-btn>
+                    <div class="chain_cont">
+                        <label>Destination Chain</label>
+                        <p class="chain">{{targetChain}}</p>
+                        <div class="chain_info">
+                            <label>Balance</label>
+                            <p>{{destinationBalance.toLocaleString()}} AVAX</p>
+                        </div>
                     </div>
                 </div>
-                <v-btn icon style="align-self: center;" class="switch_but button_primary" @click="switchChain">
-                    <fa icon="sync"></fa>
-                </v-btn>
-                <div class="chain_cont">
-                    <label>Destination Chain</label>
-                    <p class="chain">{{targetChain}}</p>
-                    <div class="chain_info">
-                        <label>Balance</label>
-                        <p>{{destinationBalance.toString()}} AVAX</p>
+                <div v-show="!isConfirm">
+                    <label>Transfer Amount</label>
+                    <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
+                </div>
+                <div class="confirmation_val" v-if="isConfirm">
+                    <label>Transfer Amount</label>
+                    <p>{{formAmtText}} AVAX</p>
+                </div>
+            </div>
+            <div class="right_col">
+                <div v-if="!isSuccess && !isImportErr">
+                    <div>
+                        <label>Fee</label>
+                        <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
+                    </div>
+                    <div>
+                        <p class="err">{{err}}</p>
+                        <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
+                        <v-btn v-if="!isConfirm" data-cy="submit" class="button_secondary" @click="confirm" :disabled="!canSubmit" :loading="isLoading" block>Confirm</v-btn>
+                        <template v-else>
+                            <v-btn  data-cy="submit" class="button_secondary" @click="submit" :loading="isLoading" block depressed>Transfer</v-btn>
+                            <v-btn  data-cy="cancel" @click="cancelConfirm" block depressed text>Cancel</v-btn>
+                        </template>
                     </div>
                 </div>
-            </div>
-            <div v-if="!maxAmt.isZero() || isLoading">
-                <label>Transfer Amount</label>
-                <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
-            </div>
-            <div class="meta">
-<!--                <div>-->
-<!--                    <label>Your Balance</label>-->
-<!--                    <p style="font-size: 22px;">{{balance.toString()}} AVAX</p>-->
-<!--                </div>-->
-                <div>
-                    <label>Fee</label>
-                    <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
+                <div v-else-if="isImportErr" class="import_err">
+                    <h2>Import Failed</h2>
+                    <p>There was a problem importing you tokens into the destination chain. Please try again later by doing another transfer. </p>
+                    <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
                 </div>
-
-            </div>
-
-            <div>
-                <p class="err">{{err}}</p>
-                <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>
-                <v-btn v-else data-cy="submit" class="button_secondary" @click="submit" :disabled="!canSubmit" :loading="isLoading" block>Transfer</v-btn>
+                <div v-else-if="isSuccess" class="complete">
+                    <h2>Transfer Completed</h2>
+                    <div>
+                        <label>Export Transaction ID:</label>
+                        <p>{{exportId}}</p>
+                    </div>
+                    <div>
+                        <label>Import Transaction ID:</label>
+                        <p>{{importId}}</p>
+                    </div>
+                    <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> You have successfully transferred between chains. </p>
+                    <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
+                </div>
             </div>
         </div>
     </div>
@@ -74,6 +81,7 @@ import AvaAsset from "@/js/AvaAsset";
 import {BN} from "avalanche";
 import {pChain, avm} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+import {bnToBig} from "@/helpers/helper";
 
 
 @Component({
@@ -89,8 +97,12 @@ export default class ChainTransfer extends Vue{
     isLoading = false;
     amt: BN = new BN(0);
     err: string = "";
+
     isImportErr = false;
+    isConfirm = false;
     isSuccess = false;
+
+    formAmt = new BN(0);
 
     // Transaction ids
     exportId: string = '';
@@ -128,8 +140,10 @@ export default class ChainTransfer extends Vue{
             bal = this.avmUnlocked;
         }
 
-        let bigBal = Big(bal.toString())
-            bigBal = bigBal.div(Math.pow(10,9))
+        // let bigBal = Big(bal.toString())
+        //     bigBal = bigBal.div(Math.pow(10,9))
+        let bigBal = bnToBig(bal,9)
+
         return bigBal;
     }
 
@@ -141,19 +155,28 @@ export default class ChainTransfer extends Vue{
             bal = this.platformUnlocked;
         }
 
-        let bigBal = Big(bal.toString())
-        bigBal = bigBal.div(Math.pow(10,9))
+        let bigBal = bnToBig(bal,9)
+        // let bigBal = Big(bal.toString())
+        // bigBal = bigBal.div(Math.pow(10,9))
         return bigBal;
     }
 
+    get formAmtText(){
+        return bnToBig(this.formAmt,9).toLocaleString();
+    }
+    // Fee is 2 times the tx transfer fee
     get fee(): Big{
-        let feeP = pChain.getFee();
-        let feeX = avm.getFee();
+        let feeP = pChain.getTxFee();
+        let feeX = avm.getTxFee();
 
-        let feePBig = Big(feeP.toString()).div(Math.pow(10,9));
-        let feeXBig = Big(feeX.toString()).div(Math.pow(10,9));
+        // let totFee = feeP.add(feeX);
+        let totFee = feeX.mul(new BN(2));
+        // let feePBig = Big(feeP.toString()).div(Math.pow(10,9));
+        // let feeXBig = Big(feeX.toString()).div(Math.pow(10,9));
+        // let feeXBig = Big(totFee.toString()).div(Math.pow(10,9));
+        let feeXBig = bnToBig(totFee,9);
 
-        return feePBig.add(feeXBig)
+        return feeXBig;
     }
 
     get maxAmt(): BN{
@@ -175,7 +198,8 @@ export default class ChainTransfer extends Vue{
 
     get amtBig(): Big{
         let bn = this.amt;
-        let big = Big(bn.toString()).div(Math.pow(10,9));
+        // let big = Big(bn.toString()).div(Math.pow(10,9));
+        let big = bnToBig(bn,9);
         return big;
     }
 
@@ -187,6 +211,19 @@ export default class ChainTransfer extends Vue{
             this.onerror(e);
         }
     }
+
+
+    confirm(){
+        this.formAmt = this.amt.clone();
+        this.isConfirm = true;
+    }
+
+    cancelConfirm(){
+        this.isConfirm = false;
+        this.formAmt = new BN(0);
+    }
+
+
     async submit(){
         this.err = "";
         this.isLoading = true;
@@ -195,7 +232,7 @@ export default class ChainTransfer extends Vue{
         try{
             let wallet: AvaHdWallet = this.$store.state.activeWallet;
 
-            let exportTxId = await wallet.chainTransfer(this.amt,this.sourceChain)
+            let exportTxId = await wallet.chainTransfer(this.formAmt,this.sourceChain)
             await wallet.getUTXOs();
             this.$store.dispatch('Notifications/add', {
                 type: 'success',
@@ -264,11 +301,27 @@ export default class ChainTransfer extends Vue{
 }
 </script>
 <style scoped lang="scss">
+
+.cols{
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    column-gap: 2vw;
+}
+
+.right_col{
+
+}
+
+.confirmation_val{
+    background-color: var(--bg-light);
+    padding: 6px 14px;
+}
+
 .form{
     justify-self: center;
-    margin: 30px auto;
+    //margin: 30px auto;
     width: 100%;
-    max-width: 540px;
+    //max-width: 540px;
     > div{
         margin: 14px 0;
     }
@@ -286,6 +339,7 @@ export default class ChainTransfer extends Vue{
     position: relative;
     text-align: center;
     display: grid;
+    margin: 0 !important;
     column-gap: 4px;
     grid-template-columns: 1fr 1fr;
 
@@ -322,7 +376,7 @@ h2{
 }
 .import_err{
     max-width: 320px;
-    margin: 10vh auto;
+    //margin: 10vh auto;
     color: var(--primary-color);
 
     p{
@@ -334,7 +388,7 @@ h2{
 
 .complete{
     max-width: 320px;
-    margin: 10vh auto;
+    //margin: 10vh auto;
 
     > div{
         background-color: var(--bg-light);

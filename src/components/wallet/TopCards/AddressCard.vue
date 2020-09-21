@@ -138,116 +138,146 @@
 <style scoped lang="scss">
 @use '../../../main';
 
-    .addr_card{
-        display: flex;
-        flex-direction: column;
-    }
-    .buts{
-        width: 100%;
-        text-align: right;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        color: var(--primary-color-light);
+.addr_card{
+    display: flex;
+    flex-direction: column;
+}
+.buts{
+    width: 100%;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: var(--primary-color-light);
 
-        > *{
-            font-size: 18px;
-            margin: 0px 18px;
-            margin-right: 0px;
-            position: relative;
-            outline: none;
-            width: 18px;
-            height: 18px;
-            opacity: 0.6;
+    > *{
+        font-size: 18px;
+        margin: 0px 18px;
+        margin-right: 0px;
+        position: relative;
+        outline: none;
+        width: 18px;
+        height: 18px;
+        opacity: 0.6;
 
-            background-size: contain;
-            background-position: center;
-            &:hover{
-                opacity: 1;
-            }
+        background-size: contain;
+        background-position: center;
+        &:hover{
+            opacity: 1;
         }
     }
+}
 
 
+.qr_but{
+    background-image: url("/img/qr_icon.png");
+}
+.print_but{
+    background-image: url("/img/faucet_icon.png");
+}
+.copy_but{
+    color: var(--primary-color);
+}
+
+.mainnet_but{
+    background-image: url("/img/modal_icons/mainnet_addr.svg");
+}
+
+
+
+@include main.night-mode{
     .qr_but{
-        background-image: url("/img/qr_icon.png");
+        background-image: url("/img/qr_icon_night.svg");
     }
     .print_but{
-        background-image: url("/img/faucet_icon.png");
-    }
-    .copy_but{
-        color: var(--primary-color);
+        background-image: url("/img/print_icon_night.svg");
     }
 
     .mainnet_but{
-        background-image: url("/img/modal_icons/mainnet_addr.svg");
+        background-image: url("/img/modal_icons/mainnet_addr_night.svg");
+    }
+}
+
+
+
+.addr_info{
+    background-color: var(--bg-light);
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px 16px;
+    margin-bottom: 12px !important;
+}
+
+$qr_width: 110px;
+
+.bottom{
+    display: grid;
+    grid-template-columns: $qr_width 1fr;
+    column-gap: 14px;
+
+    canvas{
+        width: $qr_width;
+        height: $qr_width;
+        background-color: transparent;
     }
 
-
-
-    @include main.night-mode{
-        .qr_but{
-            background-image: url("/img/qr_icon_night.svg");
-        }
-        .print_but{
-            background-image: url("/img/print_icon_night.svg");
-        }
-
-        .mainnet_but{
-            background-image: url("/img/modal_icons/mainnet_addr_night.svg");
-        }
+    .bottom_rest{
+        padding-top: 4px;
+        display: flex;
+        flex-direction: column;
     }
+}
+
+.sub{
+    margin: 0px 10px !important;
+    text-align: center;
+    font-size: 0.7rem;
+    background-color: main.$secondary-color;
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 3px;
+}
+
+.subtitle{
+    font-size: 0.7rem;
+    color: var(--primary-color-light);
+}
+
+.addr_text{
+    font-size: 16px;
+    word-break: break-all;
+    color: var(--primary-color);
+    flex-grow: 1;
+}
 
 
+@include main.medium-device{
+    //.bottom{
+    //    display: block;
+    //}
 
     .addr_info{
-        background-color: var(--bg-light);
-        font-size: 13px;
-        font-weight: bold;
-        text-align: center;
-        padding: 12px 16px;
-        margin-bottom: 12px !important;
+        display: none;
+    }
+    canvas{
+        display: block;
+        margin: 0px auto;
     }
 
-    $qr_width: 110px;
+    .buts{
+        margin: 6px 0;
+        justify-content: space-evenly;
 
-    .bottom{
-        display: grid;
-        grid-template-columns: $qr_width 1fr;
-        column-gap: 14px;
-
-        canvas{
-            width: $qr_width;
-            height: $qr_width;
-            background-color: transparent;
-        }
-
-        .bottom_rest{
-            padding-top: 4px;
-            display: flex;
-            flex-direction: column;
+        > *{
+            margin: 0;
         }
     }
+}
 
-    .sub{
-        margin: 0px 10px !important;
-        text-align: center;
-        font-size: 0.7rem;
-        background-color: main.$secondary-color;
-        color: #fff;
-        padding: 3px 6px;
-        border-radius: 3px;
+@include main.mobile-device{
+    .addr_info{
+        display: none;
     }
-
-    .subtitle{
-        font-size: 0.7rem;
-        color: var(--primary-color-light);
-    }
-
-    .addr_text{
-        font-size: 16px;
-        word-break: break-all;
-        color: var(--primary-color);
-        flex-grow: 1;
-    }
+}
 </style>

@@ -12,7 +12,7 @@ import Create from "@/views/Create.vue";
 import Wallet from "@/views/Wallet.vue";
 import WalletHome from "@/views/wallet/Portfolio.vue";
 import Earn from "@/views/wallet/Earn.vue";
-
+import Manhattan from "@/views/wallet/Mainnet.vue";
 Vue.use(VueRouter);
 
 
@@ -34,6 +34,9 @@ const ifAuthenticated = (to: Route, from: Route, next: Function) => {
     }
     next('/')
 };
+
+
+
 
 
 const routes = [
@@ -75,19 +78,24 @@ const routes = [
             {
                 path: '/',
                 name: 'wallet',
-                component: WalletHome
+                component: WalletHome,
+
             },
             {
                 path: 'transfer',
-                component: Transfer
+                component: Transfer,
             },
             {
                 path: 'keys',
-                component: ManageKeys
+                component: ManageKeys,
             },
             {
                 path: 'earn',
-                component: Earn
+                component: Earn,
+            },
+            {
+                path: 'mainnet',
+                component: Manhattan,
             }
         ],
         component: Wallet,

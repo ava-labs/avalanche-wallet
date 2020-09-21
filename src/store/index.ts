@@ -26,6 +26,7 @@ import router from "@/router";
 import {ava, avm, bintools} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
+import {Buffer} from "avalanche";
 import {UnixNow} from "avalanche/dist/utils";
 import {UTXO, KeyPair as AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist/apis/avm";
 
@@ -34,8 +35,9 @@ import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
 import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
-import {ValidatorRaw} from "@/components/misc/ValidatorList/types";
 import {LedgerWallet} from "@/js/wallets/LedgerWallet";
+import {NetworkItem} from "@/store/modules/network/types";
+import {AvaNetwork} from "@/js/AvaNetwork";
 
 export default new Vuex.Store({
     modules:{
@@ -127,6 +129,9 @@ export default new Vuex.Store({
 
                 // Process only SECP256K1 Transfer Output utxos, outputid === 07
                 let outId = utxo.getOutput().getOutputID();
+
+                // console.log(outId,utxo)
+
                 if(outId!==7) continue;
 
                 let utxoOut = utxo.getOutput() as AmountOutput;
@@ -189,10 +194,12 @@ export default new Vuex.Store({
                 let utxoOut = utxo.getOutput() as AmountOutput;
                 let outId = utxoOut.getOutputID();
 
+
                 let locktime = utxoOut.getLocktime();
 
-                // Filter out locked tokens
-                if(locktime.lte(now)){
+
+                // Filter out locked tokens and stakeable locked tokens
+                if(locktime.lte(now) && outId !== 22){
                     amt.iadd(utxoOut.getAmount());
                 }
             }
@@ -219,6 +226,32 @@ export default new Vuex.Store({
 
                 // Filter unlocked tokens
                 if(locktime.gt(now)){
+                    amt.iadd(utxoOut.getAmount());
+                }
+            }
+
+            return amt;
+        },
+
+        walletPlatformBalanceLockedStakeable(state: RootState): BN{
+            let wallet = state.activeWallet;
+            if(!wallet) return new BN(0);
+
+            let utxoSet = wallet.platformHelper.utxoSet;
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN(0);
+
+            let utxos = utxoSet.getAllUTXOs()
+            for(var n=0; n<utxos.length; n++) {
+                let utxo = utxos[n];
+                let utxoOut = utxo.getOutput() as AmountOutput;
+                let outType = utxoOut.getOutputID()
+                // let outType = utxoOut.getTypeID();
+                // let locktime = utxoOut.getLocktime();
+
+                // Type ID 22 is stakeable but locked tokens
+                if(outType===22){
                     amt.iadd(utxoOut.getAmount());
                 }
             }
@@ -447,9 +480,10 @@ export default new Vuex.Store({
 
             let toAddr = data.toAddress;
             let orders = data.orders;
+            let memo = data.memo;
 
             try{
-                let txId:string = await wallet.issueBatchTx(orders, toAddr);
+                let txId:string = await wallet.issueBatchTx(orders, toAddr, memo);
                 return txId;
             }catch(e) {
                 throw(e)
