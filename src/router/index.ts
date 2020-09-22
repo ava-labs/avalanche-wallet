@@ -37,13 +37,6 @@ const ifAuthenticated = (to: Route, from: Route, next: Function) => {
 
 
 
-const ifMainnetNotLock = (to: Route, from: Route, next: Function) => {
-    if(!store.state.isMainnetLock){
-        next();
-        return;
-    }
-    next('/wallet/mainnet')
-}
 
 
 const routes = [
@@ -86,23 +79,19 @@ const routes = [
                 path: '/',
                 name: 'wallet',
                 component: WalletHome,
-                // beforeEnter: ifMainnetNotLock
 
             },
             {
                 path: 'transfer',
                 component: Transfer,
-                // beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'keys',
                 component: ManageKeys,
-                // beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'earn',
                 component: Earn,
-                // beforeEnter: ifMainnetNotLock
             },
             {
                 path: 'mainnet',

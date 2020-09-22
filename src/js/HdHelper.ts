@@ -103,28 +103,63 @@ class HdHelper {
     // helper method to get utxos for more than 1024 addresses
     async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
         if(addrs.length<=1024){
-            return await avm.getUTXOs(addrs);
+            let utxos = (await avm.getUTXOs(addrs)).utxos;
+            // console.log(utxos.getAllUTXOs().length);
+            return utxos;
         }else{
             //Break the list in to 1024 chunks
             let chunk = addrs.slice(0,1024);
             let remainingChunk = addrs.slice(1024);
 
-            let newSet = await avm.getUTXOs(chunk);
+            let newSet = (await avm.getUTXOs(chunk)).utxos;
 
             return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
         }
     }
 
+    async platformGetAllUTXOsForAddresses(addrs: string[], endIndex:any = undefined): Promise<PlatformUTXOSet>{
+        let response;
+        if(!endIndex){
+            // console.log("Initial start.")
+            response = await pChain.getUTXOs(addrs);
+        }else{
+            // console.log("Stop index: ", stopIndex);
+            response = await pChain.getUTXOs(addrs, undefined, 0, endIndex);
+        }
+
+        // console.log(response);
+
+        let utxoSet = response.utxos;
+        let utxos = utxoSet.getAllUTXOs();
+        let nextEndIndex = response.endIndex;
+        let len = response.numFetched;
+
+        // console.log(nextEndIndex.address)
+
+        // console.log("Next stop: ",nextStopIndex);
+
+        if(len >= 1024){
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
+            return utxoSet.merge(subUtxos)
+        }
+
+        return utxoSet;
+
+    }
     // helper method to get utxos for more than 1024 addresses
     async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
+        // console.log("Get all platform UTXOs");
+        // console.log("getting utxos for: ", addrs);
         if(addrs.length<=1024){
-            return await pChain.getUTXOs(addrs);
+            let newSet = await this.platformGetAllUTXOsForAddresses(addrs);
+            // console.log("Got total set: ",newSet.getAllUTXOs().length);
+            return newSet;
         }else{
             //Break the list in to 1024 chunks
             let chunk = addrs.slice(0,1024);
             let remainingChunk = addrs.slice(1024);
 
-            let newSet = await pChain.getUTXOs(chunk);
+            let newSet = await this.platformGetAllUTXOsForAddresses(chunk);
 
             return newSet.merge(await this.platformGetAllUTXOs(remainingChunk))
         }
@@ -145,6 +180,7 @@ class HdHelper {
             result = await this.avmGetAllUTXOs(addrs);
         }else{
             result = await this.platformGetAllUTXOs(addrs);
+            // console.log(result);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
@@ -160,14 +196,19 @@ class HdHelper {
         return result;
     }
 
-
+    // Returns more addresses than the current index
+    getExtendedAddresses(){
+        let hdIndex = this.hdIndex;
+        return this.getAllDerivedAddresses(hdIndex+INDEX_RANGE);
+    }
     async getAtomicUTXOs(){
+        let hdIndex = this.hdIndex;
         let addrs: string[] = this.getAllDerivedAddresses();
         if(this.chainId === 'P'){
-            let result: PlatformUTXOSet = await pChain.getUTXOs(addrs, avm.getBlockchainID());
+            let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID())).utxos;
             return result;
         }else{
-            let result: AVMUTXOSet = await avm.getUTXOs(addrs, pChain.getBlockchainID());
+            let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos;
             return result;
         }
     }
@@ -207,9 +248,9 @@ class HdHelper {
     }
 
     // Returns all key pairs up to hd index
-    getAllDerivedKeys(): AVMKeyPair[] | PlatformVMKeyPair[]{
+    getAllDerivedKeys(upTo = this.hdIndex): AVMKeyPair[] | PlatformVMKeyPair[]{
         let set: AVMKeyPair[] | PlatformVMKeyPair[] = [];
-        for(var i=0; i<=this.hdIndex;i++){
+        for(var i=0; i<=upTo;i++){
             if(this.chainId==='X'){
                 let key = this.getKeyForIndex(i) as AVMKeyPair;
                 (set as AVMKeyPair[]).push(key);
@@ -238,40 +279,20 @@ class HdHelper {
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
-        console.log("Scan start from: ",start);
-        // let hrp = getPreferredHRP(ava.getNetworkID());
-
-        // let tempKeychain : AVMKeyChain | PlatformVMKeyChain;
-        // if(this.chainId==='X'){
-        //     tempKeychain = new AVMKeyChain(hrp,this.chainId);
-        // }else{
-        //     tempKeychain = new PlatformVMKeyChain(hrp,this.chainId);
-        // }
-
-
         let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
             let address = this.getAddressForIndex(i);
             addrs.push(address);
-            // if(this.chainId==='X'){
-            //     let key = this.getKeyForIndex(i) as AVMKeyPair;
-            //     (tempKeychain as AVMKeyChain).addKey(key);
-            // }else{
-            //     let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
-            //     (tempKeychain as PlatformVMKeyChain).addKey(key);
-            // }
         }
-        console.log(`Will scan ${addrs.length} addresses.`)
 
-        // let addrs: string[] = tempKeychain.getAddressStrings();
         let utxoSet;
 
         if(this.chainId==='X'){
-            utxoSet = await avm.getUTXOs(addrs);
+            utxoSet = (await avm.getUTXOs(addrs)).utxos;
         }else{
-            utxoSet = await pChain.getUTXOs(addrs);
+            utxoSet = (await pChain.getUTXOs(addrs)).utxos;
         }
 
 
@@ -295,11 +316,9 @@ class HdHelper {
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
-                console.log(`Found Index ${this.chainId} ${this.changePath}: `,start+i)
                 return start+i;
             }
         }
-        console.log("Will scan again from index: ",start+SCAN_RANGE);
         return await this.findAvailableIndex(start+SCAN_RANGE)
     }
 

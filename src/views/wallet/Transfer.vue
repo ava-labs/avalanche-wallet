@@ -92,6 +92,7 @@
     import {Buffer, BN} from "avalanche";
     import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
     import {IssueBatchTxInput} from "@/store/types";
+    import {bnToBig} from "@/helpers/helper";
 
 
 
@@ -304,9 +305,8 @@
         }
 
         get txFee(): Big{
-            let fee = avm.getFee();
-            let res = Big(fee.toString()).div(Math.pow(10,9));
-            return res;
+            let fee = avm.getTxFee();
+            return bnToBig(fee,9)
         }
 
         get addresses(){

@@ -21,7 +21,7 @@ const ZERO = new BN(0);
 
 let avalanche = new Avalanche(AVAX_IP, AVAX_PORT, AVAX_PROTOCOL, NETWORK_ID, 'X')
 let xChain = avalanche.XChain();
-    xChain.setFee(new BN('1000000'))
+    xChain.setTxFee(new BN('1000000'))
 let nodeKeys = avalanche.NodeKeys();
 
 
