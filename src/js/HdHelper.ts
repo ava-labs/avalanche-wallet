@@ -120,23 +120,16 @@ class HdHelper {
     async platformGetAllUTXOsForAddresses(addrs: string[], endIndex:any = undefined): Promise<PlatformUTXOSet>{
         let response;
         if(!endIndex){
-            // console.log("Initial start.")
             response = await pChain.getUTXOs(addrs);
         }else{
-            // console.log("Stop index: ", stopIndex);
             response = await pChain.getUTXOs(addrs, undefined, 0, endIndex);
         }
 
-        // console.log(response);
-
         let utxoSet = response.utxos;
-        let utxos = utxoSet.getAllUTXOs();
         let nextEndIndex = response.endIndex;
         let len = response.numFetched;
 
-        // console.log(nextEndIndex.address)
-
-        // console.log("Next stop: ",nextStopIndex);
+        console.log("Fetched: ",len);
 
         if(len >= 1024){
             let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
@@ -144,15 +137,13 @@ class HdHelper {
         }
 
         return utxoSet;
-
     }
+
     // helper method to get utxos for more than 1024 addresses
     async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
-        // console.log("Get all platform UTXOs");
-        // console.log("getting utxos for: ", addrs);
+        console.log("Addr num:",addrs.length)
         if(addrs.length<=1024){
             let newSet = await this.platformGetAllUTXOsForAddresses(addrs);
-            // console.log("Got total set: ",newSet.getAllUTXOs().length);
             return newSet;
         }else{
             //Break the list in to 1024 chunks
@@ -180,7 +171,6 @@ class HdHelper {
             result = await this.avmGetAllUTXOs(addrs);
         }else{
             result = await this.platformGetAllUTXOs(addrs);
-            // console.log(result);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
@@ -279,6 +269,7 @@ class HdHelper {
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
+        console.log(`Scanning start from ${this.chainId} ${this.changePath} ${start}`);
         let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
@@ -316,6 +307,7 @@ class HdHelper {
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
+                console.log(`Found index ${this.chainId} ${this.changePath} ${start+i}`);
                 return start+i;
             }
         }
