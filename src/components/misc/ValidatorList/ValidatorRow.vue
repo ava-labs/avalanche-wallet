@@ -48,7 +48,7 @@ export default class ValidatorsList extends Vue{
     get uptimeText(): string{
         let uptime = parseFloat(this.validator.uptime) * 100;
 
-        if(!uptime) return '?';
+        // if(!uptime) return '?';
 
         return uptime.toFixed(2) + ' %';
     }

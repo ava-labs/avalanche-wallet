@@ -26,6 +26,11 @@
                     <img v-else src="@/assets/sidebar/earn_nav_night.png" />
                     Earn
                 </router-link>
+                <router-link to="/wallet/advanced" data-cy="wallet_earn">
+                    <img v-if="$root.theme==='day'" src="@/assets/sidebar/advanced_nav.png" />
+                    <img v-else src="@/assets/sidebar/advanced_nav_night.png" />
+                    Advanced
+                </router-link>
             </div>
         </div>
     </div>
