@@ -58,8 +58,6 @@
 
             if(!asset) return this.assetId.substring(0,4);
 
-            // TODO: Remove this hack after everest
-            if(asset.symbol==='AVA') return 'AVAX';
             return  asset.symbol;
         }
     }
