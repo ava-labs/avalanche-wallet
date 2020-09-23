@@ -2,7 +2,7 @@
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal" v-if="walletType!=='ledger'"></paper-wallet>
-        <MainnetAddressModal ref="mainnet_modal"></MainnetAddressModal>
+<!--        <MainnetAddressModal ref="mainnet_modal"></MainnetAddressModal>-->
         <p class="addr_info">{{warningText}}</p>
         <div class="bottom">
             <div>
@@ -13,7 +13,7 @@
                 <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">
-                        <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>
+<!--                        <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>-->
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
                         <button v-if="walletType!=='ledger'" :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
                         <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
