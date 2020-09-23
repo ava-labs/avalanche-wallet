@@ -46,9 +46,7 @@ export default class ValidatorsList extends Vue{
     }
     get amtText(){
         let amt = this.stakeAmt;
-        let big = Big(amt);
-            big = big.div(Math.pow(10,9));
-
+        let big = bnToBig(amt,9);
         return big.toLocaleString(0);
     }
 
@@ -115,7 +113,10 @@ export default class ValidatorsList extends Vue{
 
     get isVisible(){
 
-        if(this.remainingStake.eq(new BN(0))) return false;
+        // If remaining amount is less than the minimum delegation amount
+        let minDelAmt = this.$store.state.Platform.minStakeDelegation;
+        if(this.remainingStake.lt(minDelAmt)) return false;
+
         return true;
     }
 
