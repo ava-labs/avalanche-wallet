@@ -234,10 +234,17 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
     async importToPlatformChain(): Promise<string>{
         await this.platformHelper.updateHdIndex();
         const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
+
+        if(utxoSet.getAllUTXOs().length === 0){
+            throw new Error("Nothing to import.")
+        }
+
         let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         let pAddrs = keyChain.getAddressStrings();
         // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress();
+
+
 
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
@@ -266,13 +273,17 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         let xAddrs = keyChain.getAddressStrings();
         let xToAddr = this.externalHelper.getCurrentAddress();
 
+        if(utxoSet.getAllUTXOs().length === 0){
+            throw new Error("Nothing to import.")
+        }
+
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
             xAddrs,
             pChain.getBlockchainID(),
             [xToAddr],
-            [xToAddr],
+            xAddrs,
             [xToAddr],
         );
         const tx = unsignedTx.sign(keyChain);

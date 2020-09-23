@@ -1,8 +1,12 @@
 <template>
-    <div>
+    <div class="chain_import">
         <h2>Chain Import</h2>
-        <p>If you have have funds stuck in a failed chain transfer, you can try importing them here.</p>
-        <p class="err" v-if="err">{{err}}</p>
+        <p>If you have have funds stuck in a failed chain transfer, you can finish importing them here.</p>
+        <div v-if="isSuccess" class="is_success">
+            <label>Tx ID</label>
+            <p>{{txId}}</p>
+        </div>
+        <p class="err" v-else-if="err">{{err}}</p>
         <v-btn block class="button_secondary" depressed @click="atomicImportX" small>Import X</v-btn>
         <v-btn block class="button_secondary" depressed @click="atomicImportP" small>Import P</v-btn>
     </div>
@@ -18,13 +22,15 @@ import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 @Component
 export default class ChainImport extends Vue{
     err = "";
+    isSuccess = false;
+    txId = "";
 
     get wallet(): null|AvaHdWallet|LedgerWallet{
         let wallet: null|AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
         return wallet;
     }
     async atomicImportX(){
-        this.err = "";
+        this.beforeSubmit();
         if(!this.wallet) return;
         try{
             let txId = await this.wallet.importToXChain();
@@ -35,7 +41,7 @@ export default class ChainImport extends Vue{
     }
 
     async atomicImportP(){
-        this.err = "";
+        this.beforeSubmit();
         if(!this.wallet) return;
         try{
             let txId = await this.wallet.importToPlatformChain();
@@ -45,23 +51,44 @@ export default class ChainImport extends Vue{
         }
     }
 
+    beforeSubmit(){
+        this.err = "";
+        this.isSuccess = false;
+        this.txId = "";
+    }
+
     onSuccess(txId: string){
-        console.log("Success", txId);
+        this.err = "";
+        this.isSuccess = true;
+        this.txId = txId;
+
+        this.$store.dispatch('Notifications/add', {
+            type: 'error',
+            title: 'Import Success',
+            message: txId
+        });
     }
 
     onError(err: Error){
         let msg = "";
         if(err.message.includes("No atomic")){
-            msg = "Nothing found to import.";
+            this.err = "Nothing found to import.";
             return;
+        }else{
+            this.err = err.message;
         }
-        this.err = err.message;
     }
 }
 
 </script>
-<style>
+<style scoped lang="scss">
 .v-btn{
-    margin: 4px 0;
+    margin: 8px 0;
+}
+
+.is_success{
+    label{
+        color: var(--primary-color-light);
+    }
 }
 </style>

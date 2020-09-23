@@ -45,14 +45,15 @@
                         <v-btn v-if="!isConfirm" data-cy="submit" class="button_secondary" @click="confirm" :disabled="!canSubmit" :loading="isLoading" block>Confirm</v-btn>
                         <template v-else>
                             <v-btn  data-cy="submit" class="button_secondary" @click="submit" :loading="isLoading" block depressed>Transfer</v-btn>
-                            <v-btn  data-cy="cancel" @click="cancelConfirm" block depressed text>Cancel</v-btn>
+                            <v-btn  v-if="!isLoading" data-cy="cancel" style="color: var(--primary-color); margin: 12px 0 !important;" @click="cancelConfirm" block depressed text>Cancel</v-btn>
                         </template>
                     </div>
                 </div>
                 <div v-else-if="isImportErr" class="import_err">
                     <h2>Import Failed</h2>
-                    <p>There was a problem importing you tokens into the destination chain. Please try again later by doing another transfer. </p>
-                    <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
+                    <p>There was a problem importing you tokens into the destination chain. Please try importing again. </p>
+                    <v-btn @click="triggerImport" block class="button_secondary" small>Trigger Import</v-btn>
+<!--                    <v-btn depressed style="color: var(&#45;&#45;primary-color)" small @click="$emit('cancel')" block text>Back to Earn</v-btn>-->
                 </div>
                 <div v-else-if="isSuccess" class="complete">
                     <h2>Transfer Completed</h2>
@@ -203,16 +204,6 @@ export default class ChainTransfer extends Vue{
         return big;
     }
 
-    async forceImport(){
-        try{
-            let wallet: AvaHdWallet = this.$store.state.activeWallet;
-            let importTxId = await wallet.importToPlatformChain();
-        }catch(e){
-            this.onerror(e);
-        }
-    }
-
-
     confirm(){
         this.formAmt = this.amt.clone();
         this.isConfirm = true;
@@ -223,6 +214,33 @@ export default class ChainTransfer extends Vue{
         this.formAmt = new BN(0);
     }
 
+    get wallet(){
+        let wallet: AvaHdWallet = this.$store.state.activeWallet;
+        return wallet;
+    }
+
+    // triggers an import on the destination chain
+    async triggerImport(){
+        try{
+            this.isImportErr = false;
+            let txId;
+            if(this.sourceChain==='X'){
+                txId = await this.wallet.importToPlatformChain()
+            }else{
+                txId = await this.wallet.importToXChain()
+            }
+            this.$store.dispatch('Notifications/add', {
+                type: 'success',
+                title: 'Import Success',
+                message: `Tokens imported to the ${this.targetChain} chain.`
+            });
+            this.onsuccess(this.exportId, txId);
+        }catch(e){
+            this.isImportErr = true;
+            this.onerror(e);
+        }
+
+    }
 
     async submit(){
         this.err = "";
@@ -239,6 +257,7 @@ export default class ChainTransfer extends Vue{
                 title: 'Export Success',
                 message: `Tokens exported from the ${this.sourceChain} chain.`
             });
+            this.exportId = exportTxId;
 
             setTimeout(async () => {
                 let importTxId;
