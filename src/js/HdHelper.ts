@@ -24,6 +24,9 @@ class HdHelper {
     addressCache: {
         [index: number]: string;
     }
+    hdCache: {
+        [index: number]: HDKey;
+    }
     changePath: string
     masterKey: HDKey;
     hdIndex: number;
@@ -43,6 +46,7 @@ class HdHelper {
         }
         this.keyCache = {};
         this.addressCache = {};
+        this.hdCache = {};
         this.masterKey = masterKey;
         this.hdIndex = 0;
         this.isPublic = isPublic;
@@ -371,7 +375,15 @@ class HdHelper {
         if(cacheExternal) return cacheExternal;
 
         let derivationPath: string = `${this.changePath}/${index.toString()}`;
-        let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
+
+        // Get key from cache, if not generate it
+        let key: HDKey;
+        if(this.hdCache[index]){
+            key = this.hdCache[index];
+        }else{
+            key = this.masterKey.derive(derivationPath) as HDKey;
+            this.hdCache[index] = key;
+        }
 
         let pkHex: string;
         if(!this.isPublic){
@@ -396,7 +408,18 @@ class HdHelper {
         }
 
         let derivationPath: string = `${this.changePath}/${index.toString()}`;
-        let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
+        // let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
+
+        // Get key from cache, if not generate it
+        let key: HDKey;
+        if(this.hdCache[index]){
+            key = this.hdCache[index];
+        }else{
+            key = this.masterKey.derive(derivationPath) as HDKey;
+            this.hdCache[index] = key;
+        }
+
+
         let pkHex = key.publicKey.toString('hex');
         let pkBuff = Buffer.from(pkHex, 'hex');
         let hrp = getPreferredHRP(ava.getNetworkID());

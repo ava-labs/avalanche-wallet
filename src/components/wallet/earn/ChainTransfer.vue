@@ -279,7 +279,7 @@ export default class ChainTransfer extends Vue{
                     this.onerror(e);
                 }
 
-            }, 3000);
+            }, 5000);
 
 
         }catch(err){
