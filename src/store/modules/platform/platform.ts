@@ -5,7 +5,7 @@ import {ava, avm, infoApi, pChain} from "@/AVA";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {explorer_api} from "@/explorer_api";
 import BN from "bn.js";
-import {PlatformState, ValidatorDict} from "@/store/modules/platform/types";
+import {PlatformState, ValidatorDelegatorDict, ValidatorDict, ValidatorGroup} from "@/store/modules/platform/types";
 import {GetValdiatorsResponse, ValidatorRaw} from "@/components/misc/ValidatorList/types";
 
 const platform_module: Module<PlatformState, RootState> = {
@@ -77,7 +77,7 @@ const platform_module: Module<PlatformState, RootState> = {
             for(var i=0; i<validators.length; i++){
                 let v = validators[i];
                 validatorDict[v.nodeID] = {
-                    ...v
+                    ...v,
                 }
             }
 
@@ -105,7 +105,25 @@ const platform_module: Module<PlatformState, RootState> = {
             }
 
             return res;
-        }
+        },
+
+        // Maps delegators to a node id
+        nodeDelegatorMap(state): ValidatorDelegatorDict{
+            let res: ValidatorDelegatorDict = {};
+            let delegators = state.delegators;
+            for(var i=0; i<delegators.length; i++){
+                let delegator = delegators[i];
+                let nodeID = delegator.nodeID;
+                let target = res[nodeID];
+
+                if(target){
+                    res[nodeID].push(delegator);
+                }else{
+                    res[nodeID] = [delegator];
+                }
+            }
+            return res;
+        },
     }
 };
 

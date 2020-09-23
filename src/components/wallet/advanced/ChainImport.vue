@@ -7,8 +7,11 @@
             <p>{{txId}}</p>
         </div>
         <p class="err" v-else-if="err">{{err}}</p>
-        <v-btn block class="button_secondary" depressed @click="atomicImportX" small>Import X</v-btn>
-        <v-btn block class="button_secondary" depressed @click="atomicImportP" small>Import P</v-btn>
+        <template v-if="!isLoading">
+            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>Import X</v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>Import P</v-btn>
+        </template>
+        <Spinner class="spinner" v-else></Spinner>
     </div>
 </template>
 <script lang="ts">
@@ -17,12 +20,14 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {LedgerWallet} from "@/js/wallets/LedgerWallet";
-
-
-@Component
+import Spinner from "@/components/misc/Spinner.vue";
+@Component({
+    components: {Spinner}
+})
 export default class ChainImport extends Vue{
     err = "";
     isSuccess = false;
+    isLoading = false;
     txId = "";
 
     get wallet(): null|AvaHdWallet|LedgerWallet{
@@ -52,12 +57,14 @@ export default class ChainImport extends Vue{
     }
 
     beforeSubmit(){
+        this.isLoading = true;
         this.err = "";
         this.isSuccess = false;
         this.txId = "";
     }
 
     onSuccess(txId: string){
+        this.isLoading = false;
         this.err = "";
         this.isSuccess = true;
         this.txId = txId;
@@ -70,6 +77,7 @@ export default class ChainImport extends Vue{
     }
 
     onError(err: Error){
+        this.isLoading = false;
         let msg = "";
         if(err.message.includes("No atomic")){
             this.err = "Nothing found to import.";
@@ -90,5 +98,10 @@ export default class ChainImport extends Vue{
     label{
         color: var(--primary-color-light);
     }
+}
+
+.spinner{
+    color: var(--primary-color) !important;
+    margin: 14px auto !important;
 }
 </style>

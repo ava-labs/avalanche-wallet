@@ -16,6 +16,15 @@ export interface GetValidatorsResponse {
     delegators : DelegatorRaw[],
 }
 
+export interface ValidatorGroup{
+    data: ValidatorRaw,
+    delegators: DelegatorRaw[]
+}
+
+export interface ValidatorDelegatorDict{
+    [key: string]: DelegatorRaw[];
+}
+
 export interface ValidatorDict {
     [nodeId: string]: ValidatorRaw
 }
