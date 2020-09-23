@@ -370,14 +370,19 @@ export default class AddValidator extends Vue{
             type: 'success',
             title: 'Validator Added',
             message: 'Your tokens are now used to validate the network and earn rewards.'
-        })
+        });
+        this.updateTxStatus(txId);
+    }
 
-        // Check tx status
-        setTimeout(async ()=>{
-            let status = await pChain.getTxStatus(txId);
-            console.log(status,txId);
-            this.txStatus = status || 'Unknown';
-        },10000)
+    async updateTxStatus(txId: string){
+        let status = await pChain.getTxStatus(txId);
+        if(!status){
+            setTimeout(() => {
+                this.updateTxStatus(txId);
+            }, 5000);
+        }else{
+            this.txStatus = status;
+        }
     }
 
     get minStakeAmt(): BN{

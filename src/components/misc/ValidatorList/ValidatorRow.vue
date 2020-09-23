@@ -73,31 +73,11 @@ export default class ValidatorsList extends Vue{
     }
 
     get totalDelegated(): BN{
-        if(!this.delegators) return new BN(0);
-
-        let totBn = this.delegators.reduce((acc: BN, val: DelegatorRaw) => {
-            let valBn = new BN(val.stakeAmount);
-            return acc.add(valBn);
-        }, new BN(0));
-
-        return totBn;
+        return this.$store.getters["Platform/validatorTotalDelegated"](this.validator.nodeID);
     }
 
     get maxStake(): BN{
-        let stakeAmt = new BN(this.validator.stakeAmount);
-
-        // 5 times the validator's stake
-        let relativeMaxStake = stakeAmt.mul(new BN(5));
-
-        // absolute max stake
-        let mult = new BN(10).pow(new BN(6+9))
-        let absMaxStake = new BN(3).mul(mult);
-
-        if(relativeMaxStake.lt(absMaxStake)){
-            return relativeMaxStake;
-        }else{
-            return absMaxStake;
-        }
+        return this.$store.getters["Platform/validatorMaxStake"](this.validator);
     }
 
 

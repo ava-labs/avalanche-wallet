@@ -127,7 +127,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
             delegationFee,
         );
         let tx = unsignedTx.sign(keychain);
-        console.log(unsignedTx);
         // return ;
         // let txId = await pChain.issueTx(tx);
 
@@ -144,6 +143,8 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
     async delegate(nodeID: string, amt: BN, start: Date, end: Date, rewardAddress?: string): Promise<string>{
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
         const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet;
+
+
         let pAddressStrings = keychain.getAddressStrings();
         let stakeAmount = amt;
 

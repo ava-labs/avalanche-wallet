@@ -10,7 +10,7 @@
                     <Tooltip text="Number of Delegators"><fa icon="users"></fa></Tooltip>
                 </th>
                 <th>End Time</th>
-                <th>Uptime <Tooltip style="display: inline-block;" text="Relative to the node wallet is connected to."><fa icon="question-circle"></fa></Tooltip> </th>
+                <th>Uptime <Tooltip style="display: inline-block;" text="Relative to the node this wallet is connected to."><fa icon="question-circle"></fa></Tooltip> </th>
                 <th>Fee</th>
                 <th></th>
             </tr>
