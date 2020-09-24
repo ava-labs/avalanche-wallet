@@ -17,7 +17,7 @@
                                     <datetime v-model="startDate" type="datetime" :min-datetime="startDateMin" :max-datetime="startDateMax"></datetime>
                                 </div>
                                 <div>
-                                    <label>End Date & Time</label>
+                                    <label>End Date & Time <span @click="maxoutEndDate">Max</span></label>
                                     <datetime v-model="endDate" type="datetime" :min-datetime="endDateMin" :max-datetime="endDateMax"></datetime>
                                 </div>
                             </div>
@@ -46,6 +46,10 @@
                 </transition-group>
                 <div>
                     <div class="summary" v-if="!isSuccess">
+                        <div>
+                            <label>Max Delegation Amount <Tooltip style="display: inline-block" text="Maximum amount that can be delegated to this validator."><fa icon="question-circle"></fa></Tooltip></label>
+                            <p>{{maxDelegationText}} AVAX</p>
+                        </div>
                         <div>
                             <label>Staking Duration *</label>
                             <p>{{durationText}}</p>
@@ -94,13 +98,18 @@ import {bintools, pChain} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import ConfirmPage from "@/components/wallet/earn/Validate/ConfirmPage.vue";
 import moment from "moment";
-import {calculateStakingReward} from "@/helpers/helper";
+import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {ONEAVAX} from "avalanche/dist/utils";
+import Tooltip from "@/components/misc/Tooltip.vue";
 
-let dayMs = 1000 * 60 * 60 * 24;
+const MIN_MS = 60000;
+const HOUR_MS = MIN_MS * 60;
+const DAY_MS = HOUR_MS * 24;
+
 @Component({
     name: "add_validator",
     components: {
+        Tooltip,
         AvaxInput,
         QrInput,
         ConfirmPage
@@ -184,12 +193,12 @@ export default class AddValidator extends Vue{
         return endDate.toISOString();
     }
 
-    // Start date + 24 hours
+    // Start date + 2 weeks
     get endDateMin(){
         let start = this.startDate;
         let startDate = new Date(start);
 
-        let end = startDate.getTime() + (60000*60*24);
+        let end = startDate.getTime() + (DAY_MS*14);
         let endDate = new Date(end);
         return endDate.toISOString();
     }
@@ -225,7 +234,7 @@ export default class AddValidator extends Vue{
     }
 
     get dateMax(){
-        let dateMs = Date.now() + dayMs*364;
+        let dateMs = Date.now() + DAY_MS*364;
         let date = new Date(dateMs);
         console.log(date);
         return date.toISOString();
@@ -265,6 +274,26 @@ export default class AddValidator extends Vue{
         }else{
             return ZERO;
         }
+    }
+
+    get maxDelegationAmt(): BN{
+        let stakeAmt = this.stakeAmt;
+
+        let maxRelative = stakeAmt.mul(new BN(5));
+
+        // absolute max stake
+        let mult = new BN(10).pow(new BN(6+9))
+        let absMaxStake = new BN(3).mul(mult);
+
+        if(maxRelative.lt(absMaxStake)){
+            return maxRelative;
+        }else{
+            return absMaxStake;
+        }
+    }
+
+    get maxDelegationText(){
+        return bnToBig(this.maxDelegationAmt,9).toLocaleString(9);
     }
 
 
@@ -361,6 +390,10 @@ export default class AddValidator extends Vue{
             this.isLoading = false;
             this.onerror(err);
         }
+    }
+
+    maxoutEndDate(){
+        this.endDate = this.endDateMax;
     }
 
     onsuccess(txId: string){
@@ -471,6 +504,15 @@ label{
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
+
+    label > span{
+        float: right;
+        opacity: 0.4;
+        cursor: pointer;
+        &:hover{
+            opacity: 1;
+        }
+    }
 }
 
 .submit_box{
