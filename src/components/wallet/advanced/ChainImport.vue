@@ -70,7 +70,7 @@ export default class ChainImport extends Vue{
         this.txId = txId;
 
         this.$store.dispatch('Notifications/add', {
-            type: 'error',
+            type: 'success',
             title: 'Import Success',
             message: txId
         });
