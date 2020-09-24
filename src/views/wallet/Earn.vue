@@ -51,6 +51,7 @@ import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
 import {BN} from "avalanche/dist";
 import UserRewards from "@/components/wallet/earn/UserRewards.vue";
 import {bnToBig} from "@/helpers/helper";
+import Big from 'big.js';
 
 @Component({
     name: "earn",
