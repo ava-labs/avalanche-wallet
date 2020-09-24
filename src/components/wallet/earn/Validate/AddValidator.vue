@@ -227,18 +227,18 @@ export default class AddValidator extends Vue{
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`;
     }
 
-    get stakeAmtText(){
-        let amt = this.stakeAmt;
-        let big = Big(amt.toString()).div(Math.pow(10,9));
-        return big.toLocaleString(2);
-    }
-
-    get dateMax(){
-        let dateMs = Date.now() + DAY_MS*364;
-        let date = new Date(dateMs);
-        console.log(date);
-        return date.toISOString();
-    }
+    // get stakeAmtText(){
+    //     let amt = this.stakeAmt;
+    //     let big = Big(amt.toString()).div(Math.pow(10,9));
+    //     return big.toLocaleString(2);
+    // }
+    //
+    // get dateMax(){
+    //     let dateMs = Date.now() + DAY_MS*364;
+    //     let date = new Date(dateMs);
+    //     console.log(date);
+    //     return date.toISOString();
+    // }
 
     get dateMin(){
         let dateMs = Date.now();
