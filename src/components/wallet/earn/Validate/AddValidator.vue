@@ -267,6 +267,15 @@ export default class AddValidator extends Vue{
         let pAmt = this.platformUnlocked.add(this.platformLockedStakeable);
         // let fee = this.feeAmt;
 
+        // absolute max stake
+        let mult = new BN(10).pow(new BN(6+9))
+        let absMaxStake = new BN(3).mul(mult);
+
+        // If above stake limit
+        if(pAmt.gt(absMaxStake)){
+            return absMaxStake;
+        }
+
         // let res = pAmt.sub(fee);
         const ZERO = new BN('0');
         if(pAmt.gt(ZERO)){
@@ -274,6 +283,8 @@ export default class AddValidator extends Vue{
         }else{
             return ZERO;
         }
+
+
     }
 
     get maxDelegationAmt(): BN{
@@ -285,11 +296,15 @@ export default class AddValidator extends Vue{
         let mult = new BN(10).pow(new BN(6+9))
         let absMaxStake = new BN(3).mul(mult);
 
+
+        let res;
         if(maxRelative.lt(absMaxStake)){
-            return maxRelative;
+            res = maxRelative.sub(stakeAmt);
         }else{
-            return absMaxStake;
+            res = absMaxStake.sub(stakeAmt);
         }
+
+        return BN.max(res,new BN(0));
     }
 
     get maxDelegationText(){
@@ -401,8 +416,8 @@ export default class AddValidator extends Vue{
         this.isSuccess = true;
         this.$store.dispatch('Notifications/add', {
             type: 'success',
-            title: 'Validator Added',
-            message: 'Your tokens are now used to validate the network and earn rewards.'
+            title: 'Validator Transaction Sent',
+            message: 'If accepted, your tokens will be locked to validate the network and earn rewards.'
         });
         this.updateTxStatus(txId);
     }
