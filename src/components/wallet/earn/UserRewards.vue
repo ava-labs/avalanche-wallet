@@ -1,12 +1,15 @@
 <template>
     <div v-if="totLength>0">
-        <h2>My Rewards</h2>
+        <div>
+            <label>Total Rewards</label>
+            <p class="amt">{{totalRewardBig.toLocaleString(9)}} AVAX</p>
+        </div>
         <div v-if="validators.length > 0">
-            <h4>Validation Rewards</h4>
+            <h3>Validation Rewards</h3>
             <UserRewardRow v-for="(v, i) in validators" :key="i" :staker="v" class="reward_row"></UserRewardRow>
         </div>
         <div v-if="delegators.length > 0">
-            <h4>Delegation Rewards</h4>
+            <h3>Delegation Rewards</h3>
             <UserRewardRow v-for="(d, i) in delegators" :key="i" :staker="d" class="reward_row"></UserRewardRow>
         </div>
     </div>
@@ -18,8 +21,17 @@
 import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import {AvaWalletCore} from "../../../js/wallets/IAvaHdWallet";
-import {DelegatorRaw, ValidatorRaw} from "@/components/misc/ValidatorList/types";
+import {
+    DelegatorPendingRaw,
+    DelegatorRaw,
+    ValidatorPendingRaw,
+    ValidatorRaw
+} from "@/components/misc/ValidatorList/types";
 import UserRewardRow from "@/components/wallet/earn/UserRewardRow.vue";
+import {bnToBig} from "@/helpers/helper";
+import Big from "big.js";
+import {BN} from 'avalanche';
+
 @Component({
     components:{
         UserRewardRow
@@ -48,6 +60,21 @@ export default class UserRewards extends Vue{
         return this.validators.length + this.delegators.length;
     }
 
+    get totalReward(){
+        let vals = this.validators.reduce((acc, val: ValidatorRaw) => {
+            return acc.add(new BN(val.potentialReward));
+        }, new BN(0));
+
+        let dels = this.delegators.reduce((acc, val: DelegatorRaw) => {
+            return acc.add(new BN(val.potentialReward));
+        }, new BN(0));
+
+        return vals.add(dels);
+    }
+
+    get totalRewardBig(): Big{
+        return bnToBig(this.totalReward, 9);
+    }
 
     cleanList(list: ValidatorRaw[]|DelegatorRaw[]){
         let res = list.filter(val => {
@@ -59,26 +86,33 @@ export default class UserRewards extends Vue{
         })
         return res;
     }
-
-
-    // get allRewards(){
-    //
-    // }
 }
 </script>
 <style scoped lang="scss">
+
+
 
 .reward_row{
     margin-bottom: 12px;
 }
 
-h4{
+h3{
     margin: 12px 0;
+    margin-top: 32px;
+    font-size: 2em;
+    color: var(--primary-color-light);
     font-weight: lighter;
 }
 
-.empty{
+label{
+    margin-top: 6px;
+    color: var(--primary-color-light);
+    font-size: 14px;
+    margin-bottom: 3px;
+}
 
+.amt{
+    font-size: 2em;
 }
 
 

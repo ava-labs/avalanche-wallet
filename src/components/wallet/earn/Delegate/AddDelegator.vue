@@ -24,7 +24,11 @@
                                 <p class="node_id">{{delegationFee}} %</p>
                             </div>
                             <div>
-                                <p style="font-size: 13px; color: var(--primary-color-light)">End Date</p>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">Validator Start Date</p>
+                                <p class="node_id">{{(new Date(parseInt(selected.startTime)*1000)).toLocaleString()}}</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 13px; color: var(--primary-color-light)">Validator End Date</p>
                                 <p class="node_id">{{(new Date(parseInt(selected.endTime)*1000)).toLocaleString()}}</p>
                             </div>
                         </div>
@@ -37,7 +41,7 @@
                                     <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
                                 </div>
                                 <div>
-                                    <label>End Date & Time</label>
+                                    <label>End Date & Time <span @click="maxoutEndDate">Max</span></label>
                                     <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
                                 </div>
 
@@ -46,6 +50,7 @@
                         <div style="margin: 30px 0;">
                             <h4>Stake Amount</h4>
                             <p class="desc">The amount of AVAX to lock for staking.</p>
+                            <p class="desc">The available delegation amount for this node is {{remainingAmtText}} AVAX</p>
                             <AvaxInput v-model="stakeAmt" :max="maxAmt" class="amt_in"></AvaxInput>
                         </div>
                         <div class="reward_in" style="margin: 30px 0;"  :type="rewardDestination">
@@ -91,6 +96,11 @@
                     <h2>Delegation transaction sent.</h2>
                     <p>If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
                     <p class="tx_id">Tx ID: {{txId}}</p>
+                    <div class="tx_status">
+                        <label>Status</label>
+                        <p v-if="!txStatus">Waiting..</p>
+                        <p v-else>{{txStatus}}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,10 +125,16 @@ import moment from "moment";
 
 import {BN} from 'avalanche';
 import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
-import {ava, avm, infoApi, pChain} from "@/AVA";
+import {ava, avm, bintools, infoApi, pChain} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
-import {calculateStakingReward} from "@/helpers/helper";
+import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {Defaults, ONEAVAX} from "avalanche/dist/utils";
+
+const MIN_MS = 60000;
+const HOUR_MS = MIN_MS * 60;
+const DAY_MS = HOUR_MS * 24;
+
+
 @Component({
     components: {
         AvaxInput,
@@ -141,6 +157,7 @@ export default class AddDelegator extends Vue{
     isConfirm = false;
     isSuccess = false;
     txId = "";
+    txStatus = "";
 
     formNodeID = "";
     formAmt = new BN(0);
@@ -168,16 +185,6 @@ export default class AddDelegator extends Vue{
         this.isLoading = true;
         this.err = "";
 
-
-        // let nodeId = this.selected!.nodeID;
-        // let stakeAmt = this.stakeAmt;
-        // let start = new Date(this.startDate);
-        // let end = new Date(this.endDate);
-        // let rewardAddr = undefined;
-        // if(this.rewardDestination === 'custom'){
-        //     rewardAddr = this.rewardIn;
-        // }
-
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
 
         try{
@@ -200,6 +207,20 @@ export default class AddDelegator extends Vue{
             title: 'Delegator Added',
             message: 'Your tokens will now be delegated for staking.'
         })
+
+        this.updateTxStatus(txId);
+    }
+
+    async updateTxStatus(txId: string){
+        let status = await pChain.getTxStatus(txId);
+
+        if(!status || status==='Processing'){
+            setTimeout(() => {
+                this.updateTxStatus(txId);
+            }, 5000);
+        }else{
+            this.txStatus = status;
+        }
     }
 
     onerror(e: any){
@@ -266,8 +287,6 @@ export default class AddDelegator extends Vue{
         let endTime = (new Date(this.endDate)).getTime();
         let now = Date.now();
         let diffTime = endTime-startTime;
-        let dur24 = (60000*60*24);
-        let durYear = dur24*365;
 
 
         if(startTime <= now){
@@ -276,12 +295,12 @@ export default class AddDelegator extends Vue{
         }
 
         // TODO: UPDATE THIS WITH REAL VALUE
-        if(diffTime < dur24){
-            this.err = `Minimum staking duration is 24 hours.`;
+        if(diffTime < DAY_MS*14){
+            this.err = `Minimum staking duration is 2 weeks.`;
             return false;
         }
 
-        if(diffTime > durYear){
+        if(diffTime > DAY_MS*365){
             this.err = `Maximum staking duration is 1 year.`;
             return false;
         }
@@ -299,9 +318,18 @@ export default class AddDelegator extends Vue{
             return false;
         }
 
+        // Validate reward address
+        try{
+            bintools.stringToAddress(this.rewardIn)
+        }catch (e){
+            this.err = "Invalid reward address."
+            return false;
+        }
+
+
         // Stake amount check
         if(this.stakeAmt.lt(this.minStake)){
-            let big = Big(this.minStake.toString()).div(Math.pow(10,9));
+            let big = bnToBig(this.minStake,9);
             this.err = `Delegation amount must be at least ${big.toLocaleString()} AVAX.`
             return false;
         }
@@ -326,6 +354,10 @@ export default class AddDelegator extends Vue{
 
     cancelConfirm(){
         this.isConfirm = false;
+    }
+
+    maxoutEndDate(){
+        this.endDate = this.endMaxDate;
     }
 
     get canSubmit(): boolean{
@@ -354,14 +386,16 @@ export default class AddDelegator extends Vue{
         return nodeEndDate.toISOString()
     }
 
+    // minimum end date is start date + 2 weeks
     get endMinDate(): string{
         let startDate = new Date(this.startDate);
-        let endTime = startDate.getTime() + (1000 * 60 * 60 * 24);
+        let endTime = startDate.getTime() + (DAY_MS*14);
         // let endTime = startDate.getTime();
         let endDate = new Date(endTime);
         return endDate.toISOString();
     }
 
+    // Maximum end date is end of validator's staking duration
     get endMaxDate(): string{
         if(!this.selected) return (new Date()).toISOString();
 
@@ -380,7 +414,7 @@ export default class AddDelegator extends Vue{
     //TODO: UNDO
     @Watch('stakingDuration')
     durChange(val: number){
-        if(val < (60000*60*24)){
+        if(val < (DAY_MS*14)){
             this.endDate = this.endMinDate;
         }
     }
@@ -432,6 +466,20 @@ export default class AddDelegator extends Vue{
         return this.minStake.add(this.txFee)
     }
 
+    get remainingAmt(): BN{
+        if(!this.selected) return new BN(0);
+        let totDel: BN = this.$store.getters["Platform/validatorTotalDelegated"](this.selected.nodeID);
+        let nodeMaxStake: BN = this.$store.getters["Platform/validatorMaxStake"](this.selected);
+
+        let valAmt = new BN(this.selected.stakeAmount);
+        return nodeMaxStake.sub(totDel).sub(valAmt)
+    }
+
+    get remainingAmtText(){
+        let bn = this.remainingAmt;
+        return bnToBig(bn,9).toLocaleString();
+    }
+
     get maxAmt(): BN{
         let zero = new BN(0);
 
@@ -439,6 +487,9 @@ export default class AddDelegator extends Vue{
         // let max = totAvailable.sub(this.txFee)
 
         if(zero.gt(totAvailable)) return zero;
+
+        if(totAvailable.gt(this.remainingAmt)) return this.remainingAmt;
+
         return totAvailable;
     }
 
@@ -539,6 +590,15 @@ label{
     display: flex;
     >div{
         margin-right: 15px;
+    }
+
+    label > span{
+        float: right;
+        opacity: 0.4;
+        cursor: pointer;
+        &:hover{
+            opacity: 1;
+        }
     }
 }
 

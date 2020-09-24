@@ -4,9 +4,13 @@
             <thead>
             <tr class="header_tr">
                 <th>Node ID</th>
-                <th style="text-align: right;">Stake Amount (AVAX)</th>
+                <th style="text-align: right;">Validator Stake</th>
+                <th style="text-align: right;">Available <Tooltip style="display: inline-block;" text="How much more can be delegated to this validator."><fa icon="question-circle"></fa></Tooltip></th>
+                <th>
+                    <Tooltip text="Number of Delegators"><fa icon="users"></fa></Tooltip>
+                </th>
                 <th>End Time</th>
-                <th>Uptime</th>
+                <th>Uptime <Tooltip style="display: inline-block;" text="Relative to the node this wallet is connected to."><fa icon="question-circle"></fa></Tooltip> </th>
                 <th>Fee</th>
                 <th></th>
             </tr>
@@ -30,34 +34,42 @@ import {BN} from 'avalanche';
 
 import ValidatorRow from "@/components/misc/ValidatorList/ValidatorRow.vue";
 import {ValidatorRaw, ValidatorDict} from "@/components/misc/ValidatorList/types";
+import Tooltip from "@/components/misc/Tooltip.vue";
 
+const MINUTE_MS = 60000;
+const HOUR_MS = MINUTE_MS * 60;
+const DAY_MS = HOUR_MS * 24;
 
 
 
 @Component({
-    components: {ValidatorRow},
+    components: {Tooltip, ValidatorRow},
 })
 export default class ValidatorsList extends Vue{
     @Prop() search!: string;
 
     get validators(){
-        let res: ValidatorRaw[] = this.$store.getters['Platform/validatorsCleanArray'];
+        // let res: ValidatorRaw[] = this.$store.getters['Platform/validatorsCleanArray'];
+        let res: ValidatorRaw[] = this.$store.state.Platform.validators;
 
 
-        // If End time is less than a day, remove from list they are no use
+        if(!res) return [];
         // If less than 25 hours (+1 to avoid time passing)
         let now = Date.now();
         res = res.filter(v => {
            let endTime = parseInt(v.endTime) * 1000;
            let dif = endTime - now;
 
-           let threshold = (60000*60*25);
+            // If End time is less than 2 weeks + 1 hour, remove from list they are no use
+            let threshold = (DAY_MS*14 + (10 * MINUTE_MS));
            if(dif <= threshold){
                return false;
            }
            return true;
         });
 
+
+        // Filter search results
         if(this.search){
             res = res.filter(v => {
                 return v.nodeID.includes(this.search)
@@ -115,6 +127,7 @@ export default class ValidatorsList extends Vue{
         position: sticky;
         top: 0;
         padding: 2px 14px;
+        font-size: 14px;
         background-color: var(--bg-wallet-light);
     }
 

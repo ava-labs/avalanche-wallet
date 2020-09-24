@@ -62,7 +62,7 @@ let userKey0 = userKeychain.importKey(pk);
 
 
 async function sendAvax(address:string, amount:number){
-    let utxoSet = await xChain.getUTXOs([faucetAddress])
+    let utxoSet = (await xChain.getUTXOs([faucetAddress])).utxos;
     let assetId = await xChain.getAVAXAssetID();
 
     let sendAmount = new BN(amount);

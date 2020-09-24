@@ -1,29 +1,36 @@
 <template>
     <div class="reward_row">
-        <div class="reward_bar_cont">
-            <div class="reward_bar" :style="{
+        <p class="node_id">{{staker.nodeID}}</p>
+        <div class="data_row">
+            <div class="reward_bar_cont">
+                <div class="reward_bar" :style="{
                 width: `${percFull*100}%`
             }"></div>
-            <div class="date">
-                <label>Start</label>
-                <p >{{startDate.toLocaleString()}}</p>
+                <div class="date">
+                    <label>Start</label>
+                    <p >{{startDate.toLocaleString()}}</p>
+                </div>
+                <div>
+                    <label>Completed</label>
+                    <p>{{(percFull*100).toFixed(2)}}%</p>
+                </div>
+                <div class="date">
+                    <label>End</label>
+                    <p>{{endDate.toLocaleString()}}</p>
+                </div>
             </div>
-            <p>{{(percFull*100).toFixed(2)}}%</p>
-            <div class="date">
-                <label>End</label>
-                <p>{{endDate.toLocaleString()}}</p>
+            <div class="stake_info">
+                <div>
+                    <label>Stake</label>
+                    <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
+                </div>
+                <div>
+                    <label>Potential Reward</label>
+                    <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
+                </div>
             </div>
         </div>
-        <div class="stake_info">
-            <div>
-                <label>Stake</label>
-                <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
-            </div>
-            <div>
-                <label>Potential Reward</label>
-                <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
-            </div>
-        </div>
+
     </div>
 </template>
 <script lang="ts">
@@ -94,15 +101,30 @@ export default class UserRewardRow extends Vue{
 <style scoped lang="scss">
 @use '../../../main';
 
+.node_id{
+    grid-column: 1/3;
+    display: block;
+    width: 100%;
+    padding: 4px 12px;
+    font-weight: bold;
+    //background-color: rgba(0,0,0,0.05);
+    border-bottom: 2px solid var(--bg-wallet-light);
+}
+
 .reward_row{
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    align-items: center;
-    background-color: var(--bg-light);
     border-radius: 4px;
     overflow: hidden;
     font-size: 14px;
-    border: 2px solid var(--bg-light);
+    //border: 2px solid var(--bg-light);
+    background-color: var(--bg-light);
+}
+
+.data_row{
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    align-items: center;
+
 }
 .reward_bar_cont{
     position: relative;
@@ -145,7 +167,7 @@ export default class UserRewardRow extends Vue{
 }
 
 label{
-    color: var(--primary-color-light);
+    color: var(--primary-color-light) !important;
 }
 
 @include main.mobile-device{
