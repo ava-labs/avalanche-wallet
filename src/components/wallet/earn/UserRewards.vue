@@ -5,11 +5,11 @@
             <p class="amt">{{totalRewardBig.toLocaleString(9)}} AVAX</p>
         </div>
         <div v-if="validators.length > 0">
-            <h3>Validation Rewards</h3>
+            <h3>Validation</h3>
             <UserRewardRow v-for="(v, i) in validators" :key="i" :staker="v" class="reward_row"></UserRewardRow>
         </div>
         <div v-if="delegators.length > 0">
-            <h3>Delegation Rewards</h3>
+            <h3>Delegation</h3>
             <UserRewardRow v-for="(d, i) in delegators" :key="i" :staker="d" class="reward_row"></UserRewardRow>
         </div>
     </div>
