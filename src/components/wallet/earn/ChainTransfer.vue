@@ -42,7 +42,7 @@
                     <div>
                         <p class="err">{{err}}</p>
                         <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
-                        <v-btn v-if="!isConfirm" data-cy="submit" class="button_secondary" @click="confirm" :disabled="!canSubmit" :loading="isLoading" block>Confirm</v-btn>
+                        <v-btn v-if="!isConfirm" data-cy="confirm" class="button_secondary" @click="confirm" :disabled="!canSubmit" :loading="isLoading" block>Confirm</v-btn>
                         <template v-else>
                             <v-btn  data-cy="submit" class="button_secondary" @click="submit" :loading="isLoading" block depressed>Transfer</v-btn>
                             <v-btn  v-if="!isLoading" data-cy="cancel" style="color: var(--primary-color); margin: 12px 0 !important;" @click="cancelConfirm" block depressed text>Cancel</v-btn>
