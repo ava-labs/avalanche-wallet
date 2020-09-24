@@ -103,7 +103,9 @@ export default class UserRewardRow extends Vue{
     display: block;
     width: 100%;
     padding: 4px 12px;
-    background-color: rgba(0,0,0,0.05);
+    font-weight: bold;
+    //background-color: rgba(0,0,0,0.05);
+    border-bottom: 2px solid var(--bg-wallet-light);
 }
 
 .reward_row{
