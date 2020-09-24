@@ -57,7 +57,7 @@ declare module "big.js" {
   }
 }
 
-Big.prototype.toLocaleString = function(toFixed: number = 2) {
+Big.prototype.toLocaleString = function(toFixed: number = 9) {
   let value = this;
 
   let split = value.toString().split('.');
@@ -67,6 +67,8 @@ Big.prototype.toLocaleString = function(toFixed: number = 2) {
     return wholeStr;
   }else{
     let remainderStr = split[1];
-    return `${wholeStr}.${remainderStr}`;
+    let trimmed = remainderStr.substring(0,toFixed);
+    if(!trimmed) return wholeStr;
+    return `${wholeStr}.${trimmed}`;
   }
 }

@@ -29,7 +29,7 @@ import {Avalanche} from "avalanche/dist";
 
 Cypress.Commands.add('connectLocalhost', () => {
     cy.window().then(win => {
-        let localNet = win.app.$store.state.Network.networks[1];
+        let localNet = win.app.$store.state.Network.networks[2];
         win.app.$store.dispatch('Network/setNetwork', localNet)
     })
 })
@@ -37,7 +37,7 @@ Cypress.Commands.add("accessWallet", (mnemonic) => {
     cy.window().then(win => {
         win.app.$store.dispatch('accessWallet', mnemonic)
     })
-})
+});
 
 
 Cypress.Commands.add("access_mnemonic", (mnemonic) => {
@@ -61,6 +61,7 @@ Cypress.Commands.add("access_mnemonic", (mnemonic) => {
 Cypress.Commands.add('enterWallet', (mnemonic)=>{
     cy.visit('/')
     cy.connectLocalhost();
+    cy.wait(4000)
     cy.accessWallet(mnemonic);
 })
 

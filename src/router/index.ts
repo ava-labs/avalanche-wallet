@@ -12,11 +12,12 @@ import Create from "@/views/Create.vue";
 import Wallet from "@/views/Wallet.vue";
 import WalletHome from "@/views/wallet/Portfolio.vue";
 import Earn from "@/views/wallet/Earn.vue";
-import Manhattan from "@/views/wallet/Mainnet.vue";
+import Advanced from "@/views/wallet/Advanced.vue"; // your vuex store
+
 Vue.use(VueRouter);
 
 
-import store from '../store/index' // your vuex store
+import store from '../store/index'
 
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
@@ -94,8 +95,8 @@ const routes = [
                 component: Earn,
             },
             {
-                path: 'mainnet',
-                component: Manhattan,
+                path: 'advanced',
+                component: Advanced,
             }
         ],
         component: Wallet,

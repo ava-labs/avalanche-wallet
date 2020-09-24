@@ -324,6 +324,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress();
 
+        if(utxoSet.getAllUTXOs().length === 0){
+            throw new Error("Nothing to import.")
+        }
 
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
@@ -348,10 +351,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async importToXChain(): Promise<string> {
         const utxoSet = await this.externalHelper.getAtomicUTXOs() as AVMUTXOSet;
-        let xUtxoSet = this.getUTXOSet();
 
-        // console.log(utxoSet.getAllUTXOs());
-        // console.log(xUtxoSet.getAllUTXOs());
+        if(utxoSet.getAllUTXOs().length === 0){
+            throw new Error("Nothing to import.")
+        }
 
         let externalIndex = this.externalHelper.hdIndex;
         // let xAddrs = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
@@ -360,14 +363,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let xAddrs = this.getDerivedAddresses();
         // let xToAddr = this.externalHelper.getAllDerivedAddresses(externalIndex+10);
 
-
-        // console.log("Import to: ",xToAddr)
-
-
-        // console.log(utxoSet.getAllUTXOs());
-        // console.log(xUtxoSet.getAllUTXOs());
-        // console.log(xUtxoSet.serialize());
-        // console.log(utxoSet.serialize());
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
@@ -378,8 +373,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             [xToAddr],
 
         );
-
-        // console.log(unsignedTx.toBuffer().toString())
 
 
         let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx);

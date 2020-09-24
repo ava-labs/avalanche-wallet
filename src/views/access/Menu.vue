@@ -13,6 +13,7 @@
             <LedgerButton class="option button_primary"></LedgerButton>
 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
+        <ToS style="margin: 20px !important;"></ToS>
         <router-link to="/" class="link">Cancel</router-link>
     </div>
 </template>
@@ -20,9 +21,11 @@
 <script>
     // import TorusGoogle from "@/components/Torus/TorusGoogle";
     import LedgerButton from "@/components/Ledger/LedgerButton";
+    import ToS from "@/components/misc/ToS";
 
     export default {
         components: {
+            ToS,
           LedgerButton
         },
     }

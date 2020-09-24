@@ -11,15 +11,15 @@
                     <div>
                         <h4 class="title">Validate</h4>
                         <p style="flex-grow: 1">You have an Avalanche node that you want to stake with.</p>
-                        <p v-if="pNoBalance" class="no_balance">You must have AVAX on the P chain to add a validator.</p>
-                        <v-btn class="button_secondary" data-cy="validate" @click="addValidator" depressed small :disabled="pNoBalance">Add Validator</v-btn>
+                        <p v-if="!canValidate" class="no_balance">You must have at least <b>{{minStakeAmt.toLocaleString()}} AVAX</b> on the P chain to become a validator.</p>
+                        <v-btn class="button_secondary" data-cy="validate" @click="addValidator" depressed small :disabled="!canValidate">Add Validator</v-btn>
 <!--                        <v-btn class="button_secondary" depressed small disabled>Coming Soon</v-btn>-->
                     </div>
                     <div>
                         <h4 class="title">Delegate</h4>
                         <p style="flex-grow: 1">You do not own an Avalanche node, but you want to stake using another node.</p>
-                        <p v-if="pNoBalance" class="no_balance">You must have AVAX on the P chain to become a delegator.</p>
-                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small :disabled="pNoBalance">Add Delegator</v-btn>
+                        <p v-if="!canDelegate" class="no_balance">You must have at least <b>{{minDelegationAmt.toLocaleString()}} AVAX</b> on the P chain to become a delegator.</p>
+                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small :disabled="!canDelegate">Add Delegator</v-btn>
 <!--                        <v-btn class="button_secondary" depressed small disabled>Coming Soon</v-btn>-->
                     </div>
                     <div>
@@ -50,6 +50,8 @@ import AddDelegator from "@/components/wallet/earn/Delegate/AddDelegator.vue";
 import ChainTransfer from "@/components/wallet/earn/ChainTransfer.vue";
 import {BN} from "avalanche/dist";
 import UserRewards from "@/components/wallet/earn/UserRewards.vue";
+import {bnToBig} from "@/helpers/helper";
+import Big from 'big.js';
 
 @Component({
     name: "earn",
@@ -110,8 +112,38 @@ export default class Earn extends Vue{
         return this.$store.getters.walletPlatformBalanceLockedStakeable;
     }
 
+    get totBal(): BN{
+        return this.platformUnlocked.add(this.platformLockedStakeable);
+    }
+
     get pNoBalance(){
         return this.platformUnlocked.add(this.platformLockedStakeable).isZero();
+    }
+
+    get canDelegate(): boolean{
+        let bn = this.$store.state.Platform.minStakeDelegation;
+        if(this.totBal.lt(bn)){
+            return false;
+        }
+        return true;
+    }
+
+    get canValidate(): boolean{
+        let bn = this.$store.state.Platform.minStake;
+        if(this.totBal.lt(bn)){
+            return false;
+        }
+        return true;
+    }
+
+    get minStakeAmt(): Big{
+        let bn = this.$store.state.Platform.minStake;
+        return bnToBig(bn,9)
+    }
+
+    get minDelegationAmt(): Big{
+        let bn = this.$store.state.Platform.minStakeDelegation;
+        return bnToBig(bn,9)
     }
 }
 </script>

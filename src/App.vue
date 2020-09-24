@@ -13,6 +13,7 @@
         </v-main>
         <LedgerBlock ref="ledger_block"></LedgerBlock>
         <notifications></notifications>
+        <TestNetBanner></TestNetBanner>
     </v-app>
 </template>
 <script>
@@ -20,6 +21,7 @@
     import Navbar from './components/Navbar';
     import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
     import LedgerBlock from "@/components/modals/LedgerBlock";
+    import TestNetBanner from '@/components/TestNetBanner';
 
     export default {
         components: {
@@ -27,6 +29,7 @@
             RememberWalletModal,
             Navbar,
             Notifications,
+            TestNetBanner
         },
         async created() {
             await this.$store.dispatch('Network/init');

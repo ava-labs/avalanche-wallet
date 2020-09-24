@@ -12,7 +12,7 @@ import {
   faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus,
   faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel, faList, faTrash,
   faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown, faBars, faCog, faSearch,
-  faListOl, faSpinner, faInfoCircle, faLink, faQuoteRight, faLock, faEye, faEyeSlash
+  faListOl, faSpinner, faInfoCircle, faLink, faQuoteRight, faLock, faEye, faEyeSlash, faQuestionCircle, faUsers
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faBtc, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -24,7 +24,7 @@ library.add(
     faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel,
     faList, faTrash, faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown,
     faBars, faCog, faSearch, faListOl, faGoogle, faSpinner, faInfoCircle, faLink, faQuoteRight, faLock,
-    faEye, faEyeSlash
+    faEye, faEyeSlash, faQuestionCircle, faUsers
 
 );
 

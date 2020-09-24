@@ -37,9 +37,8 @@ const network_module: Module<NetworkState, RootState> = {
             avm.setBlockchainAlias('X');
             pChain.refreshBlockchainID(chainIdP);
             pChain.setBlockchainAlias('P');
-            // let assetId = await avm.getAVAXAssetID(true);
-
-            // console.log(bintools.cb58Encode(assetId));
+            avm.getAVAXAssetID(true);
+            pChain.getAVAXAssetID(true);
 
             state.selectedNetwork = net;
             explorer_api.defaults.baseURL = net.explorerUrl;
