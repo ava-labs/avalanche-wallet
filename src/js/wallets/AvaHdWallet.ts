@@ -127,16 +127,13 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
             delegationFee,
         );
         let tx = unsignedTx.sign(keychain);
-        // return ;
-        // let txId = await pChain.issueTx(tx);
+
 
         // Update UTXOS
         setTimeout(async () => {
             this.getUTXOs()
         },3000);
         return pChain.issueTx(tx);
-
-        // return txId;
     }
 
     // Delegates AVAX to the given node ID
