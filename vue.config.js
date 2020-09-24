@@ -4,7 +4,7 @@ module.exports = {
     ],
     devServer: {
         https: true,
-        port: 8080
+        port: 5000
     },
     // publicPath: '',
     configureWebpack:{
