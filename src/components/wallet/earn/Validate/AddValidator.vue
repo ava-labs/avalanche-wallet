@@ -424,7 +424,7 @@ export default class AddValidator extends Vue{
 
     async updateTxStatus(txId: string){
         let status = await pChain.getTxStatus(txId);
-        if(!status){
+        if(!status || status==='Processing'){
             setTimeout(() => {
                 this.updateTxStatus(txId);
             }, 5000);

@@ -10,7 +10,10 @@
                     <label>Start</label>
                     <p >{{startDate.toLocaleString()}}</p>
                 </div>
-                <p>{{(percFull*100).toFixed(2)}}%</p>
+                <div>
+                    <label>Completed</label>
+                    <p>{{(percFull*100).toFixed(2)}}%</p>
+                </div>
                 <div class="date">
                     <label>End</label>
                     <p>{{endDate.toLocaleString()}}</p>
@@ -164,7 +167,7 @@ export default class UserRewardRow extends Vue{
 }
 
 label{
-    color: var(--primary-color-light);
+    color: var(--primary-color-light) !important;
 }
 
 @include main.mobile-device{
