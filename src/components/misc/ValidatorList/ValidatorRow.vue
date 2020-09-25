@@ -21,15 +21,16 @@ import moment from "moment";
 import Big from "big.js";
 import {BN} from "avalanche";
 import {bnToBig} from "@/helpers/helper";
+import {ValidatorListItem} from "@/store/modules/platform/types";
 
 @Component({
 })
 export default class ValidatorsList extends Vue{
-    @Prop() validator!: ValidatorRaw;
+    @Prop() validator!: ValidatorListItem;
 
     get remainingMs():number{
-        let end = parseInt(this.validator.endTime);
-        let remain =  end*1000 - Date.now();
+        let end = this.validator.endTime;
+        let remain =  end.getTime() - Date.now();
         return remain;
     }
 
@@ -42,8 +43,9 @@ export default class ValidatorsList extends Vue{
     }
 
     get stakeAmt(): BN {
-        return new BN(this.validator.stakeAmount);
+        return this.validator.validatorStake;
     }
+
     get amtText(){
         let amt = this.stakeAmt;
         let big = bnToBig(amt,9);
@@ -51,7 +53,7 @@ export default class ValidatorsList extends Vue{
     }
 
     get uptimeText(): string{
-        let uptime = parseFloat(this.validator.uptime) * 100;
+        let uptime = this.validator.uptime * 100;
 
         // if(!uptime) return '?';
 
@@ -59,29 +61,40 @@ export default class ValidatorsList extends Vue{
     }
 
     get feeText(){
-        return parseFloat(this.validator.delegationFee);
+        return this.validator.fee;
     }
 
-    get delegators(): DelegatorRaw[]{
-        let map = this.$store.getters["Platform/nodeDelegatorMap"];
-        return map[this.validator.nodeID];
-    }
+    // TODO :HEAVY
+    // get delegators(): DelegatorRaw[]{
+    //     return [];
+        // let map = this.$store.getters["Platform/nodeDelegatorMap"];
+        // return map[this.validator.nodeID];
+    // }
 
+    // TODO :HEAVY
     get numDelegators(){
-        if(!this.delegators) return 0;
-        return this.delegators.length;
+        return this.validator.numDelegators;
+        // if(!this.delegators) return 0;
+        // return this.delegators.length;
     }
 
+    // TODO :HEAVY
     get totalDelegated(): BN{
-        return this.$store.getters["Platform/validatorTotalDelegated"](this.validator.nodeID);
+        return this.validator.delegatedStake;
+        // return new BN(0)
+        // return this.$store.getters["Platform/validatorTotalDelegated"](this.validator.nodeID);
     }
 
+    // TODO :HEAVY
     get maxStake(): BN{
+        // return new BN(300000000000000)
         return this.$store.getters["Platform/validatorMaxStake"](this.validator);
     }
 
 
+    // TODO :HEAVY
     get remainingStake(): BN{
+        // return new BN(1000000000000)
         return this.maxStake.sub(this.totalDelegated.add(this.stakeAmt));
     }
 

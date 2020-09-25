@@ -10,7 +10,7 @@ import {
     ValidatorDelegatorDict,
     ValidatorDelegatorPendingDict,
     ValidatorDict,
-    ValidatorGroup
+    ValidatorGroup, ValidatorListItem
 } from "@/store/modules/platform/types";
 import {
     DelegatorPendingRaw,
@@ -18,6 +18,13 @@ import {
     GetValdiatorsResponse,
     ValidatorRaw
 } from "@/components/misc/ValidatorList/types";
+
+
+const MINUTE_MS = 60000;
+const HOUR_MS = MINUTE_MS * 60;
+const DAY_MS = HOUR_MS * 24;
+
+
 
 const platform_module: Module<PlatformState, RootState> = {
     namespaced: true,
@@ -76,47 +83,110 @@ const platform_module: Module<PlatformState, RootState> = {
         }
     },
     getters: {
+        validatorListEarn(state, getters): ValidatorListItem[]{
+            // Filter validators we do not need
+            let now = Date.now();
 
-        validatorsDict(state): ValidatorDict{
             let validators = state.validators;
-            let delegators = state.delegators;
+                validators = validators.filter((v) => {
+                let endTime = parseInt(v.endTime) * 1000;
+                let dif = endTime - now;
 
-            let validatorDict: ValidatorDict = {};
+                // If End time is less than 2 weeks + 1 hour, remove from list they are no use
+                let threshold = (DAY_MS*14 + (10 * MINUTE_MS));
+                if(dif <= threshold){
+                    return false;
+                }
+                return true;
+            });
 
-            // let allValidators = validators.concat(delegators);
+            let delegatorMap: ValidatorDelegatorDict = getters.nodeDelegatorMap;
+            let delegatorPendingMap: ValidatorDelegatorPendingDict = getters.nodeDelegatorPendingMap;
 
-            for(var i=0; i<validators.length; i++){
+            let res: ValidatorListItem[] = [];
+
+            for(var i=0 ;i<validators.length;i++){
                 let v = validators[i];
-                validatorDict[v.nodeID] = {
-                    ...v,
+
+                let nodeID = v.nodeID;
+
+                let delegators: DelegatorRaw[]  = delegatorMap[nodeID] || [];
+                let delegatorsPending: DelegatorPendingRaw[] = delegatorPendingMap[nodeID] || [];
+
+                let delegatedAmt = new BN(0);
+                let delegatedPendingAmt = new BN(0);
+
+                if(delegators){
+                    delegatedAmt = delegators.reduce((acc: BN,val: DelegatorRaw)=>{
+                        return acc.add(new BN(val.stakeAmount))
+                    }, new BN(0));
                 }
-            }
 
-            for(var n=0; n<delegators.length; n++) {
-                let delegator = delegators[n];
-                let nodeID = delegator.nodeID;
-
-                let target = validatorDict[nodeID];
-                if(target){
-                    let targetAmt = new BN(target.stakeAmount);
-                    let vAmt = new BN(delegator.stakeAmount);
-                    let tot = targetAmt.add(vAmt);
-                    target.stakeAmount = tot.toString();
+                if(delegatorsPending){
+                    delegatedPendingAmt = delegatorsPending.reduce((acc: BN,val: DelegatorPendingRaw)=>{
+                        return acc.add(new BN(val.stakeAmount))
+                    }, new BN(0));
                 }
-            }
 
-            return validatorDict;
-        },
-        validatorsCleanArray(state, getters): ValidatorRaw[]{
-            let validatorDict = getters.validatorsDict;
-            let res = [];
-            for(var nodeId in validatorDict){
-                let val = validatorDict[nodeId];
-                res.push(val);
+                let startTime = new Date(parseInt(v.startTime)*1000);
+                let endTime = new Date(parseInt(v.endTime)*1000);
+
+                let listItem: ValidatorListItem = {
+                    nodeID: v.nodeID,
+                    validatorStake: new BN(v.stakeAmount),
+                    delegatedStake: delegatedAmt.add(delegatedPendingAmt),
+                    numDelegators: delegators.length + delegatorsPending.length,
+                    startTime: startTime,
+                    endTime,
+                    uptime: parseFloat(v.uptime),
+                    fee: parseFloat(v.delegationFee)
+                }
+                res.push(listItem);
             }
 
             return res;
         },
+
+        // validatorsDict(state): ValidatorDict{
+        //     let validators = state.validators;
+        //     let delegators = state.delegators;
+        //
+        //     let validatorDict: ValidatorDict = {};
+        //
+        //     // let allValidators = validators.concat(delegators);
+        //
+        //     for(var i=0; i<validators.length; i++){
+        //         let v = validators[i];
+        //         validatorDict[v.nodeID] = {
+        //             ...v,
+        //         }
+        //     }
+        //
+        //     for(var n=0; n<delegators.length; n++) {
+        //         let delegator = delegators[n];
+        //         let nodeID = delegator.nodeID;
+        //
+        //         let target = validatorDict[nodeID];
+        //         if(target){
+        //             let targetAmt = new BN(target.stakeAmount);
+        //             let vAmt = new BN(delegator.stakeAmount);
+        //             let tot = targetAmt.add(vAmt);
+        //             target.stakeAmount = tot.toString();
+        //         }
+        //     }
+        //
+        //     return validatorDict;
+        // },
+        // validatorsCleanArray(state, getters): ValidatorRaw[]{
+        //     let validatorDict = getters.validatorsDict;
+        //     let res = [];
+        //     for(var nodeId in validatorDict){
+        //         let val = validatorDict[nodeId];
+        //         res.push(val);
+        //     }
+        //
+        //     return res;
+        // },
 
         // Maps delegators to a node id
         nodeDelegatorMap(state): ValidatorDelegatorDict{
@@ -154,8 +224,9 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
 
-        validatorMaxStake: (state, getters) => (validator: ValidatorRaw) => {
-            let stakeAmt = new BN(validator.stakeAmount);
+        // Given a validator list item, calculate the max stake of this item
+        validatorMaxStake: (state, getters) => (validator: ValidatorListItem) => {
+            let stakeAmt = validator.validatorStake;
 
             // 5 times the validator's stake
             let relativeMaxStake = stakeAmt.mul(new BN(5));
@@ -201,26 +272,26 @@ const platform_module: Module<PlatformState, RootState> = {
             return totDel;
         },
 
-        validatorRemainingStake: (state, getters) => (nodeId: string) => {
-            let validator: ValidatorRaw = getters.validatorsDict[nodeId];
-
-            let delegators: DelegatorRaw[] = getters.nodeDelegatorMap[nodeId];
-            let delegatorsPending: DelegatorPendingRaw[] = getters.nodeDelegatorPendingMap[nodeId];
-
-            let stakeTotal = new BN(validator.stakeAmount);
-
-            let activeTotal = delegators.reduce((acc: BN, val: DelegatorRaw) => {
-                let valBn = new BN(val.stakeAmount);
-                return acc.add(valBn);
-            }, new BN(0));
-
-            let pendingTotal = delegatorsPending.reduce((acc: BN, val: DelegatorPendingRaw) => {
-                let valBn = new BN(val.stakeAmount);
-                return acc.add(valBn);
-            }, new BN(0));
-
-            let totDel = activeTotal.add(pendingTotal);
-        }
+        // validatorRemainingStake: (state, getters) => (nodeId: string) => {
+        //     let validator: ValidatorRaw = getters.validatorsDict[nodeId];
+        //
+        //     let delegators: DelegatorRaw[] = getters.nodeDelegatorMap[nodeId];
+        //     let delegatorsPending: DelegatorPendingRaw[] = getters.nodeDelegatorPendingMap[nodeId];
+        //
+        //     let stakeTotal = new BN(validator.stakeAmount);
+        //
+        //     let activeTotal = delegators.reduce((acc: BN, val: DelegatorRaw) => {
+        //         let valBn = new BN(val.stakeAmount);
+        //         return acc.add(valBn);
+        //     }, new BN(0));
+        //
+        //     let pendingTotal = delegatorsPending.reduce((acc: BN, val: DelegatorPendingRaw) => {
+        //         let valBn = new BN(val.stakeAmount);
+        //         return acc.add(valBn);
+        //     }, new BN(0));
+        //
+        //     let totDel = activeTotal.add(pendingTotal);
+        // }
 
     }
 };

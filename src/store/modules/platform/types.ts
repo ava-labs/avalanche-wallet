@@ -37,3 +37,16 @@ export interface ValidatorDelegatorPendingDict{
 export interface ValidatorDict {
     [nodeId: string]: ValidatorRaw
 }
+
+
+
+export interface ValidatorListItem {
+    nodeID: string
+    validatorStake: BN,
+    delegatedStake: BN,
+    numDelegators: number,
+    startTime: Date,
+    endTime: Date,
+    uptime: number,
+    fee: number
+}
