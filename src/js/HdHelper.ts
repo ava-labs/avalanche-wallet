@@ -9,7 +9,6 @@ import {SECP256k1KeyPair} from "avalanche/dist/common";
 import {getAddressDetailX} from "@/explorer_api";
 
 
-//TODO: Make this normal numbers again!!!
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
 
 const SCAN_SIZE: number = 100; // the total number of utxos to look at initially to calculate last index
@@ -324,7 +323,6 @@ class HdHelper {
                 let targetIndex = start+i;
                 // As a last resort check the explorer
                 let data = await this.checkIndexExplorer(targetIndex)
-                console.log(data);
                 if(data) continue;
                 return targetIndex;
             }
@@ -336,10 +334,15 @@ class HdHelper {
     // returns false if no explorer is present
     async checkIndexExplorer(index: number): Promise<boolean>{
         let addr = this.getAddressForIndex(index);
-        console.log("Checking explorer for address: ",addr)
-        if(this.chainId==='X'){
-            let res = await getAddressDetailX(addr)
-            if(res) return true;
+
+        try{
+            if(this.chainId==='X'){
+                let res = await getAddressDetailX(addr)
+                if(res) return true;
+            }
+        }catch(e){
+            // IF there is no available api, catch the 404 and return false
+            return false;
         }
         return false;
     }

@@ -27,8 +27,12 @@ async function getAddressDetailX(addr: string){
     let addrRaw = addr.split('-')[1];
     let url = `/x/addresses/${addrRaw}`;
 
-    let res = await explorer_api.get(url);
-    return res.data;
+    try{
+        let res = await explorer_api.get(url);
+        return res.data;
+    }catch(e){
+        throw e;
+    }
 }
 
 export {explorer_api, getAddressHistory, getAddressDetailX};
