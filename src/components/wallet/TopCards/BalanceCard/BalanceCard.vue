@@ -82,6 +82,7 @@
     import Big from 'big.js';
     import {BN} from "avalanche/dist";
     import {ONEAVAX} from "avalanche/dist/utils";
+    import {bnToBig} from "@/helpers/helper";
 
     @Component({
         components: {
@@ -138,12 +139,9 @@
                 let denom = this.ava_asset.denomination;
 
                 let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked).add(lockedStakeable);
-                let bigTot = Big(tot.toString()).div(Math.pow(10,denom))
-                if(bigTot.lt(Big('1000'))){
-                    return bigTot.toString();
-                }else{
-                    return bigTot.toLocaleString();
-                }
+                let bigTot = bnToBig(tot, denom);
+                // let bigTot = Big(tot.toString()).div(Math.pow(10,denom))
+                return bigTot.toLocaleString(denom);
             }else{
                 return '?'
             }
@@ -161,11 +159,13 @@
                     amt = amt.add(pLocked);
 
 
-                if(amt.lt(Big('0.0001'))){
-                    return amt.toLocaleString(denom);
-                }else{
-                    return amt.toLocaleString(3);
-                }
+                return amt.toLocaleString(denom);
+
+                // if(amt.lt(Big('0.0001'))){
+                //     return amt.toLocaleString(denom);
+                // }else{
+                //     return amt.toLocaleString(3);
+                // }
             }else{
                 return '?'
             }
@@ -188,22 +188,27 @@
                 let xUnlocked = this.ava_asset.amount;
                 let pUnlocked = this.platformUnlocked;
 
+                let denom = this.ava_asset.denomination;
+
                 let tot = xUnlocked.add(pUnlocked);
-                let amtBig = this.avaxBnToBigAmt(tot);
-                if(amtBig.lt(Big('1'))){
-                    return amtBig.toString();
-                }else{
-                    return amtBig.toLocaleString(3);
-                }
+                let amtBig = bnToBig(tot, denom);
+                // let amtBig = this.avaxBnToBigAmt(tot);
+
+                return amtBig.toLocaleString(denom);
+                // if(amtBig.lt(Big('1'))){
+                //     return amtBig.toString();
+                // }else{
+                //     return amtBig.toLocaleString(3);
+                // }
             }else{
                 return '?'
             }
         }
 
 
-        avaxBnToBigAmt(val: BN): Big{
-            return Big(val.toString()).div(Math.pow(10,9));
-        }
+        // avaxBnToBigAmt(val: BN): Big{
+        //     return Big(val.toString()).div(Math.pow(10,9));
+        // }
 
         get pBalanceText(){
             if(!this.ava_asset) return  '?';

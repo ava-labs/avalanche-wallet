@@ -331,6 +331,7 @@ class HdHelper {
     }
 
     // Get tx history data for the index from the explorer
+    // return true if this address has a history
     // returns false if no explorer is present
     async checkIndexExplorer(index: number): Promise<boolean>{
         let addr = this.getAddressForIndex(index);
