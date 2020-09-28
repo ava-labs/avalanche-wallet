@@ -18,8 +18,8 @@
                         <h4 class="title">Delegate</h4>
                         <p style="flex-grow: 1">You do not own an Avalanche node, but you want to stake using another node.</p>
                         <p v-if="!canDelegate" class="no_balance">You must have at least <b>{{minDelegationAmt.toLocaleString()}} AVAX</b> on the P chain to become a delegator.</p>
-<!--                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small :disabled="!canDelegate">Add Delegator</v-btn>-->
-                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small >Add Delegator</v-btn>
+                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small :disabled="!canDelegate">Add Delegator</v-btn>
+<!--                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small >Add Delegator</v-btn>-->
                     </div>
                     <div>
                         <h4 class="title">Cross Chain Transfer</h4>
