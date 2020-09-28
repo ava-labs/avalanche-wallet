@@ -25,11 +25,11 @@
                             </div>
                             <div>
                                 <p style="font-size: 13px; color: var(--primary-color-light)">Validator Start Date</p>
-                                <p class="node_id">{{(new Date(parseInt(selected.startTime)*1000)).toLocaleString()}}</p>
+                                <p class="node_id">{{selected.startTime.toLocaleString()}}</p>
                             </div>
                             <div>
                                 <p style="font-size: 13px; color: var(--primary-color-light)">Validator End Date</p>
-                                <p class="node_id">{{(new Date(parseInt(selected.endTime)*1000)).toLocaleString()}}</p>
+                                <p class="node_id">{{selected.endTime.toLocaleString()}}</p>
                             </div>
                         </div>
                         <div style="margin: 30px 0;">
