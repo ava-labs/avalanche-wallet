@@ -16,7 +16,7 @@
             </tr>
             </thead>
             <tbody>
-                <ValidatorRow v-for="v in validators" :key="v.nodeID+v.endTime" :validator="v" @select="onselect"></ValidatorRow>
+                <ValidatorRow v-for="v in validators" :key="v.nodeID" :validator="v" @select="onselect"></ValidatorRow>
             </tbody>
         </table>
         <div v-if="validators.length===0" class="empty_list">
@@ -35,6 +35,7 @@ import {BN} from 'avalanche';
 import ValidatorRow from "@/components/misc/ValidatorList/ValidatorRow.vue";
 import {ValidatorRaw, ValidatorDict} from "@/components/misc/ValidatorList/types";
 import Tooltip from "@/components/misc/Tooltip.vue";
+import {ValidatorListItem} from "@/store/modules/platform/types";
 
 const MINUTE_MS = 60000;
 const HOUR_MS = MINUTE_MS * 60;
@@ -48,47 +49,19 @@ const DAY_MS = HOUR_MS * 24;
 export default class ValidatorsList extends Vue{
     @Prop() search!: string;
 
-    get validators(){
-        // let res: ValidatorRaw[] = this.$store.getters['Platform/validatorsCleanArray'];
-        let res: ValidatorRaw[] = this.$store.state.Platform.validators;
+    get validators(): ValidatorListItem[]{
+        let list: ValidatorListItem[] = this.$store.getters["Platform/validatorListEarn"];
 
-
-        if(!res) return [];
-        // If less than 25 hours (+1 to avoid time passing)
-        let now = Date.now();
-        res = res.filter(v => {
-           let endTime = parseInt(v.endTime) * 1000;
-           let dif = endTime - now;
-
-            // If End time is less than 2 weeks + 1 hour, remove from list they are no use
-            let threshold = (DAY_MS*14 + (10 * MINUTE_MS));
-           if(dif <= threshold){
-               return false;
-           }
-           return true;
-        });
-
-
-        // Filter search results
         if(this.search){
-            res = res.filter(v => {
+            list = list.filter(v => {
                 return v.nodeID.includes(this.search)
             });
         }
 
-
-        // Sort by stake duration
-        // res = res.sort((a,b) => {
-        //     let endA = parseInt(a.endTime);
-        //     let endB = parseInt(b.endTime);
-        //     return endB - endA;
-        // })
-
-
         // order by stake amount
-        res = res.sort((a,b) => {
-            let amtA = new BN(a.stakeAmount);
-            let amtB = new BN(b.stakeAmount);
+        list = list.sort((a,b) => {
+            let amtA = a.validatorStake;
+            let amtB = b.validatorStake;
 
             if(amtA.gt(amtB)){
                 return -1;
@@ -99,13 +72,37 @@ export default class ValidatorsList extends Vue{
             }
         })
 
+        return list;
+        // let res: ValidatorRaw[] = this.$store.getters['Platform/validatorsCleanArray'];
+        // let res: ValidatorRaw[] = this.$store.state.Platform.validators;
+        //
+        //
+        // if(!res) return [];
+        // // If less than 25 hours (+1 to avoid time passing)
+        // let now = Date.now();
+        // res = res.filter(v => {
+        //    let endTime = parseInt(v.endTime) * 1000;
+        //    let dif = endTime - now;
+        //
+        //     // If End time is less than 2 weeks + 1 hour, remove from list they are no use
+        //     let threshold = (DAY_MS*14 + (10 * MINUTE_MS));
+        //    if(dif <= threshold){
+        //        return false;
+        //    }
+        //    return true;
+        // });
+        //
+        //
+        // // Filter search results
 
-        return res;
+        //
+        //
+        // return res;
     }
 
 
 
-    onselect(val: ValidatorRaw){
+    onselect(val: ValidatorListItem){
         this.$emit('select', val);
     }
 
