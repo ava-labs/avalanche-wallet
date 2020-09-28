@@ -142,7 +142,7 @@
                 if(bigTot.lt(Big('1000'))){
                     return bigTot.toString();
                 }else{
-                    return bigTot.toLocaleString(3);
+                    return bigTot.toLocaleString();
                 }
             }else{
                 return '?'
