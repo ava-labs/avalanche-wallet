@@ -22,4 +22,13 @@ async function getAddressHistory(addrs: string[], limit=20, offset=0){
     return res.data;
 }
 
-export {explorer_api, getAddressHistory};
+
+async function getAddressDetailX(addr: string){
+    let addrRaw = addr.split('-')[1];
+    let url = `/x/addresses/${addrRaw}`;
+
+    let res = await explorer_api.get(url);
+    return res.data;
+}
+
+export {explorer_api, getAddressHistory, getAddressDetailX};

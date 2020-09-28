@@ -46,16 +46,6 @@ const history_module: Module<HistoryState, RootState> = {
                 return;
             }
 
-            // // console.log(addresses);
-            // let query = addresses.map(val => {
-            //     let raw = val.split('-')[1];
-            //     return `address=${raw}`;
-            // });
-            //
-            // // Get history for all addresses of the active HD wallet
-            // let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
-            // let res = await explorer_api.get(url);
-
             let data = await getAddressHistory(addresses, limit, offset);
 
             // let transactions = res.data.transactions;
