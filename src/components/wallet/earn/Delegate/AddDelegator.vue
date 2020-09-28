@@ -129,6 +129,7 @@ import {ava, avm, bintools, infoApi, pChain} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {Defaults, ONEAVAX} from "avalanche/dist/utils";
+import {ValidatorListItem} from "@/store/modules/platform/types";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -146,7 +147,7 @@ const DAY_MS = HOUR_MS * 24;
 })
 export default class AddDelegator extends Vue{
     search: string = "";
-    selected: ValidatorRaw|null = null;
+    selected: ValidatorListItem|null = null;
     stakeAmt: BN = new BN(0);
     startDate: string = '';
     endDate: string = '';
@@ -172,7 +173,7 @@ export default class AddDelegator extends Vue{
         // avm.
     }
 
-    onselect(val: ValidatorRaw){
+    onselect(val: ValidatorListItem){
         this.search = "";
         this.selected = val;
     }
@@ -305,7 +306,7 @@ export default class AddDelegator extends Vue{
             return false;
         }
 
-        let validatorEndtime = parseInt(this.selected.endTime)*1000;
+        let validatorEndtime = this.selected.endTime.getTime();
 
         if(endTime > validatorEndtime){
             this.err = `Delegation end date can not be longer than the validator's end date.`;
@@ -379,8 +380,10 @@ export default class AddDelegator extends Vue{
     // Max date is end time -1 day
     get startMaxDate(): string{
         if(!this.selected) return (new Date()).toISOString();
-        let nodeEndTime = parseInt(this.selected.endTime);
-            nodeEndTime = nodeEndTime*1000;
+        // let nodeEndTime = parseInt(this.selected.endTime);
+        //     nodeEndTime = nodeEndTime*1000;
+
+        let nodeEndTime = this.selected.endTime.getTime();
 
         let nodeEndDate = new Date(nodeEndTime - (1000*60*60*24));
         return nodeEndDate.toISOString()
@@ -399,7 +402,8 @@ export default class AddDelegator extends Vue{
     get endMaxDate(): string{
         if(!this.selected) return (new Date()).toISOString();
 
-        let nodeEndTime = parseInt(this.selected.endTime) * 1000;
+        // let nodeEndTime = parseInt(this.selected.endTime) * 1000;
+        let nodeEndTime = this.selected.endTime.getTime();
             nodeEndTime -= 60000;
         return (new Date(nodeEndTime)).toISOString();
     }
@@ -439,7 +443,7 @@ export default class AddDelegator extends Vue{
 
     get delegationFee(): number{
         if(!this.selected) return 0;
-        return  parseFloat(this.selected.delegationFee);
+        return  this.selected.fee;
     }
 
     get totalFee(): BN{
@@ -468,10 +472,11 @@ export default class AddDelegator extends Vue{
 
     get remainingAmt(): BN{
         if(!this.selected) return new BN(0);
-        let totDel: BN = this.$store.getters["Platform/validatorTotalDelegated"](this.selected.nodeID);
+        // let totDel: BN = this.$store.getters["Platform/validatorTotalDelegated"](this.selected.nodeID);
         let nodeMaxStake: BN = this.$store.getters["Platform/validatorMaxStake"](this.selected);
 
-        let valAmt = new BN(this.selected.stakeAmount);
+        let totDel = this.selected.delegatedStake;
+        let valAmt = this.selected.validatorStake;
         return nodeMaxStake.sub(totDel).sub(valAmt)
     }
 
