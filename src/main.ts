@@ -67,8 +67,7 @@ Big.prototype.toLocaleString = function(toFixed: number = 9) {
   if(split.length===1){
     return wholeStr;
   }else{
-    // let remainderNum = parseInt(split[1]);
-    let remainderStr = split[1].toString();
+    let remainderStr = split[1];
 
     // remove trailing 0s
     let lastChar = remainderStr.charAt(remainderStr.length-1);
