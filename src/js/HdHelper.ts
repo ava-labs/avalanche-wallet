@@ -6,12 +6,12 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 import {SECP256k1KeyPair} from "avalanche/dist/common";
+import {getAddressDetailX} from "@/explorer_api";
 
 
-//TODO: Make this normal numbers again!!!
-const INDEX_RANGE: number = 500; // a gap of at least 20 indexes is needed to claim an index unused
+const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
 
-const SCAN_SIZE: number = 700; // the total number of utxos to look at initially to calculate last index
+const SCAN_SIZE: number = 100; // the total number of utxos to look at initially to calculate last index
 const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned
 
 type HelperChainId =  'X' | 'P';
@@ -320,10 +320,32 @@ class HdHelper {
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
-                return start+i;
+                let targetIndex = start+i;
+                // As a last resort check the explorer
+                let data = await this.checkIndexExplorer(targetIndex)
+                if(data) continue;
+                return targetIndex;
             }
         }
         return await this.findAvailableIndex(start+SCAN_RANGE)
+    }
+
+    // Get tx history data for the index from the explorer
+    // return true if this address has a history
+    // returns false if no explorer is present
+    async checkIndexExplorer(index: number): Promise<boolean>{
+        let addr = this.getAddressForIndex(index);
+
+        try{
+            if(this.chainId==='X'){
+                let res = await getAddressDetailX(addr)
+                if(res) return true;
+            }
+        }catch(e){
+            // IF there is no available api, catch the 404 and return false
+            return false;
+        }
+        return false;
     }
 
     // Returns the key of the first index that has no utxos

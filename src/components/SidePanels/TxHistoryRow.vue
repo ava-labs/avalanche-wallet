@@ -42,6 +42,7 @@
 
 
         get explorerUrl(): string{
+            // TODO: Make this dynamic
             return `https://explorer.avax.network/tx/${this.transaction.id}`;
         }
 

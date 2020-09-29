@@ -35,6 +35,7 @@
     import Big from "big.js";
     import BN from "bn.js";
     import NftCard from "@/components/wallet/portfolio/NftCard.vue";
+    import {bnToBig} from "@/helpers/helper";
 
     @Component({
         components: {
@@ -46,8 +47,7 @@
         @Prop() nftOrders!: UTXO[];
 
         cleanNum(val: BN, denom: number){
-            let bigVal = Big(val.toString()).div(Math.pow(10,denom))
-            return bigVal.toLocaleString(denom)
+            return bnToBig(val, denom).toLocaleString(denom);
         }
 
         get isFungibleEmpty(){
