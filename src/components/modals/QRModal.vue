@@ -14,7 +14,9 @@
     import Modal from './Modal.vue';
     import CopyText from "../misc/CopyText.vue";
     import QRCode from 'qrcode'
-    import {AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
     @Component({
         components: {
@@ -66,11 +68,11 @@
         }
 
         get address(){
-            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
-            if(!activeKey){
+            let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
+            if(!wallet){
                 return '-'
             }
-            return activeKey.getAddressString();
+            return wallet.getCurrentAddress();
         }
 
         mounted() {

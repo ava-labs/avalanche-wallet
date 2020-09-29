@@ -7,12 +7,12 @@
     "home": {
         "access": {
             "title": "Welcome Back!",
-            "desc": "You can 'Access' your existing AVAX wallet here.",
-            "submit": "Access"
+            "desc": "'Access' your existing AVAX wallet here.",
+            "submit": "Access Wallet"
         },
         "create": {
-            "title": "Are you new to Avalanche?",
-            "desc": "'Create' a new wallet to send, receive and SWAP all your assets.",
+            "title": "New to Avalanche Wallet?",
+            "desc": "'Create' a new wallet to send, receive and swap Avalanche assets.",
             "submit": "Create New Wallet"
         }
     },
@@ -58,18 +58,18 @@
         }
     },
     "create": {
-        "generate": "Generate a new key phrase to use with your wallet.",
+        "generate": "Generate a new key phrase to setup your Avalanche Wallet.",
         "but_have": "Already have a wallet?",
         "submit": "Generate Key Phrase",
         "cancel": "Cancel",
-        "mnemonic_title": "This is your 24 word key phrase.",
-        "mnemonic_desc": "You will use these words to access your wallet.",
+        "mnemonic_title": "This is your key phrase.",
+        "mnemonic_desc": "Use these 24 words in sequential order to recover your Avalanche Wallet",
         "attention": "Attention!",
-        "warning": "STORE THIS KEY PHRASE IN A SECURE LOCATION. ANYONE WITH THIS KEY PHRASE CAN ACCESS YOUR WALLET. THERE IS NO WAY TO RECOVER LOST KEY PHRASES!",
-        "confirm": "I wrote down my mnemonic phrase in a secure location.",
+        "warning": "Store this key phrase in a secure location. Anyone with this key phrase can access your Avalanche Wallet. There is no way to recover lost key phrases.",
+        "confirm": "I wrote down my key phrase in a secure location.",
         "regenerate": "Regenerate",
         "success_title": "Congratulations!",
-        "success_desc": "It`s time to open your Avalanche Wallet",
+        "success_desc": "It's time to access your Avalanche Wallet.",
         "success_submit": "Access Wallet",
         "verify": "Verify",
         "verifytitle": "Verify Mnemonic",
@@ -111,7 +111,7 @@
     },
     "keys": {
         "title": "My Keys",
-        "button1": "REMEMBER KEYS",
+        "button1": "Remember Keys",
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
         "subtitle": "Active Key",
@@ -146,15 +146,15 @@
     },
     "portfolio": {
         "assets": "Assets",
-        "assets1": "FUNGIBLES",
-        "assets2": "COLLECTIBLES",
+        "assets1": "Tokens",
+        "assets2": "Collectibles",
         "search": "Search Assets",
         "name": "Name",
         "send": "Send",
         "balance": "Balance",
         "error_network": "Unable to display assets. Disconnected from the network.",
         "nobalance": "You do not have any assets",
-        "nobalance_nft": "You do not own any NFTs.",
+        "nobalance_nft": "You do not own any collectibles.",
         "noaddresses": "You do not have any past addresses."
     },
     "logout": {

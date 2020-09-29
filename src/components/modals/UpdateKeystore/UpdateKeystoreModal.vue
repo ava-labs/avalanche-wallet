@@ -15,7 +15,7 @@
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
     import CopyText from "@/components/misc/CopyText.vue";
     import ExportWallet from "@/components/wallet/manage/ExportWallet.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
     @Component({
         components: {

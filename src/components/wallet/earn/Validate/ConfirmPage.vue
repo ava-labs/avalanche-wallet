@@ -1,0 +1,101 @@
+<template>
+    <div class="confirmation">
+        <div>
+            <label>Node ID</label>
+            <p style="word-break: break-all;">{{nodeID}}</p>
+        </div>
+        <div>
+            <label>Staking Amount</label>
+            <p>{{amtText}} AVAX</p>
+        </div>
+        <div>
+            <label>Start Date</label>
+            <p>{{start.toLocaleString()}}</p>
+        </div>
+        <div>
+            <label>End Date</label>
+            <p>{{end.toLocaleString()}}</p>
+        </div>
+        <div>
+            <label>Delegation Fee</label>
+            <p>{{delegationFee}} %</p>
+        </div>
+        <div>
+            <label>Reward Address ({{walletType}})</label>
+            <p style="word-break: break-all;">{{rewardAddress}}</p>
+        </div>
+    </div>
+</template>
+<script lang="ts">
+    import "reflect-metadata";
+    import {Vue, Component, Prop, Watch} from "vue-property-decorator";
+    import {BN} from "avalanche";
+    import Big from "big.js";
+
+    @Component
+    export default class ConfirmPage extends Vue{
+        @Prop() nodeID!: string;
+        @Prop() start!: Date;
+        @Prop() end!: Date;
+        @Prop() delegationFee!: number;
+        @Prop() amount!: BN
+        @Prop() rewardAddress!: string;
+        @Prop() rewardDestination!: string;
+
+        // amountCopy: BN = new BN(0);
+
+
+        // @Watch('amount')
+        // onAmountChange(val: BN){
+        //     console.log(val.toString(), val);
+        //     this.amountCopy = val.clone()
+        //     this.amountCopy = val.
+        // }
+
+        // get startDate(){
+        //     return new Date(this.start);
+        // }
+        //
+        // get endDate(){
+        //     return new Date(this.end);
+        // }
+
+        get amtBig(): Big{
+            let stakeAmt = Big(this.amount.toString()).div(Math.pow(10,9));
+            return stakeAmt;
+        }
+
+        get walletType(){
+            if(this.rewardDestination === 'local'){
+                return "This wallet";
+            }
+            return 'Custom'
+        }
+
+        get amtText():string{
+            let amt = this.amtBig;
+            return amt.toLocaleString(9);
+        }
+    }
+</script>
+<style scoped lang="scss">
+    .confirmation{
+        > div{
+            background-color: var(--bg-light);
+            margin: 14px 0;
+            padding: 6px 14px;
+
+            label{
+                font-size: 14px;
+                color: var(--primary-color-light);
+            }
+            p{
+                font-size: 18px;
+            }
+        }
+
+        .err{
+            font-size: 14px;
+        }
+    }
+</style>

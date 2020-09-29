@@ -18,15 +18,11 @@
 
         get name(){
             let name = this.asset.name;
-            // TODO: Remove after everest
-            if(name==="AVA") return "AVAX";
             return name;
         }
 
         get symbol(){
             let sym = this.asset.symbol;
-            // TODO: Remove after everest
-            if(sym==="AVA") return "AVAX";
             return sym;
         }
     }

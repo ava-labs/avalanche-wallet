@@ -1,6 +1,6 @@
 import Avalanche from "avalanche/dist";
 import BinTools from "avalanche/dist/utils/bintools";
-import {AVMAPI, AVMKeyChain, MinterSet, UTXOSet, UnsignedTx, Tx} from "avalanche/dist/apis/avm";
+import {AVMAPI, KeyChain as AVMKeyChain, MinterSet, UTXOSet, UnsignedTx, Tx} from "avalanche/dist/apis/avm";
 import {UnixNow, UTF8Payload, URLPayload} from "avalanche/dist/utils";
 import {OutputOwners} from "avalanche/dist/common";
 
@@ -30,7 +30,7 @@ async function createNFT(name: string, symbol: string, addresses: Buffer[], crea
     // let locktime = new BN(0);
     // const fee: BN = new BN(0);
 
-    console.log(utxoSet.getAssetIDs());
+    // console.log(utxoSet.getAssetIDs());
 
     let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
         utxoSet,
@@ -43,19 +43,19 @@ async function createNFT(name: string, symbol: string, addresses: Buffer[], crea
     // let tx: Tx =  avm.keyChain().signTx(unsignedTx)
     // console.log(tx.toBuffer().toString('hex'))
     let txid: string = await avm.issueTx(tx)
-    console.log(`Create NFT Asset Success: ${txid}`)
+    // console.log(`Create NFT Asset Success: ${txid}`)
     return txid;
 }
 
 
 async function mintNFT(txid: string, addresses: Buffer[], addressStrings: string[], payload:any): Promise<string>{
-    console.log(`Creating NFT Mint Operation #1...`)
+    // console.log(`Creating NFT Mint Operation #1...`)
     let utxoSet = await avm.getUTXOs(addresses);
     let utxoids = utxoSet.getUTXOIDs();
     let result: string = "";
 
-    console.log(utxoids);
-    console.log(txid);
+    // console.log(utxoids);
+    // console.log(txid);
 
     // scan utxos and find the nft one
     for (let index: number = 0; index < utxoids.length; ++index) {
@@ -74,9 +74,9 @@ async function mintNFT(txid: string, addresses: Buffer[], addressStrings: string
     // let outputOwners:Array<OutputOwners> = []
     // outputOwners.push(new OutputOwners(addresses, locktime, threshold))
 
-    console.log(utxoids)
-    console.log(result);
-    console.log('Result:', result);
+    // console.log(utxoids)
+    // console.log(result);
+    // console.log('Result:', result);
 
 
 
@@ -99,7 +99,7 @@ async function mintNFT(txid: string, addresses: Buffer[], addressStrings: string
     // let tx =  avm.keyChain().signTx(unsignedTx)
     // console.log(tx.toBuffer().toString('hex'))
     let mintTxid:string = await avm.issueTx(tx)
-    console.log(`NFT Mint Operation Success #1: ${mintTxid}`)
+    // console.log(`NFT Mint Operation Success #1: ${mintTxid}`)
     return mintTxid;
 }
 
@@ -114,7 +114,7 @@ async function transferNFT(utxoId: string, toAddresses: string[]): Promise<strin
     let utxos = await avm.getUTXOs(fromAddrs);
     let utxoids = utxos.getUTXOIDs();
 
-    console.log(`Utxo ids: `,utxoids);
+    // console.log(`Utxo ids: `,utxoids);
     let sourceTxId: string = "";
 
     for (let index: number = 0; index < utxoids.length; ++index) {
@@ -131,6 +131,7 @@ async function transferNFT(utxoId: string, toAddresses: string[]): Promise<strin
     let unsignedTx = await avm.buildNFTTransferTx(
         utxos,
         toAddresses,
+        fromAddrsStr,
         fromAddrsStr,
         sourceTxId,
         // fee,

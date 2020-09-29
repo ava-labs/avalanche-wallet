@@ -69,7 +69,6 @@
                                         <div class="submit">
                                             <transition name="fade" mode="out-in">
                                                 <Spinner v-if="isLoad" class="spinner"></Spinner>
-
                                                 <div v-else>
                                                     <button
                                                             class="button_primary ava_button access generate"
@@ -77,6 +76,7 @@
                                                             :disabled="!canSubmit"
                                                     >{{$t('create.success_submit')}}</button>
                                                     <router-link to="/" class="link">Cancel</router-link>
+                                                    <ToS style="margin: 30px 0 !important;"></ToS>
                                                 </div>
                                             </transition>
                                         </div>
@@ -104,10 +104,12 @@
 
     import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
     import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
+    import ToS from "@/components/misc/ToS.vue";
 
 
     @Component({
         components: {
+            ToS,
             CopyText,
             // RememberKey,
             TextDisplayCopy,
@@ -371,13 +373,17 @@ a {
     }
 
     .access_cont {
-        text-align: right;
+        text-align: left;
         flex-direction: column;
 
         .submit {
             display: flex;
             flex-direction: row;
-            justify-content: flex-start;
+            margin-top: 14px;
+            text-align: left;
+            //flex-direction: column;
+            //align-items: flex-start;
+            //justify-content: space-between;
 
             .access {
 

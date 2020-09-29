@@ -128,7 +128,7 @@
                     this.isAjax = false;
                 }catch(e){
                     this.isAjax = false;
-                    this.err = "AVA Network Not Found";
+                    this.err = "Avalanche Network Not Found";
                     return;
                 }
 

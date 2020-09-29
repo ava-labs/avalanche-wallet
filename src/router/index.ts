@@ -11,11 +11,13 @@ import Access from '../views/access/Access.vue';
 import Create from "@/views/Create.vue";
 import Wallet from "@/views/Wallet.vue";
 import WalletHome from "@/views/wallet/Portfolio.vue";
+import Earn from "@/views/wallet/Earn.vue";
+import Advanced from "@/views/wallet/Advanced.vue"; // your vuex store
 
 Vue.use(VueRouter);
 
 
-import store from '../store/index' // your vuex store
+import store from '../store/index'
 
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
@@ -33,6 +35,9 @@ const ifAuthenticated = (to: Route, from: Route, next: Function) => {
     }
     next('/')
 };
+
+
+
 
 
 const routes = [
@@ -74,15 +79,24 @@ const routes = [
             {
                 path: '/',
                 name: 'wallet',
-                component: WalletHome
+                component: WalletHome,
+
             },
             {
                 path: 'transfer',
-                component: Transfer
+                component: Transfer,
             },
             {
                 path: 'keys',
-                component: ManageKeys
+                component: ManageKeys,
+            },
+            {
+                path: 'earn',
+                component: Earn,
+            },
+            {
+                path: 'advanced',
+                component: Advanced,
             }
         ],
         component: Wallet,

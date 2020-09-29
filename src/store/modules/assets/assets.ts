@@ -41,6 +41,9 @@ const assets_module: Module<AssetsState, RootState> = {
         removeAllAssets(state){
             state.assets = [];
             state.assetsDict = {};
+            state.nftFams = [];
+            state.nftFamsDict = {};
+            state.AVA_ASSET_ID = null;
         },
         setIsUpdateBalance(state, val){
             state.isUpdateBalance = val;
@@ -48,8 +51,9 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     actions: {
         // Called on a logout event
-        onlogout({state}){
+        onlogout({state, commit}){
             state.isUpdateBalance = false;
+            commit('removeAllAssets');
         },
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
@@ -101,19 +105,19 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // fetch every asset from the explorer, if explorer exists
         // We can use it later
-        updateAssets({state, rootState, commit}){
-            //@ts-ignore
-            let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
-            if(explorerApi){
-                explorer_api.get('/x/assets').then(res => {
-                    let assets:AssetAPI[] = res.data.assets;
-                    assets.forEach(asset => {
-                        let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
-                        commit('addAsset', newAsset)
-                    });
-                });
-            }
-        },
+        // updateAssets({state, rootState, commit}){
+        //     //@ts-ignore
+        //     let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
+        //     if(explorerApi){
+        //         explorer_api.get('/x/assets').then(res => {
+        //             let assets:AssetAPI[] = res.data.assets;
+        //             assets.forEach(asset => {
+        //                 let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
+        //                 commit('addAsset', newAsset)
+        //             });
+        //         });
+        //     }
+        // },
 
         // Adds an unknown asset id to the assets dictionary
         async addUnknownAsset({state, commit}, assetId:string){

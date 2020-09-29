@@ -3,39 +3,61 @@
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
-                    <Spinner v-if="isUpdateBalance" color="#000"></Spinner>
+                    <Spinner v-if="isUpdateBalance" class="spinner"></Spinner>
                     <button v-else @click="updateBalance"><fa icon="sync"></fa></button>
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
+                <template v-if="!isBreakdown">
+                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye"></fa> Show Breakdown</button>
+                </template>
+                <template v-else>
+                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye-slash"></fa> Hide Breakdown</button>
+                </template>
             </div>
             <div class="balance_row">
                 <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
             </div>
+<!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
-<!--                <div>-->
-<!--                    <label>Available</label>-->
-<!--                    <p>{{balanceText}} AVA</p>-->
-<!--                </div>-->
                 <div>
-                    <label>{{$t('top.locked')}}</label>
-                    <p>{{balanceTextLocked}} AVAX</p>
+                    <template v-if="!isBreakdown">
+                        <label>Available</label>
+                        <p>{{unlockedText}} AVAX</p>
+                    </template>
+                    <template v-else>
+                        <label>Available (X)</label>
+                        <p>{{avmUnlocked | cleanAvaxBN}} AVAX</p>
+                        <label>Available (P)</label>
+                        <p>{{platformUnlocked | cleanAvaxBN}} AVAX</p>
+                    </template>
                 </div>
                 <div>
-                    <label>P-Chain</label>
-                    <p>{{pBalanceText}} AVAX</p>
+                    <template v-if="!isBreakdown">
+                        <label>{{$t('top.locked')}}</label>
+                        <p>{{balanceTextLocked}} AVAX</p>
+                    </template>
+                    <template v-else>
+                        <label>Locked (X)</label>
+                        <p>{{avmLocked | cleanAvaxBN}} AVAX</p>
+                        <label>Locked (P)</label>
+                        <p>{{platformLocked | cleanAvaxBN}} AVAX</p>
+                        <label>Locked Stakeable (P)</label>
+                        <p>{{platformLockedStakeable | cleanAvaxBN}} AVAX</p>
+                    </template>
+
+
+                </div>
+<!--                <div>-->
+<!--                    <label>P-Chain</label>-->
+<!--                    <p>{{pBalanceText}} AVAX</p>-->
+<!--                </div>-->
+                <div>
+                    <label>Staking</label>
+                    <p>{{stakingText}} AVAX</p>
                 </div>
             </div>
         </div>
         <NftCol class="nft_card"></NftCol>
-        <div class="where_info">
-            <v-alert type="info" text class="alert_cont">
-                <p style="font-size: 14px;">
-                    <b>{{$t('top.info2')}}</b>
-                    <br>
-                    {{$t('top.info2_desc')}}
-                </p>
-            </v-alert>
-        </div>
     </div>
 </template>
 <script lang="ts">
@@ -43,20 +65,32 @@
     import 'reflect-metadata';
     import { Vue, Component, Prop, Ref, Watch} from 'vue-property-decorator';
     import AvaAsset from "@/js/AvaAsset";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import Spinner from '@/components/misc/Spinner.vue';
     import NftCol from './NftCol.vue';
+    import Tooltip from '@/components/misc/Tooltip.vue';
 
     import Big from 'big.js';
     import {BN} from "avalanche/dist";
+    import {ONEAVAX} from "avalanche/dist/utils";
+    import {bnToBig} from "@/helpers/helper";
 
     @Component({
         components: {
             Spinner,
-            NftCol
+            NftCol,
+            Tooltip
+        },
+        filters: {
+            cleanAvaxBN(val: BN){
+                let big = Big(val.toString()).div(Big(ONEAVAX.toString()))
+                return big.toLocaleString();
+            }
         }
     })
     export default class BalanceCard extends Vue {
+        isBreakdown = false;
+
         updateBalance():void{
             this.$store.dispatch('Assets/updateUTXOs');
             this.$store.dispatch('History/updateTransactionHistory');
@@ -67,27 +101,62 @@
             return ava;
         }
 
+
+        toggleBreakdown(){
+            this.isBreakdown = !this.isBreakdown;
+        }
+
+
+        get avmUnlocked(): BN{
+            if(!this.ava_asset) return new BN(0);
+            return this.ava_asset.amount;
+        }
+
+        get avmLocked(): BN{
+            if(!this.ava_asset) return new BN(0);
+            return this.ava_asset.amountLocked;
+        }
+
+        // should be unlocked (X+P), locked (X+P) and staked and lockedStakeable
         get balanceText():string{
             if(this.ava_asset !== null){
-                let amt = this.ava_asset.getAmount();
-                if(amt.lt(Big('0.00001'))){
-                    return amt.toLocaleString(this.ava_asset.denomination);
-                }else{
-                    return amt.toString();
-                }
+                let xUnlocked = this.avmUnlocked;
+                let xLocked = this.avmLocked;
+                let pUnlocked = this.platformUnlocked;
+                let pLocked = this.platformLocked;
+                let staked = this.stakingAmount;
+                let lockedStakeable = this.platformLockedStakeable;
+
+                let denom = this.ava_asset.denomination;
+
+                let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked).add(lockedStakeable);
+                let bigTot = bnToBig(tot, denom);
+                // let bigTot = Big(tot.toString()).div(Math.pow(10,denom))
+                return bigTot.toLocaleString(denom);
             }else{
                 return '?'
             }
         }
 
+
+        // Locked balance is the sum of locked AVAX tokens on X and P chain
         get balanceTextLocked():string{
             if(this.ava_asset !== null){
+                let denom = this.ava_asset.denomination;
+                let tot = this.platformLocked.add(this.platformLockedStakeable)
+                // let otherLockedAmt = this.platformLocked.add(this.platformLockedStakeable)
+                let pLocked = Big(tot.toString()).div(Math.pow(10,denom))
                 let amt = this.ava_asset.getAmount(true);
-                if(amt.lt(Big('0.00001'))){
-                    return amt.toLocaleString(this.ava_asset.denomination);
-                }else{
-                    return amt.toString();
-                }
+                    amt = amt.add(pLocked);
+
+
+                return amt.toLocaleString(denom);
+
+                // if(amt.lt(Big('0.0001'))){
+                //     return amt.toLocaleString(denom);
+                // }else{
+                //     return amt.toLocaleString(3);
+                // }
             }else{
                 return '?'
             }
@@ -101,18 +170,68 @@
             return this.$store.getters.walletPlatformBalanceLocked;
         }
 
+        get platformLockedStakeable(): BN{
+            return this.$store.getters.walletPlatformBalanceLockedStakeable;
+        }
+
+        get unlockedText(){
+            if(this.ava_asset){
+                let xUnlocked = this.ava_asset.amount;
+                let pUnlocked = this.platformUnlocked;
+
+                let denom = this.ava_asset.denomination;
+
+                let tot = xUnlocked.add(pUnlocked);
+                let amtBig = bnToBig(tot, denom);
+                // let amtBig = this.avaxBnToBigAmt(tot);
+
+                return amtBig.toLocaleString(denom);
+                // if(amtBig.lt(Big('1'))){
+                //     return amtBig.toString();
+                // }else{
+                //     return amtBig.toLocaleString(3);
+                // }
+            }else{
+                return '?'
+            }
+        }
+
+
+        // avaxBnToBigAmt(val: BN): Big{
+        //     return Big(val.toString()).div(Math.pow(10,9));
+        // }
+
         get pBalanceText(){
             if(!this.ava_asset) return  '?';
 
             let denom = this.ava_asset.denomination;
-            let bal = this.platformUnlocked.add(this.platformLocked);
+            let bal = this.platformUnlocked;
             let bigBal = Big(bal.toString())
                 bigBal = bigBal.div(Math.pow(10,denom))
 
-            if(bigBal.lt(Big('0.00001'))){
-                return bigBal.toLocaleString(denom);
+            if(bigBal.lt(Big('1'))){
+                return bigBal.toLocaleString(9);
             }else{
+                return bigBal.toLocaleString(3);
+            }
+        }
+
+        get stakingAmount(): BN{
+            return this.$store.getters.walletStakingBalance;
+        }
+
+        get stakingText(){
+            let balance = this.stakingAmount;
+            if(!balance) return '0';
+
+            let denom = 9;
+            let bigBal = Big(balance.toString())
+                bigBal = bigBal.div(Math.pow(10,denom))
+
+            if(bigBal.lt(Big('1'))){
                 return bigBal.toString();
+            }else{
+                return bigBal.toLocaleString(3);
             }
         }
 
@@ -128,7 +247,7 @@
 <style scoped lang="scss">
     @use '../../../../main';
     .balance_card{
-        display: grid !important;
+        display: grid;
         grid-template-columns: 1fr 230px;
         column-gap: 20px;
     }
@@ -137,6 +256,7 @@
         border-left: 2px solid var(--bg-light);
     }
     .fungible_card{
+        height: 100%;
         display: grid !important;
         grid-template-rows: max-content 1fr max-content;
         flex-direction: column;
@@ -153,6 +273,7 @@
 
         h4{
             margin-left: 12px;
+            flex-grow: 1;
         }
     }
     h4{
@@ -167,7 +288,7 @@
         align-self: center;
     }
     .balance{
-        font-size: 2.4em !important;
+        font-size: 2.4em;
         white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
@@ -181,6 +302,10 @@
         img{
             object-fit: contain;
             width: 100%;
+        }
+
+        .spinner{
+            color: var(--primary-color) !important;
         }
     }
     .buts{
@@ -219,8 +344,9 @@
     .alt_info{
         display: grid;
         grid-template-columns: repeat(3, max-content);
-        column-gap: 00px;
+        column-gap: 0px;
         > div{
+            position: relative;
             padding: 0 24px;
             border-right: 2px solid var(--bg-light);
             &:first-of-type{
@@ -232,7 +358,7 @@
         }
 
         label{
-            font-size: 12px;
+            font-size: 13px;
             color: main.$primary-color-light;
         }
     }
@@ -244,10 +370,40 @@
     }
 
 
+    .breakdown_toggle{
+        color: var(--primary-color-light);
+        font-size: 13px;
+    }
+
+
+    @include main.medium-device {
+        .balance_card{
+            display: block;
+            //grid-template-columns: 1fr 120px;
+        }
+
+        .balance{
+            font-size: 1.8rem !important;
+        }
+
+        .nft_col{
+            display: none;
+        }
+
+        .alt_info{
+            font-size: 13px
+        }
+    }
+
+
     @include main.mobile-device{
         .balance_card{
             grid-template-columns: none;
             display: block !important;
+        }
+
+        .nft_col{
+            display: none;
         }
 
         .nft_card{
@@ -265,14 +421,7 @@
         .where_info{}
 
         .alt_info{
-            display: none;
-            grid-template-columns: none;
             text-align: left;
-
-            >div{
-                padding: 0;
-                border: none;
-            }
         }
     }
 </style>

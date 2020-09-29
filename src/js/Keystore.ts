@@ -3,9 +3,8 @@ import {KeyFile, KeyFileDecrypted, KeyFileKey, KeyFileKeyDecrypted} from "./IKey
 import {bintools} from "@/AVA";
 import {AvaWallet} from "@/js/AvaWallet";
 import {Buffer} from "buffer/";
-import { wallet_type } from './IAvaHdWallet';
-import AvaHdWallet from "@/js/AvaHdWallet";
-
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+import {WalletType} from "@/store/types";
 import Crypto from "@/js/Crypto";
 
 const cryptoHelpers = new Crypto();

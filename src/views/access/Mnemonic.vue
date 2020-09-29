@@ -1,4 +1,3 @@
-import {Buffer} from "buffer";
 <template>
     <div class="mnemonic_auth">
         <div class="left">
@@ -6,14 +5,9 @@ import {Buffer} from "buffer";
                 <h1>{{$t('access.mnemonic.title')}}</h1>
             </header>
             <label>{{$t('access.mnemonic.subtitle')}}</label>
-            <textarea v-model="phrase"></textarea>
-<!--            <remember-key-->
-<!--                    class="remember"-->
-<!--                    v-model="rememberPass"-->
-<!--                    @is-valid="isRememberValid"-->
-<!--                    explain="Remember key phrase for easy access"-->
-<!--            ></remember-key>-->
+            <textarea v-model="phrase" translate="no"></textarea>
             <div class="button_container">
+                <p class="err" v-if="err">{{err}}</p>
                 <v-btn
                     class="ava_button but_primary button_primary access"
                     @click="access"
@@ -27,36 +21,25 @@ import {Buffer} from "buffer";
         <div class="right">
             <label>Preview</label>
             <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
-            <p class="err" v-if="err">{{err}}</p>
-
         </div>
     </div>
 </template>
 <script lang="ts">
-
     import 'reflect-metadata';
     import { Vue, Component, Prop } from 'vue-property-decorator';
 
     import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-    // import RememberKey from "@/components/misc/RememberKey.vue";
-    // import {Buffer} from "buffer/";
-
-    // import * as bip39 from 'bip39';
-    // import {bintools, keyChain} from "@/AVA";
-    // import {AddWalletInput} from "@/store/types";
+    import * as bip39 from "bip39";
 
     @Component({
         components: {
             MnemonicDisplay,
-            // RememberKey
         },
     })
     export default class Mnemonic extends Vue{
         phrase:string = "";
         isLoading:boolean = false;
-        // rememberPass:string|null = null;
         err:string = "";
-        // rememberValid: boolean = true;
 
         errCheck(){
             let phrase = this.phrase;
@@ -68,12 +51,15 @@ import {Buffer} from "buffer";
                 return false;
             }
 
+
+            let isValid = bip39.validateMnemonic(phrase);
+            if(!isValid){
+                this.err = "Invalid mnemonic phrase. Make sure your mnemonic is all lowercase.";
+                return false;
+            }
+
             return true;
         }
-
-        // isRememberValid(val:boolean){
-        //     this.rememberValid = val;
-        // }
 
 
         get wordCount():number{
@@ -86,18 +72,14 @@ import {Buffer} from "buffer";
                 return false
             }
 
-            // if(!this.rememberValid){
-            //     return false;
-            // }
-
             return true;
         }
 
         async access() {
-            let phrase = this.phrase.trim();
+            this.phrase = this.phrase.trim();
+            let phrase = this.phrase;
 
             this.isLoading = true;
-            // this.$store.state.rememberKey = this.rememberPass;
 
             if (!this.errCheck()) {
                 this.isLoading = false;
@@ -107,18 +89,7 @@ import {Buffer} from "buffer";
 
             setTimeout(async () => {
                 try {
-                    // let entropy = bip39.mnemonicToEntropy(phrase);
-                    // let b = new Buffer(entropy, "hex");
-
-                    // let addr = keyChain.importKey(b);
-                    // let keypair = keyChain.getKey(addr);
-
-
                     await this.$store.dispatch('accessWallet', phrase);
-
-                    // if(this.rememberPass){
-                    //     this.$store.dispatch('rememberWallets', this.rememberPass);
-                    // }
                     this.isLoading = false;
                 }catch(e){
                     this.isLoading = false;

@@ -1,8 +1,7 @@
 <template>
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet ref="print_modal"></paper-wallet>
-        <MainnetAddressModal ref="mainnet_modal"></MainnetAddressModal>
+        <paper-wallet ref="print_modal" v-if="walletType!=='ledger'">></paper-wallet>
         <p class="addr_info">{{$t('wallet.address_card.desc')}}</p>
         <div class="bottom">
             <div>
@@ -13,9 +12,9 @@
                 <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">
-                        <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>
+<!--                        <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>-->
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
-                        <button :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
+                        <button v-if="walletType!=='ledger'" :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
                         <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
                     </div>
                 </div>
@@ -32,8 +31,10 @@
     import PaperWallet from "@/components/modals/PaperWallet/PaperWallet.vue";
     import QRCode from "qrcode";
     import MainnetAddressModal from "@/components/modals/MainnetAddressModal.vue";
-    // import {AVMKeyPair} from "avalanche/typings/src/apis/avm";
-    import {AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
+    import {WalletType} from "@/store/types";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+    import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
     @Component({
         components: {
@@ -75,13 +76,21 @@
             //@ts-ignore
             return this.$root.theme === 'day';
         }
+
+        get walletType(): WalletType{
+            return this.$store.state.walletType;
+        }
+
         get address(){
-            let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
-            if(!activeKey){
+            let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
+
+
+            // let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
+            if(!wallet){
                 return '-'
             }
             // return this.$store.state.address;
-            return activeKey.getAddressString();
+            return wallet.getCurrentAddress();
         }
 
 
@@ -125,116 +134,146 @@
 <style scoped lang="scss">
 @use '../../../main';
 
-    .addr_card{
-        display: flex;
-        flex-direction: column;
-    }
-    .buts{
-        width: 100%;
-        text-align: right;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        color: var(--primary-color-light);
+.addr_card{
+    display: flex;
+    flex-direction: column;
+}
+.buts{
+    width: 100%;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: var(--primary-color-light);
 
-        > *{
-            font-size: 18px;
-            margin: 0px 18px;
-            margin-right: 0px;
-            position: relative;
-            outline: none;
-            width: 18px;
-            height: 18px;
-            opacity: 0.6;
+    > *{
+        font-size: 18px;
+        margin: 0px 18px;
+        margin-right: 0px;
+        position: relative;
+        outline: none;
+        width: 18px;
+        height: 18px;
+        opacity: 0.6;
 
-            background-size: contain;
-            background-position: center;
-            &:hover{
-                opacity: 1;
-            }
+        background-size: contain;
+        background-position: center;
+        &:hover{
+            opacity: 1;
         }
     }
+}
 
 
+.qr_but{
+    background-image: url("/img/qr_icon.png");
+}
+.print_but{
+    background-image: url("/img/faucet_icon.png");
+}
+.copy_but{
+    color: var(--primary-color);
+}
+
+.mainnet_but{
+    background-image: url("/img/modal_icons/mainnet_addr.svg");
+}
+
+
+
+@include main.night-mode{
     .qr_but{
-        background-image: url("/img/qr_icon.png");
+        background-image: url("/img/qr_icon_night.svg");
     }
     .print_but{
-        background-image: url("/img/faucet_icon.png");
-    }
-    .copy_but{
-        color: var(--primary-color);
+        background-image: url("/img/print_icon_night.svg");
     }
 
     .mainnet_but{
-        background-image: url("/img/modal_icons/mainnet_addr.svg");
+        background-image: url("/img/modal_icons/mainnet_addr_night.svg");
+    }
+}
+
+
+
+.addr_info{
+    background-color: var(--bg-light);
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px 16px;
+    margin-bottom: 12px !important;
+}
+
+$qr_width: 110px;
+
+.bottom{
+    display: grid;
+    grid-template-columns: $qr_width 1fr;
+    column-gap: 14px;
+
+    canvas{
+        width: $qr_width;
+        height: $qr_width;
+        background-color: transparent;
     }
 
-
-
-    @include main.night-mode{
-        .qr_but{
-            background-image: url("/img/qr_icon_night.svg");
-        }
-        .print_but{
-            background-image: url("/img/print_icon_night.svg");
-        }
-
-        .mainnet_but{
-            background-image: url("/img/modal_icons/mainnet_addr_night.svg");
-        }
+    .bottom_rest{
+        padding-top: 4px;
+        display: flex;
+        flex-direction: column;
     }
+}
+
+.sub{
+    margin: 0px 10px !important;
+    text-align: center;
+    font-size: 0.7rem;
+    background-color: main.$secondary-color;
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 3px;
+}
+
+.subtitle{
+    font-size: 0.7rem;
+    color: var(--primary-color-light);
+}
+
+.addr_text{
+    font-size: 16px;
+    word-break: break-all;
+    color: var(--primary-color);
+    flex-grow: 1;
+}
 
 
+@include main.medium-device{
+    //.bottom{
+    //    display: block;
+    //}
 
     .addr_info{
-        background-color: var(--bg-light);
-        font-size: 13px;
-        font-weight: bold;
-        text-align: center;
-        padding: 12px 16px;
-        margin-bottom: 12px !important;
+        display: none;
+    }
+    canvas{
+        display: block;
+        margin: 0px auto;
     }
 
-    $qr_width: 110px;
+    .buts{
+        margin: 6px 0;
+        justify-content: space-evenly;
 
-    .bottom{
-        display: grid;
-        grid-template-columns: $qr_width 1fr;
-        column-gap: 14px;
-
-        canvas{
-            width: $qr_width;
-            height: $qr_width;
-            background-color: transparent;
-        }
-
-        .bottom_rest{
-            padding-top: 4px;
-            display: flex;
-            flex-direction: column;
+        > *{
+            margin: 0;
         }
     }
+}
 
-    .sub{
-        margin: 0px 10px !important;
-        text-align: center;
-        font-size: 0.7rem;
-        background-color: main.$secondary-color;
-        color: #fff;
-        padding: 3px 6px;
-        border-radius: 3px;
+@include main.mobile-device{
+    .addr_info{
+        display: none;
     }
-
-    .subtitle{
-        font-size: 0.7rem;
-        color: var(--primary-color-light);
-    }
-
-    .addr_text{
-        font-size: 16px;
-        word-break: break-all;
-        color: var(--primary-color);
-        flex-grow: 1;
-    }
+}
 </style>

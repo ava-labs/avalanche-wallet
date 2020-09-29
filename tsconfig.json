@@ -45,6 +45,6 @@
   ],
   "exclude": [
     "**/node_modules/*",
-    "../avalanche.js"
+    "../avalanche.js/*"
   ]
 }

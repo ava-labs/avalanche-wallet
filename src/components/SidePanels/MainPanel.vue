@@ -44,6 +44,8 @@
         display: flex;
         align-items: center;
         flex-direction: row;
+        display: grid;
+        grid-template-columns: max-content max-content 1fr;
         /*justify-content: space-between;*/
         padding: 24px 16px;
         font-size: 14px;

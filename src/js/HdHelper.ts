@@ -1,15 +1,17 @@
-import {AVMKeyChain, AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
+import {KeyChain as AVMKeyChain, KeyPair as AVMKeyPair, UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm";
 import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm";
 import {getPreferredHRP} from "avalanche/dist/utils";
-import {ava, avm, pChain} from "@/AVA";
+import {ava, avm, bintools, pChain} from "@/AVA";
 import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
-import {PlatformVMKeyChain, PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
+import {SECP256k1KeyPair} from "avalanche/dist/common";
+import {getAddressDetailX} from "@/explorer_api";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
 
-const SCAN_SIZE: number = 70; // the total number of utxos to look at initially to calculate last index
+const SCAN_SIZE: number = 100; // the total number of utxos to look at initially to calculate last index
 const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE; // How many items are actually scanned
 
 type HelperChainId =  'X' | 'P';
@@ -19,12 +21,19 @@ class HdHelper {
     keyCache: {
         [index: number]: AVMKeyPair|PlatformVMKeyPair
     }
+    addressCache: {
+        [index: number]: string;
+    }
+    hdCache: {
+        [index: number]: HDKey;
+    }
     changePath: string
     masterKey: HDKey;
     hdIndex: number;
     utxoSet: AVMUTXOSet | PlatformUTXOSet;
+    isPublic: boolean;
 
-    constructor(changePath: string, masterKey: HDKey, chainId: HelperChainId = 'X') {
+    constructor(changePath: string, masterKey: HDKey, chainId: HelperChainId = 'X', isPublic: boolean = false) {
         this.changePath = changePath;
         this.chainId = chainId;
         let hrp = getPreferredHRP(ava.getNetworkID());
@@ -36,14 +45,19 @@ class HdHelper {
             this.utxoSet = new PlatformUTXOSet();
         }
         this.keyCache = {};
+        this.addressCache = {};
+        this.hdCache = {};
         this.masterKey = masterKey;
         this.hdIndex = 0;
+        this.isPublic = isPublic;
         this.oninit();
     }
 
     async oninit(){
         this.hdIndex = await this.findAvailableIndex();
-        this.updateKeychain();
+        if(!this.isPublic){
+            this.updateKeychain();
+        }
         this.updateUtxos();
     }
 
@@ -65,22 +79,24 @@ class HdHelper {
 
     // Increments the hd index by one and adds the key
     // returns the new keypair
-    incrementIndex(): AVMKeyPair|PlatformVMKeyPair{
+    incrementIndex(): number{
         let newIndex: number = this.hdIndex+1;
 
-        let newKey;
-        if(this.chainId==='X'){
-            let keychain = this.keyChain as AVMKeyChain;
-            newKey = this.getKeyForIndex(newIndex) as AVMKeyPair;
-            keychain.addKey(newKey);
-        }else{
-            let keychain = this.keyChain as PlatformVMKeyChain;
-            newKey = this.getKeyForIndex(newIndex) as PlatformVMKeyPair;
-            keychain.addKey(newKey);
+        if(!this.isPublic){
+            if(this.chainId==='X'){
+                let keychain = this.keyChain as AVMKeyChain;
+                let newKey = this.getKeyForIndex(newIndex) as AVMKeyPair;
+                keychain.addKey(newKey);
+            }else{
+                let keychain = this.keyChain as PlatformVMKeyChain;
+                let newKey = this.getKeyForIndex(newIndex) as PlatformVMKeyPair;
+                keychain.addKey(newKey);
+            }
         }
 
+
         this.hdIndex = newIndex;
-        return newKey;
+        return newIndex;
     }
 
     async updateHdIndex(){
@@ -88,30 +104,117 @@ class HdHelper {
         this.updateKeychain();
     }
 
+    // helper method to get utxos for more than 1024 addresses
+    async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
+        if(addrs.length<=1024){
+            let utxos = (await avm.getUTXOs(addrs)).utxos;
+            // console.log(utxos.getAllUTXOs().length);
+            return utxos;
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = (await avm.getUTXOs(chunk)).utxos;
+
+            return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
+        }
+    }
+
+    async platformGetAllUTXOsForAddresses(addrs: string[], endIndex:any = undefined): Promise<PlatformUTXOSet>{
+        let response;
+        if(!endIndex){
+            // console.log("Initial start.")
+            response = await pChain.getUTXOs(addrs);
+        }else{
+            // console.log("Stop index: ", stopIndex);
+            response = await pChain.getUTXOs(addrs, undefined, 0, endIndex);
+        }
+
+        // console.log(response);
+
+        let utxoSet = response.utxos;
+        let utxos = utxoSet.getAllUTXOs();
+        let nextEndIndex = response.endIndex;
+        let len = response.numFetched;
+
+        // console.log(nextEndIndex.address)
+
+        // console.log("Next stop: ",nextStopIndex);
+
+        if(len >= 1024){
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
+            return utxoSet.merge(subUtxos)
+        }
+
+        return utxoSet;
+
+    }
+    // helper method to get utxos for more than 1024 addresses
+    async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
+        // console.log("Get all platform UTXOs");
+        // console.log("getting utxos for: ", addrs);
+        if(addrs.length<=1024){
+            let newSet = await this.platformGetAllUTXOsForAddresses(addrs);
+            // console.log("Got total set: ",newSet.getAllUTXOs().length);
+            return newSet;
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = await this.platformGetAllUTXOsForAddresses(chunk);
+
+            return newSet.merge(await this.platformGetAllUTXOs(remainingChunk))
+        }
+    }
+
 
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
-        let addrs: Buffer[] = this.keyChain.getAddresses();
+        // TODO: Optimize this
+        await this.updateHdIndex()
+
+        // let addrs: string[] = this.keyChain.getAddressStrings();
+        let addrs: string[] = this.getAllDerivedAddresses();
         let result: AVMUTXOSet|PlatformUTXOSet;
 
         if(this.chainId==='X'){
-            result = await avm.getUTXOs(addrs);
+            result = await this.avmGetAllUTXOs(addrs);
         }else{
-            result = await pChain.getUTXOs(addrs);
+            result = await this.platformGetAllUTXOs(addrs);
+            // console.log(result);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
 
         // If the hd index is full, increment
-        let currentKey = this.getCurrentKey();
-        let currentAddr = currentKey.getAddress();
-        let curentUtxos = result.getUTXOIDs([currentAddr])
+        let currentAddr = this.getCurrentAddress();
+        let currentAddrBuf = bintools.parseAddress(currentAddr,this.chainId);
+        let curentUtxos = result.getUTXOIDs([currentAddrBuf])
 
         if(curentUtxos.length>0){
             this.incrementIndex();
         }
         return result;
+    }
+
+    // Returns more addresses than the current index
+    getExtendedAddresses(){
+        let hdIndex = this.hdIndex;
+        return this.getAllDerivedAddresses(hdIndex+INDEX_RANGE);
+    }
+    async getAtomicUTXOs(){
+        let hdIndex = this.hdIndex;
+        let addrs: string[] = this.getAllDerivedAddresses();
+        if(this.chainId === 'P'){
+            let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID())).utxos;
+            return result;
+        }else{
+            let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos;
+            return result;
+        }
     }
 
     getUtxos(): AVMUTXOSet|PlatformUTXOSet{
@@ -149,9 +252,9 @@ class HdHelper {
     }
 
     // Returns all key pairs up to hd index
-    getAllDerivedKeys(): AVMKeyPair[] | PlatformVMKeyPair[]{
+    getAllDerivedKeys(upTo = this.hdIndex): AVMKeyPair[] | PlatformVMKeyPair[]{
         let set: AVMKeyPair[] | PlatformVMKeyPair[] = [];
-        for(var i=0; i<=this.hdIndex;i++){
+        for(var i=0; i<=upTo;i++){
             if(this.chainId==='X'){
                 let key = this.getKeyForIndex(i) as AVMKeyPair;
                 (set as AVMKeyPair[]).push(key);
@@ -163,66 +266,111 @@ class HdHelper {
         return set;
     }
 
+    getAllDerivedAddresses(limit=this.hdIndex): string[]{
+        let res = [];
+        for(var i=0;i<=limit;i++){
+            let addr = this.getAddressForIndex(i);
+            res.push(addr);
+        }
+        return res;
+    }
+
 
     clearCache(){
         this.keyCache = {};
+        this.addressCache = {};
     }
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
-        let hrp = getPreferredHRP(ava.getNetworkID());
-
-        let tempKeychain : AVMKeyChain | PlatformVMKeyChain;
-        if(this.chainId==='X'){
-            tempKeychain = new AVMKeyChain(hrp,this.chainId);
-        }else{
-            tempKeychain = new PlatformVMKeyChain(hrp,this.chainId);
-        }
+        let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
         for(let i:number=start;i<start+SCAN_SIZE;i++){
-            if(this.chainId==='X'){
-                let key = this.getKeyForIndex(i) as AVMKeyPair;
-                (tempKeychain as AVMKeyChain).addKey(key);
-            }else{
-                let key = this.getKeyForIndex(i) as PlatformVMKeyPair;
-                (tempKeychain as PlatformVMKeyChain).addKey(key);
-            }
-
+            let address = this.getAddressForIndex(i);
+            addrs.push(address);
         }
 
-        let addrs: Buffer[] = tempKeychain.getAddresses();
         let utxoSet;
 
         if(this.chainId==='X'){
-            utxoSet = await avm.getUTXOs(addrs);
+            utxoSet = (await avm.getUTXOs(addrs)).utxos;
         }else{
-            utxoSet = await pChain.getUTXOs(addrs);
+            utxoSet = (await pChain.getUTXOs(addrs)).utxos;
         }
 
 
         // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE
         for(let i:number=0; i<addrs.length-INDEX_RANGE; i++) {
             let gapSize: number = 0;
+            // console.log(`Scan index: ${this.chainId} ${this.changePath}/${i+start}`);
             for(let n:number=0;n<INDEX_RANGE;n++) {
                 let scanIndex: number = i + n;
-                let addr: Buffer = addrs[scanIndex];
-                let addrUTXOs: string[] = utxoSet.getUTXOIDs([addr]);
+                let addr: string = addrs[scanIndex];
+                let addrBuf = bintools.parseAddress(addr, this.chainId);
+                let addrUTXOs: string[] = utxoSet.getUTXOIDs([addrBuf]);
                 if(addrUTXOs.length === 0){
                     gapSize++
                 }else{
                     // Potential improvement
-                    // i = i+n;
+                    i = i+n;
                     break;
                 }
             }
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
-                return start+i;
+                let targetIndex = start+i;
+                // As a last resort check the explorer
+                let data = await this.checkIndexExplorer(targetIndex)
+                if(data) continue;
+                return targetIndex;
             }
         }
         return await this.findAvailableIndex(start+SCAN_RANGE)
+    }
+
+    // Get tx history data for the index from the explorer
+    // return true if this address has a history
+    // returns false if no explorer is present
+    async checkIndexExplorer(index: number): Promise<boolean>{
+        let addr = this.getAddressForIndex(index);
+
+        try{
+            if(this.chainId==='X'){
+                let res = await getAddressDetailX(addr)
+                if(res) return true;
+            }
+        }catch(e){
+            // IF there is no available api, catch the 404 and return false
+            return false;
+        }
+        return false;
+    }
+
+    // Returns the key of the first index that has no utxos
+    getFirstAvailableKey(){
+        for(var i=0; i<this.hdIndex; i++){
+            let key = this.getKeyForIndex(i);
+            let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
+            if(utxoIds.length === 0){
+                return key;
+            }
+        }
+        return this.getCurrentKey();
+    }
+
+    // Returns the key of the first index that has no utxos
+    getFirstAvailableAddress(): string{
+        for(var i=0; i<this.hdIndex; i++){
+            let addr = this.getAddressForIndex(i);
+            let addrBuf = bintools.parseAddress(addr,this.chainId);
+            let utxoIds = this.utxoSet.getUTXOIDs([addrBuf]);
+            if(utxoIds.length === 0){
+                return addr;
+            }
+        }
+        return this.getCurrentAddress();
     }
 
     getCurrentKey():AVMKeyPair|PlatformVMKeyPair {
@@ -231,10 +379,12 @@ class HdHelper {
     }
 
     getCurrentAddress(): string{
-        return this.getCurrentKey().getAddressString();
+        let index = this.hdIndex;
+        return this.getAddressForIndex(index);
     }
 
-    getKeyForIndex(index: number): AVMKeyPair|PlatformVMKeyPair {
+    // TODO: Public wallet should never be using this
+    getKeyForIndex(index: number, isPrivate: boolean = true): AVMKeyPair|PlatformVMKeyPair {
         // If key is cached return that
         let cacheExternal: AVMKeyPair|PlatformVMKeyPair;
 
@@ -247,16 +397,64 @@ class HdHelper {
         if(cacheExternal) return cacheExternal;
 
         let derivationPath: string = `${this.changePath}/${index.toString()}`;
-        let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
 
-        let pkHex: string = key.privateKey.toString('hex');
+        // Get key from cache, if not generate it
+        let key: HDKey;
+        if(this.hdCache[index]){
+            key = this.hdCache[index];
+        }else{
+            key = this.masterKey.derive(derivationPath) as HDKey;
+            this.hdCache[index] = key;
+        }
+
+        let pkHex: string;
+        if(!this.isPublic){
+            pkHex = key.privateKey.toString('hex');
+        }else{
+            pkHex = key.publicKey.toString('hex');
+        }
+
         let pkBuf: Buffer = new Buffer(pkHex, 'hex');
-
         let keypair = this.keyChain.importKey(pkBuf)
 
         // save to cache
         this.keyCache[index] = keypair;
         return keypair;
+    }
+
+    getAddressForIndex(index: number): string{
+
+
+        if(this.addressCache[index]){
+            return this.addressCache[index];
+        }
+
+        let derivationPath: string = `${this.changePath}/${index.toString()}`;
+        // let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
+
+        // Get key from cache, if not generate it
+        let key: HDKey;
+        if(this.hdCache[index]){
+            key = this.hdCache[index];
+        }else{
+            key = this.masterKey.derive(derivationPath) as HDKey;
+            this.hdCache[index] = key;
+        }
+
+
+        let pkHex = key.publicKey.toString('hex');
+        let pkBuff = Buffer.from(pkHex, 'hex');
+        let hrp = getPreferredHRP(ava.getNetworkID());
+
+        let chainId = this.chainId;
+
+        // No need for PlatformKeypair because addressToString uses chainID to decode
+        let keypair = new AVMKeyPair(hrp, chainId);
+        let addrBuf = keypair.addressFromPublicKey(pkBuff);
+        let addr = bintools.addressToString(hrp, chainId, addrBuf);
+
+        this.addressCache[index] = addr;
+        return addr;
     }
 }
 export {HdHelper};

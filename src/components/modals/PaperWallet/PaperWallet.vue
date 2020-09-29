@@ -20,8 +20,8 @@
 
     import Modal from '../Modal.vue';
 
-    import {AVMKeyPair} from "avalanche/dist/apis/avm";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import {KeyPair as AVMKeyPair} from "avalanche/dist/apis/avm";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 
     import QRCode from 'qrcode'
     import printjs from 'print-js'
@@ -105,7 +105,7 @@
             let cont = canv.getContext('2d') as CanvasRenderingContext2D;
 
             // Top Address
-            const wrapChar = 19;
+            const wrapChar = 25;
             let addr = this.address;
             let addr1 = addr.substr(0,wrapChar);
             let addr2 = addr.substr(wrapChar);

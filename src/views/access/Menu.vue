@@ -10,20 +10,24 @@
         <div class="options">
             <router-link to="/access/mnemonic" class="option button_primary">{{$t('access.but_mnemonic')}}</router-link>
             <router-link to="/access/keystore" class="option button_primary">{{$t('access.but_keystore')}}</router-link>
-<!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
+            <LedgerButton class="option button_primary"></LedgerButton>
+            <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
+        <ToS style="margin: 20px !important;"></ToS>
         <router-link to="/" class="link">{{$t('access.cancel')}}</router-link>
     </div>
 </template>
 
 <script>
     // import TorusGoogle from "@/components/Torus/TorusGoogle";
+    import LedgerButton from "@/components/Ledger/LedgerButton";
+    import ToS from "@/components/misc/ToS";
 
     export default {
-        // components: {TorusGoogle},
-        // comments: {
-        //     TorusGoogle
-        // }
+        components: {
+            ToS,
+          LedgerButton
+        },
     }
 </script>
 
@@ -56,7 +60,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px;
 }
 
@@ -72,7 +76,7 @@ hr {
     font-size: main.$s-size;
 
     &:hover {
-        transform: translateY(-5px);
+        //transform: translateY(-5px);
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
     }
 

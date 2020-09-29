@@ -28,7 +28,7 @@
             CopyText
         }
     })
-    export default class MnemonicPhrase extends Vue{
+    export default class ConfirmLogout extends Vue{
         @Prop({default: ""}) phrase!: string;
 
         open():void{
@@ -43,6 +43,10 @@
 
         async submit(){
             await this.$store.dispatch("logout");
+            await this.$store.dispatch('Notifications/add', {
+                title: 'Logout',
+                message: 'You have successfully logged out of your wallet.'
+            });
             this.close();
         }
     }

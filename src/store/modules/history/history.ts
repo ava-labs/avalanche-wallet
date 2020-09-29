@@ -1,10 +1,12 @@
 import {Module} from "vuex";
 import {RootState} from "@/store/types";
-import {explorer_api} from "@/explorer_api";
+import {explorer_api, getAddressHistory} from "@/explorer_api";
 
 
 
 import {HistoryState} from "@/store/modules/history/types";
+import AvaHdWallet from "@/js/wallets/AvaHdWallet";
+import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
 
 const history_module: Module<HistoryState, RootState> = {
@@ -20,7 +22,8 @@ const history_module: Module<HistoryState, RootState> = {
     },
     actions: {
         async updateTransactionHistory({state, rootState, rootGetters}){
-            if(!rootState.activeWallet) return;
+            let wallet = rootState.activeWallet;
+            if(!wallet) return;
 
             // @ts-ignore
             let network = rootState.Network.selectedNetwork;
@@ -35,25 +38,18 @@ const history_module: Module<HistoryState, RootState> = {
             let offset = 0;
             let limit = 20;
 
-            let addresses:string[] = rootGetters.addresses;
+            let addresses:string[] = wallet.getHistoryAddresses();
 
-            // this hsouldnt ever happen, but to avoid getting every transaction...
+            // this shouldnt ever happen, but to avoid getting every transaction...
             if(addresses.length === 0){
                 state.isUpdating = false;
                 return;
             }
 
-            // console.log(addresses);
-            let query = addresses.map(val => {
-                let raw = val.split('-')[1];
-                return `address=${raw}`;
-            });
+            let data = await getAddressHistory(addresses, limit, offset);
 
-            // Get history for all addresses of the active HD wallet
-            let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
-            let res = await explorer_api.get(url);
-
-            let transactions = res.data.transactions;
+            // let transactions = res.data.transactions;
+            let transactions = data.transactions;
 
             state.transactions = transactions;
             state.isUpdating = false;

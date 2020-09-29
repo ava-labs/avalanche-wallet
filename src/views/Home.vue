@@ -4,10 +4,8 @@
             <b-row>
                 <b-col>
                     <div class="home_wrapper">
-                        <img v-if="$root.theme === 'day'" class="logo" src="@/assets/wallet_logo.svg" />
-                        <img v-else class="logo" src="@/assets/wallet_logo_dark.svg" />
                         <!--            <h1>Our Asset Wallet is Bold and Secure.</h1>-->
-                        <h1>The AVAX Wallet</h1>
+                        <h1>Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.</h1>
                         <div class="login_wrapper">
                             <div class="login_option">
                                 <header>
@@ -75,7 +73,7 @@ export default class Home extends Vue {}
 
         h1 {
             text-align: center;
-            font-size: main.$xl-size;
+            font-size: 22px;
             font-weight: 400;
         }
 
@@ -137,14 +135,21 @@ export default class Home extends Vue {}
 }
 
 img {
-    max-height: 40px;
+    max-height: 50px;
     object-fit: contain;
 }
 
 
+@include main.medium-device{
+    .login_option{
+        padding: 30px 40px !important;
+        p{
+            font-size: 1.4rem !important;
+        }
+    }
+}
 
-
-@media only screen and (max-width: 600px) {
+@include main.mobile-device{
     .auth {
         border-radius: 0;
         box-shadow: none;
@@ -211,5 +216,9 @@ img {
             }
         }
     }
+}
+
+@media only screen and (max-width: 600px) {
+
 }
 </style>

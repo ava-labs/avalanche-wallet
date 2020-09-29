@@ -1,6 +1,6 @@
 <template>
     <div class="nft_col">
-        <h4>NFTs</h4>
+        <h4>Collectibles</h4>
         <p v-if="isEmpty">{{$t('top.nftempty')}}</p>
         <div v-else>
             <p>{{statusText}}</p>
@@ -61,37 +61,39 @@
     }
 </script>
 <style scoped lang="scss">
-    .nft_col{
-        p{
-            font-size: 12px;
-            color: var(--primary-color-light);
-        }
+@use '../../../../main';
+
+.nft_col{
+    p{
+        font-size: 12px;
+        color: var(--primary-color-light);
     }
+}
 
-    $nft_w: 35px;
+$nft_w: 35px;
 
 
-    .nft_list{
-        margin-top: 8px;
-        display: grid;
-        grid-template-columns: repeat(5, $nft_w);
-        grid-gap: 8px;
-        /*display: flex;*/
-        /*flex-wrap: wrap;*/
-    }
+.nft_list{
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(5, $nft_w);
+    grid-gap: 8px;
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+}
 
-    .nft_item{
-        height: $nft_w;
-        width: $nft_w;
-        border-radius: 4px;
-        overflow: hidden;
-        background-color: var(--bg-light);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.nft_item{
+    height: $nft_w;
+    width: $nft_w;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: var(--bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .dummy_item{
-        opacity: 0.2;
-    }
+.dummy_item{
+    opacity: 0.2;
+}
 </style>

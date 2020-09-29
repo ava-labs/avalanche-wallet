@@ -4,7 +4,7 @@
             <div class="card_body">
                 <header>
                     <h1>{{$t('keys.title')}}</h1>
-                    <div class="button_container">
+                    <div class="button_container" v-if="walletType!=='ledger'">
                         <button v-if="hasVolatile" @click="openRememberKeys" class="remember_keys ava_button_secondary"><fa icon="exclamation-triangle"></fa> {{$t('keys.button1')}}</button>
                         <button class="but_primary ava_button_secondary" @click="importKeys">
                             <fa icon="download"></fa>
@@ -30,8 +30,9 @@
     import MyKeys from "@/components/wallet/manage/MyKeys.vue";
     import ImportKeys from "@/components/modals/ImportKeys.vue";
     import ExportKeys from "@/components/modals/ExportKeys.vue";
-    import AvaHdWallet from "@/js/AvaHdWallet";
+    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import RememberKeysModal from "@/components/modals/RememberWallet/RememberKeysModal.vue";
+    import {WalletType} from "@/store/types";
 
     @Component({
         components: {
@@ -56,6 +57,10 @@
         openRememberKeys(){
             // @ts-ignore
             this.$refs.remember_modal.open();
+        }
+
+        get walletType(): WalletType{
+            return this.$store.state.walletType;
         }
 
         get hasVolatile(){
