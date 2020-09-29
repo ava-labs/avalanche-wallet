@@ -1,6 +1,6 @@
 import {Module} from "vuex";
 import {RootState} from "@/store/types";
-import {explorer_api} from "@/explorer_api";
+import {explorer_api, getAddressHistory} from "@/explorer_api";
 
 
 
@@ -46,17 +46,10 @@ const history_module: Module<HistoryState, RootState> = {
                 return;
             }
 
-            // console.log(addresses);
-            let query = addresses.map(val => {
-                let raw = val.split('-')[1];
-                return `address=${raw}`;
-            });
+            let data = await getAddressHistory(addresses, limit, offset);
 
-            // Get history for all addresses of the active HD wallet
-            let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
-            let res = await explorer_api.get(url);
-
-            let transactions = res.data.transactions;
+            // let transactions = res.data.transactions;
+            let transactions = data.transactions;
 
             state.transactions = transactions;
             state.isUpdating = false;

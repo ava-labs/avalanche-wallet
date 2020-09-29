@@ -1,7 +1,7 @@
 <template>
     <div class="chain_import">
         <h2>Chain Import</h2>
-        <p>If you have have funds stuck in a failed chain transfer, you can finish importing them here.</p>
+        <p>If you have funds stuck in a failed chain transfer, you can finish importing them here.</p>
         <div v-if="isSuccess" class="is_success">
             <label>Tx ID</label>
             <p>{{txId}}</p>
@@ -70,7 +70,7 @@ export default class ChainImport extends Vue{
         this.txId = txId;
 
         this.$store.dispatch('Notifications/add', {
-            type: 'error',
+            type: 'success',
             title: 'Import Success',
             message: txId
         });
