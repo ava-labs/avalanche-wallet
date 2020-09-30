@@ -4,8 +4,7 @@
             <b-row>
                 <b-col>
                     <div class="home_wrapper">
-                        <!--            <h1>Our Asset Wallet is Bold and Secure.</h1>-->
-                        <h1>Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.</h1>
+                        <h1>{{$t('home.desc')}}</h1>
                         <div class="login_wrapper">
                             <div class="login_option">
                                 <header>

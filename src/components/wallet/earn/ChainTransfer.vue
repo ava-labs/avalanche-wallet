@@ -5,10 +5,10 @@
             <div class="form">
                 <div class="chains">
                     <div class="chain_cont">
-                        <label>Source Chain</label>
+                        <label>{{$t('earn.transfer.source')}}</label>
                         <p class="chain">{{sourceChain}}</p>
                         <div class="chain_info">
-                            <label>Balance</label>
+                            <label>{{$t('earn.transfer.balance')}}</label>
                             <p>{{balance.toLocaleString()}} AVAX</p>
                         </div>
                     </div>
@@ -16,57 +16,57 @@
                         <fa icon="sync"></fa>
                     </v-btn>
                     <div class="chain_cont">
-                        <label>Destination Chain</label>
+                        <label>{{$t('earn.transfer.destination')}}</label>
                         <p class="chain">{{targetChain}}</p>
                         <div class="chain_info">
-                            <label>Balance</label>
+                            <label>{{$t('earn.transfer.balance')}}</label>
                             <p>{{destinationBalance.toLocaleString()}} AVAX</p>
                         </div>
                     </div>
                 </div>
                 <div v-show="!isConfirm">
-                    <label>Transfer Amount</label>
+                    <label>{{$t('earn.transfer.amount')}}</label>
                     <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
                 </div>
                 <div class="confirmation_val" v-if="isConfirm">
-                    <label>Transfer Amount</label>
+                    <label>{{$t('earn.transfer.amount')}}</label>
                     <p>{{formAmtText}} AVAX</p>
                 </div>
             </div>
             <div class="right_col">
                 <div v-if="!isSuccess && !isImportErr">
                     <div>
-                        <label>Fee</label>
+                        <label>{{$t('earn.transfer.fee')}}</label>
                         <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
                     </div>
                     <div>
                         <p class="err">{{err}}</p>
                         <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
-                        <v-btn v-if="!isConfirm" data-cy="confirm" class="button_secondary" @click="confirm" :disabled="!canSubmit" :loading="isLoading" block>Confirm</v-btn>
+                        <v-btn v-if="!isConfirm" data-cy="confirm" class="button_secondary" @click="confirm" :disabled="!canSubmit" :loading="isLoading" block>{{$t('earn.transfer.confirm')}}</v-btn>
                         <template v-else>
-                            <v-btn  data-cy="submit" class="button_secondary" @click="submit" :loading="isLoading" block depressed>Transfer</v-btn>
-                            <v-btn  v-if="!isLoading" data-cy="cancel" style="color: var(--primary-color); margin: 12px 0 !important;" @click="cancelConfirm" block depressed text>Cancel</v-btn>
+                            <v-btn  data-cy="submit" class="button_secondary" @click="submit" :loading="isLoading" block depressed>{{$t('earn.transfer.submit')}}</v-btn>
+                            <v-btn  v-if="!isLoading" data-cy="cancel" style="color: var(--primary-color); margin: 12px 0 !important;" @click="cancelConfirm" block depressed text>{{$t('earn.transfer.cancel')}}</v-btn>
                         </template>
                     </div>
                 </div>
                 <div v-else-if="isImportErr" class="import_err">
-                    <h2>Import Failed</h2>
-                    <p>There was a problem importing you tokens into the destination chain. Please try importing again. </p>
-                    <v-btn @click="triggerImport" block class="button_secondary" small>Trigger Import</v-btn>
+                    <h2>{{$t('earn.transfer.err_import')}}</h2>
+                    <p>{{$t('earn.transfer.err_desc')}} </p>
+                    <v-btn @click="triggerImport" block class="button_secondary" small>{{$t('earn.transfer.err_submit')}}</v-btn>
 <!--                    <v-btn depressed style="color: var(&#45;&#45;primary-color)" small @click="$emit('cancel')" block text>Back to Earn</v-btn>-->
                 </div>
                 <div v-else-if="isSuccess" class="complete">
-                    <h2>Transfer Completed</h2>
+                    <h2>{{$t('earn.transfer.success.title')}}</h2>
                     <div>
-                        <label>Export Transaction ID:</label>
+                        <label>{{$t('earn.transfer.success.export')}}</label>
                         <p>{{exportId}}</p>
                     </div>
                     <div>
-                        <label>Import Transaction ID:</label>
+                        <label>{{$t('earn.transfer.success.import')}}</label>
                         <p>{{importId}}</p>
                     </div>
-                    <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> You have successfully transferred between chains. </p>
-                    <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>Back to Earn</v-btn>
+                    <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> {{$t('earn.transfer.success.message')}} </p>
+                    <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>{{$t('earn.transfer.success.back')}}</v-btn>
                 </div>
             </div>
         </div>

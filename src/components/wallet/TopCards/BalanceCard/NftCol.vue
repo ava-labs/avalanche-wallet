@@ -1,6 +1,6 @@
 <template>
     <div class="nft_col">
-        <h4>Collectibles</h4>
+        <h4>{{$t('top.balance.collectibles')}}</h4>
         <p v-if="isEmpty">{{$t('top.nftempty')}}</p>
         <div v-else>
             <p>{{statusText}}</p>

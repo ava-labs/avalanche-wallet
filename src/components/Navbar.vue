@@ -16,8 +16,8 @@
                 <button @click="logout">{{$t('logout.button')}}</button>
             </template>
             <template v-else>
-                <router-link to="/access" class="action_but" data-cy="access">Access Wallet</router-link>
-                <router-link to="/create" class="action_but" data-cy="create">Create New Wallet</router-link>
+                <router-link to="/access" class="action_but" data-cy="access">{{$t('nav.access')}}</router-link>
+                <router-link to="/create" class="action_but" data-cy="create">{{$t('nav.create')}}</router-link>
             </template>
         </div>
 

@@ -2,13 +2,13 @@
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet ref="print_modal" v-if="walletType!=='ledger'">></paper-wallet>
-        <p class="addr_info">{{$t('wallet.address_card.desc')}}</p>
+        <p class="addr_info">{{$t('top.address.desc')}}</p>
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="subtitle">Derived AVAX Wallet Address</p>
+                <p class="subtitle">{{$t('top.address.derived')}}</p>
                 <p class="addr_text" data-cy="wallet_address">{{address}}</p>
                 <div style="display: flex; margin-top: 10px;">
                     <div class="buts">

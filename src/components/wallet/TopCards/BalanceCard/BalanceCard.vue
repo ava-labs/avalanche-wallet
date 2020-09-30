@@ -8,10 +8,10 @@
                 </div>
                 <h4>{{$t('top.title2')}}</h4>
                 <template v-if="!isBreakdown">
-                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye"></fa> Show Breakdown</button>
+                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye"></fa> {{$t('top.balance.show')}}</button>
                 </template>
                 <template v-else>
-                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye-slash"></fa> Hide Breakdown</button>
+                    <button class="breakdown_toggle" @click="toggleBreakdown"><fa icon="eye-slash"></fa> {{$t('top.balance.hide')}}</button>
                 </template>
             </div>
             <div class="balance_row">
@@ -21,13 +21,13 @@
             <div class="alt_info">
                 <div>
                     <template v-if="!isBreakdown">
-                        <label>Available</label>
+                        <label>{{$t('top.balance.available')}}</label>
                         <p>{{unlockedText}} AVAX</p>
                     </template>
                     <template v-else>
-                        <label>Available (X)</label>
+                        <label>{{$t('top.balance.available')}} (X)</label>
                         <p>{{avmUnlocked | cleanAvaxBN}} AVAX</p>
-                        <label>Available (P)</label>
+                        <label>{{$t('top.balance.available')}} (P)</label>
                         <p>{{platformUnlocked | cleanAvaxBN}} AVAX</p>
                     </template>
                 </div>
@@ -37,11 +37,11 @@
                         <p>{{balanceTextLocked}} AVAX</p>
                     </template>
                     <template v-else>
-                        <label>Locked (X)</label>
+                        <label>{{$t('top.balance.locked')}} (X)</label>
                         <p>{{avmLocked | cleanAvaxBN}} AVAX</p>
-                        <label>Locked (P)</label>
+                        <label>{{$t('top.balance.locked')}} (P)</label>
                         <p>{{platformLocked | cleanAvaxBN}} AVAX</p>
-                        <label>Locked Stakeable (P)</label>
+                        <label>{{$t('top.balance.locked_stake')}} (P)</label>
                         <p>{{platformLockedStakeable | cleanAvaxBN}} AVAX</p>
                     </template>
 
@@ -52,7 +52,7 @@
 <!--                    <p>{{pBalanceText}} AVAX</p>-->
 <!--                </div>-->
                 <div>
-                    <label>Staking</label>
+                    <label>{{$t('top.balance.stake')}}</label>
                     <p>{{stakingText}} AVAX</p>
                 </div>
             </div>

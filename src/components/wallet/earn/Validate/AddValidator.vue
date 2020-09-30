@@ -5,39 +5,39 @@
                 <transition-group name="fade" mode="out-in">
                     <div v-show="!isConfirm" key="form">
                         <div style="margin: 30px 0;">
-                            <h4>Node ID</h4>
+                            <h4>{{$t('earn.validate.label_1')}}</h4>
                             <input type="text" v-model="nodeId" style="width: 100%" label="NodeID-XXXXXXX">
                         </div>
                         <div style="margin: 30px 0;">
-                            <h4>Staking Period</h4>
-                            <p class="desc">The duration in which your tokens will be locked for staking.</p>
+                            <h4>{{$t('earn.validate.duration.label')}}</h4>
+                            <p class="desc">{{$t('earn.validate.duration.desc')}}</p>
                             <div class="dates">
                                 <div>
-                                    <label>Start Date & Time</label>
+                                    <label>{{$t('earn.validate.duration.start')}}</label>
                                     <datetime v-model="startDate" type="datetime" :min-datetime="startDateMin" :max-datetime="startDateMax"></datetime>
                                 </div>
                                 <div>
-                                    <label>End Date & Time <span @click="maxoutEndDate">Max</span></label>
+                                    <label>{{$t('earn.validate.duration.end')}} <span @click="maxoutEndDate">Max</span></label>
                                     <datetime v-model="endDate" type="datetime" :min-datetime="endDateMin" :max-datetime="endDateMax"></datetime>
                                 </div>
                             </div>
                         </div>
                         <div style="margin: 30px 0;">
-                            <h4>Stake Amount</h4>
-                            <p class="desc">The amount of AVAX to lock for staking.</p>
+                            <h4>{{$t('earn.validate.amount.label')}}</h4>
+                            <p class="desc">{{$t('earn.validate.amount.desc')}}</p>
                             <AvaxInput v-model="stakeAmt" :max="maxAmt" class="amt_in"></AvaxInput>
                         </div>
                         <div style="margin: 30px 0;">
-                            <h4>Delegation Fee</h4>
-                            <p class="desc">You will claim this % of the rewards from the delegators on your node.</p>
+                            <h4>{{$t('earn.validate.fee.label')}}</h4>
+                            <p class="desc">{{$t('earn.validate.fee.desc')}}</p>
                             <input type="number" :min="minFee" max="100" step="0.01" v-model="delegationFee">
                         </div>
                         <div class="reward_in" style="margin: 30px 0;" :type="rewardDestination">
-                            <h4>Reward Address</h4>
-                            <p class="desc">Where to send the staking rewards.</p>
+                            <h4>{{$t('earn.validate.reward.label')}}</h4>
+                            <p class="desc">{{$t('earn.validate.reward.desc')}}</p>
                             <v-chip-group mandatory @change="rewardSelect">
-                                <v-chip small value="local">Use this wallet</v-chip>
-                                <v-chip small value="custom">Custom Address</v-chip>
+                                <v-chip small value="local">{{$t('earn.validate.reward.chip_1')}}</v-chip>
+                                <v-chip small value="custom">{{$t('earn.validate.reward.chip_2')}}</v-chip>
                             </v-chip-group>
                             <QrInput style="height: 40px; border-radius: 2px;" v-model="rewardIn" placeholder="Reward Address" class="reward_addr_in"></QrInput>
                         </div>
@@ -47,38 +47,37 @@
                 <div>
                     <div class="summary" v-if="!isSuccess">
                         <div>
-                            <label>Max Delegation Amount <Tooltip style="display: inline-block" text="Maximum amount that can be delegated to this validator."><fa icon="question-circle"></fa></Tooltip></label>
+                            <label>{{$t('earn.validate.summary.max_del')}} <Tooltip style="display: inline-block" :text="$t('earn.validate.summary.max_del_tooltip')"><fa icon="question-circle"></fa></Tooltip></label>
                             <p>{{maxDelegationText}} AVAX</p>
                         </div>
                         <div>
-                            <label>Staking Duration *</label>
+                            <label>{{$t('earn.validate.summary.duration')}} *</label>
                             <p>{{durationText}}</p>
                         </div>
                         <div>
-                            <label>Estimated Rewards</label>
+                            <label>{{$t('earn.validate.summary.rewards')}}</label>
                             <p>{{estimatedReward}} AVAX</p>
                         </div>
                         <div class="submit_box">
-                            <label style="margin: 8px 0 !important;">* If it is your first time staking, start small. Staked tokens are locked until the end of the staking period.</label>
+                            <label style="margin: 8px 0 !important;">* {{$t('earn.validate.summary.warn')}}</label>
                             <p class="err">{{err}}</p>
-                            <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>Confirm</v-btn>
+                            <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>{{$t('earn.validate.confirm')}}</v-btn>
                             <template v-else>
-                                <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" block>Submit</v-btn>
-                                <v-btn text @click="cancelConfirm" block style="color:var(--primary-color); margin-top: 20px;">Cancel</v-btn>
+                                <v-btn @click="submit" class="button_secondary" depressed :loading="isLoading" block>{{$t('earn.validate.submit')}}</v-btn>
+                                <v-btn text @click="cancelConfirm" block style="color:var(--primary-color); margin-top: 20px;">{{$t('earn.validate.cancel')}}</v-btn>
                             </template>
                         </div>
                     </div>
                     <div class="success_cont" v-else>
                         <p class="check"><fa icon="check-circle"></fa></p>
-                        <h2>Your validation transaction is sent.</h2>
-                        <p>If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.</p>
+                        <h2>{{$t('earn.validate.success.title')}}</h2>
+                        <p>{{$t('earn.validate.success.desc')}}</p>
                         <p class="tx_id">Tx ID: {{txId}}</p>
-                        <label>Status</label>
+                        <label>{{$t('earn.validate.success.status')}}</label>
                         <p v-if="!txStatus">Waiting..</p>
                         <p v-else>{{txStatus}}</p>
                     </div>
                 </div>
-
             </form>
         </div>
 
@@ -376,7 +375,7 @@ export default class AddValidator extends Vue{
             try{
                 bintools.parseAddress(rewardAddr, 'P')
             }catch(e){
-                this.err = "Invalid reward address."
+                this.err = this.$t('earn.validate.errs.address') as string;
                 return false;
             }
         }
@@ -384,7 +383,7 @@ export default class AddValidator extends Vue{
         // Stake amount
         if(this.stakeAmt.lt(this.minStakeAmt)){
             let big = Big(this.minStakeAmt.toString()).div(Math.pow(10,9));
-            this.err = `Stake amount must be at least ${big.toLocaleString()} AVAX.`
+            this.err = this.$t('earn.validate.errs.amount', [big.toLocaleString()]) as string;
             return false;
         }
 
@@ -442,19 +441,19 @@ export default class AddValidator extends Vue{
         console.error(err);
 
         if(msg.includes('startTime')){
-            this.err = "Start date must be in the future and end date must be after start date."
+            this.err = this.$t('earn.validate.errs.date') as string;
         }else if(msg.includes('must be at least')){
             let minAmt = this.minStakeAmt;
             let big = Big(minAmt.toString()).div(Math.pow(10,9));
-
-            this.err = `Stake amount must be at least ${big.toString()} AVAX`;
+            this.err = this.$t('earn.validate.errs.amount', [big.toLocaleString()]) as string;
         }else if(msg.includes('nodeID')){
-            this.err = "Invalid Node ID. Must start with \"NodeID-\"";
+            this.err = this.$t('earn.validate.errs.id') as string;
         }else if(msg.includes('address format')){
-            this.err = "Invalid reward address.";
+            this.err = this.$t('earn.validate.errs.address') as string;
         }else{
             this.err = err.message;
         }
+
         this.$store.dispatch('Notifications/add', {
             type: 'error',
             title: 'Validation Failed',

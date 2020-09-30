@@ -24,19 +24,26 @@
                 <router-link to="/wallet/earn" data-cy="wallet_earn">
                     <img v-if="$root.theme==='day'" src="@/assets/sidebar/earn_nav.png" />
                     <img v-else src="@/assets/sidebar/earn_nav_night.png" />
-                    Earn
+                    {{$t('wallet.sidebar.earn')}}
                 </router-link>
                 <router-link to="/wallet/advanced" data-cy="wallet_advanced">
                     <img v-if="$root.theme==='day'" src="@/assets/sidebar/advanced_nav.png" />
                     <img v-else src="@/assets/sidebar/advanced_nav_night.png" />
-                    Advanced
+                    {{$t('wallet.sidebar.advanced')}}
                 </router-link>
+            </div>
+            <div class="bottom">
+                <LanguageSelect></LanguageSelect>
             </div>
         </div>
     </div>
 </template>
 <script>
+    import LanguageSelect from "@/components/misc/LanguageSelect";
     export default {
+        components: {
+            LanguageSelect
+        }
     }
 </script>
 <style lang="scss" scoped>

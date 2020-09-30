@@ -5,6 +5,7 @@
     "address": "Address",
     "add_pk": "Add Private Key",
     "home": {
+        "desc": "Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.",
         "access": {
             "title": "Welcome Back!",
             "desc": "'Access' your existing AVAX wallet here.",
@@ -47,11 +48,11 @@
         "sidebar": {
             "portfolio": "Portfolio",
             "manage": "Manage",
-            "send": "Send"
+            "send": "Send",
+            "earn": "Earn",
+            "advanced": "Advanced"
         },
         "address_card": {
-            "desc": "This is your address to receive funds. Your address will change after every deposit.",
-            "sub": "Derived AVAX Wallet Address"
         },
         "collectibles": {
             "empty": "You do not own any collectibles."
@@ -90,7 +91,20 @@
         "hover1": "View Address QR Code",
         "hover2": "Print",
         "hover3": "Copy",
-        "hover4": "View Mainnet Address"
+        "hover4": "View Mainnet Address",
+        "balance": {
+            "show": "Show Breakdown",
+            "hide": "Hide Breakdown",
+            "available": "Available",
+            "locked": "Locked",
+            "locked_stake": "Locked Stakeable",
+            "stake": "Staking",
+            "collectibles": "Collectibles"
+        },
+        "address": {
+            "derived": "Derived AVAX Wallet Address",
+            "desc": "This is your address to receive funds. Your address will change after every deposit."
+        }
     },
     "transfer": {
         "title": "Send",
@@ -157,12 +171,140 @@
         "nobalance_nft": "You do not own any collectibles.",
         "noaddresses": "You do not have any past addresses."
     },
+    "earn": {
+        "title": "Earn",
+        "desc": "You can earn more AVAX by staking your existing tokens.",
+        "subtitle1": "Validate",
+        "subtitle2": "Delegate",
+        "subtitle3": "Cross Chain Transfer",
+        "subtitle4": "Estimated Rewards",
+        "warning_1": "You must have at least {0} AVAX on the P chain to become a validator.",
+        "warning_2": "You must have at least {0} AVAX on the P chain to become a delegator.",
+        "validate_card": {
+            "title": "Validate",
+            "desc": "You have an Avalanche node that you want to stake with.",
+            "submit": "Add Validator"
+        },
+        "delegate_card": {
+            "title": "Delegate",
+            "desc": "You do not own an Avalanche node, but you want to stake using another node.",
+            "submit": "Add Delegator"
+        },
+        "transfer_card": {
+            "title": "Cross Chain Transfer",
+            "desc": "Staking requires AVAX on the P chain. Transfer tokens between X and P.",
+            "submit": "Transfer"
+        },
+        "rewards_card": {
+            "title": "Estimated Rewards",
+            "desc": "View staking rewards you will receive.",
+            "submit": "View Rewards"
+        },
+        "transfer": {
+            "source": "Source Chain",
+            "destination": "Destination Chain",
+            "balance": "Balance",
+            "amount": "Transfer Amount",
+            "fee": "Fee",
+            "confirm": "Confirm",
+            "submit": "Transfer",
+            "cancel": "Cancel",
+            "err_import": "Import Failed",
+            "err_desc": "There was a problem importing you tokens into the destination chain. Please try importing again.",
+            "err_submit": "Trigger Import",
+
+            "success": {
+                "title": "Transfer Completed",
+                "export": "Export Transaction ID:",
+                "import": "Import Transaction ID:",
+                "message": "You have successfully transferred between chains.",
+                "back": "Back to Earn"
+            }
+        },
+        "rewards": {
+            "total": "Total Rewards",
+            "validation": "Validation",
+            "delegation": "Delegation",
+            "empty": "You do not have any pending rewards.",
+            "row": {
+                "start": "Start",
+                "end": "End",
+                "completed": "Completed",
+                "stake": "Stake",
+                "reward": "Potential Reward"
+            }
+        },
+        "validate": {
+            "label_1": "Node ID",
+            "duration" : {
+                "label": "Staking Period",
+                "desc": "The duration in which your tokens will be locked for staking.",
+                "start": "Start Date & Time",
+                "end" : "End Date & Time"
+            },
+            "amount": {
+                "label": "Stake Amount",
+                "desc": "The amount of AVAX to lock for staking."
+            },
+            "fee": {
+                "label": "Delegation Fee",
+                "desc": "You will claim this % of the rewards from the delegators on your node."
+            },
+            "reward": {
+                "label": "Reward Address",
+                "desc": "Where to send the staking rewards.",
+                "chip_1": "Use this wallet",
+                "chip_2": "Custom Address"
+            },
+            "summary": {
+                "max_del": "Max Delegation Amount",
+                "max_del_tooltip": "Maximum amount that can be delegated to this validator.",
+                "duration": "Staking Duration",
+                "rewards": "Estimated Rewards",
+                "warn": "If it is your first time staking, start small. Staked tokens are locked until the end of the staking period."
+            },
+            "confirmation": {
+                "id": "Node ID",
+                "amount": "Staking Amount",
+                "start": "Start Date",
+                "end": "End Date",
+                "fee": "Delegation Fee",
+                "reward": "Reward Address",
+                "type_local": "This wallet",
+                "type_custom": "Custom"
+            },
+            "confirm": "Confirm",
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "success": {
+                "title": "Your validation transaction is sent.",
+                "desc": "If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "Start date must be in the future and end date must be after start date.",
+                "amount": "Stake amount must be at least {0} AVAX",
+                "id": "Invalid Node ID. Must start with \"NodeID-\"",
+                "address": "Invalid reward address."
+            }
+
+        }
+    },
+    "advanced": {
+        "title": "Advanced",
+        "import": {
+            "title": "Chain Import",
+            "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
+            "submit_x": "Import X",
+            "submit_p": "Import P"
+        }
+    },
     "logout": {
         "button": "Log Out",
         "button_conf": "LOGOUT",
         "button_cancel": "Cancel",
         "confirmation": "Are you sure you want to log out?",
-        "confirmation_messege": "This wallet and its keys will be forgotten."
+        "confirmation_message": "This wallet and its keys will be forgotten."
     },
 
 
@@ -211,5 +353,9 @@
             "err1": "Invalid password.",
             "err2": "Unable to read wallet data."
         }
+    },
+    "nav": {
+        "access": "Access Wallet",
+        "create": "Create New Wallet"
     }
 }

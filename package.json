@@ -49,6 +49,7 @@
     "@types/jspdf": "1.3.3",
     "@types/qrcode": "1.3.4",
     "@types/vue-datetime": "1.0.0",
+    "@types/vue-select": "^2.5.0",
     "@zxing/library": "0.15.2",
     "avalanche": "3.0.1",
     "big.js": "5.2.2",
