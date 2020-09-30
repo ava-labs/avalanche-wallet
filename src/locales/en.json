@@ -288,6 +288,82 @@
                 "address": "Invalid reward address."
             }
 
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Select a node to delegate",
+                "search": "Search Node ID",
+                "id": "Node ID",
+                "val_stake": "Validator Stake",
+                "aval_stake": "Available",
+                "aval_stake_tip": "How much more can be delegated to this validator.",
+                "users_tip": "Number of Delegators",
+                "end": "End Time",
+                "up": "Uptime",
+                "up_tip": "Relative to the node this wallet is connected to.",
+                "fee": "Fee",
+                "empty": {
+                    "title": "No Validators Found",
+                    "desc": "Validators need to be actively staking to be found."
+                }
+            },
+            "node": {
+                "selected": "Selected Node",
+                "fee": "Delegation Fee",
+                "start": "Validator Start Date",
+                "end": "Validator End Date"
+            },
+            "form": {
+                "period": {
+                    "label": "Staking Period",
+                    "desc": "The duration in which your tokens will be locked for staking.",
+                    "start": "Start Date & Time",
+                    "end": "End Date & Time"
+                },
+                "amount": {
+                    "label": "Stake Amount",
+                    "desc": "The amount of AVAX to lock for staking.",
+                    "desc2": "The available delegation amount for this node is {0} AVAX"
+                },
+                "reward": {
+                    "label": "Reward Address",
+                    "desc": "Where to send the staking rewards.",
+                    "chip_1": "Use this wallet",
+                    "chip_2": "Custom Address"
+                }
+            },
+            "confirmation": {
+                "node": "Node ID",
+                "amount": "Staking Amount",
+                "start": "Start Date",
+                "end": "End Date",
+                "reward": "Reward Address"
+            },
+            "errs": {
+                "start_now": "Start time must be after current time.",
+                "start_end": "Start date must be in the future and end date must be after start date.",
+                "invalid_addr": "Invalid address format. Your address must start with \"P-\"",
+                "no_addr": "You must give an address to receive delegation rewards.",
+                "min_dur": "Minimum staking duration is 2 weeks.",
+                "max_dur": "Maximum staking duration is 1 year.",
+                "no_node": "You must specify a validator.",
+                "val_end": "Delegation end date can not be longer than the validator's end date.",
+                "amt": "Delegation amount must be at least {0} AVAX."
+            },
+            "summary": {
+                "duration": "Staking Duration",
+                "reward": "Estimated Reward",
+                "fee": "Fee",
+                "warn": "If it is your first time staking, start small. Staked tokens are locked until the end of the staking period."
+            },
+            "confirm": "Confirm",
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "success": {
+                "title": "Delegation transaction sent.",
+                "desc": "If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.",
+                "status": "Status"
+            }
         }
     },
     "advanced": {
