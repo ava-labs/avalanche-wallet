@@ -11,7 +11,7 @@
                 class="addKeyBut ava_button"
                 depressed block
                 color="#4C2E56"
-            >Add Private Key</v-btn>
+            >{{$t('add_pk')}}</v-btn>
         </form>
     </div>
 </template>

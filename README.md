@@ -167,3 +167,9 @@ If there is a remembered wallet it will be the Keystore JSON format.
   "w": IKeystoreFile | undefined
 }
 ```
+
+# Language Setting
+Saved into local storage as a 2 letter code.
+```
+"lang": "en"
+```

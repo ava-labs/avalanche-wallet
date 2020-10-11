@@ -1,15 +1,15 @@
 <template>
     <div class="chain_import">
-        <h2>Chain Import</h2>
-        <p>If you have funds stuck in a failed chain transfer, you can finish importing them here.</p>
+        <h2>{{$t('advanced.import.title')}}</h2>
+        <p>{{$t('advanced.import.desc')}}</p>
         <div v-if="isSuccess" class="is_success">
             <label>Tx ID</label>
             <p>{{txId}}</p>
         </div>
         <p class="err" v-else-if="err">{{err}}</p>
         <template v-if="!isLoading">
-            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>Import X</v-btn>
-            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>Import P</v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>{{$t('advanced.import.submit_x')}}</v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>{{$t('advanced.import.submit_p')}}</v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
     </div>

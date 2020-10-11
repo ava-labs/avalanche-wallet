@@ -1,6 +1,6 @@
 <template>
     <div class="my_keys">
-        <p class="label">Active Key</p>
+        <p class="label">{{$t('keys.activate_key')}}</p>
         <key-row v-if="activeWallet" :wallet="activeWallet"
                  class="key_row"
                  :is_default="true"
@@ -46,8 +46,8 @@
             if(isConfirm){
                 await this.$store.dispatch('removeWallet', wallet);
                 this.$store.dispatch('Notifications/add', {
-                    title: 'Key Removed',
-                    message: 'Private key and assets removed from the wallet.'
+                    title: this.$t('keys.remove_success_title'),
+                    message: this.$t('keys.remove_success_msg')
                 });
             }
         }

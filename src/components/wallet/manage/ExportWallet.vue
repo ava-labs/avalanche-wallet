@@ -1,6 +1,6 @@
 <template>
     <div class="export_wallet">
-        <p v-if="isDesc" class="explain">{{$t("advanced.export.desc")}}</p>
+        <p v-if="isDesc" class="explain">{{$t("keys.export_key_desc")}}</p>
         <form @submit.prevent="download">
             <label>Password (min 9 characters)</label>
             <v-text-field

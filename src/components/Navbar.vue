@@ -12,12 +12,13 @@
             <DayNightToggle class="action_but"></DayNightToggle>
             <network-menu></network-menu>
             <template v-if="isAuth">
-                <button @click="logout">Log out</button>
+                <button @click="logout">{{$t('logout.button')}}</button>
             </template>
             <template v-else>
-                <router-link to="/access" class="action_but" data-cy="access">Access Wallet</router-link>
-                <router-link to="/create" class="action_but" data-cy="create">Create New Wallet</router-link>
+                <router-link to="/access" class="action_but" data-cy="access">{{$t('nav.access')}}</router-link>
+                <router-link to="/create" class="action_but" data-cy="create">{{$t('nav.create')}}</router-link>
             </template>
+            <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
 
         <div class="mobile_right">
@@ -35,22 +36,27 @@
                     <DayNightToggle class="action_but"></DayNightToggle>
                 </div>
                 <template v-if="isAuth">
-                    <router-link to="/wallet">Portfolio</router-link>
-                    <router-link to="/wallet/keys">Manage Keys</router-link>
-                    <router-link to="/wallet/transfer">Transfer</router-link>
-                    <router-link to="/wallet/earn">Earn</router-link>
-                    <button class="logout" @click="logout">Logout</button>
+                    <router-link to="/wallet">{{$t('wallet.sidebar.portfolio')}}</router-link>
+                    <router-link to="/wallet/keys">{{$t('wallet.sidebar.manage')}}</router-link>
+                    <router-link to="/wallet/transfer">{{$t('wallet.sidebar.send')}}</router-link>
+                    <router-link to="/wallet/earn">{{$t('wallet.sidebar.earn')}}</router-link>
+                    <router-link to="/wallet/advanced" data-cy="wallet_advanced">{{$t('wallet.sidebar.advanced')}}</router-link>
+                    <button class="logout" @click="logout">{{$t('logout.button')}}</button>
+
 <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
 <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
 <!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
-<!--                    <v-list-item @click="logout">Log out</v-list-item>-->
+<!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
                 </template>
                 <template v-else>
-                    <router-link to="/access">Access Wallet</router-link>
-                    <router-link to="/create">Create New Wallet</router-link>
+                    <router-link to="/access">{{$t('nav.access')}}</router-link>
+                    <router-link to="/create">{{$t('nav.create')}}</router-link>
 <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
 <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>
+                <div class="mobile_bottom">
+                    <LanguageSelect class="lang_mobile"></LanguageSelect>
+                </div>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -58,7 +64,7 @@
 <script lang="ts">
 import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
-// import LanguageSelect from './LanguageSelect';
+import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue';
 import DayNightToggle from "@/components/misc/DayNightToggle.vue";
 import NetworkMenu from "./NetworkSettings/NetworkMenu.vue";
 import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
@@ -66,7 +72,8 @@ import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
     components: {
         NetworkMenu,
         DayNightToggle,
-        ConfirmLogout
+        ConfirmLogout,
+        LanguageSelect
     }
 })
 export default class Navbar extends Vue {
@@ -141,7 +148,21 @@ button {
     display: none;
 }
 
+.mobile_bottom{
+    position: absolute;
+    bottom: 14px;
+}
+
+.lang_mobile, .lang_web{
+    width: max-content;
+    margin: 0;
+}
+
 @media only screen and (max-width: main.$mobile_width) {
+    .lang_web{
+        display: none;
+    }
+
     .buts_right {
         display: none;
 
@@ -167,6 +188,7 @@ button {
 
     .mobile_menu{
         background-color: var(--bg-light) !important;
+
 
 
         .v-list-item, .v-list-item--link{

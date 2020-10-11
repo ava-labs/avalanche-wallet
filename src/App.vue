@@ -32,17 +32,23 @@
             TestNetBanner
         },
         async created() {
-            await this.$store.dispatch('Network/init');
-    },
-    computed: {
-        isNavbar() {
-            if (this.$route.path.includes('/wallet')) {
-                return false;
+            // Init language preference
+            let locale = localStorage.getItem('lang');
+            if(locale){
+                this.$root.$i18n.locale = locale;
             }
-            return true
-        }
+
+            await this.$store.dispatch('Network/init');
+        },
+        computed: {
+            isNavbar() {
+                if (this.$route.path.includes('/wallet')) {
+                    return false;
+                }
+                return true
+            }
+        },
     }
-}
 </script>
 
 <style scoped lang="scss">

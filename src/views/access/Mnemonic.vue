@@ -2,9 +2,9 @@
     <div class="mnemonic_auth">
         <div class="left">
             <header>
-                <h1>Enter your MNEMONIC phrase</h1>
+                <h1>{{$t('access.mnemonic.title')}}</h1>
             </header>
-            <label>Hit ‘SPACE’ after every successful word entry.</label>
+            <label>{{$t('access.mnemonic.subtitle')}}</label>
             <textarea v-model="phrase" translate="no"></textarea>
             <div class="button_container">
                 <p class="err" v-if="err">{{err}}</p>
@@ -14,8 +14,8 @@
                     depressed
                     :loading="isLoading"
                     :disabled="!canSubmit"
-                >Access Wallet</v-btn>
-                <router-link to="/access" class="link">Cancel</router-link>
+                >{{$t('access.mnemonic.submit')}}</v-btn>
+                <router-link to="/access" class="link">{{$t('access.mnemonic.cancel')}}</router-link>
             </div>
         </div>
         <div class="right">
@@ -47,7 +47,7 @@
 
             // not a valid key phrase
             if(words.length !== 24){
-                this.err = "Invalid key phrase. Your phrase must be 24 words separated by a single space.";
+                this.err = `${this.$t('access.mnemonic.error')}`;
                 return false;
             }
 
@@ -94,7 +94,7 @@
                 }catch(e){
                     this.isLoading = false;
                     console.log(e);
-                    this.err = 'Invalid key phrase.'
+                    this.err = `${this.$t('access.mnemonic.error')}`
                 }
             }, 500)
         }
