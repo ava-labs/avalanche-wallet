@@ -43,7 +43,7 @@ export default class ImportKeys extends Vue {
     title: string = "";
     selectedTab: string = "";
     created() {
-        this.title=this.$t('keys.import_key_title').toString()
+        this.title = this.$t('keys.import_key_title') as string;
     }
 
     open() {
