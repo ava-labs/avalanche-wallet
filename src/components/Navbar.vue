@@ -36,11 +36,12 @@
                     <DayNightToggle class="action_but"></DayNightToggle>
                 </div>
                 <template v-if="isAuth">
-                    <router-link to="/wallet">Portfolio</router-link>
-                    <router-link to="/wallet/keys">Manage Keys</router-link>
-                    <router-link to="/wallet/transfer">Transfer</router-link>
-                    <router-link to="/wallet/earn">Earn</router-link>
-                    <button class="logout" @click="logout">Logout</button>
+                    <router-link to="/wallet">{{$t('wallet.sidebar.portfolio')}}</router-link>
+                    <router-link to="/wallet/keys">{{$t('wallet.sidebar.manage')}}</router-link>
+                    <router-link to="/wallet/transfer">{{$t('wallet.sidebar.send')}}</router-link>
+                    <router-link to="/wallet/earn">{{$t('wallet.sidebar.earn')}}</router-link>
+                    <router-link to="/wallet/advanced" data-cy="wallet_advanced">{{$t('wallet.sidebar.advanced')}}</router-link>
+                    <button class="logout" @click="logout">{{$t('logout.button')}}</button>
 
 <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
 <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
@@ -48,13 +49,14 @@
 <!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
                 </template>
                 <template v-else>
-                    <router-link to="/access">Access Wallet</router-link>
-                    <router-link to="/create">Create New Wallet</router-link>
+                    <router-link to="/access">{{$t('nav.access')}}</router-link>
+                    <router-link to="/create">{{$t('nav.create')}}</router-link>
 <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
 <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>
-                <LanguageSelect class="lang_mobile"></LanguageSelect>
-
+                <div class="mobile_bottom">
+                    <LanguageSelect class="lang_mobile"></LanguageSelect>
+                </div>
             </v-list>
         </v-navigation-drawer>
     </div>
@@ -146,8 +148,14 @@ button {
     display: none;
 }
 
+.mobile_bottom{
+    position: absolute;
+    bottom: 14px;
+}
+
 .lang_mobile, .lang_web{
     width: max-content;
+    margin: 0;
 }
 
 @media only screen and (max-width: main.$mobile_width) {
