@@ -39,7 +39,7 @@
     </div>
 </template>
 <script>
-    import LanguageSelect from "@/components/misc/LanguageSelect";
+    import LanguageSelect from "@/components/misc/LanguageSelect/LanguageSelect";
     export default {
         components: {
             LanguageSelect
@@ -54,6 +54,9 @@
 
     .stick{
         position: sticky;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
         top: 0;
     }
     .alert_icon{
@@ -109,5 +112,14 @@
             object-fit: contain;
         }
     }
+}
+
+
+.bottom{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 20px;
 }
 </style>

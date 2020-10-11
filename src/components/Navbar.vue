@@ -6,7 +6,6 @@
             <img v-else src="@/assets/wallet_logo_dark.svg"/>
 <!--            <span class="slogan">by Avalanche</span>-->
         </router-link>
-        <LanguageSelect class="lang_web"></LanguageSelect>
         <v-spacer></v-spacer>
 
         <div class="buts_right">
@@ -19,6 +18,7 @@
                 <router-link to="/access" class="action_but" data-cy="access">{{$t('nav.access')}}</router-link>
                 <router-link to="/create" class="action_but" data-cy="create">{{$t('nav.create')}}</router-link>
             </template>
+            <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
 
         <div class="mobile_right">
@@ -62,7 +62,7 @@
 <script lang="ts">
 import "reflect-metadata";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import LanguageSelect from './misc/LanguageSelect.vue';
+import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue';
 import DayNightToggle from "@/components/misc/DayNightToggle.vue";
 import NetworkMenu from "./NetworkSettings/NetworkMenu.vue";
 import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";

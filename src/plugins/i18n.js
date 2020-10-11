@@ -4,12 +4,12 @@ import Vue from 'vue';
 Vue.use(VueI18n);
 
 import en from '../locales/en.json';
-let tr = {}
+import fr from '../locales/fr.json';
 
 
 const messages = {
     en,
-    tr
+    fr
 };
 
 // Create VueI18n instance with options

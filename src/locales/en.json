@@ -8,7 +8,7 @@
         "desc": "Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.",
         "access": {
             "title": "Welcome Back!",
-            "desc": "'Access' your existing AVAX wallet here.",
+            "desc": "'Access' your existing Avalanche wallet here.",
             "submit": "Access Wallet"
         },
         "create": {
@@ -52,8 +52,7 @@
             "earn": "Earn",
             "advanced": "Advanced"
         },
-        "address_card": {
-        },
+        "address_card": {},
         "collectibles": {
             "empty": "You do not own any collectibles."
         }
@@ -79,7 +78,7 @@
         "error_word": "The mnemonic phrase you entered for word not match the actual phrase."
     },
     "top": {
-        "title1": "Derived AVAX Wallet Address",
+        "title1": "Derived Avalanche Wallet Address",
         "title2": "Balance",
         "title3": "Subnet",
         "title4": "Network",
@@ -102,7 +101,7 @@
             "collectibles": "Collectibles"
         },
         "address": {
-            "derived": "Derived AVAX Wallet Address",
+            "derived": "Derived Avalanche Wallet Address",
             "desc": "This is your address to receive funds. Your address will change after every deposit."
         }
     },
@@ -210,9 +209,8 @@
             "submit": "Transfer",
             "cancel": "Cancel",
             "err_import": "Import Failed",
-            "err_desc": "There was a problem importing you tokens into the destination chain. Please try importing again.",
+            "err_desc": "There was a problem importing your tokens into the destination chain. Please try importing again.",
             "err_submit": "Trigger Import",
-
             "success": {
                 "title": "Transfer Completed",
                 "export": "Export Transaction ID:",
@@ -236,11 +234,11 @@
         },
         "validate": {
             "label_1": "Node ID",
-            "duration" : {
+            "duration": {
                 "label": "Staking Period",
                 "desc": "The duration in which your tokens will be locked for staking.",
                 "start": "Start Date & Time",
-                "end" : "End Date & Time"
+                "end": "End Date & Time"
             },
             "amount": {
                 "label": "Stake Amount",
@@ -287,7 +285,6 @@
                 "id": "Invalid Node ID. Must start with \"NodeID-\"",
                 "address": "Invalid reward address."
             }
-
         },
         "delegate": {
             "list": {
@@ -382,22 +379,16 @@
         "confirmation": "Are you sure you want to log out?",
         "confirmation_message": "This wallet and its keys will be forgotten."
     },
-
-
     "keystore": {
         "title": "Keystore File",
         "button": "Select File"
-
     },
-
     "transactions": {
         "notx": "No transactions found for this address on the explorer.",
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",
         "error_api_desc": "You must provide an AVA Explorer API for this network to view transaction history."
-
-
     },
     "modal": {
         "qr": {
