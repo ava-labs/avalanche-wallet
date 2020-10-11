@@ -1,7 +1,7 @@
 <template>
-    <modal ref="modal" title="Mainnet Address">
+    <modal ref="modal" :title="$t('modal.mainnet.title')">
         <div class="mainnet_body">
-            <p style="margin-bottom: 14px !important; font-size: 18px;">Your mainnet address is:</p>
+            <p style="margin-bottom: 14px !important; font-size: 18px;">{{$t('modal.mainnet.desc')}}</p>
             <p class="addr">{{address}}</p>
         </div>
     </modal>

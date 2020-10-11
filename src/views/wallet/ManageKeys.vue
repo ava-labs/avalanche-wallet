@@ -3,17 +3,17 @@
         <div>
             <div class="card_body">
                 <header>
-                    <h1>My Keys</h1>
+                    <h1>{{$t('keys.title')}}</h1>
                     <div class="button_container" v-if="walletType!=='ledger'">
-                        <button v-if="hasVolatile" @click="openRememberKeys" class="remember_keys ava_button_secondary"><fa icon="exclamation-triangle"></fa> Remember Keys</button>
+                        <button v-if="hasVolatile" @click="openRememberKeys" class="remember_keys ava_button_secondary"><fa icon="exclamation-triangle"></fa> {{$t('keys.button1')}}</button>
                         <button class="but_primary ava_button_secondary" @click="importKeys">
                             <fa icon="download"></fa>
-                            Import Keys
+                            {{$t('keys.button2')}}
                         </button>
                         <ImportKeys ref="import"></ImportKeys>
                         <button class="but_primary ava_button_secondary" @click="exportKeys">
                             <fa icon="upload"></fa>
-                            Export Keys
+                             {{$t('keys.button3')}}
                         </button>
                         <RememberKeysModal ref="remember_modal"></RememberKeysModal>
                         <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>

@@ -1,6 +1,6 @@
 <template>
     <div class="collectible_tab">
-        <p v-if="isEmpty" class="empty">You do not own any collectibles.</p>
+        <p v-if="isEmpty" class="empty">{{$t('wallet.collectibles.empty')}}</p>
         <div v-else>
             <div v-for="(fam, famId) in nftDict" :key="famId" class="collectible_fam">
                 <p class="fam_title">{{nftFamsDict[famId].name}}</p>

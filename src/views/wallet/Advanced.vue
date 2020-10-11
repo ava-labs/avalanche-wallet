@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="header">
-            <h1>Advanced </h1>
+            <h1>{{$t('advanced.title')}}</h1>
         </div>
         <div class="grids">
             <ChainImport class="grid_box"></ChainImport>

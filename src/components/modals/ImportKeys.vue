@@ -4,9 +4,9 @@
             <img src="@/assets/import_key_bg.png" class="bg">
             <p class="explain">Add additional keys to use with your wallet.</p>
             <v-tabs color="#4C2E56" height="38" :grow="true" v-model="selectedTab">
-<!--                <v-tab key="private">Private Key</v-tab>-->
-                <v-tab key="mnemonic">Mnemonic Phrase</v-tab>
-                <v-tab key="keystore">Keystore File</v-tab>
+<!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
+                <v-tab key="mnemonic">{{$t('keys.import_key_option1')}}</v-tab>
+                <v-tab key="keystore">{{$t('keys.import_key_option2')}}</v-tab>
                 <v-tab-item>
                     <AddMnemonic @success="handleImportSuccess"></AddMnemonic>
                 </v-tab-item>
@@ -40,8 +40,11 @@ interface ITab {
 })
 export default class ImportKeys extends Vue {
     isActive: boolean = false;
-    title: string = "Import Keys";
+    title: string = "";
     selectedTab: string = "";
+    created() {
+        this.title = this.$t('keys.import_key_title') as string;
+    }
 
     open() {
         // @ts-ignore
@@ -58,8 +61,8 @@ export default class ImportKeys extends Vue {
         this.$refs.modal.close();
         this.close();
         this.$store.dispatch("Notifications/add", {
-            title: "Key Added",
-            message: "Private key and assets added to the wallet."
+            title: this.$t('keys.import_key_success_title'),
+            message: this.$t('keys.import_key_success_msg')
         });
     }
 }

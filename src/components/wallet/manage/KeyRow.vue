@@ -18,25 +18,25 @@
                 <div class="header_cols">
                     <div class="detail">
                         <p class="addressVal"><b>{{walletTitle}}</b></p>
-                        <Tooltip text="This key will be forgotten when you refresh the browser." v-if="isVolatile">
+                        <Tooltip :text="$t('keys.tooltip')" v-if="isVolatile">
                             <fa icon="exclamation-triangle" class="volatile_alert"></fa>
                         </Tooltip>
                     </div>
                     <div class="buts">
                         <button class="selBut" @click="select"  v-if="!is_default">
-                            <span>Activate Key</span>
+                            <span>{{$t('keys.activate_key')}}</span>
                         </button>
-                        <Tooltip text="Remove Key" class="row_but" @click.native="remove" v-if="!is_default">
+                        <Tooltip :text="$t('keys.remove_key')" class="row_but" @click.native="remove" v-if="!is_default">
                             <img src="@/assets/trash_can_dark.svg" style="height: 16px;">
                         </Tooltip>
 <!--                        <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>-->
-                        <Tooltip  text="HD Addresses" class="row_but" @click.native="showPastAddresses">
+                        <Tooltip  :text="$t('keys.hd_addresses')" class="row_but" @click.native="showPastAddresses">
                             <fa icon="list-ol"></fa>
                         </Tooltip>
-                        <Tooltip  v-if="walletType!=='ledger'" text="Export Key" class="row_but" @click.native="showExportModal">
+                        <Tooltip v-if="walletType!=='ledger'" :text="$t('keys.export_key')" class="row_but" @click.native="showExportModal">
                             <fa icon="upload"></fa>
                         </Tooltip>
-                        <button v-if="walletType!=='ledger'" @click="showModal">View Key Phrase</button>
+                        <button v-if="walletType!=='ledger'" @click="showModal">{{$t('keys.view_key')}}</button>
                     </div>
                 </div>
             </div>

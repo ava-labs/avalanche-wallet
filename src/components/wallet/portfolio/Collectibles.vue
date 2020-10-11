@@ -14,7 +14,7 @@
         <div class="coming_soon" v-else>
             <img v-if="$root.theme==='day'" src="@/assets/nft_preview.png">
             <img v-else src="@/assets/nft_preview_night.png">
-            <p>You do not own any collectibles.</p>
+            <p>{{$t('portfolio.nobalance_nft')}}</p>
         </div>
     </div>
 </template>

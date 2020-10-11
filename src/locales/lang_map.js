@@ -185,7 +185,7 @@ var isoLangs = {
     },
     "fr": {
         "name": "French",
-        "nativeName": "français, langue française"
+        "nativeName": "Français"
     },
     "ff": {
         "name": "Fula; Fulah; Pulaar; Pular",

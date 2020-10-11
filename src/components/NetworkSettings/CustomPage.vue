@@ -20,7 +20,7 @@
             </div>
             <p v-if="err" class="form_error">{{err}}</p>
 <!--            <button>Add Network</button>-->
-            <v-btn :loading="isAjax" height="26" depressed color="#4C2E56" type="submit" class="button_primary">Add Network</v-btn>
+            <v-btn :loading="isAjax" height="26" depressed type="submit" class="button_primary">{{$t('network.add')}}</v-btn>
         </form>
     </div>
 </template>
@@ -197,6 +197,7 @@
     .v-btn{
         text-transform: none;
         font-size: 12px !important;
+        color: var(--bg) !important;
     }
 
     .rowGroup{

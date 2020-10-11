@@ -32,7 +32,7 @@ import {UTXO, KeyPair as AVMKeyPair, AmountOutput, UTXOSet} from "avalanche/dist
 
 import AvaAsset from "@/js/AvaAsset";
 import {KEYSTORE_VERSION, makeKeyfile, readKeyFile} from "@/js/Keystore";
-import {AssetsDict, NftFamilyDict} from "@/store/modules/assets/types";
+import {AssetsDict} from "@/store/modules/assets/types";
 import {keyToKeypair} from "@/helpers/helper";
 import BN from "bn.js";
 import {LedgerWallet} from "@/js/wallets/LedgerWallet";

@@ -1,16 +1,16 @@
 <template>
     <div class="home_view">
         <div class="header">
-            <h1>Assets</h1>
+            <h1>{{$t('portfolio.assets')}}</h1>
             <div>
-                <button @click="tab='fungibles'" :active="tab===`fungibles`" data-cy="wallet_fungible">Tokens</button>
-                <button @click="tab='collectibles'" :active="tab===`collectibles`" data-cy="wallet_nft">Collectibles</button>
+                <button @click="tab='fungibles'" :active="tab===`fungibles`" data-cy="wallet_fungible">{{$t('portfolio.assets1')}}</button>
+                <button @click="tab='collectibles'" :active="tab===`collectibles`" data-cy="wallet_nft">{{$t('portfolio.assets2')}}</button>
             </div>
             <div style="flex-grow: 1"></div>
             <div class="search">
                 <img v-if="$root.theme==='day'" src="@/assets/search.png" />
                 <img v-else src="@/assets/search_night.svg" />
-                <input placeholder="Search assets.." v-model="search" />
+                <input :placeholder="$t('portfolio.search')" v-model="search" />
             </div>
         </div>
         <div class="pages">

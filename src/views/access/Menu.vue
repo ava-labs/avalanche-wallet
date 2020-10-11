@@ -4,17 +4,17 @@
             <img v-if="$root.theme === 'day'" src="@/assets/diamond-primary.svg" alt />
             <img v-else src="@/assets/diamond-primary-night.svg" alt />
         </div>
-        <h1>How do you want to access your wallet?</h1>
-        <router-link to="/create" class="link">Don't have a wallet?</router-link>
+        <h1>{{$t('access.title')}}</h1>
+        <router-link to="/create" class="link">{{$t('access.create')}}</router-link>
         <hr />
         <div class="options">
-            <router-link to="/access/mnemonic" class="option button_primary">Mnemonic Key Phrase</router-link>
-            <router-link to="/access/keystore" class="option button_primary">Keystore File</router-link>
+            <router-link to="/access/mnemonic" class="option button_primary">{{$t('access.but_mnemonic')}}</router-link>
+            <router-link to="/access/keystore" class="option button_primary">{{$t('access.but_keystore')}}</router-link>
             <LedgerButton class="option button_primary"></LedgerButton>
-<!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
+            <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
         <ToS style="margin: 20px !important;"></ToS>
-        <router-link to="/" class="link">Cancel</router-link>
+        <router-link to="/" class="link">{{$t('access.cancel')}}</router-link>
     </div>
 </template>
 

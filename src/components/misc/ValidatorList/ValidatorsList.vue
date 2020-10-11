@@ -3,15 +3,15 @@
         <table>
             <thead>
             <tr class="header_tr">
-                <th>Node ID</th>
-                <th style="text-align: right;">Validator Stake</th>
-                <th style="text-align: right;">Available <Tooltip style="display: inline-block;" text="How much more can be delegated to this validator."><fa icon="question-circle"></fa></Tooltip></th>
+                <th>{{$t('earn.delegate.list.id')}}</th>
+                <th style="text-align: right;">{{$t('earn.delegate.list.val_stake')}}</th>
+                <th style="text-align: right;">{{$t('earn.delegate.list.aval_stake')}} <Tooltip style="display: inline-block;" :text="$t('earn.delegate.list.aval_stake_tip')"><fa icon="question-circle"></fa></Tooltip></th>
                 <th>
                     <Tooltip text="Number of Delegators"><fa icon="users"></fa></Tooltip>
                 </th>
-                <th>End Time</th>
-                <th>Uptime <Tooltip style="display: inline-block;" text="Relative to the node this wallet is connected to."><fa icon="question-circle"></fa></Tooltip> </th>
-                <th>Fee</th>
+                <th>{{$t('earn.delegate.list.end')}}</th>
+                <th>{{$t('earn.delegate.list.up')}} <Tooltip style="display: inline-block;" :text="$t('earn.delegate.list.up_tip')"><fa icon="question-circle"></fa></Tooltip> </th>
+                <th>{{$t('earn.delegate.list.fee')}}</th>
                 <th></th>
             </tr>
             </thead>
@@ -20,8 +20,8 @@
             </tbody>
         </table>
         <div v-if="validators.length===0" class="empty_list">
-            <h4>No Validators Found</h4>
-            <p>Validators need to be actively staking to be found.</p>
+            <h4>{{$t('earn.delegate.list.empty.title')}}</h4>
+            <p>{{$t('earn.delegate.list.empty.desc')}}</p>
         </div>
     </div>
 

@@ -1,27 +1,27 @@
 <template>
     <div class="confirmation">
         <div>
-            <label>Node ID</label>
+            <label>{{$t('earn.validate.confirmation.id')}}</label>
             <p style="word-break: break-all;">{{nodeID}}</p>
         </div>
         <div>
-            <label>Staking Amount</label>
+            <label>{{$t('earn.validate.confirmation.amount')}}</label>
             <p>{{amtText}} AVAX</p>
         </div>
         <div>
-            <label>Start Date</label>
+            <label>{{$t('earn.validate.confirmation.start')}}</label>
             <p>{{start.toLocaleString()}}</p>
         </div>
         <div>
-            <label>End Date</label>
+            <label>{{$t('earn.validate.confirmation.end')}}</label>
             <p>{{end.toLocaleString()}}</p>
         </div>
         <div>
-            <label>Delegation Fee</label>
+            <label>{{$t('earn.validate.confirmation.fee')}}</label>
             <p>{{delegationFee}} %</p>
         </div>
         <div>
-            <label>Reward Address ({{walletType}})</label>
+            <label>{{$t('earn.validate.confirmation.reward')}} ({{walletType}})</label>
             <p style="word-break: break-all;">{{rewardAddress}}</p>
         </div>
     </div>
@@ -67,9 +67,9 @@
 
         get walletType(){
             if(this.rewardDestination === 'local'){
-                return "This wallet";
+                return this.$t('earn.validate.confirmation.type_local');
             }
-            return 'Custom'
+            return this.$t('earn.validate.confirmation.type_custom')
         }
 
         get amtText():string{

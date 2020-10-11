@@ -1,0 +1,428 @@
+{
+    "password": "Mot de passe",
+    "password_confirm": "Confirmez le mot de passe",
+    "private_key": "Clé privée",
+    "address": "Adresse",
+    "add_pk": "Ajouter une clé privée",
+    "home": {
+        "desc": "Le portefeuille Avalanche est simple, sécurisé et non-custodial pour stocker tous les actifs d'Avalanche.",
+        "access": {
+            "title": "Bienvenue !",
+            "desc": "Vous pouvez accéder à un portefeuille Avalanche déjà existant par ici.",
+            "submit": "Accéder au portefeuille"
+        },
+        "create": {
+            "title": "Nouveau sur le portefeuille Avalanche ?",
+            "desc": "Créez un nouveau portefeuille pour envoyer, recevoir et échanger tous vos actifs d'Avalanche.",
+            "submit": "Créer un nouveau portefeuille"
+        }
+    },
+    "network": {
+        "status1": "Connexion ...",
+        "status2": "Déconnecté",
+        "title": "Réseaux",
+        "title2": "Ajouter un réseau personnalisé",
+        "title3": "Éditer le réseau",
+        "custom": "Ajouter réseau personnalisé",
+        "cancel": "Annuler",
+        "add": "Ajouter un réseau"
+    },
+    "access": {
+        "title": "Comment souhaitez-vous accéder à votre portefeuille ?",
+        "create": "Vous n'avez pas de portefeuille ?",
+        "but_mnemonic": "Phrase mnémotechnique de sécurité",
+        "but_keystore": "Fichier de stockage de clés",
+        "cancel": "Annuler",
+        "json_error": "Analyse impossible du fichier JSON.",
+        "keystore_error": "Cette version de stockage de clés n'est pas supportée.",
+        "password_error": "Mot de passe incorrect.",
+        "mnemonic": {
+            "title": "Entrez votre phrase mnémotechnique\n",
+            "subtitle": "Appuyez sur 'ESPACE' après avoir écrit chaque mot.",
+            "submit": "Accéder au portefeuille",
+            "cancel": "Annuler",
+            "error": "Phrase de sécurité invalide. Votre liste doit comporter 24 mots séparés par un espace."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfolio",
+            "manage": "Gérer",
+            "send": "Envoyer",
+            "earn": "Gagner",
+            "advanced": "Avancé"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Vous n'avez aucun jeton non fongible."
+        }
+    },
+    "create": {
+        "generate": "Générez une nouvelle phrase clé pour configurer votre portefeuille Avalanche.",
+        "but_have": "Vous avez déjà un portefeuille ?",
+        "submit": "Générer une phrase de sécurité",
+        "cancel": "Annuler",
+        "mnemonic_title": "Voici votre phrase clé.",
+        "mnemonic_desc": "Utilisez ces 24 mots en ordre séquentiel pour récupérer votre portefeuille Avalanche",
+        "attention": "Attention !",
+        "warning": "Conservez cette phrase clé dans un endroit sûr. Toute personne possédant cette phrase-clé peut accéder à votre portefeuille Avalanche. Il n'y a aucun moyen de récupérer les phrases-clés perdues.",
+        "confirm": "J'ai écrit ma phrase clé dans un endroit sûr.",
+        "regenerate": "Générer à nouveau",
+        "success_title": "Félicitations !",
+        "success_desc": "Il est temps d'accéder à votre portefeuille Avalanche.",
+        "success_submit": "Accéder au portefeuille",
+        "verify": "Vérifier",
+        "verifytitle": "Vérification de la phrase de sécurité",
+        "verify_desc": "Écrivez ci-dessous la phrase mnémotechnique de sécurité",
+        "error_number": "Oups, il semblerait que vous ayez oublié de remplir le numéro",
+        "error_word": "La phrase mnémotechnique que vous avez entré pour mot ne correspond pas à la phrase actuelle."
+    },
+    "top": {
+        "title1": "Adresse de portefeuille Avalanche dérivée",
+        "title2": "Solde",
+        "title3": "Subnet",
+        "title4": "Réseau",
+        "nftcol": "NFTs",
+        "nftempty": "Vous n'avez pas encore collecté de jeton non fongible.",
+        "locked": "Verrouillés",
+        "info2": "J'ai acheté des jetons à la vente publique. Où sont mes AVAX ?",
+        "info2_desc": "Ce portefeuille est connecté au réseau de test Avalanche Everest. Votre achat apparaîtra dans le portefeuille lorsque le Mainnet Avalanche sera lancé.",
+        "hover1": "Voir le QR Code",
+        "hover2": "Imprimer",
+        "hover3": "Copier",
+        "hover4": "Voir l'adresse Mainnet",
+        "balance": {
+            "show": "Afficher la répartition",
+            "hide": "Cacher la répartition",
+            "available": "Disponible",
+            "locked": "Verrouillé",
+            "locked_stake": "Enjeu verrouillable",
+            "stake": "Enjeu",
+            "collectibles": "Collection"
+        },
+        "address": {
+            "derived": "Adresse de portefeuille Avalanche dérivée",
+            "desc": "Il s'agit de votre adresse pour recevoir des fonds. Elle changera après chaque dépôt."
+        }
+    },
+    "transfer": {
+        "title": "Envoi",
+        "no_cash": "Vous devez avoir un actif dans votre portefeuille pour effectuer une transaction.",
+        "faucet": "Avez-vous vérifié notre faucet ?",
+        "to": "À l'adresse suivante",
+        "fees": "Frais",
+        "fee_tx": "Frais de transaction",
+        "advanced": "Avancé",
+        "adv_change": "Modifier l'adresse",
+        "send": "Valider la transaction",
+        "summary": "Récapitulatif de transaction",
+        "disconnected": "Impossible d'envoyer des actifs. Déconnecté du réseau.",
+        "success_title": "Transaction envoyée",
+        "success_msg": "Vous avez effectué votre transaction avec succès.",
+        "error_title": "Erreur d'envoi de la transaction",
+        "error_msg": "L'envoi de la transaction a échoué."
+    },
+    "keys": {
+        "title": "Mes clés",
+        "button1": "Se souvenir des clés",
+        "button2": "IMPORTER LES CLÉS",
+        "button3": "EXPORTER LES CLÉS",
+        "subtitle": "Clé active",
+        "remember_key_button": "MÉMORISER",
+        "remember_key_desc": "Protégez votre portefeuille avec un mot de passe et enregistrez-le en sécurité sur ce navigateur.",
+        "remember_key_check": "Mémoriser les clés",
+        "remember_key_info": "Vous pourrez accéder à ce portefeuille depuis ce navigateur à l'aide d'un mot de passe.",
+        "export_key_button": "EXPORTER LE PORTEFEUILLE",
+        "export_key_title": "Exporter les clés",
+        "export_key_desc": "Entrez un mot de passe pour encoder votre clé privée dans un fichier. Vous pourrez alors utiliser ce fichier et votre mot de passe ultérieurement pour accéder à votre portefeuille.",
+        "export_key_info": "{0} clés sélectionnées.",
+        "export_placeholder1": "Mot de passe",
+        "export_placeholder2": "Confirmer le mot de passe",
+        "empty": "Cette clé n'a pas de solde.",
+        "import_key_button": "IMPORTER UNE CLÉ",
+        "import_key_title": "Importer des clés",
+        "import_key_desc": "Ajoutez des clés supplémentaires à utiliser avec votre portefeuille.",
+        "import_key_option1": "PHRASE MNÉMOTECHNIQUE",
+        "import_key_option2": "FICHIER KEYSTORE",
+        "import_key_success_title": "Clé ajoutée",
+        "import_key_success_msg": "Clé privée et actifs ajoutés au portefeuille.",
+        "tooltip": "Cette clé sera oubliée lorsque vous actualiserez le navigateur.",
+        "view_key": "Voir la phrase de sécurité",
+        "export_key": "Exporter la clé",
+        "hd_addresses": "Adresses HD",
+        "remove_key": "Supprimer la clé",
+        "activate_key": "Activer la clé",
+        "remove_success_title": "Clé supprimée",
+        "remove_success_msg": "Clé privée et actifs supprimés du portefeuille.",
+        "password_validation": "Le mot de passe doit comporter 9 caractères au minimum.",
+        "password_validation2": "Le mot de passe ne correspond pas."
+    },
+    "portfolio": {
+        "assets": "Actifs",
+        "assets1": "Jetons",
+        "assets2": "Collection",
+        "search": "Rechercher des actifs",
+        "name": "Nom",
+        "send": "Envoi",
+        "balance": "Solde",
+        "error_network": "Impossible d'afficher les actifs. Déconnecté du réseau.",
+        "nobalance": "Vous n'avez aucun actif",
+        "nobalance_nft": "Vous n'avez aucun jeton non fongible.",
+        "noaddresses": "Vous n'avez aucune ancienne adresse."
+    },
+    "earn": {
+        "title": "Gagner",
+        "desc": "Vous pouvez gagner plus d'AVAX en mettant en jeu vos jetons existants.",
+        "subtitle1": "Valider",
+        "subtitle2": "Déléguer",
+        "subtitle3": "Transfert entre chaînes",
+        "subtitle4": "Récompenses estimées",
+        "warning_1": "Vous devez avoir au moins {0} AVAX sur la P-Chain pour devenir un validateur.",
+        "warning_2": "Vous devez avoir au moins {0} AVAX sur la P-Chain pour devenir un délégateur.",
+        "validate_card": {
+            "title": "Valider",
+            "desc": "Vous avez un nœud Avalanche avec lequel vous souhaitez faire un enjeu.",
+            "submit": "Ajouter un validateur"
+        },
+        "delegate_card": {
+            "title": "Déléguer",
+            "desc": "Vous ne possédez pas de nœud Avalanche, mais vous voulez faire un enjeu sur un autre nœud.",
+            "submit": "Ajouter un délégué"
+        },
+        "transfer_card": {
+            "title": "Transfert entre chaînes",
+            "desc": "La mise en jeu nécessite de l'AVAX sur la P-Chain. Transférer des jetons entre X et P.",
+            "submit": "Transfert"
+        },
+        "rewards_card": {
+            "title": "Récompenses estimées",
+            "desc": "Voir les récompenses de mise en jeu que vous recevrez.",
+            "submit": "Voir les récompenses"
+        },
+        "transfer": {
+            "source": "Chaîne source",
+            "destination": "Chaîne de destination",
+            "balance": "Solde",
+            "amount": "Transférer le montant",
+            "fee": "Frais",
+            "confirm": "Confirmer",
+            "submit": "Transférer",
+            "cancel": "Annuler",
+            "err_import": "Échec de l'importation",
+            "err_desc": "Il y a eu un problème d'importation de vos jetons dans la chaîne de destination. Veuillez réessayer d'importer.",
+            "err_submit": "Déclencher l'importation",
+            "success": {
+                "title": "Transfert terminé",
+                "export": "Exporter l'ID de transaction :",
+                "import": "Importer l'ID de transaction :",
+                "message": "Vous avez réussi à transférer d'une chaîne à l'autre.",
+                "back": "Retour à Gagner"
+            }
+        },
+        "rewards": {
+            "total": "Total des récompenses",
+            "validation": "Validation",
+            "delegation": "Délégation",
+            "empty": "Vous n'avez pas de récompenses en attente.",
+            "row": {
+                "start": "Commencer",
+                "end": "Terminer",
+                "completed": "Complété",
+                "stake": "Enjeu",
+                "reward": "Récompense potentielle"
+            }
+        },
+        "validate": {
+            "label_1": "ID du nœud",
+            "duration": {
+                "label": "Période de mise en jeu",
+                "desc": "La durée pendant laquelle vos jetons seront bloqués pendant la mise en jeu.",
+                "start": "Date et heure de début",
+                "end": "Date et heure de fin"
+            },
+            "amount": {
+                "label": "Montant de l'enjeu",
+                "desc": "Le montant d'AVAX à bloquer pour la mise en jeu."
+            },
+            "fee": {
+                "label": "Frais de délégation",
+                "desc": "Vous réclamerez ce % des récompenses aux délégataires de votre nœud."
+            },
+            "reward": {
+                "label": "Adresse de récompense",
+                "desc": "Où envoyer les récompenses de la mise en jeu.",
+                "chip_1": "Utiliser ce portefeuille",
+                "chip_2": "Adresse personnalisée"
+            },
+            "summary": {
+                "max_del": "Montant maximal de délégation",
+                "max_del_tooltip": "Montant maximum qui peut être délégué à ce validateur.",
+                "duration": "Durée de la mise en jeu",
+                "rewards": "Estimation des récompenses",
+                "warn": "Si c'est la première fois que vous faites une mise en jeu, commencez petit. Les jetons mit en enjeu sont bloqués jusqu'à la fin de la période de la mise en jeu."
+            },
+            "confirmation": {
+                "id": "ID du nœud",
+                "amount": "Montant de la mise en jeu",
+                "start": "Date de commencement",
+                "end": "Date de fin",
+                "fee": "Frais de délégation",
+                "reward": "Adresse de la récompense",
+                "type_local": "Ce portefeuille",
+                "type_custom": "Personnalisé"
+            },
+            "confirm": "Confirmer",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "success": {
+                "title": "Votre transaction de validation est envoyée.",
+                "desc": "Si la transaction est acceptée, vos jetons seront bloqués pendant la mise en jeu. Vous recevrez vos jetons verrouillés ainsi que les récompenses une fois votre période de mise en jeu est terminée.",
+                "status": "Statut"
+            },
+            "errs": {
+                "date": "La date de début doit se situer dans le futur et la date de fin doit être postérieure à la date de début.",
+                "amount": "Le montant de l'enjeu doit être au moins de {0} AVAX",
+                "id": "l'ID du nœud est invalide. Il doit commencer par « NodeID- »",
+                "address": "Adresse de récompense non valable."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Sélectionnez un nœud à qui déléguer",
+                "search": "Recherchez l'ID d'un nœud",
+                "id": "ID du nœud",
+                "val_stake": "Enjeu de validation",
+                "aval_stake": "Disponible",
+                "aval_stake_tip": "Combien en plus peut être délégué à ce validateur.",
+                "users_tip": "Nombre de délégués",
+                "end": "Heure de fin",
+                "up": "Disponibilité",
+                "up_tip": "Par rapport au nœud auquel ce portefeuille est connecté.",
+                "fee": "Frais",
+                "empty": {
+                    "title": "Aucun validateur trouvé",
+                    "desc": "Les validateurs doivent être activement dans leur période de mise en jeu pour être trouvés."
+                }
+            },
+            "node": {
+                "selected": "Nœud sélectionné",
+                "fee": "Frais de délégation",
+                "start": "Date de début du validateur",
+                "end": "Date de fin du validateur"
+            },
+            "form": {
+                "period": {
+                    "label": "Période de mise en jeu",
+                    "desc": "La durée pendant laquelle vos jetons seront bloqués pour la mise en jeu.",
+                    "start": "Date et heure de début",
+                    "end": "Date et heure de fin"
+                },
+                "amount": {
+                    "label": "Montant de l'enjeu",
+                    "desc": "Le montant d'AVAX à bloquer pour la mise en jeu.",
+                    "desc2": "Le montant de la délégation disponible pour ce nœud est de {0} AVAX"
+                },
+                "reward": {
+                    "label": "Adresse de récompense",
+                    "desc": "Où envoyer les récompenses de mise en jeu.",
+                    "chip_1": "Utiliser ce portefeuille",
+                    "chip_2": "Adresse personnalisée"
+                }
+            },
+            "confirmation": {
+                "node": "ID du nœud",
+                "amount": "Montant da la mise en jeu",
+                "start": "Date de commencement",
+                "end": "Date de fin",
+                "reward": "Adresse de récompense"
+            },
+            "errs": {
+                "start_now": "L'heure de départ doit être postérieure à l'heure actuelle.",
+                "start_end": "La date de début doit se situer dans le futur et la date de fin doit être postérieure à la date de début.",
+                "invalid_addr": "Format d'adresse non valide. Votre adresse doit commencer par « P- »",
+                "no_addr": "Vous devez donner une adresse pour recevoir les récompenses de la délégation.",
+                "min_dur": "La durée minimale de la mise d'enjeu est de 2 semaines.",
+                "max_dur": "La durée maximale de la mise d'enjeu est 1 an.",
+                "no_node": "Vous devez préciser un validateur.",
+                "val_end": "La date de fin de la délégation ne peut être supérieure à la date de fin du validateur.",
+                "amt": "Le montant de la délégation doit être d'au moins {0} AVAX."
+            },
+            "summary": {
+                "duration": "Durée de la mise en jeu",
+                "reward": "Récompense estimée",
+                "fee": "Frais",
+                "warn": "Si c'est la première fois que vous faites une mise en jeu, commencez petit. Les jetons en jeu sont bloqués jusqu'à la fin de la période de la mise en jeu."
+            },
+            "confirm": "Confirmer",
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "success": {
+                "title": "Transaction de délégation envoyée.",
+                "desc": "Si la transaction est acceptée, vos jetons seront bloqués pour la mise en jeu. Vous recevrez vos jetons verrouillés ainsi que les récompenses une fois votre période de mise en jeu terminée.",
+                "status": "Statut"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Avancé",
+        "import": {
+            "title": "Importation d'une chaîne",
+            "desc": "Si vous avez des fonds bloqués dans un transfert entre chaînes qui a échoué, vous pouvez finir de les importer ici.",
+            "submit_x": "Importation X",
+            "submit_p": "Importation P"
+        }
+    },
+    "logout": {
+        "button": "Déconnexion",
+        "button_conf": "DÉCONNEXION",
+        "button_cancel": "Annuler",
+        "confirmation": "Êtes-vous sûr de vouloir vous déconnecter ?",
+        "confirmation_message": "Ce portefeuille et ses clés seront oubliés."
+    },
+    "keystore": {
+        "title": "Fichier Keystore",
+        "button": "Sélectionner le fichier"
+    },
+    "transactions": {
+        "notx": "Aucune transaction détectée pour cette adresse sur l'explorateur.",
+        "loading": "Chargement de l'historique de transaction..",
+        "warn_loading": "Cette liste peut être incomplète et hors d'usage.",
+        "error_api": "API de l'explorateur non trouvée",
+        "error_api_desc": "Vous devez fournir une API de l'explorateur AVAX pour ce réseau afin de voir l'historique de transaction."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adresse",
+            "copy": "Copier l'adresse"
+        },
+        "print": {
+            "title": "Aperçu impression",
+            "submit": "Imprimer"
+        },
+        "keystore": {
+            "title": "Mise à jour du fichier Keystore",
+            "desc": "Nous avons mis à jour les specs du fichier Keystore. Veuillez télécharger le nouveau fichier et accéder à nouveau à votre portefeuille.",
+            "logout": "Déconnexion"
+        },
+        "mainnet": {
+            "title": "Adresse Mainnet",
+            "desc": "Votre adresse mainnet est :"
+        },
+        "mnemonic": {
+            "title": "Phrase de sécurité"
+        },
+        "activateWallet": {
+            "title": "Activer le portefeuille",
+            "desc": "Il y a un portefeuille actif. Entrez votre mot de passe pour y accéder.",
+            "submit": "Accès au portefeuille",
+            "cancel": "Accès à un autre portefeuille",
+            "cancel2": "(le portefeuille précédent sera oublié)",
+            "err1": "Mot de passe incorrect.",
+            "err2": "Impossible de lire les données du portefeuille."
+        }
+    },
+    "nav": {
+        "access": "Accéder au portefeuille",
+        "create": "Créer un nouveau portefeuille"
+    }
+}

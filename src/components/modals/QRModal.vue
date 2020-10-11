@@ -3,7 +3,7 @@
         <div class="qr_body">
             <canvas ref="qr"></canvas>
             <p>{{address}}</p>
-            <CopyText :value="address" class="copyBut">Copy Address</CopyText>
+            <CopyText :value="address" class="copyBut">{{$t('modal.qr.copy')}}</CopyText>
         </div>
     </modal>
 </template>

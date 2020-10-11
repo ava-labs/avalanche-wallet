@@ -4,7 +4,7 @@
             <button @click="close" class="close_but">
                 <fa icon="times"></fa>
             </button>
-            <h3>Fill In Mnemonic Phrase Below</h3>
+            <h3>{{$t('create.verify_desc')}}</h3>
             <div class="words">
                 <div v-for="i in 24" :key="i" class="mnemonic_in" tabindex="-1">
                     <p>{{i}}.</p>
@@ -38,7 +38,7 @@ export default class VerifyMnemonic extends Vue {
     keysIn: string[] = [];
     hiddenIndices: number[] = [];
     err: string = "";
-    title: string = "Verify Mnemonic";
+    title: string = "";
 
     @Prop() mnemonic?: string;
 
@@ -48,6 +48,7 @@ export default class VerifyMnemonic extends Vue {
     }
     created() {
         this.init();
+        this.title =`${this.$t('create.verifytitle')}`
     }
 
     init(){

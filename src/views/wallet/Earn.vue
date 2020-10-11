@@ -1,35 +1,34 @@
 <template>
     <div>
         <div class="header">
-            <h1>Earn </h1>
+            <h1>{{$t('earn.title')}} </h1>
             <h1 class="subtitle" v-if="pageNow">/ {{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
         </div>
         <transition name="fade" mode="out-in">
             <div v-if="!pageNow">
-                <p>You can earn more AVAX by staking your existing tokens.</p>
+                <p>{{$t('earn.desc')}}</p>
                 <div class="options">
                     <div>
-                        <h4 class="title">Validate</h4>
-                        <p style="flex-grow: 1">You have an Avalanche node that you want to stake with.</p>
-                        <p v-if="!canValidate" class="no_balance">You must have at least <b>{{minStakeAmt.toLocaleString()}} AVAX</b> on the P chain to become a validator.</p>
-                        <v-btn class="button_secondary" data-cy="validate" @click="addValidator" depressed small :disabled="!canValidate">Add Validator</v-btn>
+                        <h4 class="title">{{$t('earn.validate_card.title')}}</h4>
+                        <p style="flex-grow: 1">{{$t('earn.validate_card.desc')}}</p>
+                        <p v-if="!canValidate" class="no_balance">{{$t('earn.warning_1', [minStakeAmt.toLocaleString()])}}</p>
+                        <v-btn class="button_secondary" data-cy="validate" @click="addValidator" depressed small :disabled="!canValidate">{{$t('earn.validate_card.submit')}}</v-btn>
                     </div>
                     <div>
-                        <h4 class="title">Delegate</h4>
-                        <p style="flex-grow: 1">You do not own an Avalanche node, but you want to stake using another node.</p>
-                        <p v-if="!canDelegate" class="no_balance">You must have at least <b>{{minDelegationAmt.toLocaleString()}} AVAX</b> on the P chain to become a delegator.</p>
-                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small :disabled="!canDelegate">Add Delegator</v-btn>
-<!--                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small >Add Delegator</v-btn>-->
+                        <h4 class="title">{{$t('earn.delegate_card.title')}}</h4>
+                        <p style="flex-grow: 1">{{$t('earn.delegate_card.desc')}}</p>
+                        <p v-if="!canDelegate" class="no_balance">{{$t('earn.warning_2', [minDelegationAmt.toLocaleString()])}}</p>
+                        <v-btn class="button_secondary" data-cy="delegate" @click="addDelegator" depressed small :disabled="!canDelegate">{{$t('earn.delegate_card.submit')}}</v-btn>
                     </div>
                     <div>
-                        <h4 class="title">Cross Chain Transfer</h4>
-                        <p style="flex-grow: 1">Staking requires AVAX on the P chain. Transfer tokens between X and P.</p>
-                        <v-btn class="button_secondary" data-cy="swap" @click="transfer" depressed small>Transfer</v-btn>
+                        <h4 class="title">{{$t('earn.transfer_card.title')}}</h4>
+                        <p style="flex-grow: 1">{{$t('earn.transfer_card.desc')}}</p>
+                        <v-btn class="button_secondary" data-cy="swap" @click="transfer" depressed small>{{$t('earn.transfer_card.submit')}}</v-btn>
                     </div>
                     <div>
-                        <h4 class="title">Estimated Rewards</h4>
-                        <p style="flex-grow: 1">View staking rewards you will receive.</p>
-                        <v-btn class="button_secondary" data-cy="rewards" @click="viewRewards" depressed small>View Rewards</v-btn>
+                        <h4 class="title">{{$t('earn.rewards_card.title')}}</h4>
+                        <p style="flex-grow: 1">{{$t('earn.rewards_card.desc')}}</p>
+                        <v-btn class="button_secondary" data-cy="rewards" @click="viewRewards" depressed small>{{$t('earn.rewards_card.submit')}}</v-btn>
                     </div>
                 </div>
 <!--                <v-btn @click="viewRewards" depressed small>View Estimated Rewards</v-btn>-->
@@ -68,20 +67,20 @@ export default class Earn extends Vue{
 
     addValidator(){
         this.pageNow = AddValidator;
-        this.subtitle = "Validate"
+        this.subtitle = this.$t('earn.subtitle1') as string;
     }
     addDelegator(){
         this.pageNow = AddDelegator;
-        this.subtitle = "Delegate"
+        this.subtitle = this.$t('earn.subtitle2') as string;
     }
     transfer(){
         this.pageNow = ChainTransfer;
-        this.subtitle = "Cross Chain Transfer"
+        this.subtitle = this.$t('earn.subtitle3') as string;
     }
 
     viewRewards(){
         this.pageNow = UserRewards
-        this.subtitle = "Estimated Rewards";
+        this.subtitle = this.$t('earn.subtitle4') as string;
     }
     cancel(){
         this.pageNow = null;

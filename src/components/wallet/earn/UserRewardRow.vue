@@ -7,25 +7,25 @@
                 width: `${percFull*100}%`
             }"></div>
                 <div class="date">
-                    <label>Start</label>
+                    <label>{{$t('earn.rewards.row.start')}}</label>
                     <p >{{startDate.toLocaleString()}}</p>
                 </div>
                 <div>
-                    <label>Completed</label>
+                    <label>{{$t('earn.rewards.row.completed')}}</label>
                     <p>{{(percFull*100).toFixed(2)}}%</p>
                 </div>
                 <div class="date">
-                    <label>End</label>
+                    <label>{{$t('earn.rewards.row.end')}}</label>
                     <p>{{endDate.toLocaleString()}}</p>
                 </div>
             </div>
             <div class="stake_info">
                 <div>
-                    <label>Stake</label>
+                    <label>{{$t('earn.rewards.row.stake')}}</label>
                     <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
                 </div>
                 <div>
-                    <label>Potential Reward</label>
+                    <label>{{$t('earn.rewards.row.reward')}}</label>
                     <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
                 </div>
             </div>
