@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import VueI18n from 'vue-i18n'
-import vSelect from 'vue-select'
 //@ts-ignore
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css'
@@ -21,8 +20,6 @@ import vuetify from './plugins/vuetify';
 import i18n from "./plugins/i18n.js";
 
 
-//@ts-ignore
-Vue.component('vue-select', vSelect)
 
 
 Vue.config.productionTip = false;

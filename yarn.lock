@@ -1871,13 +1871,6 @@
   dependencies:
     vue ">=2.0.0"
 
-"@types/vue-select@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@types/vue-select/-/vue-select-2.5.0.tgz#b674ab3f37bb591e0c9f37b984a52342422f284f"
-  integrity sha512-dQh+ytU5dNTTD41Be6YkN1icu/VTaVe1ntcHktk5/OLuhVsDAketgXaILPEGx91Mi3c8Gj+f2Yg+JMW/9gwEuw==
-  dependencies:
-    vue ">=2.0.0"
-
 "@types/webpack-dev-server@^3.11.0":
   version "3.11.0"
   resolved "https://registry.yarnpkg.com/@types/webpack-dev-server/-/webpack-dev-server-3.11.0.tgz#bcc3b85e7dc6ac2db25330610513f2228c2fcfb2"
@@ -12598,11 +12591,6 @@ vue-router@3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.1.3.tgz#e6b14fabc0c0ee9fda0e2cbbda74b350e28e412b"
   integrity sha512-8iSa4mGNXBjyuSZFCCO4fiKfvzqk+mhL0lnKuGcQtO1eoj8nq3CmbEG8FwK5QqoqwDgsjsf1GDuisDX4cdb/aQ==
-
-vue-select@3.10.8:
-  version "3.10.8"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.10.8.tgz#5d0839cba228a9a5efa1a88e5436840eb3fd0c7a"
-  integrity sha512-PnjtZWCTiSr04bs8ctPIiU41qnBK+oh/SOe6Pb4gElMMxofDFwUxiUe++mz0+84aTy4zrleGxtvVVyWbiPYBiw==
 
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
