@@ -1,0 +1,428 @@
+{
+    "password": "Parola",
+    "password_confirm": "Parolayı Doğrula",
+    "private_key": "Özel Anahtar",
+    "address": "Adres",
+    "add_pk": "Özel Anahtar Ekle",
+    "home": {
+        "desc": "Avalanche Wallet, Avalanche varlıklarınızı saklamaya yönelik basit, güvenli, gözetimsiz bir cüzdandır.",
+        "access": {
+            "title": "Tekrar Hoşgeldiniz!",
+            "desc": "Mevcut Avalanche cüzdanınıza buradan 'erişin'.",
+            "submit": "Cüzdanı Aç"
+        },
+        "create": {
+            "title": "Avalanche Cüzdan'da yeni misiniz?",
+            "desc": "Avalanche varlıklarınızı göndermek, almak ve takas etmek için yeni bir cüzdan 'oluşturun'.",
+            "submit": "Yeni Cüzdan Oluşturun"
+        }
+    },
+    "network": {
+        "status1": "Bağlanıyor ...",
+        "status2": "Bağlantı Kesildi",
+        "title": "Ağlar",
+        "title2": "Özel Ağ Ekle",
+        "title3": "Ağı Düzenle",
+        "custom": "Özel Ekle.",
+        "cancel": "İptal",
+        "add": "Ağ Ekle"
+    },
+    "access": {
+        "title": "Cüzdanınıza nasıl erişmek istersiniz?",
+        "create": "Cüzdana sahip değil misiniz?",
+        "but_mnemonic": "Anımsatıcı Anahtar Kelimeler",
+        "but_keystore": "Anahtar Dosya",
+        "cancel": "İptal Et",
+        "json_error": "JSON dosyası ayrıştırılamıyor.",
+        "keystore_error": "Anahtar dosyası versiyonu desteklenmiyor.",
+        "password_error": "Geçersiz Parola.",
+        "mnemonic": {
+            "title": "Anımsatıcı Kelimelerinizi Giriniz\n",
+            "subtitle": "Her başarılı kelime girişinden sonra \"BOŞLUK\" bırakın.",
+            "submit": "Cüzdanı Aç",
+            "cancel": "İptal Et",
+            "error": "Geçersiz anımsatıcı kelime. Tek bir boşlukla ayrılmış 24 kelime girmelisiniz."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portföy",
+            "manage": "Yönet",
+            "send": "Gönder",
+            "earn": "Kazan",
+            "advanced": "Gelişmiş"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Hiç koleksiyona sahip değilsiniz."
+        }
+    },
+    "create": {
+        "generate": "Avalanche Cüzdanınızı kurmak için yeni bir anahtar cümle oluşturun.",
+        "but_have": "Halihazırda bir cüzdanınız var mı?",
+        "submit": "Anahtar Kelime Öbeği Oluştur",
+        "cancel": "İptal",
+        "mnemonic_title": "Bu sizin anahtar cümleniz.",
+        "mnemonic_desc": "Avalanche Cüzdanınızı kurtarmak için bu 24 kelimeyi sıralı şekilde kullanın",
+        "attention": "Dikkat!",
+        "warning": "Bu anahtar cümleyi güvenli bir yerde saklayın. Bu anahtar cümleye sahip olan herkes Avalanche Cüzdanınıza erişebilir. Kayıp anahtar cümleleri kurtarmanın hiçbir yolu yok.",
+        "confirm": "Anahtar cümlemi güvenli bir yere yazdım.",
+        "regenerate": "Tekrar Oluştur",
+        "success_title": "Tebrikler!",
+        "success_desc": "Avalanche Cüzdanınıza erişmenin tam zamanı.",
+        "success_submit": "Cüzdanı Aç",
+        "verify": "Doğrula",
+        "verifytitle": "Anımsatıcı Kelime Öbeğinizi Doğrulayın",
+        "verify_desc": "Aşağıdaki Anımsatıcı Kelimeleri Tamamlayın",
+        "error_number": "Hay aksi, görünüşe göre numarayı doldurmayı unuttunuz",
+        "error_word": "Girmiş olduğunuz anımsatıcı kelimeler gerçek kelime öbeği ile eşleşmedi."
+    },
+    "top": {
+        "title1": "Türetilmiş Avalanche Cüzdan Adresi",
+        "title2": "Bakiye",
+        "title3": "Alt Ağ",
+        "title4": "Ağ",
+        "nftcol": "NFT'ler",
+        "nftempty": "Hiç NFT sahibi değilsiniz.",
+        "locked": "Kilitli",
+        "info2": "Token satışından AVAX aldım. Almış olduğum AVAX'lar nerede?",
+        "info2_desc": "Bu cüzdan Avalanche Everest test ağına bağlandı. Satın almış olduğunuz AVAX'lar Avalanche Ana Ağı hayata geçince cüzdanınızda görünebilir olacak.",
+        "hover1": "Adresin QR Kodunu Görüntüle",
+        "hover2": "Yazdır",
+        "hover3": "Kopyala",
+        "hover4": "Mainnet Adresini Görüntüle",
+        "balance": {
+            "show": "Dağılımı Göster",
+            "hide": "Dağılımı Gizle",
+            "available": "Uygun",
+            "locked": "Kilitli",
+            "locked_stake": "Kilitli Bahis",
+            "stake": "Bahis",
+            "collectibles": "Toplanabilirler"
+        },
+        "address": {
+            "derived": "Türetilmiş Avalanche Cüzdan Adresi",
+            "desc": "Bu ödeme alacağınız adrestir. Adresiniz her para yatırma işleminden sonra değişecektir."
+        }
+    },
+    "transfer": {
+        "title": "Gönder",
+        "no_cash": "İşlem yapabilmek için cüzdanınızda varlığa sahip olmalısınız.",
+        "faucet": "AVAX musluğunu kontrol ettiniz mi?",
+        "to": "Gönderilecek Cüzdan Adresi",
+        "fees": "Gönderim Ücreti",
+        "fee_tx": "İşlem Masrafı",
+        "advanced": "Gelişmiş",
+        "adv_change": "Adresi Değiştir",
+        "send": "İşlemi Gönder",
+        "summary": "İşlem Özeti",
+        "disconnected": "Varlıklar gönderilemedi. Ağ bağlantısı kesildi.",
+        "success_title": "İşlem Gönderildi",
+        "success_msg": "İşleminizi başarılı şekilde gönderdiniz.",
+        "error_title": "İşlem Gönderilirken Hata Oluştu",
+        "error_msg": "İşlem gönderilemedi."
+    },
+    "keys": {
+        "title": "Anahtarlarım",
+        "button1": "Anahtarları Hatırla",
+        "button2": "ANAHTARLARI İÇE AKTAR",
+        "button3": "ANAHTARLARI DIŞA AKTAR",
+        "subtitle": "Etkin Anahtar",
+        "remember_key_button": "HATIRLA",
+        "remember_key_desc": "Cüzdanını şifrele ve bu tarayıcıda güvenli bir şekilde depola.",
+        "remember_key_check": "Anahtarları Hatırla",
+        "remember_key_info": "Cüzdanınıza daha sonra bu tarayıcı üzerinden bir parola ile erişebilirsiniz.",
+        "export_key_button": "CÜZDANI DIŞA AKTAR",
+        "export_key_title": "Anahtarları Dışa Aktar",
+        "export_key_desc": "Özel anahtarlarınızı bir dosyada şifrelemek için bir parola giriniz. Cüzdanınıza erişmek için daha sonra bu dosyayı ve parolanızı kullanabilirsiniz.",
+        "export_key_info": "{0} anahtar seçildi.",
+        "export_placeholder1": "Parola",
+        "export_placeholder2": "Parolayı Doğrula",
+        "empty": "Bu anahtarın sahip olduğu bir bakiye yok.",
+        "import_key_button": "ANAHTARI İÇE AKTAR",
+        "import_key_title": "Anahtarları İçe Aktar",
+        "import_key_desc": "Cüzdanınızla birlikte kullanmak için ek anahtarlar ekleyiniz.",
+        "import_key_option1": "ANIMSATICI İFADE",
+        "import_key_option2": "ANAHTAR DEPOSU DOSYASI",
+        "import_key_success_title": "Anahtar Eklendi",
+        "import_key_success_msg": "Özel anahtar ve varlıklar cüzdana eklendi.",
+        "tooltip": "Tarayıcıyı yenilediğinizde bu anahtar unutulacaktır.",
+        "view_key": "Anahtar Kelimeyi Görüntüle",
+        "export_key": "Anahtarı Dışa Aktar",
+        "hd_addresses": "HD Adresleri",
+        "remove_key": "Anahtarı Kaldır",
+        "activate_key": "Anahtarı Etkinleştir",
+        "remove_success_title": "Anahtar Kaldırıldı",
+        "remove_success_msg": "Özel anahtar ve varlıklar cüzdandan kaldırıldı.",
+        "password_validation": "Parola en az 9 karakterden oluşmalıdır.",
+        "password_validation2": "Parola eşleşmiyor."
+    },
+    "portfolio": {
+        "assets": "Varlıklar",
+        "assets1": "Jetonlar",
+        "assets2": "Toplanabilirler",
+        "search": "Varlıkları Ara",
+        "name": "İsim",
+        "send": "Gönder",
+        "balance": "Bakiye",
+        "error_network": "Varlıklar görüntülenemiyor. Ağ bağlantısı kesildi.",
+        "nobalance": "Hiç varlığınız bulunmamaktadır",
+        "nobalance_nft": "Toplanabilecek bir varlığa sahip değilsin.",
+        "noaddresses": "Eski bir adresiniz yok."
+    },
+    "earn": {
+        "title": "Kazan",
+        "desc": "Var olan jetonlarınızla bahse girerek daha fazla AVAX kazanabilirsiniz.",
+        "subtitle1": "Doğrula",
+        "subtitle2": "Devret",
+        "subtitle3": "Çapraz Zincir Transferi",
+        "subtitle4": "Tahmini Ödüller",
+        "warning_1": "Doğrulayıcı olabilmeniz için P zincirinde en az {0} AVAX'ınızın olması gerekir.",
+        "warning_2": "Devredici olabilmeniz için P zincirinde en az {0} AVAX'ınızın olması gerekir.",
+        "validate_card": {
+            "title": "Doğrula",
+            "desc": "Bahse girmeyi istediğiniz bir Avalanche düğümünüz var.",
+            "submit": "Doğrulayıcı Ekle"
+        },
+        "delegate_card": {
+            "title": "Devret",
+            "desc": "Bir Avalanche düğümüne sahip değilsiniz ancak bir başka düğüm kullanarak bahse girmek istiyorsunuz.",
+            "submit": "Devredici Ekle"
+        },
+        "transfer_card": {
+            "title": "Çapraz Zincir Transferi",
+            "desc": "Bahis, P zincirinde AVAX gerektirir. X ve P arasında jeton transferi yap.",
+            "submit": "Transfer"
+        },
+        "rewards_card": {
+            "title": "Tahmini Ödüller",
+            "desc": "Alacağın bahis ödüllerini görüntüle.",
+            "submit": "Ödülleri Görüntüle"
+        },
+        "transfer": {
+            "source": "Kaynak Zinciri",
+            "destination": "Hedef Zinciri",
+            "balance": "Bakiye",
+            "amount": "Transfer Miktarı",
+            "fee": "Masraf",
+            "confirm": "Onayla",
+            "submit": "Transfer",
+            "cancel": "İptal",
+            "err_import": "İçe Aktarma Başarısız",
+            "err_desc": "Jetonlarınızı hedef zincire aktarırken bir problem meydana geldi. Lütfen tekrar içe aktarmayı deneyin.",
+            "err_submit": "İçe Aktarmayı Başlat",
+            "success": {
+                "title": "Transfer Tamamlandı",
+                "export": "Dışa Aktarma İşlemi ID:",
+                "import": "İçe Aktarma İşlemi ID:",
+                "message": "Zincirler arası transfer başarılı.",
+                "back": "Kazanca Geri Dön"
+            }
+        },
+        "rewards": {
+            "total": "Toplam Ödüller",
+            "validation": "Doğrulama",
+            "delegation": "Devretme",
+            "empty": "Bekleyen ödülünüz bulunmamakta.",
+            "row": {
+                "start": "Başla",
+                "end": "Bitir",
+                "completed": "Tamamlandı",
+                "stake": "Bahis",
+                "reward": "Potansiyel Ödül"
+            }
+        },
+        "validate": {
+            "label_1": "Düğüm ID",
+            "duration": {
+                "label": "Bahis Periyodu",
+                "desc": "Jetonlarınızın bahis için kilitli olacağı süre.",
+                "start": "Başlama Tarihi & Zamanı",
+                "end": "Bitiş Tarihi & Zamanı"
+            },
+            "amount": {
+                "label": "Bahis Miktarı",
+                "desc": "Bahis için kilitlenecek AVAX miktarı."
+            },
+            "fee": {
+                "label": "Devretme Masrafı",
+                "desc": "Düğümünüz üzerinde devredicilerden bu ödül %'sini talep edeceksiniz."
+            },
+            "reward": {
+                "label": "Ödül Adresi",
+                "desc": "Bahis ödüllerinin gönderileceği yer.",
+                "chip_1": "Bu cüzdanı kullan",
+                "chip_2": "Özel Adres"
+            },
+            "summary": {
+                "max_del": "Maksimum Devretme Miktarı",
+                "max_del_tooltip": "Bu doğrulayıcıya devredilebilecek maksimum miktar.",
+                "duration": "Bahis Süresi",
+                "rewards": "Tahmini Ödüller",
+                "warn": "İlk kez bahse giriyorsanız küçükten başlayın. Bahis jetonları, bahis periyodunun sonuna kadar kilitli kalır."
+            },
+            "confirmation": {
+                "id": "Düğüm ID",
+                "amount": "Bahis Miktarı",
+                "start": "Başlama Tarihi",
+                "end": "Bitiş Tarihi",
+                "fee": "Devretme Masrafı",
+                "reward": "Ödül Adresi",
+                "type_local": "Bu cüzdan",
+                "type_custom": "Özel"
+            },
+            "confirm": "Onayla",
+            "submit": "Gönder",
+            "cancel": "İptal",
+            "success": {
+                "title": "Doğrulama işleminiz gönderildi.",
+                "desc": "İşlem kabul edilirse, jetonlarınız bahis için kilitlenecek. Bahis süreciniz bittikten sonra kilitli jetonlarınızı ve ayrıca ödüllerinizi alacaksınız.",
+                "status": "Durum"
+            },
+            "errs": {
+                "date": "Başlangıç tarihi gelecekte olmalıdır ve bitiş tarihi de başlangıç tarihinden sonra olmalıdır.",
+                "amount": "Bahis miktarı en az {0} AVAX olmalıdır",
+                "id": "Geçersiz Düğüm ID. \"NodeID-\" ile başlamalı",
+                "address": "Geçersiz ödül adresi."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Devretmek için bir düğüm seç",
+                "search": "Arama Düğümü ID",
+                "id": "Düğüm ID",
+                "val_stake": "Doğrulayıcı Bahsi",
+                "aval_stake": "Uygun",
+                "aval_stake_tip": "Bu doğrulayıcıya devretmeye devam edilebilecek miktar.",
+                "users_tip": "Devredici Sayısı",
+                "end": "Bitiş Zamanı",
+                "up": "Çalışma zamanı",
+                "up_tip": "Bu cüzdanın bağlı olduğu düğüme bağlı.",
+                "fee": "Masraf",
+                "empty": {
+                    "title": "Doğrulayıcı Bulunamadı",
+                    "desc": "Doğrulayıcıların, bulunmaları için aktif olarak bahse girmeleri gerekir."
+                }
+            },
+            "node": {
+                "selected": "Seçilen Düğüm",
+                "fee": "Devretme Masrafı",
+                "start": "Doğrulayıcı Başlama Tarihi",
+                "end": "Doğrulayıcı Bitiş Tarihi"
+            },
+            "form": {
+                "period": {
+                    "label": "Bahis Periyodu",
+                    "desc": "Jetonlarınızın bahis için kilitli olacağı süre.",
+                    "start": "Başlama Tarihi & Zamanı",
+                    "end": "Bitiş Tarihi & Zamanı"
+                },
+                "amount": {
+                    "label": "Bahis Miktarı",
+                    "desc": "Bahis için kilitlenecek AVAX miktarı.",
+                    "desc2": "Bu düğüme yönelik uygun devretme miktarı {0} AVAX'tır"
+                },
+                "reward": {
+                    "label": "Ödül Adresi",
+                    "desc": "Bahis ödüllerinin gönderileceği yer.",
+                    "chip_1": "Bu cüzdanı kullan",
+                    "chip_2": "Özel Adres"
+                }
+            },
+            "confirmation": {
+                "node": "Düğüm ID",
+                "amount": "Bahis Miktarı",
+                "start": "Başlama Tarihi",
+                "end": "Bitiş Tarihi",
+                "reward": "Ödül Adresi"
+            },
+            "errs": {
+                "start_now": "Başlama zamanı, şu anki zamandan sonra olmalıdır.",
+                "start_end": "Başlangıç tarihi gelecekte olmalıdır ve bitiş tarihi de başlangıç tarihinden sonra olmalıdır.",
+                "invalid_addr": "Geçersiz adres formatı. Adresiniz \"P-\" ile başlamalıdır",
+                "no_addr": "Devretme ödüllerini almak için bir adres vermelisiniz.",
+                "min_dur": "Minimum bahis süresi 2 haftadır.",
+                "max_dur": "Maksimum bahis süresi 1 yıldır.",
+                "no_node": "Bir doğrulayıcı belirtmelisiniz.",
+                "val_end": "Devretme bitiş tarihi, doğrulayıcının bitiş tarihinden daha uzun olamaz.",
+                "amt": "Devretme miktarı en az {0} AVAX olmalıdır."
+            },
+            "summary": {
+                "duration": "Bahis Süresi",
+                "reward": "Tahmini Ödül",
+                "fee": "Masraf",
+                "warn": "İlk kez bahse giriyorsanız küçükten başlayın. Bahis jetonları, bahis periyodunun sonuna kadar kilitli kalır."
+            },
+            "confirm": "Onayla",
+            "submit": "Gönder",
+            "cancel": "İptal",
+            "success": {
+                "title": "Devretme işleminiz gönderildi.",
+                "desc": "İşlem kabul edilirse, jetonlarınız bahis için kilitlenecek. Bahis süreciniz bittikten sonra kilitli jetonlarınızı ve ayrıca ödüllerinizi alacaksınız.",
+                "status": "Durum"
+            }
+        }
+    },
+    "advanced": {
+        "title": "İleri Düzey",
+        "import": {
+            "title": "Zincir İçe Aktarma",
+            "desc": "Ödemeleriniz, başarısız bir zincir transferinde sıkıştıysa, bunları içe aktarmayı buradan tamamlayabilirsiniz.",
+            "submit_x": "X'i içe aktar",
+            "submit_p": "P'yi içe aktar"
+        }
+    },
+    "logout": {
+        "button": "Çıkış Yap",
+        "button_conf": "ÇIKIŞ YAP",
+        "button_cancel": "İptal",
+        "confirmation": "Çıkış yapmak istediğinizden emin misiniz?",
+        "confirmation_message": "Bu cüzdan ve anahtarları unutulacak."
+    },
+    "keystore": {
+        "title": "Anahtar Deposu Dosyası",
+        "button": "Dosya Seçiniz"
+    },
+    "transactions": {
+        "notx": "Tarayıcıda bu adrese kayıtlı bir işlem bulunamadı.",
+        "loading": "İşlem geçmişi yükleniyor..",
+        "warn_loading": "Bu liste eksik ve bozuk olabilir.",
+        "error_api": "Explorer API Bulunamadı",
+        "error_api_desc": "Bu ağın işlem geçmişini görüntülemek için bir AVA Explorer API sağlamalısınız."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adres",
+            "copy": "Adresi Kopyala"
+        },
+        "print": {
+            "title": "Baskı Önizleme",
+            "submit": "Yazdır"
+        },
+        "keystore": {
+            "title": "Anahtar Depo Dosyasını Güncelle",
+            "desc": "Anahtar deposu dosya spesifikasyonunu yükselttik. Lütfen yeni anahtar depo dosyanızı indirin ve cüzdana tekrar bağlanın.",
+            "logout": "Çıkış yap & Tekrar Giriş"
+        },
+        "mainnet": {
+            "title": "Ana Ağ Adresi",
+            "desc": "Ana ağ adresiniz:"
+        },
+        "mnemonic": {
+            "title": "Anahtar kelime öbeği"
+        },
+        "activateWallet": {
+            "title": "Cüzdanı Etkinleştir",
+            "desc": "Aktif bir cüzdan mevcut. Giriş yapmak için şifrenizi giriniz.",
+            "submit": "Cüzdanı Aç",
+            "cancel": "Başka bir cüzdan aç",
+            "cancel2": "(Önceki cüzdan unutulacak)",
+            "err1": "Geçersiz parola.",
+            "err2": "Cüzdan verisi okunamadı."
+        }
+    },
+    "nav": {
+        "access": "Cüzdana Erişim",
+        "create": "Yeni Cüzdan Oluştur"
+    }
+}

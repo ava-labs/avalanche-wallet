@@ -5,11 +5,15 @@ Vue.use(VueI18n);
 
 import en from '../locales/en.json';
 import fr from '../locales/fr.json';
+import tr from '../locales/tr.json';
+import it from '../locales/it.json';
 
 
 const messages = {
     en,
-    fr
+    fr,
+    tr,
+    it
 };
 
 // Create VueI18n instance with options
