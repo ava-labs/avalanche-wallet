@@ -8,7 +8,7 @@
         "desc": "Avalanche Cüzdan, dijital varlıklarınızı saklamaya yönelik basit, güvenli, gözetimsiz bir cüzdandır.",
         "access": {
             "title": "Tekrar Hoşgeldiniz!",
-            "desc": "Mevcut Avalanche cüzdanınıza buradan 'erişin'.",
+            "desc": "Mevcut AVAX cüzdanınızı buradan açabilirsiniz.",
             "submit": "Cüzdanı Aç"
         },
         "create": {
@@ -37,8 +37,8 @@
         "keystore_error": "Anahtar dosyası versiyonu desteklenmiyor.",
         "password_error": "Geçersiz Parola.",
         "mnemonic": {
-            "title": "Anımsatıcı Kelimelerinizi Giriniz\n",
-            "subtitle": "Her başarılı kelime girişinden sonra \"BOŞLUK\" tuşuna basın.",
+            "title": "Anımsatıcı Anahtar Cümlenizi Giriniz\n",
+            "subtitle": "Her başarılı kelime girişinden sonra BOŞLUK tuşuna basın.",
             "submit": "Cüzdanı Aç",
             "cancel": "İptal Et",
             "error": "Geçersiz anahtar cümle. Tek bir boşlukla ayrılmış 24 kelime girmelisiniz."
@@ -60,10 +60,10 @@
     "create": {
         "generate": "Avalanche Cüzdanınızı kurmak için yeni bir anahtar cümle oluşturun.",
         "but_have": "Halihazırda bir cüzdanınız var mı?",
-        "submit": "Anahtar Kelime Öbeği Oluştur",
+        "submit": "Anımsatıcı Anahtar Cümle Oluştur",
         "cancel": "İptal",
         "mnemonic_title": "Bu sizin anahtar cümleniz.",
-        "mnemonic_desc": "Avalanche Cüzdanınızı kurtarmak için bu 24 kelimeyi sıralı şekilde kullanın",
+        "mnemonic_desc": "Avalanche Cüzdanınızı tekrar yaratmak için bu 24 kelimeyi sıralı şekilde kullanın",
         "attention": "Dikkat!",
         "warning": "Bu anahtar cümleyi güvenli bir yerde saklayın. Bu anahtar cümleye sahip olan herkes Avalanche Cüzdanınıza erişebilir. Kayıp anahtar cümleleri kurtarmanın hiçbir yolu yok.",
         "confirm": "Anahtar cümlemi güvenli bir yere yazdım.",
