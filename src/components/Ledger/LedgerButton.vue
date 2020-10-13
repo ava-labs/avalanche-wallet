@@ -1,7 +1,7 @@
 <template>
     <button class="ava_button" @click="submit">
         <template v-if="!isLoading">
-            Ledger<br><small>(Coming Soon)</small>
+            Ledger
         </template>
         <Spinner v-else class="spinner"></Spinner>
     </button>

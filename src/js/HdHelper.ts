@@ -104,43 +104,21 @@ class HdHelper {
         this.updateKeychain();
     }
 
-    // helper method to get utxos for more than 1024 addresses
-    async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
-        if(addrs.length<=1024){
-            let utxos = (await avm.getUTXOs(addrs)).utxos;
-            // console.log(utxos.getAllUTXOs().length);
-            return utxos;
-        }else{
-            //Break the list in to 1024 chunks
-            let chunk = addrs.slice(0,1024);
-            let remainingChunk = addrs.slice(1024);
 
-            let newSet = (await avm.getUTXOs(chunk)).utxos;
-
-            return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
-        }
-    }
 
     async platformGetAllUTXOsForAddresses(addrs: string[], endIndex:any = undefined): Promise<PlatformUTXOSet>{
         let response;
         if(!endIndex){
-            // console.log("Initial start.")
             response = await pChain.getUTXOs(addrs);
         }else{
-            // console.log("Stop index: ", stopIndex);
             response = await pChain.getUTXOs(addrs, undefined, 0, endIndex);
         }
 
-        // console.log(response);
 
         let utxoSet = response.utxos;
         let utxos = utxoSet.getAllUTXOs();
         let nextEndIndex = response.endIndex;
         let len = response.numFetched;
-
-        // console.log(nextEndIndex.address)
-
-        // console.log("Next stop: ",nextStopIndex);
 
         if(len >= 1024){
             let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
@@ -148,15 +126,47 @@ class HdHelper {
         }
 
         return utxoSet;
-
     }
+
+    async avmGetAllUTXOsForAddresses(addrs: string[], endIndex:any = undefined): Promise<AVMUTXOSet>{
+        let response;
+        if(!endIndex){
+            response = await avm.getUTXOs(addrs);
+        }else{
+            response = await avm.getUTXOs(addrs, undefined, 0, endIndex);
+        }
+
+        let utxoSet = response.utxos;
+        let utxos = utxoSet.getAllUTXOs();
+        let nextEndIndex = response.endIndex;
+        let len = response.numFetched;
+
+        if(len >= 1024){
+            let subUtxos = await this.avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
+            return utxoSet.merge(subUtxos)
+        }
+        return utxoSet;
+    }
+
+    // helper method to get utxos for more than 1024 addresses
+    async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet>{
+        if(addrs.length<=1024){
+            let utxos = await this.avmGetAllUTXOsForAddresses(addrs);
+            return utxos;
+        }else{
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0,1024);
+            let remainingChunk = addrs.slice(1024);
+
+            let newSet = await this.avmGetAllUTXOsForAddresses(chunk);
+            return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
+        }
+    }
+
     // helper method to get utxos for more than 1024 addresses
     async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet>{
-        // console.log("Get all platform UTXOs");
-        // console.log("getting utxos for: ", addrs);
         if(addrs.length<=1024){
             let newSet = await this.platformGetAllUTXOsForAddresses(addrs);
-            // console.log("Got total set: ",newSet.getAllUTXOs().length);
             return newSet;
         }else{
             //Break the list in to 1024 chunks
