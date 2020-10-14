@@ -7,13 +7,17 @@ import en from '../locales/en.json';
 import fr from '../locales/fr.json';
 import tr from '../locales/tr.json';
 import it from '../locales/it.json';
+import es from '../locales/es.json';
+import de from '../locales/de.json';
 
 
 const messages = {
     en,
     fr,
     tr,
-    it
+    it,
+    es,
+    de
 };
 
 // Create VueI18n instance with options
