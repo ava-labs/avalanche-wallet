@@ -589,7 +589,7 @@ var isoLangs = {
     },
     "es": {
         "name": "Spanish; Castilian",
-        "nativeName": "español, castellano"
+        "nativeName": "Español"
     },
     "su": {
         "name": "Sundanese",

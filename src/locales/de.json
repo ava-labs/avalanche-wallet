@@ -1,0 +1,428 @@
+{
+    "password": "Passwort",
+    "password_confirm": "Passwort bestätigen",
+    "private_key": "privater Schlüssel",
+    "address": "Adresse",
+    "add_pk": "Privaten Schlüssel hinzufügen",
+    "home": {
+        "desc": "Avalanche Wallet ist eine einfache, sichere, \"ohne Aufsicht\" Wallet zur Aufbewahrung von Avalanche Vermögenswerten.",
+        "access": {
+            "title": "Willkommen zurück!",
+            "desc": "Hier auf dein bestehendes Avalanche Wallet zugreifen.",
+            "submit": "Auf Wallet zugreifen"
+        },
+        "create": {
+            "title": "Neu bei Avalanche Wallet?",
+            "desc": "Erstelle eine neue Wallet zum Senden, Empfangen und Tauschen von Avalanche Vermögenswerten.",
+            "submit": "Neue Wallet erstellen"
+        }
+    },
+    "network": {
+        "status1": "Verbinde ...",
+        "status2": "Nicht Verbunden",
+        "title": "Netzwerke",
+        "title2": "Benutzerdef. Netzwerk hinzufügen",
+        "title3": "Netzwerk bearbeiten",
+        "custom": "Benutzerdefiniert hinzufügen",
+        "cancel": "Abbrechen",
+        "add": "Netzwerk hinzufügen"
+    },
+    "access": {
+        "title": "Wie möchtest Du auf deine Wallet zugreifen?",
+        "create": "Hast Du noch keine Wallet?",
+        "but_mnemonic": "Mnemonic Schlüsselphrase",
+        "but_keystore": "Keystore Datei",
+        "cancel": "Abbrechen",
+        "json_error": "Die JSON Datei ist nicht lesbar.",
+        "keystore_error": "Diese Keystore Version wird nicht unterstützt.",
+        "password_error": "Ungültiges Passwort.",
+        "mnemonic": {
+            "title": "Gib deine MNEMONIC Phrase ein\n",
+            "subtitle": "Drücke die 'LEERTASTE' nach jeder erfolgreichen Eingabe.",
+            "submit": "Auf Wallet zugreifen",
+            "cancel": "Abbrechen",
+            "error": "Ungültige Schlüsselphrase. Deine Schlüsselphrase, muss aus 24 einzelnen Wörtern bestehen."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfolio",
+            "manage": "Verwalten",
+            "send": "Senden",
+            "earn": "Verdienen",
+            "advanced": "Erweitert"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Du besitzt keine Kollektion."
+        }
+    },
+    "create": {
+        "generate": "Erstelle eine neue Schlüsselphrase, um deine Wallet einzurichten.",
+        "but_have": "Hast Du schon eine Wallet?",
+        "submit": "Schlüsselphrase erstellen",
+        "cancel": "Abbrechen",
+        "mnemonic_title": "Dies ist Ihr Schlüsselsatz.",
+        "mnemonic_desc": "Verwende diese 24 Wörter in der Reihenfolge, um deine Avalanche Wallet wiederzuherstellen",
+        "attention": "Achtung!",
+        "warning": "Speichere diese Schlüsselphrase an einem sicheren Ort. Jeder mit dieser Schlüsselphrase kann auf deine Avalanche Wallet zugreifen. Es gibt keine Möglichkeit, verlorene Schlüsselphrasen wiederherzustellen.",
+        "confirm": "Ich habe meine Schlüsselphrase an einem sicheren Ort notiert.",
+        "regenerate": "Wiederherstellen",
+        "success_title": "Herzlichen Glückwunsch!",
+        "success_desc": "Es ist an der Zeit, deine Avalanche Wallet zu öffnen.",
+        "success_submit": "Auf Wallet zugreifen",
+        "verify": "Verifizieren",
+        "verifytitle": "Verifiziere Mnemonic",
+        "verify_desc": "Fülle die Mnemonic Phrase unten aus",
+        "error_number": "Oops, sieht so aus als hättest Du eine Zahl vergessen",
+        "error_word": "Deine eingegebene Mnemonic Phrase, stimmt mit der aktuellen Phrase nicht überein."
+    },
+    "top": {
+        "title1": "Hergeleitete AVAX Wallet Adresse",
+        "title2": "Guthaben",
+        "title3": "Subnetz",
+        "title4": "Netzwerk",
+        "nftcol": "NFTs",
+        "nftempty": "Du hast noch keine \"non-fungible\" Tokens (NFTs) gesammelt.",
+        "locked": "Gesperrt",
+        "info2": "Ich habe beim Token Sale, Coins gekauft. Wo sind meine AVAX?",
+        "info2_desc": "Diese Wallet ist mit dem Avalanche Everest Testnetzwerk verbunden. Dein Kauf erscheint nach dem Start von Avalanche Mainnet in der Wallet.",
+        "hover1": "Adresse als QR Code anzeigen",
+        "hover2": "Drucken",
+        "hover3": "Kopieren",
+        "hover4": "Mainnet Adresse anzeigen",
+        "balance": {
+            "show": "Übersicht anzeigen",
+            "hide": "Übersicht ausblenden",
+            "available": "Verfügbar",
+            "locked": "Gesperrt",
+            "locked_stake": "Gesperrt Staking",
+            "stake": "Staking",
+            "collectibles": "Kollektion"
+        },
+        "address": {
+            "derived": "Abgeleitete AVAX Wallet-Adresse",
+            "desc": "Dies ist Ihre Adresse, um Gelder zu erhalten. Ihre Adresse wird sich nach jeder Einzahlung ändern."
+        }
+    },
+    "transfer": {
+        "title": "Senden",
+        "no_cash": "Sie müssen in Ihrer Wallet Assets vorweisen, um eine Transaktion zu ermöglichen.",
+        "faucet": "Hast Du unsere \"faucet\" überprüft?",
+        "to": "Zur Adresse",
+        "fees": "Gebühren",
+        "fee_tx": "Transaktionsgebühren",
+        "advanced": "Erweitert",
+        "adv_change": "Adresse ändern",
+        "send": "Transaktion senden",
+        "summary": "Transaktionsübersicht",
+        "disconnected": "Senden der Vermögenswerte nicht möglich. Vom Netzwerk getrennt.",
+        "success_title": "Transaktion gesendet",
+        "success_msg": "Du hast deine Transaktion erfolgreich gesendet.",
+        "error_title": "Fehler beim Senden der Transaktion",
+        "error_msg": "Versenden der Transaktion ist fehlgeschlagen."
+    },
+    "keys": {
+        "title": "Meine Schlüssel",
+        "button1": "Schlüssel merken",
+        "button2": "SCHLÜSSEL IMPORTIEREN",
+        "button3": "SCHLÜSSEL EXPORTIEREN",
+        "subtitle": "Aktiver Schlüssel",
+        "remember_key_button": "MERKEN",
+        "remember_key_desc": "Verschlüssle deine Wallet mit einem Passwort, für eine sichere Aufbewahrung im Browser.",
+        "remember_key_check": "Schlüssel merken",
+        "remember_key_info": "Greife später auf deine Wallet in diesem Browser mit einem Passwort zu.",
+        "export_key_button": "WALLET EXPORTIEREN",
+        "export_key_title": "Schlüssel Exportieren",
+        "export_key_desc": "Gib ein Passwort ein, um deine privaten Schlüssel in eine Datei zu verschlüsseln. Du kannst später diese Datei, und dein Passwort benutzen, um auf deine Wallet zuzugreifen.",
+        "export_key_info": "Ausgewählte {0} Schlüssel.",
+        "export_placeholder1": "Passwort",
+        "export_placeholder2": "Passwort bestätigen",
+        "empty": "Dieser Schlüssel enthält kein Guthaben.",
+        "import_key_button": "SCHLÜSSEL IMPORTIEREN",
+        "import_key_title": "Schlüssel importieren",
+        "import_key_desc": "Füge weitere Schlüssel deiner Wallet hinzu.",
+        "import_key_option1": "MNEMONIC PHRASE",
+        "import_key_option2": "KEYSTORE DATEI",
+        "import_key_success_title": "Schlüssel hinzugefügt",
+        "import_key_success_msg": "Privater Schlüssel und Vermögenswerte wurden der Wallet hinzugefügt.",
+        "tooltip": "Dieser Schlüssel wird beim Aktualisieren deines Browsers gelöscht.",
+        "view_key": "Schlüsselphrase ansehen",
+        "export_key": "Schlüssel Exportieren",
+        "hd_addresses": "HD Adressen",
+        "remove_key": "Schlüssel Entfernen",
+        "activate_key": "Schlüssel Aktivieren",
+        "remove_success_title": "Schlüssel Entfernt",
+        "remove_success_msg": "Privater Schlüssel und Vermögenswerte wurden von der Wallet entfernt.",
+        "password_validation": "Passwort muss mindestens 9 Zeichen enthalten.",
+        "password_validation2": "Passwort nicht übereinstimmend."
+    },
+    "portfolio": {
+        "assets": "Vermögenswerte",
+        "assets1": "Tokens",
+        "assets2": "Kollektion",
+        "search": "Vermögenswerte suchen",
+        "name": "Name",
+        "send": "Senden",
+        "balance": "Guthaben",
+        "error_network": "Vermögenswerte werden nicht angezeigt. Vom Netzwerk getrennt.",
+        "nobalance": "Du hast keine Vermögenswerte",
+        "nobalance_nft": "Du besitzt keine Kollektion.",
+        "noaddresses": "Du hast keine früheren Adressen."
+    },
+    "earn": {
+        "title": "Einnehmen",
+        "desc": "Das Staking deiner vorhandenen Tokens vermehrt deine AVAX.",
+        "subtitle1": "Validieren",
+        "subtitle2": "Delegieren",
+        "subtitle3": "\"Cross Chain\" Transfer",
+        "subtitle4": "Geschätzte Prämien",
+        "warning_1": "Du musst mindestens {0} AVAX auf der P-Chain haben, um ein Validator zu werden.",
+        "warning_2": "Du musst mindestens {0} AVAX auf der P-Chain haben, um ein Delegator zu werden.",
+        "validate_card": {
+            "title": "Validieren",
+            "desc": "Du hast einen Avalanche Knoten, mit dem Du staken möchtest.",
+            "submit": "Validator hinzufügen"
+        },
+        "delegate_card": {
+            "title": "Delegieren",
+            "desc": "Du hast keine Avalanche Node, aber Du möchtest mit einer anderen Node staken.",
+            "submit": "Delegierer hinzufügen"
+        },
+        "transfer_card": {
+            "title": "\"Cross Chain\" Transfer",
+            "desc": "Staking erfordert AVAX auf der P-Chain. Transferiere deine Tokens zwischen X und P.",
+            "submit": "Transfer"
+        },
+        "rewards_card": {
+            "title": "Geschätzte Prämien",
+            "desc": "Zeigt die Staking Prämien an, die du erhalten wirst.",
+            "submit": "Prämien ansehen"
+        },
+        "transfer": {
+            "source": "Quell-Chain",
+            "destination": "Ziel-Chain",
+            "balance": "Guthaben",
+            "amount": "Transferbetrag",
+            "fee": "Gebühr",
+            "confirm": "Bestätigen",
+            "submit": "Transfer",
+            "cancel": "Abbrechen",
+            "err_import": "Import fehlgeschlagen",
+            "err_desc": "Es gab ein Problem beim Importieren deiner Tokens in die Ziel-Chain. Bitte versuche den Import erneut.",
+            "err_submit": "Trigger Import",
+            "success": {
+                "title": "Transfer abgeschlossen",
+                "export": "Export Transaktions-ID:",
+                "import": "Import Transaktions-ID:",
+                "message": "Du hast erfolgreich zwischen \"Chains\" übertragen.",
+                "back": "Zurück zu \"Einnehmen\""
+            }
+        },
+        "rewards": {
+            "total": "Summe der Prämien",
+            "validation": "Validierung",
+            "delegation": "Delegation",
+            "empty": "Du hast keine ausstehenden Prämien.",
+            "row": {
+                "start": "Start",
+                "end": "Ende",
+                "completed": "Abgeschlossen",
+                "stake": "Stake",
+                "reward": "Mögliche Prämie"
+            }
+        },
+        "validate": {
+            "label_1": "Node ID",
+            "duration": {
+                "label": "Staking Zeitraum",
+                "desc": "Die Dauer, in der deine Tokens fürs Staking gesperrt sind.",
+                "start": "Start Datum & Zeit",
+                "end": "End Datum & Zeit"
+            },
+            "amount": {
+                "label": "Staking Betrag",
+                "desc": "Der AVAX Betrag der fürs Staking gesperrt ist."
+            },
+            "fee": {
+                "label": "Delegationsgebühr",
+                "desc": "Auf deinem Node wirst Du diese % der Prämien von den Delegierenden einfordern."
+            },
+            "reward": {
+                "label": "Prämienadresse",
+                "desc": "Wohin die Staking Prämien gesendet werden sollen.",
+                "chip_1": "Verwende diese Wallet",
+                "chip_2": "Benutzerdefinierte Adresse"
+            },
+            "summary": {
+                "max_del": "Maximaler Delegationsbetrag",
+                "max_del_tooltip": "Maximaler Betrag, der an diesen Validator delegiert werden kann.",
+                "duration": "Einsatzdauer",
+                "rewards": "Geschätzte Prämien",
+                "warn": "Wenn es dein erstes Mal Staking ist, fange klein an. Staking Tokens sind bis zum Ende der Staking Periode gesperrt."
+            },
+            "confirmation": {
+                "id": "Knoten ID",
+                "amount": "Staking Betrag",
+                "start": "Startdatum",
+                "end": "Enddatum",
+                "fee": "Delegationsgebühr",
+                "reward": "Prämienadresse",
+                "type_local": "Diese Wallet",
+                "type_custom": "Benutzerdefiniert"
+            },
+            "confirm": "Bestätigen",
+            "submit": "Senden",
+            "cancel": "Abbrechen",
+            "success": {
+                "title": "Deine Validierungstransaktion wurde gesendet.",
+                "desc": "Wenn die Transaktion akzeptiert wird, werden deine Tokens fürs Staking gesperrt. Deine gesperrten Tokens werden am Ende der Staking Periode entsperrt und du erhältst dann auch deine Prämien.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "Das Startdatum muss in der Zukunft liegen und das Enddatum muss nach dem Startdatum liegen.",
+                "amount": "Der Staking Betrag muss mindestens {0} AVAX betragen",
+                "id": "Ungültige Node ID. Muss mit \"NodeID-\" beginnen",
+                "address": "Ungültige Prämienadresse."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Wähle einen zu delegierenden Node aus",
+                "search": "Node ID suchen",
+                "id": "Node ID",
+                "val_stake": "Validator Stake",
+                "aval_stake": "Verfügbar",
+                "aval_stake_tip": "Wie viel noch an diesen Validator delegiert werden kann.",
+                "users_tip": "Anzahl der Delegierenden",
+                "end": "Endzeit",
+                "up": "Betriebszeit",
+                "up_tip": "Bezogen auf die Node, mit dem diese Wallet verbunden ist.",
+                "fee": "Gebühr",
+                "empty": {
+                    "title": "Keine Validatoren gefunden",
+                    "desc": "Validatoren müssen aktiv Staken, um gefunden zu werden."
+                }
+            },
+            "node": {
+                "selected": "Ausgewählte Node",
+                "fee": "Delegationsgebühr",
+                "start": "Validator Startdatum",
+                "end": "Validator Enddatum"
+            },
+            "form": {
+                "period": {
+                    "label": "Staking Zeitraum",
+                    "desc": "Die Dauer, in der deine Tokens fürs Staking gesperrt sind.",
+                    "start": "Startdatum und -zeit",
+                    "end": "Enddatum und -zeit"
+                },
+                "amount": {
+                    "label": "Einsatzbetrag",
+                    "desc": "Der AVAX Betrag der fürs Staking gesperrt ist.",
+                    "desc2": "Der verfügbare Delegationsbetrag für diese Node beträgt {0} AVAX"
+                },
+                "reward": {
+                    "label": "Prämienadresse",
+                    "desc": "Wohin die Staking Prämien gesendet werden sollen.",
+                    "chip_1": "Verwende diese Wallet",
+                    "chip_2": "Benutzerdefinierte Adresse"
+                }
+            },
+            "confirmation": {
+                "node": "Node ID",
+                "amount": "Staking Betrag",
+                "start": "Startdatum",
+                "end": "Enddatum",
+                "reward": "Prämienadresse"
+            },
+            "errs": {
+                "start_now": "Die Startzeit muss nach der aktuellen Zeit liegen.",
+                "start_end": "Das Startdatum muss in der Zukunft liegen und das Enddatum muss nach dem Startdatum liegen.",
+                "invalid_addr": "Ungültiges Adressformat. Deine Adresse muss mit \"P-\" beginnen",
+                "no_addr": "Gib eine Adresse an, um Delegationsprämien zu erhalten.",
+                "min_dur": "Minimum Stakingzeitraum beträgt 2 Wochen.",
+                "max_dur": "Maximum Stakingzeitraum beträgt 1 Jahr.",
+                "no_node": "Du musst einen Validator angeben.",
+                "val_end": "Das Enddatum der Delegation darf nicht länger als das Enddatum des Validators sein.",
+                "amt": "Der Betrag der Delegation muss mindestens {0} AVAX betragen."
+            },
+            "summary": {
+                "duration": "Stakingzeitraum",
+                "reward": "Geschätzte Prämie",
+                "fee": "Gebühr",
+                "warn": "Wenn es dein erstes Mal Staking ist, fange klein an. Staking Tokens sind bis zum Ende der Staking Periode gesperrt."
+            },
+            "confirm": "Bestätigen",
+            "submit": "Senden",
+            "cancel": "Abbrechen",
+            "success": {
+                "title": "Delegationstransaktion gesendet.",
+                "desc": "Wenn die Transaktion akzeptiert wird, werden deine Tokens fürs Staking gesperrt. Deine gesperrten Tokens werden am Ende der Staking Periode entsperrt und du erhältst dann auch deine Prämien.",
+                "status": "Status"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Erweitert",
+        "import": {
+            "title": "Chain Import",
+            "desc": "Stecken Vermögenswerte in einem fehlgeschlagenden Chain Transfer fest, kannst du den Import hier beenden.",
+            "submit_x": "Import X",
+            "submit_p": "Import P"
+        }
+    },
+    "logout": {
+        "button": "Ausloggen",
+        "button_conf": "AUSLOGGEN",
+        "button_cancel": "Abbrechen",
+        "confirmation": "Willst Du dich wirklich ausloggen?",
+        "confirmation_message": "Dieser Wallet und seine Schlüssel werden entfernt."
+    },
+    "keystore": {
+        "title": "Keystore Datei",
+        "button": "Datei wählen"
+    },
+    "transactions": {
+        "notx": "Es wurden keine Transaktionen für diese Adresse im Explorer gefunden.",
+        "loading": "Lade vergangene Transaktionen ...",
+        "warn_loading": "Diese Liste ist möglicherweise unvollständig und nicht mehr aktuell.",
+        "error_api": "Explorer API nicht gefunden",
+        "error_api_desc": "Du musst eine AVA Explorer API für dieses Netzwerk zur Verfügung stellen, um den Transaktionsverlauf einzusehen."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adresse",
+            "copy": "Adresse kopieren"
+        },
+        "print": {
+            "title": "Vorschau drucken",
+            "submit": "Drucken"
+        },
+        "keystore": {
+            "title": "Keystore Datei aktualisieren",
+            "desc": "Wir haben die Spezifikation für Keystore-Dateien aktualisiert. Bitte lade deine neue Keystore-Datei herunter und greife erneut auf die Wallet zu.",
+            "logout": "Ausloggen & erneut zugreifen"
+        },
+        "mainnet": {
+            "title": "Mainnet Adresse",
+            "desc": "Deine Mainnet Adresse lautet:"
+        },
+        "mnemonic": {
+            "title": "Schlüsselphrase"
+        },
+        "activateWallet": {
+            "title": "Wallet aktivieren",
+            "desc": "Es gibt eine aktive Wallet. Gib dein Passwort ein, um darauf zuzugreifen.",
+            "submit": "Auf Wallet zugreifen",
+            "cancel": "Auf eine andere Wallet zugreifen",
+            "cancel2": "(Vorherige Wallet wird entfernt)",
+            "err1": "Ungültiges Passwort.",
+            "err2": "Lesen der Wallet Datei nicht möglich."
+        }
+    },
+    "nav": {
+        "access": "Auf Wallet zugreifen",
+        "create": "Eine neue Wallet erstellen"
+    }
+}
