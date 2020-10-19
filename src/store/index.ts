@@ -38,6 +38,7 @@ import BN from "bn.js";
 import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 import {NetworkItem} from "@/store/modules/network/types";
 import {AvaNetwork} from "@/js/AvaNetwork";
+import {StakeableLockOut} from "avalanche/dist/apis/platformvm";
 
 export default new Vuex.Store({
     modules:{
@@ -191,16 +192,20 @@ export default new Vuex.Store({
             let utxos = utxoSet.getAllUTXOs()
             for(var n=0; n<utxos.length; n++) {
                 let utxo = utxos[n];
-                let utxoOut = utxo.getOutput() as AmountOutput;
+                let utxoOut = utxo.getOutput();
                 let outId = utxoOut.getOutputID();
 
-
-                let locktime = utxoOut.getLocktime();
+                let locktime;
+                if(outId===22){
+                    locktime = (utxoOut as StakeableLockOut).getStakeableLocktime();
+                }else{
+                    locktime = (utxoOut as AmountOutput).getLocktime();
+                }
 
 
                 // Filter out locked tokens and stakeable locked tokens
-                if(locktime.lte(now) && outId !== 22){
-                    amt.iadd(utxoOut.getAmount());
+                if(locktime.lte(now)){
+                    amt.iadd((utxoOut as AmountOutput).getAmount());
                 }
             }
 
@@ -241,18 +246,22 @@ export default new Vuex.Store({
 
             // The only type of asset is AVAX on the P chain
             let amt = new BN(0);
+            let unixNow = UnixNow();
+
 
             let utxos = utxoSet.getAllUTXOs()
             for(var n=0; n<utxos.length; n++) {
                 let utxo = utxos[n];
-                let utxoOut = utxo.getOutput() as AmountOutput;
+                let utxoOut = utxo.getOutput() as StakeableLockOut;
                 let outType = utxoOut.getOutputID()
-                // let outType = utxoOut.getTypeID();
-                // let locktime = utxoOut.getLocktime();
 
                 // Type ID 22 is stakeable but locked tokens
                 if(outType===22){
-                    amt.iadd(utxoOut.getAmount());
+                    let locktime = utxoOut.getStakeableLocktime();
+                    // Make sure the locktime is in the future
+                    if(locktime.gt(unixNow)){
+                        amt.iadd(utxoOut.getAmount());
+                    }
                 }
             }
 
