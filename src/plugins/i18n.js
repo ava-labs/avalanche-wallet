@@ -9,6 +9,7 @@ import tr from '../locales/tr.json';
 import it from '../locales/it.json';
 import es from '../locales/es.json';
 import de from '../locales/de.json';
+import ko from '../locales/ko.json';
 
 
 const messages = {
@@ -17,7 +18,8 @@ const messages = {
     tr,
     it,
     es,
-    de
+    de,
+    ko
 };
 
 // Create VueI18n instance with options

@@ -1,0 +1,428 @@
+{
+    "password": "비밀번호",
+    "password_confirm": "비밀번호를 확인하십시오",
+    "private_key": "프라이빗 키",
+    "address": "주소",
+    "add_pk": "프라이빗 키 추가하기",
+    "home": {
+        "desc": "아발란체 월렛은 아발란체 자산을 관리할 수 있는 간단하고 안전한 비수탁형 월렛입니다.",
+        "access": {
+            "title": "재방문을 환영합니다!",
+            "desc": "이곳에서 기존 Avalanche 월렛에 액세스하세요.",
+            "submit": "월렛에 액세스하기"
+        },
+        "create": {
+            "title": "아발란체 월렛에 처음 오셨나요?",
+            "desc": "새 월렛을 만들어 아발란체 자산을 보내고, 받고, 스왑하세요.",
+            "submit": "새 월렛 만들기"
+        }
+    },
+    "network": {
+        "status1": "연결 중입니다...",
+        "status2": "연결이 중단되었습니다",
+        "title": "네트워크",
+        "title2": "커스텀 네트워크 추가하기",
+        "title3": "네트워크 수정하기",
+        "custom": "커스텀 추가하기",
+        "cancel": "취소",
+        "add": "네트워크 추가하기"
+    },
+    "access": {
+        "title": "월렛에 어떻게 액세스하시겠습니까?",
+        "create": "보유한 월렛이 없으신가요?",
+        "but_mnemonic": "니모닉 문구",
+        "but_keystore": "키스토어 파일",
+        "cancel": "취소",
+        "json_error": "JSON 파일을 분석할 수 없습니다.",
+        "keystore_error": "이 키스토어는 지원하지 않는 버전입니다.",
+        "password_error": "비밀번호가 유효하지 않습니다.",
+        "mnemonic": {
+            "title": "귀하의 니모닉 문구를 입력하세요\n",
+            "subtitle": "성공적으로 단어가 입력될 때마다 '스페이스'를 누르십시오.",
+            "submit": "월렛에 엑세스하기",
+            "cancel": "취소",
+            "error": "문구가 유효하지 않습니다. 귀하의 문구는 한 칸씩 띄운 24개 단어로 이루어져 있습니다."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "포트폴리오",
+            "manage": "관리",
+            "send": "전송",
+            "earn": "적립",
+            "advanced": "고급"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "수집 가능한 것이 없습니다."
+        }
+    },
+    "create": {
+        "generate": "아발란체 월렛을 생성하기 위해 새로운 키 문구를 만드세요.",
+        "but_have": "월렛을 이미 보유하셨나요?",
+        "submit": "키 문구 입력",
+        "cancel": "취소",
+        "mnemonic_title": "귀하의 키 문구입니다.",
+        "mnemonic_desc": "다음 24개 단어를 차례대로 사용하여 아발란체 월렛을 복구하세요",
+        "attention": "주의!",
+        "warning": "이 키 문구를 안전한 곳에 저장하세요. 누구든 이 키 문구를 사용하여 귀하의 아발란체 월렛에 접근할 수 있습니다. 키 문구를 분실한 경우 복구 방법이 없습니다.",
+        "confirm": "안전한 장소에 키 문구를 적어두었습니다.",
+        "regenerate": "재생성",
+        "success_title": "축하합니다!",
+        "success_desc": "귀하의 아발란체 월렛에 액세스할 때가 왔습니다.",
+        "success_submit": "월렛에 액세스하기",
+        "verify": "확인",
+        "verifytitle": "니모닉 문구 확인",
+        "verify_desc": "아래에 니모닉 문구를 입력하세요",
+        "error_number": "앗, 번호 입력을 잊으신 것 같습니다",
+        "error_word": "입력하신 니모닉 문구의 단어가 실제 문구와 일치하지 않습니다."
+    },
+    "top": {
+        "title1": "파생된 Avalanche 월렛 주소",
+        "title2": "잔액",
+        "title3": "서브넷",
+        "title4": "네트워크",
+        "nftcol": "NFT 자산",
+        "nftempty": "토큰을 수집하지 않으셨습니다.",
+        "locked": "잠김",
+        "info2": "토큰 세일에서 코인을 구매했습니다. 내 AVAX가 있는 곳을 알려주세요.",
+        "info2_desc": "이 월렛은 에버레스트 테스트 네트워크에 연결되어 있습니다. 구매하신 자산은 아발란체 메인넷이 런칭되면 월렛에서 확인하실 수 있습니다.",
+        "hover1": "QR코드 주소 보기",
+        "hover2": "인쇄",
+        "hover3": "복사",
+        "hover4": "메인넷 주소 보기",
+        "balance": {
+            "show": "분석 보기",
+            "hide": "분석 숨기기",
+            "available": "사용 가능",
+            "locked": "잠김",
+            "locked_stake": "잠김 - 스테이킹 가능",
+            "stake": "스테이킹",
+            "collectibles": "콜렉터블"
+        },
+        "address": {
+            "derived": "파생된 Avalanche 월렛 주소",
+            "desc": "자금을 받을 주소입니다. 주소는 예치 후에 매번 변경됩니다."
+        }
+    },
+    "transfer": {
+        "title": "전송",
+        "no_cash": "월렛에 거래 가능한 자산이 있어야 합니다.",
+        "faucet": "아발란체 포셋(faucet)을 확인하셨나요?",
+        "to": "보낼 주소",
+        "fees": "수수료",
+        "fee_tx": "거래 수수료",
+        "advanced": "고급",
+        "adv_change": "주소 변경",
+        "send": "거래 전송하기",
+        "summary": "거래 요약",
+        "disconnected": "자산을 보낼 수 없습니다. 네트워크 연결이 중단되었습니다.",
+        "success_title": "거래 전송 완료",
+        "success_msg": "거래가 성공적으로 완료되었습니다.",
+        "error_title": "거래 전송 오류",
+        "error_msg": "거래 전송에 실패하였습니다."
+    },
+    "keys": {
+        "title": "내 암호",
+        "button1": "암호 기억",
+        "button2": "암호 불러오기",
+        "button3": "암호 내보내기",
+        "subtitle": "암호 활성화",
+        "remember_key_button": "기억하기",
+        "remember_key_desc": "비밀번호로 월렛을 암호화하여 이 브라우저에 안전하게 저장하십시오.",
+        "remember_key_check": "암호 기억",
+        "remember_key_info": "다음에 이 브라우저에서 패스워드를 사용하여 월렛에 액세스하실 수 있습니다.",
+        "export_key_button": "월렛 내보내기",
+        "export_key_title": "암호 내보내기",
+        "export_key_desc": "프라이빗 키를 파일로 암호화하시려면 비밀번호를 입력하세요. 나중에 이 파일과 비밀번호를 사용하여 월렛에 액세스하실 수 있습니다.",
+        "export_key_info": "{0} 암호를 선택하셨습니다.",
+        "export_placeholder1": "비밀번호",
+        "export_placeholder2": "비밀번호를 확인하십시오",
+        "empty": "이 암호엔 잔액이 없습니다.",
+        "import_key_button": "암호 불러오기",
+        "import_key_title": "암호 불러오기",
+        "import_key_desc": "월렛에서 사용할 추가 암호를 입력하세요.",
+        "import_key_option1": "니모닉 문구",
+        "import_key_option2": "키스토어 파일",
+        "import_key_success_title": "암호가 추가되었습니다",
+        "import_key_success_msg": "프라이빗 키와 자산이 월렛에 추가되었습니다.",
+        "tooltip": "이 암호는 브라우저를 새로고침하시면 지워집니다.",
+        "view_key": "암호 문구 보기",
+        "export_key": "암호 내보내기",
+        "hd_addresses": "HD 주소",
+        "remove_key": "암호 삭제",
+        "activate_key": "암호 활성화",
+        "remove_success_title": "암호가 삭제되었습니다",
+        "remove_success_msg": "프라이빗 키와 자산이 월렛에서 삭제되었습니다.",
+        "password_validation": "비밀번호는 최소 9글자를 넘어야 합니다.",
+        "password_validation2": "비밀번호가 일치하지 않습니다."
+    },
+    "portfolio": {
+        "assets": "자산",
+        "assets1": "토큰",
+        "assets2": "콜렉터블",
+        "search": "자산 검색",
+        "name": "이름",
+        "send": "전송",
+        "balance": "잔액",
+        "error_network": "자산을 표시할 수 없습니다. 네트워크 연결이 중단되었습니다.",
+        "nobalance": "보유한 자산이 없습니다.",
+        "nobalance_nft": "보유한 콜렉터블이 없습니다.",
+        "noaddresses": "과거 사용하신 주소가 없습니다."
+    },
+    "earn": {
+        "title": "적립",
+        "desc": "보유하신 토큰을 스테이킹하여 더 많은 AVAX를 적립하실 수 있습니다.",
+        "subtitle1": "검증(Validate)",
+        "subtitle2": "위임(Delegate)",
+        "subtitle3": "크로스 체인 전송",
+        "subtitle4": "예상 리워드",
+        "warning_1": "검증인이 되시려면 최소 {0} AVAX를 P 체인에 보유하고 있어야 합니다.",
+        "warning_2": "위임자가 되시려면 최소 {0} AVAX를 P 체인에 보유하고 있어야 합니다.",
+        "validate_card": {
+            "title": "검증(Validate)",
+            "desc": "스테이킹하시려는 아발란체 노드가 있습니다.",
+            "submit": "검증인 추가"
+        },
+        "delegate_card": {
+            "title": "위임",
+            "desc": "아발란체 노드가 없지만 다른 노드를 사용하여 스테이킹하기를 원합니다.",
+            "submit": "위임자 추가"
+        },
+        "transfer_card": {
+            "title": "크로스 체인 전송",
+            "desc": "스테이킹하려면 P 체인의 AVAX가 필요합니다. X에서 P로 토큰을 이체하십시오.",
+            "submit": "이체"
+        },
+        "rewards_card": {
+            "title": "예상 리워드",
+            "desc": "받을 리워드 보기",
+            "submit": "리워드 보기"
+        },
+        "transfer": {
+            "source": "소스 체인",
+            "destination": "대상 체인",
+            "balance": "잔액",
+            "amount": "이체 액수",
+            "fee": "수수료",
+            "confirm": "확인",
+            "submit": "이체",
+            "cancel": "취소",
+            "err_import": "불러오기 실패",
+            "err_desc": "토큰을 대상 체인으로 불러오는 중에 문제가 발생하였습니다. 다시 시도하세요.",
+            "err_submit": "트리거 임포트",
+            "success": {
+                "title": "이체 완료",
+                "export": "내보내기 거래 ID:",
+                "import": "불러오기 거래 ID:",
+                "message": "체인 간 이체가 성공적으로 완료되었습니다.",
+                "back": "적립(Earn) 화면으로 돌아가기"
+            }
+        },
+        "rewards": {
+            "total": "전체 리워드",
+            "validation": "검증(Validate)",
+            "delegation": "위임(Delegate)",
+            "empty": "받으실 리워드가 없습니다",
+            "row": {
+                "start": "시작",
+                "end": "종료",
+                "completed": "완료",
+                "stake": "스테이킹",
+                "reward": "잠재적 보상"
+            }
+        },
+        "validate": {
+            "label_1": "노드 ID",
+            "duration": {
+                "label": "스테이킹 기간",
+                "desc": "귀하의 토큰이 스테이킹을 위해 잠기는 기간 ",
+                "start": "시작 날짜 및 시간",
+                "end": "종료 날짜 및 시간"
+            },
+            "amount": {
+                "label": "스태이킹 총액",
+                "desc": "스테이킹을 위해 잠기는 AVAX 총량"
+            },
+            "fee": {
+                "label": "위임 수수료",
+                "desc": "리워드의 %를 귀하의 노드 위임자에게 요청할 것입니다."
+            },
+            "reward": {
+                "label": "리워드 주소",
+                "desc": "스테이킹 리워드를 전송할 곳",
+                "chip_1": "이 월렛 사용하기",
+                "chip_2": "커스텀 주소"
+            },
+            "summary": {
+                "max_del": "최대 위임 총액",
+                "max_del_tooltip": "이 검증인에게 위임할 수 있는 최대 액수",
+                "duration": "스테이킹 기간",
+                "rewards": "예상 리워드",
+                "warn": "스테이킹이 처음이라면 소액으로 시작하세요. 스테이킹된 토큰은 스테이킹 기간이 끝날 때까지 잠깁니다."
+            },
+            "confirmation": {
+                "id": "노드 ID",
+                "amount": "스태이킹 총액",
+                "start": "시작일",
+                "end": "종료일",
+                "fee": "위임 수수료",
+                "reward": "리워드 주소",
+                "type_local": "이 월렛",
+                "type_custom": "커스텀"
+            },
+            "confirm": "확인",
+            "submit": "제출",
+            "cancel": "취소",
+            "success": {
+                "title": "검증 거래가 전송되었습니다.",
+                "desc": "거래가 수락되면 귀하의 토큰은 스테이킹을 위해 잠깁니다. 스테이킹 기간이 끝나면 잠긴 토큰과 리워드를 받으실 수 있습니다.",
+                "status": "상태"
+            },
+            "errs": {
+                "date": "스테이킹 시작일은 오늘 이후의 날짜여야 하며 종료일은 시작일 이후 날짜여야 합니다.",
+                "amount": "스테이킹 총액은 최소 {0} AVAX가 되어야합니다.",
+                "id": "유효하지 않은 노드 ID입니다. 반드시 \"NodeID-\"로 시작되어야 합니다.",
+                "address": "유효하지 않은 리워드 주소입니다."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "위임하실 노드를 선택하세요",
+                "search": "노드 ID 검색",
+                "id": "노드 ID",
+                "val_stake": "검증인 스테이킹",
+                "aval_stake": "사용 가능",
+                "aval_stake_tip": "해당 검증인에게 더 위임할 수 있는 액수 ",
+                "users_tip": "위임자 수",
+                "end": "종료 시간",
+                "up": "업타임",
+                "up_tip": "이 월렛이 연결된 노드와 같은 종류",
+                "fee": "수수료",
+                "empty": {
+                    "title": "검증인을 찾지 못했습니다",
+                    "desc": "검증인으로 검색되려면 더욱 활발하게 스테이킹해야 합니다."
+                }
+            },
+            "node": {
+                "selected": "선택된 노드",
+                "fee": "위임 수수료",
+                "start": "검증인 시작일",
+                "end": "검증인 종료일"
+            },
+            "form": {
+                "period": {
+                    "label": "스테이킹 기간",
+                    "desc": "귀하의 토큰이 스테이킹을 위해 잠기는 기간",
+                    "start": "시작 날짜 및 시간",
+                    "end": "종료 날짜 및 시간"
+                },
+                "amount": {
+                    "label": "스테이킹 총액",
+                    "desc": "스테이킹을 위해 잠기는 AVAX 총량",
+                    "desc2": "이 노드에 위임 가능한 총액은 {0} AVAX입니다."
+                },
+                "reward": {
+                    "label": "리워드 주소",
+                    "desc": "스테이킹 리워드를 전송할 곳",
+                    "chip_1": "이 월렛 사용하기",
+                    "chip_2": "커스텀 주소"
+                }
+            },
+            "confirmation": {
+                "node": "노드 ID",
+                "amount": "스태이킹 총액",
+                "start": "시작일",
+                "end": "종료일",
+                "reward": "리워드 주소"
+            },
+            "errs": {
+                "start_now": "스테이킹 시작 시간은 현재 시간 이후여야 합니다.",
+                "start_end": "시작일은 오늘 이후의 날짜여야 하며 종료일은 시작일 이후 날짜여야 합니다.",
+                "invalid_addr": "유효하지 않은 주소 유형입니다. 귀하의 주소는 \"P-\"로 시작되어야 합니다.",
+                "no_addr": "위임 리워드를 받으실 주소를 제출하셔야 합니다.",
+                "min_dur": "최소 스테이킹 기간은 2주일 입니다.",
+                "max_dur": "최대 스테이킹 기간은 1년 입니다.",
+                "no_node": "검증인을 설정해야 합니다. ",
+                "val_end": "위임 종료일은 검증인의 종료일보다 나중일 수 없습니다. ",
+                "amt": "최소 위임액은 {0} AVAX 입니다. "
+            },
+            "summary": {
+                "duration": "스테이킹 기간",
+                "reward": "예상 리워드",
+                "fee": "수수료",
+                "warn": "스테이킹이 처음이라면 소액으로 시작하세요. 스테이킹된 토큰은 기간이 끝날 때까지 잠깁니다."
+            },
+            "confirm": "확인",
+            "submit": "제출",
+            "cancel": "취소",
+            "success": {
+                "title": "위임 거래가 전송되었습니다.",
+                "desc": "거래가 수락되면 귀하의 토큰은 스테이킹을 위해 잠깁니다. 스테이킹 기간이 끝나면 잠긴 토큰과 리워드를 받으실 수 있습니다.",
+                "status": "상태"
+            }
+        }
+    },
+    "advanced": {
+        "title": "고급",
+        "import": {
+            "title": "체인 불러오기 ",
+            "desc": "자금이 체인 이체에 실패한 채 그대로 있다면 이곳에서 불러오기를 완료하실 수 있습니다.",
+            "submit_x": "X 불러오기 ",
+            "submit_p": "P 불러오기 "
+        }
+    },
+    "logout": {
+        "button": "로그아웃",
+        "button_conf": "로그아웃",
+        "button_cancel": "취소",
+        "confirmation": "정말로 로그아웃 하시겠습니까?",
+        "confirmation_message": "이 월렛과 암호는 기억되지 않습니다."
+    },
+    "keystore": {
+        "title": "키스토어 파일",
+        "button": "파일 선택"
+    },
+    "transactions": {
+        "notx": "익스플로러에서 이 주소로 거래한 내용은 발견되지 않았습니다.",
+        "loading": "거래 내역을 불러오는 중입니다...",
+        "warn_loading": "이 목록은 완전하지 않으며 순서가 맞지 않을 수 있습니다.",
+        "error_api": "익스플로러 API를 발견하지 못했습니다",
+        "error_api_desc": "거래 내역을 보시려면 이 네트워크에 아발란체 익스플로러 API를 제공해야 합니다."
+    },
+    "modal": {
+        "qr": {
+            "title": "주소",
+            "copy": "주소 복사"
+        },
+        "print": {
+            "title": "인쇄 미리보기",
+            "submit": "인쇄"
+        },
+        "keystore": {
+            "title": "키스토어 파일 업데이트",
+            "desc": "사양이 업그레이드된 키스토어 파일이 있습니다. 새 키스토어 파일을 내려받으시고 월렛에 다시 액세스하세요.",
+            "logout": "로그아웃 후 다시 액세스"
+        },
+        "mainnet": {
+            "title": "메인넷 주소",
+            "desc": "귀하의 메인넷 주소:"
+        },
+        "mnemonic": {
+            "title": "키 문구"
+        },
+        "activateWallet": {
+            "title": "월렛 활성화",
+            "desc": "활성화된 월렛입니다. 액세스하시려면 비밀번호를 입력하세요.",
+            "submit": "월렛에 엑세스하기",
+            "cancel": "다른 월렛에 엑세스하기",
+            "cancel2": "(이전 월렛은 저장되지 않습니다.)",
+            "err1": "비밀번호가 유효하지 않습니다.",
+            "err2": "월렛 데이터를 읽을 수 없습니다."
+        }
+    },
+    "nav": {
+        "access": "월렛에 액세스하기",
+        "create": "새 월렛 만들기"
+    }
+}
