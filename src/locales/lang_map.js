@@ -299,10 +299,10 @@ var isoLangs = {
         "name": "Kannada",
         "nativeName": "ಕನ್ನಡ"
     },
-    "kr": {
-        "name": "Kanuri",
-        "nativeName": "Kanuri"
-    },
+    // "kr": {
+    //     "name": "Kanuri",
+    //     "nativeName": "Kanuri"
+    // },
     "ks": {
         "name": "Kashmiri",
         "nativeName": "कश्मीरी, كشميري‎"
@@ -335,7 +335,7 @@ var isoLangs = {
         "name": "Kongo",
         "nativeName": "KiKongo"
     },
-    "ko": {
+    "kr": {
         "name": "Korean",
         "nativeName": "한국어"
     },
