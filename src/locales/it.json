@@ -5,7 +5,7 @@
     "address": "Indirizzo",
     "add_pk": "Aggiungi chiave privata",
     "home": {
-        "desc": "Il Wallet Avalanche è semplice, sicuro e non custodito per l'archiviazione di risorse Avalanche.",
+        "desc": "Con il Wallet Avalanche, non custodito, puoi archiviare asset Avalanche in modo semplice e sicuro.",
         "access": {
             "title": "Bentornato!",
             "desc": "\"Accedi\" al tuo wallet Avalanche qui.",
@@ -13,7 +13,7 @@
         },
         "create": {
             "title": "È la prima volta che usi un Wallet Avalanche?",
-            "desc": "\"Crea\" un nuovo wallet per inviare, ricevere e scambiare risorse Avalanche.",
+            "desc": "\"Crea\" un nuovo wallet per inviare, ricevere e scambiare asset Avalanche.",
             "submit": "Crea un nuovo wallet"
         }
     },
@@ -116,7 +116,7 @@
         "adv_change": "Cambia indirizzo",
         "send": "Invia la transazione",
         "summary": "Riepilogo della transazione",
-        "disconnected": "Impossibile inviare risorse. Disconnesso dalla rete.",
+        "disconnected": "Impossibile inviare assets. Disconnesso dalla rete.",
         "success_title": "Transazione inviata",
         "success_msg": "Hai completato con successo la tua transazione.",
         "error_title": "Errore nell'invio della transazione",
@@ -145,7 +145,7 @@
         "import_key_option1": "FRASE MNEMONICA",
         "import_key_option2": "FILE KEYSTORE",
         "import_key_success_title": "Chiave aggiunta",
-        "import_key_success_msg": "Chiave privata e risorse aggiunti al wallet.",
+        "import_key_success_msg": "Chiave privata e assets aggiunti al wallet.",
         "tooltip": "Questa chiave sarà dimenticata quando aggiorni il browser.",
         "view_key": "Vedi la frase chiave",
         "export_key": "Esporta chiave",
@@ -153,36 +153,36 @@
         "remove_key": "Rimuovi la chiave",
         "activate_key": "Attiva la chiave",
         "remove_success_title": "Chiave rimossa",
-        "remove_success_msg": "Chiave privata e risorse rimossi dal wallet.",
+        "remove_success_msg": "Chiave privata e assets rimosso dal wallet.",
         "password_validation": "La password deve avere almeno 9 caratteri.",
         "password_validation2": "La password non coincide."
     },
     "portfolio": {
-        "assets": "Risorse",
+        "assets": "Assets",
         "assets1": "Token",
         "assets2": "Collezionabili",
-        "search": "Ricerca risorse",
+        "search": "Ricerca assets",
         "name": "Nome",
         "send": "Invia",
         "balance": "Saldo",
-        "error_network": "Impossibile visualizzare le risorse. Disconnesso dalla rete.",
+        "error_network": "Impossibile visualizzare gli assets. Disconnesso dalla rete.",
         "nobalance": "Non hai nessuna risorsa",
         "nobalance_nft": "Non possiedi nessun oggetto crypto collezionabile.",
         "noaddresses": "Non possiedi indirizzi passati."
     },
     "earn": {
         "title": "Guadagna",
-        "desc": "Puoi guadagnare più AVAX puntando i tuoi token esistenti.",
+        "desc": "Puoi guadagnare più AVAX utilizzando i tuoi token esistenti nello staking.",
         "subtitle1": "Validare",
         "subtitle2": "Delega",
-        "subtitle3": "Trasferimento a catena incrociata",
-        "subtitle4": "Premi stimati",
+        "subtitle3": "Trasferimento tra chain",
+        "subtitle4": "Ricompense stimate",
         "warning_1": "Devi avere almeno {0} AVAX sulla P-Chain per diventare un validatore.",
-        "warning_2": "Devi avere almeno {0} AVAX sulla catena P per diventare un delegante.",
+        "warning_2": "Devi avere almeno {0} AVAX sulla P-chain per delegare.",
         "validate_card": {
             "title": "Validare",
-            "desc": "Hai un nodo Avalanche con a cui vuoi applicare lo staking.",
-            "submit": "Aggiungi Validator"
+            "desc": "Hai un nodo Avalanche con cui vuoi fare staking.",
+            "submit": "Aggiungi Validatore"
         },
         "delegate_card": {
             "title": "Delega",
@@ -190,18 +190,18 @@
             "submit": "Aggiungi Delegante"
         },
         "transfer_card": {
-            "title": "Trasferimento a catena incrociata",
-            "desc": "Per lo staking è necessario avere AVAX sulla catena P. Trasferisci token tra X e P.",
+            "title": "Trasferimento tra chain",
+            "desc": "Per lo staking è necessario avere AVAX sulla P-chain. Trasferisci token tra X e P.",
             "submit": "Trasferimento"
         },
         "rewards_card": {
-            "title": "Premi stimati",
-            "desc": "Visualizza i premi di staking che riceverai.",
-            "submit": "Visualizza i premi"
+            "title": "Ricompense stimate",
+            "desc": "Visualizza le ricompense da staking che riceverai.",
+            "submit": "Visualizza le ricompense"
         },
         "transfer": {
-            "source": "Catena fonte",
-            "destination": "Catena di destinazione",
+            "source": "Chain di origine",
+            "destination": "Chain di destinazione",
             "balance": "Saldo",
             "amount": "Importo del trasferimento",
             "fee": "Commissioni",
@@ -209,13 +209,13 @@
             "submit": "Trasferimento",
             "cancel": "Annulla",
             "err_import": "Importazione non riuscita",
-            "err_desc": "Si è verificato un problema durante l'importazione dei token nella catena di destinazione. Prova a importare di nuovo.",
+            "err_desc": "Si è verificato un problema durante l'importazione dei token nella chain di destinazione. Prova a importare di nuovo.",
             "err_submit": "Attiva importo",
             "success": {
                 "title": "Trasferimento completato",
                 "export": "Esporta ID della transazione:",
                 "import": "Importa ID della transazione:",
-                "message": "Hai operato con successo un trasferimento tra le catene.",
+                "message": "Hai eseguito con successo un trasferimento tra le chain.",
                 "back": "Torna ai guadagni"
             }
         },
@@ -229,7 +229,7 @@
                 "end": "Fine",
                 "completed": "Completato",
                 "stake": "Stake",
-                "reward": "Ricompensa potenziale"
+                "reward": "Ricompense potenziali"
             }
         },
         "validate": {
@@ -249,7 +249,7 @@
                 "desc": "Reclamerai questa % delle ricompense dai deleganti sul tuo nodo."
             },
             "reward": {
-                "label": "Indirizzo della ricompensa",
+                "label": "Indirizzo per le ricompense",
                 "desc": "Dove inviare le ricompense dello staking.",
                 "chip_1": "Usa questo wallet",
                 "chip_2": "Indirizzo personalizzato"
@@ -267,7 +267,7 @@
                 "start": "Data di inizio",
                 "end": "Data di fine",
                 "fee": "Commissione di delega",
-                "reward": "Indirizzo della ricompensa",
+                "reward": "Indirizzo per le ricompense",
                 "type_local": "Questo wallet",
                 "type_custom": "Personalizzato"
             },
@@ -276,39 +276,39 @@
             "cancel": "Annulla",
             "success": {
                 "title": "La tua transazione di validazione è inviata.",
-                "desc": "Se la transazione viene accettata, i tuoi token saranno bloccati per lo staking. Riceverai i tuoi token bloccati oltre ai premi una volta terminato il periodo di staking.",
+                "desc": "Se la transazione viene accettata, i tuoi token saranno bloccati per lo staking. Riceverai i tuoi token bloccati e le ricompense una volta terminato il periodo di staking.",
                 "status": "Stato"
             },
             "errs": {
                 "date": "La data di inizio deve essere futura e la data di fine deve essere successiva alla data di inizio.",
                 "amount": "L'importo dello staking deve essere almeno {0} AVAX",
                 "id": "ID nodo non valido. Deve iniziare con \"NodeID-\"",
-                "address": "Indirizzo del premio non valido."
+                "address": "Indirizzo per le ricompense non valido."
             }
         },
         "delegate": {
             "list": {
-                "prompt": "Seleziona un nodo da delegare",
+                "prompt": "Seleziona un nodo a cui delegare",
                 "search": "Cerca ID del Nodo",
                 "id": "ID del nodo",
-                "val_stake": "Staking del validator",
+                "val_stake": "Stake del validatore",
                 "aval_stake": "Disponibile",
-                "aval_stake_tip": "Importo massimo che può essere delegato a questo validator.",
+                "aval_stake_tip": "Importo massimo che può essere delegato a questo validatore.",
                 "users_tip": "Numero di deleganti",
                 "end": "Tempo scaduto",
                 "up": "Tempo di attività",
                 "up_tip": "Relativamente al nodo a cui è connesso questo wallet.",
                 "fee": "Commissione",
                 "empty": {
-                    "title": "Non è stato trovato alcun validator",
-                    "desc": "I validator devono essere attivi nello staking per essere trovati."
+                    "title": "Non è stato trovato alcun validatore",
+                    "desc": "I validatori devono essere attivi nello staking per essere trovati."
                 }
             },
             "node": {
                 "selected": "Nodo selezionato",
                 "fee": "Commissione di delega",
-                "start": "Data di inizio del validator",
-                "end": "Data di fine del validator"
+                "start": "Data di inizio del validatore",
+                "end": "Data di fine del validatore"
             },
             "form": {
                 "period": {
@@ -323,8 +323,8 @@
                     "desc2": "L'importo della delega disponibile per questo nodo è {0} AVAX"
                 },
                 "reward": {
-                    "label": "Indirizzo del premio",
-                    "desc": "Dove inviare i premi per lo staking.",
+                    "label": "Indirizzo per le ricompense",
+                    "desc": "Dove inviare le ricompense dello staking.",
                     "chip_1": "Usa questo wallet",
                     "chip_2": "Indirizzo personalizzato"
                 }
@@ -334,31 +334,31 @@
                 "amount": "Importo dello staking",
                 "start": "Data di inizio",
                 "end": "Data di fine",
-                "reward": "Indirizzo del premio"
+                "reward": "Indirizzo per le ricompense"
             },
             "errs": {
                 "start_now": "L'ora di inizio deve essere successiva all'ora corrente.",
                 "start_end": "La data di inizio deve essere futura e la data di fine deve essere successiva alla data di inizio.",
                 "invalid_addr": "Formato dell'indirizzo non valido. Il tuo indirizzo deve iniziare con \"P-\"",
-                "no_addr": "Devi fornire un indirizzo per ricevere i premi di delega.",
+                "no_addr": "Devi fornire un indirizzo per ricevere le ricompense della delega.",
                 "min_dur": "La durata minima dello staking è di 2 settimane.",
                 "max_dur": "La durata massima dello staking è di 1 anno.",
-                "no_node": "Devi specificare un validator.",
-                "val_end": "La data di fine della delega non può essere più lunga della data di fine del validator.",
+                "no_node": "Devi specificare un validatore.",
+                "val_end": "La data finale della delega non può superare la data finale del validatore.",
                 "amt": "L'importo della delega deve essere almeno {0} AVAX."
             },
             "summary": {
                 "duration": "Durata dello staking",
-                "reward": "Premi stimati",
+                "reward": "Ricompense stimate",
                 "fee": "Commissioni",
-                "warn": "Se è la prima volta che fai staking, inizia con poco. I token usati per lo staking sono bloccati fino alla fine del periodo di staking."
+                "warn": "Se è la prima volta che fai staking, inizia con poco. I token usati per lo staking resteranno bloccati fino alla fine del periodo di staking."
             },
             "confirm": "Conferma",
             "submit": "Invia",
             "cancel": "Annulla",
             "success": {
                 "title": "Transazione di delega inviata.",
-                "desc": "Se la transazione viene accettata, i tuoi token saranno bloccati per lo staking. Riceverai i tuoi token bloccati oltre ai premi una volta terminato il periodo di staking.",
+                "desc": "Se la transazione viene accettata, i tuoi token saranno bloccati per lo staking. Riceverai i tuoi token bloccati e le ricompense una volta terminato il periodo di staking.",
                 "status": "Stato"
             }
         }
@@ -366,8 +366,8 @@
     "advanced": {
         "title": "Avanzato",
         "import": {
-            "title": "Importazione della catena",
-            "desc": "Se hai dei fondi bloccati in un trasferimento a catena fallito, puoi completare l'importazione qui.",
+            "title": "Importazione della chain",
+            "desc": "Se hai dei fondi bloccati in un trasferimento tra chain fallito, puoi completare l'importazione qui.",
             "submit_x": "Importa X",
             "submit_p": "Importa P"
         }
@@ -385,7 +385,7 @@
     },
     "transactions": {
         "notx": "Nessuna transazione trovata per questo indirizzo sull'explorer.",
-        "loading": "Caricando la cronologia delle transazioni..",
+        "loading": "Caricamento della cronologia delle transazioni..",
         "warn_loading": "Questa lista potrebbe essere incompleta e non ordinata.",
         "error_api": "API dell'explorer non trovate",
         "error_api_desc": "Devi fornire l'API dell'Explorer Avalanche per questa rete per vedere la cronologia delle transazioni."

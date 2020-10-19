@@ -96,7 +96,7 @@
             "hide": "Ocultar desglose",
             "available": "Disponible",
             "locked": "Bloqueado",
-            "locked_stake": "Bloqueado - habilitado para prueba de participación",
+            "locked_stake": "Bloqueado Steakeable",
             "stake": "Participación",
             "collectibles": "Coleccionables"
         },

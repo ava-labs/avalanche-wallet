@@ -337,7 +337,7 @@ var isoLangs = {
     },
     "ko": {
         "name": "Korean",
-        "nativeName": "한국어 (韓國語), 조선말 (朝鮮語)"
+        "nativeName": "한국어"
     },
     "ku": {
         "name": "Kurdish",
