@@ -1,33 +1,64 @@
 <template>
     <div class="filter_settings">
         <div class="modal_body">
+            <h3>Filter Settings</h3>
             <div class="inputs">
                 <div class="uptime">
-                    <label>Available Space</label>
-                    <input type="number" min="0" step="1" v-model="availableSpace"><p>AVAX</p>
+                    <label>Minimum Available Delegation</label>
+                    <div class="input_row">
+                        <input type="number" min="0" step="1"
+                               @input="onInputChange"
+                               v-model="availableSpace">
+                        <p>AVAX</p>
+                    </div>
                 </div>
                 <div class="duration">
                     <label>Minimum Time Remaining</label>
-                    <input type="range" min="14" max="365" step="1" v-model="minDuration">
-                    <p style="display: inline-block;">{{durationText}}</p>
+                    <div class="input_row slider_row">
+                        <input type="range" min="14" max="365" step="1"
+                               @input="onInputChange"
+                               v-model="minDuration">
+                        <p style="display: inline-block;">{{durationText}}</p>
+                    </div>
+
                 </div>
                 <div class="fee">
                     <label>Maximum Fee</label>
-                    <input type="number" min="0" max="100" step="0.001" v-model="maxFee">
+                    <div class="input_row">
+                        <input type="number" min="0" max="100" step="1"
+                               @input="onInputChange"
+                               v-model="maxFee">
+                        <p>%</p>
+                    </div>
                 </div>
                 <div class="uptime">
                     <label>Minimum Uptime</label>
-                    <input type="number" min="0" max="100" step="1" v-model="minUptime">
+                    <div class="input_row">
+                        <input type="number" min="0" max="100" step="1"
+                               @input="onInputChange"
+                               v-model="minUptime">
+                        <p>%</p>
+                    </div>
                 </div>
             </div>
 
             <div class="preview">
-                <p>6 Valdiators found that match the criteria.</p>
+                <p>{{count}} Validators found that match the criteria.</p>
             </div>
 
             <div class="checkout">
-                <v-btn class="button_secondary" depressed>Apply Filter</v-btn>
-                <button @click="close">Cancel</button>
+                <v-btn class="button_secondary" depressed
+                       :disabled="!canApply"
+                       @click="apply"
+                >Apply Filter</v-btn>
+                <v-btn text
+                       v-if="activeFilter"
+                       @click="clear"
+                       style="margin: 8px;"
+                >
+                    Clear Filter
+                </v-btn>
+                <button @click="close" class="button_form_cancel">Cancel</button>
             </div>
         </div>
     </div>
@@ -36,6 +67,9 @@
     import "reflect-metadata";
     import {Vue, Component, Prop, Watch} from "vue-property-decorator";
     import moment from "moment";
+    import {ValidatorListFilter} from "@/components/wallet/earn/Delegate/types";
+    import {ValidatorListItem} from "@/store/modules/platform/types";
+    import {filterValidatorList} from "@/components/wallet/earn/Delegate/helper";
 
     const MINUTE_MS = 60000;
     const HOUR_MS = MINUTE_MS * 60;
@@ -46,9 +80,71 @@
         minDuration = 14;
         maxFee = 10;
         minUptime = 70;
-        availableSpace = 25000;
+        availableSpace = 25;
+        activeFilter: null|ValidatorListFilter = null;
+        count = 0;
+        timeout:NodeJS.Timeout|null = null;
+
+        @Prop() validators!: ValidatorListItem[]
+        @Watch('validators')
+        onValidatorsChange(){
+            this.updateCount();
+        }
+
+        checkValues(){
+            // max fee
+            if(this.maxFee > 100) this.maxFee = 100;
+            if(this.maxFee < 0) this.maxFee = 0;
+
+            // uptime
+            if(this.minUptime > 100) this.minUptime = 100;
+            if(this.minUptime < 0) this.minUptime = 0;
+        }
+
+        onInputChange(){
+            this.checkValues();
+            if(this.timeout){
+                clearTimeout(this.timeout);
+            }
+
+            let timeout = setTimeout(()=>{
+                this.updateCount()
+            },700);
+            this.timeout = timeout;
+        }
+
+        // Applies filters and calculates the validator count
+        updateCount(){
+            let validators = this.validators;
+            let filter = this.createFilter();
+            let res = filterValidatorList(validators, filter);
+            this.count = res.length;
+        }
+
         close(){
             this.$emit('close');
+        }
+
+        createFilter(): ValidatorListFilter{
+            return {
+                minDuration: this.minDuration,
+                maxFee: this.maxFee,
+                minUptime: this.minUptime,
+                availableSpace: this.availableSpace
+            }
+        }
+
+        clear(){
+            this.activeFilter = null;
+            this.$emit('change', null);
+            this.close();
+        }
+
+        apply(){
+            let filter:ValidatorListFilter = this.createFilter();
+            this.activeFilter = filter;
+            this.$emit('change', filter);
+            this.close();
         }
 
         get durationText(){
@@ -56,12 +152,20 @@
 
             return `${duration.months()} months ${duration.days()} days`
         }
+
+        get canApply(){
+            if(this.count===0) return false;
+            return true;
+        }
     }
 </script>
 <style scoped lang="scss">
     .filter_settings{
-        /*background-color: var(--bg);*/
-        background-color: rgba(0,0,0,0.2);
+        background-color: rgba(255,255,255,0.9);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .modal_body{
@@ -71,13 +175,32 @@
     }
 
     .inputs{
-        background-color: var(--bg-light);
         > div{
-            padding: 12px 30px;
             margin: 4px 0;
         }
     }
 
+    .input_row{
+        display: grid;
+        grid-template-columns: 1fr max-content;
+        background-color: var(--bg-light);
+        border: 1px solid rgba(0,0,0,0.1);
+        padding: 4px 30px;
+        border-radius: 2px;
+    }
+
+    .slider_row{
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+
+        input{
+            margin: 4px 0;
+        }
+        p{
+            margin: 0 !important;
+        }
+    }
     label {
         display: block;
         text-align: left;
@@ -89,7 +212,6 @@
     .duration{
         p{
             color: var(--primary-color-light);
-            margin-left: 12px !important;
         }
     }
 
@@ -97,6 +219,10 @@
         input{
             text-align: right;
         }
+    }
+
+    .preview{
+        margin: 12px 0;
     }
 
     .checkout{

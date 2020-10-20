@@ -8,11 +8,50 @@ import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-l
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faDollarSign, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory, faGlobe,
-  faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus, faMinus,
-  faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel, faList, faTrash,
-  faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown, faBars, faCog, faSearch,
-  faListOl, faSpinner, faInfoCircle, faLink, faQuoteRight, faLock, faEye, faEyeSlash, faQuestionCircle, faUsers
+  faDollarSign,
+  faTimesCircle,
+  faSignOutAlt,
+  faSignInAlt,
+  faCaretDown,
+  faHistory,
+  faGlobe,
+  faExchangeAlt,
+  faDna,
+  faCamera,
+  faDownload,
+  faCheckCircle,
+  faTimes,
+  faPlus,
+  faMinus,
+  faSync,
+  faExclamationTriangle,
+  faPrint,
+  faQrcode,
+  faCopy,
+  faKey,
+  faFileExcel,
+  faList,
+  faTrash,
+  faUpload,
+  faCreditCard,
+  faArrowRight,
+  faArrowLeft,
+  faTint,
+  faChevronDown,
+  faBars,
+  faCog,
+  faSearch,
+  faListOl,
+  faSpinner,
+  faInfoCircle,
+  faLink,
+  faQuoteRight,
+  faLock,
+  faEye,
+  faEyeSlash,
+  faQuestionCircle,
+  faUsers,
+  faFilter
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faBtc, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -24,7 +63,7 @@ library.add(
     faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel,
     faList, faTrash, faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown,
     faBars, faCog, faSearch, faListOl, faGoogle, faSpinner, faInfoCircle, faLink, faQuoteRight, faLock,
-    faEye, faEyeSlash, faQuestionCircle, faUsers
+    faEye, faEyeSlash, faQuestionCircle, faUsers, faFilter
 
 );
 
