@@ -10,6 +10,7 @@ import it from '../locales/it.json';
 import es from '../locales/es.json';
 import de from '../locales/de.json';
 import kr from '../locales/kr.json';
+import ru from '../locales/ru.json';
 
 
 const messages = {
@@ -19,7 +20,8 @@ const messages = {
     it,
     es,
     de,
-    kr
+    kr,
+    ru
 };
 
 // Create VueI18n instance with options
