@@ -1,5 +1,8 @@
 <template>
     <div class="validator_list">
+        <FilterSettings class="filter_modal" v-show="showFilter"
+            @close="showFilter = false;"
+        ></FilterSettings>
         <table>
             <thead>
             <tr class="header_tr">
@@ -33,6 +36,7 @@ import {ava, pChain} from "@/AVA";
 import {BN} from 'avalanche';
 
 import ValidatorRow from "@/components/misc/ValidatorList/ValidatorRow.vue";
+import FilterSettings from "@/components/misc/ValidatorList/FilterSettings.vue";
 import {ValidatorRaw, ValidatorDict} from "@/components/misc/ValidatorList/types";
 import Tooltip from "@/components/misc/Tooltip.vue";
 import {ValidatorListItem} from "@/store/modules/platform/types";
@@ -44,10 +48,19 @@ const DAY_MS = HOUR_MS * 24;
 
 
 @Component({
-    components: {Tooltip, ValidatorRow},
+    components: {Tooltip, ValidatorRow, FilterSettings},
 })
 export default class ValidatorsList extends Vue{
     @Prop() search!: string;
+    showFilter = true;
+
+    openFilters(){
+        this.showFilter = true;
+    }
+
+    hideFilters(){
+        this.showFilter = false;
+    }
 
     get validators(): ValidatorListItem[]{
         let list: ValidatorListItem[] = this.$store.getters["Platform/validatorListEarn"];
@@ -131,5 +144,14 @@ export default class ValidatorsList extends Vue{
     .empty_list{
         padding: 30px;
         text-align: center;
+    }
+
+    .filter_modal{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 2;
     }
 </style>

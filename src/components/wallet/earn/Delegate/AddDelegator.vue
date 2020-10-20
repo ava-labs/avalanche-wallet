@@ -4,6 +4,7 @@
             <div style="display: flex; align-items: center">
                 <p>{{$t('earn.delegate.list.prompt')}}:</p>
                 <input class="search" type="text" :placeholder="$t('earn.delegate.list.search')" v-model="search">
+                <button>Filter</button>
             </div>
             <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
         </div>
