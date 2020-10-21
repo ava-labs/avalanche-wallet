@@ -26,7 +26,7 @@
                             <p class="confirm_val">{{formMemo}}</p>
                         </template>
                         <template v-else-if="!isConfirm">
-                            <h4>Memo (Optional)</h4>
+                            <h4>{{$t('transfer.memo')}}</h4>
                             <textarea class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
                         </template>
 

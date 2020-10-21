@@ -7,7 +7,7 @@
             </div>
 
             <div class="rigt_but">
-                <button @click="openFilters">Filter <fa icon="filter"></fa></button>
+                <button @click="openFilters">{{$t('earn.delegate.filter.title')}} <fa icon="filter"></fa></button>
             </div>
         </div>
         <ValidatorsList class="val_list" :search="search" @select="onselect" ref="val_list"></ValidatorsList>

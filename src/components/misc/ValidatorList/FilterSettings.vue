@@ -1,10 +1,10 @@
 <template>
     <div class="filter_settings">
         <div class="modal_body">
-            <h3>Filter Settings</h3>
+            <h3>{{$t('earn.delegate.filter.title2')}}</h3>
             <div class="inputs">
                 <div class="uptime">
-                    <label>Minimum Available Delegation</label>
+                    <label>{{$t('earn.delegate.filter.label1')}}</label>
                     <div class="input_row">
                         <input type="number" min="0" step="1"
                                @input="onInputChange"
@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="duration">
-                    <label>Minimum Time Remaining</label>
+                    <label>{{$t('earn.delegate.filter.label2')}}</label>
                     <div class="input_row slider_row">
                         <input type="range" min="14" max="365" step="1"
                                @input="onInputChange"
@@ -23,7 +23,7 @@
 
                 </div>
                 <div class="fee">
-                    <label>Maximum Fee</label>
+                    <label>{{$t('earn.delegate.filter.label3')}}</label>
                     <div class="input_row">
                         <input type="number" min="0" max="100" step="1"
                                @input="onInputChange"
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="uptime">
-                    <label>Minimum Uptime</label>
+                    <label>{{$t('earn.delegate.filter.label4')}}</label>
                     <div class="input_row">
                         <input type="number" min="0" max="100" step="1"
                                @input="onInputChange"
@@ -43,22 +43,22 @@
             </div>
 
             <div class="preview">
-                <p>{{count}} Validators found that match the criteria.</p>
+                <p>{{$t('earn.delegate.filter.preview', [count])}}</p>
             </div>
 
             <div class="checkout">
                 <v-btn class="button_secondary" depressed
                        :disabled="!canApply"
                        @click="apply"
-                >Apply Filter</v-btn>
+                >{{$t('earn.delegate.filter.apply')}}</v-btn>
                 <v-btn text
                        v-if="activeFilter"
                        @click="clear"
                        style="margin: 8px;"
                 >
-                    Clear Filter
+                    {{$t('earn.delegate.filter.clear')}}
                 </v-btn>
-                <button @click="close" class="button_form_cancel">Cancel</button>
+                <button @click="close" class="button_form_cancel">{{$t('earn.delegate.filter.cancel')}}</button>
             </div>
         </div>
     </div>

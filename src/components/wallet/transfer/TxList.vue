@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="table_title">
-            <p>Amount</p>
-            <p>Type</p>
+            <p>{{$t('transfer.tx_list.amount')}}</p>
+            <p>{{$t('transfer.tx_list.token')}}</p>
         </div>
         <div v-for="(tx, i) in tx_list" :key="tx.uuid" class="list_item">
             <currency-input-dropdown
@@ -16,7 +16,7 @@
             </button>
         </div>
         <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
-        <p class="chain_warn">You can only send tokens on the X chain.</p>
+        <p class="chain_warn">{{$t('transfer.chain_warn')}}</p>
     </div>
 </template>
 <script lang="ts">
