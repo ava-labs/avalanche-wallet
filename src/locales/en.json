@@ -290,7 +290,7 @@
                 "date": "Start date must be in the future and end date must be after start date.",
                 "amount": "Stake amount must be at least {0} AVAX",
                 "id": "Invalid Node ID. Must start with \"NodeID-\"",
-                "address": "Invalid reward address."
+                "address": "Invalid address. Reward address must be a P chain address."
             }
         },
         "delegate": {
