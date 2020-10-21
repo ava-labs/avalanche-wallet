@@ -1,0 +1,428 @@
+{
+    "password": "密码",
+    "password_confirm": "确认密码",
+    "private_key": "私钥",
+    "address": "地址",
+    "add_pk": "添加私钥",
+    "home": {
+        "desc": "Avalanche 钱包是一个简单、安全、无托管的钱包，用于存储 Avalanche 上的资产。",
+        "access": {
+            "title": "欢迎回来！",
+            "desc": "在这里访问你现有的 Avalanche 钱包。",
+            "submit": "访问钱包"
+        },
+        "create": {
+            "title": "第一次使用 Avalanche 钱包？",
+            "desc": "点击“创建”来创建一个新钱包来发送、接收和交换 Avalanche 上的资产。",
+            "submit": "创建新钱包"
+        }
+    },
+    "network": {
+        "status1": "正在连接...",
+        "status2": "已断开",
+        "title": "网络",
+        "title2": "添加自定义网络",
+        "title3": "编辑网络",
+        "custom": "添加自定义",
+        "cancel": "取消",
+        "add": "添加网络"
+    },
+    "access": {
+        "title": "你想如何访问你的钱包？",
+        "create": "还没有 Avalanche 钱包？",
+        "but_mnemonic": "助记词",
+        "but_keystore": "密钥存储文件",
+        "cancel": "取消",
+        "json_error": "无法解析JSON文件。",
+        "keystore_error": "不支持此密钥存储文件版本。",
+        "password_error": "无效密码。",
+        "mnemonic": {
+            "title": "输入你的助记词\n",
+            "subtitle": "每输入一个单词后添加一个空格区分单词。",
+            "submit": "访问钱包",
+            "cancel": "取消",
+            "error": "无效的助记词。你的助记词必须是24个单词，每个单词之间用一个空格隔开。"
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "资产组合",
+            "manage": "管理",
+            "send": "发送",
+            "earn": "收益",
+            "advanced": "高级选项"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "你没有任何收藏品。"
+        }
+    },
+    "create": {
+        "generate": "生成一个新的助记词以设置你的Avalanche钱包。",
+        "but_have": "已有钱包？",
+        "submit": "生成助记词",
+        "cancel": "取消",
+        "mnemonic_title": "这是你的助记词。",
+        "mnemonic_desc": "按顺序使用这 24 个单词来恢复你的 Avalanche 钱包",
+        "attention": "注意！",
+        "warning": "将此助记词存储在一个安全的位置。任何持有此助记词的人都可以访问你的Avalanche钱包。没有办法找回丢失的助记词。",
+        "confirm": "我已经在一个安全的地方写下了我的助记词。",
+        "regenerate": "重新生成",
+        "success_title": "恭喜！",
+        "success_desc": "是时候访问你的Avalanche钱包了。",
+        "success_submit": "访问钱包",
+        "verify": "验证",
+        "verifytitle": "验证助记词",
+        "verify_desc": "在下面填写助记短语",
+        "error_number": "哎呀，看来你忘记填写数字了",
+        "error_word": "你输入的助记词与实际的不匹配。"
+    },
+    "top": {
+        "title1": "派生Avalanche钱包地址",
+        "title2": "余额",
+        "title3": "子网",
+        "title4": "网络",
+        "nftcol": "不可分割代币（NFT）\n",
+        "nftempty": "你没有收集任何不可分割代币。",
+        "locked": "锁定",
+        "info2": "我在代币销售中购买了货币。我的AVAX在哪里？",
+        "info2_desc": "该钱包已连接到Avalanche Everest测试网络。Avalanche主网启动后，你的购买将出现在钱包。",
+        "hover1": "查看地址二维码",
+        "hover2": "打印",
+        "hover3": "复制",
+        "hover4": "查看主网地址",
+        "balance": {
+            "show": "显示故障",
+            "hide": "隐藏故障",
+            "available": "可用",
+            "locked": "锁定",
+            "locked_stake": "锁定可质押的代币",
+            "stake": "质押",
+            "collectibles": "收藏品"
+        },
+        "address": {
+            "derived": "派生Avalanche钱包地址",
+            "desc": "这是你接收资金的地址。每次存款后你的地址都会改变。"
+        }
+    },
+    "transfer": {
+        "title": "发送",
+        "no_cash": "你必须在你的钱包中拥有资产才能发出交易。",
+        "faucet": "你查看过我们的水龙头吗？",
+        "to": "接收地址",
+        "fees": "费用",
+        "fee_tx": "交易费用",
+        "advanced": "高级",
+        "adv_change": "更改地址",
+        "send": "发送交易",
+        "summary": "交易汇总",
+        "disconnected": "无法发送资产。与网络断开连接。",
+        "success_title": "交易已发送",
+        "success_msg": "你已经成功发送你的交易。",
+        "error_title": "发送交易错误",
+        "error_msg": "发送交易失败。"
+    },
+    "keys": {
+        "title": "我的密钥",
+        "button1": "记住密钥",
+        "button2": "导入密钥",
+        "button3": "导出密钥",
+        "subtitle": "活跃密钥",
+        "remember_key_button": "记住",
+        "remember_key_desc": "为你的钱包输入密码，并在这个浏览器上安全地存储。",
+        "remember_key_check": "记住密钥",
+        "remember_key_info": "你以后可以在此浏览器上使用密码访问你的钱包。",
+        "export_key_button": "导出钱包",
+        "export_key_title": "导出密钥",
+        "export_key_desc": "输入密码将你的私钥编码到文件中。你以后可以使用此文件和你的密码访问你的钱包。",
+        "export_key_info": "选定{0}密钥。",
+        "export_placeholder1": "密码",
+        "export_placeholder2": "确认密码",
+        "empty": "该密钥没有余额。",
+        "import_key_button": "导入密钥",
+        "import_key_title": "导入密钥",
+        "import_key_desc": "为你的钱包添加额外的密钥。",
+        "import_key_option1": "助记词",
+        "import_key_option2": "密钥存储文件",
+        "import_key_success_title": "密钥已添加",
+        "import_key_success_msg": "私钥和资产已添加到钱包。",
+        "tooltip": "刷新浏览器时将忘记此密钥。",
+        "view_key": "查看助记词",
+        "export_key": "导出密钥",
+        "hd_addresses": "HD地址",
+        "remove_key": "移除密钥",
+        "activate_key": "激活密钥",
+        "remove_success_title": "密钥已移除",
+        "remove_success_msg": "私钥和资产已从钱包移除。",
+        "password_validation": "密码长度必须至少9个字符。",
+        "password_validation2": "密码不匹配。"
+    },
+    "portfolio": {
+        "assets": "资产",
+        "assets1": "代币",
+        "assets2": "收藏品",
+        "search": "搜索资产",
+        "name": "名称",
+        "send": "发送",
+        "balance": "余额",
+        "error_network": "无法显示资产。与网络断开连接。",
+        "nobalance": "你没有任何资产",
+        "nobalance_nft": "你没有任何收藏品。",
+        "noaddresses": "你没有任何过去的地址。"
+    },
+    "earn": {
+        "title": "赚钱",
+        "desc": "你可以通过质押你的现有代币赚取更多AVAX。",
+        "subtitle1": "验证",
+        "subtitle2": "委托",
+        "subtitle3": "跨链转移",
+        "subtitle4": "预计奖励",
+        "warning_1": "你必须在P链拥有至少{0}AVAX以成为一个验证者。",
+        "warning_2": "你必须在P链拥有至少{0}AVAX以成为一个委托者。",
+        "validate_card": {
+            "title": "验证",
+            "desc": "你有一个想用于质押的Avalanche节点。",
+            "submit": "添加验证者"
+        },
+        "delegate_card": {
+            "title": "委托",
+            "desc": "你没有Avalanche节点，但你想使用另一个节点进行质押。",
+            "submit": "添加委托者"
+        },
+        "transfer_card": {
+            "title": "跨链转账",
+            "desc": "质押需要P链上的AVAX。在X链和P链之间转移代币。",
+            "submit": "转账"
+        },
+        "rewards_card": {
+            "title": "预计奖励",
+            "desc": "查看你将收到的质押奖励。",
+            "submit": "查看奖励"
+        },
+        "transfer": {
+            "source": "来源链",
+            "destination": "目标链",
+            "balance": "余额",
+            "amount": "转账数量",
+            "fee": "费用",
+            "confirm": "确认",
+            "submit": "转账",
+            "cancel": "取消",
+            "err_import": "导入失败",
+            "err_desc": "在将代币导入目标链时出现问题。请再次尝试导入。",
+            "err_submit": "触发导入",
+            "success": {
+                "title": "转账完成",
+                "export": "导出交易ID：",
+                "import": "导入交易ID：",
+                "message": "你已经成功地在链之间转账。",
+                "back": "返回“赚钱”页面"
+            }
+        },
+        "rewards": {
+            "total": "总奖励",
+            "validation": "验证",
+            "delegation": "委托",
+            "empty": "你没有任何待付奖励。",
+            "row": {
+                "start": "开始",
+                "end": "结束",
+                "completed": "已完成",
+                "stake": "质押",
+                "reward": "潜在奖励"
+            }
+        },
+        "validate": {
+            "label_1": "节点ID",
+            "duration": {
+                "label": "质押期限",
+                "desc": "代币被锁定用于质押持续时间。",
+                "start": "开始日期和时间",
+                "end": "结束日期和时间"
+            },
+            "amount": {
+                "label": "质押数量",
+                "desc": "要锁定用于质押的AVAX数量。"
+            },
+            "fee": {
+                "label": "委托费用",
+                "desc": "你将从你的节点上的委托者处获取奖励的比例为（%）。"
+            },
+            "reward": {
+                "label": "奖励地址",
+                "desc": "质押奖励发送到哪里。",
+                "chip_1": "使用此钱包",
+                "chip_2": "自定义地址"
+            },
+            "summary": {
+                "max_del": "最大委托数量",
+                "max_del_tooltip": "可以委托给此验证者的最大数量。",
+                "duration": "质押持续时间",
+                "rewards": "预计奖励",
+                "warn": "如果是你第一次质押，从小的数量开始。已质押的代币将会被锁定，直到质押期限结束。"
+            },
+            "confirmation": {
+                "id": "节点ID",
+                "amount": "质押数量",
+                "start": "开始日期",
+                "end": "结束日期",
+                "fee": "委托费用",
+                "reward": "奖励地址",
+                "type_local": "此钱包",
+                "type_custom": "自定义"
+            },
+            "confirm": "确认",
+            "submit": "提交",
+            "cancel": "取消",
+            "success": {
+                "title": "你的验证交易已发送。",
+                "desc": "如果交易被接受，你的代币将被锁定用于质押。质押期结束后，你将收到你锁定的代币加上奖励。",
+                "status": "状态"
+            },
+            "errs": {
+                "date": "开始日期必须在将来，结束日期必须在开始日期之后。",
+                "amount": "质押数量必须至少为{0}AVAX",
+                "id": "无效的节点ID。必须以“NodeID-”开头",
+                "address": "无效的奖励地址。"
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "选择要一个委托的节点",
+                "search": "搜索节点ID",
+                "id": "节点ID",
+                "val_stake": "验证者质押",
+                "aval_stake": "可用",
+                "aval_stake_tip": "还有多少可以委托给这个验证者。",
+                "users_tip": "委托者数量",
+                "end": "结束时间",
+                "up": "上线时间",
+                "up_tip": "相对于该钱包所连接的节点。",
+                "fee": "费用",
+                "empty": {
+                    "title": "未找到验证者",
+                    "desc": "验证者需要活跃地质押才能被找到。"
+                }
+            },
+            "node": {
+                "selected": "选定节点",
+                "fee": "委托费用",
+                "start": "验证者开始日期",
+                "end": "验证者结束日期"
+            },
+            "form": {
+                "period": {
+                    "label": "质押期限",
+                    "desc": "代币被锁定用于质押持续时间。",
+                    "start": "开始日期和时间",
+                    "end": "结束日期和时间"
+                },
+                "amount": {
+                    "label": "质押数量",
+                    "desc": "要锁定用于质押的AVAX数量。",
+                    "desc2": "此节点的可用委托数量为{0}AVAX"
+                },
+                "reward": {
+                    "label": "奖励地址",
+                    "desc": "质押奖励发送到哪里。",
+                    "chip_1": "使用此钱包",
+                    "chip_2": "自定义地址"
+                }
+            },
+            "confirmation": {
+                "node": "节点ID",
+                "amount": "质押数量",
+                "start": "开始日期",
+                "end": "结束日期",
+                "reward": "奖励地址"
+            },
+            "errs": {
+                "start_now": "开始时间必须在当前时间之后。",
+                "start_end": "开始日期必须在将来，结束日期必须在开始日期之后。",
+                "invalid_addr": "无效的地址格式。你的地址必须以“P-”开始",
+                "no_addr": "你必须提供一个地址才能接收委托奖励。",
+                "min_dur": "最小质押持续时间为2周。",
+                "max_dur": "最大质押持续时间为1年。",
+                "no_node": "你必须指定一个验证者。",
+                "val_end": "委托结束日期不能长于验证者的结束日期。",
+                "amt": "委托数量必须至少为{0}AVAX"
+            },
+            "summary": {
+                "duration": "质押持续时间",
+                "reward": "预计奖励",
+                "fee": "费用",
+                "warn": "如果是你第一次质押，从小额开始。已质押的代币被锁定，直到质押期结束。"
+            },
+            "confirm": "确认",
+            "submit": "提交",
+            "cancel": "取消",
+            "success": {
+                "title": "委托交易已发送。",
+                "desc": "如果交易被接受，你的代币将被锁定用于质押。质押期结束后，你将收到你锁定的代币加上奖励。",
+                "status": "状态"
+            }
+        }
+    },
+    "advanced": {
+        "title": "高级",
+        "import": {
+            "title": "链导入",
+            "desc": "如果你有资金卡在一个失败的链转移中，你可以在这里完成导入。",
+            "submit_x": "导入X链",
+            "submit_p": "导入P链"
+        }
+    },
+    "logout": {
+        "button": "登出",
+        "button_conf": "登出",
+        "button_cancel": "取消",
+        "confirmation": "你确定要登出吗？",
+        "confirmation_message": "该钱包及其密钥会被忘记。"
+    },
+    "keystore": {
+        "title": "密钥存储文件",
+        "button": "选择文件"
+    },
+    "transactions": {
+        "notx": "在区块链浏览器上未发现此地址的交易。",
+        "loading": "正在加载交易历史…",
+        "warn_loading": "该列表可能不完整且无序。",
+        "error_api": "未找到区块链浏览器 API。",
+        "error_api_desc": "你必须为此网络提供一个AVA 浏览器 API来查看交易历史。"
+    },
+    "modal": {
+        "qr": {
+            "title": "地址",
+            "copy": "复制地址"
+        },
+        "print": {
+            "title": "打印预览",
+            "submit": "打印"
+        },
+        "keystore": {
+            "title": "更新密钥存储文件",
+            "desc": "我们已经升级了密钥库文件规格。请下载你的新密钥库文件并再次访问你的钱包。",
+            "logout": "登出并再次访问"
+        },
+        "mainnet": {
+            "title": "主网地址",
+            "desc": "你的主网地址是："
+        },
+        "mnemonic": {
+            "title": "密钥短语"
+        },
+        "activateWallet": {
+            "title": "激活钱包",
+            "desc": "有一个活跃的钱包。输入你的密码进行访问。",
+            "submit": "访问钱包",
+            "cancel": "访问另一个钱包",
+            "cancel2": "（之前的钱包会被忘记。）",
+            "err1": "无效密码。",
+            "err2": "无法读取钱包数据。"
+        }
+    },
+    "nav": {
+        "access": "访问钱包",
+        "create": "创建新钱包"
+    }
+}
