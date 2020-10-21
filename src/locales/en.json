@@ -25,7 +25,8 @@
         "title3": "Edit Network",
         "custom": "Add Custom",
         "cancel": "Cancel",
-        "add": "Add Network"
+        "add": "Add Network",
+        "not_mainnet": "This wallet is not connected to Mainnet."
     },
     "access": {
         "title": "How do you want to access your wallet?",
