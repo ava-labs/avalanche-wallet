@@ -38,18 +38,7 @@ import {LanguageItem} from "@/components/misc/LanguageSelect/types";
 
 
 export default class LanguageSelect extends Vue{
-    // selected: LanguageItem = {
-    //     code: 'en',
-    //     name: 'English'
-    // }
-    // selected: string = "en";
     locale = 'en';
-
-    // select(code: string){
-    //     // console.log(this.selected);
-    //     // this.selected = val;
-    //     this.$root.$i18n.locale = this.selected.code;
-    // }
 
     mounted(){
         this.locale = this.$root.$i18n.locale;
@@ -71,6 +60,12 @@ export default class LanguageSelect extends Vue{
                 break;
             case 'fr':
                 flag = 'fr';
+                break;
+            case 'zh_hant':
+                flag = "cn";
+                break;
+            case 'zh_hans':
+                flag = "cn";
                 break;
             default:
                 flag = selCode;

@@ -115,9 +115,17 @@ var isoLangs = {
         "name": "Chichewa; Chewa; Nyanja",
         "nativeName": "chiCheŵa, chinyanja"
     },
-    "zh": {
+    "cn": {
         "name": "Chinese",
         "nativeName": "中文 (Zhōngwén), 汉语, 漢語"
+    },
+    "zh_hans": {
+        "name": "Chinese (Simplified)",
+        "nativeName": "汉语"
+    },
+    "zh_hant": {
+        "name": "Chinese (Traditional)",
+        "nativeName": "漢語"
     },
     "cv": {
         "name": "Chuvash",
