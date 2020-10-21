@@ -90,53 +90,6 @@ export default class LanguageSelect extends Vue{
     }
 }
 
-// export default {
-//     components: {
-//         CountryFlag
-//     },
-//     data(){
-//         return{
-//             selected: {
-//                 code: 'en',
-//                 name: 'English'
-//             },
-//             locale: 'en',
-//         }
-//     },
-//     methods: {
-//         select(){
-//             console.log(this.selected);
-//             this.$root.$i18n.locale = this.selected.code;
-//         }
-//     },
-//     computed: {
-//         flag(){
-//             let flag = 'us';
-//             switch (this.selected) {
-//                 case 'en':
-//                     flag = 'us';
-//                     break;
-//                 default:
-//                     flag = this.selected;
-//                     break;
-//             }
-//             return flag
-//         },
-//         items(){
-//             let res = [];
-//
-//             let messages = this.$root.$i18n.messages;
-//             for(var langCode in messages){
-//                 let data = langMap[langCode];
-//                 res.push({
-//                     code: langCode,
-//                     name: data.name
-//                 })
-//             }
-//             return res;
-//         }
-//     },
-// }
 </script>
 <style scoped lang="scss">
     .sel_locale{
@@ -149,22 +102,6 @@ export default class LanguageSelect extends Vue{
         border-radius: 3px;
         position: relative;
         overflow: hidden;
-
-        /*&:hover{*/
-        /*    border: 1px solid var(--primary-color);*/
-        /*}*/
-
-        /*&:before{*/
-        /*    left: 0;*/
-        /*    position: absolute;*/
-        /*    content: "";*/
-        /*    pointer-events: none;*/
-        /*    user-select: none;*/
-        /*    width: 100%;*/
-        /*    height: 100%;*/
-        /*    background-color: var(--primary-color) !important;*/
-        /*    opacity: 0.04;*/
-        /*}*/
     }
 
     .sel_locale p.selected{
