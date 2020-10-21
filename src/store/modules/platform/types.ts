@@ -44,6 +44,7 @@ export interface ValidatorListItem {
     nodeID: string
     validatorStake: BN,
     delegatedStake: BN,
+    remainingStake: BN,
     numDelegators: number,
     startTime: Date,
     endTime: Date,

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="earn_page">
         <div class="header">
             <h1>{{$t('earn.title')}} </h1>
             <h1 class="subtitle" v-if="pageNow">/ {{subtitle}} <span @click="cancel"><fa icon="times"></fa></span></h1>
@@ -147,6 +147,10 @@ export default class Earn extends Vue{
 </script>
 <style scoped lang="scss">
 @use '../../main';
+.earn_page{
+    display: grid;
+    grid-template-rows: max-content 1fr;
+}
 .header{
     display: flex;
     /*justify-content: space-between;*/

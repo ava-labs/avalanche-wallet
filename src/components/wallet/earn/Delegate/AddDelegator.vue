@@ -1,12 +1,12 @@
 <template>
-    <div>
-        <div v-if="!selected">
-            <div style="display: flex; align-items: center">
-                <p>{{$t('earn.delegate.list.prompt')}}:</p>
-                <input class="search" type="text" :placeholder="$t('earn.delegate.list.search')" v-model="search">
-            </div>
-            <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>
-        </div>
+    <div class="add_delegator">
+            <NodeSelection v-if="!selected" @select="onselect" class="node_selection"></NodeSelection>
+<!--            <div style="display: flex; align-items: center">-->
+<!--                <p>{{$t('earn.delegate.list.prompt')}}:</p>-->
+<!--                <input class="search" type="text" :placeholder="$t('earn.delegate.list.search')" v-model="search">-->
+<!--                <button @click="openFilters">Filter</button>-->
+<!--            </div>-->
+<!--            <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>-->
         <div class="cols" v-else>
             <transition-group name="fade" mode="out-in">
                 <div class="ins_col" key="form" v-show="!isConfirm">
@@ -130,6 +130,7 @@ import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {Defaults, ONEAVAX} from "avalanche/dist/utils";
 import {ValidatorListItem} from "@/store/modules/platform/types";
+import NodeSelection from "@/components/wallet/earn/Delegate/NodeSelection.vue";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -138,6 +139,7 @@ const DAY_MS = HOUR_MS * 24;
 
 @Component({
     components: {
+        NodeSelection,
         AvaxInput,
         ValidatorsList,
         StakingCalculator,
@@ -530,11 +532,14 @@ export default class AddDelegator extends Vue{
 <style scoped lang="scss">
 @use "../../../../main";
 
-.val_list{
-    overflow: scroll;
-    max-height: 450px;
-    margin-top: 14px;
+.add_delegator{
+    height: 100%;
 }
+
+.node_selection{
+    height: 100%;
+}
+
 .cols{
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -545,13 +550,7 @@ form{
     width: 100%;
 }
 
-.search{
-    padding: 3px 12px;
-    border-radius: 12px;
-    background-color: var(--bg-light);
-    margin-left: 30px;
-    color: var(--primary-color);
-}
+
 h4{
     margin: 14px 0px 4px;
     font-weight: bold;

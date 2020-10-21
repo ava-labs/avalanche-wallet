@@ -18,6 +18,7 @@ import {
     GetValdiatorsResponse,
     ValidatorRaw
 } from "@/components/misc/ValidatorList/types";
+import {ONEAVAX} from "avalanche/dist/utils";
 
 
 const MINUTE_MS = 60000;
@@ -97,6 +98,7 @@ const platform_module: Module<PlatformState, RootState> = {
                 if(dif <= threshold){
                     return false;
                 }
+
                 return true;
             });
 
@@ -131,10 +133,21 @@ const platform_module: Module<PlatformState, RootState> = {
                 let startTime = new Date(parseInt(v.startTime)*1000);
                 let endTime = new Date(parseInt(v.endTime)*1000);
 
+
+                let delegatedStake = delegatedAmt.add(delegatedPendingAmt);
+                let validatorStake = new BN(v.stakeAmount);
+                // Calculate remaining stake
+                let absMaxStake = ONEAVAX.mul(new BN(3000000))
+                let relativeMaxStake = validatorStake.mul(new BN(5));
+                let stakeLimit = BN.min(absMaxStake, relativeMaxStake);
+
+                let remainingStake = stakeLimit.sub(validatorStake).sub(delegatedStake);
+
                 let listItem: ValidatorListItem = {
                     nodeID: v.nodeID,
-                    validatorStake: new BN(v.stakeAmount),
-                    delegatedStake: delegatedAmt.add(delegatedPendingAmt),
+                    validatorStake: validatorStake,
+                    delegatedStake: delegatedStake,
+                    remainingStake: remainingStake,
                     numDelegators: delegators.length + delegatorsPending.length,
                     startTime: startTime,
                     endTime,
@@ -144,49 +157,16 @@ const platform_module: Module<PlatformState, RootState> = {
                 res.push(listItem);
             }
 
+            res = res.filter(v => {
+                // Remove if remaining space is less than minimum
+                let min = state.minStakeDelegation;
+                if(v.remainingStake.lt(min)) return false;
+                return true;
+            })
+
             return res;
         },
 
-        // validatorsDict(state): ValidatorDict{
-        //     let validators = state.validators;
-        //     let delegators = state.delegators;
-        //
-        //     let validatorDict: ValidatorDict = {};
-        //
-        //     // let allValidators = validators.concat(delegators);
-        //
-        //     for(var i=0; i<validators.length; i++){
-        //         let v = validators[i];
-        //         validatorDict[v.nodeID] = {
-        //             ...v,
-        //         }
-        //     }
-        //
-        //     for(var n=0; n<delegators.length; n++) {
-        //         let delegator = delegators[n];
-        //         let nodeID = delegator.nodeID;
-        //
-        //         let target = validatorDict[nodeID];
-        //         if(target){
-        //             let targetAmt = new BN(target.stakeAmount);
-        //             let vAmt = new BN(delegator.stakeAmount);
-        //             let tot = targetAmt.add(vAmt);
-        //             target.stakeAmount = tot.toString();
-        //         }
-        //     }
-        //
-        //     return validatorDict;
-        // },
-        // validatorsCleanArray(state, getters): ValidatorRaw[]{
-        //     let validatorDict = getters.validatorsDict;
-        //     let res = [];
-        //     for(var nodeId in validatorDict){
-        //         let val = validatorDict[nodeId];
-        //         res.push(val);
-        //     }
-        //
-        //     return res;
-        // },
 
         // Maps delegators to a node id
         nodeDelegatorMap(state): ValidatorDelegatorDict{
@@ -243,56 +223,34 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         // Returns total active and pending delegation amount for the given node id
-        validatorTotalDelegated: (state, getters) => (nodeId: string) => {
-            // let validator: ValidatorRaw = getters.validatorsDict[nodeId];
-
-            let delegators: DelegatorRaw[]|undefined = getters.nodeDelegatorMap[nodeId];
-            let delegatorsPending: DelegatorPendingRaw[]|undefined = getters.nodeDelegatorPendingMap[nodeId];
-
-            // let stakeTotal = new BN(validator.stakeAmount);
-
-            let activeTotal = new BN(0);
-            let pendingTotal = new BN(0);
-
-            if(delegators){
-                activeTotal = delegators.reduce((acc: BN, val: DelegatorRaw) => {
-                    let valBn = new BN(val.stakeAmount);
-                    return acc.add(valBn);
-                }, new BN(0));
-            }
-
-            if(delegatorsPending){
-                pendingTotal = delegatorsPending.reduce((acc: BN, val: DelegatorPendingRaw) => {
-                    let valBn = new BN(val.stakeAmount);
-                    return acc.add(valBn);
-                }, new BN(0));
-            }
-
-            let totDel = activeTotal.add(pendingTotal);
-            return totDel;
-        },
-
-        // validatorRemainingStake: (state, getters) => (nodeId: string) => {
-        //     let validator: ValidatorRaw = getters.validatorsDict[nodeId];
+        // validatorTotalDelegated: (state, getters) => (nodeId: string) => {
+        //     // let validator: ValidatorRaw = getters.validatorsDict[nodeId];
         //
-        //     let delegators: DelegatorRaw[] = getters.nodeDelegatorMap[nodeId];
-        //     let delegatorsPending: DelegatorPendingRaw[] = getters.nodeDelegatorPendingMap[nodeId];
+        //     let delegators: DelegatorRaw[]|undefined = getters.nodeDelegatorMap[nodeId];
+        //     let delegatorsPending: DelegatorPendingRaw[]|undefined = getters.nodeDelegatorPendingMap[nodeId];
         //
-        //     let stakeTotal = new BN(validator.stakeAmount);
+        //     // let stakeTotal = new BN(validator.stakeAmount);
         //
-        //     let activeTotal = delegators.reduce((acc: BN, val: DelegatorRaw) => {
-        //         let valBn = new BN(val.stakeAmount);
-        //         return acc.add(valBn);
-        //     }, new BN(0));
+        //     let activeTotal = new BN(0);
+        //     let pendingTotal = new BN(0);
         //
-        //     let pendingTotal = delegatorsPending.reduce((acc: BN, val: DelegatorPendingRaw) => {
-        //         let valBn = new BN(val.stakeAmount);
-        //         return acc.add(valBn);
-        //     }, new BN(0));
+        //     if(delegators){
+        //         activeTotal = delegators.reduce((acc: BN, val: DelegatorRaw) => {
+        //             let valBn = new BN(val.stakeAmount);
+        //             return acc.add(valBn);
+        //         }, new BN(0));
+        //     }
+        //
+        //     if(delegatorsPending){
+        //         pendingTotal = delegatorsPending.reduce((acc: BN, val: DelegatorPendingRaw) => {
+        //             let valBn = new BN(val.stakeAmount);
+        //             return acc.add(valBn);
+        //         }, new BN(0));
+        //     }
         //
         //     let totDel = activeTotal.add(pendingTotal);
-        // }
-
+        //     return totDel;
+        // },
     }
 };
 
