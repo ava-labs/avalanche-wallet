@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="table_title">
-            <p>Amount</p>
-            <p>Type</p>
+            <p>{{$t('transfer.tx_list.amount')}}</p>
+            <p>{{$t('transfer.tx_list.token')}}</p>
         </div>
         <div v-for="(tx, i) in tx_list" :key="tx.uuid" class="list_item">
             <currency-input-dropdown
@@ -16,6 +16,7 @@
             </button>
         </div>
         <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
+        <p class="chain_warn">{{$t('transfer.chain_warn')}}</p>
     </div>
 </template>
 <script lang="ts">
@@ -155,6 +156,12 @@
 @use '../../../main';
 
 $right_pad: 80px;
+
+.chain_warn{
+    color: var(--primary-color-light);
+    font-size: 12px;
+    margin: 6px 0 !important;
+}
 
     .table_title{
         display: grid;

@@ -5,7 +5,6 @@
                 <button class="max_but" @click="maxOut">MAX</button>
                 <big-num-input ref="bigIn" @change="amount_in" class="bigIn" contenteditable="bigIn" :max="max_amount" :denomination="denomination" :step="stepSize" :placeholder="placeholder"></big-num-input>
             </div>
-<!--            <dropdown :items="dropdown_values" class="dropdown" @change="drop_change" :initial="initial"></dropdown>-->
             <BalanceDropdown :disabled_assets="disabled_assets" v-model="asset_now"></BalanceDropdown>
         </div>
     </div>
@@ -92,13 +91,9 @@
             }
         }
 
-        // get placeholder(): string{
-        //     let denom = this.denomination;
-        //
-        //     let res = '0';
-        //     return res;
-        // }
-
+        onfocus(){
+            console.log('focus')
+        }
 
         get isEmpty():boolean{
             if(this.walletAssetsArray.length===0){
@@ -129,30 +124,6 @@
             if(!this.asset_now) return 0;
             return this.asset_now.denomination;
         }
-
-
-        // get disabledAssets(){
-        //     let res = this.walletAssetsArray.filter(asset => {
-        //         return this.dis
-        //     })
-        // }
-        // get dropdown_values(){
-        //     let res: IDropdownValue[] = [];
-        //
-        //     this.walletAssetsArray.forEach(asset => {
-        //         let disabled= false;
-        //         if(this.disabled_assets.includes(asset)){
-        //             disabled = true;
-        //         }
-        //         res.push({
-        //             label: `${asset.name} (${asset.symbol})`,
-        //             key: asset.id,
-        //             data: asset,
-        //             disabled: disabled
-        //         });
-        //     });
-        //     return res;
-        // }
 
         get walletAssetsArray():AvaAsset[]{
             return this.$store.getters.walletAssetsArray;
@@ -187,14 +158,13 @@
 <style scoped lang="scss">
     @use '../../main';
 
-    $barH: 1px;
-
     .bigIn{
         width: 100%;
         /*background-color: #303030;*/
     }
 
     .max_in_cont{
+        position: relative;
         display: grid;
         grid-template-columns: 50px 1fr;
     }
@@ -204,9 +174,6 @@
         display: grid;
         grid-template-columns: 1fr 140px;
         background-color: transparent;
-        /*height: 35px;*/
-        /*font-size: 12px;*/
-        /*border: 1px solid #ddd;*/
         font-size: 12px;
         height: 40px;
         width: 100%;
@@ -243,6 +210,15 @@
         /*flex-basis: 140px;*/
         width: 100%;
         /*border-left: 1px solid #d2d2d2;*/
+    }
+
+    .balance{
+        position: absolute;
+        top: 40px;
+        padding-top: 4px;
+        right: 8px;
+        font-size: 11px;
+        color: var(--primary-color-light);
     }
 
 

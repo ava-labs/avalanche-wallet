@@ -25,7 +25,8 @@
         "title3": "Edit Network",
         "custom": "Add Custom",
         "cancel": "Cancel",
-        "add": "Add Network"
+        "add": "Add Network",
+        "not_mainnet": "This wallet is not connected to Mainnet."
     },
     "access": {
         "title": "How do you want to access your wallet?",
@@ -113,14 +114,20 @@
         "fees": "Fees",
         "fee_tx": "Transaction Fee",
         "advanced": "Advanced",
+        "memo": "Memo (Optional)",
         "adv_change": "Change Address",
         "send": "Send Transaction",
         "summary": "Transaction Summary",
+        "chain_warn": "You can only send tokens on the X chain.",
         "disconnected": "Unable to send assets. Disconnected from the network.",
         "success_title": "Transaction Sent",
         "success_msg": "You have succesfully sent your transaction.",
         "error_title": "Error Sending Transaction",
-        "error_msg": "Failed to send transaction."
+        "error_msg": "Failed to send transaction.",
+        "tx_list": {
+            "amount": "Amount",
+            "token": "Token"
+        }
     },
     "keys": {
         "title": "My Keys",
@@ -283,10 +290,22 @@
                 "date": "Start date must be in the future and end date must be after start date.",
                 "amount": "Stake amount must be at least {0} AVAX",
                 "id": "Invalid Node ID. Must start with \"NodeID-\"",
-                "address": "Invalid reward address."
+                "address": "Invalid address. Reward address must be a P chain address."
             }
         },
         "delegate": {
+            "filter": {
+                "title": "Filter",
+                "title2": "Filter Settings",
+                "label1": "Minimum Available Delegation",
+                "label2": "Minimum Time Remaining",
+                "label3": "Maximum Fee",
+                "label4": "Minimum Uptime",
+                "preview": "{0} Validators found that match the criteria.",
+                "apply": "Apply Filter",
+                "clear": "Clear Filter",
+                "cancel": "Cancel"
+            },
             "list": {
                 "prompt": "Select a node to delegate",
                 "search": "Search Node ID",

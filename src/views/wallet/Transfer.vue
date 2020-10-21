@@ -26,7 +26,7 @@
                             <p class="confirm_val">{{formMemo}}</p>
                         </template>
                         <template v-else-if="!isConfirm">
-                            <h4>Memo (Optional)</h4>
+                            <h4>{{$t('transfer.memo')}}</h4>
                             <textarea class="memo" maxlength="256" placeholder="Memo" v-model="memo"></textarea>
                         </template>
 
@@ -65,7 +65,7 @@
                         <template v-else-if="isSuccess">
                             <p style="color: var(--success);"> <fa icon="check-circle"></fa> Transaction Sent </p>
                             <label style="word-break: break-all;"><b>ID: </b> {{txId}}</label>
-                            <v-btn depressed style="margin-top: 14px;" class="button_primary" color="#4C2E56" :ripple="false" @click="startAgain" block>Start Again</v-btn>
+                            <v-btn depressed style="margin-top: 14px;" class="button_primary" color="#4C2E56" :ripple="false" @click="startAgain" block :disabled="!canSendAgain">Start Again</v-btn>
                         </template>
                     </div>
                 </div>
@@ -124,6 +124,8 @@
         isConfirm = false;
         isSuccess = false;
         txId = "";
+
+        canSendAgain = false;
 
         confirm(){
             let isValid = this.formCheck();
@@ -229,8 +231,10 @@
 
 
             // Update the user's balance
+            this.canSendAgain = false;
             setTimeout(()=>{
                 this.$store.dispatch('Assets/updateUTXOs');
+                this.canSendAgain = true;
             }, 3000);
         }
 

@@ -1,6 +1,6 @@
 <template>
     <div class="network_warning" :visible="isVisible">
-        <p>This wallet is <b>not</b> connected to mainnet.</p>
+        <p>{{$t('network.not_mainnet')}}</p>
     </div>
 </template>
 <script>

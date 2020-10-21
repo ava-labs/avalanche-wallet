@@ -1,5 +1,5 @@
 <template>
-    <tr class="validator_row" v-if="isVisible">
+    <tr class="validator_row">
         <td class="id">{{validator.nodeID}}</td>
         <td class="amount">{{amtText}}</td>
         <td class="amount">{{remainingAmtText}}</td>
@@ -23,8 +23,7 @@ import {BN} from "avalanche";
 import {bnToBig} from "@/helpers/helper";
 import {ValidatorListItem} from "@/store/modules/platform/types";
 
-@Component({
-})
+@Component
 export default class ValidatorsList extends Vue{
     @Prop() validator!: ValidatorListItem;
 
@@ -86,16 +85,17 @@ export default class ValidatorsList extends Vue{
     }
 
     // TODO :HEAVY
-    get maxStake(): BN{
-        // return new BN(300000000000000)
-        return this.$store.getters["Platform/validatorMaxStake"](this.validator);
-    }
+    // get maxStake(): BN{
+    //     return new BN(300000000000000)
+        // return this.$store.getters["Platform/validatorMaxStake"](this.validator);
+    // }
 
 
     // TODO :HEAVY
     get remainingStake(): BN{
         // return new BN(1000000000000)
-        return this.maxStake.sub(this.totalDelegated.add(this.stakeAmt));
+        return this.validator.remainingStake;
+        // return this.maxStake.sub(this.totalDelegated.add(this.stakeAmt));
     }
 
 
@@ -104,14 +104,14 @@ export default class ValidatorsList extends Vue{
         return big.toLocaleString(0)
     }
 
-    get isVisible(){
-
-        // If remaining amount is less than the minimum delegation amount
-        let minDelAmt = this.$store.state.Platform.minStakeDelegation;
-        if(this.remainingStake.lt(minDelAmt)) return false;
-
-        return true;
-    }
+    // TODO: Move this to
+    // get isVisible(){
+    //
+    //     If remaining amount is less than the minimum delegation amount
+        // let minDelAmt = this.$store.state.Platform.minStakeDelegation;
+        // if(this.remainingStake.lt(minDelAmt)) return false;
+        // return true;
+    // }
 
     select(){
         this.$emit('select', this.validator);
@@ -119,13 +119,7 @@ export default class ValidatorsList extends Vue{
 }
 </script>
 <style scoped lang="scss">
-//.validator_row{
-//    padding: 4px 0;
-//    display: grid;
-//    grid-gap: 14px;
-//    grid-template-columns: 1fr max-content max-content max-content max-content;
-//}
-
+@use '../../../main';
 
 .amount{
     text-align: right;
@@ -145,6 +139,12 @@ td{
     padding: 4px 14px;
     background-color: var(--bg-light);
     border: 1px solid var(--bg);
-    font-size: 14px;
+    font-size: 13px;
+}
+
+@include main.medium-device{
+    td{
+        font-size: 10px !important;
+    }
 }
 </style>
