@@ -16,6 +16,7 @@
             </button>
         </div>
         <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
+        <p class="chain_warn">You can only send tokens on the X chain.</p>
     </div>
 </template>
 <script lang="ts">
@@ -155,6 +156,12 @@
 @use '../../../main';
 
 $right_pad: 80px;
+
+.chain_warn{
+    color: var(--primary-color-light);
+    font-size: 12px;
+    margin: 6px 0 !important;
+}
 
     .table_title{
         display: grid;
