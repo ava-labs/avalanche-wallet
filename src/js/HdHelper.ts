@@ -54,7 +54,12 @@ class HdHelper {
     }
 
     async oninit(){
+        let start = performance.now();
         this.hdIndex = await this.findAvailableIndex();
+        let end = performance.now();
+        console.log("Find time: ", (end-start));
+        console.log(this.changePath, this.chainId,this.hdIndex);
+
         if(!this.isPublic){
             this.updateKeychain();
         }
@@ -184,7 +189,7 @@ class HdHelper {
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
         // TODO: Optimize this
-        await this.updateHdIndex()
+        // await this.updateHdIndex()
 
         // let addrs: string[] = this.keyChain.getAddressStrings();
         let addrs: string[] = this.getAllDerivedAddresses();
@@ -215,6 +220,7 @@ class HdHelper {
         let hdIndex = this.hdIndex;
         return this.getAllDerivedAddresses(hdIndex+INDEX_RANGE);
     }
+
     async getAtomicUTXOs(){
         let hdIndex = this.hdIndex;
         let addrs: string[] = this.getAllDerivedAddresses();
@@ -290,6 +296,14 @@ class HdHelper {
         this.keyCache = {};
         this.addressCache = {};
     }
+
+    //TODO: Find HD index from the explorer
+    // Scans the address space of this hd path and finds the last used index using the
+    // explorer API.
+    async findAvailableIndexExplorer() {
+
+    }
+
 
     // Scans the address space for utxos and finds a gap of INDEX_RANGE
     async findAvailableIndex(start:number=0): Promise<number> {
