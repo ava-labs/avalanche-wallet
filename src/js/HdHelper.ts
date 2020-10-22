@@ -6,7 +6,7 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 import {SECP256k1KeyPair} from "avalanche/dist/common";
-import {getAddressDetailX} from "@/explorer_api";
+import {getAddressDetailX, getAddressTransactionsP} from "@/explorer_api";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
@@ -364,6 +364,11 @@ class HdHelper {
             if(this.chainId==='X'){
                 let res = await getAddressDetailX(addr)
                 if(res) return true;
+            }else{ // P chain
+                let res = await getAddressTransactionsP(addr)
+                console.log(res);
+                let count = res.count;
+                if(count > 0) return true;
             }
         }catch(e){
             // IF there is no available api, catch the 404 and return false

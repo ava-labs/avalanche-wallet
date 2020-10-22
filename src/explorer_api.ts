@@ -1,5 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 
+// Same for every network
+const P_CHAIN_ID = "11111111111111111111111111111111LpoYY";
+
 // Doesn't really matter what we set, it will change
 const api_url: string = 'localhost';
 const explorer_api: AxiosInstance = axios.create({
@@ -35,4 +38,15 @@ async function getAddressDetailX(addr: string){
     }
 }
 
-export {explorer_api, getAddressHistory, getAddressDetailX};
+async function getAddressTransactionsP(addr: string){
+    let addrRaw = addr.split('-')[1];
+    let url = `/x/transactions?chainID=${P_CHAIN_ID}&address=${addrRaw}`
+    try{
+        let res = await explorer_api.get(url);
+        return res.data;
+    }catch(e){
+        throw e;
+    }
+}
+
+export {explorer_api, getAddressHistory, getAddressDetailX, getAddressTransactionsP};
