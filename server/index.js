@@ -9,6 +9,10 @@ const app = express();
 
 
 app.use(helmet());
+
+// API
+beforeMiddleware(app);
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -21,6 +25,7 @@ app.use (function (req, res, next) {
         next();
     } else {
         // request was via http, so redirect to https
+        // next();
         res.redirect('https://' + req.headers.host + req.url);
     }
 });
@@ -28,16 +33,16 @@ app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
 
 
-// Serving Static Files
-let publicPath = resolve(__dirname, '../dist');
-app.use(express.static(publicPath));
 
 
-// API
-beforeMiddleware(app);
+
+
 
 app.use(history);
 
+// Serving Static Files
+let publicPath = resolve(__dirname, '../dist');
+app.use(express.static(publicPath));
 
 
 const port = process.env.PORT || 4000;

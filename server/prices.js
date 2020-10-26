@@ -9,7 +9,6 @@ let prices = {
 function updatePrices(){
     axios.get(COINGECKO_URL).then(res => {
         prices.usd = res.data.avalanche.usd;
-        console.log(prices)
     });
 }
 

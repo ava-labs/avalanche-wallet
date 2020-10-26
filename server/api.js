@@ -3,7 +3,7 @@ const {prices} = require('./prices');
 
 
 router.get('/price', function (req, res) {
-    res.send(prices)
+    res.json(prices)
 });
 
 module.exports = router;
