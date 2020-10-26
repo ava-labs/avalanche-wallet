@@ -76,7 +76,7 @@ const network_module: Module<NetworkState, RootState> = {
 
         async init({state, commit, dispatch}){
             // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1, 'X', "https://explorerapi.avax-dev.network");
+            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1, 'X', "https://explorerapi.avax.network");
             let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5, 'X', "https://explorerapi.avax-test.network");
             let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
 

@@ -35,8 +35,7 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.isUpdating = true;
 
-            let offset = 0;
-            let limit = 20;
+
 
             let addresses:string[] = wallet.getHistoryAddresses();
 
@@ -45,6 +44,9 @@ const history_module: Module<HistoryState, RootState> = {
                 state.isUpdating = false;
                 return;
             }
+
+            let offset = 0;
+            let limit = addresses.length;
 
             let data = await getAddressHistory(addresses, limit, offset);
 

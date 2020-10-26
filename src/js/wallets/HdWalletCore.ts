@@ -65,8 +65,8 @@ class HdWalletCore{
         let internalIndex = this.internalHelper.hdIndex;
         let externalIndex  = this.externalHelper.hdIndex;
 
-        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex+40);
-        let external = this.externalHelper.getAllDerivedAddresses(externalIndex+40);
+        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex);
+        let external = this.externalHelper.getAllDerivedAddresses(externalIndex);
         return internal.concat(external);
     }
 
