@@ -5,8 +5,9 @@ var history = require('connect-history-api-fallback');
 const helmet = require("helmet");
 const {beforeMiddleware, onListening} = require('./configure');
 const app = express();
-app.use(helmet());
 
+
+app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -31,7 +32,7 @@ beforeMiddleware(app);
 app.use(history);
 
 // Serving Static Files
-app.use(express.static('dist'));
+app.use(express.static('../dist'));
 
 const port = process.env.PORT || 4000;
 
