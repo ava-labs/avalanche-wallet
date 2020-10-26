@@ -9,11 +9,11 @@ let prices = {
 
 function updatePrices(){
     axios.get(COINGECKO_URL).then(res => {
-        console.log(res.data);
         prices.usd = res.data.avalanche.usd;
-    })
+    });
 }
 updatePrices();
+setInterval(updatePrices, 60000);
 
 module.exports = {
     prices
