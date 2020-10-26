@@ -3,9 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 var history = require('connect-history-api-fallback');
 const helmet = require("helmet");
-const {beforeMiddleware} = require('./configure');
-const {updatePrices} = require('./prices');
-
+const {beforeMiddleware, onListening} = require('./configure');
 const app = express();
 app.use(helmet());
 
@@ -32,15 +30,12 @@ beforeMiddleware(app);
 
 app.use(history);
 
-
-
 // Serving Static Files
 app.use(express.static('dist'));
 
 const port = process.env.PORT || 4000;
+
 app.listen(port, () => {
+    onListening();
     console.log(`listening on ${port}`);
 });
-
-
-setInterval(updatePrices, 60000);

@@ -11,7 +11,6 @@ function updatePrices(){
         prices.usd = res.data.avalanche.usd;
     });
 }
-updatePrices();
 
 module.exports = {
     prices,
