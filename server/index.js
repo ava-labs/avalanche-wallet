@@ -44,5 +44,3 @@ app.listen(port, () => {
 
 
 setInterval(updatePrices, 60000);
-
-export {app}
