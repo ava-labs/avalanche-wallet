@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 var history = require('connect-history-api-fallback');
 const helmet = require("helmet");
 const {beforeMiddleware} = require('./configure');
-
+const {updatePrices} = require('./prices');
 
 const app = express();
 app.use(helmet());
@@ -30,7 +30,6 @@ app.use(helmet.frameguard());
 // API
 beforeMiddleware(app);
 
-// history.unless = unless;
 app.use(history);
 
 
@@ -42,5 +41,8 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
+
+
+setInterval(updatePrices, 60000);
 
 export {app}

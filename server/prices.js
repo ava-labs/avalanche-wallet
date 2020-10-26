@@ -12,8 +12,8 @@ function updatePrices(){
     });
 }
 updatePrices();
-setInterval(updatePrices, 60000);
 
 module.exports = {
-    prices
+    prices,
+    updatePrices
 }
