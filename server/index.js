@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 var history = require('connect-history-api-fallback');
 const helmet = require("helmet");
+const { resolve } = require('path');
 const {beforeMiddleware, onListening} = require('./configure');
 const app = express();
 
@@ -32,7 +33,8 @@ beforeMiddleware(app);
 app.use(history);
 
 // Serving Static Files
-app.use(express.static('../dist'));
+let publicPath = resolve(__dirname, '../dist');
+app.use(express.static(publicPath));
 
 const port = process.env.PORT || 4000;
 
