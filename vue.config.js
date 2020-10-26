@@ -1,4 +1,4 @@
-const {beforeMiddleware} = require('./server/configure');
+const {beforeMiddleware, onListening} = require('./server/configure');
 
 module.exports = {
     "transpileDependencies": [
@@ -8,6 +8,7 @@ module.exports = {
         https: true,
         port: 5000,
         before: beforeMiddleware,
+        onListening: onListening
     },
     // publicPath: '',
     configureWebpack:{
