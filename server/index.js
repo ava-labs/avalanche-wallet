@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 var history = require('connect-history-api-fallback');
 const helmet = require("helmet");
+const {beforeMiddleware} = require('./configure');
 
 
 const app = express();
@@ -25,7 +26,14 @@ app.use (function (req, res, next) {
 });
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
-app.use(history());
+
+// API
+beforeMiddleware(app);
+
+// history.unless = unless;
+app.use(history);
+
+
 
 // Serving Static Files
 app.use(express.static('dist'));
@@ -34,3 +42,5 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });
+
+export {app}

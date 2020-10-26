@@ -1,10 +1,13 @@
+const {beforeMiddleware} = require('./server/configure');
+
 module.exports = {
     "transpileDependencies": [
         "vuetify"
     ],
     devServer: {
         https: true,
-        port: 5000
+        port: 5000,
+        before: beforeMiddleware,
     },
     // publicPath: '',
     configureWebpack:{

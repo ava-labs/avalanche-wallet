@@ -22,6 +22,7 @@
     import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
     import LedgerBlock from "@/components/modals/LedgerBlock";
     import TestNetBanner from '@/components/TestNetBanner';
+    import {wallet_api} from "@/wallet_api";
 
     export default {
         components: {
@@ -37,6 +38,10 @@
             if(locale){
                 this.$root.$i18n.locale = locale;
             }
+
+            wallet_api.get('/price').then(res=>{
+                console.log(res);
+            });
 
             await this.$store.dispatch('Network/init');
         },
