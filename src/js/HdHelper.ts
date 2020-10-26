@@ -6,7 +6,7 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 import {SECP256k1KeyPair} from "avalanche/dist/common";
-import {getAddressDetailX, getAddressTransactionsP} from "@/explorer_api";
+import {getAddressDetailX, getAddressTransactionsP, isAddressUsedP, isAddressUsedX} from "@/explorer_api";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
@@ -55,7 +55,8 @@ class HdHelper {
 
     async oninit(){
         let start = performance.now();
-        this.hdIndex = await this.findAvailableIndex();
+        // this.hdIndex = await this.findAvailableIndex();
+        this.hdIndex = await this.findAvailableIndexExplorer();
         let end = performance.now();
         console.log("Find time: ", (end-start));
         console.log(this.changePath, this.chainId,this.hdIndex);
@@ -302,6 +303,47 @@ class HdHelper {
     // explorer API.
     async findAvailableIndexExplorer() {
 
+        // Scan one by one
+        // let isEmpty = false;
+        // let index = 0;
+        // while(!isEmpty){
+        //     // Check with explorer if address has been used
+        //     let isAddrUsed = await this.checkIndexExplorer(index);
+        //     isEmpty = !isAddrUsed;
+        //     // If address is used increment index
+        //     if(isAddrUsed) index++;
+        // }
+        // // console.log("Found index: ",index);
+        // return index;
+
+
+        // Binary search the explorer
+        let stepSize = 128;
+        let indexNow = stepSize;
+        let isFound = false;
+
+        while(!isFound){
+            // Floor the index
+            indexNow = Math.floor(indexNow);
+            // console.log("Scanning index: ",indexNow);
+            let isAddrUsed = await this.checkIndexExplorer(indexNow);
+            if(isAddrUsed){
+                indexNow += stepSize;
+            }else{
+                // If current index is 0 nothing else left to scan
+                if(indexNow===0) return indexNow;
+
+                // If previous address is used we then this is the correct index
+                // Assuming no gaps in the index space
+                let prevIndex = indexNow-1;
+                let isPrevAddrUsed = await this.checkIndexExplorer(prevIndex);
+                if(isPrevAddrUsed) return indexNow;
+
+                stepSize = stepSize/2;
+                indexNow -= stepSize;
+            }
+        }
+        return 0;
     }
 
 
@@ -362,13 +404,15 @@ class HdHelper {
 
         try{
             if(this.chainId==='X'){
-                let res = await getAddressDetailX(addr)
+                // let res = await getAddressDetailX(addr)
+                let res = await isAddressUsedX(addr);
                 if(res) return true;
             }else{ // P chain
-                let res = await getAddressTransactionsP(addr)
-                console.log(res);
-                let count = res.count;
-                if(count > 0) return true;
+                // let res = await getAddressTransactionsP(addr)
+                let res = await isAddressUsedP(addr);
+                if(res) return true;
+                // let count = res.count;
+                // if(count > 0) return true;
             }
         }catch(e){
             // IF there is no available api, catch the 404 and return false
