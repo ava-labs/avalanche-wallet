@@ -39,11 +39,8 @@
                 this.$root.$i18n.locale = locale;
             }
 
-            wallet_api.get('/price').then(res=>{
-                console.log(res);
-            });
-
             await this.$store.dispatch('Network/init');
+            this.$store.dispatch('updateAvaxPrice');
         },
         computed: {
             isNavbar() {

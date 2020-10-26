@@ -39,6 +39,7 @@ import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 import {NetworkItem} from "@/store/modules/network/types";
 import {AvaNetwork} from "@/js/AvaNetwork";
 import {StakeableLockOut} from "avalanche/dist/apis/platformvm";
+import {wallet_api} from "@/wallet_api";
 
 export default new Vuex.Store({
     modules:{
@@ -57,6 +58,9 @@ export default new Vuex.Store({
         wallets: [],
         volatileWallets: [], // will be forgotten when tab is closed
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
+        prices: {
+            usd: 0
+        },
     },
     getters: {
         walletNftUTXOs(state: RootState): UTXO[]{
@@ -605,6 +609,14 @@ export default new Vuex.Store({
             }catch(err){
                 throw(err);
             }
+        },
+
+
+        async updateAvaxPrice(store){
+            wallet_api.get('/price').then(res => {
+                let prices = res.data;
+                store.state.prices = prices;
+            });
         }
     },
 })
