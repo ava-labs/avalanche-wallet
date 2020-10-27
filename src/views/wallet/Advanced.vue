@@ -26,6 +26,7 @@ export default class Earn extends Vue{
 </script>
 <style scoped lang="scss">
 .grids{
+    margin: 30px 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
@@ -37,5 +38,6 @@ export default class Earn extends Vue{
 .grid_box{
     background-color: var(--bg-light);
     padding: 30px;
+    border-radius: 4px;
 }
 </style>
