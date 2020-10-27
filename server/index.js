@@ -30,8 +30,8 @@ app.use (function (req, res, next) {
         next();
     } else {
         // request was via http, so redirect to https
-        next();
-        // res.redirect('https://' + req.headers.host + req.url);
+        // next();
+        res.redirect('https://' + req.headers.host + req.url);
     }
 });
 app.use(helmet.xssFilter());
