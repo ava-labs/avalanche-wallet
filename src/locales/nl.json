@@ -1,0 +1,428 @@
+{
+    "password": "Wachtwoord",
+    "password_confirm": "Wachtwoord bevestigen",
+    "private_key": "Privé code",
+    "address": "Adres",
+    "add_pk": "Privé code toevoegen",
+    "home": {
+        "desc": "Avalanche Wallet is een eenvoudige en veilige portomonnee zonder bewaarneming voor het opbergen van activa van Avalanche.",
+        "access": {
+            "title": "Welkom terug!",
+            "desc": "\"Open\" hier uw bestaande Avalanche-portemonnee.",
+            "submit": "Portemonnee openen"
+        },
+        "create": {
+            "title": "Nieuw bij Avalance Wallet?",
+            "desc": "\"Creëer\" een nieuwe portemonnee om activa van Avalance te verzenden, te ontvangen en te verwisselen.",
+            "submit": "Nieuwe portemonnee creëren"
+        }
+    },
+    "network": {
+        "status1": "Er wordt verbinding gemaakt...",
+        "status2": "Verbinding verbroken.",
+        "title": "Netwerken",
+        "title2": "Aangepast netwerk toevoegen",
+        "title3": "Netwerk bewerken",
+        "custom": "Aangepast netwerk toevoegen",
+        "cancel": "Annuleren",
+        "add": "Netwerk toevoegen"
+    },
+    "access": {
+        "title": "Hoe wilt u uw portemonnee openen?",
+        "create": "Heeft u geen portemonnee?",
+        "but_mnemonic": "Mnemonische sleutelzin",
+        "but_keystore": "Keystore-bestand",
+        "cancel": "Annuleren",
+        "json_error": "Het is niet gelukt het JSON-bestand te verwerken.",
+        "keystore_error": "Deze keystore-versie wordt niet ondersteunt.",
+        "password_error": "Ongeldig wachtwoord.",
+        "mnemonic": {
+            "title": "Voer uw MNEMONISCHE zin in\n",
+            "subtitle": "Druk na elk ingevoerd woord op \"SPATIE\".",
+            "submit": "Portemonnee openen",
+            "cancel": "Annuleren",
+            "error": "Ongeldige sleutelzin. Uw zin moet uit ten minste 24 woorden gescheiden door een spatie bestaan."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfolio",
+            "manage": "Beheren",
+            "send": "Verzenden",
+            "earn": "Verdienen",
+            "advanced": "Geavanceerd"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "U hebt geen inningen."
+        }
+    },
+    "create": {
+        "generate": "Genereer een nieuwe sleutelzin om uw Avalanche Wallet in te stellen.",
+        "but_have": "Heeft u al een portemonnee?",
+        "submit": "Genereer een sleutelzin",
+        "cancel": "Annuleren",
+        "mnemonic_title": "Dit is uw sleutelzin.",
+        "mnemonic_desc": "Gebruik deze 24 woorden op volgorde om uw Avalanche Wallet te herstellen.",
+        "attention": "Attentie!",
+        "warning": "Berg deze sleutelzin op een veilige locatie op. Iedereen met deze sleutelzin heeft toegang tot uw Avalanche Wallet. Het is niet mogelijk verloren geraakte sleutelzinnen te herstellen.",
+        "confirm": "Ik heb mijn sleutelzin op een veilige locatie opgeschreven.",
+        "regenerate": "Opnieuw genereren",
+        "success_title": "Gefeliciteerd!",
+        "success_desc": "Het is tijd om uw Avalanche Wallet te openen.",
+        "success_submit": "Portemonnee openen",
+        "verify": "Verifiëren",
+        "verifytitle": "Geheugensteun verifiëren",
+        "verify_desc": "Vul onder de Mnemonische zin in",
+        "error_number": "Oeps, het lijkt erop dat u vergeten bent het nummer in te vullen.",
+        "error_word": "De door u ingevoerde mnemonische zin komt niet overeen met de daadwerkelijke zin."
+    },
+    "top": {
+        "title1": "Afgeleid adres Avalanche-portemonne",
+        "title2": "Saldo",
+        "title3": "Subnet",
+        "title4": "Netwerk",
+        "nftcol": "NFTs",
+        "nftempty": "U hebt geen onvervangbare tokens verzameld.",
+        "locked": "Vergrendeld",
+        "info2": "Ik heb munten in de Token verkoop gekocht. Waar zijn mijn AVAX?",
+        "info2_desc": "Deze portemonnee is verbonden met het testnetwerk van Avalanche Everest. Uw aankoop zal in de portemonnee verschijnen nadat het hoofdnet van Avalanche werd gestart.",
+        "hover1": "Adres QR-code bekijken",
+        "hover2": "Afdrukken",
+        "hover3": "Kopiëren",
+        "hover4": "Adres hoofdnet bekijken",
+        "balance": {
+            "show": "Uitsplitsing tonen",
+            "hide": "Uitsplitsing verbergen",
+            "available": "Beschikbaar",
+            "locked": "Vergrendeld",
+            "locked_stake": "Vergrendelde inzet",
+            "stake": "Inzetten",
+            "collectibles": "Inningen"
+        },
+        "address": {
+            "derived": "Afgeleid adres Avalanche-portemonne",
+            "desc": "Dit is het adres waar u fondsen ontvangt. U adres zal na elke storting worden gewijzigd."
+        }
+    },
+    "transfer": {
+        "title": "Verzenden",
+        "no_cash": "U moet activa in uw portemonnee hebben om een transactie te kunnen doen.",
+        "faucet": "Hebt u onze kraan bekeken?",
+        "to": "Naar adres",
+        "fees": "Tarieven",
+        "fee_tx": "Transactiekosten",
+        "advanced": "Geavanceerd",
+        "adv_change": "Adres wijzigen",
+        "send": "Transactie verzenden",
+        "summary": "Samenvatting transactie",
+        "disconnected": "Het is niet gelukt activa te verzenden. Afgekoppeld van het netwerk.",
+        "success_title": "Transactie verzonden.",
+        "success_msg": "Het is gelukt uw transactie te verzenden.",
+        "error_title": "Er vond een fout plaats tijdens het verzenden van de transactie.",
+        "error_msg": "Het is niet gelukt de transactie te verzenden."
+    },
+    "keys": {
+        "title": "Mijn codes",
+        "button1": "Codes onthouden",
+        "button2": "CODES IMPORTEREN",
+        "button3": "CODES EXPORTEREN",
+        "subtitle": "Code activeren",
+        "remember_key_button": "ONTHOUDEN",
+        "remember_key_desc": "Beveilig uw portemonnee met een wachtwoord en sla deze veilig op in deze browser.",
+        "remember_key_check": "Codes onthouden",
+        "remember_key_info": "U kunt uw portemonnee met een wachtwoord later openen in deze browser.",
+        "export_key_button": "PORTEMONNEE EXPORTEREN",
+        "export_key_title": "Codes exporteren",
+        "export_key_desc": "Voer een wachtwoord in om uw privé codes te coderen in een bestand. U kunt dit bestand en uw wachtwoord later gebruiken om uw portemonnee te openen.",
+        "export_key_info": "{0} codes geselecteerd.",
+        "export_placeholder1": "Wachtwoord",
+        "export_placeholder2": "Wachtwoord bevestigen",
+        "empty": "Deze code heeft geen saldo.",
+        "import_key_button": "CODE IMPORTEREN",
+        "import_key_title": "Codes importeren",
+        "import_key_desc": "Voeg extra codes toe om te gebruiken bij uw portemonnee.",
+        "import_key_option1": "MNEMONISCHE ZIN",
+        "import_key_option2": "KEYSTORE-BESTAND",
+        "import_key_success_title": "Code toegevoegd",
+        "import_key_success_msg": "Privé code en activa toegevoegd aan de portemonnee.",
+        "tooltip": "Deze code zal worden vergeten als u de browser vernieuwd.",
+        "view_key": "Sleutelzin bekijken",
+        "export_key": "Code exporteren",
+        "hd_addresses": "HD-adressen",
+        "remove_key": "Code verwijderen",
+        "activate_key": "Code activeren",
+        "remove_success_title": "Code verwijderd",
+        "remove_success_msg": "Privé code en activa werden uit de portemonnee gehaald.",
+        "password_validation": "Het wachtwoord moet ten minste uit 9 karakters bestaan.",
+        "password_validation2": "Het wachtwoord komt niet overeen."
+    },
+    "portfolio": {
+        "assets": "Activa",
+        "assets1": "Tokens",
+        "assets2": "Inningen",
+        "search": "Activa zoeken",
+        "name": "Naam",
+        "send": "Verzenden",
+        "balance": "Saldo",
+        "error_network": "Het lukt niet om activa weer te geven. U bent afgekoppeld van het netwerk.",
+        "nobalance": "U hebt geen activa.",
+        "nobalance_nft": "U hebt geen inningen.",
+        "noaddresses": "U hebt geen adressen uit het verleden."
+    },
+    "earn": {
+        "title": "Verdienen",
+        "desc": "U kunt meer AVAX verdienen door uw bestaande tokens in te zetten.",
+        "subtitle1": "Valideren",
+        "subtitle2": "Delegeren",
+        "subtitle3": "Cross-keten overboeking",
+        "subtitle4": "Geschatte beloningen",
+        "warning_1": "U moet ten minste {0} AVAX-punten op de P-keten hebben om een validator te worden.",
+        "warning_2": "U moet ten minste {0} AVAX-punten op de P-keten hebben om een delegatielid te worden.",
+        "validate_card": {
+            "title": "Valideren",
+            "desc": "U hebt een Avalanche-nodus die u wilt inzetten.",
+            "submit": "Validator toevoegen"
+        },
+        "delegate_card": {
+            "title": "Delegeren",
+            "desc": "U hebt geen Avalanche-nodus, maar u wilt inzetten met een andere nodus.",
+            "submit": "Delegatielid toevoegen"
+        },
+        "transfer_card": {
+            "title": "Cross-keten overboeking",
+            "desc": "Voor het inzetten is AVAX op de P-keten nodig. Boek tokens over tussen X en P.",
+            "submit": "Overboeken"
+        },
+        "rewards_card": {
+            "title": "Geschatte beloningen",
+            "desc": "Bekijk de beloningen van de inzet die u zult ontvangen.",
+            "submit": "Beloningen bekijken"
+        },
+        "transfer": {
+            "source": "Bronketen",
+            "destination": "Doelketen",
+            "balance": "Saldo",
+            "amount": "Bedrag overboeken",
+            "fee": "Tarief",
+            "confirm": "Bevestigen",
+            "submit": "Overboeken",
+            "cancel": "Annuleren",
+            "err_import": "Importeren mislukt",
+            "err_desc": "Er was een probleem met het importeren van uw tokens in de doelketen. Probeer het importeren nog een keer uit te voeren.",
+            "err_submit": "Import triggeren",
+            "success": {
+                "title": "Overboeking voltooid.",
+                "export": "Transactie-ID exporteren:",
+                "import": "Transactie-ID importeren:",
+                "message": "Het is u gelukt een overboeking tussen ketens te doen.",
+                "back": "Terug naar Verdienen"
+            }
+        },
+        "rewards": {
+            "total": "Totaal beloningen",
+            "validation": "Validatie",
+            "delegation": "Delegatie",
+            "empty": "U hebt geen beloningen in de wacht.",
+            "row": {
+                "start": "Start",
+                "end": "Einde",
+                "completed": "Voltooid",
+                "stake": "Inzet",
+                "reward": "Potentiële beloning"
+            }
+        },
+        "validate": {
+            "label_1": "Nodus ID",
+            "duration": {
+                "label": "Periode inzet",
+                "desc": "De tijdsduur waarin uw tokens vergrendeld zullen zijn om te worden ingezet.",
+                "start": "Startdatum en -tijd",
+                "end": "Einddatum en -tijd"
+            },
+            "amount": {
+                "label": "Bedrag inzet",
+                "desc": "De hoeveelheid AVAX te vergrendelen om in te zetten."
+            },
+            "fee": {
+                "label": "Delegatiekosten",
+                "desc": "U zult dit % aan beloningen claimen van de delegatieleden op uw nodus."
+            },
+            "reward": {
+                "label": "Adres beloning",
+                "desc": "Waar de beloningen van de inzet heen te zenden.",
+                "chip_1": "Gebruik deze portemonnee",
+                "chip_2": "Aangepast adres"
+            },
+            "summary": {
+                "max_del": "Max bedrag delegatie",
+                "max_del_tooltip": "Maximum bedrag dat naar deze validator kan worden verzonden.",
+                "duration": "Tijdsduur inzet",
+                "rewards": "Geschatte beloningen",
+                "warn": "Als dit de eerste keer is dat u inzet, begin dan klein. Ingezette tokens worden vergrendeld tot het einde van de periode."
+            },
+            "confirmation": {
+                "id": "Nodus ID",
+                "amount": "Bedrag inzet",
+                "start": "Startdatum",
+                "end": "Einddatum",
+                "fee": "Delegatiekosten",
+                "reward": "Adres beloning",
+                "type_local": "Deze portemonnee",
+                "type_custom": "Aanpassen"
+            },
+            "confirm": "Bevestigen",
+            "submit": "Indienen",
+            "cancel": "Annuleren",
+            "success": {
+                "title": "Uw validatie-transactie is verzonden.",
+                "desc": "Als de transactie werd geaccepteerd, dan worden uit tokens vergrendeld voor de inzet. U zul uw vergrendelde tokens plus de beloningen ontvangen zodra de periode van de inzet voorbij is.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "De startdatum moet in de toekomst liggen en de enddatum moet later zijn dan de startdatum.",
+                "amount": "Het bedrag van de inzet moet minstens {0} AVAX zijn.",
+                "id": "Ongeldige Nodus ID. Moet beginnen met \"NodeID-\".",
+                "address": "Ongeldig adres beloning."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Kies een nodus om te delegeren",
+                "search": "Nodus ID zoeken",
+                "id": "Nodus ID",
+                "val_stake": "Inzet validator",
+                "aval_stake": "Beschikbaar",
+                "aval_stake_tip": "Hoeveel meer kan er naar deze valdiator worden gedelegeerd?",
+                "users_tip": "Aantal delegatieleden",
+                "end": "Eindtijd",
+                "up": "Bedrijfstijd",
+                "up_tip": "Relatief ten opzichte van de nodus waarmee deze portemonnee is verbonden.",
+                "fee": "Tarief",
+                "empty": {
+                    "title": "Geen validators gevonden.",
+                    "desc": "Validators moeten actief bezig zijn met inzetten om te kunnen worden gevonden."
+                }
+            },
+            "node": {
+                "selected": "Geselecteerde nodus",
+                "fee": "Delegatiekosten",
+                "start": "Startdatum validator",
+                "end": "Einddatum validator"
+            },
+            "form": {
+                "period": {
+                    "label": "Tijdsduur inzet",
+                    "desc": "De tijdsduur waarin uw tokens vergrendeld zullen zijn om te worden ingezet.",
+                    "start": "Startdatum en -tijd",
+                    "end": "Einddatum en -tijd"
+                },
+                "amount": {
+                    "label": "Bedrag inzet",
+                    "desc": "De hoeveelheid AVAX te vergrendelen om in te zetten.",
+                    "desc2": "Het beschikbare delegatiebedrag voor deze nodus is {0} AVAX."
+                },
+                "reward": {
+                    "label": "Adres beloning",
+                    "desc": "Waar de beloningen van de inzet heen te zenden.",
+                    "chip_1": "Gebruik deze portemonnee",
+                    "chip_2": "Aangepast adres"
+                }
+            },
+            "confirmation": {
+                "node": "Nodus ID",
+                "amount": "Bedrag inzet",
+                "start": "Startdatum",
+                "end": "Einddatum",
+                "reward": "Adres beloning"
+            },
+            "errs": {
+                "start_now": "De starttijd moet later zijn dan de huidige tijd.",
+                "start_end": "De startdatum moet in de toekomst liggen en de einddatum moet later dan de startdatum zijn.",
+                "invalid_addr": "Ongeldige adresindeling. Uw adres moet beginnen met \"P-\"",
+                "no_addr": "U moet een adres opgeven om delegatiebeloningen te kunnen ontvangen.",
+                "min_dur": "De minimum inzet duurt 2 weken.",
+                "max_dur": "De maximum inzet is 1 jaar.",
+                "no_node": "U moet een validator opgeven.",
+                "val_end": "De einddatum van de delegatie kan niet later zijn dan de einddatum van de validator.",
+                "amt": "Het bedrag van de delegatie moet minstens {0} AVAX zijn."
+            },
+            "summary": {
+                "duration": "Tijdsduur inzet",
+                "reward": "Geschatte beloning",
+                "fee": "Tarief",
+                "warn": "Als dit de eerste keer is dat u inzet, begin dan klein. Ingezette tokens worden vergrendeld tot het einde van de periode."
+            },
+            "confirm": "Bevestigen",
+            "submit": "Indienen",
+            "cancel": "Annuleren",
+            "success": {
+                "title": "Delegatie-transactie verzonden.",
+                "desc": "Als de transactie werd geaccepteerd, dan worden uit tokens vergrendeld voor de inzet. U zul uw vergrendelde tokens plus de beloningen ontvangen zodra de periode van de inzet voorbij is.",
+                "status": "Status"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Geavanceerd",
+        "import": {
+            "title": "Keten importeren",
+            "desc": "Als u fondsen vast heb zitten in een mislukte overboeking van een keten, dan kunt u het importeren ervan hier voltooien.",
+            "submit_x": "X importeren",
+            "submit_p": "P importeren"
+        }
+    },
+    "logout": {
+        "button": "Uitloggen",
+        "button_conf": "UITLOGGEN",
+        "button_cancel": "Annuleren",
+        "confirmation": "Weet u zeker dat u wilt uitloggen?",
+        "confirmation_message": "Deze portemonnee en de codes ervan zullen worden vergeten."
+    },
+    "keystore": {
+        "title": "Keystore-bestand",
+        "button": "Kies een bestand"
+    },
+    "transactions": {
+        "notx": "Er werden geen transacties aangetroffen voor dit adres op de verkenner.",
+        "loading": "De transactiegeschiedenis wordt geladen...",
+        "warn_loading": "Deze lijst is misschien onvolledig en niet op volgorde.",
+        "error_api": "Explorer API niet gevonden.",
+        "error_api_desc": "U moet een AVA Explorer API opgeven voor dit netwerk om de transactiegeschiedenis te kunnen bekijken."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adres",
+            "copy": "Adres kopiëren"
+        },
+        "print": {
+            "title": "Voorbeeld afdrukken",
+            "submit": "Afdrukken"
+        },
+        "keystore": {
+            "title": "Keystore-bestand updaten",
+            "desc": "Wij hebben de bestandspecificaties voor Keystore bijgewerkt. Download uw nieuwe Keystore-bestand en open de portemonnee weer.",
+            "logout": "Uitloggen en weer inloggen"
+        },
+        "mainnet": {
+            "title": "Adres hoofdnet",
+            "desc": "Het adres van uw hoofdnet is:"
+        },
+        "mnemonic": {
+            "title": "Sleutelzin"
+        },
+        "activateWallet": {
+            "title": "Portemonnee activeren",
+            "desc": "Er is een portemonnee actief. Voer uw wachtwoord in om deze te openen.",
+            "submit": "Portemonnee openen",
+            "cancel": "Een andere portemonnee openen",
+            "cancel2": "(De vorige portemonnee zal worden vergeten.)",
+            "err1": "Ongeldig wachtwoord.",
+            "err2": "Het is niet gelukt om de data van de portemonnee te lezen."
+        }
+    },
+    "nav": {
+        "access": "Portemonnee openen",
+        "create": "Nieuwe portemonnee creëren"
+    }
+}

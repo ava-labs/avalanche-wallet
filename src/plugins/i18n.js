@@ -15,6 +15,7 @@ import zh_hant from '../locales/zh_hant.json';
 import zh_hans from '../locales/zh_hans.json';
 import pt from '../locales/pt.json';
 import vn from '../locales/vn.json';
+import nl from '../locales/nl.json';
 
 
 const messages = {
@@ -29,7 +30,8 @@ const messages = {
     zh_hant,
     zh_hans,
     pt,
-    vn
+    vn,
+    nl
 };
 
 // Create VueI18n instance with options
