@@ -22,7 +22,6 @@
     import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
     import LedgerBlock from "@/components/modals/LedgerBlock";
     import TestNetBanner from '@/components/TestNetBanner';
-    import {wallet_api} from "@/wallet_api";
 
     export default {
         components: {
