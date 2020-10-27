@@ -125,6 +125,7 @@ export default class LanguageSelect extends Vue{
         margin-left: 10px;
         color: var(--primary-color-light);
         cursor: pointer;
+        font-size: 13px;
 
         &:hover{
             color: var(--primary-color);
