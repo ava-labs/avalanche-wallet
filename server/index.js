@@ -10,11 +10,16 @@ const app = express();
 
 app.use(helmet());
 
+
+let corsOptions = {
+    origin: 'localhost',
+    optionsSuccessStatus: 200 // For legacy browser support
+}
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+
 // API
 beforeMiddleware(app);
-
-// app.use(cors());
-app.use(bodyParser.json());
 
 // For heroku proxy
 app.enable('trust proxy');
@@ -25,8 +30,8 @@ app.use (function (req, res, next) {
         next();
     } else {
         // request was via http, so redirect to https
-        // next();
-        res.redirect('https://' + req.headers.host + req.url);
+        next();
+        // res.redirect('https://' + req.headers.host + req.url);
     }
 });
 app.use(helmet.xssFilter());
