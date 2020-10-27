@@ -1,12 +1,6 @@
 <template>
     <div class="add_delegator">
             <NodeSelection v-if="!selected" @select="onselect" class="node_selection"></NodeSelection>
-<!--            <div style="display: flex; align-items: center">-->
-<!--                <p>{{$t('earn.delegate.list.prompt')}}:</p>-->
-<!--                <input class="search" type="text" :placeholder="$t('earn.delegate.list.search')" v-model="search">-->
-<!--                <button @click="openFilters">Filter</button>-->
-<!--            </div>-->
-<!--            <ValidatorsList class="val_list" :search="search" @select="onselect"></ValidatorsList>-->
         <div class="cols" v-else>
             <transition-group name="fade" mode="out-in">
                 <div class="ins_col" key="form" v-show="!isConfirm">
@@ -68,17 +62,20 @@
             </transition-group>
             <div>
                 <div v-if="!isSuccess" class="summary">
+                    <CurrencySelect v-model="currency_type"></CurrencySelect>
                     <div>
                         <label>{{$t('earn.delegate.summary.duration')}} *</label>
                         <p>{{stakingDurationText}}</p>
                     </div>
                     <div>
                         <label>{{$t('earn.delegate.summary.reward')}}</label>
-                        <p>{{estimatedReward.toLocaleString(0)}} AVAX</p>
+                        <p v-if="currency_type==='AVAX'">{{estimatedReward.toLocaleString(2)}} AVAX</p>
+                        <p v-if="currency_type==='USD'">${{estimatedRewardUSD.toLocaleString(2)}} USD</p>
                     </div>
                     <div>
                         <label>{{$t('earn.delegate.summary.fee')}}</label>
-                        <p>{{feeText}} AVAX</p>
+                        <p v-if="currency_type==='AVAX'">{{totalFeeBig.toLocaleString(2)}} AVAX</p>
+                        <p v-if="currency_type==='USD'">${{totalFeeUsdBig.toLocaleString(2)}} USD</p>
                     </div>
 
                     <div>
@@ -131,6 +128,7 @@ import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {Defaults, ONEAVAX} from "avalanche/dist/utils";
 import {ValidatorListItem} from "@/store/modules/platform/types";
 import NodeSelection from "@/components/wallet/earn/Delegate/NodeSelection.vue";
+import CurrencySelect from "@/components/misc/CurrencySelect/CurrencySelect.vue";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -139,6 +137,7 @@ const DAY_MS = HOUR_MS * 24;
 
 @Component({
     components: {
+        CurrencySelect,
         NodeSelection,
         AvaxInput,
         ValidatorsList,
@@ -167,6 +166,9 @@ export default class AddDelegator extends Vue{
     formStart: Date = new Date(this.startMinDate);
     formEnd: Date = new Date(this.endMaxDate);
     formRewardAddr = "";
+
+    currency_type = "AVAX";
+
 
     created(){
         this.startDate = this.startMinDate;
@@ -265,6 +267,13 @@ export default class AddDelegator extends Vue{
         return res;
     }
 
+    get estimatedRewardUSD(){
+        return this.estimatedReward.times(this.avaxPrice);
+    }
+
+    get avaxPrice(): Big{
+        return Big(this.$store.state.prices.usd);
+    }
 
     rewardSelect(val: 'local'|'custom'){
         if(val==='local'){
@@ -468,13 +477,24 @@ export default class AddDelegator extends Vue{
         return  totFee;
     }
 
+    get totalFeeBig(){
+        return bnToBig(this.totalFee, 9);
+    }
+
+    get totalFeeUsdBig(){
+        return this.totalFeeBig.times(this.avaxPrice);
+    }
+
     get txFee(): BN{
         return pChain.getTxFee();
     }
 
+    get txFeeBig(): Big{
+        return bnToBig(this.txFee, 9);
+    }
+
     get feeText(): string{
-        let amt = this.totalFee;
-        let big = Big(amt.toString()).div(Math.pow(10,9));
+        let big = this.totalFeeBig;
         return big.toLocaleString(0)
     }
 

@@ -46,9 +46,11 @@
                 </transition-group>
                 <div>
                     <div class="summary" v-if="!isSuccess">
+                        <CurrencySelect v-model="currency_type"></CurrencySelect>
                         <div>
                             <label>{{$t('earn.validate.summary.max_del')}} <Tooltip style="display: inline-block" :text="$t('earn.validate.summary.max_del_tooltip')"><fa icon="question-circle"></fa></Tooltip></label>
-                            <p>{{maxDelegationText}} AVAX</p>
+                            <p v-if="currency_type==='AVAX'">{{maxDelegationText}} AVAX</p>
+                            <p v-if="currency_type==='USD'">${{maxDelegationUsdText}} USD</p>
                         </div>
                         <div>
                             <label>{{$t('earn.validate.summary.duration')}} *</label>
@@ -56,7 +58,8 @@
                         </div>
                         <div>
                             <label>{{$t('earn.validate.summary.rewards')}}</label>
-                            <p>{{estimatedReward}} AVAX</p>
+                            <p v-if="currency_type==='AVAX'">{{estimatedReward.toLocaleString(2)}} AVAX</p>
+                            <p v-if="currency_type==='USD'">${{estimatedRewardUSD.toLocaleString(2)}} USD</p>
                         </div>
                         <div class="submit_box">
                             <label style="margin: 8px 0 !important;">* {{$t('earn.validate.summary.warn')}}</label>
@@ -100,6 +103,7 @@ import moment from "moment";
 import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {ONEAVAX} from "avalanche/dist/utils";
 import Tooltip from "@/components/misc/Tooltip.vue";
+import CurrencySelect from "@/components/misc/CurrencySelect/CurrencySelect.vue";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -111,7 +115,8 @@ const DAY_MS = HOUR_MS * 24;
         Tooltip,
         AvaxInput,
         QrInput,
-        ConfirmPage
+        ConfirmPage,
+        CurrencySelect
     }
 })
 export default class AddValidator extends Vue{
@@ -139,6 +144,7 @@ export default class AddValidator extends Vue{
     txStatus: string|null = null;
     isSuccess = false;
 
+    currency_type = "AVAX";
 
     @Watch('delegationFee')
     onFeeChange(val: string){
@@ -310,25 +316,33 @@ export default class AddValidator extends Vue{
         return bnToBig(this.maxDelegationAmt,9).toLocaleString(9);
     }
 
+    get maxDelegationUsdText(){
+        let big =  bnToBig(this.maxDelegationAmt,9)
+        let res = big.times(this.avaxPrice);
+        return res.toLocaleString(2);
+    }
 
-    get estimatedReward(): string{
+    get avaxPrice(): Big{
+        return Big(this.$store.state.prices.usd);
+    }
+
+
+    get estimatedReward(): Big{
         let start = new Date(this.startDate);
         let end = new Date(this.endDate);
         let duration = end.getTime() - start.getTime(); // in ms
-        // let durationYears = duration / (60000*60*24*365);
-        //
-        // let inflationRate = this.inflation;
-        // let stakeAmt = Big(this.stakeAmt.toString()).div(Math.pow(10,9));
 
         let currentSupply = this.$store.state.Platform.currentSupply;
         let estimation = calculateStakingReward(this.stakeAmt,duration/1000, currentSupply);
-        let res = Big(estimation.toString()).div(Math.pow(10,9));
+        let res = bnToBig(estimation,9)
 
-        // let value = stakeAmt.times( Math.pow(inflationRate, durationYears));
-        // value = value.sub(stakeAmt);
-
-        return res.toLocaleString(2);
+        return res;
     }
+
+    get estimatedRewardUSD(){
+        return this.estimatedReward.times(this.avaxPrice);
+    }
+
 
     updateFormData(){
         this.formNodeId = this.nodeId.trim();
