@@ -456,7 +456,7 @@
             grid-template-columns: none;
             column-gap: 0;
             >div{
-                padding: 0 8px;
+                padding: 8px 0;
                 border-right: none;
                 border-bottom: 1px solid var(--bg-light);
 
