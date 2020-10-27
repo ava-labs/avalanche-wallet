@@ -451,7 +451,6 @@ class HdHelper {
             this.hdCache[index] = key;
         }
 
-
         let pkHex = key.publicKey.toString('hex');
         let pkBuff = Buffer.from(pkHex, 'hex');
         let hrp = getPreferredHRP(ava.getNetworkID());

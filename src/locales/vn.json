@@ -1,0 +1,428 @@
+{
+    "password": "Mật khẩu",
+    "password_confirm": "Xác nhận mật khẩu",
+    "private_key": "Khóa riêng tư",
+    "address": "Địa chỉ",
+    "add_pk": "Thêm khóa riêng tư",
+    "home": {
+        "desc": "Avalanche Wallet là một chiếc ví đơn giản, bảo mật, không bị quản lý để lưu trữ các tài sản trên Avalanche",
+        "access": {
+            "title": "Chào mừng trở lại!",
+            "desc": "'Truy cập' ví Avalanche hiện có của bạn tại đây.",
+            "submit": "Truy cập Ví"
+        },
+        "create": {
+            "title": "Bạn mới làm quen với Ví Avalanche?",
+            "desc": "Hãy 'Tạo' ví mới để gửi, nhận và hoán đổi tài sản Avalanche của bạn.",
+            "submit": "Tạo ví mới"
+        }
+    },
+    "network": {
+        "status1": "Đang kết nối ...",
+        "status2": "Đã ngắt kết nối",
+        "title": "Mạng",
+        "title2": "Thêm mạng tùy chỉnh",
+        "title3": "Chỉnh sửa mạng",
+        "custom": "Thêm tùy chỉnh",
+        "cancel": "Huỷ bỏ",
+        "add": "Thêm mạng"
+    },
+    "access": {
+        "title": "Bạn muốn truy cập vào ví của mình bằng cách nào?",
+        "create": "Bạn không có ví?",
+        "but_mnemonic": "Cụm từ khóa ghi nhớ",
+        "but_keystore": "Tệp tin khóa",
+        "cancel": "Huỷ bỏ",
+        "json_error": "Không thể phân tích cú pháp tệp tin JSON.",
+        "keystore_error": "Phiên bản tệp tin khóa này không được hỗ trợ.",
+        "password_error": "Mật khẩu không hợp lệ.",
+        "mnemonic": {
+            "title": "Nhập cụm từ GHI NHỚ của bạn",
+            "subtitle": "Nhấn 'PHÍM CÁCH' sau mỗi lần nhập từ thành công.",
+            "submit": "Truy cập ví",
+            "cancel": "Huỷ bỏ",
+            "error": "Cụm từ khóa không hợp lệ. Cụm từ khóa của bạn phải có 24 ký tự và được phân tách bằng dấu cách."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Danh mục đầu tư",
+            "manage": "Quản lý",
+            "send": "Gửi",
+            "earn": "Kiếm tiền",
+            "advanced": "Nâng cao"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Bạn không sở hữu bất kỳ bộ sưu tập nào."
+        }
+    },
+    "create": {
+        "generate": "Tạo cụm từ khóa mới để thiết lập Ví Avalanche của bạn.",
+        "but_have": "Đã có sẵn ví?",
+        "submit": "Tạo cụm từ khóa",
+        "cancel": "Huỷ bỏ",
+        "mnemonic_title": "Đây là cụm từ khóa của bạn.",
+        "mnemonic_desc": "Hãy dùng 24 từ này theo thứ tự lần lượt để khôi phục Ví Avalanche của bạn",
+        "attention": "Chú ý!",
+        "warning": "Hãy lưu cụm từ khóa này ở một vị trí an toàn. Bất kỳ ai có cụm từ khóa này đều có thể truy cập Ví Avalanche của bạn. Không có cách nào để khôi phục các cụm từ khóa bị mất.",
+        "confirm": "Tôi đã ghi lại cụm từ khóa của mình ở vị trí an toàn.",
+        "regenerate": "Tạo lại",
+        "success_title": "Xin chúc mừng!",
+        "success_desc": "Đã đến lúc truy cập Ví Avalanche của bạn.",
+        "success_submit": "Truy cập ví",
+        "verify": "Xác nhận",
+        "verifytitle": "Xác nhận cụm từ ghi nhớ",
+        "verify_desc": "Điền cụm từ ghi nhớ vào bên dưới",
+        "error_number": "Rất tiếc, có vẻ như bạn đã quên điền số",
+        "error_word": "Cụm từ ghi nhớ bạn đã nhập không khớp với cụm từ thực tế."
+    },
+    "top": {
+        "title1": "Nguồn gốc địa chỉ ví Avalanche",
+        "title2": "Số dư ",
+        "title3": "Mạng con",
+        "title4": "Mạng",
+        "nftcol": "NFTs",
+        "nftempty": "Bạn chưa thu thập bất kỳ mã thông báo không thể thay thế nào.",
+        "locked": "Đã khóa",
+        "info2": "Tôi đã mua AVAX trong đợt bán mã thông báo. AVAX của tôi ở đâu?",
+        "info2_desc": "Ví này được kết nối với mạng thử nghiệm Avalanche Everest. Các giao dịch mua sẽ xuất hiện trong ví của bạn sau khi mạng chính Avalanche khởi chạy.",
+        "hover1": "Xem địa chỉ Mã QR",
+        "hover2": "In",
+        "hover3": "Sao chép",
+        "hover4": "Xem địa chỉ mạng chính",
+        "balance": {
+            "show": "Hiện Điểm xuyên phá",
+            "hide": "Ẩn Điểm xuyên phá",
+            "available": "Có sẵn",
+            "locked": "Đã khóa",
+            "locked_stake": "Stackable đã khóa",
+            "stake": "Staking",
+            "collectibles": "Bộ sưu tầm"
+        },
+        "address": {
+            "derived": "Địa chỉ ví Avalanche phái sinh",
+            "desc": "Đây là địa chỉ nhận tiền của bạn. Địa chỉ của bạn sẽ thay đổi sau mỗi lần gửi tiền."
+        }
+    },
+    "transfer": {
+        "title": "Gửi",
+        "no_cash": "Bạn phải có tài sản trong ví để thực hiện giao dịch.",
+        "faucet": "Bạn đã kiểm tra vòi của chúng tôi chưa?",
+        "to": "Đến địa chỉ",
+        "fees": "Phí",
+        "fee_tx": "Phí giao dịch",
+        "advanced": "Nâng cao",
+        "adv_change": "Thay đổi địa chỉ",
+        "send": "Gửi giao dịch",
+        "summary": "Tóm tắt giao dịch",
+        "disconnected": "Không thể gửi tài sản. Đã ngắt kết nối mạng.",
+        "success_title": "Gửi giao dịch",
+        "success_msg": "Bạn đã gửi thành công giao dịch của mình.",
+        "error_title": "Lỗi khi gửi giao dịch",
+        "error_msg": "Không thể gửi giao dịch."
+    },
+    "keys": {
+        "title": "Khóa của tôi",
+        "button1": "Ghi nhớ các khóa",
+        "button2": "Nhập khóa",
+        "button3": "Xuất khóa",
+        "subtitle": "Kích hoạt khóa",
+        "remember_key_button": "Ghi nhớ ",
+        "remember_key_desc": "Mã hóa ví của bạn bằng mật khẩu và lưu trữ an toàn trên trình duyệt này.",
+        "remember_key_check": "Ghi nhớ cụm từ khóa",
+        "remember_key_info": "Sau đó, bạn có thể truy cập ví của mình trên trình duyệt này bằng mật khẩu.",
+        "export_key_button": "Xuất ví",
+        "export_key_title": "Xuất khóa",
+        "export_key_desc": "Nhập mật khẩu để mã hóa khóa cá nhân của bạn thành một tệp tin. Sau đó, bạn có thể sử dụng tệp tin này và mật khẩu để truy cập ví của mình.",
+        "export_key_info": "Đã chọn {0} cụm từ khóa.",
+        "export_placeholder1": "Mật khẩu",
+        "export_placeholder2": "Xác nhận mật khẩu",
+        "empty": "Đây là khóa không có số dư",
+        "import_key_button": "Nhập khóa",
+        "import_key_title": "Nhập khóa",
+        "import_key_desc": "Thêm khóa bổ sung để sử dụng với ví của bạn",
+        "import_key_option1": "Cụm từ ghi nhớ",
+        "import_key_option2": "Tệp tin khóa",
+        "import_key_success_title": "Đã thêm khóa",
+        "import_key_success_msg": "Khóa cá nhân và tài sản được thêm vào ví.",
+        "tooltip": "Khóa này sẽ bị mất khi bạn làm mới trình duyệt.",
+        "view_key": "Xem cụm từ khóa",
+        "export_key": "Xuất khóa",
+        "hd_addresses": "Địa chỉ HD",
+        "remove_key": "Xóa khóa",
+        "activate_key": "Kích hoạt khóa",
+        "remove_success_title": "Đã xóa khóa",
+        "remove_success_msg": "Khóa cá nhân và các tài sản bị xóa khỏi ví.",
+        "password_validation": "Mật khẩu phải dài ít nhất 9 ký tự.",
+        "password_validation2": "Mật khẩu không khớp."
+    },
+    "portfolio": {
+        "assets": "Các loại tài sản",
+        "assets1": "Tokens",
+        "assets2": "Bộ sưu tầm",
+        "search": "Tìm kiếm tài sản",
+        "name": "Tên",
+        "send": "Gửi",
+        "balance": "Số dư",
+        "error_network": "Không thể hiển thị tài sản. Đã ngắt kết nối mạng.",
+        "nobalance": "Bạn không có bất kỳ tài sản nào",
+        "nobalance_nft": "Bạn không sở hữu bộ sưu tầm nào.",
+        "noaddresses": "Bạn không có bất kỳ địa chỉ nào trong quá khứ."
+    },
+    "earn": {
+        "title": "Kiếm tiền",
+        "desc": "Bạn có thể kiếm thêm AVAX bằng cách stake số token hiện có của mình.",
+        "subtitle1": "Trình xác thực",
+        "subtitle2": "Ủy quyền",
+        "subtitle3": "Chuyển đổi giữa các Chain",
+        "subtitle4": "Phần thưởng dự kiến",
+        "warning_1": "Bạn phải sở hữu tối thiểu {0} AVAX trên P-Chain để trở thành trình xác thực.",
+        "warning_2": "Bạn phải sở hữu tối thiểu {0} AVAX trên P-Chain để có thể ủy quyền.",
+        "validate_card": {
+            "title": "Trình xác thực",
+            "desc": "Bạn sở hữu một nút Avalanche mà bạn muốn stake.",
+            "submit": "Thêm Trình xác thực"
+        },
+        "delegate_card": {
+            "title": "Ủy quyền",
+            "desc": "Bạn không sở hữu nút Avalanche, nhưng bạn muốn stake bằng nút khác.",
+            "submit": "Thêm ủy quyền"
+        },
+        "transfer_card": {
+            "title": "Chuyển đổi Chain",
+            "desc": "Staking yêu cầu có AVAX trên P-Chain. Hãy chuyển token từ X sang P.",
+            "submit": "Chuyển đổi"
+        },
+        "rewards_card": {
+            "title": "Phần thưởng ước tính",
+            "desc": "Xem phần thưởng staking bạn sẽ nhận được.",
+            "submit": "Xem Phần Thưởng"
+        },
+        "transfer": {
+            "source": "Chain gốc",
+            "destination": "Chain đích",
+            "balance": "Số dư",
+            "amount": "Số tiền Chuyển đổi",
+            "fee": "Phí",
+            "confirm": "Xác nhận",
+            "submit": "Chuyển đổi",
+            "cancel": "Hủy",
+            "err_import": "Nhập thất bại",
+            "err_desc": "Có sự cố khi nhập token của bạn vào Chain đích. Vui lòng thử nhập lại lần nữa.",
+            "err_submit": "Kích hoạt lệnh nhập",
+            "success": {
+                "title": "Chuyển đổi hoàn tất",
+                "export": "Xuất ID Giao dịch:",
+                "import": "Nhập ID Giao dịch:",
+                "message": "Bạn đã chuyển đổi thành công giữa các chain.",
+                "back": "Trở lại mục Kiếm tiền"
+            }
+        },
+        "rewards": {
+            "total": "Tổng Phần Thưởng",
+            "validation": "Thao tác Xác thực",
+            "delegation": "Thao tác Ủy quyền",
+            "empty": "Bạn không có phần thưởng đang chờ nào.",
+            "row": {
+                "start": "Bắt đầu",
+                "end": "Kết thúc",
+                "completed": "Đã hoàn thành",
+                "stake": "Stake",
+                "reward": "Phần Thưởng Tiềm năng"
+            }
+        },
+        "validate": {
+            "label_1": "ID Nút",
+            "duration": {
+                "label": "Giai đoạn Staking",
+                "desc": "Khoảng thời gian token của bạn bị khóa để stake.",
+                "start": "Ngày & Giờ Bắt đầu",
+                "end": "Ngày & Giờ Kết thúc"
+            },
+            "amount": {
+                "label": "Số tiền stake",
+                "desc": "Số lượng AVAX sẽ khóa để stake."
+            },
+            "fee": {
+                "label": "Phí Ủy quyền",
+                "desc": "Bạn sẽ nhận số % phần thưởng từ người ủy quyền trên nút của bạn."
+            },
+            "reward": {
+                "label": "Địa chỉ nhận thưởng",
+                "desc": "Nơi gửi phần thưởng staking.",
+                "chip_1": "Sử dụng ví này",
+                "chip_2": "Địa chỉ Tùy chỉnh"
+            },
+            "summary": {
+                "max_del": "Số lượng Ủy quyền đã ở mức tối đa",
+                "max_del_tooltip": "Số tiền tối đa có thể ủy quyền cho trình xác thực này.",
+                "duration": "Thời gian Staking",
+                "rewards": "Phần thưởng dự kiến",
+                "warn": "Nếu đây là lần đầu staking của bạn, hãy bắt đầu với số tiền nhỏ. Token đã stake sẽ bị khóa cho đến khi hết giai đoạn staking."
+            },
+            "confirmation": {
+                "id": "ID Nút",
+                "amount": "Số tiền Staking",
+                "start": "Ngày bắt đầu",
+                "end": "Ngày kết thúc",
+                "fee": "Phí Ủy quyền",
+                "reward": "Địa chỉ Lợi nhuận",
+                "type_local": "Ví này",
+                "type_custom": "Tùy chỉnh"
+            },
+            "confirm": "Xác nhận",
+            "submit": "Gửi đi",
+            "cancel": "Hủy",
+            "success": {
+                "title": "Giao dịch xác thực của bạn đã được gửi.",
+                "desc": "Nếu giao dịch được chấp nhận, token của bạn sẽ bị khóa để stake. Bạn sẽ nhận được token bị khóa kèm theo lợi nhuận sau khi giai đoạn staking kết thúc.",
+                "status": "Trạng thái"
+            },
+            "errs": {
+                "date": "Ngày bắt đầu phải ở trong tương lai và ngày kết thúc phải sau ngày bắt đầu.",
+                "amount": "Số tiền staking tối thiểu phải là {0} AVAX",
+                "id": "ID Nút không hợp lệ. Phải bắt đầu bằng “NodeID-”",
+                "address": "Địa chỉ nhận thưởng không hợp lệ."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Chọn nút để ủy quyền",
+                "search": "Tìm ID Nút",
+                "id": "ID Nút",
+                "val_stake": "Stake Trình xác thực",
+                "aval_stake": "Có sẵn",
+                "aval_stake_tip": "Số tiền còn lại có thể ủy quyền cho trình xác thực này.",
+                "users_tip": "Số Người ủy quyền",
+                "end": "Thời gian kết thúc",
+                "up": "Thời gian hoạt động",
+                "up_tip": "Tương ứng với nút mà ví này liên kết.",
+                "fee": "Phí",
+                "empty": {
+                    "title": "Không tìm thấy Trình xác thực",
+                    "desc": "Trình xác thực phải thường xuyên staking để được tìm thấy."
+                }
+            },
+            "node": {
+                "selected": "Chọn Nút",
+                "fee": "Phí Ủy quyền",
+                "start": "Ngày bắt đầu của Trình xác thực",
+                "end": "Ngày kết thúc của Trình xác thực"
+            },
+            "form": {
+                "period": {
+                    "label": "Giai đoạn Staking",
+                    "desc": "Khoảng thời gian token của bạn bị khóa để stake.",
+                    "start": "Ngày & Giờ Bắt đầu",
+                    "end": "Ngày & Giờ Kết thúc"
+                },
+                "amount": {
+                    "label": "Số tiền stake",
+                    "desc": "Số lượng AVAX sẽ khóa để stake.",
+                    "desc2": "Số tiền có thể ủy quyền cho nút này là {0} AVAX"
+                },
+                "reward": {
+                    "label": "Địa chỉ nhận thưởng",
+                    "desc": "Nơi gửi phần thưởng staking.",
+                    "chip_1": "Sử dụng ví này",
+                    "chip_2": "Địa chỉ Tùy chỉnh"
+                }
+            },
+            "confirmation": {
+                "node": "ID Nút",
+                "amount": "Số tiền Staking",
+                "start": "Ngày bắt đầu",
+                "end": "Ngày kết thúc",
+                "reward": "Địa chỉ nhận thưởng"
+            },
+            "errs": {
+                "start_now": "Ngày bắt đầu phải sau thời điểm hiện tại.",
+                "start_end": "Ngày bắt đầu phải ở trong tương lai và ngày kết thúc phải sau ngày bắt đầu.",
+                "invalid_addr": "Định dạng địa chỉ không hợp lệ. Địa chỉ của bạn phải bắt đầu bằng “P-”",
+                "no_addr": "Bạn phải cung cấp địa chỉ để nhận lợi nhuận ủy quyền.",
+                "min_dur": "Thời gian staking tối thiểu là 2 tuần.",
+                "max_dur": "Thời gian staking tối đa là 1 năm.",
+                "no_node": "Bạn phải xác định một trình xác thực.",
+                "val_end": "Ngày kết thúc ủy quyền không thể xa hơn ngày kết thúc của trình xác thực.",
+                "amt": "Số tiền ủy quyền tối thiểu phải là {0} AVAX."
+            },
+            "summary": {
+                "duration": "Thời gian Staking",
+                "reward": "Phần thưởng dự kiến",
+                "fee": "Phí",
+                "warn": "Nếu đây là lần đầu staking của bạn, hãy bắt đầu với số tiền nhỏ. Token đã stake sẽ bị khóa cho đến khi hết giai đoạn staking."
+            },
+            "confirm": "Xác nhận",
+            "submit": "Gửi đi",
+            "cancel": "Hủy",
+            "success": {
+                "title": "Đã gửi giao dịch ủy quyền.",
+                "desc": "Nếu giao dịch được chấp nhận, token của bạn sẽ bị khóa để stake. Bạn sẽ nhận được token bị khóa kèm theo lợi nhuận sau khi giai đoạn staking kết thúc.",
+                "status": "Trạng thái"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Nâng cao",
+        "import": {
+            "title": "Nhập Chain",
+            "desc": "Nếu bạn có khoản tiền kẹt trong một giao dịch chuyển đổi chain thất bại, bạn có thể kết thúc quá trình bằng cách nhập tại đây.",
+            "submit_x": "Nhập X",
+            "submit_p": "Nhập P"
+        }
+    },
+    "logout": {
+        "button": "Đăng xuất",
+        "button_conf": "ĐĂNG XUẤT",
+        "button_cancel": "Huỷ bỏ",
+        "confirmation": "Bạn có chắc chắn muốn thoát?",
+        "confirmation_message": "Ví này và khóa của ví này sẽ bị gỡ."
+    },
+    "keystore": {
+        "title": "Tệp tin khôi phục",
+        "button": "Chọn tệp tin"
+    },
+    "transactions": {
+        "notx": "Không tìm thấy giao dịch nào cho địa chỉ này trên trình khám phá.",
+        "loading": "Đang tải lịch sử giao dịch ..",
+        "warn_loading": "Danh sách này có thể không đầy đủ và không theo thứ tự.",
+        "error_api": "Không tìm thấy API Explorer",
+        "error_api_desc": "Bạn phải cung cấp một API AVAX Explorer cho mạng này để xem lịch sử giao dịch."
+    },
+    "modal": {
+        "qr": {
+            "title": "Địa chỉ",
+            "copy": "Sao chép địa chỉ"
+        },
+        "print": {
+            "title": "Xem trước khi in",
+            "submit": "In"
+        },
+        "keystore": {
+            "title": "Cập nhật tệp tin khôi phục",
+            "desc": "Chúng tôi đã nâng cấp thông số tệp tin khóa. Vui lòng tải xuống tệp tin khóa mới của bạn và truy cập lại ví.",
+            "logout": "Đăng xuất & Truy cập lại"
+        },
+        "mainnet": {
+            "title": "Địa chỉ mạng chính",
+            "desc": "Địa chỉ mạng chính của bạn là:"
+        },
+        "mnemonic": {
+            "title": "Cụm từ khoá"
+        },
+        "activateWallet": {
+            "title": "Kích hoạt ví",
+            "desc": "Ví đang hoạt động. Nhập mật khẩu của bạn để truy cập.",
+            "submit": "Truy cập ví",
+            "cancel": "Truy cập ví khác",
+            "cancel2": "(Ví trước đó sẽ bị lãng quên.)",
+            "err1": "Mật khẩu không hợp lệ.",
+            "err2": "Không thể đọc dữ liệu ví."
+        }
+    },
+    "nav": {
+        "access": "Truy cập Ví",
+        "create": "Tạo Ví mới"
+    }
+}
