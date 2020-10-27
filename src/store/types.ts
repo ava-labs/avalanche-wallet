@@ -16,10 +16,15 @@ export interface RootState {
     address: String|null
     volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
+    prices: priceDict // USD value of 1 AVAX
 }
 
 
 export type WalletType = "mnemonic" | "ledger"
+
+export interface priceDict {
+    usd: number
+}
 
 interface Modal {
     open(): void,

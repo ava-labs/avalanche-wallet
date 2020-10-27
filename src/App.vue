@@ -39,6 +39,7 @@
             }
 
             await this.$store.dispatch('Network/init');
+            this.$store.dispatch('updateAvaxPrice');
         },
         computed: {
             isNavbar() {

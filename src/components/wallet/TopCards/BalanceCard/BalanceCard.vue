@@ -16,6 +16,7 @@
             </div>
             <div class="balance_row">
                 <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
+                <p class="balance_usd"><b>$ {{totalBalanceUSD.toLocaleString(2)}}</b> USD</p>
             </div>
 <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
@@ -74,6 +75,7 @@
     import {BN} from "avalanche/dist";
     import {ONEAVAX} from "avalanche/dist/utils";
     import {bnToBig} from "@/helpers/helper";
+    import {priceDict} from "@/store/types";
 
     @Component({
         components: {
@@ -117,22 +119,37 @@
             return this.ava_asset.amountLocked;
         }
 
+        get totalBalance(): BN{
+            let xUnlocked = this.avmUnlocked;
+            let xLocked = this.avmLocked;
+            let pUnlocked = this.platformUnlocked;
+            let pLocked = this.platformLocked;
+            let staked = this.stakingAmount;
+            let lockedStakeable = this.platformLockedStakeable;
+
+            let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked).add(lockedStakeable);
+            return tot;
+        }
+
+        get totalBalanceBig(): Big{
+            if(this.ava_asset){
+                let denom = this.ava_asset.denomination;
+                let bigTot = bnToBig(this.totalBalance, denom);
+                return bigTot;
+            }
+            return Big(0);
+        }
+
+        get totalBalanceUSD(): Big{
+            let usdPrice = this.priceDict.usd;
+            let usdBig = this.totalBalanceBig.times(Big(usdPrice));
+            return usdBig
+        }
         // should be unlocked (X+P), locked (X+P) and staked and lockedStakeable
         get balanceText():string{
             if(this.ava_asset !== null){
-                let xUnlocked = this.avmUnlocked;
-                let xLocked = this.avmLocked;
-                let pUnlocked = this.platformUnlocked;
-                let pLocked = this.platformLocked;
-                let staked = this.stakingAmount;
-                let lockedStakeable = this.platformLockedStakeable;
-
                 let denom = this.ava_asset.denomination;
-
-                let tot = xUnlocked.add(xLocked).add(pUnlocked).add(pLocked).add(staked).add(lockedStakeable);
-                let bigTot = bnToBig(tot, denom);
-                // let bigTot = Big(tot.toString()).div(Math.pow(10,denom))
-                return bigTot.toLocaleString(denom);
+                return this.totalBalanceBig.toLocaleString(denom);
             }else{
                 return '?'
             }
@@ -242,6 +259,10 @@
         get isUpdateBalance():boolean{
             return this.$store.state.Assets.isUpdateBalance;
         }
+
+        get priceDict(): priceDict{
+            return this.$store.state.prices;
+        }
     }
 </script>
 <style scoped lang="scss">
@@ -292,6 +313,15 @@
         white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
+    }
+
+    .balance_usd{
+        width: max-content;
+        background: var(--bg-light);
+        color: var(--primary-color-light);
+        font-size: 13px;
+        padding: 1px 6px;
+        border-radius: 3px;
     }
 
     .refresh{
@@ -345,6 +375,7 @@
         display: grid;
         grid-template-columns: repeat(3, max-content);
         column-gap: 0px;
+        margin-top: 12px;
         > div{
             position: relative;
             padding: 0 24px;
@@ -422,6 +453,17 @@
 
         .alt_info{
             text-align: left;
+            grid-template-columns: none;
+            column-gap: 0;
+            >div{
+                padding: 8px 0;
+                border-right: none;
+                border-bottom: 1px solid var(--bg-light);
+
+                &:last-of-type{
+                    border: none;
+                }
+            }
         }
     }
 </style>
