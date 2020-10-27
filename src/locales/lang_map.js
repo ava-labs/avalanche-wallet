@@ -695,7 +695,7 @@ var isoLangs = {
         "name": "Venda",
         "nativeName": "Tshivenḓa"
     },
-    "vi": {
+    "vn": {
         "name": "Vietnamese",
         "nativeName": "Tiếng Việt"
     },

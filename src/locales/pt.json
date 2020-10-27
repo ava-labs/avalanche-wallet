@@ -8,12 +8,12 @@
         "desc": "A Avalanche Wallet é uma carteira simples, segura e sem custódia para armazenar os ativos do Avalanche.",
         "access": {
             "title": "Bem Vindo de Volta!",
-            "desc": "'Acesse' sua wallet Avalanche existente aqui.",
+            "desc": "'Acesse' sua Avalanche wallet existente aqui.",
             "submit": "Acessar a Wallet"
         },
         "create": {
             "title": "Você é novo na Avalanche Wallet?",
-            "desc": "'Criar' uma nova wallet para enviar, receber e trocar os ativos Avalanche.",
+            "desc": "'Criar' uma nova wallet para enviar, receber e trocar os ativos do Avalanche.",
             "submit": "Criar Nova Wallet"
         }
     },
