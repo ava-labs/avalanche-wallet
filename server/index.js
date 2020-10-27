@@ -32,17 +32,14 @@ app.use (function (req, res, next) {
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
 
-
-
-
-
+// Serving Static Files
+let publicPath = resolve(__dirname, '../dist');
+app.use(express.static(publicPath));
 
 
 app.use(history);
 
-// Serving Static Files
-let publicPath = resolve(__dirname, '../dist');
-app.use(express.static(publicPath));
+
 
 
 const port = process.env.PORT || 4000;
