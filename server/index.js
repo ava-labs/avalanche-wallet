@@ -9,15 +9,14 @@ const app = express();
 
 
 app.use(helmet());
-
-// API
-beforeMiddleware(app);
-
-app.use(cors());
+// app.use(cors());
 app.use(bodyParser.json());
 
 // For heroku proxy
 app.enable('trust proxy');
+
+// API
+beforeMiddleware(app);
 
 app.use (function (req, res, next) {
     if (req.secure) {
