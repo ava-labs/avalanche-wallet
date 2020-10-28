@@ -30,7 +30,7 @@
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.validate.fee.label')}}</h4>
                             <p class="desc">{{$t('earn.validate.fee.desc')}}</p>
-                            <input type="number" :min="minFee" max="100" step="0.01" v-model="delegationFee">
+                            <input type="number" :min="minFee" max="100" step="0.01" v-model="delegationFee" @change="onFeeChange">
                         </div>
                         <div class="reward_in" style="margin: 30px 0;" :type="rewardDestination">
                             <h4>{{$t('earn.validate.reward.label')}}</h4>
@@ -147,9 +147,9 @@ export default class AddValidator extends Vue{
 
     currency_type = "AVAX";
 
-    @Watch('delegationFee')
-    onFeeChange(val: string){
-        let num = parseFloat(val);
+    // @Watch('delegationFee')
+    onFeeChange(){
+        let num = parseFloat(this.delegationFee);
         if(num < this.minFee){
             this.delegationFee = this.minFee.toString();
         }else if(num>100){
@@ -408,6 +408,12 @@ export default class AddValidator extends Vue{
         // Not a valid Node ID
         if(!this.nodeId.includes("NodeID-")){
             this.err = this.$t('earn.validate.errs.id') as string;
+            return false;
+        }
+
+        // Delegation Fee
+        if(parseFloat(this.delegationFee) < this.minFee){
+            this.err = this.$t('earn.validate.errs.fee',[this.minFee]) as string;
             return false;
         }
 
