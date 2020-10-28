@@ -6,7 +6,7 @@
                     <div v-show="!isConfirm" key="form">
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.validate.label_1')}}</h4>
-                            <input type="text" v-model="nodeId" style="width: 100%" label="NodeID-XXXXXXX">
+                            <input type="text" v-model="nodeId" style="width: 100%">
                         </div>
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.validate.duration.label')}}</h4>
@@ -63,6 +63,7 @@
                         </div>
                         <div class="submit_box">
                             <label style="margin: 8px 0 !important;">* {{$t('earn.validate.summary.warn')}}</label>
+                            <p v-if="warnShortDuration" class="err">{{$t('earn.validate.errs.duration_warn')}}</p>
                             <p class="err">{{err}}</p>
                             <v-btn v-if="!isConfirm" @click="confirm" class="button_secondary" depressed :loading="isLoading" :disabled="!canSubmit" block>{{$t('earn.validate.confirm')}}</v-btn>
                             <template v-else>
@@ -159,12 +160,9 @@ export default class AddValidator extends Vue{
 
     created(){
         this.startDate = this.startDateMin;
-        this.endDate = this.endDateMin;
-    }
 
-
-    amount_in(val: BN){
-        console.log("Stake val: ",val);
+        // default end date is 3 weeks
+        this.endDate = this.defaultEndDate;
     }
 
     get rewardAddressLocal(){
@@ -208,6 +206,15 @@ export default class AddValidator extends Vue{
         return endDate.toISOString();
     }
 
+    get defaultEndDate(){
+        let start = this.startDate;
+        let startDate = new Date(start);
+
+        let end = startDate.getTime() + (DAY_MS*21);
+        let endDate = new Date(end);
+        return endDate.toISOString();
+    }
+
     // Start date + 1 year
     get endDateMax(){
         let start = this.startDate;
@@ -218,6 +225,16 @@ export default class AddValidator extends Vue{
         return endDate.toISOString();
     }
 
+    // Returns true to show a warning about short validation periods that can not take any delegators
+    get warnShortDuration(): boolean{
+        let dur = this.stakeDuration;
+
+        // If duration is less than 16 days give a warning
+        if(dur <= DAY_MS*16){
+            return true;
+        }
+        return false;
+    }
 
     get stakeDuration(): number{
         let start = new Date(this.startDate);
@@ -232,25 +249,12 @@ export default class AddValidator extends Vue{
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`;
     }
 
-    // get stakeAmtText(){
-    //     let amt = this.stakeAmt;
-    //     let big = Big(amt.toString()).div(Math.pow(10,9));
-    //     return big.toLocaleString(2);
-    // }
-    //
-    // get dateMax(){
-    //     let dateMs = Date.now() + DAY_MS*364;
+    // get dateMin(){
+    //     let dateMs = Date.now();
     //     let date = new Date(dateMs);
-    //     console.log(date);
+    //
     //     return date.toISOString();
     // }
-
-    get dateMin(){
-        let dateMs = Date.now();
-        let date = new Date(dateMs);
-
-        return date.toISOString();
-    }
 
     get denomination(){
         return 9;
@@ -386,12 +390,25 @@ export default class AddValidator extends Vue{
         if(this.rewardDestination!=='local'){
             let rewardAddr = this.rewardIn;
 
+            // If it doesnt start with P
+            if(rewardAddr[0] !== "P"){
+                this.err = this.$t('earn.validate.errs.address') as string;
+                return false;
+            }
+
+            // not a valid address
             try{
-                bintools.parseAddress(rewardAddr, 'P')
+                bintools.stringToAddress(rewardAddr)
             }catch(e){
                 this.err = this.$t('earn.validate.errs.address') as string;
                 return false;
             }
+        }
+
+        // Not a valid Node ID
+        if(!this.nodeId.includes("NodeID-")){
+            this.err = this.$t('earn.validate.errs.id') as string;
+            return false;
         }
 
         // Stake amount
