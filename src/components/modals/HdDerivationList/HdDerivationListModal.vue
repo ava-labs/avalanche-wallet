@@ -39,7 +39,7 @@
 <style scoped lang="scss">
     .hd_deriv_modal_body{
         /*width: 600px;*/
-        width: 400px;
+        /*width: 400px;*/
         /*background-color: #fff;*/
         max-width: 100%;
         padding: 0px;
