@@ -182,6 +182,7 @@
 <style scoped lang="scss">
     .list_cont{
         max-height: 60vh;
+        min-height: 290px;
         /*height: 290px;*/
         position: relative;
         overflow: scroll;

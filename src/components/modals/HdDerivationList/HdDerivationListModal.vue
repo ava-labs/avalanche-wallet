@@ -41,6 +41,7 @@
         /*width: 600px;*/
         /*width: 400px;*/
         /*background-color: #fff;*/
+        width: 600px;
         max-width: 100%;
         padding: 0px;
     }
