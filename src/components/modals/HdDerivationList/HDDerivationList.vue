@@ -168,11 +168,13 @@
             background-color: var(--bg-light) !important;
         }
 
+
+
         .list_row:last-of-type{
             > .col_index, .col_addr{
                 /*border-left: 2px solid var(--secondary-color);*/
                 /*position: relative;*/
-                color: var(--secondary-color);
+                color: var(--primary-color);
                 /*background-color: #42b983;*/
 
             }

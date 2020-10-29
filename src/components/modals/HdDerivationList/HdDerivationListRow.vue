@@ -50,12 +50,18 @@
     }
 </script>
 <style scoped lang="scss">
+
+    .col_index{
+        color: var(--primary-color-light);
+    }
+
     .col_addr{
         /*white-space: nowrap;*/
         overflow: hidden;
         text-overflow: ellipsis;
         word-break: break-all;
         font-family: monospace;
+        color: var(--primary-color-light);
     }
 
     .col_bal{
