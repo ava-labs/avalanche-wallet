@@ -8,7 +8,7 @@
                 <div v-if="numInternalKeys>0" class="list">
                     <div class="headers">
                         <p style="text-align: center">#</p>
-                        <p>Address</p>
+                        <p>{{$t('portfolio.address')}}</p>
                         <p class="col_bal">{{$t('portfolio.balance')}}</p>
                     </div>
                     <HdDerivationListRow v-for="(addr,i) in addrsInternal" :key="addr" :index="i" :address="addr" :balance="keyBalancesInternal[i]" class="list_row"
@@ -22,7 +22,7 @@
                 <div v-if="numExternalKeys>0" class="list">
                     <div class="headers">
                         <p style="text-align: center">#</p>
-                        <p>Address</p>
+                        <p>{{$t('portfolio.address')}}</p>
                         <p class="col_bal">{{$t('portfolio.balance')}}</p>
                     </div>
                     <HdDerivationListRow v-for="(addr,i) in addrsExternal" :key="addr" :index="i" :address="addr" :balance="keyBalancesExternal[i]" class="list_row"
@@ -35,8 +35,8 @@
             <v-tab-item>
                 <div class="headers">
                     <p style="text-align: center">#</p>
-                    <p>Address</p>
-                    <p class="col_bal">{{$t('portfolio.balance')}}e</p>
+                    <p>{{$t('portfolio.address')}}</p>
+                    <p class="col_bal">{{$t('portfolio.balance')}}</p>
                 </div>
                 <HdDerivationListRow v-for="(addr,i) in addrsPlatform" :key="addr" :index="i" :address="addr" :balance="keyBalancesPlatform[i]" class="list_row"
                 ></HdDerivationListRow>
@@ -167,12 +167,23 @@
         .v-tabs-bar{
             background-color: var(--bg-light) !important;
         }
+
+        .list_row:last-of-type{
+            > .col_index, .col_addr{
+                /*border-left: 2px solid var(--secondary-color);*/
+                /*position: relative;*/
+                color: var(--secondary-color);
+                /*background-color: #42b983;*/
+
+            }
+        }
     }
 </style>
 <style scoped lang="scss">
     .list_cont{
         max-height: 60vh;
-        height: 290px;
+        min-height: 290px;
+        /*height: 290px;*/
         position: relative;
         overflow: scroll;
     }
@@ -195,7 +206,7 @@
 
     .headers, .list_row{
         display: grid;
-        grid-template-columns: 25px 90px 1fr;
+        grid-template-columns: 35px max-content 1fr;
         padding: 5px 0px;
         column-gap: 10px;
     }
@@ -204,6 +215,7 @@
     .col_bal{
         text-align: right;
         padding-right: 15px;
+        padding-left: 15px;
     }
 
 

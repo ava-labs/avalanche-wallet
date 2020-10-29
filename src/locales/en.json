@@ -172,6 +172,7 @@
         "name": "Name",
         "send": "Send",
         "balance": "Balance",
+        "address": "Address",
         "error_network": "Unable to display assets. Disconnected from the network.",
         "nobalance": "You do not have any assets",
         "nobalance_nft": "You do not own any collectibles.",
