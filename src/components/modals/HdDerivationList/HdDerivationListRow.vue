@@ -1,12 +1,15 @@
 <template>
     <div class="list_row">
-        <p style="text-align: center;">{{index}}</p>
+        <p class="col_index" style="text-align: center;">{{index}}</p>
         <p class="col_addr">{{address}}</p>
         <div class="col_bal">
-            <p v-for="(bal, assetId) in cleanBalance" :key="assetId">
-                {{bal.toLocaleString(assetsDict[assetId].denomination)}}
-                <span>{{assetsDict[assetId].symbol}}</span>
-            </p>
+            <p v-if="noBalance">-</p>
+            <template v-else>
+                <p v-for="(bal, assetId) in cleanBalance" :key="assetId">
+                    {{bal.toLocaleString(assetsDict[assetId].denomination)}}
+                    <span>{{assetsDict[assetId].symbol}}</span>
+                </p>
+            </template>
         </div>
     </div>
 </template>
@@ -36,6 +39,10 @@
             return res;
         }
 
+        get noBalance(): boolean{
+            return Object.keys(this.cleanBalance).length === 0;
+        }
+
         get assetsDict(){
             return this.$store.state.Assets.assetsDict;
         }
@@ -43,15 +50,27 @@
     }
 </script>
 <style scoped lang="scss">
+
+    .col_index{
+        color: var(--primary-color-light);
+    }
+
     .col_addr{
-        white-space: nowrap;
+        /*white-space: nowrap;*/
         overflow: hidden;
         text-overflow: ellipsis;
+        word-break: break-all;
+        font-family: monospace;
+        color: var(--primary-color-light);
     }
 
     .col_bal{
         text-align: right;
         padding-right: 15px;
+        padding-left: 15px;
+        font-family: monospace;
+        word-break: keep-all;
+        white-space: nowrap;
     }
 
     span{

@@ -38,24 +38,8 @@
 </script>
 <style scoped lang="scss">
     .hd_deriv_modal_body{
-        /*width: 600px;*/
-        width: 400px;
-        /*background-color: #fff;*/
+        width: 600px;
         max-width: 100%;
         padding: 0px;
     }
-
-    /*.copyBut{*/
-    /*    width: 20px;*/
-    /*    height: 20px;*/
-    /*    margin: 15px auto;*/
-    /*    margin-bottom: 0;*/
-    /*}*/
-
-    /*.phrase_raw{*/
-    /*    background-color: #fff;*/
-    /*    margin: 15px 0px !important;*/
-    /*    border-radius: 2px;*/
-    /*    padding: 6px 12px;*/
-    /*}*/
 </style>

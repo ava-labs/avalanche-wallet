@@ -91,7 +91,6 @@
         }
     })
     export default class KeyRow extends Vue{
-        // @Prop() address!:string;
         @Prop() wallet!:AvaHdWallet|LedgerWallet;
         @Prop({default: false}) is_default?:boolean;
 
@@ -102,11 +101,8 @@
 
         get walletTitle(){
             return this.wallet.externalHelper.getAddressForIndex(0)
-            // return this.seed.substring(0,4);
         }
-        // get seed(): string{
-        //     return this.wallet.seed;
-        // }
+
         get assetsDict():AssetsDict{
             return this.$store.state.Assets.assetsDict;
         }
@@ -166,10 +162,6 @@
             return res;
         }
 
-        // get keyPair():KeyPair{
-        //     return this.wallet.masterKey;
-        // }
-
         get walletType(): WalletType{
             return this.$store.state.walletType;
         }
@@ -177,10 +169,6 @@
             if(this.walletType==='ledger') return '?';
             let wallet = this.wallet as AvaHdWallet;
             return wallet.getMnemonic()
-            // let pk = this.keyPair.getPrivateKey();
-            // let hex = pk.toString('hex');
-            // let mnemonic = bip39.entropyToMnemonic(hex);
-            // return mnemonic;
         }
 
         remove(){
