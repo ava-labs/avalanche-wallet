@@ -74,4 +74,19 @@ async function getAddressTransactionsP(addr: string){
     }
 }
 
-export {explorer_api, getAddressHistory, getAddressDetailX, getAddressTransactionsP, isAddressUsedX, isAddressUsedP};
+async function getAddressChains(addrs: string[]){
+
+    // Strip the prefix
+    let cleanAddrs = addrs.map(addr => {
+        let clean = "address=" + addr.split('-')[1];
+        return clean;
+    })
+
+    let joined = cleanAddrs.join('&')
+    let url = `/x/addressChains?${joined}`;
+    let res = await explorer_api.get(url);
+
+    return res.data.addressChains;
+}
+
+export {explorer_api, getAddressHistory, getAddressDetailX, getAddressTransactionsP, isAddressUsedX, isAddressUsedP, getAddressChains};
