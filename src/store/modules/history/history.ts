@@ -46,7 +46,7 @@ const history_module: Module<HistoryState, RootState> = {
             }
 
             let offset = 0;
-            let limit = addresses.length;
+            let limit = 20;
 
             let data = await getAddressHistory(addresses, limit, offset);
 

@@ -301,13 +301,13 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         const tx = unsignedTx.sign(keychain);
         const txId: string = await avm.issueTx(tx);
 
-        // TODO: This might not be necessary anymore
-        setTimeout(async () => {
-            // Find the new HD index
-            this.internalHelper.findHdIndex()
-            this.externalHelper.findHdIndex()
-            this.platformHelper.findHdIndex()
-        }, 2000)
+        // // TODO: This might not be necessary anymore
+        // setTimeout(async () => {
+        //     // Find the new HD index
+        //     this.internalHelper.findHdIndex()
+        //     this.externalHelper.findHdIndex()
+        //     this.platformHelper.findHdIndex()
+        // }, 2000)
 
         return txId;
     }
