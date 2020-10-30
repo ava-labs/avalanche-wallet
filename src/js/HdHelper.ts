@@ -6,7 +6,17 @@ import HDKey from 'hdkey';
 import {Buffer} from "buffer/";
 import {KeyChain as PlatformVMKeyChain, KeyPair as PlatformVMKeyPair} from "avalanche/dist/apis/platformvm";
 import {SECP256k1KeyPair} from "avalanche/dist/common";
-import {getAddressDetailX} from "@/explorer_api";
+import store from '@/store';
+
+import {
+    getAddressChains,
+    getAddressDetailX,
+    getAddressTransactionsP,
+    isAddressUsedP,
+    isAddressUsedX
+} from "@/explorer_api";
+import {NetworkItem} from "@/store/modules/network/types";
+import {AvaNetwork} from "@/js/AvaNetwork";
 
 
 const INDEX_RANGE: number = 20; // a gap of at least 20 indexes is needed to claim an index unused
@@ -54,10 +64,13 @@ class HdHelper {
     }
 
     async oninit(){
-        this.hdIndex = await this.findAvailableIndex();
-        if(!this.isPublic){
-            this.updateKeychain();
-        }
+        this.findHdIndex();
+        // this.hdIndex = await this.findAvailableIndexNode();
+        // this.hdIndex = await this.findAvailableIndexExplorer();
+
+        // if(!this.isPublic){
+        //     this.updateKeychain();
+        // }
         this.updateUtxos();
     }
 
@@ -99,9 +112,22 @@ class HdHelper {
         return newIndex;
     }
 
-    async updateHdIndex(){
-        this.hdIndex = await this.findAvailableIndex();
-        this.updateKeychain();
+    async findHdIndex(){
+        // Check if explorer is available
+
+        // @ts-ignore
+        let network: AvaNetwork = store.state.Network.selectedNetwork;
+        let explorerUrl = network.explorerUrl;
+
+        if(explorerUrl){
+            this.hdIndex = await this.findAvailableIndexExplorer();
+        }else{
+            this.hdIndex = await this.findAvailableIndexNode();
+        }
+
+        if(!this.isPublic){
+            this.updateKeychain();
+        }
     }
 
 
@@ -183,10 +209,6 @@ class HdHelper {
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet|PlatformUTXOSet>{
-        // TODO: Optimize this
-        await this.updateHdIndex()
-
-        // let addrs: string[] = this.keyChain.getAddressStrings();
         let addrs: string[] = this.getAllDerivedAddresses();
         let result: AVMUTXOSet|PlatformUTXOSet;
 
@@ -198,13 +220,12 @@ class HdHelper {
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
-
         // If the hd index is full, increment
         let currentAddr = this.getCurrentAddress();
         let currentAddrBuf = bintools.parseAddress(currentAddr,this.chainId);
-        let curentUtxos = result.getUTXOIDs([currentAddrBuf])
+        let currentUtxos = result.getUTXOIDs([currentAddrBuf])
 
-        if(curentUtxos.length>0){
+        if(currentUtxos.length>0){
             this.incrementIndex();
         }
         return result;
@@ -215,8 +236,8 @@ class HdHelper {
         let hdIndex = this.hdIndex;
         return this.getAllDerivedAddresses(hdIndex+INDEX_RANGE);
     }
+
     async getAtomicUTXOs(){
-        let hdIndex = this.hdIndex;
         let addrs: string[] = this.getAllDerivedAddresses();
         if(this.chainId === 'P'){
             let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID())).utxos;
@@ -276,9 +297,9 @@ class HdHelper {
         return set;
     }
 
-    getAllDerivedAddresses(limit=this.hdIndex): string[]{
+    getAllDerivedAddresses(upTo= this.hdIndex, start=0): string[]{
         let res = [];
-        for(var i=0;i<=limit;i++){
+        for(var i=start;i<=upTo;i++){
             let addr = this.getAddressForIndex(i);
             res.push(addr);
         }
@@ -291,8 +312,38 @@ class HdHelper {
         this.addressCache = {};
     }
 
-    // Scans the address space for utxos and finds a gap of INDEX_RANGE
-    async findAvailableIndex(start:number=0): Promise<number> {
+    // Scans the address space of this hd path and finds the last used index using the
+    // explorer API.
+    async findAvailableIndexExplorer(startIndex=0): Promise<number> {
+        let upTo = 200;
+
+        let addrs = this.getAllDerivedAddresses(startIndex+upTo, startIndex);
+        let addrChains = await getAddressChains(addrs);
+
+        let chainID;
+        if(this.chainId==='X'){
+            chainID = avm.getBlockchainID();
+        }else{
+            chainID = pChain.getBlockchainID();
+        }
+
+        for(var i=0; i<addrs.length; i++){
+            let rawAddr = addrs[i].split('-')[1];
+            let chains: string[] = addrChains[rawAddr];
+
+            // If doesnt exist on any chain
+            if(!chains) return i+startIndex;
+            // If doesnt exist on this chain
+            if(!chains.includes(chainID)) return i+startIndex;
+        }
+
+        return await this.findAvailableIndexExplorer(startIndex+upTo);
+    }
+
+
+    // Uses the node to find last used HD index
+    // Only used when there is no explorer API available
+    async findAvailableIndexNode(start:number=0): Promise<number> {
         let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
@@ -331,44 +382,48 @@ class HdHelper {
             // If we found a gap of 20, we can return the last fullIndex+1
             if(gapSize===INDEX_RANGE){
                 let targetIndex = start+i;
-                // As a last resort check the explorer
-                let data = await this.checkIndexExplorer(targetIndex)
-                if(data) continue;
                 return targetIndex;
             }
         }
-        return await this.findAvailableIndex(start+SCAN_RANGE)
+        return await this.findAvailableIndexNode(start+SCAN_RANGE)
     }
 
     // Get tx history data for the index from the explorer
     // return true if this address has a history
     // returns false if no explorer is present
-    async checkIndexExplorer(index: number): Promise<boolean>{
-        let addr = this.getAddressForIndex(index);
-
-        try{
-            if(this.chainId==='X'){
-                let res = await getAddressDetailX(addr)
-                if(res) return true;
-            }
-        }catch(e){
-            // IF there is no available api, catch the 404 and return false
-            return false;
-        }
-        return false;
-    }
+    // async checkIndexExplorer(index: number): Promise<boolean>{
+    //     let addr = this.getAddressForIndex(index);
+    //
+    //     try{
+    //         if(this.chainId==='X'){
+    //             // let res = await getAddressDetailX(addr)
+    //             let res = await isAddressUsedX(addr);
+    //             if(res) return true;
+    //         }else{ // P chain
+    //             // let res = await getAddressTransactionsP(addr)
+    //             let res = await isAddressUsedP(addr);
+    //             if(res) return true;
+    //             // let count = res.count;
+    //             // if(count > 0) return true;
+    //         }
+    //     }catch(e){
+    //         // IF there is no available api, catch the 404 and return false
+    //         return false;
+    //     }
+    //     return false;
+    // }
 
     // Returns the key of the first index that has no utxos
-    getFirstAvailableKey(){
-        for(var i=0; i<this.hdIndex; i++){
-            let key = this.getKeyForIndex(i);
-            let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
-            if(utxoIds.length === 0){
-                return key;
-            }
-        }
-        return this.getCurrentKey();
-    }
+    // getFirstAvailableKey(){
+    //     for(var i=0; i<this.hdIndex; i++){
+    //         let key = this.getKeyForIndex(i);
+    //         let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
+    //         if(utxoIds.length === 0){
+    //             return key;
+    //         }
+    //     }
+    //     return this.getCurrentKey();
+    // }
 
     // Returns the key of the first index that has no utxos
     getFirstAvailableAddress(): string{

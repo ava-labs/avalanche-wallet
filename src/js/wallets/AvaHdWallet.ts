@@ -230,7 +230,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
 
 
     async importToPlatformChain(): Promise<string>{
-        await this.platformHelper.updateHdIndex();
+        // await this.platformHelper.findHdIndex();
         const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
 
         if(utxoSet.getAllUTXOs().length === 0){
@@ -267,13 +267,14 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
 
     async importToXChain(){
         const utxoSet = await this.externalHelper.getAtomicUTXOs() as AVMUTXOSet;
-        let keyChain = this.getKeyChain() as AVMKeyChain;
-        let xAddrs = keyChain.getAddressStrings();
-        let xToAddr = this.externalHelper.getCurrentAddress();
 
         if(utxoSet.getAllUTXOs().length === 0){
             throw new Error("Nothing to import.")
         }
+
+        let keyChain = this.getKeyChain() as AVMKeyChain;
+        let xAddrs = keyChain.getAddressStrings();
+        let xToAddr = this.externalHelper.getCurrentAddress();
 
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
@@ -301,15 +302,13 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         const tx = unsignedTx.sign(keychain);
         const txId: string = await avm.issueTx(tx);
 
-        // TODO: Must update index after sending a tx
-        // TODO: Index will not increase but it could decrease.
-        // TODO: With the current setup this can lead to gaps in index space greater than scan size.
-        setTimeout(async () => {
-            // Find the new HD index
-            this.internalHelper.updateHdIndex()
-            this.externalHelper.updateHdIndex()
-            this.platformHelper.updateHdIndex()
-        }, 2000)
+        // // TODO: This might not be necessary anymore
+        // setTimeout(async () => {
+        //     // Find the new HD index
+        //     this.internalHelper.findHdIndex()
+        //     this.externalHelper.findHdIndex()
+        //     this.platformHelper.findHdIndex()
+        // }, 2000)
 
         return txId;
     }
