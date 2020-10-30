@@ -238,7 +238,6 @@ class HdHelper {
     }
 
     async getAtomicUTXOs(){
-        let hdIndex = this.hdIndex;
         let addrs: string[] = this.getAllDerivedAddresses();
         if(this.chainId === 'P'){
             let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID())).utxos;
@@ -298,7 +297,7 @@ class HdHelper {
         return set;
     }
 
-    getAllDerivedAddresses(upTo=this.hdIndex, start=0): string[]{
+    getAllDerivedAddresses(upTo= this.hdIndex, start=0): string[]{
         let res = [];
         for(var i=start;i<=upTo;i++){
             let addr = this.getAddressForIndex(i);
