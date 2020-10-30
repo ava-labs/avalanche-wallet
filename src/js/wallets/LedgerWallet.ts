@@ -221,9 +221,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // TODO: With the current setup this can lead to gaps in index space greater than scan size.
         setTimeout(async () => {
             // Find the new HD index
-            this.internalHelper.updateHdIndex()
-            this.externalHelper.updateHdIndex()
-            this.platformHelper.updateHdIndex()
+            this.internalHelper.findHdIndex()
+            this.externalHelper.findHdIndex()
+            this.platformHelper.findHdIndex()
         }, 2000)
 
         return txId;
@@ -318,7 +318,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async importToPlatformChain(): Promise<string> {
-        await this.platformHelper.updateHdIndex();
+        await this.platformHelper.findHdIndex();
         const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
         let pAddrs = this.platformHelper.getAllDerivedAddresses();
         // Owner addresses, the addresses we exported to

@@ -264,8 +264,7 @@
 
             this.$store.dispatch('issueBatchTx', txList).then(res => {
 
-                console.log(res);
-                this.onsuccess()
+                this.onsuccess();
                 this.txId = res;
             }).catch(err => {
                 this.onerror(err);
