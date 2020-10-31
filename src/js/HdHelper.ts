@@ -327,17 +327,34 @@ class HdHelper {
             chainID = pChain.getBlockchainID();
         }
 
-        for(var i=0; i<addrs.length; i++){
-            let rawAddr = addrs[i].split('-')[1];
-            let chains: string[] = addrChains[rawAddr];
+        for(var i=0; i<addrs.length-INDEX_RANGE; i++){
+            let gapSize: number = 0;
 
-            // If doesnt exist on any chain
-            if(!chains) return i+startIndex;
-            // If doesnt exist on this chain
-            if(!chains.includes(chainID)) return i+startIndex;
+            for(var n=0;n<INDEX_RANGE;n++){
+                let scanIndex = i+n;
+                let scanAddr = addrs[scanIndex];
+
+                let rawAddr = scanAddr.split('-')[1];
+                let chains: string[] = addrChains[rawAddr];
+
+
+                if(!chains) { // If doesnt exist on any chain
+                    gapSize++;
+                }else if(!chains.includes(chainID)){ // If doesnt exist on this chain
+                    gapSize++;
+                }else{
+                    i = i+n;
+                    break;
+                }
+            }
+
+            // If the gap is reached return the index
+            if(gapSize===INDEX_RANGE){
+                return startIndex+i;
+            }
         }
 
-        return await this.findAvailableIndexExplorer(startIndex+upTo);
+        return await this.findAvailableIndexExplorer(startIndex+(upTo-INDEX_RANGE));
     }
 
 
