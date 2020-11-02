@@ -81,7 +81,7 @@
                         <p v-if="!txStatus">Waiting..</p>
                         <template v-else>
                             <p>{{txStatus}}</p>
-                            <p>{{txReason}}</p>
+                            <p v-if="txReason">{{txReason}}</p>
                         </template>
                     </div>
                 </div>

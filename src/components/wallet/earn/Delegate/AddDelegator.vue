@@ -98,7 +98,7 @@
                         <p v-if="!txStatus">Waiting..</p>
                         <template v-else>
                             <p>{{txStatus}}</p>
-                            <p>{{txReason}}</p>
+                            <p v-if="txReason">{{txReason}}</p>
                         </template>
                     </div>
                 </div>
@@ -222,7 +222,6 @@ export default class AddDelegator extends Vue{
 
     async updateTxStatus(txId: string){
         let res = await pChain.getTxStatus(txId);
-        console.log(res);
         let status;
         let reason = null;
         if(typeof res === "string"){
