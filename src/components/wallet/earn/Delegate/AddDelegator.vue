@@ -96,7 +96,10 @@
                     <div class="tx_status">
                         <label>{{$t('earn.delegate.success.status')}}</label>
                         <p v-if="!txStatus">Waiting..</p>
-                        <p v-else>{{txStatus}}</p>
+                        <template v-else>
+                            <p>{{txStatus}}</p>
+                            <p>{{txReason}}</p>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -160,6 +163,7 @@ export default class AddDelegator extends Vue{
     isSuccess = false;
     txId = "";
     txStatus = "";
+    txReason: null|string = null;
 
     formNodeID = "";
     formAmt = new BN(0);
@@ -217,7 +221,16 @@ export default class AddDelegator extends Vue{
     }
 
     async updateTxStatus(txId: string){
-        let status = await pChain.getTxStatus(txId);
+        let res = await pChain.getTxStatus(txId);
+        console.log(res);
+        let status;
+        let reason = null;
+        if(typeof res === "string"){
+            status = res;
+        }else{
+            status = res.status
+            reason = res.reason
+        }
 
         if(!status || status==='Processing'){
             setTimeout(() => {
@@ -225,6 +238,7 @@ export default class AddDelegator extends Vue{
             }, 5000);
         }else{
             this.txStatus = status;
+            this.txReason = reason;
         }
     }
 
@@ -306,20 +320,17 @@ export default class AddDelegator extends Vue{
 
         if(startTime <= now){
             this.err = this.$t('earn.delegate.errs.start_now') as string;
-            // this.err = `Start time must be after current time.`;
             return false;
         }
 
         // TODO: UPDATE THIS WITH REAL VALUE
         if(diffTime < DAY_MS*14){
             this.err = this.$t('earn.delegate.errs.min_dur') as string;
-            // this.err = `Minimum staking duration is 2 weeks.`;
             return false;
         }
 
         if(diffTime > DAY_MS*365){
             this.err = this.$t('earn.delegate.errs.max_dur') as string;
-            // this.err = `Maximum staking duration is 1 year.`;
             return false;
         }
 
@@ -327,14 +338,12 @@ export default class AddDelegator extends Vue{
 
         if(endTime > validatorEndtime){
             this.err = this.$t('earn.delegate.errs.val_end') as string;
-            // this.err = `Delegation end date can not be longer than the validator's end date.`;
             return false;
         }
 
         // Reward address check
         if(this.rewardDestination!='local' && !this.rewardIn){
             this.err = this.$t('earn.delegate.errs.no_addr') as string;
-            // this.err = "You must give an address to receive delegation rewards."
             return false;
         }
 
@@ -352,7 +361,6 @@ export default class AddDelegator extends Vue{
         if(this.stakeAmt.lt(this.minStake)){
             let big = bnToBig(this.minStake,9);
             this.err = this.$t('earn.delegate.errs.amt', [big.toLocaleString()]) as string;
-            // this.err = `Delegation amount must be at least ${big.toLocaleString()} AVAX.`
             return false;
         }
 
@@ -394,6 +402,9 @@ export default class AddDelegator extends Vue{
     get startMinDate(): string{
         let now = Date.now();
         let res = now + (60000 * 5);
+
+        // testing
+        // return (new Date(now)).toISOString();
 
         return (new Date(res)).toISOString();
     }
