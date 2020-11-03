@@ -79,7 +79,10 @@
                         <p class="tx_id">Tx ID: {{txId}}</p>
                         <label>{{$t('earn.validate.success.status')}}</label>
                         <p v-if="!txStatus">Waiting..</p>
-                        <p v-else>{{txStatus}}</p>
+                        <template v-else>
+                            <p>{{txStatus}}</p>
+                            <p v-if="txReason">{{txReason}}</p>
+                        </template>
                     </div>
                 </div>
             </form>
@@ -143,6 +146,8 @@ export default class AddValidator extends Vue{
 
     txId = "";
     txStatus: string|null = null;
+    txReason: null|string = null;
+
     isSuccess = false;
 
     currency_type = "AVAX";
@@ -459,13 +464,24 @@ export default class AddValidator extends Vue{
     }
 
     async updateTxStatus(txId: string){
-        let status = await pChain.getTxStatus(txId);
+        let res = await pChain.getTxStatus(txId);
+
+        let status;
+        let reason = null;
+        if(typeof res === "string"){
+            status = res;
+        }else{
+            status = res.status
+            reason = res.reason
+        }
+
         if(!status || status==='Processing'){
             setTimeout(() => {
                 this.updateTxStatus(txId);
             }, 5000);
         }else{
             this.txStatus = status;
+            this.txReason = reason
         }
     }
 
