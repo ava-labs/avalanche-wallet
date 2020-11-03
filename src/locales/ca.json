@@ -1,0 +1,428 @@
+{
+    "password": "Contrasenya",
+    "password_confirm": "Confirma la contrasenya",
+    "private_key": "Clau privada",
+    "address": "Adreça",
+    "add_pk": "Afegeix la clau privada",
+    "home": {
+        "desc": "Avalanche Wallet és una cartera senzilla, segura i no privativa per desar actius Avalanche.",
+        "access": {
+            "title": "Benvingut de nou!",
+            "desc": "'Accediu' a la vostra cartera Avalanche existent aquí.",
+            "submit": "Accediu a la Cartera"
+        },
+        "create": {
+            "title": "Sou nous a Avalanche Wallet?",
+            "desc": "'Creeu' una nova cartera per enviar, rebre i intercanviar actius Avalanche.",
+            "submit": "Crea una cartera nova"
+        }
+    },
+    "network": {
+        "status1": "Connectant ...",
+        "status2": "Desconnectat",
+        "title": "Xarxes",
+        "title2": "Afegeix una xarxa personalitzada",
+        "title3": "Edita la xarxa",
+        "custom": "Afegeix Personalitzada",
+        "cancel": "Cancel·la",
+        "add": "Afegeix una xarxa"
+    },
+    "access": {
+        "title": "Com voleu accedir a la vostra cartera?",
+        "create": "Encara no tens una cartera?",
+        "but_mnemonic": "Frase clau mnemotècnica",
+        "but_keystore": "Fitxer d'emmagatzematge de claus",
+        "cancel": "Cancel·la",
+        "json_error": "No es pot analitzar el fitxer JSON.",
+        "keystore_error": "Aquesta versió del magatzem de claus no és compatible.",
+        "password_error": "Contrasenya invàlida.",
+        "mnemonic": {
+            "title": "Introdueix la teva frase MNEMONIC\n",
+            "subtitle": "Prem \"ESPAI\" després de entrar cada paraula correcte.",
+            "submit": "Accedeix a la cartera",
+            "cancel": "Cancel·lar",
+            "error": "Frase clau no vàlida. La teva frase ha de tenir 24 paraules separades per un sol espai."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Cartera",
+            "manage": "Gestiona",
+            "send": "Envia",
+            "earn": "Guanya",
+            "advanced": "Avançat"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "No ets propietari de cap col·lecció."
+        }
+    },
+    "create": {
+        "generate": "Genera una nova frase clau per utilitzar amb la vostra Avalanche Wallet.",
+        "but_have": "Ja tens una cartera?",
+        "submit": "Genera una frase clau",
+        "cancel": "Cancel·la",
+        "mnemonic_title": "Aquesta es la vostra frase clau.",
+        "mnemonic_desc": "Utilitzeu aquestes 24 paraules en ordre seqüencial per recuperar el vostre Avalanche Wallet",
+        "attention": "Atenció!",
+        "warning": "Deseu aquesta frase clau en una localització segura. Qualsevol que disposi d'aquesta frase clau pot accedir la vostra Avalanche Wallet. No hi ha forma de recuperar les frases clau perdudes.",
+        "confirm": "He anotat la meva frase clau en una localització segura.",
+        "regenerate": "Regenerar",
+        "success_title": "Enhorabona!",
+        "success_desc": "És hora d'accedir a la vostra Avalanche Wallet.",
+        "success_submit": "Accedeix a la cartera",
+        "verify": "Verifica",
+        "verifytitle": "Verifica la mnemotècnica",
+        "verify_desc": "Completa la frase mnemotècnica a continuació",
+        "error_number": "Vaja, sembla que has oblidat completar el número",
+        "error_word": "La frase mnemotècnica que has introduït per paraula no coincideix amb la frase real."
+    },
+    "top": {
+        "title1": "Adreça de la cartera d'Avalanche derivada",
+        "title2": "Equilibri",
+        "title3": "Subxarxa",
+        "title4": "Xarxa",
+        "nftcol": "NFTs",
+        "nftempty": "No has recollit cap token no fungible.",
+        "locked": "Tancat",
+        "info2": "Vaig comprar monedes durant la venta de tokens. On es troben els meus AVAX?",
+        "info2_desc": "Aquesta cartera es troba connectada a la xarxa de proves d'Avalanche Everest. La teva compra apareixerà a la cartera després del llançament de la xarxa principal d'Avalanche.",
+        "hover1": "Veure el codi QR de l'adreça",
+        "hover2": "Imprimir",
+        "hover3": "Copiar",
+        "hover4": "Veure l'adreça de la xarxa principal",
+        "balance": {
+            "show": "Mostra el desglossament",
+            "hide": "Amaga el desglossament",
+            "available": "Disponible",
+            "locked": "Tancat",
+            "locked_stake": "Participacions tancades",
+            "stake": "Participant",
+            "collectibles": "Cobraments"
+        },
+        "address": {
+            "derived": "Adreça Avalanche Wallet derivada",
+            "desc": "Aquesta es la vostra adreça per rebre fons. La vostra adreça canviarà després de cada dipòsit."
+        }
+    },
+    "transfer": {
+        "title": "Enviar",
+        "no_cash": "Has de tenir algun actiu a la teva cartera per a poder emetre una transacció.",
+        "faucet": "Has comprovat la nostra aixeta?",
+        "to": "A l'adreça",
+        "fees": "Comissions",
+        "fee_tx": "Comissió de transacció",
+        "advanced": "Avançat",
+        "adv_change": "Canvia l'adreça",
+        "send": "Envia una transacció",
+        "summary": "Resum de les transaccions",
+        "disconnected": "No es poden enviar actius. Desconnectat e la xarxa.",
+        "success_title": "Transacció enviada",
+        "success_msg": "Has enviat la transacció amb èxit.",
+        "error_title": "Error en enviar la transacció",
+        "error_msg": "No s'ha pogut enviar la transacció."
+    },
+    "keys": {
+        "title": "Les meves claus",
+        "button1": "Recordeu les claus",
+        "button2": "IMPORTA LES CLAUS",
+        "button3": "EXPORTA LES CLAUS",
+        "subtitle": "Clau activa",
+        "remember_key_button": "RECORDA",
+        "remember_key_desc": "Codifica la teva cartera amb una contrasenya i desa-la de forma segura en aquest navegador.",
+        "remember_key_check": "Recorda les claus",
+        "remember_key_info": "Mes endavant, podràs accedir a la teva cartera en aquest navegador amb una contrasenya.",
+        "export_key_button": "EXPORTA LA CARTERA",
+        "export_key_title": "Exporta les claus",
+        "export_key_desc": "Introdueix una contrasenya per codificar les teves claus privades en un fitxer. Mes endavant podràs utilitzar aquest fitxer i la teva contrasenya per accedir a la teva cartera.",
+        "export_key_info": "{0} claus seleccionades.",
+        "export_placeholder1": "Contrasenya",
+        "export_placeholder2": "Confirma la contrasenya",
+        "empty": "Aquesta clau no té equilibri.",
+        "import_key_button": "IMPORTA CLAU",
+        "import_key_title": "Importa claus",
+        "import_key_desc": "Afegeix claus addicionals per utilitzar amb la teva cartera.",
+        "import_key_option1": "FRASE MNEMOTÈCNICA",
+        "import_key_option2": "ARXIU D'EMMAGATZEMATGE DE CLAUS",
+        "import_key_success_title": "Clau afegida",
+        "import_key_success_msg": "Clau privada i actius afegits a la cartera.",
+        "tooltip": "Aquesta clau serà oblidada quan actualitzis el navegador.",
+        "view_key": "Mostra la frase clau",
+        "export_key": "Exporta la clau",
+        "hd_addresses": "Adreces HD",
+        "remove_key": "Elimina la clau",
+        "activate_key": "Activa la clau",
+        "remove_success_title": "Clau eliminada",
+        "remove_success_msg": "S'ha eliminat la clau privada i els actius de la cartera.",
+        "password_validation": "La contrasenya ha de tenir com a mínim 9 caràcters.",
+        "password_validation2": "La contrasenya no coincideix."
+    },
+    "portfolio": {
+        "assets": "Actius",
+        "assets1": "Fitxes",
+        "assets2": "Cobraments",
+        "search": "Cerca els actius",
+        "name": "Nom",
+        "send": "Envia",
+        "balance": "Equilibri",
+        "error_network": "No es poden mostrar els actius. Desconnectat de la xarxa.",
+        "nobalance": "No tens cap actiu",
+        "nobalance_nft": "No disposeu de cap cobrament.",
+        "noaddresses": "No tens cap adreça anterior."
+    },
+    "earn": {
+        "title": "Guanya",
+        "desc": "Podeu guanyar més AVAX recopilant fitxes existents.",
+        "subtitle1": "Validar",
+        "subtitle2": "Delegar",
+        "subtitle3": "Transferència mixta en cadena",
+        "subtitle4": "Premis estimats",
+        "warning_1": "Heu de disposar de com a mínim {0} AVAX a la cadena P per tornar-vos validador.",
+        "warning_2": "Heu de disposar de com a mínim {0} AVAX a la cadena P per tornar-vos delegat.",
+        "validate_card": {
+            "title": "Validar",
+            "desc": "Disposeu d'un node Avalanche amb el qual voleu partipar.",
+            "submit": "Afegir validador"
+        },
+        "delegate_card": {
+            "title": "Delegat",
+            "desc": "No disposeu d'un node Avalanche, però voleu partipar fent ús d'un altre node.",
+            "submit": "Afegir Delegant"
+        },
+        "transfer_card": {
+            "title": "Transferència mixta en cadena",
+            "desc": "La participació requereix AVAX a la cadena P. Transferir les fitxes entre X i P.",
+            "submit": "Transferir"
+        },
+        "rewards_card": {
+            "title": "Recompenses estimades",
+            "desc": "Veure les recompenses de participació que rebreu.",
+            "submit": "Veure Recompenses"
+        },
+        "transfer": {
+            "source": "Cadena de suministrament",
+            "destination": "Cadena de destí",
+            "balance": "Balanç",
+            "amount": "Import Transferència",
+            "fee": "Taxa",
+            "confirm": "Confirmar",
+            "submit": "Transfereix",
+            "cancel": "Cancel·la",
+            "err_import": "La importació ha fallat",
+            "err_desc": "S'ha produit un problema en importar les vostres fitxes a la cadena de destinació. Torneu a importar de nou.",
+            "err_submit": "Inicieu la importació",
+            "success": {
+                "title": "Transferència completada",
+                "export": "ID d'exportació de la transacció:",
+                "import": "ID d'importació de la transacció:",
+                "message": "Heu enviat fet la transferència entre cadenes amb èxit.",
+                "back": "Torna a Guanys"
+            }
+        },
+        "rewards": {
+            "total": "Total Recompenses",
+            "validation": "Validació",
+            "delegation": "Delegació",
+            "empty": "No disposeu de cap recompensa pendent.",
+            "row": {
+                "start": "Inici",
+                "end": "Final",
+                "completed": "Completada",
+                "stake": "Participació",
+                "reward": "Recompensa potencial"
+            }
+        },
+        "validate": {
+            "label_1": "ID del node",
+            "duration": {
+                "label": "Període de participació",
+                "desc": "La durada en la qual les fitxes es tancaran per a la participació.",
+                "start": "Data i Hora d'Inici",
+                "end": "Data i Hora de finalització"
+            },
+            "amount": {
+                "label": "Import de participació",
+                "desc": "L'import d'AVAX per tancar la participació."
+            },
+            "fee": {
+                "label": "Taxa de Delegació",
+                "desc": "Reclamareu aquest % de les recompenses dels delegadors del vostre node."
+            },
+            "reward": {
+                "label": "Adreça de recompensa",
+                "desc": "On enviar les recompenses de participació.",
+                "chip_1": "Utilitza aquesta cartera",
+                "chip_2": "Personalitza l'adreça"
+            },
+            "summary": {
+                "max_del": "Import Màx Delegació",
+                "max_del_tooltip": "L'import màxim que es pot delegar a aquest validador.",
+                "duration": "Durada de la participació",
+                "rewards": "Recompenses estimades",
+                "warn": "Si aquesta és la primera vegada que participeu, comenceu amb imports petits. Les fitxes de participació es tancaran fins al final del període de participació."
+            },
+            "confirmation": {
+                "id": "ID del node",
+                "amount": "Import de participació",
+                "start": "Data d'Inici",
+                "end": "Data final",
+                "fee": "Taxa de Delegació",
+                "reward": "Adreça de recompensa",
+                "type_local": "Aquesta cartera",
+                "type_custom": "Personalitza"
+            },
+            "confirm": "Confirma",
+            "submit": "Envia",
+            "cancel": "Cancel·la",
+            "success": {
+                "title": "La vostra transacció de validació s'ha enviat.",
+                "desc": "Si la transacció s'accepta les vostres fitxes quedaran tancades per a la participació. Rebreu les vostres fitxes tancades més les recompenses quan el vostre període de participació hagi finalitzat.",
+                "status": "Estat"
+            },
+            "errs": {
+                "date": "La data d'inici ha de ser al futur proper i la data de finalització ha de ser posterior a la data d'inici.",
+                "amount": "L'import de participació ha de ser de com a mínim {0} AVAX",
+                "id": "ID de node invàlid. Ha de començar per \"NodeId-\"",
+                "address": "Adreça de recompensa invàlida."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Seleccioneu un node per delegar",
+                "search": "Cerca l'ID del node",
+                "id": "ID del node",
+                "val_stake": "Validador de participació",
+                "aval_stake": "Disponible",
+                "aval_stake_tip": "Quant més es pot delegar a aquest validador.",
+                "users_tip": "Nombre de delegadors",
+                "end": "Data de finalització",
+                "up": "Temps de funcionament",
+                "up_tip": "Relatiu al node al qual aquesta cartera està connectada.",
+                "fee": "Taxa",
+                "empty": {
+                    "title": "No s'han trobat validadors",
+                    "desc": "Els validadors han d'estar participant activament per poder-los trobar."
+                }
+            },
+            "node": {
+                "selected": "Selecciona node",
+                "fee": "Taxa de Delegació",
+                "start": "Data d'Inici de Validador",
+                "end": "Data de finalització de Validador"
+            },
+            "form": {
+                "period": {
+                    "label": "Període de participació",
+                    "desc": "La durada en la qual les fitxes es tancaran per a la participació.",
+                    "start": "Data i Hora d'Inici",
+                    "end": "Data i Hora de finalització"
+                },
+                "amount": {
+                    "label": "Import de participació",
+                    "desc": "L'import d'AVAX per tancar la participació.",
+                    "desc2": "La quantitat de delegació disponible per aquest node és {0} AVAX"
+                },
+                "reward": {
+                    "label": "Adreça de recompensa",
+                    "desc": "On enviar les recompenses de participació.",
+                    "chip_1": "Utilitza aquesta cartera",
+                    "chip_2": "Personalitza l'adreça"
+                }
+            },
+            "confirmation": {
+                "node": "ID del node",
+                "amount": "Import de participació",
+                "start": "Data d'Inici",
+                "end": "Data de finalització",
+                "reward": "Adreça de recompensa"
+            },
+            "errs": {
+                "start_now": "L'hora d'inici ha de ser posterior a l'hora actual.",
+                "start_end": "L'hora d'inici ha de ser al futur proper i l'hora de finalització ha de ser posterior a l'hora d'inici.",
+                "invalid_addr": "Format d'adreça invàlida. La vostra adreça ha de començar amb \"P-\"",
+                "no_addr": "Heu de proporcionar una adreça per rebre recompenses de delegació.",
+                "min_dur": "La durada mínima de la participació és de 2 setmanes.",
+                "max_dur": "La durada màxima de la participació és d'1 any.",
+                "no_node": "Heu d'especificar un validador.",
+                "val_end": "La data de finalització de la delegació no pot ser més llarga que la data de finalització del validador.",
+                "amt": "L'import de participació ha de ser de com a mínim {0} AVAX."
+            },
+            "summary": {
+                "duration": "Durada de la participació",
+                "reward": "Recompenses estimades",
+                "fee": "Taxa",
+                "warn": "Si aquesta és la primera vegada que participeu, comenceu amb imports petits. Les fitxes de participació es tancaran fins al final del període de participació."
+            },
+            "confirm": "Confirma",
+            "submit": "Envia",
+            "cancel": "Cancel·la",
+            "success": {
+                "title": "Transacció de delegació enviada.",
+                "desc": "Si la transacció s'accepta les vostres fitxes quedaran tancades per a la participació. Rebreu les vostres fitxes tancades més les recompenses quan el vostre període de participació hagi finalitzat.",
+                "status": "Estat"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Avançat",
+        "import": {
+            "title": "Importació en cadena",
+            "desc": "Si teniu fons encallats en una cadena de transferència fallida, podeu finalitzar la importació aquí.",
+            "submit_x": "Importa X",
+            "submit_p": "Importa P"
+        }
+    },
+    "logout": {
+        "button": "Tancar sessió",
+        "button_conf": "TANCAR SESSIÓ",
+        "button_cancel": "Cancel·lar",
+        "confirmation": "Estàs segur que vols tancar la sessió?",
+        "confirmation_message": "Aquesta cartera i les seves claus s'oblidaran."
+    },
+    "keystore": {
+        "title": "Fitxer d'emmagatzematge de claus",
+        "button": "Selecciona un fitxer"
+    },
+    "transactions": {
+        "notx": "No s'ha trobat cap transacció per aquesta adreça a l'explorador.",
+        "loading": "Carregant l'historial de transaccions..",
+        "warn_loading": "Aquesta llista pot estar incompleta i no funciona.",
+        "error_api": "No s'ha trobat l'Explorer API",
+        "error_api_desc": "Has de proporcionar un AVA Explorer API per aquesta xarxa per veure l'historial de transaccions."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adreça",
+            "copy": "Copia l'adreça"
+        },
+        "print": {
+            "title": "Vista prèvia d'impressió",
+            "submit": "Imprimir"
+        },
+        "keystore": {
+            "title": "Actualitza el fitxer d'emmagatzematge de claus",
+            "desc": "Hem actualitzat les especificacions del fitxer d'emmagatzematge de claus. Per favor descarrega el fitxer nou i torna accedir a la cartera.",
+            "logout": "Tancar sessió i tornar a accedir"
+        },
+        "mainnet": {
+            "title": "Adreça de la xarxa principal",
+            "desc": "La teva adreça de la xarxa principal és:"
+        },
+        "mnemonic": {
+            "title": "Frase clau"
+        },
+        "activateWallet": {
+            "title": "Activa la cartera",
+            "desc": "Hi ha una cartera activa. Introdueix la teva contrasenya per accedir-hi.",
+            "submit": "Accedeix a la cartera",
+            "cancel": "Accedeix a una altra cartera",
+            "cancel2": "(S'oblidarà la cartera anterior)",
+            "err1": "Contrasenya invàlida.",
+            "err2": "No es poden llegir les dades de la cartera."
+        }
+    },
+    "nav": {
+        "access": "Accedeix a la cartera",
+        "create": "Crea una cartera nova"
+    }
+}

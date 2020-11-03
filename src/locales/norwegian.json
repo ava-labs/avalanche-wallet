@@ -1,0 +1,428 @@
+{
+    "password": "Passord",
+    "password_confirm": "Bekreft passord",
+    "private_key": "Privat nøkkel",
+    "address": "Adresse",
+    "add_pk": "Legg til privat nøkkel",
+    "home": {
+        "desc": "Avalanche Wallet er en enkel, sikker, forvaringsfri lommebok for lagring av Avalanche-aktiva.",
+        "access": {
+            "title": "Velkommen tilbake!",
+            "desc": "‘Få tilgang’ til din eksisterende Avalanche-lommebok her.",
+            "submit": "Få tilgang til lommebok"
+        },
+        "create": {
+            "title": "Ny hos Avalanche Wallet?",
+            "desc": "‘Lag’ en ny lommebok for å sende, motta og bytte Avalanche-aktiva.",
+            "submit": "Lag ny lommebok"
+        }
+    },
+    "network": {
+        "status1": "Tilkobler …",
+        "status2": "Frakoblet",
+        "title": "Nettverk",
+        "title2": "Legg til tilpasset nettverk",
+        "title3": "Rediger nettverk",
+        "custom": "Legg til tilpasset",
+        "cancel": "Avbryt",
+        "add": "Legg til nettverk"
+    },
+    "access": {
+        "title": "Hvordan vil du ha tilgang til lommeboken din?",
+        "create": "Har du ikke en lommebok?",
+        "but_mnemonic": "Mnemonic-nøkkelfrase",
+        "but_keystore": "Keystore-fil",
+        "cancel": "Avbryt",
+        "json_error": "Kunne ikke analysere JSON-fil.",
+        "keystore_error": "Denne Keystore-versjonen støttes ikke.",
+        "password_error": "Ugyldig passord.",
+        "mnemonic": {
+            "title": "Oppgi din MNEMONIC-frase\n",
+            "subtitle": "Trykk på ‘MELLOMROM’ etter hver vellykkede innleggelse av ord.",
+            "submit": "Få tilgang til lommebok",
+            "cancel": "Avbryt",
+            "error": "Ugyldig nøkkelfrase. Frasen din må være 24 ord separert av et enkelt mellomrom."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portefølje",
+            "manage": "Administrer",
+            "send": "Send",
+            "earn": "Tjen",
+            "advanced": "Avansert"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Du eier ingen samleobjekter."
+        }
+    },
+    "create": {
+        "generate": "Generer en ny nøkkelfrase for å sette opp din Avalanche Wallet.",
+        "but_have": "Har du allerede en lommebok?",
+        "submit": "Generer nøkkelfrase",
+        "cancel": "Avbryt",
+        "mnemonic_title": "Dette er nøkkelfrasen din.",
+        "mnemonic_desc": "Bruk disse 24 ordene i rekkefølge for å tilbakestille din Avalanche Wallet",
+        "attention": "Se her!",
+        "warning": "Lagre denne nøkkelfrasen på et trygt sted. Alle som har denne nøkkelfrasen, har tilgang til din Avalanche Wallet. Det finnes ingen metode for å tilbakestille tapte nøkkelfraser.",
+        "confirm": "Jeg skrev ned nøkkelfrasen min på et sikkert sted.",
+        "regenerate": "Regenerer",
+        "success_title": "Gratulerer!",
+        "success_desc": "Tiden er inne for å gå inn på din Avalanche Wallet.",
+        "success_submit": "Få tilgang til lommebok",
+        "verify": "Bekreft",
+        "verifytitle": "Verifiser Mnemonic",
+        "verify_desc": "Oppgi Mnemonic-frase nedenfor",
+        "error_number": "Obs, det ser ut som om du glemte å oppgi tall",
+        "error_word": "Mnemonic-frasen du oppga for ord samsvarer ikke med den faktiske frasen."
+    },
+    "top": {
+        "title1": "Avledet Avalanche Wallet-adresse",
+        "title2": "Saldo",
+        "title3": "Undernett",
+        "title4": "Nettverk",
+        "nftcol": "NFT",
+        "nftempty": "Du har ikke samlet noen omsettelige polletter.",
+        "locked": "Låst",
+        "info2": "Jeg kjøpte mynter på polettsalg. Hvor er min AVAX?",
+        "info2_desc": "Denne lommeboken er koblet til Avalanche Everest-testnettverket. Kjøpet ditt vises i lommeboken etter lansering av Avalanche Mainnet.",
+        "hover1": "Vis QR-adressekode",
+        "hover2": "Skriv ut",
+        "hover3": "Kopier",
+        "hover4": "Vis Mainnet-adresse",
+        "balance": {
+            "show": "Vis fordeling",
+            "hide": "Skjul fordeling",
+            "available": "Tilgjengelig",
+            "locked": "Låst",
+            "locked_stake": "Låste satsbare",
+            "stake": "Satser",
+            "collectibles": "Samleobjekter"
+        },
+        "address": {
+            "derived": "Avledet Avalanche Wallet-adresse",
+            "desc": "Dette er din adresse for mottak av penger. Adressen din endres etter hvert innskudd."
+        }
+    },
+    "transfer": {
+        "title": "Send",
+        "no_cash": "Du må ha en aktive på lommeboken din for å utstede en transaksjon.",
+        "faucet": "Har du sjekket kranen vår?",
+        "to": "Til adresse",
+        "fees": "Avgifter",
+        "fee_tx": "Transaksjonsavgift",
+        "advanced": "Avansert",
+        "adv_change": "Endre adresse",
+        "send": "Send transaksjon",
+        "summary": "Transaksjonssummering",
+        "disconnected": "Kunne ikke sende aktiva. Frakoblet fra nettverket.",
+        "success_title": "Transaksjon sendt",
+        "success_msg": "Du har sendt transaksjonen din.",
+        "error_title": "Feil ved sending av transaksjon",
+        "error_msg": "Sending av transaksjon mislyktes."
+    },
+    "keys": {
+        "title": "Mine nøkler",
+        "button1": "Husk nøkler",
+        "button2": "IMPORTER NØKLER",
+        "button3": "EKSPORTER NØKLER",
+        "subtitle": "Aktiv nøkkel",
+        "remember_key_button": "HUSK",
+        "remember_key_desc": "Krypter lommeboken din med et passord og lagre sikkert i denne nettleseren.",
+        "remember_key_check": "Husk nøkler",
+        "remember_key_info": "Senere kan du gå inn på lommeboken din fra denne nettleseren med et passord.",
+        "export_key_button": "EKSPORTER LOMMEBOK",
+        "export_key_title": "Eksporter nøkler",
+        "export_key_desc": "Oppgi et passord for å kryptere dine private nøkler til en fil. Senere kan du bruke denne filen og passordet ditt for tilgang til lommeboken.",
+        "export_key_info": "Valgte {0} nøkler.",
+        "export_placeholder1": "Passord",
+        "export_placeholder2": "Bekreft passord",
+        "empty": "Denne nøkkelen har ingen saldo.",
+        "import_key_button": "IMPORTER NØKKEL",
+        "import_key_title": "Importer nøkler",
+        "import_key_desc": "Legg til ytterligere nøkler som skal brukes med lommeboken din.",
+        "import_key_option1": "MNEMONIC-FRASE",
+        "import_key_option2": "KEYSTORE-FIL",
+        "import_key_success_title": "Nøkkel lagt til",
+        "import_key_success_msg": "Privat nøkkel og aktiva lagt til lommeboken.",
+        "tooltip": "Nøkkelen glemmes når du oppdateres nettleseren.",
+        "view_key": "Vis nøkkelfrase",
+        "export_key": "Eksporter nøkkel",
+        "hd_addresses": "HD-adresser",
+        "remove_key": "Fjern nøkkel",
+        "activate_key": "Aktiver nøkkel",
+        "remove_success_title": "Nøkkel fjernet",
+        "remove_success_msg": "Privat nøkkel og aktiva fjernet fra lommeboken.",
+        "password_validation": "Passordet må være minst 9 tegn langt.",
+        "password_validation2": "Passord samsvarer ikke."
+    },
+    "portfolio": {
+        "assets": "Aktiva",
+        "assets1": "Polletter",
+        "assets2": "Samleobjekter",
+        "search": "Søk aktiva",
+        "name": "Navn",
+        "send": "Send",
+        "balance": "Saldo",
+        "error_network": "Kunne ikke vise aktiva. Frakoblet fra nettverket.",
+        "nobalance": "Du har ingen aktiva",
+        "nobalance_nft": "Du eier ingen samleobjekter.",
+        "noaddresses": "Du har ingen tidligere adresser."
+    },
+    "earn": {
+        "title": "Tjen",
+        "desc": "Du kan tjene mer AVAX ved å satse dine eksisterende polletter.",
+        "subtitle1": "Valider",
+        "subtitle2": "Deleger",
+        "subtitle3": "Krysskjedeoverføring",
+        "subtitle4": "Estimerte belønninger",
+        "warning_1": "Du må ha minst {0} AVAX på P-kjedet for å bli en validator.",
+        "warning_2": "Du må ha minst {0} AVAX på P-kjedet for å bli en delegator.",
+        "validate_card": {
+            "title": "Valider",
+            "desc": "Du har en Avalanche-node som du vil satse med.",
+            "submit": "Legg til validator"
+        },
+        "delegate_card": {
+            "title": "Deleger",
+            "desc": "Du eier ikke en Avalanche-node, men du vil satse ved å bruke en annen node.",
+            "submit": "Legg til delegator"
+        },
+        "transfer_card": {
+            "title": "Krysskjedeoverføring",
+            "desc": "Satsing krever AVAX på P-kjedet. Overfør polletter mellom X og P.",
+            "submit": "Overfør"
+        },
+        "rewards_card": {
+            "title": "Estimerte belønninger",
+            "desc": "Vis innsatsbelønningene du vil motta.",
+            "submit": "Vis belønninger"
+        },
+        "transfer": {
+            "source": "Kjedekilde",
+            "destination": "Kjededestinasjon",
+            "balance": "Saldo",
+            "amount": "Overfør beløp",
+            "fee": "Avgift",
+            "confirm": "Bekreft",
+            "submit": "Overfør",
+            "cancel": "Avbryt",
+            "err_import": "Import mislyktes",
+            "err_desc": "Det oppstod et problem med import av pollettene dine til kjededestinasjonen. Prøv å importere igjen.",
+            "err_submit": "Aktiver import",
+            "success": {
+                "title": "Overføring fullført",
+                "export": "Eksporter transaksjons-ID:",
+                "import": "Importer transaksjons-ID:",
+                "message": "Du har overført mellom kjeder.",
+                "back": "Tilbake til inntjening"
+            }
+        },
+        "rewards": {
+            "total": "Totale belønninger",
+            "validation": "Validering",
+            "delegation": "Delegering",
+            "empty": "Du har ingen ventende belønninger.",
+            "row": {
+                "start": "Start",
+                "end": "Slutt",
+                "completed": "Fullført",
+                "stake": "Innsats",
+                "reward": "Potensiell belønning"
+            }
+        },
+        "validate": {
+            "label_1": "Node-ID",
+            "duration": {
+                "label": "Innsatsperiode",
+                "desc": "Varigheten for hvor lenge pollettene dine er låst for satsing.",
+                "start": "Startdato & tid",
+                "end": "Sluttdato & tid"
+            },
+            "amount": {
+                "label": "Sats beløp",
+                "desc": "Mengden AVAX som låses for satsing."
+            },
+            "fee": {
+                "label": "Delegeringsavgift",
+                "desc": "Du vil hente denne % av belønningene fra delegatorene på noden din."
+            },
+            "reward": {
+                "label": "Belønningsadresse",
+                "desc": "Hvor innsatsbelønninger skal sendes.",
+                "chip_1": "Bruk denne lommeboken",
+                "chip_2": "Tilpasset adresse"
+            },
+            "summary": {
+                "max_del": "Maks delegeringsbeløp",
+                "max_del_tooltip": "Maksimalbeløpet som kan delegeres til denne validatoren.",
+                "duration": "Innsatsvarighet",
+                "rewards": "Estimerte belønninger",
+                "warn": "Start i det små dersom det er første gang du satser. Satsede polletter låses inntil slutten av innsatsperioden."
+            },
+            "confirmation": {
+                "id": "Node-ID",
+                "amount": "Innsatsbeløp",
+                "start": "Startdato",
+                "end": "Sluttdato",
+                "fee": "Delegeringsavgift",
+                "reward": "Belønningsadresse",
+                "type_local": "Denne lommeboken",
+                "type_custom": "Tilpasset"
+            },
+            "confirm": "Bekreft",
+            "submit": "Send",
+            "cancel": "Avbryt",
+            "success": {
+                "title": "Valideringstransaksjonen din er sendt.",
+                "desc": "Dersom transaksjonen godtas av pollettene dine, blir de låst for satsing. Du mottar dine låste polletter pluss belønningen når innsatsperioden din er over.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "Startdatoen må være i fremtiden og sluttdatoen må være etter startdatoen.",
+                "amount": "Innsatsbeløpet må være minst {0} AVAX",
+                "id": "Ugyldig nodenr. Må starte med \"NodeID-”",
+                "address": "Ugyldig belønningsadresse."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Velg en node for å delegere",
+                "search": "Søk node-ID",
+                "id": "Node-ID",
+                "val_stake": "Validatorinnsats",
+                "aval_stake": "Tilgjengelig",
+                "aval_stake_tip": "Hvor mye mer kan delegeres til denne validatoren.",
+                "users_tip": "Antall delegatorer",
+                "end": "Sluttid",
+                "up": "Oppetid",
+                "up_tip": "Relativ til noden denne lommeboken er koblet til.",
+                "fee": "Avgift",
+                "empty": {
+                    "title": "Ingen validatorer funnet",
+                    "desc": "Validatorer må være aktivt satset for å bli funnet."
+                }
+            },
+            "node": {
+                "selected": "Velg node",
+                "fee": "Delegeringsavgift",
+                "start": "Validatorens startdato",
+                "end": "Validatorens sluttdato"
+            },
+            "form": {
+                "period": {
+                    "label": "Innsatsperiode",
+                    "desc": "Varigheten for hvor lenge pollettene dine er låst for satsing.",
+                    "start": "Startdato & tid",
+                    "end": "Sluttdato & tid"
+                },
+                "amount": {
+                    "label": "Sats beløp",
+                    "desc": "Mengden AVAX som låses for satsing.",
+                    "desc2": "Det tilgjengelige delegeringsbeløpet for denne noden er is {0} AVAX"
+                },
+                "reward": {
+                    "label": "Belønningsadresse",
+                    "desc": "Hvor innsatsbelønninger skal sendes.",
+                    "chip_1": "Bruk denne lommeboken",
+                    "chip_2": "Tilpasset adresse"
+                }
+            },
+            "confirmation": {
+                "node": "Node-ID",
+                "amount": "Innsatsbeløp",
+                "start": "Startdato",
+                "end": "Sluttdato",
+                "reward": "Belønningsadresse"
+            },
+            "errs": {
+                "start_now": "Starttidspunktet må være etter nåværende tid.",
+                "start_end": "Startdatoen må være i fremtiden og sluttdatoen må være etter startdatoen.",
+                "invalid_addr": "Ugyldig adresseformat. Adressen din må starte med \"P-”",
+                "no_addr": "Du må oppgi en adresse for å motta delegeringsbelønninger.",
+                "min_dur": "Minste innsatsperiode er 2 uker.",
+                "max_dur": "Maksimal innsatsperiode er 1 år.",
+                "no_node": "Du må spesifisere en validator.",
+                "val_end": "Delegeringens sluttdato kan ikke være lenger enn validatorens sluttdato.",
+                "amt": "Delegeringsbeløpet må være minst {0} AVAX."
+            },
+            "summary": {
+                "duration": "Innsatsvarighet",
+                "reward": "Estimert belønning",
+                "fee": "Avgift",
+                "warn": "Start i det små dersom det er første gang du satser. Satsede polletter låses inntil slutten av innsatsperioden."
+            },
+            "confirm": "Bekreft",
+            "submit": "Send",
+            "cancel": "Avbryt",
+            "success": {
+                "title": "Delegeringstransaksjon sendt.",
+                "desc": "Dersom transaksjonen godtas av pollettene dine, blir de låst for satsing. Du mottar dine låste polletter pluss belønningen når innsatsperioden din er over.",
+                "status": "Status"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Avansert",
+        "import": {
+            "title": "Kjedeimport",
+            "desc": "Dersom du har penger som sitter fast i en feilet kjedeoverføring, kan du fullføre importen her.",
+            "submit_x": "Importer X",
+            "submit_p": "Importer P"
+        }
+    },
+    "logout": {
+        "button": "Logg ut",
+        "button_conf": "LOGG UT",
+        "button_cancel": "Avbryt",
+        "confirmation": "Er du sikker på at du vil logge ut?",
+        "confirmation_message": "Denne lommeboken og nøklene dens blir glemt."
+    },
+    "keystore": {
+        "title": "Keystore-fil",
+        "button": "Velg fil"
+    },
+    "transactions": {
+        "notx": "Ingen transaksjoner funnet for denne adressen på Explorer.",
+        "loading": "Laster inn transaksjonshistorikk ...",
+        "warn_loading": "Denne listen kan være ufullstendige og ute av bruk.",
+        "error_api": "Explorer API ikke funnet",
+        "error_api_desc": "Du må oppgi en AVA Explorer API for dette nettverket for å vise transaksjonshistorikken."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adresse",
+            "copy": "Kopier adresse"
+        },
+        "print": {
+            "title": "Skriv ut forhåndsvisning",
+            "submit": "Skriv ut"
+        },
+        "keystore": {
+            "title": "Oppdater Keystore-fil",
+            "desc": "Du har oppdatert Keystore-filspesifikasjoner. Last ned din nye Keystore-fil og få tilgang til lommeboken igjen.",
+            "logout": "Logg & få tilgang igjen"
+        },
+        "mainnet": {
+            "title": "Mainnet-adresse",
+            "desc": "Din Mainnet-adresse er:"
+        },
+        "mnemonic": {
+            "title": "Nøkkelfrase"
+        },
+        "activateWallet": {
+            "title": "Aktiver lommebok",
+            "desc": "Det finnes en aktiv lommebok. Oppgi passordet ditt for tilgang til den.",
+            "submit": "Få tilgang til lommebok",
+            "cancel": "Få tilgang til en annen lommebok",
+            "cancel2": "(forrige lommebok blir glemt).",
+            "err1": "Ugyldig passord.",
+            "err2": "Kunne ikke lese lommebokdata."
+        }
+    },
+    "nav": {
+        "access": "Få tilgang til lommebok",
+        "create": "Lag ny lommebok"
+    }
+}

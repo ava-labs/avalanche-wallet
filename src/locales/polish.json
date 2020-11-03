@@ -1,0 +1,428 @@
+{
+    "password": "Hasło",
+    "password_confirm": "Potwierdźic hasło",
+    "private_key": "Prywatny klucz",
+    "address": "Adres",
+    "add_pk": "Dodać prywatny klucz",
+    "home": {
+        "desc": "Portfel Avalanche to prosty, bezpieczny portfel bez zabezpieczenia do przechowywania aktywów Avalanche.",
+        "access": {
+            "title": "Witamy z powrotem!",
+            "desc": "„Uzyskaj dostęp” do swojego istniejącego portfela Avalanche tutaj.",
+            "submit": "Uzyskaj dostęp do Portfela"
+        },
+        "create": {
+            "title": "Nowy w portfelu Avalanche?",
+            "desc": "„Utwórz” nowy portfel, aby wysyłać, odbierać i wymieniać aktywa Avalanche.",
+            "submit": "Stworzyćz nowy portfel"
+        }
+    },
+    "network": {
+        "status1": "Połączenie...",
+        "status2": "Wyłączony",
+        "title": "Sieći",
+        "title2": "Dodac niestandardowe sieć",
+        "title3": "Edytować siec",
+        "custom": "Dodaj niestandardowy",
+        "cancel": "Anulować",
+        "add": "Dodac sieć"
+    },
+    "access": {
+        "title": "Jak chcesz uzyskać dostęp do swojego portfela?",
+        "create": "Nie masz portfela?",
+        "but_mnemonic": "Mnemoniczna Kluczowa Fraza",
+        "but_keystore": "Keystore Plik",
+        "cancel": "Anulować",
+        "json_error": "Nie można przeanalizować JSON plik.",
+        "keystore_error": "Ten wersja keystore nie jest obsługiwana.",
+        "password_error": "Nieprawidłowe hasło.",
+        "mnemonic": {
+            "title": "Wprowadź swoją mnemoniczną frazę\n",
+            "subtitle": "Naciśnij SPACJĘ po każdym prawidłowa wpisaniu słowa.",
+            "submit": "Dostęp do portfela",
+            "cancel": "Anulować",
+            "error": "Nieprawidłowe kluczowa fraza. Twoje kluczowa fraza musi składać się z 24 słów oddzielonych jedną spacją."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfolio",
+            "manage": "Zarządzać",
+            "send": "Wysłać",
+            "earn": "Zarabiaj",
+            "advanced": "Zaawansowane"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Nie masz żadnych przedmiotów kolekcjonerskich."
+        }
+    },
+    "create": {
+        "generate": "Wygeneruj nową frazę kluczową, aby skonfigurować portfel Avalanche.",
+        "but_have": "Czy masz już portfel?",
+        "submit": "Wygenerować Kluczowa Fraza",
+        "cancel": "Anulować",
+        "mnemonic_title": "To jest twoja kluczowa fraza.",
+        "mnemonic_desc": "Użyj tych 24 słów w kolejności, aby odzyskać swój portfel lawinowy",
+        "attention": "Uwaga!",
+        "warning": "Przechowuj tę frazę kluczową w bezpiecznym miejscu. Każdy, kto ma tę kluczową frazę, może uzyskać dostęp do Twojego portfela Avalanche. Nie ma sposobu na odzyskanie utraconych fraz kluczowych.",
+        "confirm": "Zapisałem swoją kluczową frazę w bezpiecznym miejscu.",
+        "regenerate": "Regenerować",
+        "success_title": "Gratulujemy!",
+        "success_desc": "Nadszedł czas, aby uzyskać dostęp do portfela Avalanche.",
+        "success_submit": "Dostęp do portfela",
+        "verify": "Potwierdzać",
+        "verifytitle": "Potwierdzać Mnemoniczną Frazę",
+        "verify_desc": "Wpisz poniżej mnemoniczną frazę",
+        "error_number": "Ojej, wygląda na to, że zapomniałeś wpisać numer",
+        "error_word": "Podana mnemoniczna fraza nie pasuje do rzeczywistej."
+    },
+    "top": {
+        "title1": "Otrzymany adres portfela Avalanche",
+        "title2": "Saldo",
+        "title3": "Podsieć",
+        "title4": "Sieć",
+        "nftcol": "NFTs",
+        "nftempty": "Nie masz żadnych zamienne tokenów.",
+        "locked": "Zablokowane",
+        "info2": "Kupiłem monety podczas wyprzedaży. Gdzie są moje tokeny AVAX?",
+        "info2_desc": "Ten portfel jest połączony z testową Avalanche Everest siecią. Twój zakup pojawi się w portfelu po uruchomieniu Avalanche Mainnet.",
+        "hover1": "Wyświetl QR kod adresu",
+        "hover2": "Wydrukować",
+        "hover3": "Kopiować",
+        "hover4": "Wyświetl Adres Głównej Sieci",
+        "balance": {
+            "show": "Pokaż podział",
+            "hide": "Pokaż podział",
+            "available": "Dostępny",
+            "locked": "Zablokowane",
+            "locked_stake": "Zablokowany Stakeable",
+            "stake": "Staking",
+            "collectibles": "Artykuły kolekcjonerskie"
+        },
+        "address": {
+            "derived": "Pochodny adres portfela Avalanche",
+            "desc": "To jest Twój adres, na który należy przekazywać środki. Twój adres zmieni się po każdej wpłacie."
+        }
+    },
+    "transfer": {
+        "title": "Wysłać",
+        "no_cash": "Musisz mieć aktywa w portfelu, aby dokonać transakcji.",
+        "faucet": "Sprawdziłeś nasz kran?",
+        "to": "Adres Odbiorcy",
+        "fees": "Prowizje",
+        "fee_tx": "Transakcyjna Prowizje",
+        "advanced": "Zaawansowanych Opcji",
+        "adv_change": "Zmienić Adres",
+        "send": "Wysłać transakcję",
+        "summary": "Szczegóły transakcji",
+        "disconnected": "Nie można wysłać zasobów. Brak połączenia z siecią.",
+        "success_title": "Transakcja Wysłana",
+        "success_msg": "Pomyślnie przesłałeś transakcję.",
+        "error_title": "Błąd podczas wysyłania transakcji",
+        "error_msg": "Nie udało się wysłać transakcji."
+    },
+    "keys": {
+        "title": "Moje Kluczy",
+        "button1": "Pamiętaj klucze",
+        "button2": "IMPORT KLUCZY",
+        "button3": "EKSPORT KLUCZY",
+        "subtitle": "Aktywny Klucz",
+        "remember_key_button": "Zapamiętywać",
+        "remember_key_desc": "Zakoduj swój portfel hasłem i przechowuj bezpiecznie w tej przeglądarce.",
+        "remember_key_check": "Zapamiętywać Kluczy",
+        "remember_key_info": "Możesz później uzyskać dostęp do swojego portfela w tej przeglądarce za pomocą hasła.",
+        "export_key_button": "EKSPORT PORTFEL",
+        "export_key_title": "Eksport Kluczy",
+        "export_key_desc": "Wprowadź hasło, aby zakodować klucze prywatne w pliku. Możesz później użyć tego pliku i hasła, aby uzyskać dostęp do swojego portfela.",
+        "export_key_info": "Wybrane klucze: {0}.",
+        "export_placeholder1": "Hasło",
+        "export_placeholder2": "Potwierdzić Hasło",
+        "empty": "Ten klucz nie ma równowagi.",
+        "import_key_button": "Import Klucz",
+        "import_key_title": "Import Klucz",
+        "import_key_desc": "Dodaj dodatkowe kluczy do portfela.",
+        "import_key_option1": "Mnemoniczna Fraza",
+        "import_key_option2": "KEYSTORE PLIK",
+        "import_key_success_title": "Klucz Dodane",
+        "import_key_success_msg": "Priwatny klucz i aktywów zostały dodane do portfela.",
+        "tooltip": "Ten klucz zostanie zapomniany po odświeżeniu przeglądarki.",
+        "view_key": "Wyświetlić Kluczowa Fraza",
+        "export_key": "Eksport Klucz",
+        "hd_addresses": "HD Adresy",
+        "remove_key": "Usuń klucz",
+        "activate_key": "Aktywować klucz",
+        "remove_success_title": "Klucz Usunięte",
+        "remove_success_msg": "Priwatny klucz i aktywów zostały usunięte z portfela.",
+        "password_validation": "Hasło musi mieć co najmniej 9 znaków.",
+        "password_validation2": "Hasło jest nieprawidłowe."
+    },
+    "portfolio": {
+        "assets": "Aktywa",
+        "assets1": "Tokeny",
+        "assets2": "Artykuły kolekcjonerskie",
+        "search": "Wyszukaj Aktywów",
+        "name": "Nazwa",
+        "send": "Wysłać",
+        "balance": "Saldo",
+        "error_network": "Nie można wyświetlić aktywów. Odłączono od sieci.",
+        "nobalance": "Nie masz żadnych aktywów",
+        "nobalance_nft": "Nie masz żadnych przedmiotów kolekcjonerskich.",
+        "noaddresses": "Nie masz żadnych przeszłych adresów."
+    },
+    "earn": {
+        "title": "Zarabiaj",
+        "desc": "Możesz zarobić więcej AVAX, stawiając swoje istniejące tokeny.",
+        "subtitle1": "Ratyfikuj",
+        "subtitle2": "Delegat",
+        "subtitle3": "Transfer krzyżowy",
+        "subtitle4": "Szacowane nagrody",
+        "warning_1": "Aby zostać walidatorem, musisz mieć co najmniej {0} AVAX w łańcuchu P.",
+        "warning_2": "Aby zostać delegatem, musisz mieć co najmniej {0} AVAX w łańcuchu P.",
+        "validate_card": {
+            "title": "Waliduj",
+            "desc": "Masz węzeł Avalanche, z którym chcesz postawić.",
+            "submit": "Dodaj walidatora"
+        },
+        "delegate_card": {
+            "title": "Delegat",
+            "desc": "Nie jesteś właścicielem węzła lawinowego, ale chcesz postawić na inny węzeł.",
+            "submit": "Dodaj delegatora"
+        },
+        "transfer_card": {
+            "title": "Transfer krzyżowy",
+            "desc": "Staking wymaga AVAX w łańcuchu P. Przenieś tokeny między X i P.",
+            "submit": "Transfer"
+        },
+        "rewards_card": {
+            "title": "Szacowane nagrody",
+            "desc": "Zobacz nagrody, które otrzymasz.",
+            "submit": "Zobacz nagrody"
+        },
+        "transfer": {
+            "source": "Łańcuch źródłowy",
+            "destination": "Łańcuch docelowy",
+            "balance": "Saldo",
+            "amount": "Kwota przelewu",
+            "fee": "Prowizja",
+            "confirm": "Potwierdź",
+            "submit": "Transfer",
+            "cancel": "Anulować",
+            "err_import": "Import nieudany",
+            "err_desc": "Wystąpił problem podczas importowania tokenów do łańcucha docelowego. Spróbuj ponownie zaimportować.",
+            "err_submit": "Uruchom import",
+            "success": {
+                "title": "Transfer zakończony",
+                "export": "Identyfikator transakcji eksportowej:",
+                "import": "Identyfikator transakcji importu:",
+                "message": "Udało Ci się przenieść między łańcuchami.",
+                "back": "Powrót do zarabiania"
+            }
+        },
+        "rewards": {
+            "total": "Całkowite nagrody",
+            "validation": "Walidacja",
+            "delegation": "Delegacja",
+            "empty": "Nie masz żadnych oczekujących nagród.",
+            "row": {
+                "start": "Start",
+                "end": "Koniec",
+                "completed": "Zakończony",
+                "stake": "Stake",
+                "reward": "Potencjalna nagroda"
+            }
+        },
+        "validate": {
+            "label_1": "Node ID",
+            "duration": {
+                "label": "Okres obstawiania",
+                "desc": "Czas, w którym twoje żetony zostaną zablokowane do obstawiania.",
+                "start": "Data i godzina rozpoczęcia",
+                "end": "Data i godzina zakończenia"
+            },
+            "amount": {
+                "label": "Kwota stake",
+                "desc": "Kwota AVAX do zablokowania do obstawienia."
+            },
+            "fee": {
+                "label": "Opłata delegacyjna",
+                "desc": "Odbierzesz ten% nagród od delegatów w twoim węźle."
+            },
+            "reward": {
+                "label": "Adres nagrody",
+                "desc": "Gdzie wysłać nagrody za obstawianie.",
+                "chip_1": "Użyj tego portfela",
+                "chip_2": "Adres niestandardowy"
+            },
+            "summary": {
+                "max_del": "Maksymalna kwota delegacji",
+                "max_del_tooltip": "Maksymalna kwota, jaką można delegować do tego walidatora.",
+                "duration": "Czas trwania obstawiania",
+                "rewards": "Szacowane nagrody",
+                "warn": "Jeśli obstawiasz po raz pierwszy, zacznij od małych kwot. Żetony postawione są zablokowane do końca okresu obstawiania."
+            },
+            "confirmation": {
+                "id": "Node ID",
+                "amount": "Kwota staking",
+                "start": "Data rozpoczęcia",
+                "end": "Data końcowa",
+                "fee": "Opłata delegacyjna",
+                "reward": "Adres nagrody",
+                "type_local": "Ten portfel",
+                "type_custom": "Niestandardowy"
+            },
+            "confirm": "Potwierdź",
+            "submit": "Zatwierdź",
+            "cancel": "Anulować",
+            "success": {
+                "title": "Twoja transakcja walidacyjna została wysłana.",
+                "desc": "Jeśli transakcja zostanie zaakceptowana, Twoje tokeny zostaną zablokowane do obstawiania. Otrzymasz swoje zablokowane tokeny oraz nagrody po zakończeniu okresu obstawiania.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "Data rozpoczęcia musi przypadać w przyszłości, a data zakończenia musi być późniejsza niż data rozpoczęcia.",
+                "amount": "Kwota stawki musi wynosić co najmniej {0} AVAX",
+                "id": "Nieprawidłowy identyfikator węzła. Musi zaczynać się od „NodeID-”",
+                "address": "Nieprawidłowy adres nagrody."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Wybierz węzeł do delegowania",
+                "search": "Wyszukaj identyfikator węzła",
+                "id": "Node ID",
+                "val_stake": "Walidator Stake",
+                "aval_stake": "Dostępny",
+                "aval_stake_tip": "O ile więcej można delegować do tego walidatora.",
+                "users_tip": "Liczba delegatów",
+                "end": "Koniec czasu",
+                "up": "Dostępność",
+                "up_tip": "Względem węzła, z którym połączony jest ten portfel.",
+                "fee": "Prowizja",
+                "empty": {
+                    "title": "Nie znaleziono walidatorów",
+                    "desc": "Aby znaleźć walidatorów, należy aktywnie stakować."
+                }
+            },
+            "node": {
+                "selected": "Wybrany węzeł",
+                "fee": "Opłata delegacyjna",
+                "start": "Data rozpoczęcia walidatora",
+                "end": "Data zakończenia walidatora"
+            },
+            "form": {
+                "period": {
+                    "label": "Okres obstawiania",
+                    "desc": "Czas, w którym twoje żetony zostaną zablokowane do obstawiania.",
+                    "start": "Data i godzina rozpoczęcia",
+                    "end": "Data i godzina zakończenia"
+                },
+                "amount": {
+                    "label": "Kwota stake",
+                    "desc": "Kwota AVAX do zablokowania do obstawienia.",
+                    "desc2": "Dostępna kwota delegowania dla tego węzła to {0} AVAX"
+                },
+                "reward": {
+                    "label": "Adres nagrody",
+                    "desc": "Gdzie wysłać nagrody za obstawianie.",
+                    "chip_1": "Użyj tego portfela",
+                    "chip_2": "Adres niestandardowy"
+                }
+            },
+            "confirmation": {
+                "node": "Node ID",
+                "amount": "Kwota staking",
+                "start": "Data rozpoczęcia",
+                "end": "Data końcowa",
+                "reward": "Adres nagrody"
+            },
+            "errs": {
+                "start_now": "Czas rozpoczęcia musi być późniejszy niż aktualny czas.",
+                "start_end": "Data rozpoczęcia musi przypadać w przyszłości, a data zakończenia musi być późniejsza niż data rozpoczęcia.",
+                "invalid_addr": "Nieprawidłowy format adresu. Twój adres musi zaczynać się od „P-”",
+                "no_addr": "Musisz podać adres, aby otrzymać nagrody delegacji.",
+                "min_dur": "Minimalny okres obstawiania to 2 tygodnie.",
+                "max_dur": "Maksymalny okres obstawiania to 1 rok.",
+                "no_node": "Musisz określić walidator.",
+                "val_end": "Data zakończenia delegacji nie może być dłuższa niż data zakończenia walidatora.",
+                "amt": "Kwota delegacji musi wynosić co najmniej {0} AVAX."
+            },
+            "summary": {
+                "duration": "Czas trwania obstawiania",
+                "reward": "Szacowana nagroda",
+                "fee": "Prowizja",
+                "warn": "Jeśli obstawiasz po raz pierwszy, zacznij od małych kwot. Żetony postawione są zablokowane do końca okresu obstawiania."
+            },
+            "confirm": "Potwierdź",
+            "submit": "Zatwierdź",
+            "cancel": "Anuluj",
+            "success": {
+                "title": "Wysłano transakcję delegowania.",
+                "desc": "Jeśli transakcja zostanie zaakceptowana, Twoje tokeny zostaną zablokowane do obstawiania. Otrzymasz swoje zablokowane tokeny oraz nagrody po zakończeniu okresu obstawiania.",
+                "status": "Status"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Zaawansowane",
+        "import": {
+            "title": "Import łańcuchowy",
+            "desc": "Jeśli środki utknęły w nieudanym przelewie łańcuchowym, możesz dokończyć ich importowanie tutaj.",
+            "submit_x": "Import X",
+            "submit_p": "Import P"
+        }
+    },
+    "logout": {
+        "button": "Wylogować Się",
+        "button_conf": "Wylogować",
+        "button_cancel": "Anulować",
+        "confirmation": "Czy na pewno chcesz się wylogować?",
+        "confirmation_message": "Ten portfel i jego kluczy zostaną zapomniane."
+    },
+    "keystore": {
+        "title": "Keystore Plik",
+        "button": "Wybierz plik"
+    },
+    "transactions": {
+        "notx": "W eksploratorze nie znaleziono transakcji dla tego adresu.",
+        "loading": "Wczytuję historię transakcji..",
+        "warn_loading": "Ta lista może być niekompletna i nieaktualna.",
+        "error_api": "Nie znaleziono interfejsu Explorer API",
+        "error_api_desc": "Aby wyświetlić historię transakcji, musisz udostępnić interfejs API AVA Explorer dla tej sieci."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adres",
+            "copy": "Kopiować Adres"
+        },
+        "print": {
+            "title": "Podgląd wydruku",
+            "submit": "Wydrukować"
+        },
+        "keystore": {
+            "title": "Aktualizacją Keystore Plik",
+            "desc": "Zaktualizowaliśmy specyfikację keystore plik. Pobierz nowy keystore plik i ponownie uzyskaj dostęp do portfela.",
+            "logout": "Wylogować Się & Uzyskać Dostęp Ponownie"
+        },
+        "mainnet": {
+            "title": "Adres Głównej Sieci",
+            "desc": "Wasz Adres Głównej Sieci:"
+        },
+        "mnemonic": {
+            "title": "Kluczowa Fraza"
+        },
+        "activateWallet": {
+            "title": "Aktywować Portfel",
+            "desc": "Jest aktywny portfel. Wprowadź swoje hasło, aby uzyskać do niego dostęp.",
+            "submit": "Uzyskać dostęp do Portfela",
+            "cancel": "Uzyskaj dostęp do innego portfela",
+            "cancel2": "(Poprzedni portfel zostanie zapomniany.)",
+            "err1": "Nieprawidłowe hasło.",
+            "err2": "Nie można odczytać danych z portfela."
+        }
+    },
+    "nav": {
+        "access": "Dostęp do portfela",
+        "create": "Stworzyćz nowy portfel"
+    }
+}

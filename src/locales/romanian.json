@@ -1,0 +1,428 @@
+{
+    "password": "Parolă",
+    "password_confirm": "Confirmă Parola",
+    "private_key": "Private Key",
+    "address": "Adresă",
+    "add_pk": "Adaugă Private Key",
+    "home": {
+        "desc": "Portofelul Avalanche este un portofel simplu, sigur, protector pentru depozitarea activelor Avalanche.",
+        "access": {
+            "title": "Bun venit înapoi!",
+            "desc": "„Accesează” aici portofelul tău Avalanche existent.",
+            "submit": "Accesează Wallet"
+        },
+        "create": {
+            "title": "Nou la Avalanche Wallet?",
+            "desc": "„Creează” un nou portofel pentru a trimite, primi și schimba activele Avalanche.",
+            "submit": "Creați un wallet nou"
+        }
+    },
+    "network": {
+        "status1": "Se conectează ...",
+        "status2": "Deconectat",
+        "title": "Rețele",
+        "title2": "Adăugați rețea personalizată",
+        "title3": "Editați rețeaua",
+        "custom": "Adăugați personalizat",
+        "cancel": "Anulează",
+        "add": "Adaugă Rețeaua"
+    },
+    "access": {
+        "title": "Cum doriți să vă accesați wallet?",
+        "create": "Nu ai un portofel?",
+        "but_mnemonic": "Frază Cheie Mnemonică",
+        "but_keystore": "Fișier de Stocare a Cheilor",
+        "cancel": "Anulează",
+        "json_error": "Imposibil de analizat fișierul JSON.",
+        "keystore_error": "Această versiune de depozit de chei nu este acceptată.",
+        "password_error": "Parolă Invalidă.",
+        "mnemonic": {
+            "title": "Introdu fraza ta MNEMONICĂ\n",
+            "subtitle": "Apasă butonul „SPAȚIU” după fiecare cuvânt introdus cu succes.",
+            "submit": "Accesează Portofelul",
+            "cancel": "Anulează",
+            "error": "Fraza cheie nevalidă. Fraza dvs. trebuie să fie de 24 de cuvinte separate printr-un singur spațiu."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portofoliu",
+            "manage": "Administra",
+            "send": "Expedia",
+            "earn": "Câștigă",
+            "advanced": "Avansat"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Nu deții obiecte de colecție."
+        }
+    },
+    "create": {
+        "generate": "Generează o nouă frază cheie pentru configurarea Portofelului tău Avalanche.",
+        "but_have": "Aveți deja un wallet?",
+        "submit": "Generați o frază cheie",
+        "cancel": "Anulare",
+        "mnemonic_title": "Aceasta este fraza ta cheie.",
+        "mnemonic_desc": "Utilizează aceste 24 de cuvinte în ordine continuă pentru a-ți recupera Portofelul Avalanche",
+        "attention": "Atenție!",
+        "warning": "Stochează această frază cheie într-un loc sigur. Cu această cheie oricine poate accesa Portofelul tău Avalanche. Nu există nicio cale de recuperare a frazelor cheie pierdute.",
+        "confirm": "Mi-am notat fraza mea cheie într-un loc sigur.",
+        "regenerate": "Regenerează",
+        "success_title": "Felicitări!",
+        "success_desc": "Este timpul să accesezi Portofelul tău Avalanche.",
+        "success_submit": "Accesează Wallet",
+        "verify": "Verifica",
+        "verifytitle": "Verificați Mnemonic",
+        "verify_desc": "Completați mai jos o frază Mnemonică",
+        "error_number": "Ups, se pare că ați uitat să completați numărul",
+        "error_word": "Expresia Mnemonică pe care ați introdus-o pentru cuvânt nu se potrivește cu expresia reală."
+    },
+    "top": {
+        "title1": "Adresă portofel Avalanche derivată",
+        "title2": "Sold",
+        "title3": "Subrețea",
+        "title4": "Rețea",
+        "nftcol": "NFT-uri",
+        "nftempty": "Nu ați adunat niciun token nefungibil.",
+        "locked": "Blocat",
+        "info2": "Am cumpărat monede în Token Sale. Unde sunt AVAX-ul meu?",
+        "info2_desc": "Acest wallet este conectat la rețeaua de testare Avalanche Everest. Achiziția dvs. va apărea în portofel după lansarea Avalanche Mainnet.",
+        "hover1": "Vizualizați codul QR al adresei",
+        "hover2": "Imprimare",
+        "hover3": "Copie",
+        "hover4": "Vizualizați adresa Mainnet",
+        "balance": {
+            "show": "Afișează Defalcarea",
+            "hide": "Ascunde Defalcarea",
+            "available": "Disponibil",
+            "locked": "Blocat",
+            "locked_stake": "Participări Blocate",
+            "stake": "Capital",
+            "collectibles": "Sume de încasat"
+        },
+        "address": {
+            "derived": "Adresa Portofelului Avalanche derivată",
+            "desc": "Această este adresa ta de primire fonduri. Adresa ta se va modifica după fiecare depunere."
+        }
+    },
+    "transfer": {
+        "title": "Expediază",
+        "no_cash": "Trebuie să aveți un activ în wallet pentru a emite o tranzacție.",
+        "faucet": "Ai verificat robinetul nostru?",
+        "to": "La Adresa",
+        "fees": "Comisioane",
+        "fee_tx": "Comisionul Tranzacției",
+        "advanced": "Avansat",
+        "adv_change": "Schimbă Adresa",
+        "send": "Trimite Tranzacția",
+        "summary": "Rezumatul Tranzacției",
+        "disconnected": "Imposibil de trimis active. S-a deconectat din rețea.",
+        "success_title": "Tranzacție Trimisă",
+        "success_msg": "Ai trimis cu succes tranzacția ta.",
+        "error_title": "Eroare la Trimiterea Tranzacției",
+        "error_msg": "Trimiterea tranzacției a eșuat."
+    },
+    "keys": {
+        "title": "Cheile mele",
+        "button1": "Memorează Cheile",
+        "button2": "IMPORTĂ CHEILE",
+        "button3": "EXPORTĂ CHEILE",
+        "subtitle": "Cheie Activă",
+        "remember_key_button": "MEMOREAZĂ",
+        "remember_key_desc": "Codifică-ți portofelul cu o parolă și stocheaz-o în siguranță pe acest browser.",
+        "remember_key_check": "Memorează Cheile",
+        "remember_key_info": "Poți accesa portofelul mai târziu pe acest browser cu o parolă.",
+        "export_key_button": "EXPORTĂ PORTOFELUL",
+        "export_key_title": "Exportă Cheile",
+        "export_key_desc": "Introdu o parolă pentru codificarea cheii tale private într-un fișier. Mai târziu poți utiliza acest fișier și parola ta pentru accesarea portofelului tău.",
+        "export_key_info": "Sunt selectate {0} chei.",
+        "export_placeholder1": "Parolă",
+        "export_placeholder2": "Confirmă Parola",
+        "empty": "Aceasta cheie nu are stabilitate.",
+        "import_key_button": "IMPORTĂ CHEIA",
+        "import_key_title": "Importă Cheile",
+        "import_key_desc": "Adaugă chei suplimentare pe care să le utilizezi la portofelul tău.",
+        "import_key_option1": "FRAZĂ MNEMONICĂ",
+        "import_key_option2": "FIȘIER DE STOCARE CHEI",
+        "import_key_success_title": "Cheie Adăugată",
+        "import_key_success_msg": "Cheie privată și active adăugate în portofel.",
+        "tooltip": "Această cheie va fi uitată când îți reîmprospătezi browserul.",
+        "view_key": "Vizualizează Fraza Cheie",
+        "export_key": "Exportă Cheia",
+        "hd_addresses": "Adrese HD",
+        "remove_key": "Elimină Cheia",
+        "activate_key": "Activează Cheia",
+        "remove_success_title": "Cheie Eliminată",
+        "remove_success_msg": "Cheie privată și active eliminate din portofel.",
+        "password_validation": "Parola trebuie să conțină cel puțin 9 caractere.",
+        "password_validation2": "Parola nu se potrivește."
+    },
+    "portfolio": {
+        "assets": "Active",
+        "assets1": "Jetoane",
+        "assets2": "Sume de Încasat",
+        "search": "Caută Active",
+        "name": "Nume",
+        "send": "Trimite",
+        "balance": "Sold",
+        "error_network": "Imposibil de afișat activele. S-a deconectat de la rețea.",
+        "nobalance": "Nu ai niciun activ",
+        "nobalance_nft": "Nu deții sume de încasat.",
+        "noaddresses": "Nu ai adrese vechi."
+    },
+    "earn": {
+        "title": "Câștigă",
+        "desc": "Poți câștiga mai multe AVAX mizând jetoanele tale existente.",
+        "subtitle1": "Validează",
+        "subtitle2": "Deleagă",
+        "subtitle3": "Transfer Încrucișat",
+        "subtitle4": "Recompense Estimate",
+        "warning_1": "Trebuie să ai cel puțin {0} AVAX în lanțul P pentru a deveni un validator.",
+        "warning_2": "Trebuie să ai cel puțin {0} AVAX în lanțul P pentru a deveni un delegatar.",
+        "validate_card": {
+            "title": "Validează",
+            "desc": "Ai un nod Avalanche cu care dorești să mizezi.",
+            "submit": "Adaugă Validatorul"
+        },
+        "delegate_card": {
+            "title": "Deleagă",
+            "desc": "Nu deții un nod Avalanche, dar vrei să mizezi utilizând alt nod.",
+            "submit": "Adaugă Delegatarul"
+        },
+        "transfer_card": {
+            "title": "Transfer Încrucișat",
+            "desc": "Miza necesită AVAX în lanțul P. Transferă jetoane între X și P.",
+            "submit": "Transferă"
+        },
+        "rewards_card": {
+            "title": "Recompense Estimate",
+            "desc": "Vizualizează recompensele mizate pe care le vei primi.",
+            "submit": "Vizualizează Recompensele"
+        },
+        "transfer": {
+            "source": "Lanț Sursă",
+            "destination": "Lanț Destinație",
+            "balance": "Sold",
+            "amount": "Transferă Suma",
+            "fee": "Comision",
+            "confirm": "Confirmă",
+            "submit": "Transferă",
+            "cancel": "Anulează",
+            "err_import": "Importul a Eșuat",
+            "err_desc": "S-a produs o problemă la importul jetoanelor tale în lanțul de destinație. Încearcă să imporți din nou.",
+            "err_submit": "Declanșează Importul",
+            "success": {
+                "title": "Transfer Finalizat",
+                "export": "Exportă ID Tranzacție:",
+                "import": "Importă ID Tranzacție:",
+                "message": "Ai transferat cu succes între lanțuri.",
+                "back": "Înapoi la Câștigă"
+            }
+        },
+        "rewards": {
+            "total": "Recompense Totale",
+            "validation": "Validare",
+            "delegation": "Delegare",
+            "empty": "Nu există recompense în așteptare.",
+            "row": {
+                "start": "Început",
+                "end": "Sfârșit",
+                "completed": "Finalizat",
+                "stake": "Miză",
+                "reward": "Recompensă Posibilă"
+            }
+        },
+        "validate": {
+            "label_1": "ID Nod",
+            "duration": {
+                "label": "Perioada mizei",
+                "desc": "Durata în care jetoanele tale vor fi blocate pentru miză.",
+                "start": "Data & Ora de Început",
+                "end": "Data & Ora de Sfârșit"
+            },
+            "amount": {
+                "label": "Suma Mizată",
+                "desc": "Suma AVAX blocată pentru miză."
+            },
+            "fee": {
+                "label": "Comision de Delegare",
+                "desc": "Vei pretinde acest % din recompensă de la delegatarii din nodul tău."
+            },
+            "reward": {
+                "label": "Adresa Recompensei",
+                "desc": "Unde se trimit recompensele mizate.",
+                "chip_1": "Utilizează acest portofel",
+                "chip_2": "Adresă Personalizată"
+            },
+            "summary": {
+                "max_del": "Suma Maximă a Delegării",
+                "max_del_tooltip": "Suma maximă ce poate fi delegată acestui validator.",
+                "duration": "Durata Mizei",
+                "rewards": "Recompense Estimate",
+                "warn": "Dacă este prima ta miză, începe cu una mică. Jetoanele mizate sunt blocate până la sfârșitul perioadei de miză."
+            },
+            "confirmation": {
+                "id": "ID Nod",
+                "amount": "Suma Mizată",
+                "start": "Data de Început",
+                "end": "Data de Sfârșit",
+                "fee": "Comision de Delegare",
+                "reward": "Adresa Recompensei",
+                "type_local": "Acest portofel",
+                "type_custom": "Personalizat"
+            },
+            "confirm": "Confirmă",
+            "submit": "Trimite",
+            "cancel": "Anulează",
+            "success": {
+                "title": "Tranzacția ta de validare este trimisă.",
+                "desc": "Dacă validarea este acceptată, jetoanele tale vor fi blocate pentru miză. Vei primi jetoanele tale blocate plus recompensele odată ce perioada de miză se încheie.",
+                "status": "Stare"
+            },
+            "errs": {
+                "date": "Data de Început trebuie să fie în viitor, iar data de sfârșit trebuie să fie după data de început.",
+                "amount": "Suma mizată trebuie să fie de cel puțin {0} AVAX",
+                "id": "ID Nod invalid. Trebuie să înceapă cu „IDNod-”",
+                "address": "Adresă de recompensă invalidă."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Selectează un nod pentru delegare",
+                "search": "Caută ID Nod",
+                "id": "ID Nod",
+                "val_stake": "Validator de Miză",
+                "aval_stake": "Disponibil",
+                "aval_stake_tip": "Cât de mult se mai poate delega acestui validator.",
+                "users_tip": "Numărul Delegatarilor",
+                "end": "Ora de Sfârșit",
+                "up": "Timp de funcționare",
+                "up_tip": "În legătură cu nodul la care acest portofel este conectat.",
+                "fee": "Comision",
+                "empty": {
+                    "title": "Nu Au Fost Găsiți Validatori",
+                    "desc": "Validatorii trebuie să mizeze în mod activ pentru a fi găsiți."
+                }
+            },
+            "node": {
+                "selected": "Nod Selectat",
+                "fee": "Comision de Delegare",
+                "start": "Data de Început a Validatorului",
+                "end": "Data de Sfârșit a Validatorului"
+            },
+            "form": {
+                "period": {
+                    "label": "Perioada Mizei",
+                    "desc": "Durata în care jetoanele tale vor fi blocate pentru miză.",
+                    "start": "Data & Ora de Început",
+                    "end": "Data & Ora de Sfârșit"
+                },
+                "amount": {
+                    "label": "Suma Mizei",
+                    "desc": "Suma AVAX blocată pentru miză.",
+                    "desc2": "Suma delegării disponibilă pentru acest nod este de {0} AVAX"
+                },
+                "reward": {
+                    "label": "Adresa Recompensei",
+                    "desc": "Unde se trimit recompensele mizate.",
+                    "chip_1": "Utilizează acest portofel",
+                    "chip_2": "Adresă Personalizată"
+                }
+            },
+            "confirmation": {
+                "node": "ID Nod",
+                "amount": "Suma Mizată",
+                "start": "Data de Început",
+                "end": "Data de Sfârșit",
+                "reward": "Adresa Recompensei"
+            },
+            "errs": {
+                "start_now": "Ora de început trebuie să fie după ora actuală.",
+                "start_end": "Data de Început trebuie să fie în viitor, iar data de sfârșit trebuie să fie după data de început.",
+                "invalid_addr": "Format adresă invalid. Adresa ta trebuie să înceapă cu „P-”",
+                "no_addr": "Trebuie să dai o adresă pentru a primi recompensele delegării.",
+                "min_dur": "Durata minimă a mizei este de 2 săptămâni.",
+                "max_dur": "Durata maximă a mizei este de 1 an.",
+                "no_node": "Trebuie să menționezi un validator.",
+                "val_end": "Data de sfârșit a delegării nu poate fi mai mare decât data de sfârșit a validatorului.",
+                "amt": "Suma delegării trebuie să fie de cel puțin {0} AVAX."
+            },
+            "summary": {
+                "duration": "Durata Mizei",
+                "reward": "Recompensă Estimată",
+                "fee": "Comision",
+                "warn": "Dacă este prima ta miză, începe cu una mică. Jetoanele mizate sunt blocate până la sfârșitul perioadei de miză."
+            },
+            "confirm": "Confirmă",
+            "submit": "Trimite",
+            "cancel": "Anulează",
+            "success": {
+                "title": "Tranzacția de delegare a fost trimisă.",
+                "desc": "Dacă tranzacția este acceptată, jetoanele tale vor fi blocate pentru miză. Vei primi jetoanele tale blocate plus recompensele odată ce perioada de miză se încheie.",
+                "status": "Stare"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Avansat",
+        "import": {
+            "title": "Importă Lanțul",
+            "desc": "Dacă ai fonduri blocate într-un transfer eșuat în lanț, poți termina importarea lor aici.",
+            "submit_x": "Importă X",
+            "submit_p": "Importă P"
+        }
+    },
+    "logout": {
+        "button": "Deconectare",
+        "button_conf": "DECONECTARE",
+        "button_cancel": "Anulează",
+        "confirmation": "Ești sigur că vrei să te deconectezi?",
+        "confirmation_message": "Acest portofel și cheile sale vor fi uitate."
+    },
+    "keystore": {
+        "title": "Fișier de Stocare a Cheilor",
+        "button": "Selectează Fișierul"
+    },
+    "transactions": {
+        "notx": "Nu au fost găsite tranzacții pentru această adresă pe explorer.",
+        "loading": "Se încarcă istoricul tranzacției..",
+        "warn_loading": "Această listă poate fi incompletă și dezordonată.",
+        "error_api": "API Explorer Nu A Fost Găsit",
+        "error_api_desc": "Trebuie să furnizezi un AVA API Explorer pentru ca această rețea să vizualizeze istoricul tranzacției."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adresă",
+            "copy": "Copiază Adresa"
+        },
+        "print": {
+            "title": "Previzualizare Tipărire",
+            "submit": "Tipărește"
+        },
+        "keystore": {
+            "title": "Actualizează Fișierul de Stocare a Cheilor",
+            "desc": "Am actualizat specificațiile fișierului de stocare a cheilor. Te rugăm să descarci noul tău fișier de stocare a cheilor și să accesezi din nou portofelul.",
+            "logout": "Deconectează-te & Accesează Din Nou"
+        },
+        "mainnet": {
+            "title": "Adresă Mainnet",
+            "desc": "Adresa ta mainnet este:"
+        },
+        "mnemonic": {
+            "title": "Frază Cheie"
+        },
+        "activateWallet": {
+            "title": "Activează Portofelul",
+            "desc": "Există un portofel activ. Introdu parola ta pentru a-l accesa.",
+            "submit": "Accesează Portofelul",
+            "cancel": "Accesează alt portofel",
+            "cancel2": "(Portofelul anterior va fi uitat.)",
+            "err1": "Parolă invalidă.",
+            "err2": "Imposibil de citit datele portofelului."
+        }
+    },
+    "nav": {
+        "access": "Accesează Portofelul",
+        "create": "Creează Portofel Nou"
+    }
+}
