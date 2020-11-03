@@ -16,7 +16,22 @@ import zh_hans from '../locales/zh_hans.json';
 import pt from '../locales/pt.json';
 import vn from '../locales/vn.json';
 import nl from '../locales/nl.json';
-
+import uk from '../locales/uk.json';
+import ca from '../locales/ca.json';
+import cs from '../locales/cs.json';
+import af from '../locales/aafrikans.json';
+import ar from '../locales/arabic.json';
+import da from '../locales/danish.json';
+import fi from '../locales/finnish.json';
+import el from '../locales/greek.json';
+import he from '../locales/hebrew.json';
+import hu from '../locales/hungarian.json';
+import nb from '../locales/norwegian.json';
+import pl from '../locales/polish.json';
+import ro from '../locales/romanian.json';
+import sr from '../locales/serbian.json';
+import sv from '../locales/swedish.json';
+import th from '../locales/thai.json';
 
 const messages = {
     en,
@@ -31,7 +46,23 @@ const messages = {
     zh_hans,
     pt,
     vn,
-    nl
+    nl,
+    uk,
+    ca,
+    cs,
+    af,
+    ar,
+    da,
+    fi,
+    el,
+    he,
+    hu,
+    nb,
+    pl,
+    ro,
+    sr,
+    sv,
+    th
 };
 
 // Create VueI18n instance with options

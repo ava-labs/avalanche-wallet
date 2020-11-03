@@ -1,0 +1,428 @@
+{
+    "password": "Jelszó",
+    "password_confirm": "Jelszó megerősítése",
+    "private_key": "Privát kulcs",
+    "address": "Cím",
+    "add_pk": "Hozzáadás",
+    "home": {
+        "desc": "Az Avalanche Wallet egyszerű, biztonságos, nem letétkezelői pénztárca az Avalanche eszközök tárolására.",
+        "access": {
+            "title": "Üdv újra!",
+            "desc": "Itt 'férhet hozzá' meglévő Avalanche pénztárcájához.",
+            "submit": "Wallet hozzáférés"
+        },
+        "create": {
+            "title": "Új Önnek az Avalanche Wallet?",
+            "desc": "„Hozzon létre” új pénztárcát az Avalanche eszközök küldéséhez, fogadásához és cseréjéhez.",
+            "submit": "Hozzon létre új pénztárcát"
+        }
+    },
+    "network": {
+        "status1": "Csatlakozás...",
+        "status2": "Szétkapcsolt",
+        "title": "Hálózatok",
+        "title2": "Egyéni hálózat hozzáadása",
+        "title3": "Hálózat szerkesztése",
+        "custom": "Egyéni hozzáadása",
+        "cancel": "Megszünteti",
+        "add": "Hálózat hozzáadása"
+    },
+    "access": {
+        "title": "Hogyan szeretné elérni a pénztárcáját?",
+        "create": "Nincs pénztárcád?",
+        "but_mnemonic": "Mnemonikus kulcsmondat",
+        "but_keystore": "Kulcstároló fájl",
+        "cancel": "Megszünteti",
+        "json_error": "Nem sikerült elemezni a JSON fájlt.",
+        "keystore_error": "Ez a kulcstár verzió nem támogatott.",
+        "password_error": "Érvénytelen jelszó.",
+        "mnemonic": {
+            "title": "Írja be a MNEMONIKUS kulcsmondatot\n",
+            "subtitle": "Minden sikeres szóbejegyzés után nyomja meg a „SPACE” gombot.",
+            "submit": "Hozzáférés pénztárcád",
+            "cancel": "Megszünteti",
+            "error": "Érvénytelen kulcsmondat. A kifejezésnek 24 szóból kell állnia, egyetlen szóközzel elválasztva."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfólió",
+            "manage": "Kezelés",
+            "send": "Küldés",
+            "earn": "Keressen",
+            "advanced": "Speciális"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Nincsenek gyűjthető tárgyai."
+        }
+    },
+    "create": {
+        "generate": "Generáljon új kulcsmondatot Avalanche pénztárcája használatához.",
+        "but_have": "Már van pénztárcája?",
+        "submit": "Kulcsmondat létrehozása",
+        "cancel": "Megszünteti",
+        "mnemonic_title": "Ez a Ön kulcsmondata.",
+        "mnemonic_desc": "Ezt a 24 szót használja az itt megadott sorrendben az Avalanche Wallet pénztárca\nhelyreállítására/elérésére",
+        "attention": "Figyelem!",
+        "warning": "Biztonságos helyen tárolja ezt a kulcsmondatot. Ezzel a kulcsmondattal bárki hozzáférhet Avalanche pénztárcájához. Az elveszített kulcsmondat helyreállítására viszont nincs mód.",
+        "confirm": "Biztonsági helyre írtam fel a kulcsmondatomat.",
+        "regenerate": "Regenerálás",
+        "success_title": "Gratulálunk!",
+        "success_desc": "Ideje megtekinteni Avalanche pénztárcáját.",
+        "success_submit": "Hozzáférés pénztárcád",
+        "verify": "Ellenőrizze",
+        "verifytitle": "Ellenőrizze a mnemónikus elemet",
+        "verify_desc": "Töltse ki alább az emlékeztető kifejezést",
+        "error_number": "Hoppá, úgy tűnik, elfelejtette kitölteni a számot",
+        "error_word": "A szóra megadott mnemonikus kifejezés nem egyezik a tényleges kifejezéssel."
+    },
+    "top": {
+        "title1": "Származtatott Avalanche pénztárca cím",
+        "title2": "Egyensúly",
+        "title3": "Alhálózat",
+        "title4": "Hálózatok",
+        "nftcol": "nem helyettesíthető token (NHT)",
+        "nftempty": "Még nem gyűjtött össze nem helyettesíthető tokent.",
+        "locked": "Zárt",
+        "info2": "A Token Sale-ban vásároltam érméket. Hol van az AVAX?",
+        "info2_desc": "Ez a pénztárca az Avalanche Everest teszthálózathoz csatlakozik. Vásárlása az Avalanche Mainnet elindítása után jelenik meg a pénztárcában.",
+        "hover1": "Cím QR-kód megtekintése",
+        "hover2": "Nyomtatás",
+        "hover3": "Másolat",
+        "hover4": "Mainnet cím megtekintése",
+        "balance": {
+            "show": "Bontás mutatása",
+            "hide": "Bontás elrejtése",
+            "available": "Elérhető",
+            "locked": "Zárolva",
+            "locked_stake": "Zárolva, megjátszható",
+            "stake": "Megjátszás",
+            "collectibles": "Gyűjthető tárgyak"
+        },
+        "address": {
+            "derived": "Származtatott Avalanche pénztárca cím",
+            "desc": "Ez az Ön címe, ahová pénzt kap. Címe minden befizetés után változik."
+        }
+    },
+    "transfer": {
+        "title": "Küld",
+        "no_cash": "A tranzakció kiállításához rendelkeznie kell egy eszközzel a pénztárcájában.",
+        "faucet": "Megnézte a csapunkat?",
+        "to": "Címezni",
+        "fees": "Díjak",
+        "fee_tx": "Tranzakciós illeték",
+        "advanced": "Fejlett",
+        "adv_change": "Cím módosítása",
+        "send": "Tranzakció küldése",
+        "summary": "Tranzakciók összefoglalása",
+        "disconnected": "Nem lehet eszközeket küldeni. Leválasztva a hálózatról.",
+        "success_title": "Tranzakció elküldve",
+        "success_msg": "Sikeresen elküldte a tranzakciót.",
+        "error_title": "Hiba a tranzakció küldésekor",
+        "error_msg": "Nem sikerült elküldeni a tranzakciót."
+    },
+    "keys": {
+        "title": "A kulcsaim",
+        "button1": "Emlékezzen a kulcsokra",
+        "button2": "IMPORT GOMBOK",
+        "button3": "EXPORT GOMBOK",
+        "subtitle": "Aktív kulcs",
+        "remember_key_button": "EMLÉKEZIK",
+        "remember_key_desc": "Kódolja a pénztárcáját jelszóval, és biztonságosan tárolja ezen a böngészőn.",
+        "remember_key_check": "Emlékezzen a kulcsokra",
+        "remember_key_info": "Később a böngészőben jelszóval férhet hozzá pénztárcájához.",
+        "export_key_button": "EXPORT TÁRCSA",
+        "export_key_title": "Export kulcsok",
+        "export_key_desc": "Adjon meg egy jelszót a magánkulcsok fájlba kódolásához. Később felhasználhatja ezt a fájlt és jelszavát a pénztárca eléréséhez.",
+        "export_key_info": "Kiválasztott {0} gomb.",
+        "export_placeholder1": "Jelszó",
+        "export_placeholder2": "Jelszó megerősítése",
+        "empty": "Ennek a kulcsnak nincs egyensúlya.",
+        "import_key_button": "IMPORT GOMBOK",
+        "import_key_title": "Import kulcsok",
+        "import_key_desc": "Adjon hozzá további kulcsokat, amelyeket a pénztárcájához használhat.",
+        "import_key_option1": "MNEMONIKUS KIFEJEZÉS",
+        "import_key_option2": "KEYSTORE FÁJL",
+        "import_key_success_title": "Kulcs hozzáadva",
+        "import_key_success_msg": "Privát kulcs és eszközök hozzáadva a pénztárcához.",
+        "tooltip": "A böngésző frissítésekor ezt a kulcsot elfelejtjük.",
+        "view_key": "Kulcsmondat megtekintése",
+        "export_key": "Export kulcsok",
+        "hd_addresses": "HD címek",
+        "remove_key": "Kulcs eltávolítása",
+        "activate_key": "Aktiválja a kulcsot",
+        "remove_success_title": "Kulcs eltávolítva",
+        "remove_success_msg": "Privát kulcs és eszközök eltávolítva a pénztárcából.",
+        "password_validation": "A jelszónak legalább 9 karakter hosszúnak kell lennie.",
+        "password_validation2": "A jelszó nem egyezik."
+    },
+    "portfolio": {
+        "assets": "Eszközök",
+        "assets1": "Tokenek",
+        "assets2": "Gyűjthető tárgyak",
+        "search": "Eszközök keresése",
+        "name": "Név",
+        "send": "Küld",
+        "balance": "Egyensúly",
+        "error_network": "Nem lehet megjeleníteni az eszközöket. Leválasztva a hálózatról.",
+        "nobalance": "Nincsenek eszközei",
+        "nobalance_nft": "Nincsenek gyűjthető tárgyai.",
+        "noaddresses": "Nincs korábbi címe."
+    },
+    "earn": {
+        "title": "Keressen",
+        "desc": "Több AVAX-ot kereshet, ha megjátssza meglévő zsetonjait.",
+        "subtitle1": "Érvényesítés",
+        "subtitle2": "Delegálás",
+        "subtitle3": "Transzfer láncok között",
+        "subtitle4": "Becsült jutalom",
+        "warning_1": "Legalább {0} AVAX szükséges a P láncon ahhoz, hogy érvényesítő legyen.",
+        "warning_2": "Legalábbt {0} AVAX szükséges a P láncon ahhoz, hogy érvényesítő legyen.",
+        "validate_card": {
+            "title": "Érvényesítés",
+            "desc": "Rendelkezik egy Avalanche csomópontja amit meg akar játszani.",
+            "submit": "Érvényesítő hozzáadása"
+        },
+        "delegate_card": {
+            "title": "Delegálás",
+            "desc": "Nem rendelkezik Avalanche csomóponttal, de játszani akar egy másik csomópont használatával.",
+            "submit": "Delegáló hozzáadása"
+        },
+        "transfer_card": {
+            "title": "Transzfer láncok között",
+            "desc": "A megjátszáshoz AVAX szükséges a P láncon. Vigyen át zsetont az X láncról P-re.",
+            "submit": "Transzfer"
+        },
+        "rewards_card": {
+            "title": "Becsült jutalom",
+            "desc": "Tekintse meg a megjátszási jutalmakat, amiket kapni fog.",
+            "submit": "Jutalom megtekintése"
+        },
+        "transfer": {
+            "source": "Forrás lánc",
+            "destination": "Cél lánc",
+            "balance": "Egyenleg",
+            "amount": "Transzfer összege",
+            "fee": "Költség",
+            "confirm": "Megerősítés",
+            "submit": "Transzfer",
+            "cancel": "Mégse",
+            "err_import": "Az import nem sikerült",
+            "err_desc": "Probléma adódott a zsetonok cél láncra importálása során. Kérjük, próbálja importálni újra.",
+            "err_submit": "Import indítása",
+            "success": {
+                "title": "Transzfer befejezve",
+                "export": "Exportálás tranzakciós azonosítója:",
+                "import": "Importálás tranzakciós azonosítója:",
+                "message": "Sikeres áthelyezés a láncok között.",
+                "back": "Vissza a kereséshez"
+            }
+        },
+        "rewards": {
+            "total": "Összes jutalom",
+            "validation": "Érvényesítés",
+            "delegation": "Delegálás",
+            "empty": "Nincs jutalom függőben.",
+            "row": {
+                "start": "Kezdés",
+                "end": "Befejezés",
+                "completed": "Befejezve",
+                "stake": "Megjátszás",
+                "reward": "Lehetséges jutalom"
+            }
+        },
+        "validate": {
+            "label_1": "Csomópont azonosító",
+            "duration": {
+                "label": "Megjátszási időszak",
+                "desc": "Az az időtartam, amíg a zsetonjai zárolva vannak megjátszás szempontjából.",
+                "start": "Kezdés dátuma és ideje",
+                "end": "Befejezés dátuma és ideje"
+            },
+            "amount": {
+                "label": "Megjátszott összeg",
+                "desc": "AVAX összeg amit zárol a megjátszáshoz."
+            },
+            "fee": {
+                "label": "Delegálási költség",
+                "desc": "A jutalomnak ennyi %-át igényli az Ön csomópontján lévő delegálóktól."
+            },
+            "reward": {
+                "label": "Jutalom címe",
+                "desc": "Hova kell küldeni a megjátszási jutalmat.",
+                "chip_1": "Ennek a pénztárcának a használata",
+                "chip_2": "Egyéni cím"
+            },
+            "summary": {
+                "max_del": "Legnagyobb delegálási összeg",
+                "max_del_tooltip": "A legnagyobb összeg, ami ehhez az érvényesítőhöz delegálható.",
+                "duration": "Megjátszási időtartam",
+                "rewards": "Becsült jutalom",
+                "warn": "Ha ez az első alkalom, hogy megjátszik valamit, kicsiben kezdje. A megjátszott zsetonok zárolva vannak a megjátszási időszakban."
+            },
+            "confirmation": {
+                "id": "Csomópont azonosító",
+                "amount": "Megjátszott összeg",
+                "start": "Kezdés dátuma",
+                "end": "Befejezés dátuma",
+                "fee": "Delegálási költség",
+                "reward": "Jutalom címe",
+                "type_local": "Ez a pénztárca",
+                "type_custom": "Egyéni"
+            },
+            "confirm": "Megerősítés",
+            "submit": "Beküldés",
+            "cancel": "Mégse",
+            "success": {
+                "title": "Érvényesítési tranzakció elküldve.",
+                "desc": "Ha a tranzakciót elfogadják, a zsetonjai zárolva lesznek megjátszásra. A zárolt zsetonokat és a jutalmat akkor kapja meg, amikor a megjátszási időszak véget ér.",
+                "status": "Állapot"
+            },
+            "errs": {
+                "date": "A kezdési dátum a jövőben van, a befejezés dátuma pedig követi a kezdési dátumot.",
+                "amount": "A delegálási összeg legalább {0} AVAX",
+                "id": "Érvénytelen csomópont azonosító. Így kell kezdődnie: \"NodeID-\"",
+                "address": "Érvénytelen jutalom cím."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Válasszon csomópontot a delegáláshoz",
+                "search": "Csomópont azonosító keresése",
+                "id": "Csomópont azonosító",
+                "val_stake": "Érvényesítő tétje",
+                "aval_stake": "Elérhető",
+                "aval_stake_tip": "Amennyit még ehhez az érvényesítőhöz lehet delegálni.",
+                "users_tip": "Delegálók száma",
+                "end": "Befejezés ideje",
+                "up": "Rendelkezésre állási idő",
+                "up_tip": "Ahhoz a csomóponthoz viszonyítva, amelyhez ez a pénztárca csatlakozik.",
+                "fee": "Költség",
+                "empty": {
+                    "title": "Nem találtunk érvényesítőt",
+                    "desc": "Az érvényesítőnek aktív megjátszónak kell lennie, hogy megtaláljuk."
+                }
+            },
+            "node": {
+                "selected": "Kiválasztott csomópont",
+                "fee": "Delegálási költség",
+                "start": "Érvényesítő kezdési dátuma",
+                "end": "Érvényesítő befejezési dátuma"
+            },
+            "form": {
+                "period": {
+                    "label": "Megjátszási időszak",
+                    "desc": "Az az időtartam, amíg a zsetonjai zárolva vannak megjátszás szempontjából.",
+                    "start": "Kezdés dátuma és ideje",
+                    "end": "Befejezés dátuma és ideje"
+                },
+                "amount": {
+                    "label": "Megjátszott összeg",
+                    "desc": "AVAX összeg amit zárol a megjátszáshoz.",
+                    "desc2": "Az elérhető delegálási összeg ehhez a csomóponthoz {0} AVAX"
+                },
+                "reward": {
+                    "label": "Jutalom címe",
+                    "desc": "Ahová a megjátszási jutalmat kell küldeni.",
+                    "chip_1": "Ennek a pénztárcának a használata",
+                    "chip_2": "Egyéni cím"
+                }
+            },
+            "confirmation": {
+                "node": "Csomópont azonosító",
+                "amount": "Megjátszott összeg",
+                "start": "Kezdés dátuma",
+                "end": "Befejezés dátuma",
+                "reward": "Jutalom címe"
+            },
+            "errs": {
+                "start_now": "A kezdés idejének az aktuális idő utáninak kell lennie.",
+                "start_end": "A kezdési dátum a jövőben van, a befejezés dátuma pedig követi a kezdési dátumot.",
+                "invalid_addr": "Érvénytelen cím formátum. A címnek így kell kezdődnie \"P-\"",
+                "no_addr": "Meg kell adnia egy címet, hogy megkapja a delegálási jutalmat.",
+                "min_dur": "A megjátszási időtartam legalább 2 hét.",
+                "max_dur": "A megjátszási időtartam legfeljebb 1 év.",
+                "no_node": "Meg kell adnia egy érvényesítőt.",
+                "val_end": "A delegálás befejezési dátuma nem lehet későbbi az érvényesítő befejezési dátumánál.",
+                "amt": "A delegálási összeg legalább {0} AVAX."
+            },
+            "summary": {
+                "duration": "Megjátszási időtartam",
+                "reward": "Becsült jutalom",
+                "fee": "Költség",
+                "warn": "Ha ez az első alkalom, hogy megjátszik valamit, kicsiben kezdje. A megjátszott zsetonok zárolva vannak a megjátszási időszakban."
+            },
+            "confirm": "Megerősítés",
+            "submit": "Beküldés",
+            "cancel": "Mégse",
+            "success": {
+                "title": "Delegálási tranzakció elküldve.",
+                "desc": "Ha a tranzakciót elfogadják, a zsetonjai zárolva lesznek megjátszásra. A zárolt zsetonokat és a jutalmat akkor kapja meg, amikor a megjátszási időszak véget ér.",
+                "status": "Állapot"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Speciális",
+        "import": {
+            "title": "Lánc importálás",
+            "desc": "Ha a pénze egy sikertelen lánc transzferben maradt, befejezheti úgy, hogy ide importálja.",
+            "submit_x": "X importálása",
+            "submit_p": "P importálása"
+        }
+    },
+    "logout": {
+        "button": "Kijelentkezés",
+        "button_conf": "KIJELENTKEZÉS",
+        "button_cancel": "Megszünteti",
+        "confirmation": "Biztosan kijelentkezik?",
+        "confirmation_message": "Ezt a pénztárcát és kulcsait elfelejtjük."
+    },
+    "keystore": {
+        "title": "Kulcstárfájl",
+        "button": "Válaszd ki a fájlt"
+    },
+    "transactions": {
+        "notx": "Nem található tranzakció ehhez a címhez a felfedezőben.",
+        "loading": "Tranzakciós előzmények betöltése..",
+        "warn_loading": "Lehet, hogy ez a lista hiányos és nem működik.",
+        "error_api": "Az Explorer API nem található",
+        "error_api_desc": "A tranzakciós előzmények megtekintéséhez meg kell adnia egy AVA Explorer API-t ehhez a hálózathoz."
+    },
+    "modal": {
+        "qr": {
+            "title": "Cím",
+            "copy": "Cím másolása"
+        },
+        "print": {
+            "title": "Nyomtatási előnézet",
+            "submit": "Nyomtatás"
+        },
+        "keystore": {
+            "title": "Frissítse a kulcstároló fájlt",
+            "desc": "Frissítettük a kulcstároló fájl specifikációit. Kérjük, töltse le az új kulcstárfájlt, és nyissa meg újra a pénztárcát.",
+            "logout": "Kijelentkezés és hozzáférés újra"
+        },
+        "mainnet": {
+            "title": "Mainnet cím",
+            "desc": "Az Ön Mainnet címe:"
+        },
+        "mnemonic": {
+            "title": "Kulcsmondat"
+        },
+        "activateWallet": {
+            "title": "Aktiválja a Wallet szolgáltatást",
+            "desc": "Van egy aktív pénztárca. Írja be a jelszavát a hozzáféréshez.",
+            "submit": "Hozzáférés pénztárcád",
+            "cancel": "Hozzáférés egy másik pénztárcához",
+            "cancel2": "(A korábbi pénztárcát elfelejtjük.)",
+            "err1": "Érvénytelen jelszó.",
+            "err2": "Nem lehet olvasni a pénztárca adatait."
+        }
+    },
+    "nav": {
+        "access": "Pénztárca hozzáférés",
+        "create": "Hozzon létre új pénztárcát"
+    }
+}

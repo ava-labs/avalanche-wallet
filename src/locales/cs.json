@@ -1,0 +1,428 @@
+{
+    "password": "Heslo",
+    "password_confirm": "Potvrzení hesla",
+    "private_key": "Soukromý klíč",
+    "address": "Adresa",
+    "add_pk": "Přidat soukromý klíč",
+    "home": {
+        "desc": "Peněženka Avalanche je jednoduchá, bezpečná, nehlídaná peněženka na ukládání majetku Avalanche.",
+        "access": {
+            "title": "Vítej zpátky!",
+            "desc": "Tady můžete získat přístup ke své stávající peněžence Avalanche.",
+            "submit": "Přístup k peněžence"
+        },
+        "create": {
+            "title": "Je pro Vás peněženka Avalanche novinkou?",
+            "desc": "Vytvořte si novou peněženku k odesílání, přijímání a vyměňování majetku Avalanche.",
+            "submit": "Vytvořit novou peněženku"
+        }
+    },
+    "network": {
+        "status1": "Připojování...",
+        "status2": "Odpojeno",
+        "title": "Sítě",
+        "title2": "Přidat vlastní síť",
+        "title3": "Upravit síť",
+        "custom": "Přidat vlastní",
+        "cancel": "Zrušit",
+        "add": "Přidat síť"
+    },
+    "access": {
+        "title": "Jak chcete získávat přístup ke své peněžence?",
+        "create": "Nemáte peněženku?",
+        "but_mnemonic": "Mnemonická klíčová fráze",
+        "but_keystore": "Soubor úložiště klíčů",
+        "cancel": "Zrušení",
+        "json_error": "Soubor JSON nelze analyzovat.",
+        "keystore_error": "Tato verze úložiště klíčů není podporována.",
+        "password_error": "Neplatné heslo.",
+        "mnemonic": {
+            "title": "Zadejte svou mnemonickou frázi\n",
+            "subtitle": "Po každém úspěšném zadání slova stiskněte mezerník.",
+            "submit": "Přístup do peněženky",
+            "cancel": "Zrušení",
+            "error": "Neplatná klíčová fráze. Fráze musí obsahovat 24 slov oddělovaných jednotlivými mezerami."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfolio",
+            "manage": "Spravovat",
+            "send": "Poslat",
+            "earn": "Vydělávejte",
+            "advanced": "Pokročilé"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Nevlastníte žádné sběratelské předměty."
+        }
+    },
+    "create": {
+        "generate": "Vytvořte si novou klíčovou frázi k nakonfigurování Vaší peněženky Avalanche.",
+        "but_have": "Máte už peněženku?",
+        "submit": "Vygenerovat klíčovou frázi",
+        "cancel": "Zrušit",
+        "mnemonic_title": "Toto je Vaše klíčová fráze.",
+        "mnemonic_desc": "Chcete-li obnovit svou peněženku Avalanche, použijte těchto 24 slov v postupném pořadí",
+        "attention": "Pozor!",
+        "warning": "Tuto klíčovou frázi si uložte na bezpečné místo. Každý, kdo tuto klíčovou frázi bude mít, bude moci získat přístup k Vaší peněžence Avalanche. Ztracené klíčové fráze nelze nijak získat zpět.",
+        "confirm": "Svou klíčovou frázi jsem si zapsala(a) na bezpečné místo.",
+        "regenerate": "Regenerovat",
+        "success_title": "Gratulujeme!",
+        "success_desc": "Je čas na přístup k Vaší peněžence Avalanche.",
+        "success_submit": "Přístup do peněženky",
+        "verify": "Ověřit",
+        "verifytitle": "Ověřte mnemotechniku",
+        "verify_desc": "Níže vyplňte mnemotechnickou frázi",
+        "error_number": "Jejda, vypadá to, že jste zapomněli vyplnit číslo",
+        "error_word": "Mnemotechnická fráze, kterou jste zadali pro slovo, se neshoduje se skutečnou frází."
+    },
+    "top": {
+        "title1": "Odvozená adresa peněženky Avalanche",
+        "title2": "Zůstatek",
+        "title3": "Podsíť",
+        "title4": "Síť",
+        "nftcol": "NFT",
+        "nftempty": "Neshromáždili jste žádné nepostradatelné žetony.",
+        "locked": "Zamčené",
+        "info2": "Koupil jsem mince v Token Sale. Kde jsou moje AVAX?",
+        "info2_desc": "Tato peněženka je připojena k testovací síti Avalanche Everest. Váš nákup se v peněžence objeví po spuštění Avalanche Mainnet.",
+        "hover1": "Zobrazit QR kód adresy",
+        "hover2": "Vytisknout",
+        "hover3": "Kopírovat",
+        "hover4": "Zobrazit adresu Mainnet",
+        "balance": {
+            "show": "Zobrazit rozpis",
+            "hide": "Skrýt rozpis",
+            "available": "Dostupné",
+            "locked": "Zablokované",
+            "locked_stake": "Zablokované vsaditelné",
+            "stake": "Vsazování",
+            "collectibles": "Sběratelské předměty"
+        },
+        "address": {
+            "derived": "Odvozená adresa peněženky Avalanche",
+            "desc": "Toto je Vaše adresa pro příjem prostředků. Vaše adresa se po každém vkladu změní."
+        }
+    },
+    "transfer": {
+        "title": "Poslat",
+        "no_cash": "K provedení transakce musíte mít v peněžence aktivum.",
+        "faucet": "Podívali jste se na náš kohoutek?",
+        "to": "Na adresu",
+        "fees": "Poplatky",
+        "fee_tx": "Transakční poplatek",
+        "advanced": "Pokročilý",
+        "adv_change": "Změnit adresu",
+        "send": "Odeslat transakci",
+        "summary": "Shrnutí transakce",
+        "disconnected": "Podklady nelze odeslat. Odpojeno od sítě.",
+        "success_title": "Transakce byla odeslána",
+        "success_msg": "Úspěšně jste odeslali svou transakci.",
+        "error_title": "Chyba při odesílání transakce",
+        "error_msg": "Transakci se nepodařilo odeslat."
+    },
+    "keys": {
+        "title": "Mé klíče",
+        "button1": "Pamatujte si klíče",
+        "button2": "DOVOZNÍ KLÁVESY",
+        "button3": "VÝVOZNÍ KLÍČE",
+        "subtitle": "Aktivní klíč",
+        "remember_key_button": "ZAPAMATOVAT SI",
+        "remember_key_desc": "Zakódujte svou peněženku heslem a bezpečně ji uložte v tomto prohlížeči.",
+        "remember_key_check": "Pamatujte si klíče",
+        "remember_key_info": "K peněžence v tomto prohlížeči můžete později získat přístup pomocí hesla.",
+        "export_key_button": "EXPORTNÍ PENĚŽENKA",
+        "export_key_title": "Exportovat klíče",
+        "export_key_desc": "Zadejte heslo pro zakódování soukromých klíčů do souboru. Tento soubor a heslo můžete později použít pro přístup do peněženky.",
+        "export_key_info": "Vybrané klíče.",
+        "export_placeholder1": "Heslo",
+        "export_placeholder2": "Potvrďte heslo",
+        "empty": "Tento klíč nemá zůstatek.",
+        "import_key_button": "KLÍČ DOVOZU",
+        "import_key_title": "Importovat klíče",
+        "import_key_desc": "Přidejte další klíče pro použití s peněženkou.",
+        "import_key_option1": "MNEMONICKÁ FRAZE",
+        "import_key_option2": "SOUBOR KLÁVESNIC",
+        "import_key_success_title": "Klíč přidán",
+        "import_key_success_msg": "Soukromý klíč a aktiva přidaná do peněženky.",
+        "tooltip": "Při aktualizaci prohlížeče bude tento klíč zapomenut.",
+        "view_key": "Zobrazit klíčovou frázi",
+        "export_key": "Exportovat klíč",
+        "hd_addresses": "HD adresy",
+        "remove_key": "Odebrat klíč",
+        "activate_key": "Aktivovat klíč",
+        "remove_success_title": "Klíč odstraněn",
+        "remove_success_msg": "Soukromý klíč a aktiva odstraněna z peněženky.",
+        "password_validation": "Heslo musí mít alespoň 9 znaků.",
+        "password_validation2": "Heslo se neshoduje."
+    },
+    "portfolio": {
+        "assets": "Aktiva",
+        "assets1": "Tokeny",
+        "assets2": "Sběratelské předměty",
+        "search": "Hledat aktiva",
+        "name": "Název",
+        "send": "Poslat",
+        "balance": "Zůstatek",
+        "error_network": "Podklady nelze zobrazit. Odpojeno od sítě.",
+        "nobalance": "Nemáte žádný majetek",
+        "nobalance_nft": "Nevlastníte žádné sběratelské předměty.",
+        "noaddresses": "Nemáte žádné minulé adresy."
+    },
+    "earn": {
+        "title": "Vydělávat",
+        "desc": "Vsazováním svých stávajících tokenů můžete vydělat více AVAX.",
+        "subtitle1": "Validovat",
+        "subtitle2": "Delegovat",
+        "subtitle3": "Křížový řetězový převod",
+        "subtitle4": "Odhadované odměny",
+        "warning_1": "Abyste se stali validátorem, musíte mít alespoň {0} AVAX na řetězci P.",
+        "warning_2": "Abyste se stali delegátorem, musíte mít alespoň {0} AVAX na řetězci P.",
+        "validate_card": {
+            "title": "Validovat",
+            "desc": "Máte uzel Avalanche, s kterým chcete vsazovat.",
+            "submit": "Přidat validátora"
+        },
+        "delegate_card": {
+            "title": "Delegovat",
+            "desc": "Nevlastníte žádný uzel Avalanche, ale chcete vsazovat pomocí jiného uzlu.",
+            "submit": "Přidat delegátora"
+        },
+        "transfer_card": {
+            "title": "Křížový řetězový převod",
+            "desc": "Vsazování vyžaduje AVAX na řetězci P. Převeďte tokeny mezi X a P.",
+            "submit": "Převod"
+        },
+        "rewards_card": {
+            "title": "Odhadované odměny",
+            "desc": "Zobrazit nahromaděné odměny, které dostanete.",
+            "submit": "Zobrazit odměny"
+        },
+        "transfer": {
+            "source": "Zdrojový řetězec",
+            "destination": "Cílový řetězec",
+            "balance": "Bilance",
+            "amount": "Převést částku",
+            "fee": "Poplatek",
+            "confirm": "Potvrdit",
+            "submit": "Převést",
+            "cancel": "Zrušit",
+            "err_import": "Import se nezdařil",
+            "err_desc": "Došlo k problému s importem Vašich tokenů do cílového řetězce. Pokuste se prosím o import znovu.",
+            "err_submit": "Spustit import",
+            "success": {
+                "title": "Převod je hotov",
+                "export": "Exportovat ID transakce:",
+                "import": "Importovat ID transakce:",
+                "message": "Úspěšně jste provedli převod mezi řetězci.",
+                "back": "Zpět na vydělávání"
+            }
+        },
+        "rewards": {
+            "total": "Odměny celkem",
+            "validation": "Validace",
+            "delegation": "Delegace",
+            "empty": "Nemáte žádné nezpracované odměny.",
+            "row": {
+                "start": "Začátek",
+                "end": "Konec",
+                "completed": "Dokončeno",
+                "stake": "Vsázka",
+                "reward": "Potenciální odměna"
+            }
+        },
+        "validate": {
+            "label_1": "ID uzlu",
+            "duration": {
+                "label": "Vsazovací období",
+                "desc": "Doba trvání, po kterou budou Vaše tokeny zablokovány na vsazování.",
+                "start": "Datum a čas začátku",
+                "end": "Datum a čas konce"
+            },
+            "amount": {
+                "label": "Částka sázky",
+                "desc": "Množství AVAX k zablokování na vsazení."
+            },
+            "fee": {
+                "label": "Delegační poplatek",
+                "desc": "Toto % odměn si budete nárokovat od delegátorů na Vašem uzlu."
+            },
+            "reward": {
+                "label": "Adresa pro odměny",
+                "desc": "Kam posílat odměny za vsazení.",
+                "chip_1": "Používat tuto peněženku",
+                "chip_2": "Vlastní adresa"
+            },
+            "summary": {
+                "max_del": "Maximální delegovaná částka",
+                "max_del_tooltip": "Maximální částka, kterou lze delegovat na tohoto validátora.",
+                "duration": "Doba trvání vsazení",
+                "rewards": "Odhadované odměny",
+                "warn": "Jestliže vsazujete poprvé, začínejte v malém. Vsazené tokeny budou až do konce vsazovacího období zablokovány."
+            },
+            "confirmation": {
+                "id": "ID uzlu",
+                "amount": "Vsazovací částka",
+                "start": "Datum začátku",
+                "end": "Datum konce",
+                "fee": "Delegační poplatek",
+                "reward": "Adresa odměny",
+                "type_local": "Tato peněženka",
+                "type_custom": "Vlastní"
+            },
+            "confirm": "Potvrdit",
+            "submit": "Odeslat",
+            "cancel": "Zrušit",
+            "success": {
+                "title": "Vaše validační transakce se posílá.",
+                "desc": "Jestliže bude transakce přijata, Vaše tokeny budou zablokovány na vsazení. Až bude Vaše vsazovací období u konce, obdržíte své zablokované tokeny plus odměny.",
+                "status": "Stav"
+            },
+            "errs": {
+                "date": "Datum začátku musí být v budoucnu a datum konce musí být pozdější než datum začátku.",
+                "amount": "Částka vsázky musí být alespoň {0} AVAX",
+                "id": "Neplatné ID uzlu. Musí začínat na „NodeID-“",
+                "address": "Neplatná adresa pro odměny."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Vyberte uzel k delegování",
+                "search": "Vyhledat ID uzlu",
+                "id": "ID uzlu",
+                "val_stake": "Vsázka validátora",
+                "aval_stake": "Dostupné",
+                "aval_stake_tip": "Kolik dalšího lze delegovat na tohoto validátora.",
+                "users_tip": "Počet delegátorů",
+                "end": "Čas konce",
+                "up": "Doba chodu",
+                "up_tip": "Vůči uzlu, ke kterému je tato peněženka připojena.",
+                "fee": "Poplatek",
+                "empty": {
+                    "title": "Nebyly nalezeny žádní validátoři",
+                    "desc": "Aby bylo možné validátory nalézt, musí aktivně vsázet."
+                }
+            },
+            "node": {
+                "selected": "Vybraný uzel",
+                "fee": "Delegační poplatek",
+                "start": "Datum začátku validátora",
+                "end": "Datum konce validátora"
+            },
+            "form": {
+                "period": {
+                    "label": "Vsazovací období",
+                    "desc": "Doba, po kterou budou Vaše tokeny zablokovány na vsazení.",
+                    "start": "Datum a čas začátku",
+                    "end": "Datum a čas konce"
+                },
+                "amount": {
+                    "label": "Částka sázky",
+                    "desc": "Množství AVAX k zablokování na vsazování.",
+                    "desc2": "Dostupná delegační částka pro tento uzel je {0} AVAX"
+                },
+                "reward": {
+                    "label": "Adresa pro odměny",
+                    "desc": "Kam posílat odměny za vsazování.",
+                    "chip_1": "Používat tuto peněženku",
+                    "chip_2": "Vlastní adresa"
+                }
+            },
+            "confirmation": {
+                "node": "ID uzlu",
+                "amount": "Vsazovací částka",
+                "start": "Datum začátku",
+                "end": "Datum konce",
+                "reward": "Adresa pro odměny"
+            },
+            "errs": {
+                "start_now": "Čas začátku musí být pozdější než aktuální čas.",
+                "start_end": "Datum začátku musí být v budoucnu a datum konce musí být pozdější než datum začátku.",
+                "invalid_addr": "Neplatný formát adresy. Vaše adresa musí začínat na „P-“",
+                "no_addr": "Chcete-li dostávat delegační odměny, musíte zadat adresu.",
+                "min_dur": "Minimální doba trvání vsazení je 2 týdny.",
+                "max_dur": "Maximální doba trvání vsazení je 1 rok.",
+                "no_node": "Musíte zadat validátora.",
+                "val_end": "Delegační datum konce nesmí být delší než datum konce validátora.",
+                "amt": "Delegační částka musí být alespoň {0} AVAX."
+            },
+            "summary": {
+                "duration": "Doba trvání vsazení",
+                "reward": "Odhadovaná odměna",
+                "fee": "Poplatek",
+                "warn": "Jestliže vsazujete poprvé, začínejte v malém. Vsazené tokeny budou až do konce vsazovacího období zablokovány."
+            },
+            "confirm": "Potvrdit",
+            "submit": "Odeslat",
+            "cancel": "Zrušit",
+            "success": {
+                "title": "Delegační transakce byla odeslána.",
+                "desc": "Jestliže bude transakce přijata, Vaše tokeny budou zablokovány k vsazování. Své zablokované tokeny a odměny obdržíte po skončení Vašeho období vsazování.",
+                "status": "Stav"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Pokročilé",
+        "import": {
+            "title": "Import řetězce",
+            "desc": "Jestliže máte prostředky uvízlé v nezdařené řetězcové transakci, můžete jejich import dokončit zde.",
+            "submit_x": "Import X",
+            "submit_p": "Import P"
+        }
+    },
+    "logout": {
+        "button": "Odhlásit se",
+        "button_conf": "ODHLÁSIT SE",
+        "button_cancel": "Zrušení",
+        "confirmation": "Opravdu se chcete odhlásit?",
+        "confirmation_message": "Tato peněženka a její klíče budou zapomenuty."
+    },
+    "keystore": {
+        "title": "Soubor úložiště klíčů",
+        "button": "Zvolte soubor"
+    },
+    "transactions": {
+        "notx": "V průzkumníku nebyly pro tuto adresu nalezeny žádné transakce.",
+        "loading": "Načítání historie transakcí..",
+        "warn_loading": "Tento seznam může být neúplný a nefunkční.",
+        "error_api": "Průzkumník API nebyl nalezen",
+        "error_api_desc": "Pro zobrazení historie transakcí musíte pro tuto síť poskytnout API AVA Explorer."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adresa",
+            "copy": "Kopírovat adresu"
+        },
+        "print": {
+            "title": "Náhled před tiskem",
+            "submit": "Vytisknout"
+        },
+        "keystore": {
+            "title": "Aktualizujte soubor úložiště klíčů",
+            "desc": "Upgradovali jsme specifikace souboru úložiště klíčů. Stáhněte si nový soubor úložiště klíčů a znovu se připojte k peněžence.",
+            "logout": "Odhlášení a opětovný přístup"
+        },
+        "mainnet": {
+            "title": "Mainnet Address",
+            "desc": "Vaše adresa v síti je:"
+        },
+        "mnemonic": {
+            "title": "Klíčová fráze"
+        },
+        "activateWallet": {
+            "title": "Aktivujte peněženku",
+            "desc": "K dispozici je aktivní peněženka. Zadejte své heslo pro přístup.",
+            "submit": "Přístup do peněženky",
+            "cancel": "Získejte přístup do jiné peněženky",
+            "cancel2": "(Předchozí peněženka bude zapomenuta.)",
+            "err1": "Neplatné heslo.",
+            "err2": "Nelze číst data peněženky."
+        }
+    },
+    "nav": {
+        "access": "Získat přístup k peněžence",
+        "create": "Vytvořit novou peněženku"
+    }
+}

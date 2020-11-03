@@ -1,0 +1,428 @@
+{
+    "password": "Wagwoord",
+    "password_confirm": "Bevestig Wagwoord",
+    "private_key": "Privaat Sleutel",
+    "address": "Adres",
+    "add_pk": "Voeg Privaat Sleutel by",
+    "home": {
+        "desc": "Avalanche Wallet is 'n eenvoudige, veilige, nie-toesighouende beursie vir die berging van Avalanche-bates.",
+        "access": {
+            "title": "Welkom terug!",
+            "desc": "Kry 'toegang' tot jou bestaande Avalanche beursie hier.",
+            "submit": "Kry toegang tot beursie"
+        },
+        "create": {
+            "title": "Nuut aan Avalanche Wallet?",
+            "desc": "'Skep' 'n nuwe beursie om Avalanche-bates te stuur, ontvang en omruil.",
+            "submit": "Skep Nuwe Beursie"
+        }
+    },
+    "network": {
+        "status1": "Besig om te konnekteer...",
+        "status2": "Ontkoppel",
+        "title": "Netwerke",
+        "title2": "Voeg Pasgemaakte Netwerk By",
+        "title3": "Wysig Netwerketwerk",
+        "custom": "Voeg Pasgemaakte",
+        "cancel": "Kanselleer",
+        "add": "Voeg Netwerk By"
+    },
+    "access": {
+        "title": "Hoe wil u toegang tot u beursie kry?",
+        "create": "Het u nie 'n beursie nie?",
+        "but_mnemonic": "Mnemoniese Sleutelfrase",
+        "but_keystore": "Sleutelstoorlêer",
+        "cancel": "Kanselleer",
+        "json_error": "Kan nie JSON-lêer ontleed nie.",
+        "keystore_error": "Hierdie sleutelstoorweergawe word nie ondersteun nie.",
+        "password_error": "Ongeldige Wagwoord.",
+        "mnemonic": {
+            "title": "Voer u MNEMONIC-frase in\n",
+            "subtitle": "Druk 'SPACE' na elke suksesvolle woordvoeging.",
+            "submit": "Kry Toegang tot Beursie",
+            "cancel": "Kanselleer",
+            "error": "Ongeldige sleutelfrase. U frase moet 24 woorde wees wat deur een spasie geskei is."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portefeulje",
+            "manage": "Bestuur",
+            "send": "Stuur",
+            "earn": "Verdien",
+            "advanced": "Gevorderd"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "U het geen versamelstukke nie."
+        }
+    },
+    "create": {
+        "generate": "Genereer 'n nuwe frase om u Avalanche Wallet op te stel.",
+        "but_have": "Het u alreeds a beursie?",
+        "submit": "Genereer Sleutelfrase",
+        "cancel": "Kanselleer",
+        "mnemonic_title": "Hierdie is u sleutelfrase.",
+        "mnemonic_desc": "Gebruik hierdie 24 woorde in volgorde om u Avalanche Wallet te herstel",
+        "attention": "Aandag!",
+        "warning": "Stoor hierdie sleutelfrase op 'n veilige plek. Enigiemand met hierdie sleutelfrase kan toegang tot u Avalanche Wallet verkry. Daar is geen manier om verlore sleutelfrases te herstel nie.",
+        "confirm": "Ek het my sleutelwoord op 'n veilige plek neergeskryf.",
+        "regenerate": "Genereer Weereens",
+        "success_title": "Baie geluk!",
+        "success_desc": "Dit is tyd om toegang tot u Avalanche Wallet te kry.",
+        "success_submit": "Kry Toegang tot Beursie",
+        "verify": "Verifieer",
+        "verifytitle": "Verifieer Mnemoniek",
+        "verify_desc": "Vul Mnemoniesefrase hieronder in",
+        "error_number": "Oeps, dit lyk asof u vergeet het om nommer in te vul",
+        "error_word": "Die mnemoniese frase wat u vir woord ingevoer het, stem nie ooreen met die werklike frase nie."
+    },
+    "top": {
+        "title1": "Afgeleide Avalanche-beursie-adres",
+        "title2": "Saldo",
+        "title3": "Subnet",
+        "title4": "Netwerk",
+        "nftcol": "NFTs",
+        "nftempty": "U het geen tekens wat nie aanpasbaar is nie versamel.",
+        "locked": "Gesluit",
+        "info2": "Ek het muntstukke in die Teken Uitverkoping gekoop. Waar is my AVAX?",
+        "info2_desc": "Hierdie beursie is aan die Avalanche Everest-toetsnetwerk gekoppel. U aankoop sal in die beursie verskyn na die bekendstelling van Avalanche Mainnet.",
+        "hover1": "Bekyk Adres-QR-kode",
+        "hover2": "Druk",
+        "hover3": "Kopieer",
+        "hover4": "Besigtig Mainnet-adres",
+        "balance": {
+            "show": "Toon uiteensetting",
+            "hide": "Versteek Uiteensetting",
+            "available": "Beskikbaar",
+            "locked": "Gesluit",
+            "locked_stake": "Belegbaar Gesluit",
+            "stake": "Insetting",
+            "collectibles": "Versamelstukke"
+        },
+        "address": {
+            "derived": "Afgeleide Avalanche-beursie-adres",
+            "desc": "Dit is u adres om fondse te ontvang. U adres sal na elke deposito verander."
+        }
+    },
+    "transfer": {
+        "title": "Stuur",
+        "no_cash": "U moet 'n bate in u beursie hê om 'n transaksie uit te reik.",
+        "faucet": "Het u ons kraan gekontroleer?",
+        "to": "Na Adres",
+        "fees": "Fooi",
+        "fee_tx": "Transaksiefooi",
+        "advanced": "Gevorderd",
+        "adv_change": "Verander Adres",
+        "send": "Stuur Transaksie",
+        "summary": "Transaksie Opsomming",
+        "disconnected": "Kan nie bates stuur nie. Van die netwerk ontkoppel.",
+        "success_title": "Transaksie Gestuur",
+        "success_msg": "U het u transaksie suksesvol gestuur.",
+        "error_title": "Kon nie transaksie stuur nie",
+        "error_msg": "Kon nie transaksie stuur nie."
+    },
+    "keys": {
+        "title": "My Sleutels",
+        "button1": "Onthou Sleutels",
+        "button2": "TREK SLEUTELS IN",
+        "button3": "OMSKEP SLEUTELS",
+        "subtitle": "Aktiewe sleutel",
+        "remember_key_button": "ONTHOU",
+        "remember_key_desc": "Kodeer u beursie met 'n wagwoord en stoor dit veilig in hierdie webblaaier.",
+        "remember_key_check": "Onthou Sleutels",
+        "remember_key_info": "U kan later met hierdie wagwoord toegang tot u beursie kry met 'n wagwoord.",
+        "export_key_button": "OMSKEP BEURSIE",
+        "export_key_title": "Omskep Sleutels",
+        "export_key_desc": "Voer 'n wagwoord in om u privaat sleutels in 'n lêer te kodeer. U kan later hierdie lêer en u wagwoord gebruik om toegang tot u beursie te kry.",
+        "export_key_info": "{0} Sleutels Geselekteer.",
+        "export_placeholder1": "Wagwoord",
+        "export_placeholder2": "Bevestig Wagwoord",
+        "empty": "Hierdie sleutel het nie 'n saldo nie.",
+        "import_key_button": "TREK SLEUTEL IN",
+        "import_key_title": "Trek Sleutels In",
+        "import_key_desc": "Voeg bykomende sleutels by om saam met u beursie te gebruik.",
+        "import_key_option1": "MNEMONIESE FRASE",
+        "import_key_option2": "SLEUTELSTOORLÊER",
+        "import_key_success_title": "Sleutel Bygevoeg",
+        "import_key_success_msg": "Privaatsleutel en bates is by die beursie gevoeg.",
+        "tooltip": "Hierdie sleutel sal vergeet word as u die webblaaier verfris.",
+        "view_key": "Bekyk Sleutelfrase",
+        "export_key": "Omskep Sleutels",
+        "hd_addresses": "HD-adresse",
+        "remove_key": "Verwyder Sleutel",
+        "activate_key": "Aktiveer Sleutel",
+        "remove_success_title": "Sleutel Verwyder",
+        "remove_success_msg": "Privaatsleutel en bates is vanuit die beursie verwyder.",
+        "password_validation": "Wagwoord moet minstens 9 karakters lank wees.",
+        "password_validation2": "Wagwoord stem nie ooreen nie."
+    },
+    "portfolio": {
+        "assets": "Bates",
+        "assets1": "Tekens",
+        "assets2": "Versamelstukke",
+        "search": "Soek Bates",
+        "name": "Naam",
+        "send": "Stuur",
+        "balance": "Saldo",
+        "error_network": "Kan nie bates stuur nie. Van die netwerk ontkoppel.",
+        "nobalance": "U het geen bates nie",
+        "nobalance_nft": "U het geen versamelstukke nie.",
+        "noaddresses": "U het geen vorige adresse nie."
+    },
+    "earn": {
+        "title": "Verdien",
+        "desc": "U kan meer AVAX verdien deur u bestaande tekens in te sit.",
+        "subtitle1": "Valideer",
+        "subtitle2": "Delegeer",
+        "subtitle3": "Kruiskettingoordrag",
+        "subtitle4": "Geskatte belonings",
+        "warning_1": "U moet ten minste {0} AVAX aan die P-ketting hê om 'n valideerder te word.",
+        "warning_2": "U moet ten minste {0} AVAX aan die P-ketting hê om 'n afgevaardigde te word.",
+        "validate_card": {
+            "title": "Valideer",
+            "desc": "U het 'n Avalanche-nodus waarmee u wil 'n insetting maak.",
+            "submit": "Voeg Valideerder by"
+        },
+        "delegate_card": {
+            "title": "Delegeer",
+            "desc": "U besit nie 'n Avalanch-nodus nie, maar u 'm ander nodus gebruik om 'n insetting te maak.",
+            "submit": "Voeg Afgevaardigde by"
+        },
+        "transfer_card": {
+            "title": "Kruiskettingoordrag",
+            "desc": "Om ' insetting te maak moet AVAX in die P-ketting wees. Dra tekens oor tussen X en P.",
+            "submit": "Oordrag"
+        },
+        "rewards_card": {
+            "title": "Geskatte belonings",
+            "desc": "Bekyk ingesttebelonings wat u sal ontvang.",
+            "submit": "Bekyk Belonings"
+        },
+        "transfer": {
+            "source": "Bron Ketting",
+            "destination": "Bestemmingsketting",
+            "balance": "Saldo",
+            "amount": "Dra bedrag oor",
+            "fee": "Fooi",
+            "confirm": "Bevestig",
+            "submit": "Dra oor",
+            "cancel": "Kanselleer",
+            "err_import": "Kon nie intrek nie",
+            "err_desc": "Kon nie u tekens in die bestemmingsketting in trek nie. Probeer weer om in te trek.",
+            "err_submit": "Aktiveer Intrekking",
+            "success": {
+                "title": "Oordrag Voltooi",
+                "export": "Skakel Transaksie-ID Om:",
+                "import": "Trek Transaksies-ID In:",
+                "message": "U het suksesvol tussen kettings oorgedra.",
+                "back": "Terug na Verdien"
+            }
+        },
+        "rewards": {
+            "total": "Totale belonings",
+            "validation": "Validasie",
+            "delegation": "Delegasie",
+            "empty": "U het geen belonings wat hangende is nie.",
+            "row": {
+                "start": "Begin",
+                "end": "Einde",
+                "completed": "Voltooi",
+                "stake": "Insetting",
+                "reward": "Potensiële beloning"
+            }
+        },
+        "validate": {
+            "label_1": "Nodus-ID",
+            "duration": {
+                "label": "Insettingstydperk",
+                "desc": "Die tydsduur waarin u tekens gesluit sal word om te belê.",
+                "start": "Begindatum en Tyd",
+                "end": "Einddatum en Tyd"
+            },
+            "amount": {
+                "label": "Beleggingsbedrag",
+                "desc": "Die hoeveelheid AVAX wat gesluit moet word om in te sit."
+            },
+            "fee": {
+                "label": "Delegasie fooi",
+                "desc": "U sal hierdie % van die belonings op u nodus eis."
+            },
+            "reward": {
+                "label": "Beloningsadres",
+                "desc": "Waarheen om die belonings te stuur.",
+                "chip_1": "Gebruik hierdie beursie",
+                "chip_2": "Aangepaste adres"
+            },
+            "summary": {
+                "max_del": "Maksimum Delegasiebedrag",
+                "max_del_tooltip": "Maksimum bedrag wat aan hierdie valideerder gedelegeer kan word.",
+                "duration": "Insettingstydperk",
+                "rewards": "Geskatte belonings",
+                "warn": "Begin dit klein as dit u eerste keer is. Ingesette tekens word gesluit tot aan die einde van die insettingstydperk."
+            },
+            "confirmation": {
+                "id": "Nodus-ID",
+                "amount": "Insettingsbedrag",
+                "start": "Begindatum",
+                "end": "Einddatum",
+                "fee": "Delegasiefooi",
+                "reward": "Beloningsadres",
+                "type_local": "Hierdie Beursie",
+                "type_custom": "Pasgemaakte"
+            },
+            "confirm": "Bevestig",
+            "submit": "Indien",
+            "cancel": "Kanselleer",
+            "success": {
+                "title": "U bevestigingstransaksie is gestuur.",
+                "desc": "As die transaksie aanvaar word, sal u tekens vir insetting gesluit word. U sal u geslote tekens plus die belonings ontvang sodra u insettingstydperk verby is.",
+                "status": "Staat"
+            },
+            "errs": {
+                "date": "Begindatum moet in die toekoms wees en einddatum moet na begindatum wees.",
+                "amount": "Insettingsbedrag moet tenminste {0} AVAX wees",
+                "id": "Ongeldige Nodus-ID. Moet begin met \"NodeID-\"",
+                "address": "Ongeldige beloningsadresadres."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Kies 'n nodus om te delegeer",
+                "search": "Soek Nodus-ID",
+                "id": "Nodus-ID",
+                "val_stake": "Valideerder se Insetting",
+                "aval_stake": "Beskikbaar",
+                "aval_stake_tip": "Hoeveel meer kan aan hierdie valideerder gedelegeer word.",
+                "users_tip": "Aantal Bekragters",
+                "end": "Eindtyd",
+                "up": "Looptyd",
+                "up_tip": "Ten opsigte van die nodus waaraan hierdie beursie gekoppel is.",
+                "fee": "Fooi",
+                "empty": {
+                    "title": "Geen Valideerders is gevind nie",
+                    "desc": "Valideerders moet aktiewe insettings maak om gevind te word."
+                }
+            },
+            "node": {
+                "selected": "Kies Nodus",
+                "fee": "Delegasie fooi",
+                "start": "Valideerder Begindatum",
+                "end": "Valideerder Einddatum"
+            },
+            "form": {
+                "period": {
+                    "label": "Beleggingstydperk",
+                    "desc": "Die tydsduur waarin u tekens gesluit sal word om in te sit.",
+                    "start": "Begindatum en Tyd",
+                    "end": "Einddatum en Tyd"
+                },
+                "amount": {
+                    "label": "Insettingsbedrag",
+                    "desc": "Die hoeveelheid AVAX wat gesluit moet word om in te sit.",
+                    "desc2": "Die beskikbare delegasiebedrag vir hierdie nodus is {0} AVAX"
+                },
+                "reward": {
+                    "label": "Beloningsadres",
+                    "desc": "Waarheen om die belonings te stuur.",
+                    "chip_1": "Gebruik hierdie beursie",
+                    "chip_2": "Aangepaste adres"
+                }
+            },
+            "confirmation": {
+                "node": "Nodus-ID",
+                "amount": "Insettingsbedrag",
+                "start": "Begindatum",
+                "end": "Einddatum",
+                "reward": "Beloningsadres"
+            },
+            "errs": {
+                "start_now": "Begintyd moet na huidige tyd wees.",
+                "start_end": "Begindatum moet in die toekoms wees en einddatum moet na begindatum wees.",
+                "invalid_addr": "Ongeldige adresformaat. U adres moet met \"P-\" begin",
+                "no_addr": "U moet 'n adres verskaaf om afvaardigingsbelonings te ontvang.",
+                "min_dur": "Die minimum beleggingsduur is 2 weke.",
+                "max_dur": "Maksimum insettingsduur is 2 weke.",
+                "no_node": "U moet 'n valideerder spesifiseer.",
+                "val_end": "Die einddatum van die delegasie kan nie langer as die valideerder se einddatum wees nie.",
+                "amt": "Delegasiebedrag moet tenminste {0} AVAX wees."
+            },
+            "summary": {
+                "duration": "Insettingstydperk",
+                "reward": "Geskatte belonings",
+                "fee": "Fooi",
+                "warn": "As u transaksie aanvaar is sal u tekens vir insetting gesluit wee. Ingesette tekens word gesluit tot aan die einde van die insettingstydperk."
+            },
+            "confirm": "Bevestig",
+            "submit": "Indien",
+            "cancel": "Kanselleer",
+            "success": {
+                "title": "Delegasietransaksie gestuur.",
+                "desc": "As die transaksie aanvaar word, sal u tekens vir insetting gesluit word. U sal u geslote tekens plus die belonings ontvang sodra u insettingstydperk verby is.",
+                "status": "Staat"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Gevorderd",
+        "import": {
+            "title": "Trek van Ketting in",
+            "desc": "As u fondse het wat in 'n mislukte kettingoorbrenging vassit, kan u die intrek daarvan hier voltooi.",
+            "submit_x": "Trek X In",
+            "submit_p": "Trek P In"
+        }
+    },
+    "logout": {
+        "button": "Teken Uit",
+        "button_conf": "TEKEN UIT",
+        "button_cancel": "Kanselleer",
+        "confirmation": "Is u seker dat u wil uitteken?",
+        "confirmation_message": "Hierdie beursie en sy sleutels sal vergeet word."
+    },
+    "keystore": {
+        "title": "Sleutelstoorlêer",
+        "button": "Kies Lêer"
+    },
+    "transactions": {
+        "notx": "Geen transaksies is vir hierdie adres op die explorer gevind nie.",
+        "loading": "Laai tans transaksiegeskiedenis..",
+        "warn_loading": "Hierdie lys is miskien onvolledig en nie in orde nie.",
+        "error_api": "Explorer API nie gevind nie",
+        "error_api_desc": "U moet 'n AVA Explorer API vir hierdie netwerk verskaf om die transaksiegeskiedenis te sien."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adres",
+            "copy": "Kopieer Adres"
+        },
+        "print": {
+            "title": "Druk Voorskou",
+            "submit": "Druk"
+        },
+        "keystore": {
+            "title": "Opdateer Sleutelstoorlêer",
+            "desc": "Ons het sleutelstoorlêerspesifikasies opgegradeerde. Laai asseblief u nuwe sleutelstoorlêer af en kry weereens toegang tot die beursie.",
+            "logout": "Teken af en Kry Weereens Toegang"
+        },
+        "mainnet": {
+            "title": "Mainnet-adres",
+            "desc": "U Mainnet-adres is:"
+        },
+        "mnemonic": {
+            "title": "Sleutelfrase"
+        },
+        "activateWallet": {
+            "title": "Aktiveer Beursie",
+            "desc": "Daar is 'n aktiewe beursie. Voer u wagwoord in om toegang daartoe te verkry.",
+            "submit": "Kry Toegang tot Beursie",
+            "cancel": "Kry toegang tot 'n ander beursie",
+            "cancel2": "(Vorige beursie sal vergeet word.)",
+            "err1": "Ongeldige Wagwoord.",
+            "err2": "Kan nie beursiedata lees nie."
+        }
+    },
+    "nav": {
+        "access": "Kry Toegang tot Beursie",
+        "create": "Skep Nuwe Beursie"
+    }
+}

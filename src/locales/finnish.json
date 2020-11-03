@@ -1,0 +1,428 @@
+{
+    "password": "Salasana",
+    "password_confirm": "Vahvista Salasana",
+    "private_key": "Private Key",
+    "address": "Osoite",
+    "add_pk": "Lisää Private Key",
+    "home": {
+        "desc": "Avalanche-lompakko on yksinkertainen, turvallinen ja vastuuvapaa lompakko Avalanche-varojen säilyttämiseen.",
+        "access": {
+            "title": "Tervetuloa Takaisin!",
+            "desc": "'Tarkastele' nykyistä Avalanche-lompakkoasi täällä.",
+            "submit": "Tarkastele Lompakkoa"
+        },
+        "create": {
+            "title": "Uusi Avalanche Lompakossa?",
+            "desc": "'Luo' uusi lompakko lähettääksesi, vastaanottaaksesi ja vaihtaaksesi Avalanche-varojasi.",
+            "submit": "Luo Uusi Lompakko"
+        }
+    },
+    "network": {
+        "status1": "Luodaan yhteyttä...",
+        "status2": "Yhteys Katkaistu",
+        "title": "Verkot",
+        "title2": "Lisää Mukautettu Verkko",
+        "title3": "Muokkaa Verkkoa",
+        "custom": "Lisää Mukautettu",
+        "cancel": "Peruuta",
+        "add": "Lisää Verkko"
+    },
+    "access": {
+        "title": "Kuinka haluat päästä käsiksi lompakkoosi?",
+        "create": "Eikö sinulla ole lompakkoa?",
+        "but_mnemonic": "Muistin Avainlause",
+        "but_keystore": "Avainvarastotiedosto",
+        "cancel": "Peruuta",
+        "json_error": "JSON-tiedoston jäsentäminen epäonnistui.",
+        "keystore_error": "Tätä avainvarastoversiota ei tueta.",
+        "password_error": "Väärä Salasana.",
+        "mnemonic": {
+            "title": "Anna MUISTILAUSE",
+            "subtitle": "Paina 'VÄLILYÖNTI' jokaisen oikean sanan jälkeen.",
+            "submit": "Tarkastele Lompakkoa",
+            "cancel": "Peruuta",
+            "error": "Väärä avainlauseke. Lausekkeen tulee olla 24 sanaa pitkä ja erotettu yhdellä välilyönnillä."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfolio",
+            "manage": "Hallinnoi",
+            "send": "Lähetä",
+            "earn": "Ansaitse",
+            "advanced": "Edistynyt"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Sinulla ei ole keräilyesineitä."
+        }
+    },
+    "create": {
+        "generate": "Luo uusi avainlauseke Avalanche-lompakon määrittämiseksi.",
+        "but_have": "Onko sinulla jo lompakko?",
+        "submit": "Luo Avainlauseke",
+        "cancel": "Peruuta",
+        "mnemonic_title": "Tämä on avainlauseesi.",
+        "mnemonic_desc": "Käytä näitä 24 sanaa peräkkäin palauttaaksesi Avalanche-lompakon",
+        "attention": "Huomio!",
+        "warning": "Säilytä tämä avainlause turvallisessa paikassa. Kuka tahansa salasanan tietävä henkilö voi käyttää Avalanche-lompakkoasi. Kadonneita avainlauseita ei ole mahdollista palauttaa.",
+        "confirm": "Kirjoitin avainsanani turvalliseen paikkaan.",
+        "regenerate": "Elvytä",
+        "success_title": "Onneksi Olkoon!",
+        "success_desc": "On aika käyttää Avalanche-lompakkoasi.",
+        "success_submit": "Tarkastele Lompakkoa",
+        "verify": "Vahvista",
+        "verifytitle": "Vahvista Muistilauseke",
+        "verify_desc": "Anna Muistilauseke Alapuolella",
+        "error_number": "Hups, näyttää siltä, että unohdit täyttää numeron",
+        "error_word": "Sanalle kirjoittamasi muistilauseke ei vastaa todellista ilmausta."
+    },
+    "top": {
+        "title1": "Johdettu Avalanche-lompakon osoite",
+        "title2": "Saldo",
+        "title3": "Aliverkko",
+        "title4": "Verkko",
+        "nftcol": "NFT:t",
+        "nftempty": "Et ole kerännyt yhtään ei-korvattavaa rahaketta.",
+        "locked": "Lukittu",
+        "info2": "Ostin kolikoita Token Sale -sivustolta. Missä AVAXINI on?",
+        "info2_desc": "Tämä lompakko on kytketty Avalanche Everest -testiverkkoon. Ostoksesi näkyvät lompakossa Avalanche Mainnetin käynnistämisen jälkeen.",
+        "hover1": "Näytä Osoitteen QR-koodi",
+        "hover2": "Tulosta",
+        "hover3": "Kopioi",
+        "hover4": "Näytä Mainnet-osoite",
+        "balance": {
+            "show": "Näytä Erittely",
+            "hide": "Piilota Erittely",
+            "available": "Saatavilla",
+            "locked": "Lukittu",
+            "locked_stake": "Lukittu Panostettava",
+            "stake": "Panostaminen",
+            "collectibles": "Keräilyesineet"
+        },
+        "address": {
+            "derived": "Johdettu Avalanche-lompakon osoite",
+            "desc": "Tämä on osoitteesi varojen vastaanottamiseksi. Osoitteesi muuttuu jokaisen talletuksen jälkeen."
+        }
+    },
+    "transfer": {
+        "title": "Lähetä",
+        "no_cash": "Sinulla on oltava varoja maksun suorittamiseksi.",
+        "faucet": "Oletko tarkistanut hanaasi?",
+        "to": "Osoitteeseen",
+        "fees": "Maksut",
+        "fee_tx": "Palvelumaksu",
+        "advanced": "Edistynyt",
+        "adv_change": "Muuta Osoite",
+        "send": "Lähetä Maksu",
+        "summary": "Yhteenveto",
+        "disconnected": "Varojen lähettäminen epäonnistui. Katkaise verkkoyhteys.",
+        "success_title": "Maksu Lähetetty",
+        "success_msg": "Olet lähettänyt maksun onnistuneesti.",
+        "error_title": "Maksun lähettämisessä Tapahtui Virhe",
+        "error_msg": "Maksun lähettäminen epäonnistui."
+    },
+    "keys": {
+        "title": "Avaimeni",
+        "button1": "Muista Avaimet",
+        "button2": "TUO AVAIMET",
+        "button3": "VIE AVAIMET",
+        "subtitle": "Aktiivinen Avain",
+        "remember_key_button": "MUISTA",
+        "remember_key_desc": "Turvaa lompakko salasanalla ja säilytä turvallisesti tässä selaimessa.",
+        "remember_key_check": "Muista Avaimet",
+        "remember_key_info": "Voit myöhemmin käyttää lompakkoasi salasanan avulla tässä selaimessa.",
+        "export_key_button": "VIE LOMPAKKO",
+        "export_key_title": "Vie Avaimet",
+        "export_key_desc": "Anna salasana salataksesi yksityiset avaimesi tiedostoon. Voit käyttää tätä tiedostoa ja salasanaasi myöhemmin lompakkosi tarkastelemiseksi.",
+        "export_key_info": "{0} avainta valittu.",
+        "export_placeholder1": "Salasana",
+        "export_placeholder2": "Vahvista Salasana",
+        "empty": "Tällä avaimella ei ole saldoa.",
+        "import_key_button": "TUO AVAIN",
+        "import_key_title": "Tuo Avaimet",
+        "import_key_desc": "Lisää lisäavaimia, joita voit käyttää lompakon kanssa.",
+        "import_key_option1": "MUISTILAUSEKE",
+        "import_key_option2": "AVAINVARASTOTIEDOSTO",
+        "import_key_success_title": "Avain Lisätty",
+        "import_key_success_msg": "Lompakkoon on lisätty yksityinen avain ja varat.",
+        "tooltip": "Avain unohdetaan automaattisesti, kun uudelleenlataat sivun.",
+        "view_key": "Tarkastele Avainlauseketta",
+        "export_key": "Vie Avain",
+        "hd_addresses": "HD Osoitteet",
+        "remove_key": "Poista Avain",
+        "activate_key": "Aktivoi Avain",
+        "remove_success_title": "Avain Poistettu",
+        "remove_success_msg": "Yksityinen avain ja varat on poistettu lompakostasi.",
+        "password_validation": "Salasanan on oltava ainakin 9 merkkiä pitkä.",
+        "password_validation2": "Salasanat eivät täsmää."
+    },
+    "portfolio": {
+        "assets": "Varat",
+        "assets1": "Rahakkeet",
+        "assets2": "Keräilyesineet",
+        "search": "Etsi Varoja",
+        "name": "Nimi",
+        "send": "Lähetä",
+        "balance": "Saldo",
+        "error_network": "Varojen näyttäminen epäonnistui. Katkaise verkkoyhteys.",
+        "nobalance": "Sinulle ei ole varoja",
+        "nobalance_nft": "Sinulla ei ole keräilyesineitä.",
+        "noaddresses": "Sinulla ei ole aiempia osoitteita."
+    },
+    "earn": {
+        "title": "Ansaitse",
+        "desc": "Voit tienata enemmän AVAXIA panostamalla olemassa olevat rahakkeet.",
+        "subtitle1": "Vahvista",
+        "subtitle2": "Delegoi",
+        "subtitle3": "Cross Chain-Siirto",
+        "subtitle4": "Arvioidut Palkkiot",
+        "warning_1": "Sinulla on oltava vähintään {0} AVAXIA P-ketjussa, jotta voit tulla vahvistajaksi.",
+        "warning_2": "Sinulla on oltava vähintään {0} AVAXIA P-ketjussa, jotta voit tulla delegoijaksi.",
+        "validate_card": {
+            "title": "Vahvista",
+            "desc": "Sinulla on Avalanche-node, johon haluat panostaa.",
+            "submit": "Lisää Vahvistaja"
+        },
+        "delegate_card": {
+            "title": "Delegoi",
+            "desc": "Et omista Avalanche-noodia, mutta haluat asettaa panoksen toisella noodilla.",
+            "submit": "Lisää Delegoija"
+        },
+        "transfer_card": {
+            "title": "Cross Chain-Siirto",
+            "desc": "Panostaminen vaatii AVAXIN P-ketjussa. Siirrä rahakkeita X:n ja P:n välillä.",
+            "submit": "Siirrä"
+        },
+        "rewards_card": {
+            "title": "Arvioidut Palkkiot",
+            "desc": "Katso saamasi panospalkinnot.",
+            "submit": "Tarkastele Palkkioita"
+        },
+        "transfer": {
+            "source": "Lähdeketju",
+            "destination": "Kohdeketju",
+            "balance": "Saldo",
+            "amount": "Siirtosumma",
+            "fee": "Maksu",
+            "confirm": "Vahvista",
+            "submit": "Siirrä",
+            "cancel": "Peruuta",
+            "err_import": "Tuonti Epäonnistui",
+            "err_desc": "Tunnustesi viennissä kohdeketjuun tapahtui virhe. Yritä vientiä uudelleen.",
+            "err_submit": "Laukaise Tuonti",
+            "success": {
+                "title": "Siirto Valmis",
+                "export": "Vientitapahtuman tunnus:",
+                "import": "Tuontitapahtuman tunnus:",
+                "message": "Olet onnistuneesti siirtänyt ketjujen välillä.",
+                "back": "Takaisin kohteeseen Ansaitse"
+            }
+        },
+        "rewards": {
+            "total": "Palkkiot Yhteensä",
+            "validation": "Vahvistus",
+            "delegation": "Delegointi",
+            "empty": "Sinulla ei ole odottavia palkintoja.",
+            "row": {
+                "start": "Aloita",
+                "end": "Päätä",
+                "completed": "Valmis",
+                "stake": "Panos",
+                "reward": "Mahdollinen Palkkio"
+            }
+        },
+        "validate": {
+            "label_1": "Node ID",
+            "duration": {
+                "label": "Panosjakso",
+                "desc": "Aika, joksi tunnuksesi lukitaan panostamista varten.",
+                "start": "Aloituspäivämäärä & Aika",
+                "end": "Päättymispäivämäärä & Aika"
+            },
+            "amount": {
+                "label": "Panossumma",
+                "desc": "Lukittavan AVAXIN määrä panostamista varten."
+            },
+            "fee": {
+                "label": "Delegointimaksu",
+                "desc": "Lunasta tämä prosentti noodisi edustajilta."
+            },
+            "reward": {
+                "label": "Palkkion Osoite",
+                "desc": "Panospalkintojen lähetysosoite.",
+                "chip_1": "Käytä tätä lompakkoa",
+                "chip_2": "Mukautettu Osoite"
+            },
+            "summary": {
+                "max_del": "Suurin Delegointimaksu",
+                "max_del_tooltip": "Enimmäismäärä, joka voidaan delegoida tälle vahvistajalle.",
+                "duration": "Panosjakso",
+                "rewards": "Arvioidut Palkkiot",
+                "warn": "Jos panostat ensimmäistä kertaa, aloita pienellä summalla. Panostetut rahakkeet lukitaan panostamisjakson loppuun asti."
+            },
+            "confirmation": {
+                "id": "Node ID",
+                "amount": "Panossumma",
+                "start": "Aloituspäivämäärä",
+                "end": "Päättymispäivämäärä",
+                "fee": "Delegointimaksu",
+                "reward": "Palkkion Osoite",
+                "type_local": "Tämä lompakko",
+                "type_custom": "Mukautettu"
+            },
+            "confirm": "Vahvista",
+            "submit": "Lähetä",
+            "cancel": "Peruuta",
+            "success": {
+                "title": "Vahvistustapahtumas on lähetetty.",
+                "desc": "Jos tapahtuma hyväksytään, rahakkeet lukitaan panostamista varten. Saat lukitut rahakkeet ja palkkiot panosjaksosi päätyttyä.",
+                "status": "Tila"
+            },
+            "errs": {
+                "date": "Aloituspäivän on oltava tulevaisuudessa ja lopetuspäivän on oltava alkamispäivän jälkeen.",
+                "amount": "Panoksen määrän on oltava vähintään {0} AVAXIA",
+                "id": "Väär Node ID. Tämän tulee alkaa \"NodeID-\"",
+                "address": "Väärä palkkio-osoite."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Valitse delegoitava noodi",
+                "search": "Etsi Node ID",
+                "id": "Node ID",
+                "val_stake": "Vahvistajapanos",
+                "aval_stake": "Saatavilla",
+                "aval_stake_tip": "Kuinka paljon enemmän tälle vahvistajalle voidaan delegoida.",
+                "users_tip": "Delegoijien Lukumäärä",
+                "end": "Päättymisaika",
+                "up": "Käyttöaste",
+                "up_tip": "Suhteessa noodiin, johon tämä lompakko on kytketty.",
+                "fee": "Maksu",
+                "empty": {
+                    "title": "Vahvistajia Ei Löytynyt",
+                    "desc": "Vahvistajien tulee panostaa aktiivisesti heidän löytymisekseen."
+                }
+            },
+            "node": {
+                "selected": "Valittu Noodi",
+                "fee": "Delegointimaksu",
+                "start": "Vahvistajan Aloituspäivämäärä",
+                "end": "Vahvistajan Päättymispäivämäärä"
+            },
+            "form": {
+                "period": {
+                    "label": "Panosjakso",
+                    "desc": "Aika, joksi tunnuksesi lukitaan panostamista varten.",
+                    "start": "Aloituspäivämäärä & Aika",
+                    "end": "Päättymispäivämäärä & Aika"
+                },
+                "amount": {
+                    "label": "Panossumma",
+                    "desc": "Lukittavan AVAXIN määrä panostamista varten.",
+                    "desc2": "Tämän noodin käytettävissä oleva delegointimäärä on {0} AVAXIA"
+                },
+                "reward": {
+                    "label": "Palkkion Osoite",
+                    "desc": "Panospalkintojen lähetysosoite.",
+                    "chip_1": "Käytä tätä lompakkoa",
+                    "chip_2": "Mukautettu Osoite"
+                }
+            },
+            "confirmation": {
+                "node": "Node ID",
+                "amount": "Panossumma",
+                "start": "Aloituspäivämäärä",
+                "end": "Päättymispäivämäärä",
+                "reward": "Palkkion Osoite"
+            },
+            "errs": {
+                "start_now": "Aloitusajan on oltava nykyisen ajan jälkeen.",
+                "start_end": "Aloituspäivän on oltava tulevaisuudessa ja lopetuspäivän on oltava alkamispäivän jälkeen.",
+                "invalid_addr": "Virheellinen osoitemuoto. Osoitteesi on aloitettava kirjaimella \"P-\"",
+                "no_addr": "Sinun on annettava osoite saadaksesi delegointipalkintoja.",
+                "min_dur": "Pienin panostuksen kesto on 2 viikkoa.",
+                "max_dur": "Suurin panostuksen kesto on 1 vuosi.",
+                "no_node": "Sinun on määritettävä vahvistaja.",
+                "val_end": "Delegaation lopetuspäivä ei voi olla pidempi kuin vahvistajan lopetuspäivä.",
+                "amt": "Valtuutuksen määrän on oltava vähintään {0} AVAXIA."
+            },
+            "summary": {
+                "duration": "Panoksen Kesto",
+                "reward": "Arvioitu Palkkio",
+                "fee": "Maksu",
+                "warn": "Jos panostat ensimmäistä kertaa, aloita pienellä summalla. Panostetut rahakkeet lukitaan panostamisjakson loppuun asti."
+            },
+            "confirm": "Vahvista",
+            "submit": "Lähetä",
+            "cancel": "Peruuta",
+            "success": {
+                "title": "Delegointitapahtuma on lähetetty.",
+                "desc": "Jos tapahtuma hyväksytään, rahakkeet lukitaan panostamista varten. Saat lukitut rahakkeet ja palkkiot panosjaksosi päätyttyä.",
+                "status": "Tila"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Edistynyt",
+        "import": {
+            "title": "Ketjutuonti",
+            "desc": "Jos varojasi on jumissa epäonnistuneessa ketjunsiirrossa, voit lopettaa niiden tuomisen täältä.",
+            "submit_x": "Tuo X",
+            "submit_p": "Tuo P"
+        }
+    },
+    "logout": {
+        "button": "Kirjaudu Ulos",
+        "button_conf": "KIRJAUDU ULOS",
+        "button_cancel": "Peruuta",
+        "confirmation": "Haluatko varmasti kirjautua ulos?",
+        "confirmation_message": "Tämä lompakko ja sen avaimet unohdetaan."
+    },
+    "keystore": {
+        "title": "Avainvarastotiedosto",
+        "button": "Valitse Tiedosto"
+    },
+    "transactions": {
+        "notx": "Tälle osoitteelle ei löytynyt tapahtumia exploresta.",
+        "loading": "Ladataan tapahtumahistoria ..",
+        "warn_loading": "Tämä luettelo saattaa olla epätäydellinen ja epäkunnossa.",
+        "error_api": "Explorer-sovellusliittymää ei löydy",
+        "error_api_desc": "Sinun on annettava tälle verkolle AVA Explorer -sovellusliittymä, jotta voit tarkastella tapahtumahistoriaa."
+    },
+    "modal": {
+        "qr": {
+            "title": "Osoite",
+            "copy": "Kopioi Osoite"
+        },
+        "print": {
+            "title": "Tulosta Esikatselu",
+            "submit": "Tulosta"
+        },
+        "keystore": {
+            "title": "Päivitä Keystore-tiedosto",
+            "desc": "Olemme päivittäneet avaimetalletiedoston tekniset tiedot. Lataa uusi avaimetalletiedosto ja käytä lompakkoa uudelleen.",
+            "logout": "Kirjaudu Ulos & Tarkastele Uudelleen"
+        },
+        "mainnet": {
+            "title": "Mainnet-osoite",
+            "desc": "Mainnet-osoitteesi on:"
+        },
+        "mnemonic": {
+            "title": "Avainlauseke"
+        },
+        "activateWallet": {
+            "title": "Aktivoi Lompakko",
+            "desc": "Aktiivinen lompakko on jo olemassa. Syötä salasanasi sen tarkastelemiseksi.",
+            "submit": "Tarkastele Lompakkoa",
+            "cancel": "Tarkastele toista lompakkoa",
+            "cancel2": "(Edellinen lompakko unohdetaan.)",
+            "err1": "Väärä Salasana.",
+            "err2": "Lompakon tietoja ei voi lukea."
+        }
+    },
+    "nav": {
+        "access": "Tarkastele Lompakkoa",
+        "create": "Luo Uusi Lompakko"
+    }
+}

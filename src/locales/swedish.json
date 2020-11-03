@@ -1,0 +1,428 @@
+{
+    "password": "Lösenord",
+    "password_confirm": "Bekräfta lösenord",
+    "private_key": "Privat Nyckel",
+    "address": "Adress",
+    "add_pk": "Lägg till Privat Nyckel",
+    "home": {
+        "desc": "Avalanche Wallet är en enkel, säker, icke-depåplånbok för lagring av Avalanche-tillgångar.",
+        "access": {
+            "title": "Välkommen tillbaka!",
+            "desc": "'Få tillgång' till din befintliga Avalanche-plånbok här.",
+            "submit": "Få tillgång till Wallet"
+        },
+        "create": {
+            "title": "Ny i Avalanche Wallet?",
+            "desc": "\"Skapa\" en ny plånbok för att skicka, ta emot och byta Avalanche-tillgångar.",
+            "submit": "Skapa ny Wallet"
+        }
+    },
+    "network": {
+        "status1": "Kopplas ...",
+        "status2": "Bortkopplad",
+        "title": "Nätverk",
+        "title2": "Lägg till Anpassat Nätverk",
+        "title3": "Redigera Nätverk",
+        "custom": "Lägg till anpassning",
+        "cancel": "Avbryt",
+        "add": "Lägg till Nätverk"
+    },
+    "access": {
+        "title": "Hur vill du ha tillgång till din plånbok?",
+        "create": "Har du inte en plånbok?",
+        "but_mnemonic": "Mnemoteknisk Nyckelmening",
+        "but_keystore": "Keystore-fil",
+        "cancel": "Avbryt",
+        "json_error": "Det går inte att tolka JSON-fil.",
+        "keystore_error": "Denna keystore-version stöds inte.",
+        "password_error": "Ogiltigt lösenord.",
+        "mnemonic": {
+            "title": "Lägg till din MNEMNOTEKNISKA mening",
+            "subtitle": "Tryck på \"MELLANSLAG\" efter varje framgångsrik ordinmatning.",
+            "submit": "Tillgång till plånbok",
+            "cancel": "Avbryt",
+            "error": "Ogiltig nyckelmening. Din mening måste bestå av 24 ord åtskilda av ett enda mellanslag."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portfölj",
+            "manage": "Hantera",
+            "send": "Skicka",
+            "earn": "Tjäna",
+            "advanced": "Avancerad"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Du äger inga samlarföremål."
+        }
+    },
+    "create": {
+        "generate": "Skapa en ny nyckelmening för att ställa in din Avalanche-plånbok.",
+        "but_have": "Har du redan en plånbok?",
+        "submit": "Skapa Nyckelmening",
+        "cancel": "Avbryt",
+        "mnemonic_title": "Denna är din nyckelmening.",
+        "mnemonic_desc": "Använd dessa 24 ord i följd för att återställa din Avalanche-plånbok",
+        "attention": "Observera!",
+        "warning": "Förvara den här nyckelmeningen på en säker plats. Vem som helst med denna nyckelmening kan komma åt din Avalanche-plånbok. Det finns inget sätt att återställa förlorade nyckelmeningar.",
+        "confirm": "Jag skrev min nyckelmening i en säker plats.",
+        "regenerate": "Återskapa",
+        "success_title": "Grattis!",
+        "success_desc": "Det är dags att komma åt din Avalanche-plånbok.",
+        "success_submit": "Tillgång till plånbok",
+        "verify": "Verifiera",
+        "verifytitle": "Verifiera Mnemoteknisk",
+        "verify_desc": "Mata in Mnemoteknisk mening nedan",
+        "error_number": "Hoppsan, det ser ut som du har glömt att mata in nummer",
+        "error_word": "Den mnemotekniska meningen du matade som ord matchar inte med den nuvarande meningen."
+    },
+    "top": {
+        "title1": "Härledd Avalanche-plånbok adress",
+        "title2": "Balans",
+        "title3": "Subnät",
+        "title4": "Nätverk",
+        "nftcol": "NFT:s",
+        "nftempty": "Du har inte samlat in några icke fungibla tokens.",
+        "locked": "Låst",
+        "info2": "Jag köpte mynt i Tokenförsäljningen. Var är mina AVAX?",
+        "info2_desc": "Denna plånbok är ansluten till Avalanche Everest testnätverk. Ditt köp kommer att visas i plånboken efter lanseringen av Avalanche Mainnet.",
+        "hover1": "Visa Adress QR-kod",
+        "hover2": "Skriv ut",
+        "hover3": "Kopiera",
+        "hover4": "Visa Mainnet-adress",
+        "balance": {
+            "show": "Visa Uppdelning",
+            "hide": "Göm Uppdelning",
+            "available": "Tillgänglig",
+            "locked": "Låst",
+            "locked_stake": "Låst Satsningsbar",
+            "stake": "Satsning",
+            "collectibles": "Samlingsföremål"
+        },
+        "address": {
+            "derived": "Härledd Avalanche-plånbok Adress",
+            "desc": "Det här är din adress för att få medel. Din adress kommer att ändras efter varje insättning."
+        }
+    },
+    "transfer": {
+        "title": "Skicka",
+        "no_cash": "Du måste ha en tillgång i din plånbok för att kunna utfärda en transaktion.",
+        "faucet": "Har du kollat vår kran?",
+        "to": "Till Adress",
+        "fees": "Avgifter",
+        "fee_tx": "Transaktionsavgift",
+        "advanced": "Avancerad",
+        "adv_change": "Byt Adress",
+        "send": "Skicka Transaktion",
+        "summary": "Transaktionsöversikt",
+        "disconnected": "Det gick inte att skicka tillgångar. Frånkopplad från nätverket.",
+        "success_title": "Transaktion Skickad",
+        "success_msg": "Du har skickat din transaktion.",
+        "error_title": "Fel vid sändning av transaktion",
+        "error_msg": "Fel vid sändning av transaktionen."
+    },
+    "keys": {
+        "title": "Mina nycklar",
+        "button1": "Kom ihåg nycklar",
+        "button2": "IMPORTERA NYCKLAR",
+        "button3": "EXPORTERA NYCKLAR",
+        "subtitle": "Aktivera Nyckel",
+        "remember_key_button": "KOM IHÅG",
+        "remember_key_desc": "Koda din plånbok med ett lösenord och lagra säkert i den här webbläsaren.",
+        "remember_key_check": "Kom ihåg nyckelord",
+        "remember_key_info": "Du kan senare komma åt din plånbok i den här webbläsaren med ett lösenord.",
+        "export_key_button": "EXPORTERA PLÅNBOK",
+        "export_key_title": "Exportera nycklar",
+        "export_key_desc": "Ange ett lösenord för att koda dina privata nycklar i en fil. Du kan senare använda den här filen och ditt lösenord för att komma åt din plånbok.",
+        "export_key_info": "{0} nycklar valda.",
+        "export_placeholder1": "Lösenord",
+        "export_placeholder2": "Bekräfta Lösenord",
+        "empty": "Den här nyckeln har ingen balans.",
+        "import_key_button": "IMPORTERA NYCKEL",
+        "import_key_title": "Importera nycklar",
+        "import_key_desc": "Lägg till ytterligare nycklar som du kan använda med din plånbok.",
+        "import_key_option1": "MNEMOTEKNISK MENING",
+        "import_key_option2": "KEYSTORE-FIL",
+        "import_key_success_title": "Nyckel tillagd",
+        "import_key_success_msg": "Privat nyckel och tillgångar tillagda i plånboken.",
+        "tooltip": "Den här nyckeln kommer att glömmas när du uppdaterar webbläsaren.",
+        "view_key": "Se Nyckelmening",
+        "export_key": "Exportera Nyckel",
+        "hd_addresses": "HD Adresser",
+        "remove_key": "Ta bort Nyckel",
+        "activate_key": "Aktivera Nyckel",
+        "remove_success_title": "Nyckel Borttagen",
+        "remove_success_msg": "Privat nyckel och tillgångar borttagna från plånboken.",
+        "password_validation": "Lösenordet måste innehålla minst 9 tecken.",
+        "password_validation2": "Lösenordet matchar inte."
+    },
+    "portfolio": {
+        "assets": "Tillgångar",
+        "assets1": "Tokens",
+        "assets2": "Samlingsföremål",
+        "search": "Sök tillgångar",
+        "name": "Namn",
+        "send": "Skicka",
+        "balance": "Balans",
+        "error_network": "Går ej att visa tillgångar. Frånkopplad från nätverket.",
+        "nobalance": "Du har inga tillgångar",
+        "nobalance_nft": "Du har inga samlingsföremål.",
+        "noaddresses": "Du har inga tidigare adresser."
+    },
+    "earn": {
+        "title": "Tjäna",
+        "desc": "Du kan tjäna mer AVAX genom att placera dina befintliga tokens.",
+        "subtitle1": "Validera",
+        "subtitle2": "Delegera",
+        "subtitle3": "Cross Chain Överförelser",
+        "subtitle4": "Beräknade belöningar",
+        "warning_1": "Du måste ha minst {0} AVAX i P-kedjan för att bli validerare.",
+        "warning_2": "Du måste ha minst {0} AVAX i P-kedjan för att bli delegator.",
+        "validate_card": {
+            "title": "Validera",
+            "desc": "Du har en Avalanche-nod som du vill placera med.",
+            "submit": "Lägg till Validerare"
+        },
+        "delegate_card": {
+            "title": "Delegera",
+            "desc": "Du äger inte en Avalanche node, men du vill satsa med en annan node.",
+            "submit": "Lägg till Delegerare"
+        },
+        "transfer_card": {
+            "title": "Cross Chain Överföring",
+            "desc": "Satsa kräver AVAX i P-kedjan. Överför tokens mellan X och P.",
+            "submit": "Överföring"
+        },
+        "rewards_card": {
+            "title": "Beräknade belöningar",
+            "desc": "Visa insatsbelöningar som du ska få.",
+            "submit": "Se belöningar"
+        },
+        "transfer": {
+            "source": "Källa kedja",
+            "destination": "Mål kedja",
+            "balance": "Balans",
+            "amount": "Överfört belopp",
+            "fee": "Avgift",
+            "confirm": "Bekräfta",
+            "submit": "Överföring",
+            "cancel": "Avbryt",
+            "err_import": "Beloppet blev fel",
+            "err_desc": "Det uppstod ett problem vid import av dina tokens till målkedjan. Försök importera igen.",
+            "err_submit": "Trigger Import",
+            "success": {
+                "title": "Överföring avslutad",
+                "export": "Exportera transaktions ID:",
+                "import": "Importera transaktions ID:",
+                "message": "Du har lyckats överföra mellan kedjor.",
+                "back": "Tillbaka till Tjäna"
+            }
+        },
+        "rewards": {
+            "total": "Totala belöningar",
+            "validation": "Validering",
+            "delegation": "Delegering",
+            "empty": "Du har inga väntande belöningar.",
+            "row": {
+                "start": "Start",
+                "end": "Slut",
+                "completed": "Avslutat",
+                "stake": "Satsning",
+                "reward": "Potentiell belöning"
+            }
+        },
+        "validate": {
+            "label_1": "Node ID",
+            "duration": {
+                "label": "Satsningsperiod",
+                "desc": "Varaktigheten då dina tokens låses för insättning.",
+                "start": "Startdatum och starttid",
+                "end": "Slut Datum och Tid"
+            },
+            "amount": {
+                "label": "Satsningsbelopp",
+                "desc": "Mängden AVAX att låsa för satsning."
+            },
+            "fee": {
+                "label": "Delegeringsavgift",
+                "desc": "Du kommer kräva denna % av belöningarna från delegaterna på din node."
+            },
+            "reward": {
+                "label": "Belöningsadress",
+                "desc": "Var satsningsbelöningarna ska skickas.",
+                "chip_1": "Använd denna plånbok",
+                "chip_2": "Anpassad Adress"
+            },
+            "summary": {
+                "max_del": "Maximalt Delegeringsbelopp",
+                "max_del_tooltip": "Maximalt belopp som kan delegeras till denna validerare.",
+                "duration": "Satsningsvarighet",
+                "rewards": "Beräknade belöningar",
+                "warn": "Om det är första gången du satsar, börja med smått. Insatta tokens är låsta till slutet av insatsperioden."
+            },
+            "confirmation": {
+                "id": "Nod ID",
+                "amount": "Satsningsbelopp",
+                "start": "Startdatum",
+                "end": "Slutdatum",
+                "fee": "Delegeringsavgift",
+                "reward": "Belöningsadress",
+                "type_local": "Denna plånbok",
+                "type_custom": "Anpassa"
+            },
+            "confirm": "Bekräfta",
+            "submit": "Vidarebefordra",
+            "cancel": "Avbryt",
+            "success": {
+                "title": "Din valideringstransaktion är skickad.",
+                "desc": "Om transaktionen accepteras låses dina tokens för att satsa. Du kommer att få dina låsta tokens plus belöningarna när din insatsperiod är över.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "Startdatum måste vara i framtiden och slutdatum måste vara efter startdatum.",
+                "amount": "Insatsbeloppet måste vara minst {0} AVAX",
+                "id": "Ogiltig Node ID. den måste börja med \"NodeID-\"",
+                "address": "Ogiltig belöningsadress."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Välj en node att delegera",
+                "search": "Sök Node ID",
+                "id": "Node ID",
+                "val_stake": "Validerarinsats",
+                "aval_stake": "Tillgänglig",
+                "aval_stake_tip": "Hur mycket mer kan delegeras till denna validerare.",
+                "users_tip": "Antal Delegerare",
+                "end": "Sluttid",
+                "up": "Upptid",
+                "up_tip": "I förhållande till den node som denna plånbok är ansluten till.",
+                "fee": "Avgift",
+                "empty": {
+                    "title": "Inga Validerare hittades",
+                    "desc": "Validerare måste vara aktivt satsande för att hitta dem."
+                }
+            },
+            "node": {
+                "selected": "Vald node",
+                "fee": "Delegeringsavgift",
+                "start": "Validerare Startdatum",
+                "end": "Validerare Slutdatum"
+            },
+            "form": {
+                "period": {
+                    "label": "Satsningsperiod",
+                    "desc": "Hur länge dina tokens låses för insättning.",
+                    "start": "Startdatum och starttid",
+                    "end": "Slutdatum och Sluttid"
+                },
+                "amount": {
+                    "label": "Satsningsbelopp",
+                    "desc": "Antalet AVAX att låsas för satsning.",
+                    "desc2": "Det tillgängliga delegerade beloppet för denna node är {0} AVAX"
+                },
+                "reward": {
+                    "label": "Belöningsadress",
+                    "desc": "Var satsningsbelöningarna ska skickas.",
+                    "chip_1": "Använd denna plånbok",
+                    "chip_2": "Anpassad Adress"
+                }
+            },
+            "confirmation": {
+                "node": "Node ID",
+                "amount": "Satsningsbelopp",
+                "start": "Startdatum",
+                "end": "Slutdatum",
+                "reward": "Belöningsadress"
+            },
+            "errs": {
+                "start_now": "Starttiden måste vara efter den nuvarande tiden.",
+                "start_end": "Startdatumet måste ligga i framtiden och slutdatumet måste vara efter startdatumet.",
+                "invalid_addr": "Ogiltigt adressformat. Din adress måste börja med \"P-\"",
+                "no_addr": "Du måste ange en adress för att få delegationsbelöningar.",
+                "min_dur": "Minsta satsningstid är 2 veckor.",
+                "max_dur": "Högsta satsningstid är 1 år.",
+                "no_node": "Du måste ange en validerare.",
+                "val_end": "Delegationens slutdatum kan inte vara längre än validerings slutdatum.",
+                "amt": "Delegationsbeloppet måste vara minst {0} AVAX."
+            },
+            "summary": {
+                "duration": "Satsningstid",
+                "reward": "Beräknad belöning",
+                "fee": "Avgift",
+                "warn": "Om det är första gången du satsar, börja smått. Insatta tokens är låsta till slutet av insatsperioden."
+            },
+            "confirm": "Bekräfta",
+            "submit": "Skicka",
+            "cancel": "Avbryt",
+            "success": {
+                "title": "Delegeringstransaktion skickat.",
+                "desc": "Om transaktionen accepteras låses dina tokens för att satsa. Du kommer att få dina låsta tokens plus belöningarna när din insatsperiod är över.",
+                "status": "Status"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Avancerat",
+        "import": {
+            "title": "Kedjeimport",
+            "desc": "Om du har pengar kvar i en misslyckad kedjeöverföring kan du slutimportera dem här.",
+            "submit_x": "Importera X",
+            "submit_p": "Importera P"
+        }
+    },
+    "logout": {
+        "button": "Logga ut",
+        "button_conf": "UTLOGGNING",
+        "button_cancel": "Avbryt",
+        "confirmation": "Är du säker att du vill logga ut?",
+        "confirmation_message": "Denna plånbok och dess nycklar kommer glömmas."
+    },
+    "keystore": {
+        "title": "Keystore-fil",
+        "button": "Välj fil"
+    },
+    "transactions": {
+        "notx": "Inga transaktioner hittades för den här adressen på sökaren.",
+        "loading": "Laddar transaktionshistorik..",
+        "warn_loading": "Listan kan vara ofullständig och ur funktion.",
+        "error_api": "Sökar-API hittades inte",
+        "error_api_desc": "Du måste tillhandahålla ett AVA Explorer API för detta nätverk för att se transaktionshistoriken."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adress",
+            "copy": "Kopiera adress"
+        },
+        "print": {
+            "title": "Skriv ut Förhandsgranskning",
+            "submit": "Skriv ut"
+        },
+        "keystore": {
+            "title": "Uppdatera Keystore-filen",
+            "desc": "Vi har uppgraderat keystore-filspecifikationen. Ladda ner din nya keystore-fil och öppna plånboken igen.",
+            "logout": "Logga ut och Kom in igen"
+        },
+        "mainnet": {
+            "title": "Mainnet-adress",
+            "desc": "Din Mainnet-adress är:"
+        },
+        "mnemonic": {
+            "title": "Nyckelmening"
+        },
+        "activateWallet": {
+            "title": "Aktivera plånbok",
+            "desc": "Det finns en aktiv plånbok. Ange ditt lösenord för att komma åt den.",
+            "submit": "Ha tillgång till Plånboken",
+            "cancel": "Ha tillgång till en annan plånbok",
+            "cancel2": "(Den föregående plånboken kommer glömmas.)",
+            "err1": "Ogiltigt lösenord.",
+            "err2": "Det går inte att läsa plånboksdata."
+        }
+    },
+    "nav": {
+        "access": "Ha tillgång till Plånboken",
+        "create": "Skapa ny Plånbok"
+    }
+}

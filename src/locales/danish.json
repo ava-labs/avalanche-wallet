@@ -1,0 +1,428 @@
+{
+    "password": "Kodeord",
+    "password_confirm": "Bekræft kodeord",
+    "private_key": "Privat nøgle",
+    "address": "Adresse",
+    "add_pk": "Tilføj privat nøgle",
+    "home": {
+        "desc": "Avalanche Wallet er en enkel, sikker, ikke-frihedsberøvende tegnebog til opbevaring af Avalanche aktiver.",
+        "access": {
+            "title": "Velkommen tilbage!",
+            "desc": "Få adgang til din eksisterende Avalanche-tegnebog her.",
+            "submit": "Adgang til tegnebogen"
+        },
+        "create": {
+            "title": "Ny på Avalanche Wallet?",
+            "desc": "'Opret' en ny tegnebog til at sende, modtage og bytte Avalanche aktiver.",
+            "submit": "Opret ny tegnebog"
+        }
+    },
+    "network": {
+        "status1": "Tilslutter ...",
+        "status2": "Afbrudt",
+        "title": "Netværk",
+        "title2": "Tilføj kundenetværk",
+        "title3": "Rediger netværk",
+        "custom": "Tilføj kunde",
+        "cancel": "Annuller",
+        "add": "Tilføj netværk"
+    },
+    "access": {
+        "title": "Hvordan vil du have adgang til din tegnebog?",
+        "create": "Har du ikke en tegnebog?",
+        "but_mnemonic": "Mnemonic Nøglesætning",
+        "but_keystore": "Keystore-fil",
+        "cancel": "Annuller",
+        "json_error": "Kan ikke analysere JSON-filen.",
+        "keystore_error": "Denne keystore-version understøttes ikke.",
+        "password_error": "Forkert kodeord.",
+        "mnemonic": {
+            "title": "Indtast din MNEMONIC sætning\n",
+            "subtitle": "Tryk 'MELLEMRUM' efter hver vellykket ordindtastning.",
+            "submit": "Adgang til tegnebogen",
+            "cancel": "Annuller",
+            "error": "Ugyldig nøglesætning. Din sætning skal bestå af 24 ord adskilt af et enkelt mellemrum."
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "Portefølje",
+            "manage": "Administrere",
+            "send": "Send",
+            "earn": "Tjen",
+            "advanced": "Avanceret"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "Du ejer ikke nogen samleobjekter."
+        }
+    },
+    "create": {
+        "generate": "Generer en ny nøglesætning for at opsætte din Avalanche Wallet.",
+        "but_have": "Har du allerede en tegnebog?",
+        "submit": "Genere nøglesætning",
+        "cancel": "Annuller",
+        "mnemonic_title": "Dette er din nøglesætning.",
+        "mnemonic_desc": "Brug disse 24 ord i rækkefølge for at gendanne din Avalanche Wallet",
+        "attention": "Obs!",
+        "warning": "Gem denne nøglesætning et sikkert sted. Alle med denne nøglesætning kan have adgang til din Avalanche Wallet. Du kan ikke gendanne mistede nøglesætninger.",
+        "confirm": "Jeg skrev min nøglesætning ned et sikkert sted.",
+        "regenerate": "Regenere",
+        "success_title": "Tillykke!",
+        "success_desc": "Det er tid til at få adgang til din Avalanche Wallet.",
+        "success_submit": "Adgang til tegnebogen",
+        "verify": "Bekræft",
+        "verifytitle": "Bekræft Mnemonic",
+        "verify_desc": "Udfyld Mnemonic-sætning nedenfor",
+        "error_number": "Ups, det ser ud til, at du har glemt at udfylde nummeret",
+        "error_word": "Den mnemonic-sætning, du indtastede med ord, stemmer ikke overens med den aktuelle sætning."
+    },
+    "top": {
+        "title1": "Afledt Avalanche tegnebog-adresse",
+        "title2": "Saldo",
+        "title3": "Subnet",
+        "title4": "Netværk",
+        "nftcol": "NFTs",
+        "nftempty": "Du har ikke samlet nogen ikke-ombyttelige poletter.",
+        "locked": "Låst",
+        "info2": "Jeg købte mønter i Token Salg. Hvor er min AVAX?",
+        "info2_desc": "Denne tegnebog er tilsluttet Avalanche Everest testnetværket. Dit køb vises i tegnebogen efter Avalanche Mainnet-lanceringen.",
+        "hover1": "Se adresse for QR-kode",
+        "hover2": "Print",
+        "hover3": "Kopi",
+        "hover4": "Se Mainnet-adresse",
+        "balance": {
+            "show": "Vis opdeling",
+            "hide": "Skjul opdeling",
+            "available": "Ledig",
+            "locked": "Låst",
+            "locked_stake": "Lukittu Stakeable",
+            "stake": "Indsats",
+            "collectibles": "Samlerobjekter"
+        },
+        "address": {
+            "derived": "Afledt Avalanche tegnebog-adresse",
+            "desc": "Dette er din adresse til at modtage penge. Din adresse ændres efter hver indbetaling."
+        }
+    },
+    "transfer": {
+        "title": "Send",
+        "no_cash": "Du skal have et aktiv i din tegnebog for at udstede en transaktion.",
+        "faucet": "Oletko tarkistanut hanaasi?",
+        "to": "Til adresse",
+        "fees": "Gebyrer",
+        "fee_tx": "Transaktionsgebyr",
+        "advanced": "Avanceret",
+        "adv_change": "Skift adresse",
+        "send": "Send transaktion",
+        "summary": "Transaktionsoversigt",
+        "disconnected": "Kan ikke sende aktiver. Afbrudt fra netværket.",
+        "success_title": "Transaktion sendt",
+        "success_msg": "Du har sendt din transaktion.",
+        "error_title": "Fejl ved afsendelse af transaktion",
+        "error_msg": "Transaktionen kunne ikke sendes."
+    },
+    "keys": {
+        "title": "Mine nøgler",
+        "button1": "Husk nøgler",
+        "button2": "IMPORTER NØGLER",
+        "button3": "EKSPORTER NØGLER",
+        "subtitle": "Aktiivinen Avain",
+        "remember_key_button": "HUSK",
+        "remember_key_desc": "Kod din tegnebog ind med en adgangskode, og gem den sikkert i denne browser.",
+        "remember_key_check": "Husk nøgler",
+        "remember_key_info": "Du kan senere få adgang til din tegnebog i denne browser med en adgangskode.",
+        "export_key_button": "EKSPORTER TEGNEBOG",
+        "export_key_title": "Eksporter nøgler",
+        "export_key_desc": "Indtast en adgangskode for at kode dine private nøgler i en fil. Du kan senere bruge denne fil og din adgangskode til at få adgang til din tegnebog.",
+        "export_key_info": "Valgte {0} nøgler.",
+        "export_placeholder1": "Kodeord",
+        "export_placeholder2": "Bekræft kodeord",
+        "empty": "Denne nøgle har ingen saldo.",
+        "import_key_button": "IMPORTER NØGLE",
+        "import_key_title": "Importer nøgler",
+        "import_key_desc": "Tilføj yderligere nøgler til at bruge sammen med din tegnebog.",
+        "import_key_option1": "MNEMONIC SÆTNING",
+        "import_key_option2": "KEYSTORE-FIL",
+        "import_key_success_title": "Nøgle tilføjet",
+        "import_key_success_msg": "Privat nøgle og aktiver tilføjet til tegnebogen.",
+        "tooltip": "Denne nøgle glemmes, når du opdaterer browseren.",
+        "view_key": "Vis nøglesætning",
+        "export_key": "Eksporter nøgle",
+        "hd_addresses": "HD-adresser",
+        "remove_key": "Fjern nøgle",
+        "activate_key": "Aktiver nøgle",
+        "remove_success_title": "Nøgle fjernet",
+        "remove_success_msg": "Privat nøgle og aktiver fjernet fra tegnebogen.",
+        "password_validation": "Adgangskoden skal have mindst 9 tegn.",
+        "password_validation2": "Kodeordet passer ikke."
+    },
+    "portfolio": {
+        "assets": "Aktiver",
+        "assets1": "Poletter",
+        "assets2": "Samlerobjekter",
+        "search": "Søg efter aktiver",
+        "name": "Navn",
+        "send": "Send",
+        "balance": "Saldo",
+        "error_network": "Kan ikke vise aktiver. Afbrudt fra netværket.",
+        "nobalance": "Du har ingen aktiver",
+        "nobalance_nft": "Du ejer ikke nogen samleobjekter.",
+        "noaddresses": "Du har ikke nogen tidligere adresser."
+    },
+    "earn": {
+        "title": "Tjen",
+        "desc": "Du kan tjene mere AVAX ved at indsætte dine eksisterende poletter.",
+        "subtitle1": "Bekræft",
+        "subtitle2": "Deleger",
+        "subtitle3": "Cross Chain overførsel",
+        "subtitle4": "Anslåede belønninger",
+        "warning_1": "Du skal have mindst {0} AVAX i P-kæden for at blive bekræftet.",
+        "warning_2": "Du skal have mindst {0} AVAX i P-kæden for at blive delegeret.",
+        "validate_card": {
+            "title": "Bekræft",
+            "desc": "Du har en Avalanche-knude, som du vil satse på.",
+            "submit": "Tilføj Validator"
+        },
+        "delegate_card": {
+            "title": "Deleger",
+            "desc": "Du ejer ikke en Avalanche-knude, men du vil satse ved hjælp af en anden knude.",
+            "submit": "Tilføj Delegator"
+        },
+        "transfer_card": {
+            "title": "Cross Chain overførsel",
+            "desc": "Indsatser kræver AVAX på P-kæden. Overfør poletter mellem X og P.",
+            "submit": "Overfør"
+        },
+        "rewards_card": {
+            "title": "Anslåede belønninger",
+            "desc": "Se indsatsbelønninger, du vil modtage.",
+            "submit": "Se belønninger"
+        },
+        "transfer": {
+            "source": "Kildekæde",
+            "destination": "Destinationskæde",
+            "balance": "Saldo",
+            "amount": "Overfør beløb",
+            "fee": "Gebyr",
+            "confirm": "Bekræft",
+            "submit": "Overfør",
+            "cancel": "Annuller",
+            "err_import": "Import mislykkedes",
+            "err_desc": "Der opstod et problem med at importere dine poletter til destinationskæden. Prøv at importere igen.",
+            "err_submit": "Udløs import",
+            "success": {
+                "title": "Overførsel gennemført",
+                "export": "Eksporttransaktions-id:",
+                "import": "Importtransaktions-id:",
+                "message": "Du har med succes overført mellem kæder.",
+                "back": "Tilbage til Tjen"
+            }
+        },
+        "rewards": {
+            "total": "Samlede belønninger",
+            "validation": "Validering",
+            "delegation": "Delegation",
+            "empty": "Du har ingen ventende belønninger.",
+            "row": {
+                "start": "Start",
+                "end": "Slut",
+                "completed": "Afsluttet",
+                "stake": "Indsats",
+                "reward": "Potentiel belønning"
+            }
+        },
+        "validate": {
+            "label_1": "Knude-ID",
+            "duration": {
+                "label": "Indsatsperiode",
+                "desc": "Varigheden, som dine poletter bliver låst til indsats.",
+                "start": "Startdato og tid",
+                "end": "Slutdato og tid"
+            },
+            "amount": {
+                "label": "Indsatsbeløb",
+                "desc": "Mængden af AVAX, der skal låses til indsats."
+            },
+            "fee": {
+                "label": "Delegationsgebyr",
+                "desc": "Du vil kræve denne % af belønningerne fra delegatorerne på din knude."
+            },
+            "reward": {
+                "label": "Belønningsadresse",
+                "desc": "Hvor skal de indsatte belønninger sendes.",
+                "chip_1": "Brug denne tegnebog",
+                "chip_2": "Brugers adresse"
+            },
+            "summary": {
+                "max_del": "Maks. Delegationsbeløb",
+                "max_del_tooltip": "Maksimumbeløb, der kan delegeres til denne validator.",
+                "duration": "Indsatsvarighed",
+                "rewards": "Anslåede belønninger",
+                "warn": "Hvis det er din første gang, skal du starte i det små. Indsatte poletter er låst indtil slutningen af indsatsperioden."
+            },
+            "confirmation": {
+                "id": "Knude-ID",
+                "amount": "Indsatsbeløb",
+                "start": "Startdato",
+                "end": "Slutdato",
+                "fee": "Delegationsgebyr",
+                "reward": "Belønningsadresse",
+                "type_local": "Denne tegnebog",
+                "type_custom": "Kunde"
+            },
+            "confirm": "Bekræft",
+            "submit": "Indsend",
+            "cancel": "Annuller",
+            "success": {
+                "title": "Din valideringstransaktion er sendt.",
+                "desc": "Hvis transaktionen accepteres, låses dine poletter til indsættelse. Du modtager dine låste poletter plus belønningerne, når din indsatsperiode er forbi.",
+                "status": "Status"
+            },
+            "errs": {
+                "date": "Startdatoen skal være i fremtiden, og slutdatoen skal være efter startdatoen.",
+                "amount": "Indsatsbeløbet skal være mindst {0} AVAX",
+                "id": "Ugyldigt knude-id. Skal starte med \"KnudeID-\"",
+                "address": "Ugyldig belønningsadresse."
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "Vælg en knude, der skal delegeres",
+                "search": "Søg efter knude-id",
+                "id": "Knude ID",
+                "val_stake": "Validator indsats",
+                "aval_stake": "Ledig",
+                "aval_stake_tip": "Hvor meget mere kan delegeres til denne validator.",
+                "users_tip": "Antal delegerede",
+                "end": "Sluttid",
+                "up": "Oppetid",
+                "up_tip": "I forhold til den knude, som denne tegnebog er tilsluttet.",
+                "fee": "Gebyr",
+                "empty": {
+                    "title": "Ingen validatorer fundet",
+                    "desc": "Validatorer skal aktivt indsætte for at blive fundet."
+                }
+            },
+            "node": {
+                "selected": "Valgt knude",
+                "fee": "Delegationsgebyr",
+                "start": "Validator startdato",
+                "end": "Validator slutdato"
+            },
+            "form": {
+                "period": {
+                    "label": "Indsatsperiode",
+                    "desc": "Varigheden, som dine poletter bliver låst til indsats.",
+                    "start": "Startdato og tid",
+                    "end": "Slutdato og tid"
+                },
+                "amount": {
+                    "label": "Indsatsbeløb",
+                    "desc": "Mængden af AVAX, der skal låses til indsats.",
+                    "desc2": "Det tilgængelige delegeringsbeløb for denne knude er {0} AVAX"
+                },
+                "reward": {
+                    "label": "Belønningsadresse",
+                    "desc": "Hvor skal de indsatte belønninger sendes til.",
+                    "chip_1": "Brug denne tegnebog",
+                    "chip_2": "Brugers adresse"
+                }
+            },
+            "confirmation": {
+                "node": "Knude-ID",
+                "amount": "Indsatsbeløb",
+                "start": "Startdato",
+                "end": "Slutdato",
+                "reward": "Belønningsadresse"
+            },
+            "errs": {
+                "start_now": "Starttidspunktet skal være efter det aktuelle tidspunkt.",
+                "start_end": "Startdatoen skal være i fremtiden, og slutdatoen skal være efter startdatoen.",
+                "invalid_addr": "Ugyldigt adresseformat. Din adresse skal starte med \"P-\"",
+                "no_addr": "Du skal give en adresse for at modtage delegationsbelønninger.",
+                "min_dur": "Min. indsatsvarighed er 2 uger.",
+                "max_dur": "Maks. indsatsvarighed er 1 år.",
+                "no_node": "Du skal angive en validator.",
+                "val_end": "Delegationens slutdato kan ikke være længere end validatorens slutdato.",
+                "amt": "Delegationsbeløbet skal være mindst {0} AVAX."
+            },
+            "summary": {
+                "duration": "Indsatsvarighed",
+                "reward": "Anslået belønning",
+                "fee": "Gebyr",
+                "warn": "Hvis det er din første gang, skal du starte i det små. Indsatte poletter er låst indtil slutningen af indsatsperioden."
+            },
+            "confirm": "Bekræft",
+            "submit": "Indsend",
+            "cancel": "Annuller",
+            "success": {
+                "title": "Delegationstransaktion sendt.",
+                "desc": "Hvis transaktionen accepteres, låses dine poletter til indsættelse. Du modtager dine låste poletter plus belønningerne, når din indsatsperiode er forbi.",
+                "status": "Status"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Avanceret",
+        "import": {
+            "title": "Import af kæde",
+            "desc": "Hvis du har penge, som sidder fast i en mislykket kædeoverførsel, kan du afslutte importen her.",
+            "submit_x": "Importer X",
+            "submit_p": "Importer P"
+        }
+    },
+    "logout": {
+        "button": "Log ud",
+        "button_conf": "LOG UD",
+        "button_cancel": "Annuller",
+        "confirmation": "Er du sikker på, at du vil logge ud?",
+        "confirmation_message": "Denne tegnebog og dens nøgler vil blive glemt."
+    },
+    "keystore": {
+        "title": "Keystore-fil",
+        "button": "Vælg fil"
+    },
+    "transactions": {
+        "notx": "Ingen transaktioner fundet for denne adresse på explorer.",
+        "loading": "Indlæser transaktionshistorik..",
+        "warn_loading": "Denne liste kan være ufuldstændig og ude af drift.",
+        "error_api": "Explorer API ikke fundet",
+        "error_api_desc": "Du skal give en AVA Explorer API til dette netværk for at se transaktionshistorik."
+    },
+    "modal": {
+        "qr": {
+            "title": "Adresse",
+            "copy": "Kopier adresse"
+        },
+        "print": {
+            "title": "Udskriv eksempel",
+            "submit": "Udskriv"
+        },
+        "keystore": {
+            "title": "Opdater Keystore-fil",
+            "desc": "Vi har opgraderet keystore-filspecifikation. Download din nye keystore-fil, og få adgang til tegnebogen igen.",
+            "logout": "Log ud og få adgang igen"
+        },
+        "mainnet": {
+            "title": "Mainnet-adresse",
+            "desc": "Din mainnet-adresse er:"
+        },
+        "mnemonic": {
+            "title": "Nøglesætning"
+        },
+        "activateWallet": {
+            "title": "Aktivér tegnebog",
+            "desc": "Der er en aktiv tegnebog. Indtast din adgangskode for at få adgang til den.",
+            "submit": "Adgang til tegnebogen",
+            "cancel": "Adgang til en anden tegnebog",
+            "cancel2": "(Tidligere tegnebog glemmes.)",
+            "err1": "Forkert kodeord.",
+            "err2": "Kan ikke læse tegnebogsdata."
+        }
+    },
+    "nav": {
+        "access": "Adgang til tegnebogen",
+        "create": "Opret ny tegnebog"
+    }
+}

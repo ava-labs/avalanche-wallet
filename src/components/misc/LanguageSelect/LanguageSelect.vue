@@ -29,14 +29,34 @@ import CountryFlag from 'vue-country-flag';
 
 import {LanguageItem} from "@/components/misc/LanguageSelect/types";
 
+
+
+
+interface FLAG_DICT{
+    [key: string]: string
+}
+const FLAGS_OVERRIDE: FLAG_DICT = {
+    'en': 'us',
+    'zh_hant': 'cn',
+    'zh_hans': 'cn',
+    'cs': 'cz',
+    'ca': 'es-ca',
+    'uk': 'ua',
+    'af': 'za',
+    'ar': 'ae',
+    'da': 'dk',
+    'el': 'gr',
+    'he': 'il',
+    'nb': 'no',
+    'sr': 'rs',
+    'sv': 'se',
+}
+
 @Component({
     components: {
         CountryFlag
     }
 })
-
-
-
 export default class LanguageSelect extends Vue{
     locale = 'en';
 
@@ -52,27 +72,15 @@ export default class LanguageSelect extends Vue{
     }
 
     get flag(){
-        let flag = 'us';
         let selCode = this.locale;
-        switch (selCode) {
-            case 'en':
-                flag = 'us';
-                break;
-            case 'fr':
-                flag = 'fr';
-                break;
-            case 'zh_hant':
-                flag = "cn";
-                break;
-            case 'zh_hans':
-                flag = "cn";
-                break;
-            default:
-                flag = selCode;
-                break;
+
+        if(FLAGS_OVERRIDE[selCode]){
+            return FLAGS_OVERRIDE[selCode];
+        }else{
+            return selCode;
         }
-        return flag
     }
+
     get items(): LanguageItem[]{
         let res = [];
 
