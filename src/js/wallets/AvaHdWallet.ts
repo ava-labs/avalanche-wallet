@@ -195,6 +195,8 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
             let xChangeAddr = this.internalHelper.getCurrentAddress();
             let fromAddrs = keychain.getAddressStrings();
 
+            // console.log(toAddress);
+
             let exportTx = await avm.buildExportTx(
                 this.utxoset,
                 amtFee,
@@ -212,6 +214,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
             let pChangeAddr = this.platformHelper.getCurrentAddress();
             let fromAddrs = keychain.getAddressStrings();
 
+            // console.log(toAddress);
 
             let exportTx = await pChain.buildExportTx(
                 utxoSet,
@@ -221,6 +224,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
                 fromAddrs,
                 [pChangeAddr]
             );
+
             let tx = exportTx.sign(keychain);
             return  pChain.issueTx(tx);
         }else{

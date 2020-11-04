@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="right_col">
-                <div v-if="!isSuccess && !isImportErr">
+                <div v-if="!isSuccess && !isImportErr && !isLoading">
                     <div>
                         <label>{{$t('earn.transfer.fee')}}</label>
                         <p style="font-size: 22px;">{{fee.toString()}} AVAX</p>
@@ -49,24 +49,59 @@
                         </template>
                     </div>
                 </div>
-                <div v-else-if="isImportErr" class="import_err">
-                    <h2>{{$t('earn.transfer.err_import')}}</h2>
-                    <p>{{$t('earn.transfer.err_desc')}} </p>
-                    <v-btn @click="triggerImport" block class="button_secondary" small>{{$t('earn.transfer.err_submit')}}</v-btn>
-<!--                    <v-btn depressed style="color: var(&#45;&#45;primary-color)" small @click="$emit('cancel')" block text>Back to Earn</v-btn>-->
-                </div>
-                <div v-else-if="isSuccess" class="complete">
-                    <h2>{{$t('earn.transfer.success.title')}}</h2>
-                    <div>
-                        <label>{{$t('earn.transfer.success.export')}}</label>
-                        <p>{{exportId}}</p>
+                <div v-else-if="isLoading" class="loading_col">
+                    <div :state="exportState">
+                        <div class="loading_header">
+                            <h4>Export</h4>
+                            <div class="status_icon">
+                                <Spinner v-if="exportState==1" class="spinner"></Spinner>
+                                <p v-else-if="exportState===2">
+                                    <fa icon="check-circle"></fa>
+                                </p>
+                                <p v-else-if="exportState===-1">
+                                    <fa icon="times-circle"></fa>
+                                </p>
+                            </div>
+                        </div>
+                        <label>ID</label>
+                        <p>{{exportId || '-'}}</p>
+                        <label>Status</label>
+                        <p v-if="!exportStatus">Not started</p>
+                        <p v-else>{{exportStatus}}</p>
+                        <template v-if="exportReason">
+                            <label>Reason</label>
+                            <p>{{exportReason}}</p>
+                        </template>
+
                     </div>
-                    <div>
-                        <label>{{$t('earn.transfer.success.import')}}</label>
-                        <p>{{importId}}</p>
+                    <div :state="importState">
+                        <div class="loading_header">
+                            <h4>Import</h4>
+                            <div class="status_icon">
+                                <Spinner v-if="importState==1" class="spinner"></Spinner>
+                                <p v-else-if="importState===2">
+                                    <fa icon="check-circle"></fa>
+                                </p>
+                                <p v-else-if="importState===-1">
+                                    <fa icon="times-circle"></fa>
+                                </p>
+                            </div>
+                        </div>
+                        <label>ID</label>
+                        <p>{{importId || '-'}}</p>
+                        <label>Status</label>
+                        <p v-if="!importStatus">Not started</p>
+                        <p v-else>{{importStatus}}</p>
+                        <template v-if="importReason">
+                            <label>Reason</label>
+                            <p>{{importReason}}</p>
+                        </template>
                     </div>
-                    <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> {{$t('earn.transfer.success.message')}} </p>
-                    <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>{{$t('earn.transfer.success.back')}}</v-btn>
+                    <div v-if="isSuccess" class="complete">
+                        <h4>{{$t('earn.transfer.success.title')}}</h4>
+                        <p style="color: var(--success); margin: 12px 0 !important;"> <fa icon="check-circle"></fa> {{$t('earn.transfer.success.message')}} </p>
+                        <v-btn depressed class="button_primary" small @click="$emit('cancel')" block>{{$t('earn.transfer.success.back')}}</v-btn>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,11 +118,20 @@ import {BN} from "avalanche";
 import {pChain, avm} from "@/AVA";
 import AvaHdWallet from "@/js/wallets/AvaHdWallet";
 import {bnToBig} from "@/helpers/helper";
+import Spinner from "@/components/misc/Spinner.vue";
 
+
+enum TxState{
+    failed = -1,
+    waiting = 0,
+    started = 1,
+    success = 2
+}
 
 @Component({
     name: "chain_transfer",
     components: {
+        Spinner,
         Dropdown,
         AvaxInput
     }
@@ -107,7 +151,14 @@ export default class ChainTransfer extends Vue{
 
     // Transaction ids
     exportId: string = '';
+    exportState: TxState = TxState.waiting;
+    exportStatus: string|null = null;
+    exportReason: string|null = null;
+
     importId: string = '';
+    importState: TxState = TxState.waiting;
+    importStatus: string|null = null;
+    importReason: string|null = null;
 
     switchChain(){
         let temp = this.sourceChain;
@@ -219,73 +270,115 @@ export default class ChainTransfer extends Vue{
         return wallet;
     }
 
-    // triggers an import on the destination chain
-    async triggerImport(){
-        try{
-            this.isImportErr = false;
-            let txId;
-            if(this.sourceChain==='X'){
-                txId = await this.wallet.importToPlatformChain()
-            }else{
-                txId = await this.wallet.importToXChain()
-            }
-            this.$store.dispatch('Notifications/add', {
-                type: 'success',
-                title: 'Import Success',
-                message: `Tokens imported to the ${this.targetChain} chain.`
-            });
-            this.onsuccess(this.exportId, txId);
-        }catch(e){
-            this.isImportErr = true;
-            this.onerror(e);
-        }
-
-    }
-
     async submit(){
         this.err = "";
         this.isLoading = true;
         this.isImportErr = false;
 
         try{
-            let wallet: AvaHdWallet = this.$store.state.activeWallet;
-
-            let exportTxId = await wallet.chainTransfer(this.formAmt,this.sourceChain)
-            await wallet.getUTXOs();
-            this.$store.dispatch('Notifications/add', {
-                type: 'success',
-                title: 'Export Success',
-                message: `Tokens exported from the ${this.sourceChain} chain.`
-            });
-            this.exportId = exportTxId;
-
-            setTimeout(async () => {
-                let importTxId;
-                try{
-                    if(this.sourceChain === 'X'){
-                        importTxId = await wallet.importToPlatformChain();
-                    }else{
-                        importTxId = await wallet.importToXChain();
-                    }
-                    this.isLoading = false;
-                    this.$store.dispatch('Notifications/add', {
-                        type: 'success',
-                        title: 'Import Success',
-                        message: `Tokens imported to the ${this.targetChain} chain.`
-                    });
-                    this.onsuccess(exportTxId,importTxId);
-                }catch (e){
-                    this.isImportErr = true;
-                    this.onerror(e);
-                }
-
-            }, 5000);
-
-
+            this.chainExport(this.formAmt, this.sourceChain);
         }catch(err){
             this.onerror(err);
         }
     }
+
+    // Triggers export from chain
+    // STEP 1
+    async chainExport(amt: BN, sourceChain: string){
+        let wallet: AvaHdWallet = this.$store.state.activeWallet;
+        let exportTxId;
+        this.exportState = TxState.started;
+
+        exportTxId = await wallet.chainTransfer(amt,sourceChain)
+
+        this.exportId = exportTxId;
+        this.waitExportStatus(exportTxId)
+    }
+
+    // STEP 2
+    async waitExportStatus(txId: string){
+
+
+        let status;
+        if(this.sourceChain==='X'){
+            status = await avm.getTxStatus(txId);
+        }else{
+            let resp = await pChain.getTxStatus(txId);
+            if(typeof resp === 'string'){
+                status = resp;
+            }else{
+                status = resp.status;
+                this.exportReason = resp.reason;
+            }
+        }
+        this.exportStatus = status;
+
+        if(status === 'Unknown' || status === 'Processing'){ // if not confirmed ask again
+            setTimeout(()=>{
+                this.waitExportStatus(txId)
+            }, 1000);
+            return false;
+        }else if(status === 'Dropped'){ // If dropped stop the process
+            this.exportState = TxState.failed;
+            return false;
+        }else{ // If success start import
+            this.exportState = TxState.success;
+            this.chainImport()
+        }
+
+        return true;
+    }
+
+    // STEP 3
+    async chainImport(){
+        let wallet: AvaHdWallet = this.$store.state.activeWallet;
+
+        let importTxId;
+        if(this.sourceChain === 'X'){
+            importTxId = await wallet.importToPlatformChain();
+        }else{
+            importTxId = await wallet.importToXChain();
+        }
+        this.importId = importTxId;
+        this.importState = TxState.started;
+
+        this.waitImportStatus(importTxId)
+    }
+
+    // STEP 4
+    async waitImportStatus(txId: string){
+        let status;
+
+        if(this.sourceChain === 'P'){
+            status = await avm.getTxStatus(txId);
+        }else{
+            let resp = await pChain.getTxStatus(txId);
+            if(typeof resp === 'string'){
+                status = resp;
+            }else{
+                status = resp.status;
+            }
+        }
+
+        this.importStatus = status;
+
+        if(status === 'Unknown' || status === 'Processing'){ // if not confirmed ask again
+            setTimeout(()=>{
+                this.waitImportStatus(txId)
+            }, 1000);
+            return false;
+        }else if(status === 'Dropped'){ // If dropped stop the process
+            this.importState = TxState.failed;
+            return false;
+        }else{ // If success display success page
+            this.importState = TxState.success;
+            this.onsuccess();
+        }
+
+        return true;
+    }
+
+
 
     onerror(err: any){
         console.error(err);
@@ -298,11 +391,14 @@ export default class ChainTransfer extends Vue{
         });
     }
 
-    onsuccess(exportId: string, importId: string){
+    onsuccess(){
         // Clear Form
         this.isSuccess = true;
-        this.exportId = exportId;
-        this.importId = importId;
+        this.$store.dispatch('Notifications/add', {
+            type: 'success',
+            title: 'Transfer Complete',
+            message: 'Funds transfered between chains.'
+        });
     }
 
 
@@ -320,6 +416,7 @@ export default class ChainTransfer extends Vue{
 }
 </script>
 <style scoped lang="scss">
+@use "../../../main";
 
 .cols{
     display: grid;
@@ -405,20 +502,80 @@ h2{
     }
 }
 
-.complete{
+.loading_col{
     max-width: 320px;
-    //margin: 10vh auto;
 
+    > div{
+        position: relative;
+        background-color: var(--bg-light);
+        padding: 14px;
+        margin-bottom: 6px;
+
+        &[state='0']{
+            opacity: 0.2;
+        }
+
+        &[state='2']{
+            .status_icon{
+                color: var(--success);
+            }
+        }
+
+        &[state='-1']{
+            .status_icon{
+                color: var(--error);
+            }
+        }
+
+        p{
+            word-break: break-all;
+            font-size: 13px;
+        }
+    }
+
+    label{
+         font-weight: bold;
+        font-size: 12px;
+    }
+
+    /*.status_icon{*/
+    /*    position: absolute;*/
+    /*    top: 8px;*/
+    /*    right: 12px;*/
+    /*}*/
+
+    .loading_header{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .spinner{
+        color: var(--primary-color) !important;
+    }
+}
+
+.complete{
     > div{
         background-color: var(--bg-light);
         padding: 14px;
         margin: 4px 0;
-        word-break: break-all;
     }
 
     .desc{
         margin: 6px 0 !important;
         color: var(--primary-color-light);
+    }
+}
+
+@include main.mobile-device {
+    .cols{
+        display: block;
+    }
+
+    .chains{
+        row-gap: 4px;
+        grid-template-columns: none;
+        grid-template-rows: max-content max-content;
     }
 }
 </style>
