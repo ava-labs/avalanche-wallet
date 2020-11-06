@@ -565,11 +565,16 @@ h2{
         margin: 6px 0 !important;
         color: var(--primary-color-light);
     }
+
+    p{
+        word-break: keep-all !important;
+    }
 }
 
 @include main.mobile-device {
     .cols{
         display: block;
+        padding-bottom: 3vh;
     }
 
     .chains{

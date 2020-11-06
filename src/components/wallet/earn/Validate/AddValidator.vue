@@ -73,16 +73,24 @@
                         </div>
                     </div>
                     <div class="success_cont" v-else>
-                        <p class="check"><fa icon="check-circle"></fa></p>
                         <h2>{{$t('earn.validate.success.title')}}</h2>
                         <p>{{$t('earn.validate.success.desc')}}</p>
                         <p class="tx_id">Tx ID: {{txId}}</p>
-                        <label>{{$t('earn.validate.success.status')}}</label>
-                        <p v-if="!txStatus">Waiting..</p>
-                        <template v-else>
-                            <p>{{txStatus}}</p>
-                            <p v-if="txReason">{{txReason}}</p>
-                        </template>
+                        <div class="tx_status">
+                            <div>
+                                <label>{{$t('earn.validate.success.status')}}</label>
+                                <p v-if="!txStatus">Waiting..</p>
+                                <template v-else>
+                                    <p>{{txStatus}}</p>
+                                    <p v-if="txReason">{{txReason}}</p>
+                                </template>
+                            </div>
+                            <div class="status_icon">
+                                <p style="color: var(--success);" v-if="txStatus==='Committed'"><fa icon="check-circle"></fa></p>
+                                <p style="color: var(--error);" v-if="txStatus==='Dropped'"><fa icon="times-circle"></fa></p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </form>
@@ -475,7 +483,7 @@ export default class AddValidator extends Vue{
             reason = res.reason
         }
 
-        if(!status || status==='Processing'){
+        if(!status || status==='Processing' || status==='Unknown'){
             setTimeout(() => {
                 this.updateTxStatus(txId);
             }, 5000);
@@ -631,6 +639,17 @@ label{
             user-select: none;
             pointer-events: none;
         }
+    }
+}
+
+.tx_status{
+    display: flex;
+    justify-content: space-between;
+
+    .status_icon{
+        align-items: center;
+        display: flex;
+        font-size: 24px;
     }
 }
 
