@@ -96,15 +96,18 @@
                         <div>
                             <label>{{$t('earn.delegate.success.status')}}</label>
                             <p v-if="!txStatus">Waiting..</p>
-                            <template v-else>
-                                <p>{{txStatus}}</p>
-                                <p v-if="txReason">{{txReason}}</p>
-                            </template>
+                            <p v-else>{{txStatus}}</p>
+
                         </div>
                         <div class="status_icon">
+                            <Spinner v-if="!txStatus" style="color: var(--primary-color);"></Spinner>
                             <p style="color: var(--success);" v-if="txStatus==='Committed'"><fa icon="check-circle"></fa></p>
                             <p style="color: var(--error);" v-if="txStatus==='Dropped'"><fa icon="times-circle"></fa></p>
                         </div>
+                    </div>
+                    <div class="reason_cont" v-if="txReason">
+                        <label>{{$t('earn.delegate.success.reason')}}</label>
+                        <p>{{txReason}}</p>
                     </div>
                 </div>
             </div>
@@ -137,6 +140,7 @@ import {Defaults, ONEAVAX} from "avalanche/dist/utils";
 import {ValidatorListItem} from "@/store/modules/platform/types";
 import NodeSelection from "@/components/wallet/earn/Delegate/NodeSelection.vue";
 import CurrencySelect from "@/components/misc/CurrencySelect/CurrencySelect.vue";
+import Spinner from "@/components/misc/Spinner.vue";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -145,6 +149,7 @@ const DAY_MS = HOUR_MS * 24;
 
 @Component({
     components: {
+        Spinner,
         CurrencySelect,
         NodeSelection,
         AvaxInput,
@@ -216,11 +221,11 @@ export default class AddDelegator extends Vue{
     onsuccess(txId: string){
         this.txId = txId;
         this.isSuccess = true;
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Delegator Added',
-            message: 'Your tokens will now be delegated for staking.'
-        })
+        // this.$store.dispatch('Notifications/add', {
+        //     type: 'success',
+        //     title: 'Delegator Added',
+        //     message: 'Your tokens will now be delegated for staking.'
+        // })
 
         this.updateTxStatus(txId);
     }
@@ -709,6 +714,12 @@ label{
         display: flex;
         font-size: 24px;
     }
+}
+
+.tx_status, .reason_cont{
+    background-color: var(--bg-light);
+    padding: 4px 12px;
+    margin-bottom: 6px;
 }
 
 .success_cont{

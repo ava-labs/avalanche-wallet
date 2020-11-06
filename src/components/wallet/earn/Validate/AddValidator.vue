@@ -80,15 +80,17 @@
                             <div>
                                 <label>{{$t('earn.validate.success.status')}}</label>
                                 <p v-if="!txStatus">Waiting..</p>
-                                <template v-else>
-                                    <p>{{txStatus}}</p>
-                                    <p v-if="txReason">{{txReason}}</p>
-                                </template>
+                                <p v-else>{{txStatus}}</p>
                             </div>
                             <div class="status_icon">
+                                <Spinner v-if="!txStatus" style="color: var(--primary-color);"></Spinner>
                                 <p style="color: var(--success);" v-if="txStatus==='Committed'"><fa icon="check-circle"></fa></p>
                                 <p style="color: var(--error);" v-if="txStatus==='Dropped'"><fa icon="times-circle"></fa></p>
                             </div>
+                        </div>
+                        <div class="reason_cont" v-if="txReason">
+                            <label>{{$t('earn.validate.success.reason')}}</label>
+                            <p>{{txReason}}</p>
                         </div>
 
                     </div>
@@ -116,6 +118,8 @@ import {bnToBig, calculateStakingReward} from "@/helpers/helper";
 import {ONEAVAX} from "avalanche/dist/utils";
 import Tooltip from "@/components/misc/Tooltip.vue";
 import CurrencySelect from "@/components/misc/CurrencySelect/CurrencySelect.vue";
+import Spinner from "@/components/misc/Spinner.vue";
+
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -128,7 +132,8 @@ const DAY_MS = HOUR_MS * 24;
         AvaxInput,
         QrInput,
         ConfirmPage,
-        CurrencySelect
+        CurrencySelect,
+        Spinner
     }
 })
 export default class AddValidator extends Vue{
@@ -463,11 +468,11 @@ export default class AddValidator extends Vue{
     onsuccess(txId: string){
         this.txId = txId;
         this.isSuccess = true;
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Validator Transaction Sent',
-            message: 'If accepted, your tokens will be locked to validate the network and earn rewards.'
-        });
+        // this.$store.dispatch('Notifications/add', {
+        //     type: 'success',
+        //     title: 'Validator Transaction Sent',
+        //     message: 'If accepted, your tokens will be locked to validate the network and earn rewards.'
+        // });
         this.updateTxStatus(txId);
     }
 
@@ -651,6 +656,12 @@ label{
         display: flex;
         font-size: 24px;
     }
+}
+
+.tx_status, .reason_cont{
+    background-color: var(--bg-light);
+    padding: 4px 12px;
+    margin-bottom: 6px;
 }
 
 @include main.mobile-device{
