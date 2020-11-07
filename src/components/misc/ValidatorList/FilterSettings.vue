@@ -161,7 +161,7 @@
 </script>
 <style scoped lang="scss">
     .filter_settings{
-        background-color: rgba(255,255,255,0.9);
+        background-color: rgba(var(--bg-1),0.9);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -177,6 +177,11 @@
     .inputs{
         > div{
             margin: 4px 0;
+            color: var(--primary-color-light)
+        }
+
+        input{
+            color: var(--primary-color)
         }
     }
 

@@ -359,7 +359,10 @@ textarea{
 
 html[data-theme='day']{
   --bg: #FFF;
-  --bg-light: #F5F6FA;
+  --bg-1: 255, 255, 255;
+  --bg-light: #f5f6fa;
+  --bg-light-1: 245, 246, 250;
+
   --primary-color: #4C2E56;
   --primary-color-light: #867E89;
   --secondary-color: #E84970;
@@ -376,7 +379,9 @@ html[data-theme='day']{
 
 html[data-theme='night']{
   --bg: #242729;
+  --bg-1: 36, 39, 41;
   --bg-light: #2E3234;
+  --bg-light-1: 46, 50, 52;
   --primary-color: #E5E5E5;
   --primary-color-light: #6E7479;
   --secondary-color: #E84970;
