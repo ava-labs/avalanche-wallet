@@ -285,7 +285,8 @@
             "success": {
                 "title": "Your validation transaction is sent.",
                 "desc": "If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.",
-                "status": "Status"
+                "status": "Status",
+                "reason": "Reason"
             },
             "errs": {
                 "duration_warn": "WARNING: You must have at least 14 days remaining on your validation period to accept delegations.",
@@ -381,7 +382,8 @@
             "success": {
                 "title": "Delegation transaction sent.",
                 "desc": "If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.",
-                "status": "Status"
+                "status": "Status",
+                "reason": "Reason"
             }
         }
     },
