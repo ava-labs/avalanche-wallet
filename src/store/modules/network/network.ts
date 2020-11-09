@@ -140,7 +140,6 @@ const network_module: Module<NetworkState, RootState> = {
             // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'https://explorerapi.avax.network');
             let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1,  "https://explorerapi.avax.network", true);
             let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5,  "https://explorerapi.avax-test.network", true);
-            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345,  undefined, true);
 
             // Load custom networks if any
             try {
@@ -152,7 +151,7 @@ const network_module: Module<NetworkState, RootState> = {
             // commit('addNetwork', netTest);
             commit('addNetwork', manhattan);
             commit('addNetwork', fuji);
-            commit('addNetwork', netLocal);
+            
             try{
                 let isSet = await dispatch('loadSelectedNetwork');
                 if(!isSet){
