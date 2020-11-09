@@ -1,10 +1,13 @@
 <template>
     <div class="network_row" :active="isSelected">
-        <img src="@/assets/network_ava.png">
+<!--        <img src="@/assets/network_ava.png">-->
         <div class="name_col">
             <p class="name">{{network.name}}</p>
             <p class="url">{{endpoint}}</p>
-            <button class="editBut" @click="edit" v-if="!isSelected && !network.readonly"><fa icon="cog"></fa> Edit</button>
+            <div v-if="!isSelected && !network.readonly" class="buts">
+                <button class="editBut" @click="edit" ><fa icon="cog"></fa> Edit</button>
+                <button class="editBut" @click="deleteNet" ><fa icon="trash"></fa> Delete</button>
+            </div>
         </div>
         <div class="stat_col">
             <button  @click="select" v-if="!isSelected">Select</button>
@@ -56,6 +59,14 @@
                 // console.log(this.$parent.$parent.$parent.onedit);
                 this.$parent.$parent.$parent.onedit(this.network);
             },
+
+            deleteNet(){
+                this.$store.dispatch('Network/removeCustomNetwork', this.network);
+                this.$store.dispatch('Notifications/add', {
+                    title: "Network Removed",
+                    message: "Removed custom network.",
+                }, {root: true});
+            },
             async select(){
                 let net = this.network;
                 try{
@@ -94,7 +105,7 @@
         position: relative;
         padding: 12px 0px;
         display: grid;
-        grid-template-columns: 40px 1fr 80px;
+        grid-template-columns: 1fr 80px;
         column-gap: 15px;
         border-bottom: 1px solid var(--bg-light);
 
@@ -117,6 +128,12 @@
         /*overflow: auto;*/
         /*text-overflow: ellipsis;*/
 
+    }
+
+    .buts{
+        button{
+            margin-right: 12px;
+        }
     }
 
     .editBut{

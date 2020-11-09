@@ -22,17 +22,6 @@ const network_module: Module<NetworkState, RootState> = {
         addNetwork(state, net: AvaNetwork){
             state.networks.push(net);
         },
-        addCustomNetwork(state, net: AvaNetwork){
-            state.networksCustom.push(net);
-        },
-        // Save custom networks to local storage
-        save(){
-
-        },
-        // Load custom networks from local storage
-        load(){
-
-        }
     },
     getters:{
         allNetworks(state){
@@ -40,6 +29,37 @@ const network_module: Module<NetworkState, RootState> = {
         }
     },
     actions: {
+        addCustomNetwork({state, dispatch}, net: AvaNetwork){
+            state.networksCustom.push(net);
+            dispatch('save');
+        },
+
+        async removeCustomNetwork({state, dispatch}, net: AvaNetwork){
+            let index = state.networksCustom.indexOf(net);
+            state.networksCustom.splice(index, 1);
+            await dispatch('save');
+        },
+
+        // Save custom networks to local storage
+        save({state}){
+            let data = JSON.stringify(state.networksCustom);
+            console.log(data);
+            localStorage.setItem('networks',data)
+
+        },
+        // Load custom networks from local storage
+        load({dispatch}){
+            let data = localStorage.getItem('networks');
+
+            if(data){
+                let networks: AvaNetwork[] = JSON.parse(data);
+
+                networks.forEach(n => {
+                    let newCustom = new AvaNetwork(n.name, n.url, n.networkId, n.explorerUrl, n.readonly);
+                    dispatch('addCustomNetwork', newCustom);
+                })
+            }
+        },
         async setNetwork({state, dispatch, commit, rootState}, net:AvaNetwork){
             // Query the network to get network id
 
@@ -97,6 +117,12 @@ const network_module: Module<NetworkState, RootState> = {
             let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5,  "https://explorerapi.avax-test.network", true);
             let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345,  undefined, true);
 
+            // Load custom networks if any
+            try {
+                await dispatch('load');
+            }catch (e) {
+                console.error(e);
+            }
 
             // commit('addNetwork', netTest);
             commit('addNetwork', manhattan);
