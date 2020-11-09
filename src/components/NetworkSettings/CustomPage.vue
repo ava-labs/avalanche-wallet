@@ -2,7 +2,7 @@
     <div class="custom_network">
         <form @submit.prevent="submit">
             <div>
-                <label>Network Name</label>
+                <label>{{$t('network.custom_page.label1')}}</label>
                 <input type="text" placeholder="Network Name" v-model="name">
             </div>
             <div>
@@ -11,11 +11,10 @@
                 <p class="form_error" v-if="err_url">{{err_url}}</p>
             </div>
             <div>
-                <label>Explorer API (optional)</label>
+                <label>{{$t('network.custom_page.label2')}}</label>
                 <input type="text" placeholder="www" v-model="explorer_api" @input="cleanExplorerUrl">
             </div>
             <p v-if="err" class="form_error">{{err}}</p>
-<!--            <button>Add Network</button>-->
             <v-btn :loading="isAjax" height="26" depressed type="submit" class="button_primary">{{$t('network.add')}}</v-btn>
         </form>
     </div>
