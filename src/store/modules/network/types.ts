@@ -3,9 +3,11 @@ import BN from "bn.js";
 
 export interface NetworkState {
     networks: AvaNetwork[]
+    networksCustom: AvaNetwork[]
     selectedNetwork: null|AvaNetwork
     // isConnected: boolean
     status: NetworkStatus
+
     txFee: BN
 }
 

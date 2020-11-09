@@ -18,15 +18,25 @@
         }
     },
     "network": {
-        "status1": "Connecting ...",
+        "status1": "Connecting..",
         "status2": "Disconnected",
+        "status3": "Connected",
         "title": "Networks",
         "title2": "Add Custom Network",
         "title3": "Edit Network",
         "custom": "Add Custom",
         "cancel": "Cancel",
         "add": "Add Network",
-        "not_mainnet": "This wallet is not connected to Mainnet."
+        "not_mainnet": "This wallet is not connected to Mainnet.",
+        "row": {
+            "edit": "Edit",
+            "delete": "Delete",
+            "select": "Select"
+        },
+        "custom_page": {
+            "label1": "Network Name",
+            "label2": "Explorer API (optional)"
+        }
     },
     "access": {
         "title": "How do you want to access your wallet?",

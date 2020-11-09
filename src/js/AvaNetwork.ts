@@ -8,12 +8,13 @@ class AvaNetwork{
     port: number;
     ip: string;
     networkId: number;
-    chainId: string;
+    // chainId: string;
     url: string;
     explorerUrl: string|undefined;
+    readonly: boolean;
     // fee: BN
 
-    constructor(name: string, url:string, networkId: number, chainId: string, explorerUrl?: string) {
+    constructor(name: string, url:string, networkId: number, explorerUrl?: string, readonly = false) {
         this.id = network_id++;
         this.name = name;
         this.explorerUrl = explorerUrl;
@@ -23,7 +24,8 @@ class AvaNetwork{
         this.url = url;
         this.updateURL(url);
         this.networkId = networkId;
-        this.chainId = chainId;
+        // this.chainId = chainId;
+        this.readonly = readonly;
         // this.fee = new BN(0);
     }
 

@@ -1,15 +1,17 @@
 <template>
     <div class="network_row" :active="isSelected">
-        <img src="@/assets/network_ava.png">
         <div class="name_col">
             <p class="name">{{network.name}}</p>
             <p class="url">{{endpoint}}</p>
-            <button class="editBut" @click="edit" v-if="!isSelected"><fa icon="cog"></fa> Edit</button>
+            <div v-if="!isSelected && !network.readonly" class="buts">
+                <button class="editBut" @click="edit" ><fa icon="cog"></fa> {{$t('network.row.edit')}}</button>
+                <button class="editBut" @click="deleteNet" ><fa icon="trash"></fa> {{$t('network.row.delete')}}</button>
+            </div>
         </div>
         <div class="stat_col">
-            <button  @click="select" v-if="!isSelected">Select</button>
-            <button  v-else-if="!isConnected" class="connecting">Connecting...</button>
-            <p v-else>Connected</p>
+            <button  @click="select" v-if="!isSelected">{{$t('network.row.select')}}</button>
+            <button  v-else-if="!isConnected" class="connecting">{{$t('network.status1')}}</button>
+            <p v-else>{{$t('network.status3')}}</p>
         </div>
     </div>
 </template>
@@ -51,10 +53,15 @@
         },
         methods: {
             edit(){
-                // console.log(this.$parent.onedit);
-                // console.log(this.$parent.$parent.onedit);
-                // console.log(this.$parent.$parent.$parent.onedit);
                 this.$parent.$parent.$parent.onedit(this.network);
+            },
+
+            deleteNet(){
+                this.$store.dispatch('Network/removeCustomNetwork', this.network);
+                this.$store.dispatch('Notifications/add', {
+                    title: "Network Removed",
+                    message: "Removed custom network.",
+                }, {root: true});
             },
             async select(){
                 let net = this.network;
@@ -68,7 +75,6 @@
                     }, {root: true});
                     this.$parent.$parent.isActive = false;
                 }catch(e){
-                    // console.log(e);
                     this.$store.state.Network.selectedNetwork = null;
                     this.$store.dispatch('Notifications/add', {
                         title: "Connection Failed",
@@ -88,13 +94,14 @@
         font-size: 14px;
         color: var(--primary-color);
         text-align: right;
+        word-break: keep-all !important;
     }
 
     .network_row{
         position: relative;
         padding: 12px 0px;
         display: grid;
-        grid-template-columns: 40px 1fr 80px;
+        grid-template-columns: 1fr 80px;
         column-gap: 15px;
         border-bottom: 1px solid var(--bg-light);
 
@@ -117,6 +124,12 @@
         /*overflow: auto;*/
         /*text-overflow: ellipsis;*/
 
+    }
+
+    .buts{
+        button{
+            margin-right: 12px;
+        }
     }
 
     .editBut{
@@ -143,6 +156,7 @@
     .url{
         color: main.$primary-color-light;
         font-size: 12px;
+        word-break: break-all;
     }
 
     @keyframes connecting {

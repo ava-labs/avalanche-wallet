@@ -32,6 +32,7 @@ import ro from '../locales/romanian.json';
 import sr from '../locales/serbian.json';
 import sv from '../locales/swedish.json';
 import th from '../locales/thai.json';
+import ja from '../locales/japanese.json';
 
 const messages = {
     en,
@@ -62,7 +63,8 @@ const messages = {
     ro,
     sr,
     sv,
-    th
+    th,
+    ja
 };
 
 // Create VueI18n instance with options

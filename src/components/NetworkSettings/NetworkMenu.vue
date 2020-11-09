@@ -34,7 +34,7 @@
                 <transition name="fade" mode="out-in">
                     <ListPage v-if="page==='list'"></ListPage>
                     <CustomPage v-if="page==='custom'" @add="addCustomNetwork"></CustomPage>
-                    <EditPage v-if="page==='edit'" :net="editNetwork" ></EditPage>
+                    <EditPage v-if="page==='edit'" :net="editNetwork" @success="networkUpdated"></EditPage>
                 </transition>
 
             </div>
@@ -78,9 +78,15 @@
             this.isActive = !this.isActive;
         }
         addCustomNetwork(data: AvaNetwork): void{
-            this.$store.commit('Network/addNetwork', data);
+            this.$store.dispatch('Network/addCustomNetwork', data);
             this.page = 'list';
         }
+
+        networkUpdated(){
+            this.page = 'list';
+            this.$store.dispatch('Network/save');
+        }
+
         onedit(network: AvaNetwork): void{
             this.editNetwork = network;
             this.page = 'edit';
@@ -92,8 +98,9 @@
         get activeNetwork(): null|AvaNetwork{
             return this.$store.state.Network.selectedNetwork;
         }
-        get networks(): AvaNetwork{
-            return this.$store.state.Network.networks;
+        get networks(): AvaNetwork[]{
+            return this.$store.getters('Network/allNetworks');
+            // return this.$store.state.Network.networks;
         }
 
         get isTestnet(): boolean{

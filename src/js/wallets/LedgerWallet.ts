@@ -318,15 +318,17 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async importToPlatformChain(): Promise<string> {
-        await this.platformHelper.findHdIndex();
+        // await this.platformHelper.findHdIndex();
         const utxoSet = await this.platformHelper.getAtomicUTXOs() as PlatformUTXOSet;
-        let pAddrs = this.platformHelper.getAllDerivedAddresses();
-        // Owner addresses, the addresses we exported to
-        let pToAddr = this.platformHelper.getCurrentAddress();
 
         if(utxoSet.getAllUTXOs().length === 0){
             throw new Error("Nothing to import.")
         }
+
+        let pAddrs = this.platformHelper.getAllDerivedAddresses();
+        // Owner addresses, the addresses we exported to
+        let pToAddr = this.platformHelper.getCurrentAddress();
+
 
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,

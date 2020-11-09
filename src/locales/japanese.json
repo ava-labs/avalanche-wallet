@@ -1,0 +1,428 @@
+{
+    "password": "パスワード",
+    "password_confirm": "パスワードの確認",
+    "private_key": "プライベートキー",
+    "address": "アドレス",
+    "add_pk": "プライベートキーの追加",
+    "home": {
+        "desc": "AvalancheウォレットはAvalancheのアセットを保存するシンプルで安全な非保管型ウォレットです",
+        "access": {
+            "title": "おかえりなさい！",
+            "desc": "こちらで既存Avalancheウォレットに”アクセス”できます",
+            "submit": "ウォレットにアクセス"
+        },
+        "create": {
+            "title": "Avalancheウォレットは初めてですか？",
+            "desc": "新規ウォレットを”作成”するとAvalancheアセットの送受信が可能になります",
+            "submit": "新規ウォレットの作成"
+        }
+    },
+    "network": {
+        "status1": "接続中…",
+        "status2": "切断されました",
+        "title": "ネットワーク",
+        "title2": "カスタムネットワークの追加",
+        "title3": "ネットワークの編集",
+        "custom": "カスタム設定を追加",
+        "cancel": "キャンセル",
+        "add": "ネットワークの追加"
+    },
+    "access": {
+        "title": "ウォレットへのアクセス方法は？",
+        "create": "ウォレットを持っていませんか？",
+        "but_mnemonic": "ニーモニックキーフレーズ",
+        "but_keystore": "キーストアファイル",
+        "cancel": "キャンセル",
+        "json_error": "JSONファイルを解析できません",
+        "keystore_error": "このキーストアバージョンはサポートされていません",
+        "password_error": "パスワードが不正です",
+        "mnemonic": {
+            "title": "ニーモニックフレーズを入力",
+            "subtitle": "単語を入力するたびにスペースを挿入してください",
+            "submit": "ウォレットにアクセス",
+            "cancel": "キャンセル",
+            "error": "キーフレーズが不正：フレーズは1つのスペースで区切られた24の単語である必要があります"
+        }
+    },
+    "wallet": {
+        "sidebar": {
+            "portfolio": "ポートフォリオ",
+            "manage": "管理",
+            "send": "送信",
+            "earn": "獲得する",
+            "advanced": "Advanced"
+        },
+        "address_card": {},
+        "collectibles": {
+            "empty": "コレクションが見つかりません"
+        }
+    },
+    "create": {
+        "generate": "新しいキーフレーズを生成してAvalancheウォレットを設定します",
+        "but_have": "ウォレットをお持ちですか？",
+        "submit": "キーフレーズの生成",
+        "cancel": "キャンセル",
+        "mnemonic_title": "こちらがあなたのキーフレーズです",
+        "mnemonic_desc": "これら24個の単語を順番通りに入力してAvalancheウォレットを回復します",
+        "attention": "注意！",
+        "warning": "キーフレーズを安全な場所に保管してください：このキーフレーズがあれば誰でもあなたのAvalancheウォレットにアクセスできます：失くしたキーフレーズを回復する方法はありません",
+        "confirm": "安全な場所に自分のキーフレーズを書き留めました",
+        "regenerate": "再生成",
+        "success_title": "おめでとう！",
+        "success_desc": "Avalancheウォレットにアクセスできるようになりました",
+        "success_submit": "ウォレットにアクセス",
+        "verify": "確認",
+        "verifytitle": "ニーモニックの確認",
+        "verify_desc": "ニーモニックフレーズを入力してください",
+        "error_number": "番号が未記入のようです",
+        "error_word": "入力したニーモニックフレーズが正しいフレーズと一致しません"
+    },
+    "top": {
+        "title1": "Derived Avalancheウォレットアドレス",
+        "title2": "残高",
+        "title3": "サブネット",
+        "title4": "ネットワーク",
+        "nftcol": "NFTs",
+        "nftempty": "NFTを保有していません",
+        "locked": "ロック済",
+        "info2": "トークンセールで購入した場合、私のAVAXはどこにありますか？",
+        "info2_desc": "このウォレットはAvalancheエベレストテストネットワークに接続されています：購入トークンは、Avalancheメインネットローンチ後にウォレットに表示されます",
+        "hover1": "アドレスQRコードを見る",
+        "hover2": "印刷",
+        "hover3": "コピー",
+        "hover4": "メインネットアドレスを見る",
+        "balance": {
+            "show": "内訳を表示",
+            "hide": "内訳を隠す",
+            "available": "利用可能額",
+            "locked": "ロック済",
+            "locked_stake": "ロック済ステーク",
+            "stake": "ステーキング",
+            "collectibles": "コレクション"
+        },
+        "address": {
+            "derived": "Derived Avalancheウォレットアドレス",
+            "desc": "こちらは資金のを受け取りに必要なアドレスで入金のたびにアドレスが変わります"
+        }
+    },
+    "transfer": {
+        "title": "送信",
+        "no_cash": "トランザクションを発行するにはウォレットにアセットを所有している必要があります",
+        "faucet": "フォーセットは確認しましたか？",
+        "to": "宛先",
+        "fees": "手数料",
+        "fee_tx": "トランザクション手数料",
+        "advanced": "Advanced",
+        "adv_change": "アドレスの変更",
+        "send": "トランザクションを送信",
+        "summary": "トランザクションサマリー",
+        "disconnected": "アセットを送信できません：ネットワークが切断されました",
+        "success_title": "トランザクション送信",
+        "success_msg": "取引が成功しました",
+        "error_title": "トランザクション送信エラー",
+        "error_msg": "トランザクションを送信できませんでした"
+    },
+    "keys": {
+        "title": "所有キー",
+        "button1": "キーを記憶する",
+        "button2": "インポートキー",
+        "button3": "エクスポートキー",
+        "subtitle": "アクティブキー",
+        "remember_key_button": "記憶させる",
+        "remember_key_desc": "ウォレットをパスワードで暗号化してブラウザで安全に保管してください",
+        "remember_key_check": "キーを記憶",
+        "remember_key_info": "後でブラウザでパスワードを入力してウォレットにアクセスすることができます",
+        "export_key_button": "ウォレットのエクスポート",
+        "export_key_title": "キーのエクスポート",
+        "export_key_desc": "パスワードを入力してプライベートキーをファイルにエンコードします：後でこのファイルとパスワードを使ってウォレットにアクセスすることができます",
+        "export_key_info": " {0} キーを選択",
+        "export_placeholder1": "パスワード",
+        "export_placeholder2": "パスワードの確認",
+        "empty": "このキーには残高がありません",
+        "import_key_button": "キーのインポート",
+        "import_key_title": "キーをインポート",
+        "import_key_desc": "ウォレットに使用するキーを追加",
+        "import_key_option1": "ニーモニックフレーズ",
+        "import_key_option2": "キーストアファイル",
+        "import_key_success_title": "キーの追加",
+        "import_key_success_msg": "ウォレットにプライベートキーとアセットを追加",
+        "tooltip": "このキーはブラウザを更新すると記録されません",
+        "view_key": "キーフレーズを見る",
+        "export_key": "キーをエクスポート",
+        "hd_addresses": "HD アドレス",
+        "remove_key": "キーの削除",
+        "activate_key": "キーを有効化",
+        "remove_success_title": "キーの削除",
+        "remove_success_msg": "プライベートキーとアセットをウォレットから削除",
+        "password_validation": "パスワードは9文字以上に設定してください",
+        "password_validation2": "パスワードが一致しません"
+    },
+    "portfolio": {
+        "assets": "アセット",
+        "assets1": "トークン",
+        "assets2": "コレクション",
+        "search": "アセットを検索",
+        "name": "名前",
+        "send": "送信",
+        "balance": "残高",
+        "error_network": "アセットを表示できません：ネットワークが切断されました",
+        "nobalance": "アセットを保有していません",
+        "nobalance_nft": "コレクションが見つかりません",
+        "noaddresses": "過去のアドレスが存在しません"
+    },
+    "earn": {
+        "title": "獲得する",
+        "desc": "トークンをステーキング出資することでより多くのAVAXを獲得できます",
+        "subtitle1": "バリデート",
+        "subtitle2": "デリゲート",
+        "subtitle3": "クロスチェーン転送",
+        "subtitle4": "推定リワード",
+        "warning_1": "バリデーターになるにはPチェーン上に最小 {0} AVAXが必要です",
+        "warning_2": "デリゲーターになるにはPチェーン上に最小 {0} AVAX必要です",
+        "validate_card": {
+            "title": "バリデート",
+            "desc": "ステーク先にするAvalancheノードを選択する必要があります",
+            "submit": "バリデーターを追加"
+        },
+        "delegate_card": {
+            "title": "デリゲート",
+            "desc": "あなたがAvalancheノードを保有していない場合は別のノードにステークしなければなりません",
+            "submit": "デリゲーターを追加"
+        },
+        "transfer_card": {
+            "title": "クロスチェーン転送",
+            "desc": "ステーキングにはPチェーン上にAVAXが必要です：X - P間でトークンを転送する",
+            "submit": "転送"
+        },
+        "rewards_card": {
+            "title": "推定リワード",
+            "desc": "受け取りステーキングリワードを見る",
+            "submit": "リワードを見る"
+        },
+        "transfer": {
+            "source": "ソースチェーン",
+            "destination": "宛先チェーン",
+            "balance": "残高",
+            "amount": "転送額",
+            "fee": "手数料",
+            "confirm": "確認",
+            "submit": "転送",
+            "cancel": "キャンセル",
+            "err_import": "インポート失敗",
+            "err_desc": "トークンの宛先チェーンのインポート中に問題が発生しました：再度インポートしてください",
+            "err_submit": "インポートを開始",
+            "success": {
+                "title": "転送完了",
+                "export": "トランザクションIDをエクスポート:",
+                "import": "トランザクションIDをインポート:",
+                "message": "チェーン間転送が成功しました",
+                "back": "収益に戻る"
+            }
+        },
+        "rewards": {
+            "total": "合計リワード",
+            "validation": "バリデーション",
+            "delegation": "デリゲーション",
+            "empty": "保留中リワードはありません",
+            "row": {
+                "start": "開始",
+                "end": "終了",
+                "completed": "完了",
+                "stake": "ステーク",
+                "reward": "潜在的リワード"
+            }
+        },
+        "validate": {
+            "label_1": "ノードID",
+            "duration": {
+                "label": "ステーキング期間",
+                "desc": "ステーキングによるトークンロック期間",
+                "start": "開始日時",
+                "end": "終了日時"
+            },
+            "amount": {
+                "label": "ステーク額",
+                "desc": "ステーキングによるロックAVAX額"
+            },
+            "fee": {
+                "label": "デリゲーション手数料",
+                "desc": "ノード上のデリゲーターからこの%のリワードを受け取ることができます"
+            },
+            "reward": {
+                "label": "リワードアドレス",
+                "desc": "ステーキングリワードの送信先",
+                "chip_1": "このウォレットを使用",
+                "chip_2": "アドレスをカスタム"
+            },
+            "summary": {
+                "max_del": "最大デリゲーション額",
+                "max_del_tooltip": "バリデータへのデリゲート可能額",
+                "duration": "ステーキング継続期間",
+                "rewards": "推定リワード",
+                "warn": "初めてのステーキングは少額から始めてください：ステーキングトークンは期間終了までロックされます"
+            },
+            "confirmation": {
+                "id": "ノードID",
+                "amount": "ステーキング額",
+                "start": "開始日",
+                "end": "終了日",
+                "fee": "デリゲーション手数料",
+                "reward": "リワードアドレス",
+                "type_local": "このウォレット",
+                "type_custom": "カスタム"
+            },
+            "confirm": "確認",
+            "submit": "提出",
+            "cancel": "キャンセル",
+            "success": {
+                "title": "バリデーショントランザクションが送信されました",
+                "desc": "トランザクションが承認されるとトークンはステーキング用にロックされます：ロックトークンにステーキングリワードを加えた額がステーキング期間終了時に支払われます",
+                "status": "ステータス"
+            },
+            "errs": {
+                "date": "開始日は未来の日付、終了日は開始日より後の日付である必要があります",
+                "amount": "最小ステーク額は {0} AVAXです",
+                "id": "ノードIDが無効です \"NodeID-\"で始まるIDを設定してください",
+                "address": "リワードアドレスが無効です"
+            }
+        },
+        "delegate": {
+            "list": {
+                "prompt": "デリゲート先のノードを選択",
+                "search": "ノードIDを検索",
+                "id": "ノードID",
+                "val_stake": "バリデータ―ステーク",
+                "aval_stake": "利用可能額",
+                "aval_stake_tip": "バリデータへのデリゲート可能額",
+                "users_tip": "デリゲーター数",
+                "end": "終了時間",
+                "up": "稼働時間",
+                "up_tip": "このウォレットが接続されているノードを基準にします",
+                "fee": "手数料",
+                "empty": {
+                    "title": "バリデーターが見つかりません",
+                    "desc": "バリデータは積極的なステーキングを受け付ける必要があります"
+                }
+            },
+            "node": {
+                "selected": "選択ノード",
+                "fee": "デリゲーション手数料",
+                "start": "バリデータ―開始日",
+                "end": "バリデータ―終了日"
+            },
+            "form": {
+                "period": {
+                    "label": "ステーキング期間",
+                    "desc": "ステーキングによるトークンロック期間",
+                    "start": "開始日時",
+                    "end": "終了日時"
+                },
+                "amount": {
+                    "label": "ステーク額",
+                    "desc": "ステーキングによるロックAVAX額",
+                    "desc2": "このノードへのデリゲーション額は {0} AVAXです"
+                },
+                "reward": {
+                    "label": "リワードアドレス",
+                    "desc": "ステーキングリワードの送信先",
+                    "chip_1": "このウォレットを使用",
+                    "chip_2": "アドレスをカスタム"
+                }
+            },
+            "confirmation": {
+                "node": "ノードID",
+                "amount": "ステーキング額",
+                "start": "開始日",
+                "end": "終了日",
+                "reward": "リワードアドレス"
+            },
+            "errs": {
+                "start_now": "開始時間は現在時刻より後でなければなりません",
+                "start_end": "開始日は未来の日付、終了日は開始日より後の日付である必要があります",
+                "invalid_addr": "無効なアドレス形式です アドレスは\"P-\"から始まる形式になります",
+                "no_addr": "デリゲーションリワードの受け取りアドレスを指定する必要があります",
+                "min_dur": "最短ステーキング期間は2週間です",
+                "max_dur": "最長ステーキング期間は1年間です",
+                "no_node": "バリデーターを指定してください",
+                "val_end": "デリゲーション終了日はバリデーター終了日より長くすることはできません",
+                "amt": "最小デリゲーション額は {0} AVAXです"
+            },
+            "summary": {
+                "duration": "ステーキング継続期間",
+                "reward": "推定リワード",
+                "fee": "手数料",
+                "warn": "初めてのステーキングは少額から始めてください：ステーキングトークンは期間終了までロックされます"
+            },
+            "confirm": "確認",
+            "submit": "提出",
+            "cancel": "キャンセル",
+            "success": {
+                "title": "デリゲーショントランザクションが送信されました",
+                "desc": "トランザクションが承認されるとトークンはステーキング用にロックされます：ロックトークンにステーキングリワードを加えた額がステーキング期間終了時に支払われます",
+                "status": "ステータス"
+            }
+        }
+    },
+    "advanced": {
+        "title": "Advanced",
+        "import": {
+            "title": "チェーンをインポートする",
+            "desc": "チェーン転送に失敗して資金が滞っている場合、こちらでインポートを完了できます",
+            "submit_x": "X をインポート",
+            "submit_p": "P をインポート"
+        }
+    },
+    "logout": {
+        "button": "ログアウト",
+        "button_conf": "ログアウト",
+        "button_cancel": "キャンセル",
+        "confirmation": "ログアウトしますか？",
+        "confirmation_message": "このウォレットとキーは記録されません"
+    },
+    "keystore": {
+        "title": "キーストアファイル",
+        "button": "シークレットファイル"
+    },
+    "transactions": {
+        "notx": "このアドレスのトランザクション履歴が見つかりませんでした",
+        "loading": "取引履歴をロード中…",
+        "warn_loading": "このリストは不完全なものであり正しくない可能性があります",
+        "error_api": "エクスプローラーAPIが見つかりません",
+        "error_api_desc": "トランザクション履歴を表示するには、このネットワーク用AVA Explorer APIを提供する必要があります"
+    },
+    "modal": {
+        "qr": {
+            "title": "アドレス",
+            "copy": "アドレスをコピー"
+        },
+        "print": {
+            "title": "印刷プレビュー",
+            "submit": "印刷"
+        },
+        "keystore": {
+            "title": "キーストアファイルの更新",
+            "desc": "キーストアファイルの仕様を更新しました 新たなキーストアファイルをダウンロードしてウォレットに再アクセスしてください",
+            "logout": "ログアウト＆再アクセス"
+        },
+        "mainnet": {
+            "title": "メインネットアドレス",
+            "desc": "あなたのメインネットアドレス"
+        },
+        "mnemonic": {
+            "title": "キーフレーズ"
+        },
+        "activateWallet": {
+            "title": "ウォレットを起動",
+            "desc": "パスワードを入力してウォレットにアクセスしてください",
+            "submit": "ウォレットにアクセス",
+            "cancel": "他のウォレットにアクセス",
+            "cancel2": "(今までのウォレットは記録されません)",
+            "err1": "パスワードが不正です",
+            "err2": "ウォレットデータを読み込めません"
+        }
+    },
+    "nav": {
+        "access": "ウォレットにアクセス",
+        "create": "新規ウォレットの作成"
+    }
+}

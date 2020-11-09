@@ -14,6 +14,7 @@ const network_module: Module<NetworkState, RootState> = {
     state: {
         status: 'disconnected', // disconnected | connecting | connected
         networks: [],
+        networksCustom: [],
         selectedNetwork: null,
         txFee: new BN(0)
     },
@@ -22,7 +23,65 @@ const network_module: Module<NetworkState, RootState> = {
             state.networks.push(net);
         },
     },
+    getters:{
+        allNetworks(state){
+            return state.networks.concat(state.networksCustom);
+        }
+    },
     actions: {
+        addCustomNetwork({state, dispatch}, net: AvaNetwork){
+            state.networksCustom.push(net);
+            dispatch('save');
+        },
+
+        async removeCustomNetwork({state, dispatch}, net: AvaNetwork){
+            let index = state.networksCustom.indexOf(net);
+            state.networksCustom.splice(index, 1);
+            await dispatch('save');
+        },
+        saveSelectedNetwork({state}){
+            let data = JSON.stringify(state.selectedNetwork);
+            localStorage.setItem('network_selected',data)
+        },
+        async loadSelectedNetwork({dispatch, getters}): Promise<boolean>{
+            let data = localStorage.getItem('network_selected');
+            if(!data) return false;
+            try{
+                // let net: AvaNetwork = JSON.parse(data);
+                let nets: AvaNetwork[] = getters.allNetworks;
+
+                for(var i=0; i<nets.length;i++){
+                    let net = nets[i];
+                    if(JSON.stringify(net) === data){
+                        dispatch('setNetwork', net);
+                        return true;
+                    }
+                }
+                return false;
+            }catch (e) {
+                return false;
+            }
+        },
+
+        // Save custom networks to local storage
+        save({state}){
+            let data = JSON.stringify(state.networksCustom);
+            localStorage.setItem('networks',data)
+
+        },
+        // Load custom networks from local storage
+        load({dispatch}){
+            let data = localStorage.getItem('networks');
+
+            if(data){
+                let networks: AvaNetwork[] = JSON.parse(data);
+
+                networks.forEach(n => {
+                    let newCustom = new AvaNetwork(n.name, n.url, n.networkId, n.explorerUrl, n.readonly);
+                    dispatch('addCustomNetwork', newCustom);
+                })
+            }
+        },
         async setNetwork({state, dispatch, commit, rootState}, net:AvaNetwork){
             // Query the network to get network id
 
@@ -41,6 +100,9 @@ const network_module: Module<NetworkState, RootState> = {
             pChain.getAVAXAssetID(true);
 
             state.selectedNetwork = net;
+            dispatch('saveSelectedNetwork');
+
+            // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl;
 
             commit('Assets/removeAllAssets', null, {root: true});
@@ -75,18 +137,26 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({state, commit, dispatch}){
-            // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1, 'X', "https://explorerapi.avax.network");
-            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5, 'X', "https://explorerapi.avax-test.network");
-            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
+            // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'https://explorerapi.avax.network');
+            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1,  "https://explorerapi.avax.network", true);
+            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5,  "https://explorerapi.avax-test.network", true);
 
+            // Load custom networks if any
+            try {
+                await dispatch('load');
+            }catch (e) {
+                console.error(e);
+            }
 
             // commit('addNetwork', netTest);
             commit('addNetwork', manhattan);
             commit('addNetwork', fuji);
-            commit('addNetwork', netLocal);
+            
             try{
-                let res = await dispatch('setNetwork', state.networks[0]);
+                let isSet = await dispatch('loadSelectedNetwork');
+                if(!isSet){
+                    await dispatch('setNetwork', state.networks[0]);
+                }
                 return true;
             }catch (e) {
                 console.log(e);
@@ -94,9 +164,6 @@ const network_module: Module<NetworkState, RootState> = {
             }
         }
     },
-    getters: {
-
-    }
 };
 
 export default network_module;
