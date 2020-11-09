@@ -50,6 +50,7 @@ const FLAGS_OVERRIDE: FLAG_DICT = {
     'nb': 'no',
     'sr': 'rs',
     'sv': 'se',
+    'ja': 'jp',
 }
 
 @Component({
