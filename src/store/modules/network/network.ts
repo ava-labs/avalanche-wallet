@@ -14,6 +14,7 @@ const network_module: Module<NetworkState, RootState> = {
     state: {
         status: 'disconnected', // disconnected | connecting | connected
         networks: [],
+        networksCustom: [],
         selectedNetwork: null,
         txFee: new BN(0)
     },
@@ -21,6 +22,22 @@ const network_module: Module<NetworkState, RootState> = {
         addNetwork(state, net: AvaNetwork){
             state.networks.push(net);
         },
+        addCustomNetwork(state, net: AvaNetwork){
+            state.networksCustom.push(net);
+        },
+        // Save custom networks to local storage
+        save(){
+
+        },
+        // Load custom networks from local storage
+        load(){
+
+        }
+    },
+    getters:{
+        allNetworks(state){
+            return state.networks.concat(state.networksCustom);
+        }
     },
     actions: {
         async setNetwork({state, dispatch, commit, rootState}, net:AvaNetwork){
@@ -75,10 +92,10 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({state, commit, dispatch}){
-            // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'X', 'https://explorerapi.avax.network');
-            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1, 'X', "https://explorerapi.avax.network");
-            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5, 'X', "https://explorerapi.avax-test.network");
-            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345, 'X');
+            // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'https://explorerapi.avax.network');
+            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1,  "https://explorerapi.avax.network", true);
+            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5,  "https://explorerapi.avax-test.network", true);
+            let netLocal = new AvaNetwork("Localhost",'http://localhost:9650', 12345,  undefined, true);
 
 
             // commit('addNetwork', netTest);
@@ -94,9 +111,6 @@ const network_module: Module<NetworkState, RootState> = {
             }
         }
     },
-    getters: {
-
-    }
 };
 
 export default network_module;

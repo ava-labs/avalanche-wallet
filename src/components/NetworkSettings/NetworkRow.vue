@@ -4,7 +4,7 @@
         <div class="name_col">
             <p class="name">{{network.name}}</p>
             <p class="url">{{endpoint}}</p>
-            <button class="editBut" @click="edit" v-if="!isSelected"><fa icon="cog"></fa> Edit</button>
+            <button class="editBut" @click="edit" v-if="!isSelected && !network.readonly"><fa icon="cog"></fa> Edit</button>
         </div>
         <div class="stat_col">
             <button  @click="select" v-if="!isSelected">Select</button>
@@ -143,6 +143,7 @@
     .url{
         color: main.$primary-color-light;
         font-size: 12px;
+        word-break: break-all;
     }
 
     @keyframes connecting {

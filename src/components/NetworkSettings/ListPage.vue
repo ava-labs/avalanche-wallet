@@ -5,19 +5,33 @@
         </div>
     </div>
 </template>
-<script>
-    import NetworkRow from './NetworkRow';
+<script lang="ts">
+    import 'reflect-metadata';
+    import { Vue, Component, Prop } from 'vue-property-decorator';
 
-    export default {
-        components:{
+    import NetworkRow from './NetworkRow.vue';
+    import {AvaNetwork} from "@/js/AvaNetwork";
+
+    @Component({
+        components: {
             NetworkRow
-        },
-        computed: {
-            networks(){
-                return this.$store.state.Network.networks;
-            }
-        },
+        }
+    })
+    export default class ListPage extends Vue{
+        get networks(): AvaNetwork[]{
+            return this.$store.getters['Network/allNetworks'];
+        }
     }
+
+    // export default {
+    //     components:{
+    //         NetworkRow
+    //     },
+    //     computed: {
+    //         networks(){
+    //              }
+    //     },
+    // }
 </script>
 <style scoped lang="scss">
     .networks_list{

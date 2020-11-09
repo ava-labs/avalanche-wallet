@@ -78,7 +78,7 @@
             this.isActive = !this.isActive;
         }
         addCustomNetwork(data: AvaNetwork): void{
-            this.$store.commit('Network/addNetwork', data);
+            this.$store.commit('Network/addCustomNetwork', data);
             this.page = 'list';
         }
         onedit(network: AvaNetwork): void{
@@ -92,8 +92,9 @@
         get activeNetwork(): null|AvaNetwork{
             return this.$store.state.Network.selectedNetwork;
         }
-        get networks(): AvaNetwork{
-            return this.$store.state.Network.networks;
+        get networks(): AvaNetwork[]{
+            return this.$store.getters('Network/allNetworks');
+            // return this.$store.state.Network.networks;
         }
 
         get isTestnet(): boolean{

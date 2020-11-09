@@ -132,7 +132,7 @@
                     return;
                 }
 
-                let net = new AvaNetwork(this.name, this.url,  netID, this.chainId, this.explorer_api);
+                let net = new AvaNetwork(this.name, this.url,  netID, this.explorer_api);
 
                 this.$emit('add', net);
 
