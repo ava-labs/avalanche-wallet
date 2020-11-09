@@ -22,16 +22,6 @@
             return this.$store.getters['Network/allNetworks'];
         }
     }
-
-    // export default {
-    //     components:{
-    //         NetworkRow
-    //     },
-    //     computed: {
-    //         networks(){
-    //              }
-    //     },
-    // }
 </script>
 <style scoped lang="scss">
     .networks_list{
