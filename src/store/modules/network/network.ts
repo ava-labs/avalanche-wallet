@@ -39,11 +39,33 @@ const network_module: Module<NetworkState, RootState> = {
             state.networksCustom.splice(index, 1);
             await dispatch('save');
         },
+        saveSelectedNetwork({state}){
+            let data = JSON.stringify(state.selectedNetwork);
+            localStorage.setItem('network_selected',data)
+        },
+        async loadSelectedNetwork({dispatch, getters}): Promise<boolean>{
+            let data = localStorage.getItem('network_selected');
+            if(!data) return false;
+            try{
+                // let net: AvaNetwork = JSON.parse(data);
+                let nets: AvaNetwork[] = getters.allNetworks;
+
+                for(var i=0; i<nets.length;i++){
+                    let net = nets[i];
+                    if(JSON.stringify(net) === data){
+                        dispatch('setNetwork', net);
+                        return true;
+                    }
+                }
+                return false;
+            }catch (e) {
+                return false;
+            }
+        },
 
         // Save custom networks to local storage
         save({state}){
             let data = JSON.stringify(state.networksCustom);
-            console.log(data);
             localStorage.setItem('networks',data)
 
         },
@@ -78,6 +100,9 @@ const network_module: Module<NetworkState, RootState> = {
             pChain.getAVAXAssetID(true);
 
             state.selectedNetwork = net;
+            dispatch('saveSelectedNetwork');
+
+            // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl;
 
             commit('Assets/removeAllAssets', null, {root: true});
@@ -129,7 +154,10 @@ const network_module: Module<NetworkState, RootState> = {
             commit('addNetwork', fuji);
             commit('addNetwork', netLocal);
             try{
-                let res = await dispatch('setNetwork', state.networks[0]);
+                let isSet = await dispatch('loadSelectedNetwork');
+                if(!isSet){
+                    await dispatch('setNetwork', state.networks[0]);
+                }
                 return true;
             }catch (e) {
                 console.log(e);

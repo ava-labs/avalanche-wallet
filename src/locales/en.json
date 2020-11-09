@@ -18,7 +18,7 @@
         }
     },
     "network": {
-        "status1": "Connecting ...",
+        "status1": "Connecting..",
         "status2": "Disconnected",
         "status3": "Connected",
         "title": "Networks",

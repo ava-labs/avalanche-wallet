@@ -94,6 +94,7 @@
         font-size: 14px;
         color: var(--primary-color);
         text-align: right;
+        word-break: keep-all !important;
     }
 
     .network_row{
