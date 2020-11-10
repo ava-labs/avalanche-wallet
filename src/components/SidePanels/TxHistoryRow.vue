@@ -1,8 +1,8 @@
 <template>
     <div class="tx_history_row">
-        <div class="icons">
-            <img v-for="url in icons" :src="url" :key="url">
-        </div>
+<!--        <div class="icons">-->
+<!--            <img v-for="url in icons" :src="url" :key="url">-->
+<!--        </div>-->
         <div>
             <p class="time">
                 {{timeText}}
@@ -186,10 +186,10 @@
     }
 
     .tx_history_row{
-        padding: 14px 0px;
+        padding: 10px 0px;
         /*padding-right: 0;*/
-        display: grid;
-        grid-template-columns: 40px 1fr;
+        /*display: grid;*/
+        /*grid-template-columns: 40px 1fr;*/
 
         > div{
             align-self: center;
@@ -202,7 +202,7 @@
     }
 
     .time{
-        font-size: 16px;
+        font-size: 15px;
 
         a{
             float: right;

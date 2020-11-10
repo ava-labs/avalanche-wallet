@@ -41,9 +41,9 @@
         grid-template-rows: max-content 1fr;
     }
     .panel_nav{
-        display: flex;
-        align-items: center;
-        flex-direction: row;
+        /*display: flex;*/
+        /*align-items: center;*/
+        /*flex-direction: row;*/
         display: grid;
         grid-template-columns: max-content max-content 1fr;
         /*justify-content: space-between;*/
