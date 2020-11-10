@@ -113,6 +113,7 @@
     .list{
         overflow: scroll;
         padding: 8px 16px;
+        padding-bottom: 20px;
     }
 
     .empty{

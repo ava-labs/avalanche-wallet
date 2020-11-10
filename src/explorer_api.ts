@@ -20,7 +20,7 @@ async function getAddressHistory(addrs: string[], limit=20, offset=0){
     });
 
     // Get history for all addresses of the active HD wallet
-    let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc`;
+    let url = `/x/transactions?${query.join('&')}&limit=${limit}&offset=${offset}&sort=timestamp-desc&disableCount=1`;
     let res = await explorer_api.get(url);
     return res.data;
 }

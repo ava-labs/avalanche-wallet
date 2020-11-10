@@ -87,6 +87,7 @@
     .amount{
         text-align: right;
         white-space: nowrap;
+        font-size: 15px;
     }
 
     .name{
