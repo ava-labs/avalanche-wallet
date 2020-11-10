@@ -93,6 +93,7 @@
     import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
     import {IssueBatchTxInput} from "@/store/types";
     import {bnToBig} from "@/helpers/helper";
+    import * as bip39 from "bip39";
 
 
 
@@ -179,6 +180,12 @@
                 let size = buff.length;
                 if(size>256){
                     err.push('You can have a maximum of 256 characters in your memo.')
+                }
+
+                // Make sure memo isnt mnemonic
+                let isMnemonic = bip39.validateMnemonic(memo);
+                if(isMnemonic){
+                    err.push('You should not put a mnemonic phrase into the Memo field.')
                 }
             }
 
