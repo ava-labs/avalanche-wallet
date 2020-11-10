@@ -14,6 +14,10 @@
                 <label>Explorer API (optional)</label>
                 <input type="text" placeholder="www" v-model="explorer_api" @input="cleanExplorerUrl">
             </div>
+            <div>
+                <label>Explorer Site (optional)</label>
+                <input type="text" placeholder="www" v-model="explorer_site" @input="cleanExplorerSite">
+            </div>
             <div class="rowGroup">
                 <div>
                     <label>Network ID</label>
@@ -38,7 +42,8 @@
         name = "My Custom Network"
         url = ''
         networkId = 12345
-        explorer_api = ''
+        explorer_api: string|undefined = ''
+        explorer_site: string|undefined = ''
         chainId = 'X'
         err = null
         err_url = ''
@@ -51,14 +56,23 @@
             this.name = net.name;
             this.url = net.getFullURL();
             this.networkId = net.networkId;
+            this.explorer_api = net.explorerUrl;
+            this.explorer_site = net.explorerSiteUrl;
         }
 
         cleanExplorerUrl(){
             // console.log(val);
-            let url = this.explorer_api;
+            let url = this.explorer_api as string;
             this.explorer_api = punycode.toASCII(url);
             // console.log(this.explorer_api);
         }
+
+        cleanExplorerSite(){
+            let url = this.explorer_site as string;
+            url = punycode.toASCII(url);
+            this.explorer_site = url;
+        }
+
         checkUrl(){
             let err = '';
             let url = this.url;
@@ -131,6 +145,7 @@
             let net = this.net;
             net.name = this.name;
             net.updateURL(this.url);
+            net.explorerSiteUrl = this.explorer_site;
             net.networkId =  this.networkId;
 
             this.$store.dispatch('Notifications/add',{

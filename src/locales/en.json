@@ -35,7 +35,8 @@
         },
         "custom_page": {
             "label1": "Network Name",
-            "label2": "Explorer API (optional)"
+            "label2": "Explorer API (optional)",
+            "label3": "Explorer Site (optional)"
         }
     },
     "access": {
