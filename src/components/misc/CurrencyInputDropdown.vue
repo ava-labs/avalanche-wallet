@@ -7,6 +7,10 @@
             </div>
             <BalanceDropdown :disabled_assets="disabled_assets" v-model="asset_now"></BalanceDropdown>
         </div>
+        <div class=balance>
+            <p><b>Balance:</b> {{maxAmountBig.toLocaleString(denomination)}}</p>
+            <div></div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -26,6 +30,8 @@
 
     import BalanceDropdown from "@/components/misc/BalancePopup/BalanceDropdown.vue";
     import {avm} from "@/AVA";
+    import Big from "big.js";
+    import {bnToBig} from "@/helpers/helper";
     interface IDropdownValue {
         label: string,
         key: string,
@@ -139,7 +145,7 @@
             let assetId = this.asset_now.id;
             let balance = this.walletAssetsDict[assetId];
 
-            // Max amount is BALANCE - FEE
+            // Max amount is BALANCE - FEE for AVAX
             if(this.asset_now.symbol === 'AVAX'){
                 let fee = avm.getTxFee();
                 // console.log(fee);
@@ -152,6 +158,11 @@
 
             if(balance.amount.isZero()) return null;
             return balance.amount;
+        }
+
+        get maxAmountBig(): Big{
+            if(!this.max_amount) return Big(0);
+            return bnToBig(this.max_amount, this.denomination);
         }
     }
 </script>
@@ -213,12 +224,16 @@
     }
 
     .balance{
-        position: absolute;
-        top: 40px;
-        padding-top: 4px;
-        right: 8px;
-        font-size: 11px;
+        display: grid;
+        column-gap: 10px;
+        grid-template-columns: 1fr 140px;
+        font-size: 13px;
         color: var(--primary-color-light);
+
+        p{
+            text-align: right;
+            padding: 2px 8px;
+        }
     }
 
 
