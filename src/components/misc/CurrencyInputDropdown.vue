@@ -241,5 +241,9 @@
         .curr_in_drop{
             grid-template-columns: 1fr 70px;
         }
+
+        .balance{
+            grid-template-columns: 1fr 70px;
+        }
     }
 </style>

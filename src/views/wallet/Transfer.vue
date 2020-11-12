@@ -6,6 +6,12 @@
         </div>
         <div class="card_body" v-else>
             <div class="new_order_Form">
+<!--                <div class="chain_select">-->
+<!--                    <label>Chain</label>-->
+<!--                    <div style="display: flex">-->
+<!--                        <button>X</button>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="lists" v-show="!isConfirm">
                     <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                     <template v-if="hasNFT">
@@ -515,6 +521,15 @@
         background-color: var(--bg-light);
         word-break: break-all;
         padding: 8px 16px;
+    }
+
+    .chain_select{
+        button{
+            background-color: var(--bg-light);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+        }
     }
 
     @media only screen and (max-width: 600px) {
