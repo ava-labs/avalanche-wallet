@@ -23,6 +23,8 @@
         localStart = this.startDateMin;
         localEnd = this.endDateMin;
 
+        @Prop() maxEndDate?: string;
+
         @Watch('localStart')
         startChange(val: string){
             this.setStartDate(val);
@@ -114,8 +116,10 @@
             return endDate.toISOString();
         }
 
-        // Start date + 1 year
+        // Start date + 1 year, or the prop
         get endDateMax(){
+            if(this.maxEndDate) return this.maxEndDate;
+
             let start = this.localStart;
             let startDate = new Date(start);
 

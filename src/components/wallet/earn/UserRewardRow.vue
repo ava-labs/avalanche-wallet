@@ -1,33 +1,27 @@
 <template>
     <div class="reward_row">
-        <p class="node_id">{{staker.nodeID}}</p>
-        <div class="data_row">
-            <div class="reward_bar_cont">
-                <div class="reward_bar" :style="{
-                width: `${percFull*100}%`
-            }"></div>
-                <div class="date">
-                    <label>{{$t('earn.rewards.row.start')}}</label>
-                    <p >{{startDate.toLocaleString()}}</p>
-                </div>
-                <div>
-                    <label>{{$t('earn.rewards.row.completed')}}</label>
-                    <p>{{(percFull*100).toFixed(2)}}%</p>
-                </div>
-                <div class="date">
-                    <label>{{$t('earn.rewards.row.end')}}</label>
-                    <p>{{endDate.toLocaleString()}}</p>
-                </div>
+        <div class="top_bar">
+            <div style="display: flex; justify-content: space-between;">
+                <p>{{startDate.toLocaleString()}}</p>
+                <p>{{endDate.toLocaleString()}}</p>
             </div>
-            <div class="stake_info">
-                <div>
-                    <label>{{$t('earn.rewards.row.stake')}}</label>
-                    <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
-                </div>
-                <div>
-                    <label>{{$t('earn.rewards.row.reward')}}</label>
-                    <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
-                </div>
+            <div class="reward_bar" :style="{
+                        width: `${percFull*100}%`
+                    }"
+            ></div>
+        </div>
+        <div class="data_row stake_info">
+            <div>
+                <label>NodeID</label>
+                <p class="reward">{{staker.nodeID}}</p>
+            </div>
+            <div>
+                <label>{{$t('earn.rewards.row.stake')}}</label>
+                <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
+            </div>
+            <div>
+                <label>{{$t('earn.rewards.row.reward')}}</label>
+                <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
             </div>
         </div>
 
@@ -111,6 +105,12 @@ export default class UserRewardRow extends Vue{
     border-bottom: 2px solid var(--bg-wallet-light);
 }
 
+.top_bar{
+    height: max-content;
+    position: relative;
+    padding: 2px 8px;
+    border-bottom: 2px solid var(--bg-wallet-light);
+}
 .reward_row{
     border-radius: 4px;
     overflow: hidden;
@@ -158,12 +158,10 @@ export default class UserRewardRow extends Vue{
 }
 
 .stake_info{
-    padding: 4px 12px;
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
     text-align: right;
-    display: grid;
-    grid-template-rows: max-content max-content;
-    //grid-template-columns: 1fr 1fr;
-    border-left: 3px solid var(--bg);
 }
 
 label{

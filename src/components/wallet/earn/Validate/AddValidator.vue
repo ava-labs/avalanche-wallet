@@ -11,16 +11,6 @@
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.validate.duration.label')}}</h4>
                             <p class="desc">{{$t('earn.validate.duration.desc')}}</p>
-<!--                            <div class="dates">-->
-<!--                                <div>-->
-<!--                                    <label>{{$t('earn.validate.duration.start')}}</label>-->
-<!--                                    <datetime v-model="startDate" type="datetime" :min-datetime="startDateMin" :max-datetime="startDateMax"></datetime>-->
-<!--                                </div>-->
-<!--                                <div>-->
-<!--                                    <label>{{$t('earn.validate.duration.end')}} <span @click="maxoutEndDate">Max</span></label>-->
-<!--                                    <datetime v-model="endDate" type="datetime" :min-datetime="endDateMin" :max-datetime="endDateMax"></datetime>-->
-<!--                                </div>-->
-<!--                            </div>-->
                             <DateForm @change_start="setStart" @change_end="setEnd"></DateForm>
                         </div>
                         <div style="margin: 30px 0;">
@@ -169,9 +159,6 @@ export default class AddValidator extends Vue{
 
     currency_type = "AVAX";
 
-    timeNow = 0;
-
-    // @Watch('delegationFee')
     onFeeChange(){
         let num = parseFloat(this.delegationFee);
         if(num < this.minFee){
@@ -181,14 +168,6 @@ export default class AddValidator extends Vue{
         }
     }
 
-    // @Watch('startDate')
-    // onStartDateChange(){
-    //     let date = new Date(this.startDate);
-    //     if(this.stakeDuration < MIN_STAKE_DURATION){
-    //         this.endDate = this.endDateMin;
-    //     }
-    // }
-
 
     setStart(val: string){
         this.startDate = val;
@@ -197,26 +176,6 @@ export default class AddValidator extends Vue{
         this.endDate = val;
     }
 
-    // updateTimeNow(){
-    //     this.timeNow = Date.now();
-    //
-    //     // If current start date is less than now
-    //     let startCurrent = new Date(this.startDate);
-    //     if((startCurrent.getTime()-10000) < this.timeNow){
-    //         this.startDate = this.startDateMin;
-    //     }
-    //     setTimeout(()=>{
-    //         this.updateTimeNow();
-    //     }, 20000);
-    // }
-
-    created(){
-        // this.startDate = this.startDateMin;
-
-        // default end date is 3 weeks
-        // this.endDate = this.defaultEndDate;
-        // this.updateTimeNow()
-    }
 
     get rewardAddressLocal(){
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
@@ -231,51 +190,6 @@ export default class AddValidator extends Vue{
         }
         this.rewardDestination = val;
     }
-
-    // 1 minutes from now
-    // get startDateMin(){
-    //     let now = this.timeNow || Date.now();
-    //     let res = now + (60000);
-    //     return (new Date(res)).toISOString();
-    // }
-    //
-    // // 2 weeks
-    // get startDateMax(){
-    //     let startDate = new Date();
-    //     // add 2 weeks
-    //     let endTime = startDate.getTime() + (60000*60*24*14);
-    //     let endDate = new Date(endTime);
-    //     return endDate.toISOString();
-    // }
-
-    // Start date + 2 weeks
-    // get endDateMin(){
-    //     let start = this.startDate;
-    //     let startDate = new Date(start);
-    //
-    //     let end = startDate.getTime() + MIN_STAKE_DURATION;
-    //     let endDate = new Date(end);
-    //     return endDate.toISOString();
-    // }
-
-    // get defaultEndDate(){
-    //     let start = this.startDate;
-    //     let startDate = new Date(start);
-    //
-    //     let end = startDate.getTime() + (DAY_MS*21);
-    //     let endDate = new Date(end);
-    //     return endDate.toISOString();
-    // }
-
-    // Start date + 1 year
-    // get endDateMax(){
-    //     let start = this.startDate;
-    //     let startDate = new Date(start);
-    //
-    //     let end = startDate.getTime() + (60000*60*24*365);
-    //     let endDate = new Date(end);
-    //     return endDate.toISOString();
-    // }
 
     // Returns true to show a warning about short validation periods that can not take any delegators
     get warnShortDuration(): boolean{
@@ -307,12 +221,6 @@ export default class AddValidator extends Vue{
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`;
     }
 
-    // get dateMin(){
-    //     let dateMs = Date.now();
-    //     let date = new Date(dateMs);
-    //
-    //     return date.toISOString();
-    // }
 
     get denomination(){
         return 9;
@@ -499,18 +407,10 @@ export default class AddValidator extends Vue{
         }
     }
 
-    // maxoutEndDate(){
-    //     this.endDate = this.endDateMax;
-    // }
 
     onsuccess(txId: string){
         this.txId = txId;
         this.isSuccess = true;
-        // this.$store.dispatch('Notifications/add', {
-        //     type: 'success',
-        //     title: 'Validator Transaction Sent',
-        //     message: 'If accepted, your tokens will be locked to validate the network and earn rewards.'
-        // });
         this.updateTxStatus(txId);
     }
 
