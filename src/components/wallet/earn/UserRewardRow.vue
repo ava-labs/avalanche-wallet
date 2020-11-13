@@ -13,13 +13,13 @@
         <div class="data_row stake_info">
             <div>
                 <label>NodeID</label>
-                <p class="reward">{{staker.nodeID}}</p>
+                <p class="reward node_id">{{staker.nodeID}}</p>
             </div>
             <div>
                 <label>{{$t('earn.rewards.row.stake')}}</label>
                 <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
             </div>
-            <div>
+            <div style="text-align: right;">
                 <label>{{$t('earn.rewards.row.reward')}}</label>
                 <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
             </div>
@@ -96,13 +96,7 @@ export default class UserRewardRow extends Vue{
 @use '../../../main';
 
 .node_id{
-    grid-column: 1/3;
-    display: block;
-    width: 100%;
-    padding: 4px 12px;
-    font-weight: bold;
-    //background-color: rgba(0,0,0,0.05);
-    border-bottom: 2px solid var(--bg-wallet-light);
+    word-break: break-all;
 }
 
 .top_bar{
@@ -126,23 +120,6 @@ export default class UserRewardRow extends Vue{
     align-items: center;
 
 }
-.reward_bar_cont{
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 12px;
-    height: 100%;
-    //background-color: rgba(0,0,0,0.1);
-
-    p{
-        z-index: 1;
-    }
-
-    label{
-        color: var(--primary-color);
-    }
-}
 
 .date{
     z-index: 1;
@@ -159,9 +136,16 @@ export default class UserRewardRow extends Vue{
 
 .stake_info{
     padding: 6px 12px;
-    display: flex;
-    justify-content: space-between;
-    text-align: right;
+    display: grid;
+    column-gap: 14px;
+    grid-template-columns: 2fr 1fr 1fr;
+    /*justify-content: space-between;*/
+    /*text-align: right;*/
+    text-align: left;
+
+    > div{
+        align-self: baseline;
+    }
 }
 
 label{
@@ -169,9 +153,6 @@ label{
 }
 
 @include main.mobile-device{
-    .reward_bar_cont{
-        grid-column: 1/3;
-    }
 
     .stake_info{
         grid-column: 1/3;

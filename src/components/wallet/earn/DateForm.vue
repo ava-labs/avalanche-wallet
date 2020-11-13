@@ -47,12 +47,17 @@
         }
 
         created(){
-            console.log("yo")
+            this.updateTimeNow()
+        }
+
+        mounted(){
             this.localStart = this.startDateMin;
 
             // default end date is 3 weeks
             this.localEnd = this.defaultEndDate;
-            this.updateTimeNow()
+
+            this.setStartDate(this.localStart);
+            this.setEndDate(this.localEnd);
         }
 
         updateTimeNow(){
@@ -61,12 +66,12 @@
             let remaining = MINUTE_MS - (this.timeNow % MINUTE_MS);
             // If current start date is less than now
             let startCurrent = new Date(this.localStart);
-            if((startCurrent.getTime()) < this.timeNow + remaining){
+            if((startCurrent.getTime()) <= this.timeNow + remaining){
                 this.localStart = this.startDateMin;
             }
             setTimeout(()=>{
                 this.updateTimeNow();
-            }, 20000);
+            }, 10000);
         }
 
         setStartDate(val: string){
@@ -90,10 +95,10 @@
             return diff;
         }
 
-        // 1 minutes from now
+        // 1 minute from now
         get startDateMin(){
             let now = this.timeNow || Date.now();
-            let res = now + MINUTE_MS - (now%MINUTE_MS);
+            let res = now + MINUTE_MS + (now%MINUTE_MS);
             return (new Date(res)).toISOString();
         }
 
