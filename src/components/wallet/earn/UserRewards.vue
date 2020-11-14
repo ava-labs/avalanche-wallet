@@ -1,5 +1,5 @@
 <template>
-    <div v-if="totLength>0">
+    <div v-if="totLength>0" class="user_rewards">
         <div>
             <label>{{$t('earn.rewards.total')}}</label>
             <p class="amt">{{totalRewardBig.toLocaleString(9)}} AVAX</p>
@@ -84,12 +84,20 @@ export default class UserRewards extends Vue{
             })
             return filtered.length > 0;
         })
+
+        res.sort((a, b) => {
+            let startA = parseInt(a.startTime);
+            let startB = parseInt(b.startTime);
+            return startA - startB;
+        });
         return res;
     }
 }
 </script>
 <style scoped lang="scss">
-
+.user_rewards{
+    padding-bottom: 5vh;
+}
 
 
 .reward_row{
@@ -114,6 +122,4 @@ label{
 .amt{
     font-size: 2em;
 }
-
-
 </style>

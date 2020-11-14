@@ -11,16 +11,7 @@
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.validate.duration.label')}}</h4>
                             <p class="desc">{{$t('earn.validate.duration.desc')}}</p>
-                            <div class="dates">
-                                <div>
-                                    <label>{{$t('earn.validate.duration.start')}}</label>
-                                    <datetime v-model="startDate" type="datetime" :min-datetime="startDateMin" :max-datetime="startDateMax"></datetime>
-                                </div>
-                                <div>
-                                    <label>{{$t('earn.validate.duration.end')}} <span @click="maxoutEndDate">Max</span></label>
-                                    <datetime v-model="endDate" type="datetime" :min-datetime="endDateMin" :max-datetime="endDateMax"></datetime>
-                                </div>
-                            </div>
+                            <DateForm @change_start="setStart" @change_end="setEnd"></DateForm>
                         </div>
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.validate.amount.label')}}</h4>
@@ -119,11 +110,13 @@ import {ONEAVAX} from "avalanche/dist/utils";
 import Tooltip from "@/components/misc/Tooltip.vue";
 import CurrencySelect from "@/components/misc/CurrencySelect/CurrencySelect.vue";
 import Spinner from "@/components/misc/Spinner.vue";
-
+import DateForm from "@/components/wallet/earn/DateForm.vue";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
 const DAY_MS = HOUR_MS * 24;
+
+const MIN_STAKE_DURATION = DAY_MS * 14;
 
 @Component({
     name: "add_validator",
@@ -133,12 +126,13 @@ const DAY_MS = HOUR_MS * 24;
         QrInput,
         ConfirmPage,
         CurrencySelect,
-        Spinner
+        Spinner,
+        DateForm
     }
 })
 export default class AddValidator extends Vue{
     startDate: string = (new Date()).toISOString();
-    endDate: string = "";
+    endDate: string = (new Date()).toISOString();
     delegationFee: string = '2.0';
     nodeId = "";
     rewardIn: string = "";
@@ -152,8 +146,8 @@ export default class AddValidator extends Vue{
 
     formNodeId = "";
     formAmt: BN = new BN(0);
-    formStart: Date = new Date(this.startDateMin);
-    formEnd: Date = new Date(this.endDateMax);
+    formStart: Date = new Date();
+    formEnd: Date = new Date();
     formFee: number = 0;
     formRewardAddr = "";
 
@@ -165,7 +159,6 @@ export default class AddValidator extends Vue{
 
     currency_type = "AVAX";
 
-    // @Watch('delegationFee')
     onFeeChange(){
         let num = parseFloat(this.delegationFee);
         if(num < this.minFee){
@@ -176,12 +169,13 @@ export default class AddValidator extends Vue{
     }
 
 
-    created(){
-        this.startDate = this.startDateMin;
-
-        // default end date is 3 weeks
-        this.endDate = this.defaultEndDate;
+    setStart(val: string){
+        this.startDate = val;
     }
+    setEnd(val: string){
+        this.endDate = val;
+    }
+
 
     get rewardAddressLocal(){
         let wallet: AvaHdWallet = this.$store.state.activeWallet;
@@ -195,52 +189,6 @@ export default class AddValidator extends Vue{
             this.rewardIn = "";
         }
         this.rewardDestination = val;
-    }
-
-    // 5 minutes from now
-    get startDateMin(){
-        let now = Date.now();
-        let res = now + (60000 * 5);
-
-        return (new Date(res)).toISOString();
-    }
-
-    // 2 weeks
-    get startDateMax(){
-        let startDate = new Date();
-        // add 2 weeks
-        let endTime = startDate.getTime() + (60000*60*24*14);
-        let endDate = new Date(endTime);
-        return endDate.toISOString();
-    }
-
-    // Start date + 2 weeks
-    get endDateMin(){
-        let start = this.startDate;
-        let startDate = new Date(start);
-
-        let end = startDate.getTime() + (DAY_MS*14);
-        let endDate = new Date(end);
-        return endDate.toISOString();
-    }
-
-    get defaultEndDate(){
-        let start = this.startDate;
-        let startDate = new Date(start);
-
-        let end = startDate.getTime() + (DAY_MS*21);
-        let endDate = new Date(end);
-        return endDate.toISOString();
-    }
-
-    // Start date + 1 year
-    get endDateMax(){
-        let start = this.startDate;
-        let startDate = new Date(start);
-
-        let end = startDate.getTime() + (60000*60*24*365);
-        let endDate = new Date(end);
-        return endDate.toISOString();
     }
 
     // Returns true to show a warning about short validation periods that can not take any delegators
@@ -257,6 +205,12 @@ export default class AddValidator extends Vue{
     get stakeDuration(): number{
         let start = new Date(this.startDate);
         let end = new Date(this.endDate);
+
+        if(this.isConfirm){
+            start = this.formStart;
+            end = this.formEnd;
+        }
+
         let diff = end.getTime() - start.getTime();
         return diff;
     }
@@ -267,12 +221,6 @@ export default class AddValidator extends Vue{
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`;
     }
 
-    // get dateMin(){
-    //     let dateMs = Date.now();
-    //     let date = new Date(dateMs);
-    //
-    //     return date.toISOString();
-    // }
 
     get denomination(){
         return 9;
@@ -310,8 +258,6 @@ export default class AddValidator extends Vue{
         }else{
             return ZERO;
         }
-
-
     }
 
     get maxDelegationAmt(): BN{
@@ -461,18 +407,10 @@ export default class AddValidator extends Vue{
         }
     }
 
-    maxoutEndDate(){
-        this.endDate = this.endDateMax;
-    }
 
     onsuccess(txId: string){
         this.txId = txId;
         this.isSuccess = true;
-        // this.$store.dispatch('Notifications/add', {
-        //     type: 'success',
-        //     title: 'Validator Transaction Sent',
-        //     message: 'If accepted, your tokens will be locked to validate the network and earn rewards.'
-        // });
         this.updateTxStatus(txId);
     }
 

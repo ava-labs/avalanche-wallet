@@ -6,7 +6,7 @@
         <div>
             <p class="time">
                 {{timeText}}
-                <a :href="explorerUrl" target="_blank" tooltip="View in Explorer" class="explorer_link"><fa icon="search"></fa></a>
+                <a v-if="explorerUrl" :href="explorerUrl" target="_blank" tooltip="View in Explorer" class="explorer_link"><fa icon="search"></fa></a>
             </p>
             <div class="utxos">
                 <tx-history-value v-for="(amount, assetId) in valList" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="false"></tx-history-value>
@@ -30,6 +30,7 @@
     import store from '@/store';
     import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import {LedgerWallet} from "@/js/wallets/LedgerWallet";
+    import {AvaNetwork} from "@/js/AvaNetwork";
 
 
     @Component({
@@ -41,9 +42,13 @@
         @Prop() transaction!: ITransactionData;
 
 
-        get explorerUrl(): string{
+        get explorerUrl(): string|null{
             // TODO: Make this dynamic
-            return `https://explorer.avax.network/tx/${this.transaction.id}`;
+            let network:AvaNetwork = this.$store.state.Network.selectedNetwork;
+            if(network.explorerSiteUrl){
+                return `${network.explorerSiteUrl}/tx/${this.transaction.id}`;
+            }
+            return null;
         }
 
         get time(){

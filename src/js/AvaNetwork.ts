@@ -11,13 +11,15 @@ class AvaNetwork{
     // chainId: string;
     url: string;
     explorerUrl: string|undefined;
+    explorerSiteUrl: string|undefined;
     readonly: boolean;
     // fee: BN
 
-    constructor(name: string, url:string, networkId: number, explorerUrl?: string, readonly = false) {
+    constructor(name: string, url:string, networkId: number, explorerUrl?: string, explorerSiteUrl?: string, readonly = false) {
         this.id = network_id++;
         this.name = name;
         this.explorerUrl = explorerUrl;
+        this.explorerSiteUrl = explorerSiteUrl;
         this.protocol = 'http';
         this.port = 9650;
         this.ip='localhost';

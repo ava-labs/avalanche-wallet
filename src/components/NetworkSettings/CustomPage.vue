@@ -14,6 +14,10 @@
                 <label>{{$t('network.custom_page.label2')}}</label>
                 <input type="text" placeholder="www" v-model="explorer_api" @input="cleanExplorerUrl">
             </div>
+            <div>
+                <label>{{$t('network.custom_page.label3')}}</label>
+                <input type="text" placeholder="www" v-model="explorer_site" @input="cleanExplorerSite">
+            </div>
             <p v-if="err" class="form_error">{{err}}</p>
             <v-btn :loading="isAjax" height="26" depressed type="submit" class="button_primary">{{$t('network.add')}}</v-btn>
         </form>
@@ -32,6 +36,7 @@
         name = "My Custom Network"
         url = ''
         explorer_api = ''
+        explorer_site = '';
         err: null|string = null
         err_url = ''
         isAjax = false
@@ -41,6 +46,13 @@
             url = punycode.toASCII(url);
             this.explorer_api = url;
         }
+
+        cleanExplorerSite(){
+            let url = this.explorer_site;
+            url = punycode.toASCII(url);
+            this.explorer_site = url;
+        }
+
         checkUrl(){
             let err = '';
             let url = this.url;
@@ -130,7 +142,7 @@
                 return;
             }
 
-            let net = new AvaNetwork(this.name, this.url,  netID, this.explorer_api);
+            let net = new AvaNetwork(this.name, this.url,  netID, this.explorer_api, this.explorer_site);
 
             this.$emit('add', net);
 

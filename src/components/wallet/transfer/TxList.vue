@@ -16,7 +16,7 @@
             </button>
         </div>
         <button block depressed @click="addTx()" class="add_asset" v-if="showAdd"> <fa icon="plus"></fa> Add Asset</button>
-        <p class="chain_warn">{{$t('transfer.chain_warn')}}</p>
+<!--        <p class="chain_warn">{{$t('transfer.chain_warn')}}</p>-->
     </div>
 </template>
 <script lang="ts">
@@ -220,11 +220,10 @@ $right_pad: 80px;
     .list_item button{
         width: max-content;
         text-align: right;
-        align-self: flex-end;
-        text-align: right;
+        /*align-self: flex-end;*/
         font-size: 12px;
         color: var(--primary-color-light);
-        margin-top: 6px;
+        margin-top: 10px;
         margin-bottom: 10px;
 
         &:hover{
@@ -244,9 +243,11 @@ $right_pad: 80px;
         border-radius: 0;
         color: var(--primary-color-light);
         font-size: 14px;
+        opacity: 0.3;
+        transition-duration: .2s;
 
         &:hover{
-            opacity: 0.7;
+            opacity: 1;
             color: var(--primary-color);
         }
     }

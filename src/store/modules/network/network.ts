@@ -77,7 +77,7 @@ const network_module: Module<NetworkState, RootState> = {
                 let networks: AvaNetwork[] = JSON.parse(data);
 
                 networks.forEach(n => {
-                    let newCustom = new AvaNetwork(n.name, n.url, n.networkId, n.explorerUrl, n.readonly);
+                    let newCustom = new AvaNetwork(n.name, n.url, n.networkId, n.explorerUrl, n.explorerSiteUrl, n.readonly);
                     dispatch('addCustomNetwork', newCustom);
                 })
             }
@@ -138,8 +138,8 @@ const network_module: Module<NetworkState, RootState> = {
 
         async init({state, commit, dispatch}){
             // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'https://explorerapi.avax.network');
-            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1,  "https://explorerapi.avax.network", true);
-            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5,  "https://explorerapi.avax-test.network", true);
+            let manhattan = new AvaNetwork("Mainnet",'https://api.avax.network:443', 1,  "https://explorerapi.avax.network", "https://explorer.avax.network", true);
+            let fuji = new AvaNetwork("Fuji",'https://api.avax-test.network:443', 5,  "https://explorerapi.avax-test.network", "https://explorer.avax-test.network", true);
 
             // Load custom networks if any
             try {
@@ -151,7 +151,7 @@ const network_module: Module<NetworkState, RootState> = {
             // commit('addNetwork', netTest);
             commit('addNetwork', manhattan);
             commit('addNetwork', fuji);
-            
+
             try{
                 let isSet = await dispatch('loadSelectedNetwork');
                 if(!isSet){
