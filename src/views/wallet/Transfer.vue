@@ -6,6 +6,12 @@
         </div>
         <div class="card_body" v-else>
             <div class="new_order_Form">
+<!--                <div class="chain_select">-->
+<!--                    <label>Chain</label>-->
+<!--                    <div style="display: flex">-->
+<!--                        <button>X</button>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="lists" v-show="!isConfirm">
                     <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                     <template v-if="hasNFT">
@@ -93,6 +99,7 @@
     import TxSummary from "@/components/wallet/transfer/TxSummary.vue";
     import {IssueBatchTxInput} from "@/store/types";
     import {bnToBig} from "@/helpers/helper";
+    import * as bip39 from "bip39";
 
 
 
@@ -179,6 +186,12 @@
                 let size = buff.length;
                 if(size>256){
                     err.push('You can have a maximum of 256 characters in your memo.')
+                }
+
+                // Make sure memo isnt mnemonic
+                let isMnemonic = bip39.validateMnemonic(memo);
+                if(isMnemonic){
+                    err.push('You should not put a mnemonic phrase into the Memo field.')
                 }
             }
 
@@ -508,6 +521,15 @@
         background-color: var(--bg-light);
         word-break: break-all;
         padding: 8px 16px;
+    }
+
+    .chain_select{
+        button{
+            background-color: var(--bg-light);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+        }
     }
 
     @media only screen and (max-width: 600px) {

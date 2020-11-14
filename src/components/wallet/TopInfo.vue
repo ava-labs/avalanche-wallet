@@ -6,7 +6,7 @@
 </template>
 <script>
     import BalanceCard from "./TopCards/BalanceCard/BalanceCard";
-    import AddressCard from "./TopCards/AddressCard";
+    import AddressCard from "./TopCards/AddressCard/AddressCard";
 
     export default {
         components: {

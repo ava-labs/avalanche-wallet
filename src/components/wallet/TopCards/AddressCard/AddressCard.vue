@@ -1,7 +1,7 @@
 <template>
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet ref="print_modal" v-if="walletType!=='ledger'">></paper-wallet>
+        <paper-wallet ref="print_modal" v-if="walletType!=='ledger'"></paper-wallet>
         <p class="addr_info">{{$t('top.address.desc')}}</p>
         <div class="bottom">
             <div>
@@ -9,10 +9,11 @@
             </div>
             <div class="bottom_rest">
                 <p class="subtitle">{{$t('top.address.derived')}}</p>
-                <p class="addr_text" data-cy="wallet_address">{{address}}</p>
+                <p class="addr_text" data-cy="wallet_address" v-if="chainNow==='X'">{{address}}</p>
+                <p class="addr_text" data-cy="wallet_address" v-else>{{addressPVM}}</p>
                 <div style="display: flex; margin-top: 10px;">
+                    <ChainSelect v-model="chainNow"></ChainSelect>
                     <div class="buts">
-<!--                        <button tooltip="View Mainnet Address" @click="viewMainnetModal" class="mainnet_but"></button>-->
                         <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but"></button>
                         <button v-if="walletType!=='ledger'" :tooltip="$t('top.hover2')" @click="viewPrintModal" class="print_but"></button>
                         <CopyText :tooltip="$t('top.hover3')" :value="address" class="copy_but"></CopyText>
@@ -36,17 +37,20 @@
     import AvaHdWallet from "@/js/wallets/AvaHdWallet";
     import {LedgerWallet} from "@/js/wallets/LedgerWallet";
 
+    import ChainSelect from "@/components/wallet/TopCards/AddressCard/ChainSelect.vue";
     @Component({
         components: {
             CopyText,
             PaperWallet,
             QRModal,
-            MainnetAddressModal
+            MainnetAddressModal,
+            ChainSelect
         }
     })
     export default class AddressCard extends Vue{
         colorLight: string = "#FFF";
         colorDark: string = "#242729";
+        chainNow: string = 'X';
 
         $refs!: {
             qr_modal: QRModal,
@@ -83,14 +87,18 @@
 
         get address(){
             let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
-
-
-            // let activeKey:AVMKeyPair|null = this.$store.getters.activeKey;
             if(!wallet){
                 return '-'
             }
-            // return this.$store.state.address;
             return wallet.getCurrentAddress();
+        }
+
+        get addressPVM(){
+            let wallet: AvaHdWallet|LedgerWallet = this.$store.state.activeWallet;
+            if(!wallet){
+                return '-'
+            }
+            return wallet.platformHelper.getCurrentAddress();
         }
 
 
@@ -132,7 +140,7 @@
     }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../../main';
 
 .addr_card{
     display: flex;
@@ -147,7 +155,7 @@
     color: var(--primary-color-light);
 
     > *{
-        font-size: 18px;
+        font-size: 16px;
         margin: 0px 18px;
         margin-right: 0px;
         position: relative;
@@ -237,11 +245,12 @@ $qr_width: 110px;
 
 .subtitle{
     font-size: 0.7rem;
+    margin-top: 3px !important;
     color: var(--primary-color-light);
 }
 
 .addr_text{
-    font-size: 16px;
+    font-size: 15px;
     word-break: break-all;
     color: var(--primary-color);
     flex-grow: 1;

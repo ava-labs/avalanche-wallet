@@ -29,17 +29,7 @@
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.delegate.form.period.label')}}</h4>
                             <p class="desc">{{$t('earn.delegate.form.period.desc')}}</p>
-                            <div class="dates">
-                                <div>
-                                    <label>{{$t('earn.delegate.form.period.start')}}</label>
-                                    <datetime v-model="startDate" type="datetime" :min-datetime="startMinDate" :max-datetime="startMaxDate"></datetime>
-                                </div>
-                                <div>
-                                    <label>{{$t('earn.delegate.form.period.end')}} <span @click="maxoutEndDate">Max</span></label>
-                                    <datetime v-model="endDate" type="datetime" :min-datetime="endMinDate" :max-datetime="endMaxDate"></datetime>
-                                </div>
-
-                            </div>
+                            <DateForm @change_start="setStart" @change_end="setEnd" :max-end-date="endMaxDate"></DateForm>
                         </div>
                         <div style="margin: 30px 0;">
                             <h4>{{$t('earn.delegate.form.amount.label')}}</h4>
@@ -141,6 +131,7 @@ import {ValidatorListItem} from "@/store/modules/platform/types";
 import NodeSelection from "@/components/wallet/earn/Delegate/NodeSelection.vue";
 import CurrencySelect from "@/components/misc/CurrencySelect/CurrencySelect.vue";
 import Spinner from "@/components/misc/Spinner.vue";
+import DateForm from "@/components/wallet/earn/DateForm.vue";
 
 const MIN_MS = 60000;
 const HOUR_MS = MIN_MS * 60;
@@ -149,6 +140,7 @@ const DAY_MS = HOUR_MS * 24;
 
 @Component({
     components: {
+        DateForm,
         Spinner,
         CurrencySelect,
         NodeSelection,
@@ -163,8 +155,8 @@ export default class AddDelegator extends Vue{
     search: string = "";
     selected: ValidatorListItem|null = null;
     stakeAmt: BN = new BN(0);
-    startDate: string = '';
-    endDate: string = '';
+    startDate: string = (new Date()).toISOString();
+    endDate: string = (new Date()).toISOString();
     rewardIn: string = "";
     rewardDestination = 'local'; // local || custom
     err: string = "";
@@ -177,18 +169,18 @@ export default class AddDelegator extends Vue{
 
     formNodeID = "";
     formAmt = new BN(0);
-    formStart: Date = new Date(this.startMinDate);
-    formEnd: Date = new Date(this.endMaxDate);
+    formStart: Date = new Date();
+    formEnd: Date = new Date();
     formRewardAddr = "";
 
     currency_type = "AVAX";
 
 
-    created(){
-        this.startDate = this.startMinDate;
-        this.endDate = this.endMaxDate;
-
-        // avm.
+    setStart(val: string){
+        this.startDate = val;
+    }
+    setEnd(val: string){
+        this.endDate = val;
     }
 
     onselect(val: ValidatorListItem){
@@ -269,13 +261,6 @@ export default class AddDelegator extends Vue{
             title: 'Delegation Failed',
             message: 'Failed to delegate tokens.'
         })
-    }
-
-    onStartChange(val: any){
-        this.startDate = val;
-    }
-    onEndChange(val: any){
-        this.endDate = val;
     }
 
     get estimatedReward(): Big{
@@ -395,10 +380,6 @@ export default class AddDelegator extends Vue{
         this.isConfirm = false;
     }
 
-    maxoutEndDate(){
-        this.endDate = this.endMaxDate;
-    }
-
     get canSubmit(): boolean{
         if(this.stakeAmt.isZero()){
             return false;
@@ -406,47 +387,12 @@ export default class AddDelegator extends Vue{
         return true
     }
 
-    // ISOS string
-    // Earliest date is now + 5min.
-    get startMinDate(): string{
-        let now = Date.now();
-        let res = now + (60000 * 5);
-
-        // testing
-        // return (new Date(now)).toISOString();
-
-        return (new Date(res)).toISOString();
-    }
-
-    // Max date is end time -1 day
-    get startMaxDate(): string{
-        if(!this.selected) return (new Date()).toISOString();
-        // let nodeEndTime = parseInt(this.selected.endTime);
-        //     nodeEndTime = nodeEndTime*1000;
-
-        let nodeEndTime = this.selected.endTime.getTime();
-
-        let nodeEndDate = new Date(nodeEndTime - (1000*60*60*24));
-        return nodeEndDate.toISOString()
-    }
-
-    // minimum end date is start date + 2 weeks
-    get endMinDate(): string{
-        let startDate = new Date(this.startDate);
-        let endTime = startDate.getTime() + (DAY_MS*14);
-        // let endTime = startDate.getTime();
-        let endDate = new Date(endTime);
-        return endDate.toISOString();
-    }
 
     // Maximum end date is end of validator's staking duration
-    get endMaxDate(): string{
-        if(!this.selected) return (new Date()).toISOString();
+    get endMaxDate(): string|undefined{
+        if(!this.selected) return undefined;
 
-        // let nodeEndTime = parseInt(this.selected.endTime) * 1000;
-        let nodeEndTime = this.selected.endTime.getTime();
-            nodeEndTime -= 60000;
-        return (new Date(nodeEndTime)).toISOString();
+        return this.selected.endTime.toISOString();
     }
 
     get stakingDuration(): number{
@@ -454,19 +400,6 @@ export default class AddDelegator extends Vue{
         let end = new Date(this.endDate);
         let dur = end.getTime() - start.getTime()
         return dur;
-    }
-
-    //TODO: UNDO
-    @Watch('stakingDuration')
-    durChange(val: number){
-        if(val < (DAY_MS*14)){
-            this.endDate = this.endMinDate;
-        }
-    }
-
-    @Watch('selected')
-    onValidatorChange(val: ValidatorRaw){
-        this.endDate = this.endMinDate;
     }
 
     get stakingDurationText(): string{

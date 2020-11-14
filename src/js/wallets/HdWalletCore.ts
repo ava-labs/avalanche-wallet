@@ -86,7 +86,7 @@ class HdWalletCore{
     }
 
     getPlatformRewardAddress(): string {
-        return this.platformHelper.getAddressForIndex(0)
+        return this.platformHelper.getCurrentAddress();
     }
 
     // helper method to get all stake for more than 256 addresses
