@@ -118,10 +118,10 @@
             for(var n=0; n<addrUtxos.length; n++){
                 let utxo = addrUtxos[n];
 
-                // ignore NFTS
+                // ignore NFTS and mint outputs
                 //TODO: support nfts
                 let outId = utxo.getOutput().getOutputID();
-                if(outId===11) continue;
+                if(outId===11 || outId===6 || outId===10) continue;
 
                 let utxoOut = utxo.getOutput() as AmountOutput;
 
