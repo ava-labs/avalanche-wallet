@@ -139,14 +139,20 @@
             return this.$store.getters['walletAssetsDict'];
         }
 
+        get avaxAsset(): AvaAsset{
+            return this.$store.getters['Assets/AssetAVA'];
+        }
+
         get max_amount(): null | BN{
             if(!this.asset_now) return null;
 
             let assetId = this.asset_now.id;
             let balance = this.walletAssetsDict[assetId];
 
+            let avaxId = this.avaxAsset.id;
+
             // Max amount is BALANCE - FEE for AVAX
-            if(this.asset_now.symbol === 'AVAX'){
+            if(assetId === avaxId){
                 let fee = avm.getTxFee();
                 // console.log(fee);
                 if(fee.gte(balance.amount)){

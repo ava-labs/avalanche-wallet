@@ -41,7 +41,6 @@
 
         get symbol(){
             let sym = this.asset.symbol;
-            if(sym==='AVA') return 'AVAX';
             return sym;
         }
 

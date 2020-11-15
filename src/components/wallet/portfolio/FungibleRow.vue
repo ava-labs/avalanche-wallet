@@ -1,7 +1,7 @@
 <template>
     <div class="asset">
         <div class="icon">
-            <hexagon class="hex_bg" :is-ava="isAvaToken"></hexagon>
+            <hexagon class="hex_bg" :is-ava="isAvaxToken"></hexagon>
             <div class="icon_img">
                 <img v-if="iconUrl" :src="iconUrl">
                 <p v-else>?</p>
@@ -39,7 +39,7 @@
         get iconUrl(): string | null{
             if(!this.asset) return null;
 
-            if(this.asset.symbol==='AVA'){
+            if(this.isAvaxToken){
                 return "/ava_letter_icon.png";
             }
 
@@ -59,14 +59,14 @@
             return `/wallet/transfer?asset=${this.asset.id}`;
         }
 
-        get avaToken(): AvaAsset{
+        get avaxToken(): AvaAsset{
             return this.$store.getters['Assets/AssetAVA'];
         }
 
-        get isAvaToken(): boolean{
+        get isAvaxToken(): boolean{
             if(!this.asset) return false;
 
-            if(this.avaToken.id === this.asset.id){
+            if(this.avaxToken.id === this.asset.id){
                 return true;
             }else{
                 return  false

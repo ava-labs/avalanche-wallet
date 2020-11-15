@@ -49,11 +49,13 @@
                 let symbolB = b.symbol.toUpperCase();
                 let amtA = a.getAmount();
                 let amtB = b.getAmount();
+                let idA = a.id;
+                let idB = b.id;
 
                 // AVA always on top
-                if(symbolA === 'AVAX'){
+                if(idA === this.avaxToken.id){
                     return -1;
-                }else if(symbolB === 'AVAX'){
+                }else if(idB === this.avaxToken.id){
                     return 1;
                 }
 
@@ -72,6 +74,10 @@
             });
 
             return balance;
+        }
+
+        get avaxToken(): AvaAsset{
+            return this.$store.getters['Assets/AssetAVA'];
         }
 
         get walletBalances(): AvaAsset[]{
