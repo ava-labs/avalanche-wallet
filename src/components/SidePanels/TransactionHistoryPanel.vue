@@ -61,6 +61,8 @@
         get transactions(): ITransactionData[]{
             let res:ITransactionData[] =  this.$store.state.History.transactions;
 
+            if(!res) return [];
+
             let seenId:string[] = [];
             let r: ITransactionData[] = res.filter(tx => {
                 if(seenId.includes(tx.id)){
