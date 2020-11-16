@@ -10,7 +10,7 @@
         </div>
         <div>
             <label>{{$t('advanced.sign.label2')}}</label>
-            <p class="warn">{{$t('advanced.sign.warn')}}.</p>
+            <p class="warn">{{$t('advanced.sign.warn')}}</p>
             <textarea v-model="message"></textarea>
         </div>
         <p class="err">{{error}}</p>

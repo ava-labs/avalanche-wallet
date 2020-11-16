@@ -377,13 +377,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         let digestBuff = Buffer.from(digestHex, 'hex');
         let signed = key.sign(digestBuff);
 
-        // console.log(signed.toString('hex'));
-        // console.log(msgBuf.toString('hex'), msgBuf.toString('utf8'));
-        // let pubKey = key.recover(msgBuf, signed);
-        // let addr = key.addressFromPublicKey(pubKey);
-
-        // let addrString = bintools.addressToString(getPreferredHRP(), 'X', addr)
-        // console.log("Address: ",addrString);
         return signed.toString('hex');
     }
 }

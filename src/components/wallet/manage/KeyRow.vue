@@ -26,14 +26,13 @@
                         <button class="selBut" @click="select"  v-if="!is_default">
                             <span>{{$t('keys.activate_key')}}</span>
                         </button>
-                        <Tooltip :text="$t('keys.remove_key')" class="row_but" @click.native="remove" v-if="!is_default">
+                        <Tooltip :text="$t('keys.remove_key')" class="row_but circle" @click.native="remove" v-if="!is_default">
                             <img src="@/assets/trash_can_dark.svg" style="height: 16px;">
                         </Tooltip>
-<!--                        <button @click="remove" v-if="!is_default"><fa icon="trash"></fa> Remove Key</button>-->
-                        <Tooltip  :text="$t('keys.hd_addresses')" class="row_but" @click.native="showPastAddresses">
+                        <Tooltip  :text="$t('keys.hd_addresses')" class="row_but circle" @click.native="showPastAddresses">
                             <fa icon="list-ol"></fa>
                         </Tooltip>
-                        <Tooltip v-if="walletType!=='ledger'" :text="$t('keys.export_key')" class="row_but" @click.native="showExportModal">
+                        <Tooltip v-if="walletType!=='ledger'" :text="$t('keys.export_key')" class="row_but circle" @click.native="showExportModal">
                             <fa icon="upload"></fa>
                         </Tooltip>
                         <button v-if="walletType!=='ledger'" @click="showModal">{{$t('keys.view_key')}}</button>
@@ -221,6 +220,7 @@
     }
 
 
+
     .buts{
         display: flex;
         align-items: center;
@@ -229,6 +229,26 @@
 
         > *{
             margin: 0px 8px !important;
+        }
+
+        button{
+            font-size: 16px;
+
+        }
+
+        $but_w: 32px;
+        .circle{
+            width: $but_w;
+            height: $but_w;
+            border-radius: $but_w;
+            background-color: rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-self: center;
+
+            &:hover{
+                background-color: var(--bg);
+            }
         }
     }
 
