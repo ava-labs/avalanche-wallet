@@ -416,11 +416,11 @@
             "label3": "Signature"
         },
         "verify": {
-            "title": "Verify Message",
+            "title": "Check Message Source",
             "desc": "Given a message and its signature, retrieve the address that signed it.",
             "label1": "Message",
             "label2": "Signature",
-            "submit": "Verify Message",
+            "submit": "Check Source",
             "label3": "Source Address"
         }
     },
