@@ -436,6 +436,38 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return pChain.issueTx(tx);
     }
 
+
+    async signMessage(msgStr: string, address: string): Promise<string> {
+        let index = this.externalHelper.findAddressIndex(address);
+
+        if(index===null) throw "Address not found.";
+
+        // this.app.signHash('')
+
+        let pathStr = `0/${index}`;
+        const addressPath = bippath.fromString(pathStr, false);
+        const accountPath = bippath.fromString(`m/44'/9000'/0'`);
+
+        let msgBuf = Buffer.from(msgStr, 'utf8');
+        let digestBuff = Buffer.from(createHash('sha256').update(msgBuf).digest());
+        let digestHex = digestBuff.toString('hex');
+
+        store.commit('Ledger/openModal',{
+            title: `Sign Hash`,
+            info: digestHex.toUpperCase()
+        })
+
+
+        try{
+            let sigMap = await this.app.signHash(accountPath, [addressPath], digestBuff);
+            store.commit('Ledger/closeModal')
+            let signed = sigMap.get(pathStr);
+            return signed.toString('hex');
+        }catch (e) {
+            store.commit('Ledger/closeModal');
+            throw e;
+        }
+    }
 }
 
 export {LedgerWallet};

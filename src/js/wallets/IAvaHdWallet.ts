@@ -47,6 +47,7 @@ export interface AvaWalletCore {
     importToPlatformChain(): Promise<string>;
     importToXChain(): Promise<string>;
     issueBatchTx(orders: (UTXO|ITransaction)[], addr: string, memo?: Buffer): Promise<string>;
+    signMessage(msg: string, address: string): Promise<string>;
 }
 
 export interface IAvaHdWallet extends AvaWalletCore{

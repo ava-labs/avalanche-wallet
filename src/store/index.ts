@@ -69,7 +69,7 @@ export default new Vuex.Store({
 
             if(!wallet) return [];
 
-            let utxoSet = wallet.getUTXOSet()
+            let utxoSet = wallet.getUTXOSet();
             if(!utxoSet) return [];
 
             let addrUtxos = utxoSet.getAllUTXOs();
@@ -134,8 +134,6 @@ export default new Vuex.Store({
 
                 // Process only SECP256K1 Transfer Output utxos, outputid === 07
                 let outId = utxo.getOutput().getOutputID();
-
-                // console.log(outId,utxo)
 
                 if(outId!==7) continue;
 

@@ -405,6 +405,23 @@
             "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
             "submit_x": "Import X",
             "submit_p": "Import P"
+        },
+        "sign": {
+            "title": "Sign Message",
+            "desc": "Sign a message with your private key and prove ownership of an address.",
+            "label1": "Address",
+            "label2": "Message",
+            "warn": "Do not sign messages you dont trust.",
+            "submit": "Sign Message",
+            "label3": "Signature"
+        },
+        "verify": {
+            "title": "Check Message Source",
+            "desc": "Given a message and its signature, retrieve the address that signed it.",
+            "label1": "Message",
+            "label2": "Signature",
+            "submit": "Check Source",
+            "label3": "Source Address"
         }
     },
     "logout": {
@@ -419,7 +436,7 @@
         "button": "Select File"
     },
     "transactions": {
-        "notx": "No transactions found for this address on the explorer.",
+        "notx": "No transactions found on the explorer.",
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",
