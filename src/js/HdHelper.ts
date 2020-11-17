@@ -543,7 +543,6 @@ class HdHelper {
         let addrs = this.getAllDerivedAddresses();
         let index = addrs.indexOf(addr);
 
-        console.log(addrs, index);
 
         if(index<0) return null;
         return index;
