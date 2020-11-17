@@ -506,8 +506,6 @@ class HdHelper {
     }
 
     getAddressForIndex(index: number): string{
-
-
         if(this.addressCache[index]){
             return this.addressCache[index];
         }
@@ -537,6 +535,17 @@ class HdHelper {
 
         this.addressCache[index] = addr;
         return addr;
+    }
+
+
+    // Given an address find the derived index
+    findAddressIndex(addr: string): number|null{
+        let addrs = this.getAllDerivedAddresses();
+        let index = addrs.indexOf(addr);
+
+
+        if(index<0) return null;
+        return index;
     }
 }
 export {HdHelper};

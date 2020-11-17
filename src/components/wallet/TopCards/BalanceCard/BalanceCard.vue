@@ -15,7 +15,8 @@
                 </template>
             </div>
             <div class="balance_row">
-                <p class="balance" data-cy="wallet_balance">{{balanceText}} AVAX</p>
+                <p class="balance" data-cy="wallet_balance" v-if="!balanceTextRight">{{balanceTextLeft}} AVAX</p>
+                <p class="balance" data-cy="wallet_balance" v-else>{{balanceTextLeft}}<span>.{{balanceTextRight}}</span> AVAX</p>
                 <p class="balance_usd"><b>$ {{totalBalanceUSD.toLocaleString(2)}}</b> USD</p>
             </div>
 <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
@@ -153,6 +154,24 @@
             }else{
                 return '?'
             }
+        }
+
+        get balanceTextLeft(): string{
+            let text = this.balanceText;
+            if(text.includes('.')){
+                let left = text.split('.')[0]
+                return left
+            }
+            return text;
+        }
+
+        get balanceTextRight(): string{
+            let text = this.balanceText;
+            if(text.includes('.')){
+                let right = text.split('.')[1]
+                return right
+            }
+            return '';
         }
 
 
@@ -313,6 +332,11 @@
         white-space: normal;
         /*font-weight: bold;*/
         font-family: Rubik !important;
+
+        span{
+            font-size: 0.8em;
+            /*color: var(--primary-color-light);*/
+        }
     }
 
     .balance_usd{

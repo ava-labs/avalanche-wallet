@@ -25,6 +25,7 @@ import {
 } from "avalanche/dist/utils";
 
 
+
 import * as bip39 from "bip39";
 import {BN, Buffer} from 'avalanche';
 import {ava, avm, bintools, pChain} from "@/AVA";
@@ -357,5 +358,25 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
             const tx = (unsignedTx as PlatformUnsignedTx).sign(keychainP);
             return tx as SignedTx;
         }
+    }
+
+
+    async signMessage(msgStr: string, address: string): Promise<string>{
+        let index = this.externalHelper.findAddressIndex(address);
+
+        if(index===null) throw "Address not found.";
+
+        let key = this.externalHelper.getKeyForIndex(index) as AVMKeyPair;
+
+
+        let msgBuf = Buffer.from(msgStr, 'utf8');
+        let digest = createHash('sha256').update(msgBuf).digest();
+
+        // Convert to the other Buffer and sign
+        let digestHex = digest.toString('hex');
+        let digestBuff = Buffer.from(digestHex, 'hex');
+        let signed = key.sign(digestBuff);
+
+        return signed.toString('hex');
     }
 }
