@@ -142,9 +142,9 @@ class HdHelper {
 
 
         let utxoSet = response.utxos;
-        let utxos = utxoSet.getAllUTXOs();
         let nextEndIndex = response.endIndex;
         let len = response.numFetched;
+
 
         if(len >= 1024){
             let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
@@ -216,7 +216,6 @@ class HdHelper {
             result = await this.avmGetAllUTXOs(addrs);
         }else{
             result = await this.platformGetAllUTXOs(addrs);
-            // console.log(result);
         }
         this.utxoSet = result; // we can use local copy of utxos as cache for some functions
 
@@ -362,6 +361,7 @@ class HdHelper {
     // Uses the node to find last used HD index
     // Only used when there is no explorer API available
     async findAvailableIndexNode(start:number=0): Promise<number> {
+
         let addrs: string[] = [];
 
         // Get keys for indexes start to start+scan_size
