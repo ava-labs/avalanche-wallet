@@ -368,7 +368,9 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
 
         let key = this.externalHelper.getKeyForIndex(index) as AVMKeyPair;
         let mBuf = Buffer.from(msgStr, 'utf8');
-        let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${mBuf.length.toString(16)}${msgStr}`, 'utf8');
+        let msgSize = Buffer.alloc(4);
+        msgSize.writeUInt32BE(mBuf.length, 0);
+        let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`, 'utf8');
         let digest = createHash('sha256').update(msgBuf).digest();
 
         // Convert to the other Buffer and sign

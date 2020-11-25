@@ -46,7 +46,9 @@
         }
         verify(){
             let mBuf = Buffer.from(this.message, 'utf8');
-            let msgBuff = Buffer.from(`\x1AAvalanche Signed Message:\n${mBuf.length.toString(16)}${this.message}`, 'utf8');
+            let msgSize = Buffer.alloc(4);
+            msgSize.writeUInt32BE(mBuf.length, 0);
+            let msgBuff = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${this.message}`, 'utf8');
             let digest = createHash('sha256').update(msgBuff).digest();
 
             let digestBuff = Buffer.from(digest.toString('hex'), 'hex');
