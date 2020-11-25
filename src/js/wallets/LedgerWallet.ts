@@ -462,7 +462,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             store.commit('Ledger/closeModal')
             let signed = sigMap.get(pathStr);
             return bintools.cb58Encode(signed);
-            // return signed.toString('hex');
         }catch (e) {
             store.commit('Ledger/closeModal');
             throw e;
