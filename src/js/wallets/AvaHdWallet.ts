@@ -367,9 +367,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         if(index===null) throw "Address not found.";
 
         let key = this.externalHelper.getKeyForIndex(index) as AVMKeyPair;
-
-
-        let msgBuf = Buffer.from(msgStr, 'utf8');
+        let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgStr}`, 'utf8');
         let digest = createHash('sha256').update(msgBuf).digest();
 
         // Convert to the other Buffer and sign
@@ -377,6 +375,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet{
         let digestBuff = Buffer.from(digestHex, 'hex');
         let signed = key.sign(digestBuff);
 
-        return signed.toString('hex');
+        return bintools.cb58Encode(signed)
     }
 }

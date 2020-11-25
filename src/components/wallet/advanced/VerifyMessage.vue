@@ -45,7 +45,7 @@
             }
         }
         verify(){
-            let msgBuff = Buffer.from(this.message, "utf8");
+            let msgBuff = Buffer.from(`\x1AAvalanche Signed Message:\n${this.message}`, 'utf8');
             let digest = createHash('sha256').update(msgBuff).digest();
 
             let digestBuff = Buffer.from(digest.toString('hex'), 'hex');
@@ -55,7 +55,7 @@
             let hrp = getPreferredHRP(networkId);
             let keypair = new KeyPair(hrp, 'X');
 
-            let signedBuff = Buffer.from(this.signature, 'hex');
+            let signedBuff = bintools.cb58Decode(this.signature);
 
             let pubKey = keypair.recover(digestBuff, signedBuff);
             let addressBuff = keypair.addressFromPublicKey(pubKey);
