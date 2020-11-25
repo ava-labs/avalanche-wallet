@@ -27,6 +27,7 @@
     import {getPreferredHRP} from "avalanche/dist/utils";
     import {avm} from "@/AVA";
     import {Buffer} from "avalanche";
+    import {digestMessage} from "@/helpers/helper";
 
     @Component
     export default class VerifyMessage extends Vue{
@@ -45,12 +46,7 @@
             }
         }
         verify(){
-            let mBuf = Buffer.from(this.message, 'utf8');
-            let msgSize = Buffer.alloc(4);
-            msgSize.writeUInt32BE(mBuf.length, 0);
-            let msgBuff = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${this.message}`, 'utf8');
-            let digest = createHash('sha256').update(msgBuff).digest();
-
+            let digest = digestMessage(this.message);
             let digestBuff = Buffer.from(digest.toString('hex'), 'hex');
 
             let networkId = ava.getNetworkID();
