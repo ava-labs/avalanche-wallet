@@ -1,6 +1,6 @@
 
 const axios = require('axios');
-const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=avalanche&vs_currencies=usd";
+const COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price?ids=avalanche-2&vs_currencies=usd";
 
 let prices = {
     "usd": 0
