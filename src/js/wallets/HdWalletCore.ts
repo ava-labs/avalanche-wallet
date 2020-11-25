@@ -15,6 +15,7 @@ import {UTXOSet as AVMUTXOSet} from "avalanche/dist/apis/avm/utxos";
 import HDKey from "hdkey";
 import {HdHelper} from "@/js/HdHelper";
 import {UTXOSet as PlatformUTXOSet} from "avalanche/dist/apis/platformvm/utxos";
+import createHash from "create-hash";
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
@@ -239,7 +240,6 @@ class HdWalletCore{
         }
         return unsignedTx;
     }
-
 
 
 }

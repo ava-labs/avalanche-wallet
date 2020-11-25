@@ -32,6 +32,7 @@ import {Credential, SigIdx, Signature, StandardTx, StandardUnsignedTx} from "ava
 import {getPreferredHRP} from "avalanche/dist/utils";
 import {HdWalletCore} from "@/js/wallets/HdWalletCore";
 import {WalletType} from "@/store/types";
+import {digestMessage} from "@/helpers/helper";
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax;
@@ -442,14 +443,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         if(index===null) throw "Address not found.";
 
-        // this.app.signHash('')
-
         let pathStr = `0/${index}`;
         const addressPath = bippath.fromString(pathStr, false);
         const accountPath = bippath.fromString(`m/44'/9000'/0'`);
 
-        let msgBuf = Buffer.from(msgStr, 'utf8');
-        let digestBuff = Buffer.from(createHash('sha256').update(msgBuf).digest());
+        let digest = digestMessage(msgStr);
+        let digestBuff = Buffer.from(digest);
         let digestHex = digestBuff.toString('hex');
 
         store.commit('Ledger/openModal',{
@@ -462,7 +461,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let sigMap = await this.app.signHash(accountPath, [addressPath], digestBuff);
             store.commit('Ledger/closeModal')
             let signed = sigMap.get(pathStr);
-            return signed.toString('hex');
+            return bintools.cb58Encode(signed);
         }catch (e) {
             store.commit('Ledger/closeModal');
             throw e;

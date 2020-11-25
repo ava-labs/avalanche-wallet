@@ -16,6 +16,8 @@ import {BN} from "avalanche/dist";
 import Big from 'big.js';
 
 import {PlatformVMConstants} from "avalanche/dist/apis/platformvm";
+import {Buffer} from "avalanche";
+import createHash from "create-hash";
 
 function getAssetIcon(id:string){
     let url = "/question-solid.svg";
@@ -77,5 +79,12 @@ function calculateStakingReward(amount: BN, duration: number, currentSupply: BN)
     return rewardBN;
 }
 
+function digestMessage(msgStr: string){
+    let mBuf = Buffer.from(msgStr, 'utf8');
+    let msgSize = Buffer.alloc(4);
+        msgSize.writeUInt32BE(mBuf.length, 0);
+    let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`, 'utf8');
+    return createHash('sha256').update(msgBuf).digest();
+}
 
-export {getAssetIcon, keyToKeypair, calculateStakingReward, bnToBig};
+export {getAssetIcon, keyToKeypair, calculateStakingReward, bnToBig, digestMessage};
