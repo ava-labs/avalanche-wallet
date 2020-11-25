@@ -45,7 +45,8 @@
             }
         }
         verify(){
-            let msgBuff = Buffer.from(`\x1AAvalanche Signed Message:\n${this.message}`, 'utf8');
+            let mBuf = Buffer.from(this.message, 'utf8');
+            let msgBuff = Buffer.from(`\x1AAvalanche Signed Message:\n${mBuf.length.toString(16)}${this.message}`, 'utf8');
             let digest = createHash('sha256').update(msgBuff).digest();
 
             let digestBuff = Buffer.from(digest.toString('hex'), 'hex');
