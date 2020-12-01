@@ -6,12 +6,13 @@
   },
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test": "jest --verbose ./tests",
     "cypress": "cypress open",
-    "test_watch": "jest --verbose --watch ./tests"
+    "format": "prettier '**/*.{js,ts,vue}' --write",
+    "lint": "vue-cli-service lint",
+    "serve": "vue-cli-service serve",
+    "test_watch": "jest --verbose --watch ./tests",
+    "test": "jest --verbose ./tests"
   },
   "jest": {
     "moduleFileExtensions": [
