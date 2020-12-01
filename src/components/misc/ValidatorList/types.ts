@@ -42,10 +42,6 @@ export interface ValidatorRewardOwner{
     threshold: string
 }
 
-// export interface GetValdiatorsResponse{
-//     validators: ValidatorRaw[]
-//     delegators: ValidatorRaw[]
-// }
 
 export interface ValidatorDict {
     [nodeId: string]: ValidatorRaw
