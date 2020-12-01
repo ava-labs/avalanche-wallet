@@ -52,7 +52,15 @@ export default class UserRewards extends Vue{
     }
 
     get delegators(): DelegatorRaw[]{
-        let delegators: DelegatorRaw[] = this.$store.state.Platform.delegators;
+        let delegators: DelegatorRaw[] = []
+        let validators: ValidatorRaw[] = this.$store.state.Platform.validators;
+
+        for(var i=0;i<validators.length;i++){
+            let v = validators[i];
+            if(v.delegators===null) continue;
+            delegators.push(...v.delegators);
+        }
+
         return this.cleanList(delegators) as DelegatorRaw[];
     }
 
@@ -75,6 +83,7 @@ export default class UserRewards extends Vue{
     get totalRewardBig(): Big{
         return bnToBig(this.totalReward, 9);
     }
+
 
     cleanList(list: ValidatorRaw[]|DelegatorRaw[]){
         let res = list.filter(val => {
