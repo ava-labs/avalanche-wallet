@@ -17,39 +17,39 @@
     </v-app>
 </template>
 <script>
-    import Notifications from '@/components/Notifications';
-    import Navbar from './components/Navbar';
-    import RememberWalletModal from "@/components/modals/RememberWallet/RememberWalletModal";
-    import LedgerBlock from "@/components/modals/LedgerBlock";
-    import TestNetBanner from '@/components/TestNetBanner';
+import Notifications from '@/components/Notifications'
+import Navbar from './components/Navbar'
+import RememberWalletModal from '@/components/modals/RememberWallet/RememberWalletModal'
+import LedgerBlock from '@/components/modals/LedgerBlock'
+import TestNetBanner from '@/components/TestNetBanner'
 
-    export default {
-        components: {
-            LedgerBlock,
-            RememberWalletModal,
-            Navbar,
-            Notifications,
-            TestNetBanner
-        },
-        async created() {
-            // Init language preference
-            let locale = localStorage.getItem('lang');
-            if(locale){
-                this.$root.$i18n.locale = locale;
-            }
+export default {
+    components: {
+        LedgerBlock,
+        RememberWalletModal,
+        Navbar,
+        Notifications,
+        TestNetBanner,
+    },
+    async created() {
+        // Init language preference
+        let locale = localStorage.getItem('lang')
+        if (locale) {
+            this.$root.$i18n.locale = locale
+        }
 
-            await this.$store.dispatch('Network/init');
-            this.$store.dispatch('updateAvaxPrice');
-        },
-        computed: {
-            isNavbar() {
-                if (this.$route.path.includes('/wallet')) {
-                    return false;
-                }
-                return true
+        await this.$store.dispatch('Network/init')
+        this.$store.dispatch('updateAvaxPrice')
+    },
+    computed: {
+        isNavbar() {
+            if (this.$route.path.includes('/wallet')) {
+                return false
             }
+            return true
         },
-    }
+    },
+}
 </script>
 
 <style scoped lang="scss">
@@ -66,8 +66,7 @@
         }
     }
 
-
-    #router_view{
+    #router_view {
         min-height: calc(100vh - 80px);
         position: relative;
         padding: main.$container_padding_m;
@@ -110,7 +109,7 @@ p {
     text-align: left;
     color: var(--primary-color);
     background-color: var(--bg) !important;
-    font-family: "Rubik", sans-serif;
+    font-family: 'Rubik', sans-serif;
     transition-duration: 0.2s;
 }
 

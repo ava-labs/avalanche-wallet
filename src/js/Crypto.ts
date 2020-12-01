@@ -1,5 +1,5 @@
-import { Buffer } from 'buffer/';
-import createHash from 'create-hash';
+import { Buffer } from 'buffer/'
+import createHash from 'create-hash'
 
 /**
  * @ignore
@@ -10,15 +10,15 @@ import createHash from 'create-hash';
  * Encryption is using XChaCha20Poly1305 with a random public nonce.
  */
 export default class CryptoHelpers {
-    protected ivSize: number = 12;
+    protected ivSize: number = 12
 
-    protected saltSize: number = 16;
+    protected saltSize: number = 16
 
-    protected tagLength: number = 128;
+    protected tagLength: number = 128
 
-    protected aesLength: number = 256;
+    protected aesLength: number = 256
 
-    public keygenIterations: number = 200000; //3.0, 2.0 uses 100000
+    public keygenIterations: number = 200000 //3.0, 2.0 uses 100000
 
     /**
      * Internal-intended function for cleaning passwords.
@@ -26,9 +26,9 @@ export default class CryptoHelpers {
      * @param password
      * @param salt
      */
-    _pwcleaner(password:string, slt:Buffer):Buffer {
-        const pw:Buffer = Buffer.from(password, 'utf8');
-        return this.sha256(Buffer.concat([pw, slt]));
+    _pwcleaner(password: string, slt: Buffer): Buffer {
+        const pw: Buffer = Buffer.from(password, 'utf8')
+        return this.sha256(Buffer.concat([pw, slt]))
     }
     /**
      * Internal-intended function for producing an intermediate key.
@@ -36,14 +36,14 @@ export default class CryptoHelpers {
      * @param pwkey
      */
 
-    async _keyMaterial(pwkey:Buffer):Promise<CryptoKey> {
+    async _keyMaterial(pwkey: Buffer): Promise<CryptoKey> {
         return window.crypto.subtle.importKey(
             'raw',
             new Uint8Array(pwkey),
             { name: 'PBKDF2' },
             false,
-            ['deriveKey'],
-        );
+            ['deriveKey']
+        )
     }
 
     /**
@@ -52,7 +52,7 @@ export default class CryptoHelpers {
      * @param keyMaterial
      * @param salt
      */
-    async _deriveKey(keyMaterial:CryptoKey, salt:Buffer):Promise<CryptoKey> {
+    async _deriveKey(keyMaterial: CryptoKey, salt: Buffer): Promise<CryptoKey> {
         return window.crypto.subtle.deriveKey(
             {
                 name: 'PBKDF2',
@@ -63,8 +63,8 @@ export default class CryptoHelpers {
             keyMaterial,
             { name: 'AES-GCM', length: this.aesLength },
             false,
-            ['encrypt', 'decrypt'],
-        );
+            ['encrypt', 'decrypt']
+        )
     }
 
     /**
@@ -74,23 +74,23 @@ export default class CryptoHelpers {
      *
      * @returns A {@link https://github.com/feross/buffer|Buffer} containing the SHA256 hash of the message
      */
-    sha256(message:string | Buffer):Buffer {
-        let buff:Buffer;
+    sha256(message: string | Buffer): Buffer {
+        let buff: Buffer
         if (typeof message === 'string') {
-            buff = Buffer.from(message, 'utf8');
+            buff = Buffer.from(message, 'utf8')
         } else {
-            buff = Buffer.from(message);
+            buff = Buffer.from(message)
         }
-        return Buffer.from(createHash('sha256').update(buff).digest()); // ensures correct Buffer class is used
+        return Buffer.from(createHash('sha256').update(buff).digest()) // ensures correct Buffer class is used
     }
 
     /**
      * Generates a randomized {@link https://github.com/feross/buffer|Buffer} to be used as a salt
      */
-    makeSalt():Buffer {
-        const salt = Buffer.alloc(this.saltSize);
-        window.crypto.getRandomValues(salt);
-        return salt;
+    makeSalt(): Buffer {
+        const salt = Buffer.alloc(this.saltSize)
+        window.crypto.getRandomValues(salt)
+        return salt
     }
 
     /**
@@ -101,16 +101,22 @@ export default class CryptoHelpers {
      *
      * @returns An object containing the "salt" and the "hash" produced by this function, both as {@link https://github.com/feross/buffer|Buffer}.
      */
-    async pwhash(password:string, salt:Buffer):Promise< {salt:Buffer; hash:Buffer} > {
-        let slt:Buffer;
+    async pwhash(
+        password: string,
+        salt: Buffer
+    ): Promise<{ salt: Buffer; hash: Buffer }> {
+        let slt: Buffer
         if (salt instanceof Buffer) {
-            slt = salt;
+            slt = salt
         } else {
-            slt = this.makeSalt();
+            slt = this.makeSalt()
         }
 
-        const hash:Buffer = this._pwcleaner(password, this._pwcleaner(password, slt));
-        return { salt: slt, hash };
+        const hash: Buffer = this._pwcleaner(
+            password,
+            this._pwcleaner(password, slt)
+        )
+        return { salt: slt, hash }
     }
 
     /**
@@ -122,44 +128,49 @@ export default class CryptoHelpers {
      *
      * @returns An object containing the "salt", "iv", and "ciphertext", all as {@link https://github.com/feross/buffer|Buffer}.
      */
-    async encrypt(password:string,
-                  plaintext:Buffer | string,
-                  salt:Buffer|undefined = undefined):Promise< {salt:Buffer; iv:Buffer; ciphertext:Buffer} > {
-        let slt:Buffer;
+    async encrypt(
+        password: string,
+        plaintext: Buffer | string,
+        salt: Buffer | undefined = undefined
+    ): Promise<{ salt: Buffer; iv: Buffer; ciphertext: Buffer }> {
+        let slt: Buffer
         if (typeof salt !== 'undefined' && salt instanceof Buffer) {
-            slt = salt;
+            slt = salt
         } else {
-            slt = this.makeSalt();
+            slt = this.makeSalt()
         }
 
-        let pt:Buffer;
+        let pt: Buffer
         if (typeof plaintext !== 'undefined' && plaintext instanceof Buffer) {
-            pt = plaintext;
+            pt = plaintext
         } else {
-            pt = Buffer.from(plaintext, 'utf8');
+            pt = Buffer.from(plaintext, 'utf8')
         }
-        const pwkey:Buffer = this._pwcleaner(password, slt);
-        const keyMaterial:CryptoKey = await this._keyMaterial(pwkey);
-        const pkey:CryptoKey = await this._deriveKey(keyMaterial, slt);
-        const iv:Buffer = Buffer.from(window.crypto.getRandomValues(new Uint8Array(this.ivSize)));
+        const pwkey: Buffer = this._pwcleaner(password, slt)
+        const keyMaterial: CryptoKey = await this._keyMaterial(pwkey)
+        const pkey: CryptoKey = await this._deriveKey(keyMaterial, slt)
+        const iv: Buffer = Buffer.from(
+            window.crypto.getRandomValues(new Uint8Array(this.ivSize))
+        )
 
-        const ciphertext:Buffer = Buffer.from(await window.crypto.subtle.encrypt(
-            {
-                name: 'AES-GCM',
-                iv,
-                additionalData: slt,
-                tagLength: this.tagLength,
-            },
-            pkey,
-            pt,
-
-        ));
+        const ciphertext: Buffer = Buffer.from(
+            await window.crypto.subtle.encrypt(
+                {
+                    name: 'AES-GCM',
+                    iv,
+                    additionalData: slt,
+                    tagLength: this.tagLength,
+                },
+                pkey,
+                pt
+            )
+        )
 
         return {
             salt: slt,
             iv,
             ciphertext,
-        };
+        }
     }
 
     /**
@@ -170,21 +181,28 @@ export default class CryptoHelpers {
      * @param salt A {@link https://github.com/feross/buffer|Buffer} for the salt
      * @param iv A {@link https://github.com/feross/buffer|Buffer} for the iv
      */
-    async decrypt(password:string, ciphertext:Buffer, salt:Buffer, iv:Buffer):Promise<Buffer> {
-        const pwkey:Buffer = this._pwcleaner(password, salt);
-        const keyMaterial:CryptoKey = await this._keyMaterial(pwkey);
-        const pkey:CryptoKey = await this._deriveKey(keyMaterial, salt);
-        const pt:Buffer = Buffer.from(await window.crypto.subtle.decrypt(
-            {
-                name: 'AES-GCM',
-                iv, // The initialization vector you used to encrypt
-                additionalData: salt, // The addtionalData you used to encrypt (if any)
-                tagLength: 128, // The tagLength you used to encrypt (if any)
-            },
-            pkey, // from generateKey or importKey above
-            ciphertext, // ArrayBuffer of the data
-        ));
-        return pt;
+    async decrypt(
+        password: string,
+        ciphertext: Buffer,
+        salt: Buffer,
+        iv: Buffer
+    ): Promise<Buffer> {
+        const pwkey: Buffer = this._pwcleaner(password, salt)
+        const keyMaterial: CryptoKey = await this._keyMaterial(pwkey)
+        const pkey: CryptoKey = await this._deriveKey(keyMaterial, salt)
+        const pt: Buffer = Buffer.from(
+            await window.crypto.subtle.decrypt(
+                {
+                    name: 'AES-GCM',
+                    iv, // The initialization vector you used to encrypt
+                    additionalData: salt, // The addtionalData you used to encrypt (if any)
+                    tagLength: 128, // The tagLength you used to encrypt (if any)
+                },
+                pkey, // from generateKey or importKey above
+                ciphertext // ArrayBuffer of the data
+            )
+        )
+        return pt
     }
 
     constructor() {}

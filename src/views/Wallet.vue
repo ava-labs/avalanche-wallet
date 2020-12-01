@@ -19,56 +19,55 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import TopInfo from "@/components/wallet/TopInfo.vue";
-import Sidebar from '@/components/wallet/Sidebar.vue';
-import MainPanel from '@/components/SidePanels/MainPanel.vue';
-import UpdateKeystoreModal from "@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue";
+import { Vue, Component } from 'vue-property-decorator'
+import TopInfo from '@/components/wallet/TopInfo.vue'
+import Sidebar from '@/components/wallet/Sidebar.vue'
+import MainPanel from '@/components/SidePanels/MainPanel.vue'
+import UpdateKeystoreModal from '@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue'
 
-const TIMEOUT_DURATION = 60 * 7; // in seconds
+const TIMEOUT_DURATION = 60 * 7 // in seconds
 
 @Component({
     components: {
         Sidebar,
         MainPanel,
         TopInfo,
-        UpdateKeystoreModal
-    }
+        UpdateKeystoreModal,
+    },
 })
 export default class Wallet extends Vue {
-    inactiveDur: number = TIMEOUT_DURATION;
-    intervalId: NodeJS.Timeout|null = null;
+    inactiveDur: number = TIMEOUT_DURATION
+    intervalId: NodeJS.Timeout | null = null
 
-    resetTimer(){
-        this.inactiveDur = TIMEOUT_DURATION;
+    resetTimer() {
+        this.inactiveDur = TIMEOUT_DURATION
     }
 
-
-    created(){
+    created() {
         this.intervalId = setInterval(() => {
-            this.inactiveDur -= 1;
-            if(this.inactiveDur <= 0){
-                this.$store.dispatch('timeoutLogout');
+            this.inactiveDur -= 1
+            if (this.inactiveDur <= 0) {
+                this.$store.dispatch('timeoutLogout')
             }
         }, 1000)
     }
 
-    mounted(){
-        let view = this.$refs.wallet_view as HTMLDivElement;
+    mounted() {
+        let view = this.$refs.wallet_view as HTMLDivElement
 
-        view.addEventListener('mousemove', this.resetTimer);
-        view.addEventListener('mousedown', this.resetTimer);
+        view.addEventListener('mousemove', this.resetTimer)
+        view.addEventListener('mousedown', this.resetTimer)
     }
 
-    destroyed(){
-        clearInterval(this.intervalId!);
+    destroyed() {
+        clearInterval(this.intervalId!)
     }
 
-    get isManageWarning(): boolean{
-        if(this.$store.state.warnUpdateKeyfile){
-            return true;
+    get isManageWarning(): boolean {
+        if (this.$store.state.warnUpdateKeyfile) {
+            return true
         }
-        return false;
+        return false
     }
 }
 </script>
@@ -85,7 +84,7 @@ export default class Wallet extends Vue {
     background-color: var(--bg-wallet);
 }
 
-.panel{
+.panel {
     background-color: var(--bg-wallet-light);
     overflow: auto;
     height: 100%;
@@ -123,7 +122,6 @@ export default class Wallet extends Vue {
         display: none;
     }
 }
-
 
 @include main.medium-device {
     .wallet_view {

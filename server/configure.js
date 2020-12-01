@@ -1,18 +1,16 @@
-const api = require('./api');
-const {updatePrices} = require('./prices');
+const api = require('./api')
+const { updatePrices } = require('./prices')
 
-
-
-function beforeMiddleware(app){
+function beforeMiddleware(app) {
     app.use('/api', api)
 }
 
 function onListening() {
-    updatePrices();
-    setInterval(updatePrices, 60000);
+    updatePrices()
+    setInterval(updatePrices, 60000)
 }
 
 module.exports = {
     beforeMiddleware,
-    onListening
-};
+    onListening,
+}

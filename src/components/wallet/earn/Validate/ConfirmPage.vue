@@ -1,101 +1,104 @@
 <template>
     <div class="confirmation">
         <div>
-            <label>{{$t('earn.validate.confirmation.id')}}</label>
-            <p style="word-break: break-all;">{{nodeID}}</p>
+            <label>{{ $t('earn.validate.confirmation.id') }}</label>
+            <p style="word-break: break-all">{{ nodeID }}</p>
         </div>
         <div>
-            <label>{{$t('earn.validate.confirmation.amount')}}</label>
-            <p>{{amtText}} AVAX</p>
+            <label>{{ $t('earn.validate.confirmation.amount') }}</label>
+            <p>{{ amtText }} AVAX</p>
         </div>
         <div>
-            <label>{{$t('earn.validate.confirmation.start')}}</label>
-            <p>{{start.toLocaleString()}}</p>
+            <label>{{ $t('earn.validate.confirmation.start') }}</label>
+            <p>{{ start.toLocaleString() }}</p>
         </div>
         <div>
-            <label>{{$t('earn.validate.confirmation.end')}}</label>
-            <p>{{end.toLocaleString()}}</p>
+            <label>{{ $t('earn.validate.confirmation.end') }}</label>
+            <p>{{ end.toLocaleString() }}</p>
         </div>
         <div>
-            <label>{{$t('earn.validate.confirmation.fee')}}</label>
-            <p>{{delegationFee}} %</p>
+            <label>{{ $t('earn.validate.confirmation.fee') }}</label>
+            <p>{{ delegationFee }} %</p>
         </div>
         <div>
-            <label>{{$t('earn.validate.confirmation.reward')}} ({{walletType}})</label>
-            <p style="word-break: break-all;">{{rewardAddress}}</p>
+            <label
+                >{{ $t('earn.validate.confirmation.reward') }} ({{
+                    walletType
+                }})</label
+            >
+            <p style="word-break: break-all">{{ rewardAddress }}</p>
         </div>
     </div>
 </template>
 <script lang="ts">
-    import "reflect-metadata";
-    import {Vue, Component, Prop, Watch} from "vue-property-decorator";
-    import {BN} from "avalanche";
-    import Big from "big.js";
+import 'reflect-metadata'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { BN } from 'avalanche'
+import Big from 'big.js'
 
-    @Component
-    export default class ConfirmPage extends Vue{
-        @Prop() nodeID!: string;
-        @Prop() start!: Date;
-        @Prop() end!: Date;
-        @Prop() delegationFee!: number;
-        @Prop() amount!: BN
-        @Prop() rewardAddress!: string;
-        @Prop() rewardDestination!: string;
+@Component
+export default class ConfirmPage extends Vue {
+    @Prop() nodeID!: string
+    @Prop() start!: Date
+    @Prop() end!: Date
+    @Prop() delegationFee!: number
+    @Prop() amount!: BN
+    @Prop() rewardAddress!: string
+    @Prop() rewardDestination!: string
 
-        // amountCopy: BN = new BN(0);
+    // amountCopy: BN = new BN(0);
 
+    // @Watch('amount')
+    // onAmountChange(val: BN){
+    //     console.log(val.toString(), val);
+    //     this.amountCopy = val.clone()
+    //     this.amountCopy = val.
+    // }
 
-        // @Watch('amount')
-        // onAmountChange(val: BN){
-        //     console.log(val.toString(), val);
-        //     this.amountCopy = val.clone()
-        //     this.amountCopy = val.
-        // }
+    // get startDate(){
+    //     return new Date(this.start);
+    // }
+    //
+    // get endDate(){
+    //     return new Date(this.end);
+    // }
 
-        // get startDate(){
-        //     return new Date(this.start);
-        // }
-        //
-        // get endDate(){
-        //     return new Date(this.end);
-        // }
-
-        get amtBig(): Big{
-            let stakeAmt = Big(this.amount.toString()).div(Math.pow(10,9));
-            return stakeAmt;
-        }
-
-        get walletType(){
-            if(this.rewardDestination === 'local'){
-                return this.$t('earn.validate.confirmation.type_local');
-            }
-            return this.$t('earn.validate.confirmation.type_custom')
-        }
-
-        get amtText():string{
-            let amt = this.amtBig;
-            return amt.toLocaleString(9);
-        }
+    get amtBig(): Big {
+        let stakeAmt = Big(this.amount.toString()).div(Math.pow(10, 9))
+        return stakeAmt
     }
+
+    get walletType() {
+        if (this.rewardDestination === 'local') {
+            return this.$t('earn.validate.confirmation.type_local')
+        }
+        return this.$t('earn.validate.confirmation.type_custom')
+    }
+
+    get amtText(): string {
+        let amt = this.amtBig
+        return amt.toLocaleString(9)
+    }
+}
 </script>
 <style scoped lang="scss">
-    .confirmation{
-        > div{
-            background-color: var(--bg-light);
-            margin: 14px 0;
-            padding: 6px 14px;
+.confirmation {
+    > div {
+        background-color: var(--bg-light);
+        margin: 14px 0;
+        padding: 6px 14px;
 
-            label{
-                font-size: 14px;
-                color: var(--primary-color-light);
-            }
-            p{
-                font-size: 18px;
-            }
-        }
-
-        .err{
+        label {
             font-size: 14px;
+            color: var(--primary-color-light);
+        }
+        p {
+            font-size: 18px;
         }
     }
+
+    .err {
+        font-size: 14px;
+    }
+}
 </style>

@@ -1,93 +1,126 @@
-import Vue from 'vue';
-import Vuetify from 'vuetify/lib';
+import Vue from 'vue'
+import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loader
-
-
-
-
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faDollarSign,
-  faTimesCircle,
-  faSignOutAlt,
-  faSignInAlt,
-  faCaretDown,
-  faHistory,
-  faGlobe,
-  faExchangeAlt,
-  faDna,
-  faCamera,
-  faDownload,
-  faCheckCircle,
-  faTimes,
-  faPlus,
-  faMinus,
-  faSync,
-  faExclamationTriangle,
-  faPrint,
-  faQrcode,
-  faCopy,
-  faKey,
-  faFileExcel,
-  faList,
-  faTrash,
-  faUpload,
-  faCreditCard,
-  faArrowRight,
-  faArrowLeft,
-  faTint,
-  faChevronDown,
-  faBars,
-  faCog,
-  faSearch,
-  faListOl,
-  faSpinner,
-  faInfoCircle,
-  faLink,
-  faQuoteRight,
-  faLock,
-  faEye,
-  faEyeSlash,
-  faQuestionCircle,
-  faUsers,
-  faFilter
+    faDollarSign,
+    faTimesCircle,
+    faSignOutAlt,
+    faSignInAlt,
+    faCaretDown,
+    faHistory,
+    faGlobe,
+    faExchangeAlt,
+    faDna,
+    faCamera,
+    faDownload,
+    faCheckCircle,
+    faTimes,
+    faPlus,
+    faMinus,
+    faSync,
+    faExclamationTriangle,
+    faPrint,
+    faQrcode,
+    faCopy,
+    faKey,
+    faFileExcel,
+    faList,
+    faTrash,
+    faUpload,
+    faCreditCard,
+    faArrowRight,
+    faArrowLeft,
+    faTint,
+    faChevronDown,
+    faBars,
+    faCog,
+    faSearch,
+    faListOl,
+    faSpinner,
+    faInfoCircle,
+    faLink,
+    faQuoteRight,
+    faLock,
+    faEye,
+    faEyeSlash,
+    faQuestionCircle,
+    faUsers,
+    faFilter,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faBtc, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
-    faDollarSign, faBtc, faTimesCircle, faSignOutAlt, faSignInAlt, faCaretDown, faHistory,
-    faGlobe, faExchangeAlt, faDna, faCamera, faDownload, faCheckCircle, faTimes, faPlus,
-    faMinus, faSync, faExclamationTriangle, faPrint, faQrcode, faCopy, faKey, faFileExcel,
-    faList, faTrash, faUpload, faCreditCard, faArrowRight, faArrowLeft, faTint, faChevronDown,
-    faBars, faCog, faSearch, faListOl, faGoogle, faSpinner, faInfoCircle, faLink, faQuoteRight, faLock,
-    faEye, faEyeSlash, faQuestionCircle, faUsers, faFilter
+    faDollarSign,
+    faBtc,
+    faTimesCircle,
+    faSignOutAlt,
+    faSignInAlt,
+    faCaretDown,
+    faHistory,
+    faGlobe,
+    faExchangeAlt,
+    faDna,
+    faCamera,
+    faDownload,
+    faCheckCircle,
+    faTimes,
+    faPlus,
+    faMinus,
+    faSync,
+    faExclamationTriangle,
+    faPrint,
+    faQrcode,
+    faCopy,
+    faKey,
+    faFileExcel,
+    faList,
+    faTrash,
+    faUpload,
+    faCreditCard,
+    faArrowRight,
+    faArrowLeft,
+    faTint,
+    faChevronDown,
+    faBars,
+    faCog,
+    faSearch,
+    faListOl,
+    faGoogle,
+    faSpinner,
+    faInfoCircle,
+    faLink,
+    faQuoteRight,
+    faLock,
+    faEye,
+    faEyeSlash,
+    faQuestionCircle,
+    faUsers,
+    faFilter
+)
 
-);
+Vue.component('fa', FontAwesomeIcon)
 
-Vue.component('fa', FontAwesomeIcon);
-
-
-
-Vue.use(Vuetify);
+Vue.use(Vuetify)
 
 export default new Vuetify({
-  theme: {
-    themes: {
-      light: {
-        primary: '#42b983',
-        secondary: '#06f',
-        accent: '#82B1FF',
-        error: '#ff9090',
-        info: '#2196F3',
-        success: '#4CAF50',
-        warning: '#ecce73'
-      },
+    theme: {
+        themes: {
+            light: {
+                primary: '#42b983',
+                secondary: '#06f',
+                accent: '#82B1FF',
+                error: '#ff9090',
+                info: '#2196F3',
+                success: '#4CAF50',
+                warning: '#ecce73',
+            },
+        },
     },
-  },
-  icons: {
-    iconfont: 'fa',
-  },
-});
+    icons: {
+        iconfont: 'fa',
+    },
+})

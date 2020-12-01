@@ -1,21 +1,21 @@
-import {WalletType} from "@/store/types";
+import { WalletType } from '@/store/types'
 
-export interface KeyFile{
-    salt: string,
-    pass_hash: string,
-    keys: KeyFileKey[],
-    version: string,
+export interface KeyFile {
+    salt: string
+    pass_hash: string
+    keys: KeyFileKey[]
+    version: string
     // warnings: string[]
 }
 
 export interface KeyFileKey {
-    key: string,
-    iv: string,
+    key: string
+    iv: string
     // address: string
 }
 
 export interface KeyFileDecrypted {
-    version: string,
+    version: string
     keys: KeyFileKeyDecrypted[]
 }
 

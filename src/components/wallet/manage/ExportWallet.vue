@@ -1,137 +1,148 @@
 <template>
     <div class="export_wallet">
-        <p v-if="isDesc" class="explain">{{$t("keys.export_key_desc")}}</p>
+        <p v-if="isDesc" class="explain">{{ $t('keys.export_key_desc') }}</p>
         <form @submit.prevent="download">
             <label>Password (min 9 characters)</label>
             <v-text-field
-                type="password" placeholder="Password"
+                type="password"
+                placeholder="Password"
                 v-model="pass"
-                hide-details outlined dense
-                class="formIn" height="40"
+                hide-details
+                outlined
+                dense
+                class="formIn"
+                height="40"
             ></v-text-field>
             <label>Confirm Password</label>
             <v-text-field
-                type="password" placeholder="Confirm Password"
+                type="password"
+                placeholder="Confirm Password"
                 v-model="passConfirm"
-                hide-details outlined dense
-                class="formIn" height="40"
+                hide-details
+                outlined
+                dense
+                class="formIn"
+                height="40"
             ></v-text-field>
-            <p class="err">{{err}}</p>
+            <p class="err">{{ err }}</p>
             <v-btn
                 type="submit"
                 :disabled="!isValid"
                 :loading="isLoading"
-                depressed block
+                depressed
+                block
                 class="button_primary"
-            >Export Wallet</v-btn>
+                >Export Wallet</v-btn
+            >
         </form>
     </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
-    import AvaHdWallet from "@/js/wallets/AvaHdWallet";
-    import {ExportWalletsInput} from "@/store/types";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import { ExportWalletsInput } from '@/store/types'
 
-    @Component
-    export default class ExportWallet extends Vue{
-        isLoading: boolean = false;
-        pass: string = "";
-        passConfirm: string = "";
-        err: string = "";
+@Component
+export default class ExportWallet extends Vue {
+    isLoading: boolean = false
+    pass: string = ''
+    passConfirm: string = ''
+    err: string = ''
 
-        @Prop() wallets!: AvaHdWallet[];
-        @Prop({default: true}) isDesc!: boolean;
+    @Prop() wallets!: AvaHdWallet[]
+    @Prop({ default: true }) isDesc!: boolean
 
-        get isValid(): boolean {
-            return (this.pass.length >= 9 && this.pass===this.passConfirm) ? true : false;
-        }
-
-        async download() {
-            this.isLoading = true;
-            this.err = "";
-
-            if(!this.wallets){
-                this.isLoading = false;
-                this.err = "No wallet selected."
-                return;
-            }
-
-            let input: ExportWalletsInput = {
-                password: this.pass,
-                wallets: this.wallets
-            }
-            setTimeout(() => {
-                this.$store.dispatch("exportWallets", input).then(res => {
-                    this.isLoading = false;
-                    this.pass = "";
-                    this.passConfirm = "";
-                    this.$store.dispatch("Notifications/add", {
-                        title: "Key File Export" ,
-                        message: "Your keys are downloaded."
-                    });
-                    // @ts-ignore
-                    this.$emit("success");
-                });
-            }, 200);
-        }
+    get isValid(): boolean {
+        return this.pass.length >= 9 && this.pass === this.passConfirm
+            ? true
+            : false
     }
+
+    async download() {
+        this.isLoading = true
+        this.err = ''
+
+        if (!this.wallets) {
+            this.isLoading = false
+            this.err = 'No wallet selected.'
+            return
+        }
+
+        let input: ExportWalletsInput = {
+            password: this.pass,
+            wallets: this.wallets,
+        }
+        setTimeout(() => {
+            this.$store.dispatch('exportWallets', input).then((res) => {
+                this.isLoading = false
+                this.pass = ''
+                this.passConfirm = ''
+                this.$store.dispatch('Notifications/add', {
+                    title: 'Key File Export',
+                    message: 'Your keys are downloaded.',
+                })
+                // @ts-ignore
+                this.$emit('success')
+            })
+        }, 200)
+    }
+}
 </script>
 <style lang="scss">
-    .export_wallet{
-        .formIn{
-            .v-input__slot {
-                background-color: var(--bg-light) !important;
-                border: none !important;
-            }
-
-            .v-text-field__details{
-                padding: 0;
-            }
-
-            fieldset{
-                border: none;
-            }
-        }
-    }
-</style>
-<style lang="scss">
-    .export_wallet{
-        fieldset{
+.export_wallet {
+    .formIn {
+        .v-input__slot {
+            background-color: var(--bg-light) !important;
             border: none !important;
         }
+
+        .v-text-field__details {
+            padding: 0;
+        }
+
+        fieldset {
+            border: none;
+        }
     }
+}
+</style>
+<style lang="scss">
+.export_wallet {
+    fieldset {
+        border: none !important;
+    }
+}
 </style>
 <style scoped lang="scss">
 @use '../../../main';
 @use '../../../light_theme';
 
-    .export_wallet{
-        font-size: 12px;
-    }
-    .explain{
-        color: var(--primary-color-light);
-        margin-bottom: 20px !important;
-    }
+.export_wallet {
+    font-size: 12px;
+}
+.explain {
+    color: var(--primary-color-light);
+    margin-bottom: 20px !important;
+}
 
+label {
+    color: var(--primary-color-light);
+}
 
-    label{
-        color: var(--primary-color-light);
-    }
+.formIn {
+    border: none;
+    background-color: var(--bg-light);
+    font-size: 12px;
+    border-radius: 2px;
+}
 
-    .formIn{
-        border: none;
-        background-color: var(--bg-light);
-        font-size: 12px;
-        border-radius: 2px;
-    }
+.button_primary {
+    margin-top: 10px;
+}
 
-    .button_primary{
-        margin-top: 10px;
-    }
-
-    .err{
-        margin: 4px 0 !important;
-        color: var(--error);
-    }
+.err {
+    margin: 4px 0 !important;
+    color: var(--error);
+}
 </style>

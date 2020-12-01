@@ -1,12 +1,10 @@
-import BN from "bn.js";
+import BN from 'bn.js'
 
-
-export interface TransactionValueDict{
+export interface TransactionValueDict {
     [address: string]: number
 }
 
-
-export interface TransactionAssetsDict{
+export interface TransactionAssetsDict {
     [assetId: string]: {
         amount: BN
         addresses: Set<string>

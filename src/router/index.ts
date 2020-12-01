@@ -1,51 +1,45 @@
 import Vue from 'vue'
-import VueRouter, {Route} from 'vue-router'
+import VueRouter, { Route } from 'vue-router'
 import Home from '../views/Home.vue'
 
-import Transfer from '@/views/wallet/Transfer.vue';
-import ManageKeys from '@/views/wallet/ManageKeys.vue';
-import Menu from '../views/access/Menu.vue';
-import Keystore from '../views/access/Keystore.vue';
-import Mnemonic from "@/views/access/Mnemonic.vue";
-import Access from '../views/access/Access.vue';
-import Create from "@/views/Create.vue";
-import Wallet from "@/views/Wallet.vue";
-import WalletHome from "@/views/wallet/Portfolio.vue";
-import Earn from "@/views/wallet/Earn.vue";
-import Advanced from "@/views/wallet/Advanced.vue"; // your vuex store
+import Transfer from '@/views/wallet/Transfer.vue'
+import ManageKeys from '@/views/wallet/ManageKeys.vue'
+import Menu from '../views/access/Menu.vue'
+import Keystore from '../views/access/Keystore.vue'
+import Mnemonic from '@/views/access/Mnemonic.vue'
+import Access from '../views/access/Access.vue'
+import Create from '@/views/Create.vue'
+import Wallet from '@/views/Wallet.vue'
+import WalletHome from '@/views/wallet/Portfolio.vue'
+import Earn from '@/views/wallet/Earn.vue'
+import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
 
-Vue.use(VueRouter);
-
+Vue.use(VueRouter)
 
 import store from '../store/index'
 
-
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
     if (!store.state.isAuth) {
-        next();
+        next()
         return
     }
     next('/wallet')
-};
+}
 
 const ifAuthenticated = (to: Route, from: Route, next: Function) => {
     if (store.state.isAuth) {
-        next();
+        next()
         return
     }
     next('/')
-};
-
-
-
-
+}
 
 const routes = [
     {
         path: '/',
         name: 'home',
         component: Home,
-        beforeEnter: ifNotAuthenticated
+        beforeEnter: ifNotAuthenticated,
     },
     {
         path: '/access',
@@ -62,16 +56,16 @@ const routes = [
             {
                 path: 'mnemonic',
                 component: Mnemonic,
-            }
+            },
         ],
         component: Access,
-        beforeEnter: ifNotAuthenticated
+        beforeEnter: ifNotAuthenticated,
     },
     {
         path: '/create',
         name: 'create',
-        component:  Create,
-        beforeEnter: ifNotAuthenticated
+        component: Create,
+        beforeEnter: ifNotAuthenticated,
     },
     {
         path: '/wallet',
@@ -80,7 +74,6 @@ const routes = [
                 path: '/',
                 name: 'wallet',
                 component: WalletHome,
-
             },
             {
                 path: 'transfer',
@@ -97,17 +90,17 @@ const routes = [
             {
                 path: 'advanced',
                 component: Advanced,
-            }
+            },
         ],
         component: Wallet,
-        beforeEnter: ifAuthenticated
+        beforeEnter: ifAuthenticated,
     },
 ]
 
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes
-});
+    routes,
+})
 
 export default router

@@ -7,16 +7,33 @@
                         <!-- PHASE 1 -->
                         <div v-if="!keyPhrase" class="stage_1">
                             <div class="img_container">
-                                <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
-                                <img v-else src="@/assets/diamond-secondary-night.svg" alt />
+                                <img
+                                    v-if="$root.theme === 'day'"
+                                    src="@/assets/diamond-secondary.png"
+                                    alt
+                                />
+                                <img
+                                    v-else
+                                    src="@/assets/diamond-secondary-night.svg"
+                                    alt
+                                />
                             </div>
-                            <h1>{{$t('create.generate')}}</h1>
-                            <router-link to="/access" class="link">{{$t('create.but_have')}}</router-link>
+                            <h1>{{ $t('create.generate') }}</h1>
+                            <router-link to="/access" class="link">{{
+                                $t('create.but_have')
+                            }}</router-link>
                             <div class="options">
-                                <button class="ava_button but_generate button_secondary" @click="createKey">{{$t('create.submit')}}</button>
-<!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
+                                <button
+                                    class="ava_button but_generate button_secondary"
+                                    @click="createKey"
+                                >
+                                    {{ $t('create.submit') }}
+                                </button>
+                                <!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
-                            <router-link to="/" class="link">{{$t('create.cancel')}}</router-link>
+                            <router-link to="/" class="link">{{
+                                $t('create.cancel')
+                            }}</router-link>
                         </div>
                         <!-- PHASE 2 -->
                         <div v-else class="stage_2">
@@ -24,12 +41,31 @@
                                 <!-- LEFT -->
                                 <div class="mneumonic_disp_col">
                                     <div class="mnemonic_disp">
-                                        <mnemonic-display :phrase="keyPhrase" :bgColor="verificatiionColor" class="mnemonic_display"></mnemonic-display>
-                                        <p class="phrase_raw" v-bind:class="{ verified: isVerified }">{{keyPhrase}}</p>
-                                        <div class="mneumonic_button_container" v-if="!isVerified">
-                                            <button @click="createKey" class="ava_button but_randomize button_primary ">
+                                        <mnemonic-display
+                                            :phrase="keyPhrase"
+                                            :bgColor="verificatiionColor"
+                                            class="mnemonic_display"
+                                        ></mnemonic-display>
+                                        <p
+                                            class="phrase_raw"
+                                            v-bind:class="{
+                                                verified: isVerified,
+                                            }"
+                                        >
+                                            {{ keyPhrase }}
+                                        </p>
+                                        <div
+                                            class="mneumonic_button_container"
+                                            v-if="!isVerified"
+                                        >
+                                            <button
+                                                @click="createKey"
+                                                class="ava_button but_randomize button_primary"
+                                            >
                                                 <fa icon="sync"></fa>
-                                                <span>{{$t('create.regenerate')}}</span>
+                                                <span>{{
+                                                    $t('create.regenerate')
+                                                }}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -37,46 +73,92 @@
                                 <!-- RIGHT -->
                                 <div class="phrase_disp_col">
                                     <template v-if="!isVerified">
-                                        <img v-if="$root.theme === 'day'" src="@/assets/keyphrase.png" alt />
-                                        <img v-else src="@/assets/keyphrase_night.svg" alt />
+                                        <img
+                                            v-if="$root.theme === 'day'"
+                                            src="@/assets/keyphrase.png"
+                                            alt
+                                        />
+                                        <img
+                                            v-else
+                                            src="@/assets/keyphrase_night.svg"
+                                            alt
+                                        />
                                     </template>
                                     <template v-else>
                                         <img src="@/assets/success.svg" alt />
                                     </template>
                                     <header v-if="!isVerified">
-                                        <h1>{{$t('create.mnemonic_title')}}</h1>
-                                        <p>{{$t('create.mnemonic_desc')}}</p>
+                                        <h1>
+                                            {{ $t('create.mnemonic_title') }}
+                                        </h1>
+                                        <p>{{ $t('create.mnemonic_desc') }}</p>
                                     </header>
                                     <header v-else>
-                                        <h1>{{$t('create.success_title')}}</h1>
-                                        <p>{{$t('create.success_desc')}}</p>
+                                        <h1>
+                                            {{ $t('create.success_title') }}
+                                        </h1>
+                                        <p>{{ $t('create.success_desc') }}</p>
                                     </header>
                                     <p class="warn" v-if="!isVerified">
-                                        <span class="label">{{$t('create.attention')}}</span>
-                                        <span class="description">{{$t('create.warning')}}</span>
+                                        <span class="label">{{
+                                            $t('create.attention')
+                                        }}</span>
+                                        <span class="description">{{
+                                            $t('create.warning')
+                                        }}</span>
                                     </p>
                                     <!-- STEP 2a - VERIFY -->
                                     <div class="verify_cont" v-if="!isVerified">
                                         <MnemonicCopied
-                                                v-model="isSecured"
-                                                :explain="$t('create.confirm')"
+                                            v-model="isSecured"
+                                            :explain="$t('create.confirm')"
                                         ></MnemonicCopied>
-                                        <VerifyMnemonic :mnemonic="keyPhrase" ref="verify" @complete="complete"></VerifyMnemonic>
-                                        <button class="but_primary ava_button button_secondary" @click="verifyMnemonic" :disabled="!canVerify">{{$t('create.success_submit')}}</button>
+                                        <VerifyMnemonic
+                                            :mnemonic="keyPhrase"
+                                            ref="verify"
+                                            @complete="complete"
+                                        ></VerifyMnemonic>
+                                        <button
+                                            class="but_primary ava_button button_secondary"
+                                            @click="verifyMnemonic"
+                                            :disabled="!canVerify"
+                                        >
+                                            {{ $t('create.success_submit') }}
+                                        </button>
                                     </div>
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
                                         <div class="submit">
-                                            <transition name="fade" mode="out-in">
-                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
+                                            <transition
+                                                name="fade"
+                                                mode="out-in"
+                                            >
+                                                <Spinner
+                                                    v-if="isLoad"
+                                                    class="spinner"
+                                                ></Spinner>
                                                 <div v-else>
                                                     <button
-                                                            class="button_primary ava_button access generate"
-                                                            @click="access"
-                                                            :disabled="!canSubmit"
-                                                    >{{$t('create.success_submit')}}</button>
-                                                    <router-link to="/" class="link">Cancel</router-link>
-                                                    <ToS style="margin: 30px 0 !important;"></ToS>
+                                                        class="button_primary ava_button access generate"
+                                                        @click="access"
+                                                        :disabled="!canSubmit"
+                                                    >
+                                                        {{
+                                                            $t(
+                                                                'create.success_submit'
+                                                            )
+                                                        }}
+                                                    </button>
+                                                    <router-link
+                                                        to="/"
+                                                        class="link"
+                                                        >Cancel</router-link
+                                                    >
+                                                    <ToS
+                                                        style="
+                                                            margin: 30px 0 !important;
+                                                        "
+                                                    ></ToS>
                                                 </div>
                                             </transition>
                                         </div>
@@ -88,102 +170,98 @@
                 </b-col>
             </b-row>
         </b-container>
-        <div>
-        </div>
+        <div></div>
     </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
-    import TextDisplayCopy from "@/components/misc/TextDisplayCopy.vue";
-    import Spinner from '@/components/misc/Spinner.vue';
-    // import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
-    import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-    import CopyText from "@/components/misc/CopyText.vue";
-    import * as bip39 from 'bip39';
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import TextDisplayCopy from '@/components/misc/TextDisplayCopy.vue'
+import Spinner from '@/components/misc/Spinner.vue'
+// import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
+import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
+import CopyText from '@/components/misc/CopyText.vue'
+import * as bip39 from 'bip39'
 
-    import VerifyMnemonic from "@/components/CreateWalletWorkflow/VerifyMnemonic.vue";
-    import MnemonicCopied from "@/components/CreateWalletWorkflow/MnemonicCopied.vue";
-    import ToS from "@/components/misc/ToS.vue";
+import VerifyMnemonic from '@/components/CreateWalletWorkflow/VerifyMnemonic.vue'
+import MnemonicCopied from '@/components/CreateWalletWorkflow/MnemonicCopied.vue'
+import ToS from '@/components/misc/ToS.vue'
 
+@Component({
+    components: {
+        ToS,
+        CopyText,
+        // RememberKey,
+        TextDisplayCopy,
+        MnemonicDisplay,
+        Spinner,
+        // TorusGoogle,
+        VerifyMnemonic,
+        MnemonicCopied,
+    },
+})
+export default class CreateWallet extends Vue {
+    // TODO: We do not need to create keyPair, only mnemonic is sufficient
+    isLoad: boolean = false
+    // rememberPassword:string|null = null;
+    // rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
+    // Mnemonic
+    // newPrivateKey: string|null =null;
+    keyPhrase: string = ''
+    // keyPair: KeyPair|null = null;
+    // Verify Mnemonic
+    isSecured: boolean = false
+    isVerified: boolean = false
 
-    @Component({
-        components: {
-            ToS,
-            CopyText,
-            // RememberKey,
-            TextDisplayCopy,
-            MnemonicDisplay,
-            Spinner,
-            // TorusGoogle,
-            VerifyMnemonic,
-            MnemonicCopied
-        }
-    })
-    export default class CreateWallet extends Vue{
-        // TODO: We do not need to create keyPair, only mnemonic is sufficient
-        isLoad: boolean = false;
-        // rememberPassword:string|null = null;
-        // rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
-        // Mnemonic
-        // newPrivateKey: string|null =null;
-        keyPhrase: string = "";
-        // keyPair: KeyPair|null = null;
-        // Verify Mnemonic
-        isSecured: boolean = false;
-        isVerified: boolean = false;
-
-
-        get canVerify(): boolean{
-            return this.isSecured ? true : false;
-        }
-
-        get verificatiionColor() {
-            return this.isVerified ? '#a9efbf' : '#F5F6FA';
-        }
-
-        createKey():void{
-            this.isSecured = false;
-            let mnemonic = bip39.generateMnemonic(256);
-            this.keyPhrase = mnemonic;
-        }
-
-        // Will be true if the values in remember wallet checkbox are valid
-        // isRememberValid(val: boolean){
-        //     this.rememberValid = val;
-        // }
-
-        get canSubmit():boolean{
-            // if(!this.rememberValid) return false;
-            return true;
-        }
-        verifyMnemonic(){
-            // @ts-ignore
-            this.$refs.verify.open();
-        }
-
-        complete(){
-            this.isVerified = true;
-        }
-
-        async access(): Promise<void> {
-            if (!this.keyPhrase) return;
-
-            this.isLoad = true;
-
-
-            let parent = this;
-
-            setTimeout(async ()=>{
-                await parent.$store.dispatch('accessWallet', this.keyPhrase);
-
-                // if(this.rememberPassword && this.rememberValid){
-                //     // console.log("Will remember..");
-                //     parent.$store.dispatch('rememberWallets', this.rememberPassword);
-                // }
-            }, 500);
-        }
+    get canVerify(): boolean {
+        return this.isSecured ? true : false
     }
+
+    get verificatiionColor() {
+        return this.isVerified ? '#a9efbf' : '#F5F6FA'
+    }
+
+    createKey(): void {
+        this.isSecured = false
+        let mnemonic = bip39.generateMnemonic(256)
+        this.keyPhrase = mnemonic
+    }
+
+    // Will be true if the values in remember wallet checkbox are valid
+    // isRememberValid(val: boolean){
+    //     this.rememberValid = val;
+    // }
+
+    get canSubmit(): boolean {
+        // if(!this.rememberValid) return false;
+        return true
+    }
+    verifyMnemonic() {
+        // @ts-ignore
+        this.$refs.verify.open()
+    }
+
+    complete() {
+        this.isVerified = true
+    }
+
+    async access(): Promise<void> {
+        if (!this.keyPhrase) return
+
+        this.isLoad = true
+
+        let parent = this
+
+        setTimeout(async () => {
+            await parent.$store.dispatch('accessWallet', this.keyPhrase)
+
+            // if(this.rememberPassword && this.rememberValid){
+            //     // console.log("Will remember..");
+            //     parent.$store.dispatch('rememberWallets', this.rememberPassword);
+            // }
+        }, 500)
+    }
+}
 </script>
 <style scoped lang="scss">
 @use '../../main';
@@ -221,11 +299,9 @@
         font-size: main.$m-size;
         font-weight: 400;
     }
-
-
 }
 
-.options{
+.options {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -233,29 +309,27 @@
     padding-top: 15px;
     border-top: 1px solid var(--primary-color-light);
 
-    >*{
+    > * {
         margin: 4px;
         font-size: 0.8rem;
     }
 
-    p{
+    p {
         color: #999;
         margin: 6px !important;
     }
 }
 
-.torus_but{
+.torus_but {
     background-color: #db3236;
-    color: #FFF;
+    color: #fff;
 }
-
 
 .but_generate {
     display: block;
     height: max-content;
     background-color: main.$secondary-color;
 }
-
 
 .key_disp {
     margin: 30px auto;
@@ -301,7 +375,7 @@ a {
         margin: 30px 0px !important;
     }
 
-    .mnemonic_display{
+    .mnemonic_display {
         background-color: var(--bg-light);
         padding: 14px;
     }
@@ -312,7 +386,6 @@ a {
     }
 
     .mneumonic_button_container {
-
         .but_randomize {
             span {
                 margin-left: 12px;
@@ -386,7 +459,6 @@ a {
             //justify-content: space-between;
 
             .access {
-
             }
 
             .link {
@@ -396,19 +468,14 @@ a {
     }
 }
 
-.spinner{
+.spinner {
     width: 26px !important;
     margin: 0px auto;
 }
 
-
-
-.remember_wallet{
+.remember_wallet {
     margin: 20px 0;
 }
-
-
-
 
 @include main.medium-device {
     .stage_1 {
@@ -434,11 +501,11 @@ a {
         display: block;
     }
 
-    .options{
+    .options {
         margin: 30px 0px;
         flex-direction: column;
 
-        > button{
+        > button {
             width: 100%;
         }
     }
@@ -512,11 +579,12 @@ a {
 }
 </style>
 <style lang="scss">
-    .create_wallet{
-        .remember_wallet{
-            .v-expansion-panel-header, .v-expansion-panel-content__wrap{
-                padding: 6px 0;
-            }
+.create_wallet {
+    .remember_wallet {
+        .v-expansion-panel-header,
+        .v-expansion-panel-content__wrap {
+            padding: 6px 0;
         }
     }
+}
 </style>
