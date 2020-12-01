@@ -6,6 +6,8 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
 import BN from 'bn.js'
 import {
+    GetPendingValidatorsResponse,
+    GetValidatorsResponse,
     PlatformState,
     ValidatorDelegatorDict,
     ValidatorDelegatorPendingDict,
@@ -16,10 +18,9 @@ import {
 import {
     DelegatorPendingRaw,
     DelegatorRaw,
-    GetValdiatorsResponse,
-    ValidatorRaw,
-} from '@/components/misc/ValidatorList/types'
-import { ONEAVAX } from 'avalanche/dist/utils'
+    ValidatorRaw
+} from "@/components/misc/ValidatorList/types";
+import {ONEAVAX} from "avalanche/dist/utils";
 
 const MINUTE_MS = 60000
 const HOUR_MS = MINUTE_MS * 60
@@ -30,7 +31,7 @@ const platform_module: Module<PlatformState, RootState> = {
     state: {
         validators: [],
         validatorsPending: [],
-        delegators: [],
+        // delegators: [],
         delegatorsPending: [],
         minStake: new BN(0),
         minStakeDelegation: new BN(0),
@@ -61,19 +62,17 @@ const platform_module: Module<PlatformState, RootState> = {
             dispatch('updateCurrentSupply')
         },
 
-        async updateValidators({ state, commit }) {
-            let res = (await pChain.getCurrentValidators()) as GetValdiatorsResponse
-            let validators = res.validators
-            let delegators = res.delegators
+        async updateValidators({state, commit}){
+            let res = await pChain.getCurrentValidators() as GetValidatorsResponse;
+            let validators = res.validators;
 
             commit('setValidators', validators)
-            state.delegators = delegators
         },
 
-        async updateValidatorsPending({ state, commit }) {
-            let res = (await pChain.getPendingValidators()) as GetValdiatorsResponse
-            let validators = res.validators
-            let delegators = res.delegators
+        async updateValidatorsPending({state, commit}){
+            let res = await pChain.getPendingValidators() as GetPendingValidatorsResponse;
+            let validators = res.validators;
+            let delegators = res.delegators;
 
             //@ts-ignore
             state.validatorsPending = validators
@@ -174,19 +173,14 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         // Maps delegators to a node id
-        nodeDelegatorMap(state): ValidatorDelegatorDict {
-            let res: ValidatorDelegatorDict = {}
-            let delegators = state.delegators
-            for (var i = 0; i < delegators.length; i++) {
-                let delegator = delegators[i]
-                let nodeID = delegator.nodeID
-                let target = res[nodeID]
-
-                if (target) {
-                    res[nodeID].push(delegator)
-                } else {
-                    res[nodeID] = [delegator]
-                }
+        
+        nodeDelegatorMap(state): ValidatorDelegatorDict{
+            let res: ValidatorDelegatorDict = {};
+            let validators = state.validators;
+            for(var i=0; i<validators.length; i++){
+                let validator = validators[i];
+                let nodeID = validator.nodeID;
+                res[nodeID] = validator.delegators || [];
             }
             return res
         },
