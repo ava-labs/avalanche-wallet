@@ -1,159 +1,154 @@
 <template>
     <div class="sel_locale">
-<!--        <vue-select :options="items" label="name" v-model="selected" @input="select">-->
-<!--            <template #selected-option="{ code, name }">-->
-<!--                <div style="display: flex; align-items: baseline;">-->
-<!--                    {{ name }}-->
-<!--                </div>-->
-<!--            </template>-->
-<!--            <template v-slot:option="option">-->
-<!--                {{ option.name }}-->
-<!--            </template>-->
-<!--        </vue-select>-->
+        <!--        <vue-select :options="items" label="name" v-model="selected" @input="select">-->
+        <!--            <template #selected-option="{ code, name }">-->
+        <!--                <div style="display: flex; align-items: baseline;">-->
+        <!--                    {{ name }}-->
+        <!--                </div>-->
+        <!--            </template>-->
+        <!--            <template v-slot:option="option">-->
+        <!--                {{ option.name }}-->
+        <!--            </template>-->
+        <!--        </vue-select>-->
         <country-flag :country="flag" size="small"></country-flag>
         <select v-model="locale">
             <option v-for="item in items" :key="item.code" :value="item.code">
-                {{item.nativeName}}
+                {{ item.nativeName }}
             </option>
         </select>
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import {Vue, Component, Prop, Watch} from "vue-property-decorator";
+import 'reflect-metadata'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 //@ts-ignore
-import langMap from '@/locales/lang_map';
+import langMap from '@/locales/lang_map'
 //@ts-ignore
-import CountryFlag from 'vue-country-flag';
+import CountryFlag from 'vue-country-flag'
 
-import {LanguageItem} from "@/components/misc/LanguageSelect/types";
+import { LanguageItem } from '@/components/misc/LanguageSelect/types'
 
-
-
-
-interface FLAG_DICT{
+interface FLAG_DICT {
     [key: string]: string
 }
 const FLAGS_OVERRIDE: FLAG_DICT = {
-    'en': 'us',
-    'zh_hant': 'cn',
-    'zh_hans': 'cn',
-    'cs': 'cz',
-    'ca': 'es-ca',
-    'uk': 'ua',
-    'af': 'za',
-    'ar': 'ae',
-    'da': 'dk',
-    'el': 'gr',
-    'he': 'il',
-    'nb': 'no',
-    'sr': 'rs',
-    'sv': 'se',
-    'ja': 'jp',
+    en: 'us',
+    zh_hant: 'cn',
+    zh_hans: 'cn',
+    cs: 'cz',
+    ca: 'es-ca',
+    uk: 'ua',
+    af: 'za',
+    ar: 'ae',
+    da: 'dk',
+    el: 'gr',
+    he: 'il',
+    nb: 'no',
+    sr: 'rs',
+    sv: 'se',
+    ja: 'jp',
 }
 
 @Component({
     components: {
-        CountryFlag
-    }
+        CountryFlag,
+    },
 })
-export default class LanguageSelect extends Vue{
-    locale = 'en';
+export default class LanguageSelect extends Vue {
+    locale = 'en'
 
-    mounted(){
-        this.locale = this.$root.$i18n.locale;
+    mounted() {
+        this.locale = this.$root.$i18n.locale
     }
-
 
     @Watch('locale')
-    onSelectedChange(val: string){
-        this.$root.$i18n.locale = val;
-        localStorage.setItem("lang", val);
+    onSelectedChange(val: string) {
+        this.$root.$i18n.locale = val
+        localStorage.setItem('lang', val)
     }
 
-    get flag(){
-        let selCode = this.locale;
+    get flag() {
+        let selCode = this.locale
 
-        if(FLAGS_OVERRIDE[selCode]){
-            return FLAGS_OVERRIDE[selCode];
-        }else{
-            return selCode;
+        if (FLAGS_OVERRIDE[selCode]) {
+            return FLAGS_OVERRIDE[selCode]
+        } else {
+            return selCode
         }
     }
 
-    get items(): LanguageItem[]{
-        let res = [];
+    get items(): LanguageItem[] {
+        let res = []
 
-        let messages = this.$root.$i18n.messages;
-        for(var langCode in messages){
-            let data = langMap[langCode];
+        let messages = this.$root.$i18n.messages
+        for (var langCode in messages) {
+            let data = langMap[langCode]
 
             res.push({
                 code: langCode,
                 name: data.name,
-                nativeName: data.nativeName
+                nativeName: data.nativeName,
             })
         }
-        return res;
+        return res
+    }
+}
+</script>
+<style scoped lang="scss">
+.sel_locale {
+    margin: 0px 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 4px 12px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
+
+.sel_locale p.selected {
+    margin: 0;
+    padding-left: 8px;
+    color: var(--primary-color);
+}
+
+.sel_outlined {
+    border-color: #1d82bb !important;
+    color: #1d82bb !important;
+}
+
+.selected {
+    font-size: 13px;
+}
+
+select {
+    outline: none;
+    flex-grow: 1;
+    margin-left: 10px;
+    color: var(--primary-color-light);
+    cursor: pointer;
+    font-size: 13px;
+
+    &:hover {
+        color: var(--primary-color);
     }
 }
 
-</script>
-<style scoped lang="scss">
-    .sel_locale{
-        margin: 0px 15px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 4px 12px;
-        border: 1px solid transparent;
-        border-radius: 3px;
-        position: relative;
-        overflow: hidden;
+@media only screen and (max-width: 600px) {
+    .sel_locale {
+        width: min-content;
     }
-
-    .sel_locale p.selected{
-        margin: 0;
-        padding-left: 8px;
-        color: var(--primary-color);
+    p.selected {
+        display: none;
     }
-
-    .sel_outlined{
-        border-color: #1d82bb !important;
-        color: #1d82bb !important;
-    }
-
-    .selected{
-        font-size: 13px;
-    }
-
-    select{
-        outline: none;
-        flex-grow: 1;
-        margin-left: 10px;
-        color: var(--primary-color-light);
-        cursor: pointer;
-        font-size: 13px;
-
-        &:hover{
-            color: var(--primary-color);
-        }
-    }
-
-    @media only screen and (max-width: 600px) {
-        .sel_locale{
-            width: min-content;
-        }
-        p.selected{
-            display: none;
-        }
-    }
+}
 </style>
 <style lang="scss">
-    .sel_locale{
-        .vs__dropdown-toggle{
-            border-color: var(--primary-color-light) !important;
-        }
+.sel_locale {
+    .vs__dropdown-toggle {
+        border-color: var(--primary-color-light) !important;
     }
+}
 </style>

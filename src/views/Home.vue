@@ -4,45 +4,68 @@
             <b-row>
                 <b-col>
                     <div class="home_wrapper">
-                        <h1>{{$t('home.desc')}}</h1>
+                        <h1>{{ $t('home.desc') }}</h1>
                         <div class="login_wrapper">
                             <div class="login_option">
                                 <header>
                                     <div class="img_container">
-                                        <img v-if="$root.theme === 'day'" src="@/assets/diamond-primary.svg" alt />
-                                        <img v-else src="@/assets/diamond-primary-night.svg" alt />
+                                        <img
+                                            v-if="$root.theme === 'day'"
+                                            src="@/assets/diamond-primary.svg"
+                                            alt
+                                        />
+                                        <img
+                                            v-else
+                                            src="@/assets/diamond-primary-night.svg"
+                                            alt
+                                        />
                                     </div>
-                                    <h2>{{$t('home.access.title')}}</h2>
-                                    <p>{{$t('home.access.desc')}}</p>
+                                    <h2>{{ $t('home.access.title') }}</h2>
+                                    <p>{{ $t('home.access.desc') }}</p>
                                 </header>
-                                <router-link to="/access" class="ava_button button_primary">{{$t('home.access.submit')}}</router-link>
+                                <router-link
+                                    to="/access"
+                                    class="ava_button button_primary"
+                                    >{{ $t('home.access.submit') }}</router-link
+                                >
                             </div>
                             <div class="login_option">
                                 <header>
                                     <div class="img_container">
-                                        <img v-if="$root.theme === 'day'" src="@/assets/diamond-secondary.png" alt />
-                                        <img v-else src="@/assets/diamond-secondary-night.svg" alt />
+                                        <img
+                                            v-if="$root.theme === 'day'"
+                                            src="@/assets/diamond-secondary.png"
+                                            alt
+                                        />
+                                        <img
+                                            v-else
+                                            src="@/assets/diamond-secondary-night.svg"
+                                            alt
+                                        />
                                     </div>
-                                    <h2>{{$t('home.create.title')}}</h2>
-                                    <p>{{$t('home.create.desc')}}</p>
+                                    <h2>{{ $t('home.create.title') }}</h2>
+                                    <p>{{ $t('home.create.desc') }}</p>
                                 </header>
-                                <router-link to="/create" class="ava_button button_secondary">{{$t('home.create.submit')}}</router-link>
+                                <router-link
+                                    to="/create"
+                                    class="ava_button button_secondary"
+                                    >{{ $t('home.create.submit') }}</router-link
+                                >
                             </div>
                         </div>
                     </div>
                 </b-col>
             </b-row>
         </b-container>
-
     </div>
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component({
-    name: "home"
+    name: 'home',
 })
 export default class Home extends Vue {}
 </script>
@@ -89,7 +112,8 @@ export default class Home extends Vue {}
                 align-items: flex-start;
                 justify-content: space-between;
                 background-color: var(--bg-light);
-                padding: 60px 90px main.$container-padding main.$container-padding;
+                padding: 60px 90px main.$container-padding
+                    main.$container-padding;
 
                 header {
                     margin-bottom: 60px;
@@ -102,7 +126,7 @@ export default class Home extends Vue {}
 
                     h2 {
                         padding-top: main.$s-size;
-                        font-family: "DM Sans", sans-serif;
+                        font-family: 'DM Sans', sans-serif;
                         font-size: main.$s-size;
                         text-transform: uppercase;
                         color: var(--primary-color-light);
@@ -126,8 +150,7 @@ export default class Home extends Vue {}
    Nav
    ========================================== */
 
-@include main.night-mode{
-
+@include main.night-mode {
 }
 .logo {
     margin-bottom: 30px;
@@ -138,17 +161,16 @@ img {
     object-fit: contain;
 }
 
-
-@include main.medium-device{
-    .login_option{
+@include main.medium-device {
+    .login_option {
         padding: 30px 40px !important;
-        p{
+        p {
             font-size: 1.4rem !important;
         }
     }
 }
 
-@include main.mobile-device{
+@include main.mobile-device {
     .auth {
         border-radius: 0;
         box-shadow: none;
@@ -166,10 +188,8 @@ img {
         display: none;
     }
 
-
     .home {
         .home_wrapper {
-
             h1 {
                 font-size: main.$xl-size-mobile;
             }
@@ -218,6 +238,5 @@ img {
 }
 
 @media only screen and (max-width: 600px) {
-
 }
 </style>

@@ -2,103 +2,107 @@
     <div class="mnemonic_auth">
         <div class="left">
             <header>
-                <h1>{{$t('access.mnemonic.title')}}</h1>
+                <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
-            <label>{{$t('access.mnemonic.subtitle')}}</label>
+            <label>{{ $t('access.mnemonic.subtitle') }}</label>
             <textarea v-model="phrase" translate="no"></textarea>
             <div class="button_container">
-                <p class="err" v-if="err">{{err}}</p>
+                <p class="err" v-if="err">{{ err }}</p>
                 <v-btn
                     class="ava_button but_primary button_primary access"
                     @click="access"
                     depressed
                     :loading="isLoading"
                     :disabled="!canSubmit"
-                >{{$t('access.mnemonic.submit')}}</v-btn>
-                <router-link to="/access" class="link">{{$t('access.mnemonic.cancel')}}</router-link>
+                    >{{ $t('access.mnemonic.submit') }}</v-btn
+                >
+                <router-link to="/access" class="link">{{
+                    $t('access.mnemonic.cancel')
+                }}</router-link>
             </div>
         </div>
         <div class="right">
             <label>Preview</label>
-            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
+            <mnemonic-display
+                :phrase="phrase"
+                class="phrase_disp"
+                :rowSize="3"
+            ></mnemonic-display>
         </div>
     </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-    import MnemonicDisplay from "@/components/misc/MnemonicDisplay.vue";
-    import * as bip39 from "bip39";
+import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
+import * as bip39 from 'bip39'
 
-    @Component({
-        components: {
-            MnemonicDisplay,
-        },
-    })
-    export default class Mnemonic extends Vue{
-        phrase:string = "";
-        isLoading:boolean = false;
-        err:string = "";
+@Component({
+    components: {
+        MnemonicDisplay,
+    },
+})
+export default class Mnemonic extends Vue {
+    phrase: string = ''
+    isLoading: boolean = false
+    err: string = ''
 
-        errCheck(){
-            let phrase = this.phrase;
-            let words = phrase.split(' ');
+    errCheck() {
+        let phrase = this.phrase
+        let words = phrase.split(' ')
 
-            // not a valid key phrase
-            if(words.length !== 24){
-                this.err = `${this.$t('access.mnemonic.error')}`;
-                return false;
-            }
-
-
-            let isValid = bip39.validateMnemonic(phrase);
-            if(!isValid){
-                this.err = "Invalid mnemonic phrase. Make sure your mnemonic is all lowercase.";
-                return false;
-            }
-
-            return true;
+        // not a valid key phrase
+        if (words.length !== 24) {
+            this.err = `${this.$t('access.mnemonic.error')}`
+            return false
         }
 
-
-        get wordCount():number{
-            return this.phrase.trim().split(' ').length;
+        let isValid = bip39.validateMnemonic(phrase)
+        if (!isValid) {
+            this.err =
+                'Invalid mnemonic phrase. Make sure your mnemonic is all lowercase.'
+            return false
         }
 
-        get canSubmit(){
-
-            if(this.wordCount < 24){
-                return false
-            }
-
-            return true;
-        }
-
-        async access() {
-            this.phrase = this.phrase.trim();
-            let phrase = this.phrase;
-
-            this.isLoading = true;
-
-            if (!this.errCheck()) {
-                this.isLoading = false;
-                return;
-            }
-
-
-            setTimeout(async () => {
-                try {
-                    await this.$store.dispatch('accessWallet', phrase);
-                    this.isLoading = false;
-                }catch(e){
-                    this.isLoading = false;
-                    console.log(e);
-                    this.err = `${this.$t('access.mnemonic.error')}`
-                }
-            }, 500)
-        }
+        return true
     }
+
+    get wordCount(): number {
+        return this.phrase.trim().split(' ').length
+    }
+
+    get canSubmit() {
+        if (this.wordCount < 24) {
+            return false
+        }
+
+        return true
+    }
+
+    async access() {
+        this.phrase = this.phrase.trim()
+        let phrase = this.phrase
+
+        this.isLoading = true
+
+        if (!this.errCheck()) {
+            this.isLoading = false
+            return
+        }
+
+        setTimeout(async () => {
+            try {
+                await this.$store.dispatch('accessWallet', phrase)
+                this.isLoading = false
+            } catch (e) {
+                this.isLoading = false
+                console.log(e)
+                this.err = `${this.$t('access.mnemonic.error')}`
+            }
+        }, 500)
+    }
+}
 </script>
 <style scoped lang="scss">
 @use '../../main';
@@ -130,7 +134,6 @@ h1 {
 }
 
 textarea {
-
 }
 
 label {

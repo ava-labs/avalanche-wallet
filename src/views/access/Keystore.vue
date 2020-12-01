@@ -1,89 +1,89 @@
 <template>
     <div class="access_card">
         <div class="content">
-            <h1>{{$t('keystore.title')}}</h1>
+            <h1>{{ $t('keystore.title') }}</h1>
             <file-input class="file_in" @change="onfile"></file-input>
             <form @submit.prevent="access">
                 <v-text-field
-                        class="pass"
-                        :label="$t('password')"
-                        dense
-                        solo
-                        flat
-                        type="password"
-                        v-model="pass"
-                        v-if="file"
-                        hide-details
+                    class="pass"
+                    :label="$t('password')"
+                    dense
+                    solo
+                    flat
+                    type="password"
+                    v-model="pass"
+                    v-if="file"
+                    hide-details
                 ></v-text-field>
-                <p class="err">{{error}}</p>
-<!--                <remember-key class="remember" v-model="rememberPass" v-if="file" @is-valid="isRememberValid"></remember-key>-->
+                <p class="err">{{ error }}</p>
+                <!--                <remember-key class="remember" v-model="rememberPass" v-if="file" @is-valid="isRememberValid"></remember-key>-->
                 <v-btn
-                        class="ava_button button_primary"
-                        @click="access"
-                        color="#4C2E56"
-                        :loading="isLoading"
-                        v-if="file"
-                        :disabled="!canSubmit"
-                        depressed
-                >{{$t('access.mnemonic.submit')}}</v-btn>
+                    class="ava_button button_primary"
+                    @click="access"
+                    color="#4C2E56"
+                    :loading="isLoading"
+                    v-if="file"
+                    :disabled="!canSubmit"
+                    depressed
+                    >{{ $t('access.mnemonic.submit') }}</v-btn
+                >
             </form>
-            <router-link to="/access" class="link">{{$t('access.cancel')}}</router-link>
+            <router-link to="/access" class="link">{{
+                $t('access.cancel')
+            }}</router-link>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from 'vue-property-decorator'
 
-import FileInput from "../../components/misc/FileInput.vue";
+import FileInput from '../../components/misc/FileInput.vue'
 // import RememberKey from "../../components/misc/RememberKey.vue";
-import {ImportKeyfileInput} from "@/store/types";
-import {KeyFile} from "@/js/IKeystore";
-
+import { ImportKeyfileInput } from '@/store/types'
+import { KeyFile } from '@/js/IKeystore'
 
 @Component({
     components: {
         // RememberKey,
-        FileInput
-    }
+        FileInput,
+    },
 })
-export default class Keystore extends Vue{
-    pass: string = "";
-    file: File|null = null;
-    fileText: string|null = null;
+export default class Keystore extends Vue {
+    pass: string = ''
+    file: File | null = null
+    fileText: string | null = null
     // rememberPass: string|null = null;
     // rememberValid: boolean = true;
-    isLoading: boolean = false;
-    error: string = "";
-
+    isLoading: boolean = false
+    error: string = ''
 
     onfile(val: File) {
-        this.file = val;
-        let parent = this;
+        this.file = val
+        let parent = this
 
-
-        let reader = new FileReader();
-            reader.addEventListener('load', async () => {
-                let res = reader.result as string;
-                parent.fileText = res;
-            });
-            reader.readAsText(val);
+        let reader = new FileReader()
+        reader.addEventListener('load', async () => {
+            let res = reader.result as string
+            parent.fileText = res
+        })
+        reader.readAsText(val)
     }
 
     // isRememberValid(val: boolean){
     //     this.rememberValid = val;
     // }
     access() {
-        if (!this.canSubmit || this.isLoading) return;
+        if (!this.canSubmit || this.isLoading) return
 
-        let parent = this;
-        this.error = '';
+        let parent = this
+        this.error = ''
 
-        let fileData:KeyFile;
-        try{
-            fileData = JSON.parse(this.fileText as string);
-        }catch(e){
+        let fileData: KeyFile
+        try {
+            fileData = JSON.parse(this.fileText as string)
+        } catch (e) {
             this.error = `${this.$t('access.json_error')}`
-            return;
+            return
         }
 
         // console.log(this.fileText);
@@ -92,51 +92,55 @@ export default class Keystore extends Vue{
         // let rememberPass = this.rememberPass;
         let data: ImportKeyfileInput = {
             password: this.pass,
-            data: fileData
-        };
-
-        this.isLoading = true;
-
-        setTimeout(() => {
-            this.$store.dispatch('importKeyfile', data).then((res) => {
-                parent.isLoading = false;
-
-                // if(rememberPass){
-                //     parent.$store.dispatch('rememberWallets', rememberPass)
-                // }
-            }).catch((err) => {
-                console.log(err);
-                if(err === "INVALID_PASS"){
-                    parent.error = this.$t('access.password_error').toString()
-                }else if(err === "INVALID_VERSION"){
-                    parent.error = this.$t('access.keystore_error').toString()
-                }else{
-                    parent.error = err.message;
-                }
-                parent.isLoading = false;
-            });
-
-        }, 200);
-    }
-
-
-    get canSubmit():boolean {
-        if (!this.file || !this.pass || !this.fileText) {
-            return false;
+            data: fileData,
         }
 
-        return true;
+        this.isLoading = true
+
+        setTimeout(() => {
+            this.$store
+                .dispatch('importKeyfile', data)
+                .then((res) => {
+                    parent.isLoading = false
+
+                    // if(rememberPass){
+                    //     parent.$store.dispatch('rememberWallets', rememberPass)
+                    // }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    if (err === 'INVALID_PASS') {
+                        parent.error = this.$t(
+                            'access.password_error'
+                        ).toString()
+                    } else if (err === 'INVALID_VERSION') {
+                        parent.error = this.$t(
+                            'access.keystore_error'
+                        ).toString()
+                    } else {
+                        parent.error = err.message
+                    }
+                    parent.isLoading = false
+                })
+        }, 200)
+    }
+
+    get canSubmit(): boolean {
+        if (!this.file || !this.pass || !this.fileText) {
+            return false
+        }
+
+        return true
     }
 }
 </script>
 <style scoped lang="scss">
 @use '../../main';
 
-
-.pass{
+.pass {
     background-color: var(--bg) !important;
 }
-.ava_button{
+.ava_button {
     width: 100%;
     margin-bottom: 22px;
 }
@@ -154,7 +158,7 @@ export default class Keystore extends Vue{
     border-radius: 6px;
 }
 
-.content{
+.content {
     width: 340px;
     max-width: 100%;
     margin: 0px auto;
@@ -179,11 +183,11 @@ a {
     margin: 10px 0 20px;
 }
 
-.link{
+.link {
     color: var(--secondary-color);
 }
 
-.remember{
+.remember {
     margin: 12px 0;
 }
 .err {
@@ -193,7 +197,6 @@ a {
 }
 
 @media only screen and (max-width: main.$mobile_width) {
-
     h1 {
         font-size: main.$m-size-mobile;
     }

@@ -1,3 +1,1 @@
-
-
-export type CurrencyType = "USD" | "AVAX";
+export type CurrencyType = 'USD' | 'AVAX'

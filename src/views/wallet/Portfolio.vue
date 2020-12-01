@@ -1,46 +1,66 @@
 <template>
     <div class="home_view">
         <div class="header">
-            <h1>{{$t('portfolio.assets')}}</h1>
+            <h1>{{ $t('portfolio.assets') }}</h1>
             <div>
-                <button @click="tab='fungibles'" :active="tab===`fungibles`" data-cy="wallet_fungible">{{$t('portfolio.assets1')}}</button>
-                <button @click="tab='collectibles'" :active="tab===`collectibles`" data-cy="wallet_nft">{{$t('portfolio.assets2')}}</button>
+                <button
+                    @click="tab = 'fungibles'"
+                    :active="tab === `fungibles`"
+                    data-cy="wallet_fungible"
+                >
+                    {{ $t('portfolio.assets1') }}
+                </button>
+                <button
+                    @click="tab = 'collectibles'"
+                    :active="tab === `collectibles`"
+                    data-cy="wallet_nft"
+                >
+                    {{ $t('portfolio.assets2') }}
+                </button>
             </div>
             <div style="flex-grow: 1"></div>
             <div class="search">
-                <img v-if="$root.theme==='day'" src="@/assets/search.png" />
+                <img v-if="$root.theme === 'day'" src="@/assets/search.png" />
                 <img v-else src="@/assets/search_night.svg" />
                 <input :placeholder="$t('portfolio.search')" v-model="search" />
             </div>
         </div>
         <div class="pages">
             <transition name="fade" mode="out-in">
-                <fungibles v-if="tab===`fungibles`" key="fungibles" :search="search"></fungibles>
-                <collectibles v-else key="fungibles" :search="search"></collectibles>
+                <fungibles
+                    v-if="tab === `fungibles`"
+                    key="fungibles"
+                    :search="search"
+                ></fungibles>
+                <collectibles
+                    v-else
+                    key="fungibles"
+                    :search="search"
+                ></collectibles>
             </transition>
         </div>
     </div>
 </template>
 <script>
-import Fungibles from '@/components/wallet/portfolio/Fungibles';
-import Collectibles from '@/components/wallet/portfolio/Collectibles';
+import Fungibles from '@/components/wallet/portfolio/Fungibles'
+import Collectibles from '@/components/wallet/portfolio/Collectibles'
 export default {
-    name: "WalletHome",
+    name: 'WalletHome',
     data() {
         return {
-            search: "",
+            search: '',
             tab: 'fungibles',
         }
     },
     components: {
         Fungibles,
-        Collectibles
+        Collectibles,
     },
     watch: {
         tab() {
-            this.search = "";
-        }
-    }
+            this.search = ''
+        },
+    },
 }
 </script>
 <style scoped lang="scss">

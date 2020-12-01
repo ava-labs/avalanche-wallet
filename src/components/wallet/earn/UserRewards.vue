@@ -1,54 +1,64 @@
 <template>
-    <div v-if="totLength>0" class="user_rewards">
+    <div v-if="totLength > 0" class="user_rewards">
         <div>
-            <label>{{$t('earn.rewards.total')}}</label>
-            <p class="amt">{{totalRewardBig.toLocaleString(9)}} AVAX</p>
+            <label>{{ $t('earn.rewards.total') }}</label>
+            <p class="amt">{{ totalRewardBig.toLocaleString(9) }} AVAX</p>
         </div>
         <div v-if="validators.length > 0">
-            <h3>{{$t('earn.rewards.validation')}}</h3>
-            <UserRewardRow v-for="(v, i) in validators" :key="i" :staker="v" class="reward_row"></UserRewardRow>
+            <h3>{{ $t('earn.rewards.validation') }}</h3>
+            <UserRewardRow
+                v-for="(v, i) in validators"
+                :key="i"
+                :staker="v"
+                class="reward_row"
+            ></UserRewardRow>
         </div>
         <div v-if="delegators.length > 0">
-            <h3>{{$t('earn.rewards.delegation')}}</h3>
-            <UserRewardRow v-for="(d, i) in delegators" :key="i" :staker="d" class="reward_row"></UserRewardRow>
+            <h3>{{ $t('earn.rewards.delegation') }}</h3>
+            <UserRewardRow
+                v-for="(d, i) in delegators"
+                :key="i"
+                :staker="d"
+                class="reward_row"
+            ></UserRewardRow>
         </div>
     </div>
     <div v-else class="empty">
-        <p>{{$t('earn.rewards.empty')}}</p>
+        <p>{{ $t('earn.rewards.empty') }}</p>
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
-import {AvaWalletCore} from "../../../js/wallets/IAvaHdWallet";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { AvaWalletCore } from '../../../js/wallets/IAvaHdWallet'
 import {
     DelegatorPendingRaw,
     DelegatorRaw,
     ValidatorPendingRaw,
-    ValidatorRaw
-} from "@/components/misc/ValidatorList/types";
-import UserRewardRow from "@/components/wallet/earn/UserRewardRow.vue";
-import {bnToBig} from "@/helpers/helper";
-import Big from "big.js";
-import {BN} from 'avalanche';
+    ValidatorRaw,
+} from '@/components/misc/ValidatorList/types'
+import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
+import { bnToBig } from '@/helpers/helper'
+import Big from 'big.js'
+import { BN } from 'avalanche'
 
 @Component({
-    components:{
-        UserRewardRow
-    }
+    components: {
+        UserRewardRow,
+    },
 })
-export default class UserRewards extends Vue{
-    get userAddresses(){
-        let wallet: AvaWalletCore = this.$store.state.activeWallet;
-        if(!wallet) return [];
+export default class UserRewards extends Vue {
+    get userAddresses() {
+        let wallet: AvaWalletCore = this.$store.state.activeWallet
+        if (!wallet) return []
 
-        return wallet.getExtendedPlatformAddresses();
+        return wallet.getExtendedPlatformAddresses()
     }
 
-    get validators(): ValidatorRaw[]{
-        let validators: ValidatorRaw[] = this.$store.state.Platform.validators;
+    get validators(): ValidatorRaw[] {
+        let validators: ValidatorRaw[] = this.$store.state.Platform.validators
 
-        return this.cleanList(validators) as ValidatorRaw[];
+        return this.cleanList(validators) as ValidatorRaw[]
     }
 
     get delegators(): DelegatorRaw[]{
@@ -64,25 +74,27 @@ export default class UserRewards extends Vue{
         return this.cleanList(delegators) as DelegatorRaw[];
     }
 
-    get totLength(){
-        return this.validators.length + this.delegators.length;
+    get totLength() {
+        return this.validators.length + this.delegators.length
     }
 
-    get totalReward(){
+    get totalReward() {
         let vals = this.validators.reduce((acc, val: ValidatorRaw) => {
-            return acc.add(new BN(val.potentialReward));
-        }, new BN(0));
+            return acc.add(new BN(val.potentialReward))
+        }, new BN(0))
 
         let dels = this.delegators.reduce((acc, val: DelegatorRaw) => {
-            return acc.add(new BN(val.potentialReward));
-        }, new BN(0));
+            return acc.add(new BN(val.potentialReward))
+        }, new BN(0))
 
-        return vals.add(dels);
+        return vals.add(dels)
     }
 
-    get totalRewardBig(): Big{
-        return bnToBig(this.totalReward, 9);
+    get totalRewardBig(): Big {
+        return bnToBig(this.totalReward, 9)
     }
+
+
 
 
     cleanList(list: ValidatorRaw[]|DelegatorRaw[]){
@@ -91,29 +103,28 @@ export default class UserRewards extends Vue{
             let filtered = rewardAddrs.filter(addr => {
                 return this.userAddresses.includes(addr);
             })
-            return filtered.length > 0;
+            return filtered.length > 0
         })
 
         res.sort((a, b) => {
-            let startA = parseInt(a.startTime);
-            let startB = parseInt(b.startTime);
-            return startA - startB;
-        });
-        return res;
+            let startA = parseInt(a.startTime)
+            let startB = parseInt(b.startTime)
+            return startA - startB
+        })
+        return res
     }
 }
 </script>
 <style scoped lang="scss">
-.user_rewards{
+.user_rewards {
     padding-bottom: 5vh;
 }
 
-
-.reward_row{
+.reward_row {
     margin-bottom: 12px;
 }
 
-h3{
+h3 {
     margin: 12px 0;
     margin-top: 32px;
     font-size: 2em;
@@ -121,14 +132,14 @@ h3{
     font-weight: lighter;
 }
 
-label{
+label {
     margin-top: 6px;
     color: var(--primary-color-light);
     font-size: 14px;
     margin-bottom: 3px;
 }
 
-.amt{
+.amt {
     font-size: 2em;
 }
 </style>

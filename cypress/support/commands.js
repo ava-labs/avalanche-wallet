@@ -23,28 +23,26 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-import 'cypress-file-upload';
-import {Avalanche} from "avalanche/dist";
-
+import 'cypress-file-upload'
+import { Avalanche } from 'avalanche/dist'
 
 Cypress.Commands.add('connectLocalhost', () => {
-    cy.window().then(win => {
-        let localNet = win.app.$store.state.Network.networks[2];
+    cy.window().then((win) => {
+        let localNet = win.app.$store.state.Network.networks[2]
         win.app.$store.dispatch('Network/setNetwork', localNet)
     })
 })
-Cypress.Commands.add("accessWallet", (mnemonic) => {
-    cy.window().then(win => {
+Cypress.Commands.add('accessWallet', (mnemonic) => {
+    cy.window().then((win) => {
         win.app.$store.dispatch('accessWallet', mnemonic)
     })
-});
+})
 
-
-Cypress.Commands.add("access_mnemonic", (mnemonic) => {
-    cy.get('[data-cy=access]').click();
-    cy.get('a.option').eq(0).click();
-    cy.get('textarea').type(mnemonic);
-    cy.get('.access').click();
+Cypress.Commands.add('access_mnemonic', (mnemonic) => {
+    cy.get('[data-cy=access]').click()
+    cy.get('a.option').eq(0).click()
+    cy.get('textarea').type(mnemonic)
+    cy.get('.access').click()
 })
 
 // Cypress.Commands.add('send_avax', async (address, amount) => {
@@ -58,11 +56,11 @@ Cypress.Commands.add("access_mnemonic", (mnemonic) => {
 //     await xChain.issueTx(signed_tx)
 // });
 
-Cypress.Commands.add('enterWallet', (mnemonic)=>{
+Cypress.Commands.add('enterWallet', (mnemonic) => {
     cy.visit('/')
-    cy.connectLocalhost();
+    cy.connectLocalhost()
     cy.wait(4000)
-    cy.accessWallet(mnemonic);
+    cy.accessWallet(mnemonic)
 })
 
 // Send the user's balance back to the faucet

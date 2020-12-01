@@ -1,4 +1,4 @@
-export interface ValidatorRaw{
+export interface ValidatorRaw {
     connection: boolean
     endTime: string
     nodeID: string
@@ -11,7 +11,7 @@ export interface ValidatorRaw{
     rewardOwner: ValidatorRewardOwner
 }
 
-export interface DelegatorRaw{
+export interface DelegatorRaw {
     endTime: string
     nodeID: string
     potentialReward: string
@@ -20,27 +20,28 @@ export interface DelegatorRaw{
     startTime: string
 }
 
-export interface DelegatorPendingRaw{
-    startTime: string,
-    endTime: string,
-    stakeAmount: string,
+export interface DelegatorPendingRaw {
+    startTime: string
+    endTime: string
+    stakeAmount: string
     nodeID: string
 }
 
-export interface ValidatorPendingRaw{
-    startTime: string,
-    endTime: string,
-    stakeAmount: string,
-    nodeID: string,
-    delegationFee: string,
+export interface ValidatorPendingRaw {
+    startTime: string
+    endTime: string
+    stakeAmount: string
+    nodeID: string
+    delegationFee: string
     connected: boolean
 }
 
-export interface ValidatorRewardOwner{
-    addresses: string[],
-    locktime: string,
+export interface ValidatorRewardOwner {
+    addresses: string[]
+    locktime: string
     threshold: string
 }
+
 
 
 export interface ValidatorDict {
