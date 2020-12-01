@@ -1,9 +1,7 @@
 export interface HistoryState {
-    transactions: ITransactionData[],
-    isUpdating: boolean,
+    transactions: ITransactionData[]
+    isUpdating: boolean
 }
-
-
 
 export interface ITransactionData {
     chainID: string
@@ -19,17 +17,16 @@ export interface ITransactionData {
     outputs: UTXO[]
 
     reusedAddressTotals: null
-    timestamp: string,
-    type: string,
+    timestamp: string
+    type: string
 }
 
-
-interface TransactionInput{
+interface TransactionInput {
     credentials: any[]
     output: UTXO
 }
 
-interface UTXO{
+interface UTXO {
     addresses: string[]
     amount: string
     assetID: string

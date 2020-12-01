@@ -1,34 +1,44 @@
 <template>
     <div class="access_card">
         <div class="img_container">
-            <img v-if="$root.theme === 'day'" src="@/assets/diamond-primary.svg" alt />
+            <img
+                v-if="$root.theme === 'day'"
+                src="@/assets/diamond-primary.svg"
+                alt
+            />
             <img v-else src="@/assets/diamond-primary-night.svg" alt />
         </div>
-        <h1>{{$t('access.title')}}</h1>
-        <router-link to="/create" class="link">{{$t('access.create')}}</router-link>
+        <h1>{{ $t('access.title') }}</h1>
+        <router-link to="/create" class="link">{{
+            $t('access.create')
+        }}</router-link>
         <hr />
         <div class="options">
-            <router-link to="/access/mnemonic" class="option button_primary">{{$t('access.but_mnemonic')}}</router-link>
-            <router-link to="/access/keystore" class="option button_primary">{{$t('access.but_keystore')}}</router-link>
+            <router-link to="/access/mnemonic" class="option button_primary">{{
+                $t('access.but_mnemonic')
+            }}</router-link>
+            <router-link to="/access/keystore" class="option button_primary">{{
+                $t('access.but_keystore')
+            }}</router-link>
             <LedgerButton class="option button_primary"></LedgerButton>
             <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
-        <ToS style="margin: 20px !important;"></ToS>
-        <router-link to="/" class="link">{{$t('access.cancel')}}</router-link>
+        <ToS style="margin: 20px !important"></ToS>
+        <router-link to="/" class="link">{{ $t('access.cancel') }}</router-link>
     </div>
 </template>
 
 <script>
-    // import TorusGoogle from "@/components/Torus/TorusGoogle";
-    import LedgerButton from "@/components/Ledger/LedgerButton";
-    import ToS from "@/components/misc/ToS";
+// import TorusGoogle from "@/components/Torus/TorusGoogle";
+import LedgerButton from '@/components/Ledger/LedgerButton'
+import ToS from '@/components/misc/ToS'
 
-    export default {
-        components: {
-            ToS,
-          LedgerButton
-        },
-    }
+export default {
+    components: {
+        ToS,
+        LedgerButton,
+    },
+}
 </script>
 
 <style scoped lang="scss">
@@ -69,7 +79,7 @@ hr {
     transition-duration: 0.1s;
     transition-timing-function: ease-in;
     border-radius: 6px;
-    font-family: "DM Sans", sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 700 !important;
     text-transform: uppercase;
     padding: 8px 18px;
@@ -80,11 +90,9 @@ hr {
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
     }
 
-
     h2 {
     }
 }
-
 
 @include main.mobile-device {
     img {

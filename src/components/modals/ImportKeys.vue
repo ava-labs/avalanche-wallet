@@ -1,12 +1,21 @@
 <template>
     <modal ref="modal" :title="title">
         <div class="add_key_body">
-            <img src="@/assets/import_key_bg.png" class="bg">
+            <img src="@/assets/import_key_bg.png" class="bg" />
             <p class="explain">Add additional keys to use with your wallet.</p>
-            <v-tabs color="#4C2E56" height="38" :grow="true" v-model="selectedTab">
-<!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
-                <v-tab key="mnemonic">{{$t('keys.import_key_option1')}}</v-tab>
-                <v-tab key="keystore">{{$t('keys.import_key_option2')}}</v-tab>
+            <v-tabs
+                color="#4C2E56"
+                height="38"
+                :grow="true"
+                v-model="selectedTab"
+            >
+                <!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
+                <v-tab key="mnemonic">{{
+                    $t('keys.import_key_option1')
+                }}</v-tab>
+                <v-tab key="keystore">{{
+                    $t('keys.import_key_option2')
+                }}</v-tab>
                 <v-tab-item>
                     <AddMnemonic @success="handleImportSuccess"></AddMnemonic>
                 </v-tab-item>
@@ -19,14 +28,14 @@
 </template>
 
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
-import Modal from "@/components/modals/Modal.vue";
-import AddKeyFile from "@/components/wallet/manage/AddKeyFile.vue";
-import AddKeyString from "@/components/wallet/manage/AddKeyString.vue";
-import AddMnemonic from "@/components/wallet/manage/AddMnemonic.vue";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import Modal from '@/components/modals/Modal.vue'
+import AddKeyFile from '@/components/wallet/manage/AddKeyFile.vue'
+import AddKeyString from '@/components/wallet/manage/AddKeyString.vue'
+import AddMnemonic from '@/components/wallet/manage/AddMnemonic.vue'
 interface ITab {
-    id: number,
+    id: number
     name: string
 }
 
@@ -35,35 +44,35 @@ interface ITab {
         Modal,
         AddKeyFile,
         AddKeyString,
-        AddMnemonic
-    }
+        AddMnemonic,
+    },
 })
 export default class ImportKeys extends Vue {
-    isActive: boolean = false;
-    title: string = "";
-    selectedTab: string = "";
+    isActive: boolean = false
+    title: string = ''
+    selectedTab: string = ''
     created() {
-        this.title = this.$t('keys.import_key_title') as string;
+        this.title = this.$t('keys.import_key_title') as string
     }
 
     open() {
         // @ts-ignore
-        this.$refs.modal.open();
-        this.selectedTab = "private"; // explicitly set v-model value for modal
+        this.$refs.modal.open()
+        this.selectedTab = 'private' // explicitly set v-model value for modal
     }
 
     close() {
-        this.isActive = false;
+        this.isActive = false
     }
 
     handleImportSuccess() {
         // @ts-ignore
-        this.$refs.modal.close();
-        this.close();
-        this.$store.dispatch("Notifications/add", {
+        this.$refs.modal.close()
+        this.close()
+        this.$store.dispatch('Notifications/add', {
             title: this.$t('keys.import_key_success_title'),
-            message: this.$t('keys.import_key_success_msg')
-        });
+            message: this.$t('keys.import_key_success_msg'),
+        })
     }
 }
 </script>

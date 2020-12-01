@@ -1,34 +1,36 @@
 <template>
-    <div class="mnemonic_display" :style="{gridTemplateColumns: `repeat(${rowSize}, 1fr)`}">
+    <div
+        class="mnemonic_display"
+        :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }"
+    >
         <div v-for="i in wordNum" :key="i" class="word">
-            <p class="index">{{i}}.</p>
-            <p class="phrase_word">{{phraseArray[i-1]}}</p>
+            <p class="index">{{ i }}.</p>
+            <p class="phrase_word">{{ phraseArray[i - 1] }}</p>
         </div>
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class MnemonicDisplay extends Vue {
-    @Prop({ default: "#FFFFFF" }) bgColor?: string;
-    @Prop({ default: 4 }) rowSize!: number;
-    wordNum: number = 24;
-
+    @Prop({ default: '#FFFFFF' }) bgColor?: string
+    @Prop({ default: 4 }) rowSize!: number
+    wordNum: number = 24
 
     get phraseArray(): string[] {
-        let words = this.phrase.split(" ");
-        let res: string[] = [];
+        let words = this.phrase.split(' ')
+        let res: string[] = []
 
         for (let i = 0; i < Math.max(words.length, this.wordNum); i++) {
-            let val = words[i] ? words[i] : "";
-            res.push(val);
+            let val = words[i] ? words[i] : ''
+            res.push(val)
         }
-        return res;
+        return res
     }
 
-    @Prop() phrase!: string;
+    @Prop() phrase!: string
 }
 </script>
 <style scoped lang="scss">
@@ -78,18 +80,18 @@ span {
     text-align: center;
 }
 
-@include main.mobile-device{
-    .word{
-        *{
+@include main.mobile-device {
+    .word {
+        * {
             padding: 4px 2px;
         }
     }
 
-    .mnemonic_display{
+    .mnemonic_display {
         grid-template-columns: 1fr 1fr 1fr !important;
     }
 
-    .phrase_word{}
+    .phrase_word {
+    }
 }
-
 </style>

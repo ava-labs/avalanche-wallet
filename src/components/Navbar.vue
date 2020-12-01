@@ -2,9 +2,9 @@
     <div id="nav">
         <ConfirmLogout ref="logout"></ConfirmLogout>
         <router-link to="/" class="logo">
-            <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg"/>
-            <img v-else src="@/assets/wallet_logo_dark.svg"/>
-<!--            <span class="slogan">by Avalanche</span>-->
+            <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg" />
+            <img v-else src="@/assets/wallet_logo_dark.svg" />
+            <!--            <span class="slogan">by Avalanche</span>-->
         </router-link>
         <v-spacer></v-spacer>
 
@@ -12,11 +12,15 @@
             <DayNightToggle class="action_but"></DayNightToggle>
             <network-menu></network-menu>
             <template v-if="isAuth">
-                <button @click="logout">{{$t('logout.button')}}</button>
+                <button @click="logout">{{ $t('logout.button') }}</button>
             </template>
             <template v-else>
-                <router-link to="/access" class="action_but" data-cy="access">{{$t('nav.access')}}</router-link>
-                <router-link to="/create" class="action_but" data-cy="create">{{$t('nav.create')}}</router-link>
+                <router-link to="/access" class="action_but" data-cy="access">{{
+                    $t('nav.access')
+                }}</router-link>
+                <router-link to="/create" class="action_but" data-cy="create">{{
+                    $t('nav.create')
+                }}</router-link>
             </template>
             <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
@@ -28,31 +32,65 @@
         </div>
 
         <!--   MOBILE MENU     -->
-        <v-navigation-drawer ref="drawer" class="mobile_menu" v-model="isDrawer" fixed style="z-index: 999;" hide-overlay>
+        <v-navigation-drawer
+            ref="drawer"
+            class="mobile_menu"
+            v-model="isDrawer"
+            fixed
+            style="z-index: 999"
+            hide-overlay
+        >
             <v-list dense nav>
-                <div style="display: flex; justify-content: space-between; padding: 4px 8px;">
-                    <img v-if="$root.theme==='day'" src="@/assets/wallet_logo.svg"/>
-                    <img v-else src="@/assets/wallet_logo_dark.svg"/>
+                <div
+                    style="
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 4px 8px;
+                    "
+                >
+                    <img
+                        v-if="$root.theme === 'day'"
+                        src="@/assets/wallet_logo.svg"
+                    />
+                    <img v-else src="@/assets/wallet_logo_dark.svg" />
                     <DayNightToggle class="action_but"></DayNightToggle>
                 </div>
                 <template v-if="isAuth">
-                    <router-link to="/wallet">{{$t('wallet.sidebar.portfolio')}}</router-link>
-                    <router-link to="/wallet/keys">{{$t('wallet.sidebar.manage')}}</router-link>
-                    <router-link to="/wallet/transfer">{{$t('wallet.sidebar.send')}}</router-link>
-                    <router-link to="/wallet/earn">{{$t('wallet.sidebar.earn')}}</router-link>
-                    <router-link to="/wallet/advanced" data-cy="wallet_advanced">{{$t('wallet.sidebar.advanced')}}</router-link>
-                    <button class="logout" @click="logout">{{$t('logout.button')}}</button>
+                    <router-link to="/wallet">{{
+                        $t('wallet.sidebar.portfolio')
+                    }}</router-link>
+                    <router-link to="/wallet/keys">{{
+                        $t('wallet.sidebar.manage')
+                    }}</router-link>
+                    <router-link to="/wallet/transfer">{{
+                        $t('wallet.sidebar.send')
+                    }}</router-link>
+                    <router-link to="/wallet/earn">{{
+                        $t('wallet.sidebar.earn')
+                    }}</router-link>
+                    <router-link
+                        to="/wallet/advanced"
+                        data-cy="wallet_advanced"
+                        >{{ $t('wallet.sidebar.advanced') }}</router-link
+                    >
+                    <button class="logout" @click="logout">
+                        {{ $t('logout.button') }}
+                    </button>
 
-<!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
-<!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
-<!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
-<!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
+                    <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
+                    <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
+                    <!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
+                    <!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
                 </template>
                 <template v-else>
-                    <router-link to="/access">{{$t('nav.access')}}</router-link>
-                    <router-link to="/create">{{$t('nav.create')}}</router-link>
-<!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
-<!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
+                    <router-link to="/access">{{
+                        $t('nav.access')
+                    }}</router-link>
+                    <router-link to="/create">{{
+                        $t('nav.create')
+                    }}</router-link>
+                    <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
+                    <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>
                 <div class="mobile_bottom">
                     <LanguageSelect class="lang_mobile"></LanguageSelect>
@@ -62,30 +100,30 @@
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
-import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue';
-import DayNightToggle from "@/components/misc/DayNightToggle.vue";
-import NetworkMenu from "./NetworkSettings/NetworkMenu.vue";
-import ConfirmLogout from "@/components/modals/ConfirmLogout.vue";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue'
+import DayNightToggle from '@/components/misc/DayNightToggle.vue'
+import NetworkMenu from './NetworkSettings/NetworkMenu.vue'
+import ConfirmLogout from '@/components/modals/ConfirmLogout.vue'
 @Component({
     components: {
         NetworkMenu,
         DayNightToggle,
         ConfirmLogout,
-        LanguageSelect
-    }
+        LanguageSelect,
+    },
 })
 export default class Navbar extends Vue {
-    isDrawer: boolean = false;
+    isDrawer: boolean = false
 
     get isAuth(): boolean {
-        return this.$store.state.isAuth;
+        return this.$store.state.isAuth
     }
 
     logout(): void {
         // @ts-ignore
-        this.$refs.logout.open();
+        this.$refs.logout.open()
     }
 }
 </script>
@@ -148,18 +186,19 @@ button {
     display: none;
 }
 
-.mobile_bottom{
+.mobile_bottom {
     position: absolute;
     bottom: 14px;
 }
 
-.lang_mobile, .lang_web{
+.lang_mobile,
+.lang_web {
     width: max-content;
     margin: 0;
 }
 
 @media only screen and (max-width: main.$mobile_width) {
-    .lang_web{
+    .lang_web {
         display: none;
     }
 
@@ -175,39 +214,38 @@ button {
         display: block;
     }
 
-    .mobile_drawer{
+    .mobile_drawer {
         color: var(--primary-color) !important;
     }
 
-    .logout{
+    .logout {
         margin-top: 40px;
     }
 }
 </style>
 <style lang="scss">
+.mobile_menu {
+    background-color: var(--bg-light) !important;
 
-    .mobile_menu{
-        background-color: var(--bg-light) !important;
-
-
-
-        .v-list-item, .v-list-item--link{
-            color: var(--primary-color-light) !important;
-        }
-
-        .v-list-item--active{
-            color: var(--primary-color) !important;
-        }
-
-        a, .logout{
-            display: block;
-            padding: 8px 8px;
-            color: var(--primary-color-light) !important;
-        }
-
-        .router-link-exact-active{
-            background-color: var(--bg);
-            color: var(--primary-color) !important;
-        }
+    .v-list-item,
+    .v-list-item--link {
+        color: var(--primary-color-light) !important;
     }
+
+    .v-list-item--active {
+        color: var(--primary-color) !important;
+    }
+
+    a,
+    .logout {
+        display: block;
+        padding: 8px 8px;
+        color: var(--primary-color-light) !important;
+    }
+
+    .router-link-exact-active {
+        background-color: var(--bg);
+        color: var(--primary-color) !important;
+    }
+}
 </style>

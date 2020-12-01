@@ -4,20 +4,17 @@
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import CreateWallet from "@/components/CreateWalletWorkflow/CreateWallet.vue";
-
+import CreateWallet from '@/components/CreateWalletWorkflow/CreateWallet.vue'
 
 @Component({
     components: {
         CreateWallet,
-    }
+    },
 })
-export default class Create extends Vue {
-
-}
+export default class Create extends Vue {}
 </script>
 <style scoped lang="scss">
 @use '../main';

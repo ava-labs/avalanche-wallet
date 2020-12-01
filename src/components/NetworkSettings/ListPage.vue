@@ -1,30 +1,35 @@
 <template>
     <div>
         <div class="networks_list">
-            <network-row v-for="net in networks" :key="net.id" class="network_row" :network="net"></network-row>
+            <network-row
+                v-for="net in networks"
+                :key="net.id"
+                class="network_row"
+                :network="net"
+            ></network-row>
         </div>
     </div>
 </template>
 <script lang="ts">
-    import 'reflect-metadata';
-    import { Vue, Component, Prop } from 'vue-property-decorator';
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
-    import NetworkRow from './NetworkRow.vue';
-    import {AvaNetwork} from "@/js/AvaNetwork";
+import NetworkRow from './NetworkRow.vue'
+import { AvaNetwork } from '@/js/AvaNetwork'
 
-    @Component({
-        components: {
-            NetworkRow
-        }
-    })
-    export default class ListPage extends Vue{
-        get networks(): AvaNetwork[]{
-            return this.$store.getters['Network/allNetworks'];
-        }
+@Component({
+    components: {
+        NetworkRow,
+    },
+})
+export default class ListPage extends Vue {
+    get networks(): AvaNetwork[] {
+        return this.$store.getters['Network/allNetworks']
     }
+}
 </script>
 <style scoped lang="scss">
-    .networks_list{
-        padding: 0px 15px;
-    }
+.networks_list {
+    padding: 0px 15px;
+}
 </style>

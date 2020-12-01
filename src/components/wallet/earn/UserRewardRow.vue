@@ -1,111 +1,112 @@
 <template>
     <div class="reward_row">
         <div class="top_bar">
-            <div style="display: flex; justify-content: space-between;">
-                <p>{{startDate.toLocaleString()}}</p>
-                <p>{{endDate.toLocaleString()}}</p>
+            <div style="display: flex; justify-content: space-between">
+                <p>{{ startDate.toLocaleString() }}</p>
+                <p>{{ endDate.toLocaleString() }}</p>
             </div>
-            <div class="reward_bar" :style="{
-                        width: `${percFull*100}%`
-                    }"
+            <div
+                class="reward_bar"
+                :style="{
+                    width: `${percFull * 100}%`,
+                }"
             ></div>
         </div>
         <div class="data_row stake_info">
             <div>
                 <label>NodeID</label>
-                <p class="reward node_id">{{staker.nodeID}}</p>
+                <p class="reward node_id">{{ staker.nodeID }}</p>
             </div>
             <div>
-                <label>{{$t('earn.rewards.row.stake')}}</label>
-                <p class="reward">{{stakeBig.toLocaleString()}} AVAX</p>
+                <label>{{ $t('earn.rewards.row.stake') }}</label>
+                <p class="reward">{{ stakeBig.toLocaleString() }} AVAX</p>
             </div>
-            <div style="text-align: right;">
-                <label>{{$t('earn.rewards.row.reward')}}</label>
-                <p class="reward">{{rewardBig.toLocaleString()}} AVAX</p>
+            <div style="text-align: right">
+                <label>{{ $t('earn.rewards.row.reward') }}</label>
+                <p class="reward">{{ rewardBig.toLocaleString() }} AVAX</p>
             </div>
         </div>
-
     </div>
 </template>
 <script lang="ts">
-import "reflect-metadata";
-import { Vue, Component, Prop } from "vue-property-decorator";
-import {DelegatorRaw, ValidatorRaw} from "../../misc/ValidatorList/types";
-import {BN} from "avalanche";
-import Big from "big.js";
+import 'reflect-metadata'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { DelegatorRaw, ValidatorRaw } from '../../misc/ValidatorList/types'
+import { BN } from 'avalanche'
+import Big from 'big.js'
 
 @Component
-export default class UserRewardRow extends Vue{
-    now: number = Date.now();
-    intervalID: any = null;
+export default class UserRewardRow extends Vue {
+    now: number = Date.now()
+    intervalID: any = null
 
-    @Prop() staker!: ValidatorRaw|DelegatorRaw;
+    @Prop() staker!: ValidatorRaw | DelegatorRaw
 
-    updateNow(){
-        this.now = Date.now();
+    updateNow() {
+        this.now = Date.now()
     }
 
-    created(){
-        this.intervalID = setInterval(()=>{
+    created() {
+        this.intervalID = setInterval(() => {
             this.updateNow()
-        }, 2000);
+        }, 2000)
     }
-    destroyed(){
-        clearInterval(this.intervalID);
+    destroyed() {
+        clearInterval(this.intervalID)
     }
-    get startTime(){
-        return parseInt(this.staker.startTime) * 1000;
-    }
-
-    get endtime(){
-        return parseInt(this.staker.endTime) * 1000;
+    get startTime() {
+        return parseInt(this.staker.startTime) * 1000
     }
 
-    get startDate(){
-        return new Date(this.startTime);
+    get endtime() {
+        return parseInt(this.staker.endTime) * 1000
     }
 
-    get endDate(){
-        return new Date(this.endtime);
+    get startDate() {
+        return new Date(this.startTime)
     }
 
-    get rewardAmt(): BN{
-        return new BN(this.staker.potentialReward);
+    get endDate() {
+        return new Date(this.endtime)
     }
 
-    get stakingAmt(): BN{
-        return new BN(this.staker.stakeAmount);
+    get rewardAmt(): BN {
+        return new BN(this.staker.potentialReward)
     }
 
-    get rewardBig(): Big{
-        return Big(this.rewardAmt.toString()).div(Math.pow(10,9));
+    get stakingAmt(): BN {
+        return new BN(this.staker.stakeAmount)
     }
 
-    get stakeBig(): Big{
-        return Big(this.stakingAmt.toString()).div(Math.pow(10,9));
+    get rewardBig(): Big {
+        return Big(this.rewardAmt.toString()).div(Math.pow(10, 9))
     }
 
-    get percFull(): number{
-        let range = this.endtime - this.startTime;
-        let res = (this.now - this.startTime)/range;
-        return Math.min(res,1);
+    get stakeBig(): Big {
+        return Big(this.stakingAmt.toString()).div(Math.pow(10, 9))
+    }
+
+    get percFull(): number {
+        let range = this.endtime - this.startTime
+        let res = (this.now - this.startTime) / range
+        return Math.min(res, 1)
     }
 }
 </script>
 <style scoped lang="scss">
 @use '../../../main';
 
-.node_id{
+.node_id {
     word-break: break-all;
 }
 
-.top_bar{
+.top_bar {
     height: max-content;
     position: relative;
     padding: 2px 8px;
     border-bottom: 2px solid var(--bg-wallet-light);
 }
-.reward_row{
+.reward_row {
     border-radius: 4px;
     overflow: hidden;
     font-size: 14px;
@@ -113,18 +114,17 @@ export default class UserRewardRow extends Vue{
     background-color: var(--bg-light);
 }
 
-.data_row{
+.data_row {
     grid-column: 1/3;
     display: grid;
     grid-template-columns: 1fr 280px;
     align-items: center;
-
 }
 
-.date{
+.date {
     z-index: 1;
 }
-.reward_bar{
+.reward_bar {
     background-color: var(--success);
     position: absolute;
     opacity: 0.5;
@@ -134,7 +134,7 @@ export default class UserRewardRow extends Vue{
     z-index: 0;
 }
 
-.stake_info{
+.stake_info {
     padding: 6px 12px;
     display: grid;
     column-gap: 14px;
@@ -143,23 +143,22 @@ export default class UserRewardRow extends Vue{
     /*text-align: right;*/
     text-align: left;
 
-    > div{
+    > div {
         align-self: baseline;
     }
 }
 
-label{
+label {
     color: var(--primary-color-light) !important;
 }
 
-@include main.mobile-device{
-
-    .stake_info{
+@include main.mobile-device {
+    .stake_info {
         grid-column: 1/3;
         border-left: none;
         border-top: 3px solid var(--bg);
 
-        > div:first-of-type{
+        > div:first-of-type {
             text-align: left;
         }
     }

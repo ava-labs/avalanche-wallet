@@ -2,52 +2,50 @@ import {
     DelegatorPendingRaw,
     DelegatorRaw,
     ValidatorPendingRaw,
-    ValidatorRaw
-} from "@/components/misc/ValidatorList/types";
-import {BN} from "avalanche";
+    ValidatorRaw,
+} from '@/components/misc/ValidatorList/types'
+import { BN } from 'avalanche'
 
 export interface PlatformState {
-    validators: ValidatorRaw[];
-    validatorsPending: ValidatorPendingRaw[];
-    delegators: DelegatorRaw[];
-    delegatorsPending: DelegatorPendingRaw[];
-    minStake: BN;
-    minStakeDelegation: BN;
-    currentSupply: BN;
+    validators: ValidatorRaw[]
+    validatorsPending: ValidatorPendingRaw[]
+    delegators: DelegatorRaw[]
+    delegatorsPending: DelegatorPendingRaw[]
+    minStake: BN
+    minStakeDelegation: BN
+    currentSupply: BN
 }
 
 export interface GetValidatorsResponse {
-    validators: ValidatorRaw[],
-    delegators : DelegatorRaw[],
-}
-
-export interface ValidatorGroup{
-    data: ValidatorRaw,
+    validators: ValidatorRaw[]
     delegators: DelegatorRaw[]
 }
 
-export interface ValidatorDelegatorDict{
-    [key: string]: DelegatorRaw[];
+export interface ValidatorGroup {
+    data: ValidatorRaw
+    delegators: DelegatorRaw[]
 }
 
-export interface ValidatorDelegatorPendingDict{
-    [key: string]: DelegatorPendingRaw[];
+export interface ValidatorDelegatorDict {
+    [key: string]: DelegatorRaw[]
+}
+
+export interface ValidatorDelegatorPendingDict {
+    [key: string]: DelegatorPendingRaw[]
 }
 
 export interface ValidatorDict {
     [nodeId: string]: ValidatorRaw
 }
 
-
-
 export interface ValidatorListItem {
     nodeID: string
-    validatorStake: BN,
-    delegatedStake: BN,
-    remainingStake: BN,
-    numDelegators: number,
-    startTime: Date,
-    endTime: Date,
-    uptime: number,
+    validatorStake: BN
+    delegatedStake: BN
+    remainingStake: BN
+    numDelegators: number
+    startTime: Date
+    endTime: Date
+    uptime: number
     fee: number
 }

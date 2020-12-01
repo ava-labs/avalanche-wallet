@@ -27,7 +27,6 @@
     </v-layout>
 </template>
 <script>
-
 export default {
     props: {
         label: String,
@@ -41,31 +40,31 @@ export default {
 
             // minDate: "2019-07-04",
             // maxDate: "2019-08-30",
-        };
+        }
     },
     computed: {
         fromDateDisp() {
-            return this.dateVal;
+            return this.dateVal
             // format date, apply validations, etc. Example below.
             // return this.fromDateVal ? this.formatDate(this.fromDateVal) : "";
         },
     },
     methods: {
-        dateIn(){
+        dateIn() {
             this.fromDateMenu = false
             // console.log(this.dateVal);
-        }
+        },
     },
     watch: {
-        dateVal(val){
+        dateVal(val) {
             // console.log(val);
-            this.$emit('change', val);
-        }
-    }
-};
+            this.$emit('change', val)
+        },
+    },
+}
 </script>
 <style scoped lang="scss">
-.layout{
+.layout {
     margin: 0;
 }
 </style>
