@@ -7,25 +7,25 @@ import {
 import { BN } from 'avalanche'
 
 export interface PlatformState {
-    validators: ValidatorRaw[];
-    validatorsPending: ValidatorPendingRaw[];
-    delegatorsPending: DelegatorPendingRaw[];
-    minStake: BN;
-    minStakeDelegation: BN;
-    currentSupply: BN;
+    validators: ValidatorRaw[]
+    validatorsPending: ValidatorPendingRaw[]
+    delegatorsPending: DelegatorPendingRaw[]
+    minStake: BN
+    minStakeDelegation: BN
+    currentSupply: BN
 }
 
 export interface GetValidatorsResponse {
-    validators: ValidatorRaw[],
+    validators: ValidatorRaw[]
 }
 
 export interface GetPendingValidatorsResponse {
-    validators: ValidatorPendingRaw[],
-    delegators : DelegatorPendingRaw[],
+    validators: ValidatorPendingRaw[]
+    delegators: DelegatorPendingRaw[]
 }
 
-export interface ValidatorGroup{
-    data: ValidatorRaw,
+export interface ValidatorGroup {
+    data: ValidatorRaw
     // delegators: DelegatorRaw[]
 }
 

@@ -6,7 +6,7 @@ export interface ValidatorRaw {
     startTime: string
     uptime: string
     delegationFee: string
-    delegators: DelegatorRaw[]|null
+    delegators: DelegatorRaw[] | null
     potentialReward: string
     rewardOwner: ValidatorRewardOwner
 }
@@ -41,8 +41,6 @@ export interface ValidatorRewardOwner {
     locktime: string
     threshold: string
 }
-
-
 
 export interface ValidatorDict {
     [nodeId: string]: ValidatorRaw

@@ -61,17 +61,17 @@ export default class UserRewards extends Vue {
         return this.cleanList(validators) as ValidatorRaw[]
     }
 
-    get delegators(): DelegatorRaw[]{
+    get delegators(): DelegatorRaw[] {
         let delegators: DelegatorRaw[] = []
-        let validators: ValidatorRaw[] = this.$store.state.Platform.validators;
+        let validators: ValidatorRaw[] = this.$store.state.Platform.validators
 
-        for(var i=0;i<validators.length;i++){
-            let v = validators[i];
-            if(v.delegators===null) continue;
-            delegators.push(...v.delegators);
+        for (var i = 0; i < validators.length; i++) {
+            let v = validators[i]
+            if (v.delegators === null) continue
+            delegators.push(...v.delegators)
         }
 
-        return this.cleanList(delegators) as DelegatorRaw[];
+        return this.cleanList(delegators) as DelegatorRaw[]
     }
 
     get totLength() {
@@ -94,14 +94,11 @@ export default class UserRewards extends Vue {
         return bnToBig(this.totalReward, 9)
     }
 
-
-
-
-    cleanList(list: ValidatorRaw[]|DelegatorRaw[]){
-        let res = list.filter(val => {
-            let rewardAddrs = val.rewardOwner.addresses;
-            let filtered = rewardAddrs.filter(addr => {
-                return this.userAddresses.includes(addr);
+    cleanList(list: ValidatorRaw[] | DelegatorRaw[]) {
+        let res = list.filter((val) => {
+            let rewardAddrs = val.rewardOwner.addresses
+            let filtered = rewardAddrs.filter((addr) => {
+                return this.userAddresses.includes(addr)
             })
             return filtered.length > 0
         })

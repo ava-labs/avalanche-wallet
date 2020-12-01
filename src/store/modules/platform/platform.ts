@@ -18,9 +18,9 @@ import {
 import {
     DelegatorPendingRaw,
     DelegatorRaw,
-    ValidatorRaw
-} from "@/components/misc/ValidatorList/types";
-import {ONEAVAX} from "avalanche/dist/utils";
+    ValidatorRaw,
+} from '@/components/misc/ValidatorList/types'
+import { ONEAVAX } from 'avalanche/dist/utils'
 
 const MINUTE_MS = 60000
 const HOUR_MS = MINUTE_MS * 60
@@ -62,17 +62,17 @@ const platform_module: Module<PlatformState, RootState> = {
             dispatch('updateCurrentSupply')
         },
 
-        async updateValidators({state, commit}){
-            let res = await pChain.getCurrentValidators() as GetValidatorsResponse;
-            let validators = res.validators;
+        async updateValidators({ state, commit }) {
+            let res = (await pChain.getCurrentValidators()) as GetValidatorsResponse
+            let validators = res.validators
 
             commit('setValidators', validators)
         },
 
-        async updateValidatorsPending({state, commit}){
-            let res = await pChain.getPendingValidators() as GetPendingValidatorsResponse;
-            let validators = res.validators;
-            let delegators = res.delegators;
+        async updateValidatorsPending({ state, commit }) {
+            let res = (await pChain.getPendingValidators()) as GetPendingValidatorsResponse
+            let validators = res.validators
+            let delegators = res.delegators
 
             //@ts-ignore
             state.validatorsPending = validators
@@ -173,14 +173,14 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         // Maps delegators to a node id
-        
-        nodeDelegatorMap(state): ValidatorDelegatorDict{
-            let res: ValidatorDelegatorDict = {};
-            let validators = state.validators;
-            for(var i=0; i<validators.length; i++){
-                let validator = validators[i];
-                let nodeID = validator.nodeID;
-                res[nodeID] = validator.delegators || [];
+
+        nodeDelegatorMap(state): ValidatorDelegatorDict {
+            let res: ValidatorDelegatorDict = {}
+            let validators = state.validators
+            for (var i = 0; i < validators.length; i++) {
+                let validator = validators[i]
+                let nodeID = validator.nodeID
+                res[nodeID] = validator.delegators || []
             }
             return res
         },
