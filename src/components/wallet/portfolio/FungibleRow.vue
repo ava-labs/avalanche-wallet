@@ -31,6 +31,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
+import BN from 'bn.js'
 
 @Component({
     components: {
@@ -52,7 +53,7 @@ export default class FungibleRow extends Vue {
 
     get isBalance(): boolean {
         if (!this.asset) return false
-        if (!this.asset.getTotalAmount().isNeg()) {
+        if (this.asset.getTotalAmount().gt(new BN(0))) {
             return true
         }
         return false
