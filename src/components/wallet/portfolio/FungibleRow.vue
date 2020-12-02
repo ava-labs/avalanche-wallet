@@ -18,7 +18,7 @@
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
-            {{ asset.toString() }} <span>{{ symbol }}</span>
+            {{ asset.toStringTotal() }} <span>{{ symbol }}</span>
         </p>
         <p class="balance_col" v-else>
             0 <span>{{ symbol }}</span>
@@ -52,7 +52,7 @@ export default class FungibleRow extends Vue {
 
     get isBalance(): boolean {
         if (!this.asset) return false
-        if (this.asset.getAmount().gt(0)) {
+        if (!this.asset.getTotalAmount().isNeg()) {
             return true
         }
         return false

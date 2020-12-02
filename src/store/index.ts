@@ -293,6 +293,15 @@ export default new Vuex.Store({
                     asset.addBalance(balanceAmt.available)
                     asset.addBalanceLocked(balanceAmt.locked)
                 }
+
+                // Add extras for AVAX token
+                if (asset.symbol === 'AVAX') {
+                    asset.addExtra(getters.walletStakingBalance)
+                    asset.addExtra(getters.walletPlatformBalance)
+                    asset.addExtra(getters.walletPlatformBalanceLocked)
+                    asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
+                }
+
                 res[assetId] = asset
             }
             return res
