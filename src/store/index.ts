@@ -295,7 +295,8 @@ export default new Vuex.Store({
                 }
 
                 // Add extras for AVAX token
-                if (asset.symbol === 'AVAX') {
+                // @ts-ignore
+                if (asset.id === state.Assets.AVA_ASSET_ID) {
                     asset.addExtra(getters.walletStakingBalance)
                     asset.addExtra(getters.walletPlatformBalance)
                     asset.addExtra(getters.walletPlatformBalanceLocked)

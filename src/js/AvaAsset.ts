@@ -10,7 +10,7 @@ class AvaAsset {
     amount: BN
     amountLocked: BN
     // AVAX P chain, Wallet Staking
-    extraAmount: BN
+    amountExtra: BN
     private readonly pow: Big
     constructor(
         id: string,
@@ -24,7 +24,7 @@ class AvaAsset {
         this.denomination = denomination
         this.amount = new BN(0, 10)
         this.amountLocked = new BN(0, 10)
-        this.extraAmount = new BN(0, 10)
+        this.amountExtra = new BN(0, 10)
         this.pow = Big(10).pow(denomination)
     }
 
@@ -37,13 +37,13 @@ class AvaAsset {
     }
 
     addExtra(val: BN): void {
-        this.extraAmount = this.extraAmount.add(val)
+        this.amountExtra = this.amountExtra.add(val)
     }
 
     resetBalance() {
         this.amount = new BN(0, 10)
         this.amountLocked = new BN(0, 10)
-        this.extraAmount = new BN(0, 10)
+        this.amountExtra = new BN(0, 10)
     }
 
     getAmount(locked: boolean = false): Big {
@@ -63,7 +63,7 @@ class AvaAsset {
     }
 
     getTotalAmount(): BN {
-        return this.amount.add(this.amountLocked).add(this.extraAmount)
+        return this.amount.add(this.amountLocked).add(this.amountExtra)
     }
 
     toStringTotal(): string {
