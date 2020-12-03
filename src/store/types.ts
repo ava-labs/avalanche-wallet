@@ -19,7 +19,7 @@ export interface RootState {
     prices: priceDict // USD value of 1 AVAX
 }
 
-export type WalletType = 'mnemonic' | 'ledger'
+export type WalletType = 'mnemonic' | 'ledger' | 'singleton'
 
 export interface priceDict {
     usd: number
