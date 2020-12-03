@@ -93,9 +93,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
         let chainId = isAVM ? 'X' : 'P'
 
-        const msg: Buffer = Buffer.from(
-            createHash('sha256').update(txbuff).digest()
-        )
+        const msg = txbuff
         let paths: string[] = []
 
         // Collect paths derivation paths for source addresses
@@ -139,8 +137,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // and ask user to sign with device
         try {
             store.commit('Ledger/openModal', {
-                title: `Sign Hash`,
-                info: msg.toString('hex').toUpperCase(),
+                title: `Sign Transaction`,
+                info: 'TODO',
             })
 
             let uniquePaths = paths.filter((val: any, i: number) => {
@@ -151,7 +149,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 return bippath.fromString(path, false)
             })
 
-            let sigMap = await this.app.signHash(accountPath, bip32Paths, msg)
+            let sigMap = await this.app.signTransaction(
+                accountPath,
+                bip32Paths,
+                msg,
+                null
+            )
             store.commit('Ledger/closeModal')
 
             const sigs: Credential[] = []

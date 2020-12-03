@@ -1449,13 +1449,14 @@
     consola "^2.10.1"
     node-fetch "^2.6.0"
 
-"@obsidiansystems/hw-app-avalanche@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@obsidiansystems/hw-app-avalanche/-/hw-app-avalanche-0.1.0.tgz#6d718f0bb406a7f3d01eeee71eccda0f50d8f017"
-  integrity sha512-l+BRBNpQ4gmdtsqrExOIKsk/dgjS2/prDZxzo+AhqEoVASl/qHJ1pNolEwGcuYo/2R6/a/dPZdv7CQsDKK71Ww==
+"@obsidiansystems/hw-app-avalanche@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@obsidiansystems/hw-app-avalanche/-/hw-app-avalanche-0.2.2.tgz#a90843ac454b478d056f61467454c6c959a5ee07"
+  integrity sha512-8hvNA+WKw32ua6FNZzyDBy/zahNXokZ2rvPIiPp8isXHIP/3hJKuiRm5Atuja29WExSxd0QW95rDReBT80amiw==
   dependencies:
     "@ledgerhq/hw-transport" "^5.9.0"
     bip32-path "0.4.2"
+    create-hash "1.2.0"
     jest "^26.4.1"
 
 "@samverschueren/stream-to-observable@^0.3.0":
