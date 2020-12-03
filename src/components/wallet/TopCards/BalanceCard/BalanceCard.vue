@@ -133,19 +133,9 @@ export default class BalanceCard extends Vue {
     }
 
     get totalBalance(): BN {
-        let xUnlocked = this.avmUnlocked
-        let xLocked = this.avmLocked
-        let pUnlocked = this.platformUnlocked
-        let pLocked = this.platformLocked
-        let staked = this.stakingAmount
-        let lockedStakeable = this.platformLockedStakeable
+        if (!this.ava_asset) return new BN(0)
 
-        let tot = xUnlocked
-            .add(xLocked)
-            .add(pUnlocked)
-            .add(pLocked)
-            .add(staked)
-            .add(lockedStakeable)
+        let tot = this.ava_asset.getTotalAmount()
         return tot
     }
 
