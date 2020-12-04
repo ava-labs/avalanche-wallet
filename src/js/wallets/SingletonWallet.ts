@@ -20,8 +20,11 @@ import BN from 'bn.js'
 import { AvaWalletCore } from './IAvaHdWallet'
 
 class SingletonWallet implements AvaWalletCore {
-    avmChain: AVMKeyChain
-    avmKey: AVMKeyPair
+    keyChain: AVMKeyChain | PlatformKeyChain
+    // TODO, @emre check this
+    // @ts-ignore
+    utxoset: AVMUTXOSet | PlatformUTXOSet
+    keyPair: AVMKeyPair | PlatformKeyPair
 
     chainId: string
     chainIdP: string
@@ -35,9 +38,6 @@ class SingletonWallet implements AvaWalletCore {
     platformKey: PlatformKeyPair
     platformChain: PlatformKeyChain
 
-    utxoset: AVMUTXOSet
-    utxosetPlatform: PlatformUTXOSet
-
     constructor(pk: string) {
         this.key = pk
 
@@ -46,17 +46,20 @@ class SingletonWallet implements AvaWalletCore {
         this.chainIdP = chainIdP
 
         let hrp = ava.getHRP()
-        this.avmChain = new AVMKeyChain(hrp, this.chainId)
-        this.avmKey = this.avmChain.importKey(pk)
+        if (this.chainId === 'X') {
+            this.keyChain = new AVMKeyChain(hrp, this.chainId)
+            this.utxoset = new AVMUTXOSet()
+        } else {
+            this.keyChain = new PlatformKeyChain(hrp, this.chainId)
+            this.utxoset = new PlatformUTXOSet()
+        }
+        this.keyPair = this.keyChain.importKey(pk)
         this.platformChain = new PlatformKeyChain(hrp, chainIdP)
         this.platformKey = this.platformChain.importKey(pk)
 
         this.stakeAmount = new BN(0)
 
         this.type = 'singleton'
-
-        this.utxoset = new AVMUTXOSet()
-        this.utxosetPlatform = new PlatformUTXOSet()
     }
 
     chainTransfer(amt: BN, sourceChain: string): Promise<string> {
@@ -78,7 +81,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getCurrentAddress(): string {
-        return this.avmKey.getAddressString()
+        return this.keyPair.getAddressString()
     }
 
     getDerivedAddresses(): string[] {
@@ -107,21 +110,24 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getUTXOSet(): AVMUTXOSet {
-        return this.utxoset
+        // TODO, @emre check this
+        return this.utxoset as AVMUTXOSet
     }
 
     async getUTXOs(): Promise<AVMUTXOSet> {
         let addr = this.getCurrentAddress()
-        let addrP = this.getPlatformRewardAddress()
-        let res = await avm.getUTXOs([addr])
+        let res
 
-        let utxosP = await pChain.getUTXOs([addrP])
+        if (this.chainId === 'X') {
+            res = await avm.getUTXOs([addr])
+        } else {
+            res = await pChain.getUTXOs([addr])
+        }
 
         this.getStake()
-        // TODO, check this
+        // TODO, @emre check this
         this.utxoset = res.utxos
-        this.utxosetPlatform = utxosP.utxos
-        return res.utxos
+        return res.utxos as AVMUTXOSet
     }
 
     importToPlatformChain(): Promise<string> {
@@ -142,20 +148,23 @@ class SingletonWallet implements AvaWalletCore {
     onnetworkchange(): void {
         let hrp = getPreferredHRP(ava.getNetworkID())
 
-        this.avmChain = new AVMKeyChain(hrp, this.chainId)
-        this.platformChain = new PlatformKeyChain(hrp, this.chainIdP)
-        this.avmKey = this.avmChain.importKey(this.key)
+        if (this.chainId === 'X') {
+            this.keyChain = new AVMKeyChain(hrp, this.chainId)
+            this.utxoset = new AVMUTXOSet()
+        } else {
+            this.keyChain = new PlatformKeyChain(hrp, this.chainId)
+            this.utxoset = new PlatformUTXOSet()
+        }
 
-        this.utxoset = new AVMUTXOSet()
-        this.utxosetPlatform = new PlatformUTXOSet()
+        this.keyPair = this.keyChain.importKey(this.key)
 
-        // this.getUTXOs()
+        this.getUTXOs()
     }
 
     async sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(
         unsignedTx: UnsignedTx
     ): Promise<StandardTx<any, any, any>> {
-        return unsignedTx.sign(this.avmChain)
+        return unsignedTx.sign(this.keyChain)
     }
 
     async signMessage(msgStr: string): Promise<string> {
@@ -163,7 +172,7 @@ class SingletonWallet implements AvaWalletCore {
 
         let digestHex = digest.toString('hex')
         let digestBuff = Buffer.from(digestHex, 'hex')
-        let signed = this.avmKey.sign(digestBuff)
+        let signed = this.keyPair.sign(digestBuff)
 
         return bintools.cb58Encode(signed)
     }
