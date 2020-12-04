@@ -31,7 +31,7 @@
                             class="qr_but"
                         ></button>
                         <button
-                            v-if="walletType !== 'ledger'"
+                            v-if="walletType === 'mnemonic'"
                             :tooltip="$t('top.hover2')"
                             @click="viewPrintModal"
                             class="print_but"
