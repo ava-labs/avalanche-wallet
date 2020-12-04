@@ -42,6 +42,7 @@
     "access": {
         "title": "How do you want to access your wallet?",
         "create": "Don't have a wallet?",
+        "but_private_key": "Private Key",
         "but_mnemonic": "Mnemonic Key Phrase",
         "but_keystore": "Keystore File",
         "cancel": "Cancel",

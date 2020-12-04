@@ -7,11 +7,12 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { KeyFile } from '@/js/IKeystore'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 export interface RootState {
     walletType: null | WalletType
     isAuth: boolean
-    activeWallet: null | AvaHdWallet | LedgerWallet
+    activeWallet: null | AvaHdWallet | LedgerWallet | SingletonWallet
     wallets: (LedgerWallet | AvaHdWallet)[] // TODO: these should not co exist
     address: String | null
     volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
