@@ -147,6 +147,7 @@ export default class KeyRow extends Vue {
     }
 
     get walletTitle() {
+        console.log(this.wallet.externalHelper)
         return this.wallet.externalHelper.getAddressForIndex(0)
     }
 

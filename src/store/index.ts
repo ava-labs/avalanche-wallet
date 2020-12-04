@@ -37,6 +37,7 @@ import {
     AmountOutput,
     UTXOSet,
 } from 'avalanche/dist/apis/avm'
+import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 
 import AvaAsset from '@/js/AvaAsset'
 import { KEYSTORE_VERSION, makeKeyfile, readKeyFile } from '@/js/Keystore'
@@ -48,6 +49,7 @@ import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 export default new Vuex.Store({
     modules: {
@@ -188,7 +190,12 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet = wallet.platformHelper.utxoSet
+            let utxoSet: PlatformUTXOSet | UTXOSet
+            if ('utxosetPlatform' in wallet) {
+                utxoSet = wallet.utxosetPlatform
+            } else {
+                utxoSet = wallet.platformHelper.utxoSet
+            }
 
             let now = UnixNow()
 
@@ -221,7 +228,12 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet = wallet.platformHelper.utxoSet
+            let utxoSet: PlatformUTXOSet | UTXOSet
+            if ('utxosetPlatform' in wallet) {
+                utxoSet = wallet.utxosetPlatform
+            } else {
+                utxoSet = wallet.platformHelper.utxoSet
+            }
 
             let now = UnixNow()
 
@@ -247,7 +259,12 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet = wallet.platformHelper.utxoSet
+            let utxoSet: PlatformUTXOSet | UTXOSet
+            if ('utxosetPlatform' in wallet) {
+                utxoSet = wallet.utxosetPlatform
+            } else {
+                utxoSet = wallet.platformHelper.utxoSet
+            }
 
             // The only type of asset is AVAX on the P chain
             let amt = new BN(0)
@@ -327,13 +344,16 @@ export default new Vuex.Store({
         },
 
         activeKey(state): AVMKeyPair | null {
-            if (!state.activeWallet || state.walletType === 'ledger') {
+            if (
+                !state.activeWallet ||
+                state.walletType === 'ledger' ||
+                state.walletType === 'singleton'
+            ) {
                 return null
             }
-            let hdIndex = state.activeWallet.externalHelper.hdIndex
-            return state.activeWallet.externalHelper.getKeyForIndex(
-                hdIndex
-            ) as AVMKeyPair
+            let wallet = state.activeWallet as AvaHdWallet
+            let hdIndex = wallet.externalHelper.hdIndex
+            return wallet.externalHelper.getKeyForIndex(hdIndex) as AVMKeyPair
         },
     },
     mutations: {
@@ -381,6 +401,18 @@ export default new Vuex.Store({
 
             await dispatch('activateWallet', wallet)
             state.walletType = 'ledger'
+
+            dispatch('onAccess')
+        },
+
+        async accessWalletSingleton(
+            { state, dispatch },
+            wallet: SingletonWallet
+        ) {
+            state.wallets.push(wallet)
+
+            await dispatch('activateWallet', wallet)
+            state.walletType = 'singleton'
 
             dispatch('onAccess')
         },

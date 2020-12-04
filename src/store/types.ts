@@ -13,7 +13,7 @@ export interface RootState {
     walletType: null | WalletType
     isAuth: boolean
     activeWallet: null | AvaHdWallet | LedgerWallet | SingletonWallet
-    wallets: (LedgerWallet | AvaHdWallet)[] // TODO: these should not co exist
+    wallets: (LedgerWallet | AvaHdWallet | SingletonWallet)[] // TODO: these should not co exist
     address: String | null
     volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
