@@ -21,7 +21,7 @@ import { AvaWalletCore } from './IAvaHdWallet'
 
 class SingletonWallet implements AvaWalletCore {
     keyChain: AVMKeyChain | PlatformKeyChain
-    // TODO, @emre check this
+    // TODO: Singleton, @emre check this please
     // @ts-ignore
     utxoset: AVMUTXOSet | PlatformUTXOSet
     keyPair: AVMKeyPair | PlatformKeyPair
@@ -110,7 +110,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getUTXOSet(): AVMUTXOSet {
-        // TODO, @emre check this
+        // TODO: Singleton, @emre check this please
         return this.utxoset as AVMUTXOSet
     }
 
@@ -125,7 +125,7 @@ class SingletonWallet implements AvaWalletCore {
         }
 
         this.getStake()
-        // TODO, @emre check this
+        // TODO: Singleton, @emre check this please
         this.utxoset = res.utxos
         return res.utxos as AVMUTXOSet
     }

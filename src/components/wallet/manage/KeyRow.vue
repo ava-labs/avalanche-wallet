@@ -70,15 +70,16 @@
                             <fa icon="list-ol"></fa>
                         </Tooltip>
                         <Tooltip
-                            v-if="walletType !== 'ledger'"
+                            v-if="walletType === 'mnemonic'"
                             :text="$t('keys.export_key')"
                             class="row_but circle"
                             @click.native="showExportModal"
                         >
                             <fa icon="upload"></fa>
                         </Tooltip>
+                        <!-- // TODO: Singleton, show private key modal? -->
                         <button
-                            v-if="walletType !== 'ledger'"
+                            v-if="walletType == 'mnemonic'"
                             @click="showModal"
                         >
                             {{ $t('keys.view_key') }}
@@ -147,8 +148,11 @@ export default class KeyRow extends Vue {
     }
 
     get walletTitle() {
-        console.log(this.wallet.externalHelper)
-        return this.wallet.externalHelper.getAddressForIndex(0)
+        if (this.wallet.type === 'singleton') {
+            return this.wallet.getCurrentAddress()
+        } else {
+            return this.wallet.externalHelper.getAddressForIndex(0)
+        }
     }
 
     get assetsDict(): AssetsDict {
@@ -211,7 +215,7 @@ export default class KeyRow extends Vue {
         return this.$store.state.walletType
     }
     get mnemonicPhrase(): string {
-        if (this.walletType === 'ledger') return '?'
+        if (this.walletType !== 'mnemonic') return '?'
         let wallet = this.wallet as AvaHdWallet
         return wallet.getMnemonic()
     }

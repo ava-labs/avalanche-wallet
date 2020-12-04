@@ -194,6 +194,8 @@ export default new Vuex.Store({
             if ('platformHelper' in wallet) {
                 utxoSet = wallet.platformHelper.utxoSet
             } else {
+                // TODO, Singleton, discuss refactor
+                if (wallet.chainId === 'X') return new BN(0)
                 utxoSet = wallet.utxoset
             }
 
@@ -232,6 +234,8 @@ export default new Vuex.Store({
             if ('platformHelper' in wallet) {
                 utxoSet = wallet.platformHelper.utxoSet
             } else {
+                // TODO, Singleton, discuss refactor
+                if (wallet.chainId === 'X') return new BN(0)
                 utxoSet = wallet.utxoset
             }
 
@@ -263,6 +267,8 @@ export default new Vuex.Store({
             if ('platformHelper' in wallet) {
                 utxoSet = wallet.platformHelper.utxoSet
             } else {
+                // TODO, Singleton, discuss refactor
+                if (wallet.chainId === 'X') return new BN(0)
                 utxoSet = wallet.utxoset
             }
 
