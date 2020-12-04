@@ -49,10 +49,8 @@ export default class PrivateKey extends Vue {
         this.error = ''
         this.isLoading = true
         let key = this.privatekey
-        console.log(key)
         let wallet = new SingletonWallet(key)
         wallet.getUTXOs()
-        console.log(wallet)
         try {
             let res = await this.$store.dispatch(
                 'accessWalletSingleton',

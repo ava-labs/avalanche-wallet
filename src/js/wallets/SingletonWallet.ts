@@ -140,12 +140,16 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     onnetworkchange(): void {
-        this.utxoset = new AVMUTXOSet()
-        this.utxosetPlatform = new PlatformUTXOSet()
         let hrp = getPreferredHRP(ava.getNetworkID())
 
         this.avmChain = new AVMKeyChain(hrp, this.chainId)
         this.platformChain = new PlatformKeyChain(hrp, this.chainIdP)
+        this.avmKey = this.avmChain.importKey(this.key)
+
+        this.utxoset = new AVMUTXOSet()
+        this.utxosetPlatform = new PlatformUTXOSet()
+
+        // this.getUTXOs()
     }
 
     async sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(
