@@ -3,7 +3,7 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet
             ref="print_modal"
-            v-if="walletType !== 'ledger'"
+            v-if="walletType === 'mnemonic'"
         ></paper-wallet>
         <p class="addr_info">{{ $t('top.address.desc') }}</p>
         <div class="bottom">

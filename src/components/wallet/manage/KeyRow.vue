@@ -1,12 +1,12 @@
 <template>
     <div class="addressItem" :selected="is_default">
         <ExportKeys
-            v-if="walletType !== 'ledger'"
+            v-if="walletType === 'mnemonic'"
             :wallets="[wallet]"
             ref="export_wallet"
         ></ExportKeys>
         <mnemonic-phrase
-            v-if="walletType !== 'ledger'"
+            v-if="walletType === 'mnemonic'"
             ref="modal"
             :phrase="mnemonicPhrase"
         ></mnemonic-phrase>

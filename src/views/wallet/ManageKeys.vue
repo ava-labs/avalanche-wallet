@@ -6,7 +6,7 @@
                     <h1>{{ $t('keys.title') }}</h1>
                     <div
                         class="button_container"
-                        v-if="walletType !== 'ledger'"
+                        v-if="walletType === 'mnemonic'"
                     >
                         <button
                             v-if="hasVolatile"
