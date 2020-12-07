@@ -15,7 +15,7 @@ import {
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 
 // export type wallet_type = "hd" | "singleton";
@@ -26,7 +26,7 @@ export interface IIndexKeyCache {
 
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
-    type: WalletType
+    type: WalletNameType
     chainId: string
     utxoset: UTXOSet
     stakeAmount: BN

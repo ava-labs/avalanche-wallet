@@ -124,8 +124,7 @@ import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/store/types'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -140,7 +139,7 @@ interface IKeyBalanceDict {
     },
 })
 export default class KeyRow extends Vue {
-    @Prop() wallet!: AvaHdWallet | LedgerWallet
+    @Prop() wallet!: WalletType
     @Prop({ default: false }) is_default?: boolean
 
     get isVolatile() {
@@ -148,10 +147,10 @@ export default class KeyRow extends Vue {
     }
 
     get walletTitle() {
-        if (this.wallet.type === 'singleton') {
-            return this.wallet.getCurrentAddress()
-        } else {
+        if ('externalHelper' in this.wallet) {
             return this.wallet.externalHelper.getAddressForIndex(0)
+        } else {
+            return this.wallet.getCurrentAddress()
         }
     }
 
@@ -211,7 +210,7 @@ export default class KeyRow extends Vue {
         return res
     }
 
-    get walletType(): WalletType {
+    get walletType(): WalletNameType {
         return this.$store.state.walletType
     }
     get mnemonicPhrase(): string {

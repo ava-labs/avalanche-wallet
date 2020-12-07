@@ -57,7 +57,7 @@ import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
 import MainnetAddressModal from '@/components/modals/MainnetAddressModal.vue'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
@@ -104,7 +104,7 @@ export default class AddressCard extends Vue {
         return this.$root.theme === 'day'
     }
 
-    get walletType(): WalletType {
+    get walletType(): WalletNameType {
         return this.$store.state.walletType
     }
 

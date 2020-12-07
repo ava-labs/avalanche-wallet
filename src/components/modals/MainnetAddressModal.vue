@@ -22,6 +22,7 @@ import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { avm, bintools } from '@/AVA'
+import { WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -36,12 +37,17 @@ export default class MainnetAddressModal extends Vue {
     }
 
     get address() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         if (!wallet) {
             return '-'
         }
         let hrp = getPreferredHRP(1)
-        let address = wallet.externalHelper.getAddressForIndex(0)
+        let address: string
+        if ('externalHelper' in wallet) {
+            address = wallet.externalHelper.getAddressForIndex(0)
+        } else {
+            address = wallet.getCurrentAddress()
+        }
         let addrRaw = bintools.parseAddress(address, 'X')
         let addrMainnet = bintools.addressToString(hrp, 'X', addrRaw)
 

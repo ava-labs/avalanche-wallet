@@ -1,7 +1,7 @@
 import { ava, avm, bintools, pChain } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import { Buffer } from 'avalanche'
 import {
     KeyPair as AVMKeyPair,
@@ -39,7 +39,7 @@ class SingletonWallet implements AvaWalletCore {
 
     stakeAmount: BN
 
-    type: WalletType
+    type: WalletNameType
 
     platformKey: PlatformKeyPair
     platformChain: PlatformKeyChain
