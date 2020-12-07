@@ -122,8 +122,6 @@ export default class AddressCard extends Vue {
             return '-'
         }
 
-        debugger
-
         return wallet.getPlatformAddress()
     }
 

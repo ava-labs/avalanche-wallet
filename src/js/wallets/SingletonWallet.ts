@@ -170,7 +170,13 @@ class SingletonWallet implements AvaWalletCore {
         return this.platformUtxoset
     }
 
-    async getUTXOs(): Promise<AVMUTXOSet> {
+    // @ts-ignore
+    async getUTXOs() {
+        this.getAvmUTXOs()
+        this.getPlatformUTXOs()
+    }
+
+    async getAvmUTXOs(): Promise<AVMUTXOSet> {
         let addr = this.getCurrentAddress()
 
         let setInternal = await avm.getUTXOs([addr])
@@ -224,7 +230,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     async importToXChain(): Promise<string> {
-        const utxoSet = (await this.getUTXOs()) as AVMUTXOSet
+        const utxoSet = (await this.getAvmUTXOs()) as AVMUTXOSet
 
         if (utxoSet.getAllUTXOs().length === 0) {
             throw new Error('Nothing to import.')
