@@ -44,6 +44,14 @@
                     <img v-else src="@/assets/sidebar/earn_nav_night.png" />
                     {{ $t('wallet.sidebar.earn') }}
                 </router-link>
+                <router-link to="/wallet/studio" data-cy="wallet_studio">
+                    <img
+                        v-if="$root.theme === 'day'"
+                        src="@/assets/sidebar/earn_nav.png"
+                    />
+                    <img v-else src="@/assets/sidebar/earn_nav_night.png" />
+                    {{ $t('wallet.sidebar.studio') }}
+                </router-link>
                 <router-link to="/wallet/advanced" data-cy="wallet_advanced">
                     <img
                         v-if="$root.theme === 'day'"
