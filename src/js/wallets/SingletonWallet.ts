@@ -223,8 +223,34 @@ class SingletonWallet implements AvaWalletCore {
         return pChain.issueTx(tx)
     }
 
-    importToXChain(): Promise<string> {
-        return Promise.resolve('')
+    async importToXChain(): Promise<string> {
+        const utxoSet = (await this.getUTXOs()) as AVMUTXOSet
+
+        if (utxoSet.getAllUTXOs().length === 0) {
+            throw new Error('Nothing to import.')
+        }
+
+        let keyChain = this.keyChain as AVMKeyChain
+        let xAddrs = keyChain.getAddressStrings()
+        let xToAddr = this.getCurrentAddress()
+
+        // Owner addresses, the addresses we exported to
+        const unsignedTx = await avm.buildImportTx(
+            utxoSet,
+            xAddrs,
+            pChain.getBlockchainID(),
+            [xToAddr],
+            xAddrs,
+            [xToAddr]
+        )
+        const tx = unsignedTx.sign(keyChain)
+
+        // // Update UTXOS
+        setTimeout(async () => {
+            await this.getUTXOs()
+        }, 3000)
+
+        return avm.issueTx(tx)
     }
 
     async buildUnsignedTransaction(
