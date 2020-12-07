@@ -8,6 +8,11 @@ import {
     KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     UTXO,
+    AssetAmountDestination,
+    TransferableInput,
+    TransferableOutput,
+    UnsignedTx,
+    BaseTx,
 } from 'avalanche/dist/apis/avm'
 import {
     KeyPair as PlatformKeyPair,
@@ -17,6 +22,7 @@ import {
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import BN from 'bn.js'
+import { buildUnsignedTransaction } from '../TxHelper'
 import { AvaWalletCore } from './IAvaHdWallet'
 
 class SingletonWallet implements AvaWalletCore {
@@ -138,11 +144,34 @@ class SingletonWallet implements AvaWalletCore {
         return Promise.resolve('')
     }
 
-    issueBatchTx(
+    async buildUnsignedTransaction(
+        orders: (ITransaction | UTXO)[],
+        addr: string,
+        memo?: Buffer
+    ) {
+        const changeAddress = this.getChangeAddress()
+        const derivedAddresses = this.getDerivedAddresses()
+        const utxoset = this.getUTXOSet() as AVMUTXOSet
+
+        return buildUnsignedTransaction(
+            orders,
+            addr,
+            derivedAddresses,
+            utxoset,
+            changeAddress,
+            memo
+        )
+    }
+
+    async issueBatchTx(
         orders: (UTXO | ITransaction)[],
-        addr: string
+        addr: string,
+        memo: Buffer | undefined
     ): Promise<string> {
-        return Promise.resolve('')
+        let unsignedTx = await this.buildUnsignedTransaction(orders, addr, memo)
+        const tx = unsignedTx.sign(this.keyChain as AVMKeyChain)
+        const txId: string = await avm.issueTx(tx)
+        return txId
     }
 
     onnetworkchange(): void {
