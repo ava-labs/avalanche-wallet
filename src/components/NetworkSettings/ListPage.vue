@@ -2,6 +2,7 @@
     <div>
         <div class="networks_list">
             <network-row
+                data-cy="network-item"
                 v-for="net in networks"
                 :key="net.id"
                 class="network_row"

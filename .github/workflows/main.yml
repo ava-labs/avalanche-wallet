@@ -1,0 +1,60 @@
+name: Main Commit Checks
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                # The node version, you can put one or many versions in here to test with
+                node: [12.14.1]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Use Node.js ${{ matrix.node }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node }}
+
+            # This should be caching node modules, hashing the cache key with the yarn lock code and busting that when yarn lock changes
+            - name: cache modules
+              uses: actions/cache@v2
+              with:
+                  path: '**/node_modules'
+                  key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+            - run: sudo npm install -g yarn
+
+            - run: yarn install
+
+            - name: linting
+              run: yarn run lint
+
+            - name: cypress-run
+              uses: cypress-io/github-action@v2
+              env:
+                  USE_HTTP: true
+              with:
+                  start: yarn serve --mode e2e
+                  wait-on: 'http://localhost:5000/'
+                  # wait for 2 minutes for the server to respond
+                  wait-on-timeout: 120
+                  browser: chrome
+                  headless: true
+
+            # These extract all artifacts out from the container to git so they can be previewed
+            - name: extract screenshots to git
+              uses: actions/upload-artifact@v2
+              if: failure()
+              with:
+                  name: cypress-screenshots
+                  path: cypress/screenshots
+            # Test run video was always captured, so this action uses "always()" condition
+            - name: extract videos to git
+              uses: actions/upload-artifact@v2
+              if: always()
+              with:
+                  name: cypress-videos
+                  path: cypress/videos
