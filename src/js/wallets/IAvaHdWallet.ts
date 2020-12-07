@@ -9,6 +9,7 @@ import {
 } from 'avalanche/dist/apis/avm'
 
 import {
+    UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
@@ -29,6 +30,7 @@ export interface AvaWalletCore {
     type: WalletNameType
     chainId: string
     utxoset: UTXOSet
+    platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
 
     getCurrentAddress(): string
@@ -40,6 +42,9 @@ export interface AvaWalletCore {
     getUTXOs(): Promise<UTXOSet>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
+    getPlatformUTXOs(): Promise<PlatformUTXOSet>
+    getPlatformUTXOSet(): PlatformUTXOSet
+    getPlatformAddress(): string
     getPlatformRewardAddress(): string
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,

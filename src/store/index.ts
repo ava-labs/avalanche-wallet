@@ -191,13 +191,8 @@ export default new Vuex.Store({
             if (!wallet) return new BN(0)
 
             let utxoSet: PlatformUTXOSet | UTXOSet
-            if ('platformHelper' in wallet) {
-                utxoSet = wallet.platformHelper.utxoSet
-            } else {
-                // TODO, Singleton, discuss refactor
-                if (wallet.chainId === 'X') return new BN(0)
-                utxoSet = wallet.utxoset
-            }
+
+            utxoSet = wallet.getPlatformUTXOSet()
 
             let now = UnixNow()
 
@@ -231,13 +226,8 @@ export default new Vuex.Store({
             if (!wallet) return new BN(0)
 
             let utxoSet: PlatformUTXOSet | UTXOSet
-            if ('platformHelper' in wallet) {
-                utxoSet = wallet.platformHelper.utxoSet
-            } else {
-                // TODO, Singleton, discuss refactor
-                if (wallet.chainId === 'X') return new BN(0)
-                utxoSet = wallet.utxoset
-            }
+
+            utxoSet = wallet.getPlatformUTXOSet()
 
             let now = UnixNow()
 
@@ -264,13 +254,8 @@ export default new Vuex.Store({
             if (!wallet) return new BN(0)
 
             let utxoSet: PlatformUTXOSet | UTXOSet
-            if ('platformHelper' in wallet) {
-                utxoSet = wallet.platformHelper.utxoSet
-            } else {
-                // TODO, Singleton, discuss refactor
-                if (wallet.chainId === 'X') return new BN(0)
-                utxoSet = wallet.utxoset
-            }
+
+            utxoSet = wallet.getPlatformUTXOSet()
 
             // The only type of asset is AVAX on the P chain
             let amt = new BN(0)

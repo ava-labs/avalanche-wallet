@@ -26,6 +26,7 @@ import { buildUnsignedTransaction } from '../TxHelper'
 class HdWalletCore {
     chainId: string
     utxoset: UTXOSet
+    platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
 
     internalHelper: HdHelper
@@ -35,6 +36,7 @@ class HdWalletCore {
     constructor(accountHdKey: HDKey, isPublic = true) {
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
         this.utxoset = new AVMUTXOSet()
+        this.platformUtxoset = new PlatformUTXOSet()
         this.stakeAmount = new BN(0)
 
         this.externalHelper = new HdHelper(
@@ -59,13 +61,23 @@ class HdWalletCore {
     async getUTXOs(): Promise<AVMUTXOSet> {
         let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
         let setExternal = (await this.externalHelper.updateUtxos()) as AVMUTXOSet
-        let setPlatform = (await this.platformHelper.updateUtxos()) as PlatformUTXOSet
+        // let setPlatform = (await this.platformHelper.updateUtxos()) as PlatformUTXOSet
 
         this.getStake()
 
         let joined = setInternal.merge(setExternal)
         this.utxoset = joined
         return joined
+    }
+
+    async getPlatformUTXOs(): Promise<PlatformUTXOSet> {
+        let setPlatform = (await this.platformHelper.updateUtxos()) as PlatformUTXOSet
+
+        return setPlatform
+    }
+
+    getPlatformAddress(): string {
+        return this.platformHelper.getCurrentAddress()
     }
 
     getDerivedAddresses(): string[] {
@@ -100,6 +112,10 @@ class HdWalletCore {
 
     getPlatformRewardAddress(): string {
         return this.platformHelper.getCurrentAddress()
+    }
+
+    getPlatformUTXOSet() {
+        return this.platformHelper.utxoSet as PlatformUTXOSet
     }
 
     // helper method to get all stake for more than 256 addresses

@@ -2,7 +2,7 @@ import { ava, avm, bintools, pChain } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
 import { WalletNameType } from '@/store/types'
-import { Buffer } from 'avalanche'
+import { Buffer, platformvm } from 'avalanche'
 import {
     KeyPair as AVMKeyPair,
     KeyChain as AVMKeyChain,
@@ -27,10 +27,12 @@ import { AvaWalletCore } from './IAvaHdWallet'
 
 class SingletonWallet implements AvaWalletCore {
     keyChain: AVMKeyChain | PlatformKeyChain
-    // TODO: Singleton, @emre check this please
-    // @ts-ignore
-    utxoset: AVMUTXOSet | PlatformUTXOSet
     keyPair: AVMKeyPair | PlatformKeyPair
+    utxoset: AVMUTXOSet
+
+    platformKeyChain: PlatformKeyChain
+    platformKeyPair: PlatformKeyPair
+    platformUtxoset: PlatformUTXOSet
 
     chainId: string
     chainIdP: string
@@ -41,9 +43,6 @@ class SingletonWallet implements AvaWalletCore {
 
     type: WalletNameType
 
-    platformKey: PlatformKeyPair
-    platformChain: PlatformKeyChain
-
     constructor(pk: string) {
         this.key = pk
 
@@ -52,16 +51,14 @@ class SingletonWallet implements AvaWalletCore {
         this.chainIdP = chainIdP
 
         let hrp = ava.getHRP()
-        if (this.chainId === 'X') {
-            this.keyChain = new AVMKeyChain(hrp, this.chainId)
-            this.utxoset = new AVMUTXOSet()
-        } else {
-            this.keyChain = new PlatformKeyChain(hrp, this.chainId)
-            this.utxoset = new PlatformUTXOSet()
-        }
+
+        this.keyChain = new AVMKeyChain(hrp, this.chainId)
+        this.utxoset = new AVMUTXOSet()
         this.keyPair = this.keyChain.importKey(pk)
-        this.platformChain = new PlatformKeyChain(hrp, chainIdP)
-        this.platformKey = this.platformChain.importKey(pk)
+
+        this.platformKeyChain = new PlatformKeyChain(hrp, this.chainIdP)
+        this.platformUtxoset = new PlatformUTXOSet()
+        this.platformKeyPair = this.platformKeyChain.importKey(pk)
 
         this.stakeAmount = new BN(0)
 
@@ -96,7 +93,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getExtendedPlatformAddresses(): string[] {
-        let addr = this.platformKey.getAddressString()
+        let addr = this.platformKeyPair.getAddressString()
         return [addr]
     }
 
@@ -106,34 +103,53 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getPlatformRewardAddress(): string {
-        return this.platformKey.getAddressString()
+        return this.getPlatformAddress()
+    }
+
+    getPlatformAddress(): string {
+        let keypair = this.platformKeyPair
+
+        let pkHex = this.keyPair.getPublicKey().toString('hex')
+        let pkBuff = Buffer.from(pkHex, 'hex')
+        let hrp = getPreferredHRP(ava.getNetworkID())
+        let addrBuf = keypair.addressFromPublicKey(pkBuff)
+        let addr = bintools.addressToString(hrp, 'P', addrBuf)
+
+        return addr
     }
 
     async getStake(): Promise<BN> {
-        let addr = this.platformKey.getAddressString()
+        let addr = this.getPlatformAddress()
         let res = await pChain.getStake([addr])
         return res
     }
 
     getUTXOSet(): AVMUTXOSet {
-        // TODO: Singleton, @emre check this please
-        return this.utxoset as AVMUTXOSet
+        return this.utxoset
+    }
+
+    getPlatformUTXOSet(): PlatformUTXOSet {
+        return this.platformUtxoset
     }
 
     async getUTXOs(): Promise<AVMUTXOSet> {
         let addr = this.getCurrentAddress()
-        let res
 
-        if (this.chainId === 'X') {
-            res = await avm.getUTXOs([addr])
-        } else {
-            res = await pChain.getUTXOs([addr])
-        }
+        let setInternal = await avm.getUTXOs([addr])
 
         this.getStake()
-        // TODO: Singleton, @emre check this please
-        this.utxoset = res.utxos
-        return res.utxos as AVMUTXOSet
+        this.utxoset = setInternal.utxos
+        return setInternal.utxos
+    }
+
+    async getPlatformUTXOs(): Promise<PlatformUTXOSet> {
+        let pAddr = this.getPlatformAddress()
+
+        let setPlatform = await pChain.getUTXOs([pAddr])
+
+        this.getStake()
+        this.platformUtxoset = setPlatform.utxos
+        return setPlatform.utxos
     }
 
     importToPlatformChain(): Promise<string> {
@@ -177,13 +193,11 @@ class SingletonWallet implements AvaWalletCore {
     onnetworkchange(): void {
         let hrp = getPreferredHRP(ava.getNetworkID())
 
-        if (this.chainId === 'X') {
-            this.keyChain = new AVMKeyChain(hrp, this.chainId)
-            this.utxoset = new AVMUTXOSet()
-        } else {
-            this.keyChain = new PlatformKeyChain(hrp, this.chainId)
-            this.utxoset = new PlatformUTXOSet()
-        }
+        this.keyChain = new AVMKeyChain(hrp, this.chainId)
+        this.utxoset = new AVMUTXOSet()
+
+        this.platformKeyChain = new PlatformKeyChain(hrp, this.chainId)
+        this.platformUtxoset = new PlatformUTXOSet()
 
         this.keyPair = this.keyChain.importKey(this.key)
 

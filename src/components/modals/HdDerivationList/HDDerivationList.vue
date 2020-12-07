@@ -85,6 +85,7 @@ import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
     },
 })
 export default class HDDerivationList extends Vue {
+    // @TODO: Singleton, check this
     @Prop() wallet!: AvaHdWallet
 
     addrsExternal: string[] = []
@@ -170,14 +171,14 @@ export default class HDDerivationList extends Vue {
 
     get keyBalancesInternal(): DerivationListBalanceDict[] {
         let wallet = this.wallet
-        let utxoSet = wallet.internalHelper.utxoSet
+        let utxoSet = wallet.getUTXOSet()
         let addrs = this.addrsInternal
         return this.utxoSetToBalanceDict<AVMKeyPair>(utxoSet, addrs)
     }
 
     get keyBalancesPlatform(): DerivationListBalanceDict[] {
         let wallet = this.wallet
-        let utxoSet = wallet.platformHelper.utxoSet
+        let utxoSet = wallet.getPlatformUTXOSet()
         let addrs = this.addrsPlatform
         return this.utxoSetToBalanceDict<PlatformVMKeyPair>(utxoSet, addrs)
     }
