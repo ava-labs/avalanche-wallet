@@ -149,6 +149,8 @@ class SingletonWallet implements AvaWalletCore {
     async getStake(): Promise<BN> {
         let addr = this.getPlatformAddress()
         let res = await pChain.getStake([addr])
+
+        this.stakeAmount = res
         return res
     }
 
@@ -163,8 +165,8 @@ class SingletonWallet implements AvaWalletCore {
     // TODO, Singleton check with emre on this
     // @ts-ignore
     async getUTXOs() {
-        this.getAvmUTXOs()
-        this.getPlatformUTXOs()
+        await this.getAvmUTXOs()
+        await this.getPlatformUTXOs()
     }
 
     async getAvmUTXOs(): Promise<AVMUTXOSet> {
