@@ -107,16 +107,6 @@ class SingletonWallet implements AvaWalletCore {
         }
     }
 
-    delegate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        rewardAddress?: string
-    ): Promise<string> {
-        return Promise.resolve('')
-    }
-
     getChangeAddress(): string {
         return this.getCurrentAddress()
     }
@@ -170,6 +160,7 @@ class SingletonWallet implements AvaWalletCore {
         return this.platformUtxoset
     }
 
+    // TODO, Singleton check with emre on this
     // @ts-ignore
     async getUTXOs() {
         this.getAvmUTXOs()
@@ -319,15 +310,102 @@ class SingletonWallet implements AvaWalletCore {
         return bintools.cb58Encode(signed)
     }
 
-    validate(
+    async delegate(
         nodeID: string,
         amt: BN,
         start: Date,
         end: Date,
-        delegationFee: number,
         rewardAddress?: string
     ): Promise<string> {
-        return Promise.resolve('')
+        let keychain = this.platformKeyChain as PlatformKeyChain
+        const utxoSet: PlatformUTXOSet = this.platformUtxoset as PlatformUTXOSet
+
+        let pAddressStrings = keychain.getAddressStrings()
+        let stakeAmount = amt
+
+        // If reward address isn't given use index 0 address
+        if (!rewardAddress) {
+            rewardAddress = this.getPlatformRewardAddress()
+        }
+
+        // For change address use first available on the platform chain
+        let changeAddr = this.getPlatformAddress()
+
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress()
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000))
+        let endTime = new BN(Math.round(end.getTime() / 1000))
+
+        const unsignedTx = await pChain.buildAddDelegatorTx(
+            utxoSet,
+            [stakeReturnAddr],
+            pAddressStrings,
+            [changeAddr],
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress] // reward address
+        )
+        const tx = unsignedTx.sign(keychain)
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        }, 3000)
+
+        return pChain.issueTx(tx)
+    }
+
+    async validate(
+        nodeID: string,
+        amt: BN,
+        start: Date,
+        end: Date,
+        delegationFee: number = 0,
+        rewardAddress?: string
+    ): Promise<string> {
+        let keychain = this.platformKeyChain as PlatformKeyChain
+        const utxoSet: PlatformUTXOSet = this.platformUtxoset as PlatformUTXOSet
+        let pAddressStrings = keychain.getAddressStrings()
+
+        let stakeAmount = amt
+
+        // If reward address isn't given use index 0 address
+        if (!rewardAddress) {
+            rewardAddress = this.getPlatformRewardAddress()
+        }
+
+        // For change address use first available on the platform chain
+        let changeAddress = this.getPlatformAddress()
+
+        // Stake is always returned to address at index 0
+        let stakeReturnAddr = this.getPlatformRewardAddress()
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000))
+        let endTime = new BN(Math.round(end.getTime() / 1000))
+
+        const unsignedTx = await pChain.buildAddValidatorTx(
+            utxoSet,
+            [stakeReturnAddr],
+            pAddressStrings, // from
+            [changeAddress], // change
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress],
+            delegationFee
+        )
+        let tx = unsignedTx.sign(keychain)
+
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        }, 3000)
+        return pChain.issueTx(tx)
     }
 }
 
