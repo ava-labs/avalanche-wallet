@@ -14,7 +14,7 @@ export interface RootState {
     activeWallet: null | WalletType
     wallets: WalletType[]
     address: String | null
-    volatileWallets: VolatileWalletType[] // will be forgotten when tab is closed
+    volatileWallets: WalletType[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
     prices: priceDict // USD value of 1 AVAX
 }
@@ -22,8 +22,6 @@ export interface RootState {
 export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
 
 export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
-
-export type VolatileWalletType = AvaHdWallet | SingletonWallet
 
 export interface priceDict {
     usd: number
