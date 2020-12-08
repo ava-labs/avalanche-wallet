@@ -1,0 +1,53 @@
+<template>
+    <div>
+        <div v-if="!mintUtxo">
+            <p>Select a family and group to mint.</p>
+            <SelectMintUTXO @change="setUtxo"></SelectMintUTXO>
+        </div>
+        <MintForm v-else :mint-utxo="mintUtxo" @clearUtxo="clearUtxo"></MintForm>
+    </div>
+</template>
+<script lang="ts">
+import { Vue, Component } from 'vue-property-decorator'
+import { pChain } from '@/AVA'
+import { bnToBig } from '@/helpers/helper'
+import Big from 'big.js'
+
+import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUTXO.vue'
+import MintForm from '@/components/wallet/studio/mint/MintForm.vue'
+import { UTXO } from 'avalanche/dist/apis/avm'
+@Component({
+    components: {
+        SelectMintUTXO,
+        MintForm,
+    },
+})
+export default class MintNft extends Vue {
+    isLoading = false
+    mintUtxo: null | UTXO = null
+
+    get txFee(): Big {
+        return bnToBig(pChain.getTxFee(), 9)
+    }
+
+    async submit() {
+        let wallet = this.$store.state.activeWallet
+        if (!wallet) return
+
+        this.isLoading = true
+        this.isLoading = false
+    }
+
+    get mintUtxos() {
+        return this.$store.getters.walletNftMintUTXOs
+    }
+
+    setUtxo(utxo: UTXO) {
+        this.mintUtxo = utxo
+    }
+
+    clearUtxo() {
+        this.mintUtxo = null
+    }
+}
+</script>

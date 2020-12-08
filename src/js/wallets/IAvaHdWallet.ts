@@ -6,12 +6,10 @@ import {
     UTXO,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
+    UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 
-import {
-    UnsignedTx as PlatformUnsignedTx,
-    Tx as PlatformTx,
-} from 'avalanche/dist/apis/platformvm'
+import { UnsignedTx as PlatformUnsignedTx, Tx as PlatformTx } from 'avalanche/dist/apis/platformvm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
@@ -41,6 +39,7 @@ export interface AvaWalletCore {
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
     getPlatformRewardAddress(): string
+    createNftFamily(name: string, symbol: string, groupNum: number): void
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
@@ -66,11 +65,7 @@ export interface AvaWalletCore {
     chainTransfer(amt: BN, sourceChain: string): Promise<string>
     importToPlatformChain(): Promise<string>
     importToXChain(): Promise<string>
-    issueBatchTx(
-        orders: (UTXO | ITransaction)[],
-        addr: string,
-        memo?: Buffer
-    ): Promise<string>
+    issueBatchTx(orders: (UTXO | ITransaction)[], addr: string, memo?: Buffer): Promise<string>
     signMessage(msg: string, address: string): Promise<string>
 }
 

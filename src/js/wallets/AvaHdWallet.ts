@@ -97,8 +97,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         rewardAddress?: string
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformHelper
-            .utxoSet as PlatformUTXOSet
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
         let pAddressStrings = keychain.getAddressStrings()
 
         let stakeAmount = amt
@@ -148,8 +147,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         rewardAddress?: string
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformHelper
-            .utxoSet as PlatformUTXOSet
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
 
         let pAddressStrings = keychain.getAddressStrings()
         let stakeAmount = amt
@@ -388,5 +386,11 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         let signed = key.sign(digestBuff)
 
         return bintools.cb58Encode(signed)
+    }
+
+    async createNftFamily(name: string, symbol: string, groupNum: number) {
+        let tx = await this.buildCreateNftFamiltTx(name, symbol, groupNum)
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        await avm.issueTx(signed)
     }
 }

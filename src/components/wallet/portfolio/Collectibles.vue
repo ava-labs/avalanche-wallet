@@ -27,7 +27,7 @@
 import NFTCard from './NftCard.vue'
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { IWalletNftDict } from '@/store/types'
+import { IWalletNftDict, IWalletNftMintDict } from '@/store/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 
@@ -40,11 +40,17 @@ import { NftFamilyDict } from '@/store/modules/assets/types'
 })
 export default class Collectibles extends Vue {
     get isEmpty(): boolean {
-        return this.$store.getters.walletNftUTXOs.length === 0
+        let nftUtxos = this.$store.getters.walletNftUTXOs.length
+        let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
+        return nftUtxos + mintUTxos === 0
     }
 
     get nftDict(): IWalletNftDict {
         return this.$store.getters.walletNftDict
+    }
+
+    get nftMintDict(): IWalletNftMintDict {
+        return this.$store.getters.walletNftMintDict
     }
 
     get nftFamsArray() {

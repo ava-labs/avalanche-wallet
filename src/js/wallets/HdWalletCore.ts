@@ -2,6 +2,7 @@ import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
 import {
     AssetAmountDestination,
     BaseTx,
+    MinterSet,
     TransferableInput,
     TransferableOutput,
     Tx,
@@ -36,23 +37,45 @@ class HdWalletCore {
         this.utxoset = new AVMUTXOSet()
         this.stakeAmount = new BN(0)
 
-        this.externalHelper = new HdHelper(
-            'm/0',
-            accountHdKey,
-            undefined,
-            isPublic
-        )
-        this.internalHelper = new HdHelper(
-            'm/1',
-            accountHdKey,
-            undefined,
-            isPublic
-        )
+        this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
+        this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
     }
 
     getUTXOSet(): AVMUTXOSet {
         return this.utxoset
+    }
+
+    // TODO: This function can be moved to a Core wallet class
+    async buildCreateNftFamiltTx(
+        name: string,
+        symbol: string,
+        groupNum: number = 1
+    ): Promise<UnsignedTx> {
+        let fromAddresses = this.getDerivedAddresses()
+        let changeAddress = this.getChangeAddress()
+
+        let minterAddress = this.getCurrentAddress()
+
+        const minterSets: MinterSet[] = []
+
+        // Create the groups
+        for (var i = 0; i < groupNum; i++) {
+            const minterSet: MinterSet = new MinterSet(1, [minterAddress])
+            minterSets.push(minterSet)
+        }
+
+        let utxoSet: UTXOSet = this.utxoset
+
+        let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
+            utxoSet,
+            fromAddresses,
+            [changeAddress],
+            minterSets,
+            name,
+            symbol
+        )
+        return unsignedTx
     }
 
     async getUTXOs(): Promise<AVMUTXOSet> {
@@ -132,23 +155,15 @@ class HdWalletCore {
         this.platformHelper.onNetworkChange()
     }
 
-    async buildUnsignedTransaction(
-        orders: (ITransaction | UTXO)[],
-        addr: string,
-        memo?: Buffer
-    ) {
+    async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {
         // TODO: Get new change index.
         if (this.getChangeAddress() === null) {
             throw 'Unable to issue transaction. Ran out of change index.'
         }
 
         let fromAddrsStr: string[] = this.getDerivedAddresses()
-        let fromAddrs: Buffer[] = fromAddrsStr.map((val) =>
-            bintools.parseAddress(val, 'X')
-        )
-        let changeAddr: Buffer = bintools.stringToAddress(
-            this.getChangeAddress()
-        )
+        let fromAddrs: Buffer[] = fromAddrsStr.map((val) => bintools.parseAddress(val, 'X'))
+        let changeAddr: Buffer = bintools.stringToAddress(this.getChangeAddress())
 
         // TODO: use internal asset ID
         // This does not update on network change, causing issues
@@ -156,11 +171,9 @@ class HdWalletCore {
         const AVAX_ID_STR = AVAX_ID_BUF.toString('hex')
         const TO_BUF = bintools.stringToAddress(addr)
 
-        const aad: AssetAmountDestination = new AssetAmountDestination(
-            [TO_BUF],
-            fromAddrs,
-            [changeAddr]
-        )
+        const aad: AssetAmountDestination = new AssetAmountDestination([TO_BUF], fromAddrs, [
+            changeAddr,
+        ])
         const ZERO = new BN(0)
         let isFeeAdded = false
 

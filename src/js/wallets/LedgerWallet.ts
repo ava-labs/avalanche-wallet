@@ -9,11 +9,7 @@ var bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
 
-import {
-    AssetAmountDestination,
-    UTXO,
-    UTXOSet as AVMUTXOSet,
-} from 'avalanche/dist/apis/avm/utxos'
+import { AssetAmountDestination, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
@@ -93,9 +89,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
         let chainId = isAVM ? 'X' : 'P'
 
-        const msg: Buffer = Buffer.from(
-            createHash('sha256').update(txbuff).digest()
-        )
+        const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
         let paths: string[] = []
 
         // Collect paths derivation paths for source addresses
@@ -178,9 +172,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             for (let i = 0; i < operations.length; i++) {
                 let op = operations[i].getOperation()
                 const sigidxs: SigIdx[] = op.getSigIdxs()
-                const cred: Credential = SelectCredentialClass(
-                    op.getCredentialID()
-                )
+                const cred: Credential = SelectCredentialClass(op.getCredentialID())
 
                 for (let j = 0; j < sigidxs.length; j++) {
                     let pathIndex = items.length + i + j
@@ -199,10 +191,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             if (isAVM) {
                 signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, sigs)
             } else {
-                signedTx = new PlatformTx(
-                    unsignedTx as PlatformUnsignedTx,
-                    sigs
-                )
+                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, sigs)
             }
             return signedTx as SignedTx
         } catch (e) {
@@ -293,10 +282,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 [pChangeAddr]
             )
 
-            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(
-                exportTx,
-                false
-            )
+            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
             return pChain.issueTx(tx)
         } else {
             throw 'Invalid source chain.'
@@ -311,8 +297,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         rewardAddress?: string
     ): Promise<string> {
         // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
-        const utxoSet: PlatformUTXOSet = this.platformHelper
-            .utxoSet as PlatformUTXOSet
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
         let stakeAmount = amt
 
@@ -342,10 +327,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             [rewardAddress] // reward address
         )
 
-        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(
-            unsignedTx,
-            false
-        )
+        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
 
         // Update UTXOS
         setTimeout(async () => {
@@ -377,10 +359,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             undefined,
             undefined
         )
-        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(
-            unsignedTx,
-            false
-        )
+        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
 
         // Update UTXOS
         setTimeout(async () => {
@@ -432,8 +411,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         delegationFee: number,
         rewardAddress?: string
     ): Promise<string> {
-        const utxoSet: PlatformUTXOSet = this.platformHelper
-            .utxoSet as PlatformUTXOSet
+        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
 
         let stakeAmount = amt
@@ -469,10 +447,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // console.log(unsignedTx.serialize('display'));
         // console.log(unsignedTx.toBuffer().toString('hex'))
 
-        let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(
-            unsignedTx,
-            false
-        )
+        let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
 
         // console.log(tx.toBuffer().toString('hex'));
         // console.log((tx.serialize()))
@@ -503,11 +478,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         })
 
         try {
-            let sigMap = await this.app.signHash(
-                accountPath,
-                [addressPath],
-                digestBuff
-            )
+            let sigMap = await this.app.signHash(accountPath, [addressPath], digestBuff)
             store.commit('Ledger/closeModal')
             let signed = sigMap.get(pathStr)
             return bintools.cb58Encode(signed)
@@ -515,6 +486,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             store.commit('Ledger/closeModal')
             throw e
         }
+    }
+
+    async createNftFamily(name: string, symbol: string, groupNum: number) {
+        let tx = await this.buildCreateNftFamiltTx(name, symbol, groupNum)
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        await avm.issueTx(signed)
     }
 }
 

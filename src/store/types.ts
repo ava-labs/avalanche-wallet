@@ -50,6 +50,10 @@ export interface IWalletAssetsDict {
     [assetId: string]: AvaAsset
 }
 
+export interface IWalletNftMintDict {
+    [assetId: string]: UTXO[]
+}
+
 // interface ModalDict {
 //     [key: string]: Modal
 // }
