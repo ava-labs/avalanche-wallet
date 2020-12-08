@@ -121,7 +121,7 @@ export default class AddressCard extends Vue {
             return '-'
         }
 
-        return wallet.getPlatformAddress()
+        return wallet.getCurrentPlatformAddress()
     }
 
     viewQRModal() {

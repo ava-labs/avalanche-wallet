@@ -122,6 +122,10 @@ class HdWalletCore {
         return this.platformHelper.utxoSet as PlatformUTXOSet
     }
 
+    getTitleForWallet() {
+        return this.externalHelper.getAddressForIndex(0)
+    }
+
     // helper method to get all stake for more than 256 addresses
     async getAllStake(addrs: string[]): Promise<BN> {
         if (addrs.length <= 256) {

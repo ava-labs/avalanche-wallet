@@ -47,6 +47,7 @@ export interface AvaWalletCore {
     getPlatformUTXOs(): Promise<PlatformUTXOSet>
     getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
+    getTitleForWallet(): string
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

@@ -147,14 +147,7 @@ export default class KeyRow extends Vue {
     }
 
     get walletTitle() {
-        // TODO, Singleton: why is this the first address
-        // can we change this to:
-        // address = wallet.getCurrentAddress()
-        if ('externalHelper' in this.wallet) {
-            return this.wallet.externalHelper.getAddressForIndex(0)
-        } else {
-            return this.wallet.getCurrentAddress()
-        }
+        return this.wallet.getTitleForWallet()
     }
 
     get assetsDict(): AssetsDict {

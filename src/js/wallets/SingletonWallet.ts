@@ -150,6 +150,10 @@ class SingletonWallet implements AvaWalletCore {
         return addr
     }
 
+    getTitleForWallet(): string {
+        return this.getCurrentAddress()
+    }
+
     async getStake(): Promise<BN> {
         let addr = this.getCurrentPlatformAddress()
         let res = await pChain.getStake([addr])
