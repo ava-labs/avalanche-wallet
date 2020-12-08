@@ -164,11 +164,10 @@ class SingletonWallet implements AvaWalletCore {
         return this.platformUtxoset
     }
 
-    // TODO, Singleton check with emre on this
-    // @ts-ignore
     async getUTXOs() {
-        await this.getAvmUTXOs()
         await this.getPlatformUTXOs()
+        await this.getStake()
+        return await this.getAvmUTXOs()
     }
 
     async getAvmUTXOs(): Promise<AVMUTXOSet> {
@@ -176,7 +175,6 @@ class SingletonWallet implements AvaWalletCore {
 
         let setInternal = await avm.getUTXOs([addr])
 
-        this.getStake()
         this.utxoset = setInternal.utxos
         return setInternal.utxos
     }
@@ -186,7 +184,6 @@ class SingletonWallet implements AvaWalletCore {
 
         let setPlatform = await pChain.getUTXOs([pAddr])
 
-        this.getStake()
         this.platformUtxoset = setPlatform.utxos
         return setPlatform.utxos
     }
