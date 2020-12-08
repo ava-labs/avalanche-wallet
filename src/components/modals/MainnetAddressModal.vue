@@ -43,6 +43,9 @@ export default class MainnetAddressModal extends Vue {
         }
         let hrp = getPreferredHRP(1)
         let address: string
+        // TODO, Singleton: why is this the first address
+        // can we change this to:
+        // address = wallet.getCurrentAddress()
         if ('externalHelper' in wallet) {
             address = wallet.externalHelper.getAddressForIndex(0)
         } else {
