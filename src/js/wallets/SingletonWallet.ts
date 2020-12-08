@@ -141,13 +141,7 @@ class SingletonWallet implements AvaWalletCore {
     getCurrentPlatformAddress(): string {
         let keypair = this.platformKeyPair
 
-        let pkHex = this.keyPair.getPublicKey().toString('hex')
-        let pkBuff = Buffer.from(pkHex, 'hex')
-        let hrp = getPreferredHRP(ava.getNetworkID())
-        let addrBuf = keypair.addressFromPublicKey(pkBuff)
-        let addr = bintools.addressToString(hrp, 'P', addrBuf)
-
-        return addr
+        return keypair.getAddressString()
     }
 
     getBaseAddress(): string {

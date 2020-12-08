@@ -61,6 +61,7 @@ class HdWalletCore {
     async getUTXOs(): Promise<AVMUTXOSet> {
         let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
         let setExternal = (await this.externalHelper.updateUtxos()) as AVMUTXOSet
+        // TODO
         // platform utxos are updated but not returned by function
         let setPlatform = (await this.platformHelper.updateUtxos()) as PlatformUTXOSet
 
