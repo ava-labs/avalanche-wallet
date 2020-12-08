@@ -346,7 +346,7 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        // TODO, Singleton rename to accessWalletMenmonic
+        // TODO rename to accessWalletMenmonic
         async accessWallet(
             { state, dispatch, commit },
             mnemonic: string
@@ -354,7 +354,6 @@ export default new Vuex.Store({
             let wallet: AvaHdWallet = await dispatch('addWallet', mnemonic)
             await dispatch('activateWallet', wallet)
 
-            wallet.type = 'mnemonic'
             dispatch('onAccess')
             return wallet
         },
