@@ -80,6 +80,10 @@ class HdWalletCore {
         return this.platformHelper.getCurrentAddress()
     }
 
+    getAllDerivedExternalAddresses(): string[] {
+        return this.externalHelper.getAllDerivedAddresses()
+    }
+
     getDerivedAddresses(): string[] {
         let internal = this.internalHelper.getAllDerivedAddresses()
         let external = this.externalHelper.getAllDerivedAddresses()

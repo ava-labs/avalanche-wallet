@@ -47,11 +47,7 @@ export default class SignMessage extends Vue {
     signed = ''
     error = ''
     get addresses(): string[] {
-        if ('externalHelper' in this.wallet) {
-            return this.wallet.externalHelper.getAllDerivedAddresses()
-        } else {
-            return this.wallet.getDerivedAddresses()
-        }
+        return this.wallet.getAllDerivedExternalAddresses()
     }
 
     get wallet(): WalletType {

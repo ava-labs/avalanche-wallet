@@ -36,6 +36,7 @@ export interface AvaWalletCore {
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
+    getAllDerivedExternalAddresses(): string[]
     getHistoryAddresses(): string[]
     getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void

@@ -120,6 +120,10 @@ class SingletonWallet implements AvaWalletCore {
         return [addr]
     }
 
+    getAllDerivedExternalAddresses(): string[] {
+        return this.getDerivedAddresses()
+    }
+
     getExtendedPlatformAddresses(): string[] {
         let addr = this.platformKeyPair.getAddressString()
         return [addr]
