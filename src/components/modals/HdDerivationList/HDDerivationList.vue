@@ -78,6 +78,7 @@ import AvaAsset from '@/js/AvaAsset'
 import HdDerivationListRow from '@/components/modals/HdDerivationList/HdDerivationListRow.vue'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
+import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 
 @Component({
     components: {
@@ -85,8 +86,7 @@ import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
     },
 })
 export default class HDDerivationList extends Vue {
-    // @TODO: Singleton, check this
-    @Prop() wallet!: AvaHdWallet
+    @Prop() wallet!: AvaHdWallet | LedgerWallet
 
     addrsExternal: string[] = []
     addrsInternal: string[] = []
