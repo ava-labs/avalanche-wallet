@@ -150,7 +150,7 @@ class SingletonWallet implements AvaWalletCore {
         return addr
     }
 
-    getTitleForWallet(): string {
+    getBaseAddress(): string {
         return this.getCurrentAddress()
     }
 
