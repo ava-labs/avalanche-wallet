@@ -4,5 +4,24 @@ Formatting rules are set by eslint and prettier, there are a few plugins to help
 
 ## VSCode Setup
 
-To get this working is vscode simply install the prettier plugin and the eslint plugin
-After that in your user settings set the following `"editor.defaultFormatter": "esbenp.prettier-vscode"`, lastly set your format on save preferences and your done
+To get this working in VSCode simply install the prettier and eslint plugins via the command palette:
+
+```
+ext install esbenp.prettier-vscode
+ext install dbaeumer.vscode-eslint
+```
+
+Open workspace settings via command palette:
+
+```
+Preferences: Open Workspace Settings (JSON)
+```
+
+Modify and save settings.json
+
+```
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+}
+```

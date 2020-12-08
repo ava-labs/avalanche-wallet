@@ -2782,10 +2782,10 @@ autoprefixer@^9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-avalanche@3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.0.4.tgz#9d126a971e494e2f42062c28980f88fc4868856a"
-  integrity sha512-9GFw7qACG7UQgTTwITZchB3dTnb70G9rUBIZguCrlU5bLAMp4ueGRWccKBPtiXXx2YmzK8uOCIIaZIOIwzfrrA==
+avalanche@3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.0.6.tgz#6b341f6f209a2659c80cd00ce24c1d916421cb63"
+  integrity sha512-6oEkvJFCGWwPNGHCzO8G+NDdiulN/3jkxAb1XJ5EO7H/KeBI3ktCHIGZo6WLTim15i9IrViQRjsGN8ZSkYPJiw==
   dependencies:
     axios "0.19.2"
     bech32 "1.1.4"
