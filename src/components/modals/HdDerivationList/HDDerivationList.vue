@@ -171,14 +171,14 @@ export default class HDDerivationList extends Vue {
 
     get keyBalancesInternal(): DerivationListBalanceDict[] {
         let wallet = this.wallet
-        let utxoSet = wallet.getUTXOSet()
+        let utxoSet = wallet.internalHelper.utxoSet
         let addrs = this.addrsInternal
         return this.utxoSetToBalanceDict<AVMKeyPair>(utxoSet, addrs)
     }
 
     get keyBalancesPlatform(): DerivationListBalanceDict[] {
         let wallet = this.wallet
-        let utxoSet = wallet.getPlatformUTXOSet()
+        let utxoSet = wallet.platformHelper.utxoSet
         let addrs = this.addrsPlatform
         return this.utxoSetToBalanceDict<PlatformVMKeyPair>(utxoSet, addrs)
     }
