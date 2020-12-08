@@ -332,19 +332,6 @@ export default new Vuex.Store({
             let addresses = wallet.getDerivedAddresses()
             return addresses
         },
-
-        activeKey(state): AVMKeyPair | null {
-            if (
-                !state.activeWallet ||
-                state.activeWallet.type === 'ledger' ||
-                state.activeWallet.type === 'singleton'
-            ) {
-                return null
-            }
-            let wallet = state.activeWallet as AvaHdWallet
-            let hdIndex = wallet.externalHelper.hdIndex
-            return wallet.externalHelper.getKeyForIndex(hdIndex) as AVMKeyPair
-        },
     },
     mutations: {
         updateActiveAddress(state) {
