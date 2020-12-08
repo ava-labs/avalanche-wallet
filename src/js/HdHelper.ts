@@ -47,7 +47,6 @@ class HdHelper {
     masterKey: HDKey
     hdIndex: number
     utxoSet: AVMUTXOSet | PlatformUTXOSet
-    platformUtxoset: PlatformUTXOSet
     isPublic: boolean
 
     constructor(
@@ -67,7 +66,6 @@ class HdHelper {
             this.keyChain = new PlatformVMKeyChain(hrp, chainId)
             this.utxoSet = new PlatformUTXOSet()
         }
-        this.platformUtxoset = new PlatformUTXOSet()
 
         this.keyCache = {}
         this.addressCache = {}
@@ -275,10 +273,6 @@ class HdHelper {
 
     getUtxos(): AVMUTXOSet | PlatformUTXOSet {
         return this.utxoSet
-    }
-
-    getPlatformUtxos(): PlatformUTXOSet {
-        return this.platformUtxoset
     }
 
     // Updates the helper keychain to contain keys upto the HD Index
