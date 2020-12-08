@@ -80,7 +80,7 @@ export default class ManageKeys extends Vue {
     }
 
     get walletType(): WalletNameType {
-        return this.$store.state.walletType
+        return this.$store.state.activeWallet.type
     }
 
     get hasVolatile() {

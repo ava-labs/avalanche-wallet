@@ -10,7 +10,6 @@ import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 export interface RootState {
-    walletType: null | WalletNameType
     isAuth: boolean
     activeWallet: null | WalletType
     wallets: WalletType[]

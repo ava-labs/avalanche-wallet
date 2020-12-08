@@ -55,7 +55,6 @@ import CopyText from '@/components/misc/CopyText.vue'
 import QRModal from '@/components/modals/QRModal.vue'
 import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
-import MainnetAddressModal from '@/components/modals/MainnetAddressModal.vue'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import { WalletNameType, WalletType } from '@/store/types'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
@@ -67,7 +66,6 @@ import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vu
         CopyText,
         PaperWallet,
         QRModal,
-        MainnetAddressModal,
         ChainSelect,
     },
 })
@@ -105,7 +103,8 @@ export default class AddressCard extends Vue {
     }
 
     get walletType(): WalletNameType {
-        return this.$store.state.walletType
+        let wallet: WalletType = this.$store.state.activeWallet
+        return wallet.type
     }
 
     get address() {
@@ -123,11 +122,6 @@ export default class AddressCard extends Vue {
         }
 
         return wallet.getPlatformAddress()
-    }
-
-    viewMainnetModal() {
-        // @ts-ignore
-        this.$refs.mainnet_modal.open()
     }
 
     viewQRModal() {

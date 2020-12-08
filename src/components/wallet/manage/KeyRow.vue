@@ -214,7 +214,7 @@ export default class KeyRow extends Vue {
     }
 
     get walletType(): WalletNameType {
-        return this.$store.state.walletType
+        return this.wallet.type
     }
     get mnemonicPhrase(): string {
         if (this.walletType !== 'mnemonic') return '?'
