@@ -190,7 +190,7 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet: PlatformUTXOSet | UTXOSet
+            let utxoSet: PlatformUTXOSet
 
             utxoSet = wallet.getPlatformUTXOSet()
 
@@ -225,7 +225,7 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet: PlatformUTXOSet | UTXOSet
+            let utxoSet: PlatformUTXOSet
 
             utxoSet = wallet.getPlatformUTXOSet()
 
