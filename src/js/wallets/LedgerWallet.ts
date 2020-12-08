@@ -37,7 +37,7 @@ import {
     StandardTx,
     StandardUnsignedTx,
 } from 'avalanche/dist/common'
-import { getPreferredHRP } from 'avalanche/dist/utils'
+import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletType } from '@/store/types'
 import { digestMessage } from '@/helpers/helper'
@@ -489,9 +489,21 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async createNftFamily(name: string, symbol: string, groupNum: number) {
-        let tx = await this.buildCreateNftFamiltTx(name, symbol, groupNum)
+        let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         await avm.issueTx(signed)
+    }
+
+    async mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number) {
+        let tx = await this.buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            this.getCurrentAddress(),
+            this.getChangeAddress()
+        )
+        let signed = this.sign<AVMUnsignedTx, AVMTx>(tx)
+        console.log(signed)
     }
 }
 

@@ -15,6 +15,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
 import { WalletType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
+import { PayloadBase } from 'avalanche/dist/utils'
 
 // export type wallet_type = "hd" | "singleton";
 
@@ -29,6 +30,14 @@ export interface AvaWalletCore {
     utxoset: UTXOSet
     stakeAmount: BN
 
+    buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
+    buildMintNftTx(
+        mintUtxo: UTXO,
+        payload: PayloadBase,
+        quantity: number,
+        ownerAddress: string,
+        changeAddress: string
+    ): Promise<UnsignedTx>
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
@@ -40,6 +49,7 @@ export interface AvaWalletCore {
     getStake(): Promise<BN>
     getPlatformRewardAddress(): string
     createNftFamily(name: string, symbol: string, groupNum: number): void
+    mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number): void
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

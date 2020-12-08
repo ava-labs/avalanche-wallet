@@ -1,5 +1,5 @@
 <template>
-    <Component :is="viewer" :payload="payload"></Component>
+    <Component :is="viewer" :payload="payload" class="nft_payload_view"></Component>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -28,3 +28,4 @@ export default class NftPayloadView extends Vue {
     }
 }
 </script>
+<style scoped></style>

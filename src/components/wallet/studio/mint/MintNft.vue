@@ -2,7 +2,7 @@
     <div>
         <div v-if="!mintUtxo">
             <p>Select a family and group to mint.</p>
-            <SelectMintUTXO @change="setUtxo"></SelectMintUTXO>
+            <SelectMintUTXO @change="setUtxo" class="select_mint_utxo"></SelectMintUTXO>
         </div>
         <MintForm v-else :mint-utxo="mintUtxo" @clearUtxo="clearUtxo"></MintForm>
     </div>
@@ -51,3 +51,4 @@ export default class MintNft extends Vue {
     }
 }
 </script>
+<style scoped lang="scss"></style>

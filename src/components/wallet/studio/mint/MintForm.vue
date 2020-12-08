@@ -1,41 +1,56 @@
 <template>
     <div class="mint_form">
-        <div class="header">
-            <div class="type_sel">
-                <label>Type</label>
-                <p>Select collectible type.</p>
-                <v-chip-group mandatory v-model="nftType">
-                    <v-chip value="utf8">UTF-8</v-chip>
-                    <v-chip value="url">URL</v-chip>
-                    <v-chip value="json">JSON</v-chip>
-                </v-chip-group>
-            </div>
-            <div class="utxo">
-                <div>
-                    <label>Name</label>
-                    <p>{{ family.name }}</p>
-                </div>
-                <div>
-                    <label>Symbol</label>
-                    <p>{{ family.symbol }}</p>
-                </div>
-                <div>
-                    <label>Group</label>
-                    <p style="word-break: break-all">{{ groupId }}</p>
-                </div>
-                <button @click="clearUtxo"><fa icon="sync"></fa></button>
-            </div>
-        </div>
-
         <div class="cols">
-            <Component :is="formComponent" @onInput="onInput"></Component>
+            <div class="form_col">
+                <div class="header">
+                    <div class="type_sel">
+                        <label>Type</label>
+                        <p>Select collectible type.</p>
+                        <v-chip-group mandatory v-model="nftType">
+                            <v-chip value="utf8">UTF-8</v-chip>
+                            <v-chip value="url">URL</v-chip>
+                            <v-chip value="json">JSON</v-chip>
+                        </v-chip-group>
+                    </div>
+                </div>
+                <div>
+                    <label>Quantity</label>
+                    <input type="number" min="1" v-model="quantity" />
+                </div>
+                <Component :is="formComponent" @onInput="onInput"></Component>
+                <div class="fee">
+                    <p>
+                        Fee
+                        <span>{{ txFee.toLocaleString() }} AVAX</span>
+                    </p>
+                </div>
+                <v-btn :disabled="!canSubmit" @click="submit">Mint</v-btn>
+            </div>
             <div class="preview_col">
+                <div class="utxo">
+                    <div>
+                        <label>Name</label>
+                        <p>{{ family.name }}</p>
+                    </div>
+                    <div>
+                        <label>Symbol</label>
+                        <p>{{ family.symbol }}</p>
+                    </div>
+                    <div>
+                        <label>Group</label>
+                        <p style="word-break: break-all">{{ groupId }}</p>
+                    </div>
+                    <button @click="clearUtxo"><fa icon="sync"></fa></button>
+                </div>
                 <label>Preview</label>
                 <NftPayloadView
                     v-if="payloadPreview"
                     class="nft_preview"
                     :payload="payloadPreview"
                 ></NftPayloadView>
+                <div class="nft_preview preview_holder" v-else>
+                    <p>Complete the form to see the preview.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -49,9 +64,11 @@ import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
 import { NFTMintOutput, UTXO } from 'avalanche/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import { bintools } from '@/AVA'
+import { avm, bintools, pChain } from '@/AVA'
 import { NftMintFormType, UrlFormType } from '@/components/wallet/studio/mint/types'
 import { PayloadBase, URLPayload, UTF8Payload } from 'avalanche/dist/utils'
+import Big from 'big.js'
+import { bnToBig } from '@/helpers/helper'
 
 type NftType = 'utf8' | 'url' | 'json'
 
@@ -65,8 +82,10 @@ type NftType = 'utf8' | 'url' | 'json'
 export default class MintNft extends Vue {
     @Prop() mintUtxo!: UTXO
 
+    quantity = 1
     nftType: NftType = 'url'
     payloadPreview: null | PayloadBase = null
+    canSubmit = false
 
     get nftFamsDict(): NftFamilyDict {
         return this.$store.state.Assets.nftFamsDict
@@ -95,8 +114,16 @@ export default class MintNft extends Vue {
         this.$emit('clearUtxo')
     }
 
-    onInput(form: NftMintFormType) {
-        console.log(form)
+    get txFee(): Big {
+        return bnToBig(avm.getTxFee(), 9)
+    }
+
+    onInput(form: NftMintFormType | null) {
+        if (form === null) {
+            this.payloadPreview = null
+            this.canSubmit = false
+            return
+        }
 
         try {
             let payload
@@ -111,8 +138,19 @@ export default class MintNft extends Vue {
                     payload = new UTF8Payload('hi there')
                     break
             }
-            console.log(payload)
             this.payloadPreview = payload
+            this.canSubmit = true
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    submit() {
+        let wallet = this.$store.state.activeWallet
+        if (!wallet) return
+
+        try {
+            wallet.mintNft(this.mintUtxo, this.payloadPreview, this.quantity)
         } catch (e) {
             console.error(e)
         }
@@ -137,8 +175,8 @@ export default class MintNft extends Vue {
     }
 
     .header {
-        display: flex;
-        justify-content: space-between;
+        //display: flex;
+        //justify-content: space-between;
         padding-bottom: 14px;
         margin-bottom: 14px;
         border-bottom: 1px solid var(--bg-light);
@@ -146,16 +184,37 @@ export default class MintNft extends Vue {
 }
 </style>
 <style lang="scss" scoped>
+.mint_form {
+    padding: 30px 0;
+}
 .utxo {
     background-color: var(--bg-light);
     padding: 4px 8px;
     border-radius: 6px;
-    //display: flex;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-size: 13px;
+    //width: max-content;
 
-    display: grid;
-    grid-template-columns: repeat(3, max-content) 40px;
-    column-gap: 14px;
+    //display: grid;
+    //grid-template-columns: repeat(3, max-content) 40px;
+    //column-gap: 14px;
     height: max-content;
+    margin-bottom: 22px;
+
+    button {
+        position: absolute;
+        font-size: 13px;
+        right: 12px;
+        top: 6px;
+        color: var(--secondary-color);
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
 }
 
 .cols {
@@ -165,12 +224,37 @@ export default class MintNft extends Vue {
 
 .preview_col {
     border-left: 1px solid var(--bg-light);
-    padding-left: 14px;
+    padding-left: 2vw;
 }
 
 .nft_preview {
-    width: 240px;
+    width: 180px;
+    max-height: 320px;
+    overflow: auto;
+
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+.preview_holder {
+    border-color: var(--primary-color-light);
     min-height: 240px;
-    border: 1px dashed var(--bg-light);
+    text-align: center;
+    display: flex;
+    padding: 14px;
+    border: 1px dashed var(--primary-color);
+
+    p {
+        align-self: center;
+        font-size: 13px;
+        color: var(--primary-color-light);
+    }
+}
+.fee {
+    p > span {
+        margin-left: 35px;
+    }
+}
+
+.form_col {
+    padding-right: 2vw;
 }
 </style>

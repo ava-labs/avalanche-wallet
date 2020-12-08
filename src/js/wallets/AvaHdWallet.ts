@@ -11,6 +11,7 @@ import {
     Tx as AVMTx,
     UTXO,
     AssetAmountDestination,
+    UTXOSet,
 } from 'avalanche/dist/apis/avm'
 
 import {
@@ -20,7 +21,7 @@ import {
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
 
-import { getPreferredHRP } from 'avalanche/dist/utils'
+import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 
 import * as bip39 from 'bip39'
 import { BN, Buffer } from 'avalanche'
@@ -389,8 +390,21 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     }
 
     async createNftFamily(name: string, symbol: string, groupNum: number) {
-        let tx = await this.buildCreateNftFamiltTx(name, symbol, groupNum)
+        let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         await avm.issueTx(signed)
+    }
+
+    async mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number) {
+        let tx = await this.buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            this.getCurrentAddress(),
+            this.getChangeAddress()
+        )
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        let txId = await avm.issueTx(signed)
+        console.log(txId)
     }
 }
