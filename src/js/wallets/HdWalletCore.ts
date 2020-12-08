@@ -76,10 +76,6 @@ class HdWalletCore {
         return setPlatform
     }
 
-    getPlatformAddress(): string {
-        return this.platformHelper.getCurrentAddress()
-    }
-
     getAllDerivedExternalAddresses(): string[] {
         return this.externalHelper.getAllDerivedAddresses()
     }
@@ -115,6 +111,10 @@ class HdWalletCore {
     }
 
     getPlatformRewardAddress(): string {
+        return this.platformHelper.getCurrentAddress()
+    }
+
+    getCurrentPlatformAddress(): string {
         return this.platformHelper.getCurrentAddress()
     }
 

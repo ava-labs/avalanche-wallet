@@ -70,7 +70,7 @@ class SingletonWallet implements AvaWalletCore {
         let txId
         if (sourceChain === 'X') {
             let keychain = this.keyChain
-            let toAddress = this.getPlatformAddress()
+            let toAddress = this.getCurrentPlatformAddress()
             let xChangeAddr = this.getCurrentAddress()
             let fromAddrs = keychain.getAddressStrings()
 
@@ -88,7 +88,7 @@ class SingletonWallet implements AvaWalletCore {
             let keychain = this.platformKeyChain
             let utxoSet = this.platformUtxoset
             let toAddress = this.getCurrentAddress()
-            let pChangeAddr = this.getPlatformAddress()
+            let pChangeAddr = this.getCurrentPlatformAddress()
             let fromAddrs = keychain.getAddressStrings()
 
             let exportTx = await pChain.buildExportTx(
@@ -135,10 +135,10 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getPlatformRewardAddress(): string {
-        return this.getPlatformAddress()
+        return this.getCurrentPlatformAddress()
     }
 
-    getPlatformAddress(): string {
+    getCurrentPlatformAddress(): string {
         let keypair = this.platformKeyPair
 
         let pkHex = this.keyPair.getPublicKey().toString('hex')
@@ -151,7 +151,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     async getStake(): Promise<BN> {
-        let addr = this.getPlatformAddress()
+        let addr = this.getCurrentPlatformAddress()
         let res = await pChain.getStake([addr])
 
         this.stakeAmount = res
@@ -184,7 +184,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     async getPlatformUTXOs(): Promise<PlatformUTXOSet> {
-        let pAddr = this.getPlatformAddress()
+        let pAddr = this.getCurrentPlatformAddress()
 
         let setPlatform = await pChain.getUTXOs([pAddr])
 
@@ -204,7 +204,7 @@ class SingletonWallet implements AvaWalletCore {
         let keyChain = this.platformKeyChain as PlatformKeyChain
         let pAddrs = keyChain.getAddressStrings()
         // Owner addresses, the addresses we exported to
-        let pToAddr = this.getPlatformAddress()
+        let pToAddr = this.getCurrentPlatformAddress()
 
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
@@ -335,7 +335,7 @@ class SingletonWallet implements AvaWalletCore {
         }
 
         // For change address use first available on the platform chain
-        let changeAddr = this.getPlatformAddress()
+        let changeAddr = this.getCurrentPlatformAddress()
 
         // Stake is always returned to address at index 0
         let stakeReturnAddr = this.getPlatformRewardAddress()
@@ -384,7 +384,7 @@ class SingletonWallet implements AvaWalletCore {
         }
 
         // For change address use first available on the platform chain
-        let changeAddress = this.getPlatformAddress()
+        let changeAddress = this.getCurrentPlatformAddress()
 
         // Stake is always returned to address at index 0
         let stakeReturnAddr = this.getPlatformRewardAddress()

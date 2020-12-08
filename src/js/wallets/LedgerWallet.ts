@@ -55,10 +55,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         this.type = 'ledger'
     }
 
-    getPlatformAddress(): string {
-        return this.platformHelper.getCurrentAddress()
-    }
-
     static async fromApp(app: AppAvax) {
         let res = await app.getWalletExtendedPublicKey("44'/9000'/0'")
 
