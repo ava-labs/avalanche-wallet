@@ -1,15 +1,17 @@
 <template>
     <BaseNftCard :mini="mini" :raw-card="rawCard" :utxo-id="utxo.getUTXOID()">
         <template v-slot:card>
-            <img :src="url" v-if="img_types.includes(fileType)" />
-            <div v-else-if="fileType === 'pdf'" class="pdf">
-                <p>{{ url }}</p>
-                <p class="type">PDF</p>
-            </div>
-            <div v-else class="unknown">
-                <p>{{ url }}</p>
-                <p class="type">Unknown</p>
-            </div>
+            <UrlPayloadView :payload="payload"></UrlPayloadView>
+            <!--            <img :src="url" v-if="img_types.includes(fileType)" />-->
+
+            <!--            <div v-else-if="fileType === 'pdf'" class="pdf">-->
+            <!--                <p>{{ url }}</p>-->
+            <!--                <p class="type">PDF</p>-->
+            <!--            </div>-->
+            <!--            <div v-else class="unknown">-->
+            <!--                <p>{{ url }}</p>-->
+            <!--                <p class="type">Unknown</p>-->
+            <!--            </div>-->
         </template>
 
         <template v-slot:deck>
@@ -22,11 +24,7 @@
         </template>
 
         <template v-slot:mini>
-            <img
-                :src="url"
-                v-if="img_types.includes(fileType)"
-                class="img_mini"
-            />
+            <img :src="url" v-if="img_types.includes(fileType)" class="img_mini" />
             <p v-else><fa icon="link"></fa></p>
         </template>
     </BaseNftCard>
@@ -37,10 +35,11 @@ import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
 import { PayloadBase } from 'avalanche/dist/utils'
 import BaseNftCard from '@/components/NftCards/BaseNftCard.vue'
 import { UTXO } from 'avalanche/dist/apis/avm'
-
+import UrlPayloadView from '@/components/misc/NftPayloadView/UrlPayloadView.vue'
 @Component({
     components: {
         BaseNftCard,
+        UrlPayloadView,
     },
 })
 export default class URL_NFT extends Vue {

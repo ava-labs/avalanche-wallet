@@ -1,6 +1,11 @@
 <template>
     <div>
         <div v-if="!isEmpty">
+            <CollectibleFamilyRow
+                v-for="fam in nftFamsArray"
+                :key="fam.id"
+                :family="fam"
+            ></CollectibleFamilyRow>
             <div v-for="fam in nftFamsArray" :key="fam.id">
                 <div class="fam_header">
                     <p class="name">{{ fam.name }}</p>
@@ -25,6 +30,7 @@
 </template>
 <script lang="ts">
 import NFTCard from './NftCard.vue'
+import CollectibleFamilyRow from '@/components/wallet/portfolio/CollectibleFamilyRow.vue'
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { IWalletNftDict, IWalletNftMintDict } from '@/store/types'
@@ -32,10 +38,10 @@ import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 
 // const payloadTypes = PayloadTypes.getInstance();
-
 @Component({
     components: {
         NFTCard,
+        CollectibleFamilyRow,
     },
 })
 export default class Collectibles extends Vue {
@@ -95,15 +101,19 @@ $flip_dur: 0.6s;
 }
 
 .list {
-    display: grid;
-    padding: 30px 0;
-    grid-template-columns: repeat(4, 1fr);
-    grid-row-gap: 15px;
-    grid-column-gap: 15px;
+    //display: grid;
+    //padding: 30px 0;
+    //grid-template-columns: repeat(4, 1fr);
+    //grid-row-gap: 15px;
+    //grid-column-gap: 15px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .nft_card {
     transition-duration: 0.3s;
+    width: 140px;
+    height: 220px;
 }
 
 .fam_header {

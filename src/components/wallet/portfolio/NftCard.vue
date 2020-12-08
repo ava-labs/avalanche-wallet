@@ -22,7 +22,6 @@ const payloadtypes = PayloadTypes.getInstance()
 
 import UTF8_NFT from '@/components/NftCards/UTF8_NFT.vue'
 import URL_NFT from '@/components/NftCards/URL_NFT.vue'
-
 @Component
 export default class NftCard extends Vue {
     @Prop() utxo!: UTXO
@@ -72,7 +71,9 @@ export default class NftCard extends Vue {
 .nft_card {
     word-break: break-all;
     max-width: 100%;
-    max-height: 420px;
+    //width: 130px;
+    //max-height: 420px;
+    max-height: 100%;
     /*overflow: hidden;*/
 }
 
