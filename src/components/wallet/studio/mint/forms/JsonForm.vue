@@ -1,8 +1,8 @@
 <template>
     <div>
-        <label>Payload (MAX 1024 characters)</label>
+        <label>JSON Payload (MAX 1024 characters)</label>
         <div class="input_cont">
-            JSON
+            <!--            <div ref="editor" class="editor"></div>-->
             <textarea maxlength="1024" type="text" v-model="data" @input="onInput" />
             <p class="counter">{{ data.length }} / 1024</p>
         </div>
@@ -12,14 +12,33 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { JsonFormType } from '@/components/wallet/studio/mint/types'
 
+// const JSONEditor = require('jsoneditor')
+
 @Component
 export default class JsonForm extends Vue {
-    data = ''
+    data = '{\n\n}'
 
     get isValid(): boolean {
+        let data = this.data
+
+        if (data.length === 0) return false
+        try {
+            JSON.parse(data)
+        } catch (e) {
+            return false
+        }
         return true
     }
 
+    mounted() {
+        // const container = this.$refs.editor
+        // const options = {
+        //     mode: 'text',
+        // }
+        // const editor = new JSONEditor(container, options)
+        //
+        // console.log(editor)
+    }
     onInput() {
         let msg: null | JsonFormType = null
 
@@ -36,10 +55,17 @@ export default class JsonForm extends Vue {
 }
 </script>
 <style scoped lang="scss">
-textarea {
+textarea,
+.editor {
     width: 100%;
     height: 180px;
     max-width: 100%;
+}
+
+.editor {
+    position: relative;
+    //overflow: scroll;
+    background-color: var(--bg-light);
 }
 
 .input_cont {

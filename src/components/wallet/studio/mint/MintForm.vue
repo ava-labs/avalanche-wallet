@@ -252,7 +252,7 @@ export default class MintNft extends Vue {
     width: 180px;
     max-height: 320px;
     border-radius: 14px;
-    overflow: hidden;
+    overflow: scroll;
 
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 }
