@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "engines": {
         "node": "12.14.1"
     },
