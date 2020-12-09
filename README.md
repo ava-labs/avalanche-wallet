@@ -32,12 +32,16 @@ When you go to the website on your browser, you might get a warning saying
  1) Compile and minify to have a production ready application with ``yarn build``.
  2) Serve from the ``/dist`` directory.
  
+ ## Releases
+ 1) Generate a (personal access token)[https://github.com/settings/tokens/new?scopes=repo&description=release-it]
+ 2) Save it in your local env as RELEASE_IT_GITHUB_TOKEN
+ 3) Run `yarn release`
+ 
  ## Changing the Network
  
  By default the wallet will connect to the Avalanche test network. You can change to another network by clicking the button labeled `TestNet`  on the navigation bar and selecting another network, or add a custom network.
 
 ## Explorer API
-
 
 The wallet uses the Avalanche Explorer API to display wallet transaction history. 
 
@@ -48,7 +52,6 @@ WARNING: This history might be out of order and incomplete.
 We suggest using Google Chrome to view the Avalanche Wallet website.
 
 ### Firefox and https
-
 
 Firefox does not allow https requests to localhost. But the Avalanche Wallet uses https by default, so we will need to change this to http. Make this switch by editing the `vue.config.js` file in the root directory and change 
 

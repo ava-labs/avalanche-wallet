@@ -1,8 +1,10 @@
 {
     "git": {
+        "requireCleanWorkingDir": false,
         "commitMessage": "chore(release): v${version}"
     },
     "github": {
-        "release": true
+        "release": true,
+        "tokenRef": "RELEASE_IT_GITHUB_TOKEN"
     }
 }
