@@ -35,7 +35,7 @@ import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
 import { PayloadBase } from 'avalanche/dist/utils'
 import BaseNftCard from '@/components/NftCards/BaseNftCard.vue'
 import { UTXO } from 'avalanche/dist/apis/avm'
-import UrlPayloadView from '@/components/misc/NftPayloadView/UrlPayloadView.vue'
+import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
 @Component({
     components: {
         BaseNftCard,

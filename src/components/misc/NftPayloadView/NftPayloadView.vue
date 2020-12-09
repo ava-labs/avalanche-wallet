@@ -5,13 +5,15 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { PayloadBase } from 'avalanche/dist/utils'
 
-import UrlPayloadView from '@/components/misc/NftPayloadView/UrlPayloadView.vue'
-import UtfPayloadView from '@/components/misc/NftPayloadView/UtfPayloadView.vue'
+import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
+import UtfPayloadView from '@/components/misc/NftPayloadView/views/UtfPayloadView.vue'
+import JsonPayloadView from '@/components/misc/NftPayloadView/views/JsonPayloadView.vue'
 
 @Component({
     components: {
         UrlPayloadView,
         UtfPayloadView,
+        JsonPayloadView,
     },
 })
 export default class NftPayloadView extends Vue {
@@ -24,6 +26,8 @@ export default class NftPayloadView extends Vue {
                 return UtfPayloadView
             case 27: // url
                 return UrlPayloadView
+            case 24: // JSON
+                return JsonPayloadView
             default:
                 return UrlPayloadView
         }

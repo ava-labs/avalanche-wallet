@@ -61,13 +61,19 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUTXO.vue'
 import UrlForm from '@/components/wallet/studio/mint/forms/UrlForm.vue'
 import Utf8Form from '@/components/wallet/studio/mint/forms/Utf8Form.vue'
+import JsonForm from '@/components/wallet/studio/mint/forms/JsonForm.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
 import { NFTMintOutput, UTXO } from 'avalanche/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 import { avm, bintools, pChain } from '@/AVA'
-import { NftMintFormType, UrlFormType, UtfFormType } from '@/components/wallet/studio/mint/types'
-import { PayloadBase, URLPayload, UTF8Payload } from 'avalanche/dist/utils'
+import {
+    JsonFormType,
+    NftMintFormType,
+    UrlFormType,
+    UtfFormType,
+} from '@/components/wallet/studio/mint/types'
+import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from 'avalanche/dist/utils'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 
@@ -79,6 +85,7 @@ type NftType = 'utf8' | 'url' | 'json'
         UrlForm,
         NftPayloadView,
         Utf8Form,
+        JsonForm,
     },
 })
 export default class MintNft extends Vue {
@@ -109,8 +116,10 @@ export default class MintNft extends Vue {
                 return Utf8Form
             case 'url':
                 return UrlForm
+            case 'json':
+                return JsonForm
             default:
-                return UrlForm
+                return Utf8Form
         }
     }
 
@@ -136,7 +145,7 @@ export default class MintNft extends Vue {
                     payload = new URLPayload((form as UrlFormType).url)
                     break
                 case 'json':
-                    payload = new URLPayload((form as UrlFormType).url)
+                    payload = new JSONPayload((form as JsonFormType).data)
                     break
                 case 'utf8':
                     payload = new UTF8Payload((form as UtfFormType).text)
