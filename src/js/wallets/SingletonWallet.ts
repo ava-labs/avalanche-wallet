@@ -42,8 +42,7 @@ class SingletonWallet implements AvaWalletCore {
         this.key = pk
 
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
-        let chainIdP = pChain.getBlockchainID()
-        this.chainIdP = chainIdP
+        this.chainIdP = pChain.getBlockchainID()
 
         let hrp = ava.getHRP()
 
@@ -139,9 +138,14 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getCurrentPlatformAddress(): string {
-        let keypair = this.platformKeyPair
+        let pkHex = this.platformKeyPair.getPublicKey().toString('hex')
 
-        return keypair.getAddressString()
+        let pkBuff = Buffer.from(pkHex, 'hex')
+        let hrp = getPreferredHRP(ava.getNetworkID())
+        let addrBuf = this.platformKeyPair.addressFromPublicKey(pkBuff)
+        let addr = bintools.addressToString(hrp, 'P', addrBuf)
+
+        return addr
     }
 
     getBaseAddress(): string {
@@ -282,15 +286,15 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     onnetworkchange(): void {
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
 
         this.keyChain = new AVMKeyChain(hrp, this.chainId)
         this.utxoset = new AVMUTXOSet()
-
-        this.platformKeyChain = new PlatformKeyChain(hrp, this.chainId)
-        this.platformUtxoset = new PlatformUTXOSet()
-
         this.keyPair = this.keyChain.importKey(this.key)
+
+        this.platformKeyChain = new PlatformKeyChain(hrp, this.chainIdP)
+        this.platformUtxoset = new PlatformUTXOSet()
+        this.platformKeyPair = this.platformKeyChain.importKey(this.key)
 
         this.getUTXOs()
     }
