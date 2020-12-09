@@ -60,12 +60,13 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUTXO.vue'
 import UrlForm from '@/components/wallet/studio/mint/forms/UrlForm.vue'
+import Utf8Form from '@/components/wallet/studio/mint/forms/Utf8Form.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
 import { NFTMintOutput, UTXO } from 'avalanche/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 import { avm, bintools, pChain } from '@/AVA'
-import { NftMintFormType, UrlFormType } from '@/components/wallet/studio/mint/types'
+import { NftMintFormType, UrlFormType, UtfFormType } from '@/components/wallet/studio/mint/types'
 import { PayloadBase, URLPayload, UTF8Payload } from 'avalanche/dist/utils'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
@@ -77,6 +78,7 @@ type NftType = 'utf8' | 'url' | 'json'
         SelectMintUTXO,
         UrlForm,
         NftPayloadView,
+        Utf8Form,
     },
 })
 export default class MintNft extends Vue {
@@ -103,6 +105,8 @@ export default class MintNft extends Vue {
 
     get formComponent() {
         switch (this.nftType) {
+            case 'utf8':
+                return Utf8Form
             case 'url':
                 return UrlForm
             default:
@@ -133,6 +137,9 @@ export default class MintNft extends Vue {
                     break
                 case 'json':
                     payload = new URLPayload((form as UrlFormType).url)
+                    break
+                case 'utf8':
+                    payload = new UTF8Payload((form as UtfFormType).text)
                     break
                 default:
                     payload = new UTF8Payload('hi there')
@@ -166,12 +173,17 @@ export default class MintNft extends Vue {
         margin-bottom: 3px;
     }
 
-    input {
+    input,
+    textarea {
         background-color: var(--bg-light);
         padding: 8px 12px;
         display: block;
         font-size: 14px;
         color: var(--primary-color);
+    }
+
+    textarea {
+        resize: none;
     }
 
     .header {

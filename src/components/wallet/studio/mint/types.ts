@@ -2,4 +2,8 @@ export interface UrlFormType {
     url: string
 }
 
-export type NftMintFormType = UrlFormType
+export interface UtfFormType {
+    text: string
+}
+
+export type NftMintFormType = UrlFormType | UtfFormType

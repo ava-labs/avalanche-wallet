@@ -138,7 +138,7 @@ $countW: 28px;
     left: 0;
     width: 100%;
     border-radius: 14px;
-    overflow: hidden;
+    overflow: auto;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
 }
 
