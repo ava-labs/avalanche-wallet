@@ -33,7 +33,7 @@ When you go to the website on your browser, you might get a warning saying
  2) Serve from the ``/dist`` directory.
  
  ## Releases
- 1) Generate a (personal access token)[https://github.com/settings/tokens/new?scopes=repo&description=release-it]
+ 1) Generate a [personal access token](https://github.com/settings/tokens/new?scopes=repo&description=release-it)
  2) Save it in your local env as RELEASE_IT_GITHUB_TOKEN
  3) Run `yarn release`
  
