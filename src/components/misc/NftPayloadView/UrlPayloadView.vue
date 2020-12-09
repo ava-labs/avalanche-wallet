@@ -34,7 +34,6 @@ export default class UrlPayloadView extends Vue {
         if (split.length === 1) return null
 
         let extension: string = split[split.length - 1]
-        console.log(extension)
 
         if (!this.valid_types.includes(extension)) return null
         return extension
@@ -43,8 +42,8 @@ export default class UrlPayloadView extends Vue {
 </script>
 <style scoped lang="scss">
 .url_payload_view {
-    border-radius: 14px;
-    overflow: hidden;
+    //border-radius: 14px;
+    //overflow: hidden;
 }
 img {
     width: 100%;

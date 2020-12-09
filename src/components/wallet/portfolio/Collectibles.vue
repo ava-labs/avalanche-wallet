@@ -6,20 +6,20 @@
                 :key="fam.id"
                 :family="fam"
             ></CollectibleFamilyRow>
-            <div v-for="fam in nftFamsArray" :key="fam.id">
-                <div class="fam_header">
-                    <p class="name">{{ fam.name }}</p>
-                    <p class="symbol">{{ fam.symbol }}</p>
-                </div>
-                <div class="list">
-                    <NFTCard
-                        class="nft_card"
-                        v-for="utxo in nftDict[fam.id]"
-                        :utxo="utxo"
-                        :key="utxo.id"
-                    ></NFTCard>
-                </div>
-            </div>
+            <!--            <div v-for="fam in nftFamsArray" :key="fam.id">-->
+            <!--                <div class="fam_header">-->
+            <!--                    <p class="name">{{ fam.name }}</p>-->
+            <!--                    <p class="symbol">{{ fam.symbol }}</p>-->
+            <!--                </div>-->
+            <!--                <div class="list">-->
+            <!--                    <NFTCard-->
+            <!--                        class="nft_card"-->
+            <!--                        v-for="utxo in nftDict[fam.id]"-->
+            <!--                        :utxo="utxo"-->
+            <!--                        :key="utxo.id"-->
+            <!--                    ></NFTCard>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
         <div class="coming_soon" v-else>
             <img v-if="$root.theme === 'day'" src="@/assets/nft_preview.png" />
@@ -114,25 +114,6 @@ $flip_dur: 0.6s;
     transition-duration: 0.3s;
     width: 140px;
     height: 220px;
-}
-
-.fam_header {
-    width: 100%;
-    /*display: flex;*/
-    margin: 30px 0 8px;
-    /*border-bottom: 1px solid var(--primary-color-light);*/
-    font-size: 18px;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-}
-
-.name {
-    padding-right: 10px;
-}
-.symbol {
-    padding-left: 10px;
-    color: var(--primary-color-light);
-    border-left: 1px solid var(--primary-color-light);
 }
 
 @include main.mobile-device {

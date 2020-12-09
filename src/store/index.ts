@@ -38,6 +38,7 @@ import {
     AmountOutput,
     UTXOSet,
     NFTMintOutput,
+    AVMConstants,
 } from 'avalanche/dist/apis/avm'
 
 import AvaAsset from '@/js/AvaAsset'
