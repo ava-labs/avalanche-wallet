@@ -30,15 +30,11 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import FileInput from '../../components/misc/FileInput.vue'
 import { ImportKeyfileInput } from '@/store/types'
 import { KeyFile } from '@/js/IKeystore'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-@Component({
-    components: {
-        FileInput,
-    },
-})
+
+@Component
 export default class PrivateKey extends Vue {
     privatekey: string = ''
     isLoading: boolean = false
