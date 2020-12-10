@@ -2,7 +2,7 @@
     <div class="new_family">
         <div>
             <p>Create a new Collectible family.</p>
-            <form @submit.prevent="submit">
+            <form @submit.prevent="submit" v-if="!isSuccess">
                 <div style="display: flex">
                     <div>
                         <label>Name</label>
@@ -32,6 +32,13 @@
                     Create
                 </v-btn>
             </form>
+            <div class="success_cont" v-if="isSuccess">
+                <p>Created NFT Family</p>
+                <div>
+                    <label>Tx ID</label>
+                    <p>{{ txId }}</p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -48,6 +55,9 @@ export default class NewCollectibleFamily extends Vue {
     symbol: string = ''
     groupNum = 1
     isLoading = false
+    isSuccess = false
+    error = ''
+    txId = ''
 
     get txFee(): Big {
         return bnToBig(pChain.getTxFee(), 9)
@@ -57,9 +67,25 @@ export default class NewCollectibleFamily extends Vue {
         let wallet = this.$store.state.activeWallet
         if (!wallet) return
 
+        this.error = ''
         this.isLoading = true
-        await wallet.createNftFamily(this.name, this.symbol, this.groupNum)
+        try {
+            let txId = await wallet.createNftFamily(this.name, this.symbol, this.groupNum)
+            this.onSuccess(txId)
+        } catch (e) {
+            this.onError(e)
+        }
+    }
+
+    onError(e: any) {
+        this.error = ''
+        console.error(e)
         this.isLoading = false
+    }
+    onSuccess(txId: string) {
+        this.isLoading = false
+        this.isSuccess = true
+        this.txId = txId
     }
 
     get mintUtxos() {

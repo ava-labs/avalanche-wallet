@@ -1,14 +1,20 @@
 <template>
-    <div class="json_payload_view">
-        <!--        <p>{{ text }}</p>-->
+    <div v-if="!isGeneric" class="json_payload_view">
         <textarea cols="30" row="200" v-model="val" disabled></textarea>
     </div>
+    <GenericPayloadView v-else :payload="payload"></GenericPayloadView>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { JSONPayload } from 'avalanche/dist/utils'
 
-@Component
+import GenericPayloadView from '@/components/misc/NftPayloadView/views/GenericPayloadView.vue'
+
+@Component({
+    components: {
+        GenericPayloadView,
+    },
+})
 export default class JsonPayloadView extends Vue {
     @Prop() payload!: JSONPayload
     val = ''
@@ -21,15 +27,34 @@ export default class JsonPayloadView extends Vue {
         let data = this.text
         try {
             let obj = JSON.parse(data)
-            console.log(obj)
             return JSON.stringify(obj, undefined, 4)
         } catch (e) {
-            console.log(e)
             return data
         }
     }
-    get text() {
-        return this.payload.getContent()
+    get text(): string {
+        return this.payload.getContent().toString()
+    }
+
+    get isGeneric() {
+        let data = this.text
+        try {
+            let obj = JSON.parse(data)
+
+            if (
+                obj.hasOwnProperty('title') &&
+                obj.hasOwnProperty('version') &&
+                obj.hasOwnProperty('type') &&
+                obj.hasOwnProperty('img')
+            ) {
+                return true
+            } else {
+                return false
+            }
+        } catch (e) {
+            return false
+        }
+        return false
     }
 
     @Watch('payload')

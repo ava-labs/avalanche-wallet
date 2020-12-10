@@ -10,4 +10,20 @@ export interface JsonFormType {
     data: string
 }
 
-export type NftMintFormType = UrlFormType | UtfFormType | JsonFormType
+export interface GenericFormType {
+    data: IGenericNft
+}
+
+export interface IGenericNft {
+    version: number
+    type: GenericNftTypes
+    title: string
+    desc?: string
+    img: string
+    img_b?: string // back image
+    img_m?: string // mask image (for 3d layering)
+}
+
+type GenericNftTypes = 'generic'
+
+export type NftMintFormType = UrlFormType | UtfFormType | JsonFormType | GenericFormType

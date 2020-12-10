@@ -132,7 +132,8 @@ export default class CollectibleFamilyRow extends Vue {
     align-self: flex-end;
     width: 180px;
     height: 220px;
-    margin: 14px;
+    margin-right: 14px;
+    margin-bottom: 14px;
 }
 
 .mint_card {

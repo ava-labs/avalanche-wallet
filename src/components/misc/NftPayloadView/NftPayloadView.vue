@@ -8,12 +8,13 @@ import { PayloadBase } from 'avalanche/dist/utils'
 import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
 import UtfPayloadView from '@/components/misc/NftPayloadView/views/UtfPayloadView.vue'
 import JsonPayloadView from '@/components/misc/NftPayloadView/views/JsonPayloadView.vue'
-
+// import GenericPayloadView from '@/components/misc/NftPayloadView/views/GenericPayloadView.vue'
 @Component({
     components: {
         UrlPayloadView,
         UtfPayloadView,
         JsonPayloadView,
+        // GenericPayloadView,
     },
 })
 export default class NftPayloadView extends Vue {

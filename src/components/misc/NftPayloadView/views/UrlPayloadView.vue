@@ -18,7 +18,7 @@ import { URLPayload } from 'avalanche/dist/utils'
 export default class UrlPayloadView extends Vue {
     @Prop() payload!: URLPayload
 
-    img_types = ['jpeg', 'jpg', 'gif', 'png', 'apng', 'svg', 'bmp', 'ico']
+    img_types = ['jpeg', 'jpg', 'gif', 'png', 'apng', 'svg', 'bmp', 'ico', 'webp']
     valid_types = this.img_types.concat(['pdf'])
 
     get url() {
