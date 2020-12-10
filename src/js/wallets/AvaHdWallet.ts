@@ -392,7 +392,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     async createNftFamily(name: string, symbol: string, groupNum: number) {
         let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
-        await avm.issueTx(signed)
+        return await avm.issueTx(signed)
     }
 
     async mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number) {
@@ -405,6 +405,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         )
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         let txId = await avm.issueTx(signed)
-        console.log(txId)
+        return txId
     }
 }

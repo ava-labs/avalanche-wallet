@@ -12,6 +12,7 @@
             <label>Description (Optional)</label>
             <textarea class="text" maxlength="256" v-model="description" @input="onInput" />
         </div>
+        <p class="err">{{ error }}</p>
 
         <!--        <div class="input_cont">-->
         <!--            <textarea maxlength="1024" type="text" v-model="val" @input="onInput" />-->
@@ -33,15 +34,38 @@ export default class GenericForm extends Vue {
     title = ''
     description = ''
     imgUrl = ''
+    error = ''
 
-    get isValid(): boolean {
+    validate() {
+        if (!this.title) {
+            this.error = 'You must set a title.'
+            return false
+        }
+
+        try {
+            new URL(this.imgUrl)
+        } catch (e) {
+            this.error = 'Not a valid Image URL.'
+            return false
+        }
+        if (!this.imgUrl) {
+            this.error = 'You must set the image.'
+            return false
+        }
+
+        if (this.imgUrl.length > 516) {
+            this.error = 'Image URL too long.'
+            return false
+        }
+
         return true
     }
 
     onInput() {
         let msg: null | GenericFormType = null
+        this.error = ''
 
-        if (this.isValid) {
+        if (this.validate()) {
             let data: IGenericNft = {
                 version: 1,
                 type: 'generic',

@@ -48,8 +48,8 @@ export interface AvaWalletCore {
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
     getPlatformRewardAddress(): string
-    createNftFamily(name: string, symbol: string, groupNum: number): void
-    mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number): void
+    createNftFamily(name: string, symbol: string, groupNum: number): Promise<string>
+    mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number): Promise<string>
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

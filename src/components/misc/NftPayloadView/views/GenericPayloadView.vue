@@ -6,7 +6,6 @@
             <div class="generic_view">
                 <img :src="img" />
                 <p class="nft_title">{{ title }}</p>
-                <p>Generic</p>
                 <div class="desc" v-if="desc">{{ desc }}</div>
             </div>
         </template>

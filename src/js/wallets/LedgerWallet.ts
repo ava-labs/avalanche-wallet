@@ -491,7 +491,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     async createNftFamily(name: string, symbol: string, groupNum: number) {
         let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
-        await avm.issueTx(signed)
+        return await avm.issueTx(signed)
     }
 
     async mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number) {
@@ -502,8 +502,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             this.getCurrentAddress(),
             this.getChangeAddress()
         )
-        let signed = this.sign<AVMUnsignedTx, AVMTx>(tx)
-        console.log(signed)
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        return await avm.issueTx(signed)
     }
 }
 

@@ -10,18 +10,28 @@
         <template v-if="!pageNow">
             <p>Create and manage assets.</p>
             <div class="menu">
-                <h3>Tokens</h3>
-                <div class="options">
-                    <div>New Fixed Cap Asset</div>
-                </div>
+                <!--                <h3>Tokens</h3>-->
+                <!--                <div class="options">-->
+                <!--                    <div>New Fixed Cap Asset</div>-->
+                <!--                </div>-->
                 <h3>Collectibles</h3>
                 <div class="options">
-                    <div @click="goNewNftFamily">New Family</div>
-                    <div @click="goMint">Mint</div>
+                    <div>
+                        <h4 class="title">New Family</h4>
+                        <p>Create a new set of collectibles with a name and symbol.</p>
+                        <v-btn @click="goNewNftFamily" class="button_secondary" small depressed>
+                            New Family
+                        </v-btn>
+                    </div>
+                    <div>
+                        <h4 class="title">Mint Groups</h4>
+                        <p>Issue collectibles for the families you created.</p>
+                        <v-btn @click="goMint" class="button_secondary" small depressed>Mint</v-btn>
+                    </div>
                 </div>
             </div>
         </template>
-        <Component v-else :is="pageNow"></Component>
+        <Component v-else :is="pageNow" @cancel="cancel"></Component>
     </div>
 </template>
 <script lang="ts">
@@ -90,16 +100,36 @@ export default class Studio extends Vue {
 }
 
 .options {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 14px;
     > div {
-        border-radius: 14px;
+        border-radius: 4px;
         border: 1px solid var(--bg-light);
-        padding: 14px 18px;
+        background-color: var(--bg-light);
+        padding: 30px;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
 
         &:hover {
             background-color: var(--bg-light);
         }
+    }
+
+    p {
+        flex-grow: 1;
+        margin: 12px 0 !important;
+    }
+
+    h4 {
+        font-size: 32px !important;
+        font-weight: lighter;
+        color: var(--primary-color-light);
+    }
+
+    .v-btn {
+        width: max-content;
     }
 }
 </style>

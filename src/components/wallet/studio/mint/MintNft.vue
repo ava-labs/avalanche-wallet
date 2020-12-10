@@ -4,7 +4,7 @@
             <p>Select a family and group to mint.</p>
             <SelectMintUTXO @change="setUtxo" class="select_mint_utxo"></SelectMintUTXO>
         </div>
-        <MintForm v-else :mint-utxo="mintUtxo" @clearUtxo="clearUtxo"></MintForm>
+        <MintForm v-else :mint-utxo="mintUtxo" @clearUtxo="clearUtxo" @cancel="cancel"></MintForm>
     </div>
 </template>
 <script lang="ts">
@@ -48,6 +48,10 @@ export default class MintNft extends Vue {
 
     clearUtxo() {
         this.mintUtxo = null
+    }
+
+    cancel() {
+        this.$emit('cancel')
     }
 }
 </script>

@@ -4,19 +4,30 @@
             <p>Create a new Collectible family.</p>
             <form @submit.prevent="submit" v-if="!isSuccess">
                 <div style="display: flex">
-                    <div>
+                    <div style="flex-grow: 1">
                         <label>Name</label>
-                        <input type="text" placeholder="Name" v-model="name" />
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            v-model="name"
+                            style="width: 100%"
+                            maxlength="128"
+                        />
                     </div>
                     <div class="symbol">
                         <label>Symbol</label>
-                        <input type="text" placeholder="xxxx" v-model="symbol" />
+                        <input
+                            type="text"
+                            placeholder="xxxx"
+                            v-model="symbol"
+                            max="4"
+                            maxlength="4"
+                        />
                     </div>
                 </div>
 
                 <div>
                     <label>Number of Groups</label>
-                    <p>You will get to mint each group after you create a family.</p>
                     <input
                         type="number"
                         placeholder="Name of the Collection"
@@ -28,22 +39,41 @@
                 <div>
                     <p>Fee: {{ txFee.toLocaleString() }} AVAX</p>
                 </div>
+                <p v-if="error" class="err">{{ error }}</p>
                 <v-btn :loading="isLoading" type="submit" class="button_secondary" small>
                     Create
                 </v-btn>
             </form>
             <div class="success_cont" v-if="isSuccess">
-                <p>Created NFT Family</p>
+                <p style="color: var(--success); margin: 12px 0 !important">
+                    <fa icon="check-circle"></fa>
+                    Collectible Family Created
+                </p>
                 <div>
                     <label>Tx ID</label>
-                    <p>{{ txId }}</p>
+                    <p style="word-break: break-all">{{ txId }}</p>
                 </div>
+                <div>
+                    <label>Family Name</label>
+                    <p>{{ name }}</p>
+                </div>
+                <div>
+                    <label>Symbol</label>
+                    <p>{{ symbol }}</p>
+                </div>
+                <div>
+                    <label>Number of Group</label>
+                    <p>{{ groupNum }}</p>
+                </div>
+                <v-btn class="button_secondary" small @click="cancel" depressed>
+                    Back to Studio
+                </v-btn>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import { BN } from 'avalanche'
 import { pChain } from '@/AVA'
 import { bnToBig } from '@/helpers/helper'
@@ -59,33 +89,77 @@ export default class NewCollectibleFamily extends Vue {
     error = ''
     txId = ''
 
-    get txFee(): Big {
-        return bnToBig(pChain.getTxFee(), 9)
+    @Watch('symbol')
+    onSymbolChange(val: string) {
+        let newVal = val.toUpperCase()
+        // Remove numbers
+        newVal = newVal.replace(/[0-9]/g, '')
+        this.symbol = newVal
     }
 
+    get txFee(): Big {
+        return bnToBig(pChain.getCreationTxFee(), 9)
+    }
+
+    validate(): boolean {
+        if (this.symbol.length === 0) {
+            this.error = 'You must provide a symbol.'
+            return false
+        } else if (this.symbol.length > 4) {
+            this.error = 'Symbol must be 4 characters max.'
+            return false
+        } else if (this.groupNum < 1) {
+            this.error = 'Number of groups must be at least 1.'
+            return false
+        }
+        return true
+    }
     async submit() {
+        if (!this.validate()) {
+            return
+        }
         let wallet = this.$store.state.activeWallet
         if (!wallet) return
 
         this.error = ''
         this.isLoading = true
+
+        let nameTrimmed = this.name.trim()
+        let symbolTrimmed = this.symbol.trim()
+
         try {
-            let txId = await wallet.createNftFamily(this.name, this.symbol, this.groupNum)
+            let txId = await wallet.createNftFamily(nameTrimmed, symbolTrimmed, this.groupNum)
+            console.log(txId)
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
         }
     }
 
+    cancel() {
+        this.$emit('cancel')
+    }
+
     onError(e: any) {
-        this.error = ''
+        this.error = e
         console.error(e)
         this.isLoading = false
     }
+
     onSuccess(txId: string) {
         this.isLoading = false
         this.isSuccess = true
         this.txId = txId
+
+        this.$store.dispatch('Notifications/add', {
+            type: 'success',
+            title: 'Success',
+            message: 'Collectible family created.',
+        })
+
+        setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
+        }, 3000)
     }
 
     get mintUtxos() {
@@ -95,11 +169,13 @@ export default class NewCollectibleFamily extends Vue {
 </script>
 <style scoped lang="scss">
 .new_family {
+    max-width: 100%;
+    width: 340px;
     //display: grid;
     //grid-template-columns: 1fr 350px;
 }
 form > div {
-    margin: 24px 0;
+    margin: 12px 0;
 }
 
 label {
@@ -137,6 +213,18 @@ input {
         background-color: var(--bg-light);
         width: 45px;
         height: 45px;
+    }
+}
+
+.success_cont {
+    > div {
+        padding: 3px 12px;
+        margin-bottom: 5px;
+        background-color: var(--bg-light);
+    }
+
+    .v-btn {
+        margin-top: 12px;
     }
 }
 </style>

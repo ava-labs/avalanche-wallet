@@ -2,35 +2,52 @@
     <div class="mint_form">
         <div class="cols">
             <div class="form_col">
-                <div class="header">
-                    <div class="type_sel">
-                        <label>Type</label>
-                        <p>Select a collectible type.</p>
-                        <v-chip-group mandatory v-model="nftFormType">
-                            <v-chip value="generic">Generic</v-chip>
-                            <v-chip value="custom">Custom</v-chip>
-                        </v-chip-group>
-
-                        <template v-if="nftFormType === 'custom'">
-                            <label>Payload Type</label>
-                            <v-chip-group mandatory v-model="nftType">
-                                <v-chip value="utf8">UTF-8</v-chip>
-                                <v-chip value="url">URL</v-chip>
-                                <v-chip value="json">JSON</v-chip>
+                <template v-if="!isSuccess">
+                    <div class="header">
+                        <div class="type_sel">
+                            <label>Type</label>
+                            <p>Select a collectible type.</p>
+                            <v-chip-group mandatory v-model="nftFormType">
+                                <v-chip value="generic">Generic</v-chip>
+                                <v-chip value="custom">Custom</v-chip>
                             </v-chip-group>
-                        </template>
+
+                            <template v-if="nftFormType === 'custom'">
+                                <label>Payload Type</label>
+                                <v-chip-group mandatory v-model="nftType">
+                                    <v-chip value="utf8">UTF-8</v-chip>
+                                    <v-chip value="url">URL</v-chip>
+                                    <v-chip value="json">JSON</v-chip>
+                                </v-chip-group>
+                            </template>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <label>Quantity</label>
-                    <input type="number" min="1" v-model="quantity" style="width: 90px" />
-                </div>
-                <Component
-                    v-if="nftFormType === 'custom'"
-                    :is="formComponent"
-                    @onInput="onInput"
-                ></Component>
-                <GenericForm v-else @onInput="onInput"></GenericForm>
+                    <div>
+                        <label>Quantity</label>
+                        <input type="number" min="1" v-model="quantity" style="width: 90px" />
+                    </div>
+                    <Component
+                        v-if="nftFormType === 'custom'"
+                        :is="formComponent"
+                        @onInput="onInput"
+                    ></Component>
+                    <GenericForm v-else @onInput="onInput"></GenericForm>
+                </template>
+                <template v-else>
+                    <div class="success_cont">
+                        <p style="color: var(--success)">
+                            <fa icon="check-circle"></fa>
+                            Minted group
+                        </p>
+                        <div>
+                            <label>Tx ID</label>
+                            <p style="word-break: break-all">{{ txId }}</p>
+                        </div>
+                        <v-btn @click="cancel" class="button_secondary" small depressed>
+                            Back to Studio
+                        </v-btn>
+                    </div>
+                </template>
             </div>
             <div class="preview_col">
                 <div class="utxo">
@@ -46,7 +63,7 @@
                         <label>Group</label>
                         <p style="word-break: break-all">{{ groupId }}</p>
                     </div>
-                    <button @click="clearUtxo"><fa icon="sync"></fa></button>
+                    <button @click="clearUtxo" v-if="!isSuccess"><fa icon="sync"></fa></button>
                 </div>
                 <label>Preview</label>
                 <NftPayloadView
@@ -57,22 +74,25 @@
                 <div class="nft_preview preview_holder" v-else>
                     <p>Complete the form to see the preview.</p>
                 </div>
-                <div class="fee">
-                    <p>
-                        Fee
-                        <span>{{ txFee.toLocaleString() }} AVAX</span>
-                    </p>
-                </div>
-                <v-btn
-                    :disabled="!canSubmit"
-                    @click="submit"
-                    small
-                    block
-                    class="button_secondary"
-                    style="margin: 14px 0"
-                >
-                    Mint
-                </v-btn>
+                <template v-if="!isSuccess">
+                    <div class="fee">
+                        <p>
+                            Fee
+                            <span>{{ txFee.toLocaleString() }} AVAX</span>
+                        </p>
+                    </div>
+                    <v-btn
+                        :disabled="!canSubmit"
+                        @click="submit"
+                        small
+                        block
+                        :loading="isLoading"
+                        class="button_secondary"
+                        style="margin: 14px 0"
+                    >
+                        Mint
+                    </v-btn>
+                </template>
             </div>
         </div>
     </div>
@@ -121,6 +141,9 @@ export default class MintNft extends Vue {
     nftFormType = 'generic'
     payloadPreview: null | PayloadBase = null
     canSubmit = false
+    isSuccess = false
+    isLoading = false
+    txId = ''
 
     get nftFamsDict(): NftFamilyDict {
         return this.$store.state.Assets.nftFamsDict
@@ -195,15 +218,42 @@ export default class MintNft extends Vue {
         }
     }
 
-    submit() {
+    async submit() {
         let wallet = this.$store.state.activeWallet
         if (!wallet) return
 
+        this.isLoading = true
+
         try {
-            wallet.mintNft(this.mintUtxo, this.payloadPreview, this.quantity)
+            let txId = await wallet.mintNft(this.mintUtxo, this.payloadPreview, this.quantity)
+            this.onSuccess(txId)
         } catch (e) {
             console.error(e)
         }
+    }
+
+    cancel() {
+        this.$emit('cancel')
+    }
+
+    onSuccess(txId: string) {
+        this.isLoading = false
+        this.isSuccess = true
+        this.txId = txId
+
+        this.$store.dispatch('Notifications/add', {
+            type: 'success',
+            title: 'Success',
+            message: 'Collectible minted and added to your wallet.',
+        })
+
+        setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
+        }, 3000)
+    }
+
+    onError(err: any) {
+        this.isLoading = false
     }
 }
 </script>
@@ -343,5 +393,15 @@ export default class MintNft extends Vue {
 
 .form_col {
     padding-right: 2vw;
+}
+
+.success_cont {
+    width: 320px;
+    max-width: 100%;
+    > div {
+        background-color: var(--bg-light);
+        padding: 3px 12px;
+        margin: 12px 0;
+    }
 }
 </style>
