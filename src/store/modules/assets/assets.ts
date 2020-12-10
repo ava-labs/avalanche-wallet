@@ -21,7 +21,7 @@ const assets_module: Module<AssetsState, RootState> = {
     mutations: {
         addAsset(state, asset: AvaAsset) {
             if (state.assetsDict[asset.id]) {
-                console.info(`Failed to add asset. Asset already exists. (${asset.id})`)
+                // console.info(`Failed to add asset. Asset already exists. (${asset.id})`)
                 return
             }
             state.assets.push(asset)
@@ -29,7 +29,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
         addNftFamily(state, family: AvaNftFamily) {
             if (state.nftFamsDict[family.id]) {
-                console.info(`Failed to add NFT Family. Asset already exists. (${family.id})`)
+                // console.info(`Failed to add NFT Family. Asset already exists. (${family.id})`)
                 return
             }
             state.nftFams.push(family)
@@ -59,7 +59,6 @@ const assets_module: Module<AssetsState, RootState> = {
             let nftDict: IWalletNftDict = rootGetters.walletNftDict
             let nftMintDict: IWalletNftMintDict = rootGetters.walletNftMintDict
 
-            console.log(nftMintDict)
             for (var id in balanceDict) {
                 if (!state.assetsDict[id]) {
                     dispatch('addUnknownAsset', id)
