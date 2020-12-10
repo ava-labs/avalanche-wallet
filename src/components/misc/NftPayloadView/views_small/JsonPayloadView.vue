@@ -1,18 +1,18 @@
 <template>
     <div v-if="!isGeneric" class="json_payload_view">
-        <textarea cols="30" row="200" v-model="val" disabled></textarea>
+        <p>{ }</p>
     </div>
-    <GenericPayloadView v-else :payload="payload"></GenericPayloadView>
+    <GenericPayloadViewSmall v-else :payload="payload"></GenericPayloadViewSmall>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { JSONPayload } from 'avalanche/dist/utils'
 
-import GenericPayloadView from '@/components/misc/NftPayloadView/views/GenericPayloadView.vue'
+import GenericPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/GenericPayloadView.vue'
 
 @Component({
     components: {
-        GenericPayloadView,
+        GenericPayloadViewSmall,
     },
 })
 export default class JsonPayloadView extends Vue {
@@ -64,22 +64,12 @@ export default class JsonPayloadView extends Vue {
 </script>
 <style scoped lang="scss">
 .json_payload_view {
-    overflow: scroll;
-}
-textarea {
-    display: block;
-    padding: 12px;
-    min-height: 140px;
-    font-size: 12px !important;
-    background-color: #000;
-    font-family: monospace;
-    color: #0f0;
+    color: var(--primary-color);
 }
 p {
-    font-size: 13px;
-    padding: 12px 24px;
+    font-size: 16px;
     word-break: break-word;
-    overflow: scroll;
+    font-weight: bold;
     background-color: var(--bg-light);
     color: var(--primary-color);
 }

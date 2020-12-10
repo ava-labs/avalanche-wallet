@@ -5,8 +5,6 @@
         <template v-if="!isError">
             <div class="generic_view">
                 <img :src="img" />
-                <p class="nft_title">{{ title }}</p>
-                <div class="desc" v-if="desc">{{ desc }}</div>
             </div>
         </template>
         <template v-else>
@@ -63,16 +61,19 @@ export default class UtfPayloadView extends Vue {
 }
 </script>
 <style scoped lang="scss">
+.generic_payload_view {
+    width: 100%;
+    height: 100%;
+}
 .generic_view {
     position: relative;
     width: 100%;
-    height: 220px;
+    height: 100%;
     max-height: 100%;
     overflow: hidden;
 }
 p {
     font-size: 13px;
-    padding: 12px 24px;
     word-break: break-word;
     overflow: scroll;
     background-color: var(--bg-light);
@@ -82,6 +83,7 @@ p {
 img {
     display: block;
     object-fit: cover;
+    object-position: center;
     width: 100%;
     height: 100%;
     position: absolute;

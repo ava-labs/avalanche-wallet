@@ -3,6 +3,7 @@
         <div class="fam_header">
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>
+            <p class="fam_id">{{ family.id }}</p>
         </div>
         <div class="list">
             <CollectibleFamilyGroup
@@ -108,12 +109,21 @@ export default class CollectibleFamilyRow extends Vue {
 
 .fam_header {
     width: 100%;
-    margin: 30px 0 8px;
+    margin: 12px 0;
+    margin-bottom: 16px;
     font-size: 18px;
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: max-content max-content 1fr;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--bg-light);
 }
 
+.fam_id {
+    text-align: right;
+    color: var(--primary-color-light);
+    font-size: 13px;
+    align-self: center;
+}
 .name {
     padding-right: 10px;
 }

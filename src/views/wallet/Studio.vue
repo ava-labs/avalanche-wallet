@@ -108,7 +108,6 @@ export default class Studio extends Vue {
         border: 1px solid var(--bg-light);
         background-color: var(--bg-light);
         padding: 30px;
-        cursor: pointer;
         display: flex;
         flex-direction: column;
 

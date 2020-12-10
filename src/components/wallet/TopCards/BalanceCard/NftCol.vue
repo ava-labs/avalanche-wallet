@@ -5,18 +5,17 @@
         <div v-else>
             <p>{{ statusText }}</p>
             <div class="nft_list">
-                <NftCard
-                    v-for="nft in nftArray"
-                    class="nft_item"
-                    :key="nft.id"
-                    :mini="true"
-                    :utxo="nft"
-                ></NftCard>
-                <div
-                    v-for="i in dummyAmt"
-                    class="nft_item dummy_item"
-                    :key="i"
-                ></div>
+                <div class="nft_item" v-for="(utxo, i) in nftArray" :key="utxo.getUTXOID()">
+                    <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
+                </div>
+                <!--                <NftCard-->
+                <!--                    v-for="nft in nftArray"-->
+                <!--                    class="nft_item"-->
+                <!--                    :key="nft.id"-->
+                <!--                    :mini="true"-->
+                <!--                    :utxo="nft"-->
+                <!--                ></NftCard>-->
+                <div v-for="i in dummyAmt" class="nft_item dummy_item" :key="i"></div>
             </div>
         </div>
     </div>
@@ -25,12 +24,20 @@
 import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
 import { IWalletNftDict } from '@/store/types'
 // import {UTXO} from "avalanche";
-import { UTXO } from 'avalanche/dist/apis/avm'
+import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import NftCard from '@/components/wallet/portfolio/NftCard.vue'
+import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
+import { PayloadBase } from 'avalanche/dist/utils'
+import { Buffer } from 'avalanche'
+import { PayloadTypes } from 'avalanche/dist/utils'
+import { bintools } from '@/AVA'
+
+let payloadtypes = PayloadTypes.getInstance()
 
 @Component({
     components: {
         NftCard,
+        NftPayloadView,
     },
 })
 export default class NftCol extends Vue {
@@ -52,7 +59,37 @@ export default class NftCol extends Vue {
 
     get nftArray(): UTXO[] {
         let utxos: UTXO[] = this.$store.getters.walletNftUTXOs
+
+        let familyIds: string[] = []
+        let ids: number[] = []
+        // Filter same groups
+        utxos = utxos.filter((utxo) => {
+            let out = utxo.getOutput() as NFTTransferOutput
+            let famId = bintools.cb58Encode(utxo.getAssetID())
+            let groupId = out.getGroupID()
+            if (ids.includes(groupId) && familyIds.includes(famId)) {
+                return false
+            } else {
+                ids.push(groupId)
+                familyIds.push(famId)
+                return true
+            }
+        })
+
         return utxos.slice(0, 10)
+    }
+
+    get nftPayloads(): PayloadBase[] {
+        return this.nftArray.map((utxo) => {
+            let out = utxo.getOutput() as NFTTransferOutput
+            let payload = out.getPayloadBuffer()
+
+            let typeId = payloadtypes.getTypeID(payload)
+            let pl: Buffer = payloadtypes.getContent(payload)
+            let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+
+            return payloadbase
+        })
     }
 
     get dummyAmt(): number {
@@ -83,9 +120,12 @@ $nft_w: 35px;
 
 .nft_list {
     margin-top: 8px;
-    display: grid;
-    grid-template-columns: repeat(5, $nft_w);
+    //display: grid;
+    //grid-template-columns: repeat(5, $nft_w);
     grid-gap: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     /*display: flex;*/
     /*flex-wrap: wrap;*/
 }
