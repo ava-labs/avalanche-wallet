@@ -42,7 +42,7 @@ class SingletonWallet implements AvaWalletCore {
         this.key = pk
 
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
-        this.chainIdP = pChain.getBlockchainID()
+        this.chainIdP = pChain.getBlockchainAlias() || pChain.getBlockchainID()
 
         let hrp = ava.getHRP()
 
@@ -138,14 +138,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     getCurrentPlatformAddress(): string {
-        let pkHex = this.platformKeyPair.getPublicKey().toString('hex')
-
-        let pkBuff = Buffer.from(pkHex, 'hex')
-        let hrp = getPreferredHRP(ava.getNetworkID())
-        let addrBuf = this.platformKeyPair.addressFromPublicKey(pkBuff)
-        let addr = bintools.addressToString(hrp, 'P', addrBuf)
-
-        return addr
+        return this.platformKeyPair.getAddressString()
     }
 
     getBaseAddress(): string {
