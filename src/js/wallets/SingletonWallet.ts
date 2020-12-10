@@ -18,7 +18,7 @@ import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import { buildUnsignedTransaction } from '../TxHelper'
-import { AvaWalletCore } from './IAvaHdWallet'
+import { AvaWalletCore, ChainAlias } from './IAvaHdWallet'
 
 class SingletonWallet implements AvaWalletCore {
     keyChain: AVMKeyChain
@@ -161,33 +161,141 @@ class SingletonWallet implements AvaWalletCore {
         return this.platformUtxoset
     }
 
+    async getAtomicUTXOs(chainId: ChainAlias) {
+        // console.log(addrs);
+        if (chainId === 'P') {
+            let result: PlatformUTXOSet = (
+                await pChain.getUTXOs(
+                    this.getExtendedPlatformAddresses(),
+                    avm.getBlockchainID()
+                )
+            ).utxos
+            return result
+        } else {
+            let result: AVMUTXOSet = (
+                await avm.getUTXOs(
+                    this.getDerivedAddresses(),
+                    pChain.getBlockchainID()
+                )
+            ).utxos
+            return result
+        }
+    }
+
+    async updateUtxos(
+        // TODO, type
+        chainId: ChainAlias
+    ): Promise<AVMUTXOSet | PlatformUTXOSet> {
+        let result: AVMUTXOSet | PlatformUTXOSet
+
+        if (chainId === 'X') {
+            result = await this.avmGetAllUTXOs()
+            this.utxoset = result // we can use local copy of utxos as cache for some functions
+        } else {
+            result = await this.platformGetAllUTXOs()
+            this.platformUtxoset = result
+        }
+
+        return result
+    }
+
     async getUTXOs() {
-        await this.getPlatformUTXOs()
-        await this.getStake()
-        return await this.getAvmUTXOs()
+        let setInternal = (await this.updateUtxos('X')) as AVMUTXOSet
+        // TODO
+        // platform utxos are updated but not returned by function
+        let setPlatform = (await this.updateUtxos('P')) as PlatformUTXOSet
+
+        this.getStake()
+
+        return setInternal
     }
 
-    async getAvmUTXOs(): Promise<AVMUTXOSet> {
-        let addr = this.getCurrentAddress()
+    async platformGetAllUTXOsForAddresses(
+        addrs: string[],
+        endIndex: any = undefined
+    ): Promise<PlatformUTXOSet> {
+        let response
+        if (!endIndex) {
+            response = await pChain.getUTXOs(addrs)
+        } else {
+            response = await pChain.getUTXOs(addrs, undefined, 0, endIndex)
+        }
 
-        let setInternal = await avm.getUTXOs([addr])
+        let utxoSet = response.utxos
+        let nextEndIndex = response.endIndex
+        let len = response.numFetched
 
-        this.utxoset = setInternal.utxos
-        return setInternal.utxos
+        if (len >= 1024) {
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(
+                addrs,
+                nextEndIndex
+            )
+            return utxoSet.merge(subUtxos)
+        }
+
+        return utxoSet
     }
 
-    async getPlatformUTXOs(): Promise<PlatformUTXOSet> {
-        let pAddr = this.getCurrentPlatformAddress()
+    async avmGetAllUTXOsForAddresses(
+        addrs: string[],
+        endIndex: any = undefined
+    ): Promise<AVMUTXOSet> {
+        let response
+        if (!endIndex) {
+            response = await avm.getUTXOs(addrs)
+        } else {
+            response = await avm.getUTXOs(addrs, undefined, 0, endIndex)
+        }
 
-        let setPlatform = await pChain.getUTXOs([pAddr])
+        let utxoSet = response.utxos
+        let utxos = utxoSet.getAllUTXOs()
+        let nextEndIndex = response.endIndex
+        let len = response.numFetched
 
-        this.platformUtxoset = setPlatform.utxos
-        return setPlatform.utxos
+        if (len >= 1024) {
+            let subUtxos = await this.avmGetAllUTXOsForAddresses(
+                addrs,
+                nextEndIndex
+            )
+            return utxoSet.merge(subUtxos)
+        }
+        return utxoSet
+    }
+
+    // helper method to get utxos for more than 1024 addresses
+    async avmGetAllUTXOs(): Promise<AVMUTXOSet> {
+        let addrs = this.getDerivedAddresses()
+        if (addrs.length <= 1024) {
+            let utxos = await this.avmGetAllUTXOsForAddresses(addrs)
+            return utxos
+        } else {
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0, 1024)
+
+            let newSet = await this.avmGetAllUTXOsForAddresses(chunk)
+            return newSet.merge(await this.avmGetAllUTXOs())
+        }
+    }
+
+    // helper method to get utxos for more than 1024 addresses
+    async platformGetAllUTXOs(): Promise<PlatformUTXOSet> {
+        const addrs = this.getExtendedPlatformAddresses()
+        if (addrs.length <= 1024) {
+            let newSet = await this.platformGetAllUTXOsForAddresses(addrs)
+            return newSet
+        } else {
+            //Break the list in to 1024 chunks
+            let chunk = addrs.slice(0, 1024)
+
+            let newSet = await this.platformGetAllUTXOsForAddresses(chunk)
+
+            return newSet.merge(await this.platformGetAllUTXOs())
+        }
     }
 
     async importToPlatformChain(): Promise<string> {
         // await this.platformHelper.findHdIndex();
-        const utxoSet = (await this.getPlatformUTXOs()) as PlatformUTXOSet
+        const utxoSet = (await this.getAtomicUTXOs('P')) as PlatformUTXOSet
 
         if (utxoSet.getAllUTXOs().length === 0) {
             throw new Error('Nothing to import.')
@@ -219,7 +327,7 @@ class SingletonWallet implements AvaWalletCore {
     }
 
     async importToXChain(): Promise<string> {
-        const utxoSet = (await this.getAvmUTXOs()) as AVMUTXOSet
+        const utxoSet = (await this.getAtomicUTXOs('X')) as AVMUTXOSet
 
         if (utxoSet.getAllUTXOs().length === 0) {
             throw new Error('Nothing to import.')

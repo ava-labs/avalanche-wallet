@@ -24,15 +24,14 @@ import {
 } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import { ChainAlias } from './wallets/IAvaHdWallet'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 
 const SCAN_SIZE: number = 100 // the total number of utxos to look at initially to calculate last index
 const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE // How many items are actually scanned
-
-type HelperChainId = 'X' | 'P'
 class HdHelper {
-    chainId: HelperChainId
+    chainId: ChainAlias
     keyChain: AVMKeyChain | PlatformVMKeyChain
     keyCache: {
         [index: number]: AVMKeyPair | PlatformVMKeyPair
@@ -52,7 +51,7 @@ class HdHelper {
     constructor(
         changePath: string,
         masterKey: HDKey,
-        chainId: HelperChainId = 'X',
+        chainId: ChainAlias = 'X',
         isPublic: boolean = false
     ) {
         this.changePath = changePath
@@ -271,6 +270,7 @@ class HdHelper {
         }
     }
 
+    // Not used?
     getUtxos(): AVMUTXOSet | PlatformUTXOSet {
         return this.utxoSet
     }

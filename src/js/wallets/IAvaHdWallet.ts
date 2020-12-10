@@ -25,6 +25,8 @@ export interface IIndexKeyCache {
     [index: number]: AVMKeyPair
 }
 
+export type ChainAlias = 'X' | 'P'
+
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
     type: WalletNameType
@@ -32,7 +34,6 @@ export interface AvaWalletCore {
     utxoset: UTXOSet
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
-
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
@@ -44,7 +45,6 @@ export interface AvaWalletCore {
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
     getCurrentPlatformAddress(): string
-    getPlatformUTXOs(): Promise<PlatformUTXOSet>
     getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
     getBaseAddress(): string

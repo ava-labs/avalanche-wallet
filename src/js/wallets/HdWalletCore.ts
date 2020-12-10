@@ -72,12 +72,6 @@ class HdWalletCore {
         return joined
     }
 
-    async getPlatformUTXOs(): Promise<PlatformUTXOSet> {
-        let setPlatform = (await this.platformHelper.updateUtxos()) as PlatformUTXOSet
-
-        return setPlatform
-    }
-
     getAllDerivedExternalAddresses(): string[] {
         return this.externalHelper.getAllDerivedAddresses()
     }
