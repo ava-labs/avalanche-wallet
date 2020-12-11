@@ -92,12 +92,14 @@ const network_module: Module<NetworkState, RootState> = {
             { state, dispatch, commit, rootState },
             net: AvaNetwork
         ) {
-            // Query the network to get network id
-
             state.status = 'connecting'
             ava.setAddress(net.ip, net.port, net.protocol)
             ava.setNetworkID(net.networkId)
 
+            // Reset transaction history
+            commit('History/clear', null, { root: true })
+
+            // Query the network to get network id
             let chainIdX = await infoApi.getBlockchainID('X')
             let chainIdP = await infoApi.getBlockchainID('P')
 

@@ -24,6 +24,7 @@
                                     <p>{{ $t('home.access.desc') }}</p>
                                 </header>
                                 <router-link
+                                    data-cy="access"
                                     to="/access"
                                     class="ava_button button_primary"
                                     >{{ $t('home.access.submit') }}</router-link
@@ -47,6 +48,7 @@
                                     <p>{{ $t('home.create.desc') }}</p>
                                 </header>
                                 <router-link
+                                    data-cy="create"
                                     to="/create"
                                     class="ava_button button_secondary"
                                     >{{ $t('home.create.submit') }}</router-link

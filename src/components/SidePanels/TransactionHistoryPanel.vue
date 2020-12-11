@@ -12,9 +12,9 @@
         <div class="empty" v-else-if="isEmpty && !isUpdating">
             <p>{{ $t('transactions.notx') }}</p>
         </div>
-        <!--        <div v-else-if="isUpdating">-->
-        <!--            <p class="empty">{{$t('transactions.loading')}}</p>-->
-        <!--        </div>-->
+        <div v-else-if="isUpdating">
+            <p class="empty">{{ $t('transactions.loading') }}</p>
+        </div>
         <div class="list" v-else>
             <tx-history-row
                 v-for="tx in transactions"

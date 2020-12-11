@@ -1,5 +1,6 @@
 <template>
     <div
+        data-cy="network-switcher"
         class="network_menu"
         :connected="status === 'connected'"
         @keydown.esc="closeMenu"
@@ -37,10 +38,14 @@
                 @click="closeMenu"
             ></div>
             <div class="network_body" v-if="isActive" key="body">
-                <div class="header">
+                <div class="header" data-cy="custom-network-option">
                     <template v-if="page === 'list'">
                         <h4>{{ $t('network.title') }}</h4>
-                        <button @click="viewCustom" class="button_secondary">
+                        <button
+                            @click="viewCustom"
+                            class="button_secondary"
+                            data-cy="create-custom-option"
+                        >
                             {{ $t('network.custom') }}
                         </button>
                     </template>
