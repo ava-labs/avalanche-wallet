@@ -165,18 +165,12 @@ class SingletonWallet implements AvaWalletCore {
         // console.log(addrs);
         if (chainId === 'P') {
             let result: PlatformUTXOSet = (
-                await pChain.getUTXOs(
-                    this.getExtendedPlatformAddresses(),
-                    avm.getBlockchainID()
-                )
+                await pChain.getUTXOs(this.getExtendedPlatformAddresses(), avm.getBlockchainID())
             ).utxos
             return result
         } else {
             let result: AVMUTXOSet = (
-                await avm.getUTXOs(
-                    this.getDerivedAddresses(),
-                    pChain.getBlockchainID()
-                )
+                await avm.getUTXOs(this.getDerivedAddresses(), pChain.getBlockchainID())
             ).utxos
             return result
         }
@@ -189,14 +183,10 @@ class SingletonWallet implements AvaWalletCore {
         let result: AVMUTXOSet | PlatformUTXOSet
 
         if (chainId === 'X') {
-            result = await this.avmGetAllUTXOsForAddresses([
-                this.getCurrentAddress(),
-            ])
+            result = await this.avmGetAllUTXOsForAddresses([this.getCurrentAddress()])
             this.utxoset = result // we can use local copy of utxos as cache for some functions
         } else {
-            result = await this.platformGetAllUTXOsForAddresses([
-                this.getCurrentPlatformAddress(),
-            ])
+            result = await this.platformGetAllUTXOsForAddresses([this.getCurrentPlatformAddress()])
             this.platformUtxoset = result
         }
 
@@ -230,10 +220,7 @@ class SingletonWallet implements AvaWalletCore {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.platformGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
 
@@ -257,10 +244,7 @@ class SingletonWallet implements AvaWalletCore {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.avmGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
         return utxoSet
@@ -329,11 +313,7 @@ class SingletonWallet implements AvaWalletCore {
         return avm.issueTx(tx)
     }
 
-    async buildUnsignedTransaction(
-        orders: (ITransaction | UTXO)[],
-        addr: string,
-        memo?: Buffer
-    ) {
+    async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {
         const changeAddress = this.getChangeAddress()
         const derivedAddresses = this.getDerivedAddresses()
         const utxoset = this.getUTXOSet() as AVMUTXOSet

@@ -21,8 +21,9 @@
                     :loading="isLoading"
                     :disabled="!canSubmit"
                     depressed
-                    >Access Wallet</v-btn
                 >
+                    Access Wallet
+                </v-btn>
             </form>
             <router-link to="/access" class="link">Cancel</router-link>
         </div>
@@ -47,10 +48,7 @@ export default class PrivateKey extends Vue {
         let key = this.privatekey
         try {
             let wallet = new SingletonWallet(key)
-            let res = await this.$store.dispatch(
-                'accessWalletSingleton',
-                wallet
-            )
+            let res = await this.$store.dispatch('accessWalletSingleton', wallet)
             this.onsuccess()
         } catch (e) {
             this.onerror('Invalid Private Key.')
