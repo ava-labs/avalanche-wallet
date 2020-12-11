@@ -1,15 +1,11 @@
 <template>
     <div v-if="!isEmpty">
         <div class="added_list">
-            <div v-for="utxo in addedNfts" class="nft_icon" :key="utxo.id">
+            <div v-for="(utxo, i) in addedNfts" class="nft_icon" :key="utxo.id">
                 <button @click="remove(utxo)" class="removeBut">
                     <fa icon="times"></fa>
                 </button>
-                <NftCard
-                    :utxo="utxo"
-                    :mini="true"
-                    style="height: 100%; width: 100%; overflow: hidden"
-                ></NftCard>
+                <NftPayloadView :payload="payloads[i]" small="true"></NftPayloadView>
             </div>
             <button @click="showPopup" class="nft_icon card add_but">
                 +
@@ -33,13 +29,16 @@ import BalancePopup from '@/components/misc/BalancePopup/BalancePopup.vue'
 
 import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import { UTXO } from 'avalanche/dist/apis/avm'
-import NftCard from '@/components/wallet/portfolio/NftCard.vue'
+import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
+import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
+import { Buffer } from 'avalanche'
+import { PayloadBase } from 'avalanche/dist/utils'
+import { getPayloadFromUTXO } from '@/helpers/helper'
 
 @Component({
     components: {
-        NftCard,
         BalancePopup,
+        NftPayloadView,
     },
 })
 export default class NftList extends Vue {
@@ -52,6 +51,12 @@ export default class NftList extends Vue {
     @Watch('addedNfts')
     onlistchange(val: UTXO[]) {
         this.$emit('change', val)
+    }
+
+    get payloads() {
+        return this.addedNfts.map((utxo) => {
+            return getPayloadFromUTXO(utxo)
+        })
     }
 
     get isEmpty(): boolean {
@@ -127,6 +132,9 @@ $nft_w: 90px;
     background-color: var(--bg-light);
     border-radius: 3px;
     margin: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:first-of-type {
         margin-left: 0;
@@ -144,6 +152,7 @@ $nft_w: 90px;
 $remove_w: 24px;
 .removeBut {
     position: absolute;
+    z-index: 1;
     top: -$remove_w/4;
     right: -$remove_w/4;
     width: $remove_w;

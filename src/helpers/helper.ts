@@ -5,9 +5,11 @@ import {
     AVMConstants,
     KeyChain as AVMKeyChain,
     KeyPair as AVMKeyPair,
+    NFTTransferOutput,
+    UTXO,
 } from 'avalanche/dist/apis/avm'
 
-import { Defaults, getPreferredHRP, ONEAVAX } from 'avalanche/dist/utils'
+import { Defaults, getPreferredHRP, ONEAVAX, PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
 import { BN } from 'avalanche/dist'
 import Big from 'big.js'
 
@@ -80,4 +82,23 @@ function digestMessage(msgStr: string) {
     return createHash('sha256').update(msgBuf).digest()
 }
 
-export { getAssetIcon, keyToKeypair, calculateStakingReward, bnToBig, digestMessage }
+let payloadtypes = PayloadTypes.getInstance()
+
+function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
+    let out = utxo.getOutput() as NFTTransferOutput
+    let payload = out.getPayloadBuffer()
+
+    let typeId = payloadtypes.getTypeID(payload)
+    let pl: Buffer = payloadtypes.getContent(payload)
+    let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+
+    return payloadbase
+}
+export {
+    getAssetIcon,
+    keyToKeypair,
+    calculateStakingReward,
+    bnToBig,
+    digestMessage,
+    getPayloadFromUTXO,
+}
