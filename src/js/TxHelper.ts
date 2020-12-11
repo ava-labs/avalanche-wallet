@@ -4,14 +4,19 @@ import { BN, Buffer } from 'avalanche'
 import {
     AssetAmountDestination,
     BaseTx,
+    MinterSet,
+    NFTMintOutput,
     TransferableInput,
     TransferableOutput,
     UnsignedTx,
     UTXO,
+    UTXOSet,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
 
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
+import { PayloadBase } from 'avalanche/dist/utils'
+import { OutputOwners } from 'avalanche/dist/common'
 
 export async function buildUnsignedTransaction(
     orders: (ITransaction | UTXO)[],
@@ -133,4 +138,69 @@ export async function buildUnsignedTransaction(
         unsignedTx = new UnsignedTx(baseTx)
     }
     return unsignedTx
+}
+
+export async function buildCreateNftFamilyTx(
+    name: string,
+    symbol: string,
+    groupNum: number,
+    fromAddrs: string[],
+    minterAddr: string,
+    changeAddr: string,
+    utxoSet: UTXOSet
+) {
+    let fromAddresses = fromAddrs
+    let changeAddress = changeAddr
+    let minterAddress = minterAddr
+
+    const minterSets: MinterSet[] = []
+
+    // Create the groups
+    for (var i = 0; i < groupNum; i++) {
+        const minterSet: MinterSet = new MinterSet(1, [minterAddress])
+        minterSets.push(minterSet)
+    }
+
+    let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
+        utxoSet,
+        fromAddresses,
+        [changeAddress],
+        minterSets,
+        name,
+        symbol
+    )
+    return unsignedTx
+}
+
+export async function buildMintNftTx(
+    mintUtxo: UTXO,
+    payload: PayloadBase,
+    quantity: number,
+    ownerAddress: string,
+    changeAddress: string,
+    fromAddresses: string[],
+    utxoSet: UTXOSet
+): Promise<UnsignedTx> {
+    let addrBuf = bintools.parseAddress(ownerAddress, 'X')
+    let owners = []
+
+    let sourceAddresses = fromAddresses
+
+    for (var i = 0; i < quantity; i++) {
+        let owner = new OutputOwners([addrBuf])
+        owners.push(owner)
+    }
+
+    let groupID = (mintUtxo.getOutput() as NFTMintOutput).getGroupID()
+
+    let mintTx = await avm.buildCreateNFTMintTx(
+        utxoSet,
+        owners,
+        sourceAddresses,
+        [changeAddress],
+        mintUtxo.getUTXOID(),
+        groupID,
+        payload
+    )
+    return mintTx
 }

@@ -8,6 +8,7 @@ import {
     KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     UTXO,
+    UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 import {
     KeyPair as PlatformKeyPair,
@@ -15,10 +16,15 @@ import {
     UTXOSet as PlatformUTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
-import { getPreferredHRP } from 'avalanche/dist/utils'
+import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import BN from 'bn.js'
-import { buildUnsignedTransaction } from '../TxHelper'
+import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
 import { AvaWalletCore, ChainAlias } from './IAvaHdWallet'
+import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
+import {
+    Tx as PlatformTx,
+    UnsignedTx as PlatformUnsignedTx,
+} from 'avalanche/dist/apis/platformvm/tx'
 
 class SingletonWallet implements AvaWalletCore {
     keyChain: AVMKeyChain
@@ -353,10 +359,15 @@ class SingletonWallet implements AvaWalletCore {
         this.getUTXOs()
     }
 
-    async sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(
-        unsignedTx: UnsignedTx
-    ): Promise<StandardTx<any, any, any>> {
-        return unsignedTx.sign(this.keyChain)
+    async sign<
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx
+    >(unsignedTx: UnsignedTx, isAVM = true): Promise<SignedTx> {
+        if (isAVM) {
+            return (unsignedTx as AVMUnsignedTx).sign(this.keyChain) as SignedTx
+        } else {
+            return (unsignedTx as PlatformUnsignedTx).sign(this.platformKeyChain) as SignedTx
+        }
     }
 
     async signMessage(msgStr: string): Promise<string> {
@@ -465,6 +476,64 @@ class SingletonWallet implements AvaWalletCore {
             this.getUTXOs()
         }, 3000)
         return pChain.issueTx(tx)
+    }
+
+    async buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number) {
+        let fromAddresses = this.getDerivedAddresses()
+        let changeAddress = this.getChangeAddress()
+
+        let minterAddress = this.getCurrentAddress()
+
+        let unsignedTx = await buildCreateNftFamilyTx(
+            name,
+            symbol,
+            groupNum,
+            fromAddresses,
+            minterAddress,
+            changeAddress,
+            this.utxoset
+        )
+        return unsignedTx
+    }
+
+    async createNftFamily(name: string, symbol: string, groupNum: number) {
+        let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
+        let signed = (await this.sign<AVMUnsignedTx, AVMTx>(tx)) as AVMTx
+        return await avm.issueTx(signed)
+    }
+
+    async buildMintNftTx(
+        mintUtxo: UTXO,
+        payload: PayloadBase,
+        quantity: number,
+        ownerAddress: string,
+        changeAddress: string
+    ): Promise<UnsignedTx> {
+        let sourceAddresses = this.getDerivedAddresses()
+
+        let mintTx = buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            ownerAddress,
+            changeAddress,
+            sourceAddresses,
+            this.utxoset
+        )
+
+        return mintTx
+    }
+
+    async mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number) {
+        let tx = await this.buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            this.getCurrentAddress(),
+            this.getChangeAddress()
+        )
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        return await avm.issueTx(signed)
     }
 }
 

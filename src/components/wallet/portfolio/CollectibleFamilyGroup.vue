@@ -125,6 +125,7 @@ $countW: 28px;
 .front {
     max-height: 100%;
     height: 100%;
+    z-index: 1;
 }
 
 .view {
