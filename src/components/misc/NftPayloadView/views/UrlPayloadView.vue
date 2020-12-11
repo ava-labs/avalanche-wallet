@@ -52,6 +52,12 @@ img {
     object-fit: cover;
 }
 
+.unknown {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .unknown,
 .warn {
     background-color: var(--bg-light);

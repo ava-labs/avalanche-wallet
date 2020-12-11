@@ -3,7 +3,7 @@
         <p class="count" v-if="quantity > 1">{{ quantity }}</p>
         <div class="nft_card" @click="flip" :flip="isFlip">
             <div class="front">
-                <NftPayloadView :payload="payload"></NftPayloadView>
+                <NftPayloadView :payload="payload" class="view"></NftPayloadView>
             </div>
             <div class="back">
                 <div class="nft_info">
@@ -78,6 +78,8 @@ export default class CollectibleFamilyGroup extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 $countW: 28px;
 .count {
     position: absolute;
@@ -122,6 +124,11 @@ $countW: 28px;
 
 .front {
     max-height: 100%;
+    height: 100%;
+}
+
+.view {
+    height: 100%;
 }
 
 .front,
@@ -147,5 +154,8 @@ $countW: 28px;
 .nft_info {
     font-size: 12px;
     margin: 30px 0;
+}
+
+@include main.mobile-device {
 }
 </style>

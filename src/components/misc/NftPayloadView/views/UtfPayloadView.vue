@@ -18,6 +18,7 @@ export default class UtfPayloadView extends Vue {
 </script>
 <style scoped lang="scss">
 p {
+    height: 100%;
     font-size: 13px;
     padding: 12px 24px;
     word-break: break-word;

@@ -69,11 +69,14 @@ export default class JsonPayloadView extends Vue {
 textarea {
     display: block;
     padding: 12px;
+    width: 100%;
+    height: 100%;
     min-height: 140px;
     font-size: 12px !important;
     background-color: #000;
     font-family: monospace;
     color: #0f0;
+    resize: none;
 }
 p {
     font-size: 13px;

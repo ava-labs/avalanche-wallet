@@ -119,6 +119,7 @@ export default class CollectibleFamilyRow extends Vue {
 }
 
 .fam_id {
+    word-break: break-all;
     text-align: right;
     color: var(--primary-color-light);
     font-size: 13px;
@@ -141,6 +142,7 @@ export default class CollectibleFamilyRow extends Vue {
 .group {
     align-self: flex-end;
     width: 180px;
+    max-width: 100%;
     height: 220px;
     margin-right: 14px;
     margin-bottom: 14px;
@@ -158,6 +160,28 @@ export default class CollectibleFamilyRow extends Vue {
     .group {
         width: 120px;
         height: 180px;
+    }
+}
+
+@include main.mobile-device {
+    .fam_header {
+        grid-template-columns: max-content 1fr;
+    }
+
+    .group {
+        //height: 80vh;
+        height: 40vh;
+        width: 80vw;
+    }
+
+    .fam_id {
+        grid-column: 1/3;
+        text-align: left;
+    }
+    .mint_card {
+        height: max-content;
+    }
+    .list {
     }
 }
 </style>
