@@ -14,11 +14,7 @@
                                             src="@/assets/diamond-primary.svg"
                                             alt
                                         />
-                                        <img
-                                            v-else
-                                            src="@/assets/diamond-primary-night.svg"
-                                            alt
-                                        />
+                                        <img v-else src="@/assets/diamond-primary-night.svg" alt />
                                     </div>
                                     <h2>{{ $t('home.access.title') }}</h2>
                                     <p>{{ $t('home.access.desc') }}</p>
@@ -27,8 +23,9 @@
                                     data-cy="access"
                                     to="/access"
                                     class="ava_button button_primary"
-                                    >{{ $t('home.access.submit') }}</router-link
                                 >
+                                    {{ $t('home.access.submit') }}
+                                </router-link>
                             </div>
                             <div class="login_option">
                                 <header>
@@ -51,8 +48,9 @@
                                     data-cy="create"
                                     to="/create"
                                     class="ava_button button_secondary"
-                                    >{{ $t('home.create.submit') }}</router-link
                                 >
+                                    {{ $t('home.create.submit') }}
+                                </router-link>
                             </div>
                         </div>
                     </div>
@@ -114,8 +112,7 @@ export default class Home extends Vue {}
                 align-items: flex-start;
                 justify-content: space-between;
                 background-color: var(--bg-light);
-                padding: 60px 90px main.$container-padding
-                    main.$container-padding;
+                padding: 60px 90px main.$container-padding main.$container-padding;
 
                 header {
                     margin-bottom: 60px;
