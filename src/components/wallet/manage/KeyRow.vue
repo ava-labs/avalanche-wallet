@@ -7,13 +7,18 @@
         ></ExportKeys>
         <mnemonic-phrase
             v-if="walletType === 'mnemonic'"
-            ref="modal"
             :phrase="mnemonicPhrase"
+            ref="modal"
         ></mnemonic-phrase>
         <HdDerivationListModal
             :wallet="wallet"
             ref="modal_hd"
         ></HdDerivationListModal>
+        <PrivateKey
+            v-if="walletType === 'singleton'"
+            :privateKey="privateKey"
+            ref="modal_priv_key"
+        ></PrivateKey>
         <div class="rows">
             <div class="header">
                 <template v-if="is_default">
@@ -63,6 +68,7 @@
                             />
                         </Tooltip>
                         <Tooltip
+                            v-if="walletType !== 'singleton'"
                             :text="$t('keys.hd_addresses')"
                             class="row_but circle"
                             @click.native="showPastAddresses"
@@ -77,12 +83,17 @@
                         >
                             <fa icon="upload"></fa>
                         </Tooltip>
-                        <!-- // TODO: Singleton, show private key modal? -->
                         <button
                             v-if="walletType == 'mnemonic'"
                             @click="showModal"
                         >
                             {{ $t('keys.view_key') }}
+                        </button>
+                        <button
+                            v-if="walletType == 'singleton'"
+                            @click="showPrivateKeyModal"
+                        >
+                            {{ $t('keys.view_priv_key') }}
                         </button>
                     </div>
                 </div>
@@ -124,7 +135,9 @@ import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
+import PrivateKey from '@/components/modals/PrivateKey.vue'
 import { WalletNameType, WalletType } from '@/store/types'
+import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -136,6 +149,7 @@ interface IKeyBalanceDict {
         HdDerivationListModal,
         Tooltip,
         ExportKeys,
+        PrivateKey,
     },
 })
 export default class KeyRow extends Vue {
@@ -215,6 +229,12 @@ export default class KeyRow extends Vue {
         return wallet.getMnemonic()
     }
 
+    get privateKey(): string {
+        if (this.walletType !== 'singleton') return '?'
+        let wallet = this.wallet as SingletonWallet
+        return wallet.key
+    }
+
     remove() {
         this.$emit('remove', this.wallet)
     }
@@ -237,6 +257,11 @@ export default class KeyRow extends Vue {
     showExportModal() {
         //@ts-ignore
         this.$refs.export_wallet.open()
+    }
+
+    showPrivateKeyModal() {
+        //@ts-ignore
+        this.$refs.modal_priv_key.open()
     }
 }
 </script>
