@@ -6,7 +6,7 @@
                     <h1>{{ $t('keys.title') }}</h1>
                     <div
                         class="button_container"
-                        v-if="walletType !== 'ledger'"
+                        v-if="walletType === 'mnemonic'"
                     >
                         <button
                             v-if="hasVolatile"
@@ -53,7 +53,7 @@ import ImportKeys from '@/components/modals/ImportKeys.vue'
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import RememberKeysModal from '@/components/modals/RememberWallet/RememberKeysModal.vue'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 
 @Component({
     components: {
@@ -79,8 +79,8 @@ export default class ManageKeys extends Vue {
         this.$refs.remember_modal.open()
     }
 
-    get walletType(): WalletType {
-        return this.$store.state.walletType
+    get walletType(): WalletNameType {
+        return this.$store.state.activeWallet.type
     }
 
     get hasVolatile() {

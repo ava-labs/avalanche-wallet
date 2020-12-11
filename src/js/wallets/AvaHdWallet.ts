@@ -32,7 +32,7 @@ import { HdHelper } from '@/js/HdHelper'
 import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import createHash from 'create-hash'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { digestMessage } from '@/helpers/helper'
 
@@ -55,7 +55,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     hdKey: HDKey
     mnemonic: string
     isLoading: boolean
-    type: WalletType
+    type: WalletNameType
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {

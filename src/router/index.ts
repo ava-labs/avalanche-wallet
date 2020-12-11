@@ -7,6 +7,7 @@ import ManageKeys from '@/views/wallet/ManageKeys.vue'
 import Menu from '../views/access/Menu.vue'
 import Keystore from '../views/access/Keystore.vue'
 import Mnemonic from '@/views/access/Mnemonic.vue'
+import PrivateKey from '@/views/access/PrivateKey.vue'
 import Access from '../views/access/Access.vue'
 import Create from '@/views/Create.vue'
 import Wallet from '@/views/Wallet.vue'
@@ -52,6 +53,10 @@ const routes = [
             {
                 path: 'keystore',
                 component: Keystore,
+            },
+            {
+                path: 'privatekey',
+                component: PrivateKey,
             },
             {
                 path: 'mnemonic',

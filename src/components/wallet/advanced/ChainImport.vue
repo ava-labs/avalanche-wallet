@@ -32,9 +32,8 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import Spinner from '@/components/misc/Spinner.vue'
+import { WalletType } from '@/store/types'
 @Component({
     components: { Spinner },
 })
@@ -44,9 +43,8 @@ export default class ChainImport extends Vue {
     isLoading = false
     txId = ''
 
-    get wallet(): null | AvaHdWallet | LedgerWallet {
-        let wallet: null | AvaHdWallet | LedgerWallet = this.$store.state
-            .activeWallet
+    get wallet(): null | WalletType {
+        let wallet: null | WalletType = this.$store.state.activeWallet
         return wallet
     }
     async atomicImportX() {

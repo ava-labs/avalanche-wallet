@@ -36,10 +36,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import AvaHdWallet from '../../../js/wallets/AvaHdWallet'
-import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 import createHash from 'create-hash'
 import { Buffer } from 'avalanche'
+import { WalletType } from '@/store/types'
 
 @Component
 export default class SignMessage extends Vue {
@@ -48,10 +47,10 @@ export default class SignMessage extends Vue {
     signed = ''
     error = ''
     get addresses(): string[] {
-        return this.wallet.externalHelper.getAllDerivedAddresses()
+        return this.wallet.getAllDerivedExternalAddresses()
     }
 
-    get wallet(): AvaHdWallet | LedgerWallet {
+    get wallet(): WalletType {
         return this.$store.state.activeWallet
     }
 

@@ -1,5 +1,3 @@
-import { WalletType } from '@/store/types'
-
 export interface KeyFile {
     salt: string
     pass_hash: string

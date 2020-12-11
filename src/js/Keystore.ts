@@ -6,10 +6,8 @@ import {
     KeyFileKeyDecrypted,
 } from './IKeystore'
 import { bintools } from '@/AVA'
-import { AvaWallet } from '@/js/AvaWallet'
 import { Buffer } from 'buffer/'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { WalletType } from '@/store/types'
 import Crypto from '@/js/Crypto'
 
 const cryptoHelpers = new Crypto()

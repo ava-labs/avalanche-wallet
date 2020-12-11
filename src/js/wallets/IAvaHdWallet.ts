@@ -9,13 +9,14 @@ import {
 } from 'avalanche/dist/apis/avm'
 
 import {
+    UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 
 // export type wallet_type = "hd" | "singleton";
@@ -24,23 +25,29 @@ export interface IIndexKeyCache {
     [index: number]: AVMKeyPair
 }
 
+export type ChainAlias = 'X' | 'P'
+
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
-    type: WalletType
+    type: WalletNameType
     chainId: string
     utxoset: UTXOSet
+    platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
-
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
+    getAllDerivedExternalAddresses(): string[]
     getHistoryAddresses(): string[]
     getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void
     getUTXOs(): Promise<UTXOSet>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
+    getCurrentPlatformAddress(): string
+    getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
+    getBaseAddress(): string
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

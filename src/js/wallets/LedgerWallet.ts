@@ -43,12 +43,12 @@ import {
 } from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import { digestMessage } from '@/helpers/helper'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
-    type: WalletType
+    type: WalletNameType
     constructor(app: AppAvax, hdkey: HDKey) {
         super(hdkey)
         this.app = app
