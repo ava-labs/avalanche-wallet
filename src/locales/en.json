@@ -42,6 +42,7 @@
     "access": {
         "title": "How do you want to access your wallet?",
         "create": "Don't have a wallet?",
+        "but_private_key": "Private Key",
         "but_mnemonic": "Mnemonic Key Phrase",
         "but_keystore": "Keystore File",
         "cancel": "Cancel",
@@ -166,6 +167,7 @@
         "import_key_success_title": "Key Added",
         "import_key_success_msg": "Private key and assets added to the wallet.",
         "tooltip": "This key will be forgotten when you refresh the browser.",
+        "view_priv_key": "View Private Key",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -463,6 +465,9 @@
         },
         "mnemonic": {
             "title": "Key Phrase"
+        },
+        "priv_key": {
+            "title": "Private Key"
         },
         "activateWallet": {
             "title": "Activate Wallet",

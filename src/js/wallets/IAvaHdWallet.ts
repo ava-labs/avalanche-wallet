@@ -9,11 +9,15 @@ import {
     UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 
-import { UnsignedTx as PlatformUnsignedTx, Tx as PlatformTx } from 'avalanche/dist/apis/platformvm'
+import {
+    UTXOSet as PlatformUTXOSet,
+    UnsignedTx as PlatformUnsignedTx,
+    Tx as PlatformTx,
+} from 'avalanche/dist/apis/platformvm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
-import { WalletType } from '@/store/types'
+import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { PayloadBase } from 'avalanche/dist/utils'
 
@@ -23,13 +27,15 @@ export interface IIndexKeyCache {
     [index: number]: AVMKeyPair
 }
 
+export type ChainAlias = 'X' | 'P'
+
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
-    type: WalletType
+    type: WalletNameType
     chainId: string
     utxoset: UTXOSet
+    platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
-
     buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
     buildMintNftTx(
         mintUtxo: UTXO,
@@ -41,15 +47,19 @@ export interface AvaWalletCore {
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
+    getAllDerivedExternalAddresses(): string[]
     getHistoryAddresses(): string[]
     getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void
     getUTXOs(): Promise<UTXOSet>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
+    getCurrentPlatformAddress(): string
+    getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
     createNftFamily(name: string, symbol: string, groupNum: number): Promise<string>
     mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number): Promise<string>
+    getBaseAddress(): string
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

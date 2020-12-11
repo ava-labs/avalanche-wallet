@@ -8,6 +8,9 @@
         <router-link to="/create" class="link">{{ $t('access.create') }}</router-link>
         <hr />
         <div class="options">
+            <router-link to="/access/privatekey" class="option button_primary">
+                {{ $t('access.but_private_key') }}
+            </router-link>
             <router-link to="/access/mnemonic" class="option button_primary">
                 {{ $t('access.but_mnemonic') }}
             </router-link>
@@ -64,7 +67,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 30px;
 }
 

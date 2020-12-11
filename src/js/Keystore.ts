@@ -1,10 +1,8 @@
 // Functions to manage import/export of keystore files
 import { KeyFile, KeyFileDecrypted, KeyFileKey, KeyFileKeyDecrypted } from './IKeystore'
 import { bintools } from '@/AVA'
-import { AvaWallet } from '@/js/AvaWallet'
 import { Buffer } from 'buffer/'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { WalletType } from '@/store/types'
 import Crypto from '@/js/Crypto'
 
 const cryptoHelpers = new Crypto()

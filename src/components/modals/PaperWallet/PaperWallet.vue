@@ -64,21 +64,25 @@ export default class PaperWallet extends Vue {
     }
 
     get address() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
-        if (!wallet) return '-'
+        try {
+            let wallet: AvaHdWallet = this.$store.state.activeWallet
+            if (!wallet) return '-'
 
-        let key = wallet.externalHelper.getKeyForIndex(0)
-        if (!key) {
+            let key = wallet.externalHelper.getKeyForIndex(0)
+            if (!key) {
+                return '-'
+            }
+            return key.getAddressString()
+        } catch (e) {
             return '-'
         }
-        return key.getAddressString()
     }
 
     get mnemonic(): string {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
         if (!wallet) return '-'
 
-        return wallet.mnemonic
+        return wallet.mnemonic || '-'
     }
 
     get aspectRatio(): number {

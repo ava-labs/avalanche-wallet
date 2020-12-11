@@ -42,9 +42,8 @@ import { TransactionValueDict } from '@/components/SidePanels/types'
 // import {AssetsDict} from "@/store/modules/assets/types";
 // import {AvaNetwork} from "@/js/AvaNetwork";
 import store from '@/store'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import { WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -98,7 +97,7 @@ export default class TxHistoryRow extends Vue {
     }
 
     get addresses() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         if (!wallet) return []
 
         return wallet.getHistoryAddresses()
