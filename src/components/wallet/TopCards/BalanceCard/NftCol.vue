@@ -49,29 +49,21 @@ export default class NftCol extends Vue {
         return this.$store.getters.walletNftDict
     }
 
-    get collectionAmt(): number {
-        let count = 0
-        for (var col in this.nftDict) {
-            count++
-        }
-        return count
-    }
-
     get nftArray(): UTXO[] {
         let utxos: UTXO[] = this.$store.getters.walletNftUTXOs
 
-        let familyIds: string[] = []
-        let ids: number[] = []
+        let ids: string[] = []
         // Filter same groups
         utxos = utxos.filter((utxo) => {
             let out = utxo.getOutput() as NFTTransferOutput
             let famId = bintools.cb58Encode(utxo.getAssetID())
             let groupId = out.getGroupID()
-            if (ids.includes(groupId) && familyIds.includes(famId)) {
+
+            let cacheId = `${famId}-${groupId}`
+            if (ids.includes(cacheId)) {
                 return false
             } else {
-                ids.push(groupId)
-                familyIds.push(famId)
+                ids.push(cacheId)
                 return true
             }
         })
@@ -97,11 +89,21 @@ export default class NftCol extends Vue {
     }
 
     get collectedAmt(): number {
-        return this.nftArray.length
+        return this.$store.getters.walletNftUTXOs.length
+    }
+
+    get collectionAmt(): number {
+        let fams = this.$store.state.Assets.nftFams
+        return fams.length
+        // let count = 0
+        // for (var col in this.nftDict) {
+        //     count++
+        // }
+        // return count
     }
 
     get statusText(): string {
-        let res = `${this.collectedAmt} NFTs collected from ${this.collectionAmt} Collections`
+        let res = `${this.collectedAmt} collected from ${this.collectionAmt} Collections`
         return res
     }
 }

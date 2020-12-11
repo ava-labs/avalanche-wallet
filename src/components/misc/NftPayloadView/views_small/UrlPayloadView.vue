@@ -2,11 +2,7 @@
     <div class="url_payload_view">
         <img :src="url" v-if="img_types.includes(fileType)" />
         <div v-else class="unknown">
-            <p>
-                <span>URL</span>
-            </p>
-            <a :href="url" target="_blank">{{ url }}</a>
-            <p class="warn">Do NOT click links you do not trust.</p>
+            <p><fa icon="link"></fa></p>
         </div>
     </div>
 </template>
@@ -42,9 +38,16 @@ export default class UrlPayloadView extends Vue {
 </script>
 <style scoped lang="scss">
 .url_payload_view {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     //border-radius: 14px;
     //overflow: hidden;
 }
+
 img {
     width: 100%;
     height: 100%;
@@ -52,23 +55,8 @@ img {
     object-fit: cover;
 }
 
-.unknown,
-.warn {
+.unknown {
     background-color: var(--bg-light);
     text-align: center;
-    padding: 12px 8px;
-    word-break: break-all;
-    font-size: 13px;
-    span {
-        color: var(--primary-color-light);
-        font-size: 13px;
-    }
-}
-
-.warn {
-    color: var(--error);
-    word-break: normal;
-    font-size: 11px;
-    opacity: 0.6;
 }
 </style>

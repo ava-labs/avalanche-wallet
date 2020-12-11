@@ -81,8 +81,6 @@ export default class GenericForm extends Vue {
             }
         }
 
-        console.log(msg)
-
         // this.$emit('onInput', JSON.stringify(msg))
         this.$emit('onInput', msg)
     }

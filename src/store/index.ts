@@ -51,6 +51,7 @@ import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
+import { AvaNftFamily } from '@/js/AvaNftFamily'
 
 export default new Vuex.Store({
     modules: {
