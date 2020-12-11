@@ -189,10 +189,14 @@ class SingletonWallet implements AvaWalletCore {
         let result: AVMUTXOSet | PlatformUTXOSet
 
         if (chainId === 'X') {
-            result = await this.avmGetAllUTXOs()
+            result = await this.avmGetAllUTXOsForAddresses([
+                this.getCurrentAddress(),
+            ])
             this.utxoset = result // we can use local copy of utxos as cache for some functions
         } else {
-            result = await this.platformGetAllUTXOs()
+            result = await this.platformGetAllUTXOsForAddresses([
+                this.getCurrentPlatformAddress(),
+            ])
             this.platformUtxoset = result
         }
 
@@ -260,37 +264,6 @@ class SingletonWallet implements AvaWalletCore {
             return utxoSet.merge(subUtxos)
         }
         return utxoSet
-    }
-
-    // helper method to get utxos for more than 1024 addresses
-    async avmGetAllUTXOs(): Promise<AVMUTXOSet> {
-        let addrs = this.getDerivedAddresses()
-        if (addrs.length <= 1024) {
-            let utxos = await this.avmGetAllUTXOsForAddresses(addrs)
-            return utxos
-        } else {
-            //Break the list in to 1024 chunks
-            let chunk = addrs.slice(0, 1024)
-
-            let newSet = await this.avmGetAllUTXOsForAddresses(chunk)
-            return newSet.merge(await this.avmGetAllUTXOs())
-        }
-    }
-
-    // helper method to get utxos for more than 1024 addresses
-    async platformGetAllUTXOs(): Promise<PlatformUTXOSet> {
-        const addrs = this.getExtendedPlatformAddresses()
-        if (addrs.length <= 1024) {
-            let newSet = await this.platformGetAllUTXOsForAddresses(addrs)
-            return newSet
-        } else {
-            //Break the list in to 1024 chunks
-            let chunk = addrs.slice(0, 1024)
-
-            let newSet = await this.platformGetAllUTXOsForAddresses(chunk)
-
-            return newSet.merge(await this.platformGetAllUTXOs())
-        }
     }
 
     async importToPlatformChain(): Promise<string> {
