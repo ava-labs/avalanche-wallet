@@ -13,16 +13,9 @@
                 <!--                    </div>-->
                 <!--                </div>-->
                 <div class="lists" v-show="!isConfirm">
-                    <tx-list
-                        class="tx_list"
-                        ref="txList"
-                        @change="updateTxList"
-                    ></tx-list>
+                    <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
                     <template v-if="hasNFT">
-                        <NftList
-                            @change="updateNftList"
-                            ref="nftList"
-                        ></NftList>
+                        <NftList @change="updateNftList" ref="nftList"></NftList>
                     </template>
                 </div>
                 <div v-show="isConfirm" class="lists">
@@ -93,8 +86,9 @@
                                 @click="confirm"
                                 :disabled="!canSend"
                                 block
-                                >Confirm</v-btn
                             >
+                                Confirm
+                            </v-btn>
                         </template>
                         <template v-else-if="isConfirm && !isSuccess">
                             <p class="err">{{ err }}</p>
@@ -107,27 +101,28 @@
                                 @click="submit"
                                 :disabled="!canSend"
                                 block
-                                >{{ $t('transfer.send') }}</v-btn
                             >
+                                {{ $t('transfer.send') }}
+                            </v-btn>
                             <v-btn
                                 text
                                 block
                                 small
-                                style="
-                                    margin-top: 20px !important;
-                                    color: var(--primary-color);
-                                "
+                                style="margin-top: 20px !important; color: var(--primary-color)"
                                 @click="cancelConfirm"
-                                >Cancel</v-btn
                             >
+                                Cancel
+                            </v-btn>
                         </template>
                         <template v-else-if="isSuccess">
                             <p style="color: var(--success)">
-                                <fa icon="check-circle"></fa> Transaction Sent
+                                <fa icon="check-circle"></fa>
+                                Transaction Sent
                             </p>
-                            <label style="word-break: break-all"
-                                ><b>ID: </b> {{ txId }}</label
-                            >
+                            <label style="word-break: break-all">
+                                <b>ID:</b>
+                                {{ txId }}
+                            </label>
                             <v-btn
                                 depressed
                                 style="margin-top: 14px"
@@ -137,8 +132,9 @@
                                 @click="startAgain"
                                 block
                                 :disabled="!canSendAgain"
-                                >Start Again</v-btn
                             >
+                                Start Again
+                            </v-btn>
                         </template>
                     </div>
                 </div>
@@ -249,17 +245,13 @@ export default class Transfer extends Vue {
             let buff = Buffer.from(memo)
             let size = buff.length
             if (size > 256) {
-                err.push(
-                    'You can have a maximum of 256 characters in your memo.'
-                )
+                err.push('You can have a maximum of 256 characters in your memo.')
             }
 
             // Make sure memo isnt mnemonic
             let isMnemonic = bip39.validateMnemonic(memo)
             if (isMnemonic) {
-                err.push(
-                    'You should not put a mnemonic phrase into the Memo field.'
-                )
+                err.push('You should not put a mnemonic phrase into the Memo field.')
             }
         }
 
@@ -331,10 +323,7 @@ export default class Transfer extends Vue {
         this.isAjax = true
         this.err = ''
 
-        let sumArray: (ITransaction | UTXO)[] = [
-            ...this.formOrders,
-            ...this.formNftOrders,
-        ]
+        let sumArray: (ITransaction | UTXO)[] = [...this.formOrders, ...this.formNftOrders]
 
         let txList: IssueBatchTxInput = {
             toAddress: this.formAddress,
@@ -378,8 +367,7 @@ export default class Transfer extends Vue {
             return false
         }
 
-        if (this.orders.length === 0 && this.nftOrders.length === 0)
-            return false
+        if (this.orders.length === 0 && this.nftOrders.length === 0) return false
 
         return true
     }

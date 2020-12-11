@@ -20,13 +20,12 @@
                             <Tooltip
                                 style="display: inline-block"
                                 :text="$t('earn.delegate.list.aval_stake_tip')"
-                                ><fa icon="question-circle"></fa
-                            ></Tooltip>
+                            >
+                                <fa icon="question-circle"></fa>
+                            </Tooltip>
                         </th>
                         <th>
-                            <Tooltip text="Number of Delegators"
-                                ><fa icon="users"></fa
-                            ></Tooltip>
+                            <Tooltip text="Number of Delegators"><fa icon="users"></fa></Tooltip>
                         </th>
                         <th>{{ $t('earn.delegate.list.end') }}</th>
                         <th>
@@ -34,8 +33,9 @@
                             <Tooltip
                                 style="display: inline-block"
                                 :text="$t('earn.delegate.list.up_tip')"
-                                ><fa icon="question-circle"></fa
-                            ></Tooltip>
+                            >
+                                <fa icon="question-circle"></fa>
+                            </Tooltip>
                         </th>
                         <th>{{ $t('earn.delegate.list.fee') }}</th>
                         <th></th>
@@ -65,10 +65,7 @@ import { BN } from 'avalanche'
 
 import ValidatorRow from '@/components/misc/ValidatorList/ValidatorRow.vue'
 import FilterSettings from '@/components/misc/ValidatorList/FilterSettings.vue'
-import {
-    ValidatorRaw,
-    ValidatorDict,
-} from '@/components/misc/ValidatorList/types'
+import { ValidatorRaw, ValidatorDict } from '@/components/misc/ValidatorList/types'
 import Tooltip from '@/components/misc/Tooltip.vue'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 import { ValidatorListFilter } from '@/components/wallet/earn/Delegate/types'
@@ -95,9 +92,7 @@ export default class ValidatorsList extends Vue {
     }
 
     get validators(): ValidatorListItem[] {
-        let list: ValidatorListItem[] = this.$store.getters[
-            'Platform/validatorListEarn'
-        ]
+        let list: ValidatorListItem[] = this.$store.getters['Platform/validatorListEarn']
 
         if (this.search) {
             list = list.filter((v) => {

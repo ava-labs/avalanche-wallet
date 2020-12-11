@@ -31,10 +31,7 @@ export default class AvaSingletonWallet implements IAvaSingletonWallet {
         this.utxoset = new UTXOSet()
         this.address = keypair.getAddressString()
 
-        this.keyChain = new AVMKeyChain(
-            getPreferredHRP(ava.getNetworkID()),
-            'X'
-        )
+        this.keyChain = new AVMKeyChain(getPreferredHRP(ava.getNetworkID()), 'X')
         this.keyChain.addKey(keypair)
 
         this.getUTXOs()

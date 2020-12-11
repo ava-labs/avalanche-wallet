@@ -99,8 +99,7 @@ const platform_module: Module<PlatformState, RootState> = {
             })
 
             let delegatorMap: ValidatorDelegatorDict = getters.nodeDelegatorMap
-            let delegatorPendingMap: ValidatorDelegatorPendingDict =
-                getters.nodeDelegatorPendingMap
+            let delegatorPendingMap: ValidatorDelegatorPendingDict = getters.nodeDelegatorPendingMap
 
             let res: ValidatorListItem[] = []
 
@@ -110,19 +109,15 @@ const platform_module: Module<PlatformState, RootState> = {
                 let nodeID = v.nodeID
 
                 let delegators: DelegatorRaw[] = delegatorMap[nodeID] || []
-                let delegatorsPending: DelegatorPendingRaw[] =
-                    delegatorPendingMap[nodeID] || []
+                let delegatorsPending: DelegatorPendingRaw[] = delegatorPendingMap[nodeID] || []
 
                 let delegatedAmt = new BN(0)
                 let delegatedPendingAmt = new BN(0)
 
                 if (delegators) {
-                    delegatedAmt = delegators.reduce(
-                        (acc: BN, val: DelegatorRaw) => {
-                            return acc.add(new BN(val.stakeAmount))
-                        },
-                        new BN(0)
-                    )
+                    delegatedAmt = delegators.reduce((acc: BN, val: DelegatorRaw) => {
+                        return acc.add(new BN(val.stakeAmount))
+                    }, new BN(0))
                 }
 
                 if (delegatorsPending) {
@@ -144,9 +139,7 @@ const platform_module: Module<PlatformState, RootState> = {
                 let relativeMaxStake = validatorStake.mul(new BN(5))
                 let stakeLimit = BN.min(absMaxStake, relativeMaxStake)
 
-                let remainingStake = stakeLimit
-                    .sub(validatorStake)
-                    .sub(delegatedStake)
+                let remainingStake = stakeLimit.sub(validatorStake).sub(delegatedStake)
 
                 let listItem: ValidatorListItem = {
                     nodeID: v.nodeID,
@@ -203,9 +196,7 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         // Given a validator list item, calculate the max stake of this item
-        validatorMaxStake: (state, getters) => (
-            validator: ValidatorListItem
-        ) => {
+        validatorMaxStake: (state, getters) => (validator: ValidatorListItem) => {
             let stakeAmt = validator.validatorStake
 
             // 5 times the validator's stake

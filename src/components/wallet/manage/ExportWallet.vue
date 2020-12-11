@@ -32,8 +32,9 @@
                 depressed
                 block
                 class="button_primary"
-                >Export Wallet</v-btn
             >
+                Export Wallet
+            </v-btn>
         </form>
     </div>
 </template>
@@ -54,9 +55,7 @@ export default class ExportWallet extends Vue {
     @Prop({ default: true }) isDesc!: boolean
 
     get isValid(): boolean {
-        return this.pass.length >= 9 && this.pass === this.passConfirm
-            ? true
-            : false
+        return this.pass.length >= 9 && this.pass === this.passConfirm ? true : false
     }
 
     async download() {

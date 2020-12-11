@@ -1,11 +1,6 @@
 <template>
     <div class="radio_buts">
-        <button
-            v-for="val in value"
-            :key="val"
-            @click="select(val)"
-            :active="selection === val"
-        >
+        <button v-for="val in value" :key="val" @click="select(val)" :active="selection === val">
             {{ val }}
         </button>
     </div>

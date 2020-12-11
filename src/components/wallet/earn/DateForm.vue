@@ -10,10 +10,10 @@
             ></datetime>
         </div>
         <div>
-            <label
-                >{{ $t('earn.validate.duration.end') }}
-                <span @click="maxoutEndDate">Max</span></label
-            >
+            <label>
+                {{ $t('earn.validate.duration.end') }}
+                <span @click="maxoutEndDate">Max</span>
+            </label>
             <datetime
                 v-model="localEnd"
                 type="datetime"

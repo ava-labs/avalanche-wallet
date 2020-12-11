@@ -1,25 +1,19 @@
 <template>
     <div class="access_card">
         <div class="img_container">
-            <img
-                v-if="$root.theme === 'day'"
-                src="@/assets/diamond-primary.svg"
-                alt
-            />
+            <img v-if="$root.theme === 'day'" src="@/assets/diamond-primary.svg" alt />
             <img v-else src="@/assets/diamond-primary-night.svg" alt />
         </div>
         <h1>{{ $t('access.title') }}</h1>
-        <router-link to="/create" class="link">{{
-            $t('access.create')
-        }}</router-link>
+        <router-link to="/create" class="link">{{ $t('access.create') }}</router-link>
         <hr />
         <div class="options">
-            <router-link to="/access/mnemonic" class="option button_primary">{{
-                $t('access.but_mnemonic')
-            }}</router-link>
-            <router-link to="/access/keystore" class="option button_primary">{{
-                $t('access.but_keystore')
-            }}</router-link>
+            <router-link to="/access/mnemonic" class="option button_primary">
+                {{ $t('access.but_mnemonic') }}
+            </router-link>
+            <router-link to="/access/keystore" class="option button_primary">
+                {{ $t('access.but_keystore') }}
+            </router-link>
             <LedgerButton class="option button_primary"></LedgerButton>
             <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>

@@ -36,11 +36,7 @@ function keyToKeypair(key: string, chainID: string = 'X'): AVMKeyPair {
     return keychain.importKey(key)
 }
 
-function calculateStakingReward(
-    amount: BN,
-    duration: number,
-    currentSupply: BN
-): BN {
+function calculateStakingReward(amount: BN, duration: number, currentSupply: BN): BN {
     let networkID = ava.getNetworkID()
 
     //@ts-ignore
@@ -65,8 +61,7 @@ function calculateStakingReward(
     let portionOfExistingSupplyBig = amtBig.div(currentSupplyBig)
 
     let portionOfStakingDuration = duration / maxStakingDuration.toNumber()
-    let mintingRate =
-        minConsumption + diffConsumption * portionOfStakingDuration
+    let mintingRate = minConsumption + diffConsumption * portionOfStakingDuration
 
     let rewardBig: Big = remainingSupplyBig.times(portionOfExistingSupplyBig)
     rewardBig = rewardBig.times(Big(mintingRate * portionOfStakingDuration))
@@ -81,17 +76,8 @@ function digestMessage(msgStr: string) {
     let mBuf = Buffer.from(msgStr, 'utf8')
     let msgSize = Buffer.alloc(4)
     msgSize.writeUInt32BE(mBuf.length, 0)
-    let msgBuf = Buffer.from(
-        `\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`,
-        'utf8'
-    )
+    let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`, 'utf8')
     return createHash('sha256').update(msgBuf).digest()
 }
 
-export {
-    getAssetIcon,
-    keyToKeypair,
-    calculateStakingReward,
-    bnToBig,
-    digestMessage,
-}
+export { getAssetIcon, keyToKeypair, calculateStakingReward, bnToBig, digestMessage }

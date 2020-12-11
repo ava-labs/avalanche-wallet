@@ -18,9 +18,7 @@
                     width: `${600 * aspectRatio}px`,
                 }"
             ></canvas>
-            <v-btn depressed block @click="print">{{
-                $t('modal.print.submit')
-            }}</v-btn>
+            <v-btn depressed block @click="print">{{ $t('modal.print.submit') }}</v-btn>
         </div>
     </modal>
 </template>

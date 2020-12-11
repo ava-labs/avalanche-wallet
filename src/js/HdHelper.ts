@@ -156,10 +156,7 @@ class HdHelper {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.platformGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
 
@@ -183,10 +180,7 @@ class HdHelper {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.avmGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
         return utxoSet
@@ -257,14 +251,11 @@ class HdHelper {
         let addrs: string[] = this.getAllDerivedAddresses()
         // console.log(addrs);
         if (this.chainId === 'P') {
-            let result: PlatformUTXOSet = (
-                await pChain.getUTXOs(addrs, avm.getBlockchainID())
-            ).utxos
+            let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID()))
+                .utxos
             return result
         } else {
-            let result: AVMUTXOSet = (
-                await avm.getUTXOs(addrs, pChain.getBlockchainID())
-            ).utxos
+            let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
             return result
         }
     }
@@ -374,9 +365,7 @@ class HdHelper {
             }
         }
 
-        return await this.findAvailableIndexExplorer(
-            startIndex + (upTo - INDEX_RANGE)
-        )
+        return await this.findAvailableIndexExplorer(startIndex + (upTo - INDEX_RANGE))
     }
 
     // Uses the node to find last used HD index
@@ -486,10 +475,7 @@ class HdHelper {
     }
 
     // TODO: Public wallet should never be using this
-    getKeyForIndex(
-        index: number,
-        isPrivate: boolean = true
-    ): AVMKeyPair | PlatformVMKeyPair {
+    getKeyForIndex(index: number, isPrivate: boolean = true): AVMKeyPair | PlatformVMKeyPair {
         // If key is cached return that
         let cacheExternal: AVMKeyPair | PlatformVMKeyPair
 

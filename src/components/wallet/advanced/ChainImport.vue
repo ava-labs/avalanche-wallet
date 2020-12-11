@@ -8,22 +8,12 @@
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportX"
-                small
-                >{{ $t('advanced.import.submit_x') }}</v-btn
-            >
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportP"
-                small
-                >{{ $t('advanced.import.submit_p') }}</v-btn
-            >
+            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>
+                {{ $t('advanced.import.submit_x') }}
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
+                {{ $t('advanced.import.submit_p') }}
+            </v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
     </div>
@@ -45,8 +35,7 @@ export default class ChainImport extends Vue {
     txId = ''
 
     get wallet(): null | AvaHdWallet | LedgerWallet {
-        let wallet: null | AvaHdWallet | LedgerWallet = this.$store.state
-            .activeWallet
+        let wallet: null | AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
         return wallet
     }
     async atomicImportX() {

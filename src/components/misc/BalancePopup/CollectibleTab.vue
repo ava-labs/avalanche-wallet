@@ -4,11 +4,7 @@
             {{ $t('wallet.collectibles.empty') }}
         </p>
         <div v-else>
-            <div
-                v-for="(fam, famId) in nftDict"
-                :key="famId"
-                class="collectible_fam"
-            >
+            <div v-for="(fam, famId) in nftDict" :key="famId" class="collectible_fam">
                 <p class="fam_title">{{ nftFamsDict[famId].name }}</p>
                 <div class="card_grid">
                     <NftCard

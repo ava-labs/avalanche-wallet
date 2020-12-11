@@ -3,19 +3,10 @@
         <div class="add_key_body">
             <img src="@/assets/import_key_bg.png" class="bg" />
             <p class="explain">Add additional keys to use with your wallet.</p>
-            <v-tabs
-                color="#4C2E56"
-                height="38"
-                :grow="true"
-                v-model="selectedTab"
-            >
+            <v-tabs color="#4C2E56" height="38" :grow="true" v-model="selectedTab">
                 <!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
-                <v-tab key="mnemonic">{{
-                    $t('keys.import_key_option1')
-                }}</v-tab>
-                <v-tab key="keystore">{{
-                    $t('keys.import_key_option2')
-                }}</v-tab>
+                <v-tab key="mnemonic">{{ $t('keys.import_key_option1') }}</v-tab>
+                <v-tab key="keystore">{{ $t('keys.import_key_option2') }}</v-tab>
                 <v-tab-item>
                     <AddMnemonic @success="handleImportSuccess"></AddMnemonic>
                 </v-tab-item>

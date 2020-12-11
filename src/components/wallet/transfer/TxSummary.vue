@@ -4,11 +4,7 @@
         <template v-else>
             <h4>Assets</h4>
             <div>
-                <div
-                    v-for="order in cleanOrders"
-                    :key="order.uuid"
-                    class="fungible_row"
-                >
+                <div v-for="order in cleanOrders" :key="order.uuid" class="fungible_row">
                     <p>{{ order.asset.symbol }}</p>
                     <p style="color: var(--primary-color)">
                         {{ order.asset.name }}

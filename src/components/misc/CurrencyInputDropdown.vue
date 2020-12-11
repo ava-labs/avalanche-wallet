@@ -21,7 +21,8 @@
         </div>
         <div class="balance">
             <p>
-                <b>Balance:</b> {{ maxAmountBig.toLocaleString(denomination) }}
+                <b>Balance:</b>
+                {{ maxAmountBig.toLocaleString(denomination) }}
             </p>
             <div></div>
         </div>

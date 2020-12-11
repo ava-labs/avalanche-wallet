@@ -1,10 +1,7 @@
 <template>
     <div class="addr_card">
         <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet
-            ref="print_modal"
-            v-if="walletType !== 'ledger'"
-        ></paper-wallet>
+        <paper-wallet ref="print_modal" v-if="walletType !== 'ledger'"></paper-wallet>
         <p class="addr_info">{{ $t('top.address.desc') }}</p>
         <div class="bottom">
             <div>
@@ -12,11 +9,7 @@
             </div>
             <div class="bottom_rest">
                 <p class="subtitle">{{ $t('top.address.derived') }}</p>
-                <p
-                    class="addr_text"
-                    data-cy="wallet_address"
-                    v-if="chainNow === 'X'"
-                >
+                <p class="addr_text" data-cy="wallet_address" v-if="chainNow === 'X'">
                     {{ address }}
                 </p>
                 <p class="addr_text" data-cy="wallet_address" v-else>

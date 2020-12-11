@@ -15,12 +15,12 @@
                 <button @click="logout">{{ $t('logout.button') }}</button>
             </template>
             <template v-else>
-                <router-link to="/access" class="action_but" data-cy="access">{{
-                    $t('nav.access')
-                }}</router-link>
-                <router-link to="/create" class="action_but" data-cy="create">{{
-                    $t('nav.create')
-                }}</router-link>
+                <router-link to="/access" class="action_but" data-cy="access">
+                    {{ $t('nav.access') }}
+                </router-link>
+                <router-link to="/create" class="action_but" data-cy="create">
+                    {{ $t('nav.create') }}
+                </router-link>
             </template>
             <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
@@ -41,38 +41,19 @@
             hide-overlay
         >
             <v-list dense nav>
-                <div
-                    style="
-                        display: flex;
-                        justify-content: space-between;
-                        padding: 4px 8px;
-                    "
-                >
-                    <img
-                        v-if="$root.theme === 'day'"
-                        src="@/assets/wallet_logo.svg"
-                    />
+                <div style="display: flex; justify-content: space-between; padding: 4px 8px">
+                    <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg" />
                     <img v-else src="@/assets/wallet_logo_dark.svg" />
                     <DayNightToggle class="action_but"></DayNightToggle>
                 </div>
                 <template v-if="isAuth">
-                    <router-link to="/wallet">{{
-                        $t('wallet.sidebar.portfolio')
-                    }}</router-link>
-                    <router-link to="/wallet/keys">{{
-                        $t('wallet.sidebar.manage')
-                    }}</router-link>
-                    <router-link to="/wallet/transfer">{{
-                        $t('wallet.sidebar.send')
-                    }}</router-link>
-                    <router-link to="/wallet/earn">{{
-                        $t('wallet.sidebar.earn')
-                    }}</router-link>
-                    <router-link
-                        to="/wallet/advanced"
-                        data-cy="wallet_advanced"
-                        >{{ $t('wallet.sidebar.advanced') }}</router-link
-                    >
+                    <router-link to="/wallet">{{ $t('wallet.sidebar.portfolio') }}</router-link>
+                    <router-link to="/wallet/keys">{{ $t('wallet.sidebar.manage') }}</router-link>
+                    <router-link to="/wallet/transfer">{{ $t('wallet.sidebar.send') }}</router-link>
+                    <router-link to="/wallet/earn">{{ $t('wallet.sidebar.earn') }}</router-link>
+                    <router-link to="/wallet/advanced" data-cy="wallet_advanced">
+                        {{ $t('wallet.sidebar.advanced') }}
+                    </router-link>
                     <button class="logout" @click="logout">
                         {{ $t('logout.button') }}
                     </button>
@@ -83,12 +64,8 @@
                     <!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
                 </template>
                 <template v-else>
-                    <router-link to="/access">{{
-                        $t('nav.access')
-                    }}</router-link>
-                    <router-link to="/create">{{
-                        $t('nav.create')
-                    }}</router-link>
+                    <router-link to="/access">{{ $t('nav.access') }}</router-link>
+                    <router-link to="/create">{{ $t('nav.create') }}</router-link>
                     <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
                     <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>

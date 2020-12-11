@@ -25,9 +25,7 @@
                         <p class="chain">{{ targetChain }}</p>
                         <div class="chain_info">
                             <label>{{ $t('earn.transfer.balance') }}</label>
-                            <p>
-                                {{ destinationBalance.toLocaleString() }} AVAX
-                            </p>
+                            <p>{{ destinationBalance.toLocaleString() }} AVAX</p>
                         </div>
                     </div>
                 </div>
@@ -57,8 +55,9 @@
                             :disabled="!canSubmit"
                             :loading="isLoading"
                             block
-                            >{{ $t('earn.transfer.confirm') }}</v-btn
                         >
+                            {{ $t('earn.transfer.confirm') }}
+                        </v-btn>
                         <template v-else>
                             <v-btn
                                 data-cy="submit"
@@ -67,21 +66,20 @@
                                 :loading="isLoading"
                                 block
                                 depressed
-                                >{{ $t('earn.transfer.submit') }}</v-btn
                             >
+                                {{ $t('earn.transfer.submit') }}
+                            </v-btn>
                             <v-btn
                                 v-if="!isLoading"
                                 data-cy="cancel"
-                                style="
-                                    color: var(--primary-color);
-                                    margin: 12px 0 !important;
-                                "
+                                style="color: var(--primary-color); margin: 12px 0 !important"
                                 @click="cancelConfirm"
                                 block
                                 depressed
                                 text
-                                >{{ $t('earn.transfer.cancel') }}</v-btn
                             >
+                                {{ $t('earn.transfer.cancel') }}
+                            </v-btn>
                         </template>
                     </div>
                 </div>
@@ -90,10 +88,7 @@
                         <div class="loading_header">
                             <h4>Export</h4>
                             <div class="status_icon">
-                                <Spinner
-                                    v-if="exportState == 1"
-                                    class="spinner"
-                                ></Spinner>
+                                <Spinner v-if="exportState == 1" class="spinner"></Spinner>
                                 <p v-else-if="exportState === 2">
                                     <fa icon="check-circle"></fa>
                                 </p>
@@ -116,10 +111,7 @@
                         <div class="loading_header">
                             <h4>Import</h4>
                             <div class="status_icon">
-                                <Spinner
-                                    v-if="importState == 1"
-                                    class="spinner"
-                                ></Spinner>
+                                <Spinner v-if="importState == 1" class="spinner"></Spinner>
                                 <p v-else-if="importState === 2">
                                     <fa icon="check-circle"></fa>
                                 </p>
@@ -140,12 +132,7 @@
                     </div>
                     <div v-if="isSuccess" class="complete">
                         <h4>{{ $t('earn.transfer.success.title') }}</h4>
-                        <p
-                            style="
-                                color: var(--success);
-                                margin: 12px 0 !important;
-                            "
-                        >
+                        <p style="color: var(--success); margin: 12px 0 !important">
                             <fa icon="check-circle"></fa>
                             {{ $t('earn.transfer.success.message') }}
                         </p>
@@ -155,8 +142,9 @@
                             small
                             @click="$emit('cancel')"
                             block
-                            >{{ $t('earn.transfer.success.back') }}</v-btn
                         >
+                            {{ $t('earn.transfer.success.back') }}
+                        </v-btn>
                     </div>
                 </div>
             </div>

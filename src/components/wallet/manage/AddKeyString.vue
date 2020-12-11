@@ -2,11 +2,7 @@
     <div>
         <label>{{ $t('private_key') }}</label>
         <form @submit.prevent="addKey">
-            <qr-input
-                @change="validateQR"
-                v-model="privateKeyInput"
-                class="qrIn"
-            ></qr-input>
+            <qr-input @change="validateQR" v-model="privateKeyInput" class="qrIn"></qr-input>
             <p class="err">{{ error }}</p>
             <v-btn
                 type="submit"
@@ -16,8 +12,9 @@
                 depressed
                 block
                 color="#4C2E56"
-                >{{ $t('add_pk') }}</v-btn
             >
+                {{ $t('add_pk') }}
+            </v-btn>
         </form>
     </div>
 </template>
@@ -61,10 +58,7 @@ export default class AddKeyString extends Vue {
         setTimeout(async () => {
             try {
                 let chainID = avm.getBlockchainAlias() || avm.getBlockchainID()
-                let keyPair: AVMKeyPair = keyToKeypair(
-                    this.privateKeyInput,
-                    chainID
-                )
+                let keyPair: AVMKeyPair = keyToKeypair(this.privateKeyInput, chainID)
                 await this.$store.dispatch('addWallet', keyPair)
                 // @ts-ignore
                 this.$emit('success')

@@ -3,13 +3,12 @@
         <div class="center_col">
             <h1>Mainnet Preview</h1>
             <p>
-                This wallet is now connected to a <b>preview</b> of the mainnet.
+                This wallet is now connected to a
+                <b>preview</b>
+                of the mainnet.
             </p>
             <div class="points">
-                <p>
-                    The balances shown will be the balance of this wallet on
-                    mainnet launch.
-                </p>
+                <p>The balances shown will be the balance of this wallet on mainnet launch.</p>
                 <p>Locked tokens can be staked.</p>
             </div>
         </div>

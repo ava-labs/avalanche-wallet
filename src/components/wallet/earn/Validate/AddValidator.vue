@@ -6,32 +6,21 @@
                     <div v-show="!isConfirm" key="form">
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.label_1') }}</h4>
-                            <input
-                                type="text"
-                                v-model="nodeId"
-                                style="width: 100%"
-                            />
+                            <input type="text" v-model="nodeId" style="width: 100%" />
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.duration.label') }}</h4>
                             <p class="desc">
                                 {{ $t('earn.validate.duration.desc') }}
                             </p>
-                            <DateForm
-                                @change_start="setStart"
-                                @change_end="setEnd"
-                            ></DateForm>
+                            <DateForm @change_start="setStart" @change_end="setEnd"></DateForm>
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.amount.label') }}</h4>
                             <p class="desc">
                                 {{ $t('earn.validate.amount.desc') }}
                             </p>
-                            <AvaxInput
-                                v-model="stakeAmt"
-                                :max="maxAmt"
-                                class="amt_in"
-                            ></AvaxInput>
+                            <AvaxInput v-model="stakeAmt" :max="maxAmt" class="amt_in"></AvaxInput>
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.fee.label') }}</h4>
@@ -47,22 +36,18 @@
                                 @change="onFeeChange"
                             />
                         </div>
-                        <div
-                            class="reward_in"
-                            style="margin: 30px 0"
-                            :type="rewardDestination"
-                        >
+                        <div class="reward_in" style="margin: 30px 0" :type="rewardDestination">
                             <h4>{{ $t('earn.validate.reward.label') }}</h4>
                             <p class="desc">
                                 {{ $t('earn.validate.reward.desc') }}
                             </p>
                             <v-chip-group mandatory @change="rewardSelect">
-                                <v-chip small value="local">{{
-                                    $t('earn.validate.reward.chip_1')
-                                }}</v-chip>
-                                <v-chip small value="custom">{{
-                                    $t('earn.validate.reward.chip_2')
-                                }}</v-chip>
+                                <v-chip small value="local">
+                                    {{ $t('earn.validate.reward.chip_1') }}
+                                </v-chip>
+                                <v-chip small value="custom">
+                                    {{ $t('earn.validate.reward.chip_2') }}
+                                </v-chip>
                             </v-chip-group>
                             <QrInput
                                 style="height: 40px; border-radius: 2px"
@@ -86,41 +71,26 @@
                 </transition-group>
                 <div>
                     <div class="summary" v-if="!isSuccess">
-                        <CurrencySelect
-                            v-model="currency_type"
-                        ></CurrencySelect>
+                        <CurrencySelect v-model="currency_type"></CurrencySelect>
                         <div>
-                            <label
-                                >{{ $t('earn.validate.summary.max_del') }}
+                            <label>
+                                {{ $t('earn.validate.summary.max_del') }}
                                 <Tooltip
                                     style="display: inline-block"
-                                    :text="
-                                        $t(
-                                            'earn.validate.summary.max_del_tooltip'
-                                        )
-                                    "
-                                    ><fa icon="question-circle"></fa></Tooltip
-                            ></label>
-                            <p v-if="currency_type === 'AVAX'">
-                                {{ maxDelegationText }} AVAX
-                            </p>
-                            <p v-if="currency_type === 'USD'">
-                                ${{ maxDelegationUsdText }} USD
-                            </p>
+                                    :text="$t('earn.validate.summary.max_del_tooltip')"
+                                >
+                                    <fa icon="question-circle"></fa>
+                                </Tooltip>
+                            </label>
+                            <p v-if="currency_type === 'AVAX'">{{ maxDelegationText }} AVAX</p>
+                            <p v-if="currency_type === 'USD'">${{ maxDelegationUsdText }} USD</p>
                         </div>
                         <div>
-                            <label
-                                >{{
-                                    $t('earn.validate.summary.duration')
-                                }}
-                                *</label
-                            >
+                            <label>{{ $t('earn.validate.summary.duration') }} *</label>
                             <p>{{ durationText }}</p>
                         </div>
                         <div>
-                            <label>{{
-                                $t('earn.validate.summary.rewards')
-                            }}</label>
+                            <label>{{ $t('earn.validate.summary.rewards') }}</label>
                             <p v-if="currency_type === 'AVAX'">
                                 {{ estimatedReward.toLocaleString(2) }} AVAX
                             </p>
@@ -129,9 +99,9 @@
                             </p>
                         </div>
                         <div class="submit_box">
-                            <label style="margin: 8px 0 !important"
-                                >* {{ $t('earn.validate.summary.warn') }}</label
-                            >
+                            <label style="margin: 8px 0 !important">
+                                * {{ $t('earn.validate.summary.warn') }}
+                            </label>
                             <p v-if="warnShortDuration" class="err">
                                 {{ $t('earn.validate.errs.duration_warn') }}
                             </p>
@@ -144,8 +114,9 @@
                                 :loading="isLoading"
                                 :disabled="!canSubmit"
                                 block
-                                >{{ $t('earn.validate.confirm') }}</v-btn
                             >
+                                {{ $t('earn.validate.confirm') }}
+                            </v-btn>
                             <template v-else>
                                 <v-btn
                                     @click="submit"
@@ -153,18 +124,17 @@
                                     depressed
                                     :loading="isLoading"
                                     block
-                                    >{{ $t('earn.validate.submit') }}</v-btn
                                 >
+                                    {{ $t('earn.validate.submit') }}
+                                </v-btn>
                                 <v-btn
                                     text
                                     @click="cancelConfirm"
                                     block
-                                    style="
-                                        color: var(--primary-color);
-                                        margin-top: 20px;
-                                    "
-                                    >{{ $t('earn.validate.cancel') }}</v-btn
+                                    style="color: var(--primary-color); margin-top: 20px"
                                 >
+                                    {{ $t('earn.validate.cancel') }}
+                                </v-btn>
                             </template>
                         </div>
                     </div>
@@ -174,9 +144,7 @@
                         <p class="tx_id">Tx ID: {{ txId }}</p>
                         <div class="tx_status">
                             <div>
-                                <label>{{
-                                    $t('earn.validate.success.status')
-                                }}</label>
+                                <label>{{ $t('earn.validate.success.status') }}</label>
                                 <p v-if="!txStatus">Waiting..</p>
                                 <p v-else>{{ txStatus }}</p>
                             </div>
@@ -185,24 +153,16 @@
                                     v-if="!txStatus"
                                     style="color: var(--primary-color)"
                                 ></Spinner>
-                                <p
-                                    style="color: var(--success)"
-                                    v-if="txStatus === 'Committed'"
-                                >
+                                <p style="color: var(--success)" v-if="txStatus === 'Committed'">
                                     <fa icon="check-circle"></fa>
                                 </p>
-                                <p
-                                    style="color: var(--error)"
-                                    v-if="txStatus === 'Dropped'"
-                                >
+                                <p style="color: var(--error)" v-if="txStatus === 'Dropped'">
                                     <fa icon="times-circle"></fa>
                                 </p>
                             </div>
                         </div>
                         <div class="reason_cont" v-if="txReason">
-                            <label>{{
-                                $t('earn.validate.success.reason')
-                            }}</label>
+                            <label>{{ $t('earn.validate.success.reason') }}</label>
                             <p>{{ txReason }}</p>
                         </div>
                     </div>
@@ -415,11 +375,7 @@ export default class AddValidator extends Vue {
         let duration = end.getTime() - start.getTime() // in ms
 
         let currentSupply = this.$store.state.Platform.currentSupply
-        let estimation = calculateStakingReward(
-            this.stakeAmt,
-            duration / 1000,
-            currentSupply
-        )
+        let estimation = calculateStakingReward(this.stakeAmt, duration / 1000, currentSupply)
         let res = bnToBig(estimation, 9)
 
         return res
@@ -493,18 +449,14 @@ export default class AddValidator extends Vue {
 
         // Delegation Fee
         if (parseFloat(this.delegationFee) < this.minFee) {
-            this.err = this.$t('earn.validate.errs.fee', [
-                this.minFee,
-            ]) as string
+            this.err = this.$t('earn.validate.errs.fee', [this.minFee]) as string
             return false
         }
 
         // Stake amount
         if (this.stakeAmt.lt(this.minStakeAmt)) {
             let big = Big(this.minStakeAmt.toString()).div(Math.pow(10, 9))
-            this.err = this.$t('earn.validate.errs.amount', [
-                big.toLocaleString(),
-            ]) as string
+            this.err = this.$t('earn.validate.errs.amount', [big.toLocaleString()]) as string
             return false
         }
 
@@ -575,9 +527,7 @@ export default class AddValidator extends Vue {
         } else if (msg.includes('must be at least')) {
             let minAmt = this.minStakeAmt
             let big = Big(minAmt.toString()).div(Math.pow(10, 9))
-            this.err = this.$t('earn.validate.errs.amount', [
-                big.toLocaleString(),
-            ]) as string
+            this.err = this.$t('earn.validate.errs.amount', [big.toLocaleString()]) as string
         } else if (msg.includes('nodeID')) {
             this.err = this.$t('earn.validate.errs.id') as string
         } else if (msg.includes('address format')) {

@@ -65,19 +65,10 @@
             </div>
 
             <div class="checkout">
-                <v-btn
-                    class="button_secondary"
-                    depressed
-                    :disabled="!canApply"
-                    @click="apply"
-                    >{{ $t('earn.delegate.filter.apply') }}</v-btn
-                >
-                <v-btn
-                    text
-                    v-if="activeFilter"
-                    @click="clear"
-                    style="margin: 8px"
-                >
+                <v-btn class="button_secondary" depressed :disabled="!canApply" @click="apply">
+                    {{ $t('earn.delegate.filter.apply') }}
+                </v-btn>
+                <v-btn text v-if="activeFilter" @click="clear" style="margin: 8px">
                     {{ $t('earn.delegate.filter.clear') }}
                 </v-btn>
                 <button @click="close" class="button_form_cancel">
@@ -172,10 +163,7 @@ export default class FilterSettings extends Vue {
     }
 
     get durationText() {
-        let duration = moment.duration(
-            this.minDuration * DAY_MS,
-            'milliseconds'
-        )
+        let duration = moment.duration(this.minDuration * DAY_MS, 'milliseconds')
 
         return `${duration.months()} months ${duration.days()} days`
     }

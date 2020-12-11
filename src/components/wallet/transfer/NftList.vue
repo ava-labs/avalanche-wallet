@@ -12,7 +12,9 @@
                 ></NftCard>
             </div>
             <button @click="showPopup" class="nft_icon card add_but">
-                +<br />Add NFT
+                +
+                <br />
+                Add NFT
             </button>
         </div>
         <BalancePopup

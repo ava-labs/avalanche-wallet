@@ -11,22 +11,13 @@
                 :disabled_assets="disabledAssets[i]"
                 :initial="tx.asset.id"
             ></currency-input-dropdown>
-            <button
-                @click="removeTx(i)"
-                v-if="i !== 0 || tx_list.length > 1"
-                class="remove_but"
-            >
+            <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length > 1" class="remove_but">
                 <img src="@/assets/trash_can_dark.svg" />
             </button>
         </div>
-        <button
-            block
-            depressed
-            @click="addTx()"
-            class="add_asset"
-            v-if="showAdd"
-        >
-            <fa icon="plus"></fa> Add Asset
+        <button block depressed @click="addTx()" class="add_asset" v-if="showAdd">
+            <fa icon="plus"></fa>
+            Add Asset
         </button>
         <!--        <p class="chain_warn">{{$t('transfer.chain_warn')}}</p>-->
     </div>
@@ -41,10 +32,7 @@ import BN from 'bn.js'
 import CurrencyInputDropdown from '@/components/misc/CurrencyInputDropdown.vue'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
-import {
-    ICurrencyInputDropdownValue,
-    ITransaction,
-} from '@/components/wallet/transfer/types'
+import { ICurrencyInputDropdownValue, ITransaction } from '@/components/wallet/transfer/types'
 
 @Component({
     components: {
@@ -157,10 +145,7 @@ export default class TxList extends Vue {
         return this.$store.getters.walletAssetsDict
     }
     get showAdd(): boolean {
-        if (
-            this.tx_list.length === this.assets_list.length ||
-            this.assets_list.length === 0
-        ) {
+        if (this.tx_list.length === this.assets_list.length || this.assets_list.length === 0) {
             return false
         }
         return true

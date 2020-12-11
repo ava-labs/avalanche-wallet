@@ -14,10 +14,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 import Modal from './Modal.vue'
 import CopyText from '../misc/CopyText.vue'
-import {
-    KeyChain as AVMKeyChain,
-    KeyPair as AVMKeyPair,
-} from 'avalanche/dist/apis/avm'
+import { KeyChain as AVMKeyChain, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
