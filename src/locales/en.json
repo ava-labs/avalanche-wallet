@@ -353,6 +353,10 @@
                     "start": "Start Date & Time",
                     "end": "End Date & Time"
                 },
+                "source": {
+                    "label": "Balance Source",
+                    "desc": "Select which tokens to spend."
+                },
                 "amount": {
                     "label": "Stake Amount",
                     "desc": "The amount of AVAX to lock for staking.",
@@ -476,6 +480,10 @@
             "cancel2": "(Previous wallet will be forgotten.)",
             "err1": "Invalid password.",
             "err2": "Unable to read wallet data."
+        },
+        "utxo_select": {
+            "title": "Select Tokens",
+            "desc": "Select the source of your funds to use in this transaction."
         }
     },
     "nav": {

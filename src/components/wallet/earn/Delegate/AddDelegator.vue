@@ -78,6 +78,10 @@
                                 :max-end-date="endMaxDate"
                             ></DateForm>
                         </div>
+                        <UtxoSelectForm
+                            style="margin: 30px 0"
+                            v-model="formUtxos"
+                        ></UtxoSelectForm>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.delegate.form.amount.label') }}</h4>
                             <p class="desc">
@@ -252,7 +256,12 @@ import Big from 'big.js'
 import moment from 'moment'
 
 import { BN } from 'avalanche'
-import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
+import {
+    AmountOutput,
+    PlatformVMConstants,
+    UTXO,
+    UTXOSet,
+} from 'avalanche/dist/apis/platformvm'
 import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
@@ -262,6 +271,10 @@ import NodeSelection from '@/components/wallet/earn/Delegate/NodeSelection.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 import DateForm from '@/components/wallet/earn/DateForm.vue'
+import { WalletType } from '@/store/types'
+
+import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
+import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -269,6 +282,7 @@ const DAY_MS = HOUR_MS * 24
 
 @Component({
     components: {
+        UtxoSelectForm,
         DateForm,
         Spinner,
         CurrencySelect,
@@ -278,6 +292,7 @@ const DAY_MS = HOUR_MS * 24
         StakingCalculator,
         QrInput,
         ConfirmPage,
+        UtxoSelectModal,
     },
 })
 export default class AddDelegator extends Vue {
@@ -297,6 +312,7 @@ export default class AddDelegator extends Vue {
     txReason: null | string = null
 
     formNodeID = ''
+    formUtxos: UTXO[] = []
     formAmt = new BN(0)
     formStart: Date = new Date()
     formEnd: Date = new Date()
@@ -333,7 +349,8 @@ export default class AddDelegator extends Vue {
                 this.formAmt,
                 this.formStart,
                 this.formEnd,
-                this.formRewardAddr
+                this.formRewardAddr,
+                this.formUtxos
             )
             this.onsuccess(txId)
         } catch (e) {
@@ -605,13 +622,21 @@ export default class AddDelegator extends Vue {
         return bnToBig(bn, 9).toLocaleString()
     }
 
+    get utxosBalance(): BN {
+        return this.formUtxos.reduce((acc, val: UTXO) => {
+            let out = val.getOutput() as AmountOutput
+            return acc.add(out.getAmount())
+        }, new BN(0))
+    }
+
     get maxAmt(): BN {
         let zero = new BN(0)
 
-        let totAvailable = this.platformUnlocked.add(
-            this.platformLockedStakeable
-        )
+        // let totAvailable = this.platformUnlocked.add(
+        //     this.platformLockedStakeable
+        // )
         // let max = totAvailable.sub(this.txFee)
+        let totAvailable = this.utxosBalance
 
         if (zero.gt(totAvailable)) return zero
 
@@ -634,6 +659,11 @@ export default class AddDelegator extends Vue {
         return this.$store.getters.walletPlatformBalance
     }
 
+    get platformUtxos(): UTXOSet {
+        let wallet: WalletType | null = this.$store.state.activeWallet
+        if (!wallet) return new UTXOSet()
+        return wallet.getPlatformUTXOSet()
+    }
     get platformLockedStakeable(): BN {
         return this.$store.getters.walletPlatformBalanceLockedStakeable
     }
@@ -656,6 +686,9 @@ export default class AddDelegator extends Vue {
     column-gap: 2vw;
 }
 
+.ins_col {
+    max-width: 490px;
+}
 form {
     width: 100%;
 }
@@ -703,7 +736,7 @@ label {
 }
 
 .amt_in {
-    width: max-content;
+    width: 100%;
 }
 
 .dates {
@@ -712,6 +745,7 @@ label {
     //grid-gap: 15px;
     display: flex;
     > div {
+        flex-grow: 1;
         margin-right: 15px;
     }
 
@@ -733,6 +767,7 @@ label {
 /*}*/
 
 .reward_in {
+    width: 100%;
     transition-duration: 0.2s;
     &[type='local'] {
         .reward_addr_in {

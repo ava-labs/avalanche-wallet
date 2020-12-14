@@ -14,7 +14,10 @@ import {
     UTXO,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm/utxos'
-import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
+import {
+    UTXO as PlatformUTXO,
+    UTXOSet as PlatformUTXOSet,
+} from 'avalanche/dist/apis/platformvm/utxos'
 import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
@@ -32,6 +35,7 @@ import {
     StakeableLockOut,
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
+    UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
@@ -308,13 +312,20 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         amt: BN,
         start: Date,
         end: Date,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
-        const utxoSet: PlatformUTXOSet = this.platformHelper
+        let utxoSet: PlatformUTXOSet = this.platformHelper
             .utxoSet as PlatformUTXOSet
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
         let stakeAmount = amt
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
 
         // If reward address isn't given use index 0 address
         if (!rewardAddress) {

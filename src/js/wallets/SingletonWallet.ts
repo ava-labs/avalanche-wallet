@@ -13,12 +13,14 @@ import {
     KeyPair as PlatformKeyPair,
     KeyChain as PlatformKeyChain,
     UTXOSet as PlatformUTXOSet,
+    UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import { buildUnsignedTransaction } from '../TxHelper'
 import { AvaWalletCore, ChainAlias } from './IAvaHdWallet'
+import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
 
 class SingletonWallet implements AvaWalletCore {
     keyChain: AVMKeyChain
@@ -394,10 +396,17 @@ class SingletonWallet implements AvaWalletCore {
         amt: BN,
         start: Date,
         end: Date,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformKeyChain as PlatformKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformUtxoset as PlatformUTXOSet
+        let utxoSet: PlatformUTXOSet = this.platformUtxoset as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
 
         let pAddressStrings = keychain.getAddressStrings()
         let stakeAmount = amt

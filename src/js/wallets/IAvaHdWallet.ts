@@ -3,7 +3,7 @@ import {
     KeyChain as AVMKeyChain,
     KeyPair as AVMKeyPair,
     UTXOSet,
-    UTXO,
+    UTXO as AVMUTXO,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
 } from 'avalanche/dist/apis/avm'
@@ -11,6 +11,7 @@ import {
 import {
     UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
+    UTXO as PlatformUTXO,
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
 
@@ -68,13 +69,14 @@ export interface AvaWalletCore {
         amt: BN,
         start: Date,
         end: Date,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string>
     chainTransfer(amt: BN, sourceChain: string): Promise<string>
     importToPlatformChain(): Promise<string>
     importToXChain(): Promise<string>
     issueBatchTx(
-        orders: (UTXO | ITransaction)[],
+        orders: (AVMUTXO | ITransaction)[],
         addr: string,
         memo?: Buffer
     ): Promise<string>
