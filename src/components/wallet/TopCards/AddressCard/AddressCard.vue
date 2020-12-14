@@ -3,7 +3,7 @@
         <q-r-modal ref="qr_modal"></q-r-modal>
         <paper-wallet
             ref="print_modal"
-            v-if="walletType !== 'ledger'"
+            v-if="walletType === 'mnemonic'"
         ></paper-wallet>
         <p class="addr_info">{{ $t('top.address.desc') }}</p>
         <div class="bottom">
@@ -31,7 +31,7 @@
                             class="qr_but"
                         ></button>
                         <button
-                            v-if="walletType !== 'ledger'"
+                            v-if="walletType === 'mnemonic'"
                             :tooltip="$t('top.hover2')"
                             @click="viewPrintModal"
                             class="print_but"
@@ -55,9 +55,8 @@ import CopyText from '@/components/misc/CopyText.vue'
 import QRModal from '@/components/modals/QRModal.vue'
 import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
-import MainnetAddressModal from '@/components/modals/MainnetAddressModal.vue'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import { WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/store/types'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
@@ -67,7 +66,6 @@ import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vu
         CopyText,
         PaperWallet,
         QRModal,
-        MainnetAddressModal,
         ChainSelect,
     },
 })
@@ -104,12 +102,13 @@ export default class AddressCard extends Vue {
         return this.$root.theme === 'day'
     }
 
-    get walletType(): WalletType {
-        return this.$store.state.walletType
+    get walletType(): WalletNameType {
+        let wallet: WalletType = this.$store.state.activeWallet
+        return wallet.type
     }
 
     get address() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -117,16 +116,12 @@ export default class AddressCard extends Vue {
     }
 
     get addressPVM() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         if (!wallet) {
             return '-'
         }
-        return wallet.platformHelper.getCurrentAddress()
-    }
 
-    viewMainnetModal() {
-        // @ts-ignore
-        this.$refs.mainnet_modal.open()
+        return wallet.getCurrentPlatformAddress()
     }
 
     viewQRModal() {

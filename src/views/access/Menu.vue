@@ -14,6 +14,11 @@
         }}</router-link>
         <hr />
         <div class="options">
+            <router-link
+                to="/access/privatekey"
+                class="option button_primary"
+                >{{ $t('access.but_private_key') }}</router-link
+            >
             <router-link to="/access/mnemonic" class="option button_primary">{{
                 $t('access.but_mnemonic')
             }}</router-link>
@@ -70,7 +75,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 30px;
 }
 
@@ -84,6 +89,9 @@ hr {
     text-transform: uppercase;
     padding: 8px 18px;
     font-size: main.$s-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
         //transform: translateY(-5px);

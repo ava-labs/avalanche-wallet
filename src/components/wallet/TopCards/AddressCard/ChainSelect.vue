@@ -7,9 +7,8 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Watch, Model } from 'vue-property-decorator'
-import AvaAsset from '../../../../js/AvaAsset'
-
-type ChainAlias = 'X' | 'P'
+import AvaAsset from '@/js/AvaAsset'
+import { ChainAlias } from '@/js/wallets/IAvaHdWallet'
 
 @Component
 export default class ChainSelect extends Vue {

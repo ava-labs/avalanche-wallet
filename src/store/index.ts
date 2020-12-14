@@ -37,6 +37,7 @@ import {
     AmountOutput,
     UTXOSet,
 } from 'avalanche/dist/apis/avm'
+import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 
 import AvaAsset from '@/js/AvaAsset'
 import { KEYSTORE_VERSION, makeKeyfile, readKeyFile } from '@/js/Keystore'
@@ -48,6 +49,7 @@ import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 export default new Vuex.Store({
     modules: {
@@ -59,7 +61,6 @@ export default new Vuex.Store({
         Ledger,
     },
     state: {
-        walletType: null,
         isAuth: false,
         activeWallet: null,
         address: null, // current active derived address
@@ -188,7 +189,9 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet = wallet.platformHelper.utxoSet
+            let utxoSet: PlatformUTXOSet
+
+            utxoSet = wallet.getPlatformUTXOSet()
 
             let now = UnixNow()
 
@@ -221,7 +224,9 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet = wallet.platformHelper.utxoSet
+            let utxoSet: PlatformUTXOSet
+
+            utxoSet = wallet.getPlatformUTXOSet()
 
             let now = UnixNow()
 
@@ -247,7 +252,9 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return new BN(0)
 
-            let utxoSet = wallet.platformHelper.utxoSet
+            let utxoSet: PlatformUTXOSet
+
+            utxoSet = wallet.getPlatformUTXOSet()
 
             // The only type of asset is AVAX on the P chain
             let amt = new BN(0)
@@ -325,16 +332,6 @@ export default new Vuex.Store({
             let addresses = wallet.getDerivedAddresses()
             return addresses
         },
-
-        activeKey(state): AVMKeyPair | null {
-            if (!state.activeWallet || state.walletType === 'ledger') {
-                return null
-            }
-            let hdIndex = state.activeWallet.externalHelper.hdIndex
-            return state.activeWallet.externalHelper.getKeyForIndex(
-                hdIndex
-            ) as AVMKeyPair
-        },
     },
     mutations: {
         updateActiveAddress(state) {
@@ -349,6 +346,7 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
+        // TODO rename to accessWalletMenmonic
         async accessWallet(
             { state, dispatch, commit },
             mnemonic: string
@@ -356,7 +354,6 @@ export default new Vuex.Store({
             let wallet: AvaHdWallet = await dispatch('addWallet', mnemonic)
             await dispatch('activateWallet', wallet)
 
-            state.walletType = 'mnemonic'
             dispatch('onAccess')
             return wallet
         },
@@ -371,7 +368,6 @@ export default new Vuex.Store({
             }
 
             await dispatch('activateWallet', state.wallets[0])
-            state.walletType = 'mnemonic'
 
             dispatch('onAccess')
         },
@@ -380,7 +376,17 @@ export default new Vuex.Store({
             state.wallets = [wallet]
 
             await dispatch('activateWallet', wallet)
-            state.walletType = 'ledger'
+
+            dispatch('onAccess')
+        },
+
+        async accessWalletSingleton(
+            { state, dispatch },
+            wallet: SingletonWallet
+        ) {
+            state.wallets.push(wallet)
+
+            await dispatch('activateWallet', wallet)
 
             dispatch('onAccess')
         },
@@ -407,7 +413,6 @@ export default new Vuex.Store({
             store.state.isAuth = false
             store.state.activeWallet = null
             store.state.address = null
-            store.state.walletType = null
 
             await store.dispatch('Assets/onlogout')
             await store.commit('History/clear')
@@ -426,7 +431,6 @@ export default new Vuex.Store({
             store.state.isAuth = false
             store.state.activeWallet = null
             store.state.address = null
-            store.state.walletType = null
 
             // Clear Assets
             await store.dispatch('Assets/onlogout')
@@ -458,7 +462,7 @@ export default new Vuex.Store({
             mnemonic: string
         ): Promise<AvaHdWallet | null> {
             // Cannot add mnemonic wallets on ledger mode
-            if (state.walletType === 'ledger') return null
+            if (state.activeWallet?.type === 'ledger') return null
 
             // Make sure wallet doesnt exist already
             for (var i = 0; i < state.wallets.length; i++) {
@@ -482,7 +486,7 @@ export default new Vuex.Store({
 
         // Creates a keystore file and saves to local storage
         async rememberWallets({ state, dispatch }, pass: string | undefined) {
-            if (!pass || state.walletType === 'ledger') return
+            if (!pass || state.activeWallet?.type === 'ledger') return
 
             let wallets = state.wallets as AvaHdWallet[]
 
