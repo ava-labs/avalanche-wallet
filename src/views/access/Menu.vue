@@ -75,7 +75,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 30px;
 }
 
@@ -89,6 +89,9 @@ hr {
     text-transform: uppercase;
     padding: 8px 18px;
     font-size: main.$s-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
         //transform: translateY(-5px);
