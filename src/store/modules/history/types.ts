@@ -18,7 +18,7 @@ export interface ITransactionData {
 
     reusedAddressTotals: null
     timestamp: string
-    type: string
+    type: TransactionType
 }
 
 interface TransactionInput {
@@ -39,3 +39,19 @@ interface UTXO {
     timestamp: string
     transactionID: string
 }
+
+export type TransactionType =
+    | 'base'
+    | 'create_asset'
+    | 'operation'
+    | 'import'
+    | 'export'
+    | 'add_validator'
+    | 'add_subnet_validator'
+    | 'add_delegator'
+    | 'create_chain'
+    | 'create_subnet'
+    | 'pvm_import'
+    | 'pvm_export'
+    | 'advance_time'
+    | 'reward_validator'

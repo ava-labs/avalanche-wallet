@@ -10,3 +10,5 @@ export interface TransactionAssetsDict {
         addresses: Set<string>
     }
 }
+
+export type ActionType = 'Sent' | 'Received' | 'Transferred'

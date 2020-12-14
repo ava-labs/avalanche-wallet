@@ -12,17 +12,9 @@ import {
     KeyChain as PlatformVMKeyChain,
     KeyPair as PlatformVMKeyPair,
 } from 'avalanche/dist/apis/platformvm'
-import { SECP256k1KeyPair } from 'avalanche/dist/common'
 import store from '@/store'
 
-import {
-    getAddressChains,
-    getAddressDetailX,
-    getAddressTransactionsP,
-    isAddressUsedP,
-    isAddressUsedX,
-} from '@/explorer_api'
-import { NetworkItem } from '@/store/modules/network/types'
+import { getAddressChains } from '@/explorer_api'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/IAvaHdWallet'
 

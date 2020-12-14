@@ -1,10 +1,9 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
-import { explorer_api, getAddressHistory } from '@/explorer_api'
+import { getAddressHistory } from '@/explorer_api'
 
 import { HistoryState } from '@/store/modules/history/types'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { avm, pChain } from '@/AVA'
 
 const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
@@ -43,10 +42,10 @@ const history_module: Module<HistoryState, RootState> = {
             let offset = 0
             let limit = 20
 
-            let data = await getAddressHistory(addresses, limit, offset)
+            let data = await getAddressHistory(addresses, limit, offset, avm.getBlockchainID())
+            let dataP = await getAddressHistory(addresses, limit, offset, pChain.getBlockchainID())
 
-            // let transactions = res.data.transactions;
-            let transactions = data.transactions
+            let transactions = data.transactions.concat(dataP.transactions)
 
             state.transactions = transactions
             state.isUpdating = false

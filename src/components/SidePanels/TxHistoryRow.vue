@@ -38,7 +38,7 @@ import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import { getAssetIcon } from '@/helpers/helper'
 import BN from 'bn.js'
 import { ITransactionData } from '@/store/modules/history/types'
-import { TransactionValueDict } from '@/components/SidePanels/types'
+import { ActionType, TransactionValueDict } from '@/components/SidePanels/types'
 // import {AssetsDict} from "@/store/modules/assets/types";
 // import {AvaNetwork} from "@/js/AvaNetwork";
 import store from '@/store'
