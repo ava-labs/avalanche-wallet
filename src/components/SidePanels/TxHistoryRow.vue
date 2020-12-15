@@ -27,6 +27,7 @@
                 ></tx-history-value>
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
+            <div v-if="memo" class="memo">Memo: {{ memo }}</div>
         </div>
     </div>
 </template>
@@ -60,6 +61,16 @@ export default class TxHistoryRow extends Vue {
             return `${network.explorerSiteUrl}/tx/${this.transaction.id}`
         }
         return null
+    }
+
+    get memo(): string | null {
+        const memo = this.transaction.memo
+        const memoText = new Buffer(memo, 'base64').toString('utf8')
+        // Bug that sets memo to empty string (AAAAAA==) for some
+        // tx types
+        if (!memoText.length || memo === 'AAAAAA==') return null
+
+        return memoText
     }
 
     get time() {
@@ -257,6 +268,11 @@ export default class TxHistoryRow extends Vue {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.memo {
+    font-size: 12px;
+    color: main.$primary-color-light;
 }
 
 @include main.medium-device {
