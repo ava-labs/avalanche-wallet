@@ -21,6 +21,7 @@
                     v-for="(amount, assetId) in valList"
                     :key="assetId"
                     :amount="amount"
+                    :type="type"
                     :asset-id="assetId"
                     :is-income="false"
                 ></tx-history-value>
@@ -37,13 +38,12 @@ import moment from 'moment'
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import { getAssetIcon } from '@/helpers/helper'
 import BN from 'bn.js'
-import { ITransactionData } from '@/store/modules/history/types'
+import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
 import { ActionType, TransactionValueDict } from '@/components/SidePanels/types'
-// import {AssetsDict} from "@/store/modules/assets/types";
-// import {AvaNetwork} from "@/js/AvaNetwork";
 import store from '@/store'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { WalletType } from '@/store/types'
+import { avm, pChain } from '@/AVA'
 
 @Component({
     components: {
@@ -78,12 +78,14 @@ export default class TxHistoryRow extends Vue {
         return this.time.fromNow()
     }
 
+    get type() {
+        return this.transaction.type
+    }
+
     get valList() {
         let ins = this.inValues
         let outs = this.outValues
-
         let res = JSON.parse(JSON.stringify(outs))
-
         for (var assetId in ins) {
             let inAmount = ins[assetId] || 0
             if (res[assetId]) {
@@ -103,7 +105,36 @@ export default class TxHistoryRow extends Vue {
         return wallet.getHistoryAddresses()
     }
 
-    // What did I loose?
+    includeUtxo(utxo: UTXO, isInput?: boolean) {
+        let addrs: string[] = this.addresses
+        let addrsRaw = addrs.map((addr) => addr.split('-')[1])
+
+        const isIncludes = utxo.addresses.filter((value) => addrsRaw.includes(value)).length > 0
+
+        switch (this.transaction.type) {
+            case 'export':
+                return utxo.chainID === avm.getBlockchainID()
+            case 'pvm_export':
+                return utxo.chainID === pChain.getBlockchainID()
+            case 'pvm_import':
+            case 'import':
+                if (isInput) return false
+                return isIncludes
+            case 'add_validator':
+            case 'add_delegator':
+                return isIncludes && !!utxo.redeemingTransactionID
+            // default just return original logic
+            // might need to be changed in the future as
+            // more tx types are added
+            case 'base':
+            default:
+                return isIncludes
+        }
+
+        return false
+    }
+
+    // What did I lose?
     get inValues() {
         let addrs: string[] = this.addresses
         let addrsRaw = addrs.map((addr) => addr.split('-')[1])
@@ -117,16 +148,11 @@ export default class TxHistoryRow extends Vue {
         }
 
         ins.forEach((inputUtxo) => {
-            let out = inputUtxo.output
-            let utxoAddrs = out.addresses
-            let assetId = out.assetID
-            let amt = out.amount
-            let amtBN = new BN(out.amount, 10)
+            const include = this.includeUtxo(inputUtxo.output, true)
+            const assetId = inputUtxo.output.assetID
+            const amt = inputUtxo.output.amount
 
-            let intersection = utxoAddrs.filter((value) => addrsRaw.includes(value))
-            let isIncludes = intersection.length > 0
-
-            if (isIncludes) {
+            if (include) {
                 if (res[assetId]) {
                     res[assetId] += parseInt(amt)
                 } else {
@@ -134,7 +160,6 @@ export default class TxHistoryRow extends Vue {
                 }
             }
         })
-        // console.log(res2);
 
         return res
     }
@@ -156,10 +181,9 @@ export default class TxHistoryRow extends Vue {
             let assetId = utxoOut.assetID
             let amt = utxoOut.amount
 
-            let intersection = utxoAddrs.filter((value) => addrsRaw.includes(value))
-            let isIncludes = intersection.length > 0
+            const include = this.includeUtxo(utxoOut)
 
-            if (isIncludes) {
+            if (include) {
                 if (res[assetId]) {
                     res[assetId] += parseInt(amt)
                 } else {

@@ -18,6 +18,7 @@ export interface ITransactionData {
 
     reusedAddressTotals: null
     timestamp: string
+    txFee: number
     type: TransactionType
 }
 
@@ -26,10 +27,11 @@ interface TransactionInput {
     output: UTXO
 }
 
-interface UTXO {
+export interface UTXO {
     addresses: string[]
     amount: string
     assetID: string
+    chainID: string
     id: string
     locktime: number
     outputIndex: number

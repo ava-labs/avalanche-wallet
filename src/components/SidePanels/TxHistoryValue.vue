@@ -17,12 +17,13 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
+import { TransactionType } from '@/store/modules/history/types'
 
 @Component
 export default class TxHistoryValue extends Vue {
     @Prop() amount!: number | string
     @Prop() assetId!: string
-    // @Prop() isIncome!: string;
+    @Prop() type!: TransactionType
 
     get asset(): AvaAsset | undefined {
         return this.$store.state.Assets.assetsDict[this.assetId]
@@ -44,10 +45,27 @@ export default class TxHistoryValue extends Vue {
         return false
     }
     get actionText(): string {
-        if (this.isIncome) {
-            return 'Received'
+        switch (this.type) {
+            case 'pvm_import':
+                return 'Import (P)'
+            case 'import':
+                return 'Import (X)'
+            case 'pvm_export':
+                return 'Export (P)'
+            case 'export':
+                return 'Export (X)'
+            case 'base':
+                if (this.isIncome) {
+                    return 'Received'
+                }
+                return 'Sent'
+            default:
+                // Capitalize first letter
+                return this.type
+                    .split('_')
+                    .map((value) => value[0].toUpperCase() + value.substring(1))
+                    .join(' ')
         }
-        return 'Sent'
     }
     get amountText(): string {
         let asset = this.asset
@@ -74,11 +92,6 @@ export default class TxHistoryValue extends Vue {
     display: grid;
     grid-template-columns: max-content 1fr;
     column-gap: 10px;
-    /*color: #ff2626;*/
-
-    &[income] {
-        /*color: main.$green;*/
-    }
 
     > * {
         align-self: center;
@@ -95,14 +108,7 @@ export default class TxHistoryValue extends Vue {
     font-size: 15px;
 }
 
-.name {
-}
-
 @include main.medium-device {
-    .utxo {
-        /*grid-template-columns: none;*/
-        /*text-align: right;*/
-    }
     .amount {
         font-size: 14px;
     }
