@@ -148,7 +148,7 @@ export default class UtxoSelect extends Vue {
 </script>
 <style scoped lang="scss">
 .utxo_select_modal_body {
-    width: 520px;
+    width: 720px;
     max-width: 100%;
     padding: 10px 20px;
 }

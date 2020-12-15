@@ -78,10 +78,6 @@
                                 :max-end-date="endMaxDate"
                             ></DateForm>
                         </div>
-                        <UtxoSelectForm
-                            style="margin: 30px 0"
-                            v-model="formUtxos"
-                        ></UtxoSelectForm>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.delegate.form.amount.label') }}</h4>
                             <p class="desc">
@@ -123,6 +119,20 @@
                                 class="reward_addr_in"
                             ></QrInput>
                         </div>
+                        <Expandable>
+                            <template v-slot:triggerOn>
+                                <p>Show Advanced</p>
+                            </template>
+                            <template v-slot:triggerOff>
+                                <p>Hide Advanced</p>
+                            </template>
+                            <template v-slot:content>
+                                <UtxoSelectForm
+                                    style="margin: 10px 0"
+                                    v-model="formUtxos"
+                                ></UtxoSelectForm>
+                            </template>
+                        </Expandable>
                     </div>
                 </div>
                 <ConfirmPage
@@ -275,6 +285,7 @@ import { WalletType } from '@/store/types'
 
 import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
+import Expandable from '@/components/misc/Expandable.vue'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -293,6 +304,7 @@ const DAY_MS = HOUR_MS * 24
         QrInput,
         ConfirmPage,
         UtxoSelectModal,
+        Expandable,
     },
 })
 export default class AddDelegator extends Vue {
@@ -659,11 +671,12 @@ export default class AddDelegator extends Vue {
         return this.$store.getters.walletPlatformBalance
     }
 
-    get platformUtxos(): UTXOSet {
+    get platformUtxos(): UTXO[] {
         let wallet: WalletType | null = this.$store.state.activeWallet
-        if (!wallet) return new UTXOSet()
-        return wallet.getPlatformUTXOSet()
+        if (!wallet) return []
+        return wallet.getPlatformUTXOSet().getAllUTXOs()
     }
+
     get platformLockedStakeable(): BN {
         return this.$store.getters.walletPlatformBalanceLockedStakeable
     }
@@ -688,6 +701,7 @@ export default class AddDelegator extends Vue {
 
 .ins_col {
     max-width: 490px;
+    padding-bottom: 8vh;
 }
 form {
     width: 100%;
@@ -859,6 +873,11 @@ label {
         border-top: 2px solid var(--bg-light);
         padding-left: 0;
         padding-top: 30px;
+    }
+
+    .ins_col {
+        width: 100%;
+        max-width: 100%;
     }
 }
 </style>
