@@ -121,10 +121,22 @@
                         </div>
                         <Expandable>
                             <template v-slot:triggerOn>
-                                <p>Show Advanced</p>
+                                <p>
+                                    {{
+                                        $t(
+                                            'earn.delegate.form.advanced.toggle_on'
+                                        )
+                                    }}
+                                </p>
                             </template>
                             <template v-slot:triggerOff>
-                                <p>Hide Advanced</p>
+                                <p>
+                                    {{
+                                        $t(
+                                            'earn.delegate.form.advanced.toggle_off'
+                                        )
+                                    }}
+                                </p>
                             </template>
                             <template v-slot:content>
                                 <UtxoSelectForm

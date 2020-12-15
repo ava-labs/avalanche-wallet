@@ -253,6 +253,16 @@
                 "reward": "Potential Reward"
             }
         },
+        "shared": {
+            "utxo_select": {
+                "available": "Available Balance (P)",
+                "all": "All",
+                "custom": "Custom",
+                "select": "Select UTXOs",
+                "label": "Balance Source",
+                "desc": "Select which tokens to spend."
+            }
+        },
         "validate": {
             "label_1": "Node ID",
             "duration": {
@@ -353,10 +363,6 @@
                     "start": "Start Date & Time",
                     "end": "End Date & Time"
                 },
-                "source": {
-                    "label": "Balance Source",
-                    "desc": "Select which tokens to spend."
-                },
                 "amount": {
                     "label": "Stake Amount",
                     "desc": "The amount of AVAX to lock for staking.",
@@ -367,6 +373,10 @@
                     "desc": "Where to send the staking rewards.",
                     "chip_1": "Use this wallet",
                     "chip_2": "Custom Address"
+                },
+                "advanced": {
+                    "toggle_on": "Show Advanced",
+                    "toggle_off": "Hide Advanced"
                 }
             },
             "confirmation": {
@@ -483,7 +493,11 @@
         },
         "utxo_select": {
             "title": "Select Tokens",
-            "desc": "Select the source of your funds to use in this transaction."
+            "desc": "Select the source of your funds to use in this transaction.",
+            "col1": "Unlock Date",
+            "col2": "Amount",
+            "available": "Available Balance",
+            "submit": "Select"
         }
     },
     "nav": {

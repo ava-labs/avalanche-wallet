@@ -1,17 +1,21 @@
 <template>
     <div>
-        <h4>{{ $t('earn.delegate.form.source.label') }}</h4>
+        <h4>{{ $t('earn.shared.utxo_select.label') }}</h4>
         <p class="desc">
-            {{ $t('earn.delegate.form.source.desc') }}
+            {{ $t('earn.shared.utxo_select.desc') }}
         </p>
         <v-chip-group @change="onTypeChange" v-model="formType" mandatory>
-            <v-chip value="all" small>All</v-chip>
-            <v-chip value="custom" small>Custom</v-chip>
+            <v-chip value="all" small>{{
+                $t('earn.shared.utxo_select.all')
+            }}</v-chip>
+            <v-chip value="custom" small>{{
+                $t('earn.shared.utxo_select.custom')
+            }}</v-chip>
         </v-chip-group>
 
         <div class="available">
             <div>
-                <label>Available Balance (P)</label>
+                <label>{{ $t('earn.shared.utxo_select.available') }}</label>
                 <p>
                     <span>{{ selectedBalanceText }} AVAX</span>
                 </p>
@@ -22,7 +26,8 @@
                 v-if="formType === 'custom'"
                 class="select_but"
             >
-                <fa icon="search"></fa> Select UTXOs
+                <fa icon="search"></fa>
+                {{ $t('earn.shared.utxo_select.select') }}
             </button>
         </div>
 
@@ -140,5 +145,11 @@ label {
     &:hover {
         opacity: 1;
     }
+}
+
+.desc {
+    font-size: 13px;
+    margin-bottom: 8px !important;
+    color: var(--primary-color-light);
 }
 </style>

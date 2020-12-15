@@ -12,8 +12,12 @@
                         <tr>
                             <th></th>
                             <th></th>
-                            <th class="col_date">Unlock Date</th>
-                            <th class="col_amt">Amount</th>
+                            <th class="col_date">
+                                {{ $t('modal.utxo_select.col1') }}
+                            </th>
+                            <th class="col_amt">
+                                {{ $t('modal.utxo_select.col2') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,11 +32,16 @@
                 </table>
             </div>
             <div class="tot">
-                <label>Available Balance</label>
+                <label>{{ $t('modal.utxo_select.available') }}</label>
                 <p>{{ selectedBalanceText }} AVAX</p>
             </div>
-            <v-btn class="button_secondary" block depressed small @click="close"
-                >Select</v-btn
+            <v-btn
+                class="button_secondary"
+                block
+                depressed
+                small
+                @click="close"
+                >{{ $t('modal.utxo_select.submit') }}</v-btn
             >
         </div>
     </modal>
