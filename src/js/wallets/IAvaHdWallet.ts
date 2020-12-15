@@ -62,7 +62,8 @@ export interface AvaWalletCore {
         start: Date,
         end: Date,
         delegationFee: number,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string>
     delegate(
         nodeID: string,

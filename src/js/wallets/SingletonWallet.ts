@@ -452,10 +452,18 @@ class SingletonWallet implements AvaWalletCore {
         start: Date,
         end: Date,
         delegationFee: number = 0,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformKeyChain as PlatformKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformUtxoset as PlatformUTXOSet
+        let utxoSet: PlatformUTXOSet = this.platformUtxoset as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
         let pAddressStrings = keychain.getAddressStrings()
 
         let stakeAmount = amt

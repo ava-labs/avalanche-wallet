@@ -283,7 +283,6 @@ import Spinner from '@/components/misc/Spinner.vue'
 import DateForm from '@/components/wallet/earn/DateForm.vue'
 import { WalletType } from '@/store/types'
 
-import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 
@@ -303,7 +302,6 @@ const DAY_MS = HOUR_MS * 24
         StakingCalculator,
         QrInput,
         ConfirmPage,
-        UtxoSelectModal,
         Expandable,
     },
 })
@@ -352,7 +350,7 @@ export default class AddDelegator extends Vue {
         this.isLoading = true
         this.err = ''
 
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
 
         try {
             this.isLoading = false

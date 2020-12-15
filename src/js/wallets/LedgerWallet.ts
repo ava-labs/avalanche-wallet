@@ -441,10 +441,18 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         start: Date,
         end: Date,
         delegationFee: number,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
-        const utxoSet: PlatformUTXOSet = this.platformHelper
+        let utxoSet: PlatformUTXOSet = this.platformHelper
             .utxoSet as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
 
         let stakeAmount = amt

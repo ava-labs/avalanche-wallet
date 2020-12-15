@@ -96,11 +96,19 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         start: Date,
         end: Date,
         delegationFee: number = 0,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformHelper
+        let utxoSet: PlatformUTXOSet = this.platformHelper
             .utxoSet as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
         let pAddressStrings = keychain.getAddressStrings()
 
         let stakeAmount = amt
