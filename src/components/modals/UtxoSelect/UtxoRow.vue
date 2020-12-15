@@ -3,12 +3,12 @@
         <td style="text-align: left; padding-left: 8px">
             <input type="checkbox" @change="onSelect" v-model="isSelect" />
         </td>
-        <td>
+        <td style="opacity: 0.4">
             <template v-if="isLocked"><fa icon="lock"></fa></template>
             <template v-else></template>
         </td>
-        <td class="amt_col">{{ amount.toLocaleString() }}</td>
         <td class="date_col">{{ lockDateText }}</td>
+        <td class="amt_col">{{ amount.toLocaleString() }}</td>
     </tr>
 </template>
 <script lang="ts">
@@ -91,11 +91,15 @@ export default class UtxoRow extends Vue {
 <style scoped lang="scss">
 td {
     font-size: 14px;
+    padding: 2px 0;
 }
 .date_col {
     color: var(--primary-color-light);
+}
+
+.amt_col {
     text-align: right;
-    padding-right: 8px;
+    padding-right: 18px;
 }
 
 tr[locked] {

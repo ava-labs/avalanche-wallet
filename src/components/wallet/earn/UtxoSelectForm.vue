@@ -11,7 +11,7 @@
 
         <div class="available">
             <div>
-                <label>Available Balance</label>
+                <label>Available Balance (P)</label>
                 <p>
                     <span>{{ selectedBalanceText }} AVAX</span>
                 </p>
@@ -78,6 +78,10 @@ export default class UtxoSelectForm extends Vue {
     }
 
     mounted() {
+        this.selectAll()
+    }
+
+    clear() {
         this.selectAll()
     }
 

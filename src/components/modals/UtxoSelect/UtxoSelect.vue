@@ -12,8 +12,8 @@
                         <tr>
                             <th></th>
                             <th></th>
-                            <th class="col_amt">Amount</th>
                             <th class="col_date">Unlock Date</th>
+                            <th class="col_amt">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,6 +170,7 @@ table {
 }
 th {
     background-color: var(--bg);
+    z-index: 1;
     padding: 2px 0;
     border-bottom: 1px solid var(--bg);
     position: sticky;
@@ -177,9 +178,9 @@ th {
     font-size: 13px;
 }
 
-.col_date {
+.col_amt {
     text-align: right;
-    padding-right: 8px;
+    padding-right: 18px;
 }
 
 .tot {
