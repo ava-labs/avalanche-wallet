@@ -51,7 +51,6 @@ const history_module: Module<HistoryState, RootState> = {
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
             state.transactions = transactions
-            console.log(state.transactions)
             state.isUpdating = false
         },
     },

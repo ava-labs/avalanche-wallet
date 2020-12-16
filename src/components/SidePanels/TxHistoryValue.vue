@@ -96,6 +96,13 @@ export default class TxHistoryValue extends Vue {
     > * {
         align-self: center;
     }
+
+    // TODO, hacky
+    &:not(:first-child) {
+        .action {
+            visibility: hidden;
+        }
+    }
 }
 
 .action {
