@@ -49,14 +49,23 @@ import { getPreferredHRP } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
 import { digestMessage } from '@/helpers/helper'
+import { web3 } from '@/evm'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
     type: WalletNameType
+
+    ethAddress: string
+    ethBalance: BN
+
     constructor(app: AppAvax, hdkey: HDKey) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
+
+        // TODO: Add actual values
+        this.ethAddress = ''
+        this.ethBalance = new BN(0)
     }
 
     static async fromApp(app: AppAvax) {
@@ -213,6 +222,21 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             store.commit('Ledger/closeModal')
             throw e
         }
+    }
+
+    getEvmAddress(): string {
+        return this.ethAddress
+    }
+
+    async getEthBalance() {
+        let bal = await web3.eth.getBalance(this.ethAddress)
+        this.ethBalance = new BN(bal)
+        return this.ethBalance
+    }
+
+    async getUTXOs(): Promise<AVMUTXOSet> {
+        this.getEthBalance()
+        return super.getUTXOs()
     }
 
     getPathFromAddress(address: string) {

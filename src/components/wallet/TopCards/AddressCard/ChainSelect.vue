@@ -2,6 +2,7 @@
     <div class="chain_select">
         <button @click="setChain('X')" :active="chain === 'X'">X</button>
         <button @click="setChain('P')" :active="chain === 'P'">P</button>
+        <button @click="setChain('C')" :active="chain === 'C'">C</button>
     </div>
 </template>
 <script lang="ts">

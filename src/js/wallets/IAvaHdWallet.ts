@@ -35,6 +35,8 @@ export interface AvaWalletCore {
     utxoset: UTXOSet
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
+    ethAddress: string
+    ethBalance: BN
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
@@ -49,6 +51,8 @@ export interface AvaWalletCore {
     getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
     getBaseAddress(): string
+    getEthBalance(): Promise<BN>
+    getEvmAddress(): string
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
@@ -84,14 +88,15 @@ export interface AvaWalletCore {
     signMessage(msg: string, address: string): Promise<string>
 }
 
-export interface IAvaHdWallet extends AvaWalletCore {
+// Wallets which have the private key in memory
+export interface UnsafeWallet {
+    ethKey: string
+}
+
+export interface IAvaHdWallet extends AvaWalletCore, UnsafeWallet {
     seed: string
     hdKey: HDKey
     getMnemonic(): string
     getCurrentKey(): AVMKeyPair
     getKeyChain(): AVMKeyChain
-}
-
-export interface IAvaSingletonWallet extends AvaWalletCore {
-    masterKey: AVMKeyPair
 }

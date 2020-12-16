@@ -19,10 +19,12 @@ import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import { buildUnsignedTransaction } from '../TxHelper'
-import { AvaWalletCore, ChainAlias } from './IAvaHdWallet'
+import { AvaWalletCore, ChainAlias, UnsafeWallet } from './IAvaHdWallet'
 import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
+import { privateToAddress } from 'ethereumjs-util'
+import { web3 } from '@/evm'
 
-class SingletonWallet implements AvaWalletCore {
+class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     keyChain: AVMKeyChain
     keyPair: AVMKeyPair
     utxoset: AVMUTXOSet
@@ -39,6 +41,10 @@ class SingletonWallet implements AvaWalletCore {
     stakeAmount: BN
 
     type: WalletNameType
+
+    ethKey: string
+    ethAddress: string
+    ethBalance: BN
 
     constructor(pk: string) {
         this.key = pk
@@ -57,6 +63,14 @@ class SingletonWallet implements AvaWalletCore {
         this.platformKeyPair = this.platformKeyChain.importKey(pk)
 
         this.stakeAmount = new BN(0)
+
+        // Derive EVM key and address
+        let pkBuf = bintools.cb58Decode(pk.split('-')[1])
+        let pkHex = pkBuf.toString('hex')
+        this.ethKey = pkHex
+        // @ts-ignore
+        this.ethAddress = privateToAddress(pkBuf).toString('hex')
+        this.ethBalance = new BN(0)
 
         this.type = 'singleton'
     }
@@ -163,6 +177,17 @@ class SingletonWallet implements AvaWalletCore {
         return this.platformUtxoset
     }
 
+    getEvmAddress(): string {
+        return this.ethAddress
+    }
+
+    async getEthBalance() {
+        let bal = await web3.eth.getBalance(this.ethAddress)
+        console.log(bal)
+        this.ethBalance = new BN(bal)
+        return this.ethBalance
+    }
+
     async getAtomicUTXOs(chainId: ChainAlias) {
         // console.log(addrs);
         if (chainId === 'P') {
@@ -212,6 +237,7 @@ class SingletonWallet implements AvaWalletCore {
         let setPlatform = (await this.updateUtxos('P')) as PlatformUTXOSet
 
         this.getStake()
+        this.getEthBalance()
 
         return setInternal
     }

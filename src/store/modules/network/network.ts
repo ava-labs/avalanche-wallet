@@ -8,6 +8,7 @@ import { explorer_api } from '@/explorer_api'
 import BN from 'bn.js'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import router from '@/router'
+import { web3 } from '@/evm'
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
@@ -115,6 +116,10 @@ const network_module: Module<NetworkState, RootState> = {
 
             // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl
+
+            // Set web3 Network Settings
+            let web3Provider = `https://${net.ip}:${net.port}/ext/bc/C/rpc`
+            web3.setProvider(web3Provider)
 
             commit('Assets/removeAllAssets', null, { root: true })
             await dispatch('Assets/updateAvaAsset', null, { root: true })

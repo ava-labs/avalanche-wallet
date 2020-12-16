@@ -48,6 +48,8 @@
                         <p>{{ avmUnlocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.available') }} (P)</label>
                         <p>{{ platformUnlocked | cleanAvaxBN }} AVAX</p>
+                        <label>{{ $t('top.balance.available') }} (C)</label>
+                        <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>
                     </template>
                 </div>
                 <div>
@@ -132,10 +134,18 @@ export default class BalanceCard extends Vue {
         return this.ava_asset.amountLocked
     }
 
+    get evmUnlocked(): BN {
+        // convert from ^18 to ^9
+        let bal = this.wallet.ethBalance
+        return bal.divRound(new BN(Math.pow(10, 9).toString()))
+    }
+
     get totalBalance(): BN {
         if (!this.ava_asset) return new BN(0)
 
         let tot = this.ava_asset.getTotalAmount()
+        // add EVM balance
+        tot = tot.add(this.evmUnlocked)
         return tot
     }
 

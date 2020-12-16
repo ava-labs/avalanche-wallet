@@ -19,8 +19,19 @@
                 >
                     {{ address }}
                 </p>
-                <p class="addr_text" data-cy="wallet_address" v-else>
+                <p
+                    class="addr_text"
+                    data-cy="wallet_address"
+                    v-else-if="chainNow === 'P'"
+                >
                     {{ addressPVM }}
+                </p>
+                <p
+                    class="addr_text"
+                    data-cy="wallet_address"
+                    v-else-if="chainNow === 'C'"
+                >
+                    {{ addressEVM }}
                 </p>
                 <div style="display: flex; margin-top: 10px">
                     <ChainSelect v-model="chainNow"></ChainSelect>
@@ -122,6 +133,15 @@ export default class AddressCard extends Vue {
         }
 
         return wallet.getCurrentPlatformAddress()
+    }
+
+    get addressEVM() {
+        let wallet: WalletType = this.$store.state.activeWallet
+        if (!wallet) {
+            return '-'
+        }
+
+        return `C-0x` + wallet.getEvmAddress()
     }
 
     viewQRModal() {

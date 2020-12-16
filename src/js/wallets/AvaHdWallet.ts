@@ -13,6 +13,9 @@ import {
     AssetAmountDestination,
 } from 'avalanche/dist/apis/avm'
 
+import { web3 } from '@/evm'
+import { privateToAddress } from 'ethereumjs-util'
+
 import {
     KeyChain as PlatformVMKeyChain,
     UTXOSet as PlatformUTXOSet,
@@ -44,6 +47,7 @@ import { digestMessage } from '@/helpers/helper'
 
 const AVA_TOKEN_INDEX: string = '9000'
 const AVA_ACCOUNT_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'` // Change and index left out
+const ETH_ACCOUNT_PATH: string = `m/44'/60'/0'`
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 const SCAN_SIZE: number = 70 // the total number of utxos to look at initially to calculate last index
@@ -58,6 +62,9 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     mnemonic: string
     isLoading: boolean
     type: WalletNameType
+    ethKey: string
+    ethAddress: string
+    ethBalance: BN
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {
@@ -67,11 +74,33 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         super(accountHdKey, false)
 
+        // Derive EVM key and address
+        let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
+        let ethPrivateKey = ethAccountKey.privateKey
+        this.ethKey = ethPrivateKey.toString('hex')
+        this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
+        this.ethBalance = new BN(0)
+
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')
         this.hdKey = masterHdKey
         this.mnemonic = mnemonic
         this.isLoading = false
+    }
+
+    getEvmAddress(): string {
+        return this.ethAddress
+    }
+
+    async getEthBalance() {
+        let bal = await web3.eth.getBalance(this.ethAddress)
+        this.ethBalance = new BN(bal)
+        return this.ethBalance
+    }
+
+    async getUTXOs(): Promise<AVMUTXOSet> {
+        this.getEthBalance()
+        return super.getUTXOs()
     }
 
     getCurrentKey(): AVMKeyPair {
