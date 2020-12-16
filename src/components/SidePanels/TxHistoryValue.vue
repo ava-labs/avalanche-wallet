@@ -25,8 +25,11 @@ export default class TxHistoryValue extends Vue {
     @Prop() assetId!: string
     @Prop() type!: TransactionType
 
-    get asset(): AvaAsset | undefined {
-        return this.$store.state.Assets.assetsDict[this.assetId]
+    get asset() {
+        return (
+            this.$store.state.Assets.assetsDict[this.assetId] ||
+            this.$store.state.Assets.nftFamsDict[this.assetId]
+        )
     }
     get color(): string {
         if (this.amount > 0) {
@@ -72,7 +75,7 @@ export default class TxHistoryValue extends Vue {
 
         if (!asset) return this.amount.toString()
 
-        let val = Big(this.amount).div(Math.pow(10, asset.denomination))
+        let val = Big(this.amount).div(Math.pow(10, asset.denomination || 9))
         return val.toString()
     }
 
