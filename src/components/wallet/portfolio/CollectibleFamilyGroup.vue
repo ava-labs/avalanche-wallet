@@ -89,11 +89,11 @@ $countW: 28px;
     height: $countW;
     border-radius: $countW;
     line-height: $countW;
-    font-size: 13px;
+    font-size: 12px;
     text-align: center;
-    background-color: var(--bg-wallet);
-    border: 1px solid var(--bg-wallet);
-    color: var(--primary-color);
+    background-color: var(--primary-color);
+    //border: 1px solid var(--bg-wallet);
+    color: var(--bg);
     font-weight: bold;
     z-index: 2;
 }
