@@ -1,3 +1,5 @@
+import { UTXO } from 'avalanche/dist/apis/avm'
+
 export interface UrlFormType {
     url: string
 }
@@ -26,6 +28,14 @@ export interface IGenericNft {
     img_m?: string // mask image (for 3d layering)
 }
 
+export interface IGroupQuantity {
+    id: string
+    utxos: UTXO[]
+}
+
+export interface IGroupDict {
+    [key: string]: UTXO[]
+}
 type GenericNftTypes = 'generic'
 
 export type NftMintFormType = UrlFormType | UtfFormType | JsonFormType | GenericFormType

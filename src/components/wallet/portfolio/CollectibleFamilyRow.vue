@@ -18,6 +18,7 @@
                     <b>Studio</b>
                     .
                 </p>
+                <v-btn class="button_secondary" small depressed :to="mintUrl">Mint</v-btn>
             </div>
         </div>
     </div>
@@ -78,6 +79,13 @@ export default class CollectibleFamilyRow extends Vue {
     }
     get allUtxos(): UTXO[] {
         return this.utxos.concat(this.mintUtxos)
+    }
+
+    get mintUrl() {
+        if (this.mintUtxos.length === 0) return ''
+        let mintUtxo = this.mintUtxos[0]
+
+        return `/wallet/studio?utxo=${mintUtxo.getUTXOID()}`
     }
 
     get groupIds(): number[] {
@@ -154,6 +162,9 @@ export default class CollectibleFamilyRow extends Vue {
     border: 1px dashed var(--primary-color-light);
     padding: 12px 12px;
     color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 @include main.medium-device {

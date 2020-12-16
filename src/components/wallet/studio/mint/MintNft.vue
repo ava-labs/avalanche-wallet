@@ -13,7 +13,7 @@ import { pChain } from '@/AVA'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 
-import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUTXO.vue'
+import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUtxo/SelectMintUTXO.vue'
 import MintForm from '@/components/wallet/studio/mint/MintForm.vue'
 import { UTXO } from 'avalanche/dist/apis/avm'
 @Component({
@@ -52,6 +52,23 @@ export default class MintNft extends Vue {
 
     cancel() {
         this.$emit('cancel')
+    }
+
+    mounted() {
+        let utxoId = this.$route.query.utxo
+
+        // Select the utxo in the query if possible
+        if (utxoId) {
+            let utxos: UTXO[] = this.mintUtxos
+
+            for (var i = 0; i < utxos.length; i++) {
+                let utxo = utxos[i]
+                let id = utxo.getUTXOID()
+                if (id === utxoId) {
+                    this.setUtxo(utxo)
+                }
+            }
+        }
     }
 }
 </script>
