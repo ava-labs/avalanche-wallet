@@ -77,6 +77,7 @@ export default class FamilyRow extends Vue {
         flex-grow: 1;
         font-size: 13px;
         text-align: right;
+        opacity: 0.4;
     }
 }
 
@@ -128,8 +129,11 @@ export default class FamilyRow extends Vue {
 @include main.medium-device {
     .mint_group {
         > div {
-            flex-basis: 30px;
-            padding: 15px;
+            width: 60px;
+            height: 60px;
+            flex-basis: 60px;
+            padding: 12px;
+            font-size: 11px;
         }
     }
 }

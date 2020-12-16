@@ -3,7 +3,7 @@
         <p class="fam_title">{{ family.name }}</p>
         <div class="group_grid">
             <div
-                v-for="(utxo, i) in utxos"
+                v-for="(utxo, i) in uniqueGroups"
                 :used="disabledIds.includes(utxo.getUTXOID())"
                 :key="utxo.getUTXOID()"
                 class="card"
@@ -51,8 +51,21 @@ export default class CollectibleFamily extends Vue {
         return this.nftDict[id] || []
     }
 
+    get uniqueGroups() {
+        let ids: number[] = []
+        return this.utxos.filter((utxo) => {
+            let gId = (utxo.getOutput() as NFTTransferOutput).getGroupID()
+            if (ids.includes(gId)) {
+                return false
+            } else {
+                ids.push(gId)
+                return true
+            }
+        })
+    }
+
     get payloads() {
-        return this.utxos.map((utxo) => {
+        return this.uniqueGroups.map((utxo) => {
             return getPayloadFromUTXO(utxo)
         })
     }

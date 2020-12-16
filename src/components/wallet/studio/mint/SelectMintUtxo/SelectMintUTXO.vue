@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="families">
         <FamilyRow
             v-for="(utxos, assetId) in nftMintDict"
             :key="assetId"
@@ -31,4 +31,20 @@ export default class SelectMintUTXO extends Vue {
     }
 }
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@use '../../../../../main';
+
+.families {
+    display: grid;
+    grid-gap: 14px;
+    column-gap: 30px;
+    grid-template-columns: 1fr 1fr;
+    padding-bottom: 30px;
+}
+
+@include main.medium-device {
+    .families {
+        display: initial;
+    }
+}
+</style>

@@ -53,6 +53,23 @@ export default class MintNft extends Vue {
     cancel() {
         this.$emit('cancel')
     }
+
+    mounted() {
+        let utxoId = this.$route.query.utxo
+
+        // Select the utxo in the query if possible
+        if (utxoId) {
+            let utxos: UTXO[] = this.mintUtxos
+
+            for (var i = 0; i < utxos.length; i++) {
+                let utxo = utxos[i]
+                let id = utxo.getUTXOID()
+                if (id === utxoId) {
+                    this.setUtxo(utxo)
+                }
+            }
+        }
+    }
 }
 </script>
 <style scoped lang="scss"></style>

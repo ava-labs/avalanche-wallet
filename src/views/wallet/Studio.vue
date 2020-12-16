@@ -26,7 +26,20 @@
                     <div>
                         <h4 class="title">Mint Groups</h4>
                         <p>Issue collectibles for the families you created.</p>
-                        <v-btn @click="goMint" class="button_secondary" small depressed>Mint</v-btn>
+                        <div>
+                            <p v-if="!canMint" class="err">
+                                You do not own any families you can mint.
+                            </p>
+                            <v-btn
+                                @click="goMint"
+                                class="button_secondary"
+                                small
+                                depressed
+                                :disabled="!canMint"
+                            >
+                                Mint
+                            </v-btn>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -38,6 +51,11 @@
 import { Component, Vue } from 'vue-property-decorator'
 import NewCollectibleFamily from '@/components/wallet/studio/NewCollectibleFamily.vue'
 import MintNft from '@/components/wallet/studio/mint/MintNft.vue'
+import { IWalletNftMintDict } from '@/store/types'
+import Big from 'big.js'
+import { bnToBig } from '@/helpers/helper'
+import { avm } from '@/AVA'
+import { BN } from 'avalanche'
 @Component({
     components: {
         NewCollectibleFamily,
@@ -57,7 +75,36 @@ export default class Studio extends Vue {
         this.subtitle = 'Mint Collectible'
     }
 
+    get nftMintDict(): IWalletNftMintDict {
+        return this.$store.getters.walletNftMintDict
+    }
+
+    get canMint(): boolean {
+        const keys = Object.keys(this.nftMintDict)
+        if (keys.length > 0) return true
+        return false
+    }
+
+    mounted() {
+        let utxoId = this.$route.query.utxo
+
+        if (utxoId) {
+            this.goMint()
+        }
+    }
+
+    // If url has a utxo id, clears it
+    clearUrl() {
+        let utxoId = this.$route.query.utxo
+
+        if (utxoId) {
+            //@ts-ignore
+            this.$router.replace({ query: null })
+        }
+    }
+
     cancel() {
+        this.clearUrl()
         this.pageNow = null
         this.subtitle = ''
     }
