@@ -253,6 +253,20 @@
                 "reward": "Potential Reward"
             }
         },
+        "shared": {
+            "utxo_select": {
+                "available": "Available Balance (P)",
+                "all": "All",
+                "custom": "Custom",
+                "select": "Select UTXOs",
+                "label": "Balance Source",
+                "desc": "Select which tokens to spend."
+            },
+            "advanced": {
+                "toggle_on": "Show Advanced",
+                "toggle_off": "Hide Advanced"
+            }
+        },
         "validate": {
             "label_1": "Node ID",
             "duration": {
@@ -476,6 +490,14 @@
             "cancel2": "(Previous wallet will be forgotten.)",
             "err1": "Invalid password.",
             "err2": "Unable to read wallet data."
+        },
+        "utxo_select": {
+            "title": "Select Tokens",
+            "desc": "Select the source of your funds to use in this transaction.",
+            "col1": "Unlock Date",
+            "col2": "Amount",
+            "available": "Available Balance",
+            "submit": "Select"
         }
     },
     "nav": {

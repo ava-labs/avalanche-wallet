@@ -119,6 +119,24 @@
                                 class="reward_addr_in"
                             ></QrInput>
                         </div>
+                        <Expandable>
+                            <template v-slot:triggerOn>
+                                <p>
+                                    {{ $t('earn.shared.advanced.toggle_on') }}
+                                </p>
+                            </template>
+                            <template v-slot:triggerOff>
+                                <p>
+                                    {{ $t('earn.shared.advanced.toggle_off') }}
+                                </p>
+                            </template>
+                            <template v-slot:content>
+                                <UtxoSelectForm
+                                    style="margin: 10px 0"
+                                    v-model="formUtxos"
+                                ></UtxoSelectForm>
+                            </template>
+                        </Expandable>
                     </div>
                 </div>
                 <ConfirmPage
@@ -252,7 +270,12 @@ import Big from 'big.js'
 import moment from 'moment'
 
 import { BN } from 'avalanche'
-import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
+import {
+    AmountOutput,
+    PlatformVMConstants,
+    UTXO,
+    UTXOSet,
+} from 'avalanche/dist/apis/platformvm'
 import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
@@ -262,6 +285,10 @@ import NodeSelection from '@/components/wallet/earn/Delegate/NodeSelection.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 import DateForm from '@/components/wallet/earn/DateForm.vue'
+import { WalletType } from '@/store/types'
+
+import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
+import Expandable from '@/components/misc/Expandable.vue'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -269,6 +296,7 @@ const DAY_MS = HOUR_MS * 24
 
 @Component({
     components: {
+        UtxoSelectForm,
         DateForm,
         Spinner,
         CurrencySelect,
@@ -278,6 +306,7 @@ const DAY_MS = HOUR_MS * 24
         StakingCalculator,
         QrInput,
         ConfirmPage,
+        Expandable,
     },
 })
 export default class AddDelegator extends Vue {
@@ -297,6 +326,7 @@ export default class AddDelegator extends Vue {
     txReason: null | string = null
 
     formNodeID = ''
+    formUtxos: UTXO[] = []
     formAmt = new BN(0)
     formStart: Date = new Date()
     formEnd: Date = new Date()
@@ -324,7 +354,7 @@ export default class AddDelegator extends Vue {
         this.isLoading = true
         this.err = ''
 
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
 
         try {
             this.isLoading = false
@@ -333,7 +363,8 @@ export default class AddDelegator extends Vue {
                 this.formAmt,
                 this.formStart,
                 this.formEnd,
-                this.formRewardAddr
+                this.formRewardAddr,
+                this.formUtxos
             )
             this.onsuccess(txId)
         } catch (e) {
@@ -605,13 +636,17 @@ export default class AddDelegator extends Vue {
         return bnToBig(bn, 9).toLocaleString()
     }
 
+    get utxosBalance(): BN {
+        return this.formUtxos.reduce((acc, val: UTXO) => {
+            let out = val.getOutput() as AmountOutput
+            return acc.add(out.getAmount())
+        }, new BN(0))
+    }
+
     get maxAmt(): BN {
         let zero = new BN(0)
 
-        let totAvailable = this.platformUnlocked.add(
-            this.platformLockedStakeable
-        )
-        // let max = totAvailable.sub(this.txFee)
+        let totAvailable = this.utxosBalance
 
         if (zero.gt(totAvailable)) return zero
 
@@ -620,19 +655,19 @@ export default class AddDelegator extends Vue {
         return totAvailable
     }
 
-    get stakeAmtText() {
-        let amt = this.stakeAmt
-        let big = Big(amt.toString()).div(Math.pow(10, 9))
-
-        if (big.lte(Big('0.0001'))) {
-            return big.toLocaleString(9)
-        }
-        return big.toLocaleString(2)
-    }
-
-    get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
-    }
+    // get stakeAmtText() {
+    //     let amt = this.stakeAmt
+    //     let big = Big(amt.toString()).div(Math.pow(10, 9))
+    //
+    //     if (big.lte(Big('0.0001'))) {
+    //         return big.toLocaleString(9)
+    //     }
+    //     return big.toLocaleString(2)
+    // }
+    //
+    // get platformUnlocked(): BN {
+    //     return this.$store.getters.walletPlatformBalance
+    // }
 
     get platformLockedStakeable(): BN {
         return this.$store.getters.walletPlatformBalanceLockedStakeable
@@ -656,6 +691,10 @@ export default class AddDelegator extends Vue {
     column-gap: 2vw;
 }
 
+.ins_col {
+    max-width: 490px;
+    padding-bottom: 8vh;
+}
 form {
     width: 100%;
 }
@@ -703,7 +742,7 @@ label {
 }
 
 .amt_in {
-    width: max-content;
+    width: 100%;
 }
 
 .dates {
@@ -712,6 +751,7 @@ label {
     //grid-gap: 15px;
     display: flex;
     > div {
+        flex-grow: 1;
         margin-right: 15px;
     }
 
@@ -733,6 +773,7 @@ label {
 /*}*/
 
 .reward_in {
+    width: 100%;
     transition-duration: 0.2s;
     &[type='local'] {
         .reward_addr_in {
@@ -824,6 +865,11 @@ label {
         border-top: 2px solid var(--bg-light);
         padding-left: 0;
         padding-top: 30px;
+    }
+
+    .ins_col {
+        width: 100%;
+        max-width: 100%;
     }
 }
 </style>

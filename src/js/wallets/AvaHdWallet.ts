@@ -9,7 +9,7 @@ import {
     BaseTx,
     UnsignedTx as AVMUnsignedTx,
     Tx as AVMTx,
-    UTXO,
+    UTXO as AVMUTXO,
     AssetAmountDestination,
 } from 'avalanche/dist/apis/avm'
 
@@ -17,7 +17,9 @@ import {
     KeyChain as PlatformVMKeyChain,
     UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
+    UTXO as PlatformUTXO,
     Tx as PlatformTx,
+    UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 
 import { getPreferredHRP } from 'avalanche/dist/utils'
@@ -94,11 +96,19 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         start: Date,
         end: Date,
         delegationFee: number = 0,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformHelper
+        let utxoSet: PlatformUTXOSet = this.platformHelper
             .utxoSet as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
         let pAddressStrings = keychain.getAddressStrings()
 
         let stakeAmount = amt
@@ -145,11 +155,18 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         amt: BN,
         start: Date,
         end: Date,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        const utxoSet: PlatformUTXOSet = this.platformHelper
+        let utxoSet: PlatformUTXOSet = this.platformHelper
             .utxoSet as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new UTXOSet()
+            utxoSet.addArray(utxos)
+        }
 
         let pAddressStrings = keychain.getAddressStrings()
         let stakeAmount = amt
@@ -304,7 +321,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     }
 
     async issueBatchTx(
-        orders: (ITransaction | UTXO)[],
+        orders: (ITransaction | AVMUTXO)[],
         addr: string,
         memo: Buffer | undefined
     ): Promise<string> {
