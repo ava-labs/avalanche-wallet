@@ -5,6 +5,7 @@
         </button>
         <div class="amt_in">
             <label>Quantity</label>
+            <p><fa icon="boxes"></fa></p>
             <input type="number" min="1" :max="allUtxos.length" v-model="quantity" />
         </div>
         <NftPayloadView :payload="payload" small="true"></NftPayloadView>
@@ -112,25 +113,36 @@ $remove_w: 24px;
 
 .amt_in {
     position: absolute;
-    bottom: -40px;
-    width: 100%;
+    bottom: -12px;
+    width: 60%;
     padding: 2px 6px;
+    border: 1px solid var(--primary-color-light);
+    border-radius: 4px;
     z-index: 2;
+    align-items: center;
     //border-radius: 4px;
     font-size: 12px;
     background-color: var(--bg-light);
+    display: flex;
 
     label {
         font-size: 11px;
         display: block;
         font-weight: bold;
         text-align: right;
+        display: none;
+    }
+
+    p {
+        //opacity: 0.5;
+        color: var(--primary-color-light);
+        font-size: 12px;
     }
 
     > input {
         width: 100%;
         color: var(--primary-color);
-        text-align: right;
+        text-align: center;
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
