@@ -232,7 +232,8 @@ export default class BalanceCard extends Vue {
 
             let denom = this.ava_asset.denomination
 
-            let tot = xUnlocked.add(pUnlocked)
+            let tot = xUnlocked.add(pUnlocked).add(this.evmUnlocked)
+
             let amtBig = bnToBig(tot, denom)
             // let amtBig = this.avaxBnToBigAmt(tot);
 
