@@ -56,6 +56,10 @@
                             {{ $t('transfer.fee_tx') }}
                             <span>{{ txFee.toLocaleString(9) }} AVAX</span>
                         </p>
+                        <p>
+                            {{ $t('transfer.total') }}
+                            <span>{{ totalUSD.toLocaleString(2) }} USD</span>
+                        </p>
                     </div>
                     <!--                    <div class="advanced">-->
                     <!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->
@@ -160,7 +164,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { Buffer, BN } from 'avalanche'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
-import { IssueBatchTxInput } from '@/store/types'
+import { IssueBatchTxInput, priceDict } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 
@@ -379,6 +383,7 @@ export default class Transfer extends Vue {
                 res = res.add(this.orders[i].amount)
             }
         }
+
         return res
     }
 
@@ -387,8 +392,20 @@ export default class Transfer extends Vue {
         return bnToBig(fee, 9)
     }
 
+    get totalUSD(): Big {
+        let totalAsset = this.totalTxSize.add(avm.getTxFee())
+        let bigAmt = bnToBig(totalAsset, 9)
+        let usdPrice = this.priceDict.usd
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
+    }
+
     get addresses() {
         return this.$store.state.addresses
+    }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
     }
 }
 </script>
