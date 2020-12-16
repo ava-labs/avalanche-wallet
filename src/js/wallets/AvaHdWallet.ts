@@ -98,6 +98,39 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return this.ethBalance
     }
 
+    async sendEth(to: string, amount: BN, gasPrice: number, gasLimit: number) {
+        console.log('Sending C Chain AVAX')
+
+        let receiver = to
+        let txAmount = amount
+        let fromAddr = this.ethAddress
+
+        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+
+        let gasPriceWei = new BN(gasPrice).mul(new BN(Math.pow(10, 9)))
+        const txConfig = {
+            from: fromAddr,
+            gasPrice: gasPriceWei,
+            gas: gasLimit,
+            to: receiver,
+            value: txAmount.toString(), // in wei
+            data: '',
+        }
+
+        let signedTx = await account.signTransaction(txConfig)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(
+                signedTx.rawTransaction as string
+            )
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+        console.log(receipt)
+        console.log('Tx Sent')
+    }
+
     async getUTXOs(): Promise<AVMUTXOSet> {
         this.getEthBalance()
         return super.getUTXOs()

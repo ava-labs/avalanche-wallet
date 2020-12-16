@@ -31,14 +31,16 @@ button {
     border-radius: 3px;
     background-color: var(--bg-light);
     padding: 0px 5px;
-    opacity: 0.6;
+    opacity: 0.8;
 
     &:hover {
+        opacity: 1;
         color: var(--primary-color);
     }
     &[active] {
         opacity: 1;
-        color: var(--primary-color);
+        background-color: var(--primary-color);
+        color: var(--bg);
     }
 }
 </style>

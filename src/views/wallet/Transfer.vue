@@ -5,13 +5,21 @@
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
         <div class="card_body" v-else>
-            <div class="new_order_Form">
+            <div>
+                <v-chip-group mandatory v-model="formType">
+                    <v-chip value="x">X Chain</v-chip>
+                    <v-chip value="c">C Chain</v-chip>
+                </v-chip-group>
+            </div>
+            <FormC v-if="formType === 'c'"></FormC>
+            <div class="new_order_Form" v-else>
                 <!--                <div class="chain_select">-->
                 <!--                    <label>Chain</label>-->
                 <!--                    <div style="display: flex">-->
                 <!--                        <button>X</button>-->
                 <!--                    </div>-->
                 <!--                </div>-->
+
                 <div class="lists" v-show="!isConfirm">
                     <tx-list
                         class="tx_list"
@@ -167,7 +175,7 @@ import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
 import { IssueBatchTxInput } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
-
+import FormC from '@/components/wallet/transfer/FormC.vue'
 @Component({
     components: {
         FaucetLink,
@@ -176,9 +184,11 @@ import * as bip39 from 'bip39'
         QrInput,
         NftList,
         TxSummary,
+        FormC,
     },
 })
 export default class Transfer extends Vue {
+    formType = 'x'
     showAdvanced: boolean = false
     isAjax: boolean = false
     addressIn: string = ''

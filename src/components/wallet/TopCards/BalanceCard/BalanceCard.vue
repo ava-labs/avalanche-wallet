@@ -429,7 +429,7 @@ h4 {
 
     label {
         font-size: 13px;
-        color: main.$primary-color-light;
+        color: var(--primary-color-light);
     }
 }
 
