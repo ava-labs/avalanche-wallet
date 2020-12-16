@@ -43,6 +43,7 @@ import {
     faLink,
     faQuoteRight,
     faLock,
+    faUnlock,
     faEye,
     faEyeSlash,
     faQuestionCircle,
@@ -99,7 +100,8 @@ library.add(
     faEyeSlash,
     faQuestionCircle,
     faUsers,
-    faFilter
+    faFilter,
+    faUnlock
 )
 
 Vue.component('fa', FontAwesomeIcon)

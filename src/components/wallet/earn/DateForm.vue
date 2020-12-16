@@ -159,6 +159,11 @@ export default class DateForm extends Vue {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;
+    width: 100%;
+
+    > div {
+        width: 100%;
+    }
 
     label > span {
         float: right;

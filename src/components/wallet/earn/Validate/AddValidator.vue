@@ -3,13 +3,14 @@
         <div class="cols">
             <form @submit.prevent="">
                 <transition-group name="fade" mode="out-in">
-                    <div v-show="!isConfirm" key="form">
+                    <div v-show="!isConfirm" key="form" class="ins_col">
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.label_1') }}</h4>
                             <input
                                 type="text"
                                 v-model="nodeId"
                                 style="width: 100%"
+                                placeholder="NodeID-"
                             />
                         </div>
                         <div style="margin: 30px 0">
@@ -71,6 +72,24 @@
                                 class="reward_addr_in"
                             ></QrInput>
                         </div>
+                        <Expandable>
+                            <template v-slot:triggerOn>
+                                <p>
+                                    {{ $t('earn.shared.advanced.toggle_on') }}
+                                </p>
+                            </template>
+                            <template v-slot:triggerOff>
+                                <p>
+                                    {{ $t('earn.shared.advanced.toggle_off') }}
+                                </p>
+                            </template>
+                            <template v-slot:content>
+                                <UtxoSelectForm
+                                    style="margin: 10px 0"
+                                    v-model="formUtxos"
+                                ></UtxoSelectForm>
+                            </template>
+                        </Expandable>
                     </div>
                     <ConfirmPage
                         key="confirm"
@@ -230,6 +249,10 @@ import Tooltip from '@/components/misc/Tooltip.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 import DateForm from '@/components/wallet/earn/DateForm.vue'
+import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
+import Expandable from '@/components/misc/Expandable.vue'
+import { AmountOutput, UTXO } from 'avalanche/dist/apis/platformvm'
+import { WalletType } from '@/store/types'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -247,6 +270,8 @@ const MIN_STAKE_DURATION = DAY_MS * 14
         CurrencySelect,
         Spinner,
         DateForm,
+        Expandable,
+        UtxoSelectForm,
     },
 })
 export default class AddValidator extends Vue {
@@ -269,6 +294,7 @@ export default class AddValidator extends Vue {
     formEnd: Date = new Date()
     formFee: number = 0
     formRewardAddr = ''
+    formUtxos: UTXO[] = []
 
     txId = ''
     txStatus: string | null = null
@@ -354,8 +380,16 @@ export default class AddValidator extends Vue {
         return pChain.getTxFee()
     }
 
+    get utxosBalance(): BN {
+        return this.formUtxos.reduce((acc, val: UTXO) => {
+            let out = val.getOutput() as AmountOutput
+            return acc.add(out.getAmount())
+        }, new BN(0))
+    }
+
     get maxAmt(): BN {
-        let pAmt = this.platformUnlocked.add(this.platformLockedStakeable)
+        // let pAmt = this.platformUnlocked.add(this.platformLockedStakeable)
+        let pAmt = this.utxosBalance
         // let fee = this.feeAmt;
 
         // absolute max stake
@@ -513,7 +547,7 @@ export default class AddValidator extends Vue {
 
     async submit() {
         if (!this.formCheck()) return
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
 
         try {
             this.isLoading = true
@@ -524,7 +558,8 @@ export default class AddValidator extends Vue {
                 this.formStart,
                 this.formEnd,
                 this.formFee,
-                this.formRewardAddr
+                this.formRewardAddr,
+                this.formUtxos
             )
             this.isLoading = false
             this.onsuccess(txId)
@@ -606,7 +641,10 @@ form {
     grid-template-columns: 1fr 340px;
     column-gap: 90px;
 }
-
+.ins_col {
+    max-width: 490px;
+    padding-bottom: 8vh;
+}
 .amt {
     width: 100%;
     display: flex;
@@ -693,10 +731,6 @@ label {
         margin: 14px 0 !important;
         font-weight: bold;
     }
-}
-
-.amt_in {
-    width: max-content;
 }
 
 .reward_in {
