@@ -261,6 +261,10 @@
                 "select": "Select UTXOs",
                 "label": "Balance Source",
                 "desc": "Select which tokens to spend."
+            },
+            "advanced": {
+                "toggle_on": "Show Advanced",
+                "toggle_off": "Hide Advanced"
             }
         },
         "validate": {
@@ -373,10 +377,6 @@
                     "desc": "Where to send the staking rewards.",
                     "chip_1": "Use this wallet",
                     "chip_2": "Custom Address"
-                },
-                "advanced": {
-                    "toggle_on": "Show Advanced",
-                    "toggle_off": "Hide Advanced"
                 }
             },
             "confirmation": {

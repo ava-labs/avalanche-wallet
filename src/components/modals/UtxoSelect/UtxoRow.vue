@@ -89,6 +89,9 @@ export default class UtxoRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
+tr {
+    border-bottom: 1px solid var(--bg);
+}
 td {
     font-size: 14px;
     padding: 2px 0;

@@ -122,20 +122,12 @@
                         <Expandable>
                             <template v-slot:triggerOn>
                                 <p>
-                                    {{
-                                        $t(
-                                            'earn.delegate.form.advanced.toggle_on'
-                                        )
-                                    }}
+                                    {{ $t('earn.shared.advanced.toggle_on') }}
                                 </p>
                             </template>
                             <template v-slot:triggerOff>
                                 <p>
-                                    {{
-                                        $t(
-                                            'earn.delegate.form.advanced.toggle_off'
-                                        )
-                                    }}
+                                    {{ $t('earn.shared.advanced.toggle_off') }}
                                 </p>
                             </template>
                             <template v-slot:content>
