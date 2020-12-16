@@ -654,10 +654,6 @@ export default class AddDelegator extends Vue {
     get maxAmt(): BN {
         let zero = new BN(0)
 
-        // let totAvailable = this.platformUnlocked.add(
-        //     this.platformLockedStakeable
-        // )
-        // let max = totAvailable.sub(this.txFee)
         let totAvailable = this.utxosBalance
 
         if (zero.gt(totAvailable)) return zero
@@ -667,25 +663,19 @@ export default class AddDelegator extends Vue {
         return totAvailable
     }
 
-    get stakeAmtText() {
-        let amt = this.stakeAmt
-        let big = Big(amt.toString()).div(Math.pow(10, 9))
-
-        if (big.lte(Big('0.0001'))) {
-            return big.toLocaleString(9)
-        }
-        return big.toLocaleString(2)
-    }
-
-    get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
-    }
-
-    get platformUtxos(): UTXO[] {
-        let wallet: WalletType | null = this.$store.state.activeWallet
-        if (!wallet) return []
-        return wallet.getPlatformUTXOSet().getAllUTXOs()
-    }
+    // get stakeAmtText() {
+    //     let amt = this.stakeAmt
+    //     let big = Big(amt.toString()).div(Math.pow(10, 9))
+    //
+    //     if (big.lte(Big('0.0001'))) {
+    //         return big.toLocaleString(9)
+    //     }
+    //     return big.toLocaleString(2)
+    // }
+    //
+    // get platformUnlocked(): BN {
+    //     return this.$store.getters.walletPlatformBalance
+    // }
 
     get platformLockedStakeable(): BN {
         return this.$store.getters.walletPlatformBalanceLockedStakeable
