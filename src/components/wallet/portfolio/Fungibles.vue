@@ -203,8 +203,7 @@ export default class Fungibles extends Vue {
 .fungibles_view {
     .balance_col {
         text-align: right;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        display: inline-block;
 
         span {
             padding-left: 8px;
