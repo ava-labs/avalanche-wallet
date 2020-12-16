@@ -15,8 +15,15 @@
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
-            {{ asset.toStringTotal() }}
-            <span>{{ symbol }}</span>
+            <span class="fiat">
+                {{ asset.toStringTotal() }}
+                &nbsp;{{ symbol }}
+            </span>
+            <span>|</span>
+            <span>
+                {{ asset.toStringTotal() }}
+                &nbsp;{{ symbol }}
+            </span>
         </p>
         <p class="balance_col" v-else>
             0
@@ -105,8 +112,11 @@ export default class FungibleRow extends Vue {
     }
 
     .balance_col {
-        font-size: 24px;
+        font-size: 18px;
         text-align: right;
+        .fiat {
+            font-size: 14px;
+        }
     }
 
     .name_col {
