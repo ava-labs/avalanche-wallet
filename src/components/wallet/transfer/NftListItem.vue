@@ -42,7 +42,6 @@ export default class NftListItem extends Vue {
     }
 
     emit() {
-        console.log(this.assetId, this.groupId)
         let msg: IGroupQuantity = {
             id: `${this.assetId}_${this.groupId}`,
             utxos: this.selectedUtxos,
