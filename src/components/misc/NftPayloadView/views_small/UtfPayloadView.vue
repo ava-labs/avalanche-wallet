@@ -13,6 +13,10 @@ export default class UtfPayloadView extends Vue {
     @Prop() payload!: UTF8Payload
     isText = false
 
+    $refs!: {
+        text: HTMLElement
+        view: HTMLElement
+    }
     mouseEnter() {
         this.showText()
     }
