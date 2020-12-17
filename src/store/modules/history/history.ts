@@ -18,7 +18,7 @@ const history_module: Module<HistoryState, RootState> = {
         },
     },
     actions: {
-        async updateTransactionHistory({ state, rootState, rootGetters }) {
+        async updateTransactionHistory({ dispatch, state, rootState, rootGetters }) {
             let wallet = rootState.activeWallet
             if (!wallet) return
 
@@ -49,6 +49,8 @@ const history_module: Module<HistoryState, RootState> = {
             let transactions = data.transactions
                 .concat(dataP.transactions)
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
+
+            dispatch('Assets/updateNftsFromHistory', transactions, { root: true })
 
             state.transactions = transactions
             state.isUpdating = false

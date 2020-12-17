@@ -1,12 +1,12 @@
 import { Module } from 'vuex'
-import { AssetAPI, AssetsState } from '@/store/modules/assets/types'
+import { AssetsState } from '@/store/modules/assets/types'
 import { IWalletBalanceDict, IWalletNftDict, IWalletNftMintDict, RootState } from '@/store/types'
 import { ava, avm, bintools } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 
-import { explorer_api } from '@/explorer_api'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
+import { ITransactionData } from '../history/types'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -54,7 +54,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
-        addUnknownAssets({ state, getters, rootGetters, dispatch }) {
+        addUnknownAssets({ state, getters, rootGetters, rootState, dispatch }) {
             let balanceDict: IWalletBalanceDict = rootGetters.walletBalanceDict
             let nftDict: IWalletNftDict = rootGetters.walletNftDict
             let nftMintDict: IWalletNftMintDict = rootGetters.walletNftMintDict
@@ -137,10 +137,45 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async addUnknownNftFamily({ state, commit }, assetId: string) {
             let desc = await ava.XChain().getAssetDescription(assetId)
+            console.log(desc)
             let newFam = new AvaNftFamily(assetId, desc.name, desc.symbol)
 
             await commit('addNftFamily', newFam)
             return desc
+        },
+
+        updateNftsFromHistory({ state, dispatch }, transactions: ITransactionData[]) {
+            let newFams: string[] = []
+
+            for (var txN in transactions) {
+                let tx = transactions[txN]
+                if (tx.type === 'operation') {
+                    let ins = tx.inputs
+                    let outs = tx.outputs
+
+                    ins.forEach((val) => {
+                        const familyId = val.output.assetID
+                        if (val.output.payload) {
+                            if (!newFams.includes(familyId)) {
+                                newFams.push(familyId)
+                            }
+                        }
+                    })
+
+                    outs.forEach((val) => {
+                        const familyId = val.assetID
+                        if (val.payload) {
+                            if (!newFams.includes(familyId)) {
+                                newFams.push(familyId)
+                            }
+                        }
+                    })
+                }
+            }
+
+            newFams.forEach((val) => {
+                dispatch('addUnknownNftFamily', val)
+            })
         },
     },
     getters: {
