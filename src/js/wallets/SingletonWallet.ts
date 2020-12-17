@@ -529,6 +529,36 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         }, 3000)
         return pChain.issueTx(tx)
     }
+
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+        let receiver = to
+        let txAmount = amount
+        let fromAddr = this.ethAddress
+
+        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+
+        const txConfig = {
+            from: fromAddr,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            to: receiver,
+            value: txAmount.toString(), // in wei
+            data: '',
+        }
+
+        let signedTx = await account.signTransaction(txConfig)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(
+                signedTx.rawTransaction as string
+            )
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
+    }
 }
 
 export { SingletonWallet }

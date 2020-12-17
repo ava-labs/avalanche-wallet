@@ -53,6 +53,12 @@ export interface AvaWalletCore {
     getBaseAddress(): string
     getEthBalance(): Promise<BN>
     getEvmAddress(): string
+    sendEth(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number
+    ): Promise<string>
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

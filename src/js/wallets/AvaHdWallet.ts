@@ -98,19 +98,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return this.ethBalance
     }
 
-    async sendEth(to: string, amount: BN, gasPrice: number, gasLimit: number) {
-        console.log('Sending C Chain AVAX')
-
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
         let receiver = to
         let txAmount = amount
         let fromAddr = this.ethAddress
 
         let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
 
-        let gasPriceWei = new BN(gasPrice).mul(new BN(Math.pow(10, 9)))
         const txConfig = {
             from: fromAddr,
-            gasPrice: gasPriceWei,
+            gasPrice: gasPrice,
             gas: gasLimit,
             to: receiver,
             value: txAmount.toString(), // in wei
@@ -127,8 +124,8 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
             console.error(err)
             throw err
         }
-        console.log(receipt)
-        console.log('Tx Sent')
+
+        return receipt.transactionHash
     }
 
     async getUTXOs(): Promise<AVMUTXOSet> {

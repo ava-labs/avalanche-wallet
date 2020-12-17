@@ -559,6 +559,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             throw e
         }
     }
+
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+        console.error('Not available yet.')
+        return 'NOT AVAILABLE'
+    }
 }
 
 export { LedgerWallet }

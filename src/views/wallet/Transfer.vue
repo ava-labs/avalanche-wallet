@@ -13,13 +13,6 @@
             </div>
             <FormC v-if="formType === 'c'"></FormC>
             <div class="new_order_Form" v-else>
-                <!--                <div class="chain_select">-->
-                <!--                    <label>Chain</label>-->
-                <!--                    <div style="display: flex">-->
-                <!--                        <button>X</button>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-
                 <div class="lists" v-show="!isConfirm">
                     <tx-list
                         class="tx_list"
