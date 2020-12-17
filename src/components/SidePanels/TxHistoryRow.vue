@@ -33,6 +33,9 @@
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
             <div v-if="memo" class="memo">Memo: {{ memo }}</div>
+            <div v-if="transaction.rewarded" class="rewarded">
+                ✅ {{ $t('transactions.rewarded') }}
+            </div>
         </div>
     </div>
 </template>
@@ -314,6 +317,7 @@ export default class TxHistoryRow extends Vue {
     white-space: nowrap;
 }
 
+.rewarded,
 .memo {
     font-size: 12px;
     color: main.$primary-color-light;

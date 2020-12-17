@@ -440,6 +440,7 @@
     },
     "transactions": {
         "notx": "No transactions found on the explorer.",
+        "rewarded": "Rewarded",
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",

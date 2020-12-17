@@ -17,6 +17,7 @@ export interface ITransactionData {
     outputs: UTXO[]
 
     reusedAddressTotals: null
+    rewarded: boolean
     timestamp: string
     txFee: number
     type: TransactionType
