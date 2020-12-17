@@ -94,7 +94,7 @@ p,
 }
 
 p {
-    padding: 8px 0;
+    padding: 8px 6px;
     text-align: center;
 }
 .max_but {
