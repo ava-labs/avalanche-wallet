@@ -137,7 +137,6 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async addUnknownNftFamily({ state, commit }, assetId: string) {
             let desc = await ava.XChain().getAssetDescription(assetId)
-            console.log(desc)
             let newFam = new AvaNftFamily(assetId, desc.name, desc.symbol)
 
             await commit('addNftFamily', newFam)

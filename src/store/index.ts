@@ -53,6 +53,7 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { ITransactionData } from './modules/history/types'
 
 export default new Vuex.Store({
     modules: {
@@ -122,6 +123,39 @@ export default new Vuex.Store({
                     }
                 }
             }
+
+            // HELP, these utxos are diff than above
+            // so getPayloadFromUTXO doesn't work
+            // @ts-ignore
+            let transactions: ITransactionData[] = state.History.transactions
+            let operations = transactions.filter((tx) => tx.type === 'operation')
+            let opIns = operations.flatMap((op) => op.inputs.map((opIn) => opIn.output))
+            let opOuts = operations.flatMap((op) => op.outputs)
+
+            opIns.forEach((utxo) => {
+                if (utxo.payload) {
+                    if (res[utxo.assetID]) {
+                        // @ts-ignore
+                        res[utxo.assetID].push(utxo)
+                    } else {
+                        // @ts-ignore
+                        res[utxo.assetID] = [utxo]
+                    }
+                }
+            })
+
+            opOuts.forEach((utxo) => {
+                if (utxo.payload) {
+                    if (res[utxo.assetID]) {
+                        // @ts-ignore
+                        res[utxo.assetID].push(utxo)
+                    } else {
+                        // @ts-ignore
+                        res[utxo.assetID] = [utxo]
+                    }
+                }
+            })
+
             return res
         },
 
