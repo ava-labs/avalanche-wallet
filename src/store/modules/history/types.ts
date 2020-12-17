@@ -34,6 +34,7 @@ export interface UTXO {
     chainID: string
     id: string
     locktime: number
+    payload?: string
     outputIndex: number
     outputType: number
     redeemingTransactionID: string

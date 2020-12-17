@@ -25,6 +25,11 @@
                     :asset-id="assetId"
                     :is-income="false"
                 ></tx-history-value>
+                <tx-history-nft
+                    v-for="(payload, assetId, i) in nftPayloads"
+                    :key="i"
+                    :payload="payload"
+                ></tx-history-nft>
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
             <div v-if="memo" class="memo">Memo: {{ memo }}</div>
@@ -37,18 +42,21 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import moment from 'moment'
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
-import { getAssetIcon } from '@/helpers/helper'
+import TxHistoryNft from '@/components/SidePanels/TxHistoryNft.vue'
+import { getAssetIcon, getPayloadFromUTXO } from '@/helpers/helper'
 import BN from 'bn.js'
 import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
-import { ActionType, TransactionValueDict } from '@/components/SidePanels/types'
+import { ActionType, TransactionNftDict, TransactionValueDict } from '@/components/SidePanels/types'
 import store from '@/store'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { WalletType } from '@/store/types'
+import { IWalletNftDict, WalletType } from '@/store/types'
 import { avm, pChain } from '@/AVA'
+import { NFTTransferOutput } from 'avalanche/dist/apis/avm'
 
 @Component({
     components: {
         TxHistoryValue,
+        TxHistoryNft,
     },
 })
 export default class TxHistoryRow extends Vue {
@@ -97,6 +105,7 @@ export default class TxHistoryRow extends Vue {
         let ins = this.inValues
         let outs = this.outValues
         let res = JSON.parse(JSON.stringify(outs))
+
         for (var assetId in ins) {
             let inAmount = ins[assetId] || 0
             if (res[assetId]) {
@@ -134,6 +143,11 @@ export default class TxHistoryRow extends Vue {
             case 'add_validator':
             case 'add_delegator':
                 return isIncludes && !!utxo.redeemingTransactionID
+            case 'operation':
+                // if no payload it is avax
+                // check if it is from wallet
+                if (!utxo.payload) return false
+                return true
             // default just return original logic
             // might need to be changed in the future as
             // more tx types are added
@@ -216,6 +230,36 @@ export default class TxHistoryRow extends Vue {
             urls.push(getAssetIcon(assetId))
         }
         return urls.splice(0, 1)
+    }
+
+    get nftDict(): IWalletNftDict {
+        return this.$store.getters.walletNftDict
+    }
+
+    get nftPayloads() {
+        let res: TransactionNftDict = {}
+
+        const isNft = (output: UTXO) => {
+            return !res[output.assetID] && this.nftDict[output.assetID]
+        }
+
+        const payload = (utxo: UTXO) => {
+            return getPayloadFromUTXO(this.nftDict[utxo.assetID][0])
+        }
+
+        this.transaction.outputs.forEach((utxo) => {
+            if (isNft(utxo)) {
+                res[utxo.assetID] = payload(utxo)
+            }
+        })
+
+        this.transaction.inputs.forEach(({ output }) => {
+            if (isNft(output)) {
+                res[output.assetID] = payload(output)
+            }
+        })
+
+        return res
     }
 }
 </script>

@@ -1,4 +1,9 @@
+import { PayloadBase } from 'avalanche/dist/utils'
 import BN from 'bn.js'
+
+export interface TransactionNftDict {
+    [address: string]: PayloadBase
+}
 
 export interface TransactionValueDict {
     [address: string]: number
