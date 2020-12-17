@@ -48,7 +48,7 @@
             </div>
         </div>
         <div style="border-right: 1px solid var(--bg-light)"></div>
-        <div>
+        <div class="right_col">
             <div class="to_address">
                 <label>{{ $t('transfer.to') }}</label>
                 <qr-input
@@ -324,6 +324,8 @@ export default class FormC extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 .cols {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
@@ -377,5 +379,25 @@ label {
 
 .checkout {
     margin-top: 14px;
+}
+
+.right_col {
+    padding-bottom: 30px;
+}
+
+@include main.mobile-device {
+    .cols {
+        display: block;
+    }
+
+    .gas_cont {
+        display: block;
+
+        > div {
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+    }
 }
 </style>

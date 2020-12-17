@@ -38,42 +38,78 @@
             </div>
             <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
-                <div>
-                    <template v-if="!isBreakdown">
+                <div class="alt_non_breakdown" v-if="!isBreakdown">
+                    <div>
                         <label>{{ $t('top.balance.available') }}</label>
                         <p>{{ unlockedText }} AVAX</p>
-                    </template>
-                    <template v-else>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.locked') }}</label>
+                        <p>{{ balanceTextLocked }} AVAX</p>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.balance.stake') }}</label>
+                        <p>{{ stakingText }} AVAX</p>
+                    </div>
+                </div>
+                <div class="alt_breakdown" v-else>
+                    <div>
                         <label>{{ $t('top.balance.available') }} (X)</label>
                         <p>{{ avmUnlocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.available') }} (P)</label>
                         <p>{{ platformUnlocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.available') }} (C)</label>
                         <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>
-                    </template>
-                </div>
-                <div>
-                    <template v-if="!isBreakdown">
-                        <label>{{ $t('top.locked') }}</label>
-                        <p>{{ balanceTextLocked }} AVAX</p>
-                    </template>
-                    <template v-else>
+                    </div>
+                    <div>
                         <label>{{ $t('top.balance.locked') }} (X)</label>
                         <p>{{ avmLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked') }} (P)</label>
                         <p>{{ platformLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked_stake') }} (P)</label>
                         <p>{{ platformLockedStakeable | cleanAvaxBN }} AVAX</p>
-                    </template>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.balance.stake') }}</label>
+                        <p>{{ stakingText }} AVAX</p>
+                    </div>
                 </div>
                 <!--                <div>-->
-                <!--                    <label>P-Chain</label>-->
-                <!--                    <p>{{pBalanceText}} AVAX</p>-->
+                <!--                    <template v-if="!isBreakdown">-->
+                <!--                        <label>{{ $t('top.balance.available') }}</label>-->
+                <!--                        <p>{{ unlockedText }} AVAX</p>-->
+                <!--                    </template>-->
+                <!--                    <template v-else>-->
+                <!--                        <label>{{ $t('top.balance.available') }} (X)</label>-->
+                <!--                        <p>{{ avmUnlocked | cleanAvaxBN }} AVAX</p>-->
+                <!--                        <label>{{ $t('top.balance.available') }} (P)</label>-->
+                <!--                        <p>{{ platformUnlocked | cleanAvaxBN }} AVAX</p>-->
+                <!--                        <label>{{ $t('top.balance.available') }} (C)</label>-->
+                <!--                        <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>-->
+                <!--                    </template>-->
                 <!--                </div>-->
-                <div>
-                    <label>{{ $t('top.balance.stake') }}</label>
-                    <p>{{ stakingText }} AVAX</p>
-                </div>
+                <!--                <div>-->
+                <!--                    <template v-if="!isBreakdown">-->
+                <!--                        <label>{{ $t('top.locked') }}</label>-->
+                <!--                        <p>{{ balanceTextLocked }} AVAX</p>-->
+                <!--                    </template>-->
+                <!--                    <template v-else>-->
+                <!--                        <label>{{ $t('top.balance.locked') }} (X)</label>-->
+                <!--                        <p>{{ avmLocked | cleanAvaxBN }} AVAX</p>-->
+                <!--                        <label>{{ $t('top.balance.locked') }} (P)</label>-->
+                <!--                        <p>{{ platformLocked | cleanAvaxBN }} AVAX</p>-->
+                <!--                        <label>{{ $t('top.balance.locked_stake') }} (P)</label>-->
+                <!--                        <p>{{ platformLockedStakeable | cleanAvaxBN }} AVAX</p>-->
+                <!--                    </template>-->
+                <!--                </div>-->
+                <!--                &lt;!&ndash;                <div>&ndash;&gt;-->
+                <!--                &lt;!&ndash;                    <label>P-Chain</label>&ndash;&gt;-->
+                <!--                &lt;!&ndash;                    <p>{{pBalanceText}} AVAX</p>&ndash;&gt;-->
+                <!--                &lt;!&ndash;                </div>&ndash;&gt;-->
+                <!--                <div>-->
+                <!--                    <label>{{ $t('top.balance.stake') }}</label>-->
+                <!--                    <p>{{ stakingText }} AVAX</p>-->
+                <!--                </div>-->
             </div>
         </div>
         <NftCol class="nft_card"></NftCol>
@@ -410,7 +446,7 @@ h4 {
     padding: 4px 8px;
 }
 
-.alt_info {
+.alt_info > div {
     display: grid;
     grid-template-columns: repeat(3, max-content);
     column-gap: 0px;
@@ -487,18 +523,28 @@ h4 {
     }
 
     .alt_info {
-        text-align: left;
-        grid-template-columns: none;
-        column-gap: 0;
         > div {
-            padding: 8px 0;
-            border-right: none;
-            border-bottom: 1px solid var(--bg-light);
+            text-align: left;
+            grid-template-columns: none;
+            column-gap: 0;
+        }
 
-            &:last-of-type {
-                border: none;
+        .alt_non_breakdown,
+        .alt_breakdown {
+            > div {
+                padding: 8px 0;
+                border-right: none;
+                border-bottom: 1px solid var(--bg-light);
+
+                &:last-of-type {
+                    border: none;
+                }
             }
         }
+    }
+
+    .alt_non_breakdown {
+        display: none !important;
     }
 }
 </style>

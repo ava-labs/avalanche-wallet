@@ -92,6 +92,11 @@ p,
     background-color: var(--bg-light);
     border-radius: 3px;
 }
+
+p {
+    padding: 8px 0;
+    text-align: center;
+}
 .max_but {
     opacity: 0.4;
     &:hover {
