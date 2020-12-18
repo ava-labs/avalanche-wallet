@@ -8,12 +8,12 @@
         "desc": "Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.",
         "access": {
             "title": "Welcome Back!",
-            "desc": "'Access' your existing Avalanche wallet here.",
+            "desc": "Access your existing Avalanche wallet here.",
             "submit": "Access Wallet"
         },
         "create": {
             "title": "New to Avalanche Wallet?",
-            "desc": "'Create' a new wallet to send, receive and swap Avalanche assets.",
+            "desc": "Create a new wallet to send, receive and swap Avalanche assets.",
             "submit": "Create New Wallet"
         }
     },
