@@ -25,6 +25,8 @@ export default class TxHistoryValue extends Vue {
     @Prop() amount!: number | string
     @Prop() assetId!: string
     @Prop() type!: TransactionType
+    @Prop() operationColor!: string
+    @Prop() operationDirection!: 'Sent' | 'Received'
 
     get asset() {
         return (
@@ -33,6 +35,8 @@ export default class TxHistoryValue extends Vue {
         )
     }
     get color(): string {
+        if (this.type === 'operation') return this.operationColor
+
         if (this.amount > 0) {
             return '#6BC688'
         } else if (this.amount === 0) {
@@ -63,6 +67,8 @@ export default class TxHistoryValue extends Vue {
                     return 'Received'
                 }
                 return 'Sent'
+            case 'operation':
+                return this.operationDirection
             default:
                 // Capitalize first letter
                 return this.type
@@ -76,6 +82,8 @@ export default class TxHistoryValue extends Vue {
 
         if (!asset) return this.amount.toString()
 
+        if (this.type === 'operation' && this.assetId !== this.ava_asset!.id) return ''
+
         let val = Big(this.amount).div(Math.pow(10, asset.denomination || 9))
         return val.toString()
     }
@@ -86,6 +94,11 @@ export default class TxHistoryValue extends Vue {
         if (!asset) return this.assetId.substring(0, 4)
 
         return asset.symbol
+    }
+
+    get ava_asset(): AvaAsset | null {
+        let ava = this.$store.getters['Assets/AssetAVA']
+        return ava
     }
 }
 </script>
@@ -99,6 +112,12 @@ export default class TxHistoryValue extends Vue {
 
     > * {
         align-self: center;
+    }
+
+    &:not(:first-child) {
+        .action {
+            visibility: hidden;
+        }
     }
 }
 

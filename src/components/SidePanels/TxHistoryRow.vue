@@ -24,12 +24,16 @@
                     :type="type"
                     :asset-id="assetId"
                     :is-income="false"
+                    :operation-color="operationColor"
+                    :operation-direction="operationDirection"
                 ></tx-history-value>
-                <tx-history-nft
-                    v-for="(payload, assetId, i) in nftPayloads"
-                    :key="i"
-                    :payload="payload"
-                ></tx-history-nft>
+                <div class="nfts">
+                    <tx-history-nft
+                        v-for="(payload, assetId, i) in nftPayloads"
+                        :key="i"
+                        :payload="payload"
+                    ></tx-history-nft>
+                </div>
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
             <div v-if="memo" class="memo">Memo: {{ memo }}</div>
@@ -57,6 +61,7 @@ import { avm, pChain } from '@/AVA'
 import { NFTTransferOutput } from 'avalanche/dist/apis/avm'
 import { Buffer } from 'avalanche'
 import { PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
+import AvaAsset from '../../js/AvaAsset'
 let payloadtypes = PayloadTypes.getInstance()
 
 @Component({
@@ -152,7 +157,7 @@ export default class TxHistoryRow extends Vue {
             case 'operation':
                 // if no payload it is avax
                 // check if it is from wallet
-                if (!utxo.payload) return false
+                if (!utxo.payload && !isIncludes) return false
                 return true
             // default just return original logic
             // might need to be changed in the future as
@@ -244,42 +249,56 @@ export default class TxHistoryRow extends Vue {
 
         let ins = this.transaction.inputs || {}
         let outs = this.transaction.outputs || {}
-        let res: { [key in string]: PayloadBase } = {} // asset id -> nft payload dict
+        let res: PayloadBase[] = [] // asset id -> nft payload dict
 
         ins.forEach((inputUtxo) => {
             const assetId = inputUtxo.output.assetID
 
             if (inputUtxo.output.payload) {
-                if (!res[assetId]) {
-                    let payload = Buffer.from(inputUtxo.output.payload, 'base64')
-                    payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
+                let payload = Buffer.from(inputUtxo.output.payload, 'base64')
+                payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
 
-                    let typeId = payloadtypes.getTypeID(payload)
-                    let pl: Buffer = payloadtypes.getContent(payload)
-                    let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+                let typeId = payloadtypes.getTypeID(payload)
+                let pl: Buffer = payloadtypes.getContent(payload)
+                let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
 
-                    res[assetId] = payloadbase
-                }
+                res.push(payloadbase)
             }
         })
         outs.forEach((utxoOut) => {
             let assetId = utxoOut.assetID
 
             if (utxoOut.payload) {
-                if (!res[assetId]) {
-                    let payload = Buffer.from(utxoOut.payload, 'base64')
-                    payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
+                let payload = Buffer.from(utxoOut.payload, 'base64')
+                payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
 
-                    let typeId = payloadtypes.getTypeID(payload)
-                    let pl: Buffer = payloadtypes.getContent(payload)
-                    let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+                let typeId = payloadtypes.getTypeID(payload)
+                let pl: Buffer = payloadtypes.getContent(payload)
+                let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
 
-                    res[assetId] = payloadbase
-                }
+                res.push(payloadbase)
             }
         })
 
         return res
+    }
+
+    // specific to operation txs
+    get ava_asset(): AvaAsset | null {
+        let ava = this.$store.getters['Assets/AssetAVA']
+        return ava
+    }
+
+    get operationColor() {
+        return this.operationDirection === 'Received' ? '#6BC688' : '#d04c4c'
+    }
+
+    get operationDirection() {
+        if (this.type !== 'operation') return 'N/A'
+
+        const fee = this.outValues[this.ava_asset?.id || '']
+
+        return !fee ? 'Received' : 'Sent'
     }
 }
 </script>
@@ -338,6 +357,14 @@ export default class TxHistoryRow extends Vue {
 .memo {
     font-size: 12px;
     color: main.$primary-color-light;
+}
+
+.nfts {
+    display: flex;
+    flex-wrap: wrap;
+    > div {
+        margin-right: 5px;
+    }
 }
 
 @include main.medium-device {
