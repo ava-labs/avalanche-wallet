@@ -2,57 +2,11 @@
     <div>
         <div class="cols">
             <div class="form">
-                <div class="chains">
-                    <ChainCard
-                        v-model="sourceChain"
-                        :exclude="targetChain"
-                    ></ChainCard>
-                    <ChainCard
-                        v-model="targetChain"
-                        :exclude="sourceChain"
-                        :is-source="false"
-                    ></ChainCard>
-                </div>
+                <ChainSwapForm
+                    @change="onFormChange"
+                    :is-confirm="isConfirm"
+                ></ChainSwapForm>
 
-                <!--                <div class="chains">-->
-                <!--                    <div class="chain_cont">-->
-                <!--                        <label>{{ $t('earn.transfer.source') }}</label>-->
-                <!--                        <p class="chain">{{ sourceChain }}</p>-->
-                <!--                        <div class="chain_info">-->
-                <!--                            <label>{{ $t('earn.transfer.balance') }}</label>-->
-                <!--                            <p>{{ balance.toLocaleString() }} AVAX</p>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                    <v-btn-->
-                <!--                        icon-->
-                <!--                        style="align-self: center"-->
-                <!--                        class="switch_but button_primary"-->
-                <!--                        @click="switchChain"-->
-                <!--                        v-if="!isConfirm"-->
-                <!--                    >-->
-                <!--                        <fa icon="sync"></fa>-->
-                <!--                    </v-btn>-->
-                <!--                    <div class="chain_cont">-->
-                <!--                        <label>{{ $t('earn.transfer.destination') }}</label>-->
-                <!--                        <p class="chain">{{ targetChain }}</p>-->
-                <!--                        <div class="chain_info">-->
-                <!--                            <label>{{ $t('earn.transfer.balance') }}</label>-->
-                <!--                            <p>-->
-                <!--                                {{ destinationBalance.toLocaleString() }} AVAX-->
-                <!--                            </p>-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <div v-show="!isConfirm">
-                    <label>{{ $t('earn.transfer.amount') }}</label>
-                    <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
-                </div>
-                <div class="confirmation_val" v-if="isConfirm">
-                    <label>{{ $t('earn.transfer.amount') }}</label>
-                    <p>{{ formAmtText }} AVAX</p>
-                </div>
-            </div>
-            <div class="right_col">
                 <div v-if="!isSuccess && !isImportErr && !isLoading">
                     <div>
                         <label>{{ $t('earn.transfer.fee') }}</label>
@@ -97,80 +51,94 @@
                         </template>
                     </div>
                 </div>
-                <div v-else-if="isLoading" class="loading_col">
-                    <div :state="exportState">
-                        <div class="loading_header">
-                            <h4>Export</h4>
-                            <div class="status_icon">
-                                <Spinner
-                                    v-if="exportState == 1"
-                                    class="spinner"
-                                ></Spinner>
-                                <p v-else-if="exportState === 2">
-                                    <fa icon="check-circle"></fa>
-                                </p>
-                                <p v-else-if="exportState === -1">
-                                    <fa icon="times-circle"></fa>
-                                </p>
-                            </div>
-                        </div>
-                        <label>ID</label>
-                        <p>{{ exportId || '-' }}</p>
-                        <label>Status</label>
-                        <p v-if="!exportStatus">Not started</p>
-                        <p v-else>{{ exportStatus }}</p>
-                        <template v-if="exportReason">
-                            <label>Reason</label>
-                            <p>{{ exportReason }}</p>
-                        </template>
-                    </div>
-                    <div :state="importState">
-                        <div class="loading_header">
-                            <h4>Import</h4>
-                            <div class="status_icon">
-                                <Spinner
-                                    v-if="importState == 1"
-                                    class="spinner"
-                                ></Spinner>
-                                <p v-else-if="importState === 2">
-                                    <fa icon="check-circle"></fa>
-                                </p>
-                                <p v-else-if="importState === -1">
-                                    <fa icon="times-circle"></fa>
-                                </p>
-                            </div>
-                        </div>
-                        <label>ID</label>
-                        <p>{{ importId || '-' }}</p>
-                        <label>Status</label>
-                        <p v-if="!importStatus">Not started</p>
-                        <p v-else>{{ importStatus }}</p>
-                        <template v-if="importReason">
-                            <label>Reason</label>
-                            <p>{{ importReason }}</p>
-                        </template>
-                    </div>
-                    <div v-if="isSuccess" class="complete">
-                        <h4>{{ $t('earn.transfer.success.title') }}</h4>
-                        <p
-                            style="
-                                color: var(--success);
-                                margin: 12px 0 !important;
-                            "
-                        >
-                            <fa icon="check-circle"></fa>
-                            {{ $t('earn.transfer.success.message') }}
-                        </p>
-                        <v-btn
-                            depressed
-                            class="button_primary"
-                            small
-                            @click="$emit('cancel')"
-                            block
-                            >{{ $t('earn.transfer.success.back') }}</v-btn
-                        >
-                    </div>
+                <div v-if="isSuccess" class="complete">
+                    <h4>{{ $t('earn.transfer.success.title') }}</h4>
+                    <p style="color: var(--success); margin: 12px 0 !important">
+                        <fa icon="check-circle"></fa>
+                        {{ $t('earn.transfer.success.message') }}
+                    </p>
+                    <v-btn
+                        depressed
+                        class="button_primary"
+                        small
+                        @click="$emit('cancel')"
+                        block
+                        >{{ $t('earn.transfer.success.back') }}</v-btn
+                    >
                 </div>
+            </div>
+            <div class="right_col">
+                <ChainCard :chain="sourceChain"></ChainCard>
+                <TxStateCard
+                    :state="exportState"
+                    :status="exportStatus"
+                    :reason="exportReason"
+                    :tx-id="exportId"
+                ></TxStateCard>
+                <TxStateCard
+                    :state="importState"
+                    :status="importStatus"
+                    :reason="importReason"
+                    :tx-id="importId"
+                    :is-export="false"
+                ></TxStateCard>
+                <ChainCard :chain="targetChain" :is-source="false"></ChainCard>
+
+                <!--                <div v-else-if="isLoading" class="loading_col">-->
+                <!--                    <div :state="exportState">-->
+                <!--                        <div class="loading_header">-->
+                <!--                            <h4>Export</h4>-->
+                <!--                            <div class="status_icon">-->
+                <!--                                <Spinner-->
+                <!--                                    v-if="exportState == 1"-->
+                <!--                                    class="spinner"-->
+                <!--                                ></Spinner>-->
+                <!--                                <p v-else-if="exportState === 2">-->
+                <!--                                    <fa icon="check-circle"></fa>-->
+                <!--                                </p>-->
+                <!--                                <p v-else-if="exportState === -1">-->
+                <!--                                    <fa icon="times-circle"></fa>-->
+                <!--                                </p>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                        <label>ID</label>-->
+                <!--                        <p>{{ exportId || '-' }}</p>-->
+                <!--                        <label>Status</label>-->
+                <!--                        <p v-if="!exportStatus">Not started</p>-->
+                <!--                        <p v-else>{{ exportStatus }}</p>-->
+                <!--                        <template v-if="exportReason">-->
+                <!--                            <label>Reason</label>-->
+                <!--                            <p>{{ exportReason }}</p>-->
+                <!--                        </template>-->
+                <!--                    </div>-->
+                <!--                    <div :state="importState">-->
+                <!--                        <div class="loading_header">-->
+                <!--                            <h4>Import</h4>-->
+                <!--                            <div class="status_icon">-->
+                <!--                                <Spinner-->
+                <!--                                    v-if="importState == 1"-->
+                <!--                                    class="spinner"-->
+                <!--                                ></Spinner>-->
+                <!--                                <p v-else-if="importState === 2">-->
+                <!--                                    <fa icon="check-circle"></fa>-->
+                <!--                                </p>-->
+                <!--                                <p v-else-if="importState === -1">-->
+                <!--                                    <fa icon="times-circle"></fa>-->
+                <!--                                </p>-->
+                <!--                            </div>-->
+                <!--                        </div>-->
+                <!--                        <label>ID</label>-->
+                <!--                        <p>{{ importId || '-' }}</p>-->
+                <!--                        <label>Status</label>-->
+                <!--                        <p v-if="!importStatus">Not started</p>-->
+                <!--                        <p v-else>{{ importStatus }}</p>-->
+                <!--                        <template v-if="importReason">-->
+                <!--                            <label>Reason</label>-->
+                <!--                            <p>{{ importReason }}</p>-->
+                <!--                        </template>-->
+                <!--                    </div>-->
+
+                <!--                </div>-->
             </div>
         </div>
     </div>
@@ -188,9 +156,15 @@ import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
-import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
+import TxStateCard from '@/components/wallet/earn/ChainTransfer/TxState.vue'
+import {
+    ChainSwapFormData,
+    TxState,
+} from '@/components/wallet/earn/ChainTransfer/types'
 import { web3 } from '@/evm'
 import { ChainIdType } from '@/constants'
+
+import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 @Component({
     name: 'chain_transfer',
@@ -199,6 +173,8 @@ import { ChainIdType } from '@/constants'
         Dropdown,
         AvaxInput,
         ChainCard,
+        ChainSwapForm,
+        TxStateCard,
     },
 })
 export default class ChainTransfer extends Vue {
@@ -303,6 +279,12 @@ export default class ChainTransfer extends Vue {
         // let big = Big(bn.toString()).div(Math.pow(10,9));
         let big = bnToBig(bn, 9)
         return big
+    }
+
+    onFormChange(data: ChainSwapFormData) {
+        this.amt = data.amount
+        this.sourceChain = data.sourceChain
+        this.targetChain = data.destinationChain
     }
 
     confirm() {
@@ -499,23 +481,29 @@ export default class ChainTransfer extends Vue {
 
 .cols {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: max-content 1fr;
     column-gap: 2vw;
 }
 
 .right_col {
-}
-
-.confirmation_val {
-    background-color: var(--bg-light);
-    padding: 6px 14px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 14px;
+    //height: max-content;
+    height: 100%;
+    > div {
+        //height: max-content;
+        background-color: var(--bg-light);
+        border-radius: 4px;
+        padding: 12px 18px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .form {
-    justify-self: center;
-    //margin: 30px auto;
-    width: 100%;
-    //max-width: 540px;
+    max-width: 100%;
+    width: 360px;
+    //justify-self: center;
     > div {
         margin: 14px 0;
     }
@@ -533,9 +521,11 @@ export default class ChainTransfer extends Vue {
     position: relative;
     //text-align: center;
     display: grid;
-    margin: 0 !important;
-    column-gap: 4px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content max-content;
+    row-gap: 14px;
+    //margin: 0 !important;
+    //column-gap: 4px;
+    //grid-template-columns: 1fr 1fr;
 }
 
 .chain_cont {
@@ -642,6 +632,22 @@ h2 {
 
     p {
         word-break: keep-all !important;
+    }
+}
+
+@include main.medium-device {
+    .cols {
+        //display: grid;
+        //grid-template-columns: 1fr 2fr;
+        grid-template-columns: none;
+        //column-gap: 2vw;
+    }
+    .right_col {
+        //grid-template-columns: 1fr 1fr;
+        //row-gap: 14px;
+        //display: none;
+        grid-column: 1;
+        grid-row: 1;
     }
 }
 

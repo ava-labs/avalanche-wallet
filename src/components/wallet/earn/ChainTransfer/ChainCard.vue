@@ -1,21 +1,17 @@
 <template>
     <div class="chain_card">
-        <div>
-            <label v-if="isSource">Source</label>
-            <label v-else>Destination</label>
-            <h4>{{ chain }}</h4>
+        <div class="input_group">
+            <h4 v-if="isSource">Source</h4>
+            <h4 v-else>Destination</h4>
+            <p style="font-size: 3em">{{ chain }}</p>
         </div>
         <div class="input_group">
-            <label>Select Chain</label>
-            <select @input="onChange">
-                <option v-for="option in options" :value="option" :key="option">
-                    {{ chainNames[option] }}
-                </option>
-            </select>
+            <label>Name</label>
+            <p style="font-size: 14px">{{ chainNames[chain] }}</p>
         </div>
         <div class="input_group">
             <label>Balance</label>
-            <p>{{ balanceText }} AVAX</p>
+            <p>{{ balanceText }}</p>
         </div>
     </div>
 </template>
@@ -38,8 +34,9 @@ const chainNames = {
 
 @Component
 export default class ChainCard extends Vue {
-    @Model('change', { type: String }) readonly chain!: ChainIdType
-    @Prop() exclude!: ChainIdType
+    // @Model('change', { type: String }) readonly chain!: ChainIdType
+    @Prop() chain!: ChainIdType
+    // @Prop() exclude!: ChainIdType
     @Prop({ default: true }) isSource?: boolean
 
     onChange(ev: any) {
@@ -49,26 +46,6 @@ export default class ChainCard extends Vue {
 
     get chainNames() {
         return chainNames
-    }
-    get options(): ChainIdType[] {
-        let all = [...chainTypes]
-
-        if (this.isSource) return all
-
-        if (this.exclude === 'X') {
-            return ['P', 'C']
-        } else {
-            return ['X']
-        }
-        // if (!this.exclude) return all
-        // let index = all.indexOf(this.exclude)
-        // all.splice(index, 1)
-        // return all
-    }
-
-    @Watch('options')
-    onOptionsChange(val: ChainIdType[]) {
-        this.$emit('change', val[0])
     }
 
     get ava_asset(): AvaAsset | null {
@@ -83,10 +60,6 @@ export default class ChainCard extends Vue {
 
     get platformUnlocked(): BN {
         return this.$store.getters.walletPlatformBalance
-    }
-
-    get platformLocked(): BN {
-        return this.$store.getters.walletPlatformBalanceLocked
     }
 
     get avmUnlocked(): BN {
@@ -118,38 +91,25 @@ export default class ChainCard extends Vue {
 }
 </script>
 <style scoped lang="scss">
-h4 {
-    font-size: 3em;
-    font-family: Roboto, sans-serif;
-    span {
-        font-size: 14px;
-    }
-}
 label {
     text-align: left;
     color: var(--primary-color-light);
     font-size: 13px;
 }
 
-select {
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color-light);
-    border-radius: 4px;
-    padding: 2px 12px;
-    font-size: 13px;
-    width: max-content;
-    outline: none;
+.chain_card {
+    //height: max-content;
+    //display: flex;
+    //justify-content: space-between;
 }
 
-.chain_card {
-    background-color: var(--bg-light);
-    padding: 12px 30px;
-    border-radius: 4px;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
-}
 .input_group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+}
+
+p {
+    font-size: 1.2em;
 }
 </style>

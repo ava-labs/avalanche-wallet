@@ -67,7 +67,7 @@ export default class AvaxInput extends Vue {
 <style scoped lang="scss">
 .avax_input {
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: 1fr 60px;
     grid-gap: 10px;
     color: var(--primary-color);
     width: 100%;
@@ -76,21 +76,30 @@ export default class AvaxInput extends Vue {
 .col1 {
     border-radius: 3px;
     background-color: var(--bg-light);
-    display: flex;
+    //display: flex;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: auto;
+    padding: 8px 14px;
 }
 
 .amt_in {
     color: var(--primary-color);
     font-family: monospace;
     flex-grow: 1;
+    flex-shrink: 1;
+    display: block;
+    box-sizing: content-box;
+    //padding: 0 12px !important;
 }
 
 .amt_in,
 p,
 .max_but {
-    padding: 8px 14px;
     background-color: var(--bg-light);
-    border-radius: 3px;
+    //border-radius: 3px;
 }
 
 p {

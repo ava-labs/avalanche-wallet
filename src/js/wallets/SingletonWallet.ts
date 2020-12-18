@@ -1,4 +1,4 @@
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
 import { WalletNameType } from '@/store/types'
@@ -15,9 +15,17 @@ import {
     UTXOSet as PlatformUTXOSet,
     UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
-import { KeyChain, KeyChain as EVMKeyChain } from 'avalanche/dist/apis/evm'
+import {
+    KeyChain,
+    KeyChain as EVMKeyChain,
+    UTXOSet as EVMUTXOSet,
+} from 'avalanche/dist/apis/evm'
 
-import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
+import {
+    StandardTx,
+    StandardUnsignedTx,
+    UTXOResponse,
+} from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import { buildUnsignedTransaction } from '../TxHelper'
@@ -201,7 +209,6 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
 
     async getEthBalance() {
         let bal = await web3.eth.getBalance(this.ethAddress)
-        console.log(bal)
         this.ethBalance = new BN(bal)
         return this.ethBalance
     }
@@ -366,7 +373,33 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     }
 
     async importToCChain(): Promise<string> {
-        return ''
+        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
+            this.ethAddressBech,
+            avm.getBlockchainID()
+        )
+        const utxoSet: EVMUTXOSet = utxoResponse.utxos
+
+        if (utxoSet.getAllUTXOs().length === 0) {
+            throw new Error('Nothing to import.')
+        }
+
+        let toAddress = '0x' + this.ethAddress
+        let ownerAddresses = [this.ethAddressBech]
+        let fromAddresses = ownerAddresses
+        let sourceChain = avm.getBlockchainID()
+
+        const unsignedTx = await cChain.buildImportTx(
+            utxoSet,
+            toAddress,
+            ownerAddresses,
+            sourceChain,
+            fromAddresses
+        )
+        let keyChain = this.ethKeyChain
+        const tx = unsignedTx.sign(keyChain)
+        let id = await cChain.issueTx(tx)
+
+        return id
     }
 
     async buildUnsignedTransaction(

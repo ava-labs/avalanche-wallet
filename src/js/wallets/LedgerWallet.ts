@@ -231,8 +231,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async getEthBalance() {
-        let bal = await web3.eth.getBalance(this.ethAddress)
-        this.ethBalance = new BN(bal)
+        console.error('Not implemented')
+        // let bal = await web3.eth.getBalance(this.ethAddress)
+        this.ethBalance = new BN(0)
         return this.ethBalance
     }
 
@@ -452,6 +453,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async importToCChain(): Promise<string> {
+        console.error('Not implemented.')
         return ''
     }
 
