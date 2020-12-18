@@ -376,6 +376,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         }
     }
 
+    // TODO: Move to Core HD file
     async importToCChain(): Promise<string> {
         const utxoResponse: UTXOResponse = await cChain.getUTXOs(
             this.ethAddressBech,
@@ -395,8 +396,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         let fromAddresses = ownerAddresses
         let sourceChain = avm.getBlockchainID()
 
-        console.log(this.ethAddress)
-        console.log(cAddrs)
         const unsignedTx = await cChain.buildImportTx(
             utxoSet,
             toAddress,
@@ -411,6 +410,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return id
     }
 
+    // TODO: Move to Core HD file
     async importToPlatformChain(): Promise<string> {
         // await this.platformHelper.findHdIndex();
         const utxoSet = (await this.platformHelper.getAtomicUTXOs()) as PlatformUTXOSet
@@ -436,14 +436,10 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         )
         const tx = unsignedTx.sign(keyChain)
 
-        // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return pChain.issueTx(tx)
     }
 
+    // TODO: Move to Core HD file
     async importToXChain(sourceChain: ChainIdType) {
         const utxoSet = (await this.externalHelper.getAtomicUTXOs()) as AVMUTXOSet
 
@@ -471,11 +467,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
             [xToAddr]
         )
         const tx = unsignedTx.sign(keyChain)
-
-        // // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
 
         return avm.issueTx(tx)
     }

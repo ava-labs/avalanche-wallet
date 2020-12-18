@@ -107,6 +107,8 @@ export default class ChainImport extends Vue {
             title: 'Import Success',
             message: txId,
         })
+
+        this.$store.dispatch('Assets/updateUTXOs')
     }
 
     onError(err: Error) {

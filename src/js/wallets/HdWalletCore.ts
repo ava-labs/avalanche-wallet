@@ -162,6 +162,8 @@ class HdWalletCore {
         this.externalHelper.onNetworkChange()
         this.internalHelper.onNetworkChange()
         this.platformHelper.onNetworkChange()
+
+        // TODO: Handle EVM changes
     }
 
     async buildUnsignedTransaction(

@@ -337,11 +337,6 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         )
         const tx = unsignedTx.sign(keyChain)
 
-        // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return pChain.issueTx(tx)
     }
 
@@ -366,11 +361,6 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
             [xToAddr]
         )
         const tx = unsignedTx.sign(keyChain)
-
-        // // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
 
         return avm.issueTx(tx)
     }

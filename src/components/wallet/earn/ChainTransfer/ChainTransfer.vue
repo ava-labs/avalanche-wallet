@@ -183,13 +183,13 @@ import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
-import { pChain, avm } from '@/AVA'
+import { pChain, avm, bintools } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
 import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
-
+import { web3 } from '@/evm'
 import { ChainIdType } from '@/constants'
 
 @Component({
@@ -368,7 +368,16 @@ export default class ChainTransfer extends Vue {
             }
         } else {
             // TODO: Add C Chain waiting logic
-            console.log('C WAIT')
+            // let txIdHex = bintools.cb58Decode(txId).toString('hex')
+            // let receipt = await web3.eth.getTransactionReceipt('0x' + txIdHex)
+            // console.log(receipt)
+
+            // if (receipt === null) {
+            //     status = 'Unknown'
+            // } else {
+            //     console.log('check receipt status')
+            //     status = 'success'
+            // }
             status = 'success'
         }
         this.exportStatus = status
@@ -468,6 +477,8 @@ export default class ChainTransfer extends Vue {
             title: 'Transfer Complete',
             message: 'Funds transfered between chains.',
         })
+
+        this.$store.dispatch('Assets/updateUTXOs')
     }
 
     get canSubmit() {

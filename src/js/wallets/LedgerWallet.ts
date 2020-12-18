@@ -419,11 +419,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             false
         )
 
-        // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return pChain.issueTx(tx)
     }
 
@@ -452,11 +447,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         )
 
         let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx)
-
-        // // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
 
         return avm.issueTx(tx)
     }
