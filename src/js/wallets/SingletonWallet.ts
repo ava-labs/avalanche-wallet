@@ -15,6 +15,8 @@ import {
     UTXOSet as PlatformUTXOSet,
     UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
+import { KeyChain, KeyChain as EVMKeyChain } from 'avalanche/dist/apis/evm'
+
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import BN from 'bn.js'
@@ -23,6 +25,7 @@ import { AvaWalletCore, ChainAlias, UnsafeWallet } from './IAvaHdWallet'
 import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
 import { privateToAddress } from 'ethereumjs-util'
 import { web3 } from '@/evm'
+import { ChainIdType } from '@/constants'
 
 class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     keyChain: AVMKeyChain
@@ -43,7 +46,9 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     type: WalletNameType
 
     ethKey: string
+    ethKeyChain: EVMKeyChain
     ethAddress: string
+    ethAddressBech: string
     ethBalance: BN
 
     constructor(pk: string) {
@@ -71,11 +76,24 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         // @ts-ignore
         this.ethAddress = privateToAddress(pkBuf).toString('hex')
         this.ethBalance = new BN(0)
+        this.ethAddressBech = ''
+
+        let cPrivKey = `PrivateKey-` + bintools.cb58Encode(Buffer.from(pkBuf))
+        let cKeyChain = new KeyChain(ava.getHRP(), 'C')
+        this.ethKeyChain = cKeyChain
+
+        let cKeypair = cKeyChain.importKey(cPrivKey)
+        this.ethAddressBech = cKeypair.getAddressString()
+        console.log(cKeypair)
 
         this.type = 'singleton'
     }
 
-    async chainTransfer(amt: BN, sourceChain: string): Promise<string> {
+    async chainTransfer(
+        amt: BN,
+        sourceChain: string,
+        destinationChain: ChainIdType
+    ): Promise<string> {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
@@ -357,6 +375,10 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         return avm.issueTx(tx)
     }
 
+    async importToCChain(): Promise<string> {
+        return ''
+    }
+
     async buildUnsignedTransaction(
         orders: (ITransaction | UTXO)[],
         addr: string,
@@ -558,6 +580,14 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         }
 
         return receipt.transactionHash
+    }
+
+    getAllAddressesX() {
+        return [this.getCurrentAddress()]
+    }
+
+    getAllAddressesP() {
+        return [this.getCurrentPlatformAddress()]
     }
 }
 

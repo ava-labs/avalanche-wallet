@@ -82,6 +82,17 @@ class HdWalletCore {
         return internal.concat(external)
     }
 
+    getDerivedAddressesP(): string[] {
+        return this.platformHelper.getAllDerivedAddresses()
+    }
+
+    getAllAddressesX() {
+        return this.getDerivedAddresses()
+    }
+
+    getAllAddressesP() {
+        return this.getDerivedAddressesP()
+    }
     // Returns addresses to check for history
     getHistoryAddresses(): string[] {
         let internalIndex = this.internalHelper.hdIndex

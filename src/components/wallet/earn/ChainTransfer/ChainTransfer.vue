@@ -3,34 +3,46 @@
         <div class="cols">
             <div class="form">
                 <div class="chains">
-                    <div class="chain_cont">
-                        <label>{{ $t('earn.transfer.source') }}</label>
-                        <p class="chain">{{ sourceChain }}</p>
-                        <div class="chain_info">
-                            <label>{{ $t('earn.transfer.balance') }}</label>
-                            <p>{{ balance.toLocaleString() }} AVAX</p>
-                        </div>
-                    </div>
-                    <v-btn
-                        icon
-                        style="align-self: center"
-                        class="switch_but button_primary"
-                        @click="switchChain"
-                        v-if="!isConfirm"
-                    >
-                        <fa icon="sync"></fa>
-                    </v-btn>
-                    <div class="chain_cont">
-                        <label>{{ $t('earn.transfer.destination') }}</label>
-                        <p class="chain">{{ targetChain }}</p>
-                        <div class="chain_info">
-                            <label>{{ $t('earn.transfer.balance') }}</label>
-                            <p>
-                                {{ destinationBalance.toLocaleString() }} AVAX
-                            </p>
-                        </div>
-                    </div>
+                    <ChainCard
+                        v-model="sourceChain"
+                        :exclude="targetChain"
+                    ></ChainCard>
+                    <ChainCard
+                        v-model="targetChain"
+                        :exclude="sourceChain"
+                        :is-source="false"
+                    ></ChainCard>
                 </div>
+
+                <!--                <div class="chains">-->
+                <!--                    <div class="chain_cont">-->
+                <!--                        <label>{{ $t('earn.transfer.source') }}</label>-->
+                <!--                        <p class="chain">{{ sourceChain }}</p>-->
+                <!--                        <div class="chain_info">-->
+                <!--                            <label>{{ $t('earn.transfer.balance') }}</label>-->
+                <!--                            <p>{{ balance.toLocaleString() }} AVAX</p>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <v-btn-->
+                <!--                        icon-->
+                <!--                        style="align-self: center"-->
+                <!--                        class="switch_but button_primary"-->
+                <!--                        @click="switchChain"-->
+                <!--                        v-if="!isConfirm"-->
+                <!--                    >-->
+                <!--                        <fa icon="sync"></fa>-->
+                <!--                    </v-btn>-->
+                <!--                    <div class="chain_cont">-->
+                <!--                        <label>{{ $t('earn.transfer.destination') }}</label>-->
+                <!--                        <p class="chain">{{ targetChain }}</p>-->
+                <!--                        <div class="chain_info">-->
+                <!--                            <label>{{ $t('earn.transfer.balance') }}</label>-->
+                <!--                            <p>-->
+                <!--                                {{ destinationBalance.toLocaleString() }} AVAX-->
+                <!--                            </p>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div v-show="!isConfirm">
                     <label>{{ $t('earn.transfer.amount') }}</label>
                     <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
@@ -175,13 +187,10 @@ import { pChain, avm } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
+import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
+import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
 
-enum TxState {
-    failed = -1,
-    waiting = 0,
-    started = 1,
-    success = 2,
-}
+import { ChainIdType } from '@/constants'
 
 @Component({
     name: 'chain_transfer',
@@ -189,11 +198,12 @@ enum TxState {
         Spinner,
         Dropdown,
         AvaxInput,
+        ChainCard,
     },
 })
 export default class ChainTransfer extends Vue {
-    sourceChain = 'X'
-    targetChain = 'P'
+    sourceChain: ChainIdType = 'X'
+    targetChain: ChainIdType = 'P'
     isLoading = false
     amt: BN = new BN(0)
     err: string = ''
@@ -215,11 +225,11 @@ export default class ChainTransfer extends Vue {
     importStatus: string | null = null
     importReason: string | null = null
 
-    switchChain() {
-        let temp = this.sourceChain
-        this.sourceChain = this.targetChain
-        this.targetChain = temp
-    }
+    // switchChain() {
+    //     let temp = this.sourceChain
+    //     this.sourceChain = this.targetChain
+    //     this.targetChain = temp
+    // }
 
     get ava_asset(): AvaAsset | null {
         let ava = this.$store.getters['Assets/AssetAVA']
@@ -239,32 +249,23 @@ export default class ChainTransfer extends Vue {
         return this.ava_asset.amount
     }
 
+    get evmUnlocked(): BN {
+        let balRaw = this.wallet.ethBalance
+        return balRaw.divRound(new BN(Math.pow(10, 9)))
+    }
+
     get balance(): Big {
         let bal: BN
         if (this.sourceChain === 'P') {
             bal = this.platformUnlocked
+        } else if (this.sourceChain === 'C') {
+            bal = this.evmUnlocked
         } else {
             bal = this.avmUnlocked
         }
 
-        // let bigBal = Big(bal.toString())
-        //     bigBal = bigBal.div(Math.pow(10,9))
         let bigBal = bnToBig(bal, 9)
 
-        return bigBal
-    }
-
-    get destinationBalance(): Big {
-        let bal: BN
-        if (this.sourceChain === 'P') {
-            bal = this.avmUnlocked
-        } else {
-            bal = this.platformUnlocked
-        }
-
-        let bigBal = bnToBig(bal, 9)
-        // let bigBal = Big(bal.toString())
-        // bigBal = bigBal.div(Math.pow(10,9))
         return bigBal
     }
 
@@ -273,14 +274,8 @@ export default class ChainTransfer extends Vue {
     }
     // Fee is 2 times the tx transfer fee
     get fee(): Big {
-        let feeP = pChain.getTxFee()
         let feeX = avm.getTxFee()
-
-        // let totFee = feeP.add(feeX);
         let totFee = feeX.mul(new BN(2))
-        // let feePBig = Big(feeP.toString()).div(Math.pow(10,9));
-        // let feeXBig = Big(feeX.toString()).div(Math.pow(10,9));
-        // let feeXBig = Big(totFee.toString()).div(Math.pow(10,9));
         let feeXBig = bnToBig(totFee, 9)
 
         return feeXBig
@@ -331,7 +326,7 @@ export default class ChainTransfer extends Vue {
         this.isImportErr = false
 
         try {
-            this.chainExport(this.formAmt, this.sourceChain)
+            this.chainExport(this.formAmt, this.sourceChain, this.targetChain)
         } catch (err) {
             this.onerror(err)
         }
@@ -339,12 +334,20 @@ export default class ChainTransfer extends Vue {
 
     // Triggers export from chain
     // STEP 1
-    async chainExport(amt: BN, sourceChain: string) {
+    async chainExport(
+        amt: BN,
+        sourceChain: ChainIdType,
+        destinationChain: ChainIdType
+    ) {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
         let exportTxId
         this.exportState = TxState.started
 
-        exportTxId = await wallet.chainTransfer(amt, sourceChain)
+        exportTxId = await wallet.chainTransfer(
+            amt,
+            sourceChain,
+            destinationChain
+        )
 
         this.exportId = exportTxId
         this.waitExportStatus(exportTxId)
@@ -355,7 +358,7 @@ export default class ChainTransfer extends Vue {
         let status
         if (this.sourceChain === 'X') {
             status = await avm.getTxStatus(txId)
-        } else {
+        } else if (this.sourceChain === 'P') {
             let resp = await pChain.getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
@@ -363,6 +366,10 @@ export default class ChainTransfer extends Vue {
                 status = resp.status
                 this.exportReason = resp.reason
             }
+        } else {
+            // TODO: Add C Chain waiting logic
+            console.log('C WAIT')
+            status = 'success'
         }
         this.exportStatus = status
 
@@ -390,10 +397,12 @@ export default class ChainTransfer extends Vue {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
 
         let importTxId
-        if (this.sourceChain === 'X') {
+        if (this.targetChain === 'P') {
             importTxId = await wallet.importToPlatformChain()
+        } else if (this.targetChain === 'X') {
+            importTxId = await wallet.importToXChain(this.sourceChain)
         } else {
-            importTxId = await wallet.importToXChain()
+            importTxId = await wallet.importToCChain()
         }
         this.importId = importTxId
         this.importState = TxState.started
@@ -405,15 +414,18 @@ export default class ChainTransfer extends Vue {
     async waitImportStatus(txId: string) {
         let status
 
-        if (this.sourceChain === 'P') {
+        if (this.targetChain === 'X') {
             status = await avm.getTxStatus(txId)
-        } else {
+        } else if (this.targetChain === 'P') {
             let resp = await pChain.getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
             } else {
                 status = resp.status
             }
+        } else {
+            // TODO: Add evm processing
+            status = 'success'
         }
 
         this.importStatus = status
@@ -472,7 +484,7 @@ export default class ChainTransfer extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../main";
+@use "../../../../main";
 
 .cols {
     display: grid;
@@ -508,7 +520,7 @@ export default class ChainTransfer extends Vue {
 }
 .chains {
     position: relative;
-    text-align: center;
+    //text-align: center;
     display: grid;
     margin: 0 !important;
     column-gap: 4px;

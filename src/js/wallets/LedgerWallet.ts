@@ -57,6 +57,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     ethAddress: string
     ethBalance: BN
+    ethAddressBech: string
 
     constructor(app: AppAvax, hdkey: HDKey) {
         super(hdkey)
@@ -66,6 +67,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // TODO: Add actual values
         this.ethAddress = ''
         this.ethBalance = new BN(0)
+        this.ethAddressBech = ''
     }
 
     static async fromApp(app: AppAvax) {
@@ -457,6 +459,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }, 3000)
 
         return avm.issueTx(tx)
+    }
+
+    async importToCChain(): Promise<string> {
+        return ''
     }
 
     async validate(

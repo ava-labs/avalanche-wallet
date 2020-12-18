@@ -420,7 +420,8 @@
             "title": "Chain Import",
             "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
             "submit_x": "Import X",
-            "submit_p": "Import P"
+            "submit_p": "Import P",
+            "submit_c": "Import C"
         },
         "sign": {
             "title": "Sign Message",

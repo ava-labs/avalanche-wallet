@@ -22,14 +22,18 @@ import {
     UnsignedTx as PlatformUnsignedTx,
     UTXO as PlatformUTXO,
     Tx as PlatformTx,
-    UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 
+import {
+    UTXOSet as EVMUTXOSet,
+    KeyChain as EVMKeyChain,
+    UnsignedTx as EVMUnsignedTx,
+} from 'avalanche/dist/apis/evm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 
 import * as bip39 from 'bip39'
 import { BN, Buffer } from 'avalanche'
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { IAvaHdWallet, IIndexKeyCache } from '@/js/wallets/IAvaHdWallet'
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
@@ -38,8 +42,15 @@ import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import createHash from 'create-hash'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
-import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
+import {
+    StandardTx,
+    StandardUnsignedTx,
+    UTXOResponse,
+} from 'avalanche/dist/common'
 import { digestMessage } from '@/helpers/helper'
+import { buildExportTransaction } from '@/js/TxHelper'
+import { ChainIdType } from '@/constants'
+import { KeyChain } from 'avalanche/dist/apis/evm'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -63,7 +74,9 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     isLoading: boolean
     type: WalletNameType
     ethKey: string
+    ethKeyChain: EVMKeyChain
     ethAddress: string
+    ethAddressBech: string
     ethBalance: BN
 
     // The master key from avalanche.js
@@ -80,6 +93,15 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         this.ethKey = ethPrivateKey.toString('hex')
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
         this.ethBalance = new BN(0)
+
+        let cPrivKey =
+            `PrivateKey-` + bintools.cb58Encode(Buffer.from(ethPrivateKey))
+        let cKeyChain = new KeyChain(ava.getHRP(), 'C')
+        this.ethKeyChain = cKeyChain
+
+        let cKeypair = cKeyChain.importKey(cPrivKey)
+        this.ethAddressBech = cKeypair.getAddressString()
+        console.log(cKeypair)
 
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')
@@ -164,7 +186,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         // If given custom UTXO set use that
         if (utxos) {
-            utxoSet = new UTXOSet()
+            utxoSet = new PlatformUTXOSet()
             utxoSet.addArray(utxos)
         }
 
@@ -223,7 +245,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         // If given custom UTXO set use that
         if (utxos) {
-            utxoSet = new UTXOSet()
+            utxoSet = new PlatformUTXOSet()
             utxoSet.addArray(utxos)
         }
 
@@ -265,7 +287,11 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return pChain.issueTx(tx)
     }
 
-    async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string> {
+    async chainTransfer(
+        amt: BN,
+        sourceChain: ChainIdType,
+        destinationChain: ChainIdType
+    ): Promise<string> {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
@@ -273,47 +299,116 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         let pId = pChain.getBlockchainID()
         let xId = avm.getBlockchainID()
         let txId
+
+        console.log(`Export ${sourceChain} -> ${destinationChain}`)
+        // Get from addresses
         if (sourceChain === 'X') {
-            let keychain = this.getKeyChain()
-            let toAddress = this.platformHelper.getCurrentAddress()
-            let xChangeAddr = this.internalHelper.getCurrentAddress()
-            let fromAddrs = keychain.getAddressStrings()
+            let destinationAddr
+            if (destinationChain === 'P') {
+                destinationAddr = this.getCurrentPlatformAddress()
+            } else {
+                // C Chain
+                // todo: replace with shared wallet class method
+                destinationAddr = this.ethAddressBech
+                console.log(destinationAddr)
+            }
 
-            // console.log(toAddress);
-
-            let exportTx = await avm.buildExportTx(
-                this.utxoset,
+            let fromAddresses = this.getAllAddressesX()
+            let changeAddress = this.getChangeAddress()
+            let utxos = this.getUTXOSet()
+            let exportTx = (await buildExportTransaction(
+                sourceChain,
+                destinationChain,
+                utxos,
+                fromAddresses,
+                destinationAddr,
                 amtFee,
-                pId,
-                [toAddress],
-                fromAddrs,
-                [xChangeAddr]
-            )
-            let tx = exportTx.sign(keychain)
+                changeAddress
+            )) as AVMUnsignedTx
+
+            let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
+            // let keychain = this.getKeyChain()
+            // let tx = exportTx.sign(keychain)
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
-            let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-            let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
-            let toAddress = this.externalHelper.getCurrentAddress()
-            let pChangeAddr = this.platformHelper.getCurrentAddress()
-            let fromAddrs = keychain.getAddressStrings()
+            let destinationAddr = this.getCurrentAddress()
+            let fromAddresses = this.getAllAddressesP()
 
-            // console.log(toAddress);
+            let changeAddress = this.getCurrentPlatformAddress()
+            let utxos = this.getPlatformUTXOSet()
 
-            let exportTx = await pChain.buildExportTx(
-                utxoSet,
+            let exportTx = (await buildExportTransaction(
+                sourceChain,
+                destinationChain,
+                utxos,
+                fromAddresses,
+                destinationAddr,
                 amtFee,
-                xId,
-                [toAddress],
-                fromAddrs,
-                [pChangeAddr]
-            )
+                changeAddress
+            )) as PlatformUnsignedTx
 
-            let tx = exportTx.sign(keychain)
+            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx)
+
+            // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
+            // let tx = exportTx.sign(keychain)
             return pChain.issueTx(tx)
+        } else if (sourceChain === 'C') {
+            let destinationAddr = this.getCurrentAddress()
+            let fromAddresses = [this.ethAddress]
+            let changeAddress = this.ethAddressBech
+            let utxos = this.getPlatformUTXOSet()
+
+            let exportTx = (await buildExportTransaction(
+                sourceChain,
+                destinationChain,
+                utxos,
+                fromAddresses,
+                destinationAddr,
+                amtFee,
+                changeAddress,
+                this.ethAddressBech
+            )) as EVMUnsignedTx
+
+            let tx = await exportTx.sign(this.ethKeyChain)
+            return cChain.issueTx(tx)
         } else {
             throw 'Invalid source chain.'
         }
+    }
+
+    async importToCChain(): Promise<string> {
+        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
+            this.ethAddressBech,
+            avm.getBlockchainID()
+        )
+        const utxoSet: EVMUTXOSet = utxoResponse.utxos
+
+        if (utxoSet.getAllUTXOs().length === 0) {
+            throw new Error('Nothing to import.')
+        }
+
+        let chainId = cChain.getBlockchainID()
+        let cAddrs = [this.ethAddressBech]
+
+        let toAddress = '0x' + this.ethAddress
+        let ownerAddresses = [this.ethAddressBech]
+        let fromAddresses = ownerAddresses
+        let sourceChain = avm.getBlockchainID()
+
+        console.log(this.ethAddress)
+        console.log(cAddrs)
+        const unsignedTx = await cChain.buildImportTx(
+            utxoSet,
+            toAddress,
+            ownerAddresses,
+            sourceChain,
+            fromAddresses
+        )
+        let keyChain = this.ethKeyChain
+        const tx = unsignedTx.sign(keyChain)
+        let id = await cChain.issueTx(tx)
+
+        return id
     }
 
     async importToPlatformChain(): Promise<string> {
@@ -349,7 +444,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return pChain.issueTx(tx)
     }
 
-    async importToXChain() {
+    async importToXChain(sourceChain: ChainIdType) {
         const utxoSet = (await this.externalHelper.getAtomicUTXOs()) as AVMUTXOSet
 
         if (utxoSet.getAllUTXOs().length === 0) {
@@ -360,11 +455,17 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         let xAddrs = keyChain.getAddressStrings()
         let xToAddr = this.externalHelper.getCurrentAddress()
 
+        let sourceChainId
+        if (sourceChain === 'P') {
+            sourceChainId = pChain.getBlockchainID()
+        } else {
+            sourceChainId = cChain.getBlockchainID()
+        }
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
             xAddrs,
-            pChain.getBlockchainID(),
+            sourceChainId,
             [xToAddr],
             xAddrs,
             [xToAddr]

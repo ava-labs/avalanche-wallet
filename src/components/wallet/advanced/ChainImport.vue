@@ -24,6 +24,14 @@
                 small
                 >{{ $t('advanced.import.submit_p') }}</v-btn
             >
+            <v-btn
+                block
+                class="button_secondary"
+                depressed
+                @click="atomicImportC"
+                small
+                >{{ $t('advanced.import.submit_c') }}</v-btn
+            >
         </template>
         <Spinner class="spinner" v-else></Spinner>
     </div>
@@ -51,7 +59,8 @@ export default class ChainImport extends Vue {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToXChain()
+            let txId = await this.wallet.importToXChain('P')
+            let txId2 = await this.wallet.importToXChain('C')
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
@@ -63,6 +72,17 @@ export default class ChainImport extends Vue {
         if (!this.wallet) return
         try {
             let txId = await this.wallet.importToPlatformChain()
+            this.onSuccess(txId)
+        } catch (e) {
+            this.onError(e)
+        }
+    }
+
+    async atomicImportC() {
+        this.beforeSubmit()
+        if (!this.wallet) return
+        try {
+            let txId = await this.wallet.importToCChain()
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
