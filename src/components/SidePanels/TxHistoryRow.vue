@@ -244,7 +244,7 @@ export default class TxHistoryRow extends Vue {
 
         let ins = this.transaction.inputs || {}
         let outs = this.transaction.outputs || {}
-        let res: { [key in string]: string } = {} // asset id -> nft payload dict
+        let res: { [key in string]: PayloadBase } = {} // asset id -> nft payload dict
 
         ins.forEach((inputUtxo) => {
             const assetId = inputUtxo.output.assetID
