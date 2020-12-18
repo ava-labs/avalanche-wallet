@@ -19,6 +19,7 @@ import {
     ExportWalletsInput,
     IWalletNftDict,
     IWalletNftMintDict,
+    ITxNftDict,
 } from '@/store/types'
 
 import { KeyFile, KeyFileDecrypted } from '@/js/IKeystore'
@@ -124,6 +125,11 @@ export default new Vuex.Store({
                 }
             }
 
+            return res
+        },
+
+        txNftDict(state: RootState) {
+            let res: ITxNftDict = {}
             // HELP, these utxos are diff than above
             // so getPayloadFromUTXO doesn't work
             // @ts-ignore
@@ -135,10 +141,8 @@ export default new Vuex.Store({
             opIns.forEach((utxo) => {
                 if (utxo.payload) {
                     if (res[utxo.assetID]) {
-                        // @ts-ignore
                         res[utxo.assetID].push(utxo)
                     } else {
-                        // @ts-ignore
                         res[utxo.assetID] = [utxo]
                     }
                 }
@@ -147,10 +151,8 @@ export default new Vuex.Store({
             opOuts.forEach((utxo) => {
                 if (utxo.payload) {
                     if (res[utxo.assetID]) {
-                        // @ts-ignore
                         res[utxo.assetID].push(utxo)
                     } else {
-                        // @ts-ignore
                         res[utxo.assetID] = [utxo]
                     }
                 }

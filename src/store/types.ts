@@ -8,6 +8,7 @@ import { KeyFile } from '@/js/IKeystore'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { UTXO as TxUTXO } from './modules/history/types'
 
 export interface RootState {
     isAuth: boolean
@@ -34,6 +35,10 @@ interface Modal {
 
 export interface IWalletNftDict {
     [assetId: string]: UTXO[]
+}
+
+export interface ITxNftDict {
+    [assetId: string]: TxUTXO[]
 }
 
 export interface IWalletBalanceDict {

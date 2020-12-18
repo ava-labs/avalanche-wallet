@@ -16,6 +16,7 @@ import Big from 'big.js'
 import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
 import { Buffer } from 'avalanche'
 import createHash from 'create-hash'
+import { UTXO as TxUTXO } from '../store/modules/history/types'
 
 function getAssetIcon(id: string) {
     let url = '/question-solid.svg'
@@ -94,6 +95,16 @@ function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
 
     return payloadbase
 }
+
+function getPayloadFromTxUTXO(utxo: TxUTXO): PayloadBase {
+    let payload = Buffer.from(utxo.payload!, 'base64')
+
+    let typeId = payloadtypes.getTypeID(payload)
+    let pl: Buffer = payloadtypes.getContent(payload)
+    let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+
+    return payloadbase
+}
 export {
     getAssetIcon,
     keyToKeypair,
@@ -101,4 +112,5 @@ export {
     bnToBig,
     digestMessage,
     getPayloadFromUTXO,
+    getPayloadFromTxUTXO,
 }

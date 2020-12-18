@@ -30,6 +30,11 @@
                     :key="i"
                     :payload="payload"
                 ></tx-history-nft>
+                <!-- <tx-history-nft
+                    v-for="(payload, assetId, i) in txNftPayloads"
+                    :key="i"
+                    :payload="payload"
+                ></tx-history-nft> -->
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
             <div v-if="memo" class="memo">Memo: {{ memo }}</div>
@@ -46,13 +51,13 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import moment from 'moment'
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import TxHistoryNft from '@/components/SidePanels/TxHistoryNft.vue'
-import { getAssetIcon, getPayloadFromUTXO } from '@/helpers/helper'
+import { getAssetIcon, getPayloadFromTxUTXO, getPayloadFromUTXO } from '@/helpers/helper'
 import BN from 'bn.js'
 import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
 import { ActionType, TransactionNftDict, TransactionValueDict } from '@/components/SidePanels/types'
 import store from '@/store'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { IWalletNftDict, WalletType } from '@/store/types'
+import { ITxNftDict, IWalletNftDict, WalletType } from '@/store/types'
 import { avm, pChain } from '@/AVA'
 import { NFTTransferOutput } from 'avalanche/dist/apis/avm'
 
@@ -263,6 +268,36 @@ export default class TxHistoryRow extends Vue {
         })
 
         return res
+    }
+
+    get txNftDict(): ITxNftDict {
+        return this.$store.getters.txNftDict
+    }
+
+    get txNftPayloads() {
+        let txRes: TransactionNftDict = {}
+
+        const isNft = (output: UTXO) => {
+            return !txRes[output.assetID] && this.txNftDict[output.assetID]
+        }
+
+        const payload = (utxo: UTXO) => {
+            return getPayloadFromTxUTXO(this.txNftDict[utxo.assetID][0])
+        }
+
+        this.transaction.outputs.forEach((utxo) => {
+            if (isNft(utxo)) {
+                txRes[utxo.assetID] = payload(utxo)
+            }
+        })
+
+        this.transaction.inputs.forEach(({ output }) => {
+            if (isNft(output)) {
+                txRes[output.assetID] = payload(output)
+            }
+        })
+
+        return txRes
     }
 }
 </script>
