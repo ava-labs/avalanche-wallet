@@ -55,6 +55,8 @@ export default class CollectibleFamilyGroup extends Vue {
         let out = this.utxos[0].getOutput() as NFTTransferOutput
         let payload = out.getPayloadBuffer()
 
+        debugger
+
         let typeId = payloadtypes.getTypeID(payload)
         let pl: Buffer = payloadtypes.getContent(payload)
         let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
