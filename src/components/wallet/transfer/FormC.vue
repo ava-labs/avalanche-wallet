@@ -2,18 +2,13 @@
     <div class="cols">
         <div class="form">
             <div>
-                <label>Balance (C)</label>
-                <p style="font-size: 22px">
-                    {{ balanceBig.toLocaleString() }} AVAX
-                </p>
-            </div>
-            <div>
-                <label>Amount</label>
+                <h4>Amount</h4>
                 <AvaxInput
                     :max="maxAmt"
                     v-model="amountIn"
                     disabled=""
                     v-show="!isConfirm"
+                    :balance="balanceBig"
                 ></AvaxInput>
                 <p
                     v-if="isConfirm"
@@ -23,34 +18,10 @@
                     {{ formAmountBig.toLocaleString() }} AVAX
                 </p>
             </div>
-
-            <div class="gas_cont">
-                <div>
-                    <label>Gas Price (GWEI)</label>
-                    <input
-                        type="number"
-                        v-model="gasPrice"
-                        min="0"
-                        v-if="!isConfirm"
-                    />
-                    <p v-else class="confirm_data">{{ gasPrice }}</p>
-                </div>
-                <div>
-                    <label>Gas Limit</label>
-                    <input
-                        type="number"
-                        v-model="gasLimit"
-                        min="0"
-                        v-if="!isConfirm"
-                    />
-                    <p v-else class="confirm_data">{{ gasLimit }}</p>
-                </div>
-            </div>
         </div>
-        <div style="border-right: 1px solid var(--bg-light)"></div>
         <div class="right_col">
             <div class="to_address">
-                <label>{{ $t('transfer.to') }}</label>
+                <h4>{{ $t('transfer.to') }}</h4>
                 <qr-input
                     v-show="!isConfirm"
                     v-model="addressIn"
@@ -65,6 +36,28 @@
                     {{ formAddress }}
                 </p>
             </div>
+            <div class="gas_cont">
+                <div>
+                    <h4>Gas Price (GWEI)</h4>
+                    <input
+                        type="number"
+                        v-model="gasPrice"
+                        min="0"
+                        v-if="!isConfirm"
+                    />
+                    <p v-else class="confirm_data">{{ gasPrice }}</p>
+                </div>
+                <div>
+                    <h4>Gas Limit</h4>
+                    <input
+                        type="number"
+                        v-model="gasLimit"
+                        min="0"
+                        v-if="!isConfirm"
+                    />
+                    <p v-else class="confirm_data">{{ gasLimit }}</p>
+                </div>
+            </div>
 
             <div class="fees">
                 <h4>{{ $t('transfer.fees') }}</h4>
@@ -76,7 +69,7 @@
             <template v-if="!isSuccess">
                 <p class="err">{{ err }}</p>
                 <v-btn
-                    class="button_secondary checkout"
+                    class="button_primary checkout"
                     depressed
                     block
                     @click="confirm"
@@ -86,7 +79,7 @@
                 >
                 <template v-else>
                     <v-btn
-                        class="button_secondary"
+                        class="button_primary"
                         depressed
                         block
                         @click="submit"
@@ -117,7 +110,7 @@
                 <v-btn
                     style="margin: 14px 0"
                     :disabled="!canSendAgain"
-                    class="button_secondary"
+                    class="button_primary"
                     small
                     block
                     @click="startAgain"
@@ -326,6 +319,14 @@ export default class FormC extends Vue {
 <style scoped lang="scss">
 @use '../../../main';
 
+h4 {
+    display: block;
+    text-align: left;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
 .cols {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
@@ -334,6 +335,9 @@ export default class FormC extends Vue {
 }
 
 .form {
+    padding-right: 80px;
+    grid-column: 1/3;
+    border-right: 1px solid var(--bg-light);
     > div {
         margin: 12px 0;
     }
@@ -347,9 +351,13 @@ input,
     font-size: 14px;
 }
 .gas_cont {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    //display: grid;
+    //grid-template-columns: 1fr 1fr;
     column-gap: 14px;
+    > div {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 label {
@@ -360,7 +368,9 @@ label {
 }
 
 .fees {
-    margin: 14px 0;
+    margin-top: 14px;
+    border-top: 1px solid var(--bg-light);
+    padding-top: 14px;
 }
 .fees p {
     text-align: left;
@@ -372,9 +382,6 @@ label {
     float: right;
 }
 .to_address {
-    margin-bottom: 14px;
-    border-bottom: 1px solid var(--bg-light);
-    padding-bottom: 14px;
 }
 
 .checkout {

@@ -10,8 +10,11 @@
                 :max="max"
                 @change="amount_in"
             ></BigNumInput>
+            <p v-if="balance" class="balance">
+                Balance: {{ balance.toLocaleString() }}
+            </p>
         </div>
-        <p>AVAX</p>
+        <p class="ticker">AVAX</p>
     </div>
 </template>
 <script lang="ts">
@@ -21,6 +24,7 @@ import { Vue, Component, Prop, Model } from 'vue-property-decorator'
 //@ts-ignore
 import { BigNumInput } from '@avalabs/vue_components'
 import { BN } from 'avalanche'
+import Big from 'big.js'
 
 @Component({
     components: {
@@ -31,6 +35,7 @@ export default class AvaxInput extends Vue {
     @Model('change', { type: Object }) readonly amount!: boolean
 
     @Prop() max?: BN | null
+    @Prop() balance?: Big | null
 
     maxOut(ev: MouseEvent) {
         ev.preventDefault()
@@ -47,10 +52,11 @@ export default class AvaxInput extends Vue {
 <style scoped lang="scss">
 .avax_input {
     display: grid;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr max-content;
     grid-gap: 10px;
     color: var(--primary-color);
     width: 100%;
+    height: 40px;
 
     .amt_in {
         color: var(--primary-color);
@@ -81,8 +87,9 @@ export default class AvaxInput extends Vue {
     grid-template-columns: max-content 1fr;
     width: 100%;
     box-sizing: border-box;
-    overflow: auto;
+    //overflow: auto;
     padding: 8px 14px;
+    position: relative;
 
     //&:hover {
     //    border-color: var(--primary-color-light);
@@ -92,8 +99,12 @@ export default class AvaxInput extends Vue {
     //}
 }
 
+.ticker {
+    border-radius: 3px;
+    padding: 8px 14px;
+}
+
 p {
-    padding: 8px 6px;
     text-align: center;
 }
 .max_but {
@@ -101,5 +112,15 @@ p {
     &:hover {
         opacity: 1;
     }
+}
+
+.balance {
+    position: absolute;
+    font-size: 13px;
+    right: 8px;
+    color: var(--primary-color-light);
+    background-color: transparent !important;
+    top: 40px;
+    padding: 2px 8px;
 }
 </style>

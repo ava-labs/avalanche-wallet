@@ -89,7 +89,6 @@
                             <v-btn
                                 depressed
                                 class="button_primary"
-                                color="#4C2E56"
                                 :ripple="false"
                                 @click="confirm"
                                 :disabled="!canSend"
@@ -476,12 +475,6 @@ h4 {
     font-size: 12px;
 }
 
-.qrIn {
-    border-radius: 2px !important;
-    height: 40px;
-    font-size: 12px;
-}
-
 .addressIn >>> input::-webkit-input-placeholder {
     color: var(--primary-color-light) !important;
 }
@@ -550,6 +543,12 @@ h4 {
     margin-bottom: 14px;
 }
 
+.fees {
+    margin: 14px 0;
+    border-top: 1px solid var(--bg-light);
+    padding-top: 14px;
+}
+
 .fees p {
     text-align: left;
     font-size: 13px;
@@ -561,9 +560,6 @@ h4 {
 }
 
 .to_address {
-    margin-bottom: 14px;
-    border-bottom: 1px solid var(--bg-light);
-    padding-bottom: 14px;
 }
 
 label {

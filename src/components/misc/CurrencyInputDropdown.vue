@@ -186,20 +186,23 @@ export default class CurrencyInputDropdown extends Vue {
 .bigIn {
     width: 100%;
     border: none !important;
+    font-size: 15px;
+    font-family: monospace;
     /*background-color: #303030;*/
 }
 
 .max_in_cont {
     position: relative;
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: max-content 1fr;
+    padding: 8px 14px;
 }
 
 .curr_in_drop {
     display: grid;
     grid-template-columns: 1fr 140px;
     background-color: transparent;
-    font-size: 12px;
+    //font-size: 12px;
     height: 40px;
     width: 100%;
     outline: none;
@@ -213,7 +216,6 @@ export default class CurrencyInputDropdown extends Vue {
 }
 
 input {
-    padding: 8px;
     flex-grow: 1;
     outline: none;
     text-align: right;
@@ -223,11 +225,10 @@ input {
 }
 
 .max_but {
-    font-size: 12px;
-    text-decoration: underline;
-    text-decoration-style: dashed;
-    outline: none;
-    padding-left: 8px;
+    opacity: 0.4;
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .dropdown {

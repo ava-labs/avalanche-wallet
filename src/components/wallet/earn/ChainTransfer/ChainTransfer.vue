@@ -9,9 +9,9 @@
                 ></ChainSwapForm>
 
                 <div v-if="!isSuccess && !isLoading">
-                    <div v-if="!isImportErr">
-                        <label>{{ $t('earn.transfer.fee') }}</label>
-                        <p style="font-size: 22px">{{ fee.toString() }} AVAX</p>
+                    <div v-if="!isImportErr" class="fees">
+                        <h4>{{ $t('earn.transfer.fee') }}</h4>
+                        <p>{{ fee.toString() }} <span>AVAX</span></p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>
@@ -148,6 +148,9 @@ import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
     },
 })
 export default class ChainTransfer extends Vue {
+    $refs!: {
+        form: ChainSwapForm
+    }
     sourceChain: ChainIdType = 'X'
     targetChain: ChainIdType = 'P'
     isLoading = false
@@ -620,6 +623,22 @@ h2 {
     .spinner {
         color: var(--primary-color) !important;
     }
+}
+
+.fees {
+    margin: 14px 0;
+    border-top: 1px solid var(--bg-light);
+    padding-top: 14px;
+}
+
+.fees p {
+    text-align: left;
+    font-size: 13px;
+    color: var(--primary-color-light);
+}
+
+.fees span {
+    float: right;
 }
 
 .complete {

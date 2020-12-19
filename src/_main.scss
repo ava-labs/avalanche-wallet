@@ -378,6 +378,7 @@ textarea{
 .qr_input{
   background-color: var(--bg-light) !important;
   color: var(--primary-color) !important;
+  font-size: 13px;
 
   @include highlight-border
 

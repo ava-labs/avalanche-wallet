@@ -204,7 +204,6 @@ $right_pad: 80px;
     grid-template-columns: 1fr $right_pad;
     /*flex-direction: column;*/
     margin-bottom: 4px;
-    padding: 2px 0px;
     border-radius: 3px !important;
 
     &:last-of-type {
