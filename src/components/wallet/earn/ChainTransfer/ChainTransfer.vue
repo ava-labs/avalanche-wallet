@@ -21,6 +21,7 @@
                             class="button_secondary"
                             @click="confirm"
                             :disabled="!canSubmit"
+                            block
                             :loading="isLoading"
                             >{{ $t('earn.transfer.confirm') }}</v-btn
                         >
@@ -31,6 +32,7 @@
                                 @click="submit"
                                 :loading="isLoading"
                                 depressed
+                                block
                                 >{{ $t('earn.transfer.submit') }}</v-btn
                             >
                             <v-btn
@@ -43,10 +45,25 @@
                                 @click="cancelConfirm"
                                 depressed
                                 text
+                                block
                                 >{{ $t('earn.transfer.cancel') }}</v-btn
                             >
                         </template>
                     </div>
+                </div>
+                <div v-if="isSuccess" class="complete">
+                    <h4>{{ $t('earn.transfer.success.title') }}</h4>
+                    <p style="color: var(--success); margin: 12px 0 !important">
+                        <fa icon="check-circle"></fa>
+                        {{ $t('earn.transfer.success.message') }}
+                    </p>
+                    <v-btn
+                        depressed
+                        class="button_primary"
+                        small
+                        @click="$emit('cancel')"
+                        >{{ $t('earn.transfer.success.back') }}</v-btn
+                    >
                 </div>
             </div>
             <div class="right_col">
@@ -65,76 +82,6 @@
                     :tx-id="importId"
                     :is-export="false"
                 ></TxStateCard>
-
-                <!--                <div v-else-if="isLoading" class="loading_col">-->
-                <!--                    <div :state="exportState">-->
-                <!--                        <div class="loading_header">-->
-                <!--                            <h4>Export</h4>-->
-                <!--                            <div class="status_icon">-->
-                <!--                                <Spinner-->
-                <!--                                    v-if="exportState == 1"-->
-                <!--                                    class="spinner"-->
-                <!--                                ></Spinner>-->
-                <!--                                <p v-else-if="exportState === 2">-->
-                <!--                                    <fa icon="check-circle"></fa>-->
-                <!--                                </p>-->
-                <!--                                <p v-else-if="exportState === -1">-->
-                <!--                                    <fa icon="times-circle"></fa>-->
-                <!--                                </p>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                        <label>ID</label>-->
-                <!--                        <p>{{ exportId || '-' }}</p>-->
-                <!--                        <label>Status</label>-->
-                <!--                        <p v-if="!exportStatus">Not started</p>-->
-                <!--                        <p v-else>{{ exportStatus }}</p>-->
-                <!--                        <template v-if="exportReason">-->
-                <!--                            <label>Reason</label>-->
-                <!--                            <p>{{ exportReason }}</p>-->
-                <!--                        </template>-->
-                <!--                    </div>-->
-                <!--                    <div :state="importState">-->
-                <!--                        <div class="loading_header">-->
-                <!--                            <h4>Import</h4>-->
-                <!--                            <div class="status_icon">-->
-                <!--                                <Spinner-->
-                <!--                                    v-if="importState == 1"-->
-                <!--                                    class="spinner"-->
-                <!--                                ></Spinner>-->
-                <!--                                <p v-else-if="importState === 2">-->
-                <!--                                    <fa icon="check-circle"></fa>-->
-                <!--                                </p>-->
-                <!--                                <p v-else-if="importState === -1">-->
-                <!--                                    <fa icon="times-circle"></fa>-->
-                <!--                                </p>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                        <label>ID</label>-->
-                <!--                        <p>{{ importId || '-' }}</p>-->
-                <!--                        <label>Status</label>-->
-                <!--                        <p v-if="!importStatus">Not started</p>-->
-                <!--                        <p v-else>{{ importStatus }}</p>-->
-                <!--                        <template v-if="importReason">-->
-                <!--                            <label>Reason</label>-->
-                <!--                            <p>{{ importReason }}</p>-->
-                <!--                        </template>-->
-                <!--                    </div>-->
-
-                <!--                </div>-->
-            </div>
-            <div v-if="isSuccess" class="complete">
-                <h4>{{ $t('earn.transfer.success.title') }}</h4>
-                <p style="color: var(--success); margin: 12px 0 !important">
-                    <fa icon="check-circle"></fa>
-                    {{ $t('earn.transfer.success.message') }}
-                </p>
-                <v-btn
-                    depressed
-                    class="button_primary"
-                    small
-                    @click="$emit('cancel')"
-                    >{{ $t('earn.transfer.success.back') }}</v-btn
-                >
             </div>
         </div>
     </div>
@@ -389,13 +336,19 @@ export default class ChainTransfer extends Vue {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
 
         let importTxId
-        if (this.targetChain === 'P') {
-            importTxId = await wallet.importToPlatformChain()
-        } else if (this.targetChain === 'X') {
-            importTxId = await wallet.importToXChain(this.sourceChain)
-        } else {
-            importTxId = await wallet.importToCChain()
+        try {
+            if (this.targetChain === 'P') {
+                importTxId = await wallet.importToPlatformChain()
+            } else if (this.targetChain === 'X') {
+                importTxId = await wallet.importToXChain(this.sourceChain)
+            } else {
+                importTxId = await wallet.importToCChain()
+            }
+        } catch (e) {
+            this.onerror(e)
+            return
         }
+
         this.importId = importTxId
         this.importState = TxState.started
 

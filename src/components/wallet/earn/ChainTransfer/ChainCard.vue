@@ -29,9 +29,9 @@ import { bnToBig } from '@/helpers/helper'
 
 const chainTypes: ChainIdType[] = ['X', 'P', 'C']
 const chainNames = {
-    X: 'X Chain (Exchange)',
-    C: 'C Chain (Contract)',
-    P: 'P Chain (Platform)',
+    X: 'Exchange Chain',
+    C: 'Contract Chain',
+    P: 'Platform Chain',
 }
 
 @Component
