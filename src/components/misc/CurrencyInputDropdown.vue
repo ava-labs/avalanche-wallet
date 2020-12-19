@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="curr_in_drop">
-            <div class="max_in_cont">
+            <div class="max_in_cont hover_border">
                 <button class="max_but" @click="maxOut">MAX</button>
                 <big-num-input
                     ref="bigIn"
@@ -185,6 +185,7 @@ export default class CurrencyInputDropdown extends Vue {
 
 .bigIn {
     width: 100%;
+    border: none !important;
     /*background-color: #303030;*/
 }
 
@@ -192,10 +193,6 @@ export default class CurrencyInputDropdown extends Vue {
     position: relative;
     display: grid;
     grid-template-columns: 50px 1fr;
-
-    &:focus-within {
-        outline: 1px solid var(--secondary-color);
-    }
 }
 
 .curr_in_drop {

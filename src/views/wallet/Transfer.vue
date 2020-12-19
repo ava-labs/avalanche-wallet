@@ -39,7 +39,7 @@
                         <qr-input
                             v-if="!isConfirm"
                             v-model="addressIn"
-                            class="qrIn"
+                            class="qrIn hover_border"
                             placeholder="xxx"
                         ></qr-input>
                         <p class="confirm_val" v-else>{{ formAddress }}</p>

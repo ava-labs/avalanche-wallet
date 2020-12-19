@@ -30,6 +30,7 @@
                                 @click="confirm"
                                 :disabled="!canSubmit"
                                 block
+                                depressed
                                 :loading="isLoading"
                                 >{{ $t('earn.transfer.confirm') }}</v-btn
                             >
@@ -70,6 +71,7 @@
                         depressed
                         class="button_primary"
                         small
+                        block
                         @click="$emit('cancel')"
                         >{{ $t('earn.transfer.success.back') }}</v-btn
                     >

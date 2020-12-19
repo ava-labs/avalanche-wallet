@@ -2,7 +2,7 @@
     <div class="swap_form">
         <div>
             <label>Source Chain</label>
-            <select @input="onChangeSource">
+            <select @input="onChangeSource" class="hover_border">
                 <option
                     v-for="option in sourceOptions"
                     :value="option"
@@ -15,7 +15,7 @@
         </div>
         <div>
             <label>Destination Chain</label>
-            <select @input="onChangeDestination">
+            <select @input="onChangeDestination" class="hover_border">
                 <option
                     v-for="option in destinationOptions"
                     :value="option"
@@ -248,18 +248,23 @@ select {
     width: 100%;
     color: var(--primary-color);
     background-color: var(--bg-light);
-    //border: 1px solid var(--primary-color-light);
+    border: 1px solid transparent;
     border-radius: 4px;
     padding: 16px 12px;
     font-size: 14px;
-    //width: max-content;
     outline: none;
     -webkit-appearance: menulist;
     -moz-appearance: menulist;
+    transition-duration: 0.1s;
+    cursor: pointer;
 
-    &:focus {
-        outline: 1px solid var(--secondary-color);
-    }
+    //&:hover {
+    //    border-color: var(--primary-color-light);
+    //}
+    //
+    //&:focus {
+    //    border-color: var(--secondary-color);
+    //}
 }
 
 .balance {

@@ -19,7 +19,7 @@
                 </button>
             </div>
             <div style="flex-grow: 1"></div>
-            <div class="search">
+            <div class="search hover_border">
                 <img v-if="$root.theme === 'day'" src="@/assets/search.png" />
                 <img v-else src="@/assets/search_night.svg" />
                 <input :placeholder="$t('portfolio.search')" v-model="search" />
@@ -112,10 +112,6 @@ export default {
 
     $icon_w: 36px;
 
-    &:focus-within {
-        border: 1px solid var(--secondary-color);
-    }
-
     img {
         border-radius: 4px;
         padding: 10px 0px;
@@ -129,6 +125,7 @@ export default {
     input {
         padding: 0px 16px;
         outline: none;
+        border: none !important;
         flex-grow: 1;
         color: var(--primary-color);
 

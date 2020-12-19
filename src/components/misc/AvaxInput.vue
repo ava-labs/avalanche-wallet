@@ -1,6 +1,6 @@
 <template>
     <div class="avax_input">
-        <div class="col1">
+        <div class="col1 hover_border">
             <button class="max_but" @click="maxOut">MAX</button>
             <BigNumInput
                 ref="amt_in"
@@ -43,26 +43,6 @@ export default class AvaxInput extends Vue {
         this.$emit('change', val)
     }
 }
-// export default {
-//     props: {
-//         max: {
-//             type: BN,
-//             default: null
-//         }
-//     },
-//     components: {
-//         BigNumInput
-//     },
-//     methods: {
-//         maxOut(){
-//             this.$refs.amt_in.maxout();
-//         },
-//
-//         amount_in(val: BN){
-//
-//         }
-//     }
-// }
 </script>
 <style scoped lang="scss">
 .avax_input {
@@ -80,6 +60,7 @@ export default class AvaxInput extends Vue {
         display: block;
         box-sizing: content-box;
         outline: none !important;
+        border: none !important;
         //padding: 0 12px !important;
     }
 
@@ -94,6 +75,7 @@ export default class AvaxInput extends Vue {
 .col1 {
     border-radius: 3px;
     background-color: var(--bg-light);
+    border: 1px solid transparent;
     //display: flex;
     display: grid;
     grid-template-columns: max-content 1fr;
@@ -101,9 +83,13 @@ export default class AvaxInput extends Vue {
     box-sizing: border-box;
     overflow: auto;
     padding: 8px 14px;
-    &:focus-within {
-        outline: 1px solid var(--secondary-color);
-    }
+
+    //&:hover {
+    //    border-color: var(--primary-color-light);
+    //}
+    //&:focus-within {
+    //    border-color: var(--secondary-color);
+    //}
 }
 
 p {

@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown" :active="isPopup">
+    <div class="dropdown hover_border" :active="isPopup">
         <button @click="showPopup">
             {{ symbol }}
             <fa icon="caret-down" style="float: right"></fa>

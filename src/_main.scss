@@ -75,7 +75,23 @@ $l-size-mobile: 22px;
 $m-size-mobile: 18px;
 $s-size-mobile: 14px;
 
+@mixin highlight-border{
+  transition-duration: 0.1s;
+  border: 1px solid transparent;
+  outline: none !important;
+  &:hover{
+    border-color: var(--primary-color-light);
+  }
 
+  &:focus-within{
+    border-color: var(--secondary-color);
+  }
+}
+
+
+.hover_border{
+  @include highlight-border
+}
 
 
 *[tooltip]:hover:before {
@@ -98,9 +114,7 @@ button{
   outline: none !important;
 }
 textarea, input{
-  &:focus{
-    outline: 1px solid var(--secondary-color)
-  }
+  @include highlight-border
 }
 
 
@@ -318,6 +332,7 @@ textarea{
 }
 
 .v-text-field{
+  @include highlight-border;
   color: var(--primary-color) !important;
   label{
     color: var(--primary-color-light) !important;
@@ -325,6 +340,7 @@ textarea{
 
   input{
     outline: none;
+    border: none;
   }
   .v-input__slot:before{
     border-color: var(--primary-color-light) !important;
@@ -363,9 +379,11 @@ textarea{
   background-color: var(--bg-light) !important;
   color: var(--primary-color) !important;
 
-  &:focus-within {
-    outline: 1px solid var(--secondary-color);
-  }
+  @include highlight-border
+
+  //&:focus-within {
+  //  outline: 1px solid var(--secondary-color);
+  //}
 }
 
 
