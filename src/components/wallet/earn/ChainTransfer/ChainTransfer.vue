@@ -51,6 +51,7 @@
             </div>
             <div class="right_col">
                 <ChainCard :chain="sourceChain"></ChainCard>
+                <ChainCard :chain="targetChain" :is-source="false"></ChainCard>
                 <TxStateCard
                     :state="exportState"
                     :status="exportStatus"
@@ -64,7 +65,6 @@
                     :tx-id="importId"
                     :is-export="false"
                 ></TxStateCard>
-                <ChainCard :chain="targetChain" :is-source="false"></ChainCard>
 
                 <!--                <div v-else-if="isLoading" class="loading_col">-->
                 <!--                    <div :state="exportState">-->
@@ -481,15 +481,16 @@ export default class ChainTransfer extends Vue {
 @use "../../../../main";
 
 .cols {
-    /*display: grid;*/
-    /*grid-template-columns: max-content 1fr;*/
-    /*column-gap: 2vw;*/
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 5vw;
 }
 
 .right_col {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     column-gap: 14px;
+    row-gap: 14px;
     height: max-content;
     //height: 100%;
     > div {
@@ -503,7 +504,7 @@ export default class ChainTransfer extends Vue {
 
 .form {
     max-width: 100%;
-    /*width: 360px;*/
+    width: 360px;
     padding-bottom: 14px;
     //justify-self: center;
     > div {

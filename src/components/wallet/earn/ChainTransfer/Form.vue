@@ -229,12 +229,12 @@ export default class Form extends Vue {
     > div {
         flex-direction: column;
         display: flex;
-        margin: 6px 0;
+        margin: 13px 0;
     }
-    overflow: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 20px;
+    //overflow: auto;
+    //display: grid;
+    //grid-template-columns: 1fr 1fr;
+    //column-gap: 20px;
 }
 label {
     color: var(--primary-color);
