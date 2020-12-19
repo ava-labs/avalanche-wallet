@@ -13,18 +13,20 @@
                 </p>
             </div>
         </div>
-        <div class="data_row">
-            <label>ID</label>
-            <p>{{ txId || '-' }}</p>
-        </div>
-        <div class="data_row">
-            <label>Status</label>
-            <p v-if="!status">Not started</p>
-            <p v-else>{{ status }}</p>
-        </div>
-        <div v-if="reason" class="data_row">
-            <label>Reason</label>
-            <p>{{ reason }}</p>
+        <div>
+            <div class="data_row">
+                <label>ID</label>
+                <p>{{ txId || '-' }}</p>
+            </div>
+            <div class="data_row">
+                <label>Status</label>
+                <p v-if="!status">Not started</p>
+                <p v-else>{{ status }}</p>
+            </div>
+            <div v-if="reason" class="data_row">
+                <label>Reason</label>
+                <p>{{ reason }}</p>
+            </div>
         </div>
     </div>
 </template>

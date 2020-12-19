@@ -293,14 +293,13 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         destinationChain: ChainIdType
     ): Promise<string> {
         let fee = avm.getTxFee()
+
         let amtFee = amt.add(fee)
+        if (destinationChain === 'C') {
+            // C Chain imports do not have a fee
+            amtFee = amt
+        }
 
-        // EXPORT
-        let pId = pChain.getBlockchainID()
-        let xId = avm.getBlockchainID()
-        let txId
-
-        console.log(`Export ${sourceChain} -> ${destinationChain}`)
         // Get from addresses
         if (sourceChain === 'X') {
             let destinationAddr
@@ -327,8 +326,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
             )) as AVMUnsignedTx
 
             let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
-            // let keychain = this.getKeyChain()
-            // let tx = exportTx.sign(keychain)
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let destinationAddr = this.getCurrentAddress()
@@ -347,10 +344,11 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
                 changeAddress
             )) as PlatformUnsignedTx
 
-            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx)
+            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(
+                exportTx,
+                false
+            )
 
-            // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-            // let tx = exportTx.sign(keychain)
             return pChain.issueTx(tx)
         } else if (sourceChain === 'C') {
             let destinationAddr = this.getCurrentAddress()

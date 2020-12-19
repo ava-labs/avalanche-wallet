@@ -2,7 +2,9 @@
     <div class="chain_select">
         <button @click="setChain('X')" :active="chain === 'X'">X</button>
         <button @click="setChain('P')" :active="chain === 'P'">P</button>
-        <button @click="setChain('C')" :active="chain === 'C'">C</button>
+        <button @click="setChain('C')" :active="chain === 'C'" v-if="!isLedger">
+            C
+        </button>
     </div>
 </template>
 <script lang="ts">
@@ -10,11 +12,17 @@ import 'reflect-metadata'
 import { Vue, Component, Prop, Watch, Model } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
 import { ChainAlias } from '@/js/wallets/IAvaHdWallet'
+import { WalletType } from '@/store/types'
 
 @Component
 export default class ChainSelect extends Vue {
     @Model('change', { type: String }) readonly chain!: ChainAlias
 
+    //TODO: Remove after ledger support
+    isLedger() {
+        let wallet: WalletType = this.$store.state.activeWallet
+        return wallet.type === 'ledger'
+    }
     setChain(val: ChainAlias) {
         this.$emit('change', val)
     }

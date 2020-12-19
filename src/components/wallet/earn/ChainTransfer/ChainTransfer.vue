@@ -252,6 +252,11 @@ export default class ChainTransfer extends Vue {
     get fee(): Big {
         let feeX = avm.getTxFee()
         let totFee = feeX.mul(new BN(2))
+
+        if (this.targetChain === 'C') {
+            totFee = feeX
+        }
+
         let feeXBig = bnToBig(totFee, 9)
 
         return feeXBig
@@ -489,8 +494,8 @@ export default class ChainTransfer extends Vue {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 14px;
-    //height: max-content;
-    height: 100%;
+    height: max-content;
+    //height: 100%;
     > div {
         //height: max-content;
         background-color: var(--bg-light);
@@ -503,6 +508,7 @@ export default class ChainTransfer extends Vue {
 .form {
     max-width: 100%;
     width: 360px;
+    padding-bottom: 30px;
     //justify-self: center;
     > div {
         margin: 14px 0;

@@ -84,12 +84,18 @@ export default class Form extends Vue {
     }
 
     get sourceOptions(): ChainIdType[] {
+        if (this.isLedger) {
+            return ['X', 'P']
+        }
         let all = [...chainTypes]
         return all
     }
 
     get destinationOptions(): ChainIdType[] {
         if (this.sourceChain === 'X') {
+            if (this.isLedger) {
+                return ['P']
+            }
             return ['P', 'C']
         } else {
             return ['X']
@@ -162,6 +168,10 @@ export default class Form extends Vue {
     get fee(): Big {
         let feeX = avm.getTxFee()
         let totFee = feeX.mul(new BN(2))
+
+        if (this.targetChain === 'C') {
+            totFee = feeX
+        }
         let feeXBig = bnToBig(totFee, 9)
 
         return feeXBig
@@ -175,6 +185,10 @@ export default class Form extends Vue {
     get wallet() {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
         return wallet
+    }
+
+    get isLedger() {
+        return this.wallet.type === 'ledger'
     }
 
     onChangeSource(ev: any) {

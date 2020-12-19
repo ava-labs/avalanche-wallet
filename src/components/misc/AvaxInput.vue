@@ -71,6 +71,23 @@ export default class AvaxInput extends Vue {
     grid-gap: 10px;
     color: var(--primary-color);
     width: 100%;
+
+    .amt_in {
+        color: var(--primary-color);
+        font-family: monospace;
+        flex-grow: 1;
+        flex-shrink: 1;
+        display: block;
+        box-sizing: content-box;
+        //padding: 0 12px !important;
+    }
+
+    .amt_in,
+    p,
+    .max_but {
+        background-color: var(--bg-light);
+        //border-radius: 3px;
+    }
 }
 
 .col1 {
@@ -83,23 +100,6 @@ export default class AvaxInput extends Vue {
     box-sizing: border-box;
     overflow: auto;
     padding: 8px 14px;
-}
-
-.amt_in {
-    color: var(--primary-color);
-    font-family: monospace;
-    flex-grow: 1;
-    flex-shrink: 1;
-    display: block;
-    box-sizing: content-box;
-    //padding: 0 12px !important;
-}
-
-.amt_in,
-p,
-.max_but {
-    background-color: var(--bg-light);
-    //border-radius: 3px;
 }
 
 p {
