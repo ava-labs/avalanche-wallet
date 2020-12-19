@@ -123,7 +123,7 @@ const network_module: Module<NetworkState, RootState> = {
             explorer_api.defaults.baseURL = net.explorerUrl
 
             // Set web3 Network Settings
-            let web3Provider = `https://${net.ip}:${net.port}/ext/bc/C/rpc`
+            let web3Provider = `${net.protocol}://${net.ip}:${net.port}/ext/bc/C/rpc`
             web3.setProvider(web3Provider)
 
             commit('Assets/removeAllAssets', null, { root: true })

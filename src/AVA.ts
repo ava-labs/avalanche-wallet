@@ -1,6 +1,7 @@
 import { KeyChain as AVMKeyChain, AVMAPI } from 'avalanche/dist/apis/avm'
 import { InfoAPI } from 'avalanche/dist/apis/info'
 import Avalanche from 'avalanche'
+//@ts-ignore
 import BinTools from 'avalanche/dist/utils/bintools'
 import { EVMAPI } from 'avalanche/dist/apis/evm'
 

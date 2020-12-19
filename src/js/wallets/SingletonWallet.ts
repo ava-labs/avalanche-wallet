@@ -63,6 +63,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     type: WalletNameType
 
     ethKey: string
+    ethKeyBech: string
     ethKeyChain: EVMKeyChain
     ethAddress: string
     ethAddressBech: string
@@ -96,11 +97,13 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         this.ethAddressBech = ''
 
         let cPrivKey = `PrivateKey-` + bintools.cb58Encode(Buffer.from(pkBuf))
+        this.ethKeyBech = cPrivKey
         let cKeyChain = new KeyChain(ava.getHRP(), 'C')
         this.ethKeyChain = cKeyChain
 
         let cKeypair = cKeyChain.importKey(cPrivKey)
         this.ethAddressBech = cKeypair.getAddressString()
+
         console.log(cKeypair)
 
         this.type = 'singleton'
@@ -503,6 +506,12 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         this.platformKeyChain = new PlatformKeyChain(hrp, this.chainIdP)
         this.platformUtxoset = new PlatformUTXOSet()
         this.platformKeyPair = this.platformKeyChain.importKey(this.key)
+
+        // Update EVM values
+        this.ethKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
+        let cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
+        this.ethAddressBech = cKeypair.getAddressString()
+        this.ethBalance = new BN(0)
 
         this.getUTXOs()
     }

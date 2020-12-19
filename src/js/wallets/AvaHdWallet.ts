@@ -74,10 +74,22 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     isLoading: boolean
     type: WalletNameType
     ethKey: string
+    ethKeyBech: string
     ethKeyChain: EVMKeyChain
     ethAddress: string
     ethAddressBech: string
     ethBalance: BN
+
+    // TODO : Move to hd core class
+    onnetworkchange() {
+        super.onnetworkchange()
+
+        // Update EVM values
+        this.ethKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
+        let cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
+        this.ethAddressBech = cKeypair.getAddressString()
+        this.ethBalance = new BN(0)
+    }
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {
@@ -96,12 +108,13 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         let cPrivKey =
             `PrivateKey-` + bintools.cb58Encode(Buffer.from(ethPrivateKey))
+        this.ethKeyBech = cPrivKey
+
         let cKeyChain = new KeyChain(ava.getHRP(), 'C')
         this.ethKeyChain = cKeyChain
 
         let cKeypair = cKeyChain.importKey(cPrivKey)
         this.ethAddressBech = cKeypair.getAddressString()
-        console.log(cKeypair)
 
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')
@@ -309,7 +322,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
                 // C Chain
                 // todo: replace with shared wallet class method
                 destinationAddr = this.ethAddressBech
-                console.log(destinationAddr)
             }
 
             let fromAddresses = this.getAllAddressesX()
