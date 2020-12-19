@@ -192,6 +192,10 @@ export default class CurrencyInputDropdown extends Vue {
     position: relative;
     display: grid;
     grid-template-columns: 50px 1fr;
+
+    &:focus-within {
+        outline: 1px solid var(--secondary-color);
+    }
 }
 
 .curr_in_drop {

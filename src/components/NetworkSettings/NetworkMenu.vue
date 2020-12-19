@@ -164,6 +164,10 @@ export default class NetworkMenu extends Vue {
     position: relative;
     align-items: center;
 
+    button {
+        outline: none !important;
+    }
+
     img {
         max-height: 24px;
         object-fit: contain;

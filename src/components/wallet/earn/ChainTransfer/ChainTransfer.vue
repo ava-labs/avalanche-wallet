@@ -7,47 +7,56 @@
                     :is-confirm="isConfirm"
                 ></ChainSwapForm>
 
-                <div v-if="!isSuccess && !isImportErr && !isLoading">
-                    <div>
+                <div v-if="!isSuccess && !isLoading">
+                    <div v-if="!isImportErr">
                         <label>{{ $t('earn.transfer.fee') }}</label>
                         <p style="font-size: 22px">{{ fee.toString() }} AVAX</p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>
                         <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
-                        <v-btn
-                            v-if="!isConfirm"
-                            data-cy="confirm"
-                            class="button_secondary"
-                            @click="confirm"
-                            :disabled="!canSubmit"
-                            block
-                            :loading="isLoading"
-                            >{{ $t('earn.transfer.confirm') }}</v-btn
-                        >
+                        <template v-if="isImportErr">
+                            <p>
+                                Import failed. Please try again or go
+                                <b>Advanced</b>
+                                page to finish importing.
+                            </p>
+                        </template>
                         <template v-else>
                             <v-btn
-                                data-cy="submit"
+                                v-if="!isConfirm"
+                                data-cy="confirm"
                                 class="button_secondary"
-                                @click="submit"
+                                @click="confirm"
+                                :disabled="!canSubmit"
+                                block
                                 :loading="isLoading"
-                                depressed
-                                block
-                                >{{ $t('earn.transfer.submit') }}</v-btn
+                                >{{ $t('earn.transfer.confirm') }}</v-btn
                             >
-                            <v-btn
-                                v-if="!isLoading"
-                                data-cy="cancel"
-                                style="
-                                    color: var(--primary-color);
-                                    margin: 12px 0 !important;
-                                "
-                                @click="cancelConfirm"
-                                depressed
-                                text
-                                block
-                                >{{ $t('earn.transfer.cancel') }}</v-btn
-                            >
+                            <template v-else>
+                                <v-btn
+                                    data-cy="submit"
+                                    class="button_secondary"
+                                    @click="submit"
+                                    :loading="isLoading"
+                                    depressed
+                                    block
+                                    >{{ $t('earn.transfer.submit') }}</v-btn
+                                >
+                                <v-btn
+                                    v-if="!isLoading"
+                                    data-cy="cancel"
+                                    style="
+                                        color: var(--primary-color);
+                                        margin: 12px 0 !important;
+                                    "
+                                    @click="cancelConfirm"
+                                    depressed
+                                    text
+                                    block
+                                    >{{ $t('earn.transfer.cancel') }}</v-btn
+                                >
+                            </template>
                         </template>
                     </div>
                 </div>
@@ -398,6 +407,7 @@ export default class ChainTransfer extends Vue {
         console.error(err)
         this.isLoading = false
         this.err = err
+        this.isImportErr = true
         this.$store.dispatch('Notifications/add', {
             type: 'error',
             title: 'Transfer Failed',

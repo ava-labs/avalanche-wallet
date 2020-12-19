@@ -250,10 +250,16 @@ select {
     background-color: var(--bg-light);
     //border: 1px solid var(--primary-color-light);
     border-radius: 4px;
-    padding: 6px 12px;
+    padding: 16px 12px;
     font-size: 14px;
     //width: max-content;
     outline: none;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+
+    &:focus {
+        outline: 1px solid var(--secondary-color);
+    }
 }
 
 .balance {

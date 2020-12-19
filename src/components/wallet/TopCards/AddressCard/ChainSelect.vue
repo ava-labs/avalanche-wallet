@@ -40,6 +40,7 @@ button {
     background-color: var(--bg-light);
     padding: 0px 5px;
     opacity: 0.8;
+    outline: none !important;
 
     &:hover {
         opacity: 1;

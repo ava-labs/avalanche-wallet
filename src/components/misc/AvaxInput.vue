@@ -79,6 +79,7 @@ export default class AvaxInput extends Vue {
         flex-shrink: 1;
         display: block;
         box-sizing: content-box;
+        outline: none !important;
         //padding: 0 12px !important;
     }
 
@@ -100,6 +101,9 @@ export default class AvaxInput extends Vue {
     box-sizing: border-box;
     overflow: auto;
     padding: 8px 14px;
+    &:focus-within {
+        outline: 1px solid var(--secondary-color);
+    }
 }
 
 p {

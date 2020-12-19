@@ -74,42 +74,6 @@
                         <p>{{ stakingText }} AVAX</p>
                     </div>
                 </div>
-                <!--                <div>-->
-                <!--                    <template v-if="!isBreakdown">-->
-                <!--                        <label>{{ $t('top.balance.available') }}</label>-->
-                <!--                        <p>{{ unlockedText }} AVAX</p>-->
-                <!--                    </template>-->
-                <!--                    <template v-else>-->
-                <!--                        <label>{{ $t('top.balance.available') }} (X)</label>-->
-                <!--                        <p>{{ avmUnlocked | cleanAvaxBN }} AVAX</p>-->
-                <!--                        <label>{{ $t('top.balance.available') }} (P)</label>-->
-                <!--                        <p>{{ platformUnlocked | cleanAvaxBN }} AVAX</p>-->
-                <!--                        <label>{{ $t('top.balance.available') }} (C)</label>-->
-                <!--                        <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>-->
-                <!--                    </template>-->
-                <!--                </div>-->
-                <!--                <div>-->
-                <!--                    <template v-if="!isBreakdown">-->
-                <!--                        <label>{{ $t('top.locked') }}</label>-->
-                <!--                        <p>{{ balanceTextLocked }} AVAX</p>-->
-                <!--                    </template>-->
-                <!--                    <template v-else>-->
-                <!--                        <label>{{ $t('top.balance.locked') }} (X)</label>-->
-                <!--                        <p>{{ avmLocked | cleanAvaxBN }} AVAX</p>-->
-                <!--                        <label>{{ $t('top.balance.locked') }} (P)</label>-->
-                <!--                        <p>{{ platformLocked | cleanAvaxBN }} AVAX</p>-->
-                <!--                        <label>{{ $t('top.balance.locked_stake') }} (P)</label>-->
-                <!--                        <p>{{ platformLockedStakeable | cleanAvaxBN }} AVAX</p>-->
-                <!--                    </template>-->
-                <!--                </div>-->
-                <!--                &lt;!&ndash;                <div>&ndash;&gt;-->
-                <!--                &lt;!&ndash;                    <label>P-Chain</label>&ndash;&gt;-->
-                <!--                &lt;!&ndash;                    <p>{{pBalanceText}} AVAX</p>&ndash;&gt;-->
-                <!--                &lt;!&ndash;                </div>&ndash;&gt;-->
-                <!--                <div>-->
-                <!--                    <label>{{ $t('top.balance.stake') }}</label>-->
-                <!--                    <p>{{ stakingText }} AVAX</p>-->
-                <!--                </div>-->
             </div>
         </div>
         <NftCol class="nft_card"></NftCol>
@@ -404,6 +368,9 @@ h4 {
     height: 20px;
     color: var(--primary-color);
 
+    button {
+        outline: none !important;
+    }
     img {
         object-fit: contain;
         width: 100%;
@@ -422,13 +389,14 @@ h4 {
     margin: 0px 18px;
     margin-right: 0px;
     position: relative;
-    outline: none;
+    outline: none !important;
 }
 
 .buts img {
     height: 20px;
     width: 20px;
     object-fit: contain;
+    outline: none !important;
 }
 .buts button[tooltip]:hover:before {
     border-radius: 4px;
@@ -476,6 +444,7 @@ h4 {
 .breakdown_toggle {
     color: var(--primary-color-light);
     font-size: 13px;
+    outline: none !important;
 }
 
 @include main.medium-device {

@@ -87,6 +87,9 @@ button {
 
 .dropdown {
     position: relative;
+    &:focus-within {
+        outline: 1px solid var(--secondary-color);
+    }
 }
 
 .dropdown[active] {

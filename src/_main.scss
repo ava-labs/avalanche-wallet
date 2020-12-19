@@ -94,8 +94,13 @@ $s-size-mobile: 14px;
   padding: 4px 8px;
 }
 
-button, textarea, input{
+button{
   outline: none !important;
+}
+textarea, input{
+  &:focus{
+    outline: 1px solid var(--secondary-color)
+  }
 }
 
 
@@ -318,6 +323,9 @@ textarea{
     color: var(--primary-color-light) !important;
   }
 
+  input{
+    outline: none;
+  }
   .v-input__slot:before{
     border-color: var(--primary-color-light) !important;
     color: var(--primary-color-light) !important;
@@ -354,6 +362,10 @@ textarea{
 .qr_input{
   background-color: var(--bg-light) !important;
   color: var(--primary-color) !important;
+
+  &:focus-within {
+    outline: 1px solid var(--secondary-color);
+  }
 }
 
 

@@ -88,6 +88,7 @@ export default {
         font-weight: bold;
         margin: 0px 5px;
         text-transform: uppercase;
+        outline: none !important;
 
         &[active] {
             color: var(--primary-color);
@@ -107,8 +108,14 @@ export default {
     font-size: 13px;
     flex-basis: 420px;
     flex-shrink: 1;
+    border: 1px solid transparent;
 
     $icon_w: 36px;
+
+    &:focus-within {
+        border: 1px solid var(--secondary-color);
+    }
+
     img {
         border-radius: 4px;
         padding: 10px 0px;
