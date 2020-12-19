@@ -21,7 +21,6 @@ export default class ChainSelect extends Vue {
     //TODO: Remove after ledger support
     get isLedger() {
         let wallet: WalletType = this.$store.state.activeWallet
-        console.log(wallet)
         return wallet.type === 'ledger'
     }
     setChain(val: ChainAlias) {
