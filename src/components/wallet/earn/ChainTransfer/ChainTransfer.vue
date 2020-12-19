@@ -22,7 +22,6 @@
                             @click="confirm"
                             :disabled="!canSubmit"
                             :loading="isLoading"
-                            block
                             >{{ $t('earn.transfer.confirm') }}</v-btn
                         >
                         <template v-else>
@@ -31,7 +30,6 @@
                                 class="button_secondary"
                                 @click="submit"
                                 :loading="isLoading"
-                                block
                                 depressed
                                 >{{ $t('earn.transfer.submit') }}</v-btn
                             >
@@ -43,28 +41,12 @@
                                     margin: 12px 0 !important;
                                 "
                                 @click="cancelConfirm"
-                                block
                                 depressed
                                 text
                                 >{{ $t('earn.transfer.cancel') }}</v-btn
                             >
                         </template>
                     </div>
-                </div>
-                <div v-if="isSuccess" class="complete">
-                    <h4>{{ $t('earn.transfer.success.title') }}</h4>
-                    <p style="color: var(--success); margin: 12px 0 !important">
-                        <fa icon="check-circle"></fa>
-                        {{ $t('earn.transfer.success.message') }}
-                    </p>
-                    <v-btn
-                        depressed
-                        class="button_primary"
-                        small
-                        @click="$emit('cancel')"
-                        block
-                        >{{ $t('earn.transfer.success.back') }}</v-btn
-                    >
                 </div>
             </div>
             <div class="right_col">
@@ -139,6 +121,20 @@
                 <!--                    </div>-->
 
                 <!--                </div>-->
+            </div>
+            <div v-if="isSuccess" class="complete">
+                <h4>{{ $t('earn.transfer.success.title') }}</h4>
+                <p style="color: var(--success); margin: 12px 0 !important">
+                    <fa icon="check-circle"></fa>
+                    {{ $t('earn.transfer.success.message') }}
+                </p>
+                <v-btn
+                    depressed
+                    class="button_primary"
+                    small
+                    @click="$emit('cancel')"
+                    >{{ $t('earn.transfer.success.back') }}</v-btn
+                >
             </div>
         </div>
     </div>
@@ -485,9 +481,9 @@ export default class ChainTransfer extends Vue {
 @use "../../../../main";
 
 .cols {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    column-gap: 2vw;
+    /*display: grid;*/
+    /*grid-template-columns: max-content 1fr;*/
+    /*column-gap: 2vw;*/
 }
 
 .right_col {
@@ -507,8 +503,8 @@ export default class ChainTransfer extends Vue {
 
 .form {
     max-width: 100%;
-    width: 360px;
-    padding-bottom: 30px;
+    /*width: 360px;*/
+    padding-bottom: 14px;
     //justify-self: center;
     > div {
         margin: 14px 0;
@@ -625,6 +621,7 @@ h2 {
 }
 
 .complete {
+    margin-top: 30px;
     > div {
         background-color: var(--bg-light);
         padding: 14px;

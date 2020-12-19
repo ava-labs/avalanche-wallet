@@ -29,14 +29,15 @@
 
         <div v-if="!isConfirm">
             <label>{{ $t('earn.transfer.amount') }}</label>
-            <p class="balance">
-                Balance: <span>{{ balance.toLocaleString() }} AVAX</span>
-            </p>
+
             <AvaxInput
                 :max="maxAmt"
                 v-model="amt"
                 @change="onAmtChange"
             ></AvaxInput>
+            <p class="balance">
+                Balance: <span>{{ balance.toLocaleString() }} AVAX</span>
+            </p>
         </div>
         <div class="confirmation_val" v-else>
             <label>{{ $t('earn.transfer.amount') }}</label>
@@ -228,9 +229,12 @@ export default class Form extends Vue {
     > div {
         flex-direction: column;
         display: flex;
-        margin: 14px 0;
+        margin: 6px 0;
     }
     overflow: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
 }
 label {
     color: var(--primary-color);
@@ -258,7 +262,7 @@ select {
     span {
         float: right;
     }
-    margin-bottom: 4px !important;
+    margin-top: 4px !important;
 }
 
 .confirmation_val {

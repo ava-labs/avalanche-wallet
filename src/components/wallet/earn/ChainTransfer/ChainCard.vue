@@ -5,13 +5,15 @@
             <h4 v-else>Destination</h4>
             <p style="font-size: 3em">{{ chain }}</p>
         </div>
-        <div class="input_group">
-            <label>Name</label>
-            <p style="font-size: 14px">{{ chainNames[chain] }}</p>
-        </div>
-        <div class="input_group">
-            <label>Balance</label>
-            <p>{{ balanceText }}</p>
+        <div>
+            <div class="input_group">
+                <label>Name</label>
+                <p style="font-size: 14px">{{ chainNames[chain] }}</p>
+            </div>
+            <div class="input_group">
+                <label>Balance</label>
+                <p>{{ balanceText }}</p>
+            </div>
         </div>
     </div>
 </template>
@@ -99,8 +101,9 @@ label {
 
 .chain_card {
     //height: max-content;
-    //display: flex;
-    //justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 14px;
 }
 
 .input_group {
