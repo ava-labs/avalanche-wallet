@@ -76,6 +76,11 @@ export default class Form extends Vue {
 
     @Prop() isConfirm!: boolean
 
+    clear() {
+        this.amt = new BN(0)
+        this.onChange()
+    }
+
     get chainNames() {
         return chainNames
     }

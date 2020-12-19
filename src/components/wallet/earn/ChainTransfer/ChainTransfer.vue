@@ -3,6 +3,7 @@
         <div class="cols">
             <div class="form">
                 <ChainSwapForm
+                    ref="form"
                     @change="onFormChange"
                     :is-confirm="isConfirm"
                 ></ChainSwapForm>
@@ -21,6 +22,14 @@
                                 <b>Advanced</b>
                                 page to finish importing.
                             </p>
+                            <v-btn
+                                depressed
+                                class="button_secondary"
+                                small
+                                block
+                                @click="startAgain"
+                                >{{ $t('earn.transfer.success.again') }}</v-btn
+                            >
                         </template>
                         <template v-else>
                             <v-btn
@@ -69,9 +78,17 @@
                     </p>
                     <v-btn
                         depressed
-                        class="button_primary"
+                        class="button_secondary"
                         small
                         block
+                        @click="startAgain"
+                        >{{ $t('earn.transfer.success.again') }}</v-btn
+                    >
+                    <v-btn
+                        depressed
+                        small
+                        block
+                        text
                         @click="$emit('cancel')"
                         >{{ $t('earn.transfer.success.back') }}</v-btn
                     >
@@ -99,13 +116,13 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
-import { pChain, avm, bintools } from '@/AVA'
+import { avm, pChain } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
@@ -115,7 +132,6 @@ import {
     ChainSwapFormData,
     TxState,
 } from '@/components/wallet/earn/ChainTransfer/types'
-import { web3 } from '@/evm'
 import { ChainIdType } from '@/constants'
 
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
@@ -415,6 +431,26 @@ export default class ChainTransfer extends Vue {
             title: 'Transfer Failed',
             message: err,
         })
+    }
+
+    startAgain() {
+        this.$refs.form.clear()
+
+        this.err = ''
+        this.isImportErr = false
+        this.isConfirm = false
+        this.isLoading = false
+        this.isSuccess = false
+
+        this.exportId = ''
+        this.exportState = TxState.waiting
+        this.exportStatus = null
+        this.exportReason = null
+
+        this.importId = ''
+        this.importState = TxState.waiting
+        this.importStatus = null
+        this.importReason = null
     }
 
     onsuccess() {

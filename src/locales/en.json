@@ -237,6 +237,7 @@
                 "export": "Export Transaction ID:",
                 "import": "Import Transaction ID:",
                 "message": "You have successfully transferred between chains.",
+                "again": "Start Again",
                 "back": "Back to Earn"
             }
         },
