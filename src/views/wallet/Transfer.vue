@@ -8,7 +8,7 @@
             <div>
                 <v-chip-group mandatory v-model="formType">
                     <v-chip value="x">X Chain</v-chip>
-                    <v-chip value="c">C Chain</v-chip>
+                    <v-chip value="c" v-if="!isLedger">C Chain</v-chip>
                 </v-chip-group>
             </div>
             <FormC v-if="formType === 'c'"></FormC>
@@ -165,7 +165,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { Buffer, BN } from 'avalanche'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
-import { IssueBatchTxInput } from '@/store/types'
+import { IssueBatchTxInput, WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import FormC from '@/components/wallet/transfer/FormC.vue'
@@ -395,6 +395,15 @@ export default class Transfer extends Vue {
             }
         }
         return res
+    }
+
+    get wallet(): WalletType {
+        return this.$store.state.activeWallet
+    }
+
+    // TODO: Remove after ledger support
+    get isLedger() {
+        return this.wallet.type === 'ledger'
     }
 
     get txFee(): Big {
