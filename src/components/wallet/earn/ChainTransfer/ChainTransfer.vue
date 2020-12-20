@@ -688,6 +688,9 @@ h2 {
         padding-bottom: 3vh;
     }
 
+    .form {
+        width: 100%;
+    }
     .chains {
         row-gap: 4px;
         grid-template-columns: none;
