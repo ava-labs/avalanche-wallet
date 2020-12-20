@@ -18,9 +18,11 @@ export default class NumberCounter extends Vue {
     animate() {
         let increment = this.value.gt(this.tweenedNumber)
         let diff = this.value.sub(this.tweenedNumber)
-        let step = diff.div(10).abs()
+        let step = diff.div(4).abs()
 
-        let thresh = Big(0.0001)
+        let thresh = Big(0.01)
+
+        step = step.round(2)
 
         if (step.lt(thresh)) {
             this.tweenedNumber = this.value.add(0)
