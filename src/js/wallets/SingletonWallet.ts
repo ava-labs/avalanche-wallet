@@ -522,7 +522,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
 
         // If given custom UTXO set use that
         if (utxos) {
-            utxoSet = new UTXOSet()
+            utxoSet = new PlatformUTXOSet()
             utxoSet.addArray(utxos)
         }
 
@@ -578,7 +578,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
 
         // If given custom UTXO set use that
         if (utxos) {
-            utxoSet = new UTXOSet()
+            utxoSet = new PlatformUTXOSet()
             utxoSet.addArray(utxos)
         }
 
