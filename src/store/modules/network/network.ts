@@ -2,12 +2,13 @@ import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 import { NetworkState } from '@/store/modules/network/types'
 
-import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
+import { ava, avm, bintools, cChain, infoApi, pChain } from '@/AVA'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
 import BN from 'bn.js'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import router from '@/router'
+import { web3 } from '@/evm'
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
@@ -99,19 +100,28 @@ const network_module: Module<NetworkState, RootState> = {
             // Query the network to get network id
             let chainIdX = await infoApi.getBlockchainID('X')
             let chainIdP = await infoApi.getBlockchainID('P')
+            let chainIdC = await infoApi.getBlockchainID('C')
 
             avm.refreshBlockchainID(chainIdX)
             avm.setBlockchainAlias('X')
             pChain.refreshBlockchainID(chainIdP)
             pChain.setBlockchainAlias('P')
+            cChain.refreshBlockchainID(chainIdC)
+            cChain.setBlockchainAlias('C')
+
             avm.getAVAXAssetID(true)
             pChain.getAVAXAssetID(true)
+            cChain.getAVAXAssetID(true)
 
             state.selectedNetwork = net
             dispatch('saveSelectedNetwork')
 
             // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl
+
+            // Set web3 Network Settings
+            let web3Provider = `${net.protocol}://${net.ip}:${net.port}/ext/bc/C/rpc`
+            web3.setProvider(web3Provider)
 
             commit('Assets/removeAllAssets', null, { root: true })
             await dispatch('Assets/updateAvaAsset', null, { root: true })

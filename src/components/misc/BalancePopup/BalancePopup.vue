@@ -107,8 +107,8 @@ export default class BalancePopup extends Vue {
 .desc {
     font-size: 0.8rem;
     padding: 3px 15px;
-    background-color: var(--bg-light);
-    color: var(--primary-color);
+    background-color: var(--secondary-color);
+    color: #fff;
 }
 
 .balance_popup {
@@ -126,7 +126,7 @@ export default class BalancePopup extends Vue {
     grid-template-rows: max-content 1fr;
     overflow: auto;
     z-index: 3;
-    background-color: var(--bg);
+    background-color: var(--bg-wallet);
 }
 
 .rows,

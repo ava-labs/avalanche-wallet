@@ -2,174 +2,135 @@
     <div>
         <div class="cols">
             <div class="form">
-                <div class="chains">
-                    <div class="chain_cont">
-                        <label>{{ $t('earn.transfer.source') }}</label>
-                        <p class="chain">{{ sourceChain }}</p>
-                        <div class="chain_info">
-                            <label>{{ $t('earn.transfer.balance') }}</label>
-                            <p>{{ balance.toLocaleString() }} AVAX</p>
-                        </div>
-                    </div>
-                    <v-btn
-                        icon
-                        style="align-self: center"
-                        class="switch_but button_primary"
-                        @click="switchChain"
-                        v-if="!isConfirm"
-                    >
-                        <fa icon="sync"></fa>
-                    </v-btn>
-                    <div class="chain_cont">
-                        <label>{{ $t('earn.transfer.destination') }}</label>
-                        <p class="chain">{{ targetChain }}</p>
-                        <div class="chain_info">
-                            <label>{{ $t('earn.transfer.balance') }}</label>
-                            <p>{{ destinationBalance.toLocaleString() }} AVAX</p>
-                        </div>
-                    </div>
-                </div>
-                <div v-show="!isConfirm">
-                    <label>{{ $t('earn.transfer.amount') }}</label>
-                    <AvaxInput :max="maxAmt" v-model="amt"></AvaxInput>
-                </div>
-                <div class="confirmation_val" v-if="isConfirm">
-                    <label>{{ $t('earn.transfer.amount') }}</label>
-                    <p>{{ formAmtText }} AVAX</p>
-                </div>
-            </div>
-            <div class="right_col">
-                <div v-if="!isSuccess && !isImportErr && !isLoading">
-                    <div>
-                        <label>{{ $t('earn.transfer.fee') }}</label>
-                        <p style="font-size: 22px">{{ fee.toString() }} AVAX</p>
+                <ChainSwapForm
+                    ref="form"
+                    @change="onFormChange"
+                    :is-confirm="isConfirm"
+                ></ChainSwapForm>
+
+                <div v-if="!isSuccess && !isLoading">
+                    <div v-if="!isImportErr" class="fees">
+                        <h4>{{ $t('earn.transfer.fee') }}</h4>
+                        <p>
+                            {{ fee.toString() }}
+                            <span>AVAX</span>
+                        </p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>
                         <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
-                        <v-btn
-                            v-if="!isConfirm"
-                            data-cy="confirm"
-                            class="button_secondary"
-                            @click="confirm"
-                            :disabled="!canSubmit"
-                            :loading="isLoading"
-                            block
-                        >
-                            {{ $t('earn.transfer.confirm') }}
-                        </v-btn>
+                        <template v-if="isImportErr">
+                            <p>
+                                Import failed. Please try again or go
+                                <b>Advanced</b>
+                                page to finish importing.
+                            </p>
+                            <v-btn
+                                depressed
+                                class="button_secondary"
+                                small
+                                block
+                                @click="startAgain"
+                            >
+                                {{ $t('earn.transfer.success.again') }}
+                            </v-btn>
+                        </template>
                         <template v-else>
                             <v-btn
-                                data-cy="submit"
+                                v-if="!isConfirm"
+                                data-cy="confirm"
                                 class="button_secondary"
-                                @click="submit"
+                                @click="confirm"
+                                :disabled="!canSubmit"
+                                block
+                                depressed
                                 :loading="isLoading"
-                                block
-                                depressed
                             >
-                                {{ $t('earn.transfer.submit') }}
+                                {{ $t('earn.transfer.confirm') }}
                             </v-btn>
-                            <v-btn
-                                v-if="!isLoading"
-                                data-cy="cancel"
-                                style="color: var(--primary-color); margin: 12px 0 !important"
-                                @click="cancelConfirm"
-                                block
-                                depressed
-                                text
-                            >
-                                {{ $t('earn.transfer.cancel') }}
-                            </v-btn>
+                            <template v-else>
+                                <v-btn
+                                    data-cy="submit"
+                                    class="button_secondary"
+                                    @click="submit"
+                                    :loading="isLoading"
+                                    depressed
+                                    block
+                                >
+                                    {{ $t('earn.transfer.submit') }}
+                                </v-btn>
+                                <v-btn
+                                    v-if="!isLoading"
+                                    data-cy="cancel"
+                                    style="color: var(--primary-color); margin: 12px 0 !important"
+                                    @click="cancelConfirm"
+                                    depressed
+                                    text
+                                    block
+                                >
+                                    {{ $t('earn.transfer.cancel') }}
+                                </v-btn>
+                            </template>
                         </template>
                     </div>
                 </div>
-                <div v-else-if="isLoading" class="loading_col">
-                    <div :state="exportState">
-                        <div class="loading_header">
-                            <h4>Export</h4>
-                            <div class="status_icon">
-                                <Spinner v-if="exportState == 1" class="spinner"></Spinner>
-                                <p v-else-if="exportState === 2">
-                                    <fa icon="check-circle"></fa>
-                                </p>
-                                <p v-else-if="exportState === -1">
-                                    <fa icon="times-circle"></fa>
-                                </p>
-                            </div>
-                        </div>
-                        <label>ID</label>
-                        <p>{{ exportId || '-' }}</p>
-                        <label>Status</label>
-                        <p v-if="!exportStatus">Not started</p>
-                        <p v-else>{{ exportStatus }}</p>
-                        <template v-if="exportReason">
-                            <label>Reason</label>
-                            <p>{{ exportReason }}</p>
-                        </template>
-                    </div>
-                    <div :state="importState">
-                        <div class="loading_header">
-                            <h4>Import</h4>
-                            <div class="status_icon">
-                                <Spinner v-if="importState == 1" class="spinner"></Spinner>
-                                <p v-else-if="importState === 2">
-                                    <fa icon="check-circle"></fa>
-                                </p>
-                                <p v-else-if="importState === -1">
-                                    <fa icon="times-circle"></fa>
-                                </p>
-                            </div>
-                        </div>
-                        <label>ID</label>
-                        <p>{{ importId || '-' }}</p>
-                        <label>Status</label>
-                        <p v-if="!importStatus">Not started</p>
-                        <p v-else>{{ importStatus }}</p>
-                        <template v-if="importReason">
-                            <label>Reason</label>
-                            <p>{{ importReason }}</p>
-                        </template>
-                    </div>
-                    <div v-if="isSuccess" class="complete">
-                        <h4>{{ $t('earn.transfer.success.title') }}</h4>
-                        <p style="color: var(--success); margin: 12px 0 !important">
-                            <fa icon="check-circle"></fa>
-                            {{ $t('earn.transfer.success.message') }}
-                        </p>
-                        <v-btn
-                            depressed
-                            class="button_primary"
-                            small
-                            @click="$emit('cancel')"
-                            block
-                        >
-                            {{ $t('earn.transfer.success.back') }}
-                        </v-btn>
-                    </div>
+                <div v-if="isSuccess" class="complete">
+                    <h4>{{ $t('earn.transfer.success.title') }}</h4>
+                    <p style="color: var(--success); margin: 12px 0 !important">
+                        <fa icon="check-circle"></fa>
+                        {{ $t('earn.transfer.success.message') }}
+                    </p>
+                    <v-btn depressed class="button_secondary" small block @click="startAgain">
+                        {{ $t('earn.transfer.success.again') }}
+                    </v-btn>
+                    <!--                    <v-btn-->
+                    <!--                        depressed-->
+                    <!--                        small-->
+                    <!--                        block-->
+                    <!--                        text-->
+                    <!--                        @click="$emit('cancel')"-->
+                    <!--                        >{{ $t('earn.transfer.success.back') }}</v-btn-->
+                    <!--                    >-->
                 </div>
+            </div>
+            <div class="right_col">
+                <ChainCard :chain="sourceChain"></ChainCard>
+                <ChainCard :chain="targetChain" :is-source="false"></ChainCard>
+                <TxStateCard
+                    :state="exportState"
+                    :status="exportStatus"
+                    :reason="exportReason"
+                    :tx-id="exportId"
+                ></TxStateCard>
+                <TxStateCard
+                    :state="importState"
+                    :status="importStatus"
+                    :reason="importReason"
+                    :tx-id="importId"
+                    :is-export="false"
+                ></TxStateCard>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
-import { pChain, avm } from '@/AVA'
+import { avm, pChain } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
+import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
+import TxStateCard from '@/components/wallet/earn/ChainTransfer/TxState.vue'
+import { ChainSwapFormData, TxState } from '@/components/wallet/earn/ChainTransfer/types'
+import { ChainIdType } from '@/constants'
 
-enum TxState {
-    failed = -1,
-    waiting = 0,
-    started = 1,
-    success = 2,
-}
+import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 @Component({
     name: 'chain_transfer',
@@ -177,11 +138,17 @@ enum TxState {
         Spinner,
         Dropdown,
         AvaxInput,
+        ChainCard,
+        ChainSwapForm,
+        TxStateCard,
     },
 })
 export default class ChainTransfer extends Vue {
-    sourceChain = 'X'
-    targetChain = 'P'
+    $refs!: {
+        form: ChainSwapForm
+    }
+    sourceChain: ChainIdType = 'X'
+    targetChain: ChainIdType = 'P'
     isLoading = false
     amt: BN = new BN(0)
     err: string = ''
@@ -203,11 +170,11 @@ export default class ChainTransfer extends Vue {
     importStatus: string | null = null
     importReason: string | null = null
 
-    switchChain() {
-        let temp = this.sourceChain
-        this.sourceChain = this.targetChain
-        this.targetChain = temp
-    }
+    // switchChain() {
+    //     let temp = this.sourceChain
+    //     this.sourceChain = this.targetChain
+    //     this.targetChain = temp
+    // }
 
     get ava_asset(): AvaAsset | null {
         let ava = this.$store.getters['Assets/AssetAVA']
@@ -227,32 +194,23 @@ export default class ChainTransfer extends Vue {
         return this.ava_asset.amount
     }
 
+    get evmUnlocked(): BN {
+        let balRaw = this.wallet.ethBalance
+        return balRaw.divRound(new BN(Math.pow(10, 9)))
+    }
+
     get balance(): Big {
         let bal: BN
         if (this.sourceChain === 'P') {
             bal = this.platformUnlocked
+        } else if (this.sourceChain === 'C') {
+            bal = this.evmUnlocked
         } else {
             bal = this.avmUnlocked
         }
 
-        // let bigBal = Big(bal.toString())
-        //     bigBal = bigBal.div(Math.pow(10,9))
         let bigBal = bnToBig(bal, 9)
 
-        return bigBal
-    }
-
-    get destinationBalance(): Big {
-        let bal: BN
-        if (this.sourceChain === 'P') {
-            bal = this.avmUnlocked
-        } else {
-            bal = this.platformUnlocked
-        }
-
-        let bigBal = bnToBig(bal, 9)
-        // let bigBal = Big(bal.toString())
-        // bigBal = bigBal.div(Math.pow(10,9))
         return bigBal
     }
 
@@ -261,14 +219,13 @@ export default class ChainTransfer extends Vue {
     }
     // Fee is 2 times the tx transfer fee
     get fee(): Big {
-        let feeP = pChain.getTxFee()
         let feeX = avm.getTxFee()
-
-        // let totFee = feeP.add(feeX);
         let totFee = feeX.mul(new BN(2))
-        // let feePBig = Big(feeP.toString()).div(Math.pow(10,9));
-        // let feeXBig = Big(feeX.toString()).div(Math.pow(10,9));
-        // let feeXBig = Big(totFee.toString()).div(Math.pow(10,9));
+
+        if (this.targetChain === 'C') {
+            totFee = feeX
+        }
+
         let feeXBig = bnToBig(totFee, 9)
 
         return feeXBig
@@ -298,6 +255,12 @@ export default class ChainTransfer extends Vue {
         return big
     }
 
+    onFormChange(data: ChainSwapFormData) {
+        this.amt = data.amount
+        this.sourceChain = data.sourceChain
+        this.targetChain = data.destinationChain
+    }
+
     confirm() {
         this.formAmt = this.amt.clone()
         this.isConfirm = true
@@ -319,7 +282,7 @@ export default class ChainTransfer extends Vue {
         this.isImportErr = false
 
         try {
-            this.chainExport(this.formAmt, this.sourceChain)
+            this.chainExport(this.formAmt, this.sourceChain, this.targetChain)
         } catch (err) {
             this.onerror(err)
         }
@@ -327,12 +290,12 @@ export default class ChainTransfer extends Vue {
 
     // Triggers export from chain
     // STEP 1
-    async chainExport(amt: BN, sourceChain: string) {
+    async chainExport(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType) {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
         let exportTxId
         this.exportState = TxState.started
 
-        exportTxId = await wallet.chainTransfer(amt, sourceChain)
+        exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
 
         this.exportId = exportTxId
         this.waitExportStatus(exportTxId)
@@ -343,7 +306,7 @@ export default class ChainTransfer extends Vue {
         let status
         if (this.sourceChain === 'X') {
             status = await avm.getTxStatus(txId)
-        } else {
+        } else if (this.sourceChain === 'P') {
             let resp = await pChain.getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
@@ -351,6 +314,19 @@ export default class ChainTransfer extends Vue {
                 status = resp.status
                 this.exportReason = resp.reason
             }
+        } else {
+            // TODO: Add C Chain waiting logic
+            // let txIdHex = bintools.cb58Decode(txId).toString('hex')
+            // let receipt = await web3.eth.getTransactionReceipt('0x' + txIdHex)
+            // console.log(receipt)
+
+            // if (receipt === null) {
+            //     status = 'Unknown'
+            // } else {
+            //     console.log('check receipt status')
+            //     status = 'success'
+            // }
+            status = 'success'
         }
         this.exportStatus = status
 
@@ -378,11 +354,19 @@ export default class ChainTransfer extends Vue {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
 
         let importTxId
-        if (this.sourceChain === 'X') {
-            importTxId = await wallet.importToPlatformChain()
-        } else {
-            importTxId = await wallet.importToXChain()
+        try {
+            if (this.targetChain === 'P') {
+                importTxId = await wallet.importToPlatformChain()
+            } else if (this.targetChain === 'X') {
+                importTxId = await wallet.importToXChain(this.sourceChain)
+            } else {
+                importTxId = await wallet.importToCChain()
+            }
+        } catch (e) {
+            this.onerror(e)
+            return
         }
+
         this.importId = importTxId
         this.importState = TxState.started
 
@@ -393,15 +377,18 @@ export default class ChainTransfer extends Vue {
     async waitImportStatus(txId: string) {
         let status
 
-        if (this.sourceChain === 'P') {
+        if (this.targetChain === 'X') {
             status = await avm.getTxStatus(txId)
-        } else {
+        } else if (this.targetChain === 'P') {
             let resp = await pChain.getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
             } else {
                 status = resp.status
             }
+        } else {
+            // TODO: Add evm processing
+            status = 'success'
         }
 
         this.importStatus = status
@@ -429,11 +416,32 @@ export default class ChainTransfer extends Vue {
         console.error(err)
         this.isLoading = false
         this.err = err
+        this.isImportErr = true
         this.$store.dispatch('Notifications/add', {
             type: 'error',
             title: 'Transfer Failed',
             message: err,
         })
+    }
+
+    startAgain() {
+        this.$refs.form.clear()
+
+        this.err = ''
+        this.isImportErr = false
+        this.isConfirm = false
+        this.isLoading = false
+        this.isSuccess = false
+
+        this.exportId = ''
+        this.exportState = TxState.waiting
+        this.exportStatus = null
+        this.exportReason = null
+
+        this.importId = ''
+        this.importState = TxState.waiting
+        this.importStatus = null
+        this.importReason = null
     }
 
     onsuccess() {
@@ -444,6 +452,14 @@ export default class ChainTransfer extends Vue {
             title: 'Transfer Complete',
             message: 'Funds transfered between chains.',
         })
+
+        if (this.targetChain === 'C') {
+            setTimeout(() => {
+                this.$store.dispatch('Assets/updateUTXOs')
+            }, 3000)
+        } else {
+            this.$store.dispatch('Assets/updateUTXOs')
+        }
     }
 
     get canSubmit() {
@@ -460,27 +476,36 @@ export default class ChainTransfer extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../main";
+@use "../../../../main";
 
 .cols {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    column-gap: 2vw;
+    grid-template-columns: max-content 1fr;
+    column-gap: 5vw;
 }
 
 .right_col {
-}
-
-.confirmation_val {
-    background-color: var(--bg-light);
-    padding: 6px 14px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 14px;
+    row-gap: 14px;
+    padding-top: 14px;
+    height: max-content;
+    //height: 100%;
+    > div {
+        //height: max-content;
+        background-color: var(--bg-light);
+        border-radius: 4px;
+        padding: 12px 18px;
+        box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .form {
-    justify-self: center;
-    //margin: 30px auto;
-    width: 100%;
-    //max-width: 540px;
+    max-width: 100%;
+    width: 360px;
+    padding-bottom: 14px;
+    //justify-self: center;
     > div {
         margin: 14px 0;
     }
@@ -496,11 +521,13 @@ export default class ChainTransfer extends Vue {
 }
 .chains {
     position: relative;
-    text-align: center;
+    //text-align: center;
     display: grid;
-    margin: 0 !important;
-    column-gap: 4px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content max-content;
+    row-gap: 14px;
+    //margin: 0 !important;
+    //column-gap: 4px;
+    //grid-template-columns: 1fr 1fr;
 }
 
 .chain_cont {
@@ -593,7 +620,24 @@ h2 {
     }
 }
 
+.fees {
+    margin: 14px 0;
+    border-top: 1px solid var(--bg-light);
+    padding-top: 14px;
+}
+
+.fees p {
+    text-align: left;
+    font-size: 13px;
+    color: var(--primary-color-light);
+}
+
+.fees span {
+    float: right;
+}
+
 .complete {
+    margin-top: 30px;
     > div {
         background-color: var(--bg-light);
         padding: 14px;
@@ -610,12 +654,31 @@ h2 {
     }
 }
 
+@include main.medium-device {
+    .cols {
+        //display: grid;
+        //grid-template-columns: 1fr 2fr;
+        grid-template-columns: none;
+        //column-gap: 2vw;
+    }
+    .right_col {
+        //grid-template-columns: 1fr 1fr;
+        //row-gap: 14px;
+        //display: none;
+        grid-column: 1;
+        grid-row: 1;
+    }
+}
+
 @include main.mobile-device {
     .cols {
         display: block;
         padding-bottom: 3vh;
     }
 
+    .form {
+        width: 100%;
+    }
     .chains {
         row-gap: 4px;
         grid-template-columns: none;
