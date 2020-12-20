@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!isLedger">
         <h4>Select Source Chain</h4>
         <div class="chain_select">
             <div
@@ -32,6 +32,17 @@ export default class ChainInput extends Vue {
 
     set(val: ChainIdType) {
         this.$emit('change', val)
+    }
+
+    get wallet() {
+        return this.$store.state.activeWallet
+    }
+
+    // TODO: Remove after ledger support
+    get isLedger() {
+        let wallet = this.wallet
+        if (!wallet) return false
+        return wallet.type === 'ledger'
     }
 }
 </script>
