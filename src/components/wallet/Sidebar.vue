@@ -20,14 +20,7 @@
                     />
                     {{ $t('wallet.sidebar.portfolio') }}
                 </router-link>
-                <router-link to="/wallet/keys" data-cy="wallet_manage">
-                    <img
-                        v-if="$root.theme === 'day'"
-                        src="@/assets/sidebar/manage_nav.png"
-                    />
-                    <img v-else src="@/assets/sidebar/manage_nav_night.svg" />
-                    {{ $t('wallet.sidebar.manage') }}
-                </router-link>
+
                 <router-link to="/wallet/transfer" data-cy="wallet_transfer">
                     <img
                         v-if="$root.theme === 'day'"
@@ -51,6 +44,14 @@
                     />
                     <img v-else src="@/assets/sidebar/earn_nav_night.png" />
                     {{ $t('wallet.sidebar.earn') }}
+                </router-link>
+                <router-link to="/wallet/keys" data-cy="wallet_manage">
+                    <img
+                        v-if="$root.theme === 'day'"
+                        src="@/assets/sidebar/manage_nav.png"
+                    />
+                    <img v-else src="@/assets/sidebar/manage_nav_night.svg" />
+                    {{ $t('wallet.sidebar.manage') }}
                 </router-link>
                 <router-link to="/wallet/advanced" data-cy="wallet_advanced">
                     <img

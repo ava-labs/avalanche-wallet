@@ -60,7 +60,7 @@
     "wallet": {
         "sidebar": {
             "portfolio": "Portfolio",
-            "manage": "Manage",
+            "manage": "Manage Keys",
             "send": "Send",
             "export": "Cross Chain",
             "earn": "Earn",

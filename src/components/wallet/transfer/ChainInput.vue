@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>Select Chain</h4>
+        <h4>Select Source Chain</h4>
         <div class="chain_select">
             <div
                 :active="formType === 'X'"
