@@ -6,12 +6,27 @@
         </div>
         <div class="card_body" v-else>
             <div>
-                <v-chip-group mandatory v-model="formType">
-                    <v-chip value="x">X Chain</v-chip>
-                    <v-chip value="c" v-if="!isLedger">C Chain</v-chip>
-                </v-chip-group>
+                <h4>Select Chain</h4>
+                <div class="chain_select">
+                    <div
+                        :active="formType === 'X'"
+                        @click="formType = 'X'"
+                        class="hover_border"
+                    >
+                        <h2>X</h2>
+                        <p>Exchange</p>
+                    </div>
+                    <div
+                        :active="formType === 'C'"
+                        @click="formType = 'C'"
+                        class="hover_border"
+                    >
+                        <h2>C</h2>
+                        <p>Contract</p>
+                    </div>
+                </div>
             </div>
-            <FormC v-if="formType === 'c'"></FormC>
+            <FormC v-if="formType === 'C'"></FormC>
             <div class="new_order_Form" v-else>
                 <div class="lists" v-show="!isConfirm">
                     <tx-list
@@ -168,6 +183,7 @@ import { IssueBatchTxInput, WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import FormC from '@/components/wallet/transfer/FormC.vue'
+import { ChainIdType } from '@/constants'
 @Component({
     components: {
         FaucetLink,
@@ -180,7 +196,7 @@ import FormC from '@/components/wallet/transfer/FormC.vue'
     },
 })
 export default class Transfer extends Vue {
-    formType = 'x'
+    formType: ChainIdType = 'X'
     showAdvanced: boolean = false
     isAjax: boolean = false
     addressIn: string = ''
@@ -599,11 +615,21 @@ label {
 }
 
 .chain_select {
-    button {
-        background-color: var(--bg-light);
-        width: 28px;
-        height: 28px;
+    display: flex;
+    > div {
+        border: 1px solid var(--primary-color);
+        margin-right: 14px;
+        padding: 8px;
+        opacity: 0.5;
         border-radius: 4px;
+        transition-duration: 0.2s;
+        cursor: pointer;
+        &[active] {
+            background-color: var(--primary-color);
+            color: var(--bg);
+            border-color: var(--primary-color);
+            opacity: 1;
+        }
     }
 }
 

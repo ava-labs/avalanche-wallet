@@ -36,6 +36,14 @@
                     <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
                     {{ $t('wallet.sidebar.send') }}
                 </router-link>
+                <router-link
+                    to="/wallet/cross_chain"
+                    data-cy="wallet_export"
+                    class="wallet_export"
+                >
+                    <span><fa icon="random" class="icon"></fa></span>
+                    {{ $t('wallet.sidebar.export') }}
+                </router-link>
                 <router-link to="/wallet/earn" data-cy="wallet_earn">
                     <img
                         v-if="$root.theme === 'day'"
@@ -134,7 +142,13 @@ export default {
         }
     }
 }
-
+.wallet_export {
+    span {
+        display: block;
+        margin-right: 15px;
+        width: 20px;
+    }
+}
 .bottom {
     flex-grow: 1;
     display: flex;

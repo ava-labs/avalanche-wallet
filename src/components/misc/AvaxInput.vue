@@ -11,7 +11,7 @@
                 @change="amount_in"
             ></BigNumInput>
             <p v-if="balance" class="balance">
-                Balance: {{ balance.toLocaleString() }}
+                Balance: <span>{{ balance.toLocaleString() }}</span>
             </p>
         </div>
         <p class="ticker">AVAX</p>
@@ -60,6 +60,7 @@ export default class AvaxInput extends Vue {
 
     .amt_in {
         color: var(--primary-color);
+        font-size: 15px;
         font-family: monospace;
         flex-grow: 1;
         flex-shrink: 1;
@@ -108,6 +109,7 @@ p {
     text-align: center;
 }
 .max_but {
+    font-size: 13px;
     opacity: 0.4;
     &:hover {
         opacity: 1;
@@ -116,11 +118,16 @@ p {
 
 .balance {
     position: absolute;
-    font-size: 13px;
+    font-size: 14px;
     right: 8px;
     color: var(--primary-color-light);
     background-color: transparent !important;
     top: 40px;
     padding: 2px 8px;
+
+    span {
+        font-family: monospace;
+        padding-left: 14px;
+    }
 }
 </style>

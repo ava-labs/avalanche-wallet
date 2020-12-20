@@ -110,7 +110,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import AddDelegator from '@/components/wallet/earn/Delegate/AddDelegator.vue'
-import ChainTransfer from '@/components/wallet/earn/ChainTransfer/ChainTransfer.vue'
 import { BN } from 'avalanche/dist'
 import UserRewards from '@/components/wallet/earn/UserRewards.vue'
 import { bnToBig } from '@/helpers/helper'
@@ -122,7 +121,6 @@ import Big from 'big.js'
         UserRewards,
         AddValidator,
         AddDelegator,
-        ChainTransfer,
     },
 })
 export default class Earn extends Vue {
@@ -139,8 +137,7 @@ export default class Earn extends Vue {
         this.subtitle = this.$t('earn.subtitle2') as string
     }
     transfer() {
-        this.pageNow = ChainTransfer
-        this.subtitle = this.$t('earn.subtitle3') as string
+        this.$router.replace('/wallet/cross_chain')
     }
 
     viewRewards() {
@@ -217,6 +214,9 @@ export default class Earn extends Vue {
     grid-template-rows: max-content 1fr;
 }
 .header {
+    h1 {
+        font-weight: normal;
+    }
     display: flex;
     /*justify-content: space-between;*/
     /*align-items: center;*/

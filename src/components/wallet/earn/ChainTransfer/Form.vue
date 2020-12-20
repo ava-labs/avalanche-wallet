@@ -34,10 +34,8 @@
                 :max="maxAmt"
                 v-model="amt"
                 @change="onAmtChange"
+                :balance="balance"
             ></AvaxInput>
-            <p class="balance">
-                Balance: <span>{{ balance.toLocaleString() }} AVAX</span>
-            </p>
         </div>
         <div class="confirmation_val" v-else>
             <label>{{ $t('earn.transfer.amount') }}</label>
@@ -236,6 +234,8 @@ export default class Form extends Vue {
         display: flex;
         margin: 13px 0;
     }
+
+    padding-bottom: 14px;
     //overflow: auto;
     //display: grid;
     //grid-template-columns: 1fr 1fr;

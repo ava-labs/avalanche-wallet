@@ -21,7 +21,8 @@
         </div>
         <div class="balance">
             <p>
-                <b>Balance:</b> {{ maxAmountBig.toLocaleString(denomination) }}
+                Balance:
+                <span>{{ maxAmountBig.toLocaleString(denomination) }}</span>
             </p>
             <div></div>
         </div>
@@ -226,6 +227,7 @@ input {
 
 .max_but {
     opacity: 0.4;
+    font-size: 13px;
     &:hover {
         opacity: 1;
     }
@@ -241,12 +243,18 @@ input {
     display: grid;
     column-gap: 10px;
     grid-template-columns: 1fr 140px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--primary-color-light);
+    padding: 2px 8px;
 
     p {
         text-align: right;
         padding: 2px 8px;
+    }
+
+    span {
+        font-family: monospace;
+        padding-left: 14px;
     }
 }
 

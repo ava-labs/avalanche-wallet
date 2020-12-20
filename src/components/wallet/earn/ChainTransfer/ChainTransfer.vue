@@ -84,14 +84,14 @@
                         @click="startAgain"
                         >{{ $t('earn.transfer.success.again') }}</v-btn
                     >
-                    <v-btn
-                        depressed
-                        small
-                        block
-                        text
-                        @click="$emit('cancel')"
-                        >{{ $t('earn.transfer.success.back') }}</v-btn
-                    >
+                    <!--                    <v-btn-->
+                    <!--                        depressed-->
+                    <!--                        small-->
+                    <!--                        block-->
+                    <!--                        text-->
+                    <!--                        @click="$emit('cancel')"-->
+                    <!--                        >{{ $t('earn.transfer.success.back') }}</v-btn-->
+                    <!--                    >-->
                 </div>
             </div>
             <div class="right_col">
@@ -495,6 +495,7 @@ export default class ChainTransfer extends Vue {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 14px;
     row-gap: 14px;
+    padding-top: 14px;
     height: max-content;
     //height: 100%;
     > div {
