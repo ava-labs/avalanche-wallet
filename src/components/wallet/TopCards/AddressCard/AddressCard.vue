@@ -192,7 +192,6 @@ export default class AddressCard extends Vue {
     color: var(--primary-color-light);
 
     > * {
-        outline: none !important;
         font-size: 16px;
         margin: 0px 18px;
         margin-right: 0px;

@@ -20,6 +20,8 @@ export default {
             copytext.select()
             copytext.setSelectionRange(0, 99999)
 
+            console.log(copytext.value)
+
             document.execCommand('copy')
             this.$store.dispatch('Notifications/add', {
                 title: ' Copied',
@@ -54,6 +56,7 @@ img {
 input {
     pointer-events: none;
     user-select: none;
+    width: 100% !important;
 }
 button {
     width: 100%;

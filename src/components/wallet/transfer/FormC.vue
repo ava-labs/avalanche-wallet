@@ -1,23 +1,20 @@
 <template>
     <div class="cols">
         <div class="form">
-            <div>
-                <h4>Amount</h4>
-                <AvaxInput
-                    :max="maxAmt"
-                    v-model="amountIn"
-                    disabled=""
-                    v-show="!isConfirm"
-                    :balance="balanceBig"
-                ></AvaxInput>
-                <p
-                    v-if="isConfirm"
-                    class="confirm_data"
-                    style="text-align: right"
-                >
-                    {{ formAmountBig.toLocaleString() }} AVAX
-                </p>
+            <div class="table_title">
+                <p>Amount</p>
+                <p>Token</p>
             </div>
+            <AvaxInput
+                :max="maxAmt"
+                v-model="amountIn"
+                disabled=""
+                v-show="!isConfirm"
+                :balance="balanceBig"
+            ></AvaxInput>
+            <p v-if="isConfirm" class="confirm_data" style="text-align: right">
+                {{ formAmountBig.toLocaleString() }} AVAX
+            </p>
         </div>
         <div class="right_col">
             <div class="to_address">
@@ -340,6 +337,15 @@ h4 {
     border-right: 1px solid var(--bg-light);
     > div {
         margin: 12px 0;
+    }
+}
+
+.table_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    p {
+        font-weight: bold;
     }
 }
 
