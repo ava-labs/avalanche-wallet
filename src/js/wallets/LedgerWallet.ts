@@ -49,14 +49,25 @@ import { getPreferredHRP } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
 import { digestMessage } from '@/helpers/helper'
+import { web3 } from '@/evm'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
     type: WalletNameType
+
+    ethAddress: string
+    ethBalance: BN
+    ethAddressBech: string
+
     constructor(app: AppAvax, hdkey: HDKey) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
+
+        // TODO: Add actual values
+        this.ethAddress = ''
+        this.ethBalance = new BN(0)
+        this.ethAddressBech = ''
     }
 
     static async fromApp(app: AppAvax) {
@@ -213,6 +224,22 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             store.commit('Ledger/closeModal')
             throw e
         }
+    }
+
+    getEvmAddress(): string {
+        return this.ethAddress
+    }
+
+    async getEthBalance() {
+        console.error('Not implemented')
+        // let bal = await web3.eth.getBalance(this.ethAddress)
+        this.ethBalance = new BN(0)
+        return this.ethBalance
+    }
+
+    async getUTXOs(): Promise<AVMUTXOSet> {
+        this.getEthBalance()
+        return super.getUTXOs()
     }
 
     getPathFromAddress(address: string) {
@@ -393,11 +420,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             false
         )
 
-        // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return pChain.issueTx(tx)
     }
 
@@ -427,12 +449,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx)
 
-        // // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return avm.issueTx(tx)
+    }
+
+    async importToCChain(): Promise<string> {
+        console.error('Not implemented.')
+        return ''
     }
 
     async validate(
@@ -534,6 +556,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             store.commit('Ledger/closeModal')
             throw e
         }
+    }
+
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+        console.error('Not available yet.')
+        return 'NOT AVAILABLE'
     }
 }
 

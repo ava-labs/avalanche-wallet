@@ -54,6 +54,7 @@ img {
 input {
     pointer-events: none;
     user-select: none;
+    width: 100% !important;
 }
 button {
     width: 100%;

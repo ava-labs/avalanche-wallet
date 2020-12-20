@@ -158,7 +158,6 @@ label {
 }
 
 .formIn {
-    border: none;
     height: 40px;
     font-size: 12px;
     background-color: var(--bg-light) !important;

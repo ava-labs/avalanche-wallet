@@ -60,8 +60,9 @@
     "wallet": {
         "sidebar": {
             "portfolio": "Portfolio",
-            "manage": "Manage",
+            "manage": "Manage Keys",
             "send": "Send",
+            "export": "Cross Chain",
             "earn": "Earn",
             "advanced": "Advanced"
         },
@@ -237,6 +238,7 @@
                 "export": "Export Transaction ID:",
                 "import": "Import Transaction ID:",
                 "message": "You have successfully transferred between chains.",
+                "again": "Start Again",
                 "back": "Back to Earn"
             }
         },
@@ -420,7 +422,8 @@
             "title": "Chain Import",
             "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
             "submit_x": "Import X",
-            "submit_p": "Import P"
+            "submit_p": "Import P",
+            "submit_c": "Import C"
         },
         "sign": {
             "title": "Sign Message",

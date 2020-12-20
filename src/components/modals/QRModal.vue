@@ -30,6 +30,8 @@ export default class QRModal extends Vue {
     colorDark: string = '#242729'
     colorLight: string = '#FFF'
 
+    @Prop({ default: '-' }) address!: string
+
     @Watch('address', { immediate: true })
     onaddrchange(val: string) {
         if (val) {
@@ -71,14 +73,6 @@ export default class QRModal extends Vue {
                 // console.log('success!');
             }
         )
-    }
-
-    get address() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
-        if (!wallet) {
-            return '-'
-        }
-        return wallet.getCurrentAddress()
     }
 
     mounted() {

@@ -19,7 +19,7 @@
                 </button>
             </div>
             <div style="flex-grow: 1"></div>
-            <div class="search">
+            <div class="search hover_border">
                 <img v-if="$root.theme === 'day'" src="@/assets/search.png" />
                 <img v-else src="@/assets/search_night.svg" />
                 <input :placeholder="$t('portfolio.search')" v-model="search" />
@@ -88,6 +88,7 @@ export default {
         font-weight: bold;
         margin: 0px 5px;
         text-transform: uppercase;
+        outline: none !important;
 
         &[active] {
             color: var(--primary-color);
@@ -107,8 +108,10 @@ export default {
     font-size: 13px;
     flex-basis: 420px;
     flex-shrink: 1;
+    border: 1px solid transparent;
 
     $icon_w: 36px;
+
     img {
         border-radius: 4px;
         padding: 10px 0px;
@@ -122,6 +125,7 @@ export default {
     input {
         padding: 0px 16px;
         outline: none;
+        border: none !important;
         flex-grow: 1;
         color: var(--primary-color);
 

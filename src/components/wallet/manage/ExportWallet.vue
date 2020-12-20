@@ -94,7 +94,6 @@ export default class ExportWallet extends Vue {
     .formIn {
         .v-input__slot {
             background-color: var(--bg-light) !important;
-            border: none !important;
         }
 
         .v-text-field__details {
@@ -131,7 +130,6 @@ label {
 }
 
 .formIn {
-    border: none;
     background-color: var(--bg-light);
     font-size: 12px;
     border-radius: 2px;
