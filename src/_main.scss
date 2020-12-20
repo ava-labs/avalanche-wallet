@@ -264,6 +264,10 @@ h1{
   color: var(--primary-color);
 }
 
+h1, h2, h3, h4{
+  font-family: "Rubik", sans-serif;
+}
+
 .button_primary{
   background-color: var(--primary-color) !important;
   color: var(--bg) !important;

@@ -26,6 +26,7 @@
             >
             <v-btn
                 block
+                v-if="!isLedger"
                 class="button_secondary"
                 depressed
                 @click="atomicImportC"
@@ -54,6 +55,13 @@ export default class ChainImport extends Vue {
     get wallet(): null | WalletType {
         let wallet: null | WalletType = this.$store.state.activeWallet
         return wallet
+    }
+
+    // TODO: Remove after ledger support
+    get isLedger() {
+        if (!this.wallet) return false
+        if (this.wallet.type === 'ledger') return true
+        return false
     }
     async atomicImportX() {
         this.beforeSubmit()
