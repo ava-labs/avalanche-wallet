@@ -76,6 +76,8 @@ import HdDerivationListRow from '@/components/modals/HdDerivationList/HdDerivati
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
+import { bnToBig } from '@/helpers/helper'
+import { BN } from 'avalanche'
 
 @Component({
     components: {
@@ -113,49 +115,38 @@ export default class HDDerivationList extends Vue {
         let utxoSet = wallet.externalHelper.utxoSet as AVMUTXOSet
         let addrs = this.addrsExternal
 
-        return this.utxoSetToBalanceDict<AVMKeyPair>(utxoSet, addrs)
+        return this.utxoSetToBalanceDict(utxoSet, addrs)
     }
 
-    utxoSetToBalanceDict<KeyType extends AVMKeyPair | PlatformVMKeyPair>(
+    utxoSetToBalanceDict(
         set: AVMUTXOSet | PlatformUTXOSet,
         addrs: string[]
     ): DerivationListBalanceDict[] {
-        let assetsDict = this.assetsDict
+        let assets: AvaAsset[] = this.$store.state.Assets.assets
 
-        let balances: DerivationListBalanceDict[] = addrs.map((addr) => {
-            let newSet = set.clone()
-
-            let chainID = addr.split('-')[0]
-            // get asset ids owned by this key
-            let assetIds = newSet.getAssetIDs()
-            let addrBuffer = bintools.parseAddress(addr, chainID)
-
-            let balDict: DerivationListBalanceDict = {}
-
-            // Loop through assets ids and sum the utxos
-            for (var i = 0; i < assetIds.length; i++) {
-                let assetId = assetIds[i]
-                let balance = newSet.getBalance([addrBuffer], assetId)
-                let assetIdSerial = bintools.cb58Encode(assetId)
-
-                let target: Big = balDict[assetIdSerial]
-                let asset: AvaAsset = assetsDict[assetIdSerial]
-
-                if (!asset) continue
-
-                // if asset id exists in the balance dict, add to it
-                if (target) {
-                    target = target.add(balance.toString())
-                } else {
-                    balDict[assetIdSerial] = Big(balance.toString()).div(
-                        Math.pow(10, asset.denomination)
-                    )
-                }
-            }
-            return balDict
+        let denoms: number[] = assets.map((asset) => {
+            return asset.denomination
         })
+        let assetIds: string[] = this.$store.getters['Assets/assetIds']
 
-        return balances
+        let res = []
+        for (var i = 0; i < addrs.length; i++) {
+            let balDict: DerivationListBalanceDict = {}
+            let addrBuff = bintools.stringToAddress(addrs[i])
+            assetIds.forEach((assetId, index) => {
+                let bal: BN = set.getBalance([addrBuff], assetId)
+
+                if (!bal.isZero()) {
+                    let balBig = bnToBig(bal, denoms[index])
+                    balDict[assetId] = balBig
+                }
+            })
+            res.push(balDict)
+        }
+
+        let end = performance.now()
+
+        return res
     }
 
     get numExternalKeys() {
@@ -170,14 +161,14 @@ export default class HDDerivationList extends Vue {
         let wallet = this.wallet
         let utxoSet = wallet.internalHelper.utxoSet
         let addrs = this.addrsInternal
-        return this.utxoSetToBalanceDict<AVMKeyPair>(utxoSet, addrs)
+        return this.utxoSetToBalanceDict(utxoSet, addrs)
     }
 
     get keyBalancesPlatform(): DerivationListBalanceDict[] {
         let wallet = this.wallet
         let utxoSet = wallet.platformHelper.utxoSet
         let addrs = this.addrsPlatform
-        return this.utxoSetToBalanceDict<PlatformVMKeyPair>(utxoSet, addrs)
+        return this.utxoSetToBalanceDict(utxoSet, addrs)
     }
 }
 </script>
