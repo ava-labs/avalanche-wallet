@@ -11,7 +11,7 @@ export default class NumberCounter extends Vue {
     @Prop() value!: Big
 
     @Watch('value')
-    onValueChange(val) {
+    onValueChange(val: Big) {
         this.animate()
     }
 
@@ -32,8 +32,7 @@ export default class NumberCounter extends Vue {
         } else {
             this.tweenedNumber = this.tweenedNumber.sub(step)
         }
-
-        setTimeout(this.animate, 20)
+        requestAnimationFrame(this.animate)
     }
 
     mounted() {
