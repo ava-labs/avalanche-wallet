@@ -42,22 +42,21 @@ h4 {
 .chain_select {
     display: flex;
     > div {
-        border: 1px solid var(--primary-color);
+        //border: 1px solid var(--primary-color);
         margin-right: 14px;
         padding: 8px;
         opacity: 0.5;
         border-radius: 4px;
         transition-duration: 0.2s;
         cursor: pointer;
+        color: var(--primary-color);
+        background-color: var(--bg-light);
 
         &:hover {
-            background-color: var(--primary-color);
-            color: var(--bg);
+            background-color: var(--bg-light);
         }
         &[active] {
-            background-color: var(--primary-color);
-            color: var(--bg);
-            border-color: var(--primary-color);
+            border-color: var(--primary-color-light);
             opacity: 1;
         }
     }
