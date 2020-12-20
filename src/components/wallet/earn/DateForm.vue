@@ -1,10 +1,11 @@
 <template>
-    <div class="dates">
+    <div class="dates_form">
         <div>
             <label>{{ $t('earn.validate.duration.start') }}</label>
             <datetime
                 v-model="localStart"
                 type="datetime"
+                class="date hover_border"
                 :min-datetime="startDateMin"
                 :max-datetime="startDateMax"
             ></datetime>
@@ -17,6 +18,7 @@
             <datetime
                 v-model="localEnd"
                 type="datetime"
+                class="date hover_border"
                 :min-datetime="endDateMin"
                 :max-datetime="endDateMax"
             ></datetime>
@@ -154,8 +156,15 @@ export default class DateForm extends Vue {
     }
 }
 </script>
+<style lang="scss">
+.dates_form {
+    .date input {
+        border: none !important;
+    }
+}
+</style>
 <style scoped lang="scss">
-.dates {
+.dates_form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 15px;

@@ -1,4 +1,4 @@
-import { ava, avm, bintools } from '@/AVA'
+import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
 import {
@@ -6,12 +6,20 @@ import {
     BaseTx,
     TransferableInput,
     TransferableOutput,
-    UnsignedTx,
+    UnsignedTx as AVMUnsignedTx,
     UTXO,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
 
-import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
+import {
+    UTXOSet as PlatformUTXOSet,
+    UnsignedTx as PlatformUnsignedTx,
+} from 'avalanche/dist/apis/platformvm'
+
+import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm'
+import { ChainIdType } from '@/constants'
+
+import { web3 } from '@/evm'
 
 export async function buildUnsignedTransaction(
     orders: (ITransaction | UTXO)[],
@@ -91,7 +99,7 @@ export async function buildUnsignedTransaction(
     })
 
     // If transferring an NFT, build the transaction on top of an NFT tx
-    let unsignedTx: UnsignedTx
+    let unsignedTx: AVMUnsignedTx
     let networkId: number = ava.getNetworkID()
     let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID())
 
@@ -134,7 +142,69 @@ export async function buildUnsignedTransaction(
         rawTx.ins = insNft.concat(ins)
     } else {
         let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins, memo)
-        unsignedTx = new UnsignedTx(baseTx)
+        unsignedTx = new AVMUnsignedTx(baseTx)
     }
     return unsignedTx
+}
+
+export async function buildExportTransaction(
+    sourceChain: ChainIdType,
+    destinationChain: ChainIdType,
+    utxoSet: AVMUTXOSet | PlatformUTXOSet,
+    fromAddresses: string[],
+    toAddress: string,
+    amount: BN, // export amount + fee
+    sourceChangeAddress: string,
+    evmBechAddress?: string // Used ONLY for c chain exports
+): Promise<AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx> {
+    let destinationChainId
+    switch (destinationChain) {
+        case 'X':
+            destinationChainId = avm.getBlockchainID()
+            break
+        case 'P':
+            destinationChainId = pChain.getBlockchainID()
+            break
+        case 'C':
+            destinationChainId = cChain.getBlockchainID()
+            break
+    }
+    if (sourceChain === 'X') {
+        return await avm.buildExportTx(
+            utxoSet as AVMUTXOSet,
+            amount,
+            destinationChainId,
+            [toAddress],
+            fromAddresses,
+            [sourceChangeAddress]
+        )
+    } else if (sourceChain === 'P') {
+        return await pChain.buildExportTx(
+            utxoSet as PlatformUTXOSet,
+            amount,
+            destinationChainId,
+            [toAddress],
+            fromAddresses,
+            [sourceChangeAddress]
+        )
+    } else if (sourceChain === 'C') {
+        const txcount = await web3.eth.getTransactionCount(fromAddresses[0])
+        const nonce: number = txcount
+        const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
+        const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
+
+        let fromAddressHex = fromAddresses[0]
+        let fromAddressBech = evmBechAddress!
+
+        return await cChain.buildExportTx(
+            amount,
+            avaxAssetIDStr,
+            destinationChainId,
+            fromAddressHex,
+            fromAddressBech,
+            [toAddress],
+            nonce
+        )
+    }
+    throw 'Invalid source chain.'
 }

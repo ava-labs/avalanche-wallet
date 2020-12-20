@@ -113,7 +113,7 @@ export default class Wallet extends Vue {
     transform: translateY(30px);
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .wallet_view {
         display: block;
     }
