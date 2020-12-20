@@ -1,6 +1,7 @@
 <template>
     <div class="cols">
         <div class="form">
+            <slot></slot>
             <div class="table_title">
                 <p>Amount</p>
                 <p>Token</p>
@@ -336,7 +337,7 @@ h4 {
     grid-column: 1/3;
     border-right: 1px solid var(--bg-light);
     > div {
-        margin: 12px 0;
+        margin-bottom: 12px;
     }
 }
 

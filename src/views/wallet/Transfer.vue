@@ -5,48 +5,32 @@
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
         <div class="card_body" v-else>
-            <div>
-                <h4>Select Chain</h4>
-                <div class="chain_select">
-                    <div
-                        :active="formType === 'X'"
-                        @click="formType = 'X'"
-                        class="hover_border"
-                    >
-                        <h2>X</h2>
-                        <p>Exchange</p>
-                    </div>
-                    <div
-                        :active="formType === 'C'"
-                        @click="formType = 'C'"
-                        class="hover_border"
-                    >
-                        <h2>C</h2>
-                        <p>Contract</p>
-                    </div>
-                </div>
-            </div>
-            <FormC v-if="formType === 'C'"></FormC>
+            <FormC v-if="formType === 'C'">
+                <ChainInput v-model="formType"></ChainInput>
+            </FormC>
             <div class="new_order_Form" v-else>
-                <div class="lists" v-show="!isConfirm">
-                    <tx-list
-                        class="tx_list"
-                        ref="txList"
-                        @change="updateTxList"
-                    ></tx-list>
-                    <template v-if="hasNFT">
-                        <NftList
-                            @change="updateNftList"
-                            ref="nftList"
-                        ></NftList>
-                    </template>
-                </div>
-                <div v-show="isConfirm" class="lists">
-                    <TxSummary
-                        class="lists"
-                        :orders="formOrders"
-                        :nft-orders="formNftOrders"
-                    ></TxSummary>
+                <div class="lists">
+                    <ChainInput v-model="formType"></ChainInput>
+                    <div v-show="!isConfirm">
+                        <tx-list
+                            class="tx_list"
+                            ref="txList"
+                            @change="updateTxList"
+                        ></tx-list>
+                        <template v-if="hasNFT">
+                            <NftList
+                                @change="updateNftList"
+                                ref="nftList"
+                            ></NftList>
+                        </template>
+                    </div>
+                    <div v-show="isConfirm">
+                        <TxSummary
+                            class="lists"
+                            :orders="formOrders"
+                            :nft-orders="formNftOrders"
+                        ></TxSummary>
+                    </div>
                 </div>
                 <div>
                     <div class="to_address">
@@ -80,20 +64,6 @@
                             <span>{{ txFee.toLocaleString(9) }} AVAX</span>
                         </p>
                     </div>
-                    <!--                    <div class="advanced">-->
-                    <!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->
-                    <!--                            <v-expansion-panel>-->
-                    <!--                                <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>-->
-                    <!--                                <v-expansion-panel-content>-->
-                    <!--                                    <label>{{$t('transfer.adv_change')}}</label>-->
-                    <!--                                    <p class="explain">Where to send the remaining assets after the transaction.</p>-->
-                    <!--                                    <radio-buttons class="radio_buttons" :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>-->
-                    <!--                                    &lt;!&ndash;                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>&ndash;&gt;-->
-                    <!--                                </v-expansion-panel-content>-->
-                    <!--                            </v-expansion-panel>-->
-                    <!--                        </v-expansion-panels>-->
-                    <!--                    </div>-->
-
                     <div class="checkout">
                         <ul class="err_list" v-if="formErrors.length > 0">
                             <li v-for="err in formErrors" :key="err">
@@ -184,6 +154,8 @@ import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import FormC from '@/components/wallet/transfer/FormC.vue'
 import { ChainIdType } from '@/constants'
+
+import ChainInput from '@/components/wallet/transfer/ChainInput.vue'
 @Component({
     components: {
         FaucetLink,
@@ -193,6 +165,7 @@ import { ChainIdType } from '@/constants'
         NftList,
         TxSummary,
         FormC,
+        ChainInput,
     },
 })
 export default class Transfer extends Vue {
@@ -612,25 +585,6 @@ label {
     background-color: var(--bg-light);
     word-break: break-all;
     padding: 8px 16px;
-}
-
-.chain_select {
-    display: flex;
-    > div {
-        border: 1px solid var(--primary-color);
-        margin-right: 14px;
-        padding: 8px;
-        opacity: 0.5;
-        border-radius: 4px;
-        transition-duration: 0.2s;
-        cursor: pointer;
-        &[active] {
-            background-color: var(--primary-color);
-            color: var(--bg);
-            border-color: var(--primary-color);
-            opacity: 1;
-        }
-    }
 }
 
 @media only screen and (max-width: 600px) {
