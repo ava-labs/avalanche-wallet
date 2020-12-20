@@ -1,6 +1,6 @@
 <template>
     <div class="addr_card">
-        <q-r-modal ref="qr_modal"></q-r-modal>
+        <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
         <paper-wallet
             ref="print_modal"
             v-if="walletType === 'mnemonic'"
