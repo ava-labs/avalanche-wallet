@@ -258,8 +258,6 @@ select {
     padding: 16px 12px;
     font-size: 14px;
     outline: none;
-    -webkit-appearance: menulist;
-    -moz-appearance: menulist;
     transition-duration: 0.1s;
     cursor: pointer;
 
