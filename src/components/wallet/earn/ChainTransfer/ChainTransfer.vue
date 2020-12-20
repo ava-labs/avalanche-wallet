@@ -465,7 +465,13 @@ export default class ChainTransfer extends Vue {
             message: 'Funds transfered between chains.',
         })
 
-        this.$store.dispatch('Assets/updateUTXOs')
+        if (this.targetChain === 'C') {
+            setTimeout(() => {
+                this.$store.dispatch('Assets/updateUTXOs')
+            }, 3000)
+        } else {
+            this.$store.dispatch('Assets/updateUTXOs')
+        }
     }
 
     get canSubmit() {

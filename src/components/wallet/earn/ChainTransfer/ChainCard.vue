@@ -12,7 +12,8 @@
             </div>
             <div class="input_group">
                 <label>Balance</label>
-                <p>{{ balanceText }}</p>
+                <NumberCounter :value="balanceBig"></NumberCounter>
+                <!--                <p>{{ balanceText }}</p>-->
             </div>
         </div>
     </div>
@@ -26,6 +27,7 @@ import AvaAsset from '@/js/AvaAsset'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
+import NumberCounter from '@/components/misc/NumberCounter.vue'
 
 const chainTypes: ChainIdType[] = ['X', 'P', 'C']
 const chainNames = {
@@ -34,7 +36,11 @@ const chainNames = {
     P: 'Platform Chain',
 }
 
-@Component
+@Component({
+    components: {
+        NumberCounter,
+    },
+})
 export default class ChainCard extends Vue {
     // @Model('change', { type: String }) readonly chain!: ChainIdType
     @Prop() chain!: ChainIdType
@@ -84,9 +90,11 @@ export default class ChainCard extends Vue {
         }
     }
 
+    get balanceBig() {
+        return bnToBig(this.balance, 9)
+    }
     get balanceText() {
-        let bn = this.balance
-        return bnToBig(bn, 9).toLocaleString()
+        return this.balanceBig.toLocaleString()
     }
 
     mounted() {}
