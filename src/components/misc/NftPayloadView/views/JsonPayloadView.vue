@@ -77,6 +77,7 @@ textarea {
     font-family: monospace;
     color: #0f0;
     resize: none;
+    border: none !important;
 }
 p {
     font-size: 13px;

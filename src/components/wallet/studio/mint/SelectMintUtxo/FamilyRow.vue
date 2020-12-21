@@ -29,22 +29,7 @@
         >
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>
-            <!--            <p class="id">{{ family.id }}</p>-->
         </div>
-        <!--        <v-btn small block class="button_secondary" depressed style="flex-grow: 0">Select</v-btn>-->
-        <!--        <div class="mint_group">-->
-        <!--            <div-->
-        <!--                v-for="utxo in utxosCapped"-->
-        <!--                :key="utxo.getUTXOID()"-->
-        <!--                @click="select(utxo)"-->
-        <!--                class="mint_group"-->
-        <!--            >-->
-        <!--                <p>Group {{ utxo.getOutput().getGroupID() }}</p>-->
-        <!--            </div>-->
-        <!--            <div v-if="isCapped" class="capped_sign">-->
-        <!--                <p>And {{ utxos.length - utxosCapped.length }} more..</p>-->
-        <!--            </div>-->
-        <!--        </div>-->
     </div>
 </template>
 <script lang="ts">
