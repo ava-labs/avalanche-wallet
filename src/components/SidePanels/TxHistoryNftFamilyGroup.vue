@@ -64,6 +64,7 @@ $countW: 18px;
 .payload_view {
     height: 35px;
     width: 35px;
+    background-color: var(--bg-light);
     border-radius: 4px;
 }
 
