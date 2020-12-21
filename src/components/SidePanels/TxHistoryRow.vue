@@ -371,8 +371,10 @@ export default class TxHistoryRow extends Vue {
 .nfts {
     display: flex;
     flex-wrap: wrap;
+    margin-top: 5px;
+    justify-content: flex-end;
     > div {
-        margin-right: 5px;
+        margin-left: 5px;
     }
 }
 
