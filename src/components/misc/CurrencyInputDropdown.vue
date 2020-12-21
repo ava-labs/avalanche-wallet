@@ -262,7 +262,7 @@ input {
     grid-template-columns: 1fr 140px;
     font-size: 14px;
     color: var(--primary-color-light);
-    padding: 2px 8px;
+    padding: 2px 0px;
 
     > div {
         display: flex;
@@ -270,7 +270,7 @@ input {
     }
 
     p {
-        padding: 2px 8px;
+        padding: 2px 0px;
     }
 
     p:last-child {
