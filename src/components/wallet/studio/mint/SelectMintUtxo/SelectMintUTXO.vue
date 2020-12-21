@@ -42,6 +42,9 @@ export default class SelectMintUTXO extends Vue {
     column-gap: 30px;
     grid-template-columns: repeat(5, 1fr);
     padding-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
     > div {
         width: 230px;

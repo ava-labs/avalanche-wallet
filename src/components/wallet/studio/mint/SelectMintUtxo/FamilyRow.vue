@@ -1,20 +1,12 @@
 <template>
     <div class="family">
         <div class="previews">
-            <div
-                v-for="(payload, i) in groupPayloads"
-                :key="i"
-                class="group_preview"
-                :style="{
-                    zIndex: groupPayloads.length - i,
-                    transform: `translateX(0%)  rotateZ(${
-                        (i - groupPayloads.length / 2) * rotateDeg
-                    }deg)`,
-                }"
-            >
-                <NftPayloadView :payload="payload" :small="true"></NftPayloadView>
-            </div>
-            <div v-if="groupPayloads.length === 0" class="group_preview empty_card">
+            <NftFamilyCardsPreview
+                :utxos="groupUtxos"
+                :spread="isHover"
+                :max="maxReviewItems"
+            ></NftFamilyCardsPreview>
+            <div v-if="groupUtxos.length === 0" class="group_preview empty_card">
                 <p><fa icon="plus"></fa></p>
             </div>
         </div>
@@ -34,31 +26,26 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AvaNftFamily } from '../../../../../js/AvaNftFamily'
 import { IWalletNftMintDict } from '@/store/types'
 import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
-import { getPayloadFromUTXO } from '@/helpers/helper'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
+import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
 @Component({
-    components: { NftPayloadView },
+    components: { NftFamilyCardsPreview, NftPayloadView },
 })
 export default class FamilyRow extends Vue {
     @Prop() family!: AvaNftFamily
 
-    rotateDeg = 5
     maxReviewItems = 14
 
+    isHover = false
     mouseEnter() {
-        let len = this.groupPayloads.length
-        let maxLen = this.maxReviewItems
-        this.rotateDeg = 25 * ((maxLen - len) / maxLen) + 5
+        this.isHover = true
     }
     mouseLeave() {
-        this.rotateDeg = 5
-    }
-    get mintUtxos() {
-        return this.nftMintDict[this.family.id]
+        this.isHover = false
     }
 
-    get utxosCapped() {
-        return this.mintUtxos.slice(0, 10)
+    get mintUtxos() {
+        return this.nftMintDict[this.family.id]
     }
 
     get nftMintDict(): IWalletNftMintDict {
@@ -100,16 +87,6 @@ export default class FamilyRow extends Vue {
         return filtered.slice(0, this.maxReviewItems)
     }
 
-    get groupPayloads() {
-        return this.groupUtxos.map((utxo) => {
-            return getPayloadFromUTXO(utxo)
-        })
-    }
-
-    get isCapped() {
-        return this.mintUtxos.length !== this.utxosCapped.length
-    }
-
     select() {
         this.$emit('select', this.mintUtxos[0])
     }
@@ -134,10 +111,6 @@ export default class FamilyRow extends Vue {
     display: flex;
     flex-grow: 1;
     position: relative;
-    min-height: 70px;
-    z-index: 1;
-    //display: grid;
-    //grid-template-columns: repeat(5, 1fr);
 }
 .group_preview {
     width: 70px !important;
