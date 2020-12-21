@@ -33,6 +33,7 @@ export interface UTXO {
     amount: string
     assetID: string
     chainID: string
+    groupID: number
     id: string
     locktime: number
     payload?: string

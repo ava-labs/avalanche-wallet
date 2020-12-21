@@ -32,12 +32,14 @@
                     :operation-direction="operationDirection"
                 ></tx-history-value>
                 <div class="nfts">
-                    <tx-history-nft-family-group
-                        v-for="(payloads, id) in nftGroups"
-                        :key="id"
-                        :payloads="payloads"
-                        class="group"
-                    ></tx-history-nft-family-group>
+                    <div v-for="(assetID, id) in nftGroups" :key="id">
+                        <tx-history-nft-family-group
+                            v-for="(payloads, id) in assetID"
+                            :key="id"
+                            :payloads="payloads"
+                            class="group"
+                        ></tx-history-nft-family-group>
+                    </div>
                 </div>
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
@@ -250,42 +252,49 @@ export default class TxHistoryRow extends Vue {
 
         let ins = this.transaction.inputs || {}
         let outs = this.transaction.outputs || {}
-        let res: { [key in string]: PayloadBase[] } = {} // asset id -> nft payload dict
+        let res: { [key in string]: { [key in string]: PayloadBase[] } } = {}
+
+        // res = {
+        //     'asset id': { ['group id']: 'payload' },
+        // }
+
+        const pushPayload = (rawPayload: string, assetID: string, groupID: number) => {
+            let payload = Buffer.from(rawPayload, 'base64')
+            payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
+
+            let typeId = payloadtypes.getTypeID(payload)
+            let pl: Buffer = payloadtypes.getContent(payload)
+            let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+
+            if (res[assetID]) {
+                if (res[assetID][groupID]) {
+                    res[assetID][groupID].push(payloadbase)
+                } else {
+                    res[assetID] = {
+                        [groupID]: [payloadbase],
+                    }
+                }
+            } else {
+                res[assetID] = {
+                    [groupID]: [payloadbase],
+                }
+            }
+        }
 
         ins.forEach((inputUtxo) => {
-            const assetId = inputUtxo.output.assetID
+            const groupID = inputUtxo.output.groupID
+            const assetID = inputUtxo.output.assetID
 
             if (inputUtxo.output.payload) {
-                let payload = Buffer.from(inputUtxo.output.payload, 'base64')
-                payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
-
-                let typeId = payloadtypes.getTypeID(payload)
-                let pl: Buffer = payloadtypes.getContent(payload)
-                let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
-
-                if (res[assetId]) {
-                    res[assetId].push(payloadbase)
-                } else {
-                    res[assetId] = [payloadbase]
-                }
+                pushPayload(inputUtxo.output.payload, assetID, groupID)
             }
         })
         outs.forEach((utxoOut) => {
-            let assetId = utxoOut.assetID
+            let groupID = utxoOut.groupID
+            let assetID = utxoOut.assetID
 
             if (utxoOut.payload) {
-                let payload = Buffer.from(utxoOut.payload, 'base64')
-                payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
-
-                let typeId = payloadtypes.getTypeID(payload)
-                let pl: Buffer = payloadtypes.getContent(payload)
-                let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
-
-                if (res[assetId]) {
-                    res[assetId].push(payloadbase)
-                } else {
-                    res[assetId] = [payloadbase]
-                }
+                pushPayload(utxoOut.payload, assetID, groupID)
             }
         })
 
