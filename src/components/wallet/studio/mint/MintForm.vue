@@ -1,80 +1,66 @@
 <template>
     <div class="mint_form">
         <div class="cols">
-            <div class="form_col">
-                <template v-if="!isSuccess">
-                    <div class="header">
-                        <div class="type_sel">
-                            <label>Type</label>
-                            <p>Select a collectible type.</p>
-                            <v-chip-group mandatory v-model="nftFormType">
-                                <v-chip value="generic">Generic</v-chip>
-                                <v-chip value="custom">Custom</v-chip>
-                            </v-chip-group>
-
-                            <template v-if="nftFormType === 'custom'">
-                                <label>Payload Type</label>
-                                <v-chip-group mandatory v-model="nftType">
-                                    <v-chip value="utf8">UTF-8</v-chip>
-                                    <v-chip value="url">URL</v-chip>
-                                    <v-chip value="json">JSON</v-chip>
-                                </v-chip-group>
-                            </template>
+            <div class="utxo_col">
+                <div class="utxo">
+                    <div>
+                        <v-btn text @click="clearUtxo" block>Change Family</v-btn>
+                        <div style="height: 110px; margin-top: 22px" v-if="groupUtxos.length > 0">
+                            <NftFamilyCardsPreview :utxos="groupUtxos"></NftFamilyCardsPreview>
                         </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label>Family Name</label>
+                            <p>{{ family.name }}</p>
+                        </div>
+                        <div>
+                            <label>Family Symbol</label>
+                            <p>{{ family.symbol }}</p>
+                        </div>
+                        <div>
+                            <label>Group</label>
+                            <p style="word-break: break-all">{{ groupId }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="type_col">
+                <div class="type_sel">
+                    <label>Type</label>
+                    <p>Select a collectible type.</p>
+                    <v-chip-group mandatory v-model="nftFormType">
+                        <v-chip value="generic" :disabled="isSuccess">Generic</v-chip>
+                        <v-chip value="custom" :disabled="isSuccess">Custom</v-chip>
+                    </v-chip-group>
+
+                    <template v-if="nftFormType === 'custom'">
+                        <label>Payload Type</label>
+                        <v-chip-group mandatory v-model="nftType">
+                            <v-chip value="utf8" :disabled="isSuccess">UTF-8</v-chip>
+                            <v-chip value="url" :disabled="isSuccess">URL</v-chip>
+                            <v-chip value="json" :disabled="isSuccess">JSON</v-chip>
+                        </v-chip-group>
+                    </template>
+                </div>
+                <p>
+                    {{ typeDescription }}
+                </p>
+            </div>
+            <div class="form_col">
+                <template>
+                    <div>
+                        <Component
+                            v-if="nftFormType === 'custom'"
+                            :is="formComponent"
+                            @onInput="onInput"
+                        ></Component>
+                        <GenericForm v-else @onInput="onInput"></GenericForm>
                     </div>
                     <div>
                         <label>Quantity</label>
-                        <input type="number" min="1" v-model="quantity" style="width: 90px" />
+                        <input type="number" min="1" v-model="quantity" style="width: 100%" />
                     </div>
-                    <Component
-                        v-if="nftFormType === 'custom'"
-                        :is="formComponent"
-                        @onInput="onInput"
-                    ></Component>
-                    <GenericForm v-else @onInput="onInput"></GenericForm>
-                </template>
-                <template v-else>
-                    <div class="success_cont">
-                        <p style="color: var(--success)">
-                            <fa icon="check-circle"></fa>
-                            Minted group
-                        </p>
-                        <div>
-                            <label>Tx ID</label>
-                            <p style="word-break: break-all">{{ txId }}</p>
-                        </div>
-                        <v-btn @click="cancel" class="button_secondary" small depressed>
-                            Back to Studio
-                        </v-btn>
-                    </div>
-                </template>
-            </div>
-            <div class="preview_col">
-                <div class="utxo">
-                    <div>
-                        <label>Name</label>
-                        <p>{{ family.name }}</p>
-                    </div>
-                    <div>
-                        <label>Symbol</label>
-                        <p>{{ family.symbol }}</p>
-                    </div>
-                    <div>
-                        <label>Group</label>
-                        <p style="word-break: break-all">{{ groupId }}</p>
-                    </div>
-                    <button @click="clearUtxo" v-if="!isSuccess"><fa icon="sync"></fa></button>
-                </div>
-                <label>Preview</label>
-                <NftPayloadView
-                    v-if="payloadPreview"
-                    class="nft_preview"
-                    :payload="payloadPreview"
-                ></NftPayloadView>
-                <div class="nft_preview preview_holder" v-else>
-                    <p>Complete the form to see the preview.</p>
-                </div>
-                <template v-if="!isSuccess">
                     <div class="fee">
                         <p>
                             Fee
@@ -84,14 +70,43 @@
                     <v-btn
                         :disabled="!canSubmit"
                         @click="submit"
-                        small
                         block
                         :loading="isLoading"
-                        class="button_secondary"
+                        class="button_primary"
                         style="margin: 14px 0"
+                        v-if="!isSuccess"
                     >
                         Mint
                     </v-btn>
+                </template>
+            </div>
+
+            <div class="right_col">
+                <div class="preview">
+                    <label>Preview</label>
+                    <NftPayloadView
+                        v-if="payloadPreview"
+                        class="nft_preview"
+                        :payload="payloadPreview"
+                    ></NftPayloadView>
+                    <div class="nft_preview preview_holder" v-else>
+                        <p>Complete the form to see the preview.</p>
+                    </div>
+                </div>
+                <template v-if="isSuccess">
+                    <div class="success_cont">
+                        <p style="color: var(--success)">
+                            <fa icon="check-circle"></fa>
+                            Minted group
+                        </p>
+                        <div>
+                            <label>Tx ID</label>
+                            <p style="word-break: break-all">{{ txId }}</p>
+                        </div>
+                        <v-btn @click="clearUtxo" class="button_secondary" small depressed>
+                            Back to Studio
+                        </v-btn>
+                    </div>
                 </template>
             </div>
         </div>
@@ -107,7 +122,7 @@ import JsonForm from '@/components/wallet/studio/mint/forms/JsonForm.vue'
 import GenericForm from '@/components/wallet/studio/mint/forms/GenericForm.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
-import { NFTMintOutput, UTXO } from 'avalanche/dist/apis/avm'
+import { NFTMintOutput, NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 import { avm, bintools, pChain } from '@/AVA'
 import {
@@ -120,11 +135,13 @@ import {
 import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from 'avalanche/dist/utils'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
+import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
 
 type NftType = 'utf8' | 'url' | 'json'
 
 @Component({
     components: {
+        NftFamilyCardsPreview,
         GenericForm,
         SelectMintUTXO,
         UrlForm,
@@ -144,6 +161,21 @@ export default class MintNft extends Vue {
     isSuccess = false
     isLoading = false
     txId = ''
+
+    get typeDescription() {
+        if (this.nftFormType === 'generic') {
+            return `Generic collectibles consist of an image, title and a description. The wallet
+                    can display them nicely.`
+        }
+
+        if (this.nftType === 'url') {
+            return 'If the given URL is an image the wallet will try its best to display it nicely. Otherwise it will show up as a link.'
+        } else if (this.nftType === 'json') {
+            return 'JSON payloads are ideal for custom data structures and can be used to develop decentralized applications.'
+        } else {
+            return `UTF8 payloads are simply text encoded into a collectible.`
+        }
+    }
 
     get nftFamsDict(): NftFamilyDict {
         return this.$store.state.Assets.nftFamsDict
@@ -218,6 +250,35 @@ export default class MintNft extends Vue {
         }
     }
 
+    get familyUtxos(): UTXO[] {
+        return this.$store.getters.walletNftDict[this.family.id] || []
+    }
+
+    get groupUtxos() {
+        let utxos = this.familyUtxos
+        let ids: number[] = []
+
+        let filtered = utxos.filter((utxo) => {
+            let groupId = (utxo.getOutput() as NFTTransferOutput).getGroupID()
+
+            if (ids.includes(groupId)) {
+                return false
+            } else {
+                ids.push(groupId)
+                return true
+            }
+        })
+
+        // order by group id
+        filtered.sort((a, b) => {
+            let gA = (a.getOutput() as NFTTransferOutput).getGroupID()
+            let gB = (b.getOutput() as NFTTransferOutput).getGroupID()
+            return gA - gB
+        })
+
+        return filtered.slice(0, 10)
+    }
+
     async submit() {
         let wallet = this.$store.state.activeWallet
         if (!wallet) return
@@ -261,9 +322,13 @@ export default class MintNft extends Vue {
 .mint_form {
     label {
         margin-top: 6px;
-        color: var(--primary-color-light);
+        color: var(--primary-color);
         font-size: 14px;
         margin-bottom: 3px;
+    }
+
+    p {
+        color: var(--primary-color-light);
     }
 
     input,
@@ -279,16 +344,19 @@ export default class MintNft extends Vue {
         resize: none;
     }
 
-    .header {
-        //display: flex;
-        //justify-content: space-between;
-        padding-bottom: 14px;
-        margin-bottom: 14px;
-        border-bottom: 1px solid var(--bg-light);
+    .type_col {
+        display: flex;
+        flex-direction: column;
+
+        > p {
+            margin-top: 30px !important;
+            font-size: 14px;
+        }
     }
 }
 </style>
 <style lang="scss" scoped>
+@use "../../../../main";
 .mint_form {
     padding: 10px 0;
 }
@@ -297,10 +365,9 @@ export default class MintNft extends Vue {
     display: flex;
 
     > div {
-        width: 130px;
+        //width: 130px;
         display: flex;
         flex-direction: column;
-        border: 1px solid;
         margin-right: 12px;
         border: 2px solid var(--bg-light);
         border-radius: 14px;
@@ -322,26 +389,24 @@ export default class MintNft extends Vue {
     }
 }
 .utxo {
-    background-color: var(--bg-light);
-    padding: 4px 8px;
-    border-radius: 6px;
+    //background-color: var(--bg-light);
     display: flex;
     flex-direction: column;
     position: relative;
-    font-size: 13px;
+    //font-size: 13px;
     //width: max-content;
 
     //display: grid;
     //grid-template-columns: repeat(3, max-content) 40px;
     //column-gap: 14px;
     height: max-content;
-    margin-bottom: 22px;
+    //margin-bottom: 22px;
 
     button {
-        position: absolute;
+        //position: absolute;
         font-size: 13px;
-        right: 12px;
-        top: 6px;
+        //right: 12px;
+        //top: 6px;
         color: var(--secondary-color);
         opacity: 0.8;
 
@@ -351,14 +416,23 @@ export default class MintNft extends Vue {
     }
 }
 
+$col_pad: 24px;
 .cols {
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: max-content 1fr 340px 1fr;
+    column-gap: $col_pad;
+    > div {
+        padding-left: $col_pad;
+        padding-right: $col_pad;
+        border-right: 1px solid var(--bg-light);
+    }
 }
 
-.preview_col {
-    border-left: 1px solid var(--bg-light);
-    padding-left: 2vw;
+.right_col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: none !important;
 }
 
 .nft_preview {
@@ -393,15 +467,34 @@ export default class MintNft extends Vue {
 
 .form_col {
     padding-right: 2vw;
+    //border: none !important;
 }
 
 .success_cont {
-    width: 320px;
     max-width: 100%;
+    margin: 24px 0;
+    text-align: center;
     > div {
-        background-color: var(--bg-light);
+        //background-color: var(--bg-light);
         padding: 3px 12px;
         margin: 12px 0;
+    }
+}
+
+@include main.medium-device {
+    .cols {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 24px;
+        > div {
+            border: none;
+            padding: 0;
+        }
+    }
+
+    .utxo {
+        display: grid;
+        column-gap: 22px;
+        grid-template-columns: max-content 1fr;
     }
 }
 </style>
