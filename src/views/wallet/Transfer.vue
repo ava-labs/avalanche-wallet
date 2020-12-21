@@ -602,7 +602,7 @@ label {
     }
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: main.$width_m) {
     .transfer_card {
         display: block;
         grid-template-columns: none;
@@ -619,6 +619,10 @@ label {
 
     .tx_list {
         padding: 0;
+        border: none;
+    }
+
+    .lists {
         border: none;
     }
 }

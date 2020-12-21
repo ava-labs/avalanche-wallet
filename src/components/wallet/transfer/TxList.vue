@@ -267,4 +267,10 @@ $right_pad: 80px;
 .list_item[empty] .list_in {
     pointer-events: none;
 }
+
+@media only screen and (max-width: main.$width_m) {
+    .list_item {
+        grid-template-columns: 1fr;
+    }
+}
 </style>

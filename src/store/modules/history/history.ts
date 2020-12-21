@@ -26,7 +26,7 @@ const history_module: Module<HistoryState, RootState> = {
             let network = rootState.Network.selectedNetwork
 
             // can't update if there is no explorer or no wallet
-            if (!network.explorerUrl || rootState.address === null) {
+            if (!network || !network.explorerUrl || rootState.address === null) {
                 return false
             }
 

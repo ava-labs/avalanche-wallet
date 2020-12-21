@@ -221,7 +221,6 @@ export default class CurrencyInputDropdown extends Vue {
     grid-template-columns: 1fr 140px;
     background-color: transparent;
     //font-size: 12px;
-    height: 40px;
     width: 100%;
     outline: none;
     text-align: right;
@@ -283,12 +282,15 @@ input {
     }
 }
 
-@include main.mobile-device {
-    .curr_in_drop {
-        grid-template-columns: 1fr 70px;
-    }
-
+@include main.medium-device {
     .balance {
+        grid-template-columns: 1fr;
+    }
+}
+
+@include main.mobile-device {
+    .balance,
+    .curr_in_drop {
         grid-template-columns: 1fr 70px;
     }
 }
