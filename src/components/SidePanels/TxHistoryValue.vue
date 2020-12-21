@@ -82,11 +82,18 @@ export default class TxHistoryValue extends Vue {
 
         if (!asset) return this.amount.toString()
 
-        // improve this
+        // improve this by checking different
+        // types of txs
         if (this.type === 'operation' && this.assetId !== this.ava_asset!.id) return ''
 
-        let val = Big(this.amount).div(Math.pow(10, asset.denomination))
-        return val.toLocaleString()
+        try {
+            let val = Big(this.amount).div(Math.pow(10, asset.denomination))
+            return val.toLocaleString()
+        } catch (e) {
+            console.log(this.amount)
+            console.log(asset.denomination)
+            return '-'
+        }
     }
 
     get symbolText(): string {

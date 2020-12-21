@@ -16,6 +16,10 @@
                     <fa icon="search"></fa>
                 </a>
             </p>
+            <div v-if="memo" class="memo">Memo: {{ memo }}</div>
+            <div v-if="transaction.rewarded" class="rewarded">
+                ✅ {{ $t('transactions.rewarded') }}
+            </div>
             <div class="utxos">
                 <tx-history-value
                     v-for="(amount, assetId) in valList"
@@ -36,10 +40,6 @@
                     ></tx-history-nft-family-group>
                 </div>
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
-            </div>
-            <div v-if="memo" class="memo">Memo: {{ memo }}</div>
-            <div v-if="transaction.rewarded" class="rewarded">
-                ✅ {{ $t('transactions.rewarded') }}
             </div>
         </div>
     </div>
@@ -305,9 +305,16 @@ export default class TxHistoryRow extends Vue {
     get operationDirection() {
         if (this.type !== 'operation') return 'N/A'
 
-        const fee = this.outValues[this.ava_asset?.id || '']
+        let addrs: string[] = this.addresses
+        let addrsRaw = addrs.map((addr) => addr.split('-')[1])
 
-        return !fee ? 'Received' : 'Sent'
+        const isFromWallet = this.transaction.inputs.find((input) => {
+            return input.output.addresses.find((value) => {
+                return addrsRaw.includes(value)
+            })
+        })
+
+        return isFromWallet ? 'Sent' : 'Received'
     }
 }
 </script>

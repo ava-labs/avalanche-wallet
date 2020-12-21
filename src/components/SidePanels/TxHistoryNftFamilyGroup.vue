@@ -66,6 +66,7 @@ $countW: 18px;
     width: 35px;
     background-color: var(--bg-light);
     border-radius: 4px;
+    pointer-events: none;
 }
 
 @include main.mobile-device {
