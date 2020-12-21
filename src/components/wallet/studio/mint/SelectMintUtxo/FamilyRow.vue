@@ -1,25 +1,22 @@
 <template>
     <div class="family">
         <div class="previews">
-            <NftPayloadView
+            <div
                 v-for="(payload, i) in groupPayloads"
                 :key="i"
-                :payload="payload"
                 class="group_preview"
-                :small="true"
                 :style="{
                     zIndex: groupPayloads.length - i,
                     transform: `translateX(0%)  rotateZ(${
                         (i - groupPayloads.length / 2) * rotateDeg
                     }deg)`,
                 }"
-            ></NftPayloadView>
+            >
+                <NftPayloadView :payload="payload" :small="true"></NftPayloadView>
+            </div>
             <div v-if="groupPayloads.length === 0" class="group_preview empty_card">
                 <p><fa icon="plus"></fa></p>
             </div>
-            <!--            <p v-if="groupPayloads.length === 0" class="empty">-->
-            <!--                You do not own any collectibles from this family.-->
-            <!--            </p>-->
         </div>
         <div
             class="family_header"
@@ -152,9 +149,9 @@ export default class FamilyRow extends Vue {
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
     pointer-events: none;
     user-select: none;
-    transform-origin: bottom center;
+    transform-origin: bottom center !important;
     transition-duration: 0.2s;
-    position: absolute;
+    position: absolute !important;
     left: calc(50% - 35px);
 }
 
