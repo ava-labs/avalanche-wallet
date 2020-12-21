@@ -24,7 +24,7 @@
                         </v-btn>
                     </div>
                     <div>
-                        <h4 class="title">Mint Groups</h4>
+                        <h4 class="title">Mint Collectible</h4>
                         <p>Issue collectibles for the families you created.</p>
                         <div>
                             <p v-if="!canMint" class="err">
