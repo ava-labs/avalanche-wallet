@@ -64,8 +64,10 @@ export default class JsonPayloadView extends Vue {
 </script>
 <style scoped lang="scss">
 .json_payload_view {
-    color: var(--primary-color);
+    color: #0f0;
+    background-color: #000;
     height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,7 +76,7 @@ p {
     font-size: 16px;
     word-break: break-word;
     font-weight: bold;
-    background-color: var(--bg-light);
-    color: var(--primary-color);
+    /*background-color: var(--bg-light);*/
+    /*color: var(--primary-color);*/
 }
 </style>
