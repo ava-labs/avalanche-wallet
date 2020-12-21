@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!mintUtxo">
-            <p>Select a family and group to mint.</p>
+            <p>Select a family.</p>
             <SelectMintUTXO @change="setUtxo" class="select_mint_utxo"></SelectMintUTXO>
         </div>
         <MintForm v-else :mint-utxo="mintUtxo" @clearUtxo="clearUtxo" @cancel="cancel"></MintForm>

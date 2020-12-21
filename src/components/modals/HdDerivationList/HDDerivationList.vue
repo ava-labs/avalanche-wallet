@@ -143,9 +143,6 @@ export default class HDDerivationList extends Vue {
             })
             res.push(balDict)
         }
-
-        let end = performance.now()
-
         return res
     }
 
