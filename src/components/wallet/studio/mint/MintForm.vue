@@ -6,7 +6,11 @@
                     <div>
                         <v-btn text @click="clearUtxo" block>Change Family</v-btn>
                         <div style="height: 110px; margin-top: 22px" v-if="groupUtxos.length > 0">
-                            <NftFamilyCardsPreview :utxos="groupUtxos"></NftFamilyCardsPreview>
+                            <NftFamilyCardsPreview
+                                :utxos="groupUtxos"
+                                :spread="isSuccess"
+                                :max="maxPreviewUtxoLen"
+                            ></NftFamilyCardsPreview>
                         </div>
                     </div>
                     <div>
@@ -162,6 +166,7 @@ export default class MintNft extends Vue {
     isLoading = false
     txId = ''
 
+    maxPreviewUtxoLen = 18
     get typeDescription() {
         if (this.nftFormType === 'generic') {
             return `Generic collectibles consist of an image, title and a description. The wallet
@@ -276,7 +281,7 @@ export default class MintNft extends Vue {
             return gA - gB
         })
 
-        return filtered.slice(0, 10)
+        return filtered.slice(0, this.maxPreviewUtxoLen)
     }
 
     async submit() {
@@ -310,7 +315,7 @@ export default class MintNft extends Vue {
 
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
-        }, 3000)
+        }, 2000)
     }
 
     onError(err: any) {
