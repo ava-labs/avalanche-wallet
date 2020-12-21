@@ -3,9 +3,9 @@
         <button @click="remove" class="removeBut">
             <fa icon="times"></fa>
         </button>
-        <div class="amt_in">
-            <label>Quantity</label>
-            <p><fa icon="boxes"></fa></p>
+        <div class="amt_in hover_border">
+            <!--            <label>Quantity</label>-->
+            <!--            <p><fa icon="boxes"></fa></p>-->
             <input type="number" min="1" :max="allUtxos.length" v-model="quantity" />
         </div>
         <NftPayloadView :payload="payload" small="true"></NftPayloadView>
@@ -29,6 +29,14 @@ export default class NftListItem extends Vue {
     @Prop() sample!: UTXO
 
     quantity = 1
+
+    @Watch('quantity')
+    onQuantitChange(val: number) {
+        if (val < 1) {
+            this.quantity = 1
+            return
+        }
+    }
 
     @Watch('quantity')
     onQuantityChange(val: number) {
@@ -115,13 +123,14 @@ $remove_w: 24px;
     bottom: -12px;
     width: 60%;
     padding: 2px 6px;
-    border: 1px solid var(--primary-color-light);
+    //border: 1px solid var(--bg);
     border-radius: 4px;
     z-index: 2;
     align-items: center;
     //border-radius: 4px;
     font-size: 12px;
-    background-color: var(--bg-light);
+    background-color: var(--primary-color);
+    color: var(--bg) !important;
     display: flex;
 
     label {
@@ -133,14 +142,14 @@ $remove_w: 24px;
     }
 
     p {
-        //opacity: 0.5;
-        color: var(--primary-color-light);
+        color: var(--bg) !important;
         font-size: 12px;
     }
 
     > input {
+        border: none !important;
         width: 100%;
-        color: var(--primary-color);
+        color: var(--bg) !important;
         text-align: center;
 
         &::-webkit-outer-spin-button,

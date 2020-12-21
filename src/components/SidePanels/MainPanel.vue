@@ -53,6 +53,7 @@ export default {
     font-size: 14px;
 
     > * {
+        outline: none !important;
         padding: 4px 8px;
         border-radius: 4px;
     }

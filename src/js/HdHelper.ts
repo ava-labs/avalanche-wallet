@@ -3,9 +3,11 @@ import {
     KeyPair as AVMKeyPair,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
+import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
+
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import HDKey from 'hdkey'
 import { Buffer } from 'buffer/'
 import {
@@ -249,7 +251,9 @@ class HdHelper {
             return result
         } else {
             let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
-            return result
+
+            let resultC: AVMUTXOSet = (await avm.getUTXOs(addrs, cChain.getBlockchainID())).utxos
+            return result.merge(resultC)
         }
     }
 

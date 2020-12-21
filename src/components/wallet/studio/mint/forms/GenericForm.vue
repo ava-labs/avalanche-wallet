@@ -95,7 +95,7 @@ textarea {
 
 .input_cont {
     margin-top: 2px;
-    width: 360px;
+    width: 100%;
 
     input {
         width: 100%;

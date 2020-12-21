@@ -1,22 +1,23 @@
 <template>
     <div class="family">
-        <div class="family_header">
+        <div class="previews">
+            <NftFamilyCardsPreview
+                :utxos="groupUtxos"
+                :spread="isHover"
+                :max="maxReviewItems"
+            ></NftFamilyCardsPreview>
+            <div v-if="groupUtxos.length === 0" class="group_preview empty_card">
+                <p><fa icon="plus"></fa></p>
+            </div>
+        </div>
+        <div
+            class="family_header"
+            @click="select"
+            @mouseenter="mouseEnter"
+            @mouseleave="mouseLeave"
+        >
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>
-            <p class="id">{{ family.id }}</p>
-        </div>
-        <div class="mint_group">
-            <div
-                v-for="utxo in utxosCapped"
-                :key="utxo.getUTXOID()"
-                @click="select(utxo)"
-                class="mint_group"
-            >
-                <p>Group {{ utxo.getOutput().getGroupID() }}</p>
-            </div>
-            <div v-if="isCapped" class="capped_sign">
-                <p>And {{ utxos.length - utxosCapped.length }} more..</p>
-            </div>
         </div>
     </div>
 </template>
@@ -24,30 +25,70 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AvaNftFamily } from '../../../../../js/AvaNftFamily'
 import { IWalletNftMintDict } from '@/store/types'
-import { UTXO } from 'avalanche/dist/apis/avm'
-
-@Component
+import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
+import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
+import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
+@Component({
+    components: { NftFamilyCardsPreview, NftPayloadView },
+})
 export default class FamilyRow extends Vue {
     @Prop() family!: AvaNftFamily
 
-    get utxos() {
-        return this.nftMintDict[this.family.id]
+    maxReviewItems = 14
+
+    isHover = false
+    mouseEnter() {
+        this.isHover = true
+    }
+    mouseLeave() {
+        this.isHover = false
     }
 
-    get utxosCapped() {
-        return this.utxos.slice(0, 10)
+    get mintUtxos() {
+        return this.nftMintDict[this.family.id]
     }
 
     get nftMintDict(): IWalletNftMintDict {
         return this.$store.getters.walletNftMintDict
     }
 
-    get isCapped() {
-        return this.utxos.length !== this.utxosCapped.length
+    get nftUtxoDict(): IWalletNftMintDict {
+        return this.$store.getters.walletNftDict
     }
 
-    select(utxo: UTXO) {
-        this.$emit('select', utxo)
+    // return utxos belonging to this family
+    get nftUtxos(): UTXO[] {
+        return this.nftUtxoDict[this.family.id] || []
+    }
+
+    // Return 1 of each group
+    get groupUtxos() {
+        let utxos = this.nftUtxos
+        let ids: number[] = []
+
+        let filtered = utxos.filter((utxo) => {
+            let groupId = (utxo.getOutput() as NFTTransferOutput).getGroupID()
+
+            if (ids.includes(groupId)) {
+                return false
+            } else {
+                ids.push(groupId)
+                return true
+            }
+        })
+
+        // order by group id
+        filtered.sort((a, b) => {
+            let gA = (a.getOutput() as NFTTransferOutput).getGroupID()
+            let gB = (b.getOutput() as NFTTransferOutput).getGroupID()
+            return gA - gB
+        })
+
+        return filtered.slice(0, this.maxReviewItems)
+    }
+
+    select() {
+        this.$emit('select', this.mintUtxos[0])
     }
 }
 </script>
@@ -56,21 +97,60 @@ export default class FamilyRow extends Vue {
 
 .family {
     margin-top: 24px;
+    //border: 1px solid var(--bg-light);
+    //background-color: var(--bg-light);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px 12px;
+    //background-color: var(--bg-light);
+}
+
+.previews {
+    display: flex;
+    flex-grow: 1;
+    position: relative;
+}
+.group_preview {
+    width: 70px !important;
+    height: 90px !important;
+    flex-shrink: 0;
+    background-color: var(--bg-light);
+    border: 1px solid var(--bg-light);
+    border-radius: 4px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    user-select: none;
+    transform-origin: bottom center !important;
+    transition-duration: 0.2s;
+    position: absolute !important;
+    left: calc(50% - 35px);
 }
 
 .family_header {
     display: flex;
+    flex-direction: column;
+    margin: 14px 0px;
+    align-items: center;
     font-size: 16px;
-    border-bottom: 1px solid var(--bg-light);
+    transition-duration: 0.2s;
     padding: 6px 0;
+    cursor: pointer;
+    z-index: 2;
+    background-color: var(--bg-light);
+    border-radius: 4px;
+    //border: 1px solid var(--primary-color-light);
+    user-select: none;
+    box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.4);
 
     .symbol,
     .id {
-        color: var(--primary-color-light);
+        opacity: 0.6;
     }
 
     .symbol {
-        padding-left: 14px;
+        font-size: 13px;
     }
 
     .id {
@@ -78,63 +158,29 @@ export default class FamilyRow extends Vue {
         font-size: 13px;
         text-align: right;
         opacity: 0.4;
+        word-break: break-all;
+    }
+
+    &:hover {
+        background-color: var(--secondary-color);
+        color: #fff !important;
+        border-color: transparent;
     }
 }
 
-.mint_group {
+.empty {
+    font-size: 12px;
+    text-align: center;
+    flex-grow: 1;
+    align-self: center;
+}
+
+.empty_card {
+    background-color: transparent;
     display: flex;
-    flex-wrap: wrap;
-    //justify-content: space-evenly;
-    //grid-template-columns: repeat(12, 1fr);
-    grid-column-gap: 14px;
-    grid-row-gap: 14px;
-    padding: 14px 0;
-
-    > div {
-        flex-shrink: 0;
-        flex-grow: 0;
-        width: 90px;
-        height: 90px;
-        flex-basis: 90px;
-        display: flex;
-        flex-grow: 0;
-        align-items: center;
-        justify-content: center;
-        padding: 15px;
-        font-size: 13px;
-        text-align: center;
-        flex-shrink: 0;
-    }
-
-    > .mint_group {
-        border: 1px dashed var(--bg-light);
-        background-color: var(--bg-light);
-        //padding: 30px;
-        cursor: pointer;
-        transition-duration: 0.2s;
-
-        &:hover {
-            border-color: var(--primary-color);
-            transform: scale(1.1);
-        }
-    }
-
-    .capped_sign {
-        border: 2px dashed var(--bg-wallet);
-        background-color: transparent;
-        color: var(--primary-color-light);
-    }
-}
-
-@include main.medium-device {
-    .mint_group {
-        > div {
-            width: 60px;
-            height: 60px;
-            flex-basis: 60px;
-            padding: 12px;
-            font-size: 11px;
-        }
-    }
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color-light);
+    border: 2px dashed var(--primary-color-light);
 }
 </style>

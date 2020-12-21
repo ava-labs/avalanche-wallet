@@ -181,6 +181,11 @@ const assets_module: Module<AssetsState, RootState> = {
         nftFamilies(state): AvaNftFamily[] {
             return state.nftFams
         },
+        assetIds(state): string[] {
+            return state.assets.map((asset) => {
+                return asset.id
+            })
+        },
         AssetAVA(state, getters, rootState, rootGetters): AvaAsset | null {
             let walletBalanceDict = rootGetters.walletAssetsDict
             let AVA_ASSET_ID = state.AVA_ASSET_ID

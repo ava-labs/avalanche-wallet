@@ -73,10 +73,11 @@ textarea {
     height: 100%;
     min-height: 140px;
     font-size: 12px !important;
-    background-color: #000;
-    font-family: monospace;
-    color: #0f0;
+    background-color: #000 !important;
+    font-family: monospace !important;
+    color: #0f0 !important;
     resize: none;
+    border: none !important;
 }
 p {
     font-size: 13px;

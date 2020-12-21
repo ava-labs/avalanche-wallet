@@ -1,5 +1,5 @@
 <template>
-    <div class="file_input">
+    <div class="file_input hover_border">
         <input type="file" :multiple="multiple" @input="oninput" ref="input" />
         <p v-if="fileNum === 0">Select File</p>
         <p v-else>{{ files[0].name }}</p>
@@ -84,6 +84,7 @@ input {
     z-index: 2;
     cursor: pointer;
     position: absolute;
+    border: none !important;
     width: 100%;
     height: 100%;
     top: 0;

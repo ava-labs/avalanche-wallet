@@ -6,20 +6,6 @@
                 :key="fam.id"
                 :family="fam"
             ></CollectibleFamilyRow>
-            <!--            <div v-for="fam in nftFamsArray" :key="fam.id">-->
-            <!--                <div class="fam_header">-->
-            <!--                    <p class="name">{{ fam.name }}</p>-->
-            <!--                    <p class="symbol">{{ fam.symbol }}</p>-->
-            <!--                </div>-->
-            <!--                <div class="list">-->
-            <!--                    <NFTCard-->
-            <!--                        class="nft_card"-->
-            <!--                        v-for="utxo in nftDict[fam.id]"-->
-            <!--                        :utxo="utxo"-->
-            <!--                        :key="utxo.id"-->
-            <!--                    ></NFTCard>-->
-            <!--                </div>-->
-            <!--            </div>-->
         </div>
         <div class="coming_soon" v-else>
             <img v-if="$root.theme === 'day'" src="@/assets/nft_preview.png" />

@@ -49,7 +49,7 @@ export default class UrlForm extends Vue {
 </script>
 <style scoped lang="scss">
 input {
-    width: 460px;
+    width: 100%;
     max-width: 100%;
 }
 .v-btn {

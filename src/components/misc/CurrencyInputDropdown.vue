@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="curr_in_drop">
-            <div class="max_in_cont">
+            <div class="max_in_cont hover_border">
                 <button class="max_but" @click="maxOut">MAX</button>
                 <big-num-input
                     ref="bigIn"
@@ -21,8 +21,8 @@
         </div>
         <div class="balance">
             <p>
-                <b>Balance:</b>
-                {{ maxAmountBig.toLocaleString(denomination) }}
+                Balance:
+                <span>{{ maxAmountBig.toLocaleString(denomination) }}</span>
             </p>
             <div></div>
         </div>
@@ -186,20 +186,24 @@ export default class CurrencyInputDropdown extends Vue {
 
 .bigIn {
     width: 100%;
+    border: none !important;
+    font-size: 15px;
+    font-family: monospace;
     /*background-color: #303030;*/
 }
 
 .max_in_cont {
     position: relative;
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: max-content 1fr;
+    padding: 8px 14px;
 }
 
 .curr_in_drop {
     display: grid;
     grid-template-columns: 1fr 140px;
     background-color: transparent;
-    font-size: 12px;
+    //font-size: 12px;
     height: 40px;
     width: 100%;
     outline: none;
@@ -213,7 +217,6 @@ export default class CurrencyInputDropdown extends Vue {
 }
 
 input {
-    padding: 8px;
     flex-grow: 1;
     outline: none;
     text-align: right;
@@ -223,11 +226,11 @@ input {
 }
 
 .max_but {
-    font-size: 12px;
-    text-decoration: underline;
-    text-decoration-style: dashed;
-    outline: none;
-    padding-left: 8px;
+    opacity: 0.4;
+    font-size: 13px;
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .dropdown {
@@ -240,12 +243,18 @@ input {
     display: grid;
     column-gap: 10px;
     grid-template-columns: 1fr 140px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--primary-color-light);
+    padding: 2px 8px;
 
     p {
         text-align: right;
         padding: 2px 8px;
+    }
+
+    span {
+        font-family: monospace;
+        padding-left: 14px;
     }
 }
 
