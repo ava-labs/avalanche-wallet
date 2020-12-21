@@ -9,19 +9,21 @@
                 :sample="utxo"
                 @change="setGroupUtxos"
             ></NftListItem>
-            <button @click="showPopup" class="nft_icon card add_but">
-                +
-                <br />
-                Add Collectible
-            </button>
+            <div class="nft_icon card nft_add">
+                <button @click="showPopup" class="add_but">
+                    +
+                    <br />
+                    Add Collectible
+                </button>
+                <BalancePopup
+                    ref="popup"
+                    :is-nft="true"
+                    @select="addNft"
+                    :disabled-ids="usedNftIds"
+                    class="bal_popup"
+                ></BalancePopup>
+            </div>
         </div>
-        <BalancePopup
-            ref="popup"
-            :is-nft="true"
-            @select="addNft"
-            :disabled-ids="usedNftIds"
-            class="bal_popup"
-        ></BalancePopup>
     </div>
 </template>
 <script lang="ts">
@@ -177,14 +179,21 @@ $nft_w: 90px;
     }
 }
 
-.add_but {
-    font-size: 12px;
-    opacity: 0.5;
-    transition-duration: 0.2s;
+.nft_add {
     background-color: transparent;
+}
+.add_but {
     box-shadow: none;
+    height: 100%;
+    width: 100%;
     padding: 14px;
     border: 1px dashed var(--primary-color-light);
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.5;
+    text-align: center;
+    transition-duration: 0.2s;
+
     &:hover {
         opacity: 1;
     }

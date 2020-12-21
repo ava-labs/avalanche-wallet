@@ -112,7 +112,10 @@ export default class BalancePopup extends Vue {
 }
 
 .balance_popup {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 99;
     text-align: left;
 }
 
