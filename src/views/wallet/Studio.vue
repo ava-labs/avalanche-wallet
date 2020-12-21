@@ -14,7 +14,7 @@
                 <!--                <div class="options">-->
                 <!--                    <div>New Fixed Cap Asset</div>-->
                 <!--                </div>-->
-                <h3>Collectibles</h3>
+                <h2>Collectibles</h2>
                 <div class="options">
                     <div>
                         <h4 class="title">New Family</h4>
@@ -139,10 +139,11 @@ export default class Studio extends Vue {
 }
 
 .menu {
-    h3 {
+    h2 {
         margin: 20px 0;
         color: var(--primary-color-light);
         font-weight: normal;
+        font-size: 2em;
     }
 }
 

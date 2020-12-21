@@ -12,6 +12,9 @@
                                 :max="maxPreviewUtxoLen"
                             ></NftFamilyCardsPreview>
                         </div>
+                        <div v-else class="empty_card">
+                            <p><fa icon="plus"></fa></p>
+                        </div>
                     </div>
                     <div>
                         <div>
@@ -484,6 +487,19 @@ $col_pad: 24px;
         padding: 3px 12px;
         margin: 12px 0;
     }
+}
+
+.empty_card {
+    width: 50px;
+    height: 70px;
+    margin: 12px auto;
+    background-color: transparent;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color-light);
+    border: 2px dashed var(--primary-color-light);
 }
 
 @include main.medium-device {
