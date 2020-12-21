@@ -86,7 +86,6 @@ export default new Vuex.Store({
             if (!utxoSet) return []
 
             let addrUtxos = utxoSet.getAllUTXOs()
-            console.log(addrUtxos)
             let res: UTXO[] = []
             for (var n = 0; n < addrUtxos.length; n++) {
                 let utxo = addrUtxos[n]

@@ -28,11 +28,12 @@
                     :operation-direction="operationDirection"
                 ></tx-history-value>
                 <div class="nfts">
-                    <tx-history-nft
-                        v-for="(payload, assetId, i) in nftPayloads"
-                        :key="i"
-                        :payload="payload"
-                    ></tx-history-nft>
+                    <tx-history-nft-family-group
+                        v-for="(payloads, id) in nftGroups"
+                        :key="id"
+                        :payloads="payloads"
+                        class="group"
+                    ></tx-history-nft-family-group>
                 </div>
                 <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
             </div>
@@ -49,7 +50,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import moment from 'moment'
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
-import TxHistoryNft from '@/components/SidePanels/TxHistoryNft.vue'
+import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
 import { getAssetIcon } from '@/helpers/helper'
 import BN from 'bn.js'
 import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
@@ -67,7 +68,7 @@ let payloadtypes = PayloadTypes.getInstance()
 @Component({
     components: {
         TxHistoryValue,
-        TxHistoryNft,
+        TxHistoryNftFamilyGroup,
     },
 })
 export default class TxHistoryRow extends Vue {
@@ -243,13 +244,13 @@ export default class TxHistoryRow extends Vue {
         return urls.splice(0, 1)
     }
 
-    get nftPayloads() {
+    get nftGroups() {
         let addrs: string[] = this.addresses
         let addrsRaw = addrs.map((addr) => addr.split('-')[1])
 
         let ins = this.transaction.inputs || {}
         let outs = this.transaction.outputs || {}
-        let res: PayloadBase[] = [] // asset id -> nft payload dict
+        let res: { [key in string]: PayloadBase[] } = {} // asset id -> nft payload dict
 
         ins.forEach((inputUtxo) => {
             const assetId = inputUtxo.output.assetID
@@ -262,7 +263,11 @@ export default class TxHistoryRow extends Vue {
                 let pl: Buffer = payloadtypes.getContent(payload)
                 let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
 
-                res.push(payloadbase)
+                if (res[assetId]) {
+                    res[assetId].push(payloadbase)
+                } else {
+                    res[assetId] = [payloadbase]
+                }
             }
         })
         outs.forEach((utxoOut) => {
@@ -276,7 +281,11 @@ export default class TxHistoryRow extends Vue {
                 let pl: Buffer = payloadtypes.getContent(payload)
                 let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
 
-                res.push(payloadbase)
+                if (res[assetId]) {
+                    res[assetId].push(payloadbase)
+                } else {
+                    res[assetId] = [payloadbase]
+                }
             }
         })
 
