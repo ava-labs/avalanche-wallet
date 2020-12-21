@@ -23,7 +23,7 @@ p {
     padding: 12px 24px;
     word-break: break-word;
     overflow: scroll;
-    background-color: var(--bg-light);
-    color: var(--primary-color);
+    background-color: var(--bg-light) !important;
+    color: var(--primary-color) !important;
 }
 </style>

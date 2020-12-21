@@ -1,6 +1,6 @@
 <template>
     <div class="addr_card">
-        <q-r-modal ref="qr_modal"></q-r-modal>
+        <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
         <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
         <p class="addr_info">{{ $t('top.address.desc') }}</p>
         <div class="bottom">
@@ -9,11 +9,9 @@
             </div>
             <div class="bottom_rest">
                 <p class="subtitle">{{ $t('top.address.derived') }}</p>
-                <p class="addr_text" data-cy="wallet_address" v-if="chainNow === 'X'">
-                    {{ address }}
-                </p>
-                <p class="addr_text" data-cy="wallet_address" v-else>
-                    {{ addressPVM }}
+
+                <p class="addr_text" data-cy="wallet_address">
+                    {{ activeAddress }}
                 </p>
                 <div style="display: flex; margin-top: 10px">
                     <ChainSelect v-model="chainNow"></ChainSelect>
@@ -31,7 +29,7 @@
                         ></button>
                         <CopyText
                             :tooltip="$t('top.hover3')"
-                            :value="address"
+                            :value="activeAddress"
                             class="copy_but"
                         ></CopyText>
                     </div>
@@ -54,6 +52,7 @@ import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
+import { ChainIdType } from '@/constants'
 @Component({
     components: {
         CopyText,
@@ -65,7 +64,7 @@ import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vu
 export default class AddressCard extends Vue {
     colorLight: string = '#FFF'
     colorDark: string = '#242729'
-    chainNow: string = 'X'
+    chainNow: ChainIdType = 'X'
 
     $refs!: {
         qr_modal: QRModal
@@ -73,7 +72,7 @@ export default class AddressCard extends Vue {
         qr: HTMLCanvasElement
     }
 
-    @Watch('address')
+    @Watch('activeAddress')
     onaddrchange() {
         this.updateQR()
     }
@@ -117,6 +116,26 @@ export default class AddressCard extends Vue {
         return wallet.getCurrentPlatformAddress()
     }
 
+    get addressEVM() {
+        let wallet: WalletType = this.$store.state.activeWallet
+        if (!wallet) {
+            return '-'
+        }
+
+        return `C-0x` + wallet.getEvmAddress()
+    }
+
+    get activeAddress(): string {
+        switch (this.chainNow) {
+            case 'X':
+                return this.address
+            case 'P':
+                return this.addressPVM
+            case 'C':
+                return this.addressEVM
+        }
+        return this.address
+    }
     viewQRModal() {
         // @ts-ignore
         this.$refs.qr_modal.open()
@@ -133,7 +152,7 @@ export default class AddressCard extends Vue {
         let size = canvas.clientWidth
         QRCode.toCanvas(
             canvas,
-            this.address,
+            this.activeAddress,
             {
                 scale: 6,
                 color: {

@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown" :active="isPopup">
+    <div class="dropdown hover_border" :active="isPopup">
         <button @click="showPopup">
             {{ symbol }}
             <fa icon="caret-down" style="float: right"></fa>
@@ -87,6 +87,9 @@ button {
 
 .dropdown {
     position: relative;
+    &:focus-within {
+        outline: 1px solid var(--secondary-color);
+    }
 }
 
 .dropdown[active] {

@@ -10,7 +10,6 @@ import createHash from 'create-hash'
 import store from '@/store'
 
 import { AssetAmountDestination, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
-import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
@@ -27,7 +26,9 @@ import {
     ImportTx,
     StakeableLockOut,
     Tx as PlatformTx,
+    UTXO as PlatformUTXO,
     UnsignedTx as PlatformUnsignedTx,
+    UTXOSet as PlatformUTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
@@ -41,14 +42,25 @@ import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
 import { digestMessage } from '@/helpers/helper'
+import { web3 } from '@/evm'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
     type: WalletNameType
+
+    ethAddress: string
+    ethBalance: BN
+    ethAddressBech: string
+
     constructor(app: AppAvax, hdkey: HDKey) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
+
+        // TODO: Add actual values
+        this.ethAddress = ''
+        this.ethBalance = new BN(0)
+        this.ethAddressBech = ''
     }
 
     static async fromApp(app: AppAvax) {
@@ -200,6 +212,22 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
+    getEvmAddress(): string {
+        return this.ethAddress
+    }
+
+    async getEthBalance() {
+        console.error('Not implemented')
+        // let bal = await web3.eth.getBalance(this.ethAddress)
+        this.ethBalance = new BN(0)
+        return this.ethBalance
+    }
+
+    async getUTXOs(): Promise<AVMUTXOSet> {
+        this.getEthBalance()
+        return super.getUTXOs()
+    }
+
     getPathFromAddress(address: string) {
         let externalAddrs = this.externalHelper.getExtendedAddresses()
         let internalAddrs = this.internalHelper.getExtendedAddresses()
@@ -294,12 +322,19 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         amt: BN,
         start: Date,
         end: Date,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
         // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
-        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
+        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
         let stakeAmount = amt
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
 
         // If reward address isn't given use index 0 address
         if (!rewardAddress) {
@@ -361,11 +396,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         )
         const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
 
-        // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return pChain.issueTx(tx)
     }
 
@@ -395,12 +425,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx)
 
-        // // Update UTXOS
-        setTimeout(async () => {
-            await this.getUTXOs()
-        }, 3000)
-
         return avm.issueTx(tx)
+    }
+
+    async importToCChain(): Promise<string> {
+        console.error('Not implemented.')
+        return ''
     }
 
     async validate(
@@ -409,9 +439,17 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         start: Date,
         end: Date,
         delegationFee: number,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string> {
-        const utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
+        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
         let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
 
         let stakeAmount = amt
@@ -504,6 +542,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         )
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         return await avm.issueTx(signed)
+    }
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+        console.error('Not available yet.')
+        return 'NOT AVAILABLE'
     }
 }
 

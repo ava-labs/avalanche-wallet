@@ -142,6 +142,17 @@ class HdWalletCore {
         return internal.concat(external)
     }
 
+    getDerivedAddressesP(): string[] {
+        return this.platformHelper.getAllDerivedAddresses()
+    }
+
+    getAllAddressesX() {
+        return this.getDerivedAddresses()
+    }
+
+    getAllAddressesP() {
+        return this.getDerivedAddressesP()
+    }
     // Returns addresses to check for history
     getHistoryAddresses(): string[] {
         let internalIndex = this.internalHelper.hdIndex
@@ -211,6 +222,8 @@ class HdWalletCore {
         this.externalHelper.onNetworkChange()
         this.internalHelper.onNetworkChange()
         this.platformHelper.onNetworkChange()
+
+        // TODO: Handle EVM changes
     }
 
     async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {

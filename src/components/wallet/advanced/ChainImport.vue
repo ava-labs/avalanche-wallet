@@ -14,6 +14,16 @@
             <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
                 {{ $t('advanced.import.submit_p') }}
             </v-btn>
+            <v-btn
+                block
+                v-if="!isLedger"
+                class="button_secondary"
+                depressed
+                @click="atomicImportC"
+                small
+            >
+                {{ $t('advanced.import.submit_c') }}
+            </v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
     </div>
@@ -37,11 +47,19 @@ export default class ChainImport extends Vue {
         let wallet: null | WalletType = this.$store.state.activeWallet
         return wallet
     }
+
+    // TODO: Remove after ledger support
+    get isLedger() {
+        if (!this.wallet) return false
+        if (this.wallet.type === 'ledger') return true
+        return false
+    }
     async atomicImportX() {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToXChain()
+            let txId = await this.wallet.importToXChain('P')
+            let txId2 = await this.wallet.importToXChain('C')
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
@@ -53,6 +71,17 @@ export default class ChainImport extends Vue {
         if (!this.wallet) return
         try {
             let txId = await this.wallet.importToPlatformChain()
+            this.onSuccess(txId)
+        } catch (e) {
+            this.onError(e)
+        }
+    }
+
+    async atomicImportC() {
+        this.beforeSubmit()
+        if (!this.wallet) return
+        try {
+            let txId = await this.wallet.importToCChain()
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
@@ -77,6 +106,8 @@ export default class ChainImport extends Vue {
             title: 'Import Success',
             message: txId,
         })
+
+        this.$store.dispatch('Assets/updateUTXOs')
     }
 
     onError(err: Error) {

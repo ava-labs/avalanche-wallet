@@ -3,7 +3,7 @@ import {
     KeyChain as AVMKeyChain,
     KeyPair as AVMKeyPair,
     UTXOSet,
-    UTXO,
+    UTXO as AVMUTXO,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
     UnsignedTx,
@@ -12,14 +12,17 @@ import {
 import {
     UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
+    UTXO as PlatformUTXO,
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
+import { KeyChain as EVMKeyChain } from 'avalanche/dist/apis/evm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
 import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { PayloadBase } from 'avalanche/dist/utils'
+import { ChainIdType } from '@/constants'
 
 // export type wallet_type = "hd" | "singleton";
 
@@ -38,16 +41,21 @@ export interface AvaWalletCore {
     stakeAmount: BN
     buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
     buildMintNftTx(
-        mintUtxo: UTXO,
+        mintUtxo: AVMUTXO,
         payload: PayloadBase,
         quantity: number,
         ownerAddress: string,
         changeAddress: string
     ): Promise<UnsignedTx>
+    ethAddress: string
+    ethAddressBech: string
+    ethBalance: BN
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
     getAllDerivedExternalAddresses(): string[]
+    getAllAddressesX(): string[] // returns all addresses this wallet own on the X chain
+    getAllAddressesP(): string[] // returns all addresses this wallet own on the P chain
     getHistoryAddresses(): string[]
     getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void
@@ -58,8 +66,11 @@ export interface AvaWalletCore {
     getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
     createNftFamily(name: string, symbol: string, groupNum: number): Promise<string>
-    mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number): Promise<string>
+    mintNft(mintUtxo: AVMUTXO, payload: PayloadBase, quantity: number): Promise<string>
     getBaseAddress(): string
+    getEthBalance(): Promise<BN>
+    getEvmAddress(): string
+    sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number): Promise<string>
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
@@ -73,30 +84,35 @@ export interface AvaWalletCore {
         start: Date,
         end: Date,
         delegationFee: number,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string>
     delegate(
         nodeID: string,
         amt: BN,
         start: Date,
         end: Date,
-        rewardAddress?: string
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
     ): Promise<string>
-    chainTransfer(amt: BN, sourceChain: string): Promise<string>
+    chainTransfer(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType): Promise<string>
     importToPlatformChain(): Promise<string>
-    importToXChain(): Promise<string>
-    issueBatchTx(orders: (UTXO | ITransaction)[], addr: string, memo?: Buffer): Promise<string>
+    importToXChain(sourceChain: ChainIdType): Promise<string>
+    importToCChain(): Promise<string>
+    issueBatchTx(orders: (AVMUTXO | ITransaction)[], addr: string, memo?: Buffer): Promise<string>
     signMessage(msg: string, address: string): Promise<string>
 }
 
-export interface IAvaHdWallet extends AvaWalletCore {
+// Wallets which have the private key in memory
+export interface UnsafeWallet {
+    ethKey: string
+    ethKeyChain: EVMKeyChain
+}
+
+export interface IAvaHdWallet extends AvaWalletCore, UnsafeWallet {
     seed: string
     hdKey: HDKey
     getMnemonic(): string
     getCurrentKey(): AVMKeyPair
     getKeyChain(): AVMKeyChain
-}
-
-export interface IAvaSingletonWallet extends AvaWalletCore {
-    masterKey: AVMKeyPair
 }

@@ -51,13 +51,13 @@ export default class UtfPayloadView extends Vue {
 
     &:hover {
         .icon {
-            color: var(--primary-color-light);
+            color: var(--primary-color-light) !important;
         }
     }
 }
 p {
     font-size: 13px;
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
 .hover_text {

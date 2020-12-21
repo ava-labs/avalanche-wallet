@@ -36,15 +36,30 @@ export default class SelectMintUTXO extends Vue {
 
 .families {
     display: grid;
+    //display: flex;
+    //flex-wrap: wrap;
     grid-gap: 14px;
     column-gap: 30px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(5, 1fr);
     padding-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    > div {
+        width: 230px;
+    }
 }
 
 @include main.medium-device {
     .families {
-        display: initial;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@include main.mobile-device {
+    .families {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 </style>

@@ -69,7 +69,7 @@ textarea,
 }
 
 .input_cont {
-    width: 360px;
+    width: 100%;
 }
 .v-btn {
     margin-top: 14px;
