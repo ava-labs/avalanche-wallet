@@ -14,9 +14,12 @@
                     }deg)`,
                 }"
             ></NftPayloadView>
-            <p v-if="groupPayloads.length === 0" class="empty">
-                You do not own any collectibles from this family.
-            </p>
+            <div v-if="groupPayloads.length === 0" class="group_preview empty_card">
+                <p><fa icon="plus"></fa></p>
+            </div>
+            <!--            <p v-if="groupPayloads.length === 0" class="empty">-->
+            <!--                You do not own any collectibles from this family.-->
+            <!--            </p>-->
         </div>
         <div
             class="family_header"
@@ -215,5 +218,14 @@ export default class FamilyRow extends Vue {
     text-align: center;
     flex-grow: 1;
     align-self: center;
+}
+
+.empty_card {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color-light);
+    border: 2px dashed var(--primary-color-light);
 }
 </style>
