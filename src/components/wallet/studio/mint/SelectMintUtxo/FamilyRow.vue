@@ -143,8 +143,8 @@ export default class FamilyRow extends Vue {
     //grid-template-columns: repeat(5, 1fr);
 }
 .group_preview {
-    width: 70px;
-    height: 90px;
+    width: 70px !important;
+    height: 90px !important;
     flex-shrink: 0;
     background-color: var(--bg-light);
     border: 1px solid var(--bg-light);
