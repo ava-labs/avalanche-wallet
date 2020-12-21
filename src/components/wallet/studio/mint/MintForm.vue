@@ -104,7 +104,9 @@
                     <div class="success_cont">
                         <p style="color: var(--success)">
                             <fa icon="check-circle"></fa>
-                            Minted group
+                            Success.
+                            <br />
+                            The new collectibles are added to your wallet.
                         </p>
                         <div>
                             <label>Tx ID</label>
