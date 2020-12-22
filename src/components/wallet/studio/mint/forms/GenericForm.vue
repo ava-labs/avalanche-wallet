@@ -5,11 +5,11 @@
             <input class="text" max="128" v-model="title" @input="onInput" />
         </div>
         <div class="input_cont">
-            <label>Image URL</label>
+            <label>Image URL*</label>
             <input class="text" placeholder="https://" v-model="imgUrl" @input="onInput" />
         </div>
         <div class="input_cont">
-            <label>Description (Optional)</label>
+            <label>Description</label>
             <textarea class="text" maxlength="256" v-model="description" @input="onInput" />
         </div>
         <!--        <div class="input_cont">-->
@@ -37,10 +37,10 @@ export default class GenericForm extends Vue {
     // radius = 15
 
     validate() {
-        if (!this.title) {
-            this.error = 'You must set a title.'
-            return false
-        }
+        // if (!this.title) {
+        //     this.error = 'You must set a title.'
+        //     return false
+        // }
 
         try {
             new URL(this.imgUrl)
