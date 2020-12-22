@@ -56,7 +56,7 @@ import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyG
 import { getAssetIcon } from '@/helpers/helper'
 import BN from 'bn.js'
 import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
-import { TransactionNftDict, TransactionValueDict } from '@/components/SidePanels/types'
+import { TransactionValueDict } from '@/components/SidePanels/types'
 import store from '@/store'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ITxNftDict, IWalletNftDict, WalletType } from '@/store/types'
