@@ -15,14 +15,14 @@
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
-            <span class="fiat" v-if="isAvaxToken">
-                {{ totalUSD.toLocaleString(2) }}
-                &nbsp;USD
-            </span>
-            <span v-if="isAvaxToken">|</span>
             <span>
                 {{ asset.toStringTotal() }}
                 &nbsp;{{ symbol }}
+            </span>
+            <br />
+            <span class="fiat" v-if="isAvaxToken">
+                {{ totalUSD.toLocaleString(2) }}
+                &nbsp;USD
             </span>
         </p>
         <p class="balance_col" v-else>
@@ -130,7 +130,8 @@ export default class FungibleRow extends Vue {
         font-size: 18px;
         text-align: right;
         .fiat {
-            font-size: 14px;
+            font-size: 12px;
+            color: var(--primary-color-light);
         }
     }
 
