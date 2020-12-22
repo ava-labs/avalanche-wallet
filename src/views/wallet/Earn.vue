@@ -19,11 +19,7 @@
                             {{ $t('earn.validate_card.desc') }}
                         </p>
                         <p v-if="!canValidate" class="no_balance">
-                            {{
-                                $t('earn.warning_1', [
-                                    minStakeAmt.toLocaleString(),
-                                ])
-                            }}
+                            {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
                         </p>
                         <v-btn
                             class="button_secondary"
@@ -32,8 +28,9 @@
                             depressed
                             small
                             :disabled="!canValidate"
-                            >{{ $t('earn.validate_card.submit') }}</v-btn
                         >
+                            {{ $t('earn.validate_card.submit') }}
+                        </v-btn>
                     </div>
                     <div>
                         <h4 class="title">
@@ -43,11 +40,7 @@
                             {{ $t('earn.delegate_card.desc') }}
                         </p>
                         <p v-if="!canDelegate" class="no_balance">
-                            {{
-                                $t('earn.warning_2', [
-                                    minDelegationAmt.toLocaleString(),
-                                ])
-                            }}
+                            {{ $t('earn.warning_2', [minDelegationAmt.toLocaleString()]) }}
                         </p>
                         <v-btn
                             class="button_secondary"
@@ -56,8 +49,9 @@
                             depressed
                             small
                             :disabled="!canDelegate"
-                            >{{ $t('earn.delegate_card.submit') }}</v-btn
                         >
+                            {{ $t('earn.delegate_card.submit') }}
+                        </v-btn>
                     </div>
                     <div>
                         <h4 class="title">
@@ -72,8 +66,9 @@
                             @click="transfer"
                             depressed
                             small
-                            >{{ $t('earn.transfer_card.submit') }}</v-btn
                         >
+                            {{ $t('earn.transfer_card.submit') }}
+                        </v-btn>
                     </div>
                     <div>
                         <h4 class="title">
@@ -88,18 +83,15 @@
                             @click="viewRewards"
                             depressed
                             small
-                            >{{ $t('earn.rewards_card.submit') }}</v-btn
                         >
+                            {{ $t('earn.rewards_card.submit') }}
+                        </v-btn>
                     </div>
                 </div>
                 <!--                <v-btn @click="viewRewards" depressed small>View Estimated Rewards</v-btn>-->
             </div>
             <div v-else>
-                <component
-                    :is="pageNow"
-                    class="comp"
-                    @cancel="cancel"
-                ></component>
+                <component :is="pageNow" class="comp" @cancel="cancel"></component>
             </div>
         </transition>
     </div>

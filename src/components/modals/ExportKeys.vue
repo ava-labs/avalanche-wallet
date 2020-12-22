@@ -4,10 +4,7 @@
             <p class="selection_num">
                 {{ $t('keys.export_key_info', [wallets.length]) }}
             </p>
-            <export-wallet
-                @success="handleExportSuccess"
-                :wallets="wallets"
-            ></export-wallet>
+            <export-wallet @success="handleExportSuccess" :wallets="wallets"></export-wallet>
         </div>
     </modal>
 </template>

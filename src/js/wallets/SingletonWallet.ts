@@ -8,6 +8,7 @@ import {
     KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     UTXO,
+    UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 import {
     KeyPair as PlatformKeyPair,
@@ -15,29 +16,23 @@ import {
     UTXOSet as PlatformUTXOSet,
     UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
-import {
-    KeyChain,
-    KeyChain as EVMKeyChain,
-    UTXOSet as EVMUTXOSet,
-} from 'avalanche/dist/apis/evm'
+import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 
-import {
-    StandardTx,
-    StandardUnsignedTx,
-    UTXOResponse,
-} from 'avalanche/dist/common'
-import { getPreferredHRP } from 'avalanche/dist/utils'
+import { StandardTx, StandardUnsignedTx, UTXOResponse } from 'avalanche/dist/common'
+import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import BN from 'bn.js'
-import { buildExportTransaction, buildUnsignedTransaction } from '../TxHelper'
+import {
+    buildExportTransaction,
+    buildUnsignedTransaction,
+    buildCreateNftFamilyTx,
+    buildMintNftTx,
+} from '../TxHelper'
 import { AvaWalletCore, ChainAlias, UnsafeWallet } from './IAvaHdWallet'
 import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
 import { privateToAddress } from 'ethereumjs-util'
 import { web3 } from '@/evm'
 import { ChainIdType } from '@/constants'
-import {
-    Tx as AVMTx,
-    UnsignedTx as AVMUnsignedTx,
-} from 'avalanche/dist/apis/avm/tx'
+import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import {
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
@@ -147,7 +142,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
                 changeAddress
             )) as AVMUnsignedTx
 
-            let tx = (await this.sign<AVMUnsignedTx>(exportTx)) as AVMTx
+            let tx = (await this.sign<AVMUnsignedTx, AVMTx>(exportTx)) as AVMTx
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let destinationAddr = this.getCurrentAddress()
@@ -166,7 +161,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
                 changeAddress
             )) as PlatformUnsignedTx
 
-            let tx = (await this.sign<PlatformUnsignedTx>(
+            let tx = (await this.sign<PlatformUnsignedTx, PlatformTx>(
                 exportTx,
                 false
             )) as PlatformTx
@@ -267,25 +262,16 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         // console.log(addrs);
         if (chainId === 'P') {
             let result: PlatformUTXOSet = (
-                await pChain.getUTXOs(
-                    this.getExtendedPlatformAddresses(),
-                    avm.getBlockchainID()
-                )
+                await pChain.getUTXOs(this.getExtendedPlatformAddresses(), avm.getBlockchainID())
             ).utxos
             return result
         } else {
             let result: AVMUTXOSet = (
-                await avm.getUTXOs(
-                    this.getDerivedAddresses(),
-                    pChain.getBlockchainID()
-                )
+                await avm.getUTXOs(this.getDerivedAddresses(), pChain.getBlockchainID())
             ).utxos
 
             let resultC: AVMUTXOSet = (
-                await avm.getUTXOs(
-                    this.getDerivedAddresses(),
-                    cChain.getBlockchainID()
-                )
+                await avm.getUTXOs(this.getDerivedAddresses(), cChain.getBlockchainID())
             ).utxos
 
             return result.merge(resultC)
@@ -299,14 +285,10 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         let result: AVMUTXOSet | PlatformUTXOSet
 
         if (chainId === 'X') {
-            result = await this.avmGetAllUTXOsForAddresses([
-                this.getCurrentAddress(),
-            ])
+            result = await this.avmGetAllUTXOsForAddresses([this.getCurrentAddress()])
             this.utxoset = result // we can use local copy of utxos as cache for some functions
         } else {
-            result = await this.platformGetAllUTXOsForAddresses([
-                this.getCurrentPlatformAddress(),
-            ])
+            result = await this.platformGetAllUTXOsForAddresses([this.getCurrentPlatformAddress()])
             this.platformUtxoset = result
         }
 
@@ -341,10 +323,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.platformGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
 
@@ -368,10 +347,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.avmGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
         return utxoSet
@@ -466,11 +442,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         return id
     }
 
-    async buildUnsignedTransaction(
-        orders: (ITransaction | UTXO)[],
-        addr: string,
-        memo?: Buffer
-    ) {
+    async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {
         const changeAddress = this.getChangeAddress()
         const derivedAddresses = this.getDerivedAddresses()
         const utxoset = this.getUTXOSet() as AVMUTXOSet
@@ -516,14 +488,14 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         this.getUTXOs()
     }
 
-    async sign<UnsignedTx extends StandardUnsignedTx<any, any, any>>(
-        unsignedTx: UnsignedTx,
-        isAVM = true
-    ): Promise<StandardTx<any, any, any>> {
+    async sign<
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx
+    >(unsignedTx: UnsignedTx, isAVM = true): Promise<SignedTx> {
         if (isAVM) {
-            return unsignedTx.sign(this.keyChain)
+            return (unsignedTx as AVMUnsignedTx).sign(this.keyChain) as SignedTx
         } else {
-            return unsignedTx.sign(this.platformKeyChain)
+            return (unsignedTx as PlatformUnsignedTx).sign(this.platformKeyChain) as SignedTx
         }
     }
 
@@ -550,7 +522,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
 
         // If given custom UTXO set use that
         if (utxos) {
-            utxoSet = new UTXOSet()
+            utxoSet = new PlatformUTXOSet()
             utxoSet.addArray(utxos)
         }
 
@@ -606,7 +578,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
 
         // If given custom UTXO set use that
         if (utxos) {
-            utxoSet = new UTXOSet()
+            utxoSet = new PlatformUTXOSet()
             utxoSet.addArray(utxos)
         }
 
@@ -650,6 +622,63 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         return pChain.issueTx(tx)
     }
 
+    async buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number) {
+        let fromAddresses = this.getDerivedAddresses()
+        let changeAddress = this.getChangeAddress()
+
+        let minterAddress = this.getCurrentAddress()
+
+        let unsignedTx = await buildCreateNftFamilyTx(
+            name,
+            symbol,
+            groupNum,
+            fromAddresses,
+            minterAddress,
+            changeAddress,
+            this.utxoset
+        )
+        return unsignedTx
+    }
+
+    async createNftFamily(name: string, symbol: string, groupNum: number) {
+        let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
+        let signed = (await this.sign<AVMUnsignedTx, AVMTx>(tx)) as AVMTx
+        return await avm.issueTx(signed)
+    }
+
+    async buildMintNftTx(
+        mintUtxo: UTXO,
+        payload: PayloadBase,
+        quantity: number,
+        ownerAddress: string,
+        changeAddress: string
+    ): Promise<UnsignedTx> {
+        let sourceAddresses = this.getDerivedAddresses()
+
+        let mintTx = buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            ownerAddress,
+            changeAddress,
+            sourceAddresses,
+            this.utxoset
+        )
+
+        return mintTx
+    }
+
+    async mintNft(mintUtxo: UTXO, payload: PayloadBase, quantity: number) {
+        let tx = await this.buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            this.getCurrentAddress(),
+            this.getChangeAddress()
+        )
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        return await avm.issueTx(signed)
+    }
     async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
         let receiver = to
         let txAmount = amount
@@ -668,9 +697,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
 
         let signedTx = await account.signTransaction(txConfig)
         let err,
-            receipt = await web3.eth.sendSignedTransaction(
-                signedTx.rawTransaction as string
-            )
+            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
 
         if (err) {
             console.error(err)

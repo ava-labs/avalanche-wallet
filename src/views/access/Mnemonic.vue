@@ -14,20 +14,17 @@
                     depressed
                     :loading="isLoading"
                     :disabled="!canSubmit"
-                    >{{ $t('access.mnemonic.submit') }}</v-btn
                 >
-                <router-link to="/access" class="link">{{
-                    $t('access.mnemonic.cancel')
-                }}</router-link>
+                    {{ $t('access.mnemonic.submit') }}
+                </v-btn>
+                <router-link to="/access" class="link">
+                    {{ $t('access.mnemonic.cancel') }}
+                </router-link>
             </div>
         </div>
         <div class="right">
             <label>Preview</label>
-            <mnemonic-display
-                :phrase="phrase"
-                class="phrase_disp"
-                :rowSize="3"
-            ></mnemonic-display>
+            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
         </div>
     </div>
 </template>
@@ -60,8 +57,7 @@ export default class Mnemonic extends Vue {
 
         let isValid = bip39.validateMnemonic(phrase)
         if (!isValid) {
-            this.err =
-                'Invalid mnemonic phrase. Make sure your mnemonic is all lowercase.'
+            this.err = 'Invalid mnemonic phrase. Make sure your mnemonic is all lowercase.'
             return false
         }
 

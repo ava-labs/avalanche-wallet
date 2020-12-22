@@ -4,13 +4,18 @@ import { BN, Buffer } from 'avalanche'
 import {
     AssetAmountDestination,
     BaseTx,
+    MinterSet,
+    NFTMintOutput,
     TransferableInput,
     TransferableOutput,
     UnsignedTx as AVMUnsignedTx,
-    UTXO,
+    UTXO as AVMUTXO,
+    UTXOSet,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
 
+import { PayloadBase } from 'avalanche/dist/utils'
+import { OutputOwners } from 'avalanche/dist/common'
 import {
     UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
@@ -22,7 +27,7 @@ import { ChainIdType } from '@/constants'
 import { web3 } from '@/evm'
 
 export async function buildUnsignedTransaction(
-    orders: (ITransaction | UTXO)[],
+    orders: (ITransaction | AVMUTXO)[],
     addr: string,
     derivedAddresses: string[],
     utxoset: AVMUTXOSet,
@@ -35,9 +40,7 @@ export async function buildUnsignedTransaction(
     }
 
     let fromAddrsStr: string[] = derivedAddresses
-    let fromAddrs: Buffer[] = fromAddrsStr.map((val) =>
-        bintools.parseAddress(val, 'X')
-    )
+    let fromAddrs: Buffer[] = fromAddrsStr.map((val) => bintools.parseAddress(val, 'X'))
     let changeAddr: Buffer = bintools.stringToAddress(changeAddress)
 
     // TODO: use internal asset ID
@@ -46,17 +49,15 @@ export async function buildUnsignedTransaction(
     const AVAX_ID_STR = AVAX_ID_BUF.toString('hex')
     const TO_BUF = bintools.stringToAddress(addr)
 
-    const aad: AssetAmountDestination = new AssetAmountDestination(
-        [TO_BUF],
-        fromAddrs,
-        [changeAddr]
-    )
+    const aad: AssetAmountDestination = new AssetAmountDestination([TO_BUF], fromAddrs, [
+        changeAddr,
+    ])
     const ZERO = new BN(0)
     let isFeeAdded = false
 
     // Aggregate Fungible ins & outs
     for (let i: number = 0; i < orders.length; i++) {
-        let order: ITransaction | UTXO = orders[i]
+        let order: ITransaction | AVMUTXO = orders[i]
 
         if ((order as ITransaction).asset) {
             // if fungible
@@ -147,6 +148,70 @@ export async function buildUnsignedTransaction(
     return unsignedTx
 }
 
+export async function buildCreateNftFamilyTx(
+    name: string,
+    symbol: string,
+    groupNum: number,
+    fromAddrs: string[],
+    minterAddr: string,
+    changeAddr: string,
+    utxoSet: UTXOSet
+) {
+    let fromAddresses = fromAddrs
+    let changeAddress = changeAddr
+    let minterAddress = minterAddr
+
+    const minterSets: MinterSet[] = []
+
+    // Create the groups
+    for (var i = 0; i < groupNum; i++) {
+        const minterSet: MinterSet = new MinterSet(1, [minterAddress])
+        minterSets.push(minterSet)
+    }
+
+    let unsignedTx: AVMUnsignedTx = await avm.buildCreateNFTAssetTx(
+        utxoSet,
+        fromAddresses,
+        [changeAddress],
+        minterSets,
+        name,
+        symbol
+    )
+    return unsignedTx
+}
+
+export async function buildMintNftTx(
+    mintUtxo: AVMUTXO,
+    payload: PayloadBase,
+    quantity: number,
+    ownerAddress: string,
+    changeAddress: string,
+    fromAddresses: string[],
+    utxoSet: UTXOSet
+): Promise<AVMUnsignedTx> {
+    let addrBuf = bintools.parseAddress(ownerAddress, 'X')
+    let owners = []
+
+    let sourceAddresses = fromAddresses
+
+    for (var i = 0; i < quantity; i++) {
+        let owner = new OutputOwners([addrBuf])
+        owners.push(owner)
+    }
+
+    let groupID = (mintUtxo.getOutput() as NFTMintOutput).getGroupID()
+
+    let mintTx = await avm.buildCreateNFTMintTx(
+        utxoSet,
+        owners,
+        sourceAddresses,
+        [changeAddress],
+        mintUtxo.getUTXOID(),
+        groupID,
+        payload
+    )
+    return mintTx
+}
 export async function buildExportTransaction(
     sourceChain: ChainIdType,
     destinationChain: ChainIdType,

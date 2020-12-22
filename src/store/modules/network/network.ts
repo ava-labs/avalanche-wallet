@@ -89,10 +89,7 @@ const network_module: Module<NetworkState, RootState> = {
                 })
             }
         },
-        async setNetwork(
-            { state, dispatch, commit, rootState },
-            net: AvaNetwork
-        ) {
+        async setNetwork({ state, dispatch, commit, rootState }, net: AvaNetwork) {
             state.status = 'connecting'
             ava.setAddress(net.ip, net.port, net.protocol)
             ava.setNetworkID(net.networkId)

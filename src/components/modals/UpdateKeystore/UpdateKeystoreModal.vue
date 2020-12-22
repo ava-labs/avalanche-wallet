@@ -1,10 +1,5 @@
 <template>
-    <modal
-        ref="modal"
-        :title="$t('modal.keystore.title')"
-        class="modal_main"
-        :can_close="false"
-    >
+    <modal ref="modal" :title="$t('modal.keystore.title')" class="modal_main" :can_close="false">
         <div class="update_keystore_modal_body">
             <p>{{ $t('modal.keystore.desc') }}</p>
             <ExportWallet
@@ -14,9 +9,9 @@
                 class="export_wallet"
                 :wallets="allWallets"
             ></ExportWallet>
-            <v-btn v-else class="ava_button button_primary" @click="logout">{{
-                $t('modal.keystore.logout')
-            }}</v-btn>
+            <v-btn v-else class="ava_button button_primary" @click="logout">
+                {{ $t('modal.keystore.logout') }}
+            </v-btn>
         </div>
     </modal>
 </template>

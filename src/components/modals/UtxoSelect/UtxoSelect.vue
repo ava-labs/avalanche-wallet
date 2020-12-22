@@ -1,9 +1,5 @@
 <template>
-    <modal
-        ref="modal"
-        :title="$t('modal.utxo_select.title')"
-        class="modal_main"
-    >
+    <modal ref="modal" :title="$t('modal.utxo_select.title')" class="modal_main">
         <div class="utxo_select_modal_body">
             <p>{{ $t('modal.utxo_select.desc') }}</p>
             <div class="table_cont">
@@ -35,14 +31,9 @@
                 <label>{{ $t('modal.utxo_select.available') }}</label>
                 <p>{{ selectedBalanceText }} AVAX</p>
             </div>
-            <v-btn
-                class="button_secondary"
-                block
-                depressed
-                small
-                @click="close"
-                >{{ $t('modal.utxo_select.submit') }}</v-btn
-            >
+            <v-btn class="button_secondary" block depressed small @click="close">
+                {{ $t('modal.utxo_select.submit') }}
+            </v-btn>
         </div>
     </modal>
 </template>

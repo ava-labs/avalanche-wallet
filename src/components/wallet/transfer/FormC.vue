@@ -26,33 +26,19 @@
                     class="qrIn"
                     placeholder="xxx"
                 ></qr-input>
-                <p
-                    v-if="isConfirm"
-                    class="confirm_data"
-                    style="word-break: break-all"
-                >
+                <p v-if="isConfirm" class="confirm_data" style="word-break: break-all">
                     {{ formAddress }}
                 </p>
             </div>
             <div class="gas_cont">
                 <div>
                     <h4>Gas Price (GWEI)</h4>
-                    <input
-                        type="number"
-                        v-model="gasPrice"
-                        min="0"
-                        v-if="!isConfirm"
-                    />
+                    <input type="number" v-model="gasPrice" min="0" v-if="!isConfirm" />
                     <p v-else class="confirm_data">{{ gasPrice }}</p>
                 </div>
                 <div>
                     <h4>Gas Limit</h4>
-                    <input
-                        type="number"
-                        v-model="gasLimit"
-                        min="0"
-                        v-if="!isConfirm"
-                    />
+                    <input type="number" v-model="gasLimit" min="0" v-if="!isConfirm" />
                     <p v-else class="confirm_data">{{ gasLimit }}</p>
                 </div>
             </div>
@@ -73,8 +59,9 @@
                     @click="confirm"
                     :disabled="!canConfirm"
                     v-if="!isConfirm"
-                    >Confirm</v-btn
                 >
+                    Confirm
+                </v-btn>
                 <template v-else>
                     <v-btn
                         class="button_primary"
@@ -82,8 +69,9 @@
                         block
                         @click="submit"
                         :loading="isLoading"
-                        >Send</v-btn
                     >
+                        Send
+                    </v-btn>
                     <v-btn
                         class="checkout"
                         style="color: var(--primary-color)"
@@ -91,13 +79,15 @@
                         block
                         @click="cancel"
                         small
-                        >Cancel</v-btn
                     >
+                        Cancel
+                    </v-btn>
                 </template>
             </template>
             <template v-else>
                 <p style="color: var(--success)">
-                    <fa icon="check-circle"></fa> Transaction Sent
+                    <fa icon="check-circle"></fa>
+                    Transaction Sent
                 </p>
                 <div>
                     <label>Transaction Hash</label>
@@ -112,8 +102,9 @@
                     small
                     block
                     @click="startAgain"
-                    >Start Again</v-btn
                 >
+                    Start Again
+                </v-btn>
             </template>
         </div>
     </div>
@@ -185,8 +176,7 @@ export default class FormC extends Vue {
         let addr = this.addressIn
 
         if (!this.validateAddress(addr)) {
-            this.err =
-                'Invalid C Chain address. Make sure your address begins with "C-0x"'
+            this.err = 'Invalid C Chain address. Make sure your address begins with "C-0x"'
             return false
         }
 
@@ -271,12 +261,7 @@ export default class FormC extends Vue {
         }
 
         try {
-            let txHash = await this.wallet.sendEth(
-                toAddress,
-                formAmt,
-                gasPriceWei,
-                this.gasLimit
-            )
+            let txHash = await this.wallet.sendEth(toAddress, formAmt, gasPriceWei, this.gasLimit)
             this.onSuccess(txHash)
         } catch (e) {
             this.onError(e)

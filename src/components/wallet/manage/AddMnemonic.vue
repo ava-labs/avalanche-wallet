@@ -1,9 +1,6 @@
 <template>
     <div class="add_mnemonic">
-        <textarea
-            v-model="phrase"
-            placeholder="web  jar  rack  cereal  inherit ...."
-        ></textarea>
+        <textarea v-model="phrase" placeholder="web  jar  rack  cereal  inherit ...."></textarea>
         <p class="err">{{ err }}</p>
         <v-btn
             :disabled="!canSubmit"
@@ -12,8 +9,9 @@
             block
             @click="access"
             class="but_submit"
-            >{{ $t('keys.import_key_button') }}</v-btn
         >
+            {{ $t('keys.import_key_button') }}
+        </v-btn>
     </div>
 </template>
 <script lang="ts">

@@ -3,9 +3,7 @@
         <div class="card_container" @click="flipCard" @mouseleave="mouseleave">
             <div class="card" :flipped="flipped">
                 <div class="card_back">
-                    <button class="button_secondary" @click="transfer">
-                        Send
-                    </button>
+                    <button class="button_secondary" @click="transfer">Send</button>
                 </div>
                 <div class="card_front">
                     <slot name="card"></slot>
@@ -55,8 +53,10 @@ export default class BaseNftCard extends Vue {
 <style scoped lang="scss">
 .card_container {
     position: relative;
-    width: 180px;
-    height: 220px;
+    width: 100%;
+    height: 100%;
+    //width: 180px;
+    //height: 220px;
 }
 .card {
     /*box-shadow: 1px 0px 4px 1px rgba(0,0,0,0.2);*/

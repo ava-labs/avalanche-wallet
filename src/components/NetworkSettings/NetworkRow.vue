@@ -5,10 +5,12 @@
             <p class="url">{{ endpoint }}</p>
             <div v-if="!isSelected && !network.readonly" class="buts">
                 <button class="editBut" @click="edit">
-                    <fa icon="cog"></fa> {{ $t('network.row.edit') }}
+                    <fa icon="cog"></fa>
+                    {{ $t('network.row.edit') }}
                 </button>
                 <button class="editBut" @click="deleteNet">
-                    <fa icon="trash"></fa> {{ $t('network.row.delete') }}
+                    <fa icon="trash"></fa>
+                    {{ $t('network.row.delete') }}
                 </button>
             </div>
         </div>
@@ -46,10 +48,7 @@ export default {
         },
         isConnected() {
             let state = this.$store.state.Network
-            if (
-                this.network === state.selectedNetwork &&
-                this.networkStatus === 'connected'
-            ) {
+            if (this.network === state.selectedNetwork && this.networkStatus === 'connected') {
                 return true
             }
             return false
@@ -81,10 +80,7 @@ export default {
         async select() {
             let net = this.network
             try {
-                let isSel = await this.$store.dispatch(
-                    'Network/setNetwork',
-                    net
-                )
+                let isSel = await this.$store.dispatch('Network/setNetwork', net)
 
                 this.$store.dispatch(
                     'Notifications/add',

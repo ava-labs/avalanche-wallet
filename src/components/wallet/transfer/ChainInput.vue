@@ -2,19 +2,11 @@
     <div v-if="!isLedger">
         <h4>Select Source Chain</h4>
         <div class="chain_select">
-            <div
-                :active="formType === 'X'"
-                @click="set('X')"
-                class="hover_border"
-            >
+            <div :active="formType === 'X'" @click="set('X')" class="hover_border">
                 <h2>X</h2>
                 <p>Exchange</p>
             </div>
-            <div
-                :active="formType === 'C'"
-                @click="set('C')"
-                class="hover_border"
-            >
+            <div :active="formType === 'C'" @click="set('C')" class="hover_border">
                 <h2>C</h2>
                 <p>Contract</p>
             </div>

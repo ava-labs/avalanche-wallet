@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
 import { AssetAPI, AssetsState } from '@/store/modules/assets/types'
-import { IWalletBalanceDict, IWalletNftDict, RootState } from '@/store/types'
+import { IWalletBalanceDict, IWalletNftDict, IWalletNftMintDict, RootState } from '@/store/types'
 import { ava, avm, bintools } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
@@ -21,9 +21,7 @@ const assets_module: Module<AssetsState, RootState> = {
     mutations: {
         addAsset(state, asset: AvaAsset) {
             if (state.assetsDict[asset.id]) {
-                console.info(
-                    `Failed to add asset. Asset already exists. (${asset.id})`
-                )
+                // console.info(`Failed to add asset. Asset already exists. (${asset.id})`)
                 return
             }
             state.assets.push(asset)
@@ -31,9 +29,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
         addNftFamily(state, family: AvaNftFamily) {
             if (state.nftFamsDict[family.id]) {
-                console.info(
-                    `Failed to add NFT Family. Asset already exists. (${family.id})`
-                )
+                // console.info(`Failed to add NFT Family. Asset already exists. (${family.id})`)
                 return
             }
             state.nftFams.push(family)
@@ -61,6 +57,7 @@ const assets_module: Module<AssetsState, RootState> = {
         addUnknownAssets({ state, getters, rootGetters, dispatch }) {
             let balanceDict: IWalletBalanceDict = rootGetters.walletBalanceDict
             let nftDict: IWalletNftDict = rootGetters.walletNftDict
+            let nftMintDict: IWalletNftMintDict = rootGetters.walletNftMintDict
 
             for (var id in balanceDict) {
                 if (!state.assetsDict[id]) {
@@ -71,6 +68,12 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var nft_id in nftDict) {
                 if (!state.nftFamsDict[nft_id]) {
                     dispatch('addUnknownNftFamily', nft_id)
+                }
+            }
+
+            for (var familyId in nftMintDict) {
+                if (!state.nftFamsDict[familyId]) {
+                    dispatch('addUnknownNftFamily', familyId)
                 }
             }
         },
@@ -126,12 +129,7 @@ const assets_module: Module<AssetsState, RootState> = {
         async addUnknownAsset({ state, commit }, assetId: string) {
             // get info about the asset
             let desc = await ava.XChain().getAssetDescription(assetId)
-            let newAsset = new AvaAsset(
-                assetId,
-                desc.name,
-                desc.symbol,
-                desc.denomination
-            )
+            let newAsset = new AvaAsset(assetId, desc.name, desc.symbol, desc.denomination)
 
             await commit('addAsset', newAsset)
             return desc
@@ -146,6 +144,14 @@ const assets_module: Module<AssetsState, RootState> = {
         },
     },
     getters: {
+        nftFamilies(state): AvaNftFamily[] {
+            return state.nftFams
+        },
+        assetIds(state): string[] {
+            return state.assets.map((asset) => {
+                return asset.id
+            })
+        },
         AssetAVA(state, getters, rootState, rootGetters): AvaAsset | null {
             let walletBalanceDict = rootGetters.walletAssetsDict
             let AVA_ASSET_ID = state.AVA_ASSET_ID

@@ -8,22 +8,12 @@
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportX"
-                small
-                >{{ $t('advanced.import.submit_x') }}</v-btn
-            >
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportP"
-                small
-                >{{ $t('advanced.import.submit_p') }}</v-btn
-            >
+            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>
+                {{ $t('advanced.import.submit_x') }}
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
+                {{ $t('advanced.import.submit_p') }}
+            </v-btn>
             <v-btn
                 block
                 v-if="!isLedger"
@@ -31,8 +21,9 @@
                 depressed
                 @click="atomicImportC"
                 small
-                >{{ $t('advanced.import.submit_c') }}</v-btn
             >
+                {{ $t('advanced.import.submit_c') }}
+            </v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
     </div>

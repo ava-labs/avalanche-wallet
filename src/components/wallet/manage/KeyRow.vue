@@ -10,10 +10,7 @@
             :phrase="mnemonicPhrase"
             ref="modal"
         ></mnemonic-phrase>
-        <HdDerivationListModal
-            :wallet="wallet"
-            ref="modal_hd"
-        ></HdDerivationListModal>
+        <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
         <PrivateKey
             v-if="walletType === 'singleton'"
             :privateKey="privateKey"
@@ -30,11 +27,7 @@
                         src="@/assets/key_inactive.svg"
                         class="key_logo"
                     />
-                    <img
-                        v-else
-                        src="@/assets/key_inactive_night.png"
-                        class="key_logo"
-                    />
+                    <img v-else src="@/assets/key_inactive_night.png" class="key_logo" />
                 </template>
                 <div class="header_cols">
                     <div class="detail">
@@ -42,18 +35,11 @@
                             <b>{{ walletTitle }}</b>
                         </p>
                         <Tooltip :text="$t('keys.tooltip')" v-if="isVolatile">
-                            <fa
-                                icon="exclamation-triangle"
-                                class="volatile_alert"
-                            ></fa>
+                            <fa icon="exclamation-triangle" class="volatile_alert"></fa>
                         </Tooltip>
                     </div>
                     <div class="buts">
-                        <button
-                            class="selBut"
-                            @click="select"
-                            v-if="!is_default"
-                        >
+                        <button class="selBut" @click="select" v-if="!is_default">
                             <span>{{ $t('keys.activate_key') }}</span>
                         </button>
                         <Tooltip
@@ -62,10 +48,7 @@
                             @click.native="remove"
                             v-if="!is_default"
                         >
-                            <img
-                                src="@/assets/trash_can_dark.svg"
-                                style="height: 16px"
-                            />
+                            <img src="@/assets/trash_can_dark.svg" style="height: 16px" />
                         </Tooltip>
                         <Tooltip
                             v-if="walletType !== 'singleton'"
@@ -83,16 +66,10 @@
                         >
                             <fa icon="upload"></fa>
                         </Tooltip>
-                        <button
-                            v-if="walletType == 'mnemonic'"
-                            @click="showModal"
-                        >
+                        <button v-if="walletType == 'mnemonic'" @click="showModal">
                             {{ $t('keys.view_key') }}
                         </button>
-                        <button
-                            v-if="walletType == 'singleton'"
-                            @click="showPrivateKeyModal"
-                        >
+                        <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal">
                             {{ $t('keys.view_priv_key') }}
                         </button>
                     </div>
@@ -102,17 +79,15 @@
             <div class="header">
                 <div></div>
                 <div>
-                    <p
-                        v-if="Object.keys(balances).length === 0"
-                        class="balance_empty"
-                    >
+                    <p v-if="Object.keys(balances).length === 0" class="balance_empty">
                         {{ $t('keys.empty') }}
                     </p>
                     <div class="addressBalance bal_cols" v-else>
                         <p>This key has:</p>
                         <div class="bal_rows">
                             <p v-for="bal in balances" :key="bal.id">
-                                {{ bal.toString() }} <b>{{ bal.symbol }}</b>
+                                {{ bal.toString() }}
+                                <b>{{ bal.symbol }}</b>
                             </p>
                         </div>
                     </div>

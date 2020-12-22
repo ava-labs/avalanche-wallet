@@ -11,7 +11,10 @@
                 <div v-if="!isSuccess && !isLoading">
                     <div v-if="!isImportErr" class="fees">
                         <h4>{{ $t('earn.transfer.fee') }}</h4>
-                        <p>{{ fee.toString() }} <span>AVAX</span></p>
+                        <p>
+                            {{ fee.toString() }}
+                            <span>AVAX</span>
+                        </p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>
@@ -28,8 +31,9 @@
                                 small
                                 block
                                 @click="startAgain"
-                                >{{ $t('earn.transfer.success.again') }}</v-btn
                             >
+                                {{ $t('earn.transfer.success.again') }}
+                            </v-btn>
                         </template>
                         <template v-else>
                             <v-btn
@@ -41,8 +45,9 @@
                                 block
                                 depressed
                                 :loading="isLoading"
-                                >{{ $t('earn.transfer.confirm') }}</v-btn
                             >
+                                {{ $t('earn.transfer.confirm') }}
+                            </v-btn>
                             <template v-else>
                                 <v-btn
                                     data-cy="submit"
@@ -51,21 +56,20 @@
                                     :loading="isLoading"
                                     depressed
                                     block
-                                    >{{ $t('earn.transfer.submit') }}</v-btn
                                 >
+                                    {{ $t('earn.transfer.submit') }}
+                                </v-btn>
                                 <v-btn
                                     v-if="!isLoading"
                                     data-cy="cancel"
-                                    style="
-                                        color: var(--primary-color);
-                                        margin: 12px 0 !important;
-                                    "
+                                    style="color: var(--primary-color); margin: 12px 0 !important"
                                     @click="cancelConfirm"
                                     depressed
                                     text
                                     block
-                                    >{{ $t('earn.transfer.cancel') }}</v-btn
                                 >
+                                    {{ $t('earn.transfer.cancel') }}
+                                </v-btn>
                             </template>
                         </template>
                     </div>
@@ -76,14 +80,9 @@
                         <fa icon="check-circle"></fa>
                         {{ $t('earn.transfer.success.message') }}
                     </p>
-                    <v-btn
-                        depressed
-                        class="button_secondary"
-                        small
-                        block
-                        @click="startAgain"
-                        >{{ $t('earn.transfer.success.again') }}</v-btn
-                    >
+                    <v-btn depressed class="button_secondary" small block @click="startAgain">
+                        {{ $t('earn.transfer.success.again') }}
+                    </v-btn>
                     <!--                    <v-btn-->
                     <!--                        depressed-->
                     <!--                        small-->
@@ -128,10 +127,7 @@ import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
 import TxStateCard from '@/components/wallet/earn/ChainTransfer/TxState.vue'
-import {
-    ChainSwapFormData,
-    TxState,
-} from '@/components/wallet/earn/ChainTransfer/types'
+import { ChainSwapFormData, TxState } from '@/components/wallet/earn/ChainTransfer/types'
 import { ChainIdType } from '@/constants'
 
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
@@ -294,20 +290,12 @@ export default class ChainTransfer extends Vue {
 
     // Triggers export from chain
     // STEP 1
-    async chainExport(
-        amt: BN,
-        sourceChain: ChainIdType,
-        destinationChain: ChainIdType
-    ) {
+    async chainExport(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType) {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
         let exportTxId
         this.exportState = TxState.started
 
-        exportTxId = await wallet.chainTransfer(
-            amt,
-            sourceChain,
-            destinationChain
-        )
+        exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
 
         this.exportId = exportTxId
         this.waitExportStatus(exportTxId)

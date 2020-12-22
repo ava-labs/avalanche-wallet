@@ -1,10 +1,5 @@
 // Functions to manage import/export of keystore files
-import {
-    KeyFile,
-    KeyFileDecrypted,
-    KeyFileKey,
-    KeyFileKeyDecrypted,
-} from './IKeystore'
+import { KeyFile, KeyFileDecrypted, KeyFileKey, KeyFileKeyDecrypted } from './IKeystore'
 import { bintools } from '@/AVA'
 import { Buffer } from 'buffer/'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
@@ -30,10 +25,7 @@ interface PKCrypt {
     ciphertext: Buffer
 }
 
-async function readKeyFile(
-    data: KeyFile,
-    pass: string
-): Promise<KeyFileDecrypted> {
+async function readKeyFile(data: KeyFile, pass: string): Promise<KeyFileDecrypted> {
     const version: string = data.version
 
     if (!SUPPORTED_VERSION.includes(version)) {
@@ -71,12 +63,7 @@ async function readKeyFile(
         let key: Buffer = bintools.cb58Decode(key_data.key)
         let nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
-        let key_decrypt: Buffer = await cryptoHelpers.decrypt(
-            pass,
-            key,
-            salt,
-            nonce
-        )
+        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
         let key_string: string
 
         //  versions below 5.0 used private key that had to be cb58 encoded
@@ -98,10 +85,7 @@ async function readKeyFile(
 }
 
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
-async function makeKeyfile(
-    wallets: AvaHdWallet[],
-    pass: string
-): Promise<KeyFile> {
+async function makeKeyfile(wallets: AvaHdWallet[], pass: string): Promise<KeyFile> {
     // 3.0 uses 200,000
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
@@ -113,11 +97,7 @@ async function makeKeyfile(
     for (let i: number = 0; i < wallets.length; i++) {
         let wallet: AvaHdWallet = wallets[i]
         let mnemonic = wallet.mnemonic
-        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(
-            pass,
-            mnemonic,
-            salt
-        )
+        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, mnemonic, salt)
 
         let key_data: KeyFileKey = {
             key: bintools.cb58Encode(pk_crypt.ciphertext),

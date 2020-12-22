@@ -1,10 +1,5 @@
 <template>
-    <modal
-        ref="modal"
-        title="Confirm Logout"
-        class="modal_main"
-        :can_close="false"
-    >
+    <modal ref="modal" title="Confirm Logout" class="modal_main" :can_close="false">
         <div class="confirm_body">
             <p style="text-align: center">
                 {{ $t('logout.confirmation') }}
@@ -12,12 +7,7 @@
                 {{ $t('logout.confirmation_message') }}
             </p>
             <div
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    margin-top: 14px;
-                "
+                style="display: flex; flex-direction: column; align-items: center; margin-top: 14px"
             >
                 <button class="ava_button button_primary" @click="submit">
                     {{ $t('logout.button_conf') }}

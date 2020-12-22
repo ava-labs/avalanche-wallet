@@ -20,8 +20,9 @@
             depressed
             @click="verify"
             :disabled="!canSubmit"
-            >{{ $t('advanced.verify.submit') }}</v-btn
         >
+            {{ $t('advanced.verify.submit') }}
+        </v-btn>
         <div v-if="address" class="result">
             <label>{{ $t('advanced.verify.label3') }}</label>
             <p class="address">{{ address }}</p>

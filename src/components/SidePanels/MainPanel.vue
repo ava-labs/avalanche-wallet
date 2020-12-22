@@ -9,9 +9,7 @@
             </button>
         </div>
         <transition name="fade" mode="out-in">
-            <transaction-history-panel
-                class="panel_content"
-            ></transaction-history-panel>
+            <transaction-history-panel class="panel_content"></transaction-history-panel>
         </transition>
     </div>
 </template>

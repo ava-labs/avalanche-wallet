@@ -25,12 +25,11 @@
                     v-if="file"
                     :disabled="!canSubmit"
                     depressed
-                    >{{ $t('access.mnemonic.submit') }}</v-btn
                 >
+                    {{ $t('access.mnemonic.submit') }}
+                </v-btn>
             </form>
-            <router-link to="/access" class="link">{{
-                $t('access.cancel')
-            }}</router-link>
+            <router-link to="/access" class="link">{{ $t('access.cancel') }}</router-link>
         </div>
     </div>
 </template>
@@ -110,13 +109,9 @@ export default class Keystore extends Vue {
                 .catch((err) => {
                     console.log(err)
                     if (err === 'INVALID_PASS') {
-                        parent.error = this.$t(
-                            'access.password_error'
-                        ).toString()
+                        parent.error = this.$t('access.password_error').toString()
                     } else if (err === 'INVALID_VERSION') {
-                        parent.error = this.$t(
-                            'access.keystore_error'
-                        ).toString()
+                        parent.error = this.$t('access.keystore_error').toString()
                     } else {
                         parent.error = err.message
                     }

@@ -18,15 +18,9 @@
             <textarea v-model="message"></textarea>
         </div>
         <p class="err">{{ error }}</p>
-        <v-btn
-            class="button_secondary"
-            block
-            small
-            depressed
-            @click="sign"
-            :disabled="!canSubmit"
-            >{{ $t('advanced.sign.submit') }}</v-btn
-        >
+        <v-btn class="button_secondary" block small depressed @click="sign" :disabled="!canSubmit">
+            {{ $t('advanced.sign.submit') }}
+        </v-btn>
 
         <div v-if="signed" class="result">
             <label>{{ $t('advanced.sign.label3') }}</label>
@@ -59,10 +53,7 @@ export default class SignMessage extends Vue {
         try {
             // Convert the message to a hashed buffer
             // let hashMsg = this.msgToHash(this.message);
-            this.signed = await this.wallet.signMessage(
-                this.message,
-                this.sourceAddress
-            )
+            this.signed = await this.wallet.signMessage(this.message, this.sourceAddress)
         } catch (e) {
             this.error = e
         }

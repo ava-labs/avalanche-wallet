@@ -21,7 +21,5 @@ const CYPRESS_CONFIG_LOCAL = {
  * @type {Cypress.PluginConfig}
  */
 module.exports = () => {
-    return process.env.runProduction
-        ? CYPRESS_CONFIG_PROD
-        : CYPRESS_CONFIG_LOCAL
+    return process.env.runProduction ? CYPRESS_CONFIG_PROD : CYPRESS_CONFIG_LOCAL
 }

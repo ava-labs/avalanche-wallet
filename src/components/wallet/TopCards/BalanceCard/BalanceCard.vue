@@ -11,29 +11,29 @@
                 <h4>{{ $t('top.title2') }}</h4>
                 <template v-if="!isBreakdown">
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye"></fa> {{ $t('top.balance.show') }}
+                        <fa icon="eye"></fa>
+                        {{ $t('top.balance.show') }}
                     </button>
                 </template>
                 <template v-else>
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye-slash"></fa> {{ $t('top.balance.hide') }}
+                        <fa icon="eye-slash"></fa>
+                        {{ $t('top.balance.hide') }}
                     </button>
                 </template>
             </div>
             <div class="balance_row">
-                <p
-                    class="balance"
-                    data-cy="wallet_balance"
-                    v-if="!balanceTextRight"
-                >
+                <p class="balance" data-cy="wallet_balance" v-if="!balanceTextRight">
                     {{ balanceTextLeft }} AVAX
                 </p>
                 <p class="balance" data-cy="wallet_balance" v-else>
-                    {{ balanceTextLeft
-                    }}<span>.{{ balanceTextRight }}</span> AVAX
+                    {{ balanceTextLeft }}
+                    <span>.{{ balanceTextRight }}</span>
+                    AVAX
                 </p>
                 <p class="balance_usd">
-                    <b>$ {{ totalBalanceUSD.toLocaleString(2) }}</b> USD
+                    <b>$ {{ totalBalanceUSD.toLocaleString(2) }}</b>
+                    USD
                 </p>
             </div>
             <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->

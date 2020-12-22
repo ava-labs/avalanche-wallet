@@ -12,8 +12,9 @@
                     target="_blank"
                     tooltip="View in Explorer"
                     class="explorer_link"
-                    ><fa icon="search"></fa
-                ></a>
+                >
+                    <fa icon="search"></fa>
+                </a>
             </p>
             <div class="utxos">
                 <tx-history-value
@@ -122,9 +123,7 @@ export default class TxHistoryRow extends Vue {
             let amt = out.amount
             let amtBN = new BN(out.amount, 10)
 
-            let intersection = utxoAddrs.filter((value) =>
-                addrsRaw.includes(value)
-            )
+            let intersection = utxoAddrs.filter((value) => addrsRaw.includes(value))
             let isIncludes = intersection.length > 0
 
             if (isIncludes) {
@@ -157,9 +156,7 @@ export default class TxHistoryRow extends Vue {
             let assetId = utxoOut.assetID
             let amt = utxoOut.amount
 
-            let intersection = utxoAddrs.filter((value) =>
-                addrsRaw.includes(value)
-            )
+            let intersection = utxoAddrs.filter((value) => addrsRaw.includes(value))
             let isIncludes = intersection.length > 0
 
             if (isIncludes) {

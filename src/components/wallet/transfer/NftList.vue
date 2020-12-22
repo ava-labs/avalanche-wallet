@@ -1,27 +1,29 @@
 <template>
     <div v-if="!isEmpty">
         <div class="added_list">
-            <div v-for="utxo in addedNfts" class="nft_icon" :key="utxo.id">
-                <button @click="remove(utxo)" class="removeBut">
-                    <fa icon="times"></fa>
+            <NftListItem
+                v-for="utxo in addedNfts"
+                class="nft_icon"
+                @remove="remove"
+                :key="utxo.getUTXOID()"
+                :sample="utxo"
+                @change="setGroupUtxos"
+            ></NftListItem>
+            <div class="nft_icon card nft_add">
+                <button @click="showPopup" class="add_but">
+                    +
+                    <br />
+                    Add Collectible
                 </button>
-                <NftCard
-                    :utxo="utxo"
-                    :mini="true"
-                    style="height: 100%; width: 100%; overflow: hidden"
-                ></NftCard>
+                <BalancePopup
+                    ref="popup"
+                    :is-nft="true"
+                    @select="addNft"
+                    :disabled-ids="usedNftIds"
+                    class="bal_popup"
+                ></BalancePopup>
             </div>
-            <button @click="showPopup" class="nft_icon card add_but">
-                +<br />Add NFT
-            </button>
         </div>
-        <BalancePopup
-            ref="popup"
-            :is-nft="true"
-            @select="addNft"
-            :disabled-ids="usedNftIds"
-            class="bal_popup"
-        ></BalancePopup>
     </div>
 </template>
 <script lang="ts">
@@ -31,25 +33,57 @@ import BalancePopup from '@/components/misc/BalancePopup/BalancePopup.vue'
 
 import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import { UTXO } from 'avalanche/dist/apis/avm'
-import NftCard from '@/components/wallet/portfolio/NftCard.vue'
+import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
+import { getPayloadFromUTXO } from '@/helpers/helper'
+import NftListItem from '@/components/wallet/transfer/NftListItem.vue'
+import { IGroupDict, IGroupQuantity } from '@/components/wallet/studio/mint/types'
+import { bintools } from '@/AVA'
 
 @Component({
     components: {
-        NftCard,
         BalancePopup,
+        NftListItem,
     },
 })
 export default class NftList extends Vue {
     addedNfts: UTXO[] = []
 
+    groupUtxos: IGroupDict = {}
+
     $refs!: {
         popup: BalancePopup
     }
 
-    @Watch('addedNfts')
-    onlistchange(val: UTXO[]) {
-        this.$emit('change', val)
+    // @Watch('addedNfts')
+    // onlistchange(val: UTXO[]) {
+    //     this.$emit('change', val)
+    // }
+
+    setGroupUtxos(val: IGroupQuantity) {
+        this.groupUtxos[val.id] = val.utxos
+        this.emit()
+    }
+
+    emit() {
+        let utxos = []
+
+        for (var id in this.groupUtxos) {
+            let gUtxos = this.groupUtxos[id]
+            utxos.push(...gUtxos)
+        }
+
+        this.$emit('change', utxos)
+    }
+
+    // @Watch('groupUtxos')
+    // onGroupUtxosChange(val: IGroupDict) {
+    //     console.log(this.groupUtxos)
+    // }
+
+    get payloads() {
+        return this.addedNfts.map((utxo) => {
+            return getPayloadFromUTXO(utxo)
+        })
     }
 
     get isEmpty(): boolean {
@@ -76,6 +110,8 @@ export default class NftList extends Vue {
 
     clear() {
         this.addedNfts = []
+        this.groupUtxos = {}
+        this.emit()
     }
 
     addNft(utxo: UTXO) {
@@ -83,12 +119,21 @@ export default class NftList extends Vue {
     }
 
     remove(utxo: UTXO) {
+        let famId = bintools.cb58Encode(utxo.getAssetID())
+        let groupId = (utxo.getOutput() as NFTTransferOutput).getGroupID()
+
+        // Clear from selected utxos list
+        let dictId = `${famId}_${groupId}`
+        delete this.groupUtxos[dictId]
+
         let utxos = this.addedNfts
         for (var i = 0; i < utxos.length; i++) {
             if (utxos[i].getUTXOID() === utxo.getUTXOID()) {
                 this.addedNfts.splice(i, 1)
             }
         }
+
+        this.emit()
     }
 
     showPopup() {
@@ -125,41 +170,34 @@ $nft_w: 90px;
     background-color: var(--bg-light);
     border-radius: 3px;
     margin: 4px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
 
     &:first-of-type {
         margin-left: 0;
     }
 }
 
+.nft_add {
+    background-color: transparent;
+}
 .add_but {
-    opacity: 0.4;
+    box-shadow: none;
+    height: 100%;
+    width: 100%;
+    padding: 14px;
+    border: 1px dashed var(--primary-color-light);
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.5;
+    text-align: center;
     transition-duration: 0.2s;
+
     &:hover {
         opacity: 1;
     }
-}
-
-$remove_w: 24px;
-.removeBut {
-    position: absolute;
-    top: -$remove_w/4;
-    right: -$remove_w/4;
-    width: $remove_w;
-    height: $remove_w;
-    background-color: var(--bg-light);
-    color: var(--primary-color-light);
-    border: 3px solid var(--bg);
-    font-size: 12px;
-    border-radius: $remove_w;
-    /*opacity: 0.4;*/
-
-    &:hover {
-        color: var(--primary-color);
-        /*opacity: 1;*/
-    }
-}
-
-.bal_popup {
-    max-width: 320px;
 }
 </style>

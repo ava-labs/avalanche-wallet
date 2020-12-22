@@ -1,18 +1,11 @@
 <template>
     <div class="utxo_select">
         <div class="buts">
-            <button @click="select('all')" :selected="selected === 'all'">
-                All
-            </button>
-            <button
-                @click="select('unlocked')"
-                :selected="selected === 'unlocked'"
-            >
+            <button @click="select('all')" :selected="selected === 'all'">All</button>
+            <button @click="select('unlocked')" :selected="selected === 'unlocked'">
                 Unlocked
             </button>
-            <button @click="select('locked')" :selected="selected === 'locked'">
-                Locked
-            </button>
+            <button @click="select('locked')" :selected="selected === 'locked'">Locked</button>
         </div>
     </div>
 </template>
