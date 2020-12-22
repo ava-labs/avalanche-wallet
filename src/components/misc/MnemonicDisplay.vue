@@ -1,8 +1,5 @@
 <template>
-    <div
-        class="mnemonic_display"
-        :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }"
-    >
+    <div class="mnemonic_display" :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }">
         <div v-for="i in wordNum" :key="i" class="word">
             <p class="index">{{ i }}.</p>
             <p class="phrase_word">{{ phraseArray[i - 1] }}</p>

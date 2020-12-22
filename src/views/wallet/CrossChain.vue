@@ -3,8 +3,13 @@
         <div class="head">
             <h1>Cross Chain</h1>
             <p>
-                Transfer tokens between <b>Exchange (X)</b>,
-                <b>Platform (P)</b> and <b>Contract (C)</b> chains.
+                Transfer tokens between
+                <b>Exchange (X)</b>
+                ,
+                <b>Platform (P)</b>
+                and
+                <b>Contract (C)</b>
+                chains.
             </p>
         </div>
         <ChainTransfer></ChainTransfer>

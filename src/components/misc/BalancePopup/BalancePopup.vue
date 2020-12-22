@@ -1,5 +1,5 @@
 <template>
-    <div class="balance_popup" v-if="isActive">
+    <div class="balance_popup" v-show="isActive">
         <div class="bg" @click="closePopup"></div>
         <div class="popup_body">
             <p class="desc">
@@ -74,6 +74,7 @@ export default class BalancePopup extends Vue {
 </script>
 <style lang="scss">
 .popup_body {
+    width: max-content;
     .v-tabs {
         overflow: auto;
     }
@@ -111,7 +112,10 @@ export default class BalancePopup extends Vue {
 }
 
 .balance_popup {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 99;
     text-align: left;
 }
 

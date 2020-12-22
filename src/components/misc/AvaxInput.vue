@@ -11,7 +11,8 @@
                 @change="amount_in"
             ></BigNumInput>
             <p v-if="balance" class="balance">
-                Balance: <span>{{ balance.toLocaleString() }}</span>
+                Balance:
+                <span>{{ balance.toLocaleString() }}</span>
             </p>
         </div>
         <p class="ticker">AVAX</p>

@@ -11,6 +11,7 @@ import {
     Tx as AVMTx,
     UTXO as AVMUTXO,
     AssetAmountDestination,
+    UTXOSet,
 } from 'avalanche/dist/apis/avm'
 
 import { web3 } from '@/evm'
@@ -29,7 +30,7 @@ import {
     KeyChain as EVMKeyChain,
     UnsignedTx as EVMUnsignedTx,
 } from 'avalanche/dist/apis/evm'
-import { getPreferredHRP } from 'avalanche/dist/utils'
+import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 
 import * as bip39 from 'bip39'
 import { BN, Buffer } from 'avalanche'
@@ -42,11 +43,7 @@ import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import createHash from 'create-hash'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
-import {
-    StandardTx,
-    StandardUnsignedTx,
-    UTXOResponse,
-} from 'avalanche/dist/common'
+import { StandardTx, StandardUnsignedTx, UTXOResponse } from 'avalanche/dist/common'
 import { digestMessage } from '@/helpers/helper'
 import { buildExportTransaction } from '@/js/TxHelper'
 import { ChainIdType } from '@/constants'
@@ -106,8 +103,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
         this.ethBalance = new BN(0)
 
-        let cPrivKey =
-            `PrivateKey-` + bintools.cb58Encode(Buffer.from(ethPrivateKey))
+        let cPrivKey = `PrivateKey-` + bintools.cb58Encode(Buffer.from(ethPrivateKey))
         this.ethKeyBech = cPrivKey
 
         let cKeyChain = new KeyChain(ava.getHRP(), 'C')
@@ -151,9 +147,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         let signedTx = await account.signTransaction(txConfig)
         let err,
-            receipt = await web3.eth.sendSignedTransaction(
-                signedTx.rawTransaction as string
-            )
+            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
 
         if (err) {
             console.error(err)
@@ -194,8 +188,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        let utxoSet: PlatformUTXOSet = this.platformHelper
-            .utxoSet as PlatformUTXOSet
+        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
 
         // If given custom UTXO set use that
         if (utxos) {
@@ -253,8 +246,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         utxos?: PlatformUTXO[]
     ): Promise<string> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        let utxoSet: PlatformUTXOSet = this.platformHelper
-            .utxoSet as PlatformUTXOSet
+        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
 
         // If given custom UTXO set use that
         if (utxos) {
@@ -356,10 +348,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
                 changeAddress
             )) as PlatformUnsignedTx
 
-            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(
-                exportTx,
-                false
-            )
+            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
 
             return pChain.issueTx(tx)
         } else if (sourceChain === 'C') {
@@ -563,5 +552,24 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         let signed = key.sign(digestBuff)
 
         return bintools.cb58Encode(signed)
+    }
+
+    async createNftFamily(name: string, symbol: string, groupNum: number) {
+        let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        return await avm.issueTx(signed)
+    }
+
+    async mintNft(mintUtxo: AVMUTXO, payload: PayloadBase, quantity: number) {
+        let tx = await this.buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            this.getCurrentAddress(),
+            this.getChangeAddress()
+        )
+        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
+        let txId = await avm.issueTx(signed)
+        return txId
     }
 }

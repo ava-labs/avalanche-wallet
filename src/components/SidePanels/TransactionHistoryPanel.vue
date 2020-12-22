@@ -21,8 +21,7 @@
                 :key="tx.id"
                 :transaction="tx"
                 class="tx_row"
-            >
-            </tx-history-row>
+            ></tx-history-row>
             <p class="warn">{{ $t('transactions.warn_loading') }}</p>
         </div>
     </div>
@@ -45,8 +44,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 })
 export default class TransactionHistoryPanel extends Vue {
     get isExplorer(): boolean {
-        let network: AvaNetwork | null = this.$store.state.Network
-            .selectedNetwork
+        let network: AvaNetwork | null = this.$store.state.Network.selectedNetwork
         if (!network) return false
         if (network.explorerUrl) {
             return true

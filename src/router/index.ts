@@ -18,6 +18,7 @@ import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
 Vue.use(VueRouter)
 
 import store from '../store/index'
+import Studio from '@/views/wallet/Studio.vue'
 import Export from '@/views/wallet/CrossChain.vue'
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
@@ -96,6 +97,10 @@ const routes = [
             {
                 path: 'earn',
                 component: Earn,
+            },
+            {
+                path: 'studio',
+                component: Studio,
             },
             {
                 path: 'advanced',

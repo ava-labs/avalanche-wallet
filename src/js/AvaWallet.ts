@@ -3,7 +3,7 @@
 
 import { AVMKeyChain, AVMKeyPair, UTXOSet } from 'avalanche'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import AvaSingletonWallet from '@/js/AvaSingletonWallet'
+import AvaSingletonWallet from '@/js/wallets/AvaSingletonWallet'
 import { AvaWalletCore, wallet_type } from './wallets/IAvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 

@@ -49,6 +49,8 @@ import {
     faQuestionCircle,
     faUsers,
     faFilter,
+    faFont,
+    faBoxes,
     faRandom,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -102,6 +104,8 @@ library.add(
     faQuestionCircle,
     faUsers,
     faFilter,
+    faFont,
+    faBoxes,
     faUnlock,
     faRandom
 )

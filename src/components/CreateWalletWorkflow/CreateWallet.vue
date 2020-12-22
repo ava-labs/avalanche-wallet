@@ -12,16 +12,12 @@
                                     src="@/assets/diamond-secondary.png"
                                     alt
                                 />
-                                <img
-                                    v-else
-                                    src="@/assets/diamond-secondary-night.svg"
-                                    alt
-                                />
+                                <img v-else src="@/assets/diamond-secondary-night.svg" alt />
                             </div>
                             <h1>{{ $t('create.generate') }}</h1>
-                            <router-link to="/access" class="link">{{
-                                $t('create.but_have')
-                            }}</router-link>
+                            <router-link to="/access" class="link">
+                                {{ $t('create.but_have') }}
+                            </router-link>
                             <div class="options">
                                 <button
                                     class="ava_button but_generate button_secondary"
@@ -31,9 +27,7 @@
                                 </button>
                                 <!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
-                            <router-link to="/" class="link">{{
-                                $t('create.cancel')
-                            }}</router-link>
+                            <router-link to="/" class="link">{{ $t('create.cancel') }}</router-link>
                         </div>
                         <!-- PHASE 2 -->
                         <div v-else class="stage_2">
@@ -54,18 +48,13 @@
                                         >
                                             {{ keyPhrase }}
                                         </p>
-                                        <div
-                                            class="mneumonic_button_container"
-                                            v-if="!isVerified"
-                                        >
+                                        <div class="mneumonic_button_container" v-if="!isVerified">
                                             <button
                                                 @click="createKey"
                                                 class="ava_button but_randomize button_primary"
                                             >
                                                 <fa icon="sync"></fa>
-                                                <span>{{
-                                                    $t('create.regenerate')
-                                                }}</span>
+                                                <span>{{ $t('create.regenerate') }}</span>
                                             </button>
                                         </div>
                                     </div>
@@ -78,11 +67,7 @@
                                             src="@/assets/keyphrase.png"
                                             alt
                                         />
-                                        <img
-                                            v-else
-                                            src="@/assets/keyphrase_night.svg"
-                                            alt
-                                        />
+                                        <img v-else src="@/assets/keyphrase_night.svg" alt />
                                     </template>
                                     <template v-else>
                                         <img src="@/assets/success.svg" alt />
@@ -100,12 +85,8 @@
                                         <p>{{ $t('create.success_desc') }}</p>
                                     </header>
                                     <p class="warn" v-if="!isVerified">
-                                        <span class="label">{{
-                                            $t('create.attention')
-                                        }}</span>
-                                        <span class="description">{{
-                                            $t('create.warning')
-                                        }}</span>
+                                        <span class="label">{{ $t('create.attention') }}</span>
+                                        <span class="description">{{ $t('create.warning') }}</span>
                                     </p>
                                     <!-- STEP 2a - VERIFY -->
                                     <div class="verify_cont" v-if="!isVerified">
@@ -129,36 +110,20 @@
                                     <!-- STEP 2b - ACCESS -->
                                     <div class="access_cont" v-if="isVerified">
                                         <div class="submit">
-                                            <transition
-                                                name="fade"
-                                                mode="out-in"
-                                            >
-                                                <Spinner
-                                                    v-if="isLoad"
-                                                    class="spinner"
-                                                ></Spinner>
+                                            <transition name="fade" mode="out-in">
+                                                <Spinner v-if="isLoad" class="spinner"></Spinner>
                                                 <div v-else>
                                                     <button
                                                         class="button_primary ava_button access generate"
                                                         @click="access"
                                                         :disabled="!canSubmit"
                                                     >
-                                                        {{
-                                                            $t(
-                                                                'create.success_submit'
-                                                            )
-                                                        }}
+                                                        {{ $t('create.success_submit') }}
                                                     </button>
-                                                    <router-link
-                                                        to="/"
-                                                        class="link"
-                                                        >Cancel</router-link
-                                                    >
-                                                    <ToS
-                                                        style="
-                                                            margin: 30px 0 !important;
-                                                        "
-                                                    ></ToS>
+                                                    <router-link to="/" class="link">
+                                                        Cancel
+                                                    </router-link>
+                                                    <ToS style="margin: 30px 0 !important"></ToS>
                                                 </div>
                                             </transition>
                                         </div>

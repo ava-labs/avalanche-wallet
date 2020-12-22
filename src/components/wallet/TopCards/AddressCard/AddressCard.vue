@@ -1,10 +1,7 @@
 <template>
     <div class="addr_card">
         <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
-        <paper-wallet
-            ref="print_modal"
-            v-if="walletType === 'mnemonic'"
-        ></paper-wallet>
+        <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
         <p class="addr_info">{{ $t('top.address.desc') }}</p>
         <div class="bottom">
             <div>

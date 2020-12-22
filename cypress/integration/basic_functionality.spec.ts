@@ -28,9 +28,7 @@ describe('Basic Functionality', () => {
                 .click()
 
             cy.fixture('custom_networks/basic_network.json').then((info) => {
-                cy.get('[data-cy="custom-network-name"]')
-                    .clear()
-                    .type(info.name)
+                cy.get('[data-cy="custom-network-name"]').clear().type(info.name)
                 cy.get('[data-cy="custom-network-url"]').clear().type(info.url)
                 cy.get('[data-cy="custom-network-add"]').click()
                 cy.get('[data-cy="network-item"]').should('have.length', 3)

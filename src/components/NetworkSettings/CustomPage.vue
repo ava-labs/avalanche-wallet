@@ -47,8 +47,9 @@
                 depressed
                 type="submit"
                 class="button_primary"
-                >{{ $t('network.add') }}</v-btn
             >
+                {{ $t('network.add') }}
+            </v-btn>
         </form>
     </div>
 </template>
@@ -169,13 +170,7 @@ export default class CustomPage extends Vue {
             return
         }
 
-        let net = new AvaNetwork(
-            this.name,
-            this.url,
-            netID,
-            this.explorer_api,
-            this.explorer_site
-        )
+        let net = new AvaNetwork(this.name, this.url, netID, this.explorer_api, this.explorer_site)
 
         this.$emit('add', net)
 

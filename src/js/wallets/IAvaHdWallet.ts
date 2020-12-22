@@ -6,6 +6,7 @@ import {
     UTXO as AVMUTXO,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
+    UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 
 import {
@@ -20,6 +21,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
 import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
+import { PayloadBase } from 'avalanche/dist/utils'
 import { ChainIdType } from '@/constants'
 
 // export type wallet_type = "hd" | "singleton";
@@ -37,6 +39,14 @@ export interface AvaWalletCore {
     utxoset: UTXOSet
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
+    buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
+    buildMintNftTx(
+        mintUtxo: AVMUTXO,
+        payload: PayloadBase,
+        quantity: number,
+        ownerAddress: string,
+        changeAddress: string
+    ): Promise<UnsignedTx>
     ethAddress: string
     ethAddressBech: string
     ethBalance: BN
@@ -55,15 +65,12 @@ export interface AvaWalletCore {
     getCurrentPlatformAddress(): string
     getPlatformUTXOSet(): PlatformUTXOSet
     getPlatformRewardAddress(): string
+    createNftFamily(name: string, symbol: string, groupNum: number): Promise<string>
+    mintNft(mintUtxo: AVMUTXO, payload: PayloadBase, quantity: number): Promise<string>
     getBaseAddress(): string
     getEthBalance(): Promise<BN>
     getEvmAddress(): string
-    sendEth(
-        to: string,
-        amount: BN,
-        gasPrice: BN,
-        gasLimit: number
-    ): Promise<string>
+    sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number): Promise<string>
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
@@ -88,19 +95,11 @@ export interface AvaWalletCore {
         rewardAddress?: string,
         utxos?: PlatformUTXO[]
     ): Promise<string>
-    chainTransfer(
-        amt: BN,
-        sourceChain: ChainIdType,
-        destinationChain: ChainIdType
-    ): Promise<string>
+    chainTransfer(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType): Promise<string>
     importToPlatformChain(): Promise<string>
     importToXChain(sourceChain: ChainIdType): Promise<string>
     importToCChain(): Promise<string>
-    issueBatchTx(
-        orders: (AVMUTXO | ITransaction)[],
-        addr: string,
-        memo?: Buffer
-    ): Promise<string>
+    issueBatchTx(orders: (AVMUTXO | ITransaction)[], addr: string, memo?: Buffer): Promise<string>
     signMessage(msg: string, address: string): Promise<string>
 }
 

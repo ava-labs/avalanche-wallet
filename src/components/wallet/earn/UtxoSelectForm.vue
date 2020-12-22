@@ -5,12 +5,8 @@
             {{ $t('earn.shared.utxo_select.desc') }}
         </p>
         <v-chip-group @change="onTypeChange" v-model="formType" mandatory>
-            <v-chip value="all" small>{{
-                $t('earn.shared.utxo_select.all')
-            }}</v-chip>
-            <v-chip value="custom" small>{{
-                $t('earn.shared.utxo_select.custom')
-            }}</v-chip>
+            <v-chip value="all" small>{{ $t('earn.shared.utxo_select.all') }}</v-chip>
+            <v-chip value="custom" small>{{ $t('earn.shared.utxo_select.custom') }}</v-chip>
         </v-chip-group>
 
         <div class="available">
@@ -21,21 +17,13 @@
                 </p>
             </div>
 
-            <button
-                @click="openModal"
-                v-if="formType === 'custom'"
-                class="select_but"
-            >
+            <button @click="openModal" v-if="formType === 'custom'" class="select_but">
                 <fa icon="search"></fa>
                 {{ $t('earn.shared.utxo_select.select') }}
             </button>
         </div>
 
-        <UtxoSelectModal
-            ref="modal"
-            v-model="customUtxos"
-            :all="platformUtxos"
-        ></UtxoSelectModal>
+        <UtxoSelectModal ref="modal" v-model="customUtxos" :all="platformUtxos"></UtxoSelectModal>
     </div>
 </template>
 <script lang="ts">

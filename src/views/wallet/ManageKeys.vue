@@ -4,10 +4,7 @@
             <div class="card_body">
                 <header>
                     <h1>{{ $t('keys.title') }}</h1>
-                    <div
-                        class="button_container"
-                        v-if="walletType === 'mnemonic'"
-                    >
+                    <div class="button_container" v-if="walletType === 'mnemonic'">
                         <button
                             v-if="hasVolatile"
                             @click="openRememberKeys"
@@ -16,28 +13,17 @@
                             <fa icon="exclamation-triangle"></fa>
                             {{ $t('keys.button1') }}
                         </button>
-                        <button
-                            class="but_primary ava_button_secondary"
-                            @click="importKeys"
-                        >
+                        <button class="but_primary ava_button_secondary" @click="importKeys">
                             <fa icon="download"></fa>
                             {{ $t('keys.button2') }}
                         </button>
                         <ImportKeys ref="import"></ImportKeys>
-                        <button
-                            class="but_primary ava_button_secondary"
-                            @click="exportKeys"
-                        >
+                        <button class="but_primary ava_button_secondary" @click="exportKeys">
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}
                         </button>
-                        <RememberKeysModal
-                            ref="remember_modal"
-                        ></RememberKeysModal>
-                        <ExportKeys
-                            ref="export"
-                            :wallets="allWallets"
-                        ></ExportKeys>
+                        <RememberKeysModal ref="remember_modal"></RememberKeysModal>
+                        <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
                 <my-keys></my-keys>

@@ -2,6 +2,8 @@ import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
 import {
     AssetAmountDestination,
     BaseTx,
+    MinterSet,
+    NFTMintOutput,
     TransferableInput,
     TransferableOutput,
     Tx,
@@ -18,7 +20,9 @@ import HDKey from 'hdkey'
 import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import createHash from 'create-hash'
-import { buildUnsignedTransaction } from '../TxHelper'
+import { PayloadBase } from 'avalanche/dist/utils'
+import { OutputOwners } from 'avalanche/dist/common'
+import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
@@ -39,23 +43,79 @@ class HdWalletCore {
         this.platformUtxoset = new PlatformUTXOSet()
         this.stakeAmount = new BN(0)
 
-        this.externalHelper = new HdHelper(
-            'm/0',
-            accountHdKey,
-            undefined,
-            isPublic
-        )
-        this.internalHelper = new HdHelper(
-            'm/1',
-            accountHdKey,
-            undefined,
-            isPublic
-        )
+        this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
+        this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
     }
 
     getUTXOSet(): AVMUTXOSet {
         return this.utxoset
+    }
+
+    // TODO: This function can be moved to a Core wallet class
+    async buildCreateNftFamilyTx(
+        name: string,
+        symbol: string,
+        groupNum: number = 1
+    ): Promise<UnsignedTx> {
+        let fromAddresses = this.getDerivedAddresses()
+        let changeAddress = this.getChangeAddress()
+
+        let minterAddress = this.getCurrentAddress()
+
+        let unsignedTx = await buildCreateNftFamilyTx(
+            name,
+            symbol,
+            groupNum,
+            fromAddresses,
+            minterAddress,
+            changeAddress,
+            this.utxoset
+        )
+
+        // const minterSets: MinterSet[] = []
+        //
+        // // Create the groups
+        // for (var i = 0; i < groupNum; i++) {
+        //     const minterSet: MinterSet = new MinterSet(1, [minterAddress])
+        //     minterSets.push(minterSet)
+        // }
+        //
+        // let utxoSet: UTXOSet = this.utxoset
+        //
+        // let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
+        //     utxoSet,
+        //     fromAddresses,
+        //     [changeAddress],
+        //     minterSets,
+        //     name,
+        //     symbol
+        // )
+
+        return unsignedTx
+    }
+
+    // TODO: Can be moved to a core wallet class
+    async buildMintNftTx(
+        mintUtxo: UTXO,
+        payload: PayloadBase,
+        quantity: number,
+        ownerAddress: string,
+        changeAddress: string
+    ): Promise<UnsignedTx> {
+        let sourceAddresses = this.getDerivedAddresses()
+
+        let mintTx = buildMintNftTx(
+            mintUtxo,
+            payload,
+            quantity,
+            ownerAddress,
+            changeAddress,
+            sourceAddresses,
+            this.utxoset
+        )
+
+        return mintTx
     }
 
     async getUTXOs(): Promise<AVMUTXOSet> {
@@ -166,11 +226,7 @@ class HdWalletCore {
         // TODO: Handle EVM changes
     }
 
-    async buildUnsignedTransaction(
-        orders: (ITransaction | UTXO)[],
-        addr: string,
-        memo?: Buffer
-    ) {
+    async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {
         const changeAddress = this.getChangeAddress()
         const derivedAddresses: string[] = this.getDerivedAddresses()
         const utxoset = this.getUTXOSet()

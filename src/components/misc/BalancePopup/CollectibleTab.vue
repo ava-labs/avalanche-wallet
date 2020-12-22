@@ -4,38 +4,28 @@
             {{ $t('wallet.collectibles.empty') }}
         </p>
         <div v-else>
-            <div
-                v-for="(fam, famId) in nftDict"
-                :key="famId"
-                class="collectible_fam"
-            >
-                <p class="fam_title">{{ nftFamsDict[famId].name }}</p>
-                <div class="card_grid">
-                    <NftCard
-                        v-for="utxo in fam"
-                        :utxo="utxo"
-                        :key="utxo.id"
-                        :mini="true"
-                        class="card"
-                        @click.native="selectNft(utxo)"
-                        :used="isNftUsed(utxo)"
-                    ></NftCard>
-                </div>
-            </div>
+            <CollectibleFamily
+                v-for="fam in nftFamsDict"
+                :family="fam"
+                :key="fam.id"
+                :disabled-ids="disabledIds"
+                @select="selectNft"
+            ></CollectibleFamily>
         </div>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Prop, Component } from 'vue-property-decorator'
-import { IWalletNftDict } from '@/store/types'
 import NftCard from '@/components/wallet/portfolio/NftCard.vue'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 
+import CollectibleFamily from '@/components/misc/BalancePopup/CollectibleFamily.vue'
 @Component({
     components: {
         NftCard,
+        CollectibleFamily,
     },
 })
 export default class CollectibleTab extends Vue {
@@ -46,10 +36,6 @@ export default class CollectibleTab extends Vue {
 
     get nftFamsDict(): NftFamilyDict {
         return this.$store.state.Assets.nftFamsDict
-    }
-
-    get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
     }
 
     isNftUsed(utxo: UTXO) {
