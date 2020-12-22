@@ -40,11 +40,10 @@ const history_module: Module<HistoryState, RootState> = {
                 return
             }
 
-            let offset = 0
             let limit = 20
 
-            let data = await getAddressHistory(addresses, limit, offset, avm.getBlockchainID())
-            let dataP = await getAddressHistory(addresses, limit, offset, pChain.getBlockchainID())
+            let data = await getAddressHistory(addresses, limit, avm.getBlockchainID())
+            let dataP = await getAddressHistory(addresses, limit, pChain.getBlockchainID())
 
             let transactions = data.transactions
                 .concat(dataP.transactions)

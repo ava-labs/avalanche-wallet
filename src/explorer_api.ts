@@ -14,7 +14,6 @@ const explorer_api: AxiosInstance = axios.create({
 async function getAddressHistory(
     addrs: string[],
     limit = 20,
-    offset = 0,
     chainID: string
 ): Promise<{ transactions: ITransactionData[] }> {
     let query = addrs.map((val) => {
@@ -25,7 +24,7 @@ async function getAddressHistory(
     // Get history for all addresses of the active HD wallet
     let url = `v2/transactions?${query.join(
         '&'
-    )}&limit=${limit}&offset=${offset}&sort=timestamp-desc&disableCount=1&chainID=${chainID}`
+    )}&limit=${limit}&sort=timestamp-desc&disableCount=1&chainID=${chainID}`
 
     let res = await explorer_api.get(url)
     return res.data
