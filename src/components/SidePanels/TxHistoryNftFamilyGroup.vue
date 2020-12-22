@@ -37,17 +37,17 @@ export default class TxHistoryNftFamilyGroup extends Vue {
 $countW: 18px;
 .count {
     position: absolute;
-    top: -$countW/3;
-    right: -$countW/3;
+    top: -$countW/2.5;
+    left: -$countW/2.5;
     width: $countW;
     height: $countW;
     border-radius: $countW;
     line-height: $countW;
     font-size: 10px;
     text-align: center;
-    background-color: var(--bg-wallet);
+    background-color: var(--primary-color);
     border: 1px solid var(--bg-wallet);
-    color: var(--primary-color);
+    color: var(--bg);
     font-weight: bold;
     z-index: 2;
 }
