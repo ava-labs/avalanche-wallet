@@ -22,6 +22,7 @@ export interface IGenericNft {
     version: number
     type: GenericNftTypes
     title: string
+    radius?: number // to set border radius of the card
     desc?: string
     img: string
     img_b?: string // back image
