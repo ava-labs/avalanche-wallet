@@ -49,8 +49,6 @@ const history_module: Module<HistoryState, RootState> = {
                 .concat(dataP.transactions)
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
-            dispatch('Assets/updateNftsFromHistory', transactions, { root: true })
-
             state.transactions = transactions
             state.isUpdating = false
         },

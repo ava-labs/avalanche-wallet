@@ -14,6 +14,7 @@ import { PayloadBase } from 'avalanche/dist/utils'
 import { Buffer } from 'avalanche'
 import { PayloadTypes } from 'avalanche/dist/utils'
 import { NftGroupDict } from '../wallet/portfolio/types'
+import { AvaNftFamily } from '../../js/AvaNftFamily'
 
 let payloadtypes = PayloadTypes.getInstance()
 @Component({
@@ -21,6 +22,17 @@ let payloadtypes = PayloadTypes.getInstance()
 })
 export default class TxHistoryNftFamilyGroup extends Vue {
     @Prop() payloads!: PayloadBase[]
+    @Prop() assetID!: string
+
+    created() {
+        if (!this.nftFamsDict[this.assetID]) {
+            this.$store.dispatch('Assets/addUnknownNftFamily', this.assetID)
+        }
+    }
+
+    get nftFamsDict() {
+        return this.$store.state.Assets.nftFamsDict
+    }
 
     get quantity() {
         return this.payloads.length

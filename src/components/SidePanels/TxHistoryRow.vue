@@ -32,11 +32,12 @@
                     :operation-direction="operationDirection"
                 ></tx-history-value>
                 <div class="nfts">
-                    <div v-for="(assetID, id) in nftGroups" :key="id">
+                    <div v-for="(groupIDs, assetID) in nftGroups" :key="assetID">
                         <tx-history-nft-family-group
-                            v-for="(payloads, id) in assetID"
+                            v-for="(payloads, id) in groupIDs"
                             :key="id"
                             :payloads="payloads"
+                            :assetID="assetID"
                             class="group"
                         ></tx-history-nft-family-group>
                     </div>

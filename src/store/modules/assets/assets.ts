@@ -142,40 +142,6 @@ const assets_module: Module<AssetsState, RootState> = {
             await commit('addNftFamily', newFam)
             return desc
         },
-
-        updateNftsFromHistory({ state, dispatch }, transactions: ITransactionData[]) {
-            let newFams: string[] = []
-
-            for (var txN in transactions) {
-                let tx = transactions[txN]
-                if (tx.type === 'operation') {
-                    let ins = tx.inputs
-                    let outs = tx.outputs
-
-                    ins.forEach((val) => {
-                        const familyId = val.output.assetID
-                        if (val.output.payload) {
-                            if (!newFams.includes(familyId)) {
-                                newFams.push(familyId)
-                            }
-                        }
-                    })
-
-                    outs.forEach((val) => {
-                        const familyId = val.assetID
-                        if (val.payload) {
-                            if (!newFams.includes(familyId)) {
-                                newFams.push(familyId)
-                            }
-                        }
-                    })
-                }
-            }
-
-            newFams.forEach((val) => {
-                dispatch('addUnknownNftFamily', val)
-            })
-        },
     },
     getters: {
         nftFamilies(state): AvaNftFamily[] {
