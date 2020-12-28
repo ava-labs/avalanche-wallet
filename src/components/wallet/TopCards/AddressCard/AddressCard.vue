@@ -122,7 +122,7 @@ export default class AddressCard extends Vue {
             return '-'
         }
 
-        return `C-0x` + wallet.getEvmAddress()
+        return '0x' + wallet.getEvmAddress()
     }
 
     get activeAddress(): string {

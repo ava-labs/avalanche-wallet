@@ -58,7 +58,7 @@ export default class PrivateKey extends Vue {
             privateToAddress(keyBuf)
             key = `PrivateKey-${bintools.cb58Encode(keyBuf)}`
         } catch (e) {
-            // console.error(e)
+            //
         }
 
         try {
