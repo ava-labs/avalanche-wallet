@@ -54,7 +54,7 @@ export default class MintNft extends Vue {
         this.$emit('cancel')
     }
 
-    mounted() {
+    activated() {
         let utxoId = this.$route.query.utxo
 
         // Select the utxo in the query if possible

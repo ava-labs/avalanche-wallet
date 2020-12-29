@@ -88,6 +88,12 @@ export default class ChainImport extends Vue {
         }
     }
 
+    deactivated() {
+        this.err = ''
+        this.txId = ''
+        this.isSuccess = false
+    }
+
     beforeSubmit() {
         this.isLoading = true
         this.err = ''

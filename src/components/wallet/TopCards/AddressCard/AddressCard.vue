@@ -116,12 +116,16 @@ export default class AddressCard extends Vue {
     }
 
     get walletType(): WalletNameType {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
+        if (!wallet) return 'mnemonic'
         return wallet.type
     }
 
+    get activeWallet(): WalletType | null {
+        return this.$store.state.activeWallet
+    }
     get address() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -129,7 +133,7 @@ export default class AddressCard extends Vue {
     }
 
     get addressPVM() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -138,7 +142,7 @@ export default class AddressCard extends Vue {
     }
 
     get addressEVM() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }

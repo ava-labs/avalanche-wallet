@@ -85,7 +85,8 @@ export default class Studio extends Vue {
         return false
     }
 
-    mounted() {
+    activated() {
+        this.clearPage()
         let utxoId = this.$route.query.utxo
 
         if (utxoId) {
@@ -103,10 +104,14 @@ export default class Studio extends Vue {
         }
     }
 
-    cancel() {
-        this.clearUrl()
+    clearPage() {
         this.pageNow = null
         this.subtitle = ''
+    }
+
+    cancel() {
+        this.clearUrl()
+        this.clearPage()
     }
 }
 </script>

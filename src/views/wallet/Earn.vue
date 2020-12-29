@@ -152,6 +152,9 @@ export default class Earn extends Vue {
         }, 15000)
     }
 
+    activated() {
+        this.cancel()
+    }
     destroyed() {
         clearInterval(this.intervalID)
     }
