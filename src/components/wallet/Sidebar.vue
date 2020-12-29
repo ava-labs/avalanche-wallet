@@ -11,31 +11,35 @@
                     <img v-else src="@/assets/sidebar/portfolio_nav_night.png" />
                     {{ $t('wallet.sidebar.portfolio') }}
                 </router-link>
-                <router-link to="/wallet/transfer" data-cy="wallet_transfer">
+                <router-link to="/wallet/transfer" data-cy="wallet_transfer" class="wallet_link">
                     <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
                     <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
                     {{ $t('wallet.sidebar.send') }}
                 </router-link>
-                <router-link to="/wallet/cross_chain" data-cy="wallet_export" class="wallet_export">
+                <router-link
+                    to="/wallet/cross_chain"
+                    data-cy="wallet_export"
+                    class="wallet_export wallet_link"
+                >
                     <span><fa icon="random" class="icon"></fa></span>
                     {{ $t('wallet.sidebar.export') }}
                 </router-link>
-                <router-link to="/wallet/earn" data-cy="wallet_earn">
+                <router-link to="/wallet/earn" data-cy="wallet_earn" class="wallet_link">
                     <img v-if="$root.theme === 'day'" src="@/assets/sidebar/earn_nav.png" />
                     <img v-else src="@/assets/sidebar/earn_nav_night.png" />
                     {{ $t('wallet.sidebar.earn') }}
                 </router-link>
-                <router-link to="/wallet/studio" data-cy="wallet_studio">
+                <router-link to="/wallet/studio" data-cy="wallet_studio" class="wallet_link">
                     <img v-if="$root.theme === 'day'" src="@/assets/sidebar/studio_nav.svg" />
                     <img v-else src="@/assets/sidebar/studio_nav_night.svg" />
                     {{ $t('wallet.sidebar.studio') }}
                 </router-link>
-                <router-link to="/wallet/keys" data-cy="wallet_manage">
+                <router-link to="/wallet/keys" data-cy="wallet_manage" class="wallet_link">
                     <img v-if="$root.theme === 'day'" src="@/assets/sidebar/manage_nav.png" />
                     <img v-else src="@/assets/sidebar/manage_nav_night.svg" />
                     {{ $t('wallet.sidebar.manage') }}
                 </router-link>
-                <router-link to="/wallet/advanced" data-cy="wallet_advanced">
+                <router-link to="/wallet/advanced" data-cy="wallet_advanced" class="wallet_link">
                     <img v-if="$root.theme === 'day'" src="@/assets/sidebar/advanced_nav.png" />
                     <img v-else src="@/assets/sidebar/advanced_nav_night.png" />
                     {{ $t('wallet.sidebar.advanced') }}
@@ -105,7 +109,8 @@ export default {
             }
         }
 
-        a.router-link-exact-active {
+        a.router-link-exact-active,
+        .wallet_link.router-link-active {
             color: var(--primary-color) !important;
             opacity: 1;
             background-color: var(--bg-wallet);
