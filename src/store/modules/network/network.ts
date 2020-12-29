@@ -31,6 +31,15 @@ const network_module: Module<NetworkState, RootState> = {
     },
     actions: {
         addCustomNetwork({ state, dispatch }, net: AvaNetwork) {
+            // Check if network alerady exists
+            let networks = state.networksCustom
+            // Do not add if there is a network already with the same url
+            for (var i = 0; i < networks.length; i++) {
+                let url = networks[i].url
+                if (net.url === url) {
+                    return
+                }
+            }
             state.networksCustom.push(net)
             dispatch('save')
         },

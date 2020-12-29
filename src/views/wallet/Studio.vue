@@ -10,10 +10,6 @@
         <template v-if="!pageNow">
             <p>Create and manage assets.</p>
             <div class="menu">
-                <!--                <h3>Tokens</h3>-->
-                <!--                <div class="options">-->
-                <!--                    <div>New Fixed Cap Asset</div>-->
-                <!--                </div>-->
                 <h2>Collectibles</h2>
                 <div class="options">
                     <div>
@@ -85,7 +81,11 @@ export default class Studio extends Vue {
         return false
     }
 
-    mounted() {
+    deactivated() {
+        this.clearPage()
+    }
+
+    activated() {
         let utxoId = this.$route.query.utxo
 
         if (utxoId) {
@@ -103,10 +103,14 @@ export default class Studio extends Vue {
         }
     }
 
-    cancel() {
-        this.clearUrl()
+    clearPage() {
         this.pageNow = null
         this.subtitle = ''
+    }
+
+    cancel() {
+        this.clearUrl()
+        this.clearPage()
     }
 }
 </script>
