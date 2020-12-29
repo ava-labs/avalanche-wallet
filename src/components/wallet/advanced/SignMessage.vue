@@ -59,6 +59,16 @@ export default class SignMessage extends Vue {
         }
     }
 
+    clear() {
+        this.message = ''
+        this.signed = ''
+        this.error = ''
+    }
+
+    deactivated() {
+        this.clear()
+    }
+
     // msgToHash(msgStr: string): Buffer{
     //     let msgBuf = Buffer.from(msgStr, 'utf8');
     //     return  createHash('sha256').update(msgBuf).digest();

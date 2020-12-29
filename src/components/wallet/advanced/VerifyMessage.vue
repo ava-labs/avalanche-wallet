@@ -73,6 +73,17 @@ export default class VerifyMessage extends Vue {
         this.address = address
     }
 
+    clear() {
+        this.message = ''
+        this.signature = ''
+        this.address = ''
+        this.error = ''
+    }
+
+    deactivated() {
+        this.clear()
+    }
+
     get canSubmit() {
         if (!this.message || !this.signature) return false
 

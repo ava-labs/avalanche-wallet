@@ -241,6 +241,10 @@ export default class FormC extends Vue {
         this.addressIn = ''
     }
 
+    activated() {
+        this.startAgain()
+    }
+
     get canConfirm() {
         if (this.amountIn.isZero()) return false
         if (this.addressIn.length < 6) return false

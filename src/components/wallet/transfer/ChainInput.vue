@@ -54,6 +54,8 @@ h4 {
         cursor: pointer;
         color: var(--primary-color);
         background-color: var(--bg-light);
+        display: flex;
+        align-items: center;
 
         &:hover {
             background-color: var(--bg-light);
@@ -61,6 +63,10 @@ h4 {
         &[active] {
             border-color: var(--primary-color-light);
             opacity: 1;
+        }
+
+        > p {
+            margin-left: 12px !important;
         }
     }
 }
