@@ -31,6 +31,8 @@ import { NftFamilyDict } from '@/store/modules/assets/types'
     },
 })
 export default class Collectibles extends Vue {
+    @Prop() search!: string
+
     get isEmpty(): boolean {
         let nftUtxos = this.$store.getters.walletNftUTXOs.length
         let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
@@ -47,6 +49,22 @@ export default class Collectibles extends Vue {
 
     get nftFamsArray() {
         let fams: AvaNftFamily[] = this.$store.state.Assets.nftFams
+
+        // If search query
+        if (this.search) {
+            let query = this.search
+            fams = fams.filter((fam) => {
+                if (
+                    fam.name.includes(query) ||
+                    fam.id.includes(query) ||
+                    fam.symbol.includes(query)
+                ) {
+                    return true
+                }
+                return false
+            })
+        }
+
         fams.sort((a, b) => {
             let symbolA = a.symbol
             let symbolB = b.symbol
@@ -58,6 +76,7 @@ export default class Collectibles extends Vue {
             }
             return 0
         })
+
         return fams
     }
 
