@@ -75,131 +75,146 @@ export default new Vuex.Store({
         },
     },
     getters: {
-        walletNftUTXOs(state: RootState): UTXO[] {
-            let wallet = state.activeWallet
-
-            if (!wallet) return []
-
-            let utxoSet = wallet.getUTXOSet()
-            if (!utxoSet) return []
-
-            let addrUtxos = utxoSet.getAllUTXOs()
-            let res: UTXO[] = []
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
-
-                // Process only non NFT utxos, outputid === 0b
-                let outId = utxo.getOutput().getOutputID()
-                if (outId === 11) {
-                    res.push(utxo)
-                }
-            }
-            return res
-        },
+        // walletNftUTXOs(state: RootState): UTXO[] {
+        //     let wallet = state.activeWallet
+        //
+        //     if (!wallet) return []
+        //     // if (wallet.isFetchUtxos) return []
+        //
+        //     let utxoSet = wallet.utxoset
+        //     if (!utxoSet) return []
+        //
+        //     console.log('NFT UTXOs')
+        //
+        //     let addrUtxos = utxoSet.getAllUTXOs()
+        //     let res: UTXO[] = []
+        //     for (var n = 0; n < addrUtxos.length; n++) {
+        //         let utxo = addrUtxos[n]
+        //
+        //         // Process only non NFT utxos, outputid === 0b
+        //         let outId = utxo.getOutput().getOutputID()
+        //         if (outId === 11) {
+        //             res.push(utxo)
+        //         }
+        //     }
+        //     return res
+        // },
 
         // assset id -> utxos
-        walletNftDict(state: RootState) {
-            let wallet = state.activeWallet
-
-            if (!wallet) return {}
-            if (!wallet.getUTXOSet()) return {}
-
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs()
-            let res: IWalletNftDict = {}
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
-
-                // Process only NFT utxos, outputid === 0b
-                let outId = utxo.getOutput().getOutputID()
-                if (outId === 11) {
-                    let assetIdBuff = utxo.getAssetID()
-                    let assetId = bintools.cb58Encode(assetIdBuff)
-
-                    if (res[assetId]) {
-                        res[assetId].push(utxo)
-                    } else {
-                        res[assetId] = [utxo]
-                    }
-                }
-            }
-            return res
-        },
+        // walletNftDict(state: RootState) {
+        //     let wallet = state.activeWallet
+        //
+        //     if (!wallet) return {}
+        //     // if (wallet.isFetchUtxos) return {}
+        //     if (!wallet.getUTXOSet()) return {}
+        //
+        //     console.log('NFT Dict')
+        //
+        //     let addrUtxos = wallet.getUTXOSet().getAllUTXOs()
+        //     let res: IWalletNftDict = {}
+        //     for (var n = 0; n < addrUtxos.length; n++) {
+        //         let utxo = addrUtxos[n]
+        //
+        //         // Process only NFT utxos, outputid === 0b
+        //         let outId = utxo.getOutput().getOutputID()
+        //         if (outId === 11) {
+        //             let assetIdBuff = utxo.getAssetID()
+        //             let assetId = bintools.cb58Encode(assetIdBuff)
+        //
+        //             if (res[assetId]) {
+        //                 res[assetId].push(utxo)
+        //             } else {
+        //                 res[assetId] = [utxo]
+        //             }
+        //         }
+        //     }
+        //     return res
+        // },
 
         // Creates the asset_id => raw balance dictionary
-        walletBalanceDict(state: RootState): IWalletBalanceDict {
-            let wallet = state.activeWallet
+        // walletBalanceDict(state: RootState): IWalletBalanceDict {
+        //     let wallet = state.activeWallet
+        //
+        //     if (!wallet) return {}
+        //     // if (wallet.isFetchUtxos) return {}
+        //     if (!wallet.getUTXOSet()) return {}
+        //
+        //     console.log('Balance Dict')
+        //
+        //     let dict: IWalletBalanceDict = {}
+        //
+        //     let unixNox = UnixNow()
+        //     const ZERO = new BN(0)
+        //
+        //     let addrUtxos = wallet.getUTXOSet().getAllUTXOs()
+        //     // console.log(addrUtxos.length)
+        //
+        //     for (var n = 0; n < addrUtxos.length; n++) {
+        //         let utxo = addrUtxos[n]
+        //
+        //         // Process only SECP256K1 Transfer Output utxos, outputid === 07
+        //         let outId = utxo.getOutput().getOutputID()
+        //
+        //         if (outId !== 7) continue
+        //
+        //         let utxoOut = utxo.getOutput() as AmountOutput
+        //
+        //         let locktime = utxoOut.getLocktime()
+        //         let amount = utxoOut.getAmount()
+        //         let assetIdBuff = utxo.getAssetID()
+        //         let assetId = bintools.cb58Encode(assetIdBuff)
+        //
+        //         // if not locked
+        //         if (locktime.lte(unixNox)) {
+        //             if (!dict[assetId]) {
+        //                 dict[assetId] = {
+        //                     locked: ZERO,
+        //                     available: amount.clone(),
+        //                 }
+        //             } else {
+        //                 let amt = dict[assetId].available
+        //                 dict[assetId].available = amt.add(amount)
+        //             }
+        //         } else {
+        //             // If locked
+        //             if (!dict[assetId]) {
+        //                 dict[assetId] = {
+        //                     locked: amount.clone(),
+        //                     available: ZERO,
+        //                 }
+        //             } else {
+        //                 let amt = dict[assetId].locked
+        //                 dict[assetId].locked = amt.add(amount)
+        //             }
+        //         }
+        //     }
+        //     return dict
+        // },
 
-            if (!wallet) return {}
-            if (!wallet.getUTXOSet()) return {}
-
-            let dict: IWalletBalanceDict = {}
-
-            let unixNox = UnixNow()
-            const ZERO = new BN(0)
-
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs()
-
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
-
-                // Process only SECP256K1 Transfer Output utxos, outputid === 07
-                let outId = utxo.getOutput().getOutputID()
-
-                if (outId !== 7) continue
-
-                let utxoOut = utxo.getOutput() as AmountOutput
-
-                let locktime = utxoOut.getLocktime()
-                let amount = utxoOut.getAmount()
-                let assetIdBuff = utxo.getAssetID()
-                let assetId = bintools.cb58Encode(assetIdBuff)
-
-                // if not locked
-                if (locktime.lte(unixNox)) {
-                    if (!dict[assetId]) {
-                        dict[assetId] = {
-                            locked: ZERO,
-                            available: amount.clone(),
-                        }
-                    } else {
-                        let amt = dict[assetId].available
-                        dict[assetId].available = amt.add(amount)
-                    }
-                } else {
-                    // If locked
-                    if (!dict[assetId]) {
-                        dict[assetId] = {
-                            locked: amount.clone(),
-                            available: ZERO,
-                        }
-                    } else {
-                        let amt = dict[assetId].locked
-                        dict[assetId].locked = amt.add(amount)
-                    }
-                }
-            }
-            return dict
-        },
-
-        walletNftMintUTXOs(state: RootState): any[] {
-            let wallet = state.activeWallet
-            if (!wallet) return []
-
-            let utxos = wallet.getUTXOSet().getAllUTXOs()
-            let res = utxos.filter((utxo) => {
-                let typeId = utxo.getOutput().getOutputID()
-                if (typeId === 10) {
-                    return true
-                }
-                return false
-            })
-            return res
-        },
+        // walletNftMintUTXOs(state: RootState): any[] {
+        //     let wallet = state.activeWallet
+        //     if (!wallet) return []
+        //     // if (wallet.isFetchUtxos) return []
+        //
+        //     console.log('Mint UTXOs')
+        //     let utxos = wallet.getUTXOSet().getAllUTXOs()
+        //     let res = utxos.filter((utxo) => {
+        //         let typeId = utxo.getOutput().getOutputID()
+        //         if (typeId === 10) {
+        //             return true
+        //         }
+        //         return false
+        //     })
+        //     return res
+        // },
 
         walletNftMintDict(state: RootState, getters) {
             let res: IWalletNftMintDict = {}
 
-            let mintUTXOs = getters.walletNftMintUTXOs
+            // let mintUTXOs = getters.walletNftMintUTXOs
+            //@ts-ignore
+            let mintUTXOs = state.Assets.nftMintUTXOs
+
             for (var i = 0; i < mintUTXOs.length; i++) {
                 let utxo: UTXO = mintUTXOs[i]
                 let assetId = bintools.cb58Encode(utxo.getAssetID())
@@ -326,51 +341,56 @@ export default new Vuex.Store({
         },
 
         // Get the balance dict, combine it with existing assets and return a new dict
-        walletAssetsDict(state: RootState, getters): IWalletAssetsDict {
-            let balanceDict: IWalletBalanceDict = getters.walletBalanceDict
+        // walletAssetsDict(state: RootState, getters): IWalletAssetsDict {
+        //     console.log('Assets Dict')
+        //
+        //     // let balanceDict: IWalletBalanceDict = getters.walletBalanceDict
+        //     //@ts-ignore
+        //     let balanceDict: IWalletBalanceDict = state.Assets.balanceDict
+        //
+        //     // @ts-ignore
+        //     let assetsDict: AssetsDict = state.Assets.assetsDict
+        //     let res: IWalletAssetsDict = {}
+        //
+        //     for (var assetId in assetsDict) {
+        //         let balanceAmt = balanceDict[assetId]
+        //
+        //         let asset: AvaAsset
+        //         if (!balanceAmt) {
+        //             asset = assetsDict[assetId]
+        //             asset.resetBalance()
+        //         } else {
+        //             asset = assetsDict[assetId]
+        //             asset.resetBalance()
+        //             asset.addBalance(balanceAmt.available)
+        //             asset.addBalanceLocked(balanceAmt.locked)
+        //         }
+        //
+        //         // Add extras for AVAX token
+        //         // @ts-ignore
+        //         if (asset.id === state.Assets.AVA_ASSET_ID) {
+        //             asset.addExtra(getters.walletStakingBalance)
+        //             asset.addExtra(getters.walletPlatformBalance)
+        //             asset.addExtra(getters.walletPlatformBalanceLocked)
+        //             asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
+        //         }
+        //
+        //         res[assetId] = asset
+        //     }
+        //     return res
+        // },
 
-            // @ts-ignore
-            let assetsDict: AssetsDict = state.Assets.assetsDict
-            let res: IWalletAssetsDict = {}
-
-            for (var assetId in assetsDict) {
-                let balanceAmt = balanceDict[assetId]
-
-                let asset: AvaAsset
-                if (!balanceAmt) {
-                    asset = assetsDict[assetId]
-                    asset.resetBalance()
-                } else {
-                    asset = assetsDict[assetId]
-                    asset.resetBalance()
-                    asset.addBalance(balanceAmt.available)
-                    asset.addBalanceLocked(balanceAmt.locked)
-                }
-
-                // Add extras for AVAX token
-                // @ts-ignore
-                if (asset.id === state.Assets.AVA_ASSET_ID) {
-                    asset.addExtra(getters.walletStakingBalance)
-                    asset.addExtra(getters.walletPlatformBalance)
-                    asset.addExtra(getters.walletPlatformBalanceLocked)
-                    asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
-                }
-
-                res[assetId] = asset
-            }
-            return res
-        },
-
-        walletAssetsArray(state: RootState, getters): AvaAsset[] {
-            let assetsDict: IWalletAssetsDict = getters.walletAssetsDict
-            let res: AvaAsset[] = []
-
-            for (var id in assetsDict) {
-                let asset = assetsDict[id]
-                res.push(asset)
-            }
-            return res
-        },
+        // walletAssetsArray(state: RootState, getters): AvaAsset[] {
+        //     // let assetsDict: IWalletAssetsDict = getters.walletAssetsDict
+        //     let assetsDict: IWalletAssetsDict = getters['Assets/walletAssetsDict']
+        //     let res: AvaAsset[] = []
+        //
+        //     for (var id in assetsDict) {
+        //         let asset = assetsDict[id]
+        //         res.push(asset)
+        //     }
+        //     return res
+        // },
 
         addresses(state: RootState): string[] {
             let wallet = state.activeWallet

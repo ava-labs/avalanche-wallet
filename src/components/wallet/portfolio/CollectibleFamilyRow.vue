@@ -42,7 +42,8 @@ export default class CollectibleFamilyRow extends Vue {
 
     // get groups() {}
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        return this.$store.getters['Assets/walletNftDict']
     }
 
     get nftMintDict(): IWalletNftMintDict {

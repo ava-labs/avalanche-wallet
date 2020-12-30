@@ -50,6 +50,7 @@ export interface AvaWalletCore {
     ethAddress: string
     ethAddressBech: string
     ethBalance: BN
+    isFetchUtxos: boolean // true if fetching utxos
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]
@@ -59,7 +60,7 @@ export interface AvaWalletCore {
     getHistoryAddresses(): string[]
     getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void
-    getUTXOs(): Promise<UTXOSet>
+    getUTXOs(): Promise<void>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
     getCurrentPlatformAddress(): string

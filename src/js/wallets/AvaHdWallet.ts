@@ -157,9 +157,10 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return receipt.transactionHash
     }
 
-    async getUTXOs(): Promise<AVMUTXOSet> {
+    async getUTXOs(): Promise<void> {
         this.getEthBalance()
-        return super.getUTXOs()
+        super.getUTXOs()
+        return
     }
 
     getCurrentKey(): AVMKeyPair {

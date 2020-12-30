@@ -163,7 +163,8 @@ export default class NewCollectibleFamily extends Vue {
     }
 
     get mintUtxos() {
-        return this.$store.getters.walletNftMintUTXOs
+        // return this.$store.getters.walletNftMintUTXOs
+        return this.$store.state.Assets.nftMintUTXOs
     }
 }
 </script>

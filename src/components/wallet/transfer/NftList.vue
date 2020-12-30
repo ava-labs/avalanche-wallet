@@ -91,11 +91,13 @@ export default class NftList extends Vue {
     }
 
     get nftUTXOs(): UTXO[] {
-        return this.$store.getters.walletNftUTXOs
+        // return this.$store.getters.walletNftUTXOs
+        return this.$store.state.Assets.nftUTXOs
     }
 
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        return this.$store.getters['Assets/walletNftDict']
     }
 
     get nftFamsDict(): NftFamilyDict {

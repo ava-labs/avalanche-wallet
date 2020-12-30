@@ -141,11 +141,13 @@ export default class CurrencyInputDropdown extends Vue {
     }
 
     get walletAssetsArray(): AvaAsset[] {
-        return this.$store.getters.walletAssetsArray
+        // return this.$store.getters.walletAssetsArray
+        return this.$store.getters['Assets/walletAssetsArray']
     }
 
     get walletAssetsDict(): IWalletAssetsDict {
-        return this.$store.getters['walletAssetsDict']
+        // return this.$store.getters['walletAssetsDict']
+        return this.$store.getters['Assets/walletAssetsDict']
     }
 
     get avaxAsset(): AvaAsset {

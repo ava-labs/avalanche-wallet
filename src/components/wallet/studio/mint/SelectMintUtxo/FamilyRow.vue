@@ -53,7 +53,8 @@ export default class FamilyRow extends Vue {
     }
 
     get nftUtxoDict(): IWalletNftMintDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        return this.$store.getters['Assets/walletNftDict']
     }
 
     // return utxos belonging to this family

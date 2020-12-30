@@ -64,6 +64,8 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     ethAddressBech: string
     ethBalance: BN
 
+    isFetchUtxos: boolean
+
     constructor(pk: string) {
         this.key = pk
 
@@ -99,7 +101,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         let cKeypair = cKeyChain.importKey(cPrivKey)
         this.ethAddressBech = cKeypair.getAddressString()
 
-        console.log(cKeypair)
+        this.isFetchUtxos = false
 
         this.type = 'singleton'
     }
@@ -295,16 +297,19 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         return result
     }
 
-    async getUTXOs() {
+    async getUTXOs(): Promise<void> {
+        this.isFetchUtxos = true
         let setInternal = (await this.updateUtxos('X')) as AVMUTXOSet
         // TODO
         // platform utxos are updated but not returned by function
         let setPlatform = (await this.updateUtxos('P')) as PlatformUTXOSet
 
-        this.getStake()
-        this.getEthBalance()
+        await this.getStake()
+        await this.getEthBalance()
 
-        return setInternal
+        this.isFetchUtxos = false
+
+        return
     }
 
     async platformGetAllUTXOsForAddresses(

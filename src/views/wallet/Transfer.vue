@@ -345,7 +345,8 @@ export default class Transfer extends Vue {
     }
 
     get hasNFT(): boolean {
-        return this.$store.getters.walletNftUTXOs.length > 0
+        // return this.$store.getters.walletNftUTXOs.length > 0
+        return this.$store.state.Assets.nftUTXOs.length > 0
     }
 
     get faucetLink() {

@@ -43,13 +43,22 @@ const history_module: Module<HistoryState, RootState> = {
             let offset = 0
             let limit = 20
 
-            let data = await getAddressHistory(addresses, limit, offset)
+            // let t0 = performance.now()
+            // let data = await getAddressHistory(addresses, limit, offset)
 
+            getAddressHistory(addresses, limit, offset).then((data) => {
+                let transactions = data.transactions
+                state.transactions = transactions
+                state.isUpdating = false
+            })
+
+            // let t1 = performance.now()
+            // console.log('gethistory', t1 - t0)
             // let transactions = res.data.transactions;
-            let transactions = data.transactions
-
-            state.transactions = transactions
-            state.isUpdating = false
+            // let transactions = data.transactions
+            //
+            // state.transactions = transactions
+            // state.isUpdating = false
         },
     },
 }
