@@ -185,7 +185,7 @@ export default class ChainTransfer extends Vue {
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLocked(): BN {

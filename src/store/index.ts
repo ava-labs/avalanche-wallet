@@ -239,47 +239,47 @@ export default new Vuex.Store({
         //     return res
         // },
 
-        walletStakingBalance(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
+        // walletStakingBalance(state: RootState): BN {
+        //     let wallet = state.activeWallet
+        //     if (!wallet) return new BN(0)
+        //
+        //     return wallet.stakeAmount
+        // },
 
-            return wallet.stakeAmount
-        },
-
-        walletPlatformBalance(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            let now = UnixNow()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN('0')
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput()
-                let outId = utxoOut.getOutputID()
-
-                let locktime
-                if (outId === 22) {
-                    locktime = (utxoOut as StakeableLockOut).getStakeableLocktime()
-                } else {
-                    locktime = (utxoOut as AmountOutput).getLocktime()
-                }
-
-                // Filter out locked tokens and stakeable locked tokens
-                if (locktime.lte(now)) {
-                    amt.iadd((utxoOut as AmountOutput).getAmount())
-                }
-            }
-
-            return amt
-        },
+        // walletPlatformBalance(state: RootState): BN {
+        //     let wallet = state.activeWallet
+        //     if (!wallet) return new BN(0)
+        //
+        //     let utxoSet: PlatformUTXOSet
+        //
+        //     utxoSet = wallet.getPlatformUTXOSet()
+        //
+        //     let now = UnixNow()
+        //
+        //     // The only type of asset is AVAX on the P chain
+        //     let amt = new BN('0')
+        //
+        //     let utxos = utxoSet.getAllUTXOs()
+        //     for (var n = 0; n < utxos.length; n++) {
+        //         let utxo = utxos[n]
+        //         let utxoOut = utxo.getOutput()
+        //         let outId = utxoOut.getOutputID()
+        //
+        //         let locktime
+        //         if (outId === 22) {
+        //             locktime = (utxoOut as StakeableLockOut).getStakeableLocktime()
+        //         } else {
+        //             locktime = (utxoOut as AmountOutput).getLocktime()
+        //         }
+        //
+        //         // Filter out locked tokens and stakeable locked tokens
+        //         if (locktime.lte(now)) {
+        //             amt.iadd((utxoOut as AmountOutput).getAmount())
+        //         }
+        //     }
+        //
+        //     return amt
+        // },
 
         walletPlatformBalanceLocked(state: RootState): BN {
             let wallet = state.activeWallet

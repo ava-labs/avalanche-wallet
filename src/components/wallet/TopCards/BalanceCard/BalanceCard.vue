@@ -217,7 +217,7 @@ export default class BalanceCard extends Vue {
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLocked(): BN {
@@ -264,7 +264,8 @@ export default class BalanceCard extends Vue {
     }
 
     get stakingAmount(): BN {
-        return this.$store.getters.walletStakingBalance
+        // return this.$store.getters.walletStakingBalance
+        return this.$store.getters['Assets/walletStakingBalance']
     }
 
     get stakingText() {

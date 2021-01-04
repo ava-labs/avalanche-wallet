@@ -7,7 +7,7 @@ import { IWalletBalanceDict } from '@/store/types'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 
 export interface AssetsState {
-    isUpdateBalance: boolean
+    // isUpdateBalance: boolean
     assets: AvaAsset[]
     assetsDict: AssetsDict
     AVA_ASSET_ID: string | null
