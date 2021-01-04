@@ -1,18 +1,9 @@
 <template>
-    <Modal
-        ref="modal"
-        :can_close="false"
-        :title="$t('modal.activateWallet.title')"
-    >
+    <Modal ref="modal" :can_close="false" :title="$t('modal.activateWallet.title')">
         <div class="remember_modal">
             <p>{{ $t('modal.activateWallet.desc') }}</p>
             <form @submit.prevent="onsubmit" autocomplete="off">
-                <input
-                    type="password"
-                    placeholder="Password"
-                    v-model="password"
-                    class="password"
-                />
+                <input type="password" placeholder="Password" v-model="password" class="password" />
                 <p class="err">{{ err }}</p>
                 <v-btn
                     type="submit"
@@ -20,12 +11,13 @@
                     depressed
                     color="#4C2E56"
                     class="ava_button button_primary submit"
-                    >{{ $t('modal.activateWallet.submit') }}</v-btn
                 >
+                    {{ $t('modal.activateWallet.submit') }}
+                </v-btn>
                 <button @click="cancel" class="cancel_but ava_button_secondary">
-                    {{ $t('modal.activateWallet.cancel') }}<br />{{
-                        $t('modal.activateWallet.cancel2')
-                    }}
+                    {{ $t('modal.activateWallet.cancel') }}
+                    <br />
+                    {{ $t('modal.activateWallet.cancel2') }}
                 </button>
             </form>
         </div>

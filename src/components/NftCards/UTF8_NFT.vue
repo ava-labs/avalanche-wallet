@@ -5,7 +5,7 @@
                 <p>{{ text }}</p>
             </div>
         </template>
-        <template v-slot:deck> </template>
+        <template v-slot:deck></template>
         <template v-slot:mini>
             <p><fa icon="quote-right"></fa></p>
         </template>

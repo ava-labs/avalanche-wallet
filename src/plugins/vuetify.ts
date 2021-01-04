@@ -43,11 +43,15 @@ import {
     faLink,
     faQuoteRight,
     faLock,
+    faUnlock,
     faEye,
     faEyeSlash,
     faQuestionCircle,
     faUsers,
     faFilter,
+    faFont,
+    faBoxes,
+    faRandom,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faBtc, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -99,7 +103,11 @@ library.add(
     faEyeSlash,
     faQuestionCircle,
     faUsers,
-    faFilter
+    faFilter,
+    faFont,
+    faBoxes,
+    faUnlock,
+    faRandom
 )
 
 Vue.component('fa', FontAwesomeIcon)

@@ -21,11 +21,7 @@
             <p>{{ delegationFee }} %</p>
         </div>
         <div>
-            <label
-                >{{ $t('earn.validate.confirmation.reward') }} ({{
-                    walletType
-                }})</label
-            >
+            <label>{{ $t('earn.validate.confirmation.reward') }} ({{ walletType }})</label>
             <p style="word-break: break-all">{{ rewardAddress }}</p>
         </div>
     </div>

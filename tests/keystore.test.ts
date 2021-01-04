@@ -5,10 +5,7 @@ import { Buffer } from 'buffer/'
 import { KeyFile, KeyFileDecrypted } from '../src/js/IKeystore'
 import { Avalanche } from 'avalanche'
 
-import {
-    KeyPair as AVMKeyPair,
-    KeyChain as AVMKeyChain,
-} from 'avalanche/dist/apis/avm'
+import { KeyPair as AVMKeyPair, KeyChain as AVMKeyChain } from 'avalanche/dist/apis/avm'
 
 const chain_id: string = 'GJABrZ9A6UQFpwjPU8MDxDd8vuyRoDVeDAXc694wJ5t3zEkhU'
 const ip: string = 'localhost'

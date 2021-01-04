@@ -11,66 +11,68 @@
                 <h4>{{ $t('top.title2') }}</h4>
                 <template v-if="!isBreakdown">
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye"></fa> {{ $t('top.balance.show') }}
+                        <fa icon="eye"></fa>
+                        {{ $t('top.balance.show') }}
                     </button>
                 </template>
                 <template v-else>
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye-slash"></fa> {{ $t('top.balance.hide') }}
+                        <fa icon="eye-slash"></fa>
+                        {{ $t('top.balance.hide') }}
                     </button>
                 </template>
             </div>
             <div class="balance_row">
-                <p
-                    class="balance"
-                    data-cy="wallet_balance"
-                    v-if="!balanceTextRight"
-                >
+                <p class="balance" data-cy="wallet_balance" v-if="!balanceTextRight">
                     {{ balanceTextLeft }} AVAX
                 </p>
                 <p class="balance" data-cy="wallet_balance" v-else>
-                    {{ balanceTextLeft
-                    }}<span>.{{ balanceTextRight }}</span> AVAX
+                    {{ balanceTextLeft }}
+                    <span>.{{ balanceTextRight }}</span>
+                    AVAX
                 </p>
                 <p class="balance_usd">
-                    <b>$ {{ totalBalanceUSD.toLocaleString(2) }}</b> USD
+                    <b>$ {{ totalBalanceUSD.toLocaleString(2) }}</b>
+                    USD
                 </p>
             </div>
             <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
-                <div>
-                    <template v-if="!isBreakdown">
+                <div class="alt_non_breakdown" v-if="!isBreakdown">
+                    <div>
                         <label>{{ $t('top.balance.available') }}</label>
                         <p>{{ unlockedText }} AVAX</p>
-                    </template>
-                    <template v-else>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.locked') }}</label>
+                        <p>{{ balanceTextLocked }} AVAX</p>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.balance.stake') }}</label>
+                        <p>{{ stakingText }} AVAX</p>
+                    </div>
+                </div>
+                <div class="alt_breakdown" v-else>
+                    <div>
                         <label>{{ $t('top.balance.available') }} (X)</label>
                         <p>{{ avmUnlocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.available') }} (P)</label>
                         <p>{{ platformUnlocked | cleanAvaxBN }} AVAX</p>
-                    </template>
-                </div>
-                <div>
-                    <template v-if="!isBreakdown">
-                        <label>{{ $t('top.locked') }}</label>
-                        <p>{{ balanceTextLocked }} AVAX</p>
-                    </template>
-                    <template v-else>
+                        <label>{{ $t('top.balance.available') }} (C)</label>
+                        <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>
+                    </div>
+                    <div>
                         <label>{{ $t('top.balance.locked') }} (X)</label>
                         <p>{{ avmLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked') }} (P)</label>
                         <p>{{ platformLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked_stake') }} (P)</label>
                         <p>{{ platformLockedStakeable | cleanAvaxBN }} AVAX</p>
-                    </template>
-                </div>
-                <!--                <div>-->
-                <!--                    <label>P-Chain</label>-->
-                <!--                    <p>{{pBalanceText}} AVAX</p>-->
-                <!--                </div>-->
-                <div>
-                    <label>{{ $t('top.balance.stake') }}</label>
-                    <p>{{ stakingText }} AVAX</p>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.balance.stake') }}</label>
+                        <p>{{ stakingText }} AVAX</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,10 +134,18 @@ export default class BalanceCard extends Vue {
         return this.ava_asset.amountLocked
     }
 
+    get evmUnlocked(): BN {
+        // convert from ^18 to ^9
+        let bal = this.wallet.ethBalance
+        return bal.divRound(new BN(Math.pow(10, 9).toString()))
+    }
+
     get totalBalance(): BN {
         if (!this.ava_asset) return new BN(0)
 
         let tot = this.ava_asset.getTotalAmount()
+        // add EVM balance
+        tot = tot.add(this.evmUnlocked)
         return tot
     }
 
@@ -222,7 +232,8 @@ export default class BalanceCard extends Vue {
 
             let denom = this.ava_asset.denomination
 
-            let tot = xUnlocked.add(pUnlocked)
+            let tot = xUnlocked.add(pUnlocked).add(this.evmUnlocked)
+
             let amtBig = bnToBig(tot, denom)
             // let amtBig = this.avaxBnToBigAmt(tot);
 
@@ -357,6 +368,9 @@ h4 {
     height: 20px;
     color: var(--primary-color);
 
+    button {
+        outline: none !important;
+    }
     img {
         object-fit: contain;
         width: 100%;
@@ -375,13 +389,14 @@ h4 {
     margin: 0px 18px;
     margin-right: 0px;
     position: relative;
-    outline: none;
+    outline: none !important;
 }
 
 .buts img {
     height: 20px;
     width: 20px;
     object-fit: contain;
+    outline: none !important;
 }
 .buts button[tooltip]:hover:before {
     border-radius: 4px;
@@ -399,7 +414,7 @@ h4 {
     padding: 4px 8px;
 }
 
-.alt_info {
+.alt_info > div {
     display: grid;
     grid-template-columns: repeat(3, max-content);
     column-gap: 0px;
@@ -418,7 +433,7 @@ h4 {
 
     label {
         font-size: 13px;
-        color: main.$primary-color-light;
+        color: var(--primary-color-light);
     }
 }
 
@@ -429,6 +444,7 @@ h4 {
 .breakdown_toggle {
     color: var(--primary-color-light);
     font-size: 13px;
+    outline: none !important;
 }
 
 @include main.medium-device {
@@ -476,18 +492,28 @@ h4 {
     }
 
     .alt_info {
-        text-align: left;
-        grid-template-columns: none;
-        column-gap: 0;
         > div {
-            padding: 8px 0;
-            border-right: none;
-            border-bottom: 1px solid var(--bg-light);
+            text-align: left;
+            grid-template-columns: none;
+            column-gap: 0;
+        }
 
-            &:last-of-type {
-                border: none;
+        .alt_non_breakdown,
+        .alt_breakdown {
+            > div {
+                padding: 8px 0;
+                border-right: none;
+                border-bottom: 1px solid var(--bg-light);
+
+                &:last-of-type {
+                    border: none;
+                }
             }
         }
+    }
+
+    .alt_non_breakdown {
+        display: none !important;
     }
 }
 </style>

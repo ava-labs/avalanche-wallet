@@ -18,15 +18,9 @@
             <textarea v-model="message"></textarea>
         </div>
         <p class="err">{{ error }}</p>
-        <v-btn
-            class="button_secondary"
-            block
-            small
-            depressed
-            @click="sign"
-            :disabled="!canSubmit"
-            >{{ $t('advanced.sign.submit') }}</v-btn
-        >
+        <v-btn class="button_secondary" block small depressed @click="sign" :disabled="!canSubmit">
+            {{ $t('advanced.sign.submit') }}
+        </v-btn>
 
         <div v-if="signed" class="result">
             <label>{{ $t('advanced.sign.label3') }}</label>
@@ -36,10 +30,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import AvaHdWallet from '../../../js/wallets/AvaHdWallet'
-import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 import createHash from 'create-hash'
 import { Buffer } from 'avalanche'
+import { WalletType } from '@/store/types'
 
 @Component
 export default class SignMessage extends Vue {
@@ -48,10 +41,10 @@ export default class SignMessage extends Vue {
     signed = ''
     error = ''
     get addresses(): string[] {
-        return this.wallet.externalHelper.getAllDerivedAddresses()
+        return this.wallet.getAllDerivedExternalAddresses()
     }
 
-    get wallet(): AvaHdWallet | LedgerWallet {
+    get wallet(): WalletType {
         return this.$store.state.activeWallet
     }
 
@@ -60,13 +53,20 @@ export default class SignMessage extends Vue {
         try {
             // Convert the message to a hashed buffer
             // let hashMsg = this.msgToHash(this.message);
-            this.signed = await this.wallet.signMessage(
-                this.message,
-                this.sourceAddress
-            )
+            this.signed = await this.wallet.signMessage(this.message, this.sourceAddress)
         } catch (e) {
             this.error = e
         }
+    }
+
+    clear() {
+        this.message = ''
+        this.signed = ''
+        this.error = ''
+    }
+
+    deactivated() {
+        this.clear()
     }
 
     // msgToHash(msgStr: string): Buffer{

@@ -3,9 +3,7 @@
         <div class="qr_body">
             <canvas ref="qr"></canvas>
             <p>{{ address }}</p>
-            <CopyText :value="address" class="copyBut">{{
-                $t('modal.qr.copy')
-            }}</CopyText>
+            <CopyText :value="address" class="copyBut">{{ $t('modal.qr.copy') }}</CopyText>
         </div>
     </modal>
 </template>
@@ -29,6 +27,8 @@ import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 export default class QRModal extends Vue {
     colorDark: string = '#242729'
     colorLight: string = '#FFF'
+
+    @Prop({ default: '-' }) address!: string
 
     @Watch('address', { immediate: true })
     onaddrchange(val: string) {
@@ -71,14 +71,6 @@ export default class QRModal extends Vue {
                 // console.log('success!');
             }
         )
-    }
-
-    get address() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
-        if (!wallet) {
-            return '-'
-        }
-        return wallet.getCurrentAddress()
     }
 
     mounted() {

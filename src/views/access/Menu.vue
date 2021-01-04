@@ -1,25 +1,22 @@
 <template>
     <div class="access_card">
         <div class="img_container">
-            <img
-                v-if="$root.theme === 'day'"
-                src="@/assets/diamond-primary.svg"
-                alt
-            />
+            <img v-if="$root.theme === 'day'" src="@/assets/diamond-primary.svg" alt />
             <img v-else src="@/assets/diamond-primary-night.svg" alt />
         </div>
         <h1>{{ $t('access.title') }}</h1>
-        <router-link to="/create" class="link">{{
-            $t('access.create')
-        }}</router-link>
+        <router-link to="/create" class="link">{{ $t('access.create') }}</router-link>
         <hr />
         <div class="options">
-            <router-link to="/access/mnemonic" class="option button_primary">{{
-                $t('access.but_mnemonic')
-            }}</router-link>
-            <router-link to="/access/keystore" class="option button_primary">{{
-                $t('access.but_keystore')
-            }}</router-link>
+            <router-link to="/access/privatekey" class="option button_primary">
+                {{ $t('access.but_private_key') }}
+            </router-link>
+            <router-link to="/access/mnemonic" class="option button_primary">
+                {{ $t('access.but_mnemonic') }}
+            </router-link>
+            <router-link to="/access/keystore" class="option button_primary">
+                {{ $t('access.but_keystore') }}
+            </router-link>
             <LedgerButton class="option button_primary"></LedgerButton>
             <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
@@ -70,7 +67,7 @@ hr {
 .options {
     margin: 30px auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 30px;
 }
 
@@ -84,6 +81,9 @@ hr {
     text-transform: uppercase;
     padding: 8px 18px;
     font-size: main.$s-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
         //transform: translateY(-5px);

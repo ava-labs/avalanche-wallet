@@ -4,23 +4,14 @@
             <p class="placeholder" v-if="!value">Select Address</p>
             <div v-if="multiple" class="display_val">
                 <p class="chip">{{ value[0] }}</p>
-                <p v-if="value.length > 1">
-                    and {{ value.length - 1 }} others.
-                </p>
+                <p v-if="value.length > 1">and {{ value.length - 1 }} others.</p>
             </div>
             <div v-else class="display_val">
                 <p class="chip">{{ value }}</p>
             </div>
             <p class="caret"><fa icon="caret-down"></fa></p>
         </div>
-        <div
-            ref="popup_list"
-            class="list"
-            v-show="active"
-            @focus="focus"
-            @blur="blur"
-            tabindex="1"
-        >
+        <div ref="popup_list" class="list" v-show="active" @focus="focus" @blur="blur" tabindex="1">
             <!--            <v-select></v-select>-->
             <ul>
                 <li class="select_all" @click="toggleAll" v-if="multiple">
@@ -28,11 +19,7 @@
                     <p class="add_title">All Addresses</p>
                 </li>
                 <!--                <list-item v-for="(item, index) in items" :key="item" :value="item" :index="index"></list-item>-->
-                <li
-                    v-for="(item, index) in items"
-                    :key="item"
-                    @click="toggleItem(item, index)"
-                >
+                <li v-for="(item, index) in items" :key="item" @click="toggleItem(item, index)">
                     <input type="checkbox" :checked="value.includes(item)" />
                     <div>
                         <p class="add_title">Address {{ index }}</p>

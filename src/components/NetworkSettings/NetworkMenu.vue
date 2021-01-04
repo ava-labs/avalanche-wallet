@@ -1,24 +1,17 @@
 <template>
     <div
+        data-cy="network-switcher"
         class="network_menu"
         :connected="status === 'connected'"
         @keydown.esc="closeMenu"
     >
         <div class="toggle_but" @click="toggleMenu" :testnet="isTestnet">
-            <template
-                v-if="status === 'disconnected' || status === 'connecting'"
-            >
-                <img
-                    v-if="$root.theme === 'day'"
-                    src="@/assets/network_off.png"
-                />
+            <template v-if="status === 'disconnected' || status === 'connecting'">
+                <img v-if="$root.theme === 'day'" src="@/assets/network_off.png" />
                 <img v-else src="@/assets/network_off_night.svg" />
             </template>
             <template v-else>
-                <img
-                    v-if="$root.theme === 'day'"
-                    src="@/assets/network_on.png"
-                />
+                <img v-if="$root.theme === 'day'" src="@/assets/network_on.png" />
                 <img v-else src="@/assets/network_off_night.svg" />
             </template>
             <button v-if="status === 'connected'">
@@ -30,17 +23,16 @@
             <button v-else>{{ $t('network.status2') }}</button>
         </div>
         <transition-group name="fade">
-            <div
-                class="network_dispose_bg"
-                v-if="isActive"
-                key="bg"
-                @click="closeMenu"
-            ></div>
+            <div class="network_dispose_bg" v-if="isActive" key="bg" @click="closeMenu"></div>
             <div class="network_body" v-if="isActive" key="body">
-                <div class="header">
+                <div class="header" data-cy="custom-network-option">
                     <template v-if="page === 'list'">
                         <h4>{{ $t('network.title') }}</h4>
-                        <button @click="viewCustom" class="button_secondary">
+                        <button
+                            @click="viewCustom"
+                            class="button_secondary"
+                            data-cy="create-custom-option"
+                        >
                             {{ $t('network.custom') }}
                         </button>
                     </template>
@@ -60,10 +52,7 @@
 
                 <transition name="fade" mode="out-in">
                     <ListPage v-if="page === 'list'"></ListPage>
-                    <CustomPage
-                        v-if="page === 'custom'"
-                        @add="addCustomNetwork"
-                    ></CustomPage>
+                    <CustomPage v-if="page === 'custom'" @add="addCustomNetwork"></CustomPage>
                     <EditPage
                         v-if="page === 'edit'"
                         :net="editNetwork"
@@ -158,6 +147,10 @@ export default class NetworkMenu extends Vue {
     border-radius: 6px;
     position: relative;
     align-items: center;
+
+    button {
+        outline: none !important;
+    }
 
     img {
         max-height: 24px;

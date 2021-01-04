@@ -3,7 +3,11 @@ const { beforeMiddleware, onListening } = require('./server/configure')
 module.exports = {
     transpileDependencies: ['vuetify'],
     devServer: {
-        https: true,
+        /**
+         * For e2e testing we turn this off using vue cli --mode e2e
+         * @link https://cli.vuejs.org/guide/mode-and-env.html#modes
+         */
+        https: !process.env.USE_HTTP,
         port: 5000,
         before: beforeMiddleware,
         onListening: onListening,

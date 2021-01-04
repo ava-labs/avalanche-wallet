@@ -4,11 +4,7 @@
         <template v-else>
             <h4>Assets</h4>
             <div>
-                <div
-                    v-for="order in cleanOrders"
-                    :key="order.uuid"
-                    class="fungible_row"
-                >
+                <div v-for="order in cleanOrders" :key="order.uuid" class="fungible_row">
                     <p>{{ order.asset.symbol }}</p>
                     <p style="color: var(--primary-color)">
                         {{ order.asset.name }}
@@ -17,22 +13,14 @@
                         {{ cleanNum(order.amount, order.asset.denomination) }}
                     </p>
                 </div>
-                <!--                <p v-for="order in cleanOrders" :key="order.uuid" class="fungible_row">-->
-                <!--                    {{order.asset.symbol}}-->
-                <!--                    <span class="amt">-->
-                <!--                    {{cleanNum(order.amount, order.asset.denomination)}}-->
-                <!--                    </span>-->
-                <!--                </p>-->
+                <p v-if="cleanOrders.length === 0">No tokens added.</p>
             </div>
             <template v-if="!isCollectibleEmpty">
                 <h4>Collectibles</h4>
                 <div class="nfts">
-                    <NftCard
-                        v-for="order in nftOrders"
-                        :utxo="order"
-                        :mini="true"
-                        :key="order.id"
-                    ></NftCard>
+                    <div class="nft_group" v-for="(utxo, i) in nftOrders" :key="utxo.getUTXOID()">
+                        <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
+                    </div>
                 </div>
             </template>
         </template>
@@ -45,12 +33,11 @@ import { ITransaction } from './types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import Big from 'big.js'
 import BN from 'bn.js'
-import NftCard from '@/components/wallet/portfolio/NftCard.vue'
-import { bnToBig } from '@/helpers/helper'
-
+import { bnToBig, getPayloadFromUTXO } from '@/helpers/helper'
+import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 @Component({
     components: {
-        NftCard,
+        NftPayloadView,
     },
 })
 export default class TxSummary extends Vue {
@@ -59,6 +46,12 @@ export default class TxSummary extends Vue {
 
     cleanNum(val: BN, denom: number) {
         return bnToBig(val, denom).toLocaleString(denom)
+    }
+
+    get nftPayloads() {
+        return this.nftOrders.map((utxo) => {
+            return getPayloadFromUTXO(utxo)
+        })
     }
 
     get isFungibleEmpty() {

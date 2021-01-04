@@ -12,10 +12,7 @@ self.addEventListener('message', function (event) {
 self.addEventListener('fetch', function (event) {
     try {
         const url = new URL(event.request.url)
-        if (
-            url.pathname.includes('redirect') &&
-            url.href.includes(getScope())
-        ) {
+        if (url.pathname.includes('redirect') && url.href.includes(getScope())) {
             event.respondWith(
                 new Response(
                     new Blob(

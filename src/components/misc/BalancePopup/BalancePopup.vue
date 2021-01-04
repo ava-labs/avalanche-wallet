@@ -1,5 +1,5 @@
 <template>
-    <div class="balance_popup" v-if="isActive">
+    <div class="balance_popup" v-show="isActive">
         <div class="bg" @click="closePopup"></div>
         <div class="popup_body">
             <p class="desc">
@@ -74,6 +74,7 @@ export default class BalancePopup extends Vue {
 </script>
 <style lang="scss">
 .popup_body {
+    width: max-content;
     .v-tabs {
         overflow: auto;
     }
@@ -106,12 +107,15 @@ export default class BalancePopup extends Vue {
 .desc {
     font-size: 0.8rem;
     padding: 3px 15px;
-    background-color: var(--bg-light);
-    color: var(--primary-color);
+    background-color: var(--secondary-color);
+    color: #fff;
 }
 
 .balance_popup {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 99;
     text-align: left;
 }
 
@@ -125,7 +129,7 @@ export default class BalancePopup extends Vue {
     grid-template-rows: max-content 1fr;
     overflow: auto;
     z-index: 3;
-    background-color: var(--bg);
+    background-color: var(--bg-wallet);
 }
 
 .rows,

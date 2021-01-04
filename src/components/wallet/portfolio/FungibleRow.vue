@@ -10,18 +10,17 @@
         <p class="name_col not_mobile">{{ name }} ({{ symbol }})</p>
         <p class="name_col mobile_only">{{ symbol }}</p>
         <router-link :to="sendLink" class="send_col" v-if="isBalance">
-            <img
-                v-if="$root.theme === 'day'"
-                src="@/assets/sidebar/transfer_nav.png"
-            />
+            <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
             <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
-            {{ asset.toStringTotal() }} <span>{{ symbol }}</span>
+            {{ asset.toStringTotal() }}
+            <span>{{ symbol }}</span>
         </p>
         <p class="balance_col" v-else>
-            0 <span>{{ symbol }}</span>
+            0
+            <span>{{ symbol }}</span>
         </p>
     </div>
 </template>

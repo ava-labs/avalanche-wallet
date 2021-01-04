@@ -1,26 +1,17 @@
 <template>
     <div class="addr_card">
-        <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet
-            ref="print_modal"
-            v-if="walletType !== 'ledger'"
-        ></paper-wallet>
-        <p class="addr_info">{{ $t('top.address.desc') }}</p>
+        <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
+        <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
+        <p class="addr_info">{{ addressMsg }}</p>
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="subtitle">{{ $t('top.address.derived') }}</p>
-                <p
-                    class="addr_text"
-                    data-cy="wallet_address"
-                    v-if="chainNow === 'X'"
-                >
-                    {{ address }}
-                </p>
-                <p class="addr_text" data-cy="wallet_address" v-else>
-                    {{ addressPVM }}
+                <p class="subtitle">{{ addressLabel }}</p>
+
+                <p class="addr_text" data-cy="wallet_address">
+                    {{ activeAddress }}
                 </p>
                 <div style="display: flex; margin-top: 10px">
                     <ChainSelect v-model="chainNow"></ChainSelect>
@@ -31,14 +22,14 @@
                             class="qr_but"
                         ></button>
                         <button
-                            v-if="walletType !== 'ledger'"
+                            v-if="walletType === 'mnemonic'"
                             :tooltip="$t('top.hover2')"
                             @click="viewPrintModal"
                             class="print_but"
                         ></button>
                         <CopyText
                             :tooltip="$t('top.hover3')"
-                            :value="address"
+                            :value="activeAddress"
                             class="copy_but"
                         ></CopyText>
                     </div>
@@ -55,26 +46,25 @@ import CopyText from '@/components/misc/CopyText.vue'
 import QRModal from '@/components/modals/QRModal.vue'
 import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
-import MainnetAddressModal from '@/components/modals/MainnetAddressModal.vue'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import { WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/store/types'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
+import { ChainIdType } from '@/constants'
 @Component({
     components: {
         CopyText,
         PaperWallet,
         QRModal,
-        MainnetAddressModal,
         ChainSelect,
     },
 })
 export default class AddressCard extends Vue {
     colorLight: string = '#FFF'
     colorDark: string = '#242729'
-    chainNow: string = 'X'
+    chainNow: ChainIdType = 'X'
 
     $refs!: {
         qr_modal: QRModal
@@ -82,7 +72,7 @@ export default class AddressCard extends Vue {
         qr: HTMLCanvasElement
     }
 
-    @Watch('address')
+    @Watch('activeAddress')
     onaddrchange() {
         this.updateQR()
     }
@@ -99,17 +89,43 @@ export default class AddressCard extends Vue {
         this.updateQR()
     }
 
+    get addressLabel(): string {
+        switch (this.chainNow) {
+            default:
+                return 'Derived Wallet Address'
+            case 'P':
+                return 'Derived Platform Wallet Address'
+            case 'C':
+                return 'Derived EVM Wallet Address'
+        }
+    }
+
+    get addressMsg(): string {
+        switch (this.chainNow) {
+            default:
+                return `This is your X Chain address to receive funds. Your address will change after every deposit.`
+            case 'P':
+                return 'This is your Platform Chain address to receive staking rewards and cross chain transfers.'
+            case 'C':
+                return 'This is your Contract Chain address. Use it to interact with the ethereum virtual machine. '
+        }
+    }
     get isDayTheme(): boolean {
         //@ts-ignore
         return this.$root.theme === 'day'
     }
 
-    get walletType(): WalletType {
-        return this.$store.state.walletType
+    get walletType(): WalletNameType {
+        let wallet = this.activeWallet
+        if (!wallet) return 'mnemonic'
+        return wallet.type
     }
 
+    get activeWallet(): WalletType | null {
+        return this.$store.state.activeWallet
+    }
     get address() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -117,18 +133,34 @@ export default class AddressCard extends Vue {
     }
 
     get addressPVM() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
-        return wallet.platformHelper.getCurrentAddress()
+
+        return wallet.getCurrentPlatformAddress()
     }
 
-    viewMainnetModal() {
-        // @ts-ignore
-        this.$refs.mainnet_modal.open()
+    get addressEVM() {
+        let wallet = this.activeWallet
+        if (!wallet) {
+            return '-'
+        }
+
+        return '0x' + wallet.getEvmAddress()
     }
 
+    get activeAddress(): string {
+        switch (this.chainNow) {
+            case 'X':
+                return this.address
+            case 'P':
+                return this.addressPVM
+            case 'C':
+                return this.addressEVM
+        }
+        return this.address
+    }
     viewQRModal() {
         // @ts-ignore
         this.$refs.qr_modal.open()
@@ -145,7 +177,7 @@ export default class AddressCard extends Vue {
         let size = canvas.clientWidth
         QRCode.toCanvas(
             canvas,
-            this.address,
+            this.activeAddress,
             {
                 scale: 6,
                 color: {

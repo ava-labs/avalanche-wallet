@@ -7,6 +7,7 @@ import ManageKeys from '@/views/wallet/ManageKeys.vue'
 import Menu from '../views/access/Menu.vue'
 import Keystore from '../views/access/Keystore.vue'
 import Mnemonic from '@/views/access/Mnemonic.vue'
+import PrivateKey from '@/views/access/PrivateKey.vue'
 import Access from '../views/access/Access.vue'
 import Create from '@/views/Create.vue'
 import Wallet from '@/views/Wallet.vue'
@@ -17,6 +18,8 @@ import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
 Vue.use(VueRouter)
 
 import store from '../store/index'
+import Studio from '@/views/wallet/Studio.vue'
+import Export from '@/views/wallet/CrossChain.vue'
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
     if (!store.state.isAuth) {
@@ -54,6 +57,10 @@ const routes = [
                 component: Keystore,
             },
             {
+                path: 'privatekey',
+                component: PrivateKey,
+            },
+            {
                 path: 'mnemonic',
                 component: Mnemonic,
             },
@@ -80,12 +87,20 @@ const routes = [
                 component: Transfer,
             },
             {
+                path: 'cross_chain',
+                component: Export,
+            },
+            {
                 path: 'keys',
                 component: ManageKeys,
             },
             {
                 path: 'earn',
                 component: Earn,
+            },
+            {
+                path: 'studio',
+                component: Studio,
             },
             {
                 path: 'advanced',

@@ -7,8 +7,8 @@
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
             <transition name="page_fade" mode="out-in">
-                <keep-alive include="WalletHome">
-                    <router-view id="wallet_router"></router-view>
+                <keep-alive>
+                    <router-view id="wallet_router" :key="$route.path"></router-view>
                 </keep-alive>
             </transition>
         </div>
@@ -113,7 +113,7 @@ export default class Wallet extends Vue {
     transform: translateY(30px);
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .wallet_view {
         display: block;
     }

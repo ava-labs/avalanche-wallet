@@ -14,8 +14,9 @@
                     :disabled="!canSubmit"
                     type="submit"
                     :loading="isLoading"
-                    >{{ $t('keys.remember_key_button') }}</v-btn
                 >
+                    {{ $t('keys.remember_key_button') }}
+                </v-btn>
             </form>
         </div>
     </Modal>

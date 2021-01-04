@@ -36,17 +36,11 @@
             <div class="rowGroup">
                 <div>
                     <label>Network ID</label>
-                    <input
-                        type="number"
-                        placeholder="Network ID"
-                        v-model="networkId"
-                    />
+                    <input type="number" placeholder="Network ID" v-model="networkId" />
                 </div>
             </div>
             <p v-if="err" class="form_error">{{ err }}</p>
-            <button @click="saveNetwork" class="button_primary">
-                Save Changes
-            </button>
+            <button @click="saveNetwork" class="button_primary">Save Changes</button>
             <!--            <button @click="deleteNetwork" class="del_button">Delete Network</button>-->
         </form>
     </div>

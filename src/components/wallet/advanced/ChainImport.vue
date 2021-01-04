@@ -8,22 +8,22 @@
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
+            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>
+                {{ $t('advanced.import.submit_x') }}
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
+                {{ $t('advanced.import.submit_p') }}
+            </v-btn>
             <v-btn
                 block
+                v-if="!isLedger"
                 class="button_secondary"
                 depressed
-                @click="atomicImportX"
+                @click="atomicImportC"
                 small
-                >{{ $t('advanced.import.submit_x') }}</v-btn
             >
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportP"
-                small
-                >{{ $t('advanced.import.submit_p') }}</v-btn
-            >
+                {{ $t('advanced.import.submit_c') }}
+            </v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
     </div>
@@ -32,9 +32,8 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import Spinner from '@/components/misc/Spinner.vue'
+import { WalletType } from '@/store/types'
 @Component({
     components: { Spinner },
 })
@@ -44,16 +43,23 @@ export default class ChainImport extends Vue {
     isLoading = false
     txId = ''
 
-    get wallet(): null | AvaHdWallet | LedgerWallet {
-        let wallet: null | AvaHdWallet | LedgerWallet = this.$store.state
-            .activeWallet
+    get wallet(): null | WalletType {
+        let wallet: null | WalletType = this.$store.state.activeWallet
         return wallet
+    }
+
+    // TODO: Remove after ledger support
+    get isLedger() {
+        if (!this.wallet) return false
+        if (this.wallet.type === 'ledger') return true
+        return false
     }
     async atomicImportX() {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToXChain()
+            let txId = await this.wallet.importToXChain('P')
+            let txId2 = await this.wallet.importToXChain('C')
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
@@ -69,6 +75,23 @@ export default class ChainImport extends Vue {
         } catch (e) {
             this.onError(e)
         }
+    }
+
+    async atomicImportC() {
+        this.beforeSubmit()
+        if (!this.wallet) return
+        try {
+            let txId = await this.wallet.importToCChain()
+            this.onSuccess(txId)
+        } catch (e) {
+            this.onError(e)
+        }
+    }
+
+    deactivated() {
+        this.err = ''
+        this.txId = ''
+        this.isSuccess = false
     }
 
     beforeSubmit() {
@@ -89,6 +112,8 @@ export default class ChainImport extends Vue {
             title: 'Import Success',
             message: txId,
         })
+
+        this.$store.dispatch('Assets/updateUTXOs')
     }
 
     onError(err: Error) {

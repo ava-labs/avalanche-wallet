@@ -12,8 +12,9 @@
                     target="_blank"
                     tooltip="View in Explorer"
                     class="explorer_link"
-                    ><fa icon="search"></fa
-                ></a>
+                >
+                    <fa icon="search"></fa>
+                </a>
             </p>
             <div class="utxos">
                 <tx-history-value
@@ -41,9 +42,8 @@ import { TransactionValueDict } from '@/components/SidePanels/types'
 // import {AssetsDict} from "@/store/modules/assets/types";
 // import {AvaNetwork} from "@/js/AvaNetwork";
 import store from '@/store'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import { WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -97,7 +97,7 @@ export default class TxHistoryRow extends Vue {
     }
 
     get addresses() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         if (!wallet) return []
 
         return wallet.getHistoryAddresses()
@@ -123,9 +123,7 @@ export default class TxHistoryRow extends Vue {
             let amt = out.amount
             let amtBN = new BN(out.amount, 10)
 
-            let intersection = utxoAddrs.filter((value) =>
-                addrsRaw.includes(value)
-            )
+            let intersection = utxoAddrs.filter((value) => addrsRaw.includes(value))
             let isIncludes = intersection.length > 0
 
             if (isIncludes) {
@@ -158,9 +156,7 @@ export default class TxHistoryRow extends Vue {
             let assetId = utxoOut.assetID
             let amt = utxoOut.amount
 
-            let intersection = utxoAddrs.filter((value) =>
-                addrsRaw.includes(value)
-            )
+            let intersection = utxoAddrs.filter((value) => addrsRaw.includes(value))
             let isIncludes = intersection.length > 0
 
             if (isIncludes) {

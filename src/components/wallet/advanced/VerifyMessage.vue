@@ -20,8 +20,9 @@
             depressed
             @click="verify"
             :disabled="!canSubmit"
-            >{{ $t('advanced.verify.submit') }}</v-btn
         >
+            {{ $t('advanced.verify.submit') }}
+        </v-btn>
         <div v-if="address" class="result">
             <label>{{ $t('advanced.verify.label3') }}</label>
             <p class="address">{{ address }}</p>
@@ -70,6 +71,17 @@ export default class VerifyMessage extends Vue {
         let address = bintools.addressToString(hrp, 'X', addressBuff)
 
         this.address = address
+    }
+
+    clear() {
+        this.message = ''
+        this.signature = ''
+        this.address = ''
+        this.error = ''
+    }
+
+    deactivated() {
+        this.clear()
     }
 
     get canSubmit() {

@@ -8,12 +8,12 @@
         "desc": "Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.",
         "access": {
             "title": "Welcome Back!",
-            "desc": "'Access' your existing Avalanche wallet here.",
+            "desc": "Access your existing Avalanche wallet here.",
             "submit": "Access Wallet"
         },
         "create": {
             "title": "New to Avalanche Wallet?",
-            "desc": "'Create' a new wallet to send, receive and swap Avalanche assets.",
+            "desc": "Create a new wallet to send, receive and swap Avalanche assets.",
             "submit": "Create New Wallet"
         }
     },
@@ -42,6 +42,7 @@
     "access": {
         "title": "How do you want to access your wallet?",
         "create": "Don't have a wallet?",
+        "but_private_key": "Private Key",
         "but_mnemonic": "Mnemonic Key Phrase",
         "but_keystore": "Keystore File",
         "cancel": "Cancel",
@@ -59,9 +60,11 @@
     "wallet": {
         "sidebar": {
             "portfolio": "Portfolio",
-            "manage": "Manage",
+            "manage": "Manage Keys",
             "send": "Send",
+            "export": "Cross Chain",
             "earn": "Earn",
+            "studio": "Studio",
             "advanced": "Advanced"
         },
         "address_card": {},
@@ -100,7 +103,7 @@
         "info2": "I bought coins in the Token Sale. Where are my AVAX?",
         "info2_desc": "This wallet is connected to the Avalanche Everest test network. Your purchase will appear in the wallet after the Avalanche Mainnet launch.",
         "hover1": "View Address QR Code",
-        "hover2": "Print",
+        "hover2": "Paper Wallet",
         "hover3": "Copy",
         "hover4": "View Mainnet Address",
         "balance": {
@@ -165,6 +168,7 @@
         "import_key_success_title": "Key Added",
         "import_key_success_msg": "Private key and assets added to the wallet.",
         "tooltip": "This key will be forgotten when you refresh the browser.",
+        "view_priv_key": "View Private Key",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -235,6 +239,7 @@
                 "export": "Export Transaction ID:",
                 "import": "Import Transaction ID:",
                 "message": "You have successfully transferred between chains.",
+                "again": "Start Again",
                 "back": "Back to Earn"
             }
         },
@@ -249,6 +254,20 @@
                 "completed": "Completed",
                 "stake": "Stake",
                 "reward": "Potential Reward"
+            }
+        },
+        "shared": {
+            "utxo_select": {
+                "available": "Available Balance (P)",
+                "all": "All",
+                "custom": "Custom",
+                "select": "Select UTXOs",
+                "label": "Balance Source",
+                "desc": "Select which tokens to spend."
+            },
+            "advanced": {
+                "toggle_on": "Show Advanced",
+                "toggle_off": "Hide Advanced"
             }
         },
         "validate": {
@@ -404,7 +423,8 @@
             "title": "Chain Import",
             "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
             "submit_x": "Import X",
-            "submit_p": "Import P"
+            "submit_p": "Import P",
+            "submit_c": "Import C"
         },
         "sign": {
             "title": "Sign Message",
@@ -448,7 +468,7 @@
             "copy": "Copy Address"
         },
         "print": {
-            "title": "Print Preview",
+            "title": "Paper Wallet Preview",
             "submit": "Print"
         },
         "keystore": {
@@ -463,6 +483,9 @@
         "mnemonic": {
             "title": "Key Phrase"
         },
+        "priv_key": {
+            "title": "Private Key"
+        },
         "activateWallet": {
             "title": "Activate Wallet",
             "desc": "There is an active wallet. Enter your password to access it.",
@@ -471,6 +494,14 @@
             "cancel2": "(Previous wallet will be forgotten.)",
             "err1": "Invalid password.",
             "err2": "Unable to read wallet data."
+        },
+        "utxo_select": {
+            "title": "Select Tokens",
+            "desc": "Select the source of your funds to use in this transaction.",
+            "col1": "Unlock Date",
+            "col2": "Amount",
+            "available": "Available Balance",
+            "submit": "Select"
         }
     },
     "nav": {

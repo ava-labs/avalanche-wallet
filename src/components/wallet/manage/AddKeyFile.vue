@@ -2,11 +2,7 @@
     <div class="add_key_file">
         <label>{{ $t('keystore.title') }}</label>
         <form @submit.prevent="importKeyfile">
-            <file-input
-                @change="onfile"
-                class="formIn"
-                ref="fileIn"
-            ></file-input>
+            <file-input @change="onfile" class="formIn" ref="fileIn"></file-input>
             <label>{{ $t('keys.export_placeholder1') }}</label>
             <v-text-field
                 class="formIn"
@@ -27,8 +23,9 @@
                 depressed
                 block
                 color="#4C2E56"
-                >{{ $t('keys.import_key_button') }}</v-btn
             >
+                {{ $t('keys.import_key_button') }}
+            </v-btn>
         </form>
     </div>
 </template>
@@ -158,7 +155,6 @@ label {
 }
 
 .formIn {
-    border: none;
     height: 40px;
     font-size: 12px;
     background-color: var(--bg-light) !important;

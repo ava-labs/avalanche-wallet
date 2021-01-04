@@ -1,12 +1,6 @@
 <template>
     <div class="node_selection">
-        <div
-            style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            "
-        >
+        <div style="display: flex; align-items: center; justify-content: space-between">
             <div style="display: flex; align-items: center">
                 <p>{{ $t('earn.delegate.list.prompt') }}:</p>
                 <input

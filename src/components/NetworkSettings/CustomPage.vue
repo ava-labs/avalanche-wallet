@@ -3,11 +3,17 @@
         <form @submit.prevent="submit">
             <div>
                 <label>{{ $t('network.custom_page.label1') }}</label>
-                <input type="text" placeholder="Network Name" v-model="name" />
+                <input
+                    type="text"
+                    placeholder="Network Name"
+                    v-model="name"
+                    data-cy="custom-network-name"
+                />
             </div>
             <div>
                 <label>URL</label>
                 <input
+                    data-cy="custom-network-url"
                     type="text"
                     placeholder="http://localhost:9650"
                     v-model="url"
@@ -35,13 +41,15 @@
             </div>
             <p v-if="err" class="form_error">{{ err }}</p>
             <v-btn
+                data-cy="custom-network-add"
                 :loading="isAjax"
                 height="26"
                 depressed
                 type="submit"
                 class="button_primary"
-                >{{ $t('network.add') }}</v-btn
             >
+                {{ $t('network.add') }}
+            </v-btn>
         </form>
     </div>
 </template>
@@ -162,13 +170,7 @@ export default class CustomPage extends Vue {
             return
         }
 
-        let net = new AvaNetwork(
-            this.name,
-            this.url,
-            netID,
-            this.explorer_api,
-            this.explorer_site
-        )
+        let net = new AvaNetwork(this.name, this.url, netID, this.explorer_api, this.explorer_site)
 
         this.$emit('add', net)
 
