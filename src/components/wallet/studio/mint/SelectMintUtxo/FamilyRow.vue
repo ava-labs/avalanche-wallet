@@ -49,7 +49,8 @@ export default class FamilyRow extends Vue {
     }
 
     get nftMintDict(): IWalletNftMintDict {
-        return this.$store.getters.walletNftMintDict
+        // return this.$store.getters.walletNftMintDict
+        return this.$store.getters['Assets/nftMintDict']
     }
 
     get nftUtxoDict(): IWalletNftMintDict {

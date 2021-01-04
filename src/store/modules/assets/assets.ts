@@ -14,7 +14,13 @@ import AvaAsset from '@/js/AvaAsset'
 
 import { explorer_api } from '@/explorer_api'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
-import { AmountOutput, UTXOSet as AVMUTXOSet, UTXO as AVMUTXO } from 'avalanche/dist/apis/avm'
+import {
+    AmountOutput,
+    UTXOSet as AVMUTXOSet,
+    UTXO as AVMUTXO,
+    UTXO,
+    NFTMintOutput,
+} from 'avalanche/dist/apis/avm'
 import { UnixNow } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 
@@ -114,11 +120,9 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
         addUnknownAssets({ state, getters, rootGetters, dispatch }) {
-            // let balanceDict: IWalletBalanceDict = rootGetters.walletBalanceDict
             let balanceDict: IWalletBalanceDict = state.balanceDict
-            // let nftDict: IWalletNftDict = rootGetters.walletNftDict
             let nftDict: IWalletNftDict = getters.walletNftDict
-            let nftMintDict: IWalletNftMintDict = rootGetters.walletNftMintDict
+            let nftMintDict: IWalletNftMintDict = getters.nftMintDict
 
             for (var id in balanceDict) {
                 if (!state.assetsDict[id]) {
@@ -345,9 +349,39 @@ const assets_module: Module<AssetsState, RootState> = {
             if (!wallet) return null
             return wallet.utxoset
         },
+
         nftFamilies(state): AvaNftFamily[] {
             return state.nftFams
         },
+
+        nftMintDict(state): IWalletNftMintDict {
+            let res: IWalletNftMintDict = {}
+            let mintUTXOs = state.nftMintUTXOs
+
+            for (var i = 0; i < mintUTXOs.length; i++) {
+                let utxo: UTXO = mintUTXOs[i]
+                let assetId = bintools.cb58Encode(utxo.getAssetID())
+
+                let target = res[assetId]
+                if (target) {
+                    target.push(utxo)
+                } else {
+                    res[assetId] = [utxo]
+                }
+            }
+
+            // sort by groupID
+            for (var id in res) {
+                res[id].sort((a, b) => {
+                    let idA = (a.getOutput() as NFTMintOutput).getGroupID()
+                    let idB = (b.getOutput() as NFTMintOutput).getGroupID()
+
+                    return idA - idB
+                })
+            }
+            return res
+        },
+
         assetIds(state): string[] {
             return state.assets.map((asset) => {
                 return asset.id

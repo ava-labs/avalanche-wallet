@@ -208,36 +208,36 @@ export default new Vuex.Store({
         //     return res
         // },
 
-        walletNftMintDict(state: RootState, getters) {
-            let res: IWalletNftMintDict = {}
-
-            // let mintUTXOs = getters.walletNftMintUTXOs
-            //@ts-ignore
-            let mintUTXOs = state.Assets.nftMintUTXOs
-
-            for (var i = 0; i < mintUTXOs.length; i++) {
-                let utxo: UTXO = mintUTXOs[i]
-                let assetId = bintools.cb58Encode(utxo.getAssetID())
-
-                let target = res[assetId]
-                if (target) {
-                    target.push(utxo)
-                } else {
-                    res[assetId] = [utxo]
-                }
-            }
-
-            // sort by groupID
-            for (var id in res) {
-                res[id].sort((a, b) => {
-                    let idA = (a.getOutput() as NFTMintOutput).getGroupID()
-                    let idB = (b.getOutput() as NFTMintOutput).getGroupID()
-
-                    return idA - idB
-                })
-            }
-            return res
-        },
+        // walletNftMintDict(state: RootState, getters) {
+        //     let res: IWalletNftMintDict = {}
+        //
+        //     // let mintUTXOs = getters.walletNftMintUTXOs
+        //     //@ts-ignore
+        //     let mintUTXOs = state.Assets.nftMintUTXOs
+        //
+        //     for (var i = 0; i < mintUTXOs.length; i++) {
+        //         let utxo: UTXO = mintUTXOs[i]
+        //         let assetId = bintools.cb58Encode(utxo.getAssetID())
+        //
+        //         let target = res[assetId]
+        //         if (target) {
+        //             target.push(utxo)
+        //         } else {
+        //             res[assetId] = [utxo]
+        //         }
+        //     }
+        //
+        //     // sort by groupID
+        //     for (var id in res) {
+        //         res[id].sort((a, b) => {
+        //             let idA = (a.getOutput() as NFTMintOutput).getGroupID()
+        //             let idB = (b.getOutput() as NFTMintOutput).getGroupID()
+        //
+        //             return idA - idB
+        //         })
+        //     }
+        //     return res
+        // },
 
         walletStakingBalance(state: RootState): BN {
             let wallet = state.activeWallet

@@ -23,7 +23,8 @@ export default class SelectMintUTXO extends Vue {
     }
 
     get nftMintDict(): IWalletNftMintDict {
-        return this.$store.getters.walletNftMintDict
+        // return this.$store.getters.walletNftMintDict
+        return this.$store.getters['Assets/nftMintDict']
     }
 
     select(utxo: UTXO) {

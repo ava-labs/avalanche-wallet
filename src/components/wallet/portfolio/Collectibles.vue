@@ -48,7 +48,8 @@ export default class Collectibles extends Vue {
     }
 
     get nftMintDict(): IWalletNftMintDict {
-        let dict = this.$store.getters.walletNftMintDict
+        // let dict = this.$store.getters.walletNftMintDict
+        let dict = this.$store.getters['Assets/nftMintDict']
         return dict
     }
 
