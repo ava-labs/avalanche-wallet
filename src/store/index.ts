@@ -309,36 +309,36 @@ export default new Vuex.Store({
         //     return amt
         // },
 
-        walletPlatformBalanceLockedStakeable(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN(0)
-            let unixNow = UnixNow()
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as StakeableLockOut
-                let outType = utxoOut.getOutputID()
-
-                // Type ID 22 is stakeable but locked tokens
-                if (outType === 22) {
-                    let locktime = utxoOut.getStakeableLocktime()
-                    // Make sure the locktime is in the future
-                    if (locktime.gt(unixNow)) {
-                        amt.iadd(utxoOut.getAmount())
-                    }
-                }
-            }
-
-            return amt
-        },
+        // walletPlatformBalanceLockedStakeable(state: RootState): BN {
+        //     let wallet = state.activeWallet
+        //     if (!wallet) return new BN(0)
+        //
+        //     let utxoSet: PlatformUTXOSet
+        //
+        //     utxoSet = wallet.getPlatformUTXOSet()
+        //
+        //     // The only type of asset is AVAX on the P chain
+        //     let amt = new BN(0)
+        //     let unixNow = UnixNow()
+        //
+        //     let utxos = utxoSet.getAllUTXOs()
+        //     for (var n = 0; n < utxos.length; n++) {
+        //         let utxo = utxos[n]
+        //         let utxoOut = utxo.getOutput() as StakeableLockOut
+        //         let outType = utxoOut.getOutputID()
+        //
+        //         // Type ID 22 is stakeable but locked tokens
+        //         if (outType === 22) {
+        //             let locktime = utxoOut.getStakeableLocktime()
+        //             // Make sure the locktime is in the future
+        //             if (locktime.gt(unixNow)) {
+        //                 amt.iadd(utxoOut.getAmount())
+        //             }
+        //         }
+        //     }
+        //
+        //     return amt
+        // },
 
         // Get the balance dict, combine it with existing assets and return a new dict
         // walletAssetsDict(state: RootState, getters): IWalletAssetsDict {

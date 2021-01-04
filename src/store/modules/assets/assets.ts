@@ -322,7 +322,7 @@ const assets_module: Module<AssetsState, RootState> = {
                     asset.addExtra(getters.walletStakingBalance)
                     asset.addExtra(getters.walletPlatformBalance)
                     asset.addExtra(getters.walletPlatformBalanceLocked)
-                    asset.addExtra(rootGetters.walletPlatformBalanceLockedStakeable)
+                    asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
                 }
 
                 res[assetId] = asset
@@ -416,6 +416,37 @@ const assets_module: Module<AssetsState, RootState> = {
                 // Filter unlocked tokens
                 if (locktime.gt(now)) {
                     amt.iadd(utxoOut.getAmount())
+                }
+            }
+
+            return amt
+        },
+
+        walletPlatformBalanceLockedStakeable(state, getters, rootState): BN {
+            let wallet = rootState.activeWallet
+            if (!wallet) return new BN(0)
+
+            let utxoSet: PlatformUTXOSet
+
+            utxoSet = wallet.getPlatformUTXOSet()
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN(0)
+            let unixNow = UnixNow()
+
+            let utxos = utxoSet.getAllUTXOs()
+            for (var n = 0; n < utxos.length; n++) {
+                let utxo = utxos[n]
+                let utxoOut = utxo.getOutput() as StakeableLockOut
+                let outType = utxoOut.getOutputID()
+
+                // Type ID 22 is stakeable but locked tokens
+                if (outType === 22) {
+                    let locktime = utxoOut.getStakeableLocktime()
+                    // Make sure the locktime is in the future
+                    if (locktime.gt(unixNow)) {
+                        amt.iadd(utxoOut.getAmount())
+                    }
                 }
             }
 
