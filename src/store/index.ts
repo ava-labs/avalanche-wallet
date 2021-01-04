@@ -281,33 +281,33 @@ export default new Vuex.Store({
         //     return amt
         // },
 
-        walletPlatformBalanceLocked(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            let now = UnixNow()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN(0)
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as AmountOutput
-                let locktime = utxoOut.getLocktime()
-
-                // Filter unlocked tokens
-                if (locktime.gt(now)) {
-                    amt.iadd(utxoOut.getAmount())
-                }
-            }
-
-            return amt
-        },
+        // walletPlatformBalanceLocked(state: RootState): BN {
+        //     let wallet = state.activeWallet
+        //     if (!wallet) return new BN(0)
+        //
+        //     let utxoSet: PlatformUTXOSet
+        //
+        //     utxoSet = wallet.getPlatformUTXOSet()
+        //
+        //     let now = UnixNow()
+        //
+        //     // The only type of asset is AVAX on the P chain
+        //     let amt = new BN(0)
+        //
+        //     let utxos = utxoSet.getAllUTXOs()
+        //     for (var n = 0; n < utxos.length; n++) {
+        //         let utxo = utxos[n]
+        //         let utxoOut = utxo.getOutput() as AmountOutput
+        //         let locktime = utxoOut.getLocktime()
+        //
+        //         // Filter unlocked tokens
+        //         if (locktime.gt(now)) {
+        //             amt.iadd(utxoOut.getAmount())
+        //         }
+        //     }
+        //
+        //     return amt
+        // },
 
         walletPlatformBalanceLockedStakeable(state: RootState): BN {
             let wallet = state.activeWallet
@@ -451,10 +451,13 @@ export default new Vuex.Store({
         async onAccess(store) {
             store.state.isAuth = true
 
-            await store.dispatch('Assets/updateAvaAsset')
-            store.dispatch('Assets/updateUTXOs')
+            store.dispatch('Assets/updateAvaAsset')
             store.dispatch('Platform/update')
             router.push('/wallet')
+            // setTimeout(() => {
+            console.log('Timeout')
+            store.dispatch('Assets/updateUTXOs')
+            // }, 1500)
         },
 
         // Similar to logout but keeps the Remembered keys.

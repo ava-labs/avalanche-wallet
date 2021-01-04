@@ -143,10 +143,11 @@ class HdWalletCore {
         let isInit =
             this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
         if (!isInit) {
+            // throw 'HD Wallet not ready.'
             setTimeout(() => {
                 this.getUTXOs()
             }, 1000)
-            console.log('HD Not ready try again in 1 sec..')
+            console.info('HD Not ready try again in 1 sec..')
             return
         }
 

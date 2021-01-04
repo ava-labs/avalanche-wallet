@@ -153,25 +153,21 @@ const assets_module: Module<AssetsState, RootState> = {
             }
             console.log('Update UTXOs')
 
-            // commit('setIsUpdateBalance', true)
-
-            // let start = performance.now()
-            try {
-                await wallet.getUTXOs()
-                dispatch('onUtxosUpdated')
-                // let now = performance.now()
-                // console.log(`getUTXOs: ${now - start}`)
-                commit('updateActiveAddress', null, { root: true })
-                // dispatch('History/updateTransactionHistory', null, {
-                //     root: true,
-                // })
-                // let now2 = performance.now()
-                // console.log(`update history: ${now2 - now}`)
-                // commit('setIsUpdateBalance', false)
-            } catch (e) {
-                // commit('setIsUpdateBalance', false)
-                return false
-            }
+            // try {
+            await wallet.getUTXOs()
+            dispatch('onUtxosUpdated')
+            commit('updateActiveAddress', null, { root: true })
+            // } catch (e) {
+            //     console.log('ERR')
+            //     console.error(e)
+            // dispatch('updateUTXOs')
+            //
+            // setTimeout(() => {
+            //     console.log('TRIED AGAIN')
+            //     dispatch('updateUTXOs')
+            // }, 1000)
+            // return
+            // }
         },
 
         // What is the AVA coin in the network
@@ -325,7 +321,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 if (asset.id === state.AVA_ASSET_ID) {
                     asset.addExtra(getters.walletStakingBalance)
                     asset.addExtra(getters.walletPlatformBalance)
-                    asset.addExtra(rootGetters.walletPlatformBalanceLocked)
+                    asset.addExtra(getters.walletPlatformBalanceLocked)
                     asset.addExtra(rootGetters.walletPlatformBalanceLockedStakeable)
                 }
 
@@ -392,6 +388,34 @@ const assets_module: Module<AssetsState, RootState> = {
                 // Filter out locked tokens and stakeable locked tokens
                 if (locktime.lte(now)) {
                     amt.iadd((utxoOut as AmountOutput).getAmount())
+                }
+            }
+
+            return amt
+        },
+
+        walletPlatformBalanceLocked(state, getters, rootState): BN {
+            let wallet = rootState.activeWallet
+            if (!wallet) return new BN(0)
+
+            let utxoSet: PlatformUTXOSet
+
+            utxoSet = wallet.getPlatformUTXOSet()
+
+            let now = UnixNow()
+
+            // The only type of asset is AVAX on the P chain
+            let amt = new BN(0)
+
+            let utxos = utxoSet.getAllUTXOs()
+            for (var n = 0; n < utxos.length; n++) {
+                let utxo = utxos[n]
+                let utxoOut = utxo.getOutput() as AmountOutput
+                let locktime = utxoOut.getLocktime()
+
+                // Filter unlocked tokens
+                if (locktime.gt(now)) {
+                    amt.iadd(utxoOut.getAmount())
                 }
             }
 
