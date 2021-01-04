@@ -37,6 +37,7 @@ class HdWalletCore {
     externalHelper: HdHelper
     platformHelper: HdHelper
     isFetchUtxos: boolean // true if fetching utxos
+    isInit: boolean
 
     constructor(accountHdKey: HDKey, isPublic = true) {
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
@@ -44,9 +45,20 @@ class HdWalletCore {
         this.platformUtxoset = new PlatformUTXOSet()
         this.stakeAmount = new BN(0)
         this.isFetchUtxos = false
+        this.isInit = false
         this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
+
+        this.externalHelper.oninit().then((res) => {
+            this.updateInitState()
+        })
+        this.internalHelper.oninit().then((res) => {
+            this.updateInitState()
+        })
+        this.platformHelper.oninit().then((res) => {
+            this.updateInitState()
+        })
     }
 
     getUTXOSet(): AVMUTXOSet {
@@ -135,6 +147,11 @@ class HdWalletCore {
             this.platformHelper.isFetchUtxo
 
         if (!this.isFetchUtxos) console.log('Fetch complete')
+    }
+
+    updateInitState() {
+        this.isInit =
+            this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {

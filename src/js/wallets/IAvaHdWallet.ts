@@ -51,6 +51,7 @@ export interface AvaWalletCore {
     ethAddressBech: string
     ethBalance: BN
     isFetchUtxos: boolean // true if fetching utxos
+    isInit: boolean // True once the wallet can be used (ex. when HD index is found)
     getCurrentAddress(): string
     getChangeAddress(): string
     getDerivedAddresses(): string[]

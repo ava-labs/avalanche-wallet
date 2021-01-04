@@ -18,12 +18,21 @@ const history_module: Module<HistoryState, RootState> = {
         },
     },
     actions: {
-        async updateTransactionHistory({ state, rootState, rootGetters }) {
+        async updateTransactionHistory({ state, rootState, rootGetters, dispatch }) {
             let wallet = rootState.activeWallet
             if (!wallet) return
 
+            // If wallet is still loading delay
             // @ts-ignore
             let network = rootState.Network.selectedNetwork
+
+            if (!wallet.isInit) {
+                console.log('NOT INIT')
+                setTimeout(() => {
+                    dispatch('updateTransactionHistory')
+                }, 500)
+                return false
+            }
 
             // can't update if there is no explorer or no wallet
             if (!network.explorerUrl || rootState.address === null) {

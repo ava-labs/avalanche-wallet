@@ -77,11 +77,11 @@ class HdHelper {
         this.masterKey = masterKey
         this.hdIndex = 0
         this.isPublic = isPublic
-        this.oninit()
+        // this.oninit()
     }
 
     async oninit() {
-        this.findHdIndex()
+        await this.findHdIndex()
         // this.hdIndex = await this.findAvailableIndexNode();
         // this.hdIndex = await this.findAvailableIndexExplorer();
 

@@ -65,7 +65,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     ethBalance: BN
 
     isFetchUtxos: boolean
-
+    isInit: boolean
     constructor(pk: string) {
         this.key = pk
 
@@ -104,6 +104,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         this.isFetchUtxos = false
 
         this.type = 'singleton'
+        this.isInit = true
     }
 
     async chainTransfer(
