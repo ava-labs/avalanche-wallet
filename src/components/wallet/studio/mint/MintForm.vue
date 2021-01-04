@@ -56,7 +56,7 @@
             </div>
             <div class="form_col">
                 <template>
-                    <div>
+                    <div class="form_cont">
                         <Component
                             v-if="nftFormType === 'custom'"
                             :is="formComponent"
@@ -480,6 +480,9 @@ $col_pad: 24px;
     //border: none !important;
 }
 
+.form_cont {
+    margin-bottom: 30px;
+}
 .success_cont {
     max-width: 100%;
     margin: 24px 0;

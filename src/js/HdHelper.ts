@@ -16,7 +16,13 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 import store from '@/store'
 
-import { getAddressChains } from '@/explorer_api'
+import {
+    getAddressChains,
+    getAddressDetailX,
+    getAddressTransactionsP,
+    isAddressUsedX,
+} from '@/explorer_api'
+import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/IAvaHdWallet'
 
@@ -411,43 +417,6 @@ class HdHelper {
         }
         return await this.findAvailableIndexNode(start + SCAN_RANGE)
     }
-
-    // Get tx history data for the index from the explorer
-    // return true if this address has a history
-    // returns false if no explorer is present
-    // async checkIndexExplorer(index: number): Promise<boolean>{
-    //     let addr = this.getAddressForIndex(index);
-    //
-    //     try{
-    //         if(this.chainId==='X'){
-    //             // let res = await getAddressDetailX(addr)
-    //             let res = await isAddressUsedX(addr);
-    //             if(res) return true;
-    //         }else{ // P chain
-    //             // let res = await getAddressTransactionsP(addr)
-    //             let res = await isAddressUsedP(addr);
-    //             if(res) return true;
-    //             // let count = res.count;
-    //             // if(count > 0) return true;
-    //         }
-    //     }catch(e){
-    //         // IF there is no available api, catch the 404 and return false
-    //         return false;
-    //     }
-    //     return false;
-    // }
-
-    // Returns the key of the first index that has no utxos
-    // getFirstAvailableKey(){
-    //     for(var i=0; i<this.hdIndex; i++){
-    //         let key = this.getKeyForIndex(i);
-    //         let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
-    //         if(utxoIds.length === 0){
-    //             return key;
-    //         }
-    //     }
-    //     return this.getCurrentKey();
-    // }
 
     // Returns the key of the first index that has no utxos
     getFirstAvailableAddress(): string {

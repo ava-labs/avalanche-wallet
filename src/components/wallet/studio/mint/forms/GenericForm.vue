@@ -5,19 +5,18 @@
             <input class="text" max="128" v-model="title" @input="onInput" />
         </div>
         <div class="input_cont">
-            <label>Image URL</label>
+            <label>Image URL*</label>
             <input class="text" placeholder="https://" v-model="imgUrl" @input="onInput" />
         </div>
         <div class="input_cont">
-            <label>Description (Optional)</label>
+            <label>Description</label>
             <textarea class="text" maxlength="256" v-model="description" @input="onInput" />
         </div>
-        <p class="err">{{ error }}</p>
-
         <!--        <div class="input_cont">-->
-        <!--            <textarea maxlength="1024" type="text" v-model="val" @input="onInput" />-->
-        <!--            <p class="counter">{{ val.length }} / 1024</p>-->
+        <!--            <label>Corner Radius</label>-->
+        <!--            <input type="number" min="0" max="100" v-model="radius"  @input="onInput"/>-->
         <!--        </div>-->
+        <p class="err">{{ error }}</p>
     </div>
 </template>
 <script lang="ts">
@@ -35,12 +34,13 @@ export default class GenericForm extends Vue {
     description = ''
     imgUrl = ''
     error = ''
+    // radius = 15
 
     validate() {
-        if (!this.title) {
-            this.error = 'You must set a title.'
-            return false
-        }
+        // if (!this.title) {
+        //     this.error = 'You must set a title.'
+        //     return false
+        // }
 
         try {
             new URL(this.imgUrl)
@@ -58,6 +58,11 @@ export default class GenericForm extends Vue {
             return false
         }
 
+        // if (this.radius < 0 || this.radius > 100) {
+        //     this.error = 'Invalid corner radius.'
+        //     return false
+        // }
+
         return true
     }
 
@@ -71,6 +76,7 @@ export default class GenericForm extends Vue {
                 type: 'generic',
                 title: this.title,
                 img: this.imgUrl,
+                // radius: this.radius,
                 desc: this.description,
             }
 
@@ -80,8 +86,6 @@ export default class GenericForm extends Vue {
                 },
             }
         }
-
-        // this.$emit('onInput', JSON.stringify(msg))
         this.$emit('onInput', msg)
     }
 }

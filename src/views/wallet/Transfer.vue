@@ -265,11 +265,17 @@ export default class Transfer extends Vue {
         this.txId = ''
         this.isSuccess = false
         this.cancelConfirm()
+
+        this.orders = []
+        this.nftOrders = []
+        this.formOrders = []
+        this.formNftOrders = []
     }
 
     clearForm() {
         this.addressIn = ''
         this.memo = ''
+
         // Clear transactions list
         // @ts-ignore
         this.$refs.txList.clear()

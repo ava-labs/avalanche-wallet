@@ -5,7 +5,7 @@
         <template v-if="!isError">
             <div class="generic_view">
                 <img :src="img" />
-                <p class="nft_title">{{ title }}</p>
+                <p class="nft_title" v-if="title">{{ title }}</p>
                 <div class="desc" v-if="desc">{{ desc }}</div>
             </div>
         </template>

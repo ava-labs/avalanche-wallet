@@ -110,6 +110,8 @@ export default class NftList extends Vue {
 
     clear() {
         this.addedNfts = []
+        this.groupUtxos = {}
+        this.emit()
     }
 
     addNft(utxo: UTXO) {
