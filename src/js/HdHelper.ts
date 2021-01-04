@@ -16,12 +16,7 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 import store from '@/store'
 
-import {
-    getAddressChains,
-    getAddressDetailX,
-    getAddressTransactionsP,
-    isAddressUsedX,
-} from '@/explorer_api'
+import { getAddressChains } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/IAvaHdWallet'
