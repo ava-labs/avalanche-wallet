@@ -27,7 +27,6 @@ const history_module: Module<HistoryState, RootState> = {
             let network = rootState.Network.selectedNetwork
 
             if (!wallet.isInit) {
-                console.log('NOT INIT')
                 setTimeout(() => {
                     dispatch('updateTransactionHistory')
                 }, 500)
