@@ -26,10 +26,18 @@
             </div>
         </div>
         <div class="pages">
-            <transition name="fade" mode="out-in">
-                <fungibles v-if="tab === `fungibles`" key="fungibles" :search="search"></fungibles>
-                <collectibles v-else key="fungibles" :search="search"></collectibles>
-            </transition>
+            <transition-group name="fade" mode="out-in">
+                <fungibles
+                    v-show="tab === `fungibles`"
+                    key="fungibles"
+                    :search="search"
+                ></fungibles>
+                <collectibles
+                    v-show="tab === `collectibles`"
+                    key="collectibles"
+                    :search="search"
+                ></collectibles>
+            </transition-group>
         </div>
     </div>
 </template>

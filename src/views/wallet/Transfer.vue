@@ -5,10 +5,10 @@
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
         <div class="card_body" v-else>
-            <FormC v-if="formType === 'C'">
+            <FormC v-show="formType === 'C'">
                 <ChainInput v-model="formType"></ChainInput>
             </FormC>
-            <div class="new_order_Form" v-else>
+            <div class="new_order_Form" v-show="formType === 'X'">
                 <div class="lists">
                     <ChainInput v-model="formType"></ChainInput>
                     <div v-show="!isConfirm">
@@ -278,7 +278,7 @@ export default class Transfer extends Vue {
 
         // Clear transactions list
         // @ts-ignore
-        this.$refs.txList.clear()
+        this.$refs.txList.reset()
 
         // Clear NFT list
         if (this.hasNFT) {
@@ -395,6 +395,10 @@ export default class Transfer extends Vue {
 
     get addresses() {
         return this.$store.state.addresses
+    }
+
+    activated() {
+        this.clearForm()
     }
 }
 </script>

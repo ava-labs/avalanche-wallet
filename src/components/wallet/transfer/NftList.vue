@@ -109,9 +109,11 @@ export default class NftList extends Vue {
     }
 
     clear() {
-        this.addedNfts = []
-        this.groupUtxos = {}
-        this.emit()
+        if (!this.$route.query.nft) {
+            this.addedNfts = []
+            this.groupUtxos = {}
+            this.emit()
+        }
     }
 
     addNft(utxo: UTXO) {
@@ -140,7 +142,11 @@ export default class NftList extends Vue {
         this.$refs.popup.isActive = true
     }
 
-    mounted() {
+    deactivated() {
+        this.clear()
+    }
+
+    activated() {
         if (this.$route.query.nft) {
             let utxoId = this.$route.query.nft as string
             let target = this.nftUTXOs.find((el) => {

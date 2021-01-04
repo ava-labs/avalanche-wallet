@@ -175,6 +175,9 @@ export default class ChainTransfer extends Vue {
     //     this.sourceChain = this.targetChain
     //     this.targetChain = temp
     // }
+    activated() {
+        this.$refs.form.clear()
+    }
 
     get ava_asset(): AvaAsset | null {
         let ava = this.$store.getters['Assets/AssetAVA']

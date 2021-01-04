@@ -103,7 +103,7 @@
         "info2": "I bought coins in the Token Sale. Where are my AVAX?",
         "info2_desc": "This wallet is connected to the Avalanche Everest test network. Your purchase will appear in the wallet after the Avalanche Mainnet launch.",
         "hover1": "View Address QR Code",
-        "hover2": "Print",
+        "hover2": "Paper Wallet",
         "hover3": "Copy",
         "hover4": "View Mainnet Address",
         "balance": {
@@ -469,7 +469,7 @@
             "copy": "Copy Address"
         },
         "print": {
-            "title": "Print Preview",
+            "title": "Paper Wallet Preview",
             "submit": "Print"
         },
         "keystore": {

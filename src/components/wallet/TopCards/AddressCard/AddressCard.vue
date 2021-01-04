@@ -2,13 +2,13 @@
     <div class="addr_card">
         <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
         <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
-        <p class="addr_info">{{ $t('top.address.desc') }}</p>
+        <p class="addr_info">{{ addressMsg }}</p>
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="subtitle">{{ $t('top.address.derived') }}</p>
+                <p class="subtitle">{{ addressLabel }}</p>
 
                 <p class="addr_text" data-cy="wallet_address">
                     {{ activeAddress }}
@@ -89,18 +89,43 @@ export default class AddressCard extends Vue {
         this.updateQR()
     }
 
+    get addressLabel(): string {
+        switch (this.chainNow) {
+            default:
+                return 'Derived Wallet Address'
+            case 'P':
+                return 'Derived Platform Wallet Address'
+            case 'C':
+                return 'Derived EVM Wallet Address'
+        }
+    }
+
+    get addressMsg(): string {
+        switch (this.chainNow) {
+            default:
+                return `This is your X Chain address to receive funds. Your address will change after every deposit.`
+            case 'P':
+                return 'This is your Platform Chain address to receive staking rewards and cross chain transfers.'
+            case 'C':
+                return 'This is your Contract Chain address. Use it to interact with the ethereum virtual machine. '
+        }
+    }
     get isDayTheme(): boolean {
         //@ts-ignore
         return this.$root.theme === 'day'
     }
 
     get walletType(): WalletNameType {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
+        if (!wallet) return 'mnemonic'
         return wallet.type
     }
 
+    get activeWallet(): WalletType | null {
+        return this.$store.state.activeWallet
+    }
     get address() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -108,7 +133,7 @@ export default class AddressCard extends Vue {
     }
 
     get addressPVM() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -117,12 +142,12 @@ export default class AddressCard extends Vue {
     }
 
     get addressEVM() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
 
-        return `C-0x` + wallet.getEvmAddress()
+        return '0x' + wallet.getEvmAddress()
     }
 
     get activeAddress(): string {
