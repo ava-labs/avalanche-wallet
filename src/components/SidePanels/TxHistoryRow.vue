@@ -157,7 +157,7 @@ export default class TxHistoryRow extends Vue {
                 return isIncludes
             case 'add_validator':
             case 'add_delegator':
-                return isIncludes && !!utxo.redeemingTransactionID
+                return isIncludes && utxo.stake
             case 'operation':
                 // if no payload it is avax
                 // check if it is from wallet
