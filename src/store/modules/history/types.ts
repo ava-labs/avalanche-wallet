@@ -22,6 +22,8 @@ export interface ITransactionData {
     timestamp: string
     txFee: number
     type: TransactionType
+    validatorStart: number
+    validatorEnd: number
 }
 
 interface TransactionInput {
