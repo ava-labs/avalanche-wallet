@@ -21,7 +21,10 @@
                 <p>{{ memo }}</p>
             </div>
             <div v-if="transaction.rewarded" class="rewarded">
-                {{ $t('transactions.rewarded') }} ✅
+                ✅&nbsp;{{ $t('transactions.rewarded') }}
+            </div>
+            <div v-else-if="!transaction.rewarded && !!transaction.rewardedTime" class="rewarded">
+                ❌&nbsp;{{ $t('transactions.not_rewarded') }}
             </div>
             <div class="utxos">
                 <tx-history-value
@@ -143,11 +146,14 @@ export default class TxHistoryRow extends Vue {
         return wallet.getHistoryAddresses()
     }
 
-    includeUtxo(utxo: UTXO, isInput?: boolean) {
+    get addrsRaw() {
         let addrs: string[] = this.addresses
-        let addrsRaw = addrs.map((addr) => addr.split('-')[1])
+        return addrs.map((addr) => addr.split('-')[1])
+    }
 
-        const isIncludes = utxo.addresses.filter((value) => addrsRaw.includes(value)).length > 0
+    includeUtxo(utxo: UTXO, isInput?: boolean) {
+        const isIncludes =
+            utxo.addresses.filter((value) => this.addrsRaw.includes(value)).length > 0
 
         switch (this.transaction.type) {
             case 'export':
@@ -160,7 +166,7 @@ export default class TxHistoryRow extends Vue {
                 return isIncludes
             case 'add_validator':
             case 'add_delegator':
-                return isIncludes && utxo.stake
+                return !isInput && utxo.stake
             case 'operation':
                 // if no payload it is avax
                 // check if it is from wallet
@@ -312,7 +318,7 @@ export default class TxHistoryRow extends Vue {
     }
 
     get operationColor() {
-        return this.operationDirection === 'Received' ? '#6BC688' : '#d04c4c'
+        return this.operationDirection === 'Received' ? 'success' : 'sent'
     }
 
     get operationDirection() {
