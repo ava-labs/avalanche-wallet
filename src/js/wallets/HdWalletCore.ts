@@ -156,7 +156,8 @@ class HdWalletCore {
     // Returns addresses to check for history
     getHistoryAddresses(): string[] {
         let internalIndex = this.internalHelper.hdIndex
-        let externalIndex = this.externalHelper.hdIndex
+        // They share the same address space, so whatever has the highest index
+        let externalIndex = Math.max(this.externalHelper.hdIndex, this.platformHelper.hdIndex)
 
         let internal = this.internalHelper.getAllDerivedAddresses(internalIndex)
         let external = this.externalHelper.getAllDerivedAddresses(externalIndex)
