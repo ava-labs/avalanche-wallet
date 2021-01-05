@@ -35,7 +35,7 @@ export default class TxHistoryValue extends Vue {
         )
     }
     get color(): string {
-        if (this.type === 'operation') return this.operationColor
+        // if (this.type === 'operation') return this.operationColor
         if (this.type === 'add_validator') return '#008dc5'
         if (this.type === 'add_delegator') return '#008dc5'
 
