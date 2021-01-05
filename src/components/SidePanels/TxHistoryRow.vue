@@ -16,7 +16,10 @@
                     <fa icon="search"></fa>
                 </a>
             </p>
-            <div v-if="memo" class="memo">Memo: {{ memo }}</div>
+            <div v-if="memo" class="memo">
+                <p>Memo:</p>
+                <p>{{ memo }}</p>
+            </div>
             <div v-if="transaction.rewarded" class="rewarded">
                 ✅ {{ $t('transactions.rewarded') }}
             </div>
@@ -383,6 +386,12 @@ export default class TxHistoryRow extends Vue {
 .memo {
     font-size: 12px;
     color: main.$primary-color-light;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+
+    p:last-of-type {
+        text-align: right;
+    }
 }
 
 .nfts {
