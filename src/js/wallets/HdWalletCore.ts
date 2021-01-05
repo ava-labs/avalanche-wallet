@@ -145,8 +145,6 @@ class HdWalletCore {
             this.externalHelper.isFetchUtxo ||
             this.internalHelper.isFetchUtxo ||
             this.platformHelper.isFetchUtxo
-
-        if (!this.isFetchUtxos) console.log('Fetch complete')
     }
 
     updateInitState() {
