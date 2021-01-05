@@ -32,18 +32,19 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.isUpdating = true
 
-            let addresses: string[] = wallet.getHistoryAddresses()
+            let avmAddrs: string[] = wallet.getAllAddressesX()
+            let pvmAddrs: string[] = wallet.getAllAddressesP()
 
             // this shouldnt ever happen, but to avoid getting every transaction...
-            if (addresses.length === 0) {
+            if (avmAddrs.length === 0) {
                 state.isUpdating = false
                 return
             }
 
             let limit = 20
 
-            let data = await getAddressHistory(addresses, limit, avm.getBlockchainID())
-            let dataP = await getAddressHistory(addresses, limit, pChain.getBlockchainID())
+            let data = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            let dataP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
             let transactions = data.transactions
                 .concat(dataP.transactions)
