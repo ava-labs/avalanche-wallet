@@ -21,10 +21,15 @@
                 <p>{{ memo }}</p>
             </div>
             <div v-if="transaction.rewarded" class="rewarded">
-                ✅&nbsp;{{ $t('transactions.rewarded') }}
+                <span><fa icon="check-square"></fa></span>
+                {{ $t('transactions.rewarded') }}
             </div>
-            <div v-else-if="!transaction.rewarded && !!transaction.rewardedTime" class="rewarded">
-                ❌&nbsp;{{ $t('transactions.not_rewarded') }}
+            <div
+                v-else-if="!transaction.rewarded && !!transaction.rewardedTime"
+                class="rewarded not_rewarded"
+            >
+                <span><fa icon="times"></fa></span>
+                {{ $t('transactions.not_rewarded') }}
             </div>
             <div class="utxos">
                 <tx-history-value
@@ -400,6 +405,15 @@ export default class TxHistoryRow extends Vue {
     }
 }
 
+.rewarded {
+    span {
+        margin-right: 6px;
+        color: var(--success);
+    }
+}
+.not_rewarded span {
+    color: var(--error);
+}
 .nfts {
     display: flex;
     flex-wrap: wrap;
