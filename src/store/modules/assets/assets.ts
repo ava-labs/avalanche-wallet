@@ -89,8 +89,6 @@ const assets_module: Module<AssetsState, RootState> = {
                 return
             }
 
-            console.log('UTXOs updated.')
-
             await dispatch('updateBalanceDict')
             await dispatch('updateUtxoArrays')
             await dispatch('addUnknownAssets')
@@ -151,23 +149,10 @@ const assets_module: Module<AssetsState, RootState> = {
             if (!wallet) {
                 return false
             }
-            console.log('Update UTXOs')
 
-            // try {
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
             commit('updateActiveAddress', null, { root: true })
-            // } catch (e) {
-            //     console.log('ERR')
-            //     console.error(e)
-            // dispatch('updateUTXOs')
-            //
-            // setTimeout(() => {
-            //     console.log('TRIED AGAIN')
-            //     dispatch('updateUTXOs')
-            // }, 1000)
-            // return
-            // }
         },
 
         // What is the AVA coin in the network
@@ -183,7 +168,6 @@ const assets_module: Module<AssetsState, RootState> = {
             let utxoSet = getters.walletAvmUtxoSet
             if (utxoSet === null) return {}
 
-            console.log('Update balance dict')
             let dict: IWalletBalanceDict = {}
 
             let unixNox = UnixNow()
@@ -275,8 +259,6 @@ const assets_module: Module<AssetsState, RootState> = {
             let utxos = state.nftUTXOs
             let res: IWalletNftDict = {}
 
-            console.log('NFT Dict 2')
-
             for (var i = 0; i < utxos.length; i++) {
                 let utxo = utxos[i]
                 let assetIdBuff = utxo.getAssetID()
@@ -293,8 +275,6 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         walletAssetsDict(state, getters, rootState, rootGetters): IWalletAssetsDict {
-            console.log('Assets Dict 2')
-
             // let balanceDict: IWalletBalanceDict = getters.walletBalanceDict
             //@ts-ignore
             let balanceDict: IWalletBalanceDict = state.balanceDict
