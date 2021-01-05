@@ -128,10 +128,7 @@ export default new Vuex.Store({
             store.dispatch('Assets/updateAvaAsset')
             store.dispatch('Platform/update')
             router.push('/wallet')
-            // setTimeout(() => {
-            console.log('Timeout')
             store.dispatch('Assets/updateUTXOs')
-            // }, 1500)
         },
 
         // Similar to logout but keeps the Remembered keys.
