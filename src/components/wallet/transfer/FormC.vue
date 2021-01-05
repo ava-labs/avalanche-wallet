@@ -142,11 +142,12 @@ export default class FormC extends Vue {
 
     txHash = ''
 
-    get wallet(): WalletType {
+    get wallet(): WalletType | null {
         return this.$store.state.activeWallet
     }
 
-    get rawBalance() {
+    get rawBalance(): BN {
+        if (!this.wallet) return new BN(0)
         return this.wallet.ethBalance
     }
     get balance() {
@@ -253,6 +254,7 @@ export default class FormC extends Vue {
     }
 
     async submit() {
+        if (!this.wallet) return
         this.isLoading = true
         let formAmt = this.formAmount.mul(new BN(Math.pow(10, 9)))
 
@@ -287,6 +289,7 @@ export default class FormC extends Vue {
         this.canSendAgain = false
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         }, 3000)
     }

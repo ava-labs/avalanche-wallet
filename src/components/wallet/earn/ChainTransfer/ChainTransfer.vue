@@ -459,9 +459,11 @@ export default class ChainTransfer extends Vue {
         if (this.targetChain === 'C') {
             setTimeout(() => {
                 this.$store.dispatch('Assets/updateUTXOs')
+                this.$store.dispatch('History/updateTransactionHistory')
             }, 3000)
         } else {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
         }
     }
 

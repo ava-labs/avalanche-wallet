@@ -302,6 +302,7 @@ export default class Transfer extends Vue {
         this.canSendAgain = false
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         }, 3000)
     }

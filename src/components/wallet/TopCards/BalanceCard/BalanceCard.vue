@@ -125,6 +125,7 @@ export default class BalanceCard extends Vue {
     }
 
     get avmUnlocked(): BN {
+        console.log(this.ava_asset)
         if (!this.ava_asset) return new BN(0)
         return this.ava_asset.amount
     }

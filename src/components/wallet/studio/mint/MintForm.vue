@@ -322,6 +322,7 @@ export default class MintNft extends Vue {
 
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
         }, 2000)
     }
 

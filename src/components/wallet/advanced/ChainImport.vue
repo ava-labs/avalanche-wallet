@@ -114,6 +114,7 @@ export default class ChainImport extends Vue {
         })
 
         this.$store.dispatch('Assets/updateUTXOs')
+        this.$store.dispatch('History/updateTransactionHistory')
     }
 
     onError(err: Error) {
