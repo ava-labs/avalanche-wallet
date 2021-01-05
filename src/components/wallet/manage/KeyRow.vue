@@ -72,6 +72,9 @@
                         <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal">
                             {{ $t('keys.view_priv_key') }}
                         </button>
+                        <button v-if="walletType == 'ledger'" @click="showVerifyAddressModal">
+                            {{ $t('keys.view_verify_addr') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -100,7 +103,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import { bintools, keyChain } from '@/AVA'
+import { ava, bintools, keyChain } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
@@ -113,6 +116,8 @@ import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
 import { WalletNameType, WalletType } from '@/store/types'
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
+import { getPreferredHRP } from 'avalanche/dist/utils'
+import { Buffer } from 'avalanche'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -237,6 +242,36 @@ export default class KeyRow extends Vue {
     showPrivateKeyModal() {
         //@ts-ignore
         this.$refs.modal_priv_key.open()
+    }
+
+    async showVerifyAddressModal() {
+        this.$store.commit('Ledger/openModal', {
+            title: 'Verify Address',
+            info: 'TODO',
+        })
+        console.log(this.wallet)
+        console.log(bintools)
+
+        // @ts-ignore
+        let pkHex = this.wallet.externalHelper.masterKey.publicKey.toString('hex')
+        let pkBuff = Buffer.from(pkHex, 'hex')
+        let hrp = getPreferredHRP(ava.getNetworkID())
+
+        let chainId = this.wallet.chainId
+
+        // No need for PlatformKeypair because addressToString uses chainID to decode
+        let keypair = new AVMKeyPair(hrp, chainId)
+        let addrBuf = keypair.addressFromPublicKey(pkBuff)
+        let addr = bintools.addressToString(hrp, chainId, addrBuf)
+
+        console.log(addr)
+
+        // @ts-ignore
+        await this.wallet.app.getWalletAddress(`44'/9000'/0'`)
+
+        debugger
+
+        this.$store.commit('Ledger/closeModal')
     }
 }
 </script>

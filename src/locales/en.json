@@ -170,6 +170,7 @@
         "tooltip": "This key will be forgotten when you refresh the browser.",
         "view_priv_key": "View Private Key",
         "view_key": "View Key Phrase",
+        "view_verify_addr": "Verify Address",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
         "remove_key": "Remove Key",
