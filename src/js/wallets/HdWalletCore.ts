@@ -279,9 +279,18 @@ class HdWalletCore {
     }
 
     onnetworkchange(): void {
-        this.externalHelper.onNetworkChange()
-        this.internalHelper.onNetworkChange()
-        this.platformHelper.onNetworkChange()
+        this.isInit = false
+        this.stakeAmount = new BN(0)
+
+        this.externalHelper.onNetworkChange().then(() => {
+            this.updateInitState()
+        })
+        this.internalHelper.onNetworkChange().then(() => {
+            this.updateInitState()
+        })
+        this.platformHelper.onNetworkChange().then(() => {
+            this.updateInitState()
+        })
 
         // TODO: Handle EVM changes
     }

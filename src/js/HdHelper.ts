@@ -95,6 +95,7 @@ class HdHelper {
     // Clear internal data and scan again
     async onNetworkChange() {
         this.clearCache()
+        this.isInit = false
         let hrp = getPreferredHRP(ava.getNetworkID())
         if (this.chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, this.chainId)
