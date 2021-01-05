@@ -5,7 +5,7 @@
                 Please confirm this action on your ledger device.
             </p>
             <p class="message">{{ title }}</p>
-            <p class="message" v-if="!messages">{{ info }}</p>
+            <p class="message" v-if="info">{{ info }}</p>
             <p class="message" v-else v-for="message in messages" :key="message">
                 {{ message }}
             </p>

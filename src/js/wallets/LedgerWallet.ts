@@ -40,7 +40,7 @@ import {
 } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { WalletNameType } from '@/store/types'
+import { LedgerAppConfigType, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
 
@@ -51,8 +51,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddress: string
     ethBalance: BN
     ethAddressBech: string
+    config: LedgerAppConfigType
 
-    constructor(app: AppAvax, hdkey: HDKey) {
+    constructor(app: AppAvax, hdkey: HDKey, appConfig: LedgerAppConfigType) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
@@ -61,6 +62,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         this.ethAddress = ''
         this.ethBalance = new BN(0)
         this.ethAddressBech = ''
+        this.config = appConfig
     }
 
     static async fromApp(app: AppAvax) {
@@ -70,7 +72,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        return new LedgerWallet(app, hd)
+        let appConfig = await app.getAppConfiguration()
+
+        return new LedgerWallet(app, hd, appConfig)
     }
 
     async sign<
@@ -80,6 +84,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const accountPath = bippath.fromString(`m/44'/9000'/0'`)
         const changePath = bippath.fromString(`m/44'/9000'/0'/1/${this.internalHelper.hdIndex}`)
         const changeAddr = this.internalHelper.getAddressForIndex(this.internalHelper.hdIndex)
+        const canParseTx = this.config.version >= '0.3.1'
 
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
@@ -89,6 +94,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let outs = tx.getOuts()
 
         let operations: TransferableOperation[] = []
+
+        // Used for signHash function (app version < 0.3.1)
+        const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
 
         // Try to get operations, it will fail if there are none, ignore and continue
         try {
@@ -143,25 +151,28 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         // Collect outputs to display to ledger lock modal
-        for (let i = 0; i < outs.length; i++) {
-            outs[i]
-                .getOutput()
-                .getAddresses()
-                .forEach((value) => {
-                    const addr = bintools.addressToString(hrp, chainId, value)
-                    // @ts-ignore
-                    const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
+        // only necessary if signing transaction (not hash)
+        if (canParseTx)
+            for (let i = 0; i < outs.length; i++) {
+                outs[i]
+                    .getOutput()
+                    .getAddresses()
+                    .forEach((value) => {
+                        const addr = bintools.addressToString(hrp, chainId, value)
+                        // @ts-ignore
+                        const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
 
-                    if (changeAddr !== addr) outputs.push(`${addr} - ${amt.toString()} AVAX`)
-                })
-        }
+                        if (changeAddr !== addr) outputs.push(`${addr} - ${amt.toString()} AVAX`)
+                    })
+            }
 
         // Open the ledger modal to block view
         // and ask user to sign with device
         try {
             store.commit('Ledger/openModal', {
-                title: `Sign Transaction`,
-                messages: outputs,
+                title: canParseTx ? 'Sign Transaction' : 'Sign Hash',
+                messages: canParseTx ? outputs : [],
+                info: canParseTx ? null : msg.toString('hex').toUpperCase(),
             })
 
             let uniquePaths = paths.filter((val: any, i: number) => {
@@ -172,13 +183,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 return bippath.fromString(path, false)
             })
 
-            let ledgerSignedTx = await this.app.signTransaction(
-                accountPath,
-                bip32Paths,
-                txbuff,
-                changePath
-            )
-            let sigMap = ledgerSignedTx.signatures
+            let ledgerSignedTx = canParseTx
+                ? await this.app.signTransaction(accountPath, bip32Paths, txbuff, changePath)
+                : await this.app.signHash(accountPath, bip32Paths, msg)
+            let sigMap = canParseTx ? ledgerSignedTx.signatures : ledgerSignedTx
 
             store.commit('Ledger/closeModal')
 
