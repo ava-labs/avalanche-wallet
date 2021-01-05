@@ -41,7 +41,7 @@ import {
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
-import { digestMessage } from '@/helpers/helper'
+import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
@@ -79,12 +79,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
         const accountPath = bippath.fromString(`m/44'/9000'/0'`)
         const changePath = bippath.fromString(`m/44'/9000'/0'/1/${this.internalHelper.hdIndex}`)
+        const changeAddr = this.internalHelper.getAddressForIndex(this.internalHelper.hdIndex)
 
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
         let txbuff = unsignedTx.toBuffer()
         let ins = tx.getIns()
+        let outs = tx.getOuts()
 
         let operations: TransferableOperation[] = []
 
@@ -103,7 +105,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let chainId = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
         let paths: string[] = []
-        // let outputs: string[] = []
+        let outputs: string[] = []
 
         // Collect paths derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
@@ -124,7 +126,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         // Do the Same for operational inputs, if there are any...
-        for (var i = 0; i < operations.length; i++) {
+        for (let i = 0; i < operations.length; i++) {
             let op = operations[i]
             let sigidxs: SigIdx[] = op.getOperation().getSigIdxs()
             let sources = sigidxs.map((sigidx) => sigidx.getSource())
@@ -140,12 +142,26 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
         }
 
+        // Collect outputs to display to ledger lock modal
+        for (let i = 0; i < outs.length; i++) {
+            outs[i]
+                .getOutput()
+                .getAddresses()
+                .forEach((value) => {
+                    const addr = bintools.addressToString(hrp, chainId, value)
+                    // @ts-ignore
+                    const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
+
+                    if (changeAddr !== addr) outputs.push(`${addr} - ${amt.toString()} AVAX`)
+                })
+        }
+
         // Open the ledger modal to block view
         // and ask user to sign with device
         try {
             store.commit('Ledger/openModal', {
                 title: `Sign Transaction`,
-                info: 'TODO',
+                messages: outputs,
             })
 
             let uniquePaths = paths.filter((val: any, i: number) => {
