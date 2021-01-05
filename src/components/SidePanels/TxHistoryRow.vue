@@ -21,7 +21,7 @@
                 <p>{{ memo }}</p>
             </div>
             <div v-if="transaction.rewarded" class="rewarded">
-                ✅ {{ $t('transactions.rewarded') }}
+                {{ $t('transactions.rewarded') }} ✅
             </div>
             <div class="utxos">
                 <tx-history-value
