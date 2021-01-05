@@ -18,6 +18,7 @@ export interface ITransactionData {
 
     reusedAddressTotals: null
     rewarded: boolean
+    rewardedTime: string
     timestamp: string
     txFee: number
     type: TransactionType

@@ -31,6 +31,9 @@
                 <span><fa icon="times"></fa></span>
                 {{ $t('transactions.not_rewarded') }}
             </div>
+            <div v-if="isStakingTx && isRewardPending" class="rewarded">
+                <p>Reward Pending</p>
+            </div>
             <div class="utxos">
                 <tx-history-value
                     v-for="(amount, assetId) in valList"
@@ -89,7 +92,6 @@ export default class TxHistoryRow extends Vue {
     @Prop() transaction!: ITransactionData
 
     get explorerUrl(): string | null {
-        // TODO: Make this dynamic
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         if (network.explorerSiteUrl) {
             return `${network.explorerSiteUrl}/tx/${this.transaction.id}`
@@ -339,6 +341,17 @@ export default class TxHistoryRow extends Vue {
         })
 
         return isFromWallet ? 'Sent' : 'Received'
+    }
+
+    get isStakingTx() {
+        let type = this.transaction.type
+        return type === 'add_validator' || type === 'add_delegator'
+    }
+    get isRewardPending() {
+        if (this.isStakingTx) {
+            return true
+        }
+        return false
     }
 }
 </script>
