@@ -232,7 +232,6 @@ export default class MintNft extends Vue {
         try {
             let payload
             if (this.nftFormType === 'generic') {
-                console.log('hi')
                 // let dataStr = JSON.stringify((form as GenericFormType).data)
                 // payload = new JSONPayload(dataStr)
                 payload = new JSONPayload((form as GenericFormType).data)
@@ -261,7 +260,9 @@ export default class MintNft extends Vue {
     }
 
     get familyUtxos(): UTXO[] {
-        return this.$store.getters.walletNftDict[this.family.id] || []
+        let dict = this.$store.getters['Assets/walletNftDict']
+        // return this.$store.getters.walletNftDict[this.family.id] || []
+        return dict[this.family.id] || []
     }
 
     get groupUtxos() {
@@ -320,6 +321,7 @@ export default class MintNft extends Vue {
 
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
         }, 2000)
     }
 

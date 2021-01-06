@@ -76,7 +76,8 @@ export default class NftListItem extends Vue {
 
     get allUtxos() {
         let famId = this.sample.getAssetID()
-        let utxos: UTXO[] = this.$store.getters.walletNftDict[bintools.cb58Encode(famId)]
+        // let utxos: UTXO[] = this.$store.getters.walletNftDict[bintools.cb58Encode(famId)]
+        let utxos: UTXO[] = this.$store.getters['Assets/walletNftDict'][bintools.cb58Encode(famId)]
 
         let filtered = utxos.filter((utxo) => {
             let gId = (utxo.getOutput() as NFTTransferOutput).getGroupID()

@@ -72,7 +72,8 @@ export default class Studio extends Vue {
     }
 
     get nftMintDict(): IWalletNftMintDict {
-        return this.$store.getters.walletNftMintDict
+        // return this.$store.getters.walletNftMintDict
+        return this.$store.getters['Assets/nftMintDict']
     }
 
     get canMint(): boolean {

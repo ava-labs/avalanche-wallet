@@ -254,9 +254,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return this.ethBalance
     }
 
-    async getUTXOs(): Promise<AVMUTXOSet> {
+    async getUTXOs(): Promise<void> {
         this.getEthBalance()
-        return super.getUTXOs()
+        super.getUTXOs()
+        return
     }
 
     getPathFromAddress(address: string) {

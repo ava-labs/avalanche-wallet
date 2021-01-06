@@ -1,10 +1,10 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
-import { explorer_api, getAddressHistory } from '@/explorer_api'
+import { getAddressHistory } from '@/explorer_api'
+import moment from 'moment'
 
-import { HistoryState } from '@/store/modules/history/types'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { HistoryState, ITransactionData } from '@/store/modules/history/types'
+import { avm, pChain } from '@/AVA'
 
 const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
@@ -18,12 +18,20 @@ const history_module: Module<HistoryState, RootState> = {
         },
     },
     actions: {
-        async updateTransactionHistory({ state, rootState, rootGetters }) {
+        async updateTransactionHistory({ state, rootState, rootGetters, dispatch }) {
             let wallet = rootState.activeWallet
             if (!wallet) return
 
+            // If wallet is still loading delay
             // @ts-ignore
             let network = rootState.Network.selectedNetwork
+
+            if (!wallet.isInit) {
+                setTimeout(() => {
+                    dispatch('updateTransactionHistory')
+                }, 500)
+                return false
+            }
 
             // can't update if there is no explorer or no wallet
             if (!network.explorerUrl || rootState.address === null) {
@@ -32,21 +40,33 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.isUpdating = true
 
-            let addresses: string[] = wallet.getHistoryAddresses()
+            let avmAddrs: string[] = wallet.getAllAddressesX()
+            let pvmAddrs: string[] = wallet.getAllAddressesP()
 
             // this shouldnt ever happen, but to avoid getting every transaction...
-            if (addresses.length === 0) {
+            if (avmAddrs.length === 0) {
                 state.isUpdating = false
                 return
             }
 
-            let offset = 0
             let limit = 20
 
-            let data = await getAddressHistory(addresses, limit, offset)
+            let data = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            let dataP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
-            // let transactions = res.data.transactions;
-            let transactions = data.transactions
+            let txs: ITransactionData[] = []
+            let txsP: ITransactionData[] = []
+
+            if (data.transactions !== null) {
+                txs = data.transactions
+            }
+            if (dataP.transactions !== null) {
+                txsP = dataP.transactions
+            }
+
+            let transactions = txs
+                .concat(txsP)
+                .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
             state.transactions = transactions
             state.isUpdating = false
