@@ -17,6 +17,7 @@
                         :index="i"
                         :address="addr"
                         :balance="keyBalancesInternal[i]"
+                        :path="1"
                         class="list_row"
                     ></HdDerivationListRow>
                 </div>
@@ -37,6 +38,7 @@
                         :index="i"
                         :address="addr"
                         :balance="keyBalancesExternal[i]"
+                        :path="0"
                         class="list_row"
                     ></HdDerivationListRow>
                 </div>
@@ -56,6 +58,7 @@
                     :index="i"
                     :address="addr"
                     :balance="keyBalancesPlatform[i]"
+                    :path="0"
                     class="list_row"
                 ></HdDerivationListRow>
             </v-tab-item>
