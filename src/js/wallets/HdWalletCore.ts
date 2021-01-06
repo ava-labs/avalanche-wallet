@@ -153,18 +153,6 @@ class HdWalletCore {
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {
-        this.isFetchUtxos = true
-
-        let isInit =
-            this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
-        if (!isInit) {
-            setTimeout(() => {
-                this.getUTXOs()
-            }, 1000)
-            // console.info('HD Not ready try again in 1 sec..')
-            return
-        }
-
         this.internalHelper.updateUtxos().then((utxoSet) => {
             this.updateFetchState()
             this.updateUTXOSet()

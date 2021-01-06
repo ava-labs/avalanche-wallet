@@ -51,18 +51,8 @@ const history_module: Module<HistoryState, RootState> = {
 
             let limit = 20
 
-            let data = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            let dataP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
-
-            let txs: ITransactionData[] = []
-            let txsP: ITransactionData[] = []
-
-            if (data.transactions !== null) {
-                txs = data.transactions
-            }
-            if (dataP.transactions !== null) {
-                txsP = dataP.transactions
-            }
+            let txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
             let transactions = txs
                 .concat(txsP)
