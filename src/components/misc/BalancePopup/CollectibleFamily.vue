@@ -44,7 +44,8 @@ export default class CollectibleFamily extends Vue {
     }
 
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        return this.$store.getters['Assets/walletNftDict']
     }
     get utxos() {
         let id = this.family.id

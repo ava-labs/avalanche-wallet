@@ -31,22 +31,46 @@ import { NftFamilyDict } from '@/store/modules/assets/types'
     },
 })
 export default class Collectibles extends Vue {
+    @Prop() search!: string
+
     get isEmpty(): boolean {
-        let nftUtxos = this.$store.getters.walletNftUTXOs.length
-        let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
+        // let nftUtxos = this.$store.getters.walletNftUTXOs.length
+        // let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
+        let nftUtxos = this.$store.state.Assets.nftUTXOs.length
+        let mintUTxos = this.$store.state.Assets.nftMintUTXOs.length
         return nftUtxos + mintUTxos === 0
     }
 
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        let dict = this.$store.getters['Assets/walletNftDict']
+        return dict
     }
 
     get nftMintDict(): IWalletNftMintDict {
-        return this.$store.getters.walletNftMintDict
+        // let dict = this.$store.getters.walletNftMintDict
+        let dict = this.$store.getters['Assets/nftMintDict']
+        return dict
     }
 
     get nftFamsArray() {
         let fams: AvaNftFamily[] = this.$store.state.Assets.nftFams
+
+        // If search query
+        if (this.search) {
+            let query = this.search
+            fams = fams.filter((fam) => {
+                if (
+                    fam.name.includes(query) ||
+                    fam.id.includes(query) ||
+                    fam.symbol.includes(query)
+                ) {
+                    return true
+                }
+                return false
+            })
+        }
+
         fams.sort((a, b) => {
             let symbolA = a.symbol
             let symbolB = b.symbol
@@ -58,11 +82,13 @@ export default class Collectibles extends Vue {
             }
             return 0
         })
+
         return fams
     }
 
     get nftFamsDict(): NftFamilyDict {
-        return this.$store.state.Assets.nftFamsDict
+        let dict = this.$store.state.Assets.nftFamsDict
+        return dict
     }
 }
 </script>

@@ -87,7 +87,6 @@ export default class TxList extends Vue {
     }
 
     removeTx(index: number): void {
-        if (this.tx_list.length === 1) return
         this.tx_list.splice(index, 1)
         this.updateUnavailable()
         this.$emit('change', this.tx_list)
@@ -116,14 +115,14 @@ export default class TxList extends Vue {
         this.$emit('change', this.tx_list)
     }
 
-    // clears the list and leaves 1 empty order
+    // clears the list
     clear(): void {
-        for (var i = this.tx_list.length - 1; i >= 1; i--) {
+        for (var i = this.tx_list.length - 1; i >= 0; i--) {
             this.removeTx(i)
         }
     }
 
-    mounted() {
+    addDefaultAsset() {
         this.next_initial = this.assets_list[0]
         if (this.$route.query.asset) {
             let assetId = this.$route.query.asset as string
@@ -133,16 +132,28 @@ export default class TxList extends Vue {
         }
     }
 
+    // clear and add the default asset
+    reset() {
+        this.clear()
+        this.addDefaultAsset()
+    }
+
+    activated() {
+        this.reset()
+    }
+
     @Watch('assets_list')
     onAssetListChange() {
         this.updateUnavailable()
     }
 
     get assets_list(): AvaAsset[] {
-        return this.$store.getters.walletAssetsArray
+        // return this.$store.getters.walletAssetsArray
+        return this.$store.getters['Assets/walletAssetsArray']
     }
     get assets(): AssetsDict {
-        return this.$store.getters.walletAssetsDict
+        // return this.$store.getters.walletAssetsDict
+        return this.$store.getters['Assets/walletAssetsDict']
     }
     get showAdd(): boolean {
         if (this.tx_list.length === this.assets_list.length || this.assets_list.length === 0) {

@@ -5,10 +5,10 @@
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
         <div class="card_body" v-else>
-            <FormC v-if="formType === 'C'">
+            <FormC v-show="formType === 'C'">
                 <ChainInput v-model="formType"></ChainInput>
             </FormC>
-            <div class="new_order_Form" v-else>
+            <div class="new_order_Form" v-show="formType === 'X'">
                 <div class="lists">
                     <ChainInput v-model="formType"></ChainInput>
                     <div v-show="!isConfirm">
@@ -269,14 +269,20 @@ export default class Transfer extends Vue {
         this.txId = ''
         this.isSuccess = false
         this.cancelConfirm()
+
+        this.orders = []
+        this.nftOrders = []
+        this.formOrders = []
+        this.formNftOrders = []
     }
 
     clearForm() {
         this.addressIn = ''
         this.memo = ''
+
         // Clear transactions list
         // @ts-ignore
-        this.$refs.txList.clear()
+        this.$refs.txList.reset()
 
         // Clear NFT list
         if (this.hasNFT) {
@@ -300,6 +306,7 @@ export default class Transfer extends Vue {
         this.canSendAgain = false
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         }, 3000)
     }
@@ -343,7 +350,8 @@ export default class Transfer extends Vue {
     }
 
     get hasNFT(): boolean {
-        return this.$store.getters.walletNftUTXOs.length > 0
+        // return this.$store.getters.walletNftUTXOs.length > 0
+        return this.$store.state.Assets.nftUTXOs.length > 0
     }
 
     get faucetLink() {
@@ -406,6 +414,9 @@ export default class Transfer extends Vue {
 
     get priceDict(): priceDict {
         return this.$store.state.prices
+    }
+    activated() {
+        this.clearForm()
     }
 }
 </script>

@@ -39,7 +39,8 @@ export default class MintNft extends Vue {
     }
 
     get mintUtxos() {
-        return this.$store.getters.walletNftMintUTXOs
+        // return this.$store.getters.walletNftMintUTXOs
+        return this.$store.state.Assets.nftMintUTXOs
     }
 
     setUtxo(utxo: UTXO) {
@@ -64,6 +65,7 @@ export default class MintNft extends Vue {
             for (var i = 0; i < utxos.length; i++) {
                 let utxo = utxos[i]
                 let id = utxo.getUTXOID()
+
                 if (id === utxoId) {
                     this.setUtxo(utxo)
                 }

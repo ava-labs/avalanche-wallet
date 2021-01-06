@@ -88,6 +88,12 @@ export default class ChainImport extends Vue {
         }
     }
 
+    deactivated() {
+        this.err = ''
+        this.txId = ''
+        this.isSuccess = false
+    }
+
     beforeSubmit() {
         this.isLoading = true
         this.err = ''
@@ -108,6 +114,7 @@ export default class ChainImport extends Vue {
         })
 
         this.$store.dispatch('Assets/updateUTXOs')
+        this.$store.dispatch('History/updateTransactionHistory')
     }
 
     onError(err: Error) {

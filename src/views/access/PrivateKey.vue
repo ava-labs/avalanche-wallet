@@ -34,6 +34,9 @@ import { Vue, Component } from 'vue-property-decorator'
 import { ImportKeyfileInput } from '@/store/types'
 import { KeyFile } from '@/js/IKeystore'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { privateToAddress } from 'ethereumjs-util'
+import { bintools } from '@/AVA'
+import { Buffer } from 'avalanche'
 
 @Component
 export default class PrivateKey extends Vue {
@@ -46,6 +49,18 @@ export default class PrivateKey extends Vue {
         this.error = ''
         this.isLoading = true
         let key = this.privatekey
+
+        // if ethereum private key
+
+        try {
+            let keyBuf = Buffer.from(key, 'hex')
+            // @ts-ignore
+            privateToAddress(keyBuf)
+            key = `PrivateKey-${bintools.cb58Encode(keyBuf)}`
+        } catch (e) {
+            //
+        }
+
         try {
             let wallet = new SingletonWallet(key)
             let res = await this.$store.dispatch('accessWalletSingleton', wallet)

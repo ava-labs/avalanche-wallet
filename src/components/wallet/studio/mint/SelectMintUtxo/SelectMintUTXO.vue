@@ -23,7 +23,8 @@ export default class SelectMintUTXO extends Vue {
     }
 
     get nftMintDict(): IWalletNftMintDict {
-        return this.$store.getters.walletNftMintDict
+        // return this.$store.getters.walletNftMintDict
+        return this.$store.getters['Assets/nftMintDict']
     }
 
     select(utxo: UTXO) {
@@ -35,16 +36,11 @@ export default class SelectMintUTXO extends Vue {
 @use '../../../../../main';
 
 .families {
-    display: grid;
-    //display: flex;
-    //flex-wrap: wrap;
-    grid-gap: 14px;
-    column-gap: 30px;
     grid-template-columns: repeat(5, 1fr);
-    padding-bottom: 30px;
+    padding: 30px 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
 
     > div {
         width: 230px;

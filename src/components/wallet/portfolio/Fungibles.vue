@@ -6,19 +6,21 @@
             <p class="send_col">{{ $t('portfolio.send') }}</p>
             <p class="balance_col balance_header">{{ $t('portfolio.balance') }}</p>
         </div>
-        <div v-if="networkStatus !== 'connected'" class="empty">
+        <div v-show="networkStatus !== 'connected'" class="empty">
             <p>{{ $t('portfolio.error_network') }}</p>
         </div>
-        <div v-else-if="walletBalances.length === 0" class="empty">
-            <p>{{ $t('portfolio.nobalance') }}</p>
-        </div>
-        <div class="scrollable" v-else>
-            <fungible-row
-                lass="asset"
-                v-for="asset in walletBalances"
-                :key="asset.id"
-                :asset="asset"
-            ></fungible-row>
+        <div v-show="networkStatus === 'connected'" style="flex-grow: 1">
+            <div v-if="walletBalances.length === 0" class="empty">
+                <p>{{ $t('portfolio.nobalance') }}</p>
+            </div>
+            <div class="scrollable" v-else>
+                <fungible-row
+                    lass="asset"
+                    v-for="asset in walletBalances"
+                    :key="asset.id"
+                    :asset="asset"
+                ></fungible-row>
+            </div>
         </div>
     </div>
 </template>
@@ -45,7 +47,8 @@ export default class Fungibles extends Vue {
     }
 
     get walletBalancesSorted(): AvaAsset[] {
-        let balance: AvaAsset[] = this.$store.getters['walletAssetsArray']
+        // let balance: AvaAsset[] = this.$store.getters['walletAssetsArray']
+        let balance: AvaAsset[] = this.$store.getters['Assets/walletAssetsArray']
 
         // Sort by balance, then name
         balance.sort((a, b) => {

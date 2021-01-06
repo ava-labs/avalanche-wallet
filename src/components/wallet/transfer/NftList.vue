@@ -91,11 +91,13 @@ export default class NftList extends Vue {
     }
 
     get nftUTXOs(): UTXO[] {
-        return this.$store.getters.walletNftUTXOs
+        // return this.$store.getters.walletNftUTXOs
+        return this.$store.state.Assets.nftUTXOs
     }
 
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        return this.$store.getters['Assets/walletNftDict']
     }
 
     get nftFamsDict(): NftFamilyDict {
@@ -109,7 +111,11 @@ export default class NftList extends Vue {
     }
 
     clear() {
-        this.addedNfts = []
+        if (!this.$route.query.nft) {
+            this.addedNfts = []
+            this.groupUtxos = {}
+            this.emit()
+        }
     }
 
     addNft(utxo: UTXO) {
@@ -138,7 +144,11 @@ export default class NftList extends Vue {
         this.$refs.popup.isActive = true
     }
 
-    mounted() {
+    deactivated() {
+        this.clear()
+    }
+
+    activated() {
         if (this.$route.query.nft) {
             let utxoId = this.$route.query.nft as string
             let target = this.nftUTXOs.find((el) => {

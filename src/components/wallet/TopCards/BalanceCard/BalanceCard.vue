@@ -32,7 +32,7 @@
                     AVAX
                 </p>
                 <p class="balance_usd">
-                    <b>$ {{ totalBalanceUSD.toLocaleString(2) }}</b>
+                    <b>$ {{ totalBalanceUSDText }}</b>
                     USD
                 </p>
             </div>
@@ -125,6 +125,7 @@ export default class BalanceCard extends Vue {
     }
 
     get avmUnlocked(): BN {
+        console.log(this.ava_asset)
         if (!this.ava_asset) return new BN(0)
         return this.ava_asset.amount
     }
@@ -163,6 +164,11 @@ export default class BalanceCard extends Vue {
         let usdBig = this.totalBalanceBig.times(Big(usdPrice))
         return usdBig
     }
+
+    get totalBalanceUSDText(): string {
+        if (this.isUpdateBalance) return '--'
+        return this.totalBalanceUSD.toLocaleString(2)
+    }
     // should be unlocked (X+P), locked (X+P) and staked and lockedStakeable
     get balanceText(): string {
         if (this.ava_asset !== null) {
@@ -174,6 +180,7 @@ export default class BalanceCard extends Vue {
     }
 
     get balanceTextLeft(): string {
+        if (this.isUpdateBalance) return '--'
         let text = this.balanceText
         if (text.includes('.')) {
             let left = text.split('.')[0]
@@ -183,6 +190,7 @@ export default class BalanceCard extends Vue {
     }
 
     get balanceTextRight(): string {
+        if (this.isUpdateBalance) return ''
         let text = this.balanceText
         if (text.includes('.')) {
             let right = text.split('.')[1]
@@ -193,6 +201,8 @@ export default class BalanceCard extends Vue {
 
     // Locked balance is the sum of locked AVAX tokens on X and P chain
     get balanceTextLocked(): string {
+        if (this.isUpdateBalance) return '--'
+
         if (this.ava_asset !== null) {
             let denom = this.ava_asset.denomination
             let tot = this.platformLocked.add(this.platformLockedStakeable)
@@ -202,30 +212,26 @@ export default class BalanceCard extends Vue {
             amt = amt.add(pLocked)
 
             return amt.toLocaleString(denom)
-
-            // if(amt.lt(Big('0.0001'))){
-            //     return amt.toLocaleString(denom);
-            // }else{
-            //     return amt.toLocaleString(3);
-            // }
         } else {
-            return '?'
+            return '--'
         }
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLocked(): BN {
-        return this.$store.getters.walletPlatformBalanceLocked
+        return this.$store.getters['Assets/walletPlatformBalanceLocked']
     }
 
     get platformLockedStakeable(): BN {
-        return this.$store.getters.walletPlatformBalanceLockedStakeable
+        return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
     }
 
     get unlockedText() {
+        if (this.isUpdateBalance) return '--'
+
         if (this.ava_asset) {
             let xUnlocked = this.ava_asset.amount
             let pUnlocked = this.platformUnlocked
@@ -235,25 +241,16 @@ export default class BalanceCard extends Vue {
             let tot = xUnlocked.add(pUnlocked).add(this.evmUnlocked)
 
             let amtBig = bnToBig(tot, denom)
-            // let amtBig = this.avaxBnToBigAmt(tot);
 
             return amtBig.toLocaleString(denom)
-            // if(amtBig.lt(Big('1'))){
-            //     return amtBig.toString();
-            // }else{
-            //     return amtBig.toLocaleString(3);
-            // }
         } else {
-            return '?'
+            return '--'
         }
     }
 
-    // avaxBnToBigAmt(val: BN): Big{
-    //     return Big(val.toString()).div(Math.pow(10,9));
-    // }
-
     get pBalanceText() {
-        if (!this.ava_asset) return '?'
+        if (!this.ava_asset) return '--'
+        if (this.isUpdateBalance) return '--'
 
         let denom = this.ava_asset.denomination
         let bal = this.platformUnlocked
@@ -268,12 +265,14 @@ export default class BalanceCard extends Vue {
     }
 
     get stakingAmount(): BN {
-        return this.$store.getters.walletStakingBalance
+        // return this.$store.getters.walletStakingBalance
+        return this.$store.getters['Assets/walletStakingBalance']
     }
 
     get stakingText() {
         let balance = this.stakingAmount
         if (!balance) return '0'
+        if (this.isUpdateBalance) return '--'
 
         let denom = 9
         let bigBal = Big(balance.toString())
@@ -291,7 +290,8 @@ export default class BalanceCard extends Vue {
     }
 
     get isUpdateBalance(): boolean {
-        return this.$store.state.Assets.isUpdateBalance
+        return this.wallet.isFetchUtxos
+        // return this.$store.state.Assets.isUpdateBalance
     }
 
     get priceDict(): priceDict {

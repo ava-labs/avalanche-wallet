@@ -33,7 +33,8 @@ export default class BalanceDropdown extends Vue {
     @Model('change', { type: AvaAsset }) readonly asset!: AvaAsset
 
     get assetArray(): AvaAsset[] {
-        return this.$store.getters.walletAssetsArray
+        // return this.$store.getters.walletAssetsArray
+        return this.$store.getters['Assets/walletAssetsArray']
     }
 
     @Ref('popup') readonly balancePopup!: BalancePopup

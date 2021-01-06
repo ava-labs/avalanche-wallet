@@ -31,6 +31,15 @@ const network_module: Module<NetworkState, RootState> = {
     },
     actions: {
         addCustomNetwork({ state, dispatch }, net: AvaNetwork) {
+            // Check if network alerady exists
+            let networks = state.networksCustom
+            // Do not add if there is a network already with the same url
+            for (var i = 0; i < networks.length; i++) {
+                let url = networks[i].url
+                if (net.url === url) {
+                    return
+                }
+            }
             state.networksCustom.push(net)
             dispatch('save')
         },
@@ -136,12 +145,12 @@ const network_module: Module<NetworkState, RootState> = {
                 }
             }
 
-            setTimeout(() => {
-                dispatch('Assets/updateUTXOs', null, { root: true })
-                dispatch('Platform/update', null, { root: true })
-                dispatch('Platform/updateMinStakeAmount', null, { root: true })
-                dispatch('updateTxFee')
-            }, 2000)
+            dispatch('Assets/updateUTXOs', null, { root: true })
+            dispatch('Platform/update', null, { root: true })
+            dispatch('Platform/updateMinStakeAmount', null, { root: true })
+            dispatch('updateTxFee')
+            // Update tx history
+            dispatch('History/updateTransactionHistory', null, { root: true })
 
             // state.isConnected = true;
             state.status = 'connected'
