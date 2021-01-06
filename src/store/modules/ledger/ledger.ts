@@ -6,7 +6,6 @@ const ledger_module: Module<LedgerState, RootState> = {
     namespaced: true,
     state: {
         isBlock: false, // if true a modal blocks the window
-        messages: null,
         title: 'title',
         info: `info'`,
     },
