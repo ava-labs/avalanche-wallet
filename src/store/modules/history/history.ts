@@ -3,7 +3,7 @@ import { RootState } from '@/store/types'
 import { getAddressHistory } from '@/explorer_api'
 import moment from 'moment'
 
-import { HistoryState } from '@/store/modules/history/types'
+import { HistoryState, ITransactionData } from '@/store/modules/history/types'
 import { avm, pChain } from '@/AVA'
 
 const history_module: Module<HistoryState, RootState> = {
@@ -54,8 +54,18 @@ const history_module: Module<HistoryState, RootState> = {
             let data = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
             let dataP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
-            let transactions = data.transactions
-                .concat(dataP.transactions)
+            let txs: ITransactionData[] = []
+            let txsP: ITransactionData[] = []
+
+            if (data.transactions !== null) {
+                txs = data.transactions
+            }
+            if (dataP.transactions !== null) {
+                txsP = dataP.transactions
+            }
+
+            let transactions = txs
+                .concat(txsP)
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
             state.transactions = transactions
