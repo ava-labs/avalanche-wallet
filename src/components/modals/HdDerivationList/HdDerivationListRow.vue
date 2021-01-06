@@ -26,8 +26,9 @@ import Big from 'big.js'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { WalletType } from '@/store/types'
-import { ava } from '../../../AVA'
+import { ava } from '@/AVA'
 import { getPreferredHRP } from 'avalanche/dist/utils'
+import { AVA_ACCOUNT_PATH } from '../../../js/wallets/AvaHdWallet'
 
 @Component
 export default class HdDerivationListRow extends Vue {
@@ -69,7 +70,7 @@ export default class HdDerivationListRow extends Vue {
         let networkId = ava.getNetworkID()
         let hrp = getPreferredHRP(networkId)
 
-        wallet.app.getWalletAddress(`44'/9000'/0'/${this.path}/${this.index}`, hrp)
+        wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/${this.path}/${this.index}`, hrp)
     }
 }
 </script>

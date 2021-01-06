@@ -43,6 +43,7 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { LedgerAppConfigType, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
+import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -66,7 +67,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     static async fromApp(app: AppAvax) {
-        let res = await app.getWalletExtendedPublicKey("44'/9000'/0'")
+        let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
@@ -81,8 +82,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
     >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
-        const accountPath = bippath.fromString(`m/44'/9000'/0'`)
-        const changePath = bippath.fromString(`m/44'/9000'/0'/1/${this.internalHelper.hdIndex}`)
+        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+        const changePath = bippath.fromString(
+            `${AVA_ACCOUNT_PATH}/1/${this.internalHelper.hdIndex}`
+        )
         const changeAddr = this.internalHelper.getAddressForIndex(this.internalHelper.hdIndex)
         const canParseTx = this.config.version >= '0.3.1'
 
@@ -536,7 +539,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let pathStr = `0/${index}`
         const addressPath = bippath.fromString(pathStr, false)
-        const accountPath = bippath.fromString(`m/44'/9000'/0'`)
+        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
 
         let digest = digestMessage(msgStr)
         let digestBuff = Buffer.from(digest)
