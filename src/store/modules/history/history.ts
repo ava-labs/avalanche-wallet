@@ -1,10 +1,10 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
-import { explorer_api, getAddressHistory } from '@/explorer_api'
+import { getAddressHistory } from '@/explorer_api'
+import moment from 'moment'
 
 import { HistoryState } from '@/store/modules/history/types'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { avm, pChain } from '@/AVA'
 
 const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
@@ -40,22 +40,26 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.isUpdating = true
 
-            let addresses: string[] = wallet.getHistoryAddresses()
+            let avmAddrs: string[] = wallet.getAllAddressesX()
+            let pvmAddrs: string[] = wallet.getAllAddressesP()
 
             // this shouldnt ever happen, but to avoid getting every transaction...
-            if (addresses.length === 0) {
+            if (avmAddrs.length === 0) {
                 state.isUpdating = false
                 return
             }
 
-            let offset = 0
             let limit = 20
 
-            getAddressHistory(addresses, limit, offset).then((data) => {
-                let transactions = data.transactions
-                state.transactions = transactions
-                state.isUpdating = false
-            })
+            let data = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            let dataP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
+
+            let transactions = data.transactions
+                .concat(dataP.transactions)
+                .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
+
+            state.transactions = transactions
+            state.isUpdating = false
         },
     },
 }

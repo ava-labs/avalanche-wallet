@@ -232,7 +232,6 @@ export default class MintNft extends Vue {
         try {
             let payload
             if (this.nftFormType === 'generic') {
-                console.log('hi')
                 // let dataStr = JSON.stringify((form as GenericFormType).data)
                 // payload = new JSONPayload(dataStr)
                 payload = new JSONPayload((form as GenericFormType).data)

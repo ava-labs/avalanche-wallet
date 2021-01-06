@@ -12,25 +12,17 @@ import Ledger from './modules/ledger/ledger'
 
 import { RootState, IssueBatchTxInput, ImportKeyfileInput, ExportWalletsInput } from '@/store/types'
 
-import { KeyFile, KeyFileDecrypted } from '@/js/IKeystore'
+import { KeyFileDecrypted } from '@/js/IKeystore'
 
 Vue.use(Vuex)
 
 import router from '@/router'
 
-import { ava, avm, bintools } from '@/AVA'
+import { avm, bintools } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 
-import { Buffer } from 'avalanche'
 import { UnixNow } from 'avalanche/dist/utils'
-import {
-    UTXO,
-    KeyPair as AVMKeyPair,
-    AmountOutput,
-    UTXOSet,
-    NFTMintOutput,
-    AVMConstants,
-} from 'avalanche/dist/apis/avm'
+import { UTXO, KeyPair as AVMKeyPair, AmountOutput, NFTMintOutput } from 'avalanche/dist/apis/avm'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 
 import AvaAsset from '@/js/AvaAsset'
@@ -39,8 +31,6 @@ import { AssetsDict } from '@/store/modules/assets/types'
 import { keyToKeypair } from '@/helpers/helper'
 import BN from 'bn.js'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { NetworkItem } from '@/store/modules/network/types'
-import { AvaNetwork } from '@/js/AvaNetwork'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'

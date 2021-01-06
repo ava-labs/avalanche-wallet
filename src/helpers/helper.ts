@@ -2,7 +2,6 @@ import store from '@/store/index'
 import { ava } from '@/AVA'
 
 import {
-    AVMConstants,
     KeyChain as AVMKeyChain,
     KeyPair as AVMKeyPair,
     NFTTransferOutput,
@@ -13,7 +12,6 @@ import { Defaults, getPreferredHRP, ONEAVAX, PayloadBase, PayloadTypes } from 'a
 import { BN } from 'avalanche/dist'
 import Big from 'big.js'
 
-import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
 import { Buffer } from 'avalanche'
 import createHash from 'create-hash'
 
@@ -94,6 +92,7 @@ function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
 
     return payloadbase
 }
+
 export {
     getAssetIcon,
     keyToKeypair,

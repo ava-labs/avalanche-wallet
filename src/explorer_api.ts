@@ -1,7 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-
-// Same for every network
-const P_CHAIN_ID = '11111111111111111111111111111111LpoYY'
+import { ITransactionData } from './store/modules/history/types'
 
 // Doesn't really matter what we set, it will change
 const api_url: string = 'localhost'
@@ -13,16 +11,21 @@ const explorer_api: AxiosInstance = axios.create({
     },
 })
 
-async function getAddressHistory(addrs: string[], limit = 20, offset = 0) {
+async function getAddressHistory(
+    addrs: string[],
+    limit = 20,
+    chainID: string
+): Promise<{ transactions: ITransactionData[] }> {
     let query = addrs.map((val) => {
         let raw = val.split('-')[1]
         return `address=${raw}`
     })
 
     // Get history for all addresses of the active HD wallet
-    let url = `/x/transactions?${query.join(
+    let url = `v2/transactions?${query.join(
         '&'
-    )}&limit=${limit}&offset=${offset}&sort=timestamp-desc&disableCount=1`
+    )}&limit=${limit}&sort=timestamp-desc&disableCount=1&chainID=${chainID}`
+
     let res = await explorer_api.get(url)
     return res.data
 }
@@ -40,33 +43,10 @@ async function isAddressUsedX(addr: string) {
     }
 }
 
-async function isAddressUsedP(addr: string) {
-    let addrRaw = addr.split('-')[1]
-    let url = `/x/transactions?chainID=${P_CHAIN_ID}&address=${addrRaw}&limit=1&disableCount=1`
-    try {
-        let res = await explorer_api.get(url)
-        if (res.data.transactions.length > 0) return true
-        else return false
-    } catch (e) {
-        throw e
-    }
-}
-
 async function getAddressDetailX(addr: string) {
     let addrRaw = addr.split('-')[1]
     let url = `/x/addresses/${addrRaw}`
 
-    try {
-        let res = await explorer_api.get(url)
-        return res.data
-    } catch (e) {
-        throw e
-    }
-}
-
-async function getAddressTransactionsP(addr: string) {
-    let addrRaw = addr.split('-')[1]
-    let url = `/x/transactions?chainID=${P_CHAIN_ID}&address=${addrRaw}`
     try {
         let res = await explorer_api.get(url)
         return res.data
@@ -89,12 +69,4 @@ async function getAddressChains(addrs: string[]) {
     return res.data.addressChains
 }
 
-export {
-    explorer_api,
-    getAddressHistory,
-    getAddressDetailX,
-    getAddressTransactionsP,
-    isAddressUsedX,
-    isAddressUsedP,
-    getAddressChains,
-}
+export { explorer_api, getAddressHistory, getAddressDetailX, isAddressUsedX, getAddressChains }

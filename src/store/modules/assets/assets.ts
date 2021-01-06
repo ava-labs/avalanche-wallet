@@ -12,7 +12,6 @@ import { ava, avm, bintools } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 
-import { explorer_api } from '@/explorer_api'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import {
     AmountOutput,
