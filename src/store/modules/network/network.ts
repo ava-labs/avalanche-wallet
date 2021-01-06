@@ -145,12 +145,12 @@ const network_module: Module<NetworkState, RootState> = {
                 }
             }
 
-            setTimeout(() => {
-                dispatch('Assets/updateUTXOs', null, { root: true })
-                dispatch('Platform/update', null, { root: true })
-                dispatch('Platform/updateMinStakeAmount', null, { root: true })
-                dispatch('updateTxFee')
-            }, 2000)
+            dispatch('Assets/updateUTXOs', null, { root: true })
+            dispatch('Platform/update', null, { root: true })
+            dispatch('Platform/updateMinStakeAmount', null, { root: true })
+            dispatch('updateTxFee')
+            // Update tx history
+            dispatch('History/updateTransactionHistory', null, { root: true })
 
             // state.isConnected = true;
             state.status = 'connected'

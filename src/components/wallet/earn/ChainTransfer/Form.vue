@@ -119,7 +119,7 @@ export default class Form extends Vue {
     // }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get avmUnlocked(): BN {

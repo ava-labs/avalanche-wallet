@@ -185,11 +185,11 @@ export default class ChainTransfer extends Vue {
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLocked(): BN {
-        return this.$store.getters.walletPlatformBalanceLocked
+        return this.$store.getters['Assets/walletPlatformBalanceLocked']
     }
 
     get avmUnlocked(): BN {
@@ -459,9 +459,11 @@ export default class ChainTransfer extends Vue {
         if (this.targetChain === 'C') {
             setTimeout(() => {
                 this.$store.dispatch('Assets/updateUTXOs')
+                this.$store.dispatch('History/updateTransactionHistory')
             }, 3000)
         } else {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
         }
     }
 

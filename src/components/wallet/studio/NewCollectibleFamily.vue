@@ -159,11 +159,13 @@ export default class NewCollectibleFamily extends Vue {
 
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
         }, 3000)
     }
 
     get mintUtxos() {
-        return this.$store.getters.walletNftMintUTXOs
+        // return this.$store.getters.walletNftMintUTXOs
+        return this.$store.state.Assets.nftMintUTXOs
     }
 }
 </script>

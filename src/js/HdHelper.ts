@@ -42,6 +42,8 @@ class HdHelper {
     hdIndex: number
     utxoSet: AVMUTXOSet | PlatformUTXOSet
     isPublic: boolean
+    isFetchUtxo: boolean // true if updating balance
+    isInit: boolean // true if HD index is found
 
     constructor(
         changePath: string,
@@ -50,6 +52,8 @@ class HdHelper {
         isPublic: boolean = false
     ) {
         this.changePath = changePath
+        this.isFetchUtxo = false
+        this.isInit = false
 
         this.chainId = chainId
         let hrp = getPreferredHRP(ava.getNetworkID())
@@ -67,24 +71,25 @@ class HdHelper {
         this.masterKey = masterKey
         this.hdIndex = 0
         this.isPublic = isPublic
-        this.oninit()
+        // this.oninit()
     }
 
     async oninit() {
-        this.findHdIndex()
+        await this.findHdIndex()
         // this.hdIndex = await this.findAvailableIndexNode();
         // this.hdIndex = await this.findAvailableIndexExplorer();
 
         // if(!this.isPublic){
         //     this.updateKeychain();
         // }
-        this.updateUtxos()
+        // this.updateUtxos()
     }
 
     // When the wallet connects to a different network
     // Clear internal data and scan again
     async onNetworkChange() {
         this.clearCache()
+        this.isInit = false
         let hrp = getPreferredHRP(ava.getNetworkID())
         if (this.chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, this.chainId)
@@ -134,6 +139,7 @@ class HdHelper {
         if (!this.isPublic) {
             this.updateKeychain()
         }
+        this.isInit = true
     }
 
     async platformGetAllUTXOsForAddresses(
@@ -216,6 +222,12 @@ class HdHelper {
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet | PlatformUTXOSet> {
+        this.isFetchUtxo = true
+
+        if (!this.isInit) {
+            console.error('HD Index not found yet.')
+        }
+
         let addrs: string[] = this.getAllDerivedAddresses()
         let result: AVMUTXOSet | PlatformUTXOSet
 
@@ -234,6 +246,7 @@ class HdHelper {
         if (currentUtxos.length > 0) {
             this.incrementIndex()
         }
+        this.isFetchUtxo = false
         return result
     }
 

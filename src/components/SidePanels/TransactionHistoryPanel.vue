@@ -3,7 +3,6 @@
         <div class="header">
             <h2>Transactions</h2>
             <Spinner v-if="isUpdating" class="spinner"></Spinner>
-            <!--            <a :href="explorerUrl" target="_blank" class="button_primary">See All</a>-->
         </div>
         <div class="empty" v-if="!isExplorer">
             <h4>{{ $t('transactions.error_api') }}</h4>
@@ -12,9 +11,9 @@
         <div class="empty" v-else-if="isEmpty && !isUpdating">
             <p>{{ $t('transactions.notx') }}</p>
         </div>
-        <div v-else-if="isUpdating">
-            <p class="empty">{{ $t('transactions.loading') }}</p>
-        </div>
+        <!--        <div v-else-if="isUpdating">-->
+        <!--            <p class="empty">{{ $t('transactions.loading') }}</p>-->
+        <!--        </div>-->
         <div class="list" v-else>
             <tx-history-row
                 v-for="tx in transactions"
@@ -94,6 +93,7 @@ export default class TransactionHistoryPanel extends Vue {
 
 .header {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--bg-light);
@@ -112,8 +112,9 @@ export default class TransactionHistoryPanel extends Vue {
 }
 
 .spinner {
+    display: block;
     align-self: center;
-    margin-left: 10px;
+    margin: 0 !important;
 }
 .list {
     overflow: scroll;
@@ -143,9 +144,5 @@ export default class TransactionHistoryPanel extends Vue {
 }
 
 @include main.medium-device {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 }
 </style>

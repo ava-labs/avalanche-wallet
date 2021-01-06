@@ -47,7 +47,8 @@ export default class Fungibles extends Vue {
     }
 
     get walletBalancesSorted(): AvaAsset[] {
-        let balance: AvaAsset[] = this.$store.getters['walletAssetsArray']
+        // let balance: AvaAsset[] = this.$store.getters['walletAssetsArray']
+        let balance: AvaAsset[] = this.$store.getters['Assets/walletAssetsArray']
 
         // Sort by balance, then name
         balance.sort((a, b) => {

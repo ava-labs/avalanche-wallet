@@ -36,20 +36,42 @@ class HdWalletCore {
     internalHelper: HdHelper
     externalHelper: HdHelper
     platformHelper: HdHelper
+    isFetchUtxos: boolean // true if fetching utxos
+    isInit: boolean
 
     constructor(accountHdKey: HDKey, isPublic = true) {
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
         this.utxoset = new AVMUTXOSet()
         this.platformUtxoset = new PlatformUTXOSet()
         this.stakeAmount = new BN(0)
-
+        this.isFetchUtxos = false
+        this.isInit = false
         this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
+
+        this.externalHelper.oninit().then((res) => {
+            this.updateInitState()
+        })
+        this.internalHelper.oninit().then((res) => {
+            this.updateInitState()
+        })
+        this.platformHelper.oninit().then((res) => {
+            this.updateInitState()
+        })
     }
 
     getUTXOSet(): AVMUTXOSet {
         return this.utxoset
+    }
+
+    updateUTXOSet(): void {
+        if (this.isFetchUtxos) return
+        let setExternal = this.externalHelper.utxoSet as AVMUTXOSet
+        let setInternal = this.internalHelper.utxoSet as AVMUTXOSet
+
+        let joined = setInternal.merge(setExternal)
+        this.utxoset = joined
     }
 
     // TODO: This function can be moved to a Core wallet class
@@ -118,18 +140,53 @@ class HdWalletCore {
         return mintTx
     }
 
-    async getUTXOs(): Promise<AVMUTXOSet> {
-        let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
-        let setExternal = (await this.externalHelper.updateUtxos()) as AVMUTXOSet
-        // TODO
+    updateFetchState() {
+        this.isFetchUtxos =
+            this.externalHelper.isFetchUtxo ||
+            this.internalHelper.isFetchUtxo ||
+            this.platformHelper.isFetchUtxo
+    }
+
+    updateInitState() {
+        this.isInit =
+            this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+    }
+    // Fetches the utxos
+    async getUTXOs(): Promise<void> {
+        this.isFetchUtxos = true
+
+        let isInit =
+            this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+        if (!isInit) {
+            setTimeout(() => {
+                this.getUTXOs()
+            }, 1000)
+            // console.info('HD Not ready try again in 1 sec..')
+            return
+        }
+
+        this.internalHelper.updateUtxos().then((utxoSet) => {
+            this.updateFetchState()
+            this.updateUTXOSet()
+        })
+
+        this.externalHelper.updateUtxos().then((utxoSet) => {
+            this.updateFetchState()
+            this.updateUTXOSet()
+        })
+
+        // let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
+        // let setExternal = (await this.externalHelper.updateUtxos()) as AVMUTXOSet
         // platform utxos are updated but not returned by function
-        let setPlatform = (await this.platformHelper.updateUtxos()) as PlatformUTXOSet
+        this.platformHelper.updateUtxos().then((utxoSet) => {
+            this.updateFetchState()
+        })
 
         this.getStake()
-
-        let joined = setInternal.merge(setExternal)
-        this.utxoset = joined
-        return joined
+        // let joined = setInternal.merge(setExternal)
+        // this.utxoset = joined
+        // return joined
+        return
     }
 
     getAllDerivedExternalAddresses(): string[] {
@@ -220,9 +277,18 @@ class HdWalletCore {
     }
 
     onnetworkchange(): void {
-        this.externalHelper.onNetworkChange()
-        this.internalHelper.onNetworkChange()
-        this.platformHelper.onNetworkChange()
+        this.isInit = false
+        this.stakeAmount = new BN(0)
+
+        this.externalHelper.onNetworkChange().then(() => {
+            this.updateInitState()
+        })
+        this.internalHelper.onNetworkChange().then(() => {
+            this.updateInitState()
+        })
+        this.platformHelper.onNetworkChange().then(() => {
+            this.updateInitState()
+        })
 
         // TODO: Handle EVM changes
     }
