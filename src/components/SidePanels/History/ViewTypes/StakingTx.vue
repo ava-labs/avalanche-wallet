@@ -14,7 +14,12 @@
         </div>
         <div v-else>
             <div class="time_bar">
-                <div class="bar_row"></div>
+                <div
+                    class="bar_row"
+                    :style="{
+                        width: `${timeBarPerc}%`,
+                    }"
+                ></div>
             </div>
             <div class="data_row reward_row">
                 <p>Reward Pending</p>
