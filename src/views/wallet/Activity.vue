@@ -7,6 +7,15 @@
         </div>
 
         <div>
+            <label>Filter by type</label>
+            <v-chip-group>
+                <v-chip>All</v-chip>
+                <v-chip>Transfer</v-chip>
+                <v-chip>Export/Import</v-chip>
+                <v-chip>Validation/Delegation</v-chip>
+            </v-chip-group>
+        </div>
+        <div>
             <div class="table_headers">
                 <p>Date</p>
                 <p>Action</p>

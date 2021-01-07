@@ -12,6 +12,10 @@
         <!--            {{ type }}-->
         <!--        </div>-->
         <div class="tx_detail">
+            <div>
+                <label>MEMO</label>
+                <p>{{ memo }}</p>
+            </div>
             <component :is="tx_comp" :transaction="transaction"></component>
         </div>
     </div>
@@ -21,7 +25,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData } from '@/store/modules/history/types'
 import { AssetsDict, NftFamilyDict } from '@/store/modules/assets/types'
 import { bnToBig } from '@/helpers/helper'
-import { BN } from 'avalanche'
+import { BN, Buffer } from 'avalanche'
 
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
@@ -85,6 +89,16 @@ export default class TxRow extends Vue {
 
     get nftFams(): NftFamilyDict {
         return this.$store.state.Assets.nftFamsDict
+    }
+
+    get memo(): string | null {
+        const memo = this.transaction.memo
+        const memoText = new Buffer(memo, 'base64').toString('utf8')
+        // Bug that sets memo to empty string (AAAAAA==) for some
+        // tx types
+        if (!memoText.length || memo === 'AAAAAA==') return null
+
+        return memoText
     }
 }
 </script>
