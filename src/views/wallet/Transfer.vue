@@ -51,7 +51,6 @@
                         </template>
                     </div>
                     <div class="fees">
-                        <h4>{{ $t('transfer.fees') }}</h4>
                         <p>
                             {{ $t('transfer.fee_tx') }}
                             <span>{{ txFee.toLocaleString(9) }} AVAX</span>
