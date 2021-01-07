@@ -132,6 +132,8 @@
         "adv_change": "Change Address",
         "send": "Send Transaction",
         "summary": "Transaction Summary",
+        "total": "Total",
+        "total_avax": "Total AVAX",
         "chain_warn": "You can only send tokens on the X chain.",
         "disconnected": "Unable to send assets. Disconnected from the network.",
         "success_title": "Transaction Sent",
@@ -457,6 +459,8 @@
     },
     "transactions": {
         "notx": "No transactions found on the explorer.",
+        "rewarded": "Rewarded",
+        "not_rewarded": "Not Rewarded",
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",

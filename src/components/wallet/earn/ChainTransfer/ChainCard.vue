@@ -12,8 +12,8 @@
             </div>
             <div class="input_group">
                 <label>Balance</label>
-                <NumberCounter :value="balanceBig"></NumberCounter>
-                <!--                <p>{{ balanceText }}</p>-->
+                <!--                <NumberCounter :value="balanceBig"></NumberCounter>-->
+                <p>{{ balanceText }}</p>
             </div>
         </div>
     </div>
@@ -67,7 +67,8 @@ export default class ChainCard extends Vue {
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        // return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get avmUnlocked(): BN {

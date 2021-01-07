@@ -51,10 +51,13 @@
                         </template>
                     </div>
                     <div class="fees">
-                        <h4>{{ $t('transfer.fees') }}</h4>
                         <p>
                             {{ $t('transfer.fee_tx') }}
                             <span>{{ txFee.toLocaleString(9) }} AVAX</span>
+                        </p>
+                        <p>
+                            {{ $t('transfer.total_avax') }}
+                            <span>{{ totalUSD.toLocaleString(2) }} USD</span>
                         </p>
                     </div>
                     <div class="checkout">
@@ -145,13 +148,14 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { Buffer, BN } from 'avalanche'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
-import { IssueBatchTxInput, WalletType } from '@/store/types'
+import { priceDict, IssueBatchTxInput, WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import FormC from '@/components/wallet/transfer/FormC.vue'
 import { ChainIdType } from '@/constants'
 
 import ChainInput from '@/components/wallet/transfer/ChainInput.vue'
+import AvaAsset from '../../js/AvaAsset'
 @Component({
     components: {
         FaucetLink,
@@ -302,6 +306,7 @@ export default class Transfer extends Vue {
         this.canSendAgain = false
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         }, 3000)
     }
@@ -345,7 +350,8 @@ export default class Transfer extends Vue {
     }
 
     get hasNFT(): boolean {
-        return this.$store.getters.walletNftUTXOs.length > 0
+        // return this.$store.getters.walletNftUTXOs.length > 0
+        return this.$store.state.Assets.nftUTXOs.length > 0
     }
 
     get faucetLink() {
@@ -376,7 +382,22 @@ export default class Transfer extends Vue {
                 res = res.add(this.orders[i].amount)
             }
         }
+
         return res
+    }
+    get avaxTxSize() {
+        let res = new BN(0)
+        for (var i = 0; i < this.orders.length; i++) {
+            let order = this.orders[i]
+            if (order.amount && order.asset.id === this.avaxAsset.id) {
+                res = res.add(this.orders[i].amount)
+            }
+        }
+
+        return res
+    }
+    get avaxAsset(): AvaAsset {
+        return this.$store.getters['Assets/AssetAVA']
     }
 
     get wallet(): WalletType {
@@ -393,10 +414,21 @@ export default class Transfer extends Vue {
         return bnToBig(fee, 9)
     }
 
+    get totalUSD(): Big {
+        let totalAsset = this.avaxTxSize.add(avm.getTxFee())
+        let bigAmt = bnToBig(totalAsset, 9)
+        let usdPrice = this.priceDict.usd
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
+    }
+
     get addresses() {
         return this.$store.state.addresses
     }
 
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
     activated() {
         this.clearForm()
     }
@@ -595,7 +627,7 @@ label {
     }
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .transfer_card {
         display: block;
         grid-template-columns: none;
@@ -612,6 +644,10 @@ label {
 
     .tx_list {
         padding: 0;
+        border: none;
+    }
+
+    .lists {
         border: none;
     }
 }

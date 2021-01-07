@@ -31,7 +31,8 @@ import CollectibleFamily from '@/components/misc/BalancePopup/CollectibleFamily.
 export default class CollectibleTab extends Vue {
     @Prop({ default: [] }) disabledIds!: string[]
     get isEmpty(): boolean {
-        return this.$store.getters.walletNftUTXOs.length === 0
+        // return this.$store.getters.walletNftUTXOs.length === 0
+        return this.$store.state.Assets.nftUTXOs.length === 0
     }
 
     get nftFamsDict(): NftFamilyDict {

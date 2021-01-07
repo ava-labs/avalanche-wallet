@@ -1,5 +1,4 @@
 import BN from 'bn.js'
-
 export interface TransactionValueDict {
     [address: string]: number
 }

@@ -148,10 +148,12 @@ export default class TxList extends Vue {
     }
 
     get assets_list(): AvaAsset[] {
-        return this.$store.getters.walletAssetsArray
+        // return this.$store.getters.walletAssetsArray
+        return this.$store.getters['Assets/walletAssetsArray']
     }
     get assets(): AssetsDict {
-        return this.$store.getters.walletAssetsDict
+        // return this.$store.getters.walletAssetsDict
+        return this.$store.getters['Assets/walletAssetsDict']
     }
     get showAdd(): boolean {
         if (this.tx_list.length === this.assets_list.length || this.assets_list.length === 0) {
@@ -275,5 +277,11 @@ $right_pad: 80px;
 }
 .list_item[empty] .list_in {
     pointer-events: none;
+}
+
+@include main.mobile-device {
+    .list_item {
+        grid-template-columns: 1fr;
+    }
 }
 </style>

@@ -59,7 +59,10 @@ export default class ChainImport extends Vue {
         if (!this.wallet) return
         try {
             let txId = await this.wallet.importToXChain('P')
-            let txId2 = await this.wallet.importToXChain('C')
+            // TODO: Change after ledger support
+            if (this.wallet.type !== 'ledger') {
+                let txId2 = await this.wallet.importToXChain('C')
+            }
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
@@ -114,10 +117,12 @@ export default class ChainImport extends Vue {
         })
 
         this.$store.dispatch('Assets/updateUTXOs')
+        this.$store.dispatch('History/updateTransactionHistory')
     }
 
     onError(err: Error) {
         this.isLoading = false
+        console.error(err)
         let msg = ''
         if (err.message.includes('No atomic')) {
             this.err = 'Nothing found to import.'

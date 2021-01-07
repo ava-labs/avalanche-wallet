@@ -44,10 +44,14 @@
             </div>
 
             <div class="fees">
-                <h4>{{ $t('transfer.fees') }}</h4>
                 <p>
                     {{ $t('transfer.fee_tx') }}
                     <span>{{ maxFeeText }} AVAX</span>
+                </p>
+
+                <p>
+                    {{ $t('transfer.total') }}
+                    <span>{{ totalUSD.toLocaleString(2) }} USD</span>
                 </p>
             </div>
             <template v-if="!isSuccess">
@@ -112,7 +116,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { WalletType } from '@/store/types'
+import { priceDict, WalletType } from '@/store/types'
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import Big from 'big.js'
@@ -142,11 +146,15 @@ export default class FormC extends Vue {
 
     txHash = ''
 
-    get wallet(): WalletType {
+    get wallet(): WalletType | null {
         return this.$store.state.activeWallet
     }
 
-    get rawBalance() {
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
+    get rawBalance(): BN {
+        if (!this.wallet) return new BN(0)
         return this.wallet.ethBalance
     }
     get balance() {
@@ -160,6 +168,14 @@ export default class FormC extends Vue {
 
     get txFee() {
         return Big(3)
+    }
+
+    get totalUSD(): Big {
+        let bigAmt = bnToBig(this.amountIn, 9)
+        let usdPrice = this.priceDict.usd
+        let bigFee = bnToBig(this.maxFee, 18)
+        let usdBig = bigAmt.add(bigFee).times(usdPrice)
+        return usdBig
     }
 
     validateAddress(addr: string) {
@@ -253,6 +269,7 @@ export default class FormC extends Vue {
     }
 
     async submit() {
+        if (!this.wallet) return
         this.isLoading = true
         let formAmt = this.formAmount.mul(new BN(Math.pow(10, 9)))
 
@@ -287,6 +304,7 @@ export default class FormC extends Vue {
         this.canSendAgain = false
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         }, 3000)
     }

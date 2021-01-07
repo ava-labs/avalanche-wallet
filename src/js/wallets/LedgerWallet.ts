@@ -4,7 +4,7 @@ import AppAvax from '@obsidiansystems/hw-app-avalanche'
 
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 var bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
@@ -43,6 +43,7 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
 import { digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
+import { ChainIdType } from '@/constants'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -223,9 +224,23 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return this.ethBalance
     }
 
-    async getUTXOs(): Promise<AVMUTXOSet> {
+    async getUTXOs(): Promise<void> {
+        // TODO: Move to shared file
+        this.isFetchUtxos = true
+        // If we are waiting for helpers to initialize delay the call
+        let isInit =
+            this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+        if (!isInit) {
+            setTimeout(() => {
+                this.getUTXOs()
+            }, 1000)
+            // console.info('HD Not ready try again in 1 sec..')
+            return
+        }
+
+        super.getUTXOs()
         this.getEthBalance()
-        return super.getUTXOs()
+        return
     }
 
     getPathFromAddress(address: string) {
@@ -380,13 +395,20 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             throw new Error('Nothing to import.')
         }
 
-        let pAddrs = this.platformHelper.getAllDerivedAddresses()
+        // let pAddrs = this.platformHelper.getAllDerivedAddresses()
         // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress()
 
+        let hrp = ava.getHRP()
+        let utxoAddrs = utxoSet
+            .getAddresses()
+            .map((addr) => bintools.addressToString(hrp, 'P', addr))
+        // let fromAddrs = utxoAddrs
+        let ownerAddrs = utxoAddrs
+
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
-            pAddrs,
+            ownerAddrs,
             avm.getBlockchainID(),
             [pToAddr],
             [pToAddr],
@@ -399,27 +421,43 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return pChain.issueTx(tx)
     }
 
-    async importToXChain(): Promise<string> {
+    // TODO: Move to Core HD file
+    async importToXChain(sourceChain: ChainIdType): Promise<string> {
         const utxoSet = (await this.externalHelper.getAtomicUTXOs()) as AVMUTXOSet
 
         if (utxoSet.getAllUTXOs().length === 0) {
             throw new Error('Nothing to import.')
         }
 
-        let externalIndex = this.externalHelper.hdIndex
-        // let xAddrs = this.externalHelper.getAllDerivedAddresses(externalIndex+20);
+        // let externalIndex = this.externalHelper.hdIndex
+        // let xAddrs = this.externalHelper.getAllDerivedAddresses()
         let xToAddr = this.externalHelper.getCurrentAddress()
-        let externalAddresses = this.externalHelper.getExtendedAddresses()
-        let xAddrs = this.getDerivedAddresses()
+        // let externalAddresses = this.externalHelper.getExtendedAddresses()
+        // let xAddrs = this.getDerivedAddresses()
         // let xToAddr = this.externalHelper.getAllDerivedAddresses(externalIndex+10);
+
+        let hrp = ava.getHRP()
+        let utxoAddrs = utxoSet
+            .getAddresses()
+            .map((addr) => bintools.addressToString(hrp, 'X', addr))
+
+        let fromAddrs = utxoAddrs
+        let ownerAddrs = utxoAddrs
+
+        let sourceChainId
+        if (sourceChain === 'P') {
+            sourceChainId = pChain.getBlockchainID()
+        } else {
+            sourceChainId = cChain.getBlockchainID()
+        }
 
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
-            externalAddresses,
-            pChain.getBlockchainID(),
+            ownerAddrs,
+            sourceChainId,
             [xToAddr],
-            externalAddresses,
+            fromAddrs,
             [xToAddr]
         )
 

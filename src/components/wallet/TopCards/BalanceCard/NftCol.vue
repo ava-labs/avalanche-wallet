@@ -42,15 +42,18 @@ let payloadtypes = PayloadTypes.getInstance()
 })
 export default class NftCol extends Vue {
     get isEmpty(): boolean {
-        return this.$store.getters.walletNftUTXOs.length === 0
+        // return this.$store.getters.walletNftUTXOs.length === 0
+        return this.$store.state.Assets.nftUTXOs.length === 0
     }
 
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        return this.$store.getters['Assets/walletNftDict']
     }
 
     get nftArray(): UTXO[] {
-        let utxos: UTXO[] = this.$store.getters.walletNftUTXOs
+        // let utxos: UTXO[] = this.$store.getters.walletNftUTXOs
+        let utxos: UTXO[] = this.$store.state.Assets.nftUTXOs
 
         let ids: string[] = []
         // Filter same groups
@@ -89,7 +92,8 @@ export default class NftCol extends Vue {
     }
 
     get collectedAmt(): number {
-        return this.$store.getters.walletNftUTXOs.length
+        // return this.$store.getters.walletNftUTXOs.length
+        return this.$store.state.Assets.nftUTXOs.length
     }
 
     get collectionAmt(): number {
