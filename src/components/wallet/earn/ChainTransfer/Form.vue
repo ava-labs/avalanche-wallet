@@ -173,7 +173,7 @@ export default class Form extends Vue {
         let feeX = avm.getTxFee()
         let totFee = feeX.mul(new BN(2))
 
-        if (this.targetChain === 'C' || this.sourceChain === 'C') {
+        if (this.targetChain === 'C') {
             totFee = feeX
         }
         let feeXBig = bnToBig(totFee, 9)
