@@ -1,5 +1,6 @@
 export interface HistoryState {
     transactions: ITransactionData[]
+    allTransactions: ITransactionData[]
     isUpdating: boolean
 }
 
