@@ -24,6 +24,7 @@ export interface ITransactionData {
     type: TransactionType
     validatorStart: number
     validatorEnd: number
+    validatorNodeID: string
 }
 
 interface TransactionInput {

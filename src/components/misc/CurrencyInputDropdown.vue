@@ -20,10 +20,16 @@
             ></BalanceDropdown>
         </div>
         <div class="balance">
-            <p>
-                Balance:
-                <span>{{ maxAmountBig.toLocaleString(denomination) }}</span>
-            </p>
+            <div>
+                <p>
+                    <b>Balance:</b>
+                    {{ maxAmountBig.toLocaleString(denomination) }}
+                </p>
+                <p v-if="asset_now.id === avaxAsset.id">
+                    <b>$</b>
+                    {{ amountUSD.toLocaleString(2) }}
+                </p>
+            </div>
             <div></div>
         </div>
     </div>
@@ -41,7 +47,7 @@ import Dropdown from '@/components/misc/Dropdown.vue'
 import { BigNumInput } from '@avalabs/vue_components'
 import AvaAsset from '@/js/AvaAsset'
 import { ICurrencyInputDropdownValue } from '@/components/wallet/transfer/types'
-import { IWalletAssetsDict, IWalletBalanceDict } from '@/store/types'
+import { IWalletAssetsDict, IWalletBalanceDict, priceDict } from '@/store/types'
 
 import BalanceDropdown from '@/components/misc/BalancePopup/BalanceDropdown.vue'
 import { avm } from '@/AVA'
@@ -108,6 +114,13 @@ export default class CurrencyInputDropdown extends Vue {
 
     onfocus() {
         console.log('focus')
+    }
+
+    get amountUSD(): Big {
+        let usdPrice = this.priceDict.usd
+        let bigAmt = bnToBig(this.amount, this.denomination)
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
     }
 
     get isEmpty(): boolean {
@@ -182,6 +195,10 @@ export default class CurrencyInputDropdown extends Vue {
         if (!this.max_amount) return Big(0)
         return bnToBig(this.max_amount, this.denomination)
     }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -207,7 +224,6 @@ export default class CurrencyInputDropdown extends Vue {
     grid-template-columns: 1fr 140px;
     background-color: transparent;
     //font-size: 12px;
-    height: 40px;
     width: 100%;
     outline: none;
     text-align: right;
@@ -248,11 +264,19 @@ input {
     grid-template-columns: 1fr 140px;
     font-size: 14px;
     color: var(--primary-color-light);
-    padding: 2px 8px;
+    padding: 2px 0px;
+
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
 
     p {
+        padding: 2px 0px;
+    }
+
+    p:last-child {
         text-align: right;
-        padding: 2px 8px;
     }
 
     span {
@@ -261,12 +285,15 @@ input {
     }
 }
 
-@include main.mobile-device {
-    .curr_in_drop {
-        grid-template-columns: 1fr 70px;
-    }
-
+@include main.medium-device {
     .balance {
+        grid-template-columns: 1fr;
+    }
+}
+
+@include main.mobile-device {
+    .balance,
+    .curr_in_drop {
         grid-template-columns: 1fr 70px;
     }
 }

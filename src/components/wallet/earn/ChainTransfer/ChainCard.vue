@@ -12,8 +12,8 @@
             </div>
             <div class="input_group">
                 <label>Balance</label>
-                <NumberCounter :value="balanceBig"></NumberCounter>
-                <!--                <p>{{ balanceText }}</p>-->
+                <!--                <NumberCounter :value="balanceBig"></NumberCounter>-->
+                <p>{{ balanceText }}</p>
             </div>
         </div>
     </div>

@@ -31,10 +31,18 @@
                     <span>.{{ balanceTextRight }}</span>
                     AVAX
                 </p>
-                <p class="balance_usd">
-                    <b>$ {{ totalBalanceUSDText }}</b>
-                    USD
-                </p>
+                <div style="display: flex; flex-direction: row">
+                    <p class="balance_usd">
+                        <b>$ {{ totalBalanceUSDText }}</b>
+                        USD
+                    </p>
+                    <p class="balance_usd" style="background-color: transparent">
+                        <b>1 AVAX</b>
+                        =
+                        <b>${{ avaxPriceText }}</b>
+                        USD
+                    </p>
+                </div>
             </div>
             <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
@@ -125,7 +133,6 @@ export default class BalanceCard extends Vue {
     }
 
     get avmUnlocked(): BN {
-        console.log(this.ava_asset)
         if (!this.ava_asset) return new BN(0)
         return this.ava_asset.amount
     }
@@ -157,6 +164,10 @@ export default class BalanceCard extends Vue {
             return bigTot
         }
         return Big(0)
+    }
+
+    get avaxPriceText() {
+        return this.priceDict.usd
     }
 
     get totalBalanceUSD(): Big {
@@ -361,6 +372,7 @@ h4 {
     font-size: 13px;
     padding: 1px 6px;
     border-radius: 3px;
+    margin-right: 6px !important;
 }
 
 .refresh {

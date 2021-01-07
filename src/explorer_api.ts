@@ -15,8 +15,11 @@ async function getAddressHistory(
     addrs: string[],
     limit = 20,
     chainID: string
-): Promise<{ transactions: ITransactionData[] }> {
-    let query = addrs.map((val) => {
+): Promise<ITransactionData[]> {
+    let selection = addrs.slice(0, 512)
+    let remaining = addrs.slice(512)
+
+    let query = selection.map((val) => {
         let raw = val.split('-')[1]
         return `address=${raw}`
     })
@@ -27,7 +30,16 @@ async function getAddressHistory(
     )}&limit=${limit}&sort=timestamp-desc&disableCount=1&chainID=${chainID}`
 
     let res = await explorer_api.get(url)
-    return res.data
+    let txs = res.data.transactions
+
+    if (txs === null) txs = []
+
+    if (remaining.length > 0) {
+        let nextRes = await getAddressHistory(remaining, limit, chainID)
+        txs.push(...nextRes)
+    }
+
+    return txs
 }
 
 async function isAddressUsedX(addr: string) {
@@ -63,7 +75,8 @@ async function getAddressChains(addrs: string[]) {
     })
 
     let joined = cleanAddrs.join('&')
-    let url = `/x/addressChains?${joined}`
+    let url = `/v2/addressChains?${joined}&disableCount=1`
+
     let res = await explorer_api.get(url)
 
     return res.data.addressChains

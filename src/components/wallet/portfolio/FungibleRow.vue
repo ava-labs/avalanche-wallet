@@ -15,8 +15,15 @@
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
-            {{ asset.toStringTotal() }}
-            <span>{{ symbol }}</span>
+            <span>
+                {{ asset.toStringTotal() }}
+                &nbsp;{{ symbol }}
+            </span>
+            <br />
+            <span class="fiat" v-if="isAvaxToken">
+                {{ totalUSD.toLocaleString(2) }}
+                &nbsp;USD
+            </span>
         </p>
         <p class="balance_col" v-else>
             0
@@ -31,6 +38,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
 import BN from 'bn.js'
+import { bnToBig } from '../../../helpers/helper'
+import { priceDict } from '../../../store/types'
+import Big from 'big.js'
 
 @Component({
     components: {
@@ -56,6 +66,18 @@ export default class FungibleRow extends Vue {
             return true
         }
         return false
+    }
+
+    get totalUSD(): Big {
+        if (!this.isAvaxToken) return Big(0)
+        let usdPrice = this.priceDict.usd
+        let bigAmt = bnToBig(this.asset.getTotalAmount(), this.asset.denomination)
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
+    }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
     }
 
     get sendLink(): string {
@@ -105,8 +127,12 @@ export default class FungibleRow extends Vue {
     }
 
     .balance_col {
-        font-size: 24px;
+        font-size: 18px;
         text-align: right;
+        .fiat {
+            font-size: 12px;
+            color: var(--primary-color-light);
+        }
     }
 
     .name_col {

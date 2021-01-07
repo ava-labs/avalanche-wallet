@@ -9,6 +9,7 @@ export interface ValidatorRaw {
     delegators: DelegatorRaw[] | null
     potentialReward: string
     rewardOwner: ValidatorRewardOwner
+    txID: string
 }
 
 export interface DelegatorRaw {
@@ -18,6 +19,7 @@ export interface DelegatorRaw {
     rewardOwner: ValidatorRewardOwner
     stakeAmount: string
     startTime: string
+    txID: string
 }
 
 export interface DelegatorPendingRaw {
