@@ -57,7 +57,7 @@
                             <span>{{ txFee.toLocaleString(9) }} AVAX</span>
                         </p>
                         <p>
-                            {{ $t('transfer.total') }}
+                            {{ $t('transfer.total_avax') }}
                             <span>{{ totalUSD.toLocaleString(2) }} USD</span>
                         </p>
                     </div>
@@ -156,6 +156,7 @@ import FormC from '@/components/wallet/transfer/FormC.vue'
 import { ChainIdType } from '@/constants'
 
 import ChainInput from '@/components/wallet/transfer/ChainInput.vue'
+import AvaAsset from '../../js/AvaAsset'
 @Component({
     components: {
         FaucetLink,
@@ -385,6 +386,20 @@ export default class Transfer extends Vue {
 
         return res
     }
+    get avaxTxSize() {
+        let res = new BN(0)
+        for (var i = 0; i < this.orders.length; i++) {
+            let order = this.orders[i]
+            if (order.amount && order.asset.id === this.avaxAsset.id) {
+                res = res.add(this.orders[i].amount)
+            }
+        }
+
+        return res
+    }
+    get avaxAsset(): AvaAsset {
+        return this.$store.getters['Assets/AssetAVA']
+    }
 
     get wallet(): WalletType {
         return this.$store.state.activeWallet
@@ -401,7 +416,7 @@ export default class Transfer extends Vue {
     }
 
     get totalUSD(): Big {
-        let totalAsset = this.totalTxSize.add(avm.getTxFee())
+        let totalAsset = this.avaxTxSize.add(avm.getTxFee())
         let bigAmt = bnToBig(totalAsset, 9)
         let usdPrice = this.priceDict.usd
         let usdBig = bigAmt.times(usdPrice)
@@ -613,7 +628,7 @@ label {
     }
 }
 
-@media only screen and (max-width: main.$width_m) {
+@include main.mobile-device {
     .transfer_card {
         display: block;
         grid-template-columns: none;

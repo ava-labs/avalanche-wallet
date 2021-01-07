@@ -279,7 +279,7 @@ $right_pad: 80px;
     pointer-events: none;
 }
 
-@media only screen and (max-width: main.$width_m) {
+@include main.mobile-device {
     .list_item {
         grid-template-columns: 1fr;
     }
