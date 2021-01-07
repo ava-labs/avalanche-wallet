@@ -59,6 +59,7 @@ export default class Activity extends Vue {
         for (var i = 0; i < txs.length; i++) {
             let tx = txs[i]
             let date = new Date(tx.timestamp)
+            // let mom = moment(tx.timestamp)
             let month = date.getMonth()
             let year = date.getFullYear()
             let key = `${month}/${year}`
