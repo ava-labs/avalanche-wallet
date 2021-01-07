@@ -38,7 +38,7 @@ export default class NftPayloadView extends Vue {
             case 24: // JSON
                 return JsonPayloadView
             default:
-                return UrlPayloadView
+                return UtfPayloadView
         }
     }
 
@@ -52,7 +52,7 @@ export default class NftPayloadView extends Vue {
             case 24: // JSON
                 return JsonPayloadViewSmall
             default:
-                return UrlPayloadViewSmall
+                return UtfPayloadViewSmall
         }
     }
 }

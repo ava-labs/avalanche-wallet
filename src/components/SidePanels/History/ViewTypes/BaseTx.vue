@@ -190,22 +190,26 @@ export default class BaseTx extends Vue {
             let payload = Buffer.from(rawPayload, 'base64')
             payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
 
-            let typeId = payloadtypes.getTypeID(payload)
-            let pl: Buffer = payloadtypes.getContent(payload)
-            let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+            try {
+                let typeId = payloadtypes.getTypeID(payload)
+                let pl: Buffer = payloadtypes.getContent(payload)
+                let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
 
-            if (res[assetID]) {
-                if (res[assetID][groupID]) {
-                    res[assetID][groupID].push(payloadbase)
+                if (res[assetID]) {
+                    if (res[assetID][groupID]) {
+                        res[assetID][groupID].push(payloadbase)
+                    } else {
+                        res[assetID] = {
+                            [groupID]: [payloadbase],
+                        }
+                    }
                 } else {
                     res[assetID] = {
                         [groupID]: [payloadbase],
                     }
                 }
-            } else {
-                res[assetID] = {
-                    [groupID]: [payloadbase],
-                }
+            } catch (e) {
+                // console.error(e)
             }
         }
 
