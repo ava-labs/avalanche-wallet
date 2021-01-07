@@ -12,8 +12,8 @@
                     <div v-if="!isImportErr" class="fees">
                         <h4>{{ $t('earn.transfer.fee') }}</h4>
                         <p>
-                            {{ fee.toString() }}
-                            <span>AVAX</span>
+                            Export + Import Fee
+                            <span>{{ fee.toString() }} AVAX</span>
                         </p>
                     </div>
                     <div>
@@ -132,6 +132,8 @@ import { ChainIdType } from '@/constants'
 
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
+import { web3 } from '@/evm'
+
 @Component({
     name: 'chain_transfer',
     components: {
@@ -220,6 +222,7 @@ export default class ChainTransfer extends Vue {
     get formAmtText() {
         return bnToBig(this.formAmt, 9).toLocaleString()
     }
+
     // Fee is 2 times the tx transfer fee
     get fee(): Big {
         let feeX = avm.getTxFee()
@@ -298,14 +301,23 @@ export default class ChainTransfer extends Vue {
         let exportTxId
         this.exportState = TxState.started
 
-        exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
+        let nonce = 0
+        if (this.sourceChain === 'C') {
+            nonce = await web3.eth.getTransactionCount(this.wallet.ethAddress)
+        }
+
+        try {
+            exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
+        } catch (e) {
+            throw e
+        }
 
         this.exportId = exportTxId
-        this.waitExportStatus(exportTxId)
+        this.waitExportStatus(exportTxId, nonce)
     }
 
     // STEP 2
-    async waitExportStatus(txId: string) {
+    async waitExportStatus(txId: string, nonce?: number) {
         let status
         if (this.sourceChain === 'X') {
             status = await avm.getTxStatus(txId)
@@ -318,25 +330,20 @@ export default class ChainTransfer extends Vue {
                 this.exportReason = resp.reason
             }
         } else {
-            // TODO: Add C Chain waiting logic
-            // let txIdHex = bintools.cb58Decode(txId).toString('hex')
-            // let receipt = await web3.eth.getTransactionReceipt('0x' + txIdHex)
-            // console.log(receipt)
-
-            // if (receipt === null) {
-            //     status = 'Unknown'
-            // } else {
-            //     console.log('check receipt status')
-            //     status = 'success'
-            // }
-            status = 'success'
+            // We can check the nonce to see when the tx is confirmed
+            let nonceNow = await web3.eth.getTransactionCount(this.wallet.ethAddress)
+            if (nonceNow === nonce) {
+                status = 'Processing'
+            } else {
+                status = 'Accepted'
+            }
         }
         this.exportStatus = status
 
         if (status === 'Unknown' || status === 'Processing') {
             // if not confirmed ask again
             setTimeout(() => {
-                this.waitExportStatus(txId)
+                this.waitExportStatus(txId, nonce)
             }, 1000)
             return false
         } else if (status === 'Dropped') {
@@ -391,7 +398,7 @@ export default class ChainTransfer extends Vue {
             }
         } else {
             // TODO: Add evm processing
-            status = 'success'
+            status = 'Accepted'
         }
 
         this.importStatus = status
