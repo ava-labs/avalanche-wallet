@@ -186,6 +186,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 return bippath.fromString(path, false)
             })
 
+            // Also, improve signing tx modal for other tx types
+
+            // Look at the tx type and see if not base do sign hash
+            // Specifically operation tx => sign hash, otherwise sign tx
+
             let ledgerSignedTx = canParseTx
                 ? await this.app.signTransaction(accountPath, bip32Paths, txbuff, changePath)
                 : await this.app.signHash(accountPath, bip32Paths, msg)
