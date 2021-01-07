@@ -104,6 +104,12 @@ export default class TxHistoryValue extends Vue {
         let ava = this.$store.getters['Assets/AssetAVA']
         return ava
     }
+
+    created() {
+        if (!this.asset) {
+            this.$store.dispatch('Assets/addUnknownAsset', this.assetId)
+        }
+    }
 }
 </script>
 <style scoped lang="scss">
