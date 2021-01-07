@@ -106,8 +106,10 @@ export default class TxHistoryValue extends Vue {
     }
 
     created() {
-        if (!this.asset) {
-            this.$store.dispatch('Assets/addUnknownAsset', this.assetId)
+        if (this.type === 'base') {
+            if (!this.asset) {
+                this.$store.dispatch('Assets/addUnknownAsset', this.assetId)
+            }
         }
     }
 }
