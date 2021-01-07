@@ -10,12 +10,21 @@
                 :max="max"
                 @change="amount_in"
             ></BigNumInput>
-            <p v-if="balance" class="balance">
-                Balance:
-                <span>{{ balance.toLocaleString() }}</span>
-            </p>
         </div>
         <p class="ticker">AVAX</p>
+        <div v-if="balance" class="balance">
+            <div>
+                <p>
+                    <b>Balance:</b>
+                    {{ balance.toLocaleString() }}
+                </p>
+                <p>
+                    <b>$</b>
+                    {{ amountUSD.toLocaleString(2) }}
+                </p>
+            </div>
+            <div></div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -26,6 +35,8 @@ import { Vue, Component, Prop, Model } from 'vue-property-decorator'
 import { BigNumInput } from '@avalabs/vue_components'
 import { BN } from 'avalanche'
 import Big from 'big.js'
+import { bnToBig } from '../../helpers/helper'
+import { priceDict } from '../../store/types'
 
 @Component({
     components: {
@@ -48,13 +59,25 @@ export default class AvaxInput extends Vue {
     amount_in(val: BN) {
         this.$emit('change', val)
     }
+
+    get amountUSD(): Big {
+        let usdPrice = this.priceDict.usd
+        // @ts-ignore
+        let amount = bnToBig(this.amount, 9)
+        let usdBig = amount.times(usdPrice)
+        return usdBig
+    }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
 }
 </script>
 <style scoped lang="scss">
 .avax_input {
     display: grid;
     grid-template-columns: 1fr max-content;
-    grid-gap: 10px;
+    grid-gap: 0px 10px;
     color: var(--primary-color);
     width: 100%;
     height: 40px;
@@ -72,11 +95,37 @@ export default class AvaxInput extends Vue {
         //padding: 0 12px !important;
     }
 
+    .ticker,
     .amt_in,
-    p,
     .max_but {
         background-color: var(--bg-light);
         //border-radius: 3px;
+    }
+}
+
+.balance {
+    display: grid;
+    column-gap: 10px;
+    font-size: 14px;
+    color: var(--primary-color-light);
+    padding: 2px 0px;
+
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    p {
+        padding: 2px 0px;
+    }
+
+    p:last-child {
+        text-align: right;
+    }
+
+    span {
+        font-family: monospace;
+        padding-left: 14px;
     }
 }
 
@@ -114,21 +163,6 @@ p {
     opacity: 0.4;
     &:hover {
         opacity: 1;
-    }
-}
-
-.balance {
-    position: absolute;
-    font-size: 14px;
-    right: 8px;
-    color: var(--primary-color-light);
-    background-color: transparent !important;
-    top: 40px;
-    padding: 2px 8px;
-
-    span {
-        font-family: monospace;
-        padding-left: 14px;
     }
 }
 </style>

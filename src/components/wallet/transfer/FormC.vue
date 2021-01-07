@@ -49,6 +49,11 @@
                     {{ $t('transfer.fee_tx') }}
                     <span>{{ maxFeeText }} AVAX</span>
                 </p>
+
+                <p>
+                    {{ $t('transfer.total') }}
+                    <span>{{ totalUSD.toLocaleString(2) }} USD</span>
+                </p>
             </div>
             <template v-if="!isSuccess">
                 <p class="err">{{ err }}</p>
@@ -112,7 +117,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { WalletType } from '@/store/types'
+import { priceDict, WalletType } from '@/store/types'
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import Big from 'big.js'
@@ -146,6 +151,9 @@ export default class FormC extends Vue {
         return this.$store.state.activeWallet
     }
 
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
     get rawBalance(): BN {
         if (!this.wallet) return new BN(0)
         return this.wallet.ethBalance
@@ -161,6 +169,14 @@ export default class FormC extends Vue {
 
     get txFee() {
         return Big(3)
+    }
+
+    get totalUSD(): Big {
+        let bigAmt = bnToBig(this.amountIn, 9)
+        let usdPrice = this.priceDict.usd
+        let bigFee = bnToBig(this.maxFee, 18)
+        let usdBig = bigAmt.add(bigFee).times(usdPrice)
+        return usdBig
     }
 
     validateAddress(addr: string) {
