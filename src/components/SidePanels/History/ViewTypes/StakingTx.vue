@@ -12,15 +12,13 @@
                 {{ $t('transactions.not_rewarded') }}
             </p>
         </div>
-        <div class="data_row bar_row" v-else>
-            <p>Reward Pending</p>
+        <div v-else>
             <div class="time_bar">
-                <div
-                    :style="{
-                        width: `${timeBarPerc}%`,
-                    }"
-                ></div>
-                <p>{{ timeBarPerc.toFixed(0) }} % complete</p>
+                <div class="bar_row"></div>
+            </div>
+            <div class="data_row reward_row">
+                <p>Reward Pending</p>
+                <p class="amt">{{ rewardText }} AVAX</p>
             </div>
         </div>
 
@@ -36,6 +34,7 @@ import { ITransactionData } from '@/store/modules/history/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { UnixNow } from 'avalanche/dist/utils'
+import { ValidatorListItem } from '@/store/modules/platform/types'
 
 @Component
 export default class StakingTx extends Vue {
@@ -84,6 +83,55 @@ export default class StakingTx extends Vue {
         return this.transaction.validatorEnd
     }
 
+    get validator(): ValidatorListItem {
+        let nodeId = this.transaction.validatorNodeID
+        if (nodeId) {
+            for (var i = 0; i < this.validators.length; i++) {
+                let v = this.validators[i]
+                let nodeIdRaw = v.nodeID.split('-')[1]
+                if (nodeIdRaw === nodeId) {
+                    return v
+                }
+            }
+        }
+        return null
+    }
+
+    get potentialReward() {
+        let v = this.validator
+        if (v) {
+            if (this.isValidator) {
+                return v.potentialReward
+            } else {
+                let delegators = v.delegators
+                for (var i = 0; i < delegators.length; i++) {
+                    let d = delegators[i]
+                    if (d.txID === this.transaction.id) {
+                        return d.potentialReward
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    get rewardBig() {
+        let reward = this.potentialReward
+        if (!reward) return null
+
+        let bn = new BN(reward)
+        return bnToBig(bn, 9)
+    }
+
+    get rewardText() {
+        if (!this.rewardBig) return '?'
+        return this.rewardBig.toLocaleString()
+    }
+
+    get validators(): ValidatorListItem[] {
+        return this.$store.state.Platform.validators
+    }
+
     get timeBarPerc() {
         let now = UnixNow()
         // if (this.endtime) {
@@ -116,7 +164,8 @@ export default class StakingTx extends Vue {
 .time_bar {
     background-color: var(--bg-wallet);
     border-radius: 8px;
-    height: 14px;
+    height: 4px;
+    margin: 4px 0;
     width: 100%;
     overflow: hidden;
     position: relative;
@@ -127,7 +176,7 @@ export default class StakingTx extends Vue {
         left: 0;
         top: 0;
         height: 100%;
-        background-color: rgba(var(--info-1), 0.3);
+        background-color: rgba(var(--info-1), 0.6);
     }
 
     p {
