@@ -278,4 +278,10 @@ $right_pad: 80px;
 .list_item[empty] .list_in {
     pointer-events: none;
 }
+
+@include main.mobile-device {
+    .list_item {
+        grid-template-columns: 1fr;
+    }
+}
 </style>

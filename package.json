@@ -52,6 +52,7 @@
         "@types/vue-datetime": "1.0.0",
         "@zxing/library": "0.15.2",
         "avalanche": "3.1.0",
+        "axios": "0.21.1",
         "big.js": "5.2.2",
         "bip32": "2.0.5",
         "bip32-path": "^0.4.2",

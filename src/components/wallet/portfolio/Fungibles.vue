@@ -4,7 +4,7 @@
             <p class="name_col">{{ $t('portfolio.name') }}</p>
             <p></p>
             <p class="send_col">{{ $t('portfolio.send') }}</p>
-            <p class="balance_col">{{ $t('portfolio.balance') }}</p>
+            <p class="balance_col balance_header">{{ $t('portfolio.balance') }}</p>
         </div>
         <div v-show="networkStatus !== 'connected'" class="empty">
             <p>{{ $t('portfolio.error_network') }}</p>
@@ -179,6 +179,7 @@ export default class Fungibles extends Vue {
     }
 
     .balance_col {
+        text-align: right;
         span {
             display: none;
         }
@@ -205,13 +206,16 @@ export default class Fungibles extends Vue {
 .fungibles_view {
     .balance_col {
         text-align: right;
-        display: grid;
-        grid-template-columns: 1fr 80px;
+        display: inline-block;
 
         span {
-            padding-left: 15px;
-            text-align: left;
+            padding-left: 8px;
+            text-align: right;
         }
+    }
+
+    .balance_header {
+        grid-template-columns: 1fr;
     }
 
     .headers,
@@ -229,9 +233,7 @@ export default class Fungibles extends Vue {
         }
 
         .balance_col {
-            span {
-                display: none;
-            }
+            white-space: nowrap;
             grid-template-columns: 1fr;
         }
         .balance_col {
