@@ -40,6 +40,7 @@ import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { UnixNow } from 'avalanche/dist/utils'
 import { ValidatorListItem } from '@/store/modules/platform/types'
+import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 
 @Component
 export default class StakingTx extends Vue {
@@ -88,7 +89,7 @@ export default class StakingTx extends Vue {
         return this.transaction.validatorEnd
     }
 
-    get validator(): ValidatorListItem {
+    get validator(): ValidatorRaw | null {
         let nodeId = this.transaction.validatorNodeID
         if (nodeId) {
             for (var i = 0; i < this.validators.length; i++) {
@@ -109,6 +110,7 @@ export default class StakingTx extends Vue {
                 return v.potentialReward
             } else {
                 let delegators = v.delegators
+                if (!delegators) return null
                 for (var i = 0; i < delegators.length; i++) {
                     let d = delegators[i]
                     if (d.txID === this.transaction.id) {
@@ -133,7 +135,7 @@ export default class StakingTx extends Vue {
         return this.rewardBig.toLocaleString()
     }
 
-    get validators(): ValidatorListItem[] {
+    get validators(): ValidatorRaw[] {
         return this.$store.state.Platform.validators
     }
 
