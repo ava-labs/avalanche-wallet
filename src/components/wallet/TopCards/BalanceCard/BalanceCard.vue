@@ -36,7 +36,7 @@
                         <b>$ {{ totalBalanceUSDText }}</b>
                         USD
                     </p>
-                    <p class="balance_usd">
+                    <p class="balance_usd" style="background-color: transparent">
                         <b>1 AVAX</b>
                         =
                         <b>${{ avaxPriceText }}</b>
