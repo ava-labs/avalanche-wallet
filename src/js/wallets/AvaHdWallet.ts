@@ -158,8 +158,21 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
     }
 
     async getUTXOs(): Promise<void> {
-        this.getEthBalance()
+        // TODO: Move to shared file
+        this.isFetchUtxos = true
+        // If we are waiting for helpers to initialize delay the call
+        let isInit =
+            this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+        if (!isInit) {
+            setTimeout(() => {
+                this.getUTXOs()
+            }, 1000)
+            // console.info('HD Not ready try again in 1 sec..')
+            return
+        }
+
         super.getUTXOs()
+        this.getEthBalance()
         return
     }
 
@@ -421,9 +434,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         // Owner addresses, the addresses we exported to
         let pToAddr = this.platformHelper.getCurrentAddress()
 
+        let hrp = ava.getHRP()
+        let utxoAddrs = utxoSet
+            .getAddresses()
+            .map((addr) => bintools.addressToString(hrp, 'P', addr))
+        let fromAddrs = utxoAddrs
+        let ownerAddrs = utxoAddrs
+
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
-            pAddrs,
+            ownerAddrs,
             avm.getBlockchainID(),
             [pToAddr],
             [pToAddr],
@@ -445,8 +465,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         }
 
         let keyChain = this.getKeyChain() as AVMKeyChain
-        let xAddrs = keyChain.getAddressStrings()
+        // let xAddrs = keyChain.getAddressStrings()
         let xToAddr = this.externalHelper.getCurrentAddress()
+
+        let hrp = ava.getHRP()
+        let utxoAddrs = utxoSet
+            .getAddresses()
+            .map((addr) => bintools.addressToString(hrp, 'X', addr))
+
+        let fromAddrs = utxoAddrs
+        let ownerAddrs = utxoAddrs
 
         let sourceChainId
         if (sourceChain === 'P') {
@@ -457,10 +485,10 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
-            xAddrs,
+            ownerAddrs,
             sourceChainId,
             [xToAddr],
-            xAddrs,
+            fromAddrs,
             [xToAddr]
         )
         const tx = unsignedTx.sign(keyChain)

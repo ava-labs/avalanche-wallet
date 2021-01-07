@@ -20,6 +20,7 @@ import { getAddressChains } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/IAvaHdWallet'
+import { getAtomicUTXOsForAddresses } from '@/helpers/wallet_helper'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 
@@ -258,17 +259,20 @@ class HdHelper {
 
     async getAtomicUTXOs() {
         let addrs: string[] = this.getAllDerivedAddresses()
-        // console.log(addrs);
-        if (this.chainId === 'P') {
-            let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID()))
-                .utxos
-            return result
-        } else {
-            let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
 
-            let resultC: AVMUTXOSet = (await avm.getUTXOs(addrs, cChain.getBlockchainID())).utxos
-            return result.merge(resultC)
-        }
+        let result = await getAtomicUTXOsForAddresses(addrs, this.chainId)
+        return result
+        // // console.log(addrs);
+        // if (this.chainId === 'P') {
+        //     let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID()))
+        //         .utxos
+        //     return result
+        // } else {
+        //     let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
+        //
+        //     let resultC: AVMUTXOSet = (await avm.getUTXOs(addrs, cChain.getBlockchainID())).utxos
+        //     return result.merge(resultC)
+        // }
     }
 
     // Not used?
@@ -337,7 +341,7 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
-        let upTo = 200
+        let upTo = 516
 
         let addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
         let addrChains = await getAddressChains(addrs)
