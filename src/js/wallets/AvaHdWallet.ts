@@ -171,7 +171,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
             return
         }
 
-        console.log('Wallet get utxos')
         super.getUTXOs()
         this.getEthBalance()
         return
