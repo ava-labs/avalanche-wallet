@@ -88,7 +88,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             `${AVA_ACCOUNT_PATH}/1/${this.internalHelper.hdIndex}`
         )
         const changeAddr = this.internalHelper.getAddressForIndex(this.internalHelper.hdIndex)
-        const canParseTx = this.config.version >= '0.3.1'
 
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
@@ -118,10 +117,17 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let hrp = getPreferredHRP(ava.getNetworkID())
         let paths: string[] = []
         let outputs: string[] = []
+        // Remove when 0.4.x ledger app is available
+        // 0.3.1 ledger app signTransaction only works with avax
+        let isAvaxOnly = true
 
         // Collect paths derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
             let item = items[i]
+
+            let assetId = bintools.cb58Encode(item.getAssetID())
+            // @ts-ignore
+            if (assetId !== store.state.Assets.AVA_ASSET_ID) isAvaxOnly = false
 
             let sigidxs: SigIdx[] = item.getInput().getSigIdxs()
             let sources = sigidxs.map((sigidx) => sigidx.getSource())
@@ -153,6 +159,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 paths.push(pathStr)
             }
         }
+
+        const canParseTx = this.config.version >= '0.3.1' && isAvaxOnly
 
         // Collect outputs to display to ledger lock modal
         // only necessary if signing transaction (not hash)
