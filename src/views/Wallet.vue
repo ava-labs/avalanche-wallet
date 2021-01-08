@@ -126,6 +126,15 @@ export default class Wallet extends Vue {
 @include main.medium-device {
     .wallet_view {
         grid-template-columns: 180px 1fr 240px !important;
+        column-gap: 9px;
+    }
+
+    .wallet_main {
+        grid-gap: 9px;
+    }
+
+    #wallet_router {
+        padding: 12px 18px;
     }
 }
 </style>

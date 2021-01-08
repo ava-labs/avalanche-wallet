@@ -1,6 +1,7 @@
 <template>
     <div class="tx_row">
         <p class="time">{{ date.toLocaleTimeString() }}</p>
+        <p>{{ memo }}</p>
         <div class="tx_detail">
             <component :is="tx_comp" :transaction="transaction"></component>
         </div>

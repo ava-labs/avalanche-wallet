@@ -146,4 +146,13 @@ export default {
     justify-content: flex-end;
     padding-bottom: 20px;
 }
+
+@include main.medium-device {
+    .brand {
+        height: 90px;
+    }
+    .links {
+        font-size: 12px;
+    }
+}
 </style>

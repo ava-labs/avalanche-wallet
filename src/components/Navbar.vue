@@ -174,7 +174,18 @@ button {
     margin: 0;
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.medium-device {
+    img {
+        max-height: 18px;
+    }
+    .buts_right {
+        button {
+            font-size: 11px;
+        }
+    }
+}
+
+@include main.mobile-device {
     .lang_web {
         display: none;
     }
