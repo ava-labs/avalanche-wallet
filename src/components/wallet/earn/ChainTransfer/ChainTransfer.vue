@@ -311,7 +311,6 @@ export default class ChainTransfer extends Vue {
         try {
             exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
         } catch (e) {
-            console.log('HERE')
             throw e
         }
 
