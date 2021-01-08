@@ -10,6 +10,7 @@ const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
     state: {
         isUpdating: false,
+        isUpdatingAll: false,
         transactions: [], // Used for the history sidepanel txs
         allTransactions: [], // Used for activity tab txs, paginates
     },
@@ -84,14 +85,14 @@ const history_module: Module<HistoryState, RootState> = {
                 return false
             }
 
-            // state.isUpdating = true
+            state.isUpdatingAll = true
 
             let avmAddrs: string[] = wallet.getAllAddressesX()
             let pvmAddrs: string[] = wallet.getAllAddressesP()
 
             // this shouldnt ever happen, but to avoid getting every transaction...
             if (avmAddrs.length === 0) {
-                state.isUpdating = false
+                state.isUpdatingAll = false
                 return
             }
 
@@ -105,7 +106,7 @@ const history_module: Module<HistoryState, RootState> = {
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
             state.allTransactions = transactions
-            state.isUpdating = false
+            state.isUpdatingAll = false
         },
     },
 }

@@ -2,6 +2,7 @@ export interface HistoryState {
     transactions: ITransactionData[]
     allTransactions: ITransactionData[]
     isUpdating: boolean
+    isUpdatingAll: boolean
 }
 
 export interface ITransactionData {

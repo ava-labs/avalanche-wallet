@@ -149,7 +149,8 @@ export default class TxHistoryRow extends Vue {
 
 .rewarded,
 .memo {
-    word-break: break-all;
+    overflow-wrap: break-word;
+    word-break: break-word;
     font-size: 12px;
     color: main.$primary-color-light;
     display: grid;

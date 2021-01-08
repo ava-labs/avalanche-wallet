@@ -1,7 +1,13 @@
 <template>
     <div class="tx_row">
-        <p class="time">{{ date.toLocaleTimeString() }}</p>
-        <p>{{ memo }}</p>
+        <div>
+            <p class="time">{{ date.toLocaleTimeString() }}</p>
+            <div v-if="memo" class="memo">
+                <label>MEMO</label>
+                <p>{{ memo }}</p>
+            </div>
+        </div>
+
         <div class="tx_detail">
             <component :is="tx_comp" :transaction="transaction"></component>
         </div>
@@ -95,6 +101,8 @@ export default class TxRow extends Vue {
     //grid-template-columns: 1fr 1fr;
     padding: 6px 14px;
     font-size: 13px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     //margin-bottom: 22px;
 }
 
@@ -112,6 +120,7 @@ export default class TxRow extends Vue {
 .tx_detail {
     background-color: var(--bg-light);
     margin-bottom: 8px;
+    width: 100%;
 }
 
 .time {
@@ -119,6 +128,14 @@ export default class TxRow extends Vue {
     font-size: 13px;
 }
 .memo {
-    width: max-content;
+    label {
+        font-size: 12px;
+        color: var(--primary-color-light);
+    }
+    p {
+        font-size: 12px;
+    }
+    overflow-wrap: break-word;
+    width: 100%;
 }
 </style>

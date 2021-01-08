@@ -7,11 +7,7 @@
         </div>
         <div class="cols">
             <div class="tx_table">
-                <!--                <div class="table_headers">-->
-                <!--                    <p>Date</p>-->
-                <!--                    <p>Action</p>-->
-                <!--                </div>-->
-                <div class="tx_list">
+                <div class="tx_list" v-show="showList">
                     <MonthGroup
                         class="month_group"
                         v-for="month in monthGroups"
@@ -22,15 +18,14 @@
                         <p>No Transactions Found.</p>
                     </div>
                 </div>
+                <div v-if="!showList" class="empty">
+                    <Spinner class="spinner"></Spinner>
+                    <p>LoadingTransactions.</p>
+                </div>
             </div>
             <div>
                 <label>Filter by type</label>
-                <v-chip-group v-model="mode">
-                    <v-chip value="all">All</v-chip>
-                    <v-chip value="transfer">Transfer</v-chip>
-                    <v-chip value="export_import">Export/Import</v-chip>
-                    <v-chip value="stake">Validation/Delegation</v-chip>
-                </v-chip-group>
+                <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
             </div>
         </div>
     </div>
@@ -41,18 +36,32 @@ import { ITransactionData, TransactionType } from '@/store/modules/history/types
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
+import RadioButtons from '@/components/misc/RadioButtons.vue'
+import Spinner from '@/components/misc/Spinner.vue'
 
 type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
+type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 @Component({
     components: {
+        Spinner,
         TxRow,
         MonthGroup,
+        RadioButtons,
     },
 })
 export default class Activity extends Vue {
-    mode: FilterModeType = 'all'
-    activated() {
-        // this.updateHistory()
+    mode: ModeKeyType = 'all'
+    modes = ['All', 'Transfer', 'Export/Import', 'Validation/Delegation']
+    modeKey: ModeKeyType[] = ['all', 'transfer', 'swap', 'stake']
+    isLoading = false
+
+    get showList(): boolean {
+        if (this.isUpdatingAll || this.isLoading) return false
+        return true
+    }
+
+    get isUpdatingAll(): boolean {
+        return this.$store.state.History.isUpdatingAll
     }
 
     mounted() {
@@ -88,7 +97,6 @@ export default class Activity extends Vue {
         let txs: ITransactionData[] = this.$store.state.History.allTransactions
         let filter = this.mode
 
-        let allTypes: TransactionType[] = ['base', 'create_asset', 'operation']
         let transferTypes: TransactionType[] = ['base', 'create_asset', 'operation']
         let exportTypes: TransactionType[] = ['import', 'export', 'pvm_import', 'pvm_export']
         let stakeTypes: TransactionType[] = ['add_validator', 'add_delegator']
@@ -99,7 +107,7 @@ export default class Activity extends Vue {
                 return true
             } else if (filter === 'transfer') {
                 if (transferTypes.includes(txType)) return true
-            } else if (filter === 'export_import') {
+            } else if (filter === 'swap') {
                 if (exportTypes.includes(txType)) return true
             } else if (filter === 'stake') {
                 if (stakeTypes.includes(txType)) return true
@@ -171,7 +179,7 @@ export default class Activity extends Vue {
     height: 100%;
     overflow: auto;
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: 2fr 240px;
 }
 
 .empty {
@@ -179,5 +187,11 @@ export default class Activity extends Vue {
     align-items: center;
     justify-content: center;
     padding: 18px 12px;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    color: #1d82bb;
 }
 </style>

@@ -43,6 +43,8 @@ export default class DayGroup extends Vue {
 
 .txs_col {
     background-color: var(--bg-light);
+    width: 100%;
+    overflow: auto;
 }
 .date_label {
     position: sticky;

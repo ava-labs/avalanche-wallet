@@ -35,8 +35,8 @@
                     {{ $t('wallet.sidebar.studio') }}
                 </router-link>
                 <router-link to="/wallet/activity" data-cy="wallet_activity" class="wallet_link">
-                    <img v-if="$root.theme === 'day'" src="@/assets/sidebar/manage_nav.png" />
-                    <img v-else src="@/assets/sidebar/manage_nav_night.svg" />
+                    <img v-if="$root.theme === 'day'" src="@/assets/sidebar/activity_nav.svg" />
+                    <img v-else src="@/assets/sidebar/activity_nav_night.svg" />
                     Activity
                 </router-link>
                 <router-link to="/wallet/keys" data-cy="wallet_manage" class="wallet_link">
