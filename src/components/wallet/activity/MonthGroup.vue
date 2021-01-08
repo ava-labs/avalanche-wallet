@@ -1,7 +1,9 @@
 <template>
     <div class="month_group">
-        <p class="date_label">{{ monthLabel }} {{ yearLabel }}</p>
-        <DayGroup v-for="days in dayGroups" :transactions="days" :key="days[0].txID"></DayGroup>
+        <p class="date_label">{{ yearLabel }} {{ monthLabel }}</p>
+        <div>
+            <DayGroup v-for="days in dayGroups" :transactions="days" :key="days[0].txID"></DayGroup>
+        </div>
         <!--        <TxRow v-for="tx in transactions" :key="tx.id" :transaction="tx"></TxRow>-->
     </div>
 </template>
@@ -35,15 +37,19 @@ export default class MonthGroup extends Vue {
     get dayGroups(): any {
         let res: any = {}
         let txs = this.transactions
+        let dayIdx = 0
 
+        // From most recent to oldest
         for (var i = 0; i < txs.length; i++) {
             let tx = txs[i]
             let mom = moment(tx.timestamp)
             let day = mom.format('D')
-            let key = `${day}`
+            let key = `${dayIdx}_${day}`
             if (res[key]) {
                 res[key].push(tx)
             } else {
+                dayIdx++
+                key = `${dayIdx}_${day}`
                 res[key] = [tx]
             }
         }
@@ -57,15 +63,19 @@ export default class MonthGroup extends Vue {
 </script>
 <style scoped lang="scss">
 .month_group {
+    position: relative;
     display: grid;
-    grid-template-rows: max-content 1fr;
+    grid-template-columns: max-content 1fr;
+    grid-gap: 14px;
 }
 .date_label {
     line-height: 24px;
     position: sticky;
     top: 0px;
+    height: max-content;
+    font-size: 24px;
     width: max-content;
     z-index: 2;
-    background-color: var(--bg);
+    //background-color: var(--bg);
 }
 </style>

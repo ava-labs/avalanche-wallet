@@ -1,43 +1,43 @@
 <template>
-    <div>
+    <div class="activity_page">
         <div class="header">
             <h1>Activity</h1>
             <p>{{ txs.length }} transactions found</p>
             <button @click="updateHistory"><fa icon="sync"></fa></button>
         </div>
-
-        <div>
-            <label>Filter by type</label>
-            <v-chip-group v-model="mode">
-                <v-chip value="all">All</v-chip>
-                <v-chip value="transfer">Transfer</v-chip>
-                <v-chip value="export_import">Export/Import</v-chip>
-                <v-chip value="stake">Validation/Delegation</v-chip>
-            </v-chip-group>
-        </div>
-        <div>
-            <div class="table_headers">
-                <p>Date</p>
-                <p>Action</p>
-            </div>
-            <div class="tx_list">
-                <MonthGroup
-                    class="month_group"
-                    v-for="month in monthGroups"
-                    :key="month[0].timestamp"
-                    :transactions="month"
-                ></MonthGroup>
-                <!--                <div class="month_group" v-for="month in monthGroups" :key="month[0].timestamp">-->
-                <!--                    <p class="month_label">{{ month[0].timestamp }}</p>-->
-                <!--                    <TxRow v-for="tx in month" :key="tx.id" :transaction="tx"></TxRow>-->
+        <div class="cols">
+            <div class="tx_table">
+                <!--                <div class="table_headers">-->
+                <!--                    <p>Date</p>-->
+                <!--                    <p>Action</p>-->
                 <!--                </div>-->
+                <div class="tx_list">
+                    <MonthGroup
+                        class="month_group"
+                        v-for="month in monthGroups"
+                        :key="month[0].timestamp"
+                        :transactions="month"
+                    ></MonthGroup>
+                    <div v-if="txs.length === 0" class="empty">
+                        <p>No Transactions Found.</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label>Filter by type</label>
+                <v-chip-group v-model="mode">
+                    <v-chip value="all">All</v-chip>
+                    <v-chip value="transfer">Transfer</v-chip>
+                    <v-chip value="export_import">Export/Import</v-chip>
+                    <v-chip value="stake">Validation/Delegation</v-chip>
+                </v-chip-group>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { ITransactionData } from '@/store/modules/history/types'
+import { ITransactionData, TransactionType } from '@/store/modules/history/types'
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
@@ -84,11 +84,39 @@ export default class Activity extends Vue {
     }
 
     get txs(): ITransactionData[] {
-        return this.$store.state.History.allTransactions
+        // return this.$store.state.History.allTransactions.slice(0, 100)
+        let txs: ITransactionData[] = this.$store.state.History.allTransactions
+        let filter = this.mode
+
+        let allTypes: TransactionType[] = ['base', 'create_asset', 'operation']
+        let transferTypes: TransactionType[] = ['base', 'create_asset', 'operation']
+        let exportTypes: TransactionType[] = ['import', 'export', 'pvm_import', 'pvm_export']
+        let stakeTypes: TransactionType[] = ['add_validator', 'add_delegator']
+
+        let filt = txs.filter((tx) => {
+            let txType = tx.type
+            if (filter === 'all') {
+                return true
+            } else if (filter === 'transfer') {
+                if (transferTypes.includes(txType)) return true
+            } else if (filter === 'export_import') {
+                if (exportTypes.includes(txType)) return true
+            } else if (filter === 'stake') {
+                if (stakeTypes.includes(txType)) return true
+            }
+
+            return false
+        })
+
+        return filt
     }
 }
 </script>
 <style scoped lang="scss">
+.activity_page {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+}
 .header {
     display: flex;
     flex-direction: row;
@@ -100,9 +128,20 @@ export default class Activity extends Vue {
         font-size: 22px;
     }
 }
-.tx_list {
-    max-height: 480px;
+
+.tx_table {
+    height: 100%;
+    //overflow: auto;
     overflow: scroll;
+    padding-right: 20px;
+    margin-right: 20px;
+    border-right: 1px solid var(--bg-light);
+}
+
+.tx_list {
+    //max-height: 480px;
+    //overflow: scroll;
+    height: 100px;
     position: relative;
 }
 
@@ -117,9 +156,28 @@ export default class Activity extends Vue {
     padding-bottom: 30px;
     border-bottom: 1px solid var(--bg-light);
     margin-bottom: 30px;
+
+    &:last-of-type {
+        border: none;
+    }
 }
 .month_label {
     position: sticky;
     top: 0px;
+}
+
+.cols {
+    padding-top: 30px;
+    height: 100%;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+}
+
+.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 12px;
 }
 </style>

@@ -95,7 +95,7 @@ const history_module: Module<HistoryState, RootState> = {
                 return
             }
 
-            let limit = 0
+            let limit = 500
 
             let txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
             let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())

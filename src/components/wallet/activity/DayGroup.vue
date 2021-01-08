@@ -1,8 +1,8 @@
 <template>
     <div class="day_group">
         <p class="date_label">{{ dayLabel }}</p>
-        <div>
-            <TxRow v-for="tx in transactions" :key="tx.id" :transaction="tx"></TxRow>
+        <div class="txs_col">
+            <TxRow v-for="tx in transactions" :key="tx.id" :transaction="tx" class="tx"></TxRow>
         </div>
     </div>
 </template>
@@ -40,10 +40,22 @@ export default class DayGroup extends Vue {
     padding-bottom: 14px;
     //border-bottom: 1px solid var(--bg-light);
 }
+
+.txs_col {
+    background-color: var(--bg-light);
+}
 .date_label {
     position: sticky;
     top: 0px;
-    padding-left: 130px;
-    font-size: 24px;
+    height: max-content;
+    font-size: 18px;
+}
+
+.tx {
+    border-bottom: 1px solid var(--bg);
+
+    &:last-of-type {
+        border-bottom: none;
+    }
 }
 </style>

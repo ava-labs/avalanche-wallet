@@ -1,9 +1,9 @@
 <template>
     <div class="tx_row">
+        <p class="time">{{ date.toLocaleTimeString() }}</p>
         <div class="tx_detail">
             <component :is="tx_comp" :transaction="transaction"></component>
         </div>
-        <div></div>
     </div>
 </template>
 <script lang="ts">
@@ -90,8 +90,9 @@ export default class TxRow extends Vue {
 </script>
 <style scoped lang="scss">
 .tx_row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    //display: grid;
+    //grid-template-columns: 1fr 1fr;
+    padding: 6px 14px;
     font-size: 13px;
     //margin-bottom: 22px;
 }
@@ -109,10 +110,13 @@ export default class TxRow extends Vue {
 
 .tx_detail {
     background-color: var(--bg-light);
-    padding: 4px 14px;
     margin-bottom: 8px;
 }
 
+.time {
+    //color: var(--primary-color-light);
+    font-size: 13px;
+}
 .memo {
     width: max-content;
 }
