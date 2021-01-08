@@ -156,6 +156,7 @@ import { ChainIdType } from '@/constants'
 
 import ChainInput from '@/components/wallet/transfer/ChainInput.vue'
 import AvaAsset from '../../js/AvaAsset'
+import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
 @Component({
     components: {
         FaucetLink,
@@ -189,6 +190,7 @@ export default class Transfer extends Vue {
     txId = ''
 
     canSendAgain = false
+    txState: TxState | null = null
 
     confirm() {
         let isValid = this.formCheck()
@@ -291,7 +293,7 @@ export default class Transfer extends Vue {
         }
     }
 
-    onsuccess() {
+    onsuccess(txId: string) {
         this.isAjax = false
         this.isSuccess = true
         this.clearForm()
@@ -303,12 +305,40 @@ export default class Transfer extends Vue {
         })
 
         // Update the user's balance
-        this.canSendAgain = false
-        setTimeout(() => {
-            this.$store.dispatch('Assets/updateUTXOs')
-            this.$store.dispatch('History/updateTransactionHistory')
+        // setTimeout(() => {
+        this.$store.dispatch('Assets/updateUTXOs')
+        this.$store.dispatch('History/updateTransactionHistory')
+        this.updateSendAgainLock()
+        // }, 3000)
+    }
+
+    async waitTxConfirm(txId: string) {
+        let status = await avm.getTxStatus(txId)
+        if (status === 'Unknown' || status === 'Processing') {
+            // if not confirmed ask again
+            setTimeout(() => {
+                this.waitTxConfirm(txId)
+            }, 500)
+            return false
+        } else if (status === 'Dropped') {
+            // If dropped stop the process
+            this.txState = TxState.failed
+            return false
+        } else {
+            // If success display success page
+            this.txState = TxState.success
+            this.onsuccess(txId)
+        }
+    }
+
+    updateSendAgainLock() {
+        if (!this.wallet.isFetchUtxos) {
             this.canSendAgain = true
-        }, 3000)
+        } else {
+            setTimeout(() => {
+                this.updateSendAgainLock()
+            }, 1000)
+        }
     }
 
     onerror(err: any) {
@@ -336,7 +366,8 @@ export default class Transfer extends Vue {
         this.$store
             .dispatch('issueBatchTx', txList)
             .then((res) => {
-                this.onsuccess()
+                this.canSendAgain = false
+                this.waitTxConfirm(res)
                 this.txId = res
             })
             .catch((err) => {
@@ -389,6 +420,7 @@ export default class Transfer extends Vue {
         let res = new BN(0)
         for (var i = 0; i < this.orders.length; i++) {
             let order = this.orders[i]
+            if (!order.asset) continue
             if (order.amount && order.asset.id === this.avaxAsset.id) {
                 res = res.add(this.orders[i].amount)
             }
