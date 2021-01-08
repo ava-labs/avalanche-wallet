@@ -293,7 +293,7 @@ export default class Transfer extends Vue {
         }
     }
 
-    onsuccess(txId: string) {
+    async onsuccess(txId: string) {
         this.isAjax = false
         this.isSuccess = true
         this.clearForm()
@@ -306,29 +306,10 @@ export default class Transfer extends Vue {
 
         // Update the user's balance
         // setTimeout(() => {
-        this.$store.dispatch('Assets/updateUTXOs')
-        this.$store.dispatch('History/updateTransactionHistory')
+        await this.$store.dispatch('Assets/updateUTXOs')
+        await this.$store.dispatch('History/updateTransactionHistory')
         this.updateSendAgainLock()
         // }, 3000)
-    }
-
-    async waitTxConfirm(txId: string) {
-        let status = await avm.getTxStatus(txId)
-        if (status === 'Unknown' || status === 'Processing') {
-            // if not confirmed ask again
-            setTimeout(() => {
-                this.waitTxConfirm(txId)
-            }, 500)
-            return false
-        } else if (status === 'Dropped') {
-            // If dropped stop the process
-            this.txState = TxState.failed
-            return false
-        } else {
-            // If success display success page
-            this.txState = TxState.success
-            this.onsuccess(txId)
-        }
     }
 
     updateSendAgainLock() {
@@ -373,6 +354,25 @@ export default class Transfer extends Vue {
             .catch((err) => {
                 this.onerror(err)
             })
+    }
+
+    async waitTxConfirm(txId: string) {
+        let status = await avm.getTxStatus(txId)
+        if (status === 'Unknown' || status === 'Processing') {
+            // if not confirmed ask again
+            setTimeout(() => {
+                this.waitTxConfirm(txId)
+            }, 500)
+            return false
+        } else if (status === 'Dropped') {
+            // If dropped stop the process
+            this.txState = TxState.failed
+            return false
+        } else {
+            // If success display success page
+            this.txState = TxState.success
+            this.onsuccess(txId)
+        }
     }
 
     get networkStatus(): string {
