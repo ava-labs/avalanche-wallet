@@ -100,7 +100,7 @@ import Big from 'big.js'
 import { BN } from 'avalanche/dist'
 import { ONEAVAX } from 'avalanche/dist/utils'
 import { bnToBig } from '@/helpers/helper'
-import { priceDict } from '@/store/types'
+import { priceDict, WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -143,6 +143,7 @@ export default class BalanceCard extends Vue {
     }
 
     get evmUnlocked(): BN {
+        if (!this.wallet) return new BN(0)
         // convert from ^18 to ^9
         let bal = this.wallet.ethBalance
         return bal.divRound(new BN(Math.pow(10, 9).toString()))
@@ -296,11 +297,12 @@ export default class BalanceCard extends Vue {
         }
     }
 
-    get wallet(): AvaHdWallet {
+    get wallet(): WalletType | null {
         return this.$store.state.activeWallet
     }
 
     get isUpdateBalance(): boolean {
+        if (!this.wallet) return true
         return this.wallet.isFetchUtxos
         // return this.$store.state.Assets.isUpdateBalance
     }
