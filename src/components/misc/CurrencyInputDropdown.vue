@@ -25,10 +25,12 @@
                     <b>Balance:</b>
                     {{ maxAmountBig.toLocaleString(denomination) }}
                 </p>
-                <p v-if="asset_now.id === avaxAsset.id">
-                    <b>$</b>
-                    {{ amountUSD.toLocaleString(2) }}
-                </p>
+                <template v-if="asset_now">
+                    <p v-if="asset_now.id === avaxAsset.id">
+                        <b>$</b>
+                        {{ amountUSD.toLocaleString(2) }}
+                    </p>
+                </template>
             </div>
             <div></div>
         </div>
