@@ -2,13 +2,15 @@
     <modal ref="modal" title="Check Your Ledger Device" :can_close="false">
         <div class="ledger_block" v-if="isActive">
             <p style="margin-bottom: 14px !important; font-size: 18px">
-                Please confirm this action on your ledger device.
+                Please confirm these actions on your ledger device.
             </p>
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
-            <p class="message" v-else v-for="message in messages" :key="message">
-                {{ message }}
-            </p>
+            <template v-else>
+                <p class="message" v-for="message in messages" :key="message">
+                    {{ message }}
+                </p>
+            </template>
             <Spinner class="spinner"></Spinner>
         </div>
     </modal>
@@ -44,7 +46,7 @@ export default class LedgerBlock extends Vue {
         return this.$store.state.Ledger.info
     }
 
-    get messages(): string {
+    get messages(): Array<string> {
         return this.$store.state.Ledger.messages
     }
 

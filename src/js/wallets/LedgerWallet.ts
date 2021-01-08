@@ -13,6 +13,7 @@ import { AssetAmountDestination, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/d
 import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
+    AVMConstants,
     OperationTx,
     SelectCredentialClass,
     TransferableInput,
@@ -24,11 +25,13 @@ import {
 
 import {
     ImportTx,
+    ExportTx,
     StakeableLockOut,
     Tx as PlatformTx,
     UTXO as PlatformUTXO,
     UnsignedTx as PlatformUnsignedTx,
     UTXOSet as PlatformUTXOSet,
+    PlatformVMConstants,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
@@ -45,6 +48,7 @@ import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
+import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -109,17 +113,27 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         let items = ins
-        // If tx type is 17, sign ImportInputs instead
-        if (txType === 17 || txType === 3) {
+        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
             items = (tx as ImportTx).getImportInputs()
+        }
+        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+            outs = (tx as ExportTx).getExportOutputs()
         }
         let chainId = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
         let paths: string[] = []
-        let outputs: string[] = []
+        let messages: string[] = []
+        // ----------------------------------------
         // Remove when 0.4.x ledger app is available
         // 0.3.1 ledger app signTransaction only works with avax
         let isAvaxOnly = true
+        // Get parseable tx types that ledger can handle
+        // Check if ledger can parse tx
+        let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
+        const isParseableTxType = txType in parseableTxs
+        // 0.4.x should handle more tx types on c chain
+        // Remove when 0.4.x ledger app is available
+        // ----------------------------------------
 
         // Collect paths derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
@@ -160,11 +174,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
         }
 
-        const canParseTx = this.config.version >= '0.3.1' && isAvaxOnly
+        const canParseTx = this.config.version >= '0.3.1' && isParseableTxType && isAvaxOnly
 
         // Collect outputs to display to ledger lock modal
         // only necessary if signing transaction (not hash)
-        if (canParseTx)
+        if (canParseTx) {
             for (let i = 0; i < outs.length; i++) {
                 outs[i]
                     .getOutput()
@@ -174,16 +188,39 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                         // @ts-ignore
                         const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
 
-                        if (changeAddr !== addr) outputs.push(`${addr} - ${amt.toString()} AVAX`)
+                        if (changeAddr !== addr) messages.push(`${addr} - ${amt.toString()} AVAX`)
                     })
             }
+        }
+
+        if (
+            txType === PlatformVMConstants.ADDDELEGATORTX ||
+            txType === PlatformVMConstants.ADDVALIDATORTX
+        ) {
+            // @ts-ignore
+            const nodeID = bintools.cb58Encode(tx.nodeID)
+            // @ts-ignore
+            const startTime = new Date(parseInt(tx.getStartTime()) * 1000)
+            // @ts-ignore
+            const endTime = new Date(parseInt(tx.getEndTime()) * 1000)
+            // @ts-ignore
+            const stakeAmt = bnToBig(tx.getStakeAmount(), 9)
+            messages.push(`Node-ID-${nodeID}`)
+            messages.push(`Start Time - ${startTime.toLocaleString()}`)
+            messages.push(`End Time - ${endTime.toLocaleString()}`)
+            messages.push(`Total Stake - ${stakeAmt} AVAX`)
+        }
+
+        const getTitle = () => {
+            return `Sign ${parseableTxs[txType] || 'Hash'}`
+        }
 
         // Open the ledger modal to block view
         // and ask user to sign with device
         try {
             store.commit('Ledger/openModal', {
-                title: canParseTx ? 'Sign Transaction' : 'Sign Hash',
-                messages: canParseTx ? outputs : [],
+                title: getTitle(),
+                messages: canParseTx ? messages : [],
                 info: canParseTx ? null : msg.toString('hex').toUpperCase(),
             })
 
