@@ -288,7 +288,9 @@ export default class ChainTransfer extends Vue {
         this.isImportErr = false
 
         try {
-            this.chainExport(this.formAmt, this.sourceChain, this.targetChain)
+            this.chainExport(this.formAmt, this.sourceChain, this.targetChain).catch((e) => {
+                this.onerror(e)
+            })
         } catch (err) {
             this.onerror(err)
         }
@@ -309,6 +311,7 @@ export default class ChainTransfer extends Vue {
         try {
             exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
         } catch (e) {
+            console.log('HERE')
             throw e
         }
 
@@ -374,6 +377,7 @@ export default class ChainTransfer extends Vue {
             }
         } catch (e) {
             this.onerror(e)
+            this.onErrorImport(e)
             return
         }
 
@@ -426,12 +430,15 @@ export default class ChainTransfer extends Vue {
         console.error(err)
         this.isLoading = false
         this.err = err
-        this.isImportErr = true
         this.$store.dispatch('Notifications/add', {
             type: 'error',
             title: 'Transfer Failed',
             message: err,
         })
+    }
+
+    onErrorImport(err: any) {
+        this.isImportErr = true
     }
 
     startAgain() {
