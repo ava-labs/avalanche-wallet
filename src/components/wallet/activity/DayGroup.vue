@@ -1,7 +1,7 @@
 <template>
     <div class="day_group">
+        <p class="date_label">{{ dayLabel }}</p>
         <div>
-            <p class="date_label">{{ dayLabel }}</p>
             <TxRow v-for="tx in transactions" :key="tx.id" :transaction="tx"></TxRow>
         </div>
     </div>
@@ -34,6 +34,8 @@ export default class DayGroup extends Vue {
 </script>
 <style scoped lang="scss">
 .day_group {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
     margin-bottom: 14px;
     padding-bottom: 14px;
     //border-bottom: 1px solid var(--bg-light);

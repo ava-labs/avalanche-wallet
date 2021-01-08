@@ -8,11 +8,11 @@
 
         <div>
             <label>Filter by type</label>
-            <v-chip-group>
-                <v-chip>All</v-chip>
-                <v-chip>Transfer</v-chip>
-                <v-chip>Export/Import</v-chip>
-                <v-chip>Validation/Delegation</v-chip>
+            <v-chip-group v-model="mode">
+                <v-chip value="all">All</v-chip>
+                <v-chip value="transfer">Transfer</v-chip>
+                <v-chip value="export_import">Export/Import</v-chip>
+                <v-chip value="stake">Validation/Delegation</v-chip>
             </v-chip-group>
         </div>
         <div>
@@ -42,6 +42,7 @@ import { ITransactionData } from '@/store/modules/history/types'
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
 
+type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
 @Component({
     components: {
         TxRow,
@@ -49,6 +50,7 @@ import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
     },
 })
 export default class Activity extends Vue {
+    mode: FilterModeType = 'all'
     activated() {
         // this.updateHistory()
     }

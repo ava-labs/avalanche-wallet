@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="month_group">
         <p class="date_label">{{ monthLabel }} {{ yearLabel }}</p>
         <DayGroup v-for="days in dayGroups" :transactions="days" :key="days[0].txID"></DayGroup>
         <!--        <TxRow v-for="tx in transactions" :key="tx.id" :transaction="tx"></TxRow>-->
@@ -56,6 +56,10 @@ export default class MonthGroup extends Vue {
 }
 </script>
 <style scoped lang="scss">
+.month_group {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+}
 .date_label {
     line-height: 24px;
     position: sticky;

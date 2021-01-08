@@ -1,23 +1,9 @@
 <template>
     <div class="tx_row">
-        <div class="date">
-            <!--            <p>-->
-            <!--                {{ date.getDay() }}-->
-            <!--            </p>-->
-            <!--            <p>-->
-            <!--                {{ date.toLocaleTimeString() }}-->
-            <!--            </p>-->
-        </div>
-        <!--        <div>-->
-        <!--            {{ type }}-->
-        <!--        </div>-->
         <div class="tx_detail">
-            <div>
-                <label>MEMO</label>
-                <p>{{ memo }}</p>
-            </div>
             <component :is="tx_comp" :transaction="transaction"></component>
         </div>
+        <div></div>
     </div>
 </template>
 <script lang="ts">
@@ -63,25 +49,25 @@ export default class TxRow extends Vue {
         }
     }
 
-    get outTotals(): any {
-        let outTots = this.transaction.outputTotals
-
-        let res: any = {}
-        for (var id in outTots) {
-            let asset = this.assets[id]
-            let outTot = outTots[id]
-
-            if (asset) {
-                let amtBn = new BN(outTot)
-                let big = bnToBig(amtBn, asset.denomination)
-                res[asset.symbol] = big.toLocaleString()
-            } else {
-                let nftFam = this.nftFams[id]
-                res[nftFam.symbol] = outTot
-            }
-        }
-        return res
-    }
+    // get outTotals(): any {
+    //     let outTots = this.transaction.outputTotals
+    //
+    //     let res: any = {}
+    //     for (var id in outTots) {
+    //         let asset = this.assets[id]
+    //         let outTot = outTots[id]
+    //
+    //         if (asset) {
+    //             let amtBn = new BN(outTot)
+    //             let big = bnToBig(amtBn, asset.denomination)
+    //             res[asset.symbol] = big.toLocaleString()
+    //         } else {
+    //             let nftFam = this.nftFams[id]
+    //             res[nftFam.symbol] = outTot
+    //         }
+    //     }
+    //     return res
+    // }
 
     get assets(): AssetsDict {
         return this.$store.state.Assets.assetsDict
@@ -125,5 +111,9 @@ export default class TxRow extends Vue {
     background-color: var(--bg-light);
     padding: 4px 14px;
     margin-bottom: 8px;
+}
+
+.memo {
+    width: max-content;
 }
 </style>
