@@ -62,6 +62,7 @@ export default class MonthGroup extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use "../../../main";
 .month_group {
     position: relative;
     display: grid;

@@ -7,6 +7,13 @@
         </div>
         <div class="cols">
             <div class="tx_table">
+                <div class="pagination">
+                    <div>
+                        <button @click="prevPage">Before</button>
+                        <button @click="nextPage">Next</button>
+                    </div>
+                    <p>Page {{ pageNow + 1 }} of {{ pageAmount + 1 }}</p>
+                </div>
                 <div class="tx_list" v-show="showList">
                     <MonthGroup
                         class="month_group"
@@ -18,7 +25,7 @@
                         <p>No Transactions Found.</p>
                     </div>
                 </div>
-                <div v-if="!showList" class="empty">
+                <div v-if="!showList" class="loading">
                     <Spinner class="spinner"></Spinner>
                     <p>LoadingTransactions.</p>
                 </div>
@@ -41,6 +48,9 @@ import Spinner from '@/components/misc/Spinner.vue'
 
 type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
 type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
+
+const PAGE_LIMIT = 100
+
 @Component({
     components: {
         Spinner,
@@ -54,6 +64,7 @@ export default class Activity extends Vue {
     modes = ['All', 'Transfer', 'Export/Import', 'Validation/Delegation']
     modeKey: ModeKeyType[] = ['all', 'transfer', 'swap', 'stake']
     isLoading = false
+    pageNow = 0
 
     get showList(): boolean {
         if (this.isUpdatingAll || this.isLoading) return false
@@ -74,7 +85,7 @@ export default class Activity extends Vue {
 
     get monthGroups(): any {
         let res: any = {}
-        let txs = this.txs
+        let txs = this.pageTxs
 
         for (var i = 0; i < txs.length; i++) {
             let tx = txs[i]
@@ -92,35 +103,85 @@ export default class Activity extends Vue {
         return res
     }
 
+    get allTxs(): ITransactionData[] {
+        return this.$store.state.History.allTransactions
+    }
+
     get txs(): ITransactionData[] {
-        // return this.$store.state.History.allTransactions.slice(0, 100)
-        let txs: ITransactionData[] = this.$store.state.History.allTransactions
-        let filter = this.mode
+        switch (this.mode) {
+            case 'transfer':
+                return this.txsTransfer
+                break
+            case 'swap':
+                return this.txsSwap
+                break
+            case 'stake':
+                return this.txsStake
+                break
+            default:
+                return this.allTxs
+                break
+        }
+    }
 
+    get pageAmount(): number {
+        return Math.floor(this.txs.length / PAGE_LIMIT)
+    }
+
+    prevPage() {
+        if (this.pageNow > 0) {
+            this.pageNow--
+        }
+    }
+    nextPage() {
+        if (this.pageNow < this.pageAmount) {
+            this.pageNow++
+        }
+    }
+
+    get pageTxs(): ITransactionData[] {
+        let start = this.pageNow * PAGE_LIMIT
+        return this.txs.slice(start, start + PAGE_LIMIT)
+    }
+
+    get txsTransfer(): ITransactionData[] {
+        let txs: ITransactionData[] = this.allTxs
         let transferTypes: TransactionType[] = ['base', 'create_asset', 'operation']
-        let exportTypes: TransactionType[] = ['import', 'export', 'pvm_import', 'pvm_export']
-        let stakeTypes: TransactionType[] = ['add_validator', 'add_delegator']
 
-        let filt = txs.filter((tx) => {
+        return txs.filter((tx) => {
             let txType = tx.type
-            if (filter === 'all') {
-                return true
-            } else if (filter === 'transfer') {
-                if (transferTypes.includes(txType)) return true
-            } else if (filter === 'swap') {
-                if (exportTypes.includes(txType)) return true
-            } else if (filter === 'stake') {
-                if (stakeTypes.includes(txType)) return true
-            }
+            if (transferTypes.includes(txType)) return true
 
             return false
         })
+    }
 
-        return filt
+    get txsSwap(): ITransactionData[] {
+        let txs: ITransactionData[] = this.allTxs
+        let exportTypes: TransactionType[] = ['import', 'export', 'pvm_import', 'pvm_export']
+
+        return txs.filter((tx) => {
+            let txType = tx.type
+            if (exportTypes.includes(txType)) return true
+            return false
+        })
+    }
+
+    get txsStake(): ITransactionData[] {
+        let txs: ITransactionData[] = this.allTxs
+        let stakeTypes: TransactionType[] = ['add_validator', 'add_delegator']
+
+        return txs.filter((tx) => {
+            let txType = tx.type
+            if (stakeTypes.includes(txType)) return true
+            return false
+        })
     }
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
+
 .activity_page {
     display: grid;
     grid-template-rows: max-content 1fr;
@@ -179,19 +240,33 @@ export default class Activity extends Vue {
     height: 100%;
     overflow: auto;
     display: grid;
-    grid-template-columns: 2fr 240px;
+    grid-template-columns: 1fr 240px;
 }
 
-.empty {
+.empty,
+.loading {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 18px 12px;
 }
 
+.loading {
+    background-color: var(--bg-light);
+    padding: 30px;
+}
 .spinner {
-    width: 20px;
-    height: 20px;
+    //width: 40px;
+    //height: 40px;
+    font-size: 32px;
+    margin-bottom: 22px;
     color: #1d82bb;
+}
+
+@include main.medium-device {
+    .cols {
+        grid-template-columns: 1fr 160px;
+    }
 }
 </style>
