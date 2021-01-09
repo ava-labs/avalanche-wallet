@@ -81,15 +81,12 @@ const assets_module: Module<AssetsState, RootState> = {
             let wallet: WalletType | null = rootState.activeWallet
             if (!wallet) return
 
-            console.log('on utxos updated? before')
-
             if (wallet.isFetchUtxos) {
                 setTimeout(() => {
                     dispatch('onUtxosUpdated')
                 }, 500)
                 return
             }
-            console.log('on utxos updated?')
 
             await dispatch('updateBalanceDict')
             await dispatch('updateUtxoArrays')
@@ -151,7 +148,6 @@ const assets_module: Module<AssetsState, RootState> = {
             if (!wallet) {
                 return false
             }
-            console.log('update utxos')
 
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
@@ -169,7 +165,6 @@ const assets_module: Module<AssetsState, RootState> = {
 
         updateBalanceDict({ state, rootState, getters }): IWalletBalanceDict {
             let utxoSet = getters.walletAvmUtxoSet
-            console.log(utxoSet)
             if (utxoSet === null) return {}
 
             let dict: IWalletBalanceDict = {}
@@ -178,7 +173,6 @@ const assets_module: Module<AssetsState, RootState> = {
             const ZERO = new BN(0)
 
             let addrUtxos = utxoSet.getAllUTXOs()
-            // console.log(addrUtxos.length)
 
             for (var n = 0; n < addrUtxos.length; n++) {
                 let utxo = addrUtxos[n]
