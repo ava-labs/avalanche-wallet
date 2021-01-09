@@ -173,7 +173,6 @@ const assets_module: Module<AssetsState, RootState> = {
             const ZERO = new BN(0)
 
             let addrUtxos = utxoSet.getAllUTXOs()
-            // console.log(addrUtxos.length)
 
             for (var n = 0; n < addrUtxos.length; n++) {
                 let utxo = addrUtxos[n]
@@ -253,6 +252,70 @@ const assets_module: Module<AssetsState, RootState> = {
         },
     },
     getters: {
+        // avmAvaxUtxos(state, getters, rootState): AVMUTXO[] {
+        //     let wallet = rootState.activeWallet
+        //     // let avaxAsset: AvaAsset|null = getters.AssetAVA
+        //
+        //     if (!wallet) return []
+        //     // if (avaxAsset === null) return []
+        //
+        //     let utxoSet: AVMUTXOSet | null = getters.walletAvmUtxoSet
+        //     if (!utxoSet) return []
+        //
+        //     let avaxID = state.AVA_ASSET_ID
+        //
+        //     let utxos = utxoSet.getAllUTXOs()
+        //
+        //     let avaxUtxos = utxos.filter((utxo) => {
+        //         let outId = utxo.getOutput().getOutputID()
+        //         if (outId !== 7) return false
+        //
+        //         let utxoOut = utxo.getOutput() as AmountOutput
+        //         let locktime = utxoOut.getLocktime()
+        //         let assetIdBuff = utxo.getAssetID()
+        //         let assetId = bintools.cb58Encode(assetIdBuff)
+        //
+        //         if (assetId !== avaxID) {
+        //             return false
+        //         }
+        //         return true
+        //     })
+        //     return avaxUtxos
+        // },
+        //
+        // avmAvaxBalanceUnlocked(state, getters, rootState): BN {
+        //     let wallet = rootState.activeWallet
+        //     if (!wallet) return new BN(0)
+        //
+        //     // let utxoSet: AVMUTXOSet|null = getters.walletAvmUtxoSet
+        //     // if(!utxoSet) return new BN(0)
+        //
+        //     // let utxos = utxoSet.getAllUTXOs()
+        //     let avaxUtxos = getters.avmAvaxUtxos
+        //     console.log(avaxUtxos)
+        //
+        //     let now = UnixNow()
+        //
+        //     let tot = new BN(0)
+        //     for (var i = 0; i < avaxUtxos.length; i++) {
+        //         let utxo = avaxUtxos[i]
+        //         // let outId = utxo.getOutput().getOutputID()
+        //         //
+        //         // Process only SECP256K1 Transfer Output utxos, outputid === 07
+        //         // if (outId !== 7) continue
+        //         let utxoOut = utxo.getOutput() as AmountOutput
+        //         let locktime = utxoOut.getLocktime()
+        //         let amount = utxoOut.getAmount()
+        //         let assetIdBuff = utxo.getAssetID()
+        //         let assetId = bintools.cb58Encode(assetIdBuff)
+        //
+        //         if (locktime.lt(now)) {
+        //             tot = tot.add(amount)
+        //         }
+        //     }
+        //     return tot
+        // },
+
         // assset id -> utxos
         walletNftDict(state, getters, rootState) {
             let utxos = state.nftUTXOs
