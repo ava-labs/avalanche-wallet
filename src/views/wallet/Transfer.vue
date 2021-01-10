@@ -305,11 +305,10 @@ export default class Transfer extends Vue {
         })
 
         // Update the user's balance
-        // setTimeout(() => {
-        await this.$store.dispatch('Assets/updateUTXOs')
-        await this.$store.dispatch('History/updateTransactionHistory')
-        this.updateSendAgainLock()
-        // }, 3000)
+        this.$store.dispatch('Assets/updateUTXOs').then(() => {
+            this.updateSendAgainLock()
+        })
+        this.$store.dispatch('History/updateTransactionHistory')
     }
 
     updateSendAgainLock() {
