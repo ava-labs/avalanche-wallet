@@ -24,18 +24,7 @@ async function getAddressHistory(
         return addr.split('-')[1]
     })
 
-    // let query = selection.map((val) => {
-    //     let raw = val.split('-')[1]
-    //     return `address=${raw}`
-    // })
-
-    // Get history for all addresses of the active HD wallet
-    // let url = `v2/transactions?${query.join(
-    //     '&'
-    // )}&limit=${limit}&sort=timestamp-desc&disableCount=1&chainID=${chainID}`
-
     let rootUrl = 'v2/transactions'
-    // let res = await explorer_api.get(url)
     let res = await explorer_api.post(rootUrl, {
         address: addrsRaw,
         limit: [limit.toString()],
@@ -86,24 +75,12 @@ async function getAddressChains(addrs: string[]) {
         return addr.split('-')[1]
     })
 
-    // let cleanAddrs = addrs.map((addr) => {
-    //     let clean = 'address=' + addr.split('-')[1]
-    //     return clean
-    // })
-
-    // let joined = cleanAddrs.join('&')
-    // let url = `/v2/addressChains?${joined}&disableCount=1`
-    // let res = await explorer_api.get(url)
-
     let urlRoot = `/v2/addressChains`
-    // let query = `${joined}&disableCount=1`
 
     let res = await explorer_api.post(urlRoot, {
         address: rawAddrs,
         disableCount: ['1'],
     })
-    // console.log(urlRoot, query)
-    console.log(res)
 
     return res.data.addressChains
 }
