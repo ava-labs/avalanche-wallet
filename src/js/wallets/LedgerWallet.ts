@@ -215,7 +215,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             txType === AVMConstants.EXPORTTX ||
             txType === AVMConstants.IMPORTTX ||
             txType === PlatformVMConstants.EXPORTTX ||
-            txType === PlatformVMConstants.IMPORTTX
+            txType === PlatformVMConstants.IMPORTTX ||
+            txType === AVMConstants.BASETX
         ) {
             messages.push(`Fee - ${0.001} AVAX`)
         }
