@@ -211,6 +211,15 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             messages.push(`Total Stake - ${stakeAmt} AVAX`)
         }
 
+        if (
+            txType === AVMConstants.EXPORTTX ||
+            txType === AVMConstants.IMPORTTX ||
+            txType === PlatformVMConstants.EXPORTTX ||
+            txType === PlatformVMConstants.IMPORTTX
+        ) {
+            messages.push(`Fee - ${0.001} AVAX`)
+        }
+
         const getTitle = () => {
             return `Sign ${parseableTxs[txType] || 'Hash'}`
         }
