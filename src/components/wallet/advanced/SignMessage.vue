@@ -101,6 +101,10 @@ select {
     }
 }
 
+option {
+    background-color: var(--bg-wallet);
+}
+
 label {
     display: block;
     text-align: left;

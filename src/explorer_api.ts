@@ -16,20 +16,22 @@ async function getAddressHistory(
     limit = 20,
     chainID: string
 ): Promise<ITransactionData[]> {
-    let selection = addrs.slice(0, 512)
-    let remaining = addrs.slice(512)
+    const ADDR_SIZE = 1024
+    let selection = addrs.slice(0, ADDR_SIZE)
+    let remaining = addrs.slice(ADDR_SIZE)
 
-    let query = selection.map((val) => {
-        let raw = val.split('-')[1]
-        return `address=${raw}`
+    let addrsRaw = selection.map((addr) => {
+        return addr.split('-')[1]
     })
 
-    // Get history for all addresses of the active HD wallet
-    let url = `v2/transactions?${query.join(
-        '&'
-    )}&limit=${limit}&sort=timestamp-desc&disableCount=1&chainID=${chainID}`
-
-    let res = await explorer_api.get(url)
+    let rootUrl = 'v2/transactions'
+    let res = await explorer_api.post(rootUrl, {
+        address: addrsRaw,
+        limit: [limit.toString()],
+        sort: ['timestamp-desc'],
+        disableCount: ['1'],
+        chainID: [chainID],
+    })
     let txs = res.data.transactions
 
     if (txs === null) txs = []
@@ -69,15 +71,16 @@ async function getAddressDetailX(addr: string) {
 
 async function getAddressChains(addrs: string[]) {
     // Strip the prefix
-    let cleanAddrs = addrs.map((addr) => {
-        let clean = 'address=' + addr.split('-')[1]
-        return clean
+    let rawAddrs = addrs.map((addr) => {
+        return addr.split('-')[1]
     })
 
-    let joined = cleanAddrs.join('&')
-    let url = `/v2/addressChains?${joined}&disableCount=1`
+    let urlRoot = `/v2/addressChains`
 
-    let res = await explorer_api.get(url)
+    let res = await explorer_api.post(urlRoot, {
+        address: rawAddrs,
+        disableCount: ['1'],
+    })
 
     return res.data.addressChains
 }
