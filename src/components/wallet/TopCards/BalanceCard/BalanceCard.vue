@@ -277,7 +277,6 @@ export default class BalanceCard extends Vue {
     }
 
     get stakingAmount(): BN {
-        // return this.$store.getters.walletStakingBalance
         return this.$store.getters['Assets/walletStakingBalance']
     }
 
@@ -304,7 +303,6 @@ export default class BalanceCard extends Vue {
     get isUpdateBalance(): boolean {
         if (!this.wallet) return true
         return this.wallet.isFetchUtxos
-        // return this.$store.state.Assets.isUpdateBalance
     }
 
     get priceDict(): priceDict {
