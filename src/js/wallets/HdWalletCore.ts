@@ -65,8 +65,8 @@ class HdWalletCore {
         return this.utxoset
     }
 
-    updateUTXOSet(): void {
-        if (this.isFetchUtxos) return
+    updateAvmUTXOSet(): void {
+        // if (this.isFetchUtxos) return
         let setExternal = this.externalHelper.utxoSet as AVMUTXOSet
         let setInternal = this.internalHelper.utxoSet as AVMUTXOSet
 
@@ -155,12 +155,12 @@ class HdWalletCore {
     async getUTXOs(): Promise<void> {
         this.internalHelper.updateUtxos().then((utxoSet) => {
             this.updateFetchState()
-            this.updateUTXOSet()
+            this.updateAvmUTXOSet()
         })
 
         this.externalHelper.updateUtxos().then((utxoSet) => {
             this.updateFetchState()
-            this.updateUTXOSet()
+            this.updateAvmUTXOSet()
         })
 
         // let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
