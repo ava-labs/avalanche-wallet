@@ -185,7 +185,7 @@
                             <p v-else>{{ txStatus }}</p>
                         </div>
                         <div class="status_icon">
-                            <Spinner v-if="!txStatus" style="color: var(--primary-color)"></Spinner>
+                            <Spinner v-if="!txStatus"></Spinner>
                             <p style="color: var(--success)" v-if="txStatus === 'Committed'">
                                 <fa icon="check-circle"></fa>
                             </p>
