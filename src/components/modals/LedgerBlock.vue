@@ -88,7 +88,6 @@ export default class LedgerBlock extends Vue {
             if (this.duration <= 0) {
                 this.close()
             }
-            console.log(this.duration)
         }, 1000)
     }
 
