@@ -124,7 +124,7 @@ export default class ImportExport extends Vue {
 
     &[export] {
         .amt {
-            color: #d04c4c;
+            color: var(--error);
         }
     }
 }

@@ -2,6 +2,7 @@
 //@ts-ignore
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
 
+import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
@@ -49,6 +50,7 @@ import { web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
 import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
+import { LedgerBlockMessageType } from '../../store/modules/ledger/types'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -87,11 +89,15 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
     >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
-        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+        let chainId = isAVM ? 'X' : 'P'
+        let helper = chainId === 'X' ? this.internalHelper : this.platformHelper
+        let changeDerivation = chainId === 'X' ? 1 : 0
+        let changeIndex = chainId === 'X' ? helper.hdIndex : 0
         const changePath = bippath.fromString(
-            `${AVA_ACCOUNT_PATH}/1/${this.internalHelper.hdIndex}`
+            `${AVA_ACCOUNT_PATH}/${changeDerivation}/${changeIndex}`
         )
-        const changeAddr = this.internalHelper.getAddressForIndex(this.internalHelper.hdIndex)
+        const changeAddr = helper.getAddressForIndex(changeIndex)
+        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
 
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
@@ -119,10 +125,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
             outs = (tx as ExportTx).getExportOutputs()
         }
-        let chainId = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
         let paths: string[] = []
-        let messages: string[] = []
+        let messages: LedgerBlockMessageType[] = []
         // ----------------------------------------
         // Remove when 0.4.x ledger app is available
         // 0.3.1 ledger app signTransaction only works with avax
@@ -188,7 +193,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                         // @ts-ignore
                         const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
 
-                        if (changeAddr !== addr) messages.push(`${addr} - ${amt.toString()} AVAX`)
+                        if (changeAddr !== addr)
+                            messages.push({
+                                title: 'Output',
+                                value: `${addr} - ${amt.toString()} AVAX`,
+                            })
                     })
             }
         }
@@ -197,18 +206,39 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             txType === PlatformVMConstants.ADDDELEGATORTX ||
             txType === PlatformVMConstants.ADDVALIDATORTX
         ) {
+            const format = 'YYYY-MM-DD H:mm:ss UTC'
             // @ts-ignore
             const nodeID = bintools.cb58Encode(tx.nodeID)
             // @ts-ignore
-            const startTime = new Date(parseInt(tx.getStartTime()) * 1000)
+            const startTime = moment(parseInt(tx.getStartTime()) * 1000)
+                .utc()
+                .format(format)
             // @ts-ignore
-            const endTime = new Date(parseInt(tx.getEndTime()) * 1000)
+            const endTime = moment(parseInt(tx.getEndTime()) * 1000)
+                .utc()
+                .format(format)
+            // @ts-ignore
+            console.log(tx)
             // @ts-ignore
             const stakeAmt = bnToBig(tx.getStakeAmount(), 9)
-            messages.push(`Node-ID-${nodeID}`)
-            messages.push(`Start Time - ${startTime.toLocaleString()}`)
-            messages.push(`End Time - ${endTime.toLocaleString()}`)
-            messages.push(`Total Stake - ${stakeAmt} AVAX`)
+            messages.push({ title: 'NodeID', value: nodeID })
+            messages.push({ title: 'Start Time', value: startTime })
+            messages.push({ title: 'End Time', value: endTime })
+            messages.push({ title: 'Total Stake', value: `${stakeAmt} AVAX` })
+            messages.push({
+                title: 'Stake',
+                value: `${stakeAmt} to ${this.platformHelper.getCurrentAddress()}`,
+            })
+            messages.push({
+                title: 'Reward to',
+                value: `${this.platformHelper.getCurrentAddress()}`,
+            })
+            // @ts-ignore
+            if (tx.delegationFee) {
+                // @ts-ignore
+                messages.push({ title: 'Delegation Fee', value: `${tx.delegationFee}%` })
+            }
+            messages.push({ title: 'Fee', value: '0' })
         }
 
         if (
@@ -218,7 +248,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             txType === PlatformVMConstants.IMPORTTX ||
             txType === AVMConstants.BASETX
         ) {
-            messages.push(`Fee - ${0.001} AVAX`)
+            messages.push({ title: 'Fee', value: `${0.001} AVAX` })
         }
 
         const getTitle = () => {

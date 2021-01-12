@@ -7,11 +7,23 @@
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
             <template v-else>
-                <p class="message" v-for="message in messages" :key="message">
-                    {{ message }}
-                </p>
+                <div class="message block" v-for="message in messages" :key="message.title">
+                    <p class="title">{{ message.title }}</p>
+                    <p class="value">{{ message.value }}</p>
+                </div>
             </template>
             <Spinner class="spinner"></Spinner>
+            <div v-if="duration">
+                You have
+                <span
+                    v-bind:class="{
+                        alert: duration > 0 && duration < 10,
+                    }"
+                >
+                    {{ duration }}
+                </span>
+                seconds remaining.
+            </div>
         </div>
     </modal>
 </template>
@@ -21,6 +33,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import Modal from './Modal.vue'
+import { LedgerBlockMessageType } from '../../store/modules/ledger/types'
 
 @Component({
     components: {
@@ -29,13 +42,18 @@ import Modal from './Modal.vue'
     },
 })
 export default class LedgerBlock extends Vue {
+    duration: number = 30
+    intervalId: NodeJS.Timeout | null = null
+
     open() {
         // @ts-ignore
         this.$refs.modal.open()
+        this.startTimer()
     }
     close() {
         // @ts-ignore
         this.$refs.modal.close()
+        this.stopTimer()
     }
 
     get title(): string {
@@ -46,7 +64,7 @@ export default class LedgerBlock extends Vue {
         return this.$store.state.Ledger.info
     }
 
-    get messages(): Array<string> {
+    get messages(): Array<LedgerBlockMessageType> {
         return this.$store.state.Ledger.messages
     }
 
@@ -64,11 +82,20 @@ export default class LedgerBlock extends Vue {
         }
     }
 
-    // mounted(){
-    //     setTimeout(()=>{
-    //         this.open()
-    //     },3000)
-    // }
+    startTimer() {
+        this.intervalId = setInterval(() => {
+            this.duration -= 1
+            if (this.duration <= 0) {
+                this.close()
+            }
+            console.log(this.duration)
+        }, 1000)
+    }
+
+    stopTimer() {
+        this.duration = 30
+        clearInterval(this.intervalId!)
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -78,11 +105,33 @@ export default class LedgerBlock extends Vue {
     text-align: center;
 }
 
+.message .title {
+    line-height: 1rem;
+    font-size: 0.8rem !important;
+    color: var(--primary-color-light);
+}
+
+.alert {
+    color: var(--error);
+}
+
 .message {
     padding: 12px;
     color: var(--primary-color);
     background-color: var(--bg-wallet);
     margin: 4px 0 !important;
+}
+
+.message.block {
+    text-align: left;
+    padding: 6px 12px;
+}
+
+.message.desc {
+    padding: 6px;
+    margin-top: 2px;
+    margin-bottom: 8px;
+    font-size: 1rem;
 }
 
 .spinner {
