@@ -85,7 +85,7 @@ export default class Activity extends Vue {
 
     get monthGroups(): any {
         let res: any = {}
-        let txs = this.pageTxs
+        let txs = this.txs
 
         for (var i = 0; i < txs.length; i++) {
             let tx = txs[i]

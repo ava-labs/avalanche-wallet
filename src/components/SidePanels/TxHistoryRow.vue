@@ -26,7 +26,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import moment from 'moment'
-import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
+// import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
 import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
@@ -37,8 +37,9 @@ import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 
 @Component({
     components: {
-        TxHistoryValue,
+        // TxHistoryValue,
         TxHistoryNftFamilyGroup,
+        // TxHistoryValueFunctional,
     },
 })
 export default class TxHistoryRow extends Vue {

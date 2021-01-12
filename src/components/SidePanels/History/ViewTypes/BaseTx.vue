@@ -11,6 +11,16 @@
                 :operation-color="operationColor"
                 :operation-direction="operationDirection"
             ></tx-history-value>
+            <!--            <tx-history-value-functional-->
+            <!--                v-for="(amount, assetId) in valList"-->
+            <!--                :key="assetId"-->
+            <!--                :amount="amount"-->
+            <!--                :type="type"-->
+            <!--                :asset-id="assetId"-->
+            <!--                :is-income="false"-->
+            <!--                :operation-color="operationColor"-->
+            <!--                :operation-direction="operationDirection"-->
+            <!--            ></tx-history-value-functional>-->
             <div class="nfts">
                 <div v-for="(groupIDs, assetID) in nftGroups" :key="assetID">
                     <tx-history-nft-family-group
@@ -35,6 +45,7 @@ import { WalletType } from '@/store/types'
 import { avm, pChain } from '@/AVA'
 
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
+import TxHistoryValueFunctional from '@/components/SidePanels/History/TxHistoryValueFunctional.vue'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
 
 let payloadtypes = PayloadTypes.getInstance()
@@ -42,6 +53,7 @@ let payloadtypes = PayloadTypes.getInstance()
 @Component({
     components: {
         TxHistoryValue,
+        TxHistoryValueFunctional,
         TxHistoryNftFamilyGroup,
     },
 })
