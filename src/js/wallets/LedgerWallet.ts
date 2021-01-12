@@ -35,13 +35,13 @@ import {
 import { Credential, SigIdx, Signature } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { LedgerAppConfigType, WalletNameType } from '@/store/types'
+import { ILedgerAppConfig, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
 import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
-import { LedgerBlockMessageType } from '../../store/modules/ledger/types'
+import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -50,9 +50,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddress: string
     ethBalance: BN
     ethAddressBech: string
-    config: LedgerAppConfigType
+    config: ILedgerAppConfig
 
-    constructor(app: AppAvax, hdkey: HDKey, config: LedgerAppConfigType) {
+    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
@@ -64,7 +64,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         this.ethAddressBech = ''
     }
 
-    static async fromApp(app: AppAvax, config: LedgerAppConfigType) {
+    static async fromApp(app: AppAvax, config: ILedgerAppConfig) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
 
         let hd = new HDKey()
@@ -340,8 +340,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
         isAVM: boolean = true
-    ): LedgerBlockMessageType[] {
-        let messages: LedgerBlockMessageType[] = []
+    ): ILedgerBlockMessage[] {
+        let messages: ILedgerBlockMessage[] = []
 
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()

@@ -33,7 +33,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import Modal from './Modal.vue'
-import { LedgerBlockMessageType } from '../../store/modules/ledger/types'
+import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
 @Component({
     components: {
@@ -64,7 +64,7 @@ export default class LedgerBlock extends Vue {
         return this.$store.state.Ledger.info
     }
 
-    get messages(): Array<LedgerBlockMessageType> {
+    get messages(): Array<ILedgerBlockMessage> {
         return this.$store.state.Ledger.messages
     }
 

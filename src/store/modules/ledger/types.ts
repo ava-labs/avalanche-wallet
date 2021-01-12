@@ -1,8 +1,11 @@
-export type LedgerBlockMessageType = { title: string; value: string }
+export interface ILedgerBlockMessage {
+    title: string
+    value: string
+}
 
 export interface LedgerState {
     isBlock: boolean
-    messages?: Array<LedgerBlockMessageType>
+    messages?: Array<ILedgerBlockMessage>
     title: string
     info: string
 }
