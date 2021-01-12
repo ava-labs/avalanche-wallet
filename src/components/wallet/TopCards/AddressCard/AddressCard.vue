@@ -172,15 +172,18 @@ export default class AddressCard extends Vue {
 
     get activeIdx(): number {
         const wallet = this.activeWallet as AvaHdWallet
+        const walletType = wallet.type
+
+        if (walletType === 'singleton') return 0
 
         switch (this.chainNow) {
             case 'X':
-                return wallet.externalHelper.hdIndex
+                return wallet.getExternalActiveIndex()
             case 'P':
-                return wallet.platformHelper.hdIndex
+                return wallet.getPlatformActiveIndex()
+            default:
+                return 0
         }
-
-        return 0
     }
 
     viewQRModal() {

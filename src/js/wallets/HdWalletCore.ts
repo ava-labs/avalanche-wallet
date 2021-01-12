@@ -235,6 +235,14 @@ class HdWalletCore {
         return this.platformHelper.utxoSet as PlatformUTXOSet
     }
 
+    getPlatformActiveIndex() {
+        return this.platformHelper.hdIndex
+    }
+
+    getExternalActiveIndex() {
+        return this.externalHelper.hdIndex
+    }
+
     getBaseAddress() {
         return this.externalHelper.getAddressForIndex(0)
     }
