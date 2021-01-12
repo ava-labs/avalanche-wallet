@@ -61,7 +61,7 @@ const PAGE_LIMIT = 100
 })
 export default class Activity extends Vue {
     mode: ModeKeyType = 'all'
-    modes = ['All', 'Transfer', 'Export/Import', 'Validation/Delegation']
+    modes = ['All', 'Transfer', 'Export & Import', 'Validation & Delegation']
     modeKey: ModeKeyType[] = ['all', 'transfer', 'swap', 'stake']
     isLoading = false
     pageNow = 0
