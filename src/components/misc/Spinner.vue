@@ -1,24 +1,12 @@
 <template>
     <div class="spinner">
-        <p
-            class="spinner"
-            :style="{
-                color: color,
-            }"
-        >
+        <p class="spinner">
             <fa icon="spinner"></fa>
         </p>
     </div>
 </template>
 <script>
-export default {
-    props: {
-        color: {
-            type: String,
-            default: '#fff',
-        },
-    },
-}
+export default {}
 </script>
 <style scoped lang="scss">
 .spinner {
@@ -32,6 +20,7 @@ export default {
     transform-origin: center;
     display: flex;
     justify-content: center;
+    color: var(--primary-color);
     align-items: center;
 }
 @keyframes spin {
