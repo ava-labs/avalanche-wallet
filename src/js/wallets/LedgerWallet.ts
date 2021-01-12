@@ -61,28 +61,26 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: LedgerAppConfigType
 
-    constructor(app: AppAvax, hdkey: HDKey, appConfig: LedgerAppConfigType) {
+    constructor(app: AppAvax, hdkey: HDKey, config: LedgerAppConfigType) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
+        this.config = config
 
         // TODO: Add actual values
         this.ethAddress = ''
         this.ethBalance = new BN(0)
         this.ethAddressBech = ''
-        this.config = appConfig
     }
 
-    static async fromApp(app: AppAvax) {
+    static async fromApp(app: AppAvax, config: LedgerAppConfigType) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        let appConfig = await app.getAppConfiguration()
-
-        return new LedgerWallet(app, hd, appConfig)
+        return new LedgerWallet(app, hd, config)
     }
 
     async sign<

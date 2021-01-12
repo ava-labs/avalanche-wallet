@@ -44,7 +44,8 @@ export default {
             try {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
-                let wallet = await LedgerWallet.fromApp(app)
+                let config = await app.getAppConfiguration()
+                let wallet = await LedgerWallet.fromApp(app, config)
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()
