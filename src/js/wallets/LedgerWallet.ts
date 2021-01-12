@@ -541,6 +541,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let canLedgerParse = this.config.version >= '0.3.1'
         let isParsableType = txType in parseableTxs
 
+        // TODO: Check if base tx and only avax
         if (canLedgerParse && isParsableType) {
             // If BASE Transaction make sure only AVAX is being sent, else sign hash
             //
