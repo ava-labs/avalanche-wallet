@@ -85,31 +85,17 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return new LedgerWallet(app, hd, appConfig)
     }
 
-    async sign<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
-        let chainId = isAVM ? 'X' : 'P'
-        let helper = chainId === 'X' ? this.internalHelper : this.platformHelper
-        let changeDerivation = chainId === 'X' ? 1 : 0
-        let changeIndex = chainId === 'X' ? helper.hdIndex : 0
-        const changePath = bippath.fromString(
-            `${AVA_ACCOUNT_PATH}/${changeDerivation}/${changeIndex}`
-        )
-        const changeAddr = helper.getAddressForIndex(changeIndex)
-        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
-
+    // Returns an array of derivation paths that need to sign this transaction
+    // Used with signTransactionHash and signTransactionParsable
+    getTransactionPaths<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        isAVM: boolean = true
+    ): string[] {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
-        let txbuff = unsignedTx.toBuffer()
         let ins = tx.getIns()
-        let outs = tx.getOuts()
-
         let operations: TransferableOperation[] = []
-
-        // Used for signHash function (app version < 0.3.1)
-        const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
 
         // Try to get operations, it will fail if there are none, ignore and continue
         try {
@@ -122,23 +108,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
             items = (tx as ImportTx).getImportInputs()
         }
-        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
-            outs = (tx as ExportTx).getExportOutputs()
-        }
+
         let hrp = getPreferredHRP(ava.getNetworkID())
+        let chainId = isAVM ? 'X' : 'P'
+
         let paths: string[] = []
-        let messages: LedgerBlockMessageType[] = []
-        // ----------------------------------------
-        // Remove when 0.4.x ledger app is available
-        // 0.3.1 ledger app signTransaction only works with avax
-        let isAvaxOnly = true
-        // Get parseable tx types that ledger can handle
-        // Check if ledger can parse tx
-        let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
-        const isParseableTxType = txType in parseableTxs
-        // 0.4.x should handle more tx types on c chain
-        // Remove when 0.4.x ledger app is available
-        // ----------------------------------------
 
         // Collect paths derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
@@ -179,11 +153,311 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
         }
 
-        const canParseTx = this.config.version >= '0.3.1' && isParseableTxType && isAvaxOnly
+        return paths
+    }
 
-        // Collect outputs to display to ledger lock modal
-        // only necessary if signing transaction (not hash)
-        if (canParseTx) {
+    pathsToUniqueBipPaths(paths: string[]) {
+        let uniquePaths = paths.filter((val: any, i: number) => {
+            return paths.indexOf(val) === i
+        })
+
+        let bip32Paths = uniquePaths.map((path) => {
+            return bippath.fromString(path, false)
+        })
+
+        return bip32Paths
+    }
+
+    getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        paths: string[],
+        sigMap: any
+    ): Credential[] {
+        let creds: Credential[] = []
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+
+        let ins = tx.getIns()
+
+        let items = ins
+        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+            items = (tx as ImportTx).getImportInputs()
+        }
+
+        let operations: TransferableOperation[] = []
+
+        // Try to get operations, it will fail if there are none, ignore and continue
+        try {
+            operations = (tx as OperationTx).getOperations()
+        } catch (e) {
+            console.log(e)
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
+            const cred: Credential = SelectCredentialClass(items[i].getInput().getCredentialID())
+
+            for (let j = 0; j < sigidxs.length; j++) {
+                let pathIndex = i + j
+                let pathStr = paths[pathIndex]
+
+                let sigRaw = sigMap.get(pathStr)
+                let sigBuff = Buffer.from(sigRaw)
+                const sig: Signature = new Signature()
+                sig.fromBuffer(sigBuff)
+                cred.addSignature(sig)
+            }
+            creds.push(cred)
+        }
+
+        for (let i = 0; i < operations.length; i++) {
+            let op = operations[i].getOperation()
+            const sigidxs: SigIdx[] = op.getSigIdxs()
+            const cred: Credential = SelectCredentialClass(op.getCredentialID())
+
+            for (let j = 0; j < sigidxs.length; j++) {
+                let pathIndex = items.length + i + j
+                let pathStr = paths[pathIndex]
+
+                let sigRaw = sigMap.get(pathStr)
+                let sigBuff = Buffer.from(sigRaw)
+                const sig: Signature = new Signature()
+                sig.fromBuffer(sigBuff)
+                cred.addSignature(sig)
+            }
+            creds.push(cred)
+        }
+
+        return creds
+    }
+
+    // Used for non parsable transactions.
+    // Ideally we wont use this function at all, but ledger is not ready yet.
+    async signTransactionHash<
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx
+    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        // let chainId = isAVM ? 'X' : 'P'
+
+        let txbuff = unsignedTx.toBuffer()
+        let ins = tx.getIns()
+
+        const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
+
+        let operations: TransferableOperation[] = []
+        // Try to get operations, it will fail if there are none, ignore and continue
+        try {
+            operations = (tx as OperationTx).getOperations()
+        } catch (e) {
+            console.log(e)
+        }
+
+        let items = ins
+        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+            items = (tx as ImportTx).getImportInputs()
+        }
+
+        // let hrp = getPreferredHRP(ava.getNetworkID())
+        let paths = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
+
+        // Collect paths derivation paths for source addresses
+        // for (let i = 0; i < items.length; i++) {
+        //     let item = items[i]
+        //
+        //     let assetId = bintools.cb58Encode(item.getAssetID())
+        //     // @ts-ignore
+        //     if (assetId !== store.state.Assets.AVA_ASSET_ID) isAvaxOnly = false
+        //
+        //     let sigidxs: SigIdx[] = item.getInput().getSigIdxs()
+        //     let sources = sigidxs.map((sigidx) => sigidx.getSource())
+        //     let addrs: string[] = sources.map((source) => {
+        //         return bintools.addressToString(hrp, chainId, source)
+        //     })
+        //
+        //     for (let j = 0; j < addrs.length; j++) {
+        //         let srcAddr = addrs[j]
+        //         let pathStr = this.getPathFromAddress(srcAddr) // returns change/index
+        //
+        //         paths.push(pathStr)
+        //     }
+        // }
+
+        // Do the Same for operational inputs, if there are any...
+        // for (let i = 0; i < operations.length; i++) {
+        //     let op = operations[i]
+        //     let sigidxs: SigIdx[] = op.getOperation().getSigIdxs()
+        //     let sources = sigidxs.map((sigidx) => sigidx.getSource())
+        //     let addrs: string[] = sources.map((source) => {
+        //         return bintools.addressToString(hrp, chainId, source)
+        //     })
+        //
+        //     for (let j = 0; j < addrs.length; j++) {
+        //         let srcAddr = addrs[j]
+        //         let pathStr = this.getPathFromAddress(srcAddr) // returns change/index
+        //
+        //         paths.push(pathStr)
+        //     }
+        // }
+
+        try {
+            store.commit('Ledger/openModal', {
+                title: 'Sign Hash',
+                messages: [],
+                info: msg.toString('hex').toUpperCase(),
+            })
+
+            let bip32Paths = this.pathsToUniqueBipPaths(paths)
+            // let uniquePaths = paths.filter((val: any, i: number) => {
+            //     return paths.indexOf(val) === i
+            // })
+            //
+            // let bip32Paths = uniquePaths.map((path) => {
+            //     return bippath.fromString(path, false)
+            // })
+
+            // Sign the msg with ledger
+            const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+            let sigMap = await this.app.signHash(accountPath, bip32Paths, msg)
+            store.commit('Ledger/closeModal')
+
+            let sigs: Credential[] = this.getCredentials<UnsignedTx>(unsignedTx, paths, sigMap)
+
+            // Push the message signatures in order of the inputs
+            // TODO: Can we avoid looping again and just use paths array?
+            // const sigs: Credential[] = []
+
+            // for (let i = 0; i < items.length; i++) {
+            //     const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
+            //     const cred: Credential = SelectCredentialClass(
+            //         items[i].getInput().getCredentialID()
+            //     )
+            //
+            //     for (let j = 0; j < sigidxs.length; j++) {
+            //         let pathIndex = i + j
+            //         let pathStr = paths[pathIndex]
+            //
+            //         let sigRaw = sigMap.get(pathStr)
+            //         let sigBuff = Buffer.from(sigRaw)
+            //         const sig: Signature = new Signature()
+            //         sig.fromBuffer(sigBuff)
+            //         cred.addSignature(sig)
+            //     }
+            //     sigs.push(cred)
+            // }
+            //
+            // for (let i = 0; i < operations.length; i++) {
+            //     let op = operations[i].getOperation()
+            //     const sigidxs: SigIdx[] = op.getSigIdxs()
+            //     const cred: Credential = SelectCredentialClass(op.getCredentialID())
+            //
+            //     for (let j = 0; j < sigidxs.length; j++) {
+            //         let pathIndex = items.length + i + j
+            //         let pathStr = paths[pathIndex]
+            //
+            //         let sigRaw = sigMap.get(pathStr)
+            //         let sigBuff = Buffer.from(sigRaw)
+            //         const sig: Signature = new Signature()
+            //         sig.fromBuffer(sigBuff)
+            //         cred.addSignature(sig)
+            //     }
+            //     sigs.push(cred)
+            // }
+
+            let signedTx
+            if (isAVM) {
+                signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, sigs)
+            } else {
+                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, sigs)
+            }
+            return signedTx as SignedTx
+        } catch (e) {
+            store.commit('Ledger/closeModal')
+            console.log(e)
+            throw e
+        }
+    }
+
+    // Used for signing transactions that are parsable
+    async signTransactionParsable<
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx
+    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, isAVM)
+        let chainId = isAVM ? 'X' : 'P'
+        let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
+
+        let title = `Sign ${parseableTxs[txType]}`
+
+        let paths = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
+        let bip32Paths = this.pathsToUniqueBipPaths(paths)
+
+        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+        let txbuff = unsignedTx.toBuffer()
+
+        // Get the change path
+        let helper = chainId === 'X' ? this.internalHelper : this.platformHelper
+        let changeDerivation = chainId === 'X' ? 1 : 0
+        let changeIndex = chainId === 'X' ? helper.hdIndex : 0
+        const changePath = bippath.fromString(
+            `${AVA_ACCOUNT_PATH}/${changeDerivation}/${changeIndex}`
+        )
+
+        try {
+            store.commit('Ledger/openModal', {
+                title: title,
+                messages: messages,
+                info: null,
+            })
+
+            let ledgerSignedTx = this.app.signTransaction(
+                accountPath,
+                bip32Paths,
+                txbuff,
+                changePath
+            )
+            let sigMap = ledgerSignedTx.signatures
+
+            let creds = this.getCredentials<UnsignedTx>(unsignedTx, paths, sigMap)
+
+            let signedTx
+            if (isAVM) {
+                signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, creds)
+            } else {
+                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, creds)
+            }
+            return signedTx as SignedTx
+        } catch (e) {
+            store.commit('Ledger/closeModal')
+            console.log(e)
+            throw e
+        }
+    }
+
+    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
+    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        isAVM: boolean = true
+    ): LedgerBlockMessageType[] {
+        let messages: LedgerBlockMessageType[] = []
+
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        let outs = tx.getOuts()
+        let chainId = isAVM ? 'X' : 'P'
+        let hrp = getPreferredHRP(ava.getNetworkID())
+
+        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+            outs = (tx as ExportTx).getExportOutputs()
+        }
+
+        // TODO: Get change address
+        // TODO: Construct the messages array depending on transaction type
+
+        if (txType === AVMConstants.BASETX) {
             for (let i = 0; i < outs.length; i++) {
                 outs[i]
                     .getOutput()
@@ -251,90 +525,274 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
         }
 
-        const getTitle = () => {
-            return `Sign ${parseableTxs[txType] || 'Hash'}`
+        return messages
+    }
+
+    async sign<
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx
+    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
+        // Check if transaction can be parsed by ledger
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        let chainId = isAVM ? 'X' : 'P'
+
+        let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
+
+        // If ledger doesnt support parsing, sign hash
+        let canLedgerParse = this.config.version >= '0.3.1'
+        let isParsableType = txType in parseableTxs
+
+        if (canLedgerParse && isParsableType) {
+            // If BASE Transaction make sure only AVAX is being sent, else sign hash
+            //
+            return await this.signTransactionParsable<UnsignedTx, SignedTx>(unsignedTx, isAVM)
+        } else {
+            return await this.signTransactionHash<UnsignedTx, SignedTx>(unsignedTx, isAVM)
         }
 
-        // Open the ledger modal to block view
-        // and ask user to sign with device
-        try {
-            store.commit('Ledger/openModal', {
-                title: getTitle(),
-                messages: canParseTx ? messages : [],
-                info: canParseTx ? null : msg.toString('hex').toUpperCase(),
-            })
-
-            let uniquePaths = paths.filter((val: any, i: number) => {
-                return paths.indexOf(val) === i
-            })
-
-            let bip32Paths = uniquePaths.map((path) => {
-                return bippath.fromString(path, false)
-            })
-
-            // Also, improve signing tx modal for other tx types
-
-            // Look at the tx type and see if not base do sign hash
-            // Specifically operation tx => sign hash, otherwise sign tx
-
-            let ledgerSignedTx = canParseTx
-                ? await this.app.signTransaction(accountPath, bip32Paths, txbuff, changePath)
-                : await this.app.signHash(accountPath, bip32Paths, msg)
-            let sigMap = canParseTx ? ledgerSignedTx.signatures : ledgerSignedTx
-
-            store.commit('Ledger/closeModal')
-
-            const sigs: Credential[] = []
-
-            for (let i = 0; i < items.length; i++) {
-                const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
-                const cred: Credential = SelectCredentialClass(
-                    items[i].getInput().getCredentialID()
-                )
-
-                for (let j = 0; j < sigidxs.length; j++) {
-                    let pathIndex = i + j
-                    let pathStr = paths[pathIndex]
-
-                    let sigRaw = sigMap.get(pathStr)
-                    let sigBuff = Buffer.from(sigRaw)
-                    const sig: Signature = new Signature()
-                    sig.fromBuffer(sigBuff)
-                    cred.addSignature(sig)
-                }
-                sigs.push(cred)
-            }
-
-            for (let i = 0; i < operations.length; i++) {
-                let op = operations[i].getOperation()
-                const sigidxs: SigIdx[] = op.getSigIdxs()
-                const cred: Credential = SelectCredentialClass(op.getCredentialID())
-
-                for (let j = 0; j < sigidxs.length; j++) {
-                    let pathIndex = items.length + i + j
-                    let pathStr = paths[pathIndex]
-
-                    let sigRaw = sigMap.get(pathStr)
-                    let sigBuff = Buffer.from(sigRaw)
-                    const sig: Signature = new Signature()
-                    sig.fromBuffer(sigBuff)
-                    cred.addSignature(sig)
-                }
-                sigs.push(cred)
-            }
-
-            let signedTx
-            if (isAVM) {
-                signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, sigs)
-            } else {
-                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, sigs)
-            }
-            return signedTx as SignedTx
-        } catch (e) {
-            store.commit('Ledger/closeModal')
-            console.log(e)
-            throw e
-        }
+        // let helper = chainId === 'X' ? this.internalHelper : this.platformHelper
+        // let changeDerivation = chainId === 'X' ? 1 : 0
+        // let changeIndex = chainId === 'X' ? helper.hdIndex : 0
+        // const changePath = bippath.fromString(
+        //     `${AVA_ACCOUNT_PATH}/${changeDerivation}/${changeIndex}`
+        // )
+        // const changeAddr = helper.getAddressForIndex(changeIndex)
+        // const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+        //
+        // let txbuff = unsignedTx.toBuffer()
+        // let ins = tx.getIns()
+        // let outs = tx.getOuts()
+        //
+        // let operations: TransferableOperation[] = []
+        //
+        // // Used for signHash function (app version < 0.3.1)
+        // const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
+        //
+        // // Try to get operations, it will fail if there are none, ignore and continue
+        // try {
+        //     operations = (tx as OperationTx).getOperations()
+        // } catch (e) {
+        //     console.log(e)
+        // }
+        //
+        // let items = ins
+        // if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+        //     items = (tx as ImportTx).getImportInputs()
+        // }
+        // if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+        //     outs = (tx as ExportTx).getExportOutputs()
+        // }
+        // let hrp = getPreferredHRP(ava.getNetworkID())
+        // let paths: string[] = []
+        // let messages: LedgerBlockMessageType[] = []
+        // // ----------------------------------------
+        // // Remove when 0.4.x ledger app is available
+        // // 0.3.1 ledger app signTransaction only works with avax
+        // let isAvaxOnly = true
+        // // Get parseable tx types that ledger can handle
+        // // Check if ledger can parse tx
+        // // let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
+        // const isParseableTxType = txType in parseableTxs
+        // // 0.4.x should handle more tx types on c chain
+        // // Remove when 0.4.x ledger app is available
+        // // ----------------------------------------
+        //
+        // // Collect paths derivation paths for source addresses
+        // for (let i = 0; i < items.length; i++) {
+        //     let item = items[i]
+        //
+        //     let assetId = bintools.cb58Encode(item.getAssetID())
+        //     // @ts-ignore
+        //     if (assetId !== store.state.Assets.AVA_ASSET_ID) isAvaxOnly = false
+        //
+        //     let sigidxs: SigIdx[] = item.getInput().getSigIdxs()
+        //     let sources = sigidxs.map((sigidx) => sigidx.getSource())
+        //     let addrs: string[] = sources.map((source) => {
+        //         return bintools.addressToString(hrp, chainId, source)
+        //     })
+        //
+        //     for (let j = 0; j < addrs.length; j++) {
+        //         let srcAddr = addrs[j]
+        //         let pathStr = this.getPathFromAddress(srcAddr) // returns change/index
+        //
+        //         paths.push(pathStr)
+        //     }
+        // }
+        //
+        // // Do the Same for operational inputs, if there are any...
+        // for (let i = 0; i < operations.length; i++) {
+        //     let op = operations[i]
+        //     let sigidxs: SigIdx[] = op.getOperation().getSigIdxs()
+        //     let sources = sigidxs.map((sigidx) => sigidx.getSource())
+        //     let addrs: string[] = sources.map((source) => {
+        //         return bintools.addressToString(hrp, chainId, source)
+        //     })
+        //
+        //     for (let j = 0; j < addrs.length; j++) {
+        //         let srcAddr = addrs[j]
+        //         let pathStr = this.getPathFromAddress(srcAddr) // returns change/index
+        //
+        //         paths.push(pathStr)
+        //     }
+        // }
+        //
+        // const canParseTx = this.config.version >= '0.3.1' && isParseableTxType && isAvaxOnly
+        //
+        // // Collect outputs to display to ledger lock modal
+        // // only necessary if signing transaction (not hash)
+        // if (canParseTx) {
+        //     for (let i = 0; i < outs.length; i++) {
+        //         outs[i]
+        //             .getOutput()
+        //             .getAddresses()
+        //             .forEach((value) => {
+        //                 const addr = bintools.addressToString(hrp, chainId, value)
+        //                 // @ts-ignore
+        //                 const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
+        //
+        //                 if (changeAddr !== addr)
+        //                     messages.push({
+        //                         title: 'Output',
+        //                         value: `${addr} - ${amt.toString()} AVAX`,
+        //                     })
+        //             })
+        //     }
+        // }
+        //
+        // if (
+        //     txType === PlatformVMConstants.ADDDELEGATORTX ||
+        //     txType === PlatformVMConstants.ADDVALIDATORTX
+        // ) {
+        //     const format = 'YYYY-MM-DD H:mm:ss UTC'
+        //     // @ts-ignore
+        //     const nodeID = bintools.cb58Encode(tx.nodeID)
+        //     // @ts-ignore
+        //     const startTime = moment(parseInt(tx.getStartTime()) * 1000)
+        //         .utc()
+        //         .format(format)
+        //     // @ts-ignore
+        //     const endTime = moment(parseInt(tx.getEndTime()) * 1000)
+        //         .utc()
+        //         .format(format)
+        //     // @ts-ignore
+        //     console.log(tx)
+        //     // @ts-ignore
+        //     const stakeAmt = bnToBig(tx.getStakeAmount(), 9)
+        //     messages.push({ title: 'NodeID', value: nodeID })
+        //     messages.push({ title: 'Start Time', value: startTime })
+        //     messages.push({ title: 'End Time', value: endTime })
+        //     messages.push({ title: 'Total Stake', value: `${stakeAmt} AVAX` })
+        //     messages.push({
+        //         title: 'Stake',
+        //         value: `${stakeAmt} to ${this.platformHelper.getCurrentAddress()}`,
+        //     })
+        //     messages.push({
+        //         title: 'Reward to',
+        //         value: `${this.platformHelper.getCurrentAddress()}`,
+        //     })
+        //     // @ts-ignore
+        //     if (tx.delegationFee) {
+        //         // @ts-ignore
+        //         messages.push({ title: 'Delegation Fee', value: `${tx.delegationFee}%` })
+        //     }
+        //     messages.push({ title: 'Fee', value: '0' })
+        // }
+        //
+        // if (
+        //     txType === AVMConstants.EXPORTTX ||
+        //     txType === AVMConstants.IMPORTTX ||
+        //     txType === PlatformVMConstants.EXPORTTX ||
+        //     txType === PlatformVMConstants.IMPORTTX ||
+        //     txType === AVMConstants.BASETX
+        // ) {
+        //     messages.push({ title: 'Fee', value: `${0.001} AVAX` })
+        // }
+        //
+        // const getTitle = () => {
+        //     return `Sign ${parseableTxs[txType] || 'Hash'}`
+        // }
+        //
+        // // Open the ledger modal to block view
+        // // and ask user to sign with device
+        // try {
+        //     store.commit('Ledger/openModal', {
+        //         title: getTitle(),
+        //         messages: canParseTx ? messages : [],
+        //         info: canParseTx ? null : msg.toString('hex').toUpperCase(),
+        //     })
+        //
+        //     let uniquePaths = paths.filter((val: any, i: number) => {
+        //         return paths.indexOf(val) === i
+        //     })
+        //
+        //     let bip32Paths = uniquePaths.map((path) => {
+        //         return bippath.fromString(path, false)
+        //     })
+        //
+        //     // Also, improve signing tx modal for other tx types
+        //
+        //     // Look at the tx type and see if not base do sign hash
+        //     // Specifically operation tx => sign hash, otherwise sign tx
+        //
+        //     let ledgerSignedTx = canParseTx
+        //         ? await this.app.signTransaction(accountPath, bip32Paths, txbuff, changePath)
+        //         : await this.app.signHash(accountPath, bip32Paths, msg)
+        //     let sigMap = canParseTx ? ledgerSignedTx.signatures : ledgerSignedTx
+        //
+        //     store.commit('Ledger/closeModal')
+        //
+        //     const sigs: Credential[] = []
+        //
+        //     for (let i = 0; i < items.length; i++) {
+        //         const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
+        //         const cred: Credential = SelectCredentialClass(
+        //             items[i].getInput().getCredentialID()
+        //         )
+        //
+        //         for (let j = 0; j < sigidxs.length; j++) {
+        //             let pathIndex = i + j
+        //             let pathStr = paths[pathIndex]
+        //
+        //             let sigRaw = sigMap.get(pathStr)
+        //             let sigBuff = Buffer.from(sigRaw)
+        //             const sig: Signature = new Signature()
+        //             sig.fromBuffer(sigBuff)
+        //             cred.addSignature(sig)
+        //         }
+        //         sigs.push(cred)
+        //     }
+        //
+        //     for (let i = 0; i < operations.length; i++) {
+        //         let op = operations[i].getOperation()
+        //         const sigidxs: SigIdx[] = op.getSigIdxs()
+        //         const cred: Credential = SelectCredentialClass(op.getCredentialID())
+        //
+        //         for (let j = 0; j < sigidxs.length; j++) {
+        //             let pathIndex = items.length + i + j
+        //             let pathStr = paths[pathIndex]
+        //
+        //             let sigRaw = sigMap.get(pathStr)
+        //             let sigBuff = Buffer.from(sigRaw)
+        //             const sig: Signature = new Signature()
+        //             sig.fromBuffer(sigBuff)
+        //             cred.addSignature(sig)
+        //         }
+        //         sigs.push(cred)
+        //     }
+        //
+        //     let signedTx
+        //     if (isAVM) {
+        //         signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, sigs)
+        //     } else {
+        //         signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, sigs)
+        //     }
+        //     return signedTx as SignedTx
+        // } catch (e) {
+        //     store.commit('Ledger/closeModal')
+        //     console.log(e)
+        //     throw e
+        // }
     }
 
     getEvmAddress(): string {
