@@ -10,16 +10,14 @@ var bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
 
-import { AssetAmountDestination, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
+import { UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
     AVMConstants,
     OperationTx,
     SelectCredentialClass,
-    TransferableInput,
     TransferableOperation,
-    TransferableOutput,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
 } from 'avalanche/dist/apis/avm'
@@ -27,7 +25,6 @@ import {
 import {
     ImportTx,
     ExportTx,
-    StakeableLockOut,
     Tx as PlatformTx,
     UTXO as PlatformUTXO,
     UnsignedTx as PlatformUnsignedTx,
@@ -35,13 +32,7 @@ import {
     PlatformVMConstants,
 } from 'avalanche/dist/apis/platformvm'
 
-import {
-    Credential,
-    SigIdx,
-    Signature,
-    StandardTx,
-    StandardUnsignedTx,
-} from 'avalanche/dist/common'
+import { Credential, SigIdx, Signature } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { LedgerAppConfigType, WalletNameType } from '@/store/types'
