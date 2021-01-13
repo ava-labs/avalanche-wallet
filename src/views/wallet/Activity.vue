@@ -1,8 +1,5 @@
 <template>
     <div class="activity_page">
-        <div class="header">
-            <h1>Activity</h1>
-        </div>
         <div class="settings">
             <div>
                 <div class="filter_cont">
@@ -309,7 +306,8 @@ export default class Activity extends Vue {
 
 .activity_page {
     display: grid;
-    grid-template-rows: max-content max-content 1fr;
+    grid-template-rows: max-content 1fr;
+    padding-bottom: 14px;
 }
 .header {
     display: flex;
@@ -334,7 +332,7 @@ export default class Activity extends Vue {
 .tx_table {
     height: 100%;
     overflow: auto;
-    padding-bottom: 14px;
+    border-top: 2px solid var(--bg-wallet);
     //overflow: scroll;
     //padding-right: 20px;
     //margin-right: 20px;
@@ -342,7 +340,6 @@ export default class Activity extends Vue {
 }
 
 .tx_list {
-    border-top: 2px solid var(--bg-light);
     //max-height: 480px;
     //overflow: scroll;
     height: 100%;
