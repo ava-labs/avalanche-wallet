@@ -18,10 +18,10 @@
                     </button>
                 </div>
                 <div class="pagination_info">
+                    <p>{{ txs.length }} transactions found</p>
                     <button @click="updateHistory">
                         <fa icon="sync"></fa>
                     </button>
-                    <p>{{ txs.length }} transactions found</p>
                 </div>
             </div>
         </div>
@@ -406,10 +406,19 @@ export default class Activity extends Vue {
         width: 24px;
         height: 24px;
         border-radius: 3px;
-        border: 1px solid var(--primary-color);
+        border: 1px solid var(--secondary-color);
+        color: var(--secondary-color);
         margin-left: 6px;
+        opacity: 0.6;
+        transition-duration: 0.1s;
+
+        &:hover {
+            opacity: 1;
+        }
 
         &[disabled] {
+            border-color: var(--primary-color-light);
+            color: var(--primary-color-light);
             opacity: 0.4;
         }
     }
@@ -429,11 +438,13 @@ export default class Activity extends Vue {
 .pagination_info {
     display: flex;
     flex-direction: row;
-    font-size: 12px;
+    justify-content: flex-end;
+    font-size: 13px;
     color: var(--primary-color-light);
+    transition-duration: 0.1s;
 
     button {
-        margin-right: 4px;
+        margin-left: 14px;
         color: var(--secondary-color);
         opacity: 0.6;
         &:hover {
