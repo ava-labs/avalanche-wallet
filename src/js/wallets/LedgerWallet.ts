@@ -157,7 +157,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return bip32Paths
     }
 
-    getChange<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getChangeBipPath<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
         chainId: ChainAlias
     ) {
@@ -315,7 +315,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         let txbuff = unsignedTx.toBuffer()
-        let changePath = this.getChange(unsignedTx, chainId)
+        let changePath = this.getChangeBipPath(unsignedTx, chainId)
 
         try {
             store.commit('Ledger/openModal', {
@@ -360,13 +360,22 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let outs = tx.getOuts()
         let chainId: ChainAlias = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
+        let changeAddr = this.getChangeAddress(chainId)
 
         if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
             outs = (tx as ExportTx).getExportOutputs()
         }
+        // TODO: this should really not be necessary but it is here
+        // because ledger app crashses if change addr and reward addr
+        // are the same.
+        if (
+            txType === PlatformVMConstants.ADDDELEGATORTX ||
+            txType === PlatformVMConstants.ADDVALIDATORTX
+        ) {
+            changeAddr = this.platformHelper.getFirstAvailableAddress()
+        }
 
-        const changeAddr = this.getChangeAddress(chainId)
-        const changePath = this.getChange(unsignedTx, chainId)
+        const changePath = this.getChangeBipPath(unsignedTx, chainId)
 
         // TODO: Construct the messages array depending on transaction type
         for (let i = 0; i < outs.length; i++) {
@@ -695,6 +704,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         // For change address use first available on the platform chain
         let changeAddress = this.platformHelper.getFirstAvailableAddress()
+        // Causes Ledger to crash because change and reward address are the same
+        // let changeAddress = this.platformHelper.getCurrentAddress()
 
         // Convert dates to unix time
         let startTime = new BN(Math.round(start.getTime() / 1000))
@@ -750,6 +761,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         // For change address use first available on the platform chain
         let changeAddress = this.platformHelper.getFirstAvailableAddress()
+        // Causes Ledger to crash because change and reward address are the same
+        // let changeAddress = this.platformHelper.getCurrentAddress()
 
         // Stake is always returned to address at index 0
         let stakeReturnAddr = this.getPlatformRewardAddress()
