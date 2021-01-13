@@ -2,38 +2,49 @@
     <div class="activity_page">
         <div class="header">
             <h1>Activity</h1>
-            <p>{{ txs.length }} transactions found</p>
-            <button @click="updateHistory"><fa icon="sync"></fa></button>
         </div>
         <div class="cols">
             <div class="tx_table">
-                <div class="pagination">
+                <div class="settings">
                     <div>
-                        <p>Month</p>
-                        <select>
-                            <option value="0">January</option>
-                            <option value="1">February</option>
-                        </select>
+                        <div class="filter_cont">
+                            <label>Filter by type</label>
+                            <RadioButtons
+                                :labels="modes"
+                                :keys="modeKey"
+                                v-model="mode"
+                            ></RadioButtons>
+                        </div>
                     </div>
                     <div>
-                        <p>Year</p>
-                        <select>
-                            <option value="2021">2020</option>
-                            <option value="2020">2020</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button @click="prevPage">Prev</button>
-                        <button @click="nextPage">Next</button>
+                        <div class="pagination">
+                            <p class="date_display">{{ monthNowName }} {{ yearNow }}</p>
+                            <button @click="prevPage" :disabled="!isPrevPage">
+                                <fa icon="angle-left"></fa>
+                            </button>
+                            <button @click="nextPage" :disabled="!isNextPage">
+                                <fa icon="angle-right"></fa>
+                            </button>
+                        </div>
+                        <div class="pagination_info">
+                            <button @click="updateHistory">
+                                <fa icon="sync"></fa>
+                            </button>
+                            <p>{{ txs.length }} transactions found</p>
+                        </div>
                     </div>
                 </div>
-                <div class="tx_list" v-show="showList">
+
+                <div class="tx_list" v-show="showList" ref="list">
                     <virtual-list
                         v-show="txs.length > 0"
-                        style="height: 400px; overflow-y: auto"
+                        :style="{ height: `${listH}px`, overflowY: 'auto' }"
                         :data-key="'id'"
                         :data-sources="txsProcessed"
                         :data-component="RowComponent"
+                        :keeps="20"
+                        ref="vlist"
+                        :estimate-size="txsProcessed.length"
                     ></virtual-list>
                     <!--                    <TxRow v-for="tx in txsProcessed" :key="tx.id" :source="tx"></TxRow>-->
                     <!--                    <MonthGroup-->
@@ -51,10 +62,6 @@
                     <p>LoadingTransactions.</p>
                 </div>
             </div>
-            <div>
-                <label>Filter by type</label>
-                <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
-            </div>
         </div>
     </div>
 </template>
@@ -65,6 +72,7 @@ import {
     ITransactionDataProcessed,
     TransactionType,
 } from '@/store/modules/history/types'
+import moment from 'moment'
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
@@ -101,6 +109,13 @@ export default class Activity extends Vue {
     monthNow = 0
     yearNow = 0
 
+    listH = 100
+    activated() {
+        let now = new Date()
+        this.yearNow = now.getFullYear()
+        this.monthNow = now.getMonth()
+    }
+
     get showList(): boolean {
         if (this.isUpdatingAll || this.isLoading) return false
         return true
@@ -110,13 +125,26 @@ export default class Activity extends Vue {
         return this.$store.state.History.isUpdatingAll
     }
 
+    get isNextPage() {
+        let now = new Date()
+        if (this.yearNow < now.getFullYear()) return true
+        if (this.monthNow < now.getMonth()) return true
+        return false
+    }
+
+    get isPrevPage() {
+        return true
+    }
+
+    get monthNowName() {
+        return moment(this.monthNow + 1, 'MM').format('MMMM')
+    }
+
     mounted() {
         this.updateHistory()
-
-        let now = new Date()
-        this.yearNow = now.getFullYear()
-        this.monthNow = now.getMonth()
+        this.setScrollHeight()
     }
+    deleted() {}
 
     updateHistory() {
         this.$store.dispatch('History/updateAllTransactionHistory')
@@ -166,7 +194,7 @@ export default class Activity extends Vue {
         let filtered = txs.filter((tx) => {
             let date = new Date(tx.timestamp)
 
-            if (date.getMonth() === this.monthNow && this.yearNow === this.yearNow) {
+            if (date.getMonth() === this.monthNow && date.getFullYear() === this.yearNow) {
                 return true
             }
             return false
@@ -218,6 +246,7 @@ export default class Activity extends Vue {
         } else {
             this.monthNow = this.monthNow - 1
         }
+        this.scrollToTop()
     }
     nextPage() {
         if (this.monthNow === 11) {
@@ -226,6 +255,7 @@ export default class Activity extends Vue {
         } else {
             this.monthNow = this.monthNow + 1
         }
+        this.scrollToTop()
     }
 
     get pageTxs(): ITransactionData[] {
@@ -266,6 +296,17 @@ export default class Activity extends Vue {
             return false
         })
     }
+
+    scrollToTop() {
+        //@ts-ignore
+        this.$refs.vlist.scrollToIndex(0)
+    }
+    // The virtual scroll needs to be given a height in pixels
+    setScrollHeight() {
+        //@ts-ignore
+        let h = this.$refs.list.clientHeight
+        this.listH = h
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -287,16 +328,28 @@ export default class Activity extends Vue {
     }
 }
 
+.settings {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
 .tx_table {
     height: 100%;
-    //overflow: auto;
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    overflow: auto;
+    padding-bottom: 14px;
     //overflow: scroll;
-    padding-right: 20px;
-    margin-right: 20px;
-    border-right: 1px solid var(--bg-light);
+    //padding-right: 20px;
+    //margin-right: 20px;
+    //border-right: 1px solid var(--bg-light);
 }
 
 .tx_list {
+    border-top: 2px solid var(--bg-light);
     //max-height: 480px;
     //overflow: scroll;
     height: 100%;
@@ -325,11 +378,10 @@ export default class Activity extends Vue {
 }
 
 .cols {
-    padding-top: 30px;
     height: 100%;
-    overflow: auto;
-    display: grid;
-    grid-template-columns: 1fr 240px;
+    //overflow: auto;
+    //display: grid;
+    //grid-template-columns: 1fr 240px;
 }
 
 .empty,
@@ -357,6 +409,47 @@ export default class Activity extends Vue {
     display: flex;
     flex-direction: row;
     align-items: center;
+    p {
+        margin-right: 12px !important;
+    }
+    button {
+        width: 24px;
+        height: 24px;
+        border-radius: 3px;
+        border: 1px solid var(--primary-color);
+        margin-left: 6px;
+
+        &[disabled] {
+            opacity: 0.4;
+        }
+    }
+}
+
+.date_display {
+    font-size: 24px;
+}
+
+.filter_cont {
+    label {
+        font-size: 12px;
+        color: var(--primary-color);
+    }
+}
+
+.pagination_info {
+    display: flex;
+    flex-direction: row;
+    font-size: 12px;
+    color: var(--primary-color-light);
+
+    button {
+        margin-right: 4px;
+        color: var(--secondary-color);
+        opacity: 0.6;
+        &:hover {
+            opacity: 1;
+        }
+    }
 }
 
 @include main.medium-device {

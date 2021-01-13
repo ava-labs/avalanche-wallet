@@ -1,14 +1,20 @@
 <template>
-    <div class="tx_row">
-        <div v-if="source.isMonthChange">
-            <p class="date_label">{{ monthLabel }}</p>
-        </div>
-        <p v-else></p>
-        <p v-if="source.isDayChange" class="date_label">{{ dayLabel }}</p>
-        <p v-else></p>
+    <div class="tx_row" :day_change="source.isDayChange">
+        <!--        <div v-if="source.isMonthChange">-->
+        <!--            <p class="date_label">{{ monthLabel }}</p>-->
+        <!--        </div>-->
+        <!--        <p v-else></p>-->
+        <!--        <p v-if="source.isDayChange" class="date_label">{{ dayLabel }}</p>-->
+        <!--        <p v-else></p>-->
         <div class="tx_cols">
-            <div>
-                <p class="time">{{ date.toLocaleTimeString() }}</p>
+            <div class="meta_col">
+                <div>
+                    <label>Date</label>
+                    <p class="time">
+                        {{ date.toDateString() }}
+                        <span>{{ date.toLocaleTimeString() }}</span>
+                    </p>
+                </div>
                 <div v-if="memo" class="memo">
                     <label>MEMO</label>
                     <p>{{ memo }}</p>
@@ -150,15 +156,21 @@ export default class TxRow extends Vue {
 .tx_row {
     //display: grid;
     //grid-template-columns: 1fr 1fr;
-    padding: 6px 14px;
+    padding: 2px 0px;
     font-size: 13px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 450px;
+    //display: grid;
+    //grid-template-columns: 1fr 1fr;
     //margin-bottom: 22px;
+
+    &[day_change] {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--bg-light);
+    }
 }
 .tx_cols {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 260px;
     background-color: var(--bg-light);
     padding: 8px 14px;
     border-radius: 4px;
@@ -176,26 +188,33 @@ export default class TxRow extends Vue {
 }
 
 .tx_detail {
-    margin-bottom: 8px;
+    //margin-bottom: 8px;
     width: 100%;
 }
 
 .time {
     //color: var(--primary-color-light);
     font-size: 13px;
+
+    span {
+        margin-left: 12px;
+    }
 }
 .memo {
-    label {
-        font-size: 12px;
-        color: var(--primary-color-light);
-    }
     p {
         font-size: 12px;
     }
     overflow-wrap: break-word;
     width: 100%;
+    max-width: 420px;
 }
 
+.meta_col {
+    overflow: auto;
+    display: grid;
+    column-gap: 14px;
+    grid-template-columns: max-content max-content;
+}
 .date_label {
     line-height: 24px;
     position: sticky;
@@ -205,5 +224,10 @@ export default class TxRow extends Vue {
     width: max-content;
     z-index: 2;
     //background-color: var(--bg);
+}
+
+label {
+    font-size: 12px;
+    color: var(--primary-color-light);
 }
 </style>
