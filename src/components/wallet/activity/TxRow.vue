@@ -1,21 +1,28 @@
 <template>
     <div class="tx_row">
-        <div>
-            <p class="time">{{ date.toLocaleTimeString() }}</p>
-            <div v-if="memo" class="memo">
-                <label>MEMO</label>
-                <p>{{ memo }}</p>
-            </div>
+        <div v-if="source.isMonthChange">
+            <p class="date_label">{{ monthLabel }}</p>
         </div>
-
-        <div class="tx_detail">
-            <component :is="tx_comp" :transaction="transaction"></component>
+        <p v-else></p>
+        <p v-if="source.isDayChange" class="date_label">{{ dayLabel }}</p>
+        <p v-else></p>
+        <div class="tx_cols">
+            <div>
+                <p class="time">{{ date.toLocaleTimeString() }}</p>
+                <div v-if="memo" class="memo">
+                    <label>MEMO</label>
+                    <p>{{ memo }}</p>
+                </div>
+            </div>
+            <div class="tx_detail">
+                <component :is="tx_comp" :transaction="source"></component>
+            </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ITransactionData } from '@/store/modules/history/types'
+import { ITransactionData, ITransactionDataProcessed } from '@/store/modules/history/types'
 import { AssetsDict, NftFamilyDict } from '@/store/modules/assets/types'
 import { bnToBig } from '@/helpers/helper'
 import { BN, Buffer } from 'avalanche'
@@ -23,6 +30,7 @@ import { BN, Buffer } from 'avalanche'
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
+import moment from 'moment'
 
 @Component({
     components: {
@@ -32,13 +40,40 @@ import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport
     },
 })
 export default class TxRow extends Vue {
-    @Prop() transaction!: ITransactionData
+    // @Prop() transaction!: ITransactionData
+    // @Prop() txs!: ITransactionData[]
+    @Prop() index!: number
+    @Prop() source!: ITransactionDataProcessed
+
+    // showMonth = false
+    // showDay = false
+
+    mounted() {
+        // let index = this.index
+        // if (index === 0) {
+        //     this.showMonth = true
+        //     this.showDay = true
+        //     return
+        // }
+        //
+        // let txBefore = this.txs[index - 1]
+        //
+        // let date = new Date(this.transaction.timestamp)
+        // let dateBefore = new Date(txBefore.timestamp)
+        //
+        // if (dateBefore.getMonth() !== date.getMonth()) {
+        //     this.showMonth = true
+        //     this.showDay = true
+        // } else if (dateBefore.getDay() !== date.getDay()) {
+        //     this.showDay = true
+        // }
+    }
 
     get date() {
-        return new Date(this.transaction.timestamp)
+        return new Date(this.source.timestamp)
     }
     get type() {
-        return this.transaction.type
+        return this.source.type
     }
 
     get tx_comp() {
@@ -85,13 +120,29 @@ export default class TxRow extends Vue {
     }
 
     get memo(): string | null {
-        const memo = this.transaction.memo
+        const memo = this.source.memo
         const memoText = new Buffer(memo, 'base64').toString('utf8')
         // Bug that sets memo to empty string (AAAAAA==) for some
         // tx types
         if (!memoText.length || memo === 'AAAAAA==') return null
 
         return memoText
+    }
+
+    get mom() {
+        return moment(this.source.timestamp)
+    }
+    get dayLabel() {
+        return this.mom.format('dddd Do')
+    }
+
+    get monthLabel(): string {
+        let month = this.mom.format('MMMM')
+        return month
+    }
+
+    get yearLabel(): string {
+        return this.mom.format('Y')
     }
 }
 </script>
@@ -102,8 +153,15 @@ export default class TxRow extends Vue {
     padding: 6px 14px;
     font-size: 13px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 450px;
     //margin-bottom: 22px;
+}
+.tx_cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: var(--bg-light);
+    padding: 8px 14px;
+    border-radius: 4px;
 }
 
 .date {
@@ -118,7 +176,6 @@ export default class TxRow extends Vue {
 }
 
 .tx_detail {
-    background-color: var(--bg-light);
     margin-bottom: 8px;
     width: 100%;
 }
@@ -137,5 +194,16 @@ export default class TxRow extends Vue {
     }
     overflow-wrap: break-word;
     width: 100%;
+}
+
+.date_label {
+    line-height: 24px;
+    position: sticky;
+    top: 0px;
+    height: max-content;
+    font-size: 24px;
+    width: max-content;
+    z-index: 2;
+    //background-color: var(--bg);
 }
 </style>

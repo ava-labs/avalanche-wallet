@@ -29,6 +29,11 @@ export interface ITransactionData {
     validatorNodeID: string
 }
 
+export interface ITransactionDataProcessed extends ITransactionData {
+    isMonthChange: boolean
+    isDayChange: boolean
+}
+
 interface TransactionInput {
     credentials: any[]
     output: UTXO

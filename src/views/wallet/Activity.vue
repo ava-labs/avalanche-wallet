@@ -9,18 +9,39 @@
             <div class="tx_table">
                 <div class="pagination">
                     <div>
-                        <button @click="prevPage">Before</button>
+                        <p>Month</p>
+                        <select>
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Year</p>
+                        <select>
+                            <option value="2021">2020</option>
+                            <option value="2020">2020</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button @click="prevPage">Prev</button>
                         <button @click="nextPage">Next</button>
                     </div>
-                    <p>Page {{ pageNow + 1 }} of {{ pageAmount + 1 }}</p>
                 </div>
                 <div class="tx_list" v-show="showList">
-                    <MonthGroup
-                        class="month_group"
-                        v-for="month in monthGroups"
-                        :key="month[0].timestamp"
-                        :transactions="month"
-                    ></MonthGroup>
+                    <virtual-list
+                        v-show="txs.length > 0"
+                        style="height: 400px; overflow-y: auto"
+                        :data-key="'id'"
+                        :data-sources="txsProcessed"
+                        :data-component="RowComponent"
+                    ></virtual-list>
+                    <!--                    <TxRow v-for="tx in txsProcessed" :key="tx.id" :source="tx"></TxRow>-->
+                    <!--                    <MonthGroup-->
+                    <!--                        class="month_group"-->
+                    <!--                        v-for="month in monthGroups"-->
+                    <!--                        :key="month[0].timestamp"-->
+                    <!--                        :transactions="month"-->
+                    <!--                    ></MonthGroup>-->
                     <div v-if="txs.length === 0" class="empty">
                         <p>No Transactions Found.</p>
                     </div>
@@ -39,7 +60,11 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { ITransactionData, TransactionType } from '@/store/modules/history/types'
+import {
+    ITransactionData,
+    ITransactionDataProcessed,
+    TransactionType,
+} from '@/store/modules/history/types'
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
@@ -49,7 +74,12 @@ import Spinner from '@/components/misc/Spinner.vue'
 type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
 type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 
+//@ts-ignore
+import VirtualList from 'vue-virtual-scroll-list'
+
 const PAGE_LIMIT = 100
+
+const YEAR_MIN = 2020
 
 @Component({
     components: {
@@ -57,6 +87,7 @@ const PAGE_LIMIT = 100
         TxRow,
         MonthGroup,
         RadioButtons,
+        VirtualList,
     },
 })
 export default class Activity extends Vue {
@@ -65,6 +96,10 @@ export default class Activity extends Vue {
     modeKey: ModeKeyType[] = ['all', 'transfer', 'swap', 'stake']
     isLoading = false
     pageNow = 0
+    RowComponent = TxRow
+
+    monthNow = 0
+    yearNow = 0
 
     get showList(): boolean {
         if (this.isUpdatingAll || this.isLoading) return false
@@ -77,6 +112,10 @@ export default class Activity extends Vue {
 
     mounted() {
         this.updateHistory()
+
+        let now = new Date()
+        this.yearNow = now.getFullYear()
+        this.monthNow = now.getMonth()
     }
 
     updateHistory() {
@@ -108,20 +147,64 @@ export default class Activity extends Vue {
     }
 
     get txs(): ITransactionData[] {
+        let txs
         switch (this.mode) {
             case 'transfer':
-                return this.txsTransfer
+                txs = this.txsTransfer
                 break
             case 'swap':
-                return this.txsSwap
+                txs = this.txsSwap
                 break
             case 'stake':
-                return this.txsStake
+                txs = this.txsStake
                 break
             default:
-                return this.allTxs
+                txs = this.allTxs
                 break
         }
+
+        let filtered = txs.filter((tx) => {
+            let date = new Date(tx.timestamp)
+
+            if (date.getMonth() === this.monthNow && this.yearNow === this.yearNow) {
+                return true
+            }
+            return false
+        })
+        return filtered
+    }
+
+    get txsProcessed(): ITransactionDataProcessed[] {
+        let txs = this.txs
+
+        let res = txs.map((tx, index) => {
+            let showMonth = false
+            let showDay = false
+
+            if (index === 0) {
+                showMonth = true
+                showDay = true
+            } else {
+                let txBefore = txs[index - 1]
+
+                let date = new Date(tx.timestamp)
+                let dateBefore = new Date(txBefore.timestamp)
+
+                if (dateBefore.getMonth() !== date.getMonth()) {
+                    showMonth = true
+                    showDay = true
+                } else if (dateBefore.getDay() !== date.getDay()) {
+                    showDay = true
+                }
+            }
+
+            return {
+                ...tx,
+                isMonthChange: showMonth,
+                isDayChange: showDay,
+            }
+        })
+        return res
     }
 
     get pageAmount(): number {
@@ -129,13 +212,19 @@ export default class Activity extends Vue {
     }
 
     prevPage() {
-        if (this.pageNow > 0) {
-            this.pageNow--
+        if (this.monthNow === 0) {
+            this.yearNow = this.yearNow - 1
+            this.monthNow = 11
+        } else {
+            this.monthNow = this.monthNow - 1
         }
     }
     nextPage() {
-        if (this.pageNow < this.pageAmount) {
-            this.pageNow++
+        if (this.monthNow === 11) {
+            this.yearNow = this.yearNow + 1
+            this.monthNow = 0
+        } else {
+            this.monthNow = this.monthNow + 1
         }
     }
 
@@ -201,7 +290,7 @@ export default class Activity extends Vue {
 .tx_table {
     height: 100%;
     //overflow: auto;
-    overflow: scroll;
+    //overflow: scroll;
     padding-right: 20px;
     margin-right: 20px;
     border-right: 1px solid var(--bg-light);
@@ -210,7 +299,7 @@ export default class Activity extends Vue {
 .tx_list {
     //max-height: 480px;
     //overflow: scroll;
-    height: 100px;
+    height: 100%;
     position: relative;
 }
 
@@ -262,6 +351,12 @@ export default class Activity extends Vue {
     font-size: 32px;
     margin-bottom: 22px;
     color: #1d82bb;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 @include main.medium-device {
