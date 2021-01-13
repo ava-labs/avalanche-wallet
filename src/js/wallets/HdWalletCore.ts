@@ -222,7 +222,7 @@ class HdWalletCore {
     getChangeAddress(chainId?: ChainAlias): string {
         switch (chainId) {
             case 'P':
-                return this.platformHelper.getFirstAvailableAddress()
+                return this.platformHelper.getCurrentAddress()
             case 'X':
             default:
                 return this.internalHelper.getCurrentAddress()
@@ -242,7 +242,7 @@ class HdWalletCore {
     getChangeIndex(chainId?: ChainAlias): number {
         switch (chainId) {
             case 'P':
-                return this.platformHelper.getFirstAvailableIndex()
+                return this.platformHelper.hdIndex
             case 'X':
             default:
                 return this.internalHelper.hdIndex

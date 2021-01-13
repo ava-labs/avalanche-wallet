@@ -157,6 +157,32 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return bip32Paths
     }
 
+    getChange<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        chainId: ChainAlias
+    ) {
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+
+        const chainChangePath = this.getChangePath(chainId).split('m/')[1]
+        let changeIdx = this.getChangeIndex(chainId)
+        // If change and destination paths are the same
+        // it can cause ledger to not display the destination amt.
+        // Since platform helper does not have internal/external
+        // path for change (it uses the next address)
+        // there can be an address collisions.
+        if (txType === PlatformVMConstants.IMPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+            return null
+        } else if (
+            txType === PlatformVMConstants.ADDVALIDATORTX ||
+            txType === PlatformVMConstants.ADDDELEGATORTX
+        ) {
+            changeIdx = this.platformHelper.getFirstAvailableIndex()
+        }
+
+        return bippath.fromString(`${AVA_ACCOUNT_PATH}/${chainChangePath}/${changeIdx}`)
+    }
+
     getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
         paths: string[],
@@ -289,13 +315,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         let txbuff = unsignedTx.toBuffer()
+        let changePath = this.getChange(unsignedTx, chainId)
 
-        // Get the change path
-        const chainChangePath = this.getChangePath(chainId).split('m/')[1]
-        const changeIndex = this.getChangeIndex(chainId)
-        const changePath = bippath.fromString(
-            `${AVA_ACCOUNT_PATH}/${chainChangePath}/${changeIndex}`
-        )
+        console.log(changePath)
 
         try {
             store.commit('Ledger/openModal', {
@@ -346,10 +368,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         const changeAddr = this.getChangeAddress(chainId)
+        const changePath = this.getChange(unsignedTx, chainId)
 
-        // TODO: Get change address
         // TODO: Construct the messages array depending on transaction type
-
         for (let i = 0; i < outs.length; i++) {
             outs[i]
                 .getOutput()
@@ -359,14 +380,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                     // @ts-ignore
                     const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
 
-                    if (changeAddr !== addr)
+                    if (!changePath || changeAddr !== addr)
                         messages.push({
                             title: 'Output',
                             value: `${addr} - ${amt.toString()} AVAX`,
                         })
                 })
         }
-
         if (
             txType === PlatformVMConstants.ADDDELEGATORTX ||
             txType === PlatformVMConstants.ADDVALIDATORTX
@@ -403,7 +423,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
             messages.push({ title: 'Fee', value: '0' })
         }
-
         if (
             txType === AVMConstants.EXPORTTX ||
             txType === AVMConstants.IMPORTTX ||
@@ -547,7 +566,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         } else if (sourceChain === 'P') {
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
             let toAddress = this.externalHelper.getCurrentAddress()
-            let pChangeAddr = this.platformHelper.getFirstAvailableAddress()
+            let pChangeAddr = this.platformHelper.getCurrentAddress()
             let fromAddrs = this.platformHelper.getAllDerivedAddresses()
 
             let exportTx = await pChain.buildExportTx(
@@ -564,61 +583,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         } else {
             throw 'Invalid source chain.'
         }
-    }
-
-    async delegate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
-        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
-        let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
-        let stakeAmount = amt
-
-        // If given custom UTXO set use that
-        if (utxos) {
-            utxoSet = new PlatformUTXOSet()
-            utxoSet.addArray(utxos)
-        }
-
-        // If reward address isn't given use index 0 address
-        if (!rewardAddress) {
-            rewardAddress = this.getPlatformRewardAddress()
-        }
-
-        let stakeReturnAddr = this.getPlatformRewardAddress()
-
-        // For change address use first available on the platform chain
-        let changeAddr = this.platformHelper.getFirstAvailableAddress()
-
-        // Convert dates to unix time
-        let startTime = new BN(Math.round(start.getTime() / 1000))
-        let endTime = new BN(Math.round(end.getTime() / 1000))
-
-        const unsignedTx = await pChain.buildAddDelegatorTx(
-            utxoSet,
-            [stakeReturnAddr],
-            pAddressStrings,
-            [changeAddr],
-            nodeID,
-            startTime,
-            endTime,
-            stakeAmount,
-            [rewardAddress] // reward address
-        )
-
-        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
-
-        // Update UTXOS
-        setTimeout(async () => {
-            this.getUTXOs()
-        }, 3000)
-
-        return pChain.issueTx(tx)
     }
 
     async importToPlatformChain(): Promise<string> {
@@ -703,6 +667,61 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     async importToCChain(): Promise<string> {
         console.error('Not implemented.')
         return ''
+    }
+
+    async delegate(
+        nodeID: string,
+        amt: BN,
+        start: Date,
+        end: Date,
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
+    ): Promise<string> {
+        // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
+        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
+        let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
+        let stakeAmount = amt
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
+        // If reward address isn't given use index 0 address
+        if (!rewardAddress) {
+            rewardAddress = this.getPlatformRewardAddress()
+        }
+
+        let stakeReturnAddr = this.getPlatformRewardAddress()
+
+        // For change address use first available on the platform chain
+        let changeAddress = this.platformHelper.getFirstAvailableAddress()
+
+        // Convert dates to unix time
+        let startTime = new BN(Math.round(start.getTime() / 1000))
+        let endTime = new BN(Math.round(end.getTime() / 1000))
+
+        const unsignedTx = await pChain.buildAddDelegatorTx(
+            utxoSet,
+            [stakeReturnAddr],
+            pAddressStrings,
+            [changeAddress],
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress] // reward address
+        )
+
+        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
+
+        // Update UTXOS
+        setTimeout(async () => {
+            this.getUTXOs()
+        }, 3000)
+
+        return pChain.issueTx(tx)
     }
 
     async validate(
