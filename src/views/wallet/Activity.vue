@@ -3,70 +3,63 @@
         <div class="header">
             <h1>Activity</h1>
         </div>
-        <div class="cols">
-            <div class="tx_table">
-                <div class="settings">
-                    <div>
-                        <div class="filter_cont">
-                            <label>Filter by type</label>
-                            <RadioButtons
-                                :labels="modes"
-                                :keys="modeKey"
-                                v-model="mode"
-                            ></RadioButtons>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="pagination">
-                            <p class="date_display">{{ monthNowName }} {{ yearNow }}</p>
-                            <button @click="prevPage" :disabled="!isPrevPage">
-                                <fa icon="angle-left"></fa>
-                            </button>
-                            <button @click="nextPage" :disabled="!isNextPage">
-                                <fa icon="angle-right"></fa>
-                            </button>
-                        </div>
-                        <div class="pagination_info">
-                            <button @click="updateHistory">
-                                <fa icon="sync"></fa>
-                            </button>
-                            <p>{{ txs.length }} transactions found</p>
-                        </div>
-                    </div>
+        <div class="settings">
+            <div>
+                <div class="filter_cont">
+                    <label>Filter by type</label>
+                    <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
                 </div>
-
-                <div class="tx_list" v-show="showList" ref="list">
-                    <virtual-list
-                        v-show="txs.length > 0"
-                        :style="{ height: `${listH}px`, overflowY: 'auto' }"
-                        :data-key="'id'"
-                        :data-sources="txsProcessed"
-                        :data-component="RowComponent"
-                        :keeps="20"
-                        ref="vlist"
-                        :estimate-size="txsProcessed.length"
-                    ></virtual-list>
-                    <!--                    <TxRow v-for="tx in txsProcessed" :key="tx.id" :source="tx"></TxRow>-->
-                    <!--                    <MonthGroup-->
-                    <!--                        class="month_group"-->
-                    <!--                        v-for="month in monthGroups"-->
-                    <!--                        :key="month[0].timestamp"-->
-                    <!--                        :transactions="month"-->
-                    <!--                    ></MonthGroup>-->
-                    <div v-if="txs.length === 0" class="empty">
-                        <p>No Transactions Found.</p>
-                    </div>
+            </div>
+            <div>
+                <div class="pagination">
+                    <p class="date_display">{{ monthNowName }} {{ yearNow }}</p>
+                    <button @click="prevPage" :disabled="!isPrevPage">
+                        <fa icon="angle-left"></fa>
+                    </button>
+                    <button @click="nextPage" :disabled="!isNextPage">
+                        <fa icon="angle-right"></fa>
+                    </button>
                 </div>
-                <div v-if="!showList" class="loading">
-                    <Spinner class="spinner"></Spinner>
-                    <p>LoadingTransactions.</p>
+                <div class="pagination_info">
+                    <button @click="updateHistory">
+                        <fa icon="sync"></fa>
+                    </button>
+                    <p>{{ txs.length }} transactions found</p>
                 </div>
+            </div>
+        </div>
+        <div class="tx_table" ref="list">
+            <div class="tx_list" v-show="showList">
+                <virtual-list
+                    v-show="txs.length > 0"
+                    :style="{ height: `${listH}px`, overflowY: 'auto' }"
+                    :data-key="'id'"
+                    :data-sources="txsProcessed"
+                    :data-component="RowComponent"
+                    :keeps="20"
+                    ref="vlist"
+                    :estimate-size="txsProcessed.length"
+                ></virtual-list>
+                <!--                    <TxRow v-for="tx in txsProcessed" :key="tx.id" :source="tx"></TxRow>-->
+                <!--                    <MonthGroup-->
+                <!--                        class="month_group"-->
+                <!--                        v-for="month in monthGroups"-->
+                <!--                        :key="month[0].timestamp"-->
+                <!--                        :transactions="month"-->
+                <!--                    ></MonthGroup>-->
+                <div v-if="txs.length === 0" class="empty">
+                    <p>No Transactions Found.</p>
+                </div>
+            </div>
+            <div v-if="!showList" class="loading">
+                <Spinner class="spinner"></Spinner>
+                <p>LoadingTransactions.</p>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import {
     ITransactionData,
     ITransactionDataProcessed,
@@ -316,7 +309,7 @@ export default class Activity extends Vue {
 
 .activity_page {
     display: grid;
-    grid-template-rows: max-content 1fr;
+    grid-template-rows: max-content max-content 1fr;
 }
 .header {
     display: flex;
@@ -340,8 +333,6 @@ export default class Activity extends Vue {
 
 .tx_table {
     height: 100%;
-    display: grid;
-    grid-template-rows: max-content 1fr;
     overflow: auto;
     padding-bottom: 14px;
     //overflow: scroll;
