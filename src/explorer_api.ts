@@ -25,13 +25,20 @@ async function getAddressHistory(
     })
 
     let rootUrl = 'v2/transactions'
-    let res = await explorer_api.post(rootUrl, {
+
+    let req = {
         address: addrsRaw,
-        limit: [limit.toString()],
         sort: ['timestamp-desc'],
         disableCount: ['1'],
         chainID: [chainID],
-    })
+    }
+
+    if (limit > 0) {
+        //@ts-ignore
+        req.limit = [limit.toString()]
+    }
+
+    let res = await explorer_api.post(rootUrl, req)
     let txs = res.data.transactions
 
     if (txs === null) txs = []
