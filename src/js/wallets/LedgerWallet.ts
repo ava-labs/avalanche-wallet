@@ -317,8 +317,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let txbuff = unsignedTx.toBuffer()
         let changePath = this.getChange(unsignedTx, chainId)
 
-        console.log(changePath)
-
         try {
             store.commit('Ledger/openModal', {
                 title: title,
