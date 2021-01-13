@@ -227,10 +227,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         SignedTx extends AVMTx | PlatformTx
     >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
         let tx = unsignedTx.getTransaction()
-        let txType = tx.getTxType()
-
         let txbuff = unsignedTx.toBuffer()
-        let ins = tx.getIns()
 
         const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
 
@@ -240,11 +237,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             operations = (tx as OperationTx).getOperations()
         } catch (e) {
             console.log(e)
-        }
-
-        let items = ins
-        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
-            items = (tx as ImportTx).getImportInputs()
         }
 
         let paths = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
@@ -555,7 +547,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         } else if (sourceChain === 'P') {
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
             let toAddress = this.externalHelper.getCurrentAddress()
-            let pChangeAddr = this.platformHelper.getCurrentAddress()
+            let pChangeAddr = this.platformHelper.getFirstAvailableAddress()
             let fromAddrs = this.platformHelper.getAllDerivedAddresses()
 
             let exportTx = await pChain.buildExportTx(
