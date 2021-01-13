@@ -79,7 +79,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getTransactionPaths<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
         isAVM: boolean = true
-    ): string[] {
+    ): { paths: string[]; isAvaxOnly: boolean } {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
@@ -103,13 +103,16 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let paths: string[] = []
 
+        let isAvaxOnly = true
         // Collect paths derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
             let item = items[i]
 
             let assetId = bintools.cb58Encode(item.getAssetID())
             // @ts-ignore
-            if (assetId !== store.state.Assets.AVA_ASSET_ID) isAvaxOnly = false
+            if (assetId !== store.state.Assets.AVA_ASSET_ID) {
+                isAvaxOnly = false
+            }
 
             let sigidxs: SigIdx[] = item.getInput().getSigIdxs()
             let sources = sigidxs.map((sigidx) => sigidx.getSource())
@@ -142,7 +145,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
         }
 
-        return paths
+        return { paths, isAvaxOnly }
     }
 
     pathsToUniqueBipPaths(paths: string[]) {
@@ -251,21 +254,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     async signTransactionHash<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
-        let tx = unsignedTx.getTransaction()
+    >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
         let txbuff = unsignedTx.toBuffer()
-
         const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
-
-        let operations: TransferableOperation[] = []
-        // Try to get operations, it will fail if there are none, ignore and continue
-        try {
-            operations = (tx as OperationTx).getOperations()
-        } catch (e) {
-            console.log(e)
-        }
-
-        let paths = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
 
         try {
             store.commit('Ledger/openModal', {
@@ -301,7 +292,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     async signTransactionParsable<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
+    >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
         let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, isAVM)
@@ -310,7 +301,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let title = `Sign ${parseableTxs[txType]}`
 
-        let paths = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
         let bip32Paths = this.pathsToUniqueBipPaths(paths)
 
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
@@ -454,18 +444,24 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
 
+        let { paths, isAvaxOnly } = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
         // If ledger doesnt support parsing, sign hash
         let canLedgerParse = this.config.version >= '0.3.1'
-        let isParsableType = txType in parseableTxs
+        let isParsableType = txType in parseableTxs && isAvaxOnly
 
         let signedTx
-        // TODO: Check if base tx and only avax
         if (canLedgerParse && isParsableType) {
-            // If BASE Transaction make sure only AVAX is being sent, else sign hash
-            //
-            signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(unsignedTx, isAVM)
+            signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(
+                unsignedTx,
+                paths,
+                isAVM
+            )
         } else {
-            signedTx = await this.signTransactionHash<UnsignedTx, SignedTx>(unsignedTx, isAVM)
+            signedTx = await this.signTransactionHash<UnsignedTx, SignedTx>(
+                unsignedTx,
+                paths,
+                isAVM
+            )
         }
 
         store.commit('Ledger/closeModal')
