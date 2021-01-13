@@ -114,6 +114,8 @@ export default class Activity extends Vue {
         let now = new Date()
         this.yearNow = now.getFullYear()
         this.monthNow = now.getMonth()
+        this.scrollToTop()
+        this.setScrollHeight()
     }
 
     get showList(): boolean {

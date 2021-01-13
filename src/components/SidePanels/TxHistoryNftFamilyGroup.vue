@@ -68,17 +68,16 @@ $countW: 18px;
 }
 
 .nft_card {
-    max-height: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.payload_view {
     height: 35px;
     width: 35px;
     background-color: var(--bg-light);
+    position: relative;
     border-radius: 4px;
+    overflow: hidden;
     pointer-events: none;
+}
+
+.payload_view {
 }
 
 @include main.mobile-device {
