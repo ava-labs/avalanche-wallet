@@ -242,7 +242,7 @@ class HdWalletCore {
     getChangeIndex(chainId?: ChainAlias): number {
         switch (chainId) {
             case 'P':
-                return 0
+                return this.platformHelper.getFirstAvailableIndex()
             case 'X':
             default:
                 return this.internalHelper.hdIndex
