@@ -78,6 +78,7 @@ import VirtualList from 'vue-virtual-scroll-list'
 const PAGE_LIMIT = 100
 
 const YEAR_MIN = 2020
+const MONTH_MIN = 8
 
 @Component({
     components: {
@@ -125,6 +126,8 @@ export default class Activity extends Vue {
     }
 
     get isPrevPage() {
+        // if (this.yearNow  now.getFullYear()) return true
+        if (this.monthNow === MONTH_MIN && this.yearNow === YEAR_MIN) return false
         return true
     }
 
