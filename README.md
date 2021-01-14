@@ -155,7 +155,22 @@ interface IKeystoreFile{
 }
 ```
 
+### v6.0.0
 
+Encodes mnemonic phrase as the key.
+
+```typescript
+interface IKeystoreFile {
+    version
+    salt
+    keys: [
+        {
+            key
+            iv
+        }
+    ]
+}
+```
 
 # Local Storage Remember Wallet Spec
 Basically same as storing the keystore file in the browser localstorage.
