@@ -27,6 +27,7 @@ export default class RadioButtons extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
 .radio_buts {
     display: flex;
     flex-wrap: wrap;
@@ -54,6 +55,13 @@ button {
         color: var(--primary-color);
         //border-color: #285599;
         background-color: var(--bg-light);
+    }
+}
+
+@include main.medium-device {
+    button {
+        font-size: 11px;
+        padding: 4px 8px;
     }
 }
 </style>

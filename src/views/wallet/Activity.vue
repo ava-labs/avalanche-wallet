@@ -1,7 +1,7 @@
 <template>
     <div class="activity_page">
         <div class="settings">
-            <div>
+            <div class="filter_col">
                 <div class="filter_cont">
                     <label>Filter by type</label>
                     <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
@@ -10,12 +10,14 @@
             <div>
                 <div class="pagination">
                     <p class="date_display">{{ monthNowName }} {{ yearNow }}</p>
-                    <button @click="prevPage" :disabled="!isPrevPage">
-                        <fa icon="angle-left"></fa>
-                    </button>
-                    <button @click="nextPage" :disabled="!isNextPage">
-                        <fa icon="angle-right"></fa>
-                    </button>
+                    <div>
+                        <button @click="prevPage" :disabled="!isPrevPage">
+                            <fa icon="angle-left"></fa>
+                        </button>
+                        <button @click="nextPage" :disabled="!isNextPage">
+                            <fa icon="angle-right"></fa>
+                        </button>
+                    </div>
                 </div>
                 <div class="pagination_info">
                     <p>{{ txs.length }} transactions found</p>
@@ -455,8 +457,38 @@ export default class Activity extends Vue {
 }
 
 @include main.medium-device {
-    .cols {
-        grid-template-columns: 1fr 160px;
+    .pagination {
+        p {
+            font-size: 18px;
+        }
+    }
+}
+
+@include main.mobile-device {
+    .settings {
+        display: grid;
+        grid-template-columns: none;
+        grid-template-rows: auto auto;
+    }
+
+    .filter_col {
+        grid-row: 2;
+    }
+
+    .pagination {
+        justify-content: space-between;
+        button {
+            width: 35px;
+            height: 35px;
+        }
+    }
+
+    .pagination_info {
+        justify-content: flex-start;
+    }
+
+    .tx_list {
+        height: 90vh;
     }
 }
 </style>
