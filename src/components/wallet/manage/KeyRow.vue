@@ -100,7 +100,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import { ava, bintools, keyChain } from '@/AVA'
+import { bintools, keyChain } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
@@ -113,9 +113,6 @@ import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
 import { WalletNameType, WalletType } from '@/store/types'
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
-import { getPreferredHRP } from 'avalanche/dist/utils'
-import { Buffer } from 'avalanche'
-import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
