@@ -297,14 +297,13 @@ export enum PlatfromTxNameEnum {
     'Reward Validator' = PlatformVMConstants.REWARDVALIDATORTX,
 }
 
-// @emre These are the ones I know about!
+// TODO: create asset transactions
 export enum ParseableAvmTxEnum {
     'Transaction' = AVMConstants.BASETX,
     'Import' = AVMConstants.IMPORTTX,
     'Export' = AVMConstants.EXPORTTX,
 }
 
-// @emre These are the ones I know about!
 export enum ParseablePlatformEnum {
     'Transaction' = PlatformVMConstants.BASETX,
     'Add Validator' = PlatformVMConstants.ADDVALIDATORTX,
