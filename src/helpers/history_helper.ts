@@ -45,15 +45,6 @@ export interface BaseTxAssetSummary {
     addresses: string[]
 }
 
-// export interface BaseTxNFTSummary {
-//     groups: {
-//         [groupNum: number]: {
-//             amount: BN
-//             payload: string
-//         }
-//     }
-// }
-
 // Used with tokens
 function addToDict(
     assetId: string,
@@ -159,7 +150,6 @@ function getLoss(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
                     let targets = outAddrs.filter(
                         (addr: string) => !addrsStripped.includes(addr) && !receivers.includes(addr)
                     )
-                    // let outIntersect = outAddrs.filter((addr) => addrsStripped.includes(addr))
                     receivers.push(...targets)
                 }
             })
@@ -209,7 +199,6 @@ function getProfit(tx: ITransactionData, wallet: WalletType): TokenSummaryResult
                     let targets = outAddrs.filter(
                         (addr: string) => !addrsStripped.includes(addr) && !senders.includes(addr)
                     )
-                    // let outIntersect = outAddrs.filter((addr) => addrsStripped.includes(addr))
                     senders.push(...targets)
                 }
             })
@@ -263,27 +252,6 @@ function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
         }
     }
 
-    // Switch addresses for sent tokens
-    const ZERO = new BN(0)
-    for (var assetID in sum.tokens) {
-        let token = sum.tokens[assetID]
-        let amt = token.amount
-
-        // if (amt.lt(ZERO)) {
-        //     sum.tokens[assetID].addresses = losses[assetID].addresses
-        // }
-
-        // Change addresses if we sent it
-        // if(amt.lt(new BN(0))){
-        //     tx.outputs.forEach(out => {
-        //
-        //     })
-        // }
-    }
-
-    // console.log('Loss/Profit')
-    // console.log(sum)
-    console.log(sum)
     return sum
 }
 

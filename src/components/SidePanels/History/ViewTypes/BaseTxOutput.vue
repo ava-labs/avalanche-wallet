@@ -74,6 +74,7 @@ export default class BaseTxOutput extends Vue {
     overflow: hidden;
     p {
         overflow: hidden;
+        color: var(--primary-color-light);
         white-space: nowrap;
         font-size: 12px;
         font-family: monospace;
