@@ -190,8 +190,8 @@ export default class BaseTx extends Vue {
         let addrs: string[] = this.addresses
         let addrsRaw = addrs.map((addr) => addr.split('-')[1])
 
-        let ins = this.transaction.inputs || {}
-        let outs = this.transaction.outputs || {}
+        let ins = this.transaction.inputs
+        let outs = this.transaction.outputs
         let res: { [key in string]: { [key in string]: PayloadBase[] } } = {}
 
         // res = {
@@ -225,22 +225,27 @@ export default class BaseTx extends Vue {
             }
         }
 
-        ins.forEach((inputUtxo) => {
-            const groupID = inputUtxo.output.groupID
-            const assetID = inputUtxo.output.assetID
+        if (ins) {
+            ins.forEach((inputUtxo) => {
+                const groupID = inputUtxo.output.groupID
+                const assetID = inputUtxo.output.assetID
 
-            if (inputUtxo.output.payload) {
-                pushPayload(inputUtxo.output.payload, assetID, groupID)
-            }
-        })
-        outs.forEach((utxoOut) => {
-            let groupID = utxoOut.groupID
-            let assetID = utxoOut.assetID
+                if (inputUtxo.output.payload) {
+                    pushPayload(inputUtxo.output.payload, assetID, groupID)
+                }
+            })
+        }
 
-            if (utxoOut.payload) {
-                pushPayload(utxoOut.payload, assetID, groupID)
-            }
-        })
+        if (outs) {
+            outs.forEach((utxoOut) => {
+                let groupID = utxoOut.groupID
+                let assetID = utxoOut.assetID
+
+                if (utxoOut.payload) {
+                    pushPayload(utxoOut.payload, assetID, groupID)
+                }
+            })
+        }
 
         return res
     }

@@ -1,0 +1,4 @@
+// interface IHistoryParsedBaseTx{
+//     sent:
+//     received:
+// }
