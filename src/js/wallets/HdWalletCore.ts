@@ -250,7 +250,7 @@ class HdWalletCore {
     }
 
     getChangeFromIndex(idx?: number, chainId?: ChainAlias): string | null {
-        if (!idx) return null
+        if (idx === undefined || idx === null) return null
 
         switch (chainId) {
             case 'P':

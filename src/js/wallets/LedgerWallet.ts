@@ -357,7 +357,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
-        let changeAddr = this.getChangeFromIndex(changeIdx)
+        let changeAddr = this.getChangeFromIndex(changeIdx, chainId)
 
         // TODO: Construct the messages array depending on transaction type
         for (let i = 0; i < outs.length; i++) {
