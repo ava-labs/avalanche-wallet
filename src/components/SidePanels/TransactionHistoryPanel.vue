@@ -160,7 +160,7 @@ export default class TransactionHistoryPanel extends Vue {
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 1;
     opacity: 0.8;
     pointer-events: none;
     transition-duration: 0.2s;

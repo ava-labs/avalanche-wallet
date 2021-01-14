@@ -7,6 +7,17 @@
         <!--        <p v-if="source.isDayChange" class="date_label">{{ dayLabel }}</p>-->
         <!--        <p v-else></p>-->
         <div class="tx_cols">
+            <div class="explorer_col">
+                <a
+                    v-if="explorerUrl"
+                    :href="explorerUrl"
+                    target="_blank"
+                    tooltip="View in Explorer"
+                    class="explorer_link"
+                >
+                    <fa icon="search"></fa>
+                </a>
+            </div>
             <div class="meta_col">
                 <div>
                     <label>Date</label>
@@ -37,6 +48,7 @@ import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
 import moment from 'moment'
+import { AvaNetwork } from '@/js/AvaNetwork'
 
 @Component({
     components: {
@@ -73,6 +85,14 @@ export default class TxRow extends Vue {
         // } else if (dateBefore.getDay() !== date.getDay()) {
         //     this.showDay = true
         // }
+    }
+
+    get explorerUrl(): string | null {
+        let network: AvaNetwork = this.$store.state.Network.selectedNetwork
+        if (network.explorerSiteUrl) {
+            return `${network.explorerSiteUrl}/tx/${this.source.id}`
+        }
+        return null
     }
 
     get date() {
@@ -170,7 +190,8 @@ export default class TxRow extends Vue {
 }
 .tx_cols {
     display: grid;
-    grid-template-columns: 1fr 260px;
+    grid-template-columns: max-content 1fr 260px;
+    column-gap: 14px;
     background-color: var(--bg-light);
     padding: 8px 14px;
     border-radius: 4px;
@@ -224,6 +245,18 @@ export default class TxRow extends Vue {
     width: max-content;
     z-index: 2;
     //background-color: var(--bg);
+}
+
+.explorer_col {
+    a {
+        color: var(--primary-color);
+        opacity: 0.4;
+        font-size: 12px;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
 }
 
 label {

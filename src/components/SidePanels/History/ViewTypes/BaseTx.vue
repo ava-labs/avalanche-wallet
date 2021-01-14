@@ -1,17 +1,44 @@
 <template>
     <div>
         <div class="utxos">
-            <tx-history-value
-                v-for="(amount, assetId) in valList"
-                :key="assetId"
-                :amount="amount"
-                :type="type"
-                :asset-id="assetId"
-                :is-income="false"
-                :operation-color="operationColor"
-                :operation-direction="operationDirection"
-            ></tx-history-value>
-            <!--            <tx-history-value-functional-->
+            <div v-if="hasSent">
+                <label>Sent</label>
+                <BaseTxOutput
+                    v-for="(asset, assetId) in tokensSent"
+                    :key="assetId"
+                    :asset-i-d="assetId"
+                    :summary="asset"
+                ></BaseTxOutput>
+                <div class="nft_fams">
+                    <BaseTxNFTOutput
+                        v-for="(asset, assetId) in summary.collectibles.sent"
+                        :key="assetId"
+                        :asset-i-d="assetId"
+                        :summary="asset"
+                        class="nft_out"
+                    ></BaseTxNFTOutput>
+                </div>
+            </div>
+            <div v-if="hasReceived">
+                <label>Received</label>
+                <BaseTxOutput
+                    v-for="(asset, assetId) in tokensReceived"
+                    :key="assetId"
+                    :asset-i-d="assetId"
+                    :summary="asset"
+                ></BaseTxOutput>
+                <div class="nft_fams">
+                    <BaseTxNFTOutput
+                        v-for="(asset, assetId) in summary.collectibles.received"
+                        :key="assetId"
+                        :asset-i-d="assetId"
+                        :summary="asset"
+                        class="nft_out"
+                    ></BaseTxNFTOutput>
+                </div>
+            </div>
+
+            <!--            <tx-history-value-->
             <!--                v-for="(amount, assetId) in valList"-->
             <!--                :key="assetId"-->
             <!--                :amount="amount"-->
@@ -20,18 +47,18 @@
             <!--                :is-income="false"-->
             <!--                :operation-color="operationColor"-->
             <!--                :operation-direction="operationDirection"-->
-            <!--            ></tx-history-value-functional>-->
-            <div class="nfts">
-                <div v-for="(groupIDs, assetID) in nftGroups" :key="assetID">
-                    <tx-history-nft-family-group
-                        v-for="(payloads, id) in groupIDs"
-                        :key="id"
-                        :payloads="payloads"
-                        :assetID="assetID"
-                        class="group"
-                    ></tx-history-nft-family-group>
-                </div>
-            </div>
+            <!--            ></tx-history-value>-->
+            <!--            <div class="nfts">-->
+            <!--                <div v-for="(groupIDs, assetID) in nftGroups" :key="assetID">-->
+            <!--                    <tx-history-nft-family-group-->
+            <!--                        v-for="(payloads, id) in groupIDs"-->
+            <!--                        :key="id"-->
+            <!--                        :payloads="payloads"-->
+            <!--                        :assetID="assetID"-->
+            <!--                        class="group"-->
+            <!--                    ></tx-history-nft-family-group>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
     </div>
 </template>
@@ -40,18 +67,23 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
 import { TransactionValueDict } from '@/components/SidePanels/types'
 import { PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
-import { Buffer } from 'avalanche'
+import { BN, Buffer } from 'avalanche'
 import { WalletType } from '@/store/types'
 import { avm, pChain } from '@/AVA'
 
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import TxHistoryValueFunctional from '@/components/SidePanels/History/TxHistoryValueFunctional.vue'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
+import { getTransactionSummary } from '@/helpers/history_helper'
+import BaseTxOutput from '@/components/SidePanels/History/ViewTypes/BaseTxOutput.vue'
+import BaseTxNFTOutput from '@/components/SidePanels/History/ViewTypes/BaseTxNFTOutput.vue'
 
 let payloadtypes = PayloadTypes.getInstance()
 
 @Component({
     components: {
+        BaseTxNFTOutput,
+        BaseTxOutput,
         TxHistoryValue,
         TxHistoryValueFunctional,
         TxHistoryNftFamilyGroup,
@@ -59,6 +91,23 @@ let payloadtypes = PayloadTypes.getInstance()
 })
 export default class BaseTx extends Vue {
     @Prop() transaction!: ITransactionData
+
+    get summary() {
+        let w = this.$store.state.activeWallet
+        return getTransactionSummary(this.transaction, w)
+    }
+
+    get hasSent() {
+        let numAssets = Object.keys(this.tokensSent).length
+        let numNfts = Object.keys(this.summary.collectibles.sent).length
+        return numNfts + numAssets > 0
+    }
+
+    get hasReceived() {
+        let numAssets = Object.keys(this.tokensReceived).length
+        let numNfts = Object.keys(this.summary.collectibles.received).length
+        return numNfts + numAssets > 0
+    }
 
     get addresses() {
         let wallet: WalletType = this.$store.state.activeWallet
@@ -138,6 +187,31 @@ export default class BaseTx extends Vue {
         return false
     }
 
+    get tokensReceived() {
+        let tokens = this.summary.tokens
+        let res = {}
+        for (var assetId in tokens) {
+            let asset = tokens[assetId]
+            if (asset.amount.gte(new BN(0))) {
+                //@ts-ignore
+                res[assetId] = asset
+            }
+        }
+        return res
+    }
+
+    get tokensSent() {
+        let tokens = this.summary.tokens
+        let res = {}
+        for (var assetId in tokens) {
+            let asset = tokens[assetId]
+            if (asset.amount.lt(new BN(0))) {
+                //@ts-ignore
+                res[assetId] = asset
+            }
+        }
+        return res
+    }
     // what did I gain?
     get outValues() {
         let addrs: string[] = this.addresses
@@ -271,6 +345,10 @@ export default class BaseTx extends Vue {
 }
 </script>
 <style scoped lang="scss">
+label {
+    font-size: 12px;
+    color: var(--primary-color-light);
+}
 .nfts {
     display: flex;
     flex-wrap: wrap;
@@ -279,5 +357,16 @@ export default class BaseTx extends Vue {
     > div {
         margin-left: 5px;
     }
+}
+
+.nft_fams {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.nft_out {
+    margin-bottom: 4px;
 }
 </style>
