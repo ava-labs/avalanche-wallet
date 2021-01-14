@@ -41,8 +41,10 @@ export default {
 .main_panel {
     display: grid;
     grid-template-rows: max-content 1fr;
+    row-gap: 15px;
 }
 .panel_nav {
+    background-color: var(--bg-wallet-light);
     /*display: flex;*/
     /*align-items: center;*/
     /*flex-direction: row;*/
@@ -69,6 +71,7 @@ export default {
 
 .panel_content {
     overflow: auto;
+    background-color: var(--bg-wallet-light);
     height: 100%;
 }
 

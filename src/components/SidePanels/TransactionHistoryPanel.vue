@@ -1,5 +1,6 @@
 <template>
     <div class="tx_history_panel">
+        <div class="history_block" :disabled="!isActivityPage"></div>
         <div class="header">
             <h2>Transactions</h2>
             <Spinner v-if="isUpdating" class="spinner"></Spinner>
@@ -76,6 +77,14 @@ export default class TransactionHistoryPanel extends Vue {
         // A simple filter to ignore duplicate transactions (can happen if you send to self)
         return r
     }
+
+    get isActivityPage() {
+        if (this.$route.fullPath.includes('/activity')) {
+            return true
+        }
+        return false
+    }
+
     get explorerUrl(): string {
         let addr = this.$store.state.address.split('-')[1]
         return `https://explorer.avax.network/address/${addr}`
@@ -89,6 +98,7 @@ export default class TransactionHistoryPanel extends Vue {
     display: grid;
     grid-template-rows: max-content 1fr;
     overflow: auto;
+    position: relative;
 }
 
 .header {
@@ -143,6 +153,22 @@ export default class TransactionHistoryPanel extends Vue {
     padding: 15px;
 }
 
+.history_block {
+    position: absolute;
+    background-color: var(--bg-wallet);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0.8;
+    pointer-events: none;
+    transition-duration: 0.2s;
+
+    &[disabled] {
+        opacity: 0;
+    }
+}
 @include main.medium-device {
 }
 </style>
