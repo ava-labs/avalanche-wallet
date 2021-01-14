@@ -14,7 +14,7 @@
                 </a>
             </p>
             <div v-if="memo" class="memo">
-                <p>Memo:</p>
+                <p>Memo</p>
                 <p>{{ memo }}</p>
             </div>
         </div>
@@ -157,7 +157,7 @@ export default class TxHistoryRow extends Vue {
     display: grid;
     grid-template-columns: max-content 1fr;
     column-gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 
     p:last-of-type {
         text-align: right;

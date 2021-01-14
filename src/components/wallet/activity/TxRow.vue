@@ -1,11 +1,5 @@
 <template>
     <div class="tx_row" :day_change="source.isDayChange">
-        <!--        <div v-if="source.isMonthChange">-->
-        <!--            <p class="date_label">{{ monthLabel }}</p>-->
-        <!--        </div>-->
-        <!--        <p v-else></p>-->
-        <!--        <p v-if="source.isDayChange" class="date_label">{{ dayLabel }}</p>-->
-        <!--        <p v-else></p>-->
         <div class="tx_cols">
             <div class="explorer_col">
                 <a
@@ -58,34 +52,8 @@ import { AvaNetwork } from '@/js/AvaNetwork'
     },
 })
 export default class TxRow extends Vue {
-    // @Prop() transaction!: ITransactionData
-    // @Prop() txs!: ITransactionData[]
     @Prop() index!: number
     @Prop() source!: ITransactionDataProcessed
-
-    // showMonth = false
-    // showDay = false
-
-    mounted() {
-        // let index = this.index
-        // if (index === 0) {
-        //     this.showMonth = true
-        //     this.showDay = true
-        //     return
-        // }
-        //
-        // let txBefore = this.txs[index - 1]
-        //
-        // let date = new Date(this.transaction.timestamp)
-        // let dateBefore = new Date(txBefore.timestamp)
-        //
-        // if (dateBefore.getMonth() !== date.getMonth()) {
-        //     this.showMonth = true
-        //     this.showDay = true
-        // } else if (dateBefore.getDay() !== date.getDay()) {
-        //     this.showDay = true
-        // }
-    }
 
     get explorerUrl(): string | null {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
@@ -116,26 +84,6 @@ export default class TxRow extends Vue {
                 return BaseTx
         }
     }
-
-    // get outTotals(): any {
-    //     let outTots = this.transaction.outputTotals
-    //
-    //     let res: any = {}
-    //     for (var id in outTots) {
-    //         let asset = this.assets[id]
-    //         let outTot = outTots[id]
-    //
-    //         if (asset) {
-    //             let amtBn = new BN(outTot)
-    //             let big = bnToBig(amtBn, asset.denomination)
-    //             res[asset.symbol] = big.toLocaleString()
-    //         } else {
-    //             let nftFam = this.nftFams[id]
-    //             res[nftFam.symbol] = outTot
-    //         }
-    //     }
-    //     return res
-    // }
 
     get assets(): AssetsDict {
         return this.$store.state.Assets.assetsDict
@@ -176,7 +124,7 @@ export default class TxRow extends Vue {
 .tx_row {
     //display: grid;
     //grid-template-columns: 1fr 1fr;
-    padding: 2px 0px;
+    padding: 1px 0px;
     font-size: 13px;
     //display: grid;
     //grid-template-columns: 1fr 1fr;
