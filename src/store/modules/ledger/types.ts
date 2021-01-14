@@ -5,7 +5,7 @@ export interface ILedgerBlockMessage {
 
 export interface LedgerState {
     isBlock: boolean
-    messages?: Array<ILedgerBlockMessage>
+    messages: ILedgerBlockMessage[]
     title: string
     info: string
 }
