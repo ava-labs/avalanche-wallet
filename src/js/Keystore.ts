@@ -52,29 +52,30 @@ async function readKeyFile(data: KeyFile, pass: string): Promise<KeyFileDecrypte
     let keys: KeyFileKey[] = data.keys
     let keysDecrypt: KeyFileKeyDecrypted[] = []
 
-    try {
-        for (let i: number = 0; i < keys.length; i++) {
-            let key_data: KeyFileKey = keys[i]
+    for (let i: number = 0; i < keys.length; i++) {
+        let key_data: KeyFileKey = keys[i]
 
-            let key: Buffer = bintools.cb58Decode(key_data.key)
-            let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        let key: Buffer = bintools.cb58Decode(key_data.key)
+        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        let key_decrypt: Buffer
 
-            let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-            let key_string: string
-
-            //  versions below 5.0 used private key that had to be cb58 encoded
-            if (['2.0', '3.0', '4.0'].includes(version)) {
-                key_string = bintools.cb58Encode(key_decrypt)
-            } else {
-                key_string = key_decrypt.toString()
-            }
-
-            keysDecrypt.push({
-                key: key_string,
-            })
+        try {
+            key_decrypt = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        } catch (e) {
+            throw 'INVALID_PASS'
         }
-    } catch (e) {
-        throw 'INVALID_PASS'
+        let key_string: string
+
+        //  versions below 5.0 used private key that had to be cb58 encoded
+        if (['2.0', '3.0', '4.0'].includes(version)) {
+            key_string = bintools.cb58Encode(key_decrypt)
+        } else {
+            key_string = key_decrypt.toString()
+        }
+
+        keysDecrypt.push({
+            key: key_string,
+        })
     }
 
     return {
