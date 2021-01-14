@@ -249,6 +249,18 @@ class HdWalletCore {
         }
     }
 
+    getChangeFromIndex(idx?: number, chainId?: ChainAlias): string | null {
+        if (!idx) return null
+
+        switch (chainId) {
+            case 'P':
+                return this.platformHelper.getAddressForIndex(idx)
+            case 'X':
+            default:
+                return this.internalHelper.getAddressForIndex(idx)
+        }
+    }
+
     getPlatformRewardAddress(): string {
         return this.platformHelper.getCurrentAddress()
     }

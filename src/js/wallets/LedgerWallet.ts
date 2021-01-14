@@ -295,7 +295,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
-        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, isAVM)
         let chainId: ChainAlias = isAVM ? 'X' : 'P'
         let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
 
@@ -306,6 +305,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         let txbuff = unsignedTx.toBuffer()
         let changePath = this.getChangeBipPath(unsignedTx, chainId)
+        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, isAVM, changePath)
 
         try {
             store.commit('Ledger/openModal', {
@@ -341,7 +341,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
     getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
-        isAVM: boolean = true
+        isAVM: boolean = true,
+        changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
 
@@ -350,22 +351,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let outs = tx.getOuts()
         let chainId: ChainAlias = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
-        let changeAddr = this.getChangeAddress(chainId)
 
         if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
             outs = (tx as ExportTx).getExportOutputs()
         }
-        // TODO: this should really not be necessary but it is here
-        // because ledger app crashses if change addr and reward addr
-        // are the same.
-        if (
-            txType === PlatformVMConstants.ADDDELEGATORTX ||
-            txType === PlatformVMConstants.ADDVALIDATORTX
-        ) {
-            changeAddr = this.platformHelper.getFirstAvailableAddress()
-        }
 
-        const changePath = this.getChangeBipPath(unsignedTx, chainId)
+        let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
+        let changeAddr = this.getChangeFromIndex(changeIdx)
 
         // TODO: Construct the messages array depending on transaction type
         for (let i = 0; i < outs.length; i++) {
