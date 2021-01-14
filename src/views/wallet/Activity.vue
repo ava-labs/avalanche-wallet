@@ -244,6 +244,7 @@ export default class Activity extends Vue {
         this.scrollToTop()
         this.setScrollHeight()
     }
+
     nextPage() {
         if (this.monthNow === 11) {
             this.yearNow = this.yearNow + 1
@@ -253,11 +254,6 @@ export default class Activity extends Vue {
         }
         this.scrollToTop()
         this.setScrollHeight()
-    }
-
-    get pageTxs(): ITransactionData[] {
-        let start = this.pageNow * PAGE_LIMIT
-        return this.txs.slice(start, start + PAGE_LIMIT)
     }
 
     get txsTransfer(): ITransactionData[] {
