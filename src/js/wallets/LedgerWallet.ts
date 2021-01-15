@@ -174,7 +174,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // Since platform helper does not have internal/external
         // path for change (it uses the next address)
         // there can be an address collisions.
-        if (txType === PlatformVMConstants.IMPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+        if (
+            (txType === PlatformVMConstants.IMPORTTX || txType === PlatformVMConstants.EXPORTTX) &&
+            this.platformHelper.hdIndex === this.externalHelper.hdIndex
+        ) {
             return null
         } else if (
             txType === PlatformVMConstants.ADDVALIDATORTX ||
