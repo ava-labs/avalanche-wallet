@@ -23,11 +23,13 @@ import createHash from 'create-hash'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { OutputOwners } from 'avalanche/dist/common'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
+var uniqid = require('uniqid')
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
 
 class HdWalletCore {
+    id: string
     chainId: string
     utxoset: UTXOSet
     platformUtxoset: PlatformUTXOSet
@@ -40,6 +42,7 @@ class HdWalletCore {
     isInit: boolean
 
     constructor(accountHdKey: HDKey, isPublic = true) {
+        this.id = uniqid()
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
         this.utxoset = new AVMUTXOSet()
         this.platformUtxoset = new PlatformUTXOSet()

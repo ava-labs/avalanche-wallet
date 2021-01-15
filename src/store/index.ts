@@ -141,6 +141,7 @@ export default new Vuex.Store({
             store.dispatch('Assets/updateUTXOs')
         },
 
+        // TODO: Parts can be shared with the logout function below
         // Similar to logout but keeps the Remembered keys.
         async timeoutLogout(store) {
             store.dispatch('removeAllKeys')
@@ -154,6 +155,7 @@ export default new Vuex.Store({
             store.state.isAuth = false
             store.state.activeWallet = null
             store.state.address = null
+            store.state.warnUpdateKeyfile = false
 
             await store.dispatch('Assets/onlogout')
             await store.commit('History/clear')
@@ -172,6 +174,7 @@ export default new Vuex.Store({
             store.state.isAuth = false
             store.state.activeWallet = null
             store.state.address = null
+            store.state.warnUpdateKeyfile = false
 
             // Clear Assets
             await store.dispatch('Assets/onlogout')
@@ -199,6 +202,7 @@ export default new Vuex.Store({
         },
 
         // Add a HD wallet from mnemonic string
+        // TODO: Join mnemonic and singleton functions
         async addWalletMnemonic(
             { state, dispatch },
             mnemonic: string
