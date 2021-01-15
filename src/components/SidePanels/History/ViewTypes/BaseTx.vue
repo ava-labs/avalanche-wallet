@@ -383,9 +383,14 @@ label {
     justify-content: center;
     font-size: 12px;
     color: var(--primary-color-light);
-    overflow: auto;
-    text-overflow: ellipsis;
+    overflow: hidden;
+    font-family: monospace;
     white-space: nowrap;
+
+    p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 .nft_fams {
     display: flex;

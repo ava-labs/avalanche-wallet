@@ -41,7 +41,7 @@ export default {
 .main_panel {
     display: grid;
     grid-template-rows: max-content 1fr;
-    row-gap: 15px;
+    row-gap: 6px;
 }
 .panel_nav {
     background-color: var(--bg-wallet-light);
