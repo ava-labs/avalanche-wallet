@@ -52,11 +52,22 @@ export default class Wallet extends Vue {
         }, 1000)
     }
 
+    unload(event: BeforeUnloadEvent) {
+        // user has no wallet saved
+        if (!localStorage.getItem('w') && this.hasVolatileWallets) {
+            event.preventDefault()
+            event.returnValue = ''
+            this.$router.push('/wallet/keys')
+        }
+    }
+
     mounted() {
         let view = this.$refs.wallet_view as HTMLDivElement
 
         view.addEventListener('mousemove', this.resetTimer)
         view.addEventListener('mousedown', this.resetTimer)
+
+        window.addEventListener('beforeunload', this.unload)
     }
 
     destroyed() {
@@ -68,6 +79,10 @@ export default class Wallet extends Vue {
             return true
         }
         return false
+    }
+
+    get hasVolatileWallets() {
+        return this.$store.state.volatileWallets.length > 0
     }
 }
 </script>
