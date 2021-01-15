@@ -13,11 +13,11 @@
                 </div>
             </template>
             <Spinner class="spinner"></Spinner>
-            <div v-if="duration">
+            <div v-if="duration >= 0">
                 You have
                 <span
                     v-bind:class="{
-                        alert: duration > 0 && duration < 10,
+                        alert: duration >= 0 && duration < 10,
                     }"
                 >
                     {{ duration }}
@@ -86,7 +86,7 @@ export default class LedgerBlock extends Vue {
         this.intervalId = setInterval(() => {
             this.duration -= 1
             if (this.duration <= 0) {
-                this.close()
+                this.duration = 0
             }
         }, 1000)
     }
