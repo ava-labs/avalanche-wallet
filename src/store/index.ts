@@ -10,7 +10,14 @@ import History from './modules/history/history'
 import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
 
-import { RootState, IssueBatchTxInput, ImportKeyfileInput, ExportWalletsInput } from '@/store/types'
+import {
+    RootState,
+    IssueBatchTxInput,
+    ImportKeyfileInput,
+    ExportWalletsInput,
+    WalletType,
+    AccessWalletMultipleInput,
+} from '@/store/types'
 
 import { KeyFileDecrypted } from '@/js/IKeystore'
 
@@ -26,7 +33,12 @@ import { UTXO, KeyPair as AVMKeyPair, AmountOutput, NFTMintOutput } from 'avalan
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 
 import AvaAsset from '@/js/AvaAsset'
-import { KEYSTORE_VERSION, makeKeyfile, readKeyFile } from '@/js/Keystore'
+import {
+    extractKeysFromDecryptedFile,
+    KEYSTORE_VERSION,
+    makeKeyfile,
+    readKeyFile,
+} from '@/js/Keystore'
 import { AssetsDict } from '@/store/modules/assets/types'
 import { keyToKeypair } from '@/helpers/helper'
 import BN from 'bn.js'
@@ -34,6 +46,7 @@ import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import Wallet from '@/views/Wallet.vue'
 
 export default new Vuex.Store({
     modules: {
@@ -78,17 +91,25 @@ export default new Vuex.Store({
         // Used to access wallet with a single key
         // TODO rename to accessWalletMenmonic
         async accessWallet({ state, dispatch, commit }, mnemonic: string): Promise<AvaHdWallet> {
-            let wallet: AvaHdWallet = await dispatch('addWallet', mnemonic)
+            let wallet: AvaHdWallet = await dispatch('addWalletMnemonic', mnemonic)
             await dispatch('activateWallet', wallet)
 
             dispatch('onAccess')
             return wallet
         },
 
-        async accessWalletMultiple({ state, dispatch, commit }, mnemonics: string[]) {
-            for (var i = 0; i < mnemonics.length; i++) {
-                let mnemonic = mnemonics[i]
-                await dispatch('addWallet', mnemonic)
+        // Only for singletons and mnemonics
+        async accessWalletMultiple(
+            { state, dispatch, commit },
+            keyList: AccessWalletMultipleInput[]
+        ) {
+            for (var i = 0; i < keyList.length; i++) {
+                let keyInfo = keyList[i]
+                if (keyInfo.type === 'mnemonic') {
+                    await dispatch('addWalletMnemonic', keyInfo.key)
+                } else {
+                    await dispatch('addWalletSingleton', keyInfo.key)
+                }
             }
 
             await dispatch('activateWallet', state.wallets[0])
@@ -104,9 +125,8 @@ export default new Vuex.Store({
             dispatch('onAccess')
         },
 
-        async accessWalletSingleton({ state, dispatch }, wallet: SingletonWallet) {
-            state.wallets.push(wallet)
-
+        async accessWalletSingleton({ state, dispatch }, key: string) {
+            let wallet = await dispatch('addWalletSingleton', key)
             await dispatch('activateWallet', wallet)
 
             dispatch('onAccess')
@@ -178,19 +198,48 @@ export default new Vuex.Store({
             state.volatileWallets = []
         },
 
-        async addWallet({ state, dispatch }, mnemonic: string): Promise<AvaHdWallet | null> {
+        // Add a HD wallet from mnemonic string
+        async addWalletMnemonic(
+            { state, dispatch },
+            mnemonic: string
+        ): Promise<AvaHdWallet | null> {
             // Cannot add mnemonic wallets on ledger mode
             if (state.activeWallet?.type === 'ledger') return null
 
             // Make sure wallet doesnt exist already
             for (var i = 0; i < state.wallets.length; i++) {
-                let w = state.wallets[i] as AvaHdWallet
-                if (w.mnemonic === mnemonic) {
-                    console.error('WALLET ALREADY ADDED')
-                    return null
+                let w = state.wallets[i] as WalletType
+                if (w.type === 'mnemonic') {
+                    if ((w as AvaHdWallet).mnemonic === mnemonic) {
+                        console.error('WALLET ALREADY ADDED')
+                        return null
+                    }
                 }
             }
+
             let wallet = new AvaHdWallet(mnemonic)
+            state.wallets.push(wallet)
+            state.volatileWallets.push(wallet)
+            return wallet
+        },
+
+        // Add a singleton wallet from private key string
+        async addWalletSingleton({ state, dispatch }, pk: string): Promise<SingletonWallet | null> {
+            // Cannot add singleton wallets on ledger mode
+            if (state.activeWallet?.type === 'ledger') return null
+
+            // Make sure wallet doesnt exist already
+            for (var i = 0; i < state.wallets.length; i++) {
+                let w = state.wallets[i] as WalletType
+                if (w.type === 'singleton') {
+                    if ((w as SingletonWallet).key === pk) {
+                        console.error('WALLET ALREADY ADDED')
+                        return null
+                    }
+                }
+            }
+
+            let wallet = new SingletonWallet(pk)
             state.wallets.push(wallet)
             state.volatileWallets.push(wallet)
             return wallet
@@ -204,7 +253,8 @@ export default new Vuex.Store({
 
         // Creates a keystore file and saves to local storage
         async rememberWallets({ state, dispatch }, pass: string | undefined) {
-            if (!pass || state.activeWallet?.type === 'ledger') return
+            let wallet: WalletType | null = state.activeWallet
+            if (!pass || wallet?.type === 'ledger') return
 
             let wallets = state.wallets as AvaHdWallet[]
 
@@ -287,40 +337,47 @@ export default new Vuex.Store({
                 let keyFile: KeyFileDecrypted = await readKeyFile(fileData, pass)
 
                 // Old files have private keys, 5.0 and above has mnemonic phrases
-                let keys = keyFile.keys
+                // let keys = keyFile.keys
 
-                let chainID = avm.getBlockchainAlias()
+                // let chainID = avm.getBlockchainAlias()
 
-                let mnemonics: string[]
-                // Convert old version private keys to mnemonic phrases
-                if (['2.0', '3.0', '4.0'].includes(version)) {
-                    mnemonics = keys.map((key) => {
-                        // Private keys from the keystore file do not have the PrivateKey- prefix
-                        let pk = 'PrivateKey-' + key.key
-                        let keypair = keyToKeypair(pk, chainID)
+                // let mnemonics: string[]
+                // // Convert old version private keys to mnemonic phrases
+                // if (['2.0', '3.0', '4.0'].includes(version)) {
+                //     mnemonics = keys.map((key) => {
+                //         // Private keys from the keystore file do not have the PrivateKey- prefix
+                //         let pk = 'PrivateKey-' + key.key
+                //         let keypair = keyToKeypair(pk, chainID)
+                //
+                //         let keyBuf = keypair.getPrivateKey()
+                //         let keyHex: string = keyBuf.toString('hex')
+                //
+                //         // Entropy must be 64 characters, make sure 0 pad exists
+                //         let paddedKeyHex = keyHex.padStart(64, '0')
+                //         let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
+                //
+                //         return mnemonic
+                //     })
+                // } else {
+                //     // New versions encrypt the mnemonic so we dont have to do anything
+                //     mnemonics = keys.map((key) => key.key)
+                // }
 
-                        let keyBuf = keypair.getPrivateKey()
-                        let keyHex: string = keyBuf.toString('hex')
-
-                        // Entropy must be 64 characters, make sure 0 pad exists
-                        let paddedKeyHex = keyHex.padStart(64, '0')
-                        let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
-
-                        return mnemonic
-                    })
-                } else {
-                    // New versions encrypt the mnemonic so we dont have to do anything
-                    mnemonics = keys.map((key) => key.key)
-                }
+                let keys = extractKeysFromDecryptedFile(keyFile)
 
                 // If not auth, login user then add keys
                 if (!store.state.isAuth) {
-                    await store.dispatch('accessWalletMultiple', mnemonics)
+                    await store.dispatch('accessWalletMultiple', keys)
                 } else {
-                    for (let i = 0; i < mnemonics.length; i++) {
+                    for (let i = 0; i < keys.length; i++) {
+                        let key = keys[i]
+
                         // Private keys from the keystore file do not have the PrivateKey- prefix
-                        let mnemonic = mnemonics[i]
-                        await store.dispatch('addWallet', mnemonic)
+                        if (key.type === 'mnemonic') {
+                            await store.dispatch('addWalletMnemonic', key.key)
+                        } else if (key.type === 'singleton') {
+                            await store.dispatch('addWalletSingleton', key.key)
+                        }
                     }
                 }
 

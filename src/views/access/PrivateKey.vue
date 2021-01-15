@@ -62,8 +62,7 @@ export default class PrivateKey extends Vue {
         }
 
         try {
-            let wallet = new SingletonWallet(key)
-            let res = await this.$store.dispatch('accessWalletSingleton', wallet)
+            let res = await this.$store.dispatch('accessWalletSingleton', key)
             this.onsuccess()
         } catch (e) {
             this.onerror('Invalid Private Key.')

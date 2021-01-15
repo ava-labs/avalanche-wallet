@@ -1,3 +1,4 @@
+<!--Depreciated ? -->
 <template>
     <div>
         <label>{{ $t('private_key') }}</label>

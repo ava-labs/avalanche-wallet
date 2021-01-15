@@ -107,3 +107,8 @@ export type SessionPersistFile = SessionPersistKey[]
 export interface SessionPersistKey {
     key: string
 }
+
+export interface AccessWalletMultipleInput {
+    type: Extract<'mnemonic' | 'singleton', WalletNameType>
+    key: string
+}

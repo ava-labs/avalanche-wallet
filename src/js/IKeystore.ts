@@ -1,3 +1,6 @@
+export type AllKeyFileTypes = KeyFile | KeyFileV6
+export type AllKeyFileDecryptedTypes = KeyFileDecrypted | KeyFileDecryptedV6
+
 export interface KeyFile {
     salt: string
     keys: KeyFileKey[]
@@ -8,7 +11,6 @@ export interface KeyFile {
 export interface KeyFileKey {
     key: string
     iv: string
-    // address: string
 }
 
 export interface KeyFileDecrypted {
@@ -18,5 +20,30 @@ export interface KeyFileDecrypted {
 
 export interface KeyFileKeyDecrypted {
     key: string
-    // address: string,
+}
+
+// V6 #################################
+
+export type KeystoreFileKeyType = 'mnemonic' | 'singleton'
+
+export interface KeyFileV6 {
+    salt: string
+    keys: KeyFileKeyV6[]
+    version: string
+}
+
+export interface KeyFileKeyV6 {
+    key: string
+    iv: string
+    type: KeystoreFileKeyType
+}
+
+export interface KeyFileDecryptedV6 {
+    version: string
+    keys: KeyFileKeyDecryptedV6[]
+}
+
+export interface KeyFileKeyDecryptedV6 {
+    key: string
+    type: KeystoreFileKeyType
 }
