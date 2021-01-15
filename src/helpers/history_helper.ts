@@ -130,7 +130,7 @@ function getLossNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
     let walletAddrs = wallet.getHistoryAddresses()
     let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
 
-    let inputs = tx.inputs
+    let inputs = tx.inputs || []
     let outputs = tx.outputs
 
     let loss: NFTSummaryResultDict = {
@@ -185,7 +185,7 @@ function getGainNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
     let walletAddrs = wallet.getHistoryAddresses()
     let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
 
-    let inputs = tx.inputs
+    let inputs = tx.inputs || []
     let outputs = tx.outputs
 
     let gain: NFTSummaryResultDict = {
@@ -236,7 +236,7 @@ function getGainNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
 }
 
 function getLoss(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
-    let ins = tx.inputs
+    let ins = tx.inputs || []
     let outs = tx.outputs
 
     let walletAddrs = wallet.getHistoryAddresses()
@@ -285,7 +285,7 @@ function getLoss(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
 
 function getProfit(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
     let outs = tx.outputs
-    let ins = tx.inputs
+    let ins = tx.inputs || []
 
     let walletAddrs = wallet.getHistoryAddresses()
     let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
