@@ -1,7 +1,7 @@
 <template>
     <div class="tx_out">
         <div class="addresses">
-            <p v-for="addr in summary.addresses" :key="addr">{{ 'X-' + addr }}</p>
+            <p v-for="addr in summary.addresses" :key="addr">{{ direction }} {{ 'X-' + addr }}</p>
         </div>
         <p class="amount" :profit="isProfit">
             {{ amtText }}
@@ -46,6 +46,13 @@ export default class BaseTxOutput extends Vue {
         }
     }
 
+    get direction() {
+        if (this.isProfit) {
+            return 'from'
+        } else {
+            return 'to'
+        }
+    }
     get amtText() {
         let big = bnToBig(this.summary.amount, this.assetDetail?.denomination || 0)
         return big.toLocaleString()
@@ -56,7 +63,7 @@ export default class BaseTxOutput extends Vue {
 @use "../../../../main";
 .tx_out {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr;
     column-gap: 12px;
 }
 .amount {
@@ -72,13 +79,21 @@ export default class BaseTxOutput extends Vue {
 
 .addresses {
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
     p {
         overflow: hidden;
         color: var(--primary-color-light);
         white-space: nowrap;
         font-size: 12px;
+        line-height: 12px;
         font-family: monospace;
         text-overflow: ellipsis;
+    }
+
+    label {
+        line-height: 12px;
     }
 }
 label {

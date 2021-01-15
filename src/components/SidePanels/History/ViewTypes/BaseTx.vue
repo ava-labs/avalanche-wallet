@@ -9,14 +9,21 @@
                     :asset-i-d="assetId"
                     :summary="asset"
                 ></BaseTxOutput>
-                <div class="nft_fams">
-                    <BaseTxNFTOutput
-                        v-for="(asset, assetId) in summary.collectibles.sent"
-                        :key="assetId"
-                        :asset-i-d="assetId"
-                        :summary="asset"
-                        class="nft_out"
-                    ></BaseTxNFTOutput>
+                <div class="nft_cols">
+                    <div class="nft_addr">
+                        <p v-for="addr in summary.collectibles.sent.addresses" :key="addr">
+                            to {{ 'X-' + addr }}
+                        </p>
+                    </div>
+                    <div class="nft_fams">
+                        <BaseTxNFTOutput
+                            v-for="(asset, assetId) in summary.collectibles.sent.assets"
+                            :key="assetId"
+                            :asset-i-d="assetId"
+                            :summary="asset"
+                            class="nft_out"
+                        ></BaseTxNFTOutput>
+                    </div>
                 </div>
             </div>
             <div v-if="hasReceived">
@@ -27,14 +34,21 @@
                     :asset-i-d="assetId"
                     :summary="asset"
                 ></BaseTxOutput>
-                <div class="nft_fams">
-                    <BaseTxNFTOutput
-                        v-for="(asset, assetId) in summary.collectibles.received"
-                        :key="assetId"
-                        :asset-i-d="assetId"
-                        :summary="asset"
-                        class="nft_out"
-                    ></BaseTxNFTOutput>
+                <div class="nft_cols">
+                    <div class="nft_addr">
+                        <p v-for="addr in summary.collectibles.received.addresses" :key="addr">
+                            from {{ 'X-' + addr }}
+                        </p>
+                    </div>
+                    <div class="nft_fams">
+                        <BaseTxNFTOutput
+                            v-for="(asset, assetId) in summary.collectibles.received.assets"
+                            :key="assetId"
+                            :asset-i-d="assetId"
+                            :summary="asset"
+                            class="nft_out"
+                        ></BaseTxNFTOutput>
+                    </div>
                 </div>
             </div>
 
@@ -99,13 +113,13 @@ export default class BaseTx extends Vue {
 
     get hasSent() {
         let numAssets = Object.keys(this.tokensSent).length
-        let numNfts = Object.keys(this.summary.collectibles.sent).length
+        let numNfts = Object.keys(this.summary.collectibles.sent.assets).length
         return numNfts + numAssets > 0
     }
 
     get hasReceived() {
         let numAssets = Object.keys(this.tokensReceived).length
-        let numNfts = Object.keys(this.summary.collectibles.received).length
+        let numNfts = Object.keys(this.summary.collectibles.received.assets).length
         return numNfts + numAssets > 0
     }
 
@@ -359,6 +373,20 @@ label {
     }
 }
 
+.nft_cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.nft_addr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--primary-color-light);
+    overflow: auto;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .nft_fams {
     display: flex;
     flex-direction: row;

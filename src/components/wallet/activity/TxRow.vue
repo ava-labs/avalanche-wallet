@@ -138,7 +138,7 @@ export default class TxRow extends Vue {
 }
 .tx_cols {
     display: grid;
-    grid-template-columns: max-content 1fr 260px;
+    grid-template-columns: max-content 2fr 1fr;
     column-gap: 14px;
     background-color: var(--bg-light);
     padding: 8px 14px;
