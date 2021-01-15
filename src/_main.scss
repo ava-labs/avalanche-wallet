@@ -90,7 +90,7 @@ $s-size-mobile: 14px;
     }
 
     &:focus-within {
-        border-color: var(--secondary-color);
+        border-color: var(--selection-color);
     }
 }
 
@@ -405,7 +405,7 @@ html[data-theme='day'] {
     --primary-color: #4c2e56;
     --primary-color-light: #867e89;
     --secondary-color: #e84970;
-
+    --selection-color: #6a91d8;
     --link-secondary: #6e7479;
     --error: #f00;
     --success: #6bc688;
@@ -426,7 +426,7 @@ html[data-theme='night'] {
     --primary-color: #e5e5e5;
     --primary-color-light: #6e7479;
     --secondary-color: #e84970;
-
+    --selection-color: #6a91d8;
     --link-secondary: #6e7479;
     --error: #e84970;
     --success: #6bc688;
@@ -443,4 +443,10 @@ p.err {
     color: var(--error);
     font-size: 0.9rem;
     margin: 4px 0;
+}
+
+@include medium-device {
+    h1 {
+        font-size: 25px;
+    }
 }

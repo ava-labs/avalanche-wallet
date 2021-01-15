@@ -135,7 +135,6 @@ import 'reflect-metadata'
 import { Vue, Component, Ref } from 'vue-property-decorator'
 
 import TxList from '@/components/wallet/transfer/TxList.vue'
-import RadioButtons from '@/components/misc/RadioButtons.vue'
 import Big from 'big.js'
 
 import NftList from '@/components/wallet/transfer/NftList.vue'
@@ -161,7 +160,6 @@ import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
     components: {
         FaucetLink,
         TxList,
-        RadioButtons,
         QrInput,
         NftList,
         TxSummary,

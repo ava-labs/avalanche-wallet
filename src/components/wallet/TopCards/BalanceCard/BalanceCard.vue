@@ -469,12 +469,15 @@ h4 {
         font-size: 1.8rem !important;
     }
 
+    .balance_usd {
+        font-size: 11px;
+    }
     .nft_col {
         display: none;
     }
 
     .alt_info {
-        font-size: 13px;
+        font-size: 12px;
     }
 }
 

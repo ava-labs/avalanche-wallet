@@ -14,6 +14,7 @@ import Wallet from '@/views/Wallet.vue'
 import WalletHome from '@/views/wallet/Portfolio.vue'
 import Earn from '@/views/wallet/Earn.vue'
 import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
+import Activity from '@/views/wallet/Activity.vue' // your vuex store
 
 Vue.use(VueRouter)
 
@@ -105,6 +106,10 @@ const routes = [
             {
                 path: 'advanced',
                 component: Advanced,
+            },
+            {
+                path: 'activity',
+                component: Activity,
             },
         ],
         component: Wallet,

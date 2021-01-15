@@ -2,7 +2,7 @@
     <div class="wallet_view" ref="wallet_view">
         <UpdateKeystoreModal v-if="isManageWarning"></UpdateKeystoreModal>
         <transition name="fade" mode="out-in">
-            <sidebar class="panel"></sidebar>
+            <sidebar class="panel sidenav"></sidebar>
         </transition>
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
@@ -99,8 +99,11 @@ export default class Wallet extends Vue {
     background-color: var(--bg-wallet);
 }
 
-.panel {
+.sidenav {
     background-color: var(--bg-wallet-light);
+}
+
+.panel {
     overflow: auto;
     height: 100%;
 }
@@ -141,6 +144,15 @@ export default class Wallet extends Vue {
 @include main.medium-device {
     .wallet_view {
         grid-template-columns: 180px 1fr 240px !important;
+        column-gap: 9px;
+    }
+
+    .wallet_main {
+        grid-gap: 9px;
+    }
+
+    #wallet_router {
+        padding: 12px 18px;
     }
 }
 </style>

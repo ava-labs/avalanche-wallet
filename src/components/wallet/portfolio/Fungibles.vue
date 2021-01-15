@@ -200,6 +200,12 @@ export default class Fungibles extends Vue {
         }
     }
 }
+
+@include main.medium-device {
+    .headers {
+        padding: 12px 0;
+    }
+}
 </style>
 <style lang="scss">
 @use '../../../main';
