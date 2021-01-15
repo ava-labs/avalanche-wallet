@@ -27,6 +27,12 @@
                             @click="viewPrintModal"
                             class="print_but"
                         ></button>
+                        <button
+                            v-if="walletType === 'ledger'"
+                            :tooltip="$t('create.verify')"
+                            @click="verifyLedgerAddress"
+                            class="ledger_but"
+                        ></button>
                         <CopyText
                             :tooltip="$t('top.hover3')"
                             :value="activeAddress"
@@ -48,11 +54,13 @@ import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import { WalletNameType, WalletType } from '@/store/types'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import AvaHdWallet, { AVA_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
 import { ChainIdType } from '@/constants'
+import { ava } from '@/AVA'
+import { getPreferredHRP } from 'avalanche/dist/utils'
 @Component({
     components: {
         CopyText,
@@ -161,6 +169,23 @@ export default class AddressCard extends Vue {
         }
         return this.address
     }
+
+    get activeIdx(): number {
+        const wallet = this.activeWallet as AvaHdWallet
+        const walletType = wallet.type
+
+        if (walletType === 'singleton') return 0
+
+        switch (this.chainNow) {
+            case 'X':
+                return wallet.getExternalActiveIndex()
+            case 'P':
+                return wallet.getPlatformActiveIndex()
+            default:
+                return 0
+        }
+    }
+
     viewQRModal() {
         // @ts-ignore
         this.$refs.qr_modal.open()
@@ -191,6 +216,15 @@ export default class AddressCard extends Vue {
                 if (error) console.error(error)
             }
         )
+    }
+
+    async verifyLedgerAddress() {
+        const wallet = this.activeWallet as LedgerWallet
+
+        let networkId = ava.getNetworkID()
+        let hrp = getPreferredHRP(networkId)
+
+        wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/0/${this.activeIdx}`, hrp)
     }
 
     mounted() {
@@ -237,6 +271,9 @@ export default class AddressCard extends Vue {
 .print_but {
     background-image: url('/img/faucet_icon.png');
 }
+.ledger_but {
+    background-image: url('/img/ledger_icon.png');
+}
 .copy_but {
     color: var(--primary-color);
 }
@@ -251,6 +288,9 @@ export default class AddressCard extends Vue {
     }
     .print_but {
         background-image: url('/img/print_icon_night.svg');
+    }
+    .ledger_but {
+        background-image: url('/img/ledger_night.svg');
     }
 
     .mainnet_but {

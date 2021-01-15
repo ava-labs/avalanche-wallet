@@ -6,16 +6,12 @@
 //@import "node_modules/bootstrap/scss/reboot";
 
 //@import "node_modules/bootstrap/scss/bootstrap-reboot.scss";
-@import "node_modules/bootstrap/scss/bootstrap-grid.scss";
+@import 'node_modules/bootstrap/scss/bootstrap-grid.scss';
 //@import "node_modules/bootstrap/scss/grid";
 
 //@import "node_modules/bootstrap-vue/src/variables";
 //@import "node_modules/bootstrap-vue/src/mixins";
 //@import "node_modules/bootstrap-vue/src/";
-
-
-
-
 
 $mobile_width: 900px;
 $width_s: 1300px;
@@ -27,29 +23,39 @@ $container_padding_s: 30px 3vw;
 $container_padding_mobile: 10px 10px;
 
 @mixin mobile-device {
-  @media only screen and (max-width: $mobile_width) { @content; }
+    @media only screen and (max-width: $mobile_width) {
+        @content;
+    }
 }
 
 @mixin medium-device {
-  @media only screen and (min-width: $mobile_width) and (max-width: $width_m) { @content; }
+    @media only screen and (min-width: $mobile_width) and (max-width: $width_m) {
+        @content;
+    }
 }
 
 @mixin large-device {
-  @media only screen and (min-width: 960px) and (max-width: 1200px) { @content; }
+    @media only screen and (min-width: 960px) and (max-width: 1200px) {
+        @content;
+    }
 }
 
 @mixin xl-device {
-  @media only screen and (min-width: 1200px) and (max-width: 1600px){ @content; }
+    @media only screen and (min-width: 1200px) and (max-width: 1600px) {
+        @content;
+    }
 }
 
 @mixin largest-device {
-  @media only screen and (min-width: 1600px){ @content; }
+    @media only screen and (min-width: 1600px) {
+        @content;
+    }
 }
 
 @mixin night-mode {
-  html[data-theme='night']{
-    @content
-  }
+    html[data-theme='night'] {
+        @content;
+    }
 }
 
 /* ==========================================
@@ -61,10 +67,10 @@ $container-padding: 40px;
 
 // img size: 89px   // 319
 $img-size: 89px;
-$xl-size: 53.76px;  // 192 (resized)
-$l-size: 25.2px;    // 90
-$m-size: 21.28px;   // 76
-$s-size: 14px;      // 50
+$xl-size: 53.76px; // 192 (resized)
+$l-size: 25.2px; // 90
+$m-size: 21.28px; // 76
+$s-size: 14px; // 50
 
 $vertical-padding-mobile: 30px;
 $container-padding-mobile: 15px;
@@ -75,56 +81,50 @@ $l-size-mobile: 22px;
 $m-size-mobile: 18px;
 $s-size-mobile: 14px;
 
+@mixin highlight-border {
+    transition-duration: 0.1s;
+    border: 1px solid transparent;
+    outline: none !important;
+    &:hover {
+        border-color: var(--primary-color-light);
+    }
 
-@mixin highlight-border{
-  transition-duration: 0.1s;
-  border: 1px solid transparent;
-  outline: none !important;
-  &:hover{
-    border-color: var(--primary-color-light);
-  }
-
-  &:focus-within{
-    border-color: var(--selection-color);
-  }
+    &:focus-within {
+        border-color: var(--selection-color);
+    }
 }
 
-
-.hover_border{
-  @include highlight-border
+.hover_border {
+    @include highlight-border;
 }
-
 
 *[tooltip]:hover:before {
-  border-radius: 4px;
-  /*left: 0;*/
-  left: 0;
-  transform: translateX(-50%);
-  content: attr(tooltip);
-  position: absolute;
-  background-color: #303030;
-  bottom: 100%;
-  color: #ddd;
-  width: max-content;
-  max-width: 100px;
-  font-size: 14px;
-  padding: 4px 8px;
+    border-radius: 4px;
+    /*left: 0;*/
+    left: 0;
+    transform: translateX(-50%);
+    content: attr(tooltip);
+    position: absolute;
+    background-color: #303030;
+    bottom: 100%;
+    color: #ddd;
+    width: max-content;
+    max-width: 100px;
+    font-size: 14px;
+    padding: 4px 8px;
 }
 
-button{
-  outline: none !important;
+button {
+    outline: none !important;
 }
-textarea, input{
-  @include highlight-border
-}
-
-
-label{
-  margin-bottom: initial !important;
+textarea,
+input {
+    @include highlight-border;
 }
 
-
-
+label {
+    margin-bottom: initial !important;
+}
 
 //*[tooltip]:hover{
 //  position: relative;
@@ -142,45 +142,47 @@ label{
 
 /* For vue transitions */
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .2s;
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
+    opacity: 0;
 }
 
-
-.float-enter-active, .float-leave-active {
-  transition: all .2s;
+.float-enter-active,
+.float-leave-active {
+    transition: all 0.2s;
 }
 .float-enter, .float-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateY(30px);
+    transform: translateY(30px);
 }
 
-
-.slide_right-enter-active, .slide_right-leave-active {
-  transition: opacity .2s;
+.slide_right-enter-active,
+.slide_right-leave-active {
+    transition: opacity 0.2s;
 }
 .slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateX(100%);
-  opacity: 0;
+    transform: translateX(100%);
+    opacity: 0;
 }
 
-.slide_bottom-enter-active, .slide_bottom-leave-active {
-  transition: opacity .2s;
+.slide_bottom-enter-active,
+.slide_bottom-leave-active {
+    transition: opacity 0.2s;
 }
 .slide_bottom-enter, .slide_bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateY(100%);
-  opacity: 0;
+    transform: translateY(100%);
+    opacity: 0;
 }
 
-
-.shrink-enter-active, .shrink-leave-active {
-  transition: opacity .2s;
+.shrink-enter-active,
+.shrink-leave-active {
+    transition: opacity 0.2s;
 }
 .shrink-enter, .shrink-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: translateX(100%);
-  opacity: 0;
+    transform: translateX(100%);
+    opacity: 0;
 }
 
 /* ==========================================
@@ -191,7 +193,7 @@ label{
     padding: 10px 24px;
     min-width: 140px;
     border-radius: 6px;
-    font-family: "DM Sans", sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase !important;
@@ -201,30 +203,29 @@ label{
         opacity: 0.7;
     }
 
-
     &:disabled {
-      opacity: 0.5 !important;
+        opacity: 0.5 !important;
     }
 }
 
 .ava_button_secondary {
-  background-color: transparent !important;
-  padding: 10px 24px;
-  min-width: 140px;
-  border-radius: 6px;
-  font-family: "DM Sans", sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase !important;
-  font-size: $s-size;
+    background-color: transparent !important;
+    padding: 10px 24px;
+    min-width: 140px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase !important;
+    font-size: $s-size;
 
-  &:hover {
-      opacity: 0.7;
-  }
+    &:hover {
+        opacity: 0.7;
+    }
 
-  &:disabled {
-    opacity: 0.5 !important;
-  }
+    &:disabled {
+        opacity: 0.5 !important;
+    }
 }
 
 .link {
@@ -233,24 +234,24 @@ label{
     margin-bottom: 20px;
 
     &:hover {
-      opacity: 0.7;
+        opacity: 0.7;
     }
 }
 
 @include mobile-device {
-  .link {
-    margin-bottom: 0;
-  }
+    .link {
+        margin-bottom: 0;
+    }
 }
 
-$purple: #4C2E56;
-$purple-light: #867E89;
-$pink: #E84970;
-$pink-light: #FF8080;
+$purple: #4c2e56;
+$purple-light: #867e89;
+$pink: #e84970;
+$pink-light: #ff8080;
 $pink-extra-light: #ffe6e6;
-$gray: #F5F6FA;
-$white: #FFF;
-$green: #6BC688;
+$gray: #f5f6fa;
+$white: #fff;
+$green: #6bc688;
 $green-light: #83f2a6;
 $green-extra-light: #a9efbf;
 
@@ -261,194 +262,191 @@ $secondary-color-light: $pink-light;
 $secondary-color-extra-light: $pink-extra-light;
 $background-color: $gray;
 
-h1{
-  color: var(--primary-color);
-}
-
-h1, h2, h3, h4{
-  font-family: "Rubik", sans-serif;
-}
-
-.button_primary{
-  background-color: var(--primary-color) !important;
-  color: var(--bg) !important;
-  text-decoration: none;
-  &:hover {
-    opacity: 0.7;
-  }
-
-  &[disabled]{
-    background-color: var(--primary-color) !important;
-    color: var(--primary-color-light) !important;
-    opacity: 0.7;
-    cursor: not-allowed !important;
-  }
-}
-.button_secondary{
-  background-color: var(--secondary-color) !important;
-  color: #FFF !important;
-  text-decoration: none;
-  &:hover {
-    opacity: 0.7;
-  }
-}
-
-.button_form_cancel{
-  color: var(--primary-color-light);
-  font-size: 12px;
-  text-align: center;
-  //opacity: 0.8;
-  margin: 6px 0 !important;
-
-  &:hover{
-    //opacity: 1;
+h1 {
     color: var(--primary-color);
-  }
 }
 
-.v-input--selection-controls__ripple{
-  color: var(--secondary-color) !important;
-}
-textarea{
-  color: var(--primary-color);
-  background-color: var(--bg);
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'Rubik', sans-serif;
 }
 
-.v-input__slot{
-  background-color: var(--bg) !important;
-  input{
+.button_primary {
+    background-color: var(--primary-color) !important;
+    color: var(--bg) !important;
+    text-decoration: none;
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &[disabled] {
+        background-color: var(--primary-color) !important;
+        color: var(--primary-color-light) !important;
+        opacity: 0.7;
+        cursor: not-allowed !important;
+    }
+}
+.button_secondary {
+    background-color: var(--secondary-color) !important;
+    color: #fff !important;
+    text-decoration: none;
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.button_form_cancel {
+    color: var(--primary-color-light);
+    font-size: 12px;
+    text-align: center;
+    //opacity: 0.8;
+    margin: 6px 0 !important;
+
+    &:hover {
+        //opacity: 1;
+        color: var(--primary-color);
+    }
+}
+
+.v-input--selection-controls__ripple {
+    color: var(--secondary-color) !important;
+}
+textarea {
+    color: var(--primary-color);
+    background-color: var(--bg);
+}
+
+.v-input__slot {
+    background-color: var(--bg) !important;
+    input {
+        color: var(--primary-color) !important;
+    }
+}
+
+.v-tabs-bar,
+.v-tabs-items {
+    background-color: var(--bg) !important;
+}
+
+.v-tab {
+    color: var(--primary-color-light) !important;
+}
+.v-tab--active {
     color: var(--primary-color) !important;
-  }
 }
 
-.v-tabs-bar, .v-tabs-items{
-  background-color: var(--bg) !important;
+.v-messages {
+    color: var(--primary-color) !important;
 }
 
-.v-tab{
-  color: var(--primary-color-light) !important;
-}
-.v-tab--active{
-  color: var(--primary-color) !important;
-}
+.v-text-field {
+    @include highlight-border;
+    color: var(--primary-color) !important;
+    label {
+        color: var(--primary-color-light) !important;
+    }
 
-.v-messages{
-  color: var(--primary-color) !important;
-}
-
-.v-text-field{
-  @include highlight-border;
-  color: var(--primary-color) !important;
-  label{
-    color: var(--primary-color-light) !important;
-  }
-
-  input{
-    outline: none;
-    border: none;
-  }
-  .v-input__slot:before{
-    border-color: var(--primary-color-light) !important;
-    color: var(--primary-color-light) !important;
-  }
+    input {
+        outline: none;
+        border: none;
+    }
+    .v-input__slot:before {
+        border-color: var(--primary-color-light) !important;
+        color: var(--primary-color-light) !important;
+    }
 }
 
-.v-chip{
-  background-color: var(--bg-light) !important;
-  color: var(--primary-color) !important;
-}
-.v-chip--active{
-  background-color: var(--primary-color) !important;
-  color: var(--bg-wallet) !important;
-}
-
-.vue__time-picker{
-  color: var(--primary-color);
-
-  input{
-    border: none !important;
+.v-chip {
     background-color: var(--bg-light) !important;
     color: var(--primary-color) !important;
-  }
+}
+.v-chip--active {
+    background-color: var(--primary-color) !important;
+    color: var(--bg-wallet) !important;
 }
 
-.vdatetime{
-  background-color: var(--bg-light) !important;
-  padding: 6px 12px !important;
-  input{
+.vue__time-picker {
+    color: var(--primary-color);
+
+    input {
+        border: none !important;
+        background-color: var(--bg-light) !important;
+        color: var(--primary-color) !important;
+    }
+}
+
+.vdatetime {
+    background-color: var(--bg-light) !important;
+    padding: 6px 12px !important;
+    input {
+        color: var(--primary-color) !important;
+    }
+}
+
+.qr_input {
+    background-color: var(--bg-light) !important;
     color: var(--primary-color) !important;
-  }
+    font-size: 13px;
+
+    @include highlight-border //&:focus-within {
+        //  outline: 1px solid var(--secondary-color);
+        //}
+;
 }
 
-.qr_input{
-  background-color: var(--bg-light) !important;
-  color: var(--primary-color) !important;
-  font-size: 13px;
+html[data-theme='day'] {
+    --bg: #fff;
+    --bg-1: 255, 255, 255;
+    --bg-light: #f5f6fa;
+    --bg-light-1: 245, 246, 250;
 
-  @include highlight-border
+    --primary-color: #4c2e56;
+    --primary-color-light: #867e89;
+    --secondary-color: #e84970;
+    --selection-color: #6a91d8;
+    --link-secondary: #6e7479;
+    --error: #f00;
+    --success: #6bc688;
+    --info: #2c7490;
+    --info-1: 44, 116, 144;
 
-  //&:focus-within {
-  //  outline: 1px solid var(--secondary-color);
-  //}
+    --bg-wallet: #f5f6fa;
+    --bg-wallet-light: #fff;
+
+    --warning: #ef8f4a;
 }
 
+html[data-theme='night'] {
+    --bg: #242729;
+    --bg-1: 36, 39, 41;
+    --bg-light: #2e3234;
+    --bg-light-1: 46, 50, 52;
+    --primary-color: #e5e5e5;
+    --primary-color-light: #6e7479;
+    --secondary-color: #e84970;
+    --selection-color: #6a91d8;
+    --link-secondary: #6e7479;
+    --error: #e84970;
+    --success: #6bc688;
+    --info: #4c8caf;
+    --info-1: 76, 140, 175;
 
-html[data-theme='day']{
-  --bg: #FFF;
-  --bg-1: 255, 255, 255;
-  --bg-light: #f5f6fa;
-  --bg-light-1: 245, 246, 250;
+    --bg-wallet: #181b1d;
+    --bg-wallet-light: #242729;
 
-  --primary-color: #4C2E56;
-  --primary-color-light: #867E89;
-  --secondary-color: #E84970;
-
-  --selection-color: #6a91d8;
-
-  --link-secondary: #6E7479;
-  --error:#f00;
-  --success: #6BC688;
-  --info: #2c7490;
-  --info-1: 44, 116, 144;
-
-  --bg-wallet: #F5F6FA;
-  --bg-wallet-light: #FFF;
-
-  --warning: #ef8f4a;
+    --warning: #d49534;
 }
 
-html[data-theme='night']{
-  --bg: #242729;
-  --bg-1: 36, 39, 41;
-  --bg-light: #2E3234;
-  --bg-light-1: 46, 50, 52;
-  --primary-color: #E5E5E5;
-  --primary-color-light: #6E7479;
-  --secondary-color: #E84970;
-
-  --selection-color: #6a91d8;
-
-  --link-secondary: #6E7479;
-  --error:#E84970;
-  --success: #6BC688;
-  --info: #4c8caf;
-  --info-1: 76, 140, 175;
-
-  --bg-wallet: #181B1D;
-  --bg-wallet-light: #242729;
-
-  --warning: #d49534;
+p.err {
+    color: var(--error);
+    font-size: 0.9rem;
+    margin: 4px 0;
 }
 
-p.err{
-  color: var(--error);
-  font-size: 0.9rem;
-  margin: 4px 0;
-}
-
-
-@include medium-device{
-  h1{
-    font-size: 25px;
-  }
+@include medium-device {
+    h1 {
+        font-size: 25px;
+    }
 }
