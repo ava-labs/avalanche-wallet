@@ -314,6 +314,11 @@ $qr_width: 110px;
     //.bottom{
     //    display: block;
     //}
+    .bottom_rest {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
     .addr_info {
         display: none;
@@ -324,12 +329,16 @@ $qr_width: 110px;
     }
 
     .buts {
-        margin: 6px 0;
+        //margin: 6px 0;
         justify-content: space-evenly;
 
         > * {
             margin: 0;
         }
+    }
+
+    .addr_text {
+        font-size: 13px;
     }
 }
 

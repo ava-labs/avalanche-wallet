@@ -139,7 +139,7 @@ export default {
     /*margin-top: 30px;*/
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .header {
         display: block;
 
@@ -167,12 +167,27 @@ export default {
 
 @include main.medium-device {
     .header {
-        flex-wrap: wrap;
+        button {
+            font-size: 13px;
+
+            &[active] {
+                border-bottom-width: 2px;
+            }
+        }
     }
 
     .search {
-        margin: 15px 0px;
-        flex-basis: 100%;
+        //margin: 15px 0px;
+        //flex-basis: 100%;
+        flex-grow: 1;
+        height: 36px;
+        flex-basis: auto;
+
+        img {
+            padding: 6px;
+            height: 22px;
+            width: 22px;
+        }
     }
 }
 </style>

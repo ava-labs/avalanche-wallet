@@ -75,6 +75,7 @@ $l-size-mobile: 22px;
 $m-size-mobile: 18px;
 $s-size-mobile: 14px;
 
+
 @mixin highlight-border{
   transition-duration: 0.1s;
   border: 1px solid transparent;
@@ -84,7 +85,7 @@ $s-size-mobile: 14px;
   }
 
   &:focus-within{
-    border-color: var(--secondary-color);
+    border-color: var(--selection-color);
   }
 }
 
@@ -402,6 +403,8 @@ html[data-theme='day']{
   --primary-color-light: #867E89;
   --secondary-color: #E84970;
 
+  --selection-color: #6a91d8;
+
   --link-secondary: #6E7479;
   --error:#f00;
   --success: #6BC688;
@@ -423,6 +426,8 @@ html[data-theme='night']{
   --primary-color-light: #6E7479;
   --secondary-color: #E84970;
 
+  --selection-color: #6a91d8;
+
   --link-secondary: #6E7479;
   --error:#E84970;
   --success: #6BC688;
@@ -439,4 +444,11 @@ p.err{
   color: var(--error);
   font-size: 0.9rem;
   margin: 4px 0;
+}
+
+
+@include medium-device{
+  h1{
+    font-size: 25px;
+  }
 }

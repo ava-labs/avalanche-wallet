@@ -1,5 +1,5 @@
 <template>
-    <div class="family_group">
+    <div class="family_group" v-if="payload">
         <p class="count" v-if="quantity > 1">{{ quantity }}</p>
         <div class="nft_card">
             <NftPayloadView :payload="payload" class="payload_view" small="true"></NftPayloadView>
@@ -8,20 +8,23 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
+import { NFTTransferOutput } from 'avalanche/dist/apis/avm'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { Buffer } from 'avalanche'
 import { PayloadTypes } from 'avalanche/dist/utils'
 import { NftGroupDict } from '../wallet/portfolio/types'
 import { AvaNftFamily } from '../../js/AvaNftFamily'
+import { UTXO } from '@/store/modules/history/types'
 
 let payloadtypes = PayloadTypes.getInstance()
+
 @Component({
     components: { NftPayloadView },
 })
 export default class TxHistoryNftFamilyGroup extends Vue {
-    @Prop() payloads!: PayloadBase[]
+    // @Prop() payloads!: PayloadBase[]
+    @Prop() utxos!: UTXO[]
     @Prop() assetID!: string
 
     created() {
@@ -35,11 +38,35 @@ export default class TxHistoryNftFamilyGroup extends Vue {
     }
 
     get quantity() {
-        return this.payloads.length
+        return this.utxos.length
     }
 
-    get payload(): PayloadBase {
-        return this.payloads[0]
+    parsePayload(rawPayload: string): PayloadBase {
+        let payload = Buffer.from(rawPayload, 'base64')
+        payload = Buffer.concat([new Buffer(4).fill(payload.length), payload])
+
+        // try {
+        let typeId = payloadtypes.getTypeID(payload)
+        let pl: Buffer = payloadtypes.getContent(payload)
+        let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+        return payloadbase
+        // } catch (e) {
+        //     console.error('Unable to parse payload.')
+        // console.error(e)
+        // }
+    }
+
+    get payload(): PayloadBase | null {
+        let payload = this.utxos[0].payload
+        if (!payload) return null
+
+        try {
+            let parsed = this.parsePayload(payload)
+            return parsed
+        } catch (e) {
+            console.error('Unable to parse payload.')
+        }
+        return null
     }
 }
 </script>
@@ -68,17 +95,16 @@ $countW: 18px;
 }
 
 .nft_card {
-    max-height: 100%;
-    height: 100%;
+    height: 35px !important;
+    width: 35px !important;
+    background-color: var(--bg-light);
     position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    pointer-events: none;
 }
 
 .payload_view {
-    height: 35px;
-    width: 35px;
-    background-color: var(--bg-light);
-    border-radius: 4px;
-    pointer-events: none;
 }
 
 @include main.mobile-device {

@@ -185,6 +185,31 @@ export default class FungibleRow extends Vue {
     display: none;
 }
 
+@include main.medium-device {
+    .asset {
+        padding: 4px 0;
+    }
+
+    .balance_col {
+        span {
+            font-size: 15px;
+        }
+        font-size: 15px;
+    }
+    .send_col {
+        img {
+            width: 14px;
+        }
+    }
+
+    .name_col {
+        font-size: 14px;
+    }
+
+    .icon {
+        padding: 6px;
+    }
+}
 @include main.mobile-device {
     .name_col {
         display: none;
