@@ -18,6 +18,7 @@ import {
     OperationTx,
     SelectCredentialClass,
     TransferableOperation,
+    TransferableOutput as AVMTransferableOutput,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
 } from 'avalanche/dist/apis/avm'
@@ -25,6 +26,7 @@ import {
 import {
     ImportTx,
     ExportTx,
+    TransferableOutput as PlatformTransferableOutput,
     Tx as PlatformTx,
     UTXO as PlatformUTXO,
     UnsignedTx as PlatformUnsignedTx,
@@ -341,28 +343,18 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
-    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
-        unsignedTx: UnsignedTx,
-        isAVM: boolean = true,
+    getOutputMessages<Outputs extends AVMTransferableOutput[] | PlatformTransferableOutput[]>(
+        outs: Outputs,
+        isAVM: boolean,
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
-
-        let tx = unsignedTx.getTransaction()
-        let txType = tx.getTxType()
-        let outs = tx.getOuts()
         let chainId: ChainAlias = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
-
-        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
-            outs = (tx as ExportTx).getExportOutputs()
-        }
 
         let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
         let changeAddr = this.getChangeFromIndex(changeIdx, chainId)
 
-        // TODO: Construct the messages array depending on transaction type
         for (let i = 0; i < outs.length; i++) {
             outs[i]
                 .getOutput()
@@ -379,6 +371,34 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                         })
                 })
         }
+
+        return messages
+    }
+
+    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
+    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        isAVM: boolean = true,
+        changePath: null | { toPathArray: () => number[] }
+    ): ILedgerBlockMessage[] {
+        let messages: ILedgerBlockMessage[] = []
+
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        let outs = tx.getOuts()
+        let outputMessages = this.getOutputMessages(outs, isAVM, changePath)
+
+        // regular output messages, if any
+        messages.push(...outputMessages)
+
+        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+            outs = (tx as ExportTx).getExportOutputs()
+            // export output messages, if any
+            outputMessages = this.getOutputMessages(outs, isAVM, changePath)
+            messages.push(...outputMessages)
+        }
+
+        // TODO: Construct the messages array depending on transaction type
         if (
             txType === PlatformVMConstants.ADDDELEGATORTX ||
             txType === PlatformVMConstants.ADDVALIDATORTX
