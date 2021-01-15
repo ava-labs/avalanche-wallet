@@ -39,13 +39,6 @@
                     ref="vlist"
                     :estimate-size="txsProcessed.length"
                 ></virtual-list>
-                <!--                    <TxRow v-for="tx in txsProcessed" :key="tx.id" :source="tx"></TxRow>-->
-                <!--                    <MonthGroup-->
-                <!--                        class="month_group"-->
-                <!--                        v-for="month in monthGroups"-->
-                <!--                        :key="month[0].timestamp"-->
-                <!--                        :transactions="month"-->
-                <!--                    ></MonthGroup>-->
                 <div v-if="txs.length === 0" class="empty">
                     <p>No Transactions Found.</p>
                 </div>
@@ -67,7 +60,6 @@ import {
 import moment from 'moment'
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
-import MonthGroup from '@/components/wallet/activity/MonthGroup.vue'
 import RadioButtons from '@/components/misc/RadioButtons.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 
@@ -86,7 +78,6 @@ const MONTH_MIN = 8
     components: {
         Spinner,
         TxRow,
-        MonthGroup,
         RadioButtons,
         VirtualList,
     },
