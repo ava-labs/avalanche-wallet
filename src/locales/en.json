@@ -464,7 +464,7 @@
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",
-        "error_api_desc": "You must provide an AVA Explorer API for this network to view transaction history."
+        "error_api_desc": "You must provide an Avalanche Explorer API for this network to view transaction history."
     },
     "modal": {
         "qr": {

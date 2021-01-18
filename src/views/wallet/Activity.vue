@@ -1,5 +1,11 @@
 <template>
     <div class="activity_page">
+        <div class="explorer_warning" v-if="!hasExplorer">
+            <div class="warning_body">
+                <h1>Explorer Not Found</h1>
+                <p>The active network settings has not provided an explorer API endpoint.</p>
+            </div>
+        </div>
         <div class="settings">
             <div class="filter_col">
                 <div class="filter_cont">
@@ -68,6 +74,7 @@ type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 
 //@ts-ignore
 import VirtualList from 'vue-virtual-scroll-list'
+import { AvaNetwork } from '@/js/AvaNetwork'
 
 const PAGE_LIMIT = 100
 
@@ -126,6 +133,14 @@ export default class Activity extends Vue {
 
     get monthNowName() {
         return moment(this.monthNow + 1, 'MM').format('MMMM')
+    }
+
+    get hasExplorer() {
+        let network: AvaNetwork | null = this.$store.state.Network.selectedNetwork
+        if (!network?.explorerUrl) {
+            return false
+        }
+        return true
     }
 
     mounted() {
@@ -299,10 +314,41 @@ export default class Activity extends Vue {
 @use '../../main';
 
 .activity_page {
+    position: relative;
     display: grid;
     grid-template-rows: max-content 1fr;
     padding-bottom: 14px;
 }
+
+.explorer_warning {
+    position: absolute;
+    background-color: var(--bg);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+        font-weight: normal;
+        margin-bottom: 14px;
+        color: #fff;
+    }
+
+    .warning_body {
+        display: flex;
+        flex-direction: column;
+        max-width: 380px;
+        background-color: var(--secondary-color);
+        color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+    }
+}
+
 .header {
     display: flex;
     flex-direction: row;

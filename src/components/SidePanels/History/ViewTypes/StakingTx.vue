@@ -13,7 +13,7 @@
             </p>
         </div>
         <div v-else>
-            <div class="time_bar">
+            <div class="time_bar" v-if="isStarted">
                 <div
                     class="bar_row"
                     :style="{
@@ -21,10 +21,26 @@
                     }"
                 ></div>
             </div>
-            <div class="data_row reward_row">
-                <p>Reward Pending</p>
-                <p class="amt">{{ rewardText }} AVAX</p>
+            <div v-if="!isStarted" class="data_row date_row">
+                <p>Start Date</p>
+                <p>
+                    {{ startDate.toLocaleDateString() }}
+                    {{ startDate.toLocaleTimeString() }}
+                </p>
             </div>
+            <template v-else>
+                <div class="data_row reward_row">
+                    <p>End Date</p>
+                    <p>
+                        {{ endDate.toLocaleDateString() }}
+                        {{ endDate.toLocaleTimeString() }}
+                    </p>
+                </div>
+                <div class="data_row reward_row">
+                    <p>Reward Pending</p>
+                    <p class="amt">{{ rewardText }} AVAX</p>
+                </div>
+            </template>
         </div>
 
         <div class="data_row">
@@ -41,10 +57,26 @@ import { bnToBig } from '@/helpers/helper'
 import { UnixNow } from 'avalanche/dist/utils'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
+import moment from 'moment'
 
 @Component
 export default class StakingTx extends Vue {
     @Prop() transaction!: ITransactionData
+    isStarted = false
+    mounted() {
+        this.updateStartStatus()
+    }
+
+    updateStartStatus() {
+        let now = UnixNow()
+        this.isStarted = now.toNumber() > this.startTime
+
+        if (!this.isStarted) {
+            setTimeout(() => {
+                this.updateStartStatus()
+            }, 5000)
+        }
+    }
 
     get isValidator() {
         return this.transaction.type === 'add_validator'
@@ -84,11 +116,17 @@ export default class StakingTx extends Vue {
     get startTime() {
         return this.transaction.validatorStart
     }
-
     get endtime() {
         return this.transaction.validatorEnd
     }
 
+    get startDate() {
+        return new Date(this.startTime * 1000)
+    }
+
+    get endDate() {
+        return new Date(this.endtime * 1000)
+    }
     get validator(): ValidatorRaw | null {
         let nodeId = this.transaction.validatorNodeID
         if (nodeId) {
@@ -140,6 +178,7 @@ export default class StakingTx extends Vue {
     }
 
     get timeBarPerc() {
+        if (!this.isStarted) return 0
         let now = UnixNow()
         // if (this.endtime) {
         let dur = this.endtime - this.startTime
