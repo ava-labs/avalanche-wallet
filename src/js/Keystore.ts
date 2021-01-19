@@ -2,13 +2,25 @@
 import {
     AllKeyFileDecryptedTypes,
     AllKeyFileTypes,
-    KeyFile,
-    KeyFileDecrypted,
+    KeyFileDecryptedV2,
+    KeyFileDecryptedV3,
+    KeyFileDecryptedV4,
+    KeyFileDecryptedV5,
     KeyFileDecryptedV6,
-    KeyFileKey,
-    KeyFileKeyDecrypted,
+    KeyFileKeyDecryptedV2,
+    KeyFileKeyDecryptedV3,
+    KeyFileKeyDecryptedV4,
+    KeyFileKeyDecryptedV5,
     KeyFileKeyDecryptedV6,
+    KeyFileKeyV2,
+    KeyFileKeyV3,
+    KeyFileKeyV4,
+    KeyFileKeyV5,
     KeyFileKeyV6,
+    KeyFileV2,
+    KeyFileV3,
+    KeyFileV4,
+    KeyFileV5,
     KeyFileV6,
     KeystoreFileKeyType,
 } from './IKeystore'
@@ -41,59 +53,32 @@ interface PKCrypt {
     ciphertext: Buffer
 }
 
-async function readV2(data: KeyFile, pass: string) {}
-async function readV3(data: KeyFile, pass: string) {}
-async function readV4(data: KeyFile, pass: string) {}
-
-// Extract old version support out and onto other functions
-async function readV5(data: KeyFile, pass: string) {
+async function readV2(data: KeyFileV2, pass: string) {
     const version: string = data.version
-
-    if (!SUPPORTED_VERSION.includes(version)) {
-        throw 'INVALID_VERSION'
-    }
-
-    if (version === '2.0') {
-        cryptoHelpers.keygenIterations = ITERATIONS_V2
-    } else {
-        cryptoHelpers.keygenIterations = ITERATIONS_V3
-    }
+    cryptoHelpers.keygenIterations = ITERATIONS_V2
 
     let salt: Buffer = bintools.cb58Decode(data.salt)
-    //@ts-ignore
     let pass_hash: string = data.pass_hash
 
     let checkHashString: string
-    if (version === '2.0') {
-        let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
-        checkHashString = bintools.cb58Encode(checkHash)
-    } else {
-        let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-        checkHashString = bintools.cb58Encode(checkHash.hash)
-    }
+    let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
+    checkHashString = bintools.cb58Encode(checkHash)
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
     }
 
-    let keys: KeyFileKey[] = data.keys
-    let keysDecrypt: KeyFileKeyDecrypted[] = []
+    let keys: KeyFileKeyV2[] = data.keys
+    let keysDecrypt: KeyFileKeyDecryptedV2[] = []
 
     for (let i: number = 0; i < keys.length; i++) {
-        let key_data: KeyFileKey = keys[i]
+        let key_data: KeyFileKeyV2 = keys[i]
 
         let key: Buffer = bintools.cb58Decode(key_data.key)
         let nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string: string
-
-        //  versions below 5.0 used private key that had to be cb58 encoded
-        if (['2.0', '3.0', '4.0'].includes(version)) {
-            key_string = bintools.cb58Encode(key_decrypt)
-        } else {
-            key_string = key_decrypt.toString()
-        }
+        let key_string = bintools.cb58Encode(key_decrypt)
 
         keysDecrypt.push({
             key: key_string,
@@ -101,34 +86,128 @@ async function readV5(data: KeyFile, pass: string) {
     }
 
     return {
-        version: version,
+        version,
+        keys: keysDecrypt,
+    }
+}
+async function readV3(data: KeyFileV3, pass: string) {
+    const version: string = data.version
+    cryptoHelpers.keygenIterations = ITERATIONS_V3
+
+    let salt: Buffer = bintools.cb58Decode(data.salt)
+    let pass_hash: string = data.pass_hash
+
+    let checkHashString: string
+    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
+    checkHashString = bintools.cb58Encode(checkHash.hash)
+
+    if (checkHashString !== pass_hash) {
+        throw 'INVALID_PASS'
+    }
+
+    let keys: KeyFileKeyV3[] = data.keys
+    let keysDecrypt: KeyFileKeyDecryptedV3[] = []
+
+    for (let i: number = 0; i < keys.length; i++) {
+        let key_data: KeyFileKeyV3 = keys[i]
+
+        let key: Buffer = bintools.cb58Decode(key_data.key)
+        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+
+        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        let key_string = bintools.cb58Encode(key_decrypt)
+
+        keysDecrypt.push({
+            key: key_string,
+        })
+    }
+
+    return {
+        version,
+        keys: keysDecrypt,
+    }
+}
+async function readV4(data: KeyFileV4, pass: string): Promise<KeyFileDecryptedV5> {
+    const version: string = data.version
+    cryptoHelpers.keygenIterations = ITERATIONS_V3
+
+    let salt: Buffer = bintools.cb58Decode(data.salt)
+    let pass_hash: string = data.pass_hash
+
+    let checkHashString: string
+    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
+    checkHashString = bintools.cb58Encode(checkHash.hash)
+
+    if (checkHashString !== pass_hash) {
+        throw 'INVALID_PASS'
+    }
+
+    let keys: KeyFileKeyV4[] = data.keys
+    let keysDecrypt: KeyFileKeyDecryptedV4[] = []
+
+    for (let i: number = 0; i < keys.length; i++) {
+        let key_data: KeyFileKeyV4 = keys[i]
+
+        let key: Buffer = bintools.cb58Decode(key_data.key)
+        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+
+        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        let key_string = bintools.cb58Encode(key_decrypt)
+
+        keysDecrypt.push({
+            key: key_string,
+        })
+    }
+
+    return {
+        version,
+        keys: keysDecrypt,
+    }
+}
+
+async function readV5(data: KeyFileV5, pass: string): Promise<KeyFileDecryptedV5> {
+    const version: string = data.version
+    cryptoHelpers.keygenIterations = ITERATIONS_V3
+
+    let salt: Buffer = bintools.cb58Decode(data.salt)
+    let pass_hash = data.pass_hash
+
+    let checkHashString: string
+    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
+    checkHashString = bintools.cb58Encode(checkHash.hash)
+
+    if (checkHashString !== pass_hash) {
+        throw 'INVALID_PASS'
+    }
+
+    let keys: KeyFileKeyV5[] = data.keys
+    let keysDecrypt: KeyFileKeyDecryptedV5[] = []
+
+    for (let i: number = 0; i < keys.length; i++) {
+        let key_data: KeyFileKeyV5 = keys[i]
+
+        let key: Buffer = bintools.cb58Decode(key_data.key)
+        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+
+        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        let key_string = key_decrypt.toString()
+
+        keysDecrypt.push({
+            key: key_string,
+        })
+    }
+
+    return {
+        version,
         keys: keysDecrypt,
     }
 }
 
 async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6> {
     const version: string = data.version
-
-    if (!SUPPORTED_VERSION.includes(version)) {
-        throw 'INVALID_VERSION'
-    }
-
-    if (version === '2.0') {
-        cryptoHelpers.keygenIterations = ITERATIONS_V2
-    } else {
-        cryptoHelpers.keygenIterations = ITERATIONS_V3
-    }
+    cryptoHelpers.keygenIterations = ITERATIONS_V3
 
     let salt: Buffer = bintools.cb58Decode(data.salt)
-
-    let checkHashString: string
-    if (version === '2.0') {
-        let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
-        checkHashString = bintools.cb58Encode(checkHash)
-    } else {
-        let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-        checkHashString = bintools.cb58Encode(checkHash.hash)
-    }
 
     let keys: KeyFileKeyV6[] = data.keys
     let keysDecrypt: KeyFileKeyDecryptedV6[] = []
@@ -139,21 +218,15 @@ async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6
         let key: Buffer = bintools.cb58Decode(key_data.key)
         let type: KeystoreFileKeyType = key_data.type
         let nonce: Buffer = bintools.cb58Decode(key_data.iv)
-        let key_decrypt: Buffer
 
+        let key_decrypt: Buffer
         try {
             key_decrypt = await cryptoHelpers.decrypt(pass, key, salt, nonce)
         } catch (e) {
             throw 'INVALID_PASS'
         }
-        let key_string: string
 
-        //  versions below 5.0 used private key that had to be cb58 encoded
-        if (['2.0', '3.0', '4.0'].includes(version)) {
-            key_string = bintools.cb58Encode(key_decrypt)
-        } else {
-            key_string = key_decrypt.toString()
-        }
+        const key_string = key_decrypt.toString()
 
         keysDecrypt.push({
             key: key_string,
@@ -162,79 +235,26 @@ async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6
     }
 
     return {
-        version: version,
+        version,
         keys: keysDecrypt,
     }
 }
 
 async function readKeyFile(data: AllKeyFileTypes, pass: string): Promise<AllKeyFileDecryptedTypes> {
-    const version: string = data.version
-
-    if (!SUPPORTED_VERSION.includes(version)) {
-        throw 'INVALID_VERSION'
-    }
-
-    // TODO: Add switch statement for versions and call the correct read functions
-    switch (version) {
+    switch (data.version) {
         case '6.0':
             return await readV6(data as KeyFileV6, pass)
-            break
-        // TODO: Break up for version types
+        case '5.0':
+            return await readV5(data as KeyFileV5, pass)
+        case '4.0':
+            return await readV4(data as KeyFileV4, pass)
+        case '3.0':
+            return await readV3(data as KeyFileV3, pass)
+        case '2.0':
+            return await readV2(data as KeyFileV2, pass)
         default:
-            return await readV5(data as KeyFile, pass)
-            break
+            throw 'INVALID_VERSION'
     }
-
-    // if (version === '2.0') {
-    //     cryptoHelpers.keygenIterations = ITERATIONS_V2
-    // } else {
-    //     cryptoHelpers.keygenIterations = ITERATIONS_V3
-    // }
-    //
-    // let salt: Buffer = bintools.cb58Decode(data.salt)
-    //
-    // let checkHashString: string
-    // if (version === '2.0') {
-    //     let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
-    //     checkHashString = bintools.cb58Encode(checkHash)
-    // } else {
-    //     let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    //     checkHashString = bintools.cb58Encode(checkHash.hash)
-    // }
-    //
-    // let keys: KeyFileKey[] = data.keys
-    // let keysDecrypt: KeyFileKeyDecrypted[] = []
-    //
-    // for (let i: number = 0; i < keys.length; i++) {
-    //     let key_data: KeyFileKey = keys[i]
-    //
-    //     let key: Buffer = bintools.cb58Decode(key_data.key)
-    //     let nonce: Buffer = bintools.cb58Decode(key_data.iv)
-    //     let key_decrypt: Buffer
-    //
-    //     try {
-    //         key_decrypt = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-    //     } catch (e) {
-    //         throw 'INVALID_PASS'
-    //     }
-    //     let key_string: string
-    //
-    //     //  versions below 5.0 used private key that had to be cb58 encoded
-    //     if (['2.0', '3.0', '4.0'].includes(version)) {
-    //         key_string = bintools.cb58Encode(key_decrypt)
-    //     } else {
-    //         key_string = key_decrypt.toString()
-    //     }
-    //
-    //     keysDecrypt.push({
-    //         key: key_string,
-    //     })
-    // }
-    //
-    // return {
-    //     version: version,
-    //     keys: keysDecrypt,
-    // }
 }
 
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
@@ -287,7 +307,7 @@ function extractKeysFromDecryptedFile(file: AllKeyFileDecryptedTypes): AccessWal
 
     // Convert old version private keys to mnemonic phrases
     if (['2.0', '3.0', '4.0'].includes(version)) {
-        let keys = (file as KeyFileDecrypted).keys
+        let keys = (file as KeyFileDecryptedV2 | KeyFileDecryptedV3 | KeyFileDecryptedV4).keys
 
         accessInput = keys.map((key) => {
             // Private keys from the keystore file do not have the PrivateKey- prefix
@@ -305,7 +325,7 @@ function extractKeysFromDecryptedFile(file: AllKeyFileDecryptedTypes): AccessWal
             }
         })
     } else if (version === '5.0') {
-        let keys = (file as KeyFileDecrypted).keys
+        let keys = (file as KeyFileDecryptedV5).keys
         // New versions encrypt the mnemonic so we dont have to do anything
         accessInput = keys.map((key) => {
             return {
