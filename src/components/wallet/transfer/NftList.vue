@@ -11,7 +11,7 @@
             ></NftListItem>
             <div class="nft_icon card nft_add">
                 <button @click="showPopup" class="add_but">
-                    +
+                    <fa icon="plus"></fa>
                     <br />
                     Add Collectible
                 </button>
@@ -163,6 +163,8 @@ export default class NftList extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 $nft_w: 90px;
 
 .added_list {
@@ -182,7 +184,6 @@ $nft_w: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.1);
 
     &:first-of-type {
         margin-left: 0;
@@ -193,7 +194,7 @@ $nft_w: 90px;
     background-color: transparent;
 }
 .add_but {
-    box-shadow: none;
+    box-shadow: none !important;
     height: 100%;
     width: 100%;
     padding: 14px;
@@ -206,6 +207,28 @@ $nft_w: 90px;
 
     &:hover {
         opacity: 1;
+    }
+}
+
+@include main.mobile-device {
+    .added_list {
+        display: grid;
+        grid-gap: 12px;
+        row-gap: 22px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .nft_icon {
+        width: 100%;
+        padding-top: 100%;
+        position: relative;
+        height: 0;
+        margin: 0;
+    }
+
+    .add_but {
+        position: absolute;
+        top: 0;
     }
 }
 </style>

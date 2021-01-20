@@ -336,11 +336,10 @@ h4 {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
     column-gap: 45px;
-    padding-top: 15px;
 }
 
 .form {
-    padding-right: 80px;
+    padding-right: 45px;
     grid-column: 1/3;
     border-right: 1px solid var(--bg-light);
     > div {
@@ -406,11 +405,22 @@ label {
     padding-bottom: 30px;
 }
 
+@include main.medium-device {
+    .cols {
+        grid-template-columns: 1fr 1fr 220px;
+        column-gap: 25px;
+    }
+}
+
 @include main.mobile-device {
     .cols {
         display: block;
     }
-
+    .form {
+        padding-bottom: 14px;
+        border: none;
+        padding-right: 0;
+    }
     .gas_cont {
         display: block;
 

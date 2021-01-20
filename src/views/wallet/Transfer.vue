@@ -1,6 +1,6 @@
 <template>
     <div class="transfer_card">
-        <h1>{{ $t('transfer.title') }}</h1>
+        <!--        <h1>{{ $t('transfer.title') }}</h1>-->
         <div v-if="networkStatus !== 'connected'" class="disconnected">
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
@@ -570,7 +570,6 @@ h4 {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
     column-gap: 45px;
-    padding-top: 15px;
 }
 
 .new_order_Form > div {
@@ -646,13 +645,20 @@ label {
     padding: 8px 16px;
 }
 
-@media only screen and (max-width: 600px) {
-    .order_form {
-        display: block;
-    }
-    .asset_select button {
-        flex-grow: 1;
-        word-break: break-word;
+//@media only screen and (max-width: 600px) {
+//    .order_form {
+//        display: block;
+//    }
+//    .asset_select button {
+//        flex-grow: 1;
+//        word-break: break-word;
+//    }
+//}
+
+@include main.medium-device {
+    .new_order_Form {
+        grid-template-columns: 1fr 1fr 220px;
+        column-gap: 25px;
     }
 }
 

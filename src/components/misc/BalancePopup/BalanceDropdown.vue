@@ -75,6 +75,8 @@ export default class BalanceDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 button {
     padding: 4px 12px;
     width: 100%;
@@ -102,5 +104,11 @@ button {
 }
 .popup {
     position: absolute;
+}
+
+@include main.mobile-device {
+    button {
+        font-size: 13px;
+    }
 }
 </style>
