@@ -102,6 +102,7 @@ export default class TxSummary extends Vue {
 
     $nft_w: 80px;
     > div {
+        position: relative;
         width: $nft_w;
         overflow: auto;
         border-radius: 3px;
