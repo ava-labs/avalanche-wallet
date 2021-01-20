@@ -32,7 +32,6 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { ImportKeyfileInput } from '@/store/types'
-import { KeyFile } from '@/js/IKeystore'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { privateToAddress } from 'ethereumjs-util'
 import { bintools } from '@/AVA'

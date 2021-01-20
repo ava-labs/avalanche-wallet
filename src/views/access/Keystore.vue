@@ -39,7 +39,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import FileInput from '../../components/misc/FileInput.vue'
 // import RememberKey from "../../components/misc/RememberKey.vue";
 import { ImportKeyfileInput } from '@/store/types'
-import { KeyFile } from '@/js/IKeystore'
+import { AllKeyFileTypes } from '@/js/IKeystore'
 
 @Component({
     components: {
@@ -77,7 +77,7 @@ export default class Keystore extends Vue {
         let parent = this
         this.error = ''
 
-        let fileData: KeyFile
+        let fileData: AllKeyFileTypes
         try {
             fileData = JSON.parse(this.fileText as string)
         } catch (e) {

@@ -28,13 +28,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
-import {
-    AllKeyFileTypes,
-    KeyFile,
-    KeyFileDecrypted,
-    KeyFileDecryptedV6,
-    KeystoreFileKeyType,
-} from '@/js/IKeystore'
+import { AllKeyFileTypes, KeyFileDecryptedV6, KeystoreFileKeyType } from '@/js/IKeystore'
 import { extractKeysFromDecryptedFile, readKeyFile } from '@/js/Keystore'
 import { avm } from '@/AVA'
 import { keyToKeypair } from '@/helpers/helper'

@@ -33,7 +33,7 @@
 import { Vue, Component, Ref } from 'vue-property-decorator'
 import FileInput from '@/components/misc/FileInput.vue'
 import { ImportKeyfileInput } from '@/store/types'
-import { KeyFile } from '@/js/IKeystore'
+import { AllKeyFileTypes } from '@/js/IKeystore'
 import { KEYSTORE_VERSION } from '@/js/Keystore'
 
 @Component({
@@ -68,7 +68,7 @@ export default class AddKeyFile extends Vue {
     }
 
     importKeyfile() {
-        let fileData: KeyFile
+        let fileData: AllKeyFileTypes
         this.err = null
 
         try {
@@ -79,6 +79,7 @@ export default class AddKeyFile extends Vue {
         }
 
         if (fileData.version != KEYSTORE_VERSION) {
+            // TODO: update here?
             this.err =
                 'Tried to import an old keystore version. Please update your keystore file before importing.'
             return
