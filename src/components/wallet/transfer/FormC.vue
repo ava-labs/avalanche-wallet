@@ -336,11 +336,10 @@ h4 {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
     column-gap: 45px;
-    padding-top: 15px;
 }
 
 .form {
-    padding-right: 80px;
+    //padding-right: 80px;
     grid-column: 1/3;
     border-right: 1px solid var(--bg-light);
     > div {
@@ -410,7 +409,10 @@ label {
     .cols {
         display: block;
     }
-
+    .form {
+        padding-bottom: 14px;
+        border: none;
+    }
     .gas_cont {
         display: block;
 

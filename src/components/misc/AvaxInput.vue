@@ -1,7 +1,7 @@
 <template>
     <div class="avax_input">
         <div class="col1 hover_border">
-            <button class="max_but" @click="maxOut">MAX</button>
+            <button class="max_but" @click="maxOut" v-if="max">MAX</button>
             <BigNumInput
                 ref="amt_in"
                 class="amt_in"
@@ -46,7 +46,11 @@ import { priceDict } from '../../store/types'
 export default class AvaxInput extends Vue {
     @Model('change', { type: Object }) readonly amount!: boolean
 
-    @Prop() max?: BN | null
+    @Prop({
+        default: null,
+    })
+    max?: BN | null
+
     @Prop() balance?: Big | null
 
     maxOut(ev: MouseEvent) {

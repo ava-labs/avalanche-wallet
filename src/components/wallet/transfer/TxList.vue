@@ -281,7 +281,12 @@ $right_pad: 80px;
 
 @include main.mobile-device {
     .list_item {
-        grid-template-columns: 1fr;
+        column-gap: 12px;
+        grid-template-columns: 1fr max-content;
+    }
+
+    .add_asset {
+        width: 100%;
     }
 }
 </style>

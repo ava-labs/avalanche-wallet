@@ -137,6 +137,7 @@ $nft_w: 35px;
 }
 
 .nft_item {
+    position: relative;
     height: $nft_w;
     width: $nft_w;
     border-radius: 4px;

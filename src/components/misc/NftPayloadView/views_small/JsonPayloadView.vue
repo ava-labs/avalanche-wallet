@@ -69,6 +69,9 @@ export default class JsonPayloadView extends Vue {
     height: 100%;
     width: 100%;
     display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
     align-items: center;
     justify-content: center;
 

@@ -77,6 +77,8 @@ export default class CollectibleFamily extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 .fam_title {
     border-bottom: 2px solid var(--bg-light);
 }
@@ -90,6 +92,7 @@ $card_w: 40px;
 }
 
 .card {
+    position: relative;
     width: $card_w;
     height: $card_w;
     background-color: var(--bg-light);
@@ -111,6 +114,17 @@ $card_w: 40px;
         opacity: 0.1;
         pointer-events: none;
         cursor: not-allowed;
+    }
+}
+
+@include main.mobile-device {
+    .group_grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .card {
+        width: 100%;
+        padding-top: 100%;
     }
 }
 </style>
