@@ -336,6 +336,7 @@ h4 {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
     column-gap: 45px;
+    padding: 0;
 }
 
 .form {
@@ -364,12 +365,9 @@ input,
     font-size: 14px;
 }
 .gas_cont {
-    //display: grid;
-    //grid-template-columns: 1fr 1fr;
     column-gap: 14px;
-    > div {
-        display: flex;
-        flex-direction: column;
+    input {
+        width: 100%;
     }
 }
 

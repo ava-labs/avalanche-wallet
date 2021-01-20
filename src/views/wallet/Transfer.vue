@@ -35,7 +35,8 @@
                             placeholder="xxx"
                         ></qr-input>
                         <p class="confirm_val" v-else>{{ formAddress }}</p>
-
+                    </div>
+                    <div>
                         <template v-if="isConfirm && formMemo.length > 0">
                             <h4>Memo (Optional)</h4>
                             <p class="confirm_val">{{ formMemo }}</p>
