@@ -19,7 +19,7 @@ import {
     AccessWalletMultipleInput,
 } from '@/store/types'
 
-import { KeyFileDecrypted } from '@/js/IKeystore'
+import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 
 Vue.use(Vuex)
 
@@ -338,35 +338,8 @@ export default new Vuex.Store({
 
             try {
                 // Decrypt the key file with the password
-                let keyFile: KeyFileDecrypted = await readKeyFile(fileData, pass)
-
-                // Old files have private keys, 5.0 and above has mnemonic phrases
-                // let keys = keyFile.keys
-
-                // let chainID = avm.getBlockchainAlias()
-
-                // let mnemonics: string[]
-                // // Convert old version private keys to mnemonic phrases
-                // if (['2.0', '3.0', '4.0'].includes(version)) {
-                //     mnemonics = keys.map((key) => {
-                //         // Private keys from the keystore file do not have the PrivateKey- prefix
-                //         let pk = 'PrivateKey-' + key.key
-                //         let keypair = keyToKeypair(pk, chainID)
-                //
-                //         let keyBuf = keypair.getPrivateKey()
-                //         let keyHex: string = keyBuf.toString('hex')
-                //
-                //         // Entropy must be 64 characters, make sure 0 pad exists
-                //         let paddedKeyHex = keyHex.padStart(64, '0')
-                //         let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
-                //
-                //         return mnemonic
-                //     })
-                // } else {
-                //     // New versions encrypt the mnemonic so we dont have to do anything
-                //     mnemonics = keys.map((key) => key.key)
-                // }
-
+                let keyFile: AllKeyFileDecryptedTypes = await readKeyFile(fileData, pass)
+                // Extract wallet keys
                 let keys = extractKeysFromDecryptedFile(keyFile)
 
                 // If not auth, login user then add keys
