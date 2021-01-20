@@ -98,4 +98,14 @@ export default class Modal extends Vue {
     border-radius: 2px;
     overflow: hidden;
 }
+
+@include main.mobile-device {
+    .modal_body {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        margin: 0;
+        max-width: none;
+    }
+}
 </style>
