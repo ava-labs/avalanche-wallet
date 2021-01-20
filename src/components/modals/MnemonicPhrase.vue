@@ -33,8 +33,8 @@ export default class MnemonicPhrase extends Vue {
 <style scoped lang="scss">
 .mnemonic_modal_body {
     /*width: 600px;*/
-    width: 400px;
-    max-width: 100%;
+    max-width: 400px;
+    width: 100%;
     padding: 30px;
     background-color: var(--bg-light);
 }
