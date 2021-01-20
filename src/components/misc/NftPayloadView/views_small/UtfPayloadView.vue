@@ -69,7 +69,7 @@ p {
     background-color: var(--primary-color);
     padding: 3px 12px;
     border: 1px solid var(--bg);
-    color: var(--bg);
+    color: var(--bg) !important;
     transition-duration: 0.2s;
     border-radius: 3px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
