@@ -166,7 +166,7 @@ export default class TxList extends Vue {
 <style scoped lang="scss">
 @use '../../../main';
 
-$right_pad: 80px;
+$right_pad: 60px;
 
 .chain_warn {
     color: var(--primary-color-light);

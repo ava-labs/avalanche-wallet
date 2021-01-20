@@ -339,7 +339,7 @@ h4 {
 }
 
 .form {
-    //padding-right: 80px;
+    padding-right: 45px;
     grid-column: 1/3;
     border-right: 1px solid var(--bg-light);
     > div {
@@ -412,6 +412,7 @@ label {
     .form {
         padding-bottom: 14px;
         border: none;
+        padding-right: 0;
     }
     .gas_cont {
         display: block;
