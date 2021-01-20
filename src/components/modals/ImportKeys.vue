@@ -113,6 +113,9 @@ export default class ImportKeys extends Vue {
 }
 
 @include main.mobile-device {
+    .add_key_body {
+        max-width: 100%;
+    }
 }
 </style>
 
