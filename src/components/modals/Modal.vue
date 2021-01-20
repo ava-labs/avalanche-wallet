@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div class="modal_main" v-show="isActive">
-            <div class="modal_bg" @click="bgclick"></div>
+            <div class="modal_bg" @click="bgclick" :icy="icy"></div>
             <div class="modal_body">
                 <div class="modal_topbar">
                     <h4 class="modal_title">{{ title }}</h4>
@@ -22,6 +22,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class Modal extends Vue {
     @Prop({ default: 'Modal Title' }) title!: string
     @Prop({ default: true }) can_close!: boolean
+    @Prop({ default: false }) icy!: boolean
 
     isActive: boolean = false
 
@@ -86,6 +87,10 @@ export default class Modal extends Vue {
     display: flex;
     vertical-align: center;
     align-items: center;
+
+    &[icy] {
+        backdrop-filter: blur(4px);
+    }
 }
 
 .modal_body {
@@ -101,11 +106,14 @@ export default class Modal extends Vue {
 
 @include main.mobile-device {
     .modal_body {
-        position: absolute;
+        position: fixed;
         bottom: 0;
         width: 100%;
         margin: 0;
+        padding-bottom: 20px;
         max-width: none;
+        border-top-right-radius: 30px;
+        border-top-left-radius: 30px;
     }
 }
 </style>

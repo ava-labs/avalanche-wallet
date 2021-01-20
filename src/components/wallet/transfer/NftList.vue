@@ -192,9 +192,9 @@ $nft_w: 90px;
 
 .nft_add {
     background-color: transparent;
+    box-shadow: none !important;
 }
 .add_but {
-    box-shadow: none !important;
     height: 100%;
     width: 100%;
     padding: 14px;

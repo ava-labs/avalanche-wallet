@@ -217,7 +217,7 @@ export default class HDDerivationList extends Vue {
 .headers,
 .list_row {
     display: grid;
-    grid-template-columns: 35px max-content 1fr;
+    grid-template-columns: 35px 2fr 1fr;
     padding: 5px 0px;
     column-gap: 10px;
 }

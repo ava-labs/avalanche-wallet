@@ -50,7 +50,8 @@ export default class ExportKeys extends Vue {
 
 .export_body {
     padding: 30px;
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
     min-height: 315px;
 }
 
@@ -68,7 +69,6 @@ export default class ExportKeys extends Vue {
 
 @include main.mobile-device {
     .export_body {
-        width: 90vw;
     }
 }
 </style>
