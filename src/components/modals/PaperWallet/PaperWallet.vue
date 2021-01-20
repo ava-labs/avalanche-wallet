@@ -245,6 +245,7 @@ export default class PaperWallet extends Vue {
     width: 525px;
     max-width: 100%;
     padding: 30px;
+    margin: 0px auto;
 }
 
 .qr_body p {

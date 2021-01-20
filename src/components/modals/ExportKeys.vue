@@ -69,6 +69,7 @@ export default class ExportKeys extends Vue {
 
 @include main.mobile-device {
     .export_body {
+        max-width: 100%;
     }
 }
 </style>
