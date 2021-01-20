@@ -40,10 +40,12 @@ export default class UrlPayloadView extends Vue {
 .url_payload_view {
     height: 100%;
     width: 100%;
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
     //border-radius: 14px;
     //overflow: hidden;
 }

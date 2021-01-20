@@ -25,7 +25,7 @@ export default class TxHistoryValue extends Vue {
     @Prop() amount!: number | string
     @Prop() assetId!: string
     @Prop() type!: TransactionType
-    @Prop() operationColor!: string
+    // @Prop() operationColor!: string
     @Prop() operationDirection!: 'Sent' | 'Received'
 
     get asset() {

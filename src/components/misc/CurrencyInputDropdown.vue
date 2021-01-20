@@ -93,7 +93,13 @@ export default class CurrencyInputDropdown extends Vue {
     }
 
     get stepSize() {
-        return new BN(1)
+        if (this.denomination > 3) {
+            let stepNum = Math.pow(10, this.denomination - 2)
+            return new BN(stepNum.toString())
+        } else {
+            let stepNum = Math.pow(10, this.denomination)
+            return new BN(stepNum.toString())
+        }
     }
     maxOut() {
         // @ts-ignore
@@ -141,11 +147,8 @@ export default class CurrencyInputDropdown extends Vue {
         if (this.isEmpty || !this.asset_now) return '0.00'
         let deno = this.asset_now.denomination
         let res = '0'
-        if (deno > 0) {
-            res += '.'
-            for (var i = 0; i < deno; i++) {
-                res += '0'
-            }
+        if (deno > 2) {
+            res = '0.00'
         }
         return res
     }
@@ -296,7 +299,11 @@ input {
 @include main.mobile-device {
     .balance,
     .curr_in_drop {
-        grid-template-columns: 1fr 70px;
+        grid-template-columns: 1fr 80px;
+    }
+
+    .balance {
+        font-size: 12px;
     }
 }
 </style>

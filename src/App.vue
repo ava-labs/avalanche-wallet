@@ -12,6 +12,7 @@
             </template>
         </v-main>
         <LedgerBlock ref="ledger_block"></LedgerBlock>
+        <NetworkLoadingBlock></NetworkLoadingBlock>
         <notifications></notifications>
         <TestNetBanner></TestNetBanner>
     </v-app>
@@ -22,9 +23,11 @@ import Navbar from './components/Navbar'
 import RememberWalletModal from '@/components/modals/RememberWallet/RememberWalletModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import TestNetBanner from '@/components/TestNetBanner'
+import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 
 export default {
     components: {
+        NetworkLoadingBlock,
         LedgerBlock,
         RememberWalletModal,
         Navbar,
@@ -126,7 +129,7 @@ p {
 
 @include main.mobile-device {
     #router_view {
-        padding: main.$container_padding_mobile !important;
+        padding: 9px !important;
     }
 
     #nav {

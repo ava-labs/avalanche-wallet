@@ -166,7 +166,7 @@ export default class TxList extends Vue {
 <style scoped lang="scss">
 @use '../../../main';
 
-$right_pad: 80px;
+$right_pad: 60px;
 
 .chain_warn {
     color: var(--primary-color-light);
@@ -281,7 +281,12 @@ $right_pad: 80px;
 
 @include main.mobile-device {
     .list_item {
-        grid-template-columns: 1fr;
+        column-gap: 12px;
+        grid-template-columns: 1fr max-content;
+    }
+
+    .add_asset {
+        width: 100%;
     }
 }
 </style>

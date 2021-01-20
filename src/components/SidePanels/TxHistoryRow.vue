@@ -14,7 +14,7 @@
                 </a>
             </p>
             <div v-if="memo" class="memo">
-                <p>Memo:</p>
+                <p>Memo</p>
                 <p>{{ memo }}</p>
             </div>
         </div>
@@ -26,7 +26,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import moment from 'moment'
-import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
+// import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
 import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
@@ -37,8 +37,9 @@ import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 
 @Component({
     components: {
-        TxHistoryValue,
+        // TxHistoryValue,
         TxHistoryNftFamilyGroup,
+        // TxHistoryValueFunctional,
     },
 })
 export default class TxHistoryRow extends Vue {
@@ -149,13 +150,14 @@ export default class TxHistoryRow extends Vue {
 
 .rewarded,
 .memo {
-    word-break: break-all;
+    overflow-wrap: break-word;
+    word-break: break-word;
     font-size: 12px;
     color: main.$primary-color-light;
     display: grid;
     grid-template-columns: max-content 1fr;
     column-gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 
     p:last-of-type {
         text-align: right;

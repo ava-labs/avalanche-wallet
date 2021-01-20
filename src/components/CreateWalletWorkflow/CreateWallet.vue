@@ -148,7 +148,7 @@ import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import CopyText from '@/components/misc/CopyText.vue'
 import * as bip39 from 'bip39'
 
-import VerifyMnemonic from '@/components/CreateWalletWorkflow/VerifyMnemonic.vue'
+import VerifyMnemonic from '@/components/modals/VerifyMnemonic.vue'
 import MnemonicCopied from '@/components/CreateWalletWorkflow/MnemonicCopied.vue'
 import ToS from '@/components/misc/ToS.vue'
 

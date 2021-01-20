@@ -341,7 +341,7 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
-        let upTo = 300
+        let upTo = 512
 
         let addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
         let addrChains = await getAddressChains(addrs)
@@ -430,17 +430,23 @@ class HdHelper {
         return await this.findAvailableIndexNode(start + SCAN_RANGE)
     }
 
-    // Returns the key of the first index that has no utxos
-    getFirstAvailableAddress(): string {
+    getFirstAvailableIndex(): number {
         for (var i = 0; i < this.hdIndex; i++) {
             let addr = this.getAddressForIndex(i)
             let addrBuf = bintools.parseAddress(addr, this.chainId)
             let utxoIds = this.utxoSet.getUTXOIDs([addrBuf])
             if (utxoIds.length === 0) {
-                return addr
+                return i
             }
         }
-        return this.getCurrentAddress()
+
+        return 0
+    }
+
+    // Returns the key of the first index that has no utxos
+    getFirstAvailableAddress(): string {
+        const idx = this.getFirstAvailableIndex()
+        return this.getAddressForIndex(idx)
     }
 
     getCurrentKey(): AVMKeyPair | PlatformVMKeyPair {

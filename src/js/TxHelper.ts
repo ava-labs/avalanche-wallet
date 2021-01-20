@@ -12,6 +12,7 @@ import {
     UTXO as AVMUTXO,
     UTXOSet,
     UTXOSet as AVMUTXOSet,
+    AVMConstants,
 } from 'avalanche/dist/apis/avm'
 
 import { PayloadBase } from 'avalanche/dist/utils'
@@ -19,6 +20,7 @@ import { OutputOwners } from 'avalanche/dist/common'
 import {
     UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
+    PlatformVMConstants,
 } from 'avalanche/dist/apis/platformvm'
 
 import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm'
@@ -272,4 +274,40 @@ export async function buildExportTransaction(
         )
     }
     throw 'Invalid source chain.'
+}
+
+export enum AvmTxNameEnum {
+    'Transaction' = AVMConstants.BASETX,
+    'Mint' = AVMConstants.CREATEASSETTX,
+    'Operation' = AVMConstants.OPERATIONTX,
+    'Import' = AVMConstants.IMPORTTX,
+    'Export' = AVMConstants.EXPORTTX,
+}
+
+export enum PlatfromTxNameEnum {
+    'Transaction' = PlatformVMConstants.BASETX,
+    'Add Validator' = PlatformVMConstants.ADDVALIDATORTX,
+    'Add Delegator' = PlatformVMConstants.ADDDELEGATORTX,
+    'Import' = PlatformVMConstants.IMPORTTX,
+    'Export' = PlatformVMConstants.EXPORTTX,
+    'Add Subnet Validator' = PlatformVMConstants.ADDSUBNETVALIDATORTX,
+    'Create Chain' = PlatformVMConstants.CREATECHAINTX,
+    'Create Subnet' = PlatformVMConstants.CREATESUBNETTX,
+    'Advance Time' = PlatformVMConstants.ADVANCETIMETX,
+    'Reward Validator' = PlatformVMConstants.REWARDVALIDATORTX,
+}
+
+// TODO: create asset transactions
+export enum ParseableAvmTxEnum {
+    'Transaction' = AVMConstants.BASETX,
+    'Import' = AVMConstants.IMPORTTX,
+    'Export' = AVMConstants.EXPORTTX,
+}
+
+export enum ParseablePlatformEnum {
+    'Transaction' = PlatformVMConstants.BASETX,
+    'Add Validator' = PlatformVMConstants.ADDVALIDATORTX,
+    'Add Delegator' = PlatformVMConstants.ADDDELEGATORTX,
+    'Import' = PlatformVMConstants.IMPORTTX,
+    'Export' = PlatformVMConstants.EXPORTTX,
 }

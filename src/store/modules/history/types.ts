@@ -1,6 +1,8 @@
 export interface HistoryState {
     transactions: ITransactionData[]
+    allTransactions: ITransactionData[]
     isUpdating: boolean
+    isUpdatingAll: boolean
 }
 
 export interface ITransactionData {
@@ -25,6 +27,11 @@ export interface ITransactionData {
     validatorStart: number
     validatorEnd: number
     validatorNodeID: string
+}
+
+export interface ITransactionDataProcessed extends ITransactionData {
+    isMonthChange: boolean
+    isDayChange: boolean
 }
 
 interface TransactionInput {

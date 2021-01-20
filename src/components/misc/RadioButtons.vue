@@ -1,40 +1,33 @@
 <template>
     <div class="radio_buts">
-        <button v-for="val in value" :key="val" @click="select(val)" :active="selection === val">
-            {{ val }}
+        <button
+            v-for="(key, i) in keys"
+            :key="key"
+            @click="select(key)"
+            :active="selection === key"
+            class="hover_border"
+        >
+            {{ labels[i] }}
         </button>
     </div>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            selection: null,
-        }
-    },
-    props: {
-        value: {
-            type: Array,
-            required: true,
-        },
-        default_val: {
-            type: [String, Object],
-        },
-    },
-    methods: {
-        select(val) {
-            this.selection = val
-            this.$emit('change', this.selection)
-        },
-    },
-    created() {
-        if (this.default_val) {
-            this.select(this.default_val)
-        }
-    },
+<script lang="ts">
+import { Vue, Component, Prop, Model } from 'vue-property-decorator'
+
+@Component
+export default class RadioButtons extends Vue {
+    @Prop() labels!: string[]
+    @Prop() keys!: string[]
+
+    @Model('change', { type: String }) readonly selection!: string
+
+    select(val: string) {
+        this.$emit('change', val)
+    }
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
 .radio_buts {
     display: flex;
     flex-wrap: wrap;
@@ -42,25 +35,33 @@ export default {
 button {
     word-break: normal;
     white-space: nowrap;
-    font-size: 12px;
+    font-weight: bold;
+    font-size: 14px;
     padding: 4px 14px;
     border: 1px solid transparent;
-    color: #808080;
-    background-color: #f5f6fa;
+    color: var(--primary-color-light);
+    background-color: var(--bg-wallet);
     border-radius: 4px;
     margin-right: 6px;
     margin-bottom: 6px;
     transition-duration: 0.2s;
     font-family: Inconsolata, monospace;
 
-    &:hover {
-        border-color: #999;
-    }
+    //&:hover {
+    //    border-color: var(--bg-light);
+    //}
 
     &[active] {
-        color: #285599;
-        border-color: #285599;
-        background-color: #e4f0fb;
+        color: var(--primary-color);
+        //border-color: #285599;
+        background-color: var(--bg-light);
+    }
+}
+
+@include main.medium-device {
+    button {
+        font-size: 11px;
+        padding: 4px 8px;
     }
 }
 </style>

@@ -48,9 +48,13 @@
                 </div>
                 <template v-if="isAuth">
                     <router-link to="/wallet">{{ $t('wallet.sidebar.portfolio') }}</router-link>
-                    <router-link to="/wallet/keys">{{ $t('wallet.sidebar.manage') }}</router-link>
                     <router-link to="/wallet/transfer">{{ $t('wallet.sidebar.send') }}</router-link>
+                    <router-link to="/wallet/cross_chain">
+                        {{ $t('wallet.sidebar.export') }}
+                    </router-link>
                     <router-link to="/wallet/earn">{{ $t('wallet.sidebar.earn') }}</router-link>
+                    <router-link to="/wallet/activity">Activity</router-link>
+                    <router-link to="/wallet/keys">{{ $t('wallet.sidebar.manage') }}</router-link>
                     <router-link to="/wallet/advanced" data-cy="wallet_advanced">
                         {{ $t('wallet.sidebar.advanced') }}
                     </router-link>
@@ -174,7 +178,18 @@ button {
     margin: 0;
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.medium-device {
+    img {
+        max-height: 18px;
+    }
+    .buts_right {
+        button {
+            font-size: 11px;
+        }
+    }
+}
+
+@include main.mobile-device {
     .lang_web {
         display: none;
     }

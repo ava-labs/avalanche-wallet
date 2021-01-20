@@ -3,17 +3,17 @@
         <div class="input_group">
             <h4 v-if="isSource">Source</h4>
             <h4 v-else>Destination</h4>
-            <p style="font-size: 3em">{{ chain }}</p>
+            <p style="font-size: 3em" class="chain_alias">{{ chain }}</p>
         </div>
         <div>
             <div class="input_group">
                 <label>Name</label>
-                <p style="font-size: 14px">{{ chainNames[chain] }}</p>
+                <p>{{ chainNames[chain] }}</p>
             </div>
             <div class="input_group">
                 <label>Balance</label>
                 <!--                <NumberCounter :value="balanceBig"></NumberCounter>-->
-                <p>{{ balanceText }}</p>
+                <p class="balance">{{ balanceText }}</p>
             </div>
         </div>
     </div>
@@ -102,6 +102,8 @@ export default class ChainCard extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../../main';
+
 label {
     text-align: left;
     color: var(--primary-color-light);
@@ -122,6 +124,17 @@ label {
 }
 
 p {
-    font-size: 1.2em;
+    font-size: 14px;
+    word-break: break-all;
+}
+
+@include main.mobile-device {
+    .chain_card {
+        display: block;
+    }
+    h4,
+    .chain_alias {
+        text-align: center;
+    }
 }
 </style>
