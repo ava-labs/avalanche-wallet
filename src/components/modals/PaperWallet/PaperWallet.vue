@@ -133,7 +133,7 @@ export default class PaperWallet extends Vue {
         let addr1 = addr.substr(0, wrapChar)
         let addr2 = addr.substr(wrapChar)
 
-        cont.font = '8px Helvetica'
+        cont.font = `${this.designPxToReal(8)}px Helvetica`
         cont.fillText(
             addr1,
             this.designPxToReal(352),
@@ -155,7 +155,7 @@ export default class PaperWallet extends Vue {
         )
 
         // Bottom Address
-        cont.font = '10px Helvetica'
+        cont.font = `${this.designPxToReal(10)}px Helvetica`
         cont.fillText(addr, this.designPxToReal(40), this.designPxToReal(380))
         cont.drawImage(
             this.qrImg as HTMLImageElement,
