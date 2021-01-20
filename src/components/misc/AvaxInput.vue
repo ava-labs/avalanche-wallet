@@ -8,6 +8,7 @@
                 contenteditable="amt_in"
                 :denomination="9"
                 :max="max"
+                placeholder="0.00"
                 @change="amount_in"
             ></BigNumInput>
         </div>
