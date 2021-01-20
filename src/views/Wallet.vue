@@ -134,6 +134,11 @@ export default class Wallet extends Vue {
 @include main.mobile-device {
     .wallet_view {
         display: block;
+        column-gap: 9px;
+    }
+    .wallet_main {
+        grid-gap: 9px;
+        padding-top: 0;
     }
 
     .wallet_sidebar {

@@ -117,6 +117,7 @@ export default {
     .top_cards {
         grid-template-columns: none;
         grid-template-rows: min-content;
+        grid-gap: 9px;
     }
 
     .top_card {

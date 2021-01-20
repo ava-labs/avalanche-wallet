@@ -129,7 +129,7 @@ p {
 
 @include main.mobile-device {
     #router_view {
-        padding: main.$container_padding_mobile !important;
+        padding: 9px !important;
     }
 
     #nav {
