@@ -48,7 +48,7 @@ h4 {
     > div {
         //border: 1px solid var(--primary-color);
         margin-right: 14px;
-        padding: 8px;
+        padding: 4px 14px;
         opacity: 0.5;
         border-radius: 4px;
         transition-duration: 0.2s;

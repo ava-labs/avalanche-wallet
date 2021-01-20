@@ -405,6 +405,13 @@ label {
     padding-bottom: 30px;
 }
 
+@include main.medium-device {
+    .cols {
+        grid-template-columns: 1fr 1fr 220px;
+        column-gap: 25px;
+    }
+}
+
 @include main.mobile-device {
     .cols {
         display: block;
