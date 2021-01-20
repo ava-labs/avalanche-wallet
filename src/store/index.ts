@@ -202,7 +202,6 @@ export default new Vuex.Store({
         },
 
         // Add a HD wallet from mnemonic string
-        // TODO: Join mnemonic and singleton functions
         async addWalletMnemonic(
             { state, dispatch },
             mnemonic: string
