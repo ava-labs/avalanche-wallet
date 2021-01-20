@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@avalabs/vue_components@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.7.1.tgz#9e86b2d4d42f44130867e2855dc00834c47f7cbc"
-  integrity sha512-q1dvAyoE1wnlXIiktY7Lo3Va17lx7jo/6zQz37jRfqairYKLuinu+3/ZUMUyTJ6T5ffgfk++LuXg/PZ6vz9eCg==
+"@avalabs/vue_components@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.7.2.tgz#51e2fef5694085a9aef6b3cc61b9d67dd8bfe13c"
+  integrity sha512-Q9cnB4x4rzQcDnGFwvH9XI9uqoKJb2UAoiQCsGo1OLTwgdOS6gYBEYh18UyN6BlTrh5zR4nweQ8SAt9G8dWqUA==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.27"
     "@fortawesome/free-solid-svg-icons" "^5.12.1"
