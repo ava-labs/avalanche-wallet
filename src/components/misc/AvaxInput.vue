@@ -79,6 +79,8 @@ export default class AvaxInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
+
 .avax_input {
     display: grid;
     grid-template-columns: 1fr max-content;
@@ -168,6 +170,12 @@ p {
     opacity: 0.4;
     &:hover {
         opacity: 1;
+    }
+}
+
+@include main.mobile-device {
+    .balance {
+        font-size: 12px;
     }
 }
 </style>

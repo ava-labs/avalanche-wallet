@@ -1,21 +1,25 @@
 <template>
     <modal ref="modal" :title="$t('modal.print.title')" class="print_modal">
-        <div class="qr_body">
+        <div class="qr_body" ref="qr_body">
             <img
                 ref="bg"
                 src="@/assets/paper_wallet/bg.png"
                 :style="{
                     display: 'none',
-                    height: `${600}px`,
-                    width: `${600 * aspectRatio}px`,
+                    height: `${height}px`,
+                    width: `100%`,
+                    // width: '100%',
+                    // paddingTop: `${100 / aspectRatio}%`,
                 }"
             />
             <canvas
                 class="pdf_preview"
                 ref="pdf"
                 :style="{
-                    height: `${600}px`,
-                    width: `${600 * aspectRatio}px`,
+                    width: `100%`,
+                    height: `${height}px`,
+                    // width: '100%',
+                    // paddingTop: `${100 / aspectRatio}%`,
                 }"
             ></canvas>
             <v-btn depressed block @click="print">{{ $t('modal.print.submit') }}</v-btn>
@@ -38,6 +42,8 @@ const PDF_W = 8.5
 const PDF_H = 11
 const PDF_ASPECT_RATIO = PDF_W / PDF_H
 
+// Contents of the pdf are set according to this value
+const designWidth = 525 - 60
 @Component({
     components: {
         Modal,
@@ -53,14 +59,23 @@ export default class PaperWallet extends Vue {
     qrImg: HTMLImageElement | null = null
     mnemonicImg: HTMLImageElement | null = null
 
+    // Height and Width of the img and canvas
+    width = 100
+    height = 100
+
     open() {
         let modal = this.$refs.modal
         // @ts-ignore
         modal.open()
 
         setTimeout(() => {
-            this.initBg()
+            this.setSizes()
         }, 200)
+
+        setTimeout(() => {
+            // this.setSizes()
+            this.initBg()
+        }, 500)
     }
 
     get address() {
@@ -119,24 +134,52 @@ export default class PaperWallet extends Vue {
         let addr2 = addr.substr(wrapChar)
 
         cont.font = '8px Helvetica'
-        cont.fillText(addr1, 352, 140, 120)
-        cont.fillText(addr2, 352, 150, 120)
-        cont.drawImage(this.qrImg as HTMLImageElement, 352, 10)
+        cont.fillText(
+            addr1,
+            this.designPxToReal(352),
+            this.designPxToReal(140),
+            this.designPxToReal(120)
+        )
+        cont.fillText(
+            addr2,
+            this.designPxToReal(352),
+            this.designPxToReal(150),
+            this.designPxToReal(120)
+        )
+        cont.drawImage(
+            this.qrImg as HTMLImageElement,
+            this.designPxToReal(352),
+            this.designPxToReal(10),
+            this.designPxToReal(100),
+            this.designPxToReal(100)
+        )
 
         // Bottom Address
         cont.font = '10px Helvetica'
-        cont.fillText(addr, 40, 380)
-        cont.drawImage(this.qrImg as HTMLImageElement, 352, 335, 90, 90)
+        cont.fillText(addr, this.designPxToReal(40), this.designPxToReal(380))
+        cont.drawImage(
+            this.qrImg as HTMLImageElement,
+            this.designPxToReal(352),
+            this.designPxToReal(335),
+            this.designPxToReal(90),
+            this.designPxToReal(90)
+        )
 
         // Mnemonic
         let mnemonicWords: string[] = this.mnemonic.split(' ')
         let row1 = mnemonicWords.slice(0, 8).join(' ')
         let row2 = mnemonicWords.slice(8, 16).join(' ')
         let row3 = mnemonicWords.slice(16).join(' ')
-        cont.fillText(row1, 40, 490)
-        cont.fillText(row2, 40, 505)
-        cont.fillText(row3, 40, 520)
-        cont.drawImage(this.mnemonicImg as HTMLImageElement, 352, 445)
+        cont.fillText(row1, this.designPxToReal(40), this.designPxToReal(490))
+        cont.fillText(row2, this.designPxToReal(40), this.designPxToReal(505))
+        cont.fillText(row3, this.designPxToReal(40), this.designPxToReal(520))
+        cont.drawImage(
+            this.mnemonicImg as HTMLImageElement,
+            this.designPxToReal(352),
+            this.designPxToReal(445),
+            this.designPxToReal(90),
+            this.designPxToReal(90)
+        )
     }
 
     @Watch('address')
@@ -146,7 +189,7 @@ export default class PaperWallet extends Vue {
         QRCode.toDataURL(
             this.address,
             {
-                width: 100,
+                width: this.designPxToReal(100),
             },
             function (err, url) {
                 var img = new Image()
@@ -158,7 +201,7 @@ export default class PaperWallet extends Vue {
         QRCode.toDataURL(
             this.mnemonic,
             {
-                width: 90,
+                width: this.designPxToReal(90),
             },
             function (err, url) {
                 var img = new Image()
@@ -168,8 +211,21 @@ export default class PaperWallet extends Vue {
         )
     }
 
+    setSizes() {
+        // Set height and width
+        //@ts-ignore
+        let contW = this.$refs['pdf'].clientWidth
+
+        this.width = contW
+        this.height = contW / this.aspectRatio
+    }
+
     mounted() {
         this.buildQr()
+    }
+
+    designPxToReal(px: number) {
+        return (this.width / designWidth) * px
     }
 
     print() {
@@ -185,19 +241,20 @@ export default class PaperWallet extends Vue {
 }
 </script>
 <style scoped>
-.print_modal >>> .modal_body {
-    width: auto !important;
-}
 .qr_body {
+    width: 525px;
+    max-width: 100%;
     padding: 30px;
 }
 
 .qr_body p {
     word-break: break-all;
 }
+
 .pdf_preview {
-    width: 420px;
-    height: 320px;
+    /*width: 420px;*/
+    /*max-width: 100%;*/
+    /*height: 320px;*/
     border: 1px solid #ddd;
 }
 </style>
