@@ -175,6 +175,7 @@
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
         "remove_key": "Remove Key",
+        "active_wallet": "Active Key",
         "activate_key": "Activate Key",
         "remove_success_title": "Key Removed",
         "remove_success_msg": "Private key and assets removed from the wallet.",

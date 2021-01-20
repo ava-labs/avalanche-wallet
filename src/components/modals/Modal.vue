@@ -106,6 +106,8 @@ export default class Modal extends Vue {
         width: 100%;
         margin: 0;
         max-width: none;
+        border-top-right-radius: 24px;
+        border-top-left-radius: 24px;
     }
 }
 </style>
