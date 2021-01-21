@@ -1,13 +1,4 @@
-const { defaults } = require('jest-config')
-const crypto = require('crypto')
-
 module.exports = {
-    globals: {
-        ...defaults.globals,
-        crypto: {
-            getRandomValues: (arr) => crypto.randomBytes(arr.length),
-        },
-    },
     moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
     transform: {
         '.*\\.(vue)$': 'vue-jest',
@@ -17,6 +8,7 @@ module.exports = {
     moduleNameMapper: {
         '@/(.*)$': '<rootDir>/src/$1',
     },
+    setupFilesAfterEnv: ['./jest.setup.js'],
     testURL: 'https://localhost/',
     testEnvironment: 'jsdom',
     testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',

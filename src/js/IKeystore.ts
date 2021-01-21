@@ -13,7 +13,6 @@ export interface KeyFileV2 {
     keys: KeyFileKeyV2[]
     pass_hash: string
     version: string
-    warnings: string[]
 }
 
 export interface KeyFileKeyV2 {

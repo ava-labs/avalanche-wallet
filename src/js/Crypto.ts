@@ -105,6 +105,10 @@ export default class CryptoHelpers {
         let slt: Buffer
         if (salt instanceof Buffer) {
             slt = salt
+            // For jest test
+            // @ts-ignore
+        } else if (salt instanceof Uint8Array) {
+            slt = salt
         } else {
             slt = this.makeSalt()
         }
@@ -177,6 +181,7 @@ export default class CryptoHelpers {
         const pwkey: Buffer = this._pwcleaner(password, salt)
         const keyMaterial: CryptoKey = await this._keyMaterial(pwkey)
         const pkey: CryptoKey = await this._deriveKey(keyMaterial, salt)
+
         const pt: Buffer = Buffer.from(
             await window.crypto.subtle.decrypt(
                 {
