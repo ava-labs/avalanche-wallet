@@ -18,14 +18,25 @@
         }
     },
     "network": {
-        "status1": "Bağlanıyor ...",
+        "status1": "Bağlanıyor..",
         "status2": "Bağlantı Kesildi",
+        "status3": "Bağlandı",
         "title": "Ağlar",
         "title2": "Özel Ağ Ekle",
         "title3": "Ağı Düzenle",
         "custom": "Özel Ekle.",
         "cancel": "İptal",
-        "add": "Ağ Ekle"
+        "add": "Ağ Ekle",
+        "not_mainnet": "Cüzdan mainnete bağlı değil.",
+        "row": {
+            "edit": "Düzenle",
+            "delete": "Sil",
+            "select": "Seç"
+        },
+        "custom_page": {
+            "label1": "Ağ Adı",
+            "label2": "Tarayıcı API (opsiyonel)"
+        }
     },
     "access": {
         "title": "Cüzdanınıza nasıl erişmek istersiniz?",
@@ -96,9 +107,9 @@
             "hide": "Dağılımı Gizle",
             "available": "Uygun",
             "locked": "Kilitli",
-            "locked_stake": "Kilitli Bahis",
-            "stake": "Bahis",
-            "collectibles": "Toplanabilirler"
+            "locked_stake": "Kilitli Stake Edilebilirler",
+            "stake": "Staking",
+            "collectibles": "Koleksiyon"
         },
         "address": {
             "derived": "Türetilmiş Avalanche Cüzdan Adresi",
@@ -113,14 +124,20 @@
         "fees": "Gönderim Ücreti",
         "fee_tx": "İşlem Masrafı",
         "advanced": "Gelişmiş",
+        "memo": "Memo (Opsiyonel)",
         "adv_change": "Adresi Değiştir",
         "send": "İşlemi Gönder",
         "summary": "İşlem Özeti",
+        "chain_warn": "Sadece X zincirine token gönderebilirsiniz.",
         "disconnected": "Varlıklar gönderilemedi. Ağ bağlantısı kesildi.",
         "success_title": "İşlem Gönderildi",
         "success_msg": "İşleminizi başarılı şekilde gönderdiniz.",
         "error_title": "İşlem Gönderilirken Hata Oluştu",
-        "error_msg": "İşlem gönderilemedi."
+        "error_msg": "İşlem gönderilemedi.",
+        "tx_list": {
+            "amount": "Miktar",
+            "token": "Token"
+        }
     },
     "keys": {
         "title": "Anahtarlarım",
@@ -159,20 +176,21 @@
     },
     "portfolio": {
         "assets": "Varlıklar",
-        "assets1": "Jetonlar",
-        "assets2": "Toplanabilirler",
+        "assets1": "Tokenlar",
+        "assets2": "Koleksiyon",
         "search": "Varlıkları Ara",
         "name": "İsim",
         "send": "Gönder",
         "balance": "Bakiye",
+        "address": "Adres",
         "error_network": "Varlıklar görüntülenemiyor. Ağ bağlantısı kesildi.",
         "nobalance": "Hiç varlığınız bulunmamaktadır",
-        "nobalance_nft": "Toplanabilecek bir varlığa sahip değilsin.",
+        "nobalance_nft": "Hiç bir koleksiyona sahip değilsiniz.",
         "noaddresses": "Eski bir adresiniz yok."
     },
     "earn": {
         "title": "Kazan",
-        "desc": "Var olan jetonlarınızla bahse girerek daha fazla AVAX kazanabilirsiniz.",
+        "desc": "Var olan coinleriniz stake yaparak daha fazla AVAX kazanabilirsiniz.",
         "subtitle1": "Doğrula",
         "subtitle2": "Devret",
         "subtitle3": "Çapraz Zincir Transferi",
@@ -191,12 +209,12 @@
         },
         "transfer_card": {
             "title": "Çapraz Zincir Transferi",
-            "desc": "Bahis, P zincirinde AVAX gerektirir. X ve P arasında jeton transferi yap.",
+            "desc": "Staking, P zincirinde AVAX gerektirir. X ve P arasında coin transferi yap.",
             "submit": "Transfer"
         },
         "rewards_card": {
             "title": "Tahmini Ödüller",
-            "desc": "Alacağın bahis ödüllerini görüntüle.",
+            "desc": "Alacağınız staking ödüllerini görüntüle.",
             "submit": "Ödülleri Görüntüle"
         },
         "transfer": {
@@ -209,7 +227,7 @@
             "submit": "Transfer",
             "cancel": "İptal",
             "err_import": "İçe Aktarma Başarısız",
-            "err_desc": "Jetonlarınızı hedef zincire aktarırken bir problem meydana geldi. Lütfen tekrar içe aktarmayı deneyin.",
+            "err_desc": "Coinlerinizi hedef zincire aktarırken bir problem meydana geldi. Lütfen tekrar içe aktarmayı deneyin.",
             "err_submit": "İçe Aktarmayı Başlat",
             "success": {
                 "title": "Transfer Tamamlandı",
@@ -228,21 +246,21 @@
                 "start": "Başla",
                 "end": "Bitir",
                 "completed": "Tamamlandı",
-                "stake": "Bahis",
+                "stake": "Stake",
                 "reward": "Potansiyel Ödül"
             }
         },
         "validate": {
             "label_1": "Düğüm ID",
             "duration": {
-                "label": "Bahis Periyodu",
-                "desc": "Jetonlarınızın bahis için kilitli olacağı süre.",
+                "label": "Stake Periyodu",
+                "desc": "Coinlerinizin stake için kilitli olacağı süre.",
                 "start": "Başlama Tarihi & Zamanı",
                 "end": "Bitiş Tarihi & Zamanı"
             },
             "amount": {
-                "label": "Bahis Miktarı",
-                "desc": "Bahis için kilitlenecek AVAX miktarı."
+                "label": "Stake Miktarı",
+                "desc": "Stake için kilitlenecek AVAX miktarı."
             },
             "fee": {
                 "label": "Devretme Masrafı",
@@ -250,20 +268,20 @@
             },
             "reward": {
                 "label": "Ödül Adresi",
-                "desc": "Bahis ödüllerinin gönderileceği yer.",
+                "desc": "Stake ödüllerinin gönderileceği yer.",
                 "chip_1": "Bu cüzdanı kullan",
                 "chip_2": "Özel Adres"
             },
             "summary": {
                 "max_del": "Maksimum Devretme Miktarı",
                 "max_del_tooltip": "Bu doğrulayıcıya devredilebilecek maksimum miktar.",
-                "duration": "Bahis Süresi",
+                "duration": "Stake Süresi",
                 "rewards": "Tahmini Ödüller",
-                "warn": "İlk kez bahse giriyorsanız küçükten başlayın. Bahis jetonları, bahis periyodunun sonuna kadar kilitli kalır."
+                "warn": "İlk kez stake yapıyorsanız küçükten başlayın. Stake ettiğiniz coinleri, staking periyodunun sonuna kadar kilitli kalır."
             },
             "confirmation": {
                 "id": "Düğüm ID",
-                "amount": "Bahis Miktarı",
+                "amount": "Stake Miktarı",
                 "start": "Başlama Tarihi",
                 "end": "Bitiş Tarihi",
                 "fee": "Devretme Masrafı",
@@ -276,17 +294,32 @@
             "cancel": "İptal",
             "success": {
                 "title": "Doğrulama işleminiz gönderildi.",
-                "desc": "İşlem kabul edilirse, jetonlarınız bahis için kilitlenecek. Bahis süreciniz bittikten sonra kilitli jetonlarınızı ve ayrıca ödüllerinizi alacaksınız.",
-                "status": "Durum"
+                "desc": "İşlem kabul edilirse, coinleriniz stake için kilitlenecek. Stake süreciniz bittikten sonra kilitli coinlerinizi ve ayrıca ödüllerinizi alacaksınız.",
+                "status": "Durum",
+                "reason": "Neden"
             },
             "errs": {
+                "duration_warn": "UYARI: Delegatörleri kabul etmek için validasyon sürenizin en az 14 günü olmalıdır.",
                 "date": "Başlangıç tarihi gelecekte olmalıdır ve bitiş tarihi de başlangıç tarihinden sonra olmalıdır.",
-                "amount": "Bahis miktarı en az {0} AVAX olmalıdır",
-                "id": "Geçersiz Düğüm ID. \"NodeID-\" ile başlamalı",
-                "address": "Geçersiz ödül adresi."
+                "amount": "Stake miktarı en az {0} AVAX olmalıdır",
+                "id": "Geçersiz Düğüm Kimliği.",
+                "fee": "Delegasyon ücretiniz en az {0} Avax olmalıdır",
+                "address": "Geçersiz adres. Ödül adresi geçerli bir P zinciri adresi olmalıdır."
             }
         },
         "delegate": {
+            "filter": {
+                "title": "Filtre",
+                "title2": "Filtre Ayarları",
+                "label1": "Minimum Uygun Delegasyon",
+                "label2": "Kalan Minimum Zaman",
+                "label3": "Maksimum Ücret",
+                "label4": "Minumum Uptime",
+                "preview": "Uygun kriterlere uygun {0} validatör bulundu.",
+                "apply": "Filtreyi Uygula",
+                "clear": "Filtreyi Temizle",
+                "cancel": "İptal Et"
+            },
             "list": {
                 "prompt": "Devretmek için bir düğüm seç",
                 "search": "Arama Düğümü ID",
@@ -312,26 +345,26 @@
             },
             "form": {
                 "period": {
-                    "label": "Bahis Periyodu",
-                    "desc": "Jetonlarınızın bahis için kilitli olacağı süre.",
+                    "label": "Stake Periyodu",
+                    "desc": "Coinlerinizin stake için kilitli olacağı süre.",
                     "start": "Başlama Tarihi & Zamanı",
                     "end": "Bitiş Tarihi & Zamanı"
                 },
                 "amount": {
-                    "label": "Bahis Miktarı",
-                    "desc": "Bahis için kilitlenecek AVAX miktarı.",
+                    "label": "Stake Miktarı",
+                    "desc": "Stake için kilitlenecek AVAX miktarı.",
                     "desc2": "Bu düğüme yönelik uygun devretme miktarı {0} AVAX'tır"
                 },
                 "reward": {
                     "label": "Ödül Adresi",
-                    "desc": "Bahis ödüllerinin gönderileceği yer.",
+                    "desc": "Stake ödüllerinin gönderileceği adres.",
                     "chip_1": "Bu cüzdanı kullan",
                     "chip_2": "Özel Adres"
                 }
             },
             "confirmation": {
                 "node": "Düğüm ID",
-                "amount": "Bahis Miktarı",
+                "amount": "Stake Miktarı",
                 "start": "Başlama Tarihi",
                 "end": "Bitiş Tarihi",
                 "reward": "Ödül Adresi"
@@ -339,27 +372,28 @@
             "errs": {
                 "start_now": "Başlama zamanı, şu anki zamandan sonra olmalıdır.",
                 "start_end": "Başlangıç tarihi gelecekte olmalıdır ve bitiş tarihi de başlangıç tarihinden sonra olmalıdır.",
-                "invalid_addr": "Geçersiz adres formatı. Adresiniz \"P-\" ile başlamalıdır",
+                "invalid_addr": "Geçersiz adres. Ödül adresi geçerli bir P zinciri adresi olmalıdır.",
                 "no_addr": "Devretme ödüllerini almak için bir adres vermelisiniz.",
-                "min_dur": "Minimum bahis süresi 2 haftadır.",
-                "max_dur": "Maksimum bahis süresi 1 yıldır.",
+                "min_dur": "Maksimum stake süresi 2 haftadır.",
+                "max_dur": "Maksimum stake süresi 1 yıldır.",
                 "no_node": "Bir doğrulayıcı belirtmelisiniz.",
                 "val_end": "Devretme bitiş tarihi, doğrulayıcının bitiş tarihinden daha uzun olamaz.",
                 "amt": "Devretme miktarı en az {0} AVAX olmalıdır."
             },
             "summary": {
-                "duration": "Bahis Süresi",
+                "duration": "Stake Süresi",
                 "reward": "Tahmini Ödül",
                 "fee": "Masraf",
-                "warn": "İlk kez bahse giriyorsanız küçükten başlayın. Bahis jetonları, bahis periyodunun sonuna kadar kilitli kalır."
+                "warn": "İlk kez stake yapıyorsanız küçükten başlayın. Stake ettiğiniz coinleri, staking periyodunun sonuna kadar kilitli kalır."
             },
             "confirm": "Onayla",
             "submit": "Gönder",
             "cancel": "İptal",
             "success": {
                 "title": "Devretme işleminiz gönderildi.",
-                "desc": "İşlem kabul edilirse, jetonlarınız bahis için kilitlenecek. Bahis süreciniz bittikten sonra kilitli jetonlarınızı ve ayrıca ödüllerinizi alacaksınız.",
-                "status": "Durum"
+                "desc": "İşlem kabul edilirse, coinleriniz stake için kilitlenecek. Stake süreciniz bittikten sonra kilitli coinlerinizi ve ayrıca ödüllerinizi alacaksınız.",
+                "status": "Durum",
+                "reason": "Neden"
             }
         }
     },
