@@ -199,12 +199,12 @@
         "warning_2": "Devredici olabilmeniz için P zincirinde en az {0} AVAX'ınızın olması gerekir.",
         "validate_card": {
             "title": "Doğrula",
-            "desc": "Bahse girmeyi istediğiniz bir Avalanche düğümünüz var.",
+            "desc": "Stake yapmak istediğiniz bir Avalanche düğümünüz var.",
             "submit": "Doğrulayıcı Ekle"
         },
         "delegate_card": {
             "title": "Devret",
-            "desc": "Bir Avalanche düğümüne sahip değilsiniz ancak bir başka düğüm kullanarak bahse girmek istiyorsunuz.",
+            "desc": "Bir Avalanche düğümüne sahip değilsiniz ancak bir başka düğüm kullanarak stake yapmak istiyorsunuz.",
             "submit": "Devredici Ekle"
         },
         "transfer_card": {
@@ -324,7 +324,7 @@
                 "prompt": "Devretmek için bir düğüm seç",
                 "search": "Arama Düğümü ID",
                 "id": "Düğüm ID",
-                "val_stake": "Doğrulayıcı Bahsi",
+                "val_stake": "Doğrulayıcı Stake Miktari",
                 "aval_stake": "Uygun",
                 "aval_stake_tip": "Bu doğrulayıcıya devretmeye devam edilebilecek miktar.",
                 "users_tip": "Devredici Sayısı",
@@ -334,7 +334,7 @@
                 "fee": "Masraf",
                 "empty": {
                     "title": "Doğrulayıcı Bulunamadı",
-                    "desc": "Doğrulayıcıların, bulunmaları için aktif olarak bahse girmeleri gerekir."
+                    "desc": "Doğrulayıcıların, bulunmaları için aktif olarak stake yapmalari gerekir."
                 }
             },
             "node": {
