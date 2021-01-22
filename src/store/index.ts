@@ -259,11 +259,11 @@ export default new Vuex.Store({
 
         // Creates a keystore file and saves to local storage
         async rememberWallets({ state, dispatch }, pass: string | undefined) {
-            let wallet: WalletType | null = state.activeWallet
+            let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
             if (!pass || wallet?.type === 'ledger') return
 
             let wallets = state.wallets as AvaHdWallet[]
-            let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
+            let activeIndex = wallets.findIndex((w) => w.ethKey == wallet?.ethKey) || 0
 
             let file = await makeKeyfile(wallets, pass, activeIndex)
             let fileString = JSON.stringify(file)
@@ -306,8 +306,8 @@ export default new Vuex.Store({
         async exportWallets({ state }, input: ExportWalletsInput) {
             let pass = input.password
             let wallets = input.wallets
-            let wallet: WalletType | null = state.activeWallet
-            let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
+            let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+            let activeIndex = wallets.findIndex((w) => w.ethKey == wallet?.ethKey) || 0
 
             let file_data = await makeKeyfile(wallets, pass, activeIndex)
 
