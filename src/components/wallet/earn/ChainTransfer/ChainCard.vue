@@ -1,18 +1,17 @@
 <template>
     <div class="chain_card">
         <div class="input_group">
-            <h4 v-if="isSource">Source</h4>
-            <h4 v-else>Destination</h4>
+            <h4 v-if="isSource">{{ $t('cross_chain.card.source') }}</h4>
+            <h4 v-else>{{ $t('cross_chain.card.destination') }}</h4>
             <p style="font-size: 3em" class="chain_alias">{{ chain }}</p>
         </div>
         <div>
             <div class="input_group">
-                <label>Name</label>
+                <label>{{ $t('cross_chain.card.name') }}</label>
                 <p>{{ chainNames[chain] }}</p>
             </div>
             <div class="input_group">
-                <label>Balance</label>
-                <!--                <NumberCounter :value="balanceBig"></NumberCounter>-->
+                <label>{{ $t('cross_chain.card.balance') }}</label>
                 <p class="balance">{{ balanceText }}</p>
             </div>
         </div>

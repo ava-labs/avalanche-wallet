@@ -1,7 +1,7 @@
 <template>
     <div class="swap_form">
         <div>
-            <label>Source Chain</label>
+            <label>{{ $t('cross_chain.form.source') }}</label>
             <select @input="onChangeSource" class="hover_border">
                 <option
                     v-for="option in sourceOptions"
@@ -14,7 +14,7 @@
             </select>
         </div>
         <div>
-            <label>Destination Chain</label>
+            <label>{{ $t('cross_chain.form.destination') }}</label>
             <select @input="onChangeDestination" class="hover_border">
                 <option
                     v-for="option in destinationOptions"

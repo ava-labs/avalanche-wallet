@@ -65,7 +65,8 @@
             "export": "Cross Chain",
             "earn": "Earn",
             "studio": "Studio",
-            "advanced": "Advanced"
+            "advanced": "Advanced",
+            "activity": "Activity"
         },
         "address_card": {},
         "collectibles": {
@@ -143,6 +144,27 @@
         "tx_list": {
             "amount": "Amount",
             "token": "Token"
+        }
+    },
+    "cross_chain": {
+        "title": "Cross Chain",
+        "desc": "Transfer tokens between Exchange (X) , Platform (P) and Contract (C) chains.",
+        "card": {
+            "source": "Source",
+            "destination": "Destination",
+            "name": "Name",
+            "balance": "Balance"
+        },
+        "state": {
+            "export": "Export",
+            "import": "Import",
+            "status": "Status",
+            "not_started": "Not Started",
+            "reason": "Reason"
+        },
+        "form": {
+            "source": "Source Chain",
+            "destination": "Destination Chain"
         }
     },
     "keys": {
@@ -231,11 +253,12 @@
             "balance": "Balance",
             "amount": "Transfer Amount",
             "fee": "Fee",
+            "fee_name": "Export + Import Fee",
             "confirm": "Confirm",
             "submit": "Transfer",
             "cancel": "Cancel",
             "err_import": "Import Failed",
-            "err_desc": "There was a problem importing your tokens into the destination chain. Please try importing again.",
+            "err_desc": "Import failed. Please go to Advanced page to finish importing.",
             "err_submit": "Trigger Import",
             "success": {
                 "title": "Transfer Completed",
