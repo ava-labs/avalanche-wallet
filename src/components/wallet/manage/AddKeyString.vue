@@ -9,7 +9,7 @@
                 type="submit"
                 :loading="isLoading"
                 :disabled="!canAdd"
-                class="addKeyBut ava_button"
+                class="addKeyBut button_primary ava_button"
                 depressed
                 block
                 color="#4C2E56"
@@ -21,14 +21,10 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import Spinner from '@/components/misc/Spinner.vue'
-import { avm, bintools, keyChain } from '@/AVA'
-import { keyToKeypair } from '@/helpers/helper'
-// import { AVMKeyPair } from 'avalanche';
-import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 
 @Component({
     components: {
@@ -47,6 +43,7 @@ export default class AddKeyString extends Vue {
             this.canAdd = true
         } else if (this.privateKeyInput.length === 0) {
             this.error = ''
+            this.canAdd = false
         } else {
             this.canAdd = false
         }
@@ -58,9 +55,7 @@ export default class AddKeyString extends Vue {
 
         setTimeout(async () => {
             try {
-                let chainID = avm.getBlockchainAlias() || avm.getBlockchainID()
-                let keyPair: AVMKeyPair = keyToKeypair(this.privateKeyInput, chainID)
-                await this.$store.dispatch('addWallet', keyPair)
+                await this.$store.dispatch('addWalletSingleton', this.privateKeyInput)
                 // @ts-ignore
                 this.$emit('success')
                 this.clear()
@@ -81,11 +76,6 @@ export default class AddKeyString extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
-
-.addKeyBut {
-    text-transform: none;
-    background-color: main.$primary-color !important;
-}
 
 label {
     color: #909090;

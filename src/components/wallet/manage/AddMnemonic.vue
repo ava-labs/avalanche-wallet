@@ -3,12 +3,14 @@
         <textarea v-model="phrase" placeholder="web  jar  rack  cereal  inherit ...."></textarea>
         <p class="err">{{ err }}</p>
         <v-btn
+            type="submit"
             :disabled="!canSubmit"
             :loading="isLoading"
+            @click="access"
+            class="addKeyBut button_primary ava_button"
             depressed
             block
-            @click="access"
-            class="but_submit"
+            color="#4C2E56"
         >
             {{ $t('keys.import_key_button') }}
         </v-btn>

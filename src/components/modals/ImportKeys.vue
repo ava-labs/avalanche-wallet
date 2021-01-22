@@ -7,11 +7,15 @@
                 <!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
                 <v-tab key="mnemonic">{{ $t('keys.import_key_option1') }}</v-tab>
                 <v-tab key="keystore">{{ $t('keys.import_key_option2') }}</v-tab>
+                <v-tab key="priv_key">{{ $t('keys.import_key_option3') }}</v-tab>
                 <v-tab-item>
                     <AddMnemonic @success="handleImportSuccess"></AddMnemonic>
                 </v-tab-item>
                 <v-tab-item>
                     <add-key-file @success="handleImportSuccess"></add-key-file>
+                </v-tab-item>
+                <v-tab-item>
+                    <add-key-string @success="handleImportSuccess"></add-key-string>
                 </v-tab-item>
             </v-tabs>
         </div>
@@ -23,7 +27,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import AddKeyFile from '@/components/wallet/manage/AddKeyFile.vue'
-// import AddKeyString from '@/components/wallet/manage/AddKeyString.vue'
+import AddKeyString from '@/components/wallet/manage/AddKeyString.vue'
 import AddMnemonic from '@/components/wallet/manage/AddMnemonic.vue'
 interface ITab {
     id: number
@@ -34,7 +38,7 @@ interface ITab {
     components: {
         Modal,
         AddKeyFile,
-        // AddKeyString,
+        AddKeyString,
         AddMnemonic,
     },
 })
