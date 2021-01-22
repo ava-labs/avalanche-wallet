@@ -101,7 +101,10 @@ export default new Vuex.Store({
         // Only for singletons and mnemonics
         async accessWalletMultiple(
             { state, dispatch, commit },
-            keyList: AccessWalletMultipleInput[]
+            {
+                keys: keyList,
+                activeIndex,
+            }: { keys: AccessWalletMultipleInput[]; activeIndex: number }
         ) {
             for (var i = 0; i < keyList.length; i++) {
                 let keyInfo = keyList[i]
@@ -112,7 +115,7 @@ export default new Vuex.Store({
                 }
             }
 
-            await dispatch('activateWallet', state.wallets[0])
+            await dispatch('activateWallet', state.wallets[activeIndex])
 
             dispatch('onAccess')
         },
@@ -260,8 +263,9 @@ export default new Vuex.Store({
             if (!pass || wallet?.type === 'ledger') return
 
             let wallets = state.wallets as AvaHdWallet[]
+            let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
 
-            let file = await makeKeyfile(wallets, pass)
+            let file = await makeKeyfile(wallets, pass, activeIndex)
             let fileString = JSON.stringify(file)
             localStorage.setItem('w', fileString)
 
@@ -302,8 +306,10 @@ export default new Vuex.Store({
         async exportWallets({ state }, input: ExportWalletsInput) {
             let pass = input.password
             let wallets = input.wallets
+            let wallet: WalletType | null = state.activeWallet
+            let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
 
-            let file_data = await makeKeyfile(wallets, pass)
+            let file_data = await makeKeyfile(wallets, pass, activeIndex)
 
             // Download the file
             let text = JSON.stringify(file_data)
@@ -343,7 +349,10 @@ export default new Vuex.Store({
 
                 // If not auth, login user then add keys
                 if (!store.state.isAuth) {
-                    await store.dispatch('accessWalletMultiple', keys)
+                    await store.dispatch('accessWalletMultiple', {
+                        keys,
+                        activeIndex: keyFile.activeIndex,
+                    })
                 } else {
                     for (let i = 0; i < keys.length; i++) {
                         let key = keys[i]

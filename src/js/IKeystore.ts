@@ -24,6 +24,7 @@ export interface KeyFileKeyV2 {
 export interface KeyFileDecryptedV2 {
     version: string
     keys: KeyFileKeyDecryptedV2[]
+    activeIndex: number
 }
 
 export interface KeyFileKeyDecryptedV2 {
@@ -48,6 +49,7 @@ export interface KeyFileKeyV3 {
 export interface KeyFileDecryptedV3 {
     version: string
     keys: KeyFileKeyDecryptedV3[]
+    activeIndex: number
 }
 
 export interface KeyFileKeyDecryptedV3 {
@@ -70,6 +72,7 @@ export interface KeyFileKeyV4 {
 export interface KeyFileDecryptedV4 {
     version: string
     keys: KeyFileKeyDecryptedV4[]
+    activeIndex: number
 }
 
 export interface KeyFileKeyDecryptedV4 {
@@ -92,6 +95,7 @@ export interface KeyFileKeyV5 {
 export interface KeyFileDecryptedV5 {
     version: string
     keys: KeyFileKeyDecryptedV5[]
+    activeIndex: number
 }
 
 export interface KeyFileKeyDecryptedV5 {
@@ -104,6 +108,7 @@ export interface KeyFileV6 {
     salt: string
     keys: KeyFileKeyV6[]
     version: string
+    activeIndex: number
 }
 
 export interface KeyFileKeyV6 {
@@ -113,6 +118,7 @@ export interface KeyFileKeyV6 {
 }
 
 export interface KeyFileDecryptedV6 {
+    activeIndex: number
     version: string
     keys: KeyFileKeyDecryptedV6[]
 }

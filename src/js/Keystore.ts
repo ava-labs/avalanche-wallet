@@ -87,6 +87,7 @@ async function readV2(data: KeyFileV2, pass: string) {
 
     return {
         version,
+        activeIndex: 0,
         keys: keysDecrypt,
     }
 }
@@ -124,6 +125,7 @@ async function readV3(data: KeyFileV3, pass: string) {
 
     return {
         version,
+        activeIndex: 0,
         keys: keysDecrypt,
     }
 }
@@ -161,6 +163,7 @@ async function readV4(data: KeyFileV4, pass: string): Promise<KeyFileDecryptedV5
 
     return {
         version,
+        activeIndex: 0,
         keys: keysDecrypt,
     }
 }
@@ -199,12 +202,14 @@ async function readV5(data: KeyFileV5, pass: string): Promise<KeyFileDecryptedV5
 
     return {
         version,
+        activeIndex: 0,
         keys: keysDecrypt,
     }
 }
 
 async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6> {
     const version: string = data.version
+    const activeIndex = data.activeIndex
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
     let salt: Buffer = bintools.cb58Decode(data.salt)
@@ -236,6 +241,7 @@ async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6
 
     return {
         version,
+        activeIndex: activeIndex || 0,
         keys: keysDecrypt,
     }
 }
@@ -314,7 +320,8 @@ function extractKeysFromDecryptedFile(file: AllKeyFileDecryptedTypes): AccessWal
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
 async function makeKeyfile(
     wallets: (AvaHdWallet | SingletonWallet)[],
-    pass: string
+    pass: string,
+    activeIndex: number
 ): Promise<KeyFileV6> {
     // 3.0 and above uses 200,000
     cryptoHelpers.keygenIterations = ITERATIONS_V3
@@ -347,6 +354,7 @@ async function makeKeyfile(
     let file_data: KeyFileV6 = {
         version: KEYSTORE_VERSION,
         salt: bintools.cb58Encode(salt),
+        activeIndex,
         keys: keys,
     }
     return file_data

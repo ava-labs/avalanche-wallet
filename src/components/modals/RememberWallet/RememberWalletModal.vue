@@ -28,7 +28,12 @@ import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
-import { AllKeyFileTypes, KeyFileDecryptedV6, KeystoreFileKeyType } from '@/js/IKeystore'
+import {
+    AllKeyFileDecryptedTypes,
+    AllKeyFileTypes,
+    KeyFileDecryptedV6,
+    KeystoreFileKeyType,
+} from '@/js/IKeystore'
 import { extractKeysFromDecryptedFile, readKeyFile } from '@/js/Keystore'
 import { avm } from '@/AVA'
 import { keyToKeypair } from '@/helpers/helper'
@@ -67,56 +72,16 @@ export default class RememberWalletModal extends Vue {
 
         let pass = this.password
         let fileData: AllKeyFileTypes = JSON.parse(w)
-        let version = fileData.version
 
         try {
-            let rawData = await readKeyFile(fileData, pass)
-            // let keys = rawData.keys
+            let keyFile: AllKeyFileDecryptedTypes = await readKeyFile(fileData, pass)
             this.isLoading = false
-            let chainID = avm.getBlockchainAlias()
 
-            let accessInput = extractKeysFromDecryptedFile(rawData)
-            // let accessInput: AccessWalletMultipleInput[]
-            // let type: KeystoreFileKeyType = 'mnemonic'
-            // // Convert old version private keys to mnemonic phrases
-            // if (['2.0', '3.0', '4.0'].includes(version)) {
-            //     let keys = (rawData as KeyFileDecrypted).keys
-            //
-            //     accessInput = keys.map((key) => {
-            //         // Private keys from the keystore file do not have the PrivateKey- prefix
-            //         let pk = 'PrivateKey-' + key.key
-            //         let keypair = keyToKeypair(pk, chainID)
-            //
-            //         let keyBuf = keypair.getPrivateKey()
-            //         let keyHex: string = keyBuf.toString('hex')
-            //         let paddedKeyHex = keyHex.padStart(64, '0')
-            //         let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
-            //
-            //         return {
-            //             key: mnemonic,
-            //             type: 'mnemonic',
-            //         }
-            //     })
-            // } else if (version === '5.0') {
-            //     let keys = (rawData as KeyFileDecrypted).keys
-            //     // New versions encrypt the mnemonic so we dont have to do anything
-            //     accessInput = keys.map((key) => {
-            //         return {
-            //             key: key.key,
-            //             type: 'mnemonic',
-            //         }
-            //     })
-            // } else {
-            //     let keys = (rawData as KeyFileDecryptedV6).keys
-            //     accessInput = keys.map((key) => {
-            //         return {
-            //             type: key.type,
-            //             key: key.key,
-            //         }
-            //     })
-            // }
-
-            await this.$store.dispatch('accessWalletMultiple', accessInput)
+            let accessInput = extractKeysFromDecryptedFile(keyFile)
+            await this.$store.dispatch('accessWalletMultiple', {
+                keys: accessInput,
+                activeIndex: keyFile.activeIndex,
+            })
 
             // These are not volatile wallets since they are loaded from storage
             this.$store.state.volatileWallets = []
