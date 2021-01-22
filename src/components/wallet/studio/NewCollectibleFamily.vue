@@ -1,11 +1,11 @@
 <template>
     <div class="new_family">
         <div>
-            <p>Create a new Collectible family.</p>
+            <p>{{ $t('studio.family.desc') }}</p>
             <form @submit.prevent="submit" v-if="!isSuccess">
                 <div style="display: flex">
                     <div style="flex-grow: 1">
-                        <label>Name</label>
+                        <label>{{ $t('studio.family.label1') }}</label>
                         <input
                             type="text"
                             placeholder="Name"
@@ -15,7 +15,7 @@
                         />
                     </div>
                     <div class="symbol">
-                        <label>Symbol</label>
+                        <label>{{ $t('studio.family.label2') }}</label>
                         <input
                             type="text"
                             placeholder="xxxx"
@@ -27,7 +27,7 @@
                 </div>
 
                 <div>
-                    <label>Number of Groups</label>
+                    <label>{{ $t('studio.family.label3') }}</label>
                     <input
                         type="number"
                         placeholder="Name of the Collection"
@@ -37,36 +37,36 @@
                     />
                 </div>
                 <div>
-                    <p>Fee: {{ txFee.toLocaleString() }} AVAX</p>
+                    <p>{{ $t('studio.family.fee') }}: {{ txFee.toLocaleString() }} AVAX</p>
                 </div>
                 <p v-if="error" class="err">{{ error }}</p>
                 <v-btn :loading="isLoading" type="submit" class="button_secondary" small>
-                    Create
+                    {{ $t('studio.family.submit') }}
                 </v-btn>
             </form>
             <div class="success_cont" v-if="isSuccess">
                 <p style="color: var(--success); margin: 12px 0 !important">
                     <fa icon="check-circle"></fa>
-                    Collectible Family Created
+                    {{ $t('studio.family.success.desc') }}
                 </p>
                 <div>
-                    <label>Tx ID</label>
+                    <label>{{ $t('studio.family.success.label1') }}</label>
                     <p style="word-break: break-all">{{ txId }}</p>
                 </div>
                 <div>
-                    <label>Family Name</label>
+                    <label>{{ $t('studio.family.success.label2') }}</label>
                     <p>{{ name }}</p>
                 </div>
                 <div>
-                    <label>Symbol</label>
+                    <label>{{ $t('studio.family.success.label3') }}</label>
                     <p>{{ symbol }}</p>
                 </div>
                 <div>
-                    <label>Number of Group</label>
+                    <label>{{ $t('studio.family.success.label4') }}</label>
                     <p>{{ groupNum }}</p>
                 </div>
                 <v-btn class="button_secondary" small @click="cancel" depressed>
-                    Back to Studio
+                    {{ $t('studio.family.back') }}
                 </v-btn>
             </div>
         </div>

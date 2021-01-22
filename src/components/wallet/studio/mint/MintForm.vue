@@ -4,7 +4,9 @@
             <div class="utxo_col">
                 <div class="utxo">
                     <div>
-                        <v-btn text @click="clearUtxo" block>Change Family</v-btn>
+                        <v-btn text @click="clearUtxo" block>
+                            {{ $t('studio.mint.utxo_col.change') }}
+                        </v-btn>
                         <div style="height: 110px; margin-top: 22px" v-if="groupUtxos.length > 0">
                             <NftFamilyCardsPreview
                                 :utxos="groupUtxos"
@@ -18,15 +20,15 @@
                     </div>
                     <div>
                         <div>
-                            <label>Family Name</label>
+                            <label>{{ $t('studio.mint.utxo_col.label1') }}</label>
                             <p>{{ family.name }}</p>
                         </div>
                         <div>
-                            <label>Family Symbol</label>
+                            <label>{{ $t('studio.mint.utxo_col.label2') }}</label>
                             <p>{{ family.symbol }}</p>
                         </div>
                         <div>
-                            <label>Group</label>
+                            <label>{{ $t('studio.mint.utxo_col.label3') }}</label>
                             <p style="word-break: break-all">{{ groupId }}</p>
                         </div>
                     </div>
@@ -34,15 +36,19 @@
             </div>
             <div class="type_col">
                 <div class="type_sel">
-                    <label>Type</label>
-                    <p>Select a collectible type.</p>
+                    <label>{{ $t('studio.mint.type_col.label1') }}</label>
+                    <p>{{ $t('studio.mint.type_col.desc') }}</p>
                     <v-chip-group mandatory v-model="nftFormType">
-                        <v-chip value="generic" :disabled="isSuccess">Generic</v-chip>
-                        <v-chip value="custom" :disabled="isSuccess">Custom</v-chip>
+                        <v-chip value="generic" :disabled="isSuccess">
+                            {{ $t('studio.mint.type_col.types.generic') }}
+                        </v-chip>
+                        <v-chip value="custom" :disabled="isSuccess">
+                            {{ $t('studio.mint.type_col.types.custom') }}
+                        </v-chip>
                     </v-chip-group>
 
                     <template v-if="nftFormType === 'custom'">
-                        <label>Payload Type</label>
+                        <label>{{ $t('studio.mint.type_col.label2') }}</label>
                         <v-chip-group mandatory v-model="nftType">
                             <v-chip value="utf8" :disabled="isSuccess">UTF-8</v-chip>
                             <v-chip value="url" :disabled="isSuccess">URL</v-chip>
@@ -65,12 +71,12 @@
                         <GenericForm v-else @onInput="onInput"></GenericForm>
                     </div>
                     <div>
-                        <label>Quantity</label>
+                        <label>{{ $t('studio.mint.form_col.label1') }}</label>
                         <input type="number" min="1" v-model="quantity" style="width: 100%" />
                     </div>
                     <div class="fee">
                         <p>
-                            Fee
+                            {{ $t('studio.mint.form_col.fee') }}
                             <span>{{ txFee.toLocaleString() }} AVAX</span>
                         </p>
                     </div>
@@ -83,37 +89,37 @@
                         style="margin: 14px 0"
                         v-if="!isSuccess"
                     >
-                        Mint
+                        {{ $t('studio.mint.form_col.submit') }}
                     </v-btn>
                 </template>
             </div>
 
             <div class="right_col">
                 <div class="preview">
-                    <label>Preview</label>
+                    <label>{{ $t('studio.mint.preview.label1') }}</label>
                     <NftPayloadView
                         v-if="payloadPreview"
                         class="nft_preview"
                         :payload="payloadPreview"
                     ></NftPayloadView>
                     <div class="nft_preview preview_holder" v-else>
-                        <p>Complete the form to see the preview.</p>
+                        <p>{{ $t('studio.mint.preview.info1') }}</p>
                     </div>
                 </div>
                 <template v-if="isSuccess">
                     <div class="success_cont">
                         <p style="color: var(--success)">
                             <fa icon="check-circle"></fa>
-                            Success.
+                            {{ $t('studio.mint.preview.success.text1') }}
                             <br />
-                            The new collectibles are added to your wallet.
+                            {{ $t('studio.mint.preview.success.text2') }}
                         </p>
                         <div>
-                            <label>Tx ID</label>
+                            <label>{{ $t('studio.mint.preview.success.label1') }}</label>
                             <p style="word-break: break-all">{{ txId }}</p>
                         </div>
                         <v-btn @click="clearUtxo" class="button_secondary" small depressed>
-                            Back to Studio
+                            {{ $t('studio.mint.preview.success.back') }}
                         </v-btn>
                     </div>
                 </template>
@@ -174,16 +180,15 @@ export default class MintNft extends Vue {
     maxPreviewUtxoLen = 18
     get typeDescription() {
         if (this.nftFormType === 'generic') {
-            return `Generic collectibles consist of an image, title and a description. The wallet
-                    can display them nicely.`
+            return this.$t('studio.mint.type_col.typeDesc.generic')
         }
 
         if (this.nftType === 'url') {
-            return 'If the given URL is an image the wallet will try its best to display it nicely. Otherwise it will show up as a link.'
+            return this.$t('studio.mint.type_col.typeDesc.url')
         } else if (this.nftType === 'json') {
-            return 'JSON payloads are ideal for custom data structures and can be used to develop decentralized applications.'
+            return this.$t('studio.mint.type_col.typeDesc.json')
         } else {
-            return `UTF8 payloads are simply text encoded into a collectible.`
+            return this.$t('studio.mint.type_col.typeDesc.utf8')
         }
     }
 

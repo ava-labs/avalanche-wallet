@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="!mintUtxo">
-            <p>Select a family to issue collectibles to.</p>
+            <p>{{ $t('studio.mint.desc') }}</p>
             <SelectMintUTXO @change="setUtxo" class="select_mint_utxo"></SelectMintUTXO>
         </div>
         <MintForm v-else :mint-utxo="mintUtxo" @clearUtxo="clearUtxo" @cancel="cancel"></MintForm>

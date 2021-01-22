@@ -167,6 +167,93 @@
             "destination": "Destination Chain"
         }
     },
+    "studio": {
+        "title": "Studio",
+        "desc": "Create and manage assets.",
+        "collectibles": "Collectibles",
+        "menu1": {
+            "title": "New Family",
+            "desc": "Create a new set of collectibles with a name and symbol.",
+            "submit": "New Family"
+        },
+        "menu2": {
+            "title": "Mint Collectible",
+            "desc": "Issue collectibles for the families you created.",
+            "empty": "You do not own any families you can mint.",
+            "submit": "Mint"
+        },
+        "family": {
+            "desc": "Create a new Collectible family.",
+            "label1": "Name",
+            "label2": "Symbol",
+            "label3": "Number of Groups",
+            "fee": "Fee",
+            "submit": "Create",
+            "back": "Back to Studio",
+            "success": {
+                "desc": "Collectible Family Created",
+                "label1": "Tx ID",
+                "label2": "Family Name",
+                "label3": "Symbol",
+                "label4": "Number of Groups"
+            }
+        },
+        "mint": {
+            "desc": "Select a family to issue collectibles to.",
+            "utxo_col": {
+                "change": "Change Family",
+                "label1": "Family Name",
+                "label2": "Family Symbol",
+                "label3": "Group"
+            },
+            "type_col": {
+                "label1": "Type",
+                "desc": "Select a collectible type.",
+                "types": {
+                    "custom": "Custom",
+                    "generic": "Generic"
+                },
+                "typeDesc": {
+                    "generic": "Generic collectibles consist of an image, title and a description. The wallet can display them nicely.",
+                    "url": "If the given URL is an image the wallet will try its best to display it nicely. Otherwise it will show up as a link.",
+                    "json": "JSON payloads are ideal for custom data structures and can be used to develop decentralized applications.",
+                    "utf8": "UTF8 payloads are simply text encoded into a collectible."
+                },
+                "label2": "Payload Type"
+            },
+            "form_col": {
+                "label1": "Quantity",
+                "fee": "Fee",
+                "submit": "Mint"
+            },
+            "preview": {
+                "label1": "Preview",
+                "info1": "Complete the form to see the preview.",
+                "success": {
+                    "text1": "Success.",
+                    "text2": "The new collectibles are added to your wallet.",
+                    "label1": "Tx ID",
+                    "back": "Back to Studio"
+                }
+            },
+            "forms": {
+                "generic": {
+                    "label1": "Title",
+                    "label2": "Image URL*",
+                    "label3": "Description",
+                    "err1": "Not a valid image URL.",
+                    "err2": "You must set the image.",
+                    "err3": "Image URL too long."
+                },
+                "json": {
+                    "label1": "JSON Payload (MAX 1024 characters)"
+                },
+                "utf8": {
+                    "label1": "Payload (MAX 1024 characters)"
+                }
+            }
+        }
+    },
     "keys": {
         "title": "My Keys",
         "button1": "Remember Keys",
