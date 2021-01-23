@@ -147,6 +147,20 @@
         "tx_list": {
             "amount": "Amount",
             "token": "Token"
+        },
+        "source_chain": {
+            "title": "Select Soruce Chain"
+        },
+        "c_chain": {
+            "gasPrice": "Gas Price (GWEI)",
+            "gasLimit": "Gas Limit",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "success": {
+                "desc": "Transaction Send",
+                "label1": "Transaction Hash"
+            },
+            "reset": "Start Again"
         }
     },
     "cross_chain": {
