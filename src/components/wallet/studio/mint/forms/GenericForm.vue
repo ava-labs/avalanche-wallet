@@ -45,18 +45,18 @@ export default class GenericForm extends Vue {
         try {
             new URL(this.imgUrl)
         } catch (e) {
-            this.error = this.$t('studio.mint.forms.generic.err1')
+            this.error = this.$t('studio.mint.forms.generic.err1') as string
             // this.error = 'Not a valid Image URL.'
             return false
         }
         if (!this.imgUrl) {
-            this.error = this.$t('studio.mint.forms.generic.err2')
+            this.error = this.$t('studio.mint.forms.generic.err2') as string
             // this.error = 'You must set the image.'
             return false
         }
 
         if (this.imgUrl.length > 516) {
-            this.error = this.$t('studio.mint.forms.generic.err3')
+            this.error = this.$t('studio.mint.forms.generic.err3') as string
             // this.error = 'Image URL too long.'
             return false
         }

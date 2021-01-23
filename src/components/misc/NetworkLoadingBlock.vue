@@ -2,7 +2,7 @@
     <div class="network_loading" v-if="networkLoading">
         <div>
             <Spinner class="spinner"></Spinner>
-            <p>Connecting to a new network, please wait.</p>
+            <p>{{ $t('network.blocker.desc') }}</p>
         </div>
     </div>
 </template>
