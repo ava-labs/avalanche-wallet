@@ -160,9 +160,6 @@ label {
     font-size: 12px;
     background-color: var(--bg-light) !important;
     border-radius: 2px;
-    fieldset {
-        top: 0;
-    }
 }
 </style>
 <style lang="scss">
