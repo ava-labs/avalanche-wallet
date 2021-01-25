@@ -32,6 +32,7 @@ export interface KeyFileKeyDecryptedV2 {
 }
 
 // V3 #################################
+// Underlying encryption changed.
 export interface KeyFileV3 {
     salt: string
     keys: KeyFileKeyV3[]
@@ -57,6 +58,7 @@ export interface KeyFileKeyDecryptedV3 {
 }
 
 // V4 #################################
+// Avalanche uses bech32 addresses. Removed address field from keys and the warning message.
 export interface KeyFileV4 {
     salt: string
     keys: KeyFileKeyV4[]
@@ -80,6 +82,7 @@ export interface KeyFileKeyDecryptedV4 {
 }
 
 // V5 #################################
+// Encodes mnemonic phrase as the key.
 export interface KeyFileV5 {
     salt: string
     keys: KeyFileKeyV5[]
@@ -103,7 +106,7 @@ export interface KeyFileKeyDecryptedV5 {
 }
 
 // V6 #################################
-
+// Removes pass_hash. Adds activeIndex and a type (mnemonic | singleton) to key
 export interface KeyFileV6 {
     salt: string
     keys: KeyFileKeyV6[]

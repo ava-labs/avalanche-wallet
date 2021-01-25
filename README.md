@@ -64,117 +64,6 @@ devServer: {
 
 and run `yarn serve` to reflect the change.
 
-# Keystore File Spec
-
-### v1.0.0 (initial)
-
-```typescript
-interface IKeystoreFile {
-    salt
-    pass_hash
-    keys: [
-        {
-            key
-            nonce
-            address
-        }
-    ]
-}
-```
-
-### v2.0.0
-
-```typescript
-interface IKeystoreFile {
-    version
-    salt
-    pass_hash
-    warnings
-    keys: [
-        {
-            key
-            iv
-            address
-        }
-    ]
-}
-```
-
-### v3.0.0
-
-Underlying encryption changed.
-
-```typescript
-interface IKeystoreFile {
-    version
-    salt
-    pass_hash
-    warnings
-    keys: [
-        {
-            key
-            iv
-            address
-        }
-    ]
-}
-```
-
-### v4.0.0
-
-Avalanche uses bech32 addresses. Removed address field from keys and the warning message.
-
-```typescript
-interface IKeystoreFile {
-    version
-    salt
-    pass_hash
-    keys: [
-        {
-            key
-            iv
-        }
-    ]
-}
-```
-
-### v5.0.0
-
-Encodes mnemonic phrase as the key.
-
-```typescript
-interface IKeystoreFile {
-    version
-    salt
-    pass_hash
-    keys: [
-        {
-            key
-            iv
-        }
-    ]
-}
-```
-
-### v6.0.0
-
-Removes pass_hash. Adds activeIndex and a type (mnemonic | singleton) to key
-
-```typescript
-interface IKeystoreFile {
-    version
-    salt
-    activeIndex
-    keys: [
-        {
-            key
-            iv
-            type
-        }
-    ]
-}
-```
-
 # Local Storage Remember Wallet Spec
 
 Basically same as storing the keystore file in the browser localstorage.
@@ -196,18 +85,27 @@ Saved into local storage as a 2 letter code.
 ```
 
 # Dependencies
+
 ##### Avalanche Node (https://github.com/ava-labs/avalanchego)
+
 To get utxos and to send transactions.
+
 #### Explorer API Node (https://github.com/ava-labs/ortelius)
+
 To check if an address was used before, and to get activity history.
 
 # Default Connections
+
 The wallet needs to connect to an Avalanche node, and an explorer node to operate properly.
 
-By default, there are two network options to connect to: `Mainnet` and   `Fuji`. 
+By default, there are two network options to connect to: `Mainnet` and `Fuji`.
+
 ##### Mainnet
-- Avalanche API: `https://api.avax.network:443`
-- Explorer API: `https://explorerapi.avax.network`
+
+-   Avalanche API: `https://api.avax.network:443`
+-   Explorer API: `https://explorerapi.avax.network`
+
 ##### Fuji (Testnet)
-- Avalanche API: `https://api.avax-test.network:443`
-- Explorer API: `https://explorerapi.avax-test.network`
+
+-   Avalanche API: `https://api.avax-test.network:443`
+-   Explorer API: `https://explorerapi.avax-test.network`
