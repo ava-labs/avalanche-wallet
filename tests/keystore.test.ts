@@ -34,9 +34,8 @@ describe('Export/Import Keystore', () => {
         expect(data.keys.some(({ key }) => key === KEY_V5_V6)).toBe(true)
     })
 
-    // Doesn't work
-    // test('can read v6', async () => {
-    //     const data = await readKeyFile(JSON.parse(KEYFILE_6), '111111111')
-    //     expect(data.keys.some(({ key }) => key === KEY_V5_V6)).toBe(true)
-    // })
+    test('can read v6', async () => {
+        const data = await readKeyFile(JSON.parse(KEYFILE_6), '111111111')
+        expect(data.keys.some(({ key }) => key === KEY_V5_V6)).toBe(true)
+    })
 })
