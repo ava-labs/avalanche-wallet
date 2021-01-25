@@ -85,8 +85,6 @@
         "@babel/core": "^7.10.0",
         "@babel/plugin-proposal-class-properties": "^7.10.1",
         "@babel/plugin-proposal-decorators": "^7.10.3",
-        "@babel/plugin-transform-modules-commonjs": "^7.12.1",
-        "@babel/preset-env": "7.12.1",
         "@fortawesome/fontawesome-free": "^5.13.0",
         "@types/jest": "^26.0.0",
         "@vue/cli-plugin-babel": "^4.1.0",
