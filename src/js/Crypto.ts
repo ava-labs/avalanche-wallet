@@ -105,9 +105,8 @@ export default class CryptoHelpers {
         let slt: Buffer
         if (salt instanceof Buffer) {
             slt = salt
-            // For jest test
             // @ts-ignore
-        } else if (salt instanceof Uint8Array) {
+        } else if (salt instanceof Uint8Array && process.env.NODE_ENV === 'test') {
             slt = salt
         } else {
             slt = this.makeSalt()
