@@ -77,7 +77,15 @@
                 >
                     {{ $t('earn.delegate.filter.apply') }}
                 </v-btn>
-                <v-btn text v-if="activeFilter" @click="clear" style="margin: 8px">
+                <v-btn
+                    text
+                    v-if="activeFilter"
+                    @click="clear"
+                    class="button_primary"
+                    style="margin: 8px 0px"
+                    small
+                    block
+                >
                     {{ $t('earn.delegate.filter.clear') }}
                 </v-btn>
                 <button @click="close" class="button_form_cancel">
