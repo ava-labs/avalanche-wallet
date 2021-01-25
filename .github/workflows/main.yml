@@ -32,6 +32,9 @@ jobs:
             - name: linting
               run: yarn run lint
 
+            - name: jest-run
+              run: yarn test
+
             - name: cypress-run
               uses: cypress-io/github-action@v2
               env:
