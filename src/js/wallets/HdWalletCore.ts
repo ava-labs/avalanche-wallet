@@ -1,4 +1,4 @@
-import { AvaWalletCore } from '@/js/wallets/IAvaHdWallet'
+import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
 import {
     AssetAmountDestination,
     BaseTx,
@@ -222,8 +222,46 @@ class HdWalletCore {
         return this.externalHelper.getCurrentAddress()
     }
 
-    getChangeAddress(): string {
-        return this.internalHelper.getCurrentAddress()
+    getChangeAddress(chainId?: ChainAlias): string {
+        switch (chainId) {
+            case 'P':
+                return this.platformHelper.getCurrentAddress()
+            case 'X':
+            default:
+                return this.internalHelper.getCurrentAddress()
+        }
+    }
+
+    getChangePath(chainId?: ChainAlias): string {
+        switch (chainId) {
+            case 'P':
+                return this.platformHelper.changePath
+            case 'X':
+            default:
+                return this.internalHelper.changePath
+        }
+    }
+
+    getChangeIndex(chainId?: ChainAlias): number {
+        switch (chainId) {
+            case 'P':
+                return this.platformHelper.hdIndex
+            case 'X':
+            default:
+                return this.internalHelper.hdIndex
+        }
+    }
+
+    getChangeFromIndex(idx?: number, chainId?: ChainAlias): string | null {
+        if (idx === undefined || idx === null) return null
+
+        switch (chainId) {
+            case 'P':
+                return this.platformHelper.getAddressForIndex(idx)
+            case 'X':
+            default:
+                return this.internalHelper.getAddressForIndex(idx)
+        }
     }
 
     getPlatformRewardAddress(): string {
@@ -236,6 +274,14 @@ class HdWalletCore {
 
     getPlatformUTXOSet() {
         return this.platformHelper.utxoSet as PlatformUTXOSet
+    }
+
+    getPlatformActiveIndex() {
+        return this.platformHelper.hdIndex
+    }
+
+    getExternalActiveIndex() {
+        return this.externalHelper.hdIndex
     }
 
     getBaseAddress() {

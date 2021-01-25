@@ -31,7 +31,7 @@ export default class HdDerivationList extends Vue {
 </script>
 <style scoped lang="scss">
 .hd_deriv_modal_body {
-    width: 600px;
+    //width: 600px;
     max-width: 100%;
     padding: 0px;
 }

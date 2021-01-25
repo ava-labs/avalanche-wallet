@@ -39,6 +39,7 @@ export default class ChainInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
 h4 {
     margin: 12px 0;
 }
@@ -47,7 +48,7 @@ h4 {
     > div {
         //border: 1px solid var(--primary-color);
         margin-right: 14px;
-        padding: 8px;
+        padding: 4px 14px;
         opacity: 0.5;
         border-radius: 4px;
         transition-duration: 0.2s;
@@ -67,6 +68,19 @@ h4 {
 
         > p {
             margin-left: 12px !important;
+        }
+    }
+}
+
+@include main.mobile-device {
+    .chain_select {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 14px;
+        > div {
+            margin: 0;
+            justify-content: center;
         }
     }
 }

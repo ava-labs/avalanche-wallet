@@ -3,7 +3,15 @@
         <div class="add_key_body">
             <img src="@/assets/import_key_bg.png" class="bg" />
             <p class="explain">Add additional keys to use with your wallet.</p>
-            <v-tabs color="#4C2E56" height="38" :grow="true" v-model="selectedTab">
+            <v-tabs
+                color="#4C2E56"
+                height="38"
+                :grow="true"
+                v-model="selectedTab"
+                :show-arrows="false"
+                :centered="true"
+                :mobile-breakpoint="900"
+            >
                 <!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
                 <v-tab key="mnemonic">{{ $t('keys.import_key_option1') }}</v-tab>
                 <v-tab key="keystore">{{ $t('keys.import_key_option2') }}</v-tab>
@@ -77,7 +85,7 @@ export default class ImportKeys extends Vue {
 
 .add_key_body {
     padding: 30px;
-    width: 450px;
+    max-width: 450px;
     min-height: 315px;
 }
 
@@ -98,7 +106,9 @@ export default class ImportKeys extends Vue {
 .bg {
     display: block;
     max-height: 50px;
-    margin: 12px auto;
+    object-fit: contain;
+    width: 100%;
+    //margin: 12px auto;
 }
 
 .explain {
@@ -108,7 +118,7 @@ export default class ImportKeys extends Vue {
 
 @include main.mobile-device {
     .add_key_body {
-        width: 90vw;
+        max-width: 100%;
     }
 }
 </style>

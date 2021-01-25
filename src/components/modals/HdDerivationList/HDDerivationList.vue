@@ -17,6 +17,7 @@
                         :index="i"
                         :address="addr"
                         :balance="keyBalancesInternal[i]"
+                        :path="1"
                         class="list_row"
                     ></HdDerivationListRow>
                 </div>
@@ -37,6 +38,7 @@
                         :index="i"
                         :address="addr"
                         :balance="keyBalancesExternal[i]"
+                        :path="0"
                         class="list_row"
                     ></HdDerivationListRow>
                 </div>
@@ -56,6 +58,7 @@
                     :index="i"
                     :address="addr"
                     :balance="keyBalancesPlatform[i]"
+                    :path="0"
                     class="list_row"
                 ></HdDerivationListRow>
             </v-tab-item>
@@ -214,7 +217,7 @@ export default class HDDerivationList extends Vue {
 .headers,
 .list_row {
     display: grid;
-    grid-template-columns: 35px max-content 1fr;
+    grid-template-columns: 35px 2fr 1fr;
     padding: 5px 0px;
     column-gap: 10px;
 }

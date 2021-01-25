@@ -43,7 +43,9 @@ export default class UtfPayloadView extends Vue {
 .utf_payload_view {
     height: 100%;
     width: 100%;
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,7 +69,7 @@ p {
     background-color: var(--primary-color);
     padding: 3px 12px;
     border: 1px solid var(--bg);
-    color: var(--bg);
+    color: var(--bg) !important;
     transition-duration: 0.2s;
     border-radius: 3px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);

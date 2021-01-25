@@ -109,22 +109,15 @@ export default {
 @include main.medium-device {
     .top_cards {
         grid-template-columns: 1fr 320px;
-        //grid-template-columns: none;
-        //grid-template-rows: min-content;
+        grid-gap: 9px;
     }
-    //.balance_card{
-    //    grid-column: unset;
-    //}
-
-    //.addr_card{
-    //    grid-column: unset;
-    //}
 }
 
 @include main.mobile-device {
     .top_cards {
         grid-template-columns: none;
         grid-template-rows: min-content;
+        grid-gap: 9px;
     }
 
     .top_card {

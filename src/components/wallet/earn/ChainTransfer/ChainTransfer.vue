@@ -134,6 +134,8 @@ import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 import { web3 } from '@/evm'
 
+const IMPORT_DELAY = 4000 // in ms
+
 @Component({
     name: 'chain_transfer',
     components: {
@@ -355,7 +357,13 @@ export default class ChainTransfer extends Vue {
         } else {
             // If success start import
             this.exportState = TxState.success
-            this.chainImport()
+
+            // Because the API nodes are behind a load balancer we are waiting for all api nodes to update
+            this.importState = TxState.started
+            this.importStatus = 'Waiting'
+            setTimeout(() => {
+                this.chainImport()
+            }, IMPORT_DELAY)
         }
 
         return true
@@ -466,7 +474,7 @@ export default class ChainTransfer extends Vue {
         this.$store.dispatch('Notifications/add', {
             type: 'success',
             title: 'Transfer Complete',
-            message: 'Funds transfered between chains.',
+            message: 'Funds transferred between chains.',
         })
 
         if (this.targetChain === 'C') {
@@ -506,7 +514,7 @@ export default class ChainTransfer extends Vue {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 14px;
-    row-gap: 14px;
+    row-gap: 2px;
     padding-top: 14px;
     height: max-content;
     //height: 100%;

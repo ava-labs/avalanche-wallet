@@ -7,7 +7,7 @@ import createHash from 'create-hash'
 
 /**
  * Helper utility for encryption and password hashing, browser-safe.
- * Encryption is using XChaCha20Poly1305 with a random public nonce.
+ * Encryption is using AES-GCM with a random public nonce.
  */
 export default class CryptoHelpers {
     protected ivSize: number = 12

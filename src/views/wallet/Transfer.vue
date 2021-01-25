@@ -1,6 +1,6 @@
 <template>
     <div class="transfer_card">
-        <h1>{{ $t('transfer.title') }}</h1>
+        <!--        <h1>{{ $t('transfer.title') }}</h1>-->
         <div v-if="networkStatus !== 'connected'" class="disconnected">
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
@@ -35,7 +35,8 @@
                             placeholder="xxx"
                         ></qr-input>
                         <p class="confirm_val" v-else>{{ formAddress }}</p>
-
+                    </div>
+                    <div>
                         <template v-if="isConfirm && formMemo.length > 0">
                             <h4>Memo (Optional)</h4>
                             <p class="confirm_val">{{ formMemo }}</p>
@@ -135,7 +136,6 @@ import 'reflect-metadata'
 import { Vue, Component, Ref } from 'vue-property-decorator'
 
 import TxList from '@/components/wallet/transfer/TxList.vue'
-import RadioButtons from '@/components/misc/RadioButtons.vue'
 import Big from 'big.js'
 
 import NftList from '@/components/wallet/transfer/NftList.vue'
@@ -161,7 +161,6 @@ import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
     components: {
         FaucetLink,
         TxList,
-        RadioButtons,
         QrInput,
         NftList,
         TxSummary,
@@ -572,7 +571,6 @@ h4 {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
     column-gap: 45px;
-    padding-top: 15px;
 }
 
 .new_order_Form > div {
@@ -648,13 +646,20 @@ label {
     padding: 8px 16px;
 }
 
-@media only screen and (max-width: 600px) {
-    .order_form {
-        display: block;
-    }
-    .asset_select button {
-        flex-grow: 1;
-        word-break: break-word;
+//@media only screen and (max-width: 600px) {
+//    .order_form {
+//        display: block;
+//    }
+//    .asset_select button {
+//        flex-grow: 1;
+//        word-break: break-word;
+//    }
+//}
+
+@include main.medium-device {
+    .new_order_Form {
+        grid-template-columns: 1fr 1fr 220px;
+        column-gap: 25px;
     }
 }
 

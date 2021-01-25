@@ -167,9 +167,6 @@ export default new Vuex.Store({
         },
 
         async logout(store) {
-            // Delete keys
-            store.dispatch('removeAllKeys')
-
             // Clear local storage
             localStorage.removeItem('w')
 
@@ -179,11 +176,14 @@ export default new Vuex.Store({
             store.state.address = null
             store.state.warnUpdateKeyfile = false
 
+            router.push('/')
+
+            // Delete keys
+            store.dispatch('removeAllKeys')
+
             // Clear Assets
             await store.dispatch('Assets/onlogout')
             await store.commit('History/clear')
-
-            router.push('/')
         },
 
         // used with logout

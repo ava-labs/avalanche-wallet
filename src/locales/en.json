@@ -176,6 +176,7 @@
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
         "remove_key": "Remove Key",
+        "active_wallet": "Active Key",
         "activate_key": "Activate Key",
         "remove_success_title": "Key Removed",
         "remove_success_msg": "Private key and assets removed from the wallet.",
@@ -465,7 +466,7 @@
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",
-        "error_api_desc": "You must provide an AVA Explorer API for this network to view transaction history."
+        "error_api_desc": "You must provide an Avalanche Explorer API for this network to view transaction history."
     },
     "modal": {
         "qr": {

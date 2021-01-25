@@ -24,6 +24,12 @@ export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
 
 export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
 
+export interface ILedgerAppConfig {
+    version: string
+    commit: string
+    name: 'Avalanche'
+}
+
 export interface priceDict {
     usd: number
 }
