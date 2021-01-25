@@ -39,6 +39,7 @@
                             min="0"
                             max="100"
                             step="1"
+                            inputmode="numeric"
                             @input="onInputChange"
                             v-model="maxFee"
                         />
@@ -53,6 +54,7 @@
                             min="0"
                             max="100"
                             step="1"
+                            inputmode="numeric"
                             @input="onInputChange"
                             v-model="minUptime"
                         />
@@ -208,6 +210,7 @@ export default class FilterSettings extends Vue {
         border: none !important;
         outline: none !important;
         color: var(--primary-color);
+        padding-right: 8px;
     }
 }
 
