@@ -674,6 +674,9 @@
             "col2": "Amount",
             "available": "Available Balance",
             "submit": "Select"
+        },
+        "ledger": {
+            "desc": "Please confirm these actions on your ledger device."
         }
     },
     "nav": {
