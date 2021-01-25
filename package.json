@@ -97,7 +97,6 @@
         "@vue/eslint-config-typescript": "^4.0.0",
         "@vue/test-utils": "^1.0.3",
         "babel-core": "^7.0.0-bridge.0",
-        "babel-jest": "^26.3.0",
         "canvas": "^2.6.1",
         "cypress": "^4.12.1",
         "cypress-file-upload": "^4.0.7",
