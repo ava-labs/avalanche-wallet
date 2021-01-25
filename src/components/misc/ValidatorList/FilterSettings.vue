@@ -5,11 +5,12 @@
             <div class="inputs">
                 <div class="uptime">
                     <label>{{ $t('earn.delegate.filter.label1') }}</label>
-                    <div class="input_row">
+                    <div class="input_row hover_border">
                         <input
                             type="number"
                             min="0"
                             step="1"
+                            inputmode="numeric"
                             @input="onInputChange"
                             v-model="availableSpace"
                         />
@@ -32,7 +33,7 @@
                 </div>
                 <div class="fee">
                     <label>{{ $t('earn.delegate.filter.label3') }}</label>
-                    <div class="input_row">
+                    <div class="input_row hover_border">
                         <input
                             type="number"
                             min="0"
@@ -46,7 +47,7 @@
                 </div>
                 <div class="uptime">
                     <label>{{ $t('earn.delegate.filter.label4') }}</label>
-                    <div class="input_row">
+                    <div class="input_row hover_border">
                         <input
                             type="number"
                             min="0"
@@ -65,7 +66,13 @@
             </div>
 
             <div class="checkout">
-                <v-btn class="button_secondary" depressed :disabled="!canApply" @click="apply">
+                <v-btn
+                    class="button_secondary"
+                    depressed
+                    :disabled="!canApply"
+                    @click="apply"
+                    small
+                >
                     {{ $t('earn.delegate.filter.apply') }}
                 </v-btn>
                 <v-btn text v-if="activeFilter" @click="clear" style="margin: 8px">
@@ -179,13 +186,16 @@ export default class FilterSettings extends Vue {
     background-color: rgba(var(--bg-1), 0.9);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
 .modal_body {
     width: 100%;
     max-width: 360px;
+    background-color: var(--bg-light);
+    padding: 14px 30px;
+    border: 1px solid #0004;
 }
 
 .inputs {
@@ -195,6 +205,8 @@ export default class FilterSettings extends Vue {
     }
 
     input {
+        border: none !important;
+        outline: none !important;
         color: var(--primary-color);
     }
 }
@@ -202,16 +214,21 @@ export default class FilterSettings extends Vue {
 .input_row {
     display: grid;
     grid-template-columns: 1fr max-content;
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 4px 30px;
+    padding: 4px 12px;
     border-radius: 2px;
+    margin-bottom: 4px;
+    font-size: 14px;
 }
 
 .slider_row {
     display: flex;
     flex-direction: column;
     text-align: right;
+    border: none;
+    background-color: transparent;
+    padding: 2px 0;
 
     input {
         margin: 4px 0;
@@ -243,6 +260,7 @@ label {
 
 .preview {
     margin: 12px 0;
+    font-size: 12px;
 }
 
 .checkout {

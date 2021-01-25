@@ -122,6 +122,14 @@ input {
     @include highlight-border;
 }
 
+input[type='number']{
+    &::-webkit-outer-spin-button, ::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    -moz-appearance: textfield;
+}
+
 label {
     margin-bottom: initial !important;
 }
