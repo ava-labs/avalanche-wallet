@@ -124,7 +124,7 @@ export default class BaseTx extends Vue {
     }
 
     get addresses() {
-        let wallet: WalletType = this.$store.state.activeWallet
+        let wallet: WalletType | null = this.$store.state.activeWallet
         if (!wallet) return []
 
         return wallet.getHistoryAddresses()
