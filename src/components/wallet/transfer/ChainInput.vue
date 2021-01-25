@@ -1,6 +1,6 @@
 <template>
     <div v-if="!isLedger">
-        <h4>Select Source Chain</h4>
+        <h4>{{ $t('transfer.source_chain.title') }}</h4>
         <div class="chain_select">
             <div :active="formType === 'X'" @click="set('X')" class="hover_border">
                 <h2>X</h2>

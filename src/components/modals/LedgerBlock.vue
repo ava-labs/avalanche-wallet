@@ -2,7 +2,7 @@
     <modal ref="modal" title="Check Your Ledger Device" :can_close="false">
         <div class="ledger_block" v-if="isActive">
             <p style="margin-bottom: 14px !important; font-size: 18px">
-                Please confirm these actions on your ledger device.
+                {{ $t('modal.ledger.desc') }}
             </p>
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
