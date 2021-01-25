@@ -84,7 +84,7 @@
                         @click="cancel"
                         small
                     >
-                        Cancel{{ $t('transfer.c_chain.cancel') }}
+                        {{ $t('transfer.c_chain.cancel') }}
                     </v-btn>
                 </template>
             </template>
