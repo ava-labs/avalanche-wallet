@@ -121,7 +121,12 @@
         },
         "address": {
             "derived": "Derived Avalanche Wallet Address",
-            "desc": "This is your address to receive funds. Your address will change after every deposit."
+            "title_x": "Derived Wallet Address",
+            "title_p": "Derived Platform Wallet Address",
+            "title_c": "Derived EVM Wallet Address",
+            "desc_x": "This is your X Chain address to receive funds. Your address will change after every deposit.",
+            "desc_p": "This is your Platform Chain address to receive staking rewards and cross chain transfers.",
+            "desc_c": "This is your Contract Chain address. Use it to interact with the ethereum virtual machine."
         }
     },
     "transfer": {
@@ -320,7 +325,14 @@
         "error_network": "Unable to display assets. Disconnected from the network.",
         "nobalance": "You do not have any assets",
         "nobalance_nft": "You do not own any collectibles.",
-        "noaddresses": "You do not have any past addresses."
+        "noaddresses": "You do not have any past addresses.",
+        "collectibles": {
+            "mint_more": "Mint more of this collectible family in the Studio.",
+            "mint_submit": "Mint",
+            "quantity": "Quantity",
+            "group": "Group ID",
+            "send": "Send"
+        }
     },
     "earn": {
         "title": "Earn",
@@ -667,5 +679,8 @@
     "nav": {
         "access": "Access Wallet",
         "create": "Create New Wallet"
+    },
+    "misc": {
+        "balance": "Balance"
     }
 }
