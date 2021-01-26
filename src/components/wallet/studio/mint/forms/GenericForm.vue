@@ -1,15 +1,15 @@
 <template>
     <div>
         <div class="input_cont">
-            <label>Title</label>
+            <label>{{ $t('studio.mint.forms.generic.label1') }}</label>
             <input class="text" max="128" v-model="title" @input="onInput" />
         </div>
         <div class="input_cont">
-            <label>Image URL*</label>
+            <label>{{ $t('studio.mint.forms.generic.label2') }}</label>
             <input class="text" placeholder="https://" v-model="imgUrl" @input="onInput" />
         </div>
         <div class="input_cont">
-            <label>Description</label>
+            <label>{{ $t('studio.mint.forms.generic.label3') }}</label>
             <textarea class="text" maxlength="256" v-model="description" @input="onInput" />
         </div>
         <!--        <div class="input_cont">-->
@@ -45,16 +45,19 @@ export default class GenericForm extends Vue {
         try {
             new URL(this.imgUrl)
         } catch (e) {
-            this.error = 'Not a valid Image URL.'
+            this.error = this.$t('studio.mint.forms.generic.err1') as string
+            // this.error = 'Not a valid Image URL.'
             return false
         }
         if (!this.imgUrl) {
-            this.error = 'You must set the image.'
+            this.error = this.$t('studio.mint.forms.generic.err2') as string
+            // this.error = 'You must set the image.'
             return false
         }
 
         if (this.imgUrl.length > 516) {
-            this.error = 'Image URL too long.'
+            this.error = this.$t('studio.mint.forms.generic.err3') as string
+            // this.error = 'Image URL too long.'
             return false
         }
 

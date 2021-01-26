@@ -1,8 +1,7 @@
 <template>
     <div>
-        <label>JSON Payload (MAX 1024 characters)</label>
+        <label>{{ $t('studio.mint.forms.json.label1') }}</label>
         <div class="input_cont">
-            <!--            <div ref="editor" class="editor"></div>-->
             <textarea maxlength="1024" type="text" v-model="data" @input="onInput" />
             <p class="counter">{{ data.length }} / 1024</p>
         </div>

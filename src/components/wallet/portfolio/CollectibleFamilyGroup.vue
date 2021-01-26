@@ -8,15 +8,15 @@
             <div class="back">
                 <div class="nft_info">
                     <p>
-                        <b>Quantity:</b>
+                        <b>{{ $t('portfolio.collectibles.quantity') }}:</b>
                         {{ quantity }}
                     </p>
                     <p>
-                        <b>Group ID:</b>
+                        <b>{{ $t('portfolio.collectibles.group') }}:</b>
                         {{ groupID }}
                     </p>
                 </div>
-                <v-btn @click="transfer" small>Send</v-btn>
+                <v-btn @click="transfer" small>{{ $t('portfolio.collectibles.send') }}</v-btn>
             </div>
         </div>
     </div>

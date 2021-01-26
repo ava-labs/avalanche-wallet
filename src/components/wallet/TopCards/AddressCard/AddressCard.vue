@@ -100,22 +100,22 @@ export default class AddressCard extends Vue {
     get addressLabel(): string {
         switch (this.chainNow) {
             default:
-                return 'Derived Wallet Address'
+                return this.$t('top.address.title_x') as string
             case 'P':
-                return 'Derived Platform Wallet Address'
+                return this.$t('top.address.title_p') as string
             case 'C':
-                return 'Derived EVM Wallet Address'
+                return this.$t('top.address.title_c') as string
         }
     }
 
     get addressMsg(): string {
         switch (this.chainNow) {
             default:
-                return `This is your X Chain address to receive funds. Your address will change after every deposit.`
+                return this.$t('top.address.desc_x') as string
             case 'P':
-                return 'This is your Platform Chain address to receive staking rewards and cross chain transfers.'
+                return this.$t('top.address.desc_p') as string
             case 'C':
-                return 'This is your Contract Chain address. Use it to interact with the ethereum virtual machine. '
+                return this.$t('top.address.desc_c') as string
         }
     }
     get isDayTheme(): boolean {

@@ -1,30 +1,30 @@
 <template>
     <div>
         <div class="header">
-            <h1>Studio</h1>
+            <h1>{{ $t('studio.title') }}</h1>
             <h1 class="subtitle" v-if="pageNow">
                 / {{ subtitle }}
                 <span @click="cancel"><fa icon="times"></fa></span>
             </h1>
         </div>
         <template v-if="!pageNow">
-            <p>Create and manage assets.</p>
+            <p>{{ $t('studio.desc') }}</p>
             <div class="menu">
-                <h2>Collectibles</h2>
+                <h2>{{ $t('studio.collectibles') }}</h2>
                 <div class="options">
                     <div>
-                        <h4 class="title">New Family</h4>
-                        <p>Create a new set of collectibles with a name and symbol.</p>
+                        <h4 class="title">{{ $t('studio.menu1.title') }}</h4>
+                        <p>{{ $t('studio.menu1.desc') }}</p>
                         <v-btn @click="goNewNftFamily" class="button_secondary" small depressed>
-                            New Family
+                            {{ $t('studio.menu1.submit') }}
                         </v-btn>
                     </div>
                     <div>
-                        <h4 class="title">Mint Collectible</h4>
-                        <p>Issue collectibles for the families you created.</p>
+                        <h4 class="title">{{ $t('studio.menu2.title') }}</h4>
+                        <p>{{ $t('studio.menu2.desc') }}</p>
                         <div>
                             <p v-if="!canMint" class="err">
-                                You do not own any families you can mint.
+                                {{ $t('studio.menu2.empty') }}
                             </p>
                             <v-btn
                                 @click="goMint"
@@ -33,7 +33,7 @@
                                 depressed
                                 :disabled="!canMint"
                             >
-                                Mint
+                                {{ $t('studio.menu2.submit') }}
                             </v-btn>
                         </div>
                     </div>

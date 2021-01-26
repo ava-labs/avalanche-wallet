@@ -1,15 +1,9 @@
 <template>
     <div>
         <div class="head">
-            <h1>Cross Chain</h1>
+            <h1>{{ $t('cross_chain.title') }}</h1>
             <p>
-                Transfer tokens between
-                <b>Exchange (X)</b>
-                ,
-                <b>Platform (P)</b>
-                and
-                <b>Contract (C)</b>
-                chains.
+                {{ $t('cross_chain.desc') }}
             </p>
         </div>
         <ChainTransfer></ChainTransfer>

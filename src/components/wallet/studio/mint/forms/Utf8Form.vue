@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label>Payload (MAX 1024 characters)</label>
+        <label>{{ $t('studio.mint.forms.utf8.label1') }}</label>
         <div class="input_cont">
             <textarea maxlength="1024" type="text" v-model="val" @input="onInput" />
             <p class="counter">{{ val.length }} / 1024</p>

@@ -3,8 +3,8 @@
         <div class="form">
             <slot></slot>
             <div class="table_title">
-                <p>Amount</p>
-                <p>Token</p>
+                <p>{{ $t('transfer.tx_list.amount') }}</p>
+                <p>{{ $t('transfer.tx_list.token') }}</p>
             </div>
             <AvaxInput
                 :max="maxAmt"
@@ -32,12 +32,12 @@
             </div>
             <div class="gas_cont">
                 <div>
-                    <h4>Gas Price (GWEI)</h4>
+                    <h4>{{ $t('transfer.c_chain.gasPrice') }}</h4>
                     <input type="number" v-model="gasPrice" min="0" v-if="!isConfirm" />
                     <p v-else class="confirm_data">{{ gasPrice }}</p>
                 </div>
                 <div>
-                    <h4>Gas Limit</h4>
+                    <h4>{{ $t('transfer.c_chain.gasLimit') }}</h4>
                     <input type="number" v-model="gasLimit" min="0" v-if="!isConfirm" />
                     <p v-else class="confirm_data">{{ gasLimit }}</p>
                 </div>
@@ -64,7 +64,7 @@
                     :disabled="!canConfirm"
                     v-if="!isConfirm"
                 >
-                    Confirm
+                    {{ $t('transfer.c_chain.confirm') }}
                 </v-btn>
                 <template v-else>
                     <v-btn
@@ -74,7 +74,7 @@
                         @click="submit"
                         :loading="isLoading"
                     >
-                        Send
+                        {{ $t('transfer.send') }}
                     </v-btn>
                     <v-btn
                         class="checkout"
@@ -84,17 +84,17 @@
                         @click="cancel"
                         small
                     >
-                        Cancel
+                        {{ $t('transfer.c_chain.cancel') }}
                     </v-btn>
                 </template>
             </template>
             <template v-else>
                 <p style="color: var(--success)">
                     <fa icon="check-circle"></fa>
-                    Transaction Sent
+                    {{ $t('transfer.c_chain.success.desc') }}
                 </p>
                 <div>
-                    <label>Transaction Hash</label>
+                    <label>{{ $t('transfer.c_chain.success.label1') }}</label>
                     <p class="confirm_data" style="word-break: break-all">
                         {{ txHash }}
                     </p>
@@ -107,7 +107,7 @@
                     block
                     @click="startAgain"
                 >
-                    Start Again
+                    {{ $t('transfer.c_chain.reset') }}
                 </v-btn>
             </template>
         </div>

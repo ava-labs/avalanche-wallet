@@ -14,11 +14,11 @@
             ></CollectibleFamilyGroup>
             <div v-if="canMint" class="group mint_card">
                 <p>
-                    Mint more of this collectible family in the
-                    <b>Studio</b>
-                    .
+                    {{ $t('portfolio.collectibles.mint_more') }}
                 </p>
-                <v-btn class="button_secondary" small depressed :to="mintUrl">Mint</v-btn>
+                <v-btn class="button_secondary" small depressed :to="mintUrl">
+                    {{ $t('portfolio.collectibles.mint_submit') }}
+                </v-btn>
             </div>
         </div>
     </div>

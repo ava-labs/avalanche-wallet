@@ -22,7 +22,7 @@
         <div class="balance">
             <div>
                 <p>
-                    <b>Balance:</b>
+                    <b>{{ $t('misc.balance') }}:</b>
                     {{ maxAmountBig.toLocaleString(denomination) }}
                 </p>
                 <template v-if="asset_now">

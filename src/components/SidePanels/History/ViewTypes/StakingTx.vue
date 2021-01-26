@@ -1,17 +1,35 @@
 <template>
     <div class="staking_tx">
-        <div class="data_row" v-if="isRewarded">
-            <p class="rewarded">
-                <span><fa icon="check-square"></fa></span>
-                {{ $t('transactions.rewarded') }}
-            </p>
-        </div>
-        <div class="data_row" v-else-if="!isRewarded && !!rewardTime">
-            <p class="not_rewarded">
-                <span><fa icon="times"></fa></span>
-                {{ $t('transactions.not_rewarded') }}
-            </p>
-        </div>
+        <template v-if="isRewarded">
+            <div class="data_row">
+                <p class="rewarded">
+                    <span><fa icon="check-square"></fa></span>
+                    {{ $t('transactions.rewarded') }}
+                </p>
+            </div>
+            <div class="data_row reward_row">
+                <p>{{ $t('transactions.end') }}</p>
+                <p>
+                    {{ endDate.toLocaleDateString() }}
+                    {{ endDate.toLocaleTimeString() }}
+                </p>
+            </div>
+        </template>
+        <template v-else-if="!isRewarded && !!rewardTime">
+            <div class="data_row">
+                <p class="not_rewarded">
+                    <span><fa icon="times"></fa></span>
+                    {{ $t('transactions.not_rewarded') }}
+                </p>
+            </div>
+            <div class="data_row reward_row">
+                <p>{{ $t('transactions.end') }}</p>
+                <p>
+                    {{ endDate.toLocaleDateString() }}
+                    {{ endDate.toLocaleTimeString() }}
+                </p>
+            </div>
+        </template>
         <div v-else>
             <div class="time_bar" v-if="isStarted">
                 <div
@@ -22,7 +40,7 @@
                 ></div>
             </div>
             <div v-if="!isStarted" class="data_row date_row">
-                <p>Start Date</p>
+                <p>{{ $t('transactions.start') }}</p>
                 <p>
                     {{ startDate.toLocaleDateString() }}
                     {{ startDate.toLocaleTimeString() }}
@@ -30,14 +48,14 @@
             </div>
             <template v-else>
                 <div class="data_row reward_row">
-                    <p>End Date</p>
+                    <p>{{ $t('transactions.end') }}</p>
                     <p>
                         {{ endDate.toLocaleDateString() }}
                         {{ endDate.toLocaleTimeString() }}
                     </p>
                 </div>
                 <div class="data_row reward_row">
-                    <p>Reward Pending</p>
+                    <p>{{ $t('transactions.reward_pending') }}</p>
                     <p class="amt">{{ rewardText }} AVAX</p>
                 </div>
             </template>
