@@ -217,8 +217,7 @@ export default new Vuex.Store({
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
                     if ((w as AvaHdWallet).mnemonic === mnemonic) {
-                        console.error('WALLET ALREADY ADDED')
-                        return null
+                        throw new Error('WALLET ALREADY ADDED')
                     }
                 }
             }
@@ -239,8 +238,7 @@ export default new Vuex.Store({
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'singleton') {
                     if ((w as SingletonWallet).key === pk) {
-                        console.error('WALLET ALREADY ADDED')
-                        return null
+                        throw new Error('WALLET ALREADY ADDED')
                     }
                 }
             }

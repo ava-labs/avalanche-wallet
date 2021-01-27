@@ -59,7 +59,14 @@ export default class AddKeyString extends Vue {
                 this.clear()
             } catch (e) {
                 this.isLoading = false
-                this.error = 'Invalid Private Key'
+
+                try {
+                    if (e.message === 'WALLET ALREADY ADDED') {
+                        this.error = 'This private key has already been added to this wallet.'
+                    }
+                } catch (e) {
+                    this.error = 'Invalid Private Key'
+                }
             }
         }, 200)
     }

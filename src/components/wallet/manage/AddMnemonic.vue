@@ -59,7 +59,14 @@ export default class AddMnemonic extends Vue {
                 this.handleImportSuccess()
             } catch (e) {
                 this.isLoading = false
-                this.err = 'Invalid key phrase.'
+
+                try {
+                    if (e.message === 'WALLET ALREADY ADDED') {
+                        this.err = 'This mnemonic has already been added to this wallet.'
+                    }
+                } catch (e) {
+                    this.err = 'Invalid key phrase.'
+                }
             }
         }, 500)
     }
