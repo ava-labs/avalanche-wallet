@@ -33,11 +33,18 @@ import {
     KeyFileDecryptedV6,
     KeystoreFileKeyType,
 } from '@/js/IKeystore'
-import { extractKeysFromDecryptedFile, readKeyFile } from '@/js/Keystore'
+import {
+    extractKeysFromDecryptedFile,
+    KEYSTORE_VERSION,
+    makeKeyfile,
+    readKeyFile,
+} from '@/js/Keystore'
 import { avm } from '@/AVA'
 import { keyToKeypair } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import { AccessWalletMultipleInput } from '@/store/types'
+import AvaHdWallet from '../../../js/wallets/AvaHdWallet'
+import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 @Component({
     components: { Modal },
 })
@@ -77,10 +84,21 @@ export default class RememberWalletModal extends Vue {
             this.isLoading = false
 
             let accessInput = extractKeysFromDecryptedFile(keyFile)
+
             await this.$store.dispatch('accessWalletMultiple', {
                 keys: accessInput,
                 activeIndex: keyFile.activeIndex,
             })
+
+            if (keyFile.version !== KEYSTORE_VERSION) {
+                let wallets = this.$store.state.wallets as AvaHdWallet[]
+                let wallet = this.$store.state.activeWallet as AvaHdWallet | SingletonWallet | null
+                let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
+
+                let file = await makeKeyfile(wallets, pass, activeIndex)
+                let fileString = JSON.stringify(file)
+                localStorage.setItem('w', fileString)
+            }
 
             // These are not volatile wallets since they are loaded from storage
             this.$store.state.volatileWallets = []
