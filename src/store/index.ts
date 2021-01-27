@@ -310,7 +310,7 @@ export default new Vuex.Store({
             dispatch('History/updateTransactionHistory')
         },
 
-        async exportWallets({ state }, input: ExportWalletsInput) {
+        async exportWallets({ state, dispatch }, input: ExportWalletsInput) {
             try {
                 let pass = input.password
                 let wallets = input.wallets
