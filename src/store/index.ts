@@ -217,7 +217,7 @@ export default new Vuex.Store({
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
                     if ((w as AvaHdWallet).mnemonic === mnemonic) {
-                        throw new Error('WALLET ALREADY ADDED')
+                        console.error('WALLET ALREADY ADDED')
                     }
                 }
             }
@@ -238,7 +238,7 @@ export default new Vuex.Store({
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'singleton') {
                     if ((w as SingletonWallet).key === pk) {
-                        throw new Error('WALLET ALREADY ADDED')
+                        console.error('WALLET ALREADY ADDED')
                     }
                 }
             }
@@ -257,24 +257,33 @@ export default new Vuex.Store({
 
         // Creates a keystore file and saves to local storage
         async rememberWallets({ state, dispatch }, pass: string | undefined) {
-            let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
-            if (!pass || wallet?.type === 'ledger') return
+            try {
+                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+                if (!pass || wallet?.type === 'ledger') return
 
-            let wallets = state.wallets as AvaHdWallet[]
-            let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
+                let wallets = state.wallets as AvaHdWallet[]
+                if (!wallet) throw new Error('No active wallet.')
+                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 
-            let file = await makeKeyfile(wallets, pass, activeIndex)
-            let fileString = JSON.stringify(file)
-            localStorage.setItem('w', fileString)
+                let file = await makeKeyfile(wallets, pass, activeIndex)
+                let fileString = JSON.stringify(file)
+                localStorage.setItem('w', fileString)
 
-            dispatch('Notifications/add', {
-                title: 'Remember Wallet',
-                message: 'Wallets are stored securely for easy access.',
-                type: 'info',
-            })
+                dispatch('Notifications/add', {
+                    title: 'Remember Wallet',
+                    message: 'Wallets are stored securely for easy access.',
+                    type: 'info',
+                })
 
-            // No more voltile wallets
-            state.volatileWallets = []
+                // No more voltile wallets
+                state.volatileWallets = []
+            } catch (e) {
+                dispatch('Notifications/add', {
+                    title: 'Remember Wallet',
+                    message: 'Error remembering wallet.',
+                    type: 'error',
+                })
+            }
         },
 
         async issueBatchTx({ state }, data: IssueBatchTxInput) {
@@ -302,33 +311,42 @@ export default new Vuex.Store({
         },
 
         async exportWallets({ state }, input: ExportWalletsInput) {
-            let pass = input.password
-            let wallets = input.wallets
-            let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
-            let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
+            try {
+                let pass = input.password
+                let wallets = input.wallets
+                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+                if (!wallet) throw new Error('No active wallet.')
+                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 
-            let file_data = await makeKeyfile(wallets, pass, activeIndex)
+                let file_data = await makeKeyfile(wallets, pass, activeIndex)
 
-            // Download the file
-            let text = JSON.stringify(file_data)
-            // let addr = file_data.keys[0].address.substr(2,5);
+                // Download the file
+                let text = JSON.stringify(file_data)
+                // let addr = file_data.keys[0].address.substr(2,5);
 
-            let utcDate = new Date()
-            let dateString = utcDate.toISOString().replace(' ', '_')
-            let filename = `AVAX_${dateString}.json`
+                let utcDate = new Date()
+                let dateString = utcDate.toISOString().replace(' ', '_')
+                let filename = `AVAX_${dateString}.json`
 
-            var blob = new Blob([text], {
-                type: 'application/json',
-            })
-            let url = URL.createObjectURL(blob)
-            var element = document.createElement('a')
+                var blob = new Blob([text], {
+                    type: 'application/json',
+                })
+                let url = URL.createObjectURL(blob)
+                var element = document.createElement('a')
 
-            element.setAttribute('href', url)
-            element.setAttribute('download', filename)
-            element.style.display = 'none'
-            document.body.appendChild(element)
-            element.click()
-            document.body.removeChild(element)
+                element.setAttribute('href', url)
+                element.setAttribute('download', filename)
+                element.style.display = 'none'
+                document.body.appendChild(element)
+                element.click()
+                document.body.removeChild(element)
+            } catch (e) {
+                dispatch('Notifications/add', {
+                    title: 'Export Wallet',
+                    message: 'Error exporting wallet.',
+                    type: 'error',
+                })
+            }
         },
 
         // Given a key file with password, will try to decrypt the file and add keys to user's

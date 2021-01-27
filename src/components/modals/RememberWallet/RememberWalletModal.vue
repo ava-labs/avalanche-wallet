@@ -93,7 +93,9 @@ export default class RememberWalletModal extends Vue {
             if (keyFile.version !== KEYSTORE_VERSION) {
                 let wallets = this.$store.state.wallets as AvaHdWallet[]
                 let wallet = this.$store.state.activeWallet as AvaHdWallet | SingletonWallet | null
-                let activeIndex = wallets.findIndex((w) => w.id == wallet?.id) || 0
+
+                if (!wallet) throw new Error('No active wallet.')
+                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 
                 let file = await makeKeyfile(wallets, pass, activeIndex)
                 let fileString = JSON.stringify(file)
