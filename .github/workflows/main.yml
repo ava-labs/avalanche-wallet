@@ -28,14 +28,14 @@ jobs:
             - run: sudo npm install -g yarn
 
             - run: yarn install
+              env:
+                  CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
 
             - name: linting
               run: yarn run lint
 
             - name: jest-run
               run: yarn test
-
-            - run: cypress install
 
             - name: cypress-run
               uses: cypress-io/github-action@v2
