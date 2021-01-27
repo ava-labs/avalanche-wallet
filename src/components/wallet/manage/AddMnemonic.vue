@@ -9,7 +9,6 @@
             class="addKeyBut button_primary ava_button"
             depressed
             block
-            color="#4C2E56"
         >
             {{ $t('keys.import_key_button') }}
         </v-btn>

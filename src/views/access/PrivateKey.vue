@@ -17,7 +17,6 @@
                 <v-btn
                     class="ava_button button_primary"
                     @click="access"
-                    color="#4C2E56"
                     :loading="isLoading"
                     :disabled="!canSubmit"
                     depressed

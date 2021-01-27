@@ -9,7 +9,6 @@
                     type="submit"
                     :loading="isLoading"
                     depressed
-                    color="#4C2E56"
                     class="ava_button button_primary submit"
                 >
                     {{ $t('modal.activateWallet.submit') }}

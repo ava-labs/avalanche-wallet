@@ -9,7 +9,6 @@
                 :placeholder="$t('keys.export_placeholder1')"
                 dense
                 outlined
-                color="#4C2E56"
                 hide-details
                 type="password"
                 v-model="pass"
@@ -22,7 +21,6 @@
                 class="addKeyBut button_primary ava_button"
                 depressed
                 block
-                color="#4C2E56"
             >
                 {{ $t('keys.import_key_button') }}
             </v-btn>
