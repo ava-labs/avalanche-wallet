@@ -2,14 +2,14 @@
     <div class="activity_page">
         <div class="explorer_warning" v-if="!hasExplorer">
             <div class="warning_body">
-                <h1>Explorer Not Found</h1>
-                <p>The active network settings has not provided an explorer API endpoint.</p>
+                <h1>{{ $t('activity.no_explorer.title') }}</h1>
+                <p>{{ $t('activity.no_explorer.desc') }}</p>
             </div>
         </div>
         <div class="settings">
             <div class="filter_col">
                 <div class="filter_cont">
-                    <label>Filter by type</label>
+                    <label>{{ $t('activity.label1') }}</label>
                     <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="pagination_info">
-                    <p>{{ txs.length }} transactions found</p>
+                    <p>{{ $t('activity.found', [txs.length]) }}</p>
                     <button @click="updateHistory">
                         <fa icon="sync"></fa>
                     </button>
@@ -46,12 +46,12 @@
                     :estimate-size="txsProcessed.length"
                 ></virtual-list>
                 <div v-if="txs.length === 0" class="empty">
-                    <p>No Transactions Found.</p>
+                    <p>{{ $t('activity.empty') }}</p>
                 </div>
             </div>
             <div v-if="!showList" class="loading">
                 <Spinner class="spinner"></Spinner>
-                <p>LoadingTransactions.</p>
+                <p>{{ $t('activity.loading') }}</p>
             </div>
         </div>
     </div>
@@ -91,7 +91,12 @@ const MONTH_MIN = 8
 })
 export default class Activity extends Vue {
     mode: ModeKeyType = 'all'
-    modes = ['All', 'Transfer', 'Export & Import', 'Validation & Delegation']
+    modes = [
+        this.$t('activity.mode1'),
+        this.$t('activity.mode2'),
+        this.$t('activity.mode3'),
+        this.$t('activity.mode4'),
+    ]
     modeKey: ModeKeyType[] = ['all', 'transfer', 'swap', 'stake']
     isLoading = false
     pageNow = 0
@@ -132,7 +137,7 @@ export default class Activity extends Vue {
     }
 
     get monthNowName() {
-        return moment(this.monthNow + 1, 'MM').format('MMMM')
+        return this.$t(`activity.months.${this.monthNow}`)
     }
 
     get hasExplorer() {

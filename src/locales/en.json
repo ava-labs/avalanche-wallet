@@ -37,6 +37,9 @@
             "label1": "Network Name",
             "label2": "Explorer API (optional)",
             "label3": "Explorer Site (optional)"
+        },
+        "blocker": {
+            "desc": "Connecting to a new network, please wait."
         }
     },
     "access": {
@@ -65,7 +68,8 @@
             "export": "Cross Chain",
             "earn": "Earn",
             "studio": "Studio",
-            "advanced": "Advanced"
+            "advanced": "Advanced",
+            "activity": "Activity"
         },
         "address_card": {},
         "collectibles": {
@@ -117,7 +121,12 @@
         },
         "address": {
             "derived": "Derived Avalanche Wallet Address",
-            "desc": "This is your address to receive funds. Your address will change after every deposit."
+            "title_x": "Derived Wallet Address",
+            "title_p": "Derived Platform Wallet Address",
+            "title_c": "Derived EVM Wallet Address",
+            "desc_x": "This is your X Chain address to receive funds. Your address will change after every deposit.",
+            "desc_p": "This is your Platform Chain address to receive staking rewards and cross chain transfers.",
+            "desc_c": "This is your Contract Chain address. Use it to interact with the ethereum virtual machine."
         }
     },
     "transfer": {
@@ -143,6 +152,128 @@
         "tx_list": {
             "amount": "Amount",
             "token": "Token"
+        },
+        "source_chain": {
+            "title": "Select Soruce Chain"
+        },
+        "c_chain": {
+            "gasPrice": "Gas Price (GWEI)",
+            "gasLimit": "Gas Limit",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "success": {
+                "desc": "Transaction Send",
+                "label1": "Transaction Hash"
+            },
+            "reset": "Start Again"
+        }
+    },
+    "cross_chain": {
+        "title": "Cross Chain",
+        "desc": "Transfer tokens between Exchange (X) , Platform (P) and Contract (C) chains.",
+        "card": {
+            "source": "Source",
+            "destination": "Destination",
+            "name": "Name",
+            "balance": "Balance"
+        },
+        "state": {
+            "export": "Export",
+            "import": "Import",
+            "status": "Status",
+            "not_started": "Not Started",
+            "reason": "Reason"
+        },
+        "form": {
+            "source": "Source Chain",
+            "destination": "Destination Chain"
+        }
+    },
+    "studio": {
+        "title": "Studio",
+        "desc": "Create and manage assets.",
+        "collectibles": "Collectibles",
+        "menu1": {
+            "title": "New Family",
+            "desc": "Create a new set of collectibles with a name and symbol.",
+            "submit": "New Family"
+        },
+        "menu2": {
+            "title": "Mint Collectible",
+            "desc": "Issue collectibles for the families you created.",
+            "empty": "You do not own any families you can mint.",
+            "submit": "Mint"
+        },
+        "family": {
+            "desc": "Create a new Collectible family.",
+            "label1": "Name",
+            "label2": "Symbol",
+            "label3": "Number of Groups",
+            "fee": "Fee",
+            "submit": "Create",
+            "back": "Back to Studio",
+            "success": {
+                "desc": "Collectible Family Created",
+                "label1": "Tx ID",
+                "label2": "Family Name",
+                "label3": "Symbol",
+                "label4": "Number of Groups"
+            }
+        },
+        "mint": {
+            "desc": "Select a family to issue collectibles to.",
+            "utxo_col": {
+                "change": "Change Family",
+                "label1": "Family Name",
+                "label2": "Family Symbol",
+                "label3": "Group"
+            },
+            "type_col": {
+                "label1": "Type",
+                "desc": "Select a collectible type.",
+                "types": {
+                    "custom": "Custom",
+                    "generic": "Generic"
+                },
+                "typeDesc": {
+                    "generic": "Generic collectibles consist of an image, title and a description. The wallet can display them nicely.",
+                    "url": "If the given URL is an image the wallet will try its best to display it nicely. Otherwise it will show up as a link.",
+                    "json": "JSON payloads are ideal for custom data structures and can be used to develop decentralized applications.",
+                    "utf8": "UTF8 payloads are simply text encoded into a collectible."
+                },
+                "label2": "Payload Type"
+            },
+            "form_col": {
+                "label1": "Quantity",
+                "fee": "Fee",
+                "submit": "Mint"
+            },
+            "preview": {
+                "label1": "Preview",
+                "info1": "Complete the form to see the preview.",
+                "success": {
+                    "text1": "Success.",
+                    "text2": "The new collectibles are added to your wallet.",
+                    "label1": "Tx ID",
+                    "back": "Back to Studio"
+                }
+            },
+            "forms": {
+                "generic": {
+                    "label1": "Title",
+                    "label2": "Image URL*",
+                    "label3": "Description",
+                    "err1": "Not a valid image URL.",
+                    "err2": "You must set the image.",
+                    "err3": "Image URL too long."
+                },
+                "json": {
+                    "label1": "JSON Payload (MAX 1024 characters)"
+                },
+                "utf8": {
+                    "label1": "Payload (MAX 1024 characters)"
+                }
+            }
         }
     },
     "keys": {
@@ -195,7 +326,14 @@
         "error_network": "Unable to display assets. Disconnected from the network.",
         "nobalance": "You do not have any assets",
         "nobalance_nft": "You do not own any collectibles.",
-        "noaddresses": "You do not have any past addresses."
+        "noaddresses": "You do not have any past addresses.",
+        "collectibles": {
+            "mint_more": "Mint more of this collectible family in the Studio.",
+            "mint_submit": "Mint",
+            "quantity": "Quantity",
+            "group": "Group ID",
+            "send": "Send"
+        }
     },
     "earn": {
         "title": "Earn",
@@ -232,11 +370,12 @@
             "balance": "Balance",
             "amount": "Transfer Amount",
             "fee": "Fee",
+            "fee_name": "Export + Import Fee",
             "confirm": "Confirm",
             "submit": "Transfer",
             "cancel": "Cancel",
             "err_import": "Import Failed",
-            "err_desc": "There was a problem importing your tokens into the destination chain. Please try importing again.",
+            "err_desc": "Import failed. Please go to Advanced page to finish importing.",
             "err_submit": "Trigger Import",
             "success": {
                 "title": "Transfer Completed",
@@ -448,6 +587,34 @@
             "label3": "Source Address"
         }
     },
+    "activity": {
+        "no_explorer": {
+            "title": "Explorer Not Found",
+            "desc": "The active network settings has not provided an explorer API endpoint."
+        },
+        "label1": "Filter by type",
+        "empty": "No Transactions Found",
+        "loading": "Loading Transactions",
+        "mode1": "All",
+        "mode2": "Transfer",
+        "mode3": "Export & Import",
+        "mode4": "Validation & Delegation",
+        "found": "{0} transactions found",
+        "months": {
+            "0": "January",
+            "1": "February",
+            "2": "March",
+            "3": "April",
+            "4": "May",
+            "5": "June",
+            "6": "July",
+            "7": "August",
+            "8": "September",
+            "9": "October",
+            "10": "November",
+            "11": "December"
+        }
+    },
     "logout": {
         "button": "Log Out",
         "button_conf": "LOGOUT",
@@ -466,7 +633,10 @@
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",
-        "error_api_desc": "You must provide an Avalanche Explorer API for this network to view transaction history."
+        "error_api_desc": "You must provide an Avalanche Explorer API for this network to view transaction history.",
+        "start": "Start Date",
+        "end": "End Date",
+        "reward_pending": "Reward Pending"
     },
     "modal": {
         "qr": {
@@ -508,10 +678,16 @@
             "col2": "Amount",
             "available": "Available Balance",
             "submit": "Select"
+        },
+        "ledger": {
+            "desc": "Please confirm these actions on your ledger device."
         }
     },
     "nav": {
         "access": "Access Wallet",
         "create": "Create New Wallet"
+    },
+    "misc": {
+        "balance": "Balance"
     }
 }

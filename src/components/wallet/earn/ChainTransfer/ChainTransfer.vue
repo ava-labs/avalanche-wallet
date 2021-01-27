@@ -12,7 +12,7 @@
                     <div v-if="!isImportErr" class="fees">
                         <h4>{{ $t('earn.transfer.fee') }}</h4>
                         <p>
-                            Export + Import Fee
+                            {{ $t('earn.transfer.fee_name') }}
                             <span>{{ fee.toString() }} AVAX</span>
                         </p>
                     </div>
@@ -21,9 +21,7 @@
                         <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
                         <template v-if="isImportErr">
                             <p>
-                                Import failed. Please try again or go
-                                <b>Advanced</b>
-                                page to finish importing.
+                                {{ $t('earn.transfer.err_desc') }}
                             </p>
                             <v-btn
                                 depressed

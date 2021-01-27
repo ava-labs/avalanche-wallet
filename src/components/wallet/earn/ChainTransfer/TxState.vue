@@ -1,8 +1,8 @@
 <template>
     <div class="tx_state_card" :state="state">
         <div class="loading_header">
-            <h4 v-if="isExport">Export</h4>
-            <h4 v-else>Import</h4>
+            <h4 v-if="isExport">{{ $t('cross_chain.state.export') }}</h4>
+            <h4 v-else>{{ $t('cross_chain.state.import') }}</h4>
             <div class="status_icon">
                 <Spinner v-if="state == 1" class="spinner"></Spinner>
                 <p v-else-if="state === 2">
@@ -19,12 +19,12 @@
                 <p>{{ txId || '-' }}</p>
             </div>
             <div class="data_row">
-                <label>Status</label>
-                <p v-if="!status">Not started</p>
+                <label>{{ $t('cross_chain.state.status') }}</label>
+                <p v-if="!status">{{ $t('cross_chain.state.not_started') }}</p>
                 <p v-else>{{ status }}</p>
             </div>
             <div v-if="reason" class="data_row">
-                <label>Reason</label>
+                <label>{{ $t('cross_chain.state.reason') }}</label>
                 <p>{{ reason }}</p>
             </div>
         </div>
