@@ -1,6 +1,6 @@
 {
     "name": "wallet",
-    "version": "0.1.0",
+    "version": "0.1.4",
     "engines": {
         "node": "12.14.1"
     },
@@ -10,6 +10,7 @@
         "cypress": "cypress run",
         "format": "prettier '**/*.{js,ts,vue}' --write",
         "lint": "vue-cli-service lint",
+        "release": "release-it",
         "serve": "vue-cli-service serve",
         "test_watch": "jest --verbose --watch ./tests",
         "test": "jest --verbose ./tests"
@@ -82,6 +83,7 @@
         "qrcode": "1.4.4",
         "reflect-metadata": "0.1.13",
         "register-service-worker": "1.6.2",
+        "release-it": "^14.2.2",
         "roboto-fontface": "0.10.0",
         "serve": "11.3.2",
         "uuid": "3.4.0",
