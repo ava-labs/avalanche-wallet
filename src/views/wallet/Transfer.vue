@@ -355,7 +355,7 @@ export default class Transfer extends Vue {
     }
 
     async waitTxConfirm(txId: string) {
-        let status = (await avm.getTxStatus(txId)).status
+        let status = await avm.getTxStatus(txId)
         if (status === 'Unknown' || status === 'Processing') {
             // if not confirmed ask again
             setTimeout(() => {

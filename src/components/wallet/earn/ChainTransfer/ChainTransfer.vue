@@ -322,7 +322,7 @@ export default class ChainTransfer extends Vue {
     async waitExportStatus(txId: string, nonce?: number) {
         let status
         if (this.sourceChain === 'X') {
-            status = (await avm.getTxStatus(txId)).status
+            status = await avm.getTxStatus(txId)
         } else if (this.sourceChain === 'P') {
             let resp = await pChain.getTxStatus(txId)
             if (typeof resp === 'string') {
@@ -397,7 +397,7 @@ export default class ChainTransfer extends Vue {
         let status
 
         if (this.targetChain === 'X') {
-            status = (await avm.getTxStatus(txId)).status
+            status = await avm.getTxStatus(txId)
         } else if (this.targetChain === 'P') {
             let resp = await pChain.getTxStatus(txId)
             if (typeof resp === 'string') {
