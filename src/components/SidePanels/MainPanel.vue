@@ -9,9 +9,7 @@
             </button>
         </div>
         <transition name="fade" mode="out-in">
-            <transaction-history-panel
-                class="panel_content"
-            ></transaction-history-panel>
+            <transaction-history-panel class="panel_content"></transaction-history-panel>
         </transition>
     </div>
 </template>
@@ -43,8 +41,10 @@ export default {
 .main_panel {
     display: grid;
     grid-template-rows: max-content 1fr;
+    row-gap: 6px;
 }
 .panel_nav {
+    background-color: var(--bg-wallet-light);
     /*display: flex;*/
     /*align-items: center;*/
     /*flex-direction: row;*/
@@ -55,6 +55,7 @@ export default {
     font-size: 14px;
 
     > * {
+        outline: none !important;
         padding: 4px 8px;
         border-radius: 4px;
     }
@@ -70,6 +71,7 @@ export default {
 
 .panel_content {
     overflow: auto;
+    background-color: var(--bg-wallet-light);
     height: 100%;
 }
 

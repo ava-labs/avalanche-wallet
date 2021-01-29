@@ -19,25 +19,25 @@
                 </button>
             </div>
             <div style="flex-grow: 1"></div>
-            <div class="search">
+            <div class="search hover_border">
                 <img v-if="$root.theme === 'day'" src="@/assets/search.png" />
                 <img v-else src="@/assets/search_night.svg" />
                 <input :placeholder="$t('portfolio.search')" v-model="search" />
             </div>
         </div>
         <div class="pages">
-            <transition name="fade" mode="out-in">
+            <transition-group name="fade" mode="out-in">
                 <fungibles
-                    v-if="tab === `fungibles`"
+                    v-show="tab === `fungibles`"
                     key="fungibles"
                     :search="search"
                 ></fungibles>
                 <collectibles
-                    v-else
-                    key="fungibles"
+                    v-show="tab === `collectibles`"
+                    key="collectibles"
                     :search="search"
                 ></collectibles>
-            </transition>
+            </transition-group>
         </div>
     </div>
 </template>
@@ -88,6 +88,7 @@ export default {
         font-weight: bold;
         margin: 0px 5px;
         text-transform: uppercase;
+        outline: none !important;
 
         &[active] {
             color: var(--primary-color);
@@ -107,8 +108,10 @@ export default {
     font-size: 13px;
     flex-basis: 420px;
     flex-shrink: 1;
+    border: 1px solid transparent;
 
     $icon_w: 36px;
+
     img {
         border-radius: 4px;
         padding: 10px 0px;
@@ -122,6 +125,7 @@ export default {
     input {
         padding: 0px 16px;
         outline: none;
+        border: none !important;
         flex-grow: 1;
         color: var(--primary-color);
 
@@ -135,7 +139,7 @@ export default {
     /*margin-top: 30px;*/
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .header {
         display: block;
 
@@ -163,12 +167,27 @@ export default {
 
 @include main.medium-device {
     .header {
-        flex-wrap: wrap;
+        button {
+            font-size: 13px;
+
+            &[active] {
+                border-bottom-width: 2px;
+            }
+        }
     }
 
     .search {
-        margin: 15px 0px;
-        flex-basis: 100%;
+        //margin: 15px 0px;
+        //flex-basis: 100%;
+        flex-grow: 1;
+        height: 36px;
+        flex-basis: auto;
+
+        img {
+            padding: 6px;
+            height: 22px;
+            width: 22px;
+        }
     }
 }
 </style>

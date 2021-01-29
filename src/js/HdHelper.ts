@@ -3,36 +3,31 @@ import {
     KeyPair as AVMKeyPair,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
+import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
+
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import HDKey from 'hdkey'
 import { Buffer } from 'buffer/'
 import {
     KeyChain as PlatformVMKeyChain,
     KeyPair as PlatformVMKeyPair,
 } from 'avalanche/dist/apis/platformvm'
-import { SECP256k1KeyPair } from 'avalanche/dist/common'
 import store from '@/store'
 
-import {
-    getAddressChains,
-    getAddressDetailX,
-    getAddressTransactionsP,
-    isAddressUsedP,
-    isAddressUsedX,
-} from '@/explorer_api'
+import { getAddressChains } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import { ChainAlias } from './wallets/IAvaHdWallet'
+import { getAtomicUTXOsForAddresses } from '@/helpers/wallet_helper'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 
 const SCAN_SIZE: number = 100 // the total number of utxos to look at initially to calculate last index
 const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE // How many items are actually scanned
-
-type HelperChainId = 'X' | 'P'
 class HdHelper {
-    chainId: HelperChainId
+    chainId: ChainAlias
     keyChain: AVMKeyChain | PlatformVMKeyChain
     keyCache: {
         [index: number]: AVMKeyPair | PlatformVMKeyPair
@@ -48,14 +43,19 @@ class HdHelper {
     hdIndex: number
     utxoSet: AVMUTXOSet | PlatformUTXOSet
     isPublic: boolean
+    isFetchUtxo: boolean // true if updating balance
+    isInit: boolean // true if HD index is found
 
     constructor(
         changePath: string,
         masterKey: HDKey,
-        chainId: HelperChainId = 'X',
+        chainId: ChainAlias = 'X',
         isPublic: boolean = false
     ) {
         this.changePath = changePath
+        this.isFetchUtxo = false
+        this.isInit = false
+
         this.chainId = chainId
         let hrp = getPreferredHRP(ava.getNetworkID())
         if (chainId === 'X') {
@@ -65,30 +65,32 @@ class HdHelper {
             this.keyChain = new PlatformVMKeyChain(hrp, chainId)
             this.utxoSet = new PlatformUTXOSet()
         }
+
         this.keyCache = {}
         this.addressCache = {}
         this.hdCache = {}
         this.masterKey = masterKey
         this.hdIndex = 0
         this.isPublic = isPublic
-        this.oninit()
+        // this.oninit()
     }
 
     async oninit() {
-        this.findHdIndex()
+        await this.findHdIndex()
         // this.hdIndex = await this.findAvailableIndexNode();
         // this.hdIndex = await this.findAvailableIndexExplorer();
 
         // if(!this.isPublic){
         //     this.updateKeychain();
         // }
-        this.updateUtxos()
+        // this.updateUtxos()
     }
 
     // When the wallet connects to a different network
     // Clear internal data and scan again
     async onNetworkChange() {
         this.clearCache()
+        this.isInit = false
         let hrp = getPreferredHRP(ava.getNetworkID())
         if (this.chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, this.chainId)
@@ -138,6 +140,7 @@ class HdHelper {
         if (!this.isPublic) {
             this.updateKeychain()
         }
+        this.isInit = true
     }
 
     async platformGetAllUTXOsForAddresses(
@@ -156,10 +159,7 @@ class HdHelper {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.platformGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
 
@@ -183,10 +183,7 @@ class HdHelper {
         let len = response.numFetched
 
         if (len >= 1024) {
-            let subUtxos = await this.avmGetAllUTXOsForAddresses(
-                addrs,
-                nextEndIndex
-            )
+            let subUtxos = await this.avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
             return utxoSet.merge(subUtxos)
         }
         return utxoSet
@@ -226,6 +223,12 @@ class HdHelper {
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet | PlatformUTXOSet> {
+        this.isFetchUtxo = true
+
+        if (!this.isInit) {
+            console.error('HD Index not found yet.')
+        }
+
         let addrs: string[] = this.getAllDerivedAddresses()
         let result: AVMUTXOSet | PlatformUTXOSet
 
@@ -244,6 +247,7 @@ class HdHelper {
         if (currentUtxos.length > 0) {
             this.incrementIndex()
         }
+        this.isFetchUtxo = false
         return result
     }
 
@@ -255,20 +259,23 @@ class HdHelper {
 
     async getAtomicUTXOs() {
         let addrs: string[] = this.getAllDerivedAddresses()
-        // console.log(addrs);
-        if (this.chainId === 'P') {
-            let result: PlatformUTXOSet = (
-                await pChain.getUTXOs(addrs, avm.getBlockchainID())
-            ).utxos
-            return result
-        } else {
-            let result: AVMUTXOSet = (
-                await avm.getUTXOs(addrs, pChain.getBlockchainID())
-            ).utxos
-            return result
-        }
+
+        let result = await getAtomicUTXOsForAddresses(addrs, this.chainId)
+        return result
+        // // console.log(addrs);
+        // if (this.chainId === 'P') {
+        //     let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID()))
+        //         .utxos
+        //     return result
+        // } else {
+        //     let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
+        //
+        //     let resultC: AVMUTXOSet = (await avm.getUTXOs(addrs, cChain.getBlockchainID())).utxos
+        //     return result.merge(resultC)
+        // }
     }
 
+    // Not used?
     getUtxos(): AVMUTXOSet | PlatformUTXOSet {
         return this.utxoSet
     }
@@ -334,7 +341,7 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
-        let upTo = 200
+        let upTo = 512
 
         let addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
         let addrChains = await getAddressChains(addrs)
@@ -374,9 +381,7 @@ class HdHelper {
             }
         }
 
-        return await this.findAvailableIndexExplorer(
-            startIndex + (upTo - INDEX_RANGE)
-        )
+        return await this.findAvailableIndexExplorer(startIndex + (upTo - INDEX_RANGE))
     }
 
     // Uses the node to find last used HD index
@@ -425,54 +430,23 @@ class HdHelper {
         return await this.findAvailableIndexNode(start + SCAN_RANGE)
     }
 
-    // Get tx history data for the index from the explorer
-    // return true if this address has a history
-    // returns false if no explorer is present
-    // async checkIndexExplorer(index: number): Promise<boolean>{
-    //     let addr = this.getAddressForIndex(index);
-    //
-    //     try{
-    //         if(this.chainId==='X'){
-    //             // let res = await getAddressDetailX(addr)
-    //             let res = await isAddressUsedX(addr);
-    //             if(res) return true;
-    //         }else{ // P chain
-    //             // let res = await getAddressTransactionsP(addr)
-    //             let res = await isAddressUsedP(addr);
-    //             if(res) return true;
-    //             // let count = res.count;
-    //             // if(count > 0) return true;
-    //         }
-    //     }catch(e){
-    //         // IF there is no available api, catch the 404 and return false
-    //         return false;
-    //     }
-    //     return false;
-    // }
-
-    // Returns the key of the first index that has no utxos
-    // getFirstAvailableKey(){
-    //     for(var i=0; i<this.hdIndex; i++){
-    //         let key = this.getKeyForIndex(i);
-    //         let utxoIds = this.utxoSet.getUTXOIDs([key.getAddress()]);
-    //         if(utxoIds.length === 0){
-    //             return key;
-    //         }
-    //     }
-    //     return this.getCurrentKey();
-    // }
-
-    // Returns the key of the first index that has no utxos
-    getFirstAvailableAddress(): string {
+    getFirstAvailableIndex(): number {
         for (var i = 0; i < this.hdIndex; i++) {
             let addr = this.getAddressForIndex(i)
             let addrBuf = bintools.parseAddress(addr, this.chainId)
             let utxoIds = this.utxoSet.getUTXOIDs([addrBuf])
             if (utxoIds.length === 0) {
-                return addr
+                return i
             }
         }
-        return this.getCurrentAddress()
+
+        return 0
+    }
+
+    // Returns the key of the first index that has no utxos
+    getFirstAvailableAddress(): string {
+        const idx = this.getFirstAvailableIndex()
+        return this.getAddressForIndex(idx)
     }
 
     getCurrentKey(): AVMKeyPair | PlatformVMKeyPair {
@@ -486,10 +460,7 @@ class HdHelper {
     }
 
     // TODO: Public wallet should never be using this
-    getKeyForIndex(
-        index: number,
-        isPrivate: boolean = true
-    ): AVMKeyPair | PlatformVMKeyPair {
+    getKeyForIndex(index: number, isPrivate: boolean = true): AVMKeyPair | PlatformVMKeyPair {
         // If key is cached return that
         let cacheExternal: AVMKeyPair | PlatformVMKeyPair
 

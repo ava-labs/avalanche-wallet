@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="curr_in_drop">
-            <div class="max_in_cont">
+            <div class="max_in_cont hover_border">
                 <button class="max_but" @click="maxOut">MAX</button>
                 <big-num-input
                     ref="bigIn"
@@ -20,9 +20,18 @@
             ></BalanceDropdown>
         </div>
         <div class="balance">
-            <p>
-                <b>Balance:</b> {{ maxAmountBig.toLocaleString(denomination) }}
-            </p>
+            <div>
+                <p>
+                    <b>{{ $t('misc.balance') }}:</b>
+                    {{ maxAmountBig.toLocaleString(denomination) }}
+                </p>
+                <template v-if="asset_now">
+                    <p v-if="asset_now.id === avaxAsset.id">
+                        <b>$</b>
+                        {{ amountUSD.toLocaleString(2) }}
+                    </p>
+                </template>
+            </div>
             <div></div>
         </div>
     </div>
@@ -40,7 +49,7 @@ import Dropdown from '@/components/misc/Dropdown.vue'
 import { BigNumInput } from '@avalabs/vue_components'
 import AvaAsset from '@/js/AvaAsset'
 import { ICurrencyInputDropdownValue } from '@/components/wallet/transfer/types'
-import { IWalletAssetsDict, IWalletBalanceDict } from '@/store/types'
+import { IWalletAssetsDict, IWalletBalanceDict, priceDict } from '@/store/types'
 
 import BalanceDropdown from '@/components/misc/BalancePopup/BalanceDropdown.vue'
 import { avm } from '@/AVA'
@@ -84,7 +93,13 @@ export default class CurrencyInputDropdown extends Vue {
     }
 
     get stepSize() {
-        return new BN(1)
+        if (this.denomination > 3) {
+            let stepNum = Math.pow(10, this.denomination - 2)
+            return new BN(stepNum.toString())
+        } else {
+            let stepNum = Math.pow(10, this.denomination)
+            return new BN(stepNum.toString())
+        }
     }
     maxOut() {
         // @ts-ignore
@@ -109,6 +124,13 @@ export default class CurrencyInputDropdown extends Vue {
         console.log('focus')
     }
 
+    get amountUSD(): Big {
+        let usdPrice = this.priceDict.usd
+        let bigAmt = bnToBig(this.amount, this.denomination)
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
+    }
+
     get isEmpty(): boolean {
         if (this.walletAssetsArray.length === 0) {
             return true
@@ -125,11 +147,8 @@ export default class CurrencyInputDropdown extends Vue {
         if (this.isEmpty || !this.asset_now) return '0.00'
         let deno = this.asset_now.denomination
         let res = '0'
-        if (deno > 0) {
-            res += '.'
-            for (var i = 0; i < deno; i++) {
-                res += '0'
-            }
+        if (deno > 2) {
+            res = '0.00'
         }
         return res
     }
@@ -140,19 +159,22 @@ export default class CurrencyInputDropdown extends Vue {
     }
 
     get walletAssetsArray(): AvaAsset[] {
-        return this.$store.getters.walletAssetsArray
+        // return this.$store.getters.walletAssetsArray
+        return this.$store.getters['Assets/walletAssetsArray']
     }
 
     get walletAssetsDict(): IWalletAssetsDict {
-        return this.$store.getters['walletAssetsDict']
+        // return this.$store.getters['walletAssetsDict']
+        return this.$store.getters['Assets/walletAssetsDict']
     }
 
-    get avaxAsset(): AvaAsset {
+    get avaxAsset(): AvaAsset | null {
         return this.$store.getters['Assets/AssetAVA']
     }
 
     get max_amount(): null | BN {
         if (!this.asset_now) return null
+        if (!this.avaxAsset) return null
 
         let assetId = this.asset_now.id
         let balance = this.walletAssetsDict[assetId]
@@ -178,6 +200,10 @@ export default class CurrencyInputDropdown extends Vue {
         if (!this.max_amount) return Big(0)
         return bnToBig(this.max_amount, this.denomination)
     }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -185,21 +211,24 @@ export default class CurrencyInputDropdown extends Vue {
 
 .bigIn {
     width: 100%;
+    border: none !important;
+    font-size: 15px;
+    font-family: monospace;
     /*background-color: #303030;*/
 }
 
 .max_in_cont {
     position: relative;
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: max-content 1fr;
+    padding: 8px 14px;
 }
 
 .curr_in_drop {
     display: grid;
     grid-template-columns: 1fr 140px;
     background-color: transparent;
-    font-size: 12px;
-    height: 40px;
+    //font-size: 12px;
     width: 100%;
     outline: none;
     text-align: right;
@@ -212,7 +241,6 @@ export default class CurrencyInputDropdown extends Vue {
 }
 
 input {
-    padding: 8px;
     flex-grow: 1;
     outline: none;
     text-align: right;
@@ -222,11 +250,11 @@ input {
 }
 
 .max_but {
-    font-size: 12px;
-    text-decoration: underline;
-    text-decoration-style: dashed;
-    outline: none;
-    padding-left: 8px;
+    opacity: 0.4;
+    font-size: 13px;
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .dropdown {
@@ -239,22 +267,43 @@ input {
     display: grid;
     column-gap: 10px;
     grid-template-columns: 1fr 140px;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--primary-color-light);
+    padding: 2px 0px;
+
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
 
     p {
+        padding: 2px 0px;
+    }
+
+    p:last-child {
         text-align: right;
-        padding: 2px 8px;
+    }
+
+    span {
+        font-family: monospace;
+        padding-left: 14px;
+    }
+}
+
+@include main.medium-device {
+    .balance {
+        grid-template-columns: 1fr;
     }
 }
 
 @include main.mobile-device {
+    .balance,
     .curr_in_drop {
-        grid-template-columns: 1fr 70px;
+        grid-template-columns: 1fr 80px;
     }
 
     .balance {
-        grid-template-columns: 1fr 70px;
+        font-size: 12px;
     }
 }
 </style>

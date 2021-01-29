@@ -17,17 +17,28 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
+import { TransactionType } from '@/store/modules/history/types'
+import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
 @Component
 export default class TxHistoryValue extends Vue {
     @Prop() amount!: number | string
     @Prop() assetId!: string
-    // @Prop() isIncome!: string;
+    @Prop() type!: TransactionType
+    // @Prop() operationColor!: string
+    @Prop() operationDirection!: 'Sent' | 'Received'
 
-    get asset(): AvaAsset | undefined {
-        return this.$store.state.Assets.assetsDict[this.assetId]
+    get asset() {
+        return (
+            this.$store.state.Assets.assetsDict[this.assetId] ||
+            this.$store.state.Assets.nftFamsDict[this.assetId]
+        )
     }
     get color(): string {
+        // if (this.type === 'operation') return this.operationColor
+        if (this.type === 'add_validator') return '#008dc5'
+        if (this.type === 'add_delegator') return '#008dc5'
+
         if (this.amount > 0) {
             return '#6BC688'
         } else if (this.amount === 0) {
@@ -44,18 +55,41 @@ export default class TxHistoryValue extends Vue {
         return false
     }
     get actionText(): string {
-        if (this.isIncome) {
-            return 'Received'
+        switch (this.type) {
+            case 'pvm_import':
+                return 'Import (P)'
+            case 'import':
+                return 'Import (X)'
+            case 'pvm_export':
+                return 'Export (P)'
+            case 'export':
+                return 'Export (X)'
+            case 'base':
+                if (this.isIncome) {
+                    return 'Received'
+                }
+                return 'Sent'
+            case 'operation':
+                return this.operationDirection
+            default:
+                // Capitalize first letter
+                return this.type
+                    .split('_')
+                    .map((value) => value[0].toUpperCase() + value.substring(1))
+                    .join(' ')
         }
-        return 'Sent'
     }
     get amountText(): string {
         let asset = this.asset
 
         if (!asset) return this.amount.toString()
 
-        let val = Big(this.amount).div(Math.pow(10, asset.denomination))
-        return val.toString()
+        try {
+            let val = Big(this.amount).div(Math.pow(10, asset.denomination))
+            return val.toLocaleString()
+        } catch (e) {
+            return ''
+        }
     }
 
     get symbolText(): string {
@@ -64,6 +98,19 @@ export default class TxHistoryValue extends Vue {
         if (!asset) return this.assetId.substring(0, 4)
 
         return asset.symbol
+    }
+
+    get ava_asset(): AvaAsset | null {
+        let ava = this.$store.getters['Assets/AssetAVA']
+        return ava
+    }
+
+    created() {
+        if (this.type === 'base') {
+            if (!this.asset) {
+                this.$store.dispatch('Assets/addUnknownAsset', this.assetId)
+            }
+        }
     }
 }
 </script>
@@ -74,14 +121,15 @@ export default class TxHistoryValue extends Vue {
     display: grid;
     grid-template-columns: max-content 1fr;
     column-gap: 10px;
-    /*color: #ff2626;*/
-
-    &[income] {
-        /*color: main.$green;*/
-    }
 
     > * {
         align-self: center;
+    }
+
+    &:not(:first-child) {
+        .action {
+            visibility: hidden;
+        }
     }
 }
 
@@ -95,14 +143,7 @@ export default class TxHistoryValue extends Vue {
     font-size: 15px;
 }
 
-.name {
-}
-
 @include main.medium-device {
-    .utxo {
-        /*grid-template-columns: none;*/
-        /*text-align: right;*/
-    }
     .amount {
         font-size: 14px;
     }

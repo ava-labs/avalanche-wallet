@@ -10,18 +10,24 @@
         <p class="name_col not_mobile">{{ name }} ({{ symbol }})</p>
         <p class="name_col mobile_only">{{ symbol }}</p>
         <router-link :to="sendLink" class="send_col" v-if="isBalance">
-            <img
-                v-if="$root.theme === 'day'"
-                src="@/assets/sidebar/transfer_nav.png"
-            />
+            <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
             <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
         </router-link>
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
-            {{ asset.toStringTotal() }} <span>{{ symbol }}</span>
+            <span>
+                {{ asset.toStringTotal() }}
+                &nbsp;{{ symbol }}
+            </span>
+            <br />
+            <span class="fiat" v-if="isAvaxToken">
+                {{ totalUSD.toLocaleString(2) }}
+                &nbsp;USD
+            </span>
         </p>
         <p class="balance_col" v-else>
-            0 <span>{{ symbol }}</span>
+            0
+            <span>{{ symbol }}</span>
         </p>
     </div>
 </template>
@@ -32,6 +38,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
 import BN from 'bn.js'
+import { bnToBig } from '../../../helpers/helper'
+import { priceDict } from '../../../store/types'
+import Big from 'big.js'
 
 @Component({
     components: {
@@ -57,6 +66,18 @@ export default class FungibleRow extends Vue {
             return true
         }
         return false
+    }
+
+    get totalUSD(): Big {
+        if (!this.isAvaxToken) return Big(0)
+        let usdPrice = this.priceDict.usd
+        let bigAmt = bnToBig(this.asset.getTotalAmount(), this.asset.denomination)
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
+    }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
     }
 
     get sendLink(): string {
@@ -106,8 +127,12 @@ export default class FungibleRow extends Vue {
     }
 
     .balance_col {
-        font-size: 24px;
+        font-size: 18px;
         text-align: right;
+        .fiat {
+            font-size: 12px;
+            color: var(--primary-color-light);
+        }
     }
 
     .name_col {
@@ -160,6 +185,31 @@ export default class FungibleRow extends Vue {
     display: none;
 }
 
+@include main.medium-device {
+    .asset {
+        padding: 4px 0;
+    }
+
+    .balance_col {
+        span {
+            font-size: 15px;
+        }
+        font-size: 15px;
+    }
+    .send_col {
+        img {
+            width: 14px;
+        }
+    }
+
+    .name_col {
+        font-size: 14px;
+    }
+
+    .icon {
+        padding: 6px;
+    }
+}
 @include main.mobile-device {
     .name_col {
         display: none;

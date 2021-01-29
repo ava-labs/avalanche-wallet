@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown" :active="isPopup">
+    <div class="dropdown hover_border" :active="isPopup">
         <button @click="showPopup">
             {{ symbol }}
             <fa icon="caret-down" style="float: right"></fa>
@@ -33,7 +33,8 @@ export default class BalanceDropdown extends Vue {
     @Model('change', { type: AvaAsset }) readonly asset!: AvaAsset
 
     get assetArray(): AvaAsset[] {
-        return this.$store.getters.walletAssetsArray
+        // return this.$store.getters.walletAssetsArray
+        return this.$store.getters['Assets/walletAssetsArray']
     }
 
     @Ref('popup') readonly balancePopup!: BalancePopup
@@ -74,6 +75,8 @@ export default class BalanceDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 button {
     padding: 4px 12px;
     width: 100%;
@@ -87,6 +90,9 @@ button {
 
 .dropdown {
     position: relative;
+    &:focus-within {
+        outline: 1px solid var(--secondary-color);
+    }
 }
 
 .dropdown[active] {
@@ -98,5 +104,11 @@ button {
 }
 .popup {
     position: absolute;
+}
+
+@include main.mobile-device {
+    button {
+        font-size: 13px;
+    }
 }
 </style>

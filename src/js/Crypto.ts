@@ -7,7 +7,7 @@ import createHash from 'create-hash'
 
 /**
  * Helper utility for encryption and password hashing, browser-safe.
- * Encryption is using XChaCha20Poly1305 with a random public nonce.
+ * Encryption is using AES-GCM with a random public nonce.
  */
 export default class CryptoHelpers {
     protected ivSize: number = 12
@@ -101,10 +101,7 @@ export default class CryptoHelpers {
      *
      * @returns An object containing the "salt" and the "hash" produced by this function, both as {@link https://github.com/feross/buffer|Buffer}.
      */
-    async pwhash(
-        password: string,
-        salt: Buffer
-    ): Promise<{ salt: Buffer; hash: Buffer }> {
+    async pwhash(password: string, salt: Buffer): Promise<{ salt: Buffer; hash: Buffer }> {
         let slt: Buffer
         if (salt instanceof Buffer) {
             slt = salt
@@ -112,10 +109,7 @@ export default class CryptoHelpers {
             slt = this.makeSalt()
         }
 
-        const hash: Buffer = this._pwcleaner(
-            password,
-            this._pwcleaner(password, slt)
-        )
+        const hash: Buffer = this._pwcleaner(password, this._pwcleaner(password, slt))
         return { salt: slt, hash }
     }
 
@@ -149,9 +143,7 @@ export default class CryptoHelpers {
         const pwkey: Buffer = this._pwcleaner(password, slt)
         const keyMaterial: CryptoKey = await this._keyMaterial(pwkey)
         const pkey: CryptoKey = await this._deriveKey(keyMaterial, slt)
-        const iv: Buffer = Buffer.from(
-            window.crypto.getRandomValues(new Uint8Array(this.ivSize))
-        )
+        const iv: Buffer = Buffer.from(window.crypto.getRandomValues(new Uint8Array(this.ivSize)))
 
         const ciphertext: Buffer = Buffer.from(
             await window.crypto.subtle.encrypt(
@@ -181,12 +173,7 @@ export default class CryptoHelpers {
      * @param salt A {@link https://github.com/feross/buffer|Buffer} for the salt
      * @param iv A {@link https://github.com/feross/buffer|Buffer} for the iv
      */
-    async decrypt(
-        password: string,
-        ciphertext: Buffer,
-        salt: Buffer,
-        iv: Buffer
-    ): Promise<Buffer> {
+    async decrypt(password: string, ciphertext: Buffer, salt: Buffer, iv: Buffer): Promise<Buffer> {
         const pwkey: Buffer = this._pwcleaner(password, salt)
         const keyMaterial: CryptoKey = await this._keyMaterial(pwkey)
         const pkey: CryptoKey = await this._deriveKey(keyMaterial, salt)

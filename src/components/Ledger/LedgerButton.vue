@@ -1,6 +1,6 @@
 <template>
     <button class="ava_button" @click="submit">
-        <template v-if="!isLoading"> Ledger </template>
+        <template v-if="!isLoading">Ledger</template>
         <Spinner v-else class="spinner"></Spinner>
     </button>
 </template>
@@ -10,6 +10,7 @@ import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
+import { AVA_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 
 export default {
     components: {
@@ -26,7 +27,7 @@ export default {
             if (val) {
                 this.$store.commit('Ledger/openModal', {
                     title: 'Get extended public key',
-                    info: "44'/9000'/0'",
+                    info: AVA_ACCOUNT_PATH,
                 })
             } else {
                 this.$store.commit('Ledger/closeModal')
@@ -43,7 +44,8 @@ export default {
             try {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
-                let wallet = await LedgerWallet.fromApp(app)
+                let config = await app.getAppConfiguration()
+                let wallet = await LedgerWallet.fromApp(app, config)
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()

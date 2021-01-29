@@ -7,19 +7,28 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { KeyFile } from '@/js/IKeystore'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { UTXO as TxUTXO } from './modules/history/types'
 
 export interface RootState {
-    walletType: null | WalletType
     isAuth: boolean
-    activeWallet: null | AvaHdWallet | LedgerWallet
-    wallets: (LedgerWallet | AvaHdWallet)[] // TODO: these should not co exist
+    activeWallet: null | WalletType
+    wallets: WalletType[]
     address: String | null
-    volatileWallets: AvaHdWallet[] // will be forgotten when tab is closed
+    volatileWallets: WalletType[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
     prices: priceDict // USD value of 1 AVAX
 }
 
-export type WalletType = 'mnemonic' | 'ledger'
+export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
+
+export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
+
+export interface ILedgerAppConfig {
+    version: string
+    commit: string
+    name: 'Avalanche'
+}
 
 export interface priceDict {
     usd: number
@@ -32,6 +41,10 @@ interface Modal {
 
 export interface IWalletNftDict {
     [assetId: string]: UTXO[]
+}
+
+export interface ITxNftDict {
+    [assetId: string]: TxUTXO[]
 }
 
 export interface IWalletBalanceDict {
@@ -48,6 +61,10 @@ export interface IWalletBalanceItem {
 
 export interface IWalletAssetsDict {
     [assetId: string]: AvaAsset
+}
+
+export interface IWalletNftMintDict {
+    [assetId: string]: UTXO[]
 }
 
 // interface ModalDict {

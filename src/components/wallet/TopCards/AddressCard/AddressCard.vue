@@ -1,26 +1,17 @@
 <template>
     <div class="addr_card">
-        <q-r-modal ref="qr_modal"></q-r-modal>
-        <paper-wallet
-            ref="print_modal"
-            v-if="walletType !== 'ledger'"
-        ></paper-wallet>
-        <p class="addr_info">{{ $t('top.address.desc') }}</p>
+        <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
+        <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
+        <p class="addr_info">{{ addressMsg }}</p>
         <div class="bottom">
             <div>
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
-                <p class="subtitle">{{ $t('top.address.derived') }}</p>
-                <p
-                    class="addr_text"
-                    data-cy="wallet_address"
-                    v-if="chainNow === 'X'"
-                >
-                    {{ address }}
-                </p>
-                <p class="addr_text" data-cy="wallet_address" v-else>
-                    {{ addressPVM }}
+                <p class="subtitle">{{ addressLabel }}</p>
+
+                <p class="addr_text" data-cy="wallet_address">
+                    {{ activeAddress }}
                 </p>
                 <div style="display: flex; margin-top: 10px">
                     <ChainSelect v-model="chainNow"></ChainSelect>
@@ -31,14 +22,20 @@
                             class="qr_but"
                         ></button>
                         <button
-                            v-if="walletType !== 'ledger'"
+                            v-if="walletType === 'mnemonic'"
                             :tooltip="$t('top.hover2')"
                             @click="viewPrintModal"
                             class="print_but"
                         ></button>
+                        <button
+                            v-if="walletType === 'ledger'"
+                            :tooltip="$t('create.verify')"
+                            @click="verifyLedgerAddress"
+                            class="ledger_but"
+                        ></button>
                         <CopyText
                             :tooltip="$t('top.hover3')"
-                            :value="address"
+                            :value="activeAddress"
                             class="copy_but"
                         ></CopyText>
                     </div>
@@ -55,26 +52,27 @@ import CopyText from '@/components/misc/CopyText.vue'
 import QRModal from '@/components/modals/QRModal.vue'
 import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
-import MainnetAddressModal from '@/components/modals/MainnetAddressModal.vue'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import { WalletType } from '@/store/types'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import { WalletNameType, WalletType } from '@/store/types'
+import AvaHdWallet, { AVA_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
+import { ChainIdType } from '@/constants'
+import { ava } from '@/AVA'
+import { getPreferredHRP } from 'avalanche/dist/utils'
 @Component({
     components: {
         CopyText,
         PaperWallet,
         QRModal,
-        MainnetAddressModal,
         ChainSelect,
     },
 })
 export default class AddressCard extends Vue {
     colorLight: string = '#FFF'
     colorDark: string = '#242729'
-    chainNow: string = 'X'
+    chainNow: ChainIdType = 'X'
 
     $refs!: {
         qr_modal: QRModal
@@ -82,7 +80,7 @@ export default class AddressCard extends Vue {
         qr: HTMLCanvasElement
     }
 
-    @Watch('address')
+    @Watch('activeAddress')
     onaddrchange() {
         this.updateQR()
     }
@@ -99,17 +97,43 @@ export default class AddressCard extends Vue {
         this.updateQR()
     }
 
+    get addressLabel(): string {
+        switch (this.chainNow) {
+            default:
+                return this.$t('top.address.title_x') as string
+            case 'P':
+                return this.$t('top.address.title_p') as string
+            case 'C':
+                return this.$t('top.address.title_c') as string
+        }
+    }
+
+    get addressMsg(): string {
+        switch (this.chainNow) {
+            default:
+                return this.$t('top.address.desc_x') as string
+            case 'P':
+                return this.$t('top.address.desc_p') as string
+            case 'C':
+                return this.$t('top.address.desc_c') as string
+        }
+    }
     get isDayTheme(): boolean {
         //@ts-ignore
         return this.$root.theme === 'day'
     }
 
-    get walletType(): WalletType {
-        return this.$store.state.walletType
+    get walletType(): WalletNameType {
+        let wallet = this.activeWallet
+        if (!wallet) return 'mnemonic'
+        return wallet.type
     }
 
+    get activeWallet(): WalletType | null {
+        return this.$store.state.activeWallet
+    }
     get address() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
@@ -117,16 +141,49 @@ export default class AddressCard extends Vue {
     }
 
     get addressPVM() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
+        let wallet = this.activeWallet
         if (!wallet) {
             return '-'
         }
-        return wallet.platformHelper.getCurrentAddress()
+
+        return wallet.getCurrentPlatformAddress()
     }
 
-    viewMainnetModal() {
-        // @ts-ignore
-        this.$refs.mainnet_modal.open()
+    get addressEVM() {
+        let wallet = this.activeWallet
+        if (!wallet) {
+            return '-'
+        }
+
+        return '0x' + wallet.getEvmAddress()
+    }
+
+    get activeAddress(): string {
+        switch (this.chainNow) {
+            case 'X':
+                return this.address
+            case 'P':
+                return this.addressPVM
+            case 'C':
+                return this.addressEVM
+        }
+        return this.address
+    }
+
+    get activeIdx(): number {
+        const wallet = this.activeWallet as AvaHdWallet
+        const walletType = wallet.type
+
+        if (walletType === 'singleton') return 0
+
+        switch (this.chainNow) {
+            case 'X':
+                return wallet.getExternalActiveIndex()
+            case 'P':
+                return wallet.getPlatformActiveIndex()
+            default:
+                return 0
+        }
     }
 
     viewQRModal() {
@@ -145,7 +202,7 @@ export default class AddressCard extends Vue {
         let size = canvas.clientWidth
         QRCode.toCanvas(
             canvas,
-            this.address,
+            this.activeAddress,
             {
                 scale: 6,
                 color: {
@@ -159,6 +216,15 @@ export default class AddressCard extends Vue {
                 if (error) console.error(error)
             }
         )
+    }
+
+    async verifyLedgerAddress() {
+        const wallet = this.activeWallet as LedgerWallet
+
+        let networkId = ava.getNetworkID()
+        let hrp = getPreferredHRP(networkId)
+
+        wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/0/${this.activeIdx}`, hrp)
     }
 
     mounted() {
@@ -205,6 +271,9 @@ export default class AddressCard extends Vue {
 .print_but {
     background-image: url('/img/faucet_icon.png');
 }
+.ledger_but {
+    background-image: url('/img/ledger_icon.png');
+}
 .copy_but {
     color: var(--primary-color);
 }
@@ -219,6 +288,9 @@ export default class AddressCard extends Vue {
     }
     .print_but {
         background-image: url('/img/print_icon_night.svg');
+    }
+    .ledger_but {
+        background-image: url('/img/ledger_night.svg');
     }
 
     .mainnet_but {
@@ -282,6 +354,11 @@ $qr_width: 110px;
     //.bottom{
     //    display: block;
     //}
+    .bottom_rest {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
     .addr_info {
         display: none;
@@ -292,12 +369,16 @@ $qr_width: 110px;
     }
 
     .buts {
-        margin: 6px 0;
+        //margin: 6px 0;
         justify-content: space-evenly;
 
         > * {
             margin: 0;
         }
+    }
+
+    .addr_text {
+        font-size: 13px;
     }
 }
 

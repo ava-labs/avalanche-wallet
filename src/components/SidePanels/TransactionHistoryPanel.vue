@@ -1,9 +1,9 @@
 <template>
     <div class="tx_history_panel">
+        <div class="history_block" :disabled="!isActivityPage"></div>
         <div class="header">
             <h2>Transactions</h2>
             <Spinner v-if="isUpdating" class="spinner"></Spinner>
-            <!--            <a :href="explorerUrl" target="_blank" class="button_primary">See All</a>-->
         </div>
         <div class="empty" v-if="!isExplorer">
             <h4>{{ $t('transactions.error_api') }}</h4>
@@ -13,7 +13,7 @@
             <p>{{ $t('transactions.notx') }}</p>
         </div>
         <!--        <div v-else-if="isUpdating">-->
-        <!--            <p class="empty">{{$t('transactions.loading')}}</p>-->
+        <!--            <p class="empty">{{ $t('transactions.loading') }}</p>-->
         <!--        </div>-->
         <div class="list" v-else>
             <tx-history-row
@@ -21,8 +21,7 @@
                 :key="tx.id"
                 :transaction="tx"
                 class="tx_row"
-            >
-            </tx-history-row>
+            ></tx-history-row>
             <p class="warn">{{ $t('transactions.warn_loading') }}</p>
         </div>
     </div>
@@ -45,8 +44,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 })
 export default class TransactionHistoryPanel extends Vue {
     get isExplorer(): boolean {
-        let network: AvaNetwork | null = this.$store.state.Network
-            .selectedNetwork
+        let network: AvaNetwork | null = this.$store.state.Network.selectedNetwork
         if (!network) return false
         if (network.explorerUrl) {
             return true
@@ -79,6 +77,14 @@ export default class TransactionHistoryPanel extends Vue {
         // A simple filter to ignore duplicate transactions (can happen if you send to self)
         return r
     }
+
+    get isActivityPage() {
+        if (this.$route.fullPath.includes('/activity')) {
+            return true
+        }
+        return false
+    }
+
     get explorerUrl(): string {
         let addr = this.$store.state.address.split('-')[1]
         return `https://explorer.avax.network/address/${addr}`
@@ -92,10 +98,12 @@ export default class TransactionHistoryPanel extends Vue {
     display: grid;
     grid-template-rows: max-content 1fr;
     overflow: auto;
+    position: relative;
 }
 
 .header {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--bg-light);
@@ -114,8 +122,9 @@ export default class TransactionHistoryPanel extends Vue {
 }
 
 .spinner {
+    display: block;
     align-self: center;
-    margin-left: 10px;
+    margin: 0 !important;
 }
 .list {
     overflow: scroll;
@@ -144,10 +153,22 @@ export default class TransactionHistoryPanel extends Vue {
     padding: 15px;
 }
 
-@include main.medium-device {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
+.history_block {
+    position: absolute;
+    background-color: var(--bg-wallet);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0.8;
+    pointer-events: none;
+    transition-duration: 0.2s;
+
+    &[disabled] {
+        opacity: 0;
     }
+}
+@include main.medium-device {
 }
 </style>

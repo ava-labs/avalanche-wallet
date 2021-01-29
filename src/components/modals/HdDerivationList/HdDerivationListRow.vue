@@ -1,7 +1,13 @@
 <template>
     <div class="list_row">
         <p class="col_index" style="text-align: center">{{ index }}</p>
-        <p class="col_addr">{{ address }}</p>
+        <p class="col_addr">
+            <span>{{ address }}</span>
+            &nbsp;
+            <span class="verify" v-if="walletType === 'ledger'" @click="verifyLedgerAddress">
+                {{ $t('create.verify') }}
+            </span>
+        </p>
         <div class="col_bal">
             <p v-if="noBalance">-</p>
             <template v-else>
@@ -18,10 +24,16 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import Big from 'big.js'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
+import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { WalletType } from '@/store/types'
+import { ava } from '@/AVA'
+import { getPreferredHRP } from 'avalanche/dist/utils'
+import { AVA_ACCOUNT_PATH } from '../../../js/wallets/AvaHdWallet'
 
 @Component
 export default class HdDerivationListRow extends Vue {
     @Prop() index!: number
+    @Prop() path!: number
     @Prop() address!: string
     @Prop() balance!: DerivationListBalanceDict
 
@@ -43,6 +55,23 @@ export default class HdDerivationListRow extends Vue {
     get assetsDict() {
         return this.$store.state.Assets.assetsDict
     }
+
+    get wallet() {
+        return this.$store.state.activeWallet as WalletType
+    }
+
+    get walletType() {
+        return this.wallet.type
+    }
+
+    async verifyLedgerAddress() {
+        const wallet = this.wallet as LedgerWallet
+
+        let networkId = ava.getNetworkID()
+        let hrp = getPreferredHRP(networkId)
+
+        wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/${this.path}/${this.index}`, hrp)
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -57,6 +86,23 @@ export default class HdDerivationListRow extends Vue {
     word-break: break-all;
     font-family: monospace;
     color: var(--primary-color-light);
+
+    .verify {
+        opacity: 0;
+        cursor: pointer;
+        color: var(--primary-color);
+        transition: opacity 0.1s;
+        font-size: 11px;
+        padding: 2px 4px;
+        background: var(--bg-light);
+    }
+
+    &:hover {
+        .verify {
+            opacity: 1;
+            transition: opacity 0.2s;
+        }
+    }
 }
 
 .col_bal {

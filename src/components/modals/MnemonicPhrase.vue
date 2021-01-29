@@ -31,10 +31,12 @@ export default class MnemonicPhrase extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
+
 .mnemonic_modal_body {
     /*width: 600px;*/
-    width: 400px;
-    max-width: 100%;
+    max-width: 400px;
+    width: 100%;
     padding: 30px;
     background-color: var(--bg-light);
 }
@@ -51,5 +53,11 @@ export default class MnemonicPhrase extends Vue {
     margin: 15px 0px !important;
     border-radius: 2px;
     padding: 6px 12px;
+}
+
+@include main.mobile-device {
+    .mnemonic_modal_body {
+        max-width: 100%;
+    }
 }
 </style>

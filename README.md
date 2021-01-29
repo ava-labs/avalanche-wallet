@@ -176,3 +176,20 @@ Saved into local storage as a 2 letter code.
 ```
 "lang": "en"
 ```
+
+# Dependencies
+##### Avalanche Node (https://github.com/ava-labs/avalanchego)
+To get utxos and to send transactions.
+#### Explorer API Node (https://github.com/ava-labs/ortelius)
+To check if an address was used before, and to get activity history.
+
+# Default Connections
+The wallet needs to connect to an Avalanche node, and an explorer node to operate properly.
+
+By default, there are two network options to connect to: `Mainnet` and   `Fuji`. 
+##### Mainnet
+- Avalanche API: `https://api.avax.network:443`
+- Explorer API: `https://explorerapi.avax.network`
+##### Fuji (Testnet)
+- Avalanche API: `https://api.avax-test.network:443`
+- Explorer API: `https://explorerapi.avax-test.network`

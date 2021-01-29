@@ -1,20 +1,11 @@
 <template>
     <div>
         <div v-if="!isEmpty">
-            <div v-for="fam in nftFamsArray" :key="fam.id">
-                <div class="fam_header">
-                    <p class="name">{{ fam.name }}</p>
-                    <p class="symbol">{{ fam.symbol }}</p>
-                </div>
-                <div class="list">
-                    <NFTCard
-                        class="nft_card"
-                        v-for="utxo in nftDict[fam.id]"
-                        :utxo="utxo"
-                        :key="utxo.id"
-                    ></NFTCard>
-                </div>
-            </div>
+            <CollectibleFamilyRow
+                v-for="fam in nftFamsArray"
+                :key="fam.id"
+                :family="fam"
+            ></CollectibleFamilyRow>
         </div>
         <div class="coming_soon" v-else>
             <img v-if="$root.theme === 'day'" src="@/assets/nft_preview.png" />
@@ -25,30 +16,61 @@
 </template>
 <script lang="ts">
 import NFTCard from './NftCard.vue'
+import CollectibleFamilyRow from '@/components/wallet/portfolio/CollectibleFamilyRow.vue'
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { IWalletNftDict } from '@/store/types'
+import { IWalletNftDict, IWalletNftMintDict } from '@/store/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 
 // const payloadTypes = PayloadTypes.getInstance();
-
 @Component({
     components: {
         NFTCard,
+        CollectibleFamilyRow,
     },
 })
 export default class Collectibles extends Vue {
+    @Prop() search!: string
+
     get isEmpty(): boolean {
-        return this.$store.getters.walletNftUTXOs.length === 0
+        // let nftUtxos = this.$store.getters.walletNftUTXOs.length
+        // let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
+        let nftUtxos = this.$store.state.Assets.nftUTXOs.length
+        let mintUTxos = this.$store.state.Assets.nftMintUTXOs.length
+        return nftUtxos + mintUTxos === 0
     }
 
     get nftDict(): IWalletNftDict {
-        return this.$store.getters.walletNftDict
+        // return this.$store.getters.walletNftDict
+        let dict = this.$store.getters['Assets/walletNftDict']
+        return dict
+    }
+
+    get nftMintDict(): IWalletNftMintDict {
+        // let dict = this.$store.getters.walletNftMintDict
+        let dict = this.$store.getters['Assets/nftMintDict']
+        return dict
     }
 
     get nftFamsArray() {
         let fams: AvaNftFamily[] = this.$store.state.Assets.nftFams
+
+        // If search query
+        if (this.search) {
+            let query = this.search
+            fams = fams.filter((fam) => {
+                if (
+                    fam.name.includes(query) ||
+                    fam.id.includes(query) ||
+                    fam.symbol.includes(query)
+                ) {
+                    return true
+                }
+                return false
+            })
+        }
+
         fams.sort((a, b) => {
             let symbolA = a.symbol
             let symbolB = b.symbol
@@ -60,11 +82,13 @@ export default class Collectibles extends Vue {
             }
             return 0
         })
+
         return fams
     }
 
     get nftFamsDict(): NftFamilyDict {
-        return this.$store.state.Assets.nftFamsDict
+        let dict = this.$store.state.Assets.nftFamsDict
+        return dict
     }
 }
 </script>
@@ -89,34 +113,19 @@ $flip_dur: 0.6s;
 }
 
 .list {
-    display: grid;
-    padding: 30px 0;
-    grid-template-columns: repeat(4, 1fr);
-    grid-row-gap: 15px;
-    grid-column-gap: 15px;
+    //display: grid;
+    //padding: 30px 0;
+    //grid-template-columns: repeat(4, 1fr);
+    //grid-row-gap: 15px;
+    //grid-column-gap: 15px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .nft_card {
     transition-duration: 0.3s;
-}
-
-.fam_header {
-    width: 100%;
-    /*display: flex;*/
-    margin: 30px 0 8px;
-    /*border-bottom: 1px solid var(--primary-color-light);*/
-    font-size: 18px;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-}
-
-.name {
-    padding-right: 10px;
-}
-.symbol {
-    padding-left: 10px;
-    color: var(--primary-color-light);
-    border-left: 1px solid var(--primary-color-light);
+    width: 140px;
+    height: 220px;
 }
 
 @include main.mobile-device {

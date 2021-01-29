@@ -1,8 +1,5 @@
 <template>
     <div class="tx_history_row">
-        <!--        <div class="icons">-->
-        <!--            <img v-for="url in icons" :src="url" :key="url">-->
-        <!--        </div>-->
         <div>
             <p class="time">
                 {{ timeText }}
@@ -12,20 +9,16 @@
                     target="_blank"
                     tooltip="View in Explorer"
                     class="explorer_link"
-                    ><fa icon="search"></fa
-                ></a>
+                >
+                    <fa icon="search"></fa>
+                </a>
             </p>
-            <div class="utxos">
-                <tx-history-value
-                    v-for="(amount, assetId) in valList"
-                    :key="assetId"
-                    :amount="amount"
-                    :asset-id="assetId"
-                    :is-income="false"
-                ></tx-history-value>
-                <!--                <tx-history-value v-for="(amount, assetId) in outValues" :key="assetId" :amount="amount" :asset-id="assetId" :is-income="true"></tx-history-value>-->
+            <div v-if="memo" class="memo">
+                <p>Memo</p>
+                <p>{{ memo }}</p>
             </div>
         </div>
+        <component :is="viewComponent" :transaction="transaction"></component>
     </div>
 </template>
 <script lang="ts">
@@ -33,33 +26,41 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import moment from 'moment'
-import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
-import { getAssetIcon } from '@/helpers/helper'
-import BN from 'bn.js'
-import { ITransactionData } from '@/store/modules/history/types'
-import { TransactionValueDict } from '@/components/SidePanels/types'
-// import {AssetsDict} from "@/store/modules/assets/types";
-// import {AvaNetwork} from "@/js/AvaNetwork";
-import store from '@/store'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+// import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
+import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
+import { ITransactionData, TransactionType, UTXO } from '@/store/modules/history/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import { Buffer } from 'avalanche'
+import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
+import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
+import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 
 @Component({
     components: {
-        TxHistoryValue,
+        // TxHistoryValue,
+        TxHistoryNftFamilyGroup,
+        // TxHistoryValueFunctional,
     },
 })
 export default class TxHistoryRow extends Vue {
     @Prop() transaction!: ITransactionData
 
     get explorerUrl(): string | null {
-        // TODO: Make this dynamic
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         if (network.explorerSiteUrl) {
             return `${network.explorerSiteUrl}/tx/${this.transaction.id}`
         }
         return null
+    }
+
+    get memo(): string | null {
+        const memo = this.transaction.memo
+        const memoText = new Buffer(memo, 'base64').toString('utf8')
+        // Bug that sets memo to empty string (AAAAAA==) for some
+        // tx types
+        if (!memoText.length || memo === 'AAAAAA==') return null
+
+        return memoText
     }
 
     get time() {
@@ -78,113 +79,21 @@ export default class TxHistoryRow extends Vue {
         return this.time.fromNow()
     }
 
-    get valList() {
-        let ins = this.inValues
-        let outs = this.outValues
+    get viewComponent() {
+        let type = this.transaction.type
 
-        let res = JSON.parse(JSON.stringify(outs))
-
-        for (var assetId in ins) {
-            let inAmount = ins[assetId] || 0
-            if (res[assetId]) {
-                res[assetId] -= inAmount
-            } else {
-                res[assetId] = -1 * inAmount
-            }
+        switch (type) {
+            case 'export':
+            case 'import':
+            case 'pvm_export':
+            case 'pvm_import':
+                return ImportExport
+            case 'add_delegator':
+            case 'add_validator':
+                return StakingTx
+            default:
+                return BaseTx
         }
-
-        return res
-    }
-
-    get addresses() {
-        let wallet: AvaHdWallet | LedgerWallet = this.$store.state.activeWallet
-        if (!wallet) return []
-
-        return wallet.getHistoryAddresses()
-    }
-
-    // What did I loose?
-    get inValues() {
-        let addrs: string[] = this.addresses
-        let addrsRaw = addrs.map((addr) => addr.split('-')[1])
-
-        let ins = this.transaction.inputs
-        let res: TransactionValueDict = {} // asset id -> value dict
-
-        // if empty
-        if (!ins) {
-            return res
-        }
-
-        ins.forEach((inputUtxo) => {
-            let out = inputUtxo.output
-            let utxoAddrs = out.addresses
-            let assetId = out.assetID
-            let amt = out.amount
-            let amtBN = new BN(out.amount, 10)
-
-            let intersection = utxoAddrs.filter((value) =>
-                addrsRaw.includes(value)
-            )
-            let isIncludes = intersection.length > 0
-
-            if (isIncludes) {
-                if (res[assetId]) {
-                    res[assetId] += parseInt(amt)
-                } else {
-                    res[assetId] = parseInt(amt)
-                }
-            }
-        })
-        // console.log(res2);
-
-        return res
-    }
-
-    // what did I gain?
-    get outValues() {
-        let addrs: string[] = this.addresses
-        let addrsRaw = addrs.map((addr) => addr.split('-')[1])
-        let outs = this.transaction.outputs
-        let res: TransactionValueDict = {} // asset id -> value dict
-
-        // if empty
-        if (!outs) {
-            return res
-        }
-
-        outs.forEach((utxoOut) => {
-            let utxoAddrs = utxoOut.addresses
-            let assetId = utxoOut.assetID
-            let amt = utxoOut.amount
-
-            let intersection = utxoAddrs.filter((value) =>
-                addrsRaw.includes(value)
-            )
-            let isIncludes = intersection.length > 0
-
-            if (isIncludes) {
-                if (res[assetId]) {
-                    res[assetId] += parseInt(amt)
-                } else {
-                    res[assetId] = parseInt(amt)
-                }
-            }
-        })
-
-        return res
-    }
-
-    get icons() {
-        // let ids = [];
-        let urls = []
-        let outs = this.outValues
-
-        for (var assetId in outs) {
-            // ids.push(assetId);
-            urls.push(getAssetIcon(assetId))
-        }
-        return urls.splice(0, 1)
     }
 }
 </script>
@@ -237,6 +146,41 @@ export default class TxHistoryRow extends Vue {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.rewarded,
+.memo {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    font-size: 12px;
+    color: main.$primary-color-light;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 12px;
+    margin-bottom: 4px;
+
+    p:last-of-type {
+        text-align: right;
+    }
+}
+
+.rewarded {
+    span {
+        margin-right: 6px;
+        color: var(--success);
+    }
+}
+.not_rewarded span {
+    color: var(--error);
+}
+.nfts {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5px;
+    justify-content: flex-end;
+    > div {
+        margin-left: 5px;
+    }
 }
 
 @include main.medium-device {

@@ -1,10 +1,5 @@
 <template>
-    <modal
-        ref="modal"
-        title="Confirm Logout"
-        class="modal_main"
-        :can_close="false"
-    >
+    <modal ref="modal" title="Confirm Logout" class="modal_main" :can_close="false">
         <div class="confirm_body">
             <p style="text-align: center">
                 {{ $t('logout.confirmation') }}
@@ -12,16 +7,11 @@
                 {{ $t('logout.confirmation_message') }}
             </p>
             <div
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    margin-top: 14px;
-                "
+                style="display: flex; flex-direction: column; align-items: center; margin-top: 14px"
             >
-                <button class="ava_button button_primary" @click="submit">
+                <v-btn class="ava_button button_primary" @click="submit" :loading="isLoading">
                     {{ $t('logout.button_conf') }}
-                </button>
+                </v-btn>
                 <button class="ava_button_secondary" @click="close">
                     {{ $t('logout.button_cancel') }}
                 </button>
@@ -45,6 +35,7 @@ import CopyText from '@/components/misc/CopyText.vue'
     },
 })
 export default class ConfirmLogout extends Vue {
+    isLoading = false
     @Prop({ default: '' }) phrase!: string
 
     open(): void {
@@ -58,12 +49,14 @@ export default class ConfirmLogout extends Vue {
     }
 
     async submit() {
+        this.isLoading = true
         await this.$store.dispatch('logout')
         await this.$store.dispatch('Notifications/add', {
             title: 'Logout',
             message: 'You have successfully logged out of your wallet.',
         })
-        this.close()
+        this.isLoading = false
+        // this.close()
     }
 }
 </script>

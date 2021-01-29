@@ -43,11 +43,18 @@ import {
     faLink,
     faQuoteRight,
     faLock,
+    faUnlock,
     faEye,
     faEyeSlash,
     faQuestionCircle,
     faUsers,
     faFilter,
+    faFont,
+    faBoxes,
+    faRandom,
+    faCheckSquare,
+    faAngleLeft,
+    faAngleRight,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faBtc, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -67,6 +74,7 @@ library.add(
     faCamera,
     faDownload,
     faCheckCircle,
+    faCheckSquare,
     faTimes,
     faPlus,
     faMinus,
@@ -99,7 +107,13 @@ library.add(
     faEyeSlash,
     faQuestionCircle,
     faUsers,
-    faFilter
+    faFilter,
+    faFont,
+    faBoxes,
+    faUnlock,
+    faRandom,
+    faAngleLeft,
+    faAngleRight
 )
 
 Vue.component('fa', FontAwesomeIcon)

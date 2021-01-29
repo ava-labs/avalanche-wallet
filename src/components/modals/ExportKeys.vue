@@ -4,10 +4,7 @@
             <p class="selection_num">
                 {{ $t('keys.export_key_info', [wallets.length]) }}
             </p>
-            <export-wallet
-                @success="handleExportSuccess"
-                :wallets="wallets"
-            ></export-wallet>
+            <export-wallet @success="handleExportSuccess" :wallets="wallets"></export-wallet>
         </div>
     </modal>
 </template>
@@ -53,7 +50,8 @@ export default class ExportKeys extends Vue {
 
 .export_body {
     padding: 30px;
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
     min-height: 315px;
 }
 
@@ -71,7 +69,7 @@ export default class ExportKeys extends Vue {
 
 @include main.mobile-device {
     .export_body {
-        width: 90vw;
+        max-width: 100%;
     }
 }
 </style>

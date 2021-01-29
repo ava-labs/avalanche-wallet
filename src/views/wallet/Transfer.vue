@@ -1,36 +1,29 @@
 <template>
     <div class="transfer_card">
-        <h1>{{ $t('transfer.title') }}</h1>
+        <!--        <h1>{{ $t('transfer.title') }}</h1>-->
         <div v-if="networkStatus !== 'connected'" class="disconnected">
             <p>{{ $t('transfer.disconnected') }}</p>
         </div>
         <div class="card_body" v-else>
-            <div class="new_order_Form">
-                <!--                <div class="chain_select">-->
-                <!--                    <label>Chain</label>-->
-                <!--                    <div style="display: flex">-->
-                <!--                        <button>X</button>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <div class="lists" v-show="!isConfirm">
-                    <tx-list
-                        class="tx_list"
-                        ref="txList"
-                        @change="updateTxList"
-                    ></tx-list>
-                    <template v-if="hasNFT">
-                        <NftList
-                            @change="updateNftList"
-                            ref="nftList"
-                        ></NftList>
-                    </template>
-                </div>
-                <div v-show="isConfirm" class="lists">
-                    <TxSummary
-                        class="lists"
-                        :orders="formOrders"
-                        :nft-orders="formNftOrders"
-                    ></TxSummary>
+            <FormC v-show="formType === 'C'">
+                <ChainInput v-model="formType"></ChainInput>
+            </FormC>
+            <div class="new_order_Form" v-show="formType === 'X'">
+                <div class="lists">
+                    <ChainInput v-model="formType"></ChainInput>
+                    <div v-show="!isConfirm">
+                        <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                        <template v-if="hasNFT">
+                            <NftList @change="updateNftList" ref="nftList"></NftList>
+                        </template>
+                    </div>
+                    <div v-show="isConfirm">
+                        <TxSummary
+                            class="lists"
+                            :orders="formOrders"
+                            :nft-orders="formNftOrders"
+                        ></TxSummary>
+                    </div>
                 </div>
                 <div>
                     <div class="to_address">
@@ -38,11 +31,12 @@
                         <qr-input
                             v-if="!isConfirm"
                             v-model="addressIn"
-                            class="qrIn"
+                            class="qrIn hover_border"
                             placeholder="xxx"
                         ></qr-input>
                         <p class="confirm_val" v-else>{{ formAddress }}</p>
-
+                    </div>
+                    <div>
                         <template v-if="isConfirm && formMemo.length > 0">
                             <h4>Memo (Optional)</h4>
                             <p class="confirm_val">{{ formMemo }}</p>
@@ -58,26 +52,15 @@
                         </template>
                     </div>
                     <div class="fees">
-                        <h4>{{ $t('transfer.fees') }}</h4>
                         <p>
                             {{ $t('transfer.fee_tx') }}
                             <span>{{ txFee.toLocaleString(9) }} AVAX</span>
                         </p>
+                        <p>
+                            {{ $t('transfer.total_avax') }}
+                            <span>{{ totalUSD.toLocaleString(2) }} USD</span>
+                        </p>
                     </div>
-                    <!--                    <div class="advanced">-->
-                    <!--                        <v-expansion-panels accordion class="advanced_panel" flat>-->
-                    <!--                            <v-expansion-panel>-->
-                    <!--                                <v-expansion-panel-header>{{$t('transfer.advanced')}}</v-expansion-panel-header>-->
-                    <!--                                <v-expansion-panel-content>-->
-                    <!--                                    <label>{{$t('transfer.adv_change')}}</label>-->
-                    <!--                                    <p class="explain">Where to send the remaining assets after the transaction.</p>-->
-                    <!--                                    <radio-buttons class="radio_buttons" :default_val="selectedAddress" :value="addresses" @change="changeAddressesChange"></radio-buttons>-->
-                    <!--                                    &lt;!&ndash;                                <address-dropdown :default_val="selectedAddress" @change="changeAddressesChange"></address-dropdown>&ndash;&gt;-->
-                    <!--                                </v-expansion-panel-content>-->
-                    <!--                            </v-expansion-panel>-->
-                    <!--                        </v-expansion-panels>-->
-                    <!--                    </div>-->
-
                     <div class="checkout">
                         <ul class="err_list" v-if="formErrors.length > 0">
                             <li v-for="err in formErrors" :key="err">
@@ -88,13 +71,13 @@
                             <v-btn
                                 depressed
                                 class="button_primary"
-                                color="#4C2E56"
                                 :ripple="false"
                                 @click="confirm"
                                 :disabled="!canSend"
                                 block
-                                >Confirm</v-btn
                             >
+                                Confirm
+                            </v-btn>
                         </template>
                         <template v-else-if="isConfirm && !isSuccess">
                             <p class="err">{{ err }}</p>
@@ -107,27 +90,28 @@
                                 @click="submit"
                                 :disabled="!canSend"
                                 block
-                                >{{ $t('transfer.send') }}</v-btn
                             >
+                                {{ $t('transfer.send') }}
+                            </v-btn>
                             <v-btn
                                 text
                                 block
                                 small
-                                style="
-                                    margin-top: 20px !important;
-                                    color: var(--primary-color);
-                                "
+                                style="margin-top: 20px !important; color: var(--primary-color)"
                                 @click="cancelConfirm"
-                                >Cancel</v-btn
                             >
+                                Cancel
+                            </v-btn>
                         </template>
                         <template v-else-if="isSuccess">
                             <p style="color: var(--success)">
-                                <fa icon="check-circle"></fa> Transaction Sent
+                                <fa icon="check-circle"></fa>
+                                Transaction Sent
                             </p>
-                            <label style="word-break: break-all"
-                                ><b>ID: </b> {{ txId }}</label
-                            >
+                            <label style="word-break: break-all">
+                                <b>ID:</b>
+                                {{ txId }}
+                            </label>
                             <v-btn
                                 depressed
                                 style="margin-top: 14px"
@@ -137,8 +121,9 @@
                                 @click="startAgain"
                                 block
                                 :disabled="!canSendAgain"
-                                >Start Again</v-btn
                             >
+                                Start Again
+                            </v-btn>
                         </template>
                     </div>
                 </div>
@@ -151,7 +136,6 @@ import 'reflect-metadata'
 import { Vue, Component, Ref } from 'vue-property-decorator'
 
 import TxList from '@/components/wallet/transfer/TxList.vue'
-import RadioButtons from '@/components/misc/RadioButtons.vue'
 import Big from 'big.js'
 
 import NftList from '@/components/wallet/transfer/NftList.vue'
@@ -164,21 +148,28 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { Buffer, BN } from 'avalanche'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
-import { IssueBatchTxInput } from '@/store/types'
+import { priceDict, IssueBatchTxInput, WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
+import FormC from '@/components/wallet/transfer/FormC.vue'
+import { ChainIdType } from '@/constants'
 
+import ChainInput from '@/components/wallet/transfer/ChainInput.vue'
+import AvaAsset from '../../js/AvaAsset'
+import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
 @Component({
     components: {
         FaucetLink,
         TxList,
-        RadioButtons,
         QrInput,
         NftList,
         TxSummary,
+        FormC,
+        ChainInput,
     },
 })
 export default class Transfer extends Vue {
+    formType: ChainIdType = 'X'
     showAdvanced: boolean = false
     isAjax: boolean = false
     addressIn: string = ''
@@ -198,6 +189,7 @@ export default class Transfer extends Vue {
     txId = ''
 
     canSendAgain = false
+    txState: TxState | null = null
 
     confirm() {
         let isValid = this.formCheck()
@@ -249,17 +241,13 @@ export default class Transfer extends Vue {
             let buff = Buffer.from(memo)
             let size = buff.length
             if (size > 256) {
-                err.push(
-                    'You can have a maximum of 256 characters in your memo.'
-                )
+                err.push('You can have a maximum of 256 characters in your memo.')
             }
 
             // Make sure memo isnt mnemonic
             let isMnemonic = bip39.validateMnemonic(memo)
             if (isMnemonic) {
-                err.push(
-                    'You should not put a mnemonic phrase into the Memo field.'
-                )
+                err.push('You should not put a mnemonic phrase into the Memo field.')
             }
         }
 
@@ -282,14 +270,20 @@ export default class Transfer extends Vue {
         this.txId = ''
         this.isSuccess = false
         this.cancelConfirm()
+
+        this.orders = []
+        this.nftOrders = []
+        this.formOrders = []
+        this.formNftOrders = []
     }
 
     clearForm() {
         this.addressIn = ''
         this.memo = ''
+
         // Clear transactions list
         // @ts-ignore
-        this.$refs.txList.clear()
+        this.$refs.txList.reset()
 
         // Clear NFT list
         if (this.hasNFT) {
@@ -298,7 +292,7 @@ export default class Transfer extends Vue {
         }
     }
 
-    onsuccess() {
+    async onsuccess(txId: string) {
         this.isAjax = false
         this.isSuccess = true
         this.clearForm()
@@ -310,11 +304,20 @@ export default class Transfer extends Vue {
         })
 
         // Update the user's balance
-        this.canSendAgain = false
-        setTimeout(() => {
-            this.$store.dispatch('Assets/updateUTXOs')
+        this.$store.dispatch('Assets/updateUTXOs').then(() => {
+            this.updateSendAgainLock()
+        })
+        this.$store.dispatch('History/updateTransactionHistory')
+    }
+
+    updateSendAgainLock() {
+        if (!this.wallet.isFetchUtxos) {
             this.canSendAgain = true
-        }, 3000)
+        } else {
+            setTimeout(() => {
+                this.updateSendAgainLock()
+            }, 1000)
+        }
     }
 
     onerror(err: any) {
@@ -331,10 +334,7 @@ export default class Transfer extends Vue {
         this.isAjax = true
         this.err = ''
 
-        let sumArray: (ITransaction | UTXO)[] = [
-            ...this.formOrders,
-            ...this.formNftOrders,
-        ]
+        let sumArray: (ITransaction | UTXO)[] = [...this.formOrders, ...this.formNftOrders]
 
         let txList: IssueBatchTxInput = {
             toAddress: this.formAddress,
@@ -345,12 +345,32 @@ export default class Transfer extends Vue {
         this.$store
             .dispatch('issueBatchTx', txList)
             .then((res) => {
-                this.onsuccess()
+                this.canSendAgain = false
+                this.waitTxConfirm(res)
                 this.txId = res
             })
             .catch((err) => {
                 this.onerror(err)
             })
+    }
+
+    async waitTxConfirm(txId: string) {
+        let status = await avm.getTxStatus(txId)
+        if (status === 'Unknown' || status === 'Processing') {
+            // if not confirmed ask again
+            setTimeout(() => {
+                this.waitTxConfirm(txId)
+            }, 500)
+            return false
+        } else if (status === 'Dropped') {
+            // If dropped stop the process
+            this.txState = TxState.failed
+            return false
+        } else {
+            // If success display success page
+            this.txState = TxState.success
+            this.onsuccess(txId)
+        }
     }
 
     get networkStatus(): string {
@@ -359,7 +379,8 @@ export default class Transfer extends Vue {
     }
 
     get hasNFT(): boolean {
-        return this.$store.getters.walletNftUTXOs.length > 0
+        // return this.$store.getters.walletNftUTXOs.length > 0
+        return this.$store.state.Assets.nftUTXOs.length > 0
     }
 
     get faucetLink() {
@@ -378,8 +399,7 @@ export default class Transfer extends Vue {
             return false
         }
 
-        if (this.orders.length === 0 && this.nftOrders.length === 0)
-            return false
+        if (this.orders.length === 0 && this.nftOrders.length === 0) return false
 
         return true
     }
@@ -391,7 +411,32 @@ export default class Transfer extends Vue {
                 res = res.add(this.orders[i].amount)
             }
         }
+
         return res
+    }
+    get avaxTxSize() {
+        let res = new BN(0)
+        for (var i = 0; i < this.orders.length; i++) {
+            let order = this.orders[i]
+            if (!order.asset) continue
+            if (order.amount && order.asset.id === this.avaxAsset.id) {
+                res = res.add(this.orders[i].amount)
+            }
+        }
+
+        return res
+    }
+    get avaxAsset(): AvaAsset {
+        return this.$store.getters['Assets/AssetAVA']
+    }
+
+    get wallet(): WalletType {
+        return this.$store.state.activeWallet
+    }
+
+    // TODO: Remove after ledger support
+    get isLedger() {
+        return this.wallet.type === 'ledger'
     }
 
     get txFee(): Big {
@@ -399,8 +444,23 @@ export default class Transfer extends Vue {
         return bnToBig(fee, 9)
     }
 
+    get totalUSD(): Big {
+        let totalAsset = this.avaxTxSize.add(avm.getTxFee())
+        let bigAmt = bnToBig(totalAsset, 9)
+        let usdPrice = this.priceDict.usd
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
+    }
+
     get addresses() {
         return this.$store.state.addresses
+    }
+
+    get priceDict(): priceDict {
+        return this.$store.state.prices
+    }
+    activated() {
+        this.clearForm()
     }
 }
 </script>
@@ -464,12 +524,6 @@ h4 {
     font-size: 12px;
 }
 
-.qrIn {
-    border-radius: 2px !important;
-    height: 40px;
-    font-size: 12px;
-}
-
 .addressIn >>> input::-webkit-input-placeholder {
     color: var(--primary-color-light) !important;
 }
@@ -517,7 +571,6 @@ h4 {
     display: grid;
     grid-template-columns: 1fr 1fr 300px;
     column-gap: 45px;
-    padding-top: 15px;
 }
 
 .new_order_Form > div {
@@ -538,6 +591,12 @@ h4 {
     margin-bottom: 14px;
 }
 
+.fees {
+    margin: 14px 0;
+    border-top: 1px solid var(--bg-light);
+    padding-top: 14px;
+}
+
 .fees p {
     text-align: left;
     font-size: 13px;
@@ -549,9 +608,6 @@ h4 {
 }
 
 .to_address {
-    margin-bottom: 14px;
-    border-bottom: 1px solid var(--bg-light);
-    padding-bottom: 14px;
 }
 
 label {
@@ -590,26 +646,24 @@ label {
     padding: 8px 16px;
 }
 
-.chain_select {
-    button {
-        background-color: var(--bg-light);
-        width: 28px;
-        height: 28px;
-        border-radius: 4px;
+//@media only screen and (max-width: 600px) {
+//    .order_form {
+//        display: block;
+//    }
+//    .asset_select button {
+//        flex-grow: 1;
+//        word-break: break-word;
+//    }
+//}
+
+@include main.medium-device {
+    .new_order_Form {
+        grid-template-columns: 1fr 1fr 220px;
+        column-gap: 25px;
     }
 }
 
-@media only screen and (max-width: 600px) {
-    .order_form {
-        display: block;
-    }
-    .asset_select button {
-        flex-grow: 1;
-        word-break: break-word;
-    }
-}
-
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .transfer_card {
         display: block;
         grid-template-columns: none;
@@ -626,6 +680,10 @@ label {
 
     .tx_list {
         padding: 0;
+        border: none;
+    }
+
+    .lists {
         border: none;
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="my_keys">
-        <p class="label">{{ $t('keys.activate_key') }}</p>
+        <p class="label">{{ $t('keys.active_wallet') }}</p>
         <key-row
             v-if="activeWallet"
             :wallet="activeWallet"

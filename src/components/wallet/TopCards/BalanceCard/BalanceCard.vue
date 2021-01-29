@@ -11,66 +11,76 @@
                 <h4>{{ $t('top.title2') }}</h4>
                 <template v-if="!isBreakdown">
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye"></fa> {{ $t('top.balance.show') }}
+                        <fa icon="eye"></fa>
+                        {{ $t('top.balance.show') }}
                     </button>
                 </template>
                 <template v-else>
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye-slash"></fa> {{ $t('top.balance.hide') }}
+                        <fa icon="eye-slash"></fa>
+                        {{ $t('top.balance.hide') }}
                     </button>
                 </template>
             </div>
             <div class="balance_row">
-                <p
-                    class="balance"
-                    data-cy="wallet_balance"
-                    v-if="!balanceTextRight"
-                >
+                <p class="balance" data-cy="wallet_balance" v-if="!balanceTextRight">
                     {{ balanceTextLeft }} AVAX
                 </p>
                 <p class="balance" data-cy="wallet_balance" v-else>
-                    {{ balanceTextLeft
-                    }}<span>.{{ balanceTextRight }}</span> AVAX
+                    {{ balanceTextLeft }}
+                    <span>.{{ balanceTextRight }}</span>
+                    AVAX
                 </p>
-                <p class="balance_usd">
-                    <b>$ {{ totalBalanceUSD.toLocaleString(2) }}</b> USD
-                </p>
+                <div style="display: flex; flex-direction: row">
+                    <p class="balance_usd">
+                        <b>$ {{ totalBalanceUSDText }}</b>
+                        USD
+                    </p>
+                    <p class="balance_usd" style="background-color: transparent">
+                        <b>1 AVAX</b>
+                        =
+                        <b>${{ avaxPriceText }}</b>
+                        USD
+                    </p>
+                </div>
             </div>
             <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
-                <div>
-                    <template v-if="!isBreakdown">
+                <div class="alt_non_breakdown" v-if="!isBreakdown">
+                    <div>
                         <label>{{ $t('top.balance.available') }}</label>
                         <p>{{ unlockedText }} AVAX</p>
-                    </template>
-                    <template v-else>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.locked') }}</label>
+                        <p>{{ balanceTextLocked }} AVAX</p>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.balance.stake') }}</label>
+                        <p>{{ stakingText }} AVAX</p>
+                    </div>
+                </div>
+                <div class="alt_breakdown" v-else>
+                    <div>
                         <label>{{ $t('top.balance.available') }} (X)</label>
                         <p>{{ avmUnlocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.available') }} (P)</label>
                         <p>{{ platformUnlocked | cleanAvaxBN }} AVAX</p>
-                    </template>
-                </div>
-                <div>
-                    <template v-if="!isBreakdown">
-                        <label>{{ $t('top.locked') }}</label>
-                        <p>{{ balanceTextLocked }} AVAX</p>
-                    </template>
-                    <template v-else>
+                        <label>{{ $t('top.balance.available') }} (C)</label>
+                        <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>
+                    </div>
+                    <div>
                         <label>{{ $t('top.balance.locked') }} (X)</label>
                         <p>{{ avmLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked') }} (P)</label>
                         <p>{{ platformLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked_stake') }} (P)</label>
                         <p>{{ platformLockedStakeable | cleanAvaxBN }} AVAX</p>
-                    </template>
-                </div>
-                <!--                <div>-->
-                <!--                    <label>P-Chain</label>-->
-                <!--                    <p>{{pBalanceText}} AVAX</p>-->
-                <!--                </div>-->
-                <div>
-                    <label>{{ $t('top.balance.stake') }}</label>
-                    <p>{{ stakingText }} AVAX</p>
+                    </div>
+                    <div>
+                        <label>{{ $t('top.balance.stake') }}</label>
+                        <p>{{ stakingText }} AVAX</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,7 +100,7 @@ import Big from 'big.js'
 import { BN } from 'avalanche/dist'
 import { ONEAVAX } from 'avalanche/dist/utils'
 import { bnToBig } from '@/helpers/helper'
-import { priceDict } from '@/store/types'
+import { priceDict, WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -132,10 +142,19 @@ export default class BalanceCard extends Vue {
         return this.ava_asset.amountLocked
     }
 
+    get evmUnlocked(): BN {
+        if (!this.wallet) return new BN(0)
+        // convert from ^18 to ^9
+        let bal = this.wallet.ethBalance
+        return bal.divRound(new BN(Math.pow(10, 9).toString()))
+    }
+
     get totalBalance(): BN {
         if (!this.ava_asset) return new BN(0)
 
         let tot = this.ava_asset.getTotalAmount()
+        // add EVM balance
+        tot = tot.add(this.evmUnlocked)
         return tot
     }
 
@@ -148,10 +167,19 @@ export default class BalanceCard extends Vue {
         return Big(0)
     }
 
+    get avaxPriceText() {
+        return this.priceDict.usd
+    }
+
     get totalBalanceUSD(): Big {
         let usdPrice = this.priceDict.usd
         let usdBig = this.totalBalanceBig.times(Big(usdPrice))
         return usdBig
+    }
+
+    get totalBalanceUSDText(): string {
+        if (this.isUpdateBalance) return '--'
+        return this.totalBalanceUSD.toLocaleString(2)
     }
     // should be unlocked (X+P), locked (X+P) and staked and lockedStakeable
     get balanceText(): string {
@@ -164,6 +192,7 @@ export default class BalanceCard extends Vue {
     }
 
     get balanceTextLeft(): string {
+        if (this.isUpdateBalance) return '--'
         let text = this.balanceText
         if (text.includes('.')) {
             let left = text.split('.')[0]
@@ -173,6 +202,7 @@ export default class BalanceCard extends Vue {
     }
 
     get balanceTextRight(): string {
+        if (this.isUpdateBalance) return ''
         let text = this.balanceText
         if (text.includes('.')) {
             let right = text.split('.')[1]
@@ -183,6 +213,8 @@ export default class BalanceCard extends Vue {
 
     // Locked balance is the sum of locked AVAX tokens on X and P chain
     get balanceTextLocked(): string {
+        if (this.isUpdateBalance) return '--'
+
         if (this.ava_asset !== null) {
             let denom = this.ava_asset.denomination
             let tot = this.platformLocked.add(this.platformLockedStakeable)
@@ -192,57 +224,45 @@ export default class BalanceCard extends Vue {
             amt = amt.add(pLocked)
 
             return amt.toLocaleString(denom)
-
-            // if(amt.lt(Big('0.0001'))){
-            //     return amt.toLocaleString(denom);
-            // }else{
-            //     return amt.toLocaleString(3);
-            // }
         } else {
-            return '?'
+            return '--'
         }
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters.walletPlatformBalance
+        return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLocked(): BN {
-        return this.$store.getters.walletPlatformBalanceLocked
+        return this.$store.getters['Assets/walletPlatformBalanceLocked']
     }
 
     get platformLockedStakeable(): BN {
-        return this.$store.getters.walletPlatformBalanceLockedStakeable
+        return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
     }
 
     get unlockedText() {
+        if (this.isUpdateBalance) return '--'
+
         if (this.ava_asset) {
             let xUnlocked = this.ava_asset.amount
             let pUnlocked = this.platformUnlocked
 
             let denom = this.ava_asset.denomination
 
-            let tot = xUnlocked.add(pUnlocked)
+            let tot = xUnlocked.add(pUnlocked).add(this.evmUnlocked)
+
             let amtBig = bnToBig(tot, denom)
-            // let amtBig = this.avaxBnToBigAmt(tot);
 
             return amtBig.toLocaleString(denom)
-            // if(amtBig.lt(Big('1'))){
-            //     return amtBig.toString();
-            // }else{
-            //     return amtBig.toLocaleString(3);
-            // }
         } else {
-            return '?'
+            return '--'
         }
     }
 
-    // avaxBnToBigAmt(val: BN): Big{
-    //     return Big(val.toString()).div(Math.pow(10,9));
-    // }
-
     get pBalanceText() {
-        if (!this.ava_asset) return '?'
+        if (!this.ava_asset) return '--'
+        if (this.isUpdateBalance) return '--'
 
         let denom = this.ava_asset.denomination
         let bal = this.platformUnlocked
@@ -257,12 +277,13 @@ export default class BalanceCard extends Vue {
     }
 
     get stakingAmount(): BN {
-        return this.$store.getters.walletStakingBalance
+        return this.$store.getters['Assets/walletStakingBalance']
     }
 
     get stakingText() {
         let balance = this.stakingAmount
         if (!balance) return '0'
+        if (this.isUpdateBalance) return '--'
 
         let denom = 9
         let bigBal = Big(balance.toString())
@@ -275,12 +296,13 @@ export default class BalanceCard extends Vue {
         }
     }
 
-    get wallet(): AvaHdWallet {
+    get wallet(): WalletType | null {
         return this.$store.state.activeWallet
     }
 
     get isUpdateBalance(): boolean {
-        return this.$store.state.Assets.isUpdateBalance
+        if (!this.wallet) return true
+        return this.wallet.isFetchUtxos
     }
 
     get priceDict(): priceDict {
@@ -350,6 +372,7 @@ h4 {
     font-size: 13px;
     padding: 1px 6px;
     border-radius: 3px;
+    margin-right: 6px !important;
 }
 
 .refresh {
@@ -357,6 +380,9 @@ h4 {
     height: 20px;
     color: var(--primary-color);
 
+    button {
+        outline: none !important;
+    }
     img {
         object-fit: contain;
         width: 100%;
@@ -375,13 +401,14 @@ h4 {
     margin: 0px 18px;
     margin-right: 0px;
     position: relative;
-    outline: none;
+    outline: none !important;
 }
 
 .buts img {
     height: 20px;
     width: 20px;
     object-fit: contain;
+    outline: none !important;
 }
 .buts button[tooltip]:hover:before {
     border-radius: 4px;
@@ -399,7 +426,7 @@ h4 {
     padding: 4px 8px;
 }
 
-.alt_info {
+.alt_info > div {
     display: grid;
     grid-template-columns: repeat(3, max-content);
     column-gap: 0px;
@@ -418,7 +445,7 @@ h4 {
 
     label {
         font-size: 13px;
-        color: main.$primary-color-light;
+        color: var(--primary-color-light);
     }
 }
 
@@ -429,6 +456,7 @@ h4 {
 .breakdown_toggle {
     color: var(--primary-color-light);
     font-size: 13px;
+    outline: none !important;
 }
 
 @include main.medium-device {
@@ -441,12 +469,15 @@ h4 {
         font-size: 1.8rem !important;
     }
 
+    .balance_usd {
+        font-size: 11px;
+    }
     .nft_col {
         display: none;
     }
 
     .alt_info {
-        font-size: 13px;
+        font-size: 12px;
     }
 }
 
@@ -476,18 +507,28 @@ h4 {
     }
 
     .alt_info {
-        text-align: left;
-        grid-template-columns: none;
-        column-gap: 0;
         > div {
-            padding: 8px 0;
-            border-right: none;
-            border-bottom: 1px solid var(--bg-light);
+            text-align: left;
+            grid-template-columns: none;
+            column-gap: 0;
+        }
 
-            &:last-of-type {
-                border: none;
+        .alt_non_breakdown,
+        .alt_breakdown {
+            > div {
+                padding: 8px 0;
+                border-right: none;
+                border-bottom: 1px solid var(--bg-light);
+
+                &:last-of-type {
+                    border: none;
+                }
             }
         }
+    }
+
+    .alt_non_breakdown {
+        display: none !important;
     }
 }
 </style>

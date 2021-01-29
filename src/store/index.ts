@@ -10,33 +10,20 @@ import History from './modules/history/history'
 import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
 
-import {
-    RootState,
-    IssueBatchTxInput,
-    IWalletBalanceDict,
-    IWalletAssetsDict,
-    ImportKeyfileInput,
-    ExportWalletsInput,
-    IWalletNftDict,
-} from '@/store/types'
+import { RootState, IssueBatchTxInput, ImportKeyfileInput, ExportWalletsInput } from '@/store/types'
 
-import { KeyFile, KeyFileDecrypted } from '@/js/IKeystore'
+import { KeyFileDecrypted } from '@/js/IKeystore'
 
 Vue.use(Vuex)
 
 import router from '@/router'
 
-import { ava, avm, bintools } from '@/AVA'
+import { avm, bintools } from '@/AVA'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 
-import { Buffer } from 'avalanche'
 import { UnixNow } from 'avalanche/dist/utils'
-import {
-    UTXO,
-    KeyPair as AVMKeyPair,
-    AmountOutput,
-    UTXOSet,
-} from 'avalanche/dist/apis/avm'
+import { UTXO, KeyPair as AVMKeyPair, AmountOutput, NFTMintOutput } from 'avalanche/dist/apis/avm'
+import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 
 import AvaAsset from '@/js/AvaAsset'
 import { KEYSTORE_VERSION, makeKeyfile, readKeyFile } from '@/js/Keystore'
@@ -44,10 +31,9 @@ import { AssetsDict } from '@/store/modules/assets/types'
 import { keyToKeypair } from '@/helpers/helper'
 import BN from 'bn.js'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { NetworkItem } from '@/store/modules/network/types'
-import { AvaNetwork } from '@/js/AvaNetwork'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 export default new Vuex.Store({
     modules: {
@@ -59,7 +45,6 @@ export default new Vuex.Store({
         Ledger,
     },
     state: {
-        walletType: null,
         isAuth: false,
         activeWallet: null,
         address: null, // current active derived address
@@ -71,269 +56,11 @@ export default new Vuex.Store({
         },
     },
     getters: {
-        walletNftUTXOs(state: RootState): UTXO[] {
-            let wallet = state.activeWallet
-
-            if (!wallet) return []
-
-            let utxoSet = wallet.getUTXOSet()
-            if (!utxoSet) return []
-
-            let addrUtxos = utxoSet.getAllUTXOs()
-            let res: UTXO[] = []
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
-
-                // Process only non NFT utxos, outputid === 0b
-                let outId = utxo.getOutput().getOutputID()
-                if (outId === 11) {
-                    res.push(utxo)
-                }
-            }
-            return res
-        },
-
-        // assset id -> utxos
-        walletNftDict(state: RootState) {
-            let wallet = state.activeWallet
-
-            if (!wallet) return {}
-            if (!wallet.getUTXOSet()) return {}
-
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs()
-            let res: IWalletNftDict = {}
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
-
-                // Process only NFT utxos, outputid === 0b
-                let outId = utxo.getOutput().getOutputID()
-                if (outId === 11) {
-                    let assetIdBuff = utxo.getAssetID()
-                    let assetId = bintools.cb58Encode(assetIdBuff)
-
-                    if (res[assetId]) {
-                        res[assetId].push(utxo)
-                    } else {
-                        res[assetId] = [utxo]
-                    }
-                }
-            }
-            return res
-        },
-
-        // Creates the asset_id => raw balance dictionary
-        walletBalanceDict(state: RootState): IWalletBalanceDict {
-            let wallet = state.activeWallet
-
-            if (!wallet) return {}
-            if (!wallet.getUTXOSet()) return {}
-
-            let dict: IWalletBalanceDict = {}
-
-            let unixNox = UnixNow()
-            const ZERO = new BN(0)
-
-            let addrUtxos = wallet.getUTXOSet().getAllUTXOs()
-
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
-
-                // Process only SECP256K1 Transfer Output utxos, outputid === 07
-                let outId = utxo.getOutput().getOutputID()
-
-                if (outId !== 7) continue
-
-                let utxoOut = utxo.getOutput() as AmountOutput
-
-                let locktime = utxoOut.getLocktime()
-                let amount = utxoOut.getAmount()
-                let assetIdBuff = utxo.getAssetID()
-                let assetId = bintools.cb58Encode(assetIdBuff)
-
-                // if not locked
-                if (locktime.lte(unixNox)) {
-                    if (!dict[assetId]) {
-                        dict[assetId] = {
-                            locked: ZERO,
-                            available: amount.clone(),
-                        }
-                    } else {
-                        let amt = dict[assetId].available
-                        dict[assetId].available = amt.add(amount)
-                    }
-                } else {
-                    // If locked
-                    if (!dict[assetId]) {
-                        dict[assetId] = {
-                            locked: amount.clone(),
-                            available: ZERO,
-                        }
-                    } else {
-                        let amt = dict[assetId].locked
-                        dict[assetId].locked = amt.add(amount)
-                    }
-                }
-            }
-            return dict
-        },
-
-        walletStakingBalance(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            return wallet.stakeAmount
-        },
-
-        walletPlatformBalance(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet = wallet.platformHelper.utxoSet
-
-            let now = UnixNow()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN('0')
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput()
-                let outId = utxoOut.getOutputID()
-
-                let locktime
-                if (outId === 22) {
-                    locktime = (utxoOut as StakeableLockOut).getStakeableLocktime()
-                } else {
-                    locktime = (utxoOut as AmountOutput).getLocktime()
-                }
-
-                // Filter out locked tokens and stakeable locked tokens
-                if (locktime.lte(now)) {
-                    amt.iadd((utxoOut as AmountOutput).getAmount())
-                }
-            }
-
-            return amt
-        },
-
-        walletPlatformBalanceLocked(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet = wallet.platformHelper.utxoSet
-
-            let now = UnixNow()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN(0)
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as AmountOutput
-                let locktime = utxoOut.getLocktime()
-
-                // Filter unlocked tokens
-                if (locktime.gt(now)) {
-                    amt.iadd(utxoOut.getAmount())
-                }
-            }
-
-            return amt
-        },
-
-        walletPlatformBalanceLockedStakeable(state: RootState): BN {
-            let wallet = state.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet = wallet.platformHelper.utxoSet
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN(0)
-            let unixNow = UnixNow()
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as StakeableLockOut
-                let outType = utxoOut.getOutputID()
-
-                // Type ID 22 is stakeable but locked tokens
-                if (outType === 22) {
-                    let locktime = utxoOut.getStakeableLocktime()
-                    // Make sure the locktime is in the future
-                    if (locktime.gt(unixNow)) {
-                        amt.iadd(utxoOut.getAmount())
-                    }
-                }
-            }
-
-            return amt
-        },
-
-        // Get the balance dict, combine it with existing assets and return a new dict
-        walletAssetsDict(state: RootState, getters): IWalletAssetsDict {
-            let balanceDict: IWalletBalanceDict = getters.walletBalanceDict
-
-            // @ts-ignore
-            let assetsDict: AssetsDict = state.Assets.assetsDict
-            let res: IWalletAssetsDict = {}
-
-            for (var assetId in assetsDict) {
-                let balanceAmt = balanceDict[assetId]
-
-                let asset: AvaAsset
-                if (!balanceAmt) {
-                    asset = assetsDict[assetId]
-                    asset.resetBalance()
-                } else {
-                    asset = assetsDict[assetId]
-                    asset.resetBalance()
-                    asset.addBalance(balanceAmt.available)
-                    asset.addBalanceLocked(balanceAmt.locked)
-                }
-
-                // Add extras for AVAX token
-                // @ts-ignore
-                if (asset.id === state.Assets.AVA_ASSET_ID) {
-                    asset.addExtra(getters.walletStakingBalance)
-                    asset.addExtra(getters.walletPlatformBalance)
-                    asset.addExtra(getters.walletPlatformBalanceLocked)
-                    asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
-                }
-
-                res[assetId] = asset
-            }
-            return res
-        },
-
-        walletAssetsArray(state: RootState, getters): AvaAsset[] {
-            let assetsDict: IWalletAssetsDict = getters.walletAssetsDict
-            let res: AvaAsset[] = []
-
-            for (var id in assetsDict) {
-                let asset = assetsDict[id]
-                res.push(asset)
-            }
-            return res
-        },
-
         addresses(state: RootState): string[] {
             let wallet = state.activeWallet
             if (!wallet) return []
             let addresses = wallet.getDerivedAddresses()
             return addresses
-        },
-
-        activeKey(state): AVMKeyPair | null {
-            if (!state.activeWallet || state.walletType === 'ledger') {
-                return null
-            }
-            let hdIndex = state.activeWallet.externalHelper.hdIndex
-            return state.activeWallet.externalHelper.getKeyForIndex(
-                hdIndex
-            ) as AVMKeyPair
         },
     },
     mutations: {
@@ -349,29 +76,22 @@ export default new Vuex.Store({
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
-        async accessWallet(
-            { state, dispatch, commit },
-            mnemonic: string
-        ): Promise<AvaHdWallet> {
+        // TODO rename to accessWalletMenmonic
+        async accessWallet({ state, dispatch, commit }, mnemonic: string): Promise<AvaHdWallet> {
             let wallet: AvaHdWallet = await dispatch('addWallet', mnemonic)
             await dispatch('activateWallet', wallet)
 
-            state.walletType = 'mnemonic'
             dispatch('onAccess')
             return wallet
         },
 
-        async accessWalletMultiple(
-            { state, dispatch, commit },
-            mnemonics: string[]
-        ) {
+        async accessWalletMultiple({ state, dispatch, commit }, mnemonics: string[]) {
             for (var i = 0; i < mnemonics.length; i++) {
                 let mnemonic = mnemonics[i]
                 await dispatch('addWallet', mnemonic)
             }
 
             await dispatch('activateWallet', state.wallets[0])
-            state.walletType = 'mnemonic'
 
             dispatch('onAccess')
         },
@@ -380,7 +100,14 @@ export default new Vuex.Store({
             state.wallets = [wallet]
 
             await dispatch('activateWallet', wallet)
-            state.walletType = 'ledger'
+
+            dispatch('onAccess')
+        },
+
+        async accessWalletSingleton({ state, dispatch }, wallet: SingletonWallet) {
+            state.wallets.push(wallet)
+
+            await dispatch('activateWallet', wallet)
 
             dispatch('onAccess')
         },
@@ -388,10 +115,10 @@ export default new Vuex.Store({
         async onAccess(store) {
             store.state.isAuth = true
 
-            await store.dispatch('Assets/updateAvaAsset')
-            store.dispatch('Assets/updateUTXOs')
+            store.dispatch('Assets/updateAvaAsset')
             store.dispatch('Platform/update')
             router.push('/wallet')
+            store.dispatch('Assets/updateUTXOs')
         },
 
         // Similar to logout but keeps the Remembered keys.
@@ -407,7 +134,6 @@ export default new Vuex.Store({
             store.state.isAuth = false
             store.state.activeWallet = null
             store.state.address = null
-            store.state.walletType = null
 
             await store.dispatch('Assets/onlogout')
             await store.commit('History/clear')
@@ -416,9 +142,6 @@ export default new Vuex.Store({
         },
 
         async logout(store) {
-            // Delete keys
-            store.dispatch('removeAllKeys')
-
             // Clear local storage
             localStorage.removeItem('w')
 
@@ -426,13 +149,15 @@ export default new Vuex.Store({
             store.state.isAuth = false
             store.state.activeWallet = null
             store.state.address = null
-            store.state.walletType = null
+
+            router.push('/')
+
+            // Delete keys
+            store.dispatch('removeAllKeys')
 
             // Clear Assets
             await store.dispatch('Assets/onlogout')
             await store.commit('History/clear')
-
-            router.push('/')
         },
 
         // used with logout
@@ -453,12 +178,9 @@ export default new Vuex.Store({
             state.volatileWallets = []
         },
 
-        async addWallet(
-            { state, dispatch },
-            mnemonic: string
-        ): Promise<AvaHdWallet | null> {
+        async addWallet({ state, dispatch }, mnemonic: string): Promise<AvaHdWallet | null> {
             // Cannot add mnemonic wallets on ledger mode
-            if (state.walletType === 'ledger') return null
+            if (state.activeWallet?.type === 'ledger') return null
 
             // Make sure wallet doesnt exist already
             for (var i = 0; i < state.wallets.length; i++) {
@@ -482,7 +204,7 @@ export default new Vuex.Store({
 
         // Creates a keystore file and saves to local storage
         async rememberWallets({ state, dispatch }, pass: string | undefined) {
-            if (!pass || state.walletType === 'ledger') return
+            if (!pass || state.activeWallet?.type === 'ledger') return
 
             let wallets = state.wallets as AvaHdWallet[]
 
@@ -509,21 +231,14 @@ export default new Vuex.Store({
             let memo = data.memo
 
             try {
-                let txId: string = await wallet.issueBatchTx(
-                    orders,
-                    toAddr,
-                    memo
-                )
+                let txId: string = await wallet.issueBatchTx(orders, toAddr, memo)
                 return txId
             } catch (e) {
                 throw e
             }
         },
 
-        async activateWallet(
-            { state, dispatch, commit },
-            wallet: AvaHdWallet | LedgerWallet
-        ) {
+        async activateWallet({ state, dispatch, commit }, wallet: AvaHdWallet | LedgerWallet) {
             state.activeWallet = wallet
 
             dispatch('Assets/updateAvaAsset')
@@ -569,10 +284,7 @@ export default new Vuex.Store({
 
             try {
                 // Decrypt the key file with the password
-                let keyFile: KeyFileDecrypted = await readKeyFile(
-                    fileData,
-                    pass
-                )
+                let keyFile: KeyFileDecrypted = await readKeyFile(fileData, pass)
 
                 // Old files have private keys, 5.0 and above has mnemonic phrases
                 let keys = keyFile.keys
@@ -592,9 +304,7 @@ export default new Vuex.Store({
 
                         // Entropy must be 64 characters, make sure 0 pad exists
                         let paddedKeyHex = keyHex.padStart(64, '0')
-                        let mnemonic: string = bip39.entropyToMnemonic(
-                            paddedKeyHex
-                        )
+                        let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
 
                         return mnemonic
                     })

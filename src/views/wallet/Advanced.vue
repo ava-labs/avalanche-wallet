@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="header">
+        <div>
             <h1>{{ $t('advanced.title') }}</h1>
         </div>
         <div class="grids">
@@ -31,6 +31,9 @@ export default class Advanced extends Vue {}
 <style scoped lang="scss">
 @use '../../main';
 
+h1 {
+    font-weight: normal;
+}
 .grids {
     margin: 30px 0;
     display: grid;

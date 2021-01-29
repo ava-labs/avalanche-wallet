@@ -1,7 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
-
-// Same for every network
-const P_CHAIN_ID = '11111111111111111111111111111111LpoYY'
+import { ITransactionData } from './store/modules/history/types'
 
 // Doesn't really matter what we set, it will change
 const api_url: string = 'localhost'
@@ -13,18 +11,61 @@ const explorer_api: AxiosInstance = axios.create({
     },
 })
 
-async function getAddressHistory(addrs: string[], limit = 20, offset = 0) {
-    let query = addrs.map((val) => {
-        let raw = val.split('-')[1]
-        return `address=${raw}`
+async function getAddressHistory(
+    addrs: string[],
+    limit = 20,
+    chainID: string,
+    endTime?: string
+): Promise<ITransactionData[]> {
+    const ADDR_SIZE = 1024
+    let selection = addrs.slice(0, ADDR_SIZE)
+    let remaining = addrs.slice(ADDR_SIZE)
+
+    let addrsRaw = selection.map((addr) => {
+        return addr.split('-')[1]
     })
 
-    // Get history for all addresses of the active HD wallet
-    let url = `/x/transactions?${query.join(
-        '&'
-    )}&limit=${limit}&offset=${offset}&sort=timestamp-desc&disableCount=1`
-    let res = await explorer_api.get(url)
-    return res.data
+    let rootUrl = 'v2/transactions'
+
+    let req = {
+        address: addrsRaw,
+        sort: ['timestamp-desc'],
+        disableCount: ['1'],
+        chainID: [chainID],
+        disableGenesis: ['false'],
+    }
+
+    if (limit > 0) {
+        //@ts-ignore
+        req.limit = [limit.toString()]
+    }
+
+    if (endTime) {
+        console.log('Setting endtime')
+        //@ts-ignore
+        req.endTime = [endTime]
+    }
+
+    let res = await explorer_api.post(rootUrl, req)
+    let txs = res.data.transactions
+    let next: string | undefined = res.data.next
+
+    if (txs === null) txs = []
+
+    // If we need to fetch more for this address
+    if (next && !limit) {
+        let endTime = next.split('&')[0].split('=')[1]
+        let nextRes = await getAddressHistory(selection, limit, chainID, endTime)
+        txs.push(...nextRes)
+    }
+
+    // If there are addresses left, fetch them too
+    if (remaining.length > 0) {
+        let nextRes = await getAddressHistory(remaining, limit, chainID)
+        txs.push(...nextRes)
+    }
+
+    return txs
 }
 
 async function isAddressUsedX(addr: string) {
@@ -33,18 +74,6 @@ async function isAddressUsedX(addr: string) {
     try {
         let res = await explorer_api.get(url)
         // console.log(res);
-        if (res.data.transactions.length > 0) return true
-        else return false
-    } catch (e) {
-        throw e
-    }
-}
-
-async function isAddressUsedP(addr: string) {
-    let addrRaw = addr.split('-')[1]
-    let url = `/x/transactions?chainID=${P_CHAIN_ID}&address=${addrRaw}&limit=1&disableCount=1`
-    try {
-        let res = await explorer_api.get(url)
         if (res.data.transactions.length > 0) return true
         else return false
     } catch (e) {
@@ -64,37 +93,20 @@ async function getAddressDetailX(addr: string) {
     }
 }
 
-async function getAddressTransactionsP(addr: string) {
-    let addrRaw = addr.split('-')[1]
-    let url = `/x/transactions?chainID=${P_CHAIN_ID}&address=${addrRaw}`
-    try {
-        let res = await explorer_api.get(url)
-        return res.data
-    } catch (e) {
-        throw e
-    }
-}
-
 async function getAddressChains(addrs: string[]) {
     // Strip the prefix
-    let cleanAddrs = addrs.map((addr) => {
-        let clean = 'address=' + addr.split('-')[1]
-        return clean
+    let rawAddrs = addrs.map((addr) => {
+        return addr.split('-')[1]
     })
 
-    let joined = cleanAddrs.join('&')
-    let url = `/x/addressChains?${joined}`
-    let res = await explorer_api.get(url)
+    let urlRoot = `/v2/addressChains`
+
+    let res = await explorer_api.post(urlRoot, {
+        address: rawAddrs,
+        disableCount: ['1'],
+    })
 
     return res.data.addressChains
 }
 
-export {
-    explorer_api,
-    getAddressHistory,
-    getAddressDetailX,
-    getAddressTransactionsP,
-    isAddressUsedX,
-    isAddressUsedP,
-    getAddressChains,
-}
+export { explorer_api, getAddressHistory, getAddressDetailX, isAddressUsedX, getAddressChains }

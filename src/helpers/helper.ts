@@ -2,16 +2,16 @@ import store from '@/store/index'
 import { ava } from '@/AVA'
 
 import {
-    AVMConstants,
     KeyChain as AVMKeyChain,
     KeyPair as AVMKeyPair,
+    NFTTransferOutput,
+    UTXO,
 } from 'avalanche/dist/apis/avm'
 
-import { Defaults, getPreferredHRP, ONEAVAX } from 'avalanche/dist/utils'
+import { Defaults, getPreferredHRP, ONEAVAX, PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
 import { BN } from 'avalanche/dist'
 import Big from 'big.js'
 
-import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
 import { Buffer } from 'avalanche'
 import createHash from 'create-hash'
 
@@ -36,11 +36,7 @@ function keyToKeypair(key: string, chainID: string = 'X'): AVMKeyPair {
     return keychain.importKey(key)
 }
 
-function calculateStakingReward(
-    amount: BN,
-    duration: number,
-    currentSupply: BN
-): BN {
+function calculateStakingReward(amount: BN, duration: number, currentSupply: BN): BN {
     let networkID = ava.getNetworkID()
 
     //@ts-ignore
@@ -65,8 +61,7 @@ function calculateStakingReward(
     let portionOfExistingSupplyBig = amtBig.div(currentSupplyBig)
 
     let portionOfStakingDuration = duration / maxStakingDuration.toNumber()
-    let mintingRate =
-        minConsumption + diffConsumption * portionOfStakingDuration
+    let mintingRate = minConsumption + diffConsumption * portionOfStakingDuration
 
     let rewardBig: Big = remainingSupplyBig.times(portionOfExistingSupplyBig)
     rewardBig = rewardBig.times(Big(mintingRate * portionOfStakingDuration))
@@ -81,11 +76,21 @@ function digestMessage(msgStr: string) {
     let mBuf = Buffer.from(msgStr, 'utf8')
     let msgSize = Buffer.alloc(4)
     msgSize.writeUInt32BE(mBuf.length, 0)
-    let msgBuf = Buffer.from(
-        `\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`,
-        'utf8'
-    )
+    let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`, 'utf8')
     return createHash('sha256').update(msgBuf).digest()
+}
+
+let payloadtypes = PayloadTypes.getInstance()
+
+function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
+    let out = utxo.getOutput() as NFTTransferOutput
+    let payload = out.getPayloadBuffer()
+
+    let typeId = payloadtypes.getTypeID(payload)
+    let pl: Buffer = payloadtypes.getContent(payload)
+    let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+
+    return payloadbase
 }
 
 export {
@@ -94,4 +99,5 @@ export {
     calculateStakingReward,
     bnToBig,
     digestMessage,
+    getPayloadFromUTXO,
 }

@@ -12,12 +12,7 @@ class AvaAsset {
     // AVAX P chain, Wallet Staking
     amountExtra: BN
     private readonly pow: Big
-    constructor(
-        id: string,
-        name: string,
-        symbol: string,
-        denomination: number
-    ) {
+    constructor(id: string, name: string, symbol: string, denomination: number) {
         this.id = id
         this.name = name
         this.symbol = symbol

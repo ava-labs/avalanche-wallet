@@ -1,5 +1,5 @@
 <template>
-    <modal ref="modal" :title="title">
+    <modal ref="modal" :title="title" class="modal_parent" icy>
         <div class="mnemonic_body">
             <button @click="close" class="close_but">
                 <fa icon="times"></fa>
@@ -16,12 +16,7 @@
                 </div>
             </div>
             <p class="err">{{ err }}</p>
-            <button
-                class="but_primary ava_button button_primary"
-                @click="verify"
-            >
-                Verify
-            </button>
+            <button class="but_primary ava_button button_primary" @click="verify">Verify</button>
         </div>
     </modal>
 </template>
@@ -130,6 +125,7 @@ export default class VerifyMnemonic extends Vue {
 .mnemonic_body {
     padding: 30px;
     text-align: center;
+    max-width: 100%;
     width: 450px;
 }
 
@@ -232,7 +228,7 @@ h3 {
 
 @include main.mobile-device {
     .mnemonic-body {
-        width: 90vw;
+        width: 100%;
     }
 
     .words {
