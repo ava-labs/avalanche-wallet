@@ -154,7 +154,7 @@
             "token": "Token"
         },
         "source_chain": {
-            "title": "Select Soruce Chain"
+            "title": "Select Source Chain"
         },
         "c_chain": {
             "gasPrice": "Gas Price (GWEI)",
