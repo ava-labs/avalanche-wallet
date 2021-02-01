@@ -116,7 +116,7 @@ import { priceDict, WalletType } from '@/store/types'
     },
 })
 export default class BalanceCard extends Vue {
-    isBreakdown = false
+    isBreakdown = true
 
     updateBalance(): void {
         this.$store.dispatch('Assets/updateUTXOs')
