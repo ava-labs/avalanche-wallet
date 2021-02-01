@@ -1,6 +1,8 @@
 // import AppBtc from "@ledgerhq/hw-app-btc";
 //@ts-ignore
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
+//@ts-ignore
+import Eth from '@ledgerhq/hw-app-eth'
 
 import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
@@ -40,7 +42,7 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
-import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
+import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
 import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
@@ -66,8 +68,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         this.ethAddressBech = ''
     }
 
-    static async fromApp(app: AppAvax, config: ILedgerAppConfig) {
+    static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
+        const ETH_PATH = `m/44'/60'/0/0`
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
+        let ethRes = await eth.getAddress(ETH_PATH)
+        console.log(ethRes)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key

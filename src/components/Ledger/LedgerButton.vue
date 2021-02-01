@@ -10,6 +10,7 @@ import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
+import Eth from '@ledgerhq/hw-app-eth'
 import { AVA_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 
 export default {
@@ -44,8 +45,10 @@ export default {
             try {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
+                let eth = new Eth(transport)
                 let config = await app.getAppConfiguration()
-                let wallet = await LedgerWallet.fromApp(app, config)
+
+                let wallet = await LedgerWallet.fromApp(app, eth, config)
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()

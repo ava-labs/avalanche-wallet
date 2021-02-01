@@ -55,7 +55,7 @@ import { KeyChain } from 'avalanche/dist/apis/evm'
 
 const AVA_TOKEN_INDEX: string = '9000'
 export const AVA_ACCOUNT_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'` // Change and index left out
-const ETH_ACCOUNT_PATH: string = `m/44'/60'/0'`
+export const ETH_ACCOUNT_PATH: string = `m/44'/60'/0'`
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 const SCAN_SIZE: number = 70 // the total number of utxos to look at initially to calculate last index
