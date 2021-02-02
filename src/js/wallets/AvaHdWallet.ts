@@ -48,7 +48,7 @@ import { digestMessage } from '@/helpers/helper'
 import { buildExportTransaction } from '@/js/TxHelper'
 import { ChainIdType } from '@/constants'
 import { KeyChain } from 'avalanche/dist/apis/evm'
-import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
+// import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -392,7 +392,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
     // TODO: Move to Core HD file
     async importToCChain(): Promise<string> {
-        const utxoResponse: iEVMUTXOResponse = await cChain.getUTXOs(
+        const utxoResponse = await cChain.getUTXOs(
             this.ethAddressBech,
             avm.getBlockchainID()
         )
