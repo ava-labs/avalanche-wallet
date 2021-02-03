@@ -60,11 +60,9 @@ export default class AddKeyString extends Vue {
             } catch (e) {
                 this.isLoading = false
 
-                try {
-                    if (e.message === 'WALLET ALREADY ADDED') {
-                        this.error = this.$t('keys.import_key_duplicate_err') as string
-                    }
-                } catch (e) {
+                if (e.message.includes('already')) {
+                    this.error = this.$t('keys.import_key_duplicate_err') as string
+                } else {
                     this.error = this.$t('keys.import_key_err') as string
                 }
             }

@@ -47,6 +47,8 @@ import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import { wallet_api } from '@/wallet_api'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import Wallet from '@/views/Wallet.vue'
+import { Buffer } from 'avalanche'
+import { privateToAddress } from 'ethereumjs-util'
 
 export default new Vuex.Store({
     modules: {
@@ -107,11 +109,15 @@ export default new Vuex.Store({
             }: { keys: AccessWalletMultipleInput[]; activeIndex: number }
         ) {
             for (var i = 0; i < keyList.length; i++) {
-                let keyInfo = keyList[i]
-                if (keyInfo.type === 'mnemonic') {
-                    await dispatch('addWalletMnemonic', keyInfo.key)
-                } else {
-                    await dispatch('addWalletSingleton', keyInfo.key)
+                try {
+                    let keyInfo = keyList[i]
+                    if (keyInfo.type === 'mnemonic') {
+                        await dispatch('addWalletMnemonic', keyInfo.key)
+                    } else {
+                        await dispatch('addWalletSingleton', keyInfo.key)
+                    }
+                } catch (e) {
+                    continue
                 }
             }
 
@@ -217,7 +223,7 @@ export default new Vuex.Store({
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
                     if ((w as AvaHdWallet).mnemonic === mnemonic) {
-                        console.error('WALLET ALREADY ADDED')
+                        throw new Error('Wallet already exists.')
                     }
                 }
             }
@@ -230,6 +236,15 @@ export default new Vuex.Store({
 
         // Add a singleton wallet from private key string
         async addWalletSingleton({ state, dispatch }, pk: string): Promise<SingletonWallet | null> {
+            try {
+                let keyBuf = Buffer.from(pk, 'hex')
+                // @ts-ignore
+                privateToAddress(keyBuf)
+                pk = `PrivateKey-${bintools.cb58Encode(keyBuf)}`
+            } catch (e) {
+                //
+            }
+
             // Cannot add singleton wallets on ledger mode
             if (state.activeWallet?.type === 'ledger') return null
 
@@ -238,7 +253,7 @@ export default new Vuex.Store({
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'singleton') {
                     if ((w as SingletonWallet).key === pk) {
-                        console.error('WALLET ALREADY ADDED')
+                        throw new Error('Wallet already exists.')
                     }
                 }
             }

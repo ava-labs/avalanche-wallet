@@ -42,6 +42,10 @@ export default class AddMnemonic extends Vue {
         return true
     }
 
+    clear() {
+        this.phrase = ''
+    }
+
     async access() {
         let phrase = this.phrase.trim()
         this.err = ''
@@ -59,12 +63,9 @@ export default class AddMnemonic extends Vue {
                 this.handleImportSuccess()
             } catch (e) {
                 this.isLoading = false
-
-                try {
-                    if (e.message === 'WALLET ALREADY ADDED') {
-                        this.err = this.$t('keys.import_mnemonic_duplicate_err') as string
-                    }
-                } catch (e) {
+                if (e.message.includes('already')) {
+                    this.err = this.$t('keys.import_mnemonic_duplicate_err') as string
+                } else {
                     this.err = this.$t('keys.import_mnemonic_err') as string
                 }
             }

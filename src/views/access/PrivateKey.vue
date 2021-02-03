@@ -48,17 +48,6 @@ export default class PrivateKey extends Vue {
         this.isLoading = true
         let key = this.privatekey
 
-        // if ethereum private key
-
-        try {
-            let keyBuf = Buffer.from(key, 'hex')
-            // @ts-ignore
-            privateToAddress(keyBuf)
-            key = `PrivateKey-${bintools.cb58Encode(keyBuf)}`
-        } catch (e) {
-            //
-        }
-
         try {
             let res = await this.$store.dispatch('accessWalletSingleton', key)
             this.onsuccess()

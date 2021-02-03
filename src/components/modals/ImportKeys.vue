@@ -1,5 +1,5 @@
 <template>
-    <modal ref="modal" :title="title">
+    <modal ref="modal" :title="title" @beforeClose="beforeClose">
         <div class="add_key_body">
             <img src="@/assets/import_key_bg.png" class="bg" />
             <p class="explain">Add additional keys to use with your wallet.</p>
@@ -15,13 +15,13 @@
                 <v-tab key="keystore">{{ $t('keys.import_key_option2') }}</v-tab>
                 <v-tab key="priv_key">{{ $t('keys.import_key_option3') }}</v-tab>
                 <v-tab-item>
-                    <AddMnemonic @success="handleImportSuccess"></AddMnemonic>
+                    <AddMnemonic @success="handleImportSuccess" ref="mnemonic"></AddMnemonic>
                 </v-tab-item>
                 <v-tab-item>
-                    <add-key-file @success="handleImportSuccess"></add-key-file>
+                    <add-key-file @success="handleImportSuccess" ref="keyfile"></add-key-file>
                 </v-tab-item>
                 <v-tab-item>
-                    <add-key-string @success="handleImportSuccess"></add-key-string>
+                    <add-key-string @success="handleImportSuccess" ref="keyString"></add-key-string>
                 </v-tab-item>
             </v-tabs>
         </div>
@@ -49,27 +49,32 @@ interface ITab {
     },
 })
 export default class ImportKeys extends Vue {
-    isActive: boolean = false
     title: string = ''
     selectedTab: string = ''
+
+    $refs!: {
+        modal: Modal
+        keyfile: AddKeyFile
+        keyString: AddKeyString
+        mnemonic: AddMnemonic
+    }
     created() {
         this.title = this.$t('keys.import_key_title') as string
     }
 
     open() {
-        // @ts-ignore
         this.$refs.modal.open()
         this.selectedTab = 'private' // explicitly set v-model value for modal
     }
 
-    close() {
-        this.isActive = false
+    beforeClose() {
+        this.$refs.keyfile.clear()
+        this.$refs.keyString.clear()
+        this.$refs.mnemonic.clear()
     }
 
     handleImportSuccess() {
-        // @ts-ignore
         this.$refs.modal.close()
-        this.close()
         this.$store.dispatch('Notifications/add', {
             title: this.$t('keys.import_key_success_title'),
             message: this.$t('keys.import_key_success_msg'),
