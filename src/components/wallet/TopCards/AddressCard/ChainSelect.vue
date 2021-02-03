@@ -2,7 +2,7 @@
     <div class="chain_select">
         <button @click="setChain('X')" :active="chain === 'X'">X</button>
         <button @click="setChain('P')" :active="chain === 'P'">P</button>
-        <button @click="setChain('C')" :active="chain === 'C'" v-if="!isLedger">C</button>
+        <button @click="setChain('C')" :active="chain === 'C'">C</button>
     </div>
 </template>
 <script lang="ts">
@@ -16,12 +16,6 @@ import { WalletType } from '@/store/types'
 export default class ChainSelect extends Vue {
     @Model('change', { type: String }) readonly chain!: ChainAlias
 
-    //TODO: Remove after ledger support
-    get isLedger() {
-        let wallet: WalletType | null = this.$store.state.activeWallet
-        if (!wallet) return false
-        return wallet.type === 'ledger'
-    }
     setChain(val: ChainAlias) {
         this.$emit('change', val)
     }

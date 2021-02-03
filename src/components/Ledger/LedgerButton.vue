@@ -45,7 +45,7 @@ export default {
             try {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
-                let eth = new Eth(transport)
+                let eth = new Eth(transport, 'Avalanche')
                 let config = await app.getAppConfiguration()
 
                 let wallet = await LedgerWallet.fromApp(app, eth, config)

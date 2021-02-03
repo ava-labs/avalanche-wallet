@@ -56,29 +56,30 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: ILedgerAppConfig
 
-    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig) {
+    constructor(app: AppAvax, hdkey: HDKey, ethAddress: string, config: ILedgerAppConfig) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
         this.config = config
 
-        // TODO: Add actual values
-        this.ethAddress = ''
+        this.ethAddress = ethAddress.substr(2)
         this.ethBalance = new BN(0)
+        // TODO: Add actual value
         this.ethAddressBech = ''
     }
 
     static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
-        const ETH_PATH = `m/44'/60'/0/0`
+        // SHOULD BE 60
+        const ETH_PATH = `m/44'/9000'/0'/0/0`
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
-        let ethRes = await eth.getAddress(ETH_PATH)
+        let ethRes = await eth.getAddress(ETH_PATH, true, true)
         console.log(ethRes)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        return new LedgerWallet(app, hd, config)
+        return new LedgerWallet(app, hd, ethRes.address, config)
     }
 
     // Returns an array of derivation paths that need to sign this transaction
