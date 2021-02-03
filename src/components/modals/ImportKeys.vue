@@ -11,7 +11,6 @@
                 :centered="true"
                 :mobile-breakpoint="900"
             >
-                <!--                <v-tab key="private">{{$t('private_key')}}</v-tab>-->
                 <v-tab key="mnemonic">{{ $t('keys.import_key_option1') }}</v-tab>
                 <v-tab key="keystore">{{ $t('keys.import_key_option2') }}</v-tab>
                 <v-tab key="priv_key">{{ $t('keys.import_key_option3') }}</v-tab>
