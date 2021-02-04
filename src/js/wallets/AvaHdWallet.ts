@@ -97,7 +97,8 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         super(accountHdKey, false)
 
         // Derive EVM key and address
-        let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
+        // let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
+        let ethAccountKey = masterHdKey.derive("m/44'/9000'/0'/0/0")
         let ethPrivateKey = ethAccountKey.privateKey
         this.ethKey = ethPrivateKey.toString('hex')
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
@@ -111,6 +112,9 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         let cKeypair = cKeyChain.importKey(cPrivKey)
         this.ethAddressBech = cKeypair.getAddressString()
+
+        console.log('ethAddress', this.ethAddress)
+        console.log('ethAddressBech', this.ethAddressBech)
 
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')

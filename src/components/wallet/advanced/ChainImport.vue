@@ -14,14 +14,7 @@
             <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
                 {{ $t('advanced.import.submit_p') }}
             </v-btn>
-            <v-btn
-                block
-                v-if="!isLedger"
-                class="button_secondary"
-                depressed
-                @click="atomicImportC"
-                small
-            >
+            <v-btn block class="button_secondary" depressed @click="atomicImportC" small>
                 {{ $t('advanced.import.submit_c') }}
             </v-btn>
         </template>
@@ -48,21 +41,15 @@ export default class ChainImport extends Vue {
         return wallet
     }
 
-    // TODO: Remove after ledger support
-    get isLedger() {
-        if (!this.wallet) return false
-        if (this.wallet.type === 'ledger') return true
-        return false
-    }
     async atomicImportX() {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
             let txId = await this.wallet.importToXChain('P')
             // TODO: Change after ledger support
-            if (this.wallet.type !== 'ledger') {
-                let txId2 = await this.wallet.importToXChain('C')
-            }
+            // if (this.wallet.type !== 'ledger') {
+            let txId2 = await this.wallet.importToXChain('C')
+            // }
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)

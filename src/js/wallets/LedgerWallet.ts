@@ -11,6 +11,7 @@ import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 var bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
+import { importPublic, publicToAddress } from 'ethereumjs-util'
 
 import { UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
@@ -36,7 +37,13 @@ import {
     PlatformVMConstants,
 } from 'avalanche/dist/apis/platformvm'
 
-import { Credential, SigIdx, Signature } from 'avalanche/dist/common'
+import {
+    UTXOSet as EVMUTXOSet,
+    UnsignedTx as EVMUnsignedTx,
+    Tx as EvmTx,
+} from 'avalanche/dist/apis/evm'
+
+import { Credential, SigIdx, Signature, UTXOResponse } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig, WalletNameType } from '@/store/types'
@@ -56,21 +63,27 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: ILedgerAppConfig
 
-    constructor(app: AppAvax, hdkey: HDKey, ethAddress: string, config: ILedgerAppConfig) {
+    constructor(app: AppAvax, hdkey: HDKey, hdEth: HDKey, config: ILedgerAppConfig) {
         super(hdkey)
         this.app = app
         this.type = 'ledger'
         this.config = config
 
-        this.ethAddress = ethAddress.substr(2)
+        const ethKey = hdEth.derive('m/0')
+        const ethPublic = importPublic(ethKey.publicKey)
+        this.ethAddress = publicToAddress(ethPublic).toString('hex')
         this.ethBalance = new BN(0)
-        // TODO: Add actual value
-        this.ethAddressBech = ''
+        this.ethAddressBech = bintools.addressToString(
+            ava.getHRP(),
+            'C',
+            // @ts-ignore
+            hdEth.derive('m/0').pubKeyHash
+        )
     }
 
     static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
         // SHOULD BE 60
-        const ETH_PATH = `m/44'/9000'/0'/0/0`
+        const ETH_PATH = `m/44'/9000'/0'/0`
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
         let ethRes = await eth.getAddress(ETH_PATH, true, true)
         console.log(ethRes)
@@ -79,12 +92,18 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        return new LedgerWallet(app, hd, ethRes.address, config)
+        let hdEth = new HDKey()
+        // @ts-ignore
+        hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
+        // @ts-ignore
+        hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
+
+        return new LedgerWallet(app, hd, hdEth, config)
     }
 
     // Returns an array of derivation paths that need to sign this transaction
     // Used with signTransactionHash and signTransactionParsable
-    getTransactionPaths<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getTransactionPaths<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         isAVM: boolean = true
     ): { paths: string[]; isAvaxOnly: boolean } {
@@ -197,7 +216,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return bippath.fromString(`${AVA_ACCOUNT_PATH}/${chainChangePath}/${changeIdx}`)
     }
 
-    getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         paths: string[],
         sigMap: any
@@ -263,8 +282,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     // Used for non parsable transactions.
     // Ideally we wont use this function at all, but ledger is not ready yet.
     async signTransactionHash<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx | EvmTx
     >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
         let txbuff = unsignedTx.toBuffer()
         const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
@@ -455,8 +474,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async sign<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx | EvmTx
     >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
         // Check if transaction can be parsed by ledger
         let tx = unsignedTx.getTransaction()
@@ -495,9 +514,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async getEthBalance() {
-        console.error('Not implemented')
-        // let bal = await web3.eth.getBalance(this.ethAddress)
-        this.ethBalance = new BN(0)
+        let bal = await web3.eth.getBalance(this.ethAddress)
+        this.ethBalance = new BN(bal)
         return this.ethBalance
     }
 
@@ -689,8 +707,34 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async importToCChain(): Promise<string> {
-        console.error('Not implemented.')
-        return ''
+        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
+            this.ethAddressBech,
+            avm.getBlockchainID()
+        )
+        const utxoSet: EVMUTXOSet = utxoResponse.utxos
+
+        if (utxoSet.getAllUTXOs().length === 0) {
+            throw new Error('Nothing to import.')
+        }
+
+        let toAddress = '0x' + this.ethAddress
+        let ownerAddresses = [this.ethAddressBech]
+        let fromAddresses = ownerAddresses
+        let sourceChain = avm.getBlockchainID()
+
+        const unsignedTx = await cChain.buildImportTx(
+            utxoSet,
+            toAddress,
+            ownerAddresses,
+            sourceChain,
+            fromAddresses
+        )
+
+        let tx = await this.sign<EVMUnsignedTx, EvmTx>(unsignedTx)
+
+        let id = await cChain.issueTx(tx)
+
+        return id
     }
 
     async delegate(
