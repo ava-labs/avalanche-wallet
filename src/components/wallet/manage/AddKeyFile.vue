@@ -9,7 +9,6 @@
                 :placeholder="$t('keys.export_placeholder1')"
                 dense
                 outlined
-                color="#4C2E56"
                 hide-details
                 type="password"
                 v-model="pass"
@@ -22,7 +21,6 @@
                 class="addKeyBut button_primary ava_button"
                 depressed
                 block
-                color="#4C2E56"
             >
                 {{ $t('keys.import_key_button') }}
             </v-btn>
@@ -33,7 +31,7 @@
 import { Vue, Component, Ref } from 'vue-property-decorator'
 import FileInput from '@/components/misc/FileInput.vue'
 import { ImportKeyfileInput } from '@/store/types'
-import { KeyFile } from '@/js/IKeystore'
+import { AllKeyFileTypes } from '@/js/IKeystore'
 import { KEYSTORE_VERSION } from '@/js/Keystore'
 
 @Component({
@@ -68,7 +66,7 @@ export default class AddKeyFile extends Vue {
     }
 
     importKeyfile() {
-        let fileData: KeyFile
+        let fileData: AllKeyFileTypes
         this.err = null
 
         try {
@@ -79,6 +77,7 @@ export default class AddKeyFile extends Vue {
         }
 
         if (fileData.version != KEYSTORE_VERSION) {
+            // TODO: update here?
             this.err =
                 'Tried to import an old keystore version. Please update your keystore file before importing.'
             return

@@ -1,10 +1,14 @@
 <template>
-    <modal ref="modal" :title="title">
+    <modal ref="modal" :title="title" @beforeClose="beforeClose">
         <div class="export_body">
             <p class="selection_num">
                 {{ $t('keys.export_key_info', [wallets.length]) }}
             </p>
-            <export-wallet @success="handleExportSuccess" :wallets="wallets"></export-wallet>
+            <export-wallet
+                @success="handleExportSuccess"
+                :wallets="wallets"
+                ref="export"
+            ></export-wallet>
         </div>
     </modal>
 </template>
@@ -26,10 +30,18 @@ export default class ExportKeys extends Vue {
     isActive: boolean = false
     title: string = 'Export Keys'
 
+    $refs!: {
+        modal: Modal
+        export: ExportWallet
+    }
+
     @Prop() wallets!: AvaHdWallet[]
 
+    beforeClose() {
+        this.$refs.export.clear()
+    }
+
     open() {
-        // @ts-ignore
         this.$refs.modal.open()
     }
 

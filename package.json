@@ -1,10 +1,10 @@
 {
     "name": "wallet",
+    "private": true,
     "version": "0.1.4",
     "engines": {
-        "node": "12.14.1"
+        "node": ">=15.6.0"
     },
-    "private": true,
     "scripts": {
         "build": "vue-cli-service build",
         "cypress": "cypress run",
@@ -13,25 +13,8 @@
         "release": "release-it",
         "serve": "vue-cli-service serve",
         "test_watch": "jest --verbose --watch ./tests",
+        "test_debug": "node --inspect-brk node_modules/.bin/jest ./tests --runInBand",
         "test": "jest --verbose ./tests"
-    },
-    "jest": {
-        "moduleFileExtensions": [
-            "js",
-            "ts",
-            "json",
-            "vue"
-        ],
-        "transform": {
-            ".*\\.(vue)$": "vue-jest",
-            "^.+\\.tsx?$": "ts-jest"
-        },
-        "moduleNameMapper": {
-            "@/(.*)$": "<rootDir>/src/$1"
-        },
-        "testURL": "https://localhost/",
-        "testEnvironment": "jsdom",
-        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
     },
     "dependencies": {
         "@avalabs/vue_components": "0.7.4",
@@ -86,6 +69,7 @@
         "release-it": "^14.2.2",
         "roboto-fontface": "0.10.0",
         "serve": "11.3.2",
+        "uniqid": "^5.2.0",
         "uuid": "3.4.0",
         "vue": "2.6.12",
         "vue-class-component": "7.2.3",

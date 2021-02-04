@@ -9,7 +9,6 @@
                     type="submit"
                     :loading="isLoading"
                     depressed
-                    color="#4C2E56"
                     class="ava_button button_primary submit"
                 >
                     {{ $t('modal.activateWallet.submit') }}
@@ -28,11 +27,24 @@ import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
-import { KeyFile } from '@/js/IKeystore'
-import { readKeyFile } from '@/js/Keystore'
+import {
+    AllKeyFileDecryptedTypes,
+    AllKeyFileTypes,
+    KeyFileDecryptedV6,
+    KeystoreFileKeyType,
+} from '@/js/IKeystore'
+import {
+    extractKeysFromDecryptedFile,
+    KEYSTORE_VERSION,
+    makeKeyfile,
+    readKeyFile,
+} from '@/js/Keystore'
 import { avm } from '@/AVA'
 import { keyToKeypair } from '@/helpers/helper'
 import * as bip39 from 'bip39'
+import { AccessWalletMultipleInput } from '@/store/types'
+import AvaHdWallet from '../../../js/wallets/AvaHdWallet'
+import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 @Component({
     components: { Modal },
 })
@@ -65,36 +77,30 @@ export default class RememberWalletModal extends Vue {
         if (!w) return
 
         let pass = this.password
-        let fileData: KeyFile = JSON.parse(w)
-        let version = fileData.version
+        let fileData: AllKeyFileTypes = JSON.parse(w)
 
         try {
-            let rawData = await readKeyFile(fileData, pass)
-            let keys = rawData.keys
+            let keyFile: AllKeyFileDecryptedTypes = await readKeyFile(fileData, pass)
             this.isLoading = false
-            let chainID = avm.getBlockchainAlias()
 
-            let mnemonics: string[]
-            // Convert old version private keys to mnemonic phrases
-            if (['2.0', '3.0', '4.0'].includes(version)) {
-                mnemonics = keys.map((key) => {
-                    // Private keys from the keystore file do not have the PrivateKey- prefix
-                    let pk = 'PrivateKey-' + key.key
-                    let keypair = keyToKeypair(pk, chainID)
+            let accessInput = extractKeysFromDecryptedFile(keyFile)
 
-                    let keyBuf = keypair.getPrivateKey()
-                    let keyHex: string = keyBuf.toString('hex')
-                    let paddedKeyHex = keyHex.padStart(64, '0')
-                    let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
+            await this.$store.dispatch('accessWalletMultiple', {
+                keys: accessInput,
+                activeIndex: keyFile.activeIndex,
+            })
 
-                    return mnemonic
-                })
-            } else {
-                // New versions encrypt the mnemonic so we dont have to do anything
-                mnemonics = keys.map((key) => key.key)
+            if (keyFile.version !== KEYSTORE_VERSION) {
+                let wallets = this.$store.state.wallets as AvaHdWallet[]
+                let wallet = this.$store.state.activeWallet as AvaHdWallet | SingletonWallet | null
+
+                if (!wallet) throw new Error('No active wallet.')
+                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
+
+                let file = await makeKeyfile(wallets, pass, activeIndex)
+                let fileString = JSON.stringify(file)
+                localStorage.setItem('w', fileString)
             }
-
-            await this.$store.dispatch('accessWalletMultiple', mnemonics)
 
             // These are not volatile wallets since they are loaded from storage
             this.$store.state.volatileWallets = []

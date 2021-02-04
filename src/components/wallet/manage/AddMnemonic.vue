@@ -5,10 +5,10 @@
         <v-btn
             :disabled="!canSubmit"
             :loading="isLoading"
+            @click="access"
+            class="addKeyBut button_primary ava_button"
             depressed
             block
-            @click="access"
-            class="but_submit"
         >
             {{ $t('keys.import_key_button') }}
         </v-btn>
@@ -29,7 +29,7 @@ export default class AddMnemonic extends Vue {
     isLoading: boolean = false
 
     errCheck() {
-        let phrase = this.phrase
+        let phrase = this.phrase.trim()
         let words = phrase.split(' ')
 
         // not a valid key phrase
@@ -39,7 +39,18 @@ export default class AddMnemonic extends Vue {
             return false
         }
 
+        if (!bip39.validateMnemonic(phrase)) {
+            this.err = 'Not a valid mnemonic phrase.'
+            return false
+        }
+
         return true
+    }
+
+    clear() {
+        this.phrase = ''
+        this.err = ''
+        this.isLoading = false
     }
 
     async access() {
@@ -54,12 +65,16 @@ export default class AddMnemonic extends Vue {
 
         setTimeout(async () => {
             try {
-                await this.$store.dispatch('addWallet', phrase)
+                await this.$store.dispatch('addWalletMnemonic', phrase)
                 this.isLoading = false
                 this.handleImportSuccess()
             } catch (e) {
                 this.isLoading = false
-                this.err = 'Invalid key phrase.'
+                if (e.message.includes('already')) {
+                    this.err = this.$t('keys.import_mnemonic_duplicate_err') as string
+                } else {
+                    this.err = this.$t('keys.import_mnemonic_err') as string
+                }
             }
         }, 500)
     }
