@@ -34,6 +34,7 @@ export type ChainAlias = 'X' | 'P'
 
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
+    id: string // a random string assigned as ID to distinguish between wallets
     type: WalletNameType
     chainId: string
     utxoset: UTXOSet

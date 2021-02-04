@@ -1,36 +1,20 @@
 {
     "name": "wallet",
-    "version": "0.1.0",
-    "engines": {
-        "node": "12.14.1"
-    },
     "private": true,
+    "version": "0.1.4",
+    "engines": {
+        "node": ">=15.6.0"
+    },
     "scripts": {
         "build": "vue-cli-service build",
         "cypress": "cypress run",
         "format": "prettier '**/*.{js,ts,vue}' --write",
         "lint": "vue-cli-service lint",
+        "release": "release-it",
         "serve": "vue-cli-service serve",
         "test_watch": "jest --verbose --watch ./tests",
+        "test_debug": "node --inspect-brk node_modules/.bin/jest ./tests --runInBand",
         "test": "jest --verbose ./tests"
-    },
-    "jest": {
-        "moduleFileExtensions": [
-            "js",
-            "ts",
-            "json",
-            "vue"
-        ],
-        "transform": {
-            ".*\\.(vue)$": "vue-jest",
-            "^.+\\.tsx?$": "ts-jest"
-        },
-        "moduleNameMapper": {
-            "@/(.*)$": "<rootDir>/src/$1"
-        },
-        "testURL": "https://localhost/",
-        "testEnvironment": "jsdom",
-        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
     },
     "dependencies": {
         "@avalabs/vue_components": "0.7.4",
@@ -83,8 +67,10 @@
         "qrcode": "1.4.4",
         "reflect-metadata": "0.1.13",
         "register-service-worker": "1.6.2",
+        "release-it": "^14.2.2",
         "roboto-fontface": "0.10.0",
         "serve": "11.3.2",
+        "uniqid": "^5.2.0",
         "uuid": "3.4.0",
         "vue": "2.6.12",
         "vue-class-component": "7.2.3",
@@ -114,7 +100,6 @@
         "@vue/eslint-config-typescript": "^4.0.0",
         "@vue/test-utils": "^1.0.3",
         "babel-core": "^7.0.0-bridge.0",
-        "canvas": "^2.6.1",
         "cypress": "^4.12.1",
         "cypress-file-upload": "^4.0.7",
         "deepmerge": "^4.2.2",

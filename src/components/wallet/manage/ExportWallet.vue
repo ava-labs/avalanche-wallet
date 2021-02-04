@@ -58,6 +58,13 @@ export default class ExportWallet extends Vue {
         return this.pass.length >= 9 && this.pass === this.passConfirm ? true : false
     }
 
+    clear() {
+        this.isLoading = false
+        this.pass = ''
+        this.passConfirm = ''
+        this.err = ''
+    }
+
     async download() {
         this.isLoading = true
         this.err = ''

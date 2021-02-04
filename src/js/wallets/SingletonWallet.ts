@@ -38,8 +38,10 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
+var uniqid = require('uniqid')
 
 class SingletonWallet implements AvaWalletCore, UnsafeWallet {
+    id: string
     keyChain: AVMKeyChain
     keyPair: AVMKeyPair
     utxoset: AVMUTXOSet
@@ -67,6 +69,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     isFetchUtxos: boolean
     isInit: boolean
     constructor(pk: string) {
+        this.id = uniqid()
         this.key = pk
 
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()

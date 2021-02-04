@@ -10,7 +10,11 @@
             :phrase="mnemonicPhrase"
             ref="modal"
         ></mnemonic-phrase>
-        <HdDerivationListModal :wallet="wallet" ref="modal_hd"></HdDerivationListModal>
+        <HdDerivationListModal
+            :wallet="wallet"
+            ref="modal_hd"
+            v-if="isHDWallet"
+        ></HdDerivationListModal>
         <PrivateKey
             v-if="walletType === 'singleton'"
             :privateKey="privateKey"
@@ -197,6 +201,10 @@ export default class KeyRow extends Vue {
 
     get walletType(): WalletNameType {
         return this.wallet.type
+    }
+
+    get isHDWallet() {
+        return ['mnemonic', 'ledger'].includes(this.walletType)
     }
     get mnemonicPhrase(): string {
         if (this.walletType !== 'mnemonic') return '?'
