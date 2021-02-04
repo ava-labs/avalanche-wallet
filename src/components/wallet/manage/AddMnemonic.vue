@@ -29,7 +29,7 @@ export default class AddMnemonic extends Vue {
     isLoading: boolean = false
 
     errCheck() {
-        let phrase = this.phrase
+        let phrase = this.phrase.trim()
         let words = phrase.split(' ')
 
         // not a valid key phrase
@@ -39,11 +39,18 @@ export default class AddMnemonic extends Vue {
             return false
         }
 
+        if (!bip39.validateMnemonic(phrase)) {
+            this.err = 'Not a valid mnemonic phrase.'
+            return false
+        }
+
         return true
     }
 
     clear() {
         this.phrase = ''
+        this.err = ''
+        this.isLoading = false
     }
 
     async access() {

@@ -68,9 +68,9 @@ export default class ImportKeys extends Vue {
     }
 
     beforeClose() {
-        this.$refs.keyfile.clear()
-        this.$refs.keyString.clear()
-        this.$refs.mnemonic.clear()
+        this.$refs.keyfile?.clear()
+        this.$refs.keyString?.clear()
+        this.$refs.mnemonic?.clear()
     }
 
     handleImportSuccess() {
