@@ -41,6 +41,7 @@ import {
     UTXOSet as EVMUTXOSet,
     UnsignedTx as EVMUnsignedTx,
     Tx as EvmTx,
+    EVMConstants,
 } from 'avalanche/dist/apis/evm'
 
 import { Credential, SigIdx, Signature, UTXOResponse } from 'avalanche/dist/common'
@@ -51,7 +52,7 @@ import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
-import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
+import { buildExportTransaction, ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
@@ -110,7 +111,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
-        let ins = tx.getIns()
+        let ins = tx.getIns ? tx.getIns() : null
         let operations: TransferableOperation[] = []
 
         // Try to get operations, it will fail if there are none, ignore and continue
@@ -121,7 +122,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         let items = ins
-        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+        if (
+            txType === AVMConstants.IMPORTTX ||
+            txType === PlatformVMConstants.IMPORTTX ||
+            txType === EVMConstants.IMPORTTX
+        ) {
             items = (tx as ImportTx).getImportInputs()
         }
 
@@ -225,10 +230,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
-        let ins = tx.getIns()
+        let ins = tx.getIns ? tx.getIns() : null
 
         let items = ins
-        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+        if (
+            txType === AVMConstants.IMPORTTX ||
+            txType === PlatformVMConstants.IMPORTTX ||
+            txType === EVMConstants.IMPORTTX
+        ) {
             items = (tx as ImportTx).getImportInputs()
         }
 
@@ -473,6 +482,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return messages
     }
 
+    // need to add destination chain param to know if it's C Chain because obsidian
+    // app does not support x => c and p => c parsing txs
     async sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
         SignedTx extends AVMTx | PlatformTx | EvmTx
@@ -490,6 +501,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let isParsableType = txType in parseableTxs && isAvaxOnly
 
         let signedTx
+        // FIXME: obsidian does not parse c chain txs
         if (canLedgerParse && isParsableType) {
             signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(
                 unsignedTx,
@@ -581,29 +593,42 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return txId
     }
 
-    async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string> {
+    async chainTransfer(
+        amt: BN,
+        sourceChain: string = 'X',
+        destinationChain: ChainIdType
+    ): Promise<string> {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
+        if (destinationChain === 'C') {
+            // C Chain imports/exports do not have a fee
+            amtFee = amt
+        }
         // EXPORT
-        let pId = pChain.getBlockchainID()
         let xId = avm.getBlockchainID()
-        let txId
 
         if (sourceChain === 'X') {
-            let toAddress = this.platformHelper.getCurrentAddress()
-            let xChangeAddr = this.internalHelper.getCurrentAddress()
-            let fromAddrs = this.getDerivedAddresses()
-
-            let exportTx = await avm.buildExportTx(
+            let destinationAddr
+            if (destinationChain === 'P') {
+                destinationAddr = this.getCurrentPlatformAddress()
+            } else {
+                // C Chain
+                // todo: replace with shared wallet class method
+                destinationAddr = this.ethAddressBech
+            }
+            let fromAddresses = this.getAllAddressesX()
+            let changeAddress = this.getChangeAddress()
+            let exportTx = await buildExportTransaction(
+                sourceChain,
+                destinationChain,
                 this.utxoset,
+                fromAddresses,
+                destinationAddr,
                 amtFee,
-                pId,
-                [toAddress],
-                fromAddrs,
-                [xChangeAddr]
+                changeAddress
             )
-            let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
+            let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx as AVMUnsignedTx)
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
@@ -732,7 +757,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let tx = await this.sign<EVMUnsignedTx, EvmTx>(unsignedTx)
 
-        let id = await cChain.issueTx(tx)
+        let id = await cChain.issueTx(tx.toString())
 
         return id
     }
