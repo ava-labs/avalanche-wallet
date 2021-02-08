@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isLedger">
+    <div>
         <h4>{{ $t('transfer.source_chain.title') }}</h4>
         <div class="chain_select">
             <div :active="formType === 'X'" @click="set('X')" class="hover_border">
@@ -28,13 +28,6 @@ export default class ChainInput extends Vue {
 
     get wallet() {
         return this.$store.state.activeWallet
-    }
-
-    // TODO: Remove after ledger support
-    get isLedger() {
-        let wallet = this.wallet
-        if (!wallet) return false
-        return wallet.type === 'ledger'
     }
 }
 </script>

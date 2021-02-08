@@ -50,10 +50,18 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
-import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH } from './AvaHdWallet'
+import { AVA_ACCOUNT_PATH /*, ETH_ACCOUNT_PATH */ } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
-import { buildExportTransaction, ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
+import {
+    buildExportTransaction,
+    ParseableAvmTxEnum,
+    ParseablePlatformEnum,
+    ParseableEvmTxEnum,
+} from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
+
+// TODO: LEDGER! USE CORRECT PATH!
+const ETH_ACCOUNT_PATH = `m/44'/9000'/0'/0`
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -83,10 +91,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
-        // SHOULD BE 60
-        const ETH_PATH = `m/44'/9000'/0'/0`
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
-        let ethRes = await eth.getAddress(ETH_PATH, true, true)
+        let ethRes = await eth.getAddress(ETH_ACCOUNT_PATH, true, true)
         console.log(ethRes)
 
         let hd = new HDKey()
@@ -111,6 +117,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
+        // @ts-ignore
         let ins = tx.getIns ? tx.getIns() : null
         let operations: TransferableOperation[] = []
 
@@ -192,10 +199,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return bip32Paths
     }
 
-    getChangeBipPath<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getChangeBipPath<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
-        chainId: ChainAlias
+        chainId: ChainIdType
     ) {
+        if (chainId === 'C') {
+            return bippath.fromString(`${ETH_ACCOUNT_PATH}/0/0`)
+        }
+
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
@@ -230,6 +241,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
+        // @ts-ignore
         let ins = tx.getIns ? tx.getIns() : null
 
         let items = ins
@@ -329,13 +341,16 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     // Used for signing transactions that are parsable
     async signTransactionParsable<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx | EvmTx
+    >(unsignedTx: UnsignedTx, paths: string[], chainId: ChainIdType): Promise<SignedTx> {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
-        let chainId: ChainAlias = isAVM ? 'X' : 'P'
-        let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
+        let parseableTxs = {
+            X: ParseableAvmTxEnum,
+            P: ParseablePlatformEnum,
+            C: ParseableEvmTxEnum,
+        }[chainId]
 
         let title = `Sign ${parseableTxs[txType]}`
 
@@ -344,7 +359,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         let txbuff = unsignedTx.toBuffer()
         let changePath = this.getChangeBipPath(unsignedTx, chainId)
-        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, isAVM, changePath)
+        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, chainId, changePath)
 
         try {
             store.commit('Ledger/openModal', {
@@ -364,11 +379,18 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let creds = this.getCredentials<UnsignedTx>(unsignedTx, paths, sigMap)
 
             let signedTx
-            if (isAVM) {
-                signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, creds)
-            } else {
-                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, creds)
+            switch (chainId) {
+                case 'X':
+                    signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, creds)
+                    break
+                case 'P':
+                    signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, creds)
+                    break
+                case 'C':
+                    signedTx = new EvmTx(unsignedTx as EVMUnsignedTx, creds)
+                    break
             }
+
             return signedTx as SignedTx
         } catch (e) {
             store.commit('Ledger/closeModal')
@@ -410,17 +432,22 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
-    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
-        isAVM: boolean = true,
+        chainId: ChainIdType,
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
 
-        let tx = unsignedTx.getTransaction()
+        if (chainId === 'C') {
+            // TODO: LEDGER! C chain messages
+            return []
+        }
+
+        let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
         let txType = tx.getTxType()
         let outs = tx.getOuts()
-        let outputMessages = this.getOutputMessages(outs, isAVM, changePath)
+        let outputMessages = this.getOutputMessages(outs, chainId === 'X', changePath)
 
         // regular output messages, if any
         messages.push(...outputMessages)
@@ -428,7 +455,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
             outs = (tx as ExportTx).getExportOutputs()
             // export output messages, if any
-            outputMessages = this.getOutputMessages(outs, isAVM, changePath)
+            outputMessages = this.getOutputMessages(outs, chainId === 'X', changePath)
             messages.push(...outputMessages)
         }
 
@@ -485,13 +512,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     // need to add destination chain param to know if it's C Chain because obsidian
     // app does not support x => c and p => c parsing txs
     async sign<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx | EvmTx
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx
     >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
         // Check if transaction can be parsed by ledger
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
-        let chainId = isAVM ? 'X' : 'P'
+        let chainId: ChainIdType = isAVM ? 'X' : 'P'
 
         let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
 
@@ -501,12 +528,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let isParsableType = txType in parseableTxs && isAvaxOnly
 
         let signedTx
-        // FIXME: obsidian does not parse c chain txs
         if (canLedgerParse && isParsableType) {
             signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(
                 unsignedTx,
                 paths,
-                isAVM
+                chainId
             )
         } else {
             signedTx = await this.signTransactionHash<UnsignedTx, SignedTx>(
@@ -647,6 +673,29 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
             let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
             return pChain.issueTx(tx)
+        } else if (sourceChain === 'C') {
+            let destinationAddr = this.getCurrentAddress()
+            let fromAddresses = [this.ethAddress]
+            let changeAddress = this.ethAddressBech
+            let utxos = this.getPlatformUTXOSet()
+
+            let exportTx = (await buildExportTransaction(
+                sourceChain,
+                destinationChain,
+                utxos,
+                fromAddresses,
+                destinationAddr,
+                amtFee,
+                changeAddress,
+                this.ethAddressBech
+            )) as EVMUnsignedTx
+
+            let tx = (await this.signTransactionParsable(
+                exportTx,
+                [`${ETH_ACCOUNT_PATH}/0/0`],
+                'C'
+            )) as EvmTx
+            return cChain.issueTx(tx)
         } else {
             throw 'Invalid source chain.'
         }
@@ -755,9 +804,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             fromAddresses
         )
 
-        let tx = await this.sign<EVMUnsignedTx, EvmTx>(unsignedTx)
+        let tx = (await this.signTransactionParsable(
+            unsignedTx,
+            [`${ETH_ACCOUNT_PATH}/0/0`],
+            'C'
+        )) as EvmTx
 
-        let id = await cChain.issueTx(tx.toString())
+        let id = await cChain.issueTx(tx)
 
         return id
     }
@@ -809,7 +862,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             [rewardAddress] // reward address
         )
 
-        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
+        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx)
 
         // Update UTXOS
         setTimeout(async () => {
@@ -873,7 +926,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // console.log(unsignedTx.serialize('display'));
         // console.log(unsignedTx.toBuffer().toString('hex'))
 
-        let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
+        let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx)
 
         // console.log(tx.toBuffer().toString('hex'));
         // console.log((tx.serialize()))
