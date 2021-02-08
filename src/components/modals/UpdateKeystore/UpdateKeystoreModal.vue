@@ -7,6 +7,7 @@
                 @success="success"
                 :is-desc="false"
                 class="export_wallet"
+                ref="export"
                 :wallets="allWallets"
             ></ExportWallet>
             <v-btn v-else class="ava_button button_primary" @click="logout">
@@ -36,6 +37,11 @@ import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 export default class MnemonicPhrase extends Vue {
     isSuccess: boolean = false
 
+    $refs!: {
+        export: ExportWallet
+        modal: Modal
+    }
+
     @Prop({ default: '' }) phrase!: string
 
     open(): void {
@@ -48,6 +54,7 @@ export default class MnemonicPhrase extends Vue {
     }
 
     success() {
+        this.$refs.export.clear()
         this.isSuccess = true
     }
 

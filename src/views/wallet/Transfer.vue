@@ -84,7 +84,6 @@
                             <v-btn
                                 depressed
                                 class="button_primary"
-                                color="#4C2E56"
                                 :loading="isAjax"
                                 :ripple="false"
                                 @click="submit"
@@ -116,7 +115,6 @@
                                 depressed
                                 style="margin-top: 14px"
                                 class="button_primary"
-                                color="#4C2E56"
                                 :ripple="false"
                                 @click="startAgain"
                                 block
