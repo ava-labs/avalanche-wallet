@@ -4,7 +4,7 @@
         <p>{{ $t('advanced.import.desc') }}</p>
         <div v-if="isSuccess" class="is_success">
             <label>Tx ID</label>
-            <p>{{ txId }}</p>
+            <p class="tx_id">{{ txId }}</p>
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
@@ -134,5 +134,9 @@ export default class ChainImport extends Vue {
 .spinner {
     color: var(--primary-color) !important;
     margin: 14px auto !important;
+}
+
+.tx_id {
+    word-break: break-all;
 }
 </style>

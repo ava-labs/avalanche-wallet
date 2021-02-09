@@ -93,11 +93,11 @@ export default class Form extends Vue {
     }
 
     get destinationOptions(): ChainIdType[] {
-        if (this.sourceChain === 'X') {
-            return ['P', 'C']
-        } else {
-            return ['X']
-        }
+        return {
+            X: ['P', 'C'],
+            P: ['X', 'C'],
+            C: ['X', 'P'],
+        }[this.sourceChain] as ChainIdType[]
     }
 
     @Watch('destinationOptions')
