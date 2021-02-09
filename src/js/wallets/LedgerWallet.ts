@@ -40,8 +40,10 @@ import {
 import {
     UTXOSet as EVMUTXOSet,
     UnsignedTx as EVMUnsignedTx,
+    ExportTx as EVMExportTx,
     Tx as EvmTx,
     EVMConstants,
+    EVMInput,
 } from 'avalanche/dist/apis/evm'
 
 import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
@@ -116,12 +118,20 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let txType = tx.getTxType()
 
         // @ts-ignore
-        let ins = tx.getIns ? tx.getIns() : null
+        let ins = tx.getIns ? tx.getIns() : []
         let operations: TransferableOperation[] = []
+        let evmInputs: EVMInput[] = []
 
         // Try to get operations, it will fail if there are none, ignore and continue
         try {
             operations = (tx as OperationTx).getOperations()
+        } catch (e) {
+            console.log(e)
+        }
+
+        // Try to get evm inputs, it will fail if there are none, ignore and continue
+        try {
+            evmInputs = (tx as EVMExportTx).getInputs()
         } catch (e) {
             console.log(e)
         }
@@ -167,6 +177,23 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         for (let i = 0; i < operations.length; i++) {
             let op = operations[i]
             let sigidxs: SigIdx[] = op.getOperation().getSigIdxs()
+            let sources = sigidxs.map((sigidx) => sigidx.getSource())
+            let addrs: string[] = sources.map((source) => {
+                return bintools.addressToString(hrp, chainId, source)
+            })
+
+            for (let j = 0; j < addrs.length; j++) {
+                let srcAddr = addrs[j]
+                let pathStr = this.getPathFromAddress(srcAddr) // returns change/index
+
+                paths.push(pathStr)
+            }
+        }
+
+        // Do the Same for evm inputs, if there are any...
+        for (let i = 0; i < evmInputs.length; i++) {
+            let evmInput = evmInputs[i]
+            let sigidxs: SigIdx[] = evmInput.getSigIdxs()
             let sources = sigidxs.map((sigidx) => sigidx.getSource())
             let addrs: string[] = sources.map((source) => {
                 return bintools.addressToString(hrp, chainId, source)
@@ -239,7 +266,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let txType = tx.getTxType()
 
         // @ts-ignore
-        let ins = tx.getIns ? tx.getIns() : null
+        let ins = tx.getIns ? tx.getIns() : []
+        let operations: TransferableOperation[] = []
+        let evmInputs: EVMInput[] = []
 
         let items = ins
         if (
@@ -250,11 +279,16 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             items = (tx as ImportTx).getImportInputs()
         }
 
-        let operations: TransferableOperation[] = []
-
         // Try to get operations, it will fail if there are none, ignore and continue
         try {
             operations = (tx as OperationTx).getOperations()
+        } catch (e) {
+            console.log(e)
+        }
+
+        // Try to get evm inputs, it will fail if there are none, ignore and continue
+        try {
+            evmInputs = (tx as EVMExportTx).getInputs()
         } catch (e) {
             console.log(e)
         }
@@ -280,6 +314,24 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let op = operations[i].getOperation()
             const sigidxs: SigIdx[] = op.getSigIdxs()
             const cred: Credential = SelectCredentialClass(op.getCredentialID())
+
+            for (let j = 0; j < sigidxs.length; j++) {
+                let pathIndex = items.length + i + j
+                let pathStr = paths[pathIndex]
+
+                let sigRaw = sigMap.get(pathStr)
+                let sigBuff = Buffer.from(sigRaw)
+                const sig: Signature = new Signature()
+                sig.fromBuffer(sigBuff)
+                cred.addSignature(sig)
+            }
+            creds.push(cred)
+        }
+
+        for (let i = 0; i < evmInputs.length; i++) {
+            let evmInput = evmInputs[i]
+            const sigidxs: SigIdx[] = evmInput.getSigIdxs()
+            const cred: Credential = SelectCredentialClass(evmInput.getCredentialID())
 
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = items.length + i + j
@@ -692,7 +744,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
             return pChain.issueTx(tx)
         } else if (sourceChain === 'C') {
-            // TODO: LEDGER! get correct destinationAddr
             let destinationAddr = this.getCurrentAddress()
             let fromAddresses = [this.ethAddress]
             let changeAddress = this.ethAddressBech
@@ -825,9 +876,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         let tx = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
 
-        let id = await cChain.issueTx(tx)
+        store.commit('Ledger/closeModal')
 
-        return id
+        return cChain.issueTx(tx)
     }
 
     async delegate(
