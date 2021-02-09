@@ -95,8 +95,8 @@ export default class Form extends Vue {
     get destinationOptions(): ChainIdType[] {
         return {
             X: ['P', 'C'],
-            P: ['X', 'C'],
-            C: ['X', 'P'],
+            P: ['X'],
+            C: ['X'],
         }[this.sourceChain] as ChainIdType[]
     }
 

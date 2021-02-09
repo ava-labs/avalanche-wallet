@@ -91,7 +91,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
-        let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
+        let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, false, true)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
@@ -151,14 +151,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
             let sigidxs: SigIdx[] = item.getInput().getSigIdxs()
             let sources = sigidxs.map((sigidx) => sigidx.getSource())
-            console.log(sources)
             let addrs: string[] = sources.map((source) => {
                 return bintools.addressToString(hrp, chainId, source)
             })
 
             for (let j = 0; j < addrs.length; j++) {
                 let srcAddr = addrs[j]
-                console.log('srcAddr', srcAddr)
                 let pathStr = this.getPathFromAddress(srcAddr) // returns change/index
 
                 paths.push(pathStr)
