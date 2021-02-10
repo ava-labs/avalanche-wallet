@@ -11,7 +11,7 @@ import LedgerBlock from '@/components/modals/LedgerBlock'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
 import Eth from '@ledgerhq/hw-app-eth'
-import { AVA_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
+import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 
 export default {
     components: {
@@ -27,8 +27,17 @@ export default {
         isLoading(val) {
             if (val) {
                 this.$store.commit('Ledger/openModal', {
-                    title: 'Get extended public key',
-                    info: AVA_ACCOUNT_PATH,
+                    title: 'Provide Public Keys',
+                    messages: [
+                        {
+                            title: 'Derivation Path',
+                            value: AVA_ACCOUNT_PATH,
+                        },
+                        {
+                            title: 'Derivation Path',
+                            value: LEDGER_ETH_ACCOUNT_PATH,
+                        },
+                    ],
                 })
             } else {
                 this.$store.commit('Ledger/closeModal')

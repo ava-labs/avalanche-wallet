@@ -55,7 +55,7 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
-import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH } from './AvaHdWallet'
+import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
 import {
     buildExportTransaction,
@@ -65,7 +65,6 @@ import {
 } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
-const LEDGER_ETH_ACCOUNT_PATH = ETH_ACCOUNT_PATH + '/0/0'
 const isOdd = (str: string) => str.length % 2 !== 0
 const toHex = (value: any) => {
     const hex = new BN(value).toString(16)
@@ -103,7 +102,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
-        let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, false, true)
+        let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
