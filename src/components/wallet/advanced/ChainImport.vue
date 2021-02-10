@@ -44,14 +44,22 @@ export default class ChainImport extends Vue {
     async atomicImportX() {
         this.beforeSubmit()
         if (!this.wallet) return
+
+        // Import from P
         try {
             let txId = await this.wallet.importToXChain('P')
-            // TODO: Change after ledger support
-            // if (this.wallet.type !== 'ledger') {
-            let txId2 = await this.wallet.importToXChain('C')
-            // }
             this.onSuccess(txId)
         } catch (e) {
+            if (this.isSuccess) return
+            this.onError(e)
+        }
+
+        // Import from C
+        try {
+            let txId2 = await this.wallet.importToXChain('C')
+            this.onSuccess(txId2)
+        } catch (e) {
+            if (this.isSuccess) return
             this.onError(e)
         }
     }
@@ -137,6 +145,7 @@ export default class ChainImport extends Vue {
 }
 
 .tx_id {
+    font-size: 13px;
     word-break: break-all;
 }
 </style>
