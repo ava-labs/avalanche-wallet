@@ -7,7 +7,7 @@ This is the frontend Vue.js application for the Avalanche (AVAX) Wallet.
 -   Yarn (https://classic.yarnpkg.com/en/docs/install/)
 -   Recent version of npm (6.13.4)
 -   Node v12.14.1
--   Gecko, Avalanche client in Golang (https://github.com/ava-labs/gecko)
+-   Gecko, Avalanche client in Golang (https://github.com/ava-labs/avalanchego)
 
 ## Installation
 
