@@ -370,7 +370,6 @@ export default class ChainTransfer extends Vue {
     // STEP 3
     async chainImport() {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
-
         let importTxId
         try {
             if (this.targetChain === 'P') {
