@@ -4,7 +4,7 @@
         <p>{{ $t('advanced.import.desc') }}</p>
         <div v-if="isSuccess" class="is_success">
             <label>Tx ID</label>
-            <p>{{ txId }}</p>
+            <p style="word-break: break-all; font-size: 13px">{{ txId }}</p>
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
@@ -57,14 +57,25 @@ export default class ChainImport extends Vue {
     async atomicImportX() {
         this.beforeSubmit()
         if (!this.wallet) return
+
+        // Import from P
         try {
             let txId = await this.wallet.importToXChain('P')
+            this.onSuccess(txId)
+        } catch (e) {
+            if (this.isSuccess) return
+            this.onError(e)
+        }
+
+        // Import from C
+        try {
             // TODO: Change after ledger support
             if (this.wallet.type !== 'ledger') {
                 let txId2 = await this.wallet.importToXChain('C')
+                this.onSuccess(txId2)
             }
-            this.onSuccess(txId)
         } catch (e) {
+            if (this.isSuccess) return
             this.onError(e)
         }
     }
