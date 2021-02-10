@@ -4,6 +4,9 @@ import AppAvax from '@obsidiansystems/hw-app-avalanche'
 //@ts-ignore
 import Eth from '@ledgerhq/hw-app-eth'
 
+import EthereumjsCommon from '@ethereumjs/common'
+import { Transaction } from '@ethereumjs/tx'
+
 import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
@@ -11,7 +14,7 @@ import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 var bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
-import { importPublic, publicToAddress } from 'ethereumjs-util'
+import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
 
 import { UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
@@ -63,9 +66,15 @@ import {
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
 const LEDGER_ETH_ACCOUNT_PATH = ETH_ACCOUNT_PATH + '/0/0'
+const isOdd = (str: string) => str.length % 2 !== 0
+const toHex = (value: any) => {
+    const hex = new BN(value).toString(16)
+    return isOdd(hex) ? `0x0${hex}` : `0x${hex}`
+}
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
+    ethApp: Eth
     type: WalletNameType
 
     ethAddress: string
@@ -73,9 +82,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: ILedgerAppConfig
 
-    constructor(app: AppAvax, hdkey: HDKey, hdEth: HDKey, config: ILedgerAppConfig) {
+    constructor(app: AppAvax, ethApp: Eth, hdkey: HDKey, hdEth: HDKey, config: ILedgerAppConfig) {
         super(hdkey)
         this.app = app
+        this.ethApp = ethApp
         this.type = 'ledger'
         this.config = config
 
@@ -105,7 +115,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // @ts-ignore
         hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
 
-        return new LedgerWallet(app, hd, hdEth, config)
+        return new LedgerWallet(app, eth, hd, hdEth, config)
     }
 
     // Returns an array of derivation paths that need to sign this transaction
@@ -1051,8 +1061,53 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return await avm.issueTx(signed)
     }
     async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
-        console.error('Not available yet.')
-        return 'NOT AVAILABLE'
+        const nonce = await web3.eth.getTransactionCount(this.ethAddress)
+        const chainId = await web3.eth.getChainId()
+        const networkId = await web3.eth.net.getId()
+        const chainParams = {
+            common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+        }
+        const partialTxParams = {
+            to,
+            nonce: toHex(nonce),
+            gasPrice: toHex(gasPrice),
+            gasLimit: toHex(gasLimit),
+            value: toHex(amount),
+        }
+
+        const unsignedTx = Transaction.fromTxData({ ...partialTxParams }, chainParams)
+
+        const rawUnsignedTx = rlp.encode([
+            bnToRlp(unsignedTx.nonce),
+            bnToRlp(unsignedTx.gasPrice),
+            bnToRlp(unsignedTx.gasLimit),
+            unsignedTx.to !== undefined ? unsignedTx.to.buf : Buffer.from([]),
+            bnToRlp(unsignedTx.value),
+            unsignedTx.data,
+            bnToRlp(new BN(chainId)),
+            Buffer.from([]),
+            Buffer.from([]),
+        ])
+
+        const signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
+
+        const signatureBN = {
+            v: new BN(signature.v, 16),
+            r: new BN(signature.r, 16),
+            s: new BN(signature.s, 16),
+        }
+        const signedTx = Transaction.fromTxData({ ...partialTxParams, ...signatureBN }, chainParams)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(
+                '0x' + signedTx.serialize().toString('hex')
+            )
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
     }
 }
 
