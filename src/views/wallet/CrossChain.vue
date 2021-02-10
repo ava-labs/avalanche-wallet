@@ -8,7 +8,7 @@
         </div>
         <!--        <ChainTransfer></ChainTransfer>-->
         <div class="congestion">
-            <h4>
+            <h4 style="color: var(--secondary-color)">
                 <fa icon="exclamation-triangle"></fa>
                 WARNING: Network Congestion
             </h4>
