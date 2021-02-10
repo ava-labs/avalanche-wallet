@@ -6,7 +6,17 @@
                 {{ $t('cross_chain.desc') }}
             </p>
         </div>
-        <ChainTransfer></ChainTransfer>
+        <!--        <ChainTransfer></ChainTransfer>-->
+        <div class="congestion">
+            <h4>
+                <fa icon="exclamation-triangle"></fa>
+                WARNING: Network Congestion
+            </h4>
+            <p>
+                Due to high network congestion, cross chain transfers are disabled for the time
+                being.
+            </p>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -29,5 +39,10 @@ h1 {
     //display: flex;
     //align-items: center;
     //justify-content: space-between;
+}
+.congestion {
+    background-color: var(--bg-light);
+    width: max-content;
+    padding: 30px;
 }
 </style>
