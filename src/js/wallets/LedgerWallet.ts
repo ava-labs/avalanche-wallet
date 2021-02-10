@@ -511,15 +511,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
-
-        if (chainId === 'C') {
-            // TODO: LEDGER! C chain messages
-            return []
-        }
-
         let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
         let txType = tx.getTxType()
         let outs = tx.getOuts()
+
+        // TODO: Construct the messages array depending on transaction type
         let outputMessages = this.getOutputMessages(outs, chainId === 'X', changePath)
 
         // regular output messages, if any
@@ -532,7 +528,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             messages.push(...outputMessages)
         }
 
-        // TODO: Construct the messages array depending on transaction type
         if (
             txType === PlatformVMConstants.ADDDELEGATORTX ||
             txType === PlatformVMConstants.ADDVALIDATORTX
@@ -570,11 +565,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             messages.push({ title: 'Fee', value: '0' })
         }
         if (
-            txType === AVMConstants.EXPORTTX ||
-            txType === AVMConstants.IMPORTTX ||
-            txType === PlatformVMConstants.EXPORTTX ||
-            txType === PlatformVMConstants.IMPORTTX ||
-            txType === AVMConstants.BASETX
+            (txType === AVMConstants.BASETX && chainId === 'X') ||
+            (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
+            (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.EXPORTTX && chainId === 'P') ||
+            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
+            (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C')
         ) {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
         }
