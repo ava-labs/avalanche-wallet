@@ -727,13 +727,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
+            let destinationAddr = this.externalHelper.getCurrentAddress()
 
-            let destinationAddr
-            if (destinationChain === 'X') {
-                destinationAddr = this.externalHelper.getCurrentAddress()
-            } else {
-                destinationAddr = this.ethAddressBech
-            }
             let pChangeAddr = this.platformHelper.getCurrentAddress()
             let fromAddrs = this.platformHelper.getAllDerivedAddresses()
 
@@ -933,7 +928,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             [rewardAddress] // reward address
         )
 
-        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx)
+        const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
 
         // Update UTXOS
         setTimeout(async () => {
@@ -997,7 +992,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // console.log(unsignedTx.serialize('display'));
         // console.log(unsignedTx.toBuffer().toString('hex'))
 
-        let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx)
+        let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
 
         // console.log(tx.toBuffer().toString('hex'));
         // console.log((tx.serialize()))

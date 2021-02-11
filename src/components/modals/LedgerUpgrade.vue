@@ -48,7 +48,6 @@ export default class LedgerUpgrade extends Vue {
     }
 
     get isActive() {
-        console.log('isActive', this.$store.state.Ledger.isUpgradeRequired)
         return this.$store.state.Ledger.isUpgradeRequired
     }
 
