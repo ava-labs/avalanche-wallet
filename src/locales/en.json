@@ -685,6 +685,11 @@
         },
         "ledger": {
             "desc": "Please confirm these actions on your ledger device."
+        },
+        "ledger_upgrade": {
+            "desc": "Please upgrade the Avalanche application on your Ledger device to the latest version.",
+            "submit": "Upgrade",
+            "title": "Upgrade Required"
         }
     },
     "nav": {

@@ -30,11 +30,11 @@ export default {
                     title: 'Provide Public Keys',
                     messages: [
                         {
-                            title: 'Derivation Path',
+                            title: 'Ava Derivation Path',
                             value: AVA_ACCOUNT_PATH,
                         },
                         {
-                            title: 'Derivation Path',
+                            title: 'Eth Derivation Path',
                             value: LEDGER_ETH_ACCOUNT_PATH,
                         },
                     ],
@@ -56,6 +56,17 @@ export default {
                 let app = new AppAvax(transport)
                 let eth = new Eth(transport, 'Avalanche')
                 let config = await app.getAppConfiguration()
+                const MIN_V = '0.4.0'
+                // {version: "0.4.0", commit: "TEST*", name: "Avalanche"}
+                // Check for C Chain support ("0.4.0")
+                if (config.version < MIN_V) {
+                    this.$store.commit('Ledger/setIsUpgradeRequired', true)
+                    console.error(
+                        `Avalanche Ledger App is v${config.version}. Should be at least v${MIN_V}`
+                    )
+                    this.isLoading = false
+                    return
+                }
 
                 let wallet = await LedgerWallet.fromApp(app, eth, config)
                 try {
@@ -87,6 +98,10 @@ export default {
 <style scoped lang="scss">
 .spinner {
     width: 100% !important;
-    color: var(--bg) !important;
+    color: inherit;
+}
+
+.spinner::v-deep p {
+    color: inherit;
 }
 </style>
