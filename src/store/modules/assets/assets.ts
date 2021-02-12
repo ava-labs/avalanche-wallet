@@ -135,7 +135,7 @@ const assets_module: Module<AssetsState, RootState> = {
         async initERc20List({ dispatch }) {
             const tokenLists = [
                 'https://raw.githubusercontent.com/dasconnor/tokenlist/main/fuji.tokenlist.json',
-                // 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
+                'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
             ]
 
             tokenLists.forEach((url) => {
@@ -300,7 +300,6 @@ const assets_module: Module<AssetsState, RootState> = {
 
             let filt = tokens.filter((t) => {
                 if (t.data.chainId !== chainId) return false
-                // if (t.getBalanceBN().isZero()) return false
                 return true
             })
             return filt

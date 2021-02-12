@@ -19,6 +19,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+//@ts-ignore
 import { BigNumInput } from '@avalabs/vue_components'
 import { BN } from 'avalanche'
 import EVMAssetDropdown from '@/components/misc/EVMInputDropdown/EVMAssetDropdown.vue'
@@ -46,6 +47,16 @@ export default class ERC20InputDropdown extends Vue {
             let stepNum = Math.pow(10, this.denomination)
             return new BN(stepNum.toString())
         }
+    }
+
+    get asset_now() {
+        return {
+            denomination: 2,
+        }
+    }
+
+    get isEmpty() {
+        return false
     }
 
     get placeholder(): string {

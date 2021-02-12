@@ -4,7 +4,7 @@ import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 
-import ERC20Api from '@openzeppelin/c'
+// import ERC20Api from '@openzeppelin/c'
 
 class Erc20Token {
     data: TokenListToken
