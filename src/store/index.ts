@@ -148,6 +148,7 @@ export default new Vuex.Store({
             store.dispatch('Platform/update')
             router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
+            store.dispatch('Assets/initERc20List')
         },
 
         // TODO: Parts can be shared with the logout function below

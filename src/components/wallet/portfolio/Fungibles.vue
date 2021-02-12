@@ -13,13 +13,21 @@
             <div v-if="walletBalances.length === 0" class="empty">
                 <p>{{ $t('portfolio.nobalance') }}</p>
             </div>
-            <div class="scrollable" v-else>
-                <fungible-row
-                    lass="asset"
-                    v-for="asset in walletBalances"
-                    :key="asset.id"
-                    :asset="asset"
-                ></fungible-row>
+            <div class="scrollable no_scroll_bar" v-else>
+                <div class="scrollabe_cont">
+                    <fungible-row
+                        class="asset"
+                        v-for="asset in walletBalances"
+                        :key="asset.id"
+                        :asset="asset"
+                    ></fungible-row>
+                    <ERC20Row
+                        class="asset"
+                        v-for="erc in erc20Balances"
+                        :key="erc.data.address"
+                        :token="erc"
+                    ></ERC20Row>
+                </div>
             </div>
         </div>
     </div>
@@ -31,9 +39,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import FaucetLink from '@/components/misc/FaucetLink.vue'
 import FungibleRow from '@/components/wallet/portfolio/FungibleRow.vue'
 import AvaAsset from '@/js/AvaAsset'
+import Erc20Token from '@/js/Erc20Token'
+import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 
 @Component({
     components: {
+        ERC20Row,
         FaucetLink,
         FungibleRow,
     },
@@ -85,6 +96,15 @@ export default class Fungibles extends Vue {
 
     get avaxToken(): AvaAsset {
         return this.$store.getters['Assets/AssetAVA']
+    }
+
+    get erc20Balances(): Erc20Token[] {
+        let tokens: Erc20Token[] = this.$store.getters['Assets/networkErc20Tokens']
+        let filt = tokens.filter((token) => {
+            if (token.balanceBN.isZero()) return false
+            return true
+        })
+        return filt
     }
 
     get walletBalances(): AvaAsset[] {
@@ -139,17 +159,20 @@ export default class Fungibles extends Vue {
 .headers {
     border-bottom: 1px solid var(--bg-light);
     font-size: 12px;
-    padding: 53.76px 0 14px;
+    padding: 12px 0;
     color: var(--primary-color-light);
     font-weight: bold;
 }
 
 .scrollable {
     overflow-y: scroll;
-    height: 450px;
+    height: 100%;
     flex-grow: 1;
 }
 
+.scrollabe_cont {
+    height: 50px;
+}
 .asset {
     border-bottom: 1px solid var(--bg-light);
 }

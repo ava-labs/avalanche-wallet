@@ -1,7 +1,7 @@
 <template>
     <div class="home_view">
         <div class="header">
-            <h1>{{ $t('portfolio.assets') }}</h1>
+            <!--            <h1>{{ $t('portfolio.assets') }}</h1>-->
             <div>
                 <button
                     @click="tab = 'fungibles'"
@@ -89,10 +89,11 @@ export default {
         margin: 0px 5px;
         text-transform: uppercase;
         outline: none !important;
+        color: var(--primary-color-light);
 
         &[active] {
-            color: var(--primary-color);
-            border-bottom: 4px solid main.$secondary-color;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
         }
     }
 }

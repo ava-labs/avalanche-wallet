@@ -453,6 +453,14 @@ p.err {
     margin: 4px 0;
 }
 
+.no_scroll_bar{
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 @include medium-device {
     h1 {
         font-size: 25px;

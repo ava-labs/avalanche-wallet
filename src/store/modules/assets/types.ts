@@ -5,6 +5,7 @@ import BN from 'bn.js'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IWalletBalanceDict } from '@/store/types'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
+import Erc20Token from '@/js/Erc20Token'
 
 export interface AssetsState {
     // isUpdateBalance: boolean
@@ -16,6 +17,8 @@ export interface AssetsState {
     balanceDict: IWalletBalanceDict
     nftUTXOs: AVMUTXO[]
     nftMintUTXOs: AVMUTXO[]
+    erc20Tokens: Erc20Token[]
+    evmChainId: number
 }
 
 export interface AssetDescriptions {
@@ -53,4 +56,13 @@ export interface AssetAPI {
     denomination: number
     currentSupply: string
     timestamp: string
+}
+
+export interface TokenListToken {
+    address: string
+    chainId: number
+    name: string
+    symbol: string
+    decimals: number
+    logoURI: string
 }

@@ -1,5 +1,5 @@
 import { Module } from 'vuex'
-import { AssetAPI, AssetsDict, AssetsState } from '@/store/modules/assets/types'
+import { AssetAPI, AssetsDict, AssetsState, TokenListToken } from '@/store/modules/assets/types'
 import {
     IWalletAssetsDict,
     IWalletBalanceDict,
@@ -8,7 +8,7 @@ import {
     RootState,
     WalletType,
 } from '@/store/types'
-import { ava, avm, bintools } from '@/AVA'
+import { ava, avm, bintools, cChain } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 
@@ -24,6 +24,10 @@ import { UnixNow } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
+import axios from 'axios'
+import Erc20Token from '@/js/Erc20Token'
+import { AvaNetwork } from '@/js/AvaNetwork'
+import { web3 } from '@/evm'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -37,6 +41,8 @@ const assets_module: Module<AssetsState, RootState> = {
         balanceDict: {},
         nftUTXOs: [],
         nftMintUTXOs: [],
+        erc20Tokens: [],
+        evmChainId: 0,
     },
     mutations: {
         addAsset(state, asset: AvaAsset) {
@@ -70,6 +76,10 @@ const assets_module: Module<AssetsState, RootState> = {
         // },
     },
     actions: {
+        async onNetworkChange({ state }, network: AvaNetwork) {
+            let id = await web3.eth.getChainId()
+            state.evmChainId = id
+        },
         // Called on a logout event
         onlogout({ state, commit }) {
             // state.isUpdateBalance = false
@@ -117,6 +127,27 @@ const assets_module: Module<AssetsState, RootState> = {
             state.nftMintUTXOs = nftMintUtxos
         },
 
+        async addErc20Token({ state, rootState }, token: TokenListToken) {
+            let t = new Erc20Token(token)
+            state.erc20Tokens.push(t)
+        },
+
+        async initERc20List({ dispatch }) {
+            const tokenLists = [
+                'https://raw.githubusercontent.com/dasconnor/tokenlist/main/fuji.tokenlist.json',
+                // 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
+            ]
+
+            tokenLists.forEach((url) => {
+                axios.get(url).then((res) => {
+                    let tokens: TokenListToken[] = res.data.tokens
+                    for (var i = 0; i < tokens.length; i++) {
+                        dispatch('addErc20Token', tokens[i])
+                    }
+                })
+            })
+        },
+
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
         addUnknownAssets({ state, getters, rootGetters, dispatch }) {
             let balanceDict: IWalletBalanceDict = state.balanceDict
@@ -151,7 +182,18 @@ const assets_module: Module<AssetsState, RootState> = {
 
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
+            dispatch('updateERC20Balances')
             commit('updateActiveAddress', null, { root: true })
+        },
+
+        async updateERC20Balances({ state, rootState, getters }) {
+            let wallet = rootState.activeWallet
+            if (!wallet) return
+
+            let tokens: Erc20Token[] = getters.networkErc20Tokens
+            tokens.forEach((token) => {
+                token.updateBalance(wallet!.ethAddress)
+            })
         },
 
         // What is the AVA coin in the network
@@ -252,6 +294,17 @@ const assets_module: Module<AssetsState, RootState> = {
         },
     },
     getters: {
+        networkErc20Tokens(state: AssetsState, getters, rootState: RootState): Erc20Token[] {
+            let tokens = state.erc20Tokens
+            let chainId = state.evmChainId
+
+            let filt = tokens.filter((t) => {
+                if (t.data.chainId !== chainId) return false
+                // if (t.getBalanceBN().isZero()) return false
+                return true
+            })
+            return filt
+        },
         // avmAvaxUtxos(state, getters, rootState): AVMUTXO[] {
         //     let wallet = rootState.activeWallet
         //     // let avaxAsset: AvaAsset|null = getters.AssetAVA
