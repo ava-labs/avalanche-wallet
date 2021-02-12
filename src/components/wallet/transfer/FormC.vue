@@ -13,6 +13,7 @@
                 v-show="!isConfirm"
                 :balance="balanceBig"
             ></AvaxInput>
+            <EVMInputDropdown style="margin-top: 20px"></EVMInputDropdown>
             <p v-if="isConfirm" class="confirm_data" style="text-align: right">
                 {{ formAmountBig.toLocaleString() }} AVAX
             </p>
@@ -123,9 +124,11 @@ import Big from 'big.js'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
+import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'
 
 @Component({
     components: {
+        EVMInputDropdown,
         AvaxInput,
         QrInput,
     },

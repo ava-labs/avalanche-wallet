@@ -37,6 +37,7 @@ export default class ERC20Row extends Vue {
 img {
     object-fit: contain;
     max-width: 40px;
+    justify-self: center;
 }
 
 .col_bal {
