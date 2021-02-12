@@ -11,7 +11,8 @@ import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-var bippath = require('bip32-path')
+const bippath = require('bip32-path')
+const bech32 = require('bech32')
 import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
@@ -474,31 +475,45 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     getOutputMessages<Outputs extends AVMTransferableOutput[] | PlatformTransferableOutput[]>(
         outs: Outputs,
-        isAVM: boolean,
+        chainId: ChainIdType,
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
-        let chainId: ChainAlias = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
 
-        let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
-        let changeAddr = this.getChangeFromIndex(changeIdx, chainId)
+        if (chainId === 'C') {
+            for (let i = 0; i < outs.length; i++) {
+                // @ts-ignore
+                const value = outs[i].getAddress()
+                const addr = bintools.addressToString(hrp, chainId, value)
+                // @ts-ignore
+                const amt = bnToBig(outs[i].getAmount(), 9)
 
-        for (let i = 0; i < outs.length; i++) {
-            outs[i]
-                .getOutput()
-                .getAddresses()
-                .forEach((value) => {
-                    const addr = bintools.addressToString(hrp, chainId, value)
-                    // @ts-ignore
-                    const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
-
-                    if (!changePath || changeAddr !== addr)
-                        messages.push({
-                            title: 'Output',
-                            value: `${addr} - ${amt.toString()} AVAX`,
-                        })
+                messages.push({
+                    title: 'Output',
+                    value: `${addr} - ${amt.toString()} AVAX`,
                 })
+            }
+        } else {
+            let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
+            let changeAddr = this.getChangeFromIndex(changeIdx, chainId)
+
+            for (let i = 0; i < outs.length; i++) {
+                outs[i]
+                    .getOutput()
+                    .getAddresses()
+                    .forEach((value) => {
+                        const addr = bintools.addressToString(hrp, chainId, value)
+                        // @ts-ignore
+                        const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
+
+                        if (!changePath || changeAddr !== addr)
+                            messages.push({
+                                title: 'Output',
+                                value: `${addr} - ${amt.toString()} AVAX`,
+                            })
+                    })
+            }
         }
 
         return messages
@@ -513,24 +528,35 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let messages: ILedgerBlockMessage[] = []
         let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
         let txType = tx.getTxType()
-        let outs = tx.getOuts()
+        let outs = tx.getOuts ? tx.getOuts() : []
 
         // TODO: Construct the messages array depending on transaction type
-        let outputMessages = this.getOutputMessages(outs, chainId === 'X', changePath)
+        let outputMessages = this.getOutputMessages(outs, chainId, changePath)
 
         // regular output messages, if any
         messages.push(...outputMessages)
 
-        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
+        if (
+            (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.EXPORTTX && chainId === 'P')
+        ) {
             outs = (tx as ExportTx).getExportOutputs()
             // export output messages, if any
-            outputMessages = this.getOutputMessages(outs, chainId === 'X', changePath)
+            outputMessages = this.getOutputMessages(outs, chainId, changePath)
+            messages.push(...outputMessages)
+        }
+
+        if (txType === EVMConstants.EXPORTTX && chainId === 'C') {
+            // @ts-ignore
+            outs = tx.getExportedOutputs()
+            // export output messages, if any
+            outputMessages = this.getOutputMessages(outs, chainId, changePath)
             messages.push(...outputMessages)
         }
 
         if (
-            txType === PlatformVMConstants.ADDDELEGATORTX ||
-            txType === PlatformVMConstants.ADDVALIDATORTX
+            (txType === PlatformVMConstants.ADDDELEGATORTX && chainId === 'P') ||
+            (txType === PlatformVMConstants.ADDVALIDATORTX && chainId === 'P')
         ) {
             const format = 'YYYY-MM-DD H:mm:ss UTC'
             // @ts-ignore
@@ -569,10 +595,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
             (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
             (txType === PlatformVMConstants.EXPORTTX && chainId === 'P') ||
-            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
-            (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C')
+            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P')
         ) {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
+        }
+
+        if (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C') {
+            messages.push({ title: 'Fee', value: `0 AVAX` })
         }
 
         return messages
@@ -763,6 +792,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let { paths } = this.getTransactionPaths(exportTx, 'C')
 
             let tx = (await this.signTransactionParsable(exportTx, paths, 'C')) as EvmTx
+
+            store.commit('Ledger/closeModal')
+
             return cChain.issueTx(tx)
         } else {
             throw 'Invalid source chain.'
@@ -859,7 +891,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             throw new Error('Nothing to import.')
         }
 
-        let toAddress = '0x' + this.ethAddress
+        // Needed to display the correct address on the ledger...
+        const b = bech32.decode(this.ethAddressBech.slice(2))
+        const addrBytes = Buffer.from(bech32.fromWords(b.words))
+        let toAddress = '0x' + addrBytes.toString('hex')
         let ownerAddresses = [this.ethAddressBech]
         let fromAddresses = ownerAddresses
         let sourceChain = avm.getBlockchainID()

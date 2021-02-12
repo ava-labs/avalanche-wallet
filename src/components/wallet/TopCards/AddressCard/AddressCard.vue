@@ -59,7 +59,7 @@ import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
 import { ChainIdType } from '@/constants'
-import { ava, cChain } from '@/AVA'
+import { ava } from '@/AVA'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 @Component({
     components: {
