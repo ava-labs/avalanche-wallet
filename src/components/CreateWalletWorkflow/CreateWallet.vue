@@ -27,6 +27,8 @@
                                 </button>
                                 <!--                                <TorusGoogle class="torus_but"></TorusGoogle>-->
                             </div>
+                            <ToS></ToS>
+
                             <router-link to="/" class="link">{{ $t('create.cancel') }}</router-link>
                         </div>
                         <!-- PHASE 2 -->
