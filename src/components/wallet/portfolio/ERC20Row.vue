@@ -5,7 +5,10 @@
             {{ token.data.name }} ({{ token.data.symbol }})
             <span>ERC20</span>
         </p>
-        <p></p>
+        <router-link :to="sendLink" class="send_col" v-if="isBalance">
+            <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
+            <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
+        </router-link>
         <p class="col_bal">
             {{ balText }}
         </p>
@@ -22,9 +25,19 @@ export default class ERC20Row extends Vue {
     get balText() {
         return this.token.balanceBig.toLocaleString()
     }
+
+    get isBalance() {
+        return !this.token.balanceBN.isZero()
+    }
+
+    get sendLink() {
+        return ''
+    }
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 .erc_row {
     > * {
         align-self: center;
@@ -56,5 +69,20 @@ img {
         font-size: 12px;
         color: var(--secondary-color);
     }
+}
+
+.send_col {
+    text-align: center;
+    opacity: 0.4;
+    &:hover {
+        opacity: 1;
+    }
+    img {
+        width: 18px;
+        object-fit: contain;
+    }
+}
+
+@include main.mobile-device {
 }
 </style>

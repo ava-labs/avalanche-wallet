@@ -1,7 +1,7 @@
 <template>
     <div class="evm_input_dropdown">
         <div class="col_in hover_border">
-            <button @click="maxOut" class="max_but">MAX</button>
+            <button class="max_but" @click="maxOut">MAX</button>
             <BigNumInput
                 :max="max_amount"
                 :denomination="denomination"
@@ -12,9 +12,12 @@
                 class="bigIn"
             ></BigNumInput>
         </div>
-        <div>
-            <EVMAssetDropdown></EVMAssetDropdown>
+        <!--        <div>-->
+        <EVMAssetDropdown @change="onAssetChange"></EVMAssetDropdown>
+        <div class="bal_col">
+            <p class="bal">Balance: {{ balance }}</p>
         </div>
+        <!--        </div>-->
     </div>
 </template>
 <script lang="ts">
@@ -23,6 +26,10 @@ import { Vue, Component } from 'vue-property-decorator'
 import { BigNumInput } from '@avalabs/vue_components'
 import { BN } from 'avalanche'
 import EVMAssetDropdown from '@/components/misc/EVMInputDropdown/EVMAssetDropdown.vue'
+import Erc20Token from '@/js/Erc20Token'
+import Big from 'big.js'
+import { WalletType } from '@/store/types'
+import { bnToBig } from '@/helpers/helper'
 
 @Component({
     components: {
@@ -31,12 +38,25 @@ import EVMAssetDropdown from '@/components/misc/EVMInputDropdown/EVMAssetDropdow
     },
 })
 export default class ERC20InputDropdown extends Vue {
-    get max_amount(): BN {
-        return new BN('10000000000')
+    token: Erc20Token | 'native' = 'native'
+
+    $refs!: {
+        bigIn: BigNumInput
     }
 
+    get max_amount(): BN {
+        return this.balanceBN
+    }
+
+    get isNative() {
+        return this.token === 'native'
+    }
     get denomination() {
-        return 9
+        if (this.isNative) {
+            return 18
+        } else {
+            return (this.token as Erc20Token).data.decimals
+        }
     }
 
     get stepSize() {
@@ -73,12 +93,48 @@ export default class ERC20InputDropdown extends Vue {
         // @ts-ignore
         this.$refs.bigIn.maxout()
     }
+
+    get avaxBalanceBN(): BN {
+        let w: WalletType | null = this.$store.state.activeWallet
+        if (!w) return new BN(0)
+        return w.ethBalance
+    }
+
+    get avaxBalance(): Big {
+        return bnToBig(this.avaxBalanceBN, 18)
+    }
+
+    get balance(): Big {
+        if (this.token === 'native') {
+            return this.avaxBalance
+        }
+        return this.token.balanceBig
+    }
+
+    get balanceBN(): BN {
+        if (this.token === 'native') {
+            return this.avaxBalanceBN
+        }
+        return this.token.balanceBN
+    }
+
+    onAssetChange(token: Erc20Token | 'native') {
+        console.log(token)
+        this.token = token
+        this.$refs.bigIn.clear()
+        this.$emit('tokenChange', token)
+    }
+
+    amount_in(amt: BN) {
+        console.log(amt.toString())
+        this.$emit('amountChange', amt)
+    }
 }
 </script>
 <style scoped lang="scss">
 .evm_input_dropdown {
     display: grid;
-    grid-template-columns: 1fr max-content;
+    grid-template-columns: 1fr 70px;
     column-gap: 10px;
     font-size: 15px;
 
@@ -90,6 +146,7 @@ export default class ERC20InputDropdown extends Vue {
 }
 
 .col_in {
+    position: relative;
     display: grid;
     grid-template-columns: max-content 1fr;
 }
@@ -98,8 +155,19 @@ export default class ERC20InputDropdown extends Vue {
     text-align: right;
     font-family: monospace;
     border: none !important;
+    color: var(--primary-color);
 }
 
+.bal_col {
+    background-color: transparent !important;
+    padding-top: 2px !important;
+}
+
+.bal {
+    text-align: right;
+    font-family: monospace;
+    color: var(--primary-color-light);
+}
 .max_but {
     opacity: 0.4;
     font-size: 13px;

@@ -6,14 +6,18 @@
                 <p>{{ $t('transfer.tx_list.amount') }}</p>
                 <p>{{ $t('transfer.tx_list.token') }}</p>
             </div>
-            <AvaxInput
-                :max="maxAmt"
-                v-model="amountIn"
-                disabled=""
-                v-show="!isConfirm"
-                :balance="balanceBig"
-            ></AvaxInput>
-            <EVMInputDropdown style="margin-top: 20px"></EVMInputDropdown>
+            <!--            <AvaxInput-->
+            <!--                :max="maxAmt"-->
+            <!--                v-model="amountIn"-->
+            <!--                disabled=""-->
+            <!--                v-show="!isConfirm"-->
+            <!--                :balance="balanceBig"-->
+            <!--            ></AvaxInput>-->
+            <EVMInputDropdown
+                style="margin-top: 20px"
+                @amountChange="onAmountChange"
+                @tokenChange="onTokenChange"
+            ></EVMInputDropdown>
             <p v-if="isConfirm" class="confirm_data" style="text-align: right">
                 {{ formAmountBig.toLocaleString() }} AVAX
             </p>
@@ -125,6 +129,7 @@ import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'
+import Erc20Token from '@/js/Erc20Token'
 
 @Component({
     components: {
@@ -148,6 +153,10 @@ export default class FormC extends Vue {
     canSendAgain = false
 
     txHash = ''
+
+    onAmountChange(val: BN) {}
+
+    onTokenChange(token: Erc20Token | 'native') {}
 
     get wallet(): WalletType | null {
         return this.$store.state.activeWallet
