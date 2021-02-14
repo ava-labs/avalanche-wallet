@@ -1,5 +1,6 @@
 <template>
     <div class="balance_card">
+        <UtxosBreakdownModal ref="utxos_modal"></UtxosBreakdownModal>
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
@@ -9,6 +10,7 @@
                     </button>
                 </div>
                 <h4>{{ $t('top.title2') }}</h4>
+                <button @click="showUTXOsModal">Show UTXOs</button>
                 <template v-if="!isBreakdown">
                     <button class="breakdown_toggle" @click="toggleBreakdown">
                         <fa icon="eye"></fa>
@@ -101,9 +103,11 @@ import { BN } from 'avalanche/dist'
 import { ONEAVAX } from 'avalanche/dist/utils'
 import { bnToBig } from '@/helpers/helper'
 import { priceDict, WalletType } from '@/store/types'
+import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdownModal.vue'
 
 @Component({
     components: {
+        UtxosBreakdownModal,
         Spinner,
         NftCol,
         Tooltip,
@@ -118,11 +122,18 @@ import { priceDict, WalletType } from '@/store/types'
 export default class BalanceCard extends Vue {
     isBreakdown = true
 
+    $refs!: {
+        utxos_modal: UtxosBreakdownModal
+    }
+
     updateBalance(): void {
         this.$store.dispatch('Assets/updateUTXOs')
         this.$store.dispatch('History/updateTransactionHistory')
     }
 
+    showUTXOsModal() {
+        this.$refs.utxos_modal.open()
+    }
     get ava_asset(): AvaAsset | null {
         let ava = this.$store.getters['Assets/AssetAVA']
         return ava
