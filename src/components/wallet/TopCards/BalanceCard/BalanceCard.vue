@@ -10,7 +10,6 @@
                     </button>
                 </div>
                 <h4>{{ $t('top.title2') }}</h4>
-                <button @click="showUTXOsModal">Show UTXOs</button>
                 <template v-if="!isBreakdown">
                     <button class="breakdown_toggle" @click="toggleBreakdown">
                         <fa icon="eye"></fa>
@@ -23,6 +22,7 @@
                         {{ $t('top.balance.hide') }}
                     </button>
                 </template>
+                <button @click="showUTXOsModal" class="breakdown_toggle">Show UTXOs</button>
             </div>
             <div class="balance_row">
                 <p class="balance" data-cy="wallet_balance" v-if="!balanceTextRight">
@@ -468,6 +468,11 @@ h4 {
     color: var(--primary-color-light);
     font-size: 13px;
     outline: none !important;
+    margin-left: 12px;
+
+    &:hover {
+        color: var(--secondary-color);
+    }
 }
 
 @include main.medium-device {
