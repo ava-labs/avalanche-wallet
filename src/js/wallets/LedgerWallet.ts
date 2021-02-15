@@ -530,7 +530,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let outs = tx.getOuts ? tx.getOuts() : []
 
         // TODO: Construct the messages array depending on transaction type
-        let outputMessages = this.getOutputMessages(outs, chainId, changePath)
+        let outputMessages: ILedgerBlockMessage[] = []
+        try {
+            outputMessages = this.getOutputMessages(outs, chainId, changePath)
+        } catch (e) {
+            console.log(e)
+        }
 
         // regular output messages, if any
         messages.push(...outputMessages)
@@ -549,7 +554,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             // @ts-ignore
             outs = tx.getExportedOutputs()
             // export output messages, if any
-            outputMessages = this.getOutputMessages(outs, chainId, changePath)
+            outputMessages = this.getOutputMessages(outs, 'X', changePath)
             messages.push(...outputMessages)
         }
 
