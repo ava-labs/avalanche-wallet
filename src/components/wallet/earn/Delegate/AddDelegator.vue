@@ -45,11 +45,7 @@
                             <p class="desc">
                                 {{ $t('earn.delegate.form.period.desc') }}
                             </p>
-                            <DateForm
-                                @change_start="setStart"
-                                @change_end="setEnd"
-                                :max-end-date="endMaxDate"
-                            ></DateForm>
+                            <DateForm @change_end="setEnd" :max-end-date="endMaxDate"></DateForm>
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.delegate.form.amount.label') }}</h4>
@@ -103,7 +99,6 @@
                 <ConfirmPage
                     v-show="isConfirm"
                     key="confirm"
-                    :start="formStart"
                     :end="formEnd"
                     :amount="formAmt"
                     :reward-destination="rewardDestination"
@@ -198,6 +193,9 @@
                         <label>{{ $t('earn.delegate.success.reason') }}</label>
                         <p>{{ txReason }}</p>
                     </div>
+                    <v-btn @click="cancel" block class="button_secondary" depressed>
+                        Back to Earn
+                    </v-btn>
                 </div>
             </div>
         </div>
@@ -256,7 +254,7 @@ export default class AddDelegator extends Vue {
     search: string = ''
     selected: ValidatorListItem | null = null
     stakeAmt: BN = new BN(0)
-    startDate: string = new Date().toISOString()
+    startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
     rewardIn: string = ''
     rewardDestination = 'local' // local || custom
@@ -277,9 +275,9 @@ export default class AddDelegator extends Vue {
 
     currency_type = 'AVAX'
 
-    setStart(val: string) {
-        this.startDate = val
-    }
+    // setStart(val: string) {
+    //     this.startDate = val
+    // }
     setEnd(val: string) {
         this.endDate = val
     }
@@ -299,12 +297,15 @@ export default class AddDelegator extends Vue {
 
         let wallet: WalletType = this.$store.state.activeWallet
 
+        // Start delegation in 5 minutes
+        let startDate = new Date(Date.now() + 5 * MIN_MS)
+
         try {
             this.isLoading = false
             let txId = await wallet.delegate(
                 this.formNodeID,
                 this.formAmt,
-                this.formStart,
+                startDate,
                 this.formEnd,
                 this.formRewardAddr,
                 this.formUtxos
@@ -326,6 +327,11 @@ export default class AddDelegator extends Vue {
         // })
 
         this.updateTxStatus(txId)
+
+        // Update UTXOs
+        setTimeout(() => {
+            this.$store.dispatch('History/updateTransactionHistory')
+        }, 3000)
     }
 
     async updateTxStatus(txId: string) {
@@ -468,7 +474,7 @@ export default class AddDelegator extends Vue {
     updateFormData() {
         this.formNodeID = this.selected!.nodeID
         this.formAmt = this.stakeAmt
-        this.formStart = new Date(this.startDate)
+        // this.formStart = new Date(this.startDate)
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
     }
@@ -588,6 +594,11 @@ export default class AddDelegator extends Vue {
         if (totAvailable.gt(this.remainingAmt)) return this.remainingAmt
 
         return totAvailable
+    }
+
+    // Go Back to earn
+    cancel() {
+        this.$emit('cancel')
     }
 
     // get stakeAmtText() {

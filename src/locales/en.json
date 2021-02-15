@@ -421,7 +421,7 @@
             "label_1": "Node ID",
             "duration": {
                 "label": "Staking Period",
-                "desc": "The duration in which your tokens will be locked for staking.",
+                "desc": "Your tokens will be locked for staking until this date.",
                 "start": "Start Date & Time",
                 "end": "End Date & Time"
             },
@@ -533,6 +533,7 @@
                 "node": "Node ID",
                 "amount": "Staking Amount",
                 "start": "Start Date",
+                "start_desc": "Your delegation will start 5 minutes after you submit this form.",
                 "end": "End Date",
                 "reward": "Reward Address"
             },
