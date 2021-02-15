@@ -472,15 +472,33 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    getOutputMessages<Outputs extends AVMTransferableOutput[] | PlatformTransferableOutput[]>(
-        outs: Outputs,
+    getOutputMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+        unsignedTx: UnsignedTx,
         chainId: ChainIdType,
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
         let hrp = getPreferredHRP(ava.getNetworkID())
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
 
-        if (chainId === 'C') {
+        // @ts-ignore
+        let outs
+        if (
+            (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.EXPORTTX && chainId === 'P')
+        ) {
+            outs = (tx as ExportTx).getExportOutputs()
+        } else if (txType === EVMConstants.EXPORTTX && chainId === 'C') {
+            outs = (tx as EVMExportTx).getExportedOutputs()
+        } else {
+            outs = (tx as ExportTx).getOuts()
+        }
+
+        let destinationChain = chainId
+        if (chainId === 'C' && txType === EVMConstants.EXPORTTX) destinationChain = 'X'
+
+        if (destinationChain === 'C') {
             for (let i = 0; i < outs.length; i++) {
                 // @ts-ignore
                 const value = outs[i].getAddress()
@@ -495,7 +513,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
         } else {
             let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
-            let changeAddr = this.getChangeFromIndex(changeIdx, chainId)
+            let changeAddr = this.getChangeFromIndex(changeIdx, destinationChain)
 
             for (let i = 0; i < outs.length; i++) {
                 outs[i]
@@ -527,36 +545,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let messages: ILedgerBlockMessage[] = []
         let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
         let txType = tx.getTxType()
-        let outs = tx.getOuts ? tx.getOuts() : []
 
-        // TODO: Construct the messages array depending on transaction type
-        let outputMessages: ILedgerBlockMessage[] = []
-        try {
-            outputMessages = this.getOutputMessages(outs, chainId, changePath)
-        } catch (e) {
-            console.log(e)
-        }
-
-        // regular output messages, if any
+        const outputMessages = this.getOutputMessages(unsignedTx, chainId, changePath)
         messages.push(...outputMessages)
-
-        if (
-            (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
-            (txType === PlatformVMConstants.EXPORTTX && chainId === 'P')
-        ) {
-            outs = (tx as ExportTx).getExportOutputs()
-            // export output messages, if any
-            outputMessages = this.getOutputMessages(outs, chainId, changePath)
-            messages.push(...outputMessages)
-        }
-
-        if (txType === EVMConstants.EXPORTTX && chainId === 'C') {
-            // @ts-ignore
-            outs = tx.getExportedOutputs()
-            // export output messages, if any
-            outputMessages = this.getOutputMessages(outs, 'X', changePath)
-            messages.push(...outputMessages)
-        }
 
         if (
             (txType === PlatformVMConstants.ADDDELEGATORTX && chainId === 'P') ||
@@ -599,7 +590,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
             (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
             (txType === PlatformVMConstants.EXPORTTX && chainId === 'P') ||
-            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P')
+            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
+            (txType === EVMConstants.EXPORTTX && chainId === 'C')
         ) {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
         }
