@@ -472,7 +472,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    getOutputMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+    getOutputMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         chainId: ChainIdType,
         changePath: null | { toPathArray: () => number[] }
@@ -536,18 +536,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return messages
     }
 
-    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
-    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+    getValidateDelegateMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
-        chainId: ChainIdType,
-        changePath: null | { toPathArray: () => number[] }
+        chainId: ChainIdType
     ): ILedgerBlockMessage[] {
-        let messages: ILedgerBlockMessage[] = []
         let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
         let txType = tx.getTxType()
-
-        const outputMessages = this.getOutputMessages(unsignedTx, chainId, changePath)
-        messages.push(...outputMessages)
+        let messages: ILedgerBlockMessage[] = []
 
         if (
             (txType === PlatformVMConstants.ADDDELEGATORTX && chainId === 'P') ||
@@ -585,6 +580,18 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
             messages.push({ title: 'Fee', value: '0' })
         }
+
+        return messages
+    }
+
+    getFeeMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        chainId: ChainIdType
+    ): ILedgerBlockMessage[] {
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        let messages = []
+
         if (
             (txType === AVMConstants.BASETX && chainId === 'X') ||
             (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
@@ -594,11 +601,29 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === EVMConstants.EXPORTTX && chainId === 'C')
         ) {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
-        }
-
-        if (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C') {
+        } else if (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C') {
             messages.push({ title: 'Fee', value: `0 AVAX` })
         }
+
+        return messages
+    }
+
+    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
+    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        chainId: ChainIdType,
+        changePath: null | { toPathArray: () => number[] }
+    ): ILedgerBlockMessage[] {
+        let messages: ILedgerBlockMessage[] = []
+
+        const outputMessages = this.getOutputMsgs(unsignedTx, chainId, changePath)
+        messages.push(...outputMessages)
+
+        const validateDelegateMessages = this.getValidateDelegateMsgs(unsignedTx, chainId)
+        messages.push(...validateDelegateMessages)
+
+        const feeMessages = this.getFeeMsgs(unsignedTx, chainId)
+        messages.push(...feeMessages)
 
         return messages
     }
