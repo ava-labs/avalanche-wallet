@@ -12,7 +12,6 @@ import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 const bippath = require('bip32-path')
-const bech32 = require('bech32')
 import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
@@ -891,13 +890,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             throw new Error('Nothing to import.')
         }
 
-        // Needed to display the correct address on the ledger...
-        const b = bech32.decode(this.ethAddressBech.slice(2))
-        const addrBytes = Buffer.from(bech32.fromWords(b.words))
-        let toAddress = '0x' + addrBytes.toString('hex')
         let ownerAddresses = [this.ethAddressBech]
         let fromAddresses = ownerAddresses
         let sourceChain = avm.getBlockchainID()
+
+        let toAddress = '0x' + this.ethAddress
 
         const unsignedTx = await cChain.buildImportTx(
             utxoSet,
