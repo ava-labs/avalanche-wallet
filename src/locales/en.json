@@ -420,8 +420,8 @@
         "validate": {
             "label_1": "Node ID",
             "duration": {
-                "label": "Staking Period",
-                "desc": "The duration in which your tokens will be locked for staking.",
+                "label": "Staking End Date",
+                "desc": "Your AVAX tokens will be locked until this date.",
                 "start": "Start Date & Time",
                 "end": "End Date & Time"
             },
@@ -450,6 +450,7 @@
                 "id": "Node ID",
                 "amount": "Staking Amount",
                 "start": "Start Date",
+                "start_desc": "Your validation will start at least 5 minutes after you submit this form.",
                 "end": "End Date",
                 "fee": "Delegation Fee",
                 "reward": "Reward Address",
@@ -512,8 +513,8 @@
             },
             "form": {
                 "period": {
-                    "label": "Staking Period",
-                    "desc": "The duration in which your tokens will be locked for staking.",
+                    "label": "Staking End Date",
+                    "desc": "Your AVAX tokens will be locked until this date.",
                     "start": "Start Date & Time",
                     "end": "End Date & Time"
                 },
@@ -533,6 +534,7 @@
                 "node": "Node ID",
                 "amount": "Staking Amount",
                 "start": "Start Date",
+                "start_desc": "Your delegation will start 5 minutes after you submit this form.",
                 "end": "End Date",
                 "reward": "Reward Address"
             },

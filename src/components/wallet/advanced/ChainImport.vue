@@ -111,8 +111,10 @@ export default class ChainImport extends Vue {
             message: txId,
         })
 
-        this.$store.dispatch('Assets/updateUTXOs')
-        this.$store.dispatch('History/updateTransactionHistory')
+        setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
+        }, 3000)
     }
 
     onError(err: Error) {
