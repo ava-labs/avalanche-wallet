@@ -93,11 +93,17 @@ export default class Form extends Vue {
     }
 
     get destinationOptions(): ChainIdType[] {
-        return {
-            X: ['P', 'C'],
-            P: ['X'],
-            C: ['X'],
-        }[this.sourceChain] as ChainIdType[]
+        return this.isEVMSupported
+            ? ({
+                  X: ['P', 'C'],
+                  P: ['X'],
+                  C: ['X'],
+              }[this.sourceChain] as ChainIdType[])
+            : //   @ts-ignore
+              ({
+                  X: ['P'],
+                  P: ['X'],
+              }[this.sourceChain] as ChainIdType[])
     }
 
     @Watch('destinationOptions')
@@ -183,6 +189,10 @@ export default class Form extends Vue {
     get wallet() {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
         return wallet
+    }
+
+    get isEVMSupported() {
+        return this.wallet.ethAddress
     }
 
     onChangeSource(ev: any) {

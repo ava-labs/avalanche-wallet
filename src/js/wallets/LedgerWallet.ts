@@ -66,8 +66,9 @@ import {
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
 const isOdd = (str: string) => str.length % 2 !== 0
-const toHex = (value: any) => {
-    const hex = new BN(value).toString(16)
+const toHex = (value: BN | number) => {
+    const hex = value.toString(16)
+
     return isOdd(hex) ? `0x0${hex}` : `0x${hex}`
 }
 

@@ -28,16 +28,7 @@ export default {
             if (val) {
                 this.$store.commit('Ledger/openModal', {
                     title: 'Provide Public Keys',
-                    messages: [
-                        {
-                            title: 'Ava Derivation Path',
-                            value: AVA_ACCOUNT_PATH,
-                        },
-                        {
-                            title: 'Eth Derivation Path',
-                            value: LEDGER_ETH_ACCOUNT_PATH,
-                        },
-                    ],
+                    messages: [],
                 })
             } else {
                 this.$store.commit('Ledger/closeModal')
@@ -54,18 +45,21 @@ export default {
             try {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
-                let eth = new Eth(transport, 'Avalanche')
                 let config = await app.getAppConfiguration()
-                const MIN_V = '0.4.0'
+                const MIN_V_FOR_EVM_SUPPORT = '0.4.0'
                 // {version: "0.4.0", commit: "TEST*", name: "Avalanche"}
                 // Check for C Chain support ("0.4.0")
-                if (config.version < MIN_V) {
-                    this.$store.commit('Ledger/setIsUpgradeRequired', true)
-                    console.error(
-                        `Avalanche Ledger App is v${config.version}. Should be at least v${MIN_V}`
-                    )
-                    this.isLoading = false
-                    return
+                // if (config.version < MIN_V) {
+                //     this.$store.commit('Ledger/setIsUpgradeRequired', true)
+                //     console.error(
+                //         `Avalanche Ledger App is v${config.version}. Should be at least v${MIN_V}`
+                //     )
+                //     this.isLoading = false
+                //     return
+                // }
+                let eth
+                if (config >= MIN_V_FOR_EVM_SUPPORT) {
+                    eth = new Eth(transport, 'Avalanche')
                 }
 
                 let wallet = await LedgerWallet.fromApp(app, eth, config)
@@ -76,6 +70,7 @@ export default {
                     this.onerror(e)
                 }
             } catch (e) {
+                console.log(e)
                 this.onerror(e)
             }
         },

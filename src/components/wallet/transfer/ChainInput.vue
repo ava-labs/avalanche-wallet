@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="isEVMSupported">
         <h4>{{ $t('transfer.source_chain.title') }}</h4>
         <div class="chain_select">
             <div :active="formType === 'X'" @click="set('X')" class="hover_border">
@@ -28,6 +28,10 @@ export default class ChainInput extends Vue {
 
     get wallet() {
         return this.$store.state.activeWallet
+    }
+
+    get isEVMSupported() {
+        return this.wallet.ethAddress
     }
 }
 </script>
