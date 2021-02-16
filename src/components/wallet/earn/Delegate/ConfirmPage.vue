@@ -1,16 +1,16 @@
 <template>
     <div class="confirmation">
-        <div>
-            <label>{{ $t('earn.delegate.confirmation.node') }}</label>
-            <p style="word-break: break-all">{{ nodeID }}</p>
-        </div>
+        <!--        <div>-->
+        <!--            <label>{{ $t('earn.delegate.confirmation.node') }}</label>-->
+        <!--            <p style="word-break: break-all">{{ nodeID }}</p>-->
+        <!--        </div>-->
         <div>
             <label>{{ $t('earn.delegate.confirmation.amount') }}</label>
             <p>{{ amtText }} AVAX</p>
         </div>
         <div>
             <label>{{ $t('earn.delegate.confirmation.start') }}</label>
-            <p>{{ start.toLocaleString() }}</p>
+            <p>{{ $t('earn.delegate.confirmation.start_desc') }}</p>
         </div>
         <div>
             <label>{{ $t('earn.delegate.confirmation.end') }}</label>
@@ -31,7 +31,7 @@ import Big from 'big.js'
 @Component
 export default class ConfirmPage extends Vue {
     @Prop() nodeID!: string
-    @Prop() start!: Date
+    // @Prop() start!: Date
     @Prop() end!: Date
     @Prop() amount!: BN
     @Prop() rewardAddress!: string

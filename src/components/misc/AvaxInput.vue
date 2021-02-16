@@ -123,6 +123,7 @@ export default class AvaxInput extends Vue {
     }
 
     p {
+        text-align: left;
         padding: 2px 0px;
     }
 
