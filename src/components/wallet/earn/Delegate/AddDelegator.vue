@@ -2,7 +2,7 @@
     <div class="add_delegator">
         <NodeSelection v-if="!selected" @select="onselect" class="node_selection"></NodeSelection>
         <div class="cols" v-else>
-            <div>
+            <div class="node_col">
                 <button @click="selected = null" class="close_but button_secondary">
                     <fa icon="sync"></fa>
                     Change Node
@@ -858,6 +858,15 @@ label {
     .ins_col {
         width: 100%;
         max-width: 100%;
+    }
+
+    .close_but {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .node_col {
+        margin-bottom: 24px;
     }
 }
 </style>

@@ -4,7 +4,7 @@
             <form @submit.prevent="">
                 <transition-group name="fade" mode="out-in">
                     <div v-show="!isConfirm" key="form" class="ins_col">
-                        <div style="margin: 30px 0">
+                        <div style="margin-bottom: 30px">
                             <h4>{{ $t('earn.validate.label_1') }}</h4>
                             <input
                                 type="text"
@@ -677,7 +677,6 @@ input {
 }
 
 h4 {
-    margin: 14px 0px 4px;
     font-weight: bold;
 }
 
@@ -713,7 +712,7 @@ label {
     border-left: 2px solid var(--bg-light);
     padding-left: 30px;
     > div {
-        margin: 14px 0;
+        margin-bottom: 14px;
         p {
             font-size: 24px;
         }
