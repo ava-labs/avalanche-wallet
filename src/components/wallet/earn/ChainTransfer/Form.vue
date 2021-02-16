@@ -88,6 +88,10 @@ export default class Form extends Vue {
     }
 
     get sourceOptions(): ChainIdType[] {
+        if (!this.isEVMSupported) {
+            return ['X', 'P']
+        }
+
         let all = [...chainTypes]
         return all
     }

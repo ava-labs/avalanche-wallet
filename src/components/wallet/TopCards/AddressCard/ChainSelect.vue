@@ -2,19 +2,24 @@
     <div class="chain_select">
         <button @click="setChain('X')" :active="chain === 'X'">X</button>
         <button @click="setChain('P')" :active="chain === 'P'">P</button>
-        <button @click="setChain('C')" :active="chain === 'C'">C</button>
+        <button @click="setChain('C')" :active="chain === 'C'" v-if="isEVMSupported">C</button>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch, Model } from 'vue-property-decorator'
-import AvaAsset from '@/js/AvaAsset'
+import { Vue, Component, Model } from 'vue-property-decorator'
 import { ChainAlias } from '@/js/wallets/IAvaHdWallet'
 import { WalletType } from '@/store/types'
 
 @Component
 export default class ChainSelect extends Vue {
     @Model('change', { type: String }) readonly chain!: ChainAlias
+
+    get isEVMSupported() {
+        let wallet: WalletType | null = this.$store.state.activeWallet
+        if (!wallet) return false
+        return wallet.ethAddress
+    }
 
     setChain(val: ChainAlias) {
         this.$emit('change', val)

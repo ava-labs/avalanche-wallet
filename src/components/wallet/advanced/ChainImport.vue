@@ -14,7 +14,14 @@
             <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
                 {{ $t('advanced.import.submit_p') }}
             </v-btn>
-            <v-btn block class="button_secondary" depressed @click="atomicImportC" small>
+            <v-btn
+                v-if="isEVMSupported"
+                block
+                class="button_secondary"
+                depressed
+                @click="atomicImportC"
+                small
+            >
                 {{ $t('advanced.import.submit_c') }}
             </v-btn>
         </template>
@@ -39,6 +46,11 @@ export default class ChainImport extends Vue {
     get wallet(): null | WalletType {
         let wallet: null | WalletType = this.$store.state.activeWallet
         return wallet
+    }
+
+    get isEVMSupported() {
+        if (!this.wallet) return false
+        return this.wallet.ethAddress
     }
 
     async atomicImportX() {
