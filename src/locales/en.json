@@ -450,7 +450,7 @@
                 "id": "Node ID",
                 "amount": "Staking Amount",
                 "start": "Start Date",
-                "start_desc": "Your validation will start 5 minutes after you submit this form.",
+                "start_desc": "Your validation will start at least 5 minutes after you submit this form.",
                 "end": "End Date",
                 "fee": "Delegation Fee",
                 "reward": "Reward Address",
