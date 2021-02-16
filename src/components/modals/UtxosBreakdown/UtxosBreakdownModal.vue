@@ -34,7 +34,7 @@
                                 :is-x="false"
                             ></UTXORow>
                             <tr v-if="isEmpty" class="empty_row">
-                                <td colspan="6">
+                                <td colspan="7">
                                     <p style="text-align: center">
                                         You do not have any UTXOs on this chain.
                                     </p>
