@@ -68,8 +68,10 @@ export default class ChainImport extends Vue {
 
         // Import from C
         try {
-            let txId2 = await this.wallet.importToXChain('C')
-            this.onSuccess(txId2)
+            if (this.isEVMSupported) {
+                let txId2 = await this.wallet.importToXChain('C')
+                this.onSuccess(txId2)
+            }
         } catch (e) {
             if (this.isSuccess) return
             this.onError(e)

@@ -82,40 +82,45 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: ILedgerAppConfig
 
-    constructor(app: AppAvax, ethApp: Eth, hdkey: HDKey, hdEth: HDKey, config: ILedgerAppConfig) {
+    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth?: HDKey, ethApp?: Eth) {
         super(hdkey)
         this.app = app
         this.ethApp = ethApp
         this.type = 'ledger'
         this.config = config
 
-        const ethKey = hdEth
-        const ethPublic = importPublic(ethKey.publicKey)
-        this.ethAddress = publicToAddress(ethPublic).toString('hex')
-        this.ethBalance = new BN(0)
-        this.ethAddressBech = bintools.addressToString(
-            ava.getHRP(),
-            'C',
-            // @ts-ignore
-            hdEth.pubKeyHash
-        )
+        if (hdEth) {
+            const ethKey = hdEth
+            const ethPublic = importPublic(ethKey.publicKey)
+            this.ethAddress = publicToAddress(ethPublic).toString('hex')
+            this.ethBalance = new BN(0)
+            this.ethAddressBech = bintools.addressToString(
+                ava.getHRP(),
+                'C',
+                // @ts-ignore
+                hdEth.pubKeyHash
+            )
+        }
     }
 
     static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
-        let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        let hdEth = new HDKey()
-        // @ts-ignore
-        hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
-        // @ts-ignore
-        hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
+        let hdEth
+        if (config.version >= '0.4.0') {
+            let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
+            let hdEth = new HDKey()
+            // @ts-ignore
+            hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
+            // @ts-ignore
+            hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
+        }
 
-        return new LedgerWallet(app, eth, hd, hdEth, config)
+        return new LedgerWallet(app, hd, config, hdEth, eth)
     }
 
     // Returns an array of derivation paths that need to sign this transaction
@@ -672,8 +677,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async getEthBalance() {
-        let bal = await web3.eth.getBalance(this.ethAddress)
-        this.ethBalance = new BN(bal)
+        if (this.ethAddress) {
+            let bal = await web3.eth.getBalance(this.ethAddress)
+            this.ethBalance = new BN(bal)
+        } else {
+            console.error('Not implemented')
+            this.ethBalance = new BN(0)
+        }
+
         return this.ethBalance
     }
 
