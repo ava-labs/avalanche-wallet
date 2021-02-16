@@ -10,7 +10,7 @@
         </div>
         <div>
             <label>{{ $t('earn.validate.confirmation.start') }}</label>
-            <p>{{ start.toLocaleString() }}</p>
+            <p>{{ $t('earn.validate.confirmation.start_desc') }}</p>
         </div>
         <div>
             <label>{{ $t('earn.validate.confirmation.end') }}</label>
@@ -35,7 +35,6 @@ import Big from 'big.js'
 @Component
 export default class ConfirmPage extends Vue {
     @Prop() nodeID!: string
-    @Prop() start!: Date
     @Prop() end!: Date
     @Prop() delegationFee!: number
     @Prop() amount!: BN

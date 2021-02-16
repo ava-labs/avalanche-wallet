@@ -10,15 +10,12 @@
         <!--                :max-datetime="startDateMax"-->
         <!--            ></datetime>-->
         <!--        </div>-->
-        <div>
-            <label>
-                {{ $t('earn.validate.duration.end') }}
-                <span @click="maxoutEndDate">Max</span>
-            </label>
+        <div class="hover_border">
+            <button class="max_but" @click="maxoutEndDate">Max</button>
             <datetime
                 v-model="localEnd"
                 type="datetime"
-                class="date hover_border"
+                class="date"
                 :min-datetime="endDateMin"
                 :max-datetime="endDateMax"
             ></datetime>
@@ -157,6 +154,8 @@ export default class DateForm extends Vue {
 .dates_form {
     .date input {
         border: none !important;
+        text-align: right;
+        width: 100%;
     }
 }
 </style>
@@ -169,6 +168,9 @@ export default class DateForm extends Vue {
 
     > div {
         width: 100%;
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        background-color: var(--bg-light);
     }
 
     label > span {
@@ -178,6 +180,14 @@ export default class DateForm extends Vue {
         &:hover {
             opacity: 1;
         }
+    }
+}
+
+.max_but {
+    padding-left: 12px;
+    color: var(--primary-color-light);
+    &:hover {
+        color: var(--primary-color);
     }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
     <div class="confirmation">
-        <div>
-            <label>{{ $t('earn.delegate.confirmation.node') }}</label>
-            <p style="word-break: break-all">{{ nodeID }}</p>
-        </div>
+        <!--        <div>-->
+        <!--            <label>{{ $t('earn.delegate.confirmation.node') }}</label>-->
+        <!--            <p style="word-break: break-all">{{ nodeID }}</p>-->
+        <!--        </div>-->
         <div>
             <label>{{ $t('earn.delegate.confirmation.amount') }}</label>
             <p>{{ amtText }} AVAX</p>

@@ -25,6 +25,9 @@ export default {
 </script>
 <style scoped lang="scss">
 .content {
+    border-top: 1px solid transparent;
+    margin-top: 12px;
+    padding-top: 12px;
     max-height: 0vh;
     overflow: hidden;
     transition-duration: 0.2s;
@@ -34,6 +37,7 @@ export default {
     color: var(--primary-color-light);
     font-size: 13px;
     cursor: pointer;
+    width: max-content;
 
     &:hover {
         color: var(--primary-color);
@@ -42,10 +46,11 @@ export default {
 
 .expandable[active] {
     .toggle {
-        color: var(--secondary-color);
+        //color: var(--secondary-color);
     }
     .content {
         max-height: 100vh;
+        border-color: var(--bg-light);
     }
 }
 </style>

@@ -18,7 +18,7 @@
                             <p class="desc">
                                 {{ $t('earn.validate.duration.desc') }}
                             </p>
-                            <DateForm @change_start="setStart" @change_end="setEnd"></DateForm>
+                            <DateForm @change_end="setEnd"></DateForm>
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.amount.label') }}</h4>
@@ -46,14 +46,29 @@
                             <p class="desc">
                                 {{ $t('earn.validate.reward.desc') }}
                             </p>
-                            <v-chip-group mandatory @change="rewardSelect">
-                                <v-chip small value="local">
-                                    {{ $t('earn.validate.reward.chip_1') }}
-                                </v-chip>
-                                <v-chip small value="custom">
-                                    {{ $t('earn.validate.reward.chip_2') }}
-                                </v-chip>
-                            </v-chip-group>
+                            <div class="reward_tabs">
+                                <button
+                                    @click="rewardSelect('local')"
+                                    :selected="this.rewardDestination === 'local'"
+                                >
+                                    {{ $t('earn.delegate.form.reward.chip_1') }}
+                                </button>
+                                <span>or</span>
+                                <button
+                                    @click="rewardSelect('custom')"
+                                    :selected="this.rewardDestination === 'custom'"
+                                >
+                                    {{ $t('earn.delegate.form.reward.chip_2') }}
+                                </button>
+                            </div>
+                            <!--                            <v-chip-group mandatory @change="rewardSelect">-->
+                            <!--                                <v-chip small value="local">-->
+                            <!--                                    {{ $t('earn.validate.reward.chip_1') }}-->
+                            <!--                                </v-chip>-->
+                            <!--                                <v-chip small value="custom">-->
+                            <!--                                    {{ $t('earn.validate.reward.chip_2') }}-->
+                            <!--                                </v-chip>-->
+                            <!--                            </v-chip-group>-->
                             <QrInput
                                 style="height: 40px; border-radius: 2px"
                                 v-model="rewardIn"
@@ -84,7 +99,6 @@
                         key="confirm"
                         v-show="isConfirm"
                         :node-i-d="nodeId"
-                        :start="formStart"
                         :end="formEnd"
                         :amount="formAmt"
                         :delegation-fee="delegationFee"
@@ -188,6 +202,15 @@
                             <label>{{ $t('earn.validate.success.reason') }}</label>
                             <p>{{ txReason }}</p>
                         </div>
+                        <v-btn
+                            @click="cancel"
+                            block
+                            class="button_secondary"
+                            depressed
+                            v-if="txStatus"
+                        >
+                            Back to Earn
+                        </v-btn>
                     </div>
                 </div>
             </form>
@@ -223,6 +246,7 @@ const HOUR_MS = MIN_MS * 60
 const DAY_MS = HOUR_MS * 24
 
 const MIN_STAKE_DURATION = DAY_MS * 14
+const MAX_STAKE_DURATION = DAY_MS * 365
 
 @Component({
     name: 'add_validator',
@@ -239,7 +263,7 @@ const MIN_STAKE_DURATION = DAY_MS * 14
     },
 })
 export default class AddValidator extends Vue {
-    startDate: string = new Date().toISOString()
+    startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
     delegationFee: string = '2.0'
     nodeId = ''
@@ -254,7 +278,6 @@ export default class AddValidator extends Vue {
 
     formNodeId = ''
     formAmt: BN = new BN(0)
-    formStart: Date = new Date()
     formEnd: Date = new Date()
     formFee: number = 0
     formRewardAddr = ''
@@ -268,6 +291,10 @@ export default class AddValidator extends Vue {
 
     currency_type = 'AVAX'
 
+    mounted() {
+        this.rewardSelect('local')
+    }
+
     onFeeChange() {
         let num = parseFloat(this.delegationFee)
         if (num < this.minFee) {
@@ -277,9 +304,6 @@ export default class AddValidator extends Vue {
         }
     }
 
-    setStart(val: string) {
-        this.startDate = val
-    }
     setEnd(val: string) {
         this.endDate = val
     }
@@ -314,7 +338,6 @@ export default class AddValidator extends Vue {
         let end = new Date(this.endDate)
 
         if (this.isConfirm) {
-            start = this.formStart
             end = this.formEnd
         }
 
@@ -426,7 +449,6 @@ export default class AddValidator extends Vue {
     updateFormData() {
         this.formNodeId = this.nodeId.trim()
         this.formAmt = this.stakeAmt
-        this.formStart = new Date(this.startDate)
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
         this.formFee = parseFloat(this.delegationFee)
@@ -439,6 +461,10 @@ export default class AddValidator extends Vue {
     }
     cancelConfirm() {
         this.isConfirm = false
+    }
+
+    cancel() {
+        this.$emit('cancel')
     }
 
     get canSubmit() {
@@ -505,30 +531,53 @@ export default class AddValidator extends Vue {
         if (!this.formCheck()) return
         let wallet: WalletType = this.$store.state.activeWallet
 
+        // Start delegation in 5 minutes
+        let startDate = new Date(Date.now() + 5 * MIN_MS)
+        let endMs = this.formEnd.getTime()
+        let startMs = startDate.getTime()
+
+        // If End date - start date is greater than max stake duration, adjust start date
+        if (endMs - startMs > MAX_STAKE_DURATION) {
+            startDate = new Date(endMs - MAX_STAKE_DURATION)
+        }
+
         try {
             this.isLoading = true
             this.err = ''
             let txId = await wallet.validate(
                 this.formNodeId,
                 this.formAmt,
-                this.formStart,
+                startDate,
                 this.formEnd,
                 this.formFee,
                 this.formRewardAddr,
                 this.formUtxos
             )
             this.isLoading = false
-            this.onsuccess(txId)
+            this.onTxSubmit(txId)
         } catch (err) {
             this.isLoading = false
             this.onerror(err)
         }
     }
 
-    onsuccess(txId: string) {
+    onTxSubmit(txId: string) {
         this.txId = txId
         this.isSuccess = true
         this.updateTxStatus(txId)
+    }
+
+    onsuccess() {
+        this.$store.dispatch('Notifications/add', {
+            type: 'success',
+            title: 'Validator Added',
+            message: 'Your tokens are now locked to stake.',
+        })
+
+        // Update History
+        setTimeout(() => {
+            this.$store.dispatch('History/updateTransactionHistory')
+        }, 3000)
     }
 
     async updateTxStatus(txId: string) {
@@ -550,6 +599,10 @@ export default class AddValidator extends Vue {
         } else {
             this.txStatus = status
             this.txReason = reason
+
+            if (status === 'Committed') {
+                this.onsuccess()
+            }
         }
     }
 
@@ -695,6 +748,26 @@ label {
             user-select: none;
             pointer-events: none;
         }
+    }
+}
+
+.reward_tabs {
+    margin-bottom: 8px;
+    font-size: 13px;
+    button {
+        color: var(--primary-color-light);
+
+        &:hover {
+            color: var(--primary-color);
+        }
+
+        &[selected] {
+            color: var(--secondary-color);
+        }
+    }
+
+    span {
+        margin: 0px 12px;
     }
 }
 
