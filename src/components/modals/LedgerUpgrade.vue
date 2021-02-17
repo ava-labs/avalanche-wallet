@@ -1,7 +1,7 @@
 <template>
     <modal ref="modal" :title="$t('modal.ledger_upgrade.title')" @beforeClose="beforeClose">
         <div class="ledger_block">
-            <p style="margin-bottom: 14px !important; font-size: 16px">
+            <p style="margin-bottom: 14px !important; font-size: 16px" v-if="config">
                 <b>Current Avalanche App: v{{ config.version }}</b>
             </p>
             <p style="margin-bottom: 14px !important; font-size: 16px">
