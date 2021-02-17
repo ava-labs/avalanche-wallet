@@ -6,22 +6,12 @@
                 <p>{{ $t('transfer.tx_list.amount') }}</p>
                 <p>{{ $t('transfer.tx_list.token') }}</p>
             </div>
-            <!--            <AvaxInput-->
-            <!--                :max="maxAmt"-->
-            <!--                v-model="amountIn"-->
-            <!--                disabled=""-->
-            <!--                v-show="!isConfirm"-->
-            <!--                :balance="balanceBig"-->
-            <!--            ></AvaxInput>-->
             <EVMInputDropdown
                 style="margin-top: 20px"
                 @amountChange="onAmountChange"
                 @tokenChange="onTokenChange"
                 :disabled="isConfirm"
             ></EVMInputDropdown>
-            <!--            <p v-if="isConfirm" class="confirm_data" style="text-align: right">-->
-            <!--                {{ formAmountBig.toLocaleString() }} {{ symbol }}-->
-            <!--            </p>-->
         </div>
         <div class="right_col">
             <div class="to_address">

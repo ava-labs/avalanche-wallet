@@ -25,6 +25,13 @@ class Erc20Token {
         this.contract = tokenInst
     }
 
+    // Returns a new instance of the token, given only the erc20 address
+    static fromAddress(address: string) {
+        //@ts-ignore
+        var tokenInst = new web3.eth.Contract(ERC20Abi.abi, address)
+        console.log(tokenInst)
+    }
+
     createTransferTx(to: string, amount: BN) {
         return this.contract.methods.transfer(to, amount.toString())
     }
