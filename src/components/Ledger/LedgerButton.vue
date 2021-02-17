@@ -23,18 +23,6 @@ export default {
             isLoading: false,
         }
     },
-    watch: {
-        isLoading(val) {
-            if (val) {
-                this.$store.commit('Ledger/openModal', {
-                    title: 'Provide Public Keys',
-                    messages: [],
-                })
-            } else {
-                this.$store.commit('Ledger/closeModal')
-            }
-        },
-    },
     destroyed() {
         this.$store.commit('Ledger/closeModal')
     },
@@ -50,7 +38,26 @@ export default {
                     eth = new Eth(transport, 'Avalanche')
                     this.$store.commit('Ledger/openModal', {
                         title: 'Provide Public Keys',
-                        messages: [],
+                        messages: [
+                            {
+                                title: 'Derivation Path',
+                                value: AVA_ACCOUNT_PATH,
+                            },
+                            {
+                                title: 'Derivation Path',
+                                value: LEDGER_ETH_ACCOUNT_PATH,
+                            },
+                        ],
+                    })
+                } else {
+                    this.$store.commit('Ledger/openModal', {
+                        title: 'Provide Public Key',
+                        messages: [
+                            {
+                                title: 'Derivation Path',
+                                value: AVA_ACCOUNT_PATH,
+                            },
+                        ],
                     })
                 }
 
@@ -68,10 +75,10 @@ export default {
             }
         },
         onsuccess() {
-            this.isLoading = false
+            this.$store.commit('Ledger/closeModal')
         },
         onerror(err) {
-            this.isLoading = false
+            this.$store.commit('Ledger/closeModal')
             console.error(err)
 
             this.$store.dispatch('Notifications/add', {
