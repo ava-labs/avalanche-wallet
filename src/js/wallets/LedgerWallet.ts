@@ -103,7 +103,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         } else {
             this.ethAddress = ''
             this.ethAddressBech = ''
-            this.ethBalance = this.ethBalance = new BN(0)
+            this.ethBalance = new BN(0)
         }
     }
 

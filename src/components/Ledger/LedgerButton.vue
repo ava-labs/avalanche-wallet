@@ -40,8 +40,6 @@ export default {
     },
     methods: {
         async submit() {
-            this.isLoading = true
-
             try {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
@@ -50,6 +48,10 @@ export default {
                 let eth
                 if (config.version >= MIN_V) {
                     eth = new Eth(transport, 'Avalanche')
+                    this.$store.commit('Ledger/openModal', {
+                        title: 'Provide Public Keys',
+                        messages: [],
+                    })
                 }
 
                 let wallet = await LedgerWallet.fromApp(app, eth, config)
