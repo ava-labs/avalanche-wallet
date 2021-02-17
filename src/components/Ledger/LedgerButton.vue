@@ -46,19 +46,9 @@ export default {
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
                 let config = await app.getAppConfiguration()
-                const MIN_V_FOR_EVM_SUPPORT = '0.4.0'
-                // {version: "0.4.0", commit: "TEST*", name: "Avalanche"}
-                // Check for C Chain support ("0.4.0")
-                // if (config.version < MIN_V) {
-                //     this.$store.commit('Ledger/setIsUpgradeRequired', true)
-                //     console.error(
-                //         `Avalanche Ledger App is v${config.version}. Should be at least v${MIN_V}`
-                //     )
-                //     this.isLoading = false
-                //     return
-                // }
+                const MIN_V = '0.4.0'
                 let eth
-                if (config >= MIN_V_FOR_EVM_SUPPORT) {
+                if (config.version >= MIN_V) {
                     eth = new Eth(transport, 'Avalanche')
                 }
 
@@ -66,6 +56,7 @@ export default {
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()
+                    this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_V)
                 } catch (e) {
                     this.onerror(e)
                 }

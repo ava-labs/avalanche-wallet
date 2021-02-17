@@ -2,7 +2,10 @@
     <modal ref="modal" :title="$t('modal.ledger_upgrade.title')" @beforeClose="beforeClose">
         <div class="ledger_block">
             <p style="margin-bottom: 14px !important; font-size: 16px">
-                {{ $t('modal.ledger_upgrade.desc') }}
+                <b>Current Avalanche App: v{{ config.version }}</b>
+            </p>
+            <p style="margin-bottom: 14px !important; font-size: 16px">
+                To support C-chain transfers and balance, please consider upgrading to v0.4.0.
             </p>
             <div>
                 <a
@@ -16,6 +19,8 @@
     </modal>
 </template>
 <script lang="ts">
+import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { WalletType } from '@/store/types'
 import 'reflect-metadata'
 import { Vue, Component, Watch } from 'vue-property-decorator'
 
@@ -40,15 +45,24 @@ export default class LedgerUpgrade extends Vue {
     }
 
     beforeClose() {
-        this.$store.commit('Ledger/setIsUpgradeRequired', false)
+        this.$store.commit('Ledger/setIsUpgradeRecommended', false)
     }
 
     destroyed() {
-        this.$store.commit('Ledger/setIsUpgradeRequired', false)
+        this.$store.commit('Ledger/setIsUpgradeRecommended', false)
     }
 
     get isActive() {
-        return this.$store.state.Ledger.isUpgradeRequired
+        return this.$store.state.Ledger.isUpgradeRecommended
+    }
+
+    get wallet() {
+        return this.$store.state.activeWallet as WalletType
+    }
+
+    get config() {
+        if (!this.wallet) return {}
+        return (this.wallet as LedgerWallet).config
     }
 
     @Watch('isActive', { immediate: true })
