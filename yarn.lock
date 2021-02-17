@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@avalabs/vue_components@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.7.4.tgz#8fffe7005764cb2ab8daf3cfcdf0776df617af96"
-  integrity sha512-cITC5rcuNTKC/1ioGm5Bn2dKqPr1M4VduqCy7tgtCyL82n/o7V06VpLgJrZOtFrwWBwyuBRir/dhyU4ebT3JUg==
+"@avalabs/vue_components@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.8.0.tgz#cc1e9e19667747e164e74906d9a5e1a3b1ea49be"
+  integrity sha512-Jm+eEUm8SabrCKTazk6Y1x7S3Y5VDh1FRf1hBWg77mp5PdycJkFYzLTW+SRM145lpJ751aPTQ4f1SadT988Vyw==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.27"
     "@fortawesome/free-solid-svg-icons" "^5.12.1"
@@ -15,7 +15,6 @@
     bn.js "^5.1.1"
     core-js "^3.6.4"
     vue "^2.6.11"
-    vue-currency-input "^1.21.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.11", "@babel/code-frame@^7.8.3":
   version "7.12.11"
@@ -5973,7 +5972,7 @@ ethereumjs-common@^1.3.2, ethereumjs-common@^1.5.0:
   resolved "https://registry.yarnpkg.com/ethereumjs-common/-/ethereumjs-common-1.5.2.tgz#2065dbe9214e850f2e955a80e650cb6999066979"
   integrity sha512-hTfZjwGX52GS2jcVO6E2sx4YuFnf0Fhp5ylo4pEPhEffNln7vS59Hr5sLnp3/QCazFLluuBZ+FZ6J5HTp0EqCA==
 
-ethereumjs-tx@^2.1.1:
+ethereumjs-tx@^2.1.1, ethereumjs-tx@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ethereumjs-tx/-/ethereumjs-tx-2.1.2.tgz#5dfe7688bf177b45c9a23f86cf9104d47ea35fed"
   integrity sha512-zZEK1onCeiORb0wyCXUvg94Ve5It/K6GD1K+26KfFKodiBiS6d9lfCXlUKGBBdQ+bv7Day+JK0tj1K+BeNFRAw==
@@ -13754,11 +13753,6 @@ vue-country-flag@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/vue-country-flag/-/vue-country-flag-2.0.2.tgz#a2df339378761285699c28b840da5da02253f85f"
   integrity sha512-hRK0ZLcbQNdTo5H4UFOUoN6Tqy0BwepmaG1BNuf6cMyEWRQCkcbwBv0CQJXiNhPI+VYt/DyndQMT+E1/H82F/Q==
-
-vue-currency-input@^1.21.0:
-  version "1.22.4"
-  resolved "https://registry.yarnpkg.com/vue-currency-input/-/vue-currency-input-1.22.4.tgz#f0474ab6f069f857df5d6c8879e5e4ce3bde735b"
-  integrity sha512-7HSMBhMnQTE9Ict16OHv7hlafh4TC9Vtf8A/u1hFIA6hLKB80s94RREDqMjaurdikgTCfJ/yGoMBRu4JWefAbw==
 
 vue-datetime@1.0.0-beta.14:
   version "1.0.0-beta.14"

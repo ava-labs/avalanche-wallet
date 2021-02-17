@@ -190,8 +190,10 @@ const assets_module: Module<AssetsState, RootState> = {
             let wallet = rootState.activeWallet
             if (!wallet) return
 
+            let networkID = state.evmChainId
             let tokens: Erc20Token[] = getters.networkErc20Tokens
             tokens.forEach((token) => {
+                if (token.data.chainId !== networkID) return
                 token.updateBalance(wallet!.ethAddress)
             })
         },

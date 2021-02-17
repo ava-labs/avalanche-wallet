@@ -3,8 +3,9 @@ import { web3 } from '@/evm'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
+import store from '@/store'
 
-// import ERC20Api from '@openzeppelin/c'
+import ERC20Abi from '@openzeppelin/contracts/build/contracts/ERC20.json'
 
 class Erc20Token {
     data: TokenListToken
@@ -18,32 +19,14 @@ class Erc20Token {
         this.balanceRaw = '0'
         this.balanceBN = new BN('0')
         this.balanceBig = Big(0)
-        // console.log('Created erc20', tokenData.address)
 
-        let abiSig = {
-            constant: true,
-            inputs: [
-                {
-                    name: '_owner',
-                    type: 'address',
-                },
-            ],
-            name: 'balanceOf',
-            outputs: [
-                {
-                    name: 'balance',
-                    type: 'uint256',
-                },
-            ],
-            payable: false,
-            stateMutability: 'view',
-            type: 'function',
-        }
-
-        // let abi = web3.eth.abi.encodeEventSignature(abiSig)
         //@ts-ignore
-        var tokenInst = new web3.eth.Contract([abiSig], tokenData.address)
+        var tokenInst = new web3.eth.Contract(ERC20Abi.abi, tokenData.address)
         this.contract = tokenInst
+    }
+
+    createTransferTx(to: string, amount: BN) {
+        return this.contract.methods.transfer(to, amount.toString())
     }
 
     async updateBalance(address: string) {

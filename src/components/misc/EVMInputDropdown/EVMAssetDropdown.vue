@@ -1,6 +1,6 @@
 <template>
-    <div class="evm_dropdown hover_border" :active="isPopup">
-        <button @click="showPopup">
+    <div class="evm_dropdown hover_border" :active="isPopup" :disabled="disabled">
+        <button @click="showPopup" :disabled="disabled">
             {{ symbol }}
         </button>
         <div class="list">
@@ -19,7 +19,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
@@ -28,6 +28,8 @@ import Big from 'big.js'
 export default class EVMAssetDropdown extends Vue {
     isPopup = false
     selected: Erc20Token | 'native' = 'native'
+
+    @Prop({ default: false }) disabled!: boolean
 
     get tokens(): Erc20Token[] {
         let tokens: Erc20Token[] = this.$store.getters['Assets/networkErc20Tokens']

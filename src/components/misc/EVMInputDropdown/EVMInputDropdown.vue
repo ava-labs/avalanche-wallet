@@ -1,7 +1,7 @@
 <template>
     <div class="evm_input_dropdown">
-        <div class="col_in hover_border">
-            <button class="max_but" @click="maxOut">MAX</button>
+        <div class="col_in hover_border" :disabled="disabled">
+            <button class="max_but" @click="maxOut" :disabled="disabled">MAX</button>
             <BigNumInput
                 :max="max_amount"
                 :denomination="denomination"
@@ -10,10 +10,11 @@
                 ref="bigIn"
                 @change="amount_in"
                 class="bigIn"
+                :disabled="disabled"
             ></BigNumInput>
         </div>
         <!--        <div>-->
-        <EVMAssetDropdown @change="onAssetChange"></EVMAssetDropdown>
+        <EVMAssetDropdown @change="onAssetChange" :disabled="disabled"></EVMAssetDropdown>
         <div class="bal_col">
             <p class="bal">Balance: {{ balance }}</p>
         </div>
@@ -21,7 +22,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 //@ts-ignore
 import { BigNumInput } from '@avalabs/vue_components'
 import { BN } from 'avalanche'
@@ -39,6 +40,7 @@ import { bnToBig } from '@/helpers/helper'
 })
 export default class ERC20InputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
+    @Prop({ default: false }) disabled!: boolean
 
     $refs!: {
         bigIn: BigNumInput
@@ -53,7 +55,7 @@ export default class ERC20InputDropdown extends Vue {
     }
     get denomination() {
         if (this.isNative) {
-            return 18
+            return 9
         } else {
             return (this.token as Erc20Token).data.decimals
         }
@@ -75,13 +77,8 @@ export default class ERC20InputDropdown extends Vue {
         }
     }
 
-    get isEmpty() {
-        return false
-    }
-
     get placeholder(): string {
-        if (this.isEmpty || !this.asset_now) return '0.00'
-        let deno = this.asset_now.denomination
+        let deno = this.denomination
         let res = '0'
         if (deno > 2) {
             res = '0.00'
@@ -113,7 +110,7 @@ export default class ERC20InputDropdown extends Vue {
 
     get balanceBN(): BN {
         if (this.token === 'native') {
-            return this.avaxBalanceBN
+            return new BN(this.avaxBalance.toString())
         }
         return this.token.balanceBN
     }

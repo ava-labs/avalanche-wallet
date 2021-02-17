@@ -44,6 +44,7 @@ import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
 import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
+import Erc20Token from '@/js/Erc20Token'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -857,6 +858,28 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return await avm.issueTx(signed)
     }
     async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+        console.error('Not available yet.')
+        return 'NOT AVAILABLE'
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
         console.error('Not available yet.')
         return 'NOT AVAILABLE'
     }

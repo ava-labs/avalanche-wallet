@@ -17,34 +17,38 @@
                 style="margin-top: 20px"
                 @amountChange="onAmountChange"
                 @tokenChange="onTokenChange"
+                :disabled="isConfirm"
             ></EVMInputDropdown>
-            <p v-if="isConfirm" class="confirm_data" style="text-align: right">
-                {{ formAmountBig.toLocaleString() }} AVAX
-            </p>
+            <!--            <p v-if="isConfirm" class="confirm_data" style="text-align: right">-->
+            <!--                {{ formAmountBig.toLocaleString() }} {{ symbol }}-->
+            <!--            </p>-->
         </div>
         <div class="right_col">
             <div class="to_address">
                 <h4>{{ $t('transfer.to') }}</h4>
                 <qr-input
-                    v-show="!isConfirm"
                     v-model="addressIn"
                     class="qrIn"
                     placeholder="xxx"
+                    :disabled="isConfirm"
                 ></qr-input>
-                <p v-if="isConfirm" class="confirm_data" style="word-break: break-all">
-                    {{ formAddress }}
-                </p>
             </div>
             <div class="gas_cont">
                 <div>
                     <h4>{{ $t('transfer.c_chain.gasPrice') }}</h4>
-                    <input type="number" v-model="gasPrice" min="0" v-if="!isConfirm" />
-                    <p v-else class="confirm_data">{{ gasPrice }}</p>
+                    <input type="number" v-model="gasPrice" min="0" :disabled="isConfirm" />
                 </div>
                 <div>
                     <h4>{{ $t('transfer.c_chain.gasLimit') }}</h4>
-                    <input type="number" v-model="gasLimit" min="0" v-if="!isConfirm" />
-                    <p v-else class="confirm_data">{{ gasLimit }}</p>
+                    <template v-if="formToken === 'native'">
+                        <input type="number" v-model="gasLimit" min="0" :disabled="isConfirm" />
+                    </template>
+                    <template v-else>
+                        <p v-if="!isConfirm" style="font-size: 13px">
+                            Gas Limit will be automatically calculated after you click Confirm.
+                        </p>
+                        <p v-else class="confirm_data">{{ gasLimit }}</p>
+                    </template>
                 </div>
             </div>
 
@@ -56,7 +60,7 @@
 
                 <p>
                     {{ $t('transfer.total') }}
-                    <span>{{ totalUSD.toLocaleString(2) }} USD</span>
+                    <span v-if="totalUSD">{{ totalUSD.toLocaleString(2) }} USD</span>
                 </p>
             </div>
             <template v-if="!isSuccess">
@@ -150,13 +154,24 @@ export default class FormC extends Vue {
 
     formAddress = ''
     formAmount = new BN(0)
+    formToken: Erc20Token | 'native' = 'native'
     canSendAgain = false
 
     txHash = ''
 
-    onAmountChange(val: BN) {}
+    onAmountChange(val: BN) {
+        this.amountIn = val
+    }
 
-    onTokenChange(token: Erc20Token | 'native') {}
+    onTokenChange(token: Erc20Token | 'native') {
+        this.formToken = token
+
+        if (token === 'native') {
+            this.gasPrice = 470
+        } else {
+            // this.gasPrice = token.getTransferGasPrice()
+        }
+    }
 
     get wallet(): WalletType | null {
         return this.$store.state.activeWallet
@@ -165,24 +180,43 @@ export default class FormC extends Vue {
     get priceDict(): priceDict {
         return this.$store.state.prices
     }
-    get rawBalance(): BN {
-        if (!this.wallet) return new BN(0)
-        return this.wallet.ethBalance
-    }
-    get balance() {
-        let bal = this.rawBalance
-        return bal.divRound(new BN(Math.pow(10, 9).toString()))
-    }
 
-    get balanceBig() {
-        return bnToBig(this.balance, 9)
-    }
+    // get rawBalance(): BN {
+    //     if (!this.wallet) return new BN(0)
+    //     return this.wallet.ethBalance
+    // }
+
+    // get balance() {
+    //     let bal = this.rawBalance
+    //     return bal.divRound(new BN(Math.pow(10, 9).toString()))
+    // }
+
+    // get balanceBig() {
+    //     return bnToBig(this.balance, 9)
+    // }
 
     get txFee() {
         return Big(3)
     }
 
-    get totalUSD(): Big {
+    get denomination(): number {
+        if (this.formToken === 'native') {
+            return 9
+        } else {
+            return this.formToken.data.decimals
+        }
+    }
+
+    get symbol(): string {
+        if (this.formToken === 'native') return 'AVAX'
+        return this.formToken.data.symbol
+    }
+
+    get totalUSD(): Big | null {
+        if (this.formToken !== 'native') {
+            return null
+        }
+
         let bigAmt = bnToBig(this.amountIn, 9)
         let usdPrice = this.priceDict.usd
         let bigFee = bnToBig(this.maxFee, 18)
@@ -204,7 +238,7 @@ export default class FormC extends Vue {
         let addr = this.addressIn
 
         if (!this.validateAddress(addr)) {
-            this.err = 'Invalid C Chain address. Make sure your address begins with "C-0x"'
+            this.err = 'Invalid C Chain address. Make sure your address begins with "0x" or "C-0x"'
             return false
         }
 
@@ -235,22 +269,31 @@ export default class FormC extends Vue {
     }
 
     // balance - (gas * price)
-    get maxAmt() {
-        // let priceWei = new BN(this.gasPrice).mul(new BN(Math.pow(10, 9)))
-        // let res = priceWei.mul(new BN(this.gasLimit))
-        let res = this.rawBalance.sub(this.maxFee)
-        return res.divRound(new BN(Math.pow(10, 9)))
-    }
+    // get maxAmt() {
+    //     // let priceWei = new BN(this.gasPrice).mul(new BN(Math.pow(10, 9)))
+    //     // let res = priceWei.mul(new BN(this.gasLimit))
+    //     let res = this.rawBalance.sub(this.maxFee)
+    //     return res.divRound(new BN(Math.pow(10, 9)))
+    // }
 
     confirm() {
+        if (!this.wallet) return
         if (!this.validate()) return
         this.formAddress = this.addressIn
         this.formAmount = this.amountIn.clone()
         this.isConfirm = true
+
+        if (this.formToken !== 'native') {
+            this.wallet
+                .estimateGas(this.formAddress, this.formAmount, this.formToken)
+                .then((val: number) => {
+                    this.gasLimit = val
+                })
+        }
     }
 
     get formAmountBig() {
-        return bnToBig(this.formAmount, 9)
+        return bnToBig(this.formAmount, this.denomination)
     }
 
     cancel() {
@@ -276,17 +319,16 @@ export default class FormC extends Vue {
     get canConfirm() {
         if (this.amountIn.isZero()) return false
         if (this.addressIn.length < 6) return false
-        if (this.gasPrice <= 0 || this.gasLimit <= 0) return false
+        if (this.gasPrice <= 0 || (this.gasLimit <= 0 && this.formToken == 'native')) return false
         return true
     }
 
     async submit() {
         if (!this.wallet) return
         this.isLoading = true
-        let formAmt = this.formAmount.mul(new BN(Math.pow(10, 9)))
+        // convert base 9 to 18
 
         let gasPriceWei = new BN(this.gasPrice).mul(new BN(Math.pow(10, 9)))
-
         let toAddress = this.formAddress
 
         if (toAddress.substring(0, 2) === 'C-') {
@@ -294,8 +336,26 @@ export default class FormC extends Vue {
         }
 
         try {
-            let txHash = await this.wallet.sendEth(toAddress, formAmt, gasPriceWei, this.gasLimit)
-            this.onSuccess(txHash)
+            if (this.formToken === 'native') {
+                let formAmt = this.formAmount.mul(new BN(Math.pow(10, 9)))
+
+                let txHash = await this.wallet.sendEth(
+                    toAddress,
+                    formAmt,
+                    gasPriceWei,
+                    this.gasLimit
+                )
+                this.onSuccess(txHash)
+            } else {
+                let txHash = await this.wallet.sendERC20(
+                    toAddress,
+                    this.formAmount,
+                    gasPriceWei,
+                    this.gasLimit,
+                    this.formToken
+                )
+                this.onSuccess(txHash)
+            }
         } catch (e) {
             this.onError(e)
         }

@@ -38,6 +38,7 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
+import Erc20Token from '@/js/Erc20Token'
 var uniqid = require('uniqid')
 
 class SingletonWallet implements AvaWalletCore, UnsafeWallet {
@@ -714,6 +715,28 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         }
 
         return receipt.transactionHash
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
+        console.log('Sending: ', token)
+        return ''
     }
 
     getAllAddressesX() {
