@@ -33,33 +33,37 @@ export default {
                 let app = new AppAvax(transport)
                 let config = await app.getAppConfiguration()
                 const MIN_V = '0.4.0'
-                let eth
+
+                this.isLoading = true
+
+                let eth, title, messages
                 if (config.version >= MIN_V) {
                     eth = new Eth(transport, 'Avalanche')
-                    this.$store.commit('Ledger/openModal', {
-                        title: 'Provide Public Keys',
-                        messages: [
-                            {
-                                title: 'Derivation Path',
-                                value: AVA_ACCOUNT_PATH,
-                            },
-                            {
-                                title: 'Derivation Path',
-                                value: LEDGER_ETH_ACCOUNT_PATH,
-                            },
-                        ],
-                    })
+                    title = 'Provide Public Keys'
+                    messages = [
+                        {
+                            title: 'Derivation Path',
+                            value: AVA_ACCOUNT_PATH,
+                        },
+                        {
+                            title: 'Derivation Path',
+                            value: LEDGER_ETH_ACCOUNT_PATH,
+                        },
+                    ]
                 } else {
-                    this.$store.commit('Ledger/openModal', {
-                        title: 'Provide Public Key',
-                        messages: [
-                            {
-                                title: 'Derivation Path',
-                                value: AVA_ACCOUNT_PATH,
-                            },
-                        ],
-                    })
+                    title = 'Provide Public Key'
+                    messages = [
+                        {
+                            title: 'Derivation Path',
+                            value: AVA_ACCOUNT_PATH,
+                        },
+                    ]
                 }
+
+                this.$store.commit('Ledger/openModal', {
+                    title,
+                    messages,
+                })
 
                 let wallet = await LedgerWallet.fromApp(app, eth, config)
                 try {
@@ -75,9 +79,11 @@ export default {
             }
         },
         onsuccess() {
+            this.isLoading = false
             this.$store.commit('Ledger/closeModal')
         },
         onerror(err) {
+            this.isLoading = false
             this.$store.commit('Ledger/closeModal')
             console.error(err)
 
