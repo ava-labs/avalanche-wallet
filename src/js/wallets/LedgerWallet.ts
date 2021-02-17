@@ -100,6 +100,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 // @ts-ignore
                 hdEth.pubKeyHash
             )
+        } else {
+            this.ethAddress = ''
+            this.ethAddressBech = ''
+            this.ethBalance = this.ethBalance = new BN(0)
         }
     }
 
@@ -1152,11 +1156,19 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // Remove when this constraint is fixed
         const MAX = '18446744000000000000'
 
+        let signature = {} as { v: string; r: string; s: string }
         if (unsignedTx.value.gte(new BN(MAX))) {
+            // let bip32Paths = this.pathsToUniqueBipPaths(['0/0'])
+            // const accountPath = bippath.fromString(`${ETH_ACCOUNT_PATH}`)
+            // const sigMap = await this.app.signHash(accountPath, bip32Paths, unsignedTx.hash())
+            // const response = sigMap.get('0/0')
+            // signature.v = '150f5'
+            // signature.r = response.slice(1, 1 + 32).toString('hex')
+            // signature.s = response.slice(1 + 32, 1 + 32 + 32).toString('hex')
             throw 'Amount too big'
+        } else {
+            signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
         }
-
-        let signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
 
         const signatureBN = {
             v: new BN(signature.v, 16),
