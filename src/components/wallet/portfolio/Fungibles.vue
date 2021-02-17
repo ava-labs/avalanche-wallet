@@ -1,5 +1,6 @@
 <template>
     <div class="fungibles_view">
+        <AddERC20TokenModal ref="add_token_modal"></AddERC20TokenModal>
         <div class="headers">
             <p class="name_col">{{ $t('portfolio.name') }}</p>
             <p></p>
@@ -28,7 +29,7 @@
                         :token="erc"
                     ></ERC20Row>
                     <div class="asset add_token_row">
-                        <button>Add Token</button>
+                        <button @click="addToken">Add Token</button>
                     </div>
                 </div>
             </div>
@@ -44,9 +45,11 @@ import FungibleRow from '@/components/wallet/portfolio/FungibleRow.vue'
 import AvaAsset from '@/js/AvaAsset'
 import Erc20Token from '@/js/Erc20Token'
 import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
+import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
 
 @Component({
     components: {
+        AddERC20TokenModal,
         ERC20Row,
         FaucetLink,
         FungibleRow,
@@ -55,9 +58,17 @@ import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 export default class Fungibles extends Vue {
     @Prop() search!: string
 
+    $refs!: {
+        add_token_modal: AddERC20TokenModal
+    }
+
     get networkStatus(): string {
         let stat = this.$store.state.Network.status
         return stat
+    }
+
+    addToken() {
+        this.$refs.add_token_modal.open()
     }
 
     get walletBalancesSorted(): AvaAsset[] {
@@ -184,6 +195,7 @@ export default class Fungibles extends Vue {
     display: flex !important;
     justify-content: center;
     padding: 24px;
+    border: none !important;
 
     button {
         border: 1px solid var(--primary-color-light);

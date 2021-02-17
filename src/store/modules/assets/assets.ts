@@ -1,5 +1,5 @@
 import { Module } from 'vuex'
-import { AssetAPI, AssetsDict, AssetsState, TokenListToken } from '@/store/modules/assets/types'
+import { AssetsDict, AssetsState, TokenListToken } from '@/store/modules/assets/types'
 import {
     IWalletAssetsDict,
     IWalletBalanceDict,
@@ -42,6 +42,7 @@ const assets_module: Module<AssetsState, RootState> = {
         nftUTXOs: [],
         nftMintUTXOs: [],
         erc20Tokens: [],
+        erc20TokensCustom: [],
         evmChainId: 0,
     },
     mutations: {
@@ -70,6 +71,21 @@ const assets_module: Module<AssetsState, RootState> = {
             state.nftMintUTXOs = []
             state.balanceDict = {}
             state.AVA_ASSET_ID = null
+        },
+        saveCustomErc20Tokens(state) {
+            let tokens: Erc20Token[] = state.erc20TokensCustom
+
+            let tokenRawData: TokenListToken[] = tokens.map((token) => {
+                return token.data
+            })
+            localStorage.setItem('erc20_tokens', JSON.stringify(tokenRawData))
+        },
+        loadCustomErc20Tokens(state) {
+            let tokensRaw = localStorage.getItem('erc20_tokens') || '[]'
+            let tokens: TokenListToken[] = JSON.parse(tokensRaw)
+            for (var i = 0; i < tokens.length; i++) {
+                state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
+            }
         },
         // setIsUpdateBalance(state, val) {
         //     state.isUpdateBalance = val
@@ -132,7 +148,32 @@ const assets_module: Module<AssetsState, RootState> = {
             state.erc20Tokens.push(t)
         },
 
-        async initERc20List({ dispatch }) {
+        async addCustomErc20Token({ state, rootState, commit }, token: TokenListToken) {
+            let tokens: Erc20Token[] = state.erc20TokensCustom
+
+            // Make sure its not added before
+            for (var i = 0; i < tokens.length; i++) {
+                let t = tokens[i]
+                if (token.address === t.data.address && token.chainId === t.data.chainId) {
+                    throw new Error('ERC20 Token already added.')
+                }
+            }
+
+            let t = new Erc20Token(token)
+            // Save token state to storage
+            state.erc20TokensCustom.push(t)
+
+            let w = rootState.activeWallet
+            if (w) {
+                t.updateBalance(w.ethAddress)
+            }
+
+            commit('saveCustomErc20Tokens')
+
+            return t
+        },
+
+        async initERc20List({ dispatch, commit }) {
             const tokenLists = [
                 'https://raw.githubusercontent.com/dasconnor/tokenlist/main/fuji.tokenlist.json',
                 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
@@ -146,6 +187,8 @@ const assets_module: Module<AssetsState, RootState> = {
                     }
                 })
             })
+
+            commit('loadCustomErc20Tokens')
         },
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids

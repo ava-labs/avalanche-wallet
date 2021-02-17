@@ -18,6 +18,7 @@ export interface AssetsState {
     nftUTXOs: AVMUTXO[]
     nftMintUTXOs: AVMUTXO[]
     erc20Tokens: Erc20Token[]
+    erc20TokensCustom: Erc20Token[]
     evmChainId: number
 }
 

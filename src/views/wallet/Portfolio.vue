@@ -1,7 +1,7 @@
 <template>
     <div class="home_view">
         <div class="header">
-            <!--            <h1>{{ $t('portfolio.assets') }}</h1>-->
+            <h1>{{ $t('portfolio.assets') }}</h1>
             <div>
                 <button
                     @click="tab = 'fungibles'"
