@@ -14,7 +14,11 @@
             ></BigNumInput>
         </div>
         <!--        <div>-->
-        <EVMAssetDropdown @change="onAssetChange" :disabled="disabled"></EVMAssetDropdown>
+        <EVMAssetDropdown
+            @change="onAssetChange"
+            :disabled="disabled"
+            ref="dropdown"
+        ></EVMAssetDropdown>
         <div class="bal_col">
             <p class="bal">Balance: {{ balance }}</p>
         </div>
@@ -46,6 +50,7 @@ export default class ERC20InputDropdown extends Vue {
 
     $refs!: {
         bigIn: BigNumInput
+        dropdown: EVMAssetDropdown
     }
 
     get max_amount(): BN {
@@ -115,6 +120,11 @@ export default class ERC20InputDropdown extends Vue {
             return new BN(this.avaxBalance.toString())
         }
         return this.token.balanceBN
+    }
+
+    setToken(token: 'native' | Erc20Token) {
+        //@ts-ignore
+        this.$refs.dropdown.select(token)
     }
 
     onAssetChange(token: Erc20Token | 'native') {

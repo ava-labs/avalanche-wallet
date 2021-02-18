@@ -11,6 +11,7 @@
                 @amountChange="onAmountChange"
                 @tokenChange="onTokenChange"
                 :disabled="isConfirm"
+                ref="token_in"
             ></EVMInputDropdown>
         </div>
         <div class="right_col">
@@ -148,6 +149,10 @@ export default class FormC extends Vue {
     canSendAgain = false
 
     txHash = ''
+
+    $refs!: {
+        token_in: EVMInputDropdown
+    }
 
     onAmountChange(val: BN) {
         this.amountIn = val
@@ -304,6 +309,20 @@ export default class FormC extends Vue {
 
     activated() {
         this.startAgain()
+
+        let tokenAddr = this.$route.query.token
+        if (tokenAddr) {
+            if (tokenAddr === 'native') {
+                //@ts-ignore
+                this.$refs.token_in.setToken(tokenAddr)
+            } else {
+                let token = this.$store.getters['Assets/findErc20'](tokenAddr)
+                if (token) {
+                    //@ts-ignore
+                    this.$refs.token_in.setToken(token)
+                }
+            }
+        }
     }
 
     get canConfirm() {
