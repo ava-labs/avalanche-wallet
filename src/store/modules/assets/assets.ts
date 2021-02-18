@@ -230,10 +230,10 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async updateERC20Balances({ state, rootState, getters }) {
-            let wallet = rootState.activeWallet
+            let wallet: WalletType | null = rootState.activeWallet
             if (!wallet) return
-            //TODO: Remove after ledger supports
-            if (wallet.type === 'ledger') return
+            // Old ledger wallets do not have an eth address
+            if (!wallet.ethAddress) return
 
             let networkID = state.evmChainId
             let tokens: Erc20Token[] = getters.networkErc20Tokens
