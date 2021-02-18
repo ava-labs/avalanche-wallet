@@ -57,13 +57,16 @@ export default class ChainImport extends Vue {
         this.beforeSubmit()
         if (!this.wallet) return
 
+        let err
+        let hasUTXOs
         // Import from P
         try {
             let txId = await this.wallet.importToXChain('P')
             this.onSuccess(txId)
+            hasUTXOs = true
         } catch (e) {
             if (this.isSuccess) return
-            this.onError(e)
+            err = e
         }
 
         // Import from C
@@ -71,10 +74,15 @@ export default class ChainImport extends Vue {
             if (this.isEVMSupported) {
                 let txId2 = await this.wallet.importToXChain('C')
                 this.onSuccess(txId2)
+                hasUTXOs = true
             }
         } catch (e) {
             if (this.isSuccess) return
-            this.onError(e)
+            err = e
+        }
+
+        if (!hasUTXOs) {
+            this.onError(err)
         }
     }
 
@@ -136,7 +144,6 @@ export default class ChainImport extends Vue {
     onError(err: Error) {
         this.$store.commit('Ledger/closeModal')
         this.isLoading = false
-        console.error(err)
         let msg = ''
         if (err.message.includes('No atomic')) {
             this.err = 'Nothing found to import.'
