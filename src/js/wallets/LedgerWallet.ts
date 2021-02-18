@@ -1139,7 +1139,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             // signature.v = '150f5'
             // signature.r = response.slice(1, 1 + 32).toString('hex')
             // signature.s = response.slice(1 + 32, 1 + 32 + 32).toString('hex')
-            throw 'Amount too big'
+            throw 'Amount too big. Must be less than 18 AVAX.'
         } else {
             signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
         }
