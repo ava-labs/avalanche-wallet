@@ -31,9 +31,11 @@ import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
 import { WalletType } from '@/store/types'
 import { bnToBig } from '@/helpers/helper'
+import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
 
 @Component({
     components: {
+        EVMTokenSelectModal,
         EVMAssetDropdown,
         BigNumInput,
     },

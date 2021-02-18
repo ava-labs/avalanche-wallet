@@ -229,7 +229,7 @@ export default class Fungibles extends Vue {
     white-space: nowrap;
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .headers,
     .asset {
         grid-template-columns: 50px 1fr 1fr 50px;
@@ -255,6 +255,10 @@ export default class Fungibles extends Vue {
         .send_col {
             display: none;
         }
+    }
+
+    .scrollable {
+        height: 90vh;
     }
 }
 
