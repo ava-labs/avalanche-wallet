@@ -149,7 +149,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async addCustomErc20Token({ state, rootState, commit }, token: TokenListToken) {
-            let tokens: Erc20Token[] = state.erc20TokensCustom
+            let tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
 
             // Make sure its not added before
             for (var i = 0; i < tokens.length; i++) {
