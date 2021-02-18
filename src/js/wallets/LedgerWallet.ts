@@ -519,7 +519,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return messages
     }
 
-    getValidateDelegateMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+    getValidateDelegateMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
         chainId: ChainIdType
     ): ILedgerBlockMessage[] {
@@ -602,7 +602,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const outputMessages = this.getOutputMsgs(unsignedTx, chainId, changePath)
         messages.push(...outputMessages)
 
-        const validateDelegateMessages = this.getValidateDelegateMsgs(unsignedTx, chainId)
+        const validateDelegateMessages = this.getValidateDelegateMsgs(
+            unsignedTx as AVMUnsignedTx | PlatformUnsignedTx,
+            chainId
+        )
         messages.push(...validateDelegateMessages)
 
         const feeMessages = this.getFeeMsgs(unsignedTx, chainId)
