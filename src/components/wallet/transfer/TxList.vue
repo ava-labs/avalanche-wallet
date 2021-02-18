@@ -10,8 +10,13 @@
                 @change="oninputchange(i, $event)"
                 :disabled_assets="disabledAssets[i]"
                 :initial="tx.asset.id"
+                :disabled="disabled"
             ></currency-input-dropdown>
-            <button @click="removeTx(i)" v-if="i !== 0 || tx_list.length > 1" class="remove_but">
+            <button
+                @click="removeTx(i)"
+                v-if="(i !== 0 || tx_list.length > 1) && !disabled"
+                class="remove_but"
+            >
                 <img src="@/assets/trash_can_dark.svg" />
             </button>
         </div>
@@ -43,6 +48,8 @@ export default class TxList extends Vue {
     tx_list: ITransaction[] = []
     disabledAssets: AvaAsset[][] = []
     next_initial: AvaAsset | null = null
+
+    @Prop({ default: false }) disabled!: boolean
 
     updateUnavailable(): void {
         let res: AvaAsset[][] = []
@@ -156,6 +163,7 @@ export default class TxList extends Vue {
         return this.$store.getters['Assets/walletAssetsDict']
     }
     get showAdd(): boolean {
+        if (this.disabled) return false
         if (this.tx_list.length === this.assets_list.length || this.assets_list.length === 0) {
             return false
         }

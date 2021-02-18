@@ -11,19 +11,28 @@
             <div class="new_order_Form" v-show="formType === 'X'">
                 <div class="lists">
                     <ChainInput v-model="formType"></ChainInput>
-                    <div v-show="!isConfirm">
-                        <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                    <div>
+                        <tx-list
+                            class="tx_list"
+                            ref="txList"
+                            @change="updateTxList"
+                            :disabled="isConfirm"
+                        ></tx-list>
                         <template v-if="hasNFT">
-                            <NftList @change="updateNftList" ref="nftList"></NftList>
+                            <NftList
+                                @change="updateNftList"
+                                ref="nftList"
+                                :disabled="isConfirm"
+                            ></NftList>
                         </template>
                     </div>
-                    <div v-show="isConfirm">
-                        <TxSummary
-                            class="lists"
-                            :orders="formOrders"
-                            :nft-orders="formNftOrders"
-                        ></TxSummary>
-                    </div>
+                    <!--                    <div v-show="isConfirm">-->
+                    <!--                        <TxSummary-->
+                    <!--                            class="lists"-->
+                    <!--                            :orders="formOrders"-->
+                    <!--                            :nft-orders="formNftOrders"-->
+                    <!--                        ></TxSummary>-->
+                    <!--                    </div>-->
                 </div>
                 <div>
                     <div class="to_address">

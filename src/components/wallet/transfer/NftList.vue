@@ -15,18 +15,11 @@
                 @change="setGroupUtxos"
             ></NftListItem>
             <div class="nft_icon card nft_add">
-                <button @click="showPopup" class="add_but">
+                <button @click="showPopup" class="add_but" v-if="!disabled">
                     <fa icon="plus"></fa>
                     <br />
                     Add Collectible
                 </button>
-                <BalancePopup
-                    ref="popup"
-                    :is-nft="true"
-                    @select="addNft"
-                    :disabled-ids="usedNftIds"
-                    class="bal_popup"
-                ></BalancePopup>
             </div>
         </div>
     </div>
@@ -61,6 +54,8 @@ export default class NftList extends Vue {
         popup: BalancePopup
         select_modal: AvmNftSelectModal
     }
+
+    @Prop({ default: false }) disabled!: boolean
 
     // @Watch('addedNfts')
     // onlistchange(val: UTXO[]) {

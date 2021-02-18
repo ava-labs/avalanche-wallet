@@ -1,8 +1,8 @@
 <template>
     <div class="dropdown hover_border" :active="isPopup">
-        <button @click="showPopup">
+        <button @click="showPopup" :disabled="disabled">
             {{ symbol }}
-            <fa icon="caret-down" style="float: right"></fa>
+            <!--            <fa icon="caret-down" style="float: right"></fa>-->
         </button>
         <!--        <BalancePopup-->
         <!--            :assets="assetArray"-->
@@ -38,6 +38,7 @@ export default class BalanceDropdown extends Vue {
     isPopup: boolean = false
 
     @Prop({ default: () => [] }) disabled_assets!: AvaAsset[]
+    @Prop({ default: false }) disabled!: boolean
     @Model('change', { type: AvaAsset }) readonly asset!: AvaAsset
 
     get assetArray(): AvaAsset[] {
@@ -104,6 +105,9 @@ button {
     position: relative;
     &:focus-within {
         outline: 1px solid var(--secondary-color);
+    }
+    > button {
+        text-align: center;
     }
 }
 

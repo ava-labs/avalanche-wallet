@@ -2,7 +2,7 @@
     <div>
         <div class="curr_in_drop">
             <div class="max_in_cont hover_border">
-                <button class="max_but" @click="maxOut">MAX</button>
+                <button class="max_but" @click="maxOut" :disabled="disabled">MAX</button>
                 <big-num-input
                     ref="bigIn"
                     @change="amount_in"
@@ -12,11 +12,13 @@
                     :denomination="denomination"
                     :step="stepSize"
                     :placeholder="placeholder"
+                    :disabled="disabled"
                 ></big-num-input>
             </div>
             <BalanceDropdown
                 :disabled_assets="disabled_assets"
                 v-model="asset_now"
+                :disabled="disabled"
             ></BalanceDropdown>
         </div>
         <div class="balance">
@@ -75,6 +77,7 @@ export default class CurrencyInputDropdown extends Vue {
 
     @Prop({ default: () => [] }) disabled_assets!: AvaAsset[]
     @Prop({ default: '' }) initial!: string
+    @Prop({ default: false }) disabled!: boolean
 
     mounted() {
         if (this.isEmpty) return
@@ -226,7 +229,7 @@ export default class CurrencyInputDropdown extends Vue {
 
 .curr_in_drop {
     display: grid;
-    grid-template-columns: 1fr 140px;
+    grid-template-columns: 1fr 90px;
     background-color: transparent;
     //font-size: 12px;
     width: 100%;
