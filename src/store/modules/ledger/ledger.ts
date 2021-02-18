@@ -6,6 +6,7 @@ const ledger_module: Module<LedgerState, RootState> = {
     namespaced: true,
     state: {
         isBlock: false, // if true a modal blocks the window
+        isUpgradeRecommended: false,
         messages: [],
         title: 'title',
         info: `info'`,
@@ -20,6 +21,9 @@ const ledger_module: Module<LedgerState, RootState> = {
         closeModal(state) {
             state.messages = []
             state.isBlock = false
+        },
+        setIsUpgradeRecommended(state, val) {
+            state.isUpgradeRecommended = val
         },
     },
     actions: {},

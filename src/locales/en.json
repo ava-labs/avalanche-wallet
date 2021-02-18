@@ -687,6 +687,10 @@
         },
         "ledger": {
             "desc": "Please confirm these actions on your ledger device."
+        },
+        "ledger_upgrade": {
+            "submit": "Upgrade",
+            "title": "Upgrade Available"
         }
     },
     "nav": {
