@@ -1,5 +1,10 @@
 <template>
     <div v-if="!isEmpty">
+        <AvmNftSelectModal
+            ref="select_modal"
+            @select="addNft"
+            :disabled-ids="usedNftIds"
+        ></AvmNftSelectModal>
         <div class="added_list">
             <NftListItem
                 v-for="utxo in addedNfts"
@@ -38,9 +43,11 @@ import { getPayloadFromUTXO } from '@/helpers/helper'
 import NftListItem from '@/components/wallet/transfer/NftListItem.vue'
 import { IGroupDict, IGroupQuantity } from '@/components/wallet/studio/mint/types'
 import { bintools } from '@/AVA'
+import AvmNftSelectModal from '@/components/modals/AvmNftSelectModal.vue'
 
 @Component({
     components: {
+        AvmNftSelectModal,
         BalancePopup,
         NftListItem,
     },
@@ -52,6 +59,7 @@ export default class NftList extends Vue {
 
     $refs!: {
         popup: BalancePopup
+        select_modal: AvmNftSelectModal
     }
 
     // @Watch('addedNfts')
@@ -141,7 +149,8 @@ export default class NftList extends Vue {
     }
 
     showPopup() {
-        this.$refs.popup.isActive = true
+        this.$refs.select_modal.open()
+        // this.$refs.popup.isActive = true
     }
 
     deactivated() {
