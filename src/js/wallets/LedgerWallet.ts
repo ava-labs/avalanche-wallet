@@ -922,8 +922,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             'C'
         )) as EvmTx
 
-        store.commit('Ledger/closeModal')
-
         return cChain.issueTx(tx)
     }
 
