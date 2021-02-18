@@ -118,14 +118,12 @@ export default class ERC20InputDropdown extends Vue {
     }
 
     onAssetChange(token: Erc20Token | 'native') {
-        console.log(token)
         this.token = token
         this.$refs.bigIn.clear()
         this.$emit('tokenChange', token)
     }
 
     amount_in(amt: BN) {
-        console.log(amt.toString())
         this.$emit('amountChange', amt)
     }
 }

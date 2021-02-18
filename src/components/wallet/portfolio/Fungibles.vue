@@ -28,7 +28,7 @@
                         :key="erc.data.address"
                         :token="erc"
                     ></ERC20Row>
-                    <div class="asset add_token_row">
+                    <div class="asset add_token_row" v-if="!isLedger">
                         <button @click="addToken">Add Token</button>
                     </div>
                 </div>
@@ -46,6 +46,7 @@ import AvaAsset from '@/js/AvaAsset'
 import Erc20Token from '@/js/Erc20Token'
 import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
+import { WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -69,6 +70,12 @@ export default class Fungibles extends Vue {
 
     addToken() {
         this.$refs.add_token_modal.open()
+    }
+
+    get isLedger() {
+        let w: WalletType | null = this.$store.state.activeWallet
+        if (!w) return false
+        return w.type === 'ledger'
     }
 
     get walletBalancesSorted(): AvaAsset[] {
