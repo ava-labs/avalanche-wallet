@@ -18,6 +18,8 @@
     },
     "dependencies": {
         "@avalabs/vue_components": "0.7.4",
+        "@ethereumjs/common": "^2.0.0",
+        "@ethereumjs/tx": "^3.0.0",
         "@fortawesome/fontawesome-svg-core": "1.2.26",
         "@fortawesome/free-brands-svg-icons": "5.12.0",
         "@fortawesome/free-regular-svg-icons": "5.12.0",
@@ -25,6 +27,7 @@
         "@fortawesome/vue-fontawesome": "0.1.9",
         "@ledgerhq/hw-transport-u2f": "5.22.0",
         "@ledgerhq/hw-transport-webusb": "5.22.0",
+        "@ledgerhq/hw-app-eth": "5.42.1",
         "@obsidiansystems/hw-app-avalanche": "0.2.2",
         "@toruslabs/torus-direct-web-sdk": "3.1.0",
         "@types/big.js": "4.0.5",

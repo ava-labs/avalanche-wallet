@@ -432,11 +432,6 @@ export default class Transfer extends Vue {
         return this.$store.state.activeWallet
     }
 
-    // TODO: Remove after ledger support
-    get isLedger() {
-        return this.wallet.type === 'ledger'
-    }
-
     get txFee(): Big {
         let fee = avm.getTxFee()
         return bnToBig(fee, 9)

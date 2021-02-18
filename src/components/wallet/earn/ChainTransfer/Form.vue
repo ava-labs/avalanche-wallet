@@ -88,22 +88,26 @@ export default class Form extends Vue {
     }
 
     get sourceOptions(): ChainIdType[] {
-        if (this.isLedger) {
+        if (!this.isEVMSupported) {
             return ['X', 'P']
         }
+
         let all = [...chainTypes]
         return all
     }
 
     get destinationOptions(): ChainIdType[] {
-        if (this.sourceChain === 'X') {
-            if (this.isLedger) {
-                return ['P']
-            }
-            return ['P', 'C']
-        } else {
-            return ['X']
-        }
+        return this.isEVMSupported
+            ? ({
+                  X: ['P', 'C'],
+                  P: ['X'],
+                  C: ['X'],
+              }[this.sourceChain] as ChainIdType[])
+            : //   @ts-ignore
+              ({
+                  X: ['P'],
+                  P: ['X'],
+              }[this.sourceChain] as ChainIdType[])
     }
 
     @Watch('destinationOptions')
@@ -191,8 +195,8 @@ export default class Form extends Vue {
         return wallet
     }
 
-    get isLedger() {
-        return this.wallet.type === 'ledger'
+    get isEVMSupported() {
+        return this.wallet.ethAddress
     }
 
     onChangeSource(ev: any) {
