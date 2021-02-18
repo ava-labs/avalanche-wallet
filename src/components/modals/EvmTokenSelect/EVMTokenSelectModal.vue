@@ -4,12 +4,18 @@
             <div class="list">
                 <div class="token_row" @click="select('native')">
                     <img src="/img/ava_icon.png" />
-                    <p>AVAX</p>
+                    <div class="col_name">
+                        <p>AVAX</p>
+                        <p>Avalanche</p>
+                    </div>
                     <p class="col_bal">{{ avaxBalance.toLocaleString() }}</p>
                 </div>
                 <div v-for="t in tokens" :key="t.data.address" class="token_row" @click="select(t)">
                     <img :src="t.data.logoURI" />
-                    <p class="col_name">{{ t.data.symbol }}</p>
+                    <div class="col_name">
+                        <p>{{ t.data.symbol }}</p>
+                        <p>{{ t.data.name }}</p>
+                    </div>
                     <p class="col_bal">{{ t.balanceBig.toLocaleString() }}</p>
                 </div>
             </div>
@@ -93,7 +99,7 @@ export default class EVMTokenSelectModal extends Vue {
 
 .token_row {
     font-size: 15px;
-    padding: 8px 18px;
+    padding: 10px 20px;
     display: grid;
     grid-template-columns: 34px max-content 1fr;
     column-gap: 12px;
@@ -117,5 +123,12 @@ export default class EVMTokenSelectModal extends Vue {
 
 .col_bal {
     text-align: right;
+}
+
+.col_name {
+    p:last-of-type {
+        font-size: 13px;
+        color: var(--primary-color-light);
+    }
 }
 </style>

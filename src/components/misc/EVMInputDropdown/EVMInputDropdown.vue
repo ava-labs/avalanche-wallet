@@ -133,7 +133,7 @@ export default class ERC20InputDropdown extends Vue {
 <style scoped lang="scss">
 .evm_input_dropdown {
     display: grid;
-    grid-template-columns: 1fr 70px;
+    grid-template-columns: 1fr 90px;
     column-gap: 10px;
     font-size: 15px;
 

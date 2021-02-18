@@ -12,15 +12,17 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Model } from 'vue-property-decorator'
+import { Vue, Component, Model, Prop } from 'vue-property-decorator'
 import { ChainIdType } from '@/constants'
 import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 
 @Component
 export default class ChainInput extends Vue {
     @Model('change', { type: String }) readonly formType!: CurrencyType
+    @Prop({ default: false }) disabled!: boolean
 
     set(val: ChainIdType) {
+        if (this.disabled) return
         this.$emit('change', val)
     }
 

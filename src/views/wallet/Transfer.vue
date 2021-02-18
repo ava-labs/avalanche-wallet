@@ -6,11 +6,11 @@
         </div>
         <div class="card_body" v-else>
             <FormC v-show="formType === 'C'">
-                <ChainInput v-model="formType"></ChainInput>
+                <ChainInput v-model="formType" :disabled="isConfirm"></ChainInput>
             </FormC>
             <div class="new_order_Form" v-show="formType === 'X'">
                 <div class="lists">
-                    <ChainInput v-model="formType"></ChainInput>
+                    <ChainInput v-model="formType" :disabled="isConfirm"></ChainInput>
                     <div>
                         <tx-list
                             class="tx_list"
@@ -38,27 +38,26 @@
                     <div class="to_address">
                         <h4>{{ $t('transfer.to') }}</h4>
                         <qr-input
-                            v-if="!isConfirm"
                             v-model="addressIn"
                             class="qrIn hover_border"
                             placeholder="xxx"
+                            :disabled="isConfirm"
                         ></qr-input>
-                        <p class="confirm_val" v-else>{{ formAddress }}</p>
                     </div>
                     <div>
-                        <template v-if="isConfirm && formMemo.length > 0">
-                            <h4>Memo (Optional)</h4>
-                            <p class="confirm_val">{{ formMemo }}</p>
-                        </template>
-                        <template v-else-if="!isConfirm">
-                            <h4>{{ $t('transfer.memo') }}</h4>
-                            <textarea
-                                class="memo"
-                                maxlength="256"
-                                placeholder="Memo"
-                                v-model="memo"
-                            ></textarea>
-                        </template>
+                        <!--                        <template v-if="isConfirm && formMemo.length > 0">-->
+                        <!--                            <h4>Memo (Optional)</h4>-->
+                        <!--                            <p class="confirm_val">{{ formMemo }}</p>-->
+                        <!--                        </template>-->
+                        <h4 v-if="memo || !isConfirm">{{ $t('transfer.memo') }}</h4>
+                        <textarea
+                            class="memo"
+                            maxlength="256"
+                            placeholder="Memo"
+                            v-model="memo"
+                            v-if="memo || !isConfirm"
+                            :disabled="isConfirm"
+                        ></textarea>
                     </div>
                     <div class="fees">
                         <p>
