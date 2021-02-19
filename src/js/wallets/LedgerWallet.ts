@@ -1095,14 +1095,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         return await avm.issueTx(signed)
     }
-    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number, txParams?: any) {
         const nonce = await web3.eth.getTransactionCount(this.ethAddress)
         const chainId = await web3.eth.getChainId()
         const networkId = await web3.eth.net.getId()
         const chainParams = {
             common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
         }
-        const partialTxParams = {
+        const partialTxParams = txParams || {
             to,
             nonce: toHex(nonce),
             gasPrice: toHex(gasPrice),
@@ -1182,8 +1182,52 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        console.error('Not available yet.')
-        return 'NOT AVAILABLE'
+        console.log('Sending: ', token)
+        const tx = token.createTransferTx(to, amount)
+        let from = '0x' + this.ethAddress
+
+        const nonce = await web3.eth.getTransactionCount(this.ethAddress)
+
+        const partialTxParams = {
+            to: token.data.address,
+            from,
+            nonce: toHex(nonce),
+            gasPrice: toHex(gasPrice),
+            gasLimit: toHex(gasLimit),
+            value: toHex(0),
+            data: tx.encodeABI(),
+        }
+
+        const amtString = bnToBig(amount, 18).toString()
+
+        try {
+            store.commit('Ledger/openModal', {
+                title: 'Sign ERC-20 Tx',
+                messages: [
+                    {
+                        title: '',
+                        value: '⚠️ Due to device limitations the device will display:',
+                    },
+                    {
+                        title: 'Transfer',
+                        value: `0 GWEI to ${token.data.address}`,
+                    },
+                    {
+                        title: '',
+                        value: 'However, the following will be sent:',
+                    },
+                    {
+                        title: 'Transfer',
+                        value: `${amtString} ${token.data.symbol} to ${to}`,
+                    },
+                ],
+            })
+
+            return this.sendEth(token.data.address, amount, gasPrice, gasLimit, partialTxParams)
+        } catch (e) {
+            store.commit('Ledger/closeModal')
+            return new Promise(e)
+        }
     }
 }
 
