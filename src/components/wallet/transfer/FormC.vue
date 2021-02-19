@@ -6,13 +6,14 @@
                 <p>{{ $t('transfer.tx_list.amount') }}</p>
                 <p>{{ $t('transfer.tx_list.token') }}</p>
             </div>
-            <EVMInputDropdown
-                style="margin-top: 20px"
-                @amountChange="onAmountChange"
-                @tokenChange="onTokenChange"
-                :disabled="isConfirm"
-                ref="token_in"
-            ></EVMInputDropdown>
+            <div class="list_item">
+                <EVMInputDropdown
+                    @amountChange="onAmountChange"
+                    @tokenChange="onTokenChange"
+                    :disabled="isConfirm"
+                    ref="token_in"
+                ></EVMInputDropdown>
+            </div>
         </div>
         <div class="right_col">
             <div class="to_address">
@@ -421,20 +422,22 @@ h4 {
 }
 
 .form {
-    padding-right: 45px;
+    padding-right: 60px;
     grid-column: 1/3;
     border-right: 1px solid var(--bg-light);
-    > div {
-        margin-bottom: 12px;
-    }
 }
 
+.list_item {
+    margin-bottom: 12px;
+}
 .table_title {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin: 0;
     p {
         font-weight: bold;
+        padding: 12px 0;
     }
 }
 
