@@ -7,7 +7,14 @@
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
             <template v-else>
-                <div class="message block" v-for="message in messages" :key="message.title">
+                <div
+                    class="message block"
+                    v-bind:class="{
+                        'background-clear': message.background === false,
+                    }"
+                    v-for="message in messages"
+                    :key="message.title"
+                >
                     <p class="title">{{ message.title }}</p>
                     <p class="value">{{ message.value }}</p>
                 </div>
@@ -117,8 +124,10 @@ export default class LedgerBlock extends Vue {
 .message {
     padding: 12px;
     color: var(--primary-color);
-    background-color: var(--bg-wallet);
     margin: 4px 0 !important;
+    &:not(.background-clear) {
+        background-color: var(--bg-wallet);
+    }
 }
 
 .message.block {

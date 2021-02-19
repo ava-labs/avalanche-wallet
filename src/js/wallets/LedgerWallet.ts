@@ -1200,34 +1200,31 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const amtString = bnToBig(amount, 18).toString()
 
-        try {
-            store.commit('Ledger/openModal', {
-                title: 'Sign ERC-20 Tx',
-                messages: [
-                    {
-                        title: '',
-                        value: '⚠️ Due to device limitations the device will display:',
-                    },
-                    {
-                        title: 'Transfer',
-                        value: `0 GWEI to ${token.data.address}`,
-                    },
-                    {
-                        title: '',
-                        value: 'However, the following will be sent:',
-                    },
-                    {
-                        title: 'Transfer',
-                        value: `${amtString} ${token.data.symbol} to ${to}`,
-                    },
-                ],
-            })
+        store.commit('Ledger/openModal', {
+            title: 'Sign ERC-20 Tx',
+            messages: [
+                {
+                    title: '',
+                    background: false,
+                    value: '⚠️ Due to device limitations the device will display:',
+                },
+                {
+                    title: 'Transfer',
+                    value: `0 GWEI to ${token.data.address}`,
+                },
+                {
+                    title: '',
+                    background: false,
+                    value: 'However, the following will be sent:',
+                },
+                {
+                    title: 'Transfer',
+                    value: `${amtString} ${token.data.symbol} to ${to}`,
+                },
+            ],
+        })
 
-            return this.sendEth(token.data.address, amount, gasPrice, gasLimit, partialTxParams)
-        } catch (e) {
-            store.commit('Ledger/closeModal')
-            return new Promise(e)
-        }
+        return this.sendEth(token.data.address, amount, gasPrice, gasLimit, partialTxParams)
     }
 }
 
