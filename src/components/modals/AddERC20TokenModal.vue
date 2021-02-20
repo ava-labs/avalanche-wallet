@@ -134,7 +134,7 @@ export default class AddERC20TokenModal extends Vue {
 </script>
 <style scoped lang="scss">
 .add_token_body {
-    padding: 30px;
+    padding: 30px 22px;
     text-align: center;
     width: 380px;
     max-width: 100%;
