@@ -465,7 +465,6 @@ export default class Transfer extends Vue {
 
         if (this.$route.query.chain) {
             let chain = this.$route.query.chain as string
-            console.log(chain)
             if (chain === 'X') {
                 this.formType = 'X'
             } else {
