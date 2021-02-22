@@ -295,7 +295,7 @@ export default class Fungibles extends Vue {
     .headers,
     .asset {
         display: grid;
-        grid-template-columns: 50px 1fr 100px 1fr;
+        grid-template-columns: max-content 1fr 100px 1fr;
     }
 }
 

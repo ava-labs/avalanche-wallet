@@ -1,11 +1,11 @@
 <template>
     <div class="asset">
-        <div class="icon">
-            <hexagon class="hex_bg" :is-ava="isAvaxToken"></hexagon>
-            <div class="icon_img">
-                <img v-if="iconUrl" :src="iconUrl" />
-                <p v-else>?</p>
-            </div>
+        <div class="icon" :avax="isAvaxToken">
+            <!--            <hexagon class="hex_bg" :is-ava="isAvaxToken"></hexagon>-->
+            <!--            <div class="icon_img">-->
+            <img v-if="iconUrl" :src="iconUrl" />
+            <p v-else>?</p>
+            <!--            </div>-->
         </div>
         <p class="name_col not_mobile">
             {{ name }} ({{ symbol }})
@@ -53,7 +53,7 @@ export default class FungibleRow extends Vue {
         if (!this.asset) return null
 
         if (this.isAvaxToken) {
-            return '/ava_letter_icon.png'
+            return '/img/avax_icon_circle.png'
         }
 
         return null
@@ -177,25 +177,23 @@ export default class FungibleRow extends Vue {
 
 .icon {
     position: relative;
-    width: 100%;
-    height: 100%;
     align-self: center;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
     transition-duration: 1s;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: var(--bg-light);
 
     p {
         color: #aaa;
     }
-}
-
-.icon_img {
-    position: absolute;
 
     img {
-        width: 18px;
+        width: 100%;
         object-fit: contain;
     }
 }
