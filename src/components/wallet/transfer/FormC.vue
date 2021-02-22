@@ -389,11 +389,16 @@ export default class FormC extends Vue {
             this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         }, 3000)
+
+        // Clear Ledger modal if open
+        this.$store.commit('Ledger/closeModal')
     }
 
     onError(err: any) {
         this.err = err
         this.isLoading = false
+
+        this.$store.commit('Ledger/closeModal')
 
         this.$store.dispatch('Notifications/add', {
             title: this.$t('transfer.error_title'),
