@@ -8,7 +8,7 @@
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
 import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
 import Eth from '@ledgerhq/hw-app-eth'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
@@ -57,10 +57,9 @@ export default {
                 // Otherwise timer does not reset
                 await setTimeout(() => null, 10)
 
-                const MIN_V = '0.4.0'
                 let eth, title, messages
                 // TODO: enable when we want users upgrading after ledger fixes a few issues
-                // let versionCheck = config.version >= MIN_V
+                // let versionCheck = config.version >= MIN_EVM_SUPPORT_V
                 let versionCheck = false
                 if (versionCheck) {
                     eth = new Eth(transport, 'Avalanche')
@@ -90,12 +89,12 @@ export default {
                     messages,
                 })
 
-                let wallet = await LedgerWallet.fromApp(app, eth, config)
+                let wallet = await LedgerWallet.fromApp(app, eth, versionCheck, config)
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()
                     // TODO: enable when we want users upgrading after ledger fixes a few issues
-                    // this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_V)
+                    // this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_EVM_SUPPORT_V)
                 } catch (e) {
                     this.onerror(e)
                 }
