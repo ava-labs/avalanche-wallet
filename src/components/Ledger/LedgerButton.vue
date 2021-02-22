@@ -13,6 +13,8 @@ import AppAvax from '@obsidiansystems/hw-app-avalanche'
 import Eth from '@ledgerhq/hw-app-eth'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 
+export const LEDGER_EXCHANGE_TIMEOUT = 90_000
+
 export default {
     components: {
         Spinner,
@@ -30,6 +32,7 @@ export default {
         async submit() {
             try {
                 let transport = await TransportU2F.create()
+                transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
                 let app = new AppAvax(transport)
                 let config = await app.getAppConfiguration()
                 const MIN_V = '0.4.0'
