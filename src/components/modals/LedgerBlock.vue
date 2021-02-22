@@ -123,9 +123,7 @@ export default class LedgerBlock extends Vue {
     padding: 12px;
     color: var(--primary-color);
     margin: 4px 0 !important;
-    &:not(.background-clear) {
-        background-color: var(--bg-wallet);
-    }
+    background-color: var(--bg-wallet);
 }
 
 .message.block {

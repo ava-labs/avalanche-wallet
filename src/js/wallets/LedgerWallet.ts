@@ -1203,32 +1203,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             data: tx.encodeABI(),
         }
 
-        const amtString = bnToBig(amount, 18).toString()
-
-        store.commit('Ledger/openModal', {
-            title: 'Sign ERC-20 Tx',
-            messages: [
-                {
-                    title: '',
-                    background: false,
-                    value: '⚠️ Due to device limitations the device will display:',
-                },
-                {
-                    title: 'Transfer',
-                    value: `0 GWEI to ${token.data.address}`,
-                },
-                {
-                    title: '',
-                    background: false,
-                    value: 'However, the following will be sent:',
-                },
-                {
-                    title: 'Transfer',
-                    value: `${amtString} ${token.data.symbol} to ${to}`,
-                },
-            ],
-        })
-
         return this.sendEth(token.data.address, amount, gasPrice, gasLimit, partialTxParams)
     }
 }
