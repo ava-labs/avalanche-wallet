@@ -92,7 +92,7 @@ export default class Collectibles extends Vue {
         return dict
     }
 
-    onScroll(ev) {
+    onScroll(ev: any) {
         let val = ev.target.scrollTop
         if (val > 0) {
             this.isScroll = true

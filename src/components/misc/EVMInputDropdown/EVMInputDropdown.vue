@@ -2,16 +2,19 @@
     <div class="evm_input_dropdown">
         <div class="col_in hover_border" :disabled="disabled">
             <button class="max_but" @click="maxOut" :disabled="disabled">MAX</button>
-            <BigNumInput
-                :max="max_amount"
-                :denomination="denomination"
-                :step="stepSize"
-                :placeholder="placeholder"
-                ref="bigIn"
-                @change="amount_in"
-                class="bigIn"
-                :disabled="disabled"
-            ></BigNumInput>
+            <div class="col_big_in">
+                <BigNumInput
+                    :max="max_amount"
+                    :denomination="denomination"
+                    :step="stepSize"
+                    :placeholder="placeholder"
+                    ref="bigIn"
+                    @change="amount_in"
+                    class="bigIn"
+                    :disabled="disabled"
+                ></BigNumInput>
+                <p class="usd_val" :active="token === 'native'">${{ usd_val.toLocaleString(2) }}</p>
+            </div>
         </div>
         <!--        <div>-->
         <EVMAssetDropdown
@@ -47,14 +50,34 @@ import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSele
 export default class ERC20InputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
     @Prop({ default: false }) disabled!: boolean
+    @Prop({ default: 470 }) gasPrice!: number
+    @Prop({ default: 21000 }) gasLimit!: number
+    amt = new BN(0)
 
     $refs!: {
         bigIn: BigNumInput
         dropdown: EVMAssetDropdown
     }
 
+    get usd_val(): Big {
+        if (this.token != 'native') return Big(0)
+
+        let price = this.$store.state.prices.usd
+        let big = bnToBig(this.amt, 18)
+        return big.mul(Big(price))
+    }
+
     get max_amount(): BN {
-        return this.balanceBN
+        // Subtract gas
+        if (this.isNative) {
+            let mult = new BN(10).pow(new BN(9))
+            let limit = new BN(this.gasLimit)
+            let price = new BN(this.gasPrice)
+            let fee = limit.mul(price).mul(mult)
+            return this.balanceBN.sub(fee)
+        } else {
+            return this.balanceBN
+        }
     }
 
     get isNative() {
@@ -137,6 +160,7 @@ export default class ERC20InputDropdown extends Vue {
     }
 
     amount_in(amt: BN) {
+        this.amt = amt
         this.$emit('amountChange', amt)
     }
 }
@@ -161,9 +185,14 @@ export default class ERC20InputDropdown extends Vue {
     grid-template-columns: max-content 1fr;
 }
 
-.bigIn {
+.col_big_in {
     text-align: right;
     font-family: monospace;
+    display: flex;
+    flex-direction: column;
+}
+
+.bigIn {
     border: none !important;
     color: var(--primary-color);
 }
@@ -177,6 +206,18 @@ export default class ERC20InputDropdown extends Vue {
     text-align: right;
     font-family: monospace;
     color: var(--primary-color-light);
+}
+
+.usd_val {
+    color: var(--primary-color-light);
+    font-size: 13px;
+    max-height: 0px;
+    overflow: hidden;
+    transition-duration: 0.2s;
+
+    &[active] {
+        max-height: 20px;
+    }
 }
 .max_but {
     opacity: 0.4;

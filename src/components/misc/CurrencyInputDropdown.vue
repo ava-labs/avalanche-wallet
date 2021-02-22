@@ -3,38 +3,32 @@
         <div class="curr_in_drop">
             <div class="max_in_cont hover_border">
                 <button class="max_but" @click="maxOut" :disabled="disabled">MAX</button>
-                <big-num-input
-                    ref="bigIn"
-                    @change="amount_in"
-                    class="bigIn"
-                    contenteditable="bigIn"
-                    :max="max_amount"
-                    :denomination="denomination"
-                    :step="stepSize"
-                    :placeholder="placeholder"
-                    :disabled="disabled"
-                ></big-num-input>
+                <div class="col_big_in">
+                    <big-num-input
+                        ref="bigIn"
+                        @change="amount_in"
+                        class="bigIn"
+                        contenteditable="bigIn"
+                        :max="max_amount"
+                        :denomination="denomination"
+                        :step="stepSize"
+                        :placeholder="placeholder"
+                        :disabled="disabled"
+                    ></big-num-input>
+                    <p class="usd_val" :active="isAvax">${{ amountUSD.toLocaleString(2) }}</p>
+                </div>
             </div>
             <BalanceDropdown
                 :disabled_assets="disabled_assets"
                 v-model="asset_now"
                 :disabled="disabled"
             ></BalanceDropdown>
-        </div>
-        <div class="balance">
-            <div>
+            <div class="col_balance">
                 <p>
-                    <b>{{ $t('misc.balance') }}:</b>
+                    {{ $t('misc.balance') }}:
                     {{ maxAmountBig.toLocaleString(denomination) }}
                 </p>
-                <template v-if="asset_now">
-                    <p v-if="asset_now.id === avaxAsset.id">
-                        <b>$</b>
-                        {{ amountUSD.toLocaleString(2) }}
-                    </p>
-                </template>
             </div>
-            <div></div>
         </div>
     </div>
 </template>
@@ -79,6 +73,10 @@ export default class CurrencyInputDropdown extends Vue {
     @Prop({ default: '' }) initial!: string
     @Prop({ default: false }) disabled!: boolean
 
+    $refs!: {
+        bigIn: BigNumInput
+    }
+
     mounted() {
         if (this.isEmpty) return
         if (this.initial) {
@@ -92,7 +90,8 @@ export default class CurrencyInputDropdown extends Vue {
     @Watch('asset_now')
     drop_change(val: AvaAsset) {
         this.asset_now = val
-        this.amount_in(new BN(0))
+        this.$refs.bigIn.clear()
+        // this.amount_in(new BN(0))
     }
 
     get stepSize() {
@@ -140,6 +139,11 @@ export default class CurrencyInputDropdown extends Vue {
         } else {
             return false
         }
+    }
+
+    get isAvax(): boolean {
+        if (this.asset_now.id === this.avaxAsset?.id) return true
+        return false
     }
 
     get display(): string {
@@ -290,6 +294,34 @@ input {
     span {
         font-family: monospace;
         padding-left: 14px;
+    }
+}
+
+.col_big_in {
+    text-align: right;
+    font-family: monospace;
+    display: flex;
+    flex-direction: column;
+}
+
+.col_balance {
+    padding-right: 14px;
+    padding-top: 2px !important;
+    font-size: 15px;
+    color: var(--primary-color-light);
+    font-family: monospace;
+    background-color: transparent;
+}
+
+.usd_val {
+    color: var(--primary-color-light);
+    font-size: 13px;
+    max-height: 0px;
+    overflow: hidden;
+    transition-duration: 0.2s;
+
+    &[active] {
+        max-height: 20px;
     }
 }
 

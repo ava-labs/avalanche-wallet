@@ -178,7 +178,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        console.log('Sending: ', token)
         let from = '0x' + this.ethAddress
         let tx = token.createTransferTx(to, amount)
 
@@ -392,7 +391,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
             let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
 
-            console.log(tx.serialize('display'))
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let destinationAddr = this.getCurrentAddress()

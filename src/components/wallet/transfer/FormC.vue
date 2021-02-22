@@ -12,6 +12,8 @@
                     @tokenChange="onTokenChange"
                     :disabled="isConfirm"
                     ref="token_in"
+                    :gas-price="gasPrice"
+                    :gas-limit="gasLimit"
                 ></EVMInputDropdown>
             </div>
         </div>
@@ -50,8 +52,8 @@
                     <span>{{ maxFeeText }} AVAX</span>
                 </p>
 
-                <p>
-                    {{ $t('transfer.total') }}
+                <p v-if="totalUSD">
+                    {{ $t('transfer.total') }} USD
                     <span v-if="totalUSD">{{ totalUSD.toLocaleString(2) }} USD</span>
                 </p>
             </div>
@@ -164,6 +166,7 @@ export default class FormC extends Vue {
 
         if (token === 'native') {
             this.gasPrice = 470
+            this.gasLimit = 21000
         } else {
             // this.gasPrice = token.getTransferGasPrice()
         }
@@ -191,10 +194,6 @@ export default class FormC extends Vue {
     //     return bnToBig(this.balance, 9)
     // }
 
-    get txFee() {
-        return Big(3)
-    }
-
     get denomination(): number {
         if (this.formToken === 'native') {
             return 9
@@ -213,7 +212,7 @@ export default class FormC extends Vue {
             return null
         }
 
-        let bigAmt = bnToBig(this.amountIn, 9)
+        let bigAmt = bnToBig(this.amountIn, 18)
         let usdPrice = this.priceDict.usd
         let bigFee = bnToBig(this.maxFee, 18)
         let usdBig = bigAmt.add(bigFee).times(usdPrice)
@@ -347,7 +346,7 @@ export default class FormC extends Vue {
 
         try {
             if (this.formToken === 'native') {
-                let formAmt = this.formAmount.mul(new BN(Math.pow(10, 9)))
+                let formAmt = this.formAmount
 
                 let txHash = await this.wallet.sendEth(
                     toAddress,

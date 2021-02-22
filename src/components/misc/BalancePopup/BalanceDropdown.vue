@@ -95,6 +95,7 @@ button {
     width: 100%;
     height: 100%;
     text-align: left;
+    font-size: 15px;
 
     svg {
         transition-duration: 0.2s;
