@@ -175,7 +175,6 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async initERc20List({ dispatch, commit }) {
             const tokenLists = [
-                'https://raw.githubusercontent.com/dasconnor/tokenlist/main/fuji.tokenlist.json',
                 'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
             ]
 
@@ -342,7 +341,7 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     getters: {
         networkErc20Tokens(state: AssetsState, getters, rootState: RootState): Erc20Token[] {
-            let tokens = state.erc20Tokens
+            let tokens = state.erc20Tokens.concat(state.erc20TokensCustom)
             let chainId = state.evmChainId
 
             let filt = tokens.filter((t) => {

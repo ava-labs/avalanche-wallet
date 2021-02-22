@@ -1,6 +1,9 @@
 <template>
     <div class="erc_row">
-        <img :src="token.data.logoURI" />
+        <img :src="token.data.logoURI" v-if="token.data.logoURI" />
+        <div v-else class="no_logo">
+            <p>?</p>
+        </div>
         <p class="col_name">
             {{ token.data.name }} ({{ token.data.symbol }})
             <span>ERC20</span>
@@ -49,7 +52,9 @@ export default class ERC20Row extends Vue {
 
 img {
     object-fit: contain;
-    max-width: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
     justify-self: center;
 }
 
@@ -83,6 +88,19 @@ img {
     }
 }
 
+.no_logo {
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    border-radius: 40px;
+    align-self: center;
+    justify-self: center;
+    background-color: var(--bg-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--primary-color-light);
+}
 @include main.mobile-device {
 }
 </style>

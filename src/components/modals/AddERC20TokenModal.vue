@@ -3,7 +3,7 @@
         <div class="add_token_body">
             <div>
                 <label>Token Contract Address</label>
-                <input v-model="tokenAddress" />
+                <input v-model="tokenAddress" placeholder="0x" />
                 <p class="err">{{ err }}</p>
             </div>
 
@@ -53,6 +53,10 @@ export default class AddERC20TokenModal extends Vue {
     @Watch('tokenAddress')
     async onAddressChange(val: string) {
         this.err = ''
+        if (val === '') {
+            this.clear()
+            return
+        }
         await this.validateAddress(val)
     }
 
@@ -160,6 +164,7 @@ export default class AddERC20TokenModal extends Vue {
         padding: 14px 24px;
         border-radius: 3px;
         font-size: 14px;
+        color: var(--primary-color);
     }
 }
 
@@ -174,8 +179,12 @@ export default class AddERC20TokenModal extends Vue {
         padding: 14px 24px;
     }
 
+    label {
+        color: var(--primary-color-light);
+    }
     input {
         padding: 0;
+        color: var(--primary-color);
     }
 }
 
