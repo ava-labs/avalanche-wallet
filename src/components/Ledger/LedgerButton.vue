@@ -23,6 +23,7 @@ export default {
     data() {
         return {
             isLoading: false,
+            config: undefined,
         }
     },
     destroyed() {
@@ -31,24 +32,12 @@ export default {
     methods: {
         async submit() {
             try {
-                let config
-
                 let transport = await TransportU2F.create()
                 transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
                 let app = new AppAvax(transport)
-
-                // Config is found immediately if the device is connected and the app is open.
-                // If no config was found that means user has not opened the Avalanche app.
-                setTimeout(() => {
-                    if (config) return
-                    this.$store.commit('Ledger/openModal', {
-                        title: 'Open the Avalanche app on your Ledger Device',
-                        messages: [],
-                        isPrompt: true,
-                    })
-                }, 1000)
-
-                config = await app.getAppConfiguration()
+                // Wait for app config
+                await this.waitForConfig(app)
+                console.log(this.config)
 
                 // Close the initial prompt modal if exists
                 this.$store.commit('Ledger/closeModal')
@@ -89,7 +78,7 @@ export default {
                     messages,
                 })
 
-                let wallet = await LedgerWallet.fromApp(app, eth, versionCheck, config)
+                let wallet = await LedgerWallet.fromApp(app, eth, versionCheck, this.config)
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()
@@ -102,6 +91,20 @@ export default {
                 console.log(e)
                 this.onerror(e)
             }
+        },
+        async waitForConfig(app) {
+            // Config is found immediately if the device is connected and the app is open.
+            // If no config was found that means user has not opened the Avalanche app.
+            setTimeout(() => {
+                if (this.config) return
+                this.$store.commit('Ledger/openModal', {
+                    title: 'Open the Avalanche app on your Ledger Device',
+                    messages: [],
+                    isPrompt: true,
+                })
+            }, 1000)
+
+            this.config = await app.getAppConfiguration()
         },
         onsuccess() {
             this.isLoading = false
