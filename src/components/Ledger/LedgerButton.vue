@@ -31,25 +31,33 @@ export default {
     methods: {
         async submit() {
             try {
-                this.$store.commit('Ledger/openModal', {
-                    title: 'Open the Avalanche app on your Ledger Device',
-                    messages: [],
-                    isPrompt: true,
-                })
+                let config
 
                 let transport = await TransportU2F.create()
                 transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
                 let app = new AppAvax(transport)
-                let config = await app.getAppConfiguration()
-                const MIN_V = '0.4.0'
 
-                this.isLoading = true
+                // Config is found immediately if the device is connected and the app is open.
+                // If no config was found that means user has not opened the Avalanche app.
+                setTimeout(() => {
+                    if (config) return
+                    this.$store.commit('Ledger/openModal', {
+                        title: 'Open the Avalanche app on your Ledger Device',
+                        messages: [],
+                        isPrompt: true,
+                    })
+                }, 1000)
 
+                config = await app.getAppConfiguration()
+
+                // Close the initial prompt modal if exists
                 this.$store.commit('Ledger/closeModal')
+                this.isLoading = true
 
                 // Otherwise timer does not reset
                 await setTimeout(() => null, 10)
 
+                const MIN_V = '0.4.0'
                 let eth, title, messages
                 // TODO: enable when we want users upgrading after ledger fixes a few issues
                 // let versionCheck = config.version >= MIN_V
