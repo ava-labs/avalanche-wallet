@@ -29,12 +29,23 @@ export default {
     methods: {
         async submit() {
             try {
+                this.$store.commit('Ledger/openModal', {
+                    title: 'Open the Avalanche app on your Ledger Device',
+                    messages: [],
+                    isPrompt: true,
+                })
+
                 let transport = await TransportU2F.create()
                 let app = new AppAvax(transport)
                 let config = await app.getAppConfiguration()
                 const MIN_V = '0.4.0'
 
                 this.isLoading = true
+
+                this.$store.commit('Ledger/closeModal')
+
+                // Otherwise timer does not reset
+                await setTimeout(() => null, 10)
 
                 let eth, title, messages
                 if (config.version >= MIN_V) {

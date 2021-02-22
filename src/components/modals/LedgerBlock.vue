@@ -1,7 +1,7 @@
 <template>
     <modal ref="modal" title="Check Your Ledger Device" :can_close="false">
         <div class="ledger_block" v-if="isActive">
-            <p style="margin-bottom: 14px !important; font-size: 18px">
+            <p v-if="!isPrompt" style="margin-bottom: 14px !important; font-size: 18px">
                 {{ $t('modal.ledger.desc') }}
             </p>
             <p class="message">{{ title }}</p>
@@ -13,7 +13,7 @@
                 </div>
             </template>
             <Spinner class="spinner"></Spinner>
-            <div v-if="duration >= 0">
+            <div v-if="duration >= 0 && !isPrompt">
                 You have
                 <span
                     v-bind:class="{
@@ -70,6 +70,10 @@ export default class LedgerBlock extends Vue {
 
     get isActive(): boolean {
         return this.$store.state.Ledger.isBlock
+    }
+
+    get isPrompt(): boolean {
+        return this.$store.state.Ledger.isPrompt
     }
 
     @Watch('isActive', { immediate: true })
