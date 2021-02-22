@@ -51,7 +51,10 @@ export default {
                 await setTimeout(() => null, 10)
 
                 let eth, title, messages
-                if (config.version >= MIN_V) {
+                // TODO: enable when we want users upgrading after ledger fixes a few issues
+                // let versionCheck = config.version >= MIN_V
+                let versionCheck = false
+                if (versionCheck) {
                     eth = new Eth(transport, 'Avalanche')
                     title = 'Provide Public Keys'
                     messages = [
