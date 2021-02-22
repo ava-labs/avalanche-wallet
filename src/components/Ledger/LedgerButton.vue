@@ -69,7 +69,8 @@ export default {
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()
-                    this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_V)
+                    // TODO: enable when we want users upgrading after ledger fixes a few issues
+                    // this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_V)
                 } catch (e) {
                     this.onerror(e)
                 }
