@@ -65,6 +65,8 @@ import {
 } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 
+export const MIN_EVM_SUPPORT_V = '0.4.0'
+
 const isOdd = (str: string) => str.length % 2 !== 0
 const toHex = (value: BN | number) => {
     const hex = value.toString(16)
@@ -115,7 +117,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         hd.chainCode = res.chain_code
 
         let hdEth
-        if (config.version >= '0.4.0') {
+        // TODO: enable when we want users upgrading after ledger fixes a few issues
+        // const versionCheck = config.version >= MIN_EVM_SUPPORT_V
+        const versionCheck = false
+        if (versionCheck) {
             let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
             hdEth = new HDKey()
             // @ts-ignore
