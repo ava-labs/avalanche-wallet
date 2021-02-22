@@ -462,6 +462,16 @@ export default class Transfer extends Vue {
     }
     activated() {
         this.clearForm()
+
+        if (this.$route.query.chain) {
+            let chain = this.$route.query.chain as string
+            console.log(chain)
+            if (chain === 'X') {
+                this.formType = 'X'
+            } else {
+                this.formType = 'C'
+            }
+        }
     }
 }
 </script>

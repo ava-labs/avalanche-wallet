@@ -5,6 +5,7 @@ export interface ILedgerBlockMessage {
 
 export interface LedgerState {
     isBlock: boolean
+    isPrompt: boolean
     isUpgradeRecommended: boolean
     messages: ILedgerBlockMessage[]
     title: string

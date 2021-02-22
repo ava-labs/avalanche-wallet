@@ -391,6 +391,8 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
             )) as AVMUnsignedTx
 
             let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
+
+            console.log(tx.serialize('display'))
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let destinationAddr = this.getCurrentAddress()

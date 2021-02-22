@@ -14,7 +14,11 @@
             ></BigNumInput>
         </div>
         <!--        <div>-->
-        <EVMAssetDropdown @change="onAssetChange" :disabled="disabled"></EVMAssetDropdown>
+        <EVMAssetDropdown
+            @change="onAssetChange"
+            :disabled="disabled"
+            ref="dropdown"
+        ></EVMAssetDropdown>
         <div class="bal_col">
             <p class="bal">Balance: {{ balance }}</p>
         </div>
@@ -46,6 +50,7 @@ export default class ERC20InputDropdown extends Vue {
 
     $refs!: {
         bigIn: BigNumInput
+        dropdown: EVMAssetDropdown
     }
 
     get max_amount(): BN {
@@ -57,19 +62,21 @@ export default class ERC20InputDropdown extends Vue {
     }
     get denomination() {
         if (this.isNative) {
-            return 9
+            return 18
         } else {
             return (this.token as Erc20Token).data.decimals
         }
     }
 
-    get stepSize() {
+    get stepSize(): BN {
         if (this.denomination > 3) {
-            let stepNum = Math.pow(10, this.denomination - 2)
-            return new BN(stepNum.toString())
+            let powBN = new BN(10).pow(new BN(this.denomination - 2))
+            // let stepNum = Math.pow(10, this.denomination - 2)
+            return powBN
         } else {
-            let stepNum = Math.pow(10, this.denomination)
-            return new BN(stepNum.toString())
+            let powBN = new BN(10).pow(new BN(this.denomination))
+            // let stepNum = Math.pow(10, this.denomination)
+            return powBN
         }
     }
 
@@ -110,11 +117,17 @@ export default class ERC20InputDropdown extends Vue {
         return this.token.balanceBig
     }
 
+    // The available balance of the selected asset
     get balanceBN(): BN {
         if (this.token === 'native') {
-            return new BN(this.avaxBalance.toString())
+            return this.avaxBalanceBN
         }
         return this.token.balanceBN
+    }
+
+    setToken(token: 'native' | Erc20Token) {
+        //@ts-ignore
+        this.$refs.dropdown.select(token)
     }
 
     onAssetChange(token: Erc20Token | 'native') {

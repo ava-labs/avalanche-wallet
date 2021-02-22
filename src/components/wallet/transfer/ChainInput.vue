@@ -1,13 +1,9 @@
 <template>
     <div v-if="isEVMSupported">
-        <h4>{{ $t('transfer.source_chain.title') }}</h4>
+        <label>{{ $t('transfer.source_chain.title') }}</label>
         <div class="chain_select">
-            <div :active="formType === 'X'" @click="set('X')">
-                <h2>X</h2>
-            </div>
-            <div :active="formType === 'C'" @click="set('C')">
-                <h2>C</h2>
-            </div>
+            <button :active="formType === 'X'" @click="set('X')">X</button>
+            <button :active="formType === 'C'" @click="set('C')">C</button>
         </div>
     </div>
 </template>
@@ -37,23 +33,24 @@ export default class ChainInput extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
-h4 {
-    margin: 12px 0;
+label {
+    color: var(--primary-color-light);
 }
 .chain_select {
     display: flex;
     width: max-content;
-    > div {
+    > button {
         //border: 1px solid var(--primary-color);
         //margin-right: 14px;
-        padding: 0px 14px;
-        opacity: 0.6;
-        transition-duration: 0.2s;
+        padding-right: 14px;
+        opacity: 0.2;
+        transition-duration: 0.1s;
         cursor: pointer;
         color: var(--primary-color);
         //background-color: var(--bg-light);
         display: flex;
         align-items: center;
+        font-size: 48px;
 
         &:hover {
             opacity: 1;
@@ -63,10 +60,6 @@ h4 {
             color: var(--secondary-color);
             //border-color: var(--primary-color-light);
             opacity: 1;
-        }
-
-        > p {
-            margin-left: 12px !important;
         }
     }
 }

@@ -351,6 +351,17 @@ const assets_module: Module<AssetsState, RootState> = {
             })
             return filt
         },
+
+        findErc20: (state) => (contractAddr: string) => {
+            let tokens: Erc20Token[] = state.erc20Tokens.concat(state.erc20TokensCustom)
+            for (var i = 0; i < tokens.length; i++) {
+                let t = tokens[i]
+                if (t.data.address === contractAddr) {
+                    return t
+                }
+            }
+            return null
+        },
         // avmAvaxUtxos(state, getters, rootState): AVMUTXO[] {
         //     let wallet = rootState.activeWallet
         //     // let avaxAsset: AvaAsset|null = getters.AssetAVA

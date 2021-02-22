@@ -72,7 +72,10 @@ export default class CollectibleFamilyGroup extends Vue {
         let utxoId = this.utxos[0].getUTXOID()
         this.$router.push({
             path: '/wallet/transfer',
-            query: { nft: utxoId },
+            query: {
+                nft: utxoId,
+                chain: 'X',
+            },
         })
     }
 }
