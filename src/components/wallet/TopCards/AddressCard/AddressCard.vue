@@ -4,7 +4,7 @@
         <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
         <p class="addr_info">{{ addressMsg }}</p>
         <div class="bottom">
-            <div>
+            <div class="col_qr">
                 <canvas ref="qr"></canvas>
             </div>
             <div class="bottom_rest">
@@ -13,34 +13,34 @@
                 <p class="addr_text" data-cy="wallet_address">
                     {{ activeAddress }}
                 </p>
-                <div style="display: flex; margin-top: 10px">
-                    <ChainSelect v-model="chainNow"></ChainSelect>
-                    <div class="buts">
-                        <button
-                            :tooltip="$t('top.hover1')"
-                            @click="viewQRModal"
-                            class="qr_but"
-                        ></button>
-                        <button
-                            v-if="walletType === 'mnemonic'"
-                            :tooltip="$t('top.hover2')"
-                            @click="viewPrintModal"
-                            class="print_but"
-                        ></button>
-                        <button
-                            v-if="walletType === 'ledger'"
-                            :tooltip="$t('create.verify')"
-                            @click="verifyLedgerAddress"
-                            class="ledger_but"
-                        ></button>
-                        <CopyText
-                            :tooltip="$t('top.hover3')"
-                            :value="activeAddress"
-                            class="copy_but"
-                        ></CopyText>
-                    </div>
+                <div class="buts">
+                    <button
+                        :tooltip="$t('top.hover1')"
+                        @click="viewQRModal"
+                        class="qr_but"
+                    ></button>
+                    <button
+                        v-if="walletType === 'mnemonic'"
+                        :tooltip="$t('top.hover2')"
+                        @click="viewPrintModal"
+                        class="print_but"
+                    ></button>
+                    <button
+                        v-if="walletType === 'ledger'"
+                        :tooltip="$t('create.verify')"
+                        @click="verifyLedgerAddress"
+                        class="ledger_but"
+                    ></button>
+                    <CopyText
+                        :tooltip="$t('top.hover3')"
+                        :value="activeAddress"
+                        class="copy_but"
+                    ></CopyText>
                 </div>
             </div>
+        </div>
+        <div class="bottom_tabs">
+            <ChainSelect v-model="chainNow"></ChainSelect>
         </div>
     </div>
 </template>
@@ -245,19 +245,18 @@ export default class AddressCard extends Vue {
 .addr_card {
     display: flex;
     flex-direction: column;
+    padding: 0 !important;
 }
 .buts {
     width: 100%;
-    text-align: right;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     color: var(--primary-color-light);
+    justify-content: flex-end;
 
     > * {
         font-size: 16px;
-        margin: 0px 18px;
-        margin-right: 0px;
+        margin-left: 14px;
         position: relative;
         outline: none;
         width: 18px;
@@ -285,6 +284,11 @@ export default class AddressCard extends Vue {
     color: var(--primary-color);
 }
 
+.col_qr {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .mainnet_but {
     background-image: url('/img/modal_icons/mainnet_addr.svg');
 }
@@ -306,12 +310,13 @@ export default class AddressCard extends Vue {
 }
 
 .addr_info {
+    margin: 19px !important;
+    margin-bottom: 0 !important;
     background-color: var(--bg-light);
     font-size: 13px;
     font-weight: bold;
     text-align: center;
     padding: 12px 16px;
-    margin-bottom: 12px !important;
 }
 
 $qr_width: 110px;
@@ -320,6 +325,11 @@ $qr_width: 110px;
     display: grid;
     grid-template-columns: $qr_width 1fr;
     column-gap: 14px;
+    padding-right: 14px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-left: 8px;
+    flex-grow: 1;
 
     canvas {
         width: $qr_width;
@@ -331,6 +341,7 @@ $qr_width: 110px;
         padding-top: 4px;
         display: flex;
         flex-direction: column;
+        justify-content: center;
     }
 }
 
@@ -346,7 +357,7 @@ $qr_width: 110px;
 
 .subtitle {
     font-size: 0.7rem;
-    margin-top: 3px !important;
+    margin-top: 6px !important;
     color: var(--primary-color-light);
 }
 
@@ -354,7 +365,7 @@ $qr_width: 110px;
     font-size: 15px;
     word-break: break-all;
     color: var(--primary-color);
-    flex-grow: 1;
+    min-height: 58px;
 }
 
 @include main.medium-device {
@@ -362,8 +373,6 @@ $qr_width: 110px;
     //    display: block;
     //}
     .bottom_rest {
-        display: flex;
-        flex-direction: column;
         justify-content: space-between;
     }
 
@@ -376,7 +385,6 @@ $qr_width: 110px;
     }
 
     .buts {
-        //margin: 6px 0;
         justify-content: space-evenly;
 
         > * {
@@ -387,6 +395,10 @@ $qr_width: 110px;
     .addr_text {
         font-size: 13px;
     }
+}
+
+.bottom_tabs {
+    width: 100%;
 }
 
 @include main.mobile-device {
