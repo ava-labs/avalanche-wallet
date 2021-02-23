@@ -325,7 +325,7 @@ $qr_width: 110px;
     display: grid;
     grid-template-columns: $qr_width 1fr;
     column-gap: 14px;
-    padding-right: 14px;
+    padding-right: 18px;
     margin-top: 4px;
     margin-bottom: 4px;
     padding-left: 8px;
@@ -357,7 +357,6 @@ $qr_width: 110px;
 
 .subtitle {
     font-size: 0.7rem;
-    margin-top: 6px !important;
     color: var(--primary-color-light);
 }
 
@@ -365,7 +364,7 @@ $qr_width: 110px;
     font-size: 15px;
     word-break: break-all;
     color: var(--primary-color);
-    min-height: 58px;
+    min-height: 55px;
 }
 
 @include main.medium-device {
