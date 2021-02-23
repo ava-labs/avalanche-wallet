@@ -4,8 +4,6 @@
             <fa icon="times"></fa>
         </button>
         <div class="amt_in hover_border">
-            <!--            <label>Quantity</label>-->
-            <!--            <p><fa icon="boxes"></fa></p>-->
             <input
                 type="number"
                 min="1"
