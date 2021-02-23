@@ -123,7 +123,8 @@ $logo_w: 38px;
         background-color: var(--bg-light);
 
         .col_img {
-            background-color: rgba(#000, 0.2);
+            background-color: var(--primary-color);
+            color: var(--bg-wallet);
         }
     }
 }
