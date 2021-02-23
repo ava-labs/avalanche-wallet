@@ -9,6 +9,7 @@
             <input
                 type="number"
                 min="1"
+                inputmode="numeric"
                 :max="allUtxos.length"
                 v-model="quantity"
                 :disabled="disabled"

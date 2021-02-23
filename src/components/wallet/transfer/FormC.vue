@@ -30,12 +30,24 @@
             <div class="gas_cont">
                 <div>
                     <h4>{{ $t('transfer.c_chain.gasPrice') }}</h4>
-                    <input type="number" v-model="gasPrice" min="0" :disabled="isConfirm" />
+                    <input
+                        type="number"
+                        v-model="gasPrice"
+                        min="0"
+                        inputmode="numeric"
+                        :disabled="isConfirm"
+                    />
                 </div>
                 <div>
                     <h4>{{ $t('transfer.c_chain.gasLimit') }}</h4>
                     <template v-if="formToken === 'native'">
-                        <input type="number" v-model="gasLimit" min="0" :disabled="isConfirm" />
+                        <input
+                            type="number"
+                            inputmode="numeric"
+                            v-model="gasLimit"
+                            min="0"
+                            :disabled="isConfirm"
+                        />
                     </template>
                     <template v-else>
                         <p v-if="!isConfirm" style="font-size: 13px">
