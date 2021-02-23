@@ -51,6 +51,10 @@ export default class TxList extends Vue {
 
     @Prop({ default: false }) disabled!: boolean
 
+    deactivated() {
+        this.reset()
+    }
+
     updateUnavailable(): void {
         let res: AvaAsset[][] = []
         let allDisabled = []

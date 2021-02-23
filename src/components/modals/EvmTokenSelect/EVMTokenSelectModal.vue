@@ -3,7 +3,7 @@
         <div class="token_select_body">
             <div class="list">
                 <div class="token_row" @click="select('native')">
-                    <img src="/img/ava_icon.png" />
+                    <img src="/img/avax_icon_circle.png" class="col_img" />
                     <div class="col_name">
                         <p>AVAX</p>
                         <p>Avalanche</p>
@@ -100,6 +100,8 @@ export default class EVMTokenSelectModal extends Vue {
     border-radius: 4px;
 }
 
+$logo_w: 38px;
+
 .token_row {
     font-size: 15px;
     padding: 10px 20px;
@@ -114,7 +116,6 @@ export default class EVMTokenSelectModal extends Vue {
     }
 
     img {
-        width: 100%;
         object-fit: contain;
     }
 
@@ -126,8 +127,6 @@ export default class EVMTokenSelectModal extends Vue {
         }
     }
 }
-
-$logo_w: 38px;
 
 .col_img {
     width: $logo_w;

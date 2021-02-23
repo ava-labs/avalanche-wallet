@@ -50,7 +50,7 @@ label {
         //background-color: var(--bg-light);
         display: flex;
         align-items: center;
-        font-size: 48px;
+        font-size: 28px;
 
         &:hover {
             opacity: 1;
@@ -70,9 +70,18 @@ label {
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 14px;
-        > div {
+        > button {
             margin: 0;
             justify-content: center;
+            text-align: center;
+            background-color: var(--bg-light);
+            color: var(--primary-color-light);
+
+            &[active] {
+                //background-color: var(--secondary-color);
+                color: var(--primary-color);
+                //color: #fff;
+            }
         }
     }
 }

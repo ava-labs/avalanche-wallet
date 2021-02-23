@@ -121,5 +121,14 @@ $card_w: 80px;
 }
 
 @include main.mobile-device {
+    $card_w: 60px;
+
+    .group_grid {
+        grid-template-columns: repeat(5, $card_w);
+    }
+    .card {
+        width: $card_w;
+        height: $card_w;
+    }
 }
 </style>

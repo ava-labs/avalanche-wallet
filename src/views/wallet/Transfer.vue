@@ -26,13 +26,6 @@
                             ></NftList>
                         </template>
                     </div>
-                    <!--                    <div v-show="isConfirm">-->
-                    <!--                        <TxSummary-->
-                    <!--                            class="lists"-->
-                    <!--                            :orders="formOrders"-->
-                    <!--                            :nft-orders="formNftOrders"-->
-                    <!--                        ></TxSummary>-->
-                    <!--                    </div>-->
                 </div>
                 <div>
                     <div class="to_address">
