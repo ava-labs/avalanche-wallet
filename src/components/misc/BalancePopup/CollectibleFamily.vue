@@ -123,6 +123,15 @@ $card_w: 80px;
 @include main.mobile-device {
     $card_w: 60px;
 
+    .collectible_family {
+        display: block;
+    }
+    .fam_title {
+        color: var(--primary-color-light);
+        font-size: 12px;
+        margin-bottom: 8px !important;
+    }
+
     .group_grid {
         grid-template-columns: repeat(5, $card_w);
     }
