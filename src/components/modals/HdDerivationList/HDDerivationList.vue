@@ -207,7 +207,7 @@ export default class HDDerivationList extends Vue {
     top: 0;
     border-bottom: 1px solid var(--bg-light);
     font-weight: bold;
-    //background-color: var(--bg-light);
+    background-color: var(--bg);
 }
 
 .headers,
