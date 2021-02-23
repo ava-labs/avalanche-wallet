@@ -55,6 +55,7 @@ export default class AvmNftSelectModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
 .nft_sel_body {
     width: 650px;
     max-width: 100%;
@@ -67,6 +68,12 @@ export default class AvmNftSelectModal extends Vue {
     > div {
         border-bottom: 2px solid var(--bg-light);
         padding: 14px;
+    }
+}
+
+@include main.mobile-device {
+    .nft_sel_body {
+        width: 100%;
     }
 }
 </style>

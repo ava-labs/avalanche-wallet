@@ -12,7 +12,7 @@
             <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
             <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
         </router-link>
-        <p class="col_bal">
+        <p class="balance_col">
             {{ balText }}
         </p>
     </div>
@@ -58,7 +58,7 @@ img {
     justify-self: center;
 }
 
-.col_bal {
+.balance_col {
     text-align: right;
     font-size: 18px;
 
@@ -101,6 +101,21 @@ img {
     align-items: center;
     color: var(--primary-color-light);
 }
+
+@include main.medium-device {
+    .erc_row {
+        padding: 6px 0;
+    }
+
+    $logo_w: 30px;
+    img,
+    .no_logo {
+        width: $logo_w;
+        height: $logo_w;
+        border-radius: $logo_w;
+    }
+}
+
 @include main.mobile-device {
 }
 </style>

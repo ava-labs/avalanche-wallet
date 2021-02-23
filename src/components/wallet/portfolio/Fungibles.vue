@@ -303,7 +303,7 @@ export default class Fungibles extends Vue {
     .fungibles_view {
         .headers,
         .asset {
-            grid-template-columns: 50px 1fr 1fr 50px;
+            grid-template-columns: max-content 1fr 1fr 50px;
         }
 
         .balance_col {

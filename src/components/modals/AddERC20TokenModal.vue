@@ -137,6 +137,7 @@ export default class AddERC20TokenModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
 .add_token_body {
     padding: 30px 22px;
     text-align: center;
@@ -195,5 +196,11 @@ export default class AddERC20TokenModal extends Vue {
 .err {
     width: 100%;
     text-align: center;
+}
+
+@include main.mobile-device {
+    .add_token_body {
+        width: 100%;
+    }
 }
 </style>

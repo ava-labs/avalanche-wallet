@@ -68,6 +68,8 @@ export default class PrivateKey extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../main';
+
 .avm_token_select {
     width: 520px;
     max-width: 100%;
@@ -107,5 +109,11 @@ export default class PrivateKey extends Vue {
 
 .col_balance {
     align-self: center;
+}
+
+@include main.mobile-device {
+    .avm_token_select {
+        width: 100%;
+    }
 }
 </style>

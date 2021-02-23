@@ -11,7 +11,8 @@
                     <p class="col_bal">{{ avaxBalance.toLocaleString() }}</p>
                 </div>
                 <div v-for="t in tokens" :key="t.data.address" class="token_row" @click="select(t)">
-                    <img :src="t.data.logoURI" />
+                    <img v-if="t.data.logoURI" :src="t.data.logoURI" class="col_img" />
+                    <p v-else class="col_img">?</p>
                     <div class="col_name">
                         <p>{{ t.data.symbol }}</p>
                         <p>{{ t.data.name }}</p>
@@ -79,6 +80,8 @@ export default class EVMTokenSelectModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../main';
+
 .token_select_body {
     width: 420px;
     max-width: 100%;
@@ -101,7 +104,7 @@ export default class EVMTokenSelectModal extends Vue {
     font-size: 15px;
     padding: 10px 20px;
     display: grid;
-    grid-template-columns: 34px max-content 1fr;
+    grid-template-columns: max-content max-content 1fr;
     column-gap: 12px;
     cursor: pointer;
     user-select: none;
@@ -116,9 +119,23 @@ export default class EVMTokenSelectModal extends Vue {
     }
 
     &:hover {
-        //background-color: rgba(var(--bg-1), 0.5);
         background-color: var(--bg-light);
+
+        .col_img {
+            background-color: rgba(#000, 0.2);
+        }
     }
+}
+
+$logo_w: 38px;
+
+.col_img {
+    width: $logo_w;
+    height: $logo_w;
+    border-radius: $logo_w;
+    background-color: var(--bg-light);
+    text-align: center;
+    line-height: $logo_w;
 }
 
 .col_bal {
@@ -129,6 +146,13 @@ export default class EVMTokenSelectModal extends Vue {
     p:last-of-type {
         font-size: 13px;
         color: var(--primary-color-light);
+    }
+}
+
+@include main.mobile-device {
+    .token_select_body {
+        width: 100%;
+        height: 40vh;
     }
 }
 </style>

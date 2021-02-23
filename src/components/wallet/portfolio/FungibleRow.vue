@@ -175,6 +175,7 @@ export default class FungibleRow extends Vue {
     }
 }
 
+$icon_w: 40px;
 .icon {
     position: relative;
     align-self: center;
@@ -183,13 +184,13 @@ export default class FungibleRow extends Vue {
     align-items: center;
     justify-content: center;
     transition-duration: 1s;
-    width: 40px;
-    height: 40px;
-    border-radius: 40px;
+    width: $icon_w;
+    height: $icon_w;
+    border-radius: $icon_w;
     background-color: var(--bg-light);
 
     p {
-        color: #aaa;
+        color: var(--primary-color-light);
     }
 
     img {
@@ -216,7 +217,7 @@ export default class FungibleRow extends Vue {
 
 @include main.medium-device {
     .asset {
-        padding: 4px 0;
+        padding: 6px 0;
     }
 
     .balance_col {
@@ -235,8 +236,11 @@ export default class FungibleRow extends Vue {
         font-size: 14px;
     }
 
+    $icon_w: 30px;
     .icon {
-        padding: 6px;
+        width: $icon_w;
+        height: $icon_w;
+        border-radius: $icon_w;
     }
 }
 @include main.mobile-device {

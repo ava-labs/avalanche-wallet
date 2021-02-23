@@ -92,6 +92,7 @@ export default class CurrencyInputDropdown extends Vue {
         this.asset_now = val
         this.$refs.bigIn.clear()
         // this.amount_in(new BN(0))
+        this.onchange()
     }
 
     get stepSize() {
