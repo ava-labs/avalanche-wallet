@@ -47,7 +47,7 @@ import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSele
         BigNumInput,
     },
 })
-export default class ERC20InputDropdown extends Vue {
+export default class EVMInputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
     @Prop({ default: false }) disabled!: boolean
     @Prop({ default: 470 }) gasPrice!: number
@@ -83,11 +83,11 @@ export default class ERC20InputDropdown extends Vue {
     get isNative() {
         return this.token === 'native'
     }
-    get denomination() {
+    get denomination(): number {
         if (this.isNative) {
             return 18
         } else {
-            return (this.token as Erc20Token).data.decimals
+            return parseInt((this.token as Erc20Token).data.decimals as string)
         }
     }
 

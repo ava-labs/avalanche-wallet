@@ -40,7 +40,7 @@ class Erc20Token {
         let bal = await this.contract.methods.balanceOf('0x' + address).call()
         this.balanceRaw = bal
         this.balanceBN = new BN(bal)
-        this.balanceBig = bnToBig(this.balanceBN, this.data.decimals)
+        this.balanceBig = bnToBig(this.balanceBN, parseInt(this.data.decimals as string))
     }
 }
 

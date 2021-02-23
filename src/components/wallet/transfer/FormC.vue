@@ -198,7 +198,7 @@ export default class FormC extends Vue {
         if (this.formToken === 'native') {
             return 9
         } else {
-            return this.formToken.data.decimals
+            return parseInt(this.formToken.data.decimals as string)
         }
     }
 

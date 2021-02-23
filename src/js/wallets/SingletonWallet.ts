@@ -735,8 +735,29 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        console.log('Sending: ', token)
-        return ''
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+
+        const txConfig = {
+            from: from,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            to: token.data.address,
+            data: tx.encodeABI(),
+        }
+
+        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+        let signedTx = await account.signTransaction(txConfig)
+
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
     }
 
     getAllAddressesX() {

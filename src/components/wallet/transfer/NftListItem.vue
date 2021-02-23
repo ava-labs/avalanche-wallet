@@ -1,12 +1,18 @@
 <template>
     <div>
-        <button @click="remove" class="removeBut">
+        <button @click="remove" class="removeBut" v-if="!disabled">
             <fa icon="times"></fa>
         </button>
         <div class="amt_in hover_border">
             <!--            <label>Quantity</label>-->
             <!--            <p><fa icon="boxes"></fa></p>-->
-            <input type="number" min="1" :max="allUtxos.length" v-model="quantity" />
+            <input
+                type="number"
+                min="1"
+                :max="allUtxos.length"
+                v-model="quantity"
+                :disabled="disabled"
+            />
         </div>
         <NftPayloadView :payload="payload" small="true"></NftPayloadView>
     </div>
@@ -27,6 +33,7 @@ import { IGroupQuantity } from '@/components/wallet/studio/mint/types'
 })
 export default class NftListItem extends Vue {
     @Prop() sample!: UTXO
+    @Prop({ default: false }) disabled!: boolean
 
     quantity = 1
 

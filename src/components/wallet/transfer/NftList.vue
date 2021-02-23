@@ -12,6 +12,7 @@
                 @remove="remove"
                 :key="utxo.getUTXOID()"
                 :sample="utxo"
+                :disabled="disabled"
                 @change="setGroupUtxos"
             ></NftListItem>
             <div class="nft_icon card nft_add">

@@ -64,6 +64,6 @@ export interface TokenListToken {
     chainId: number
     name: string
     symbol: string
-    decimals: number
+    decimals: number | string
     logoURI: string
 }
