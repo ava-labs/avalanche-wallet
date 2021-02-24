@@ -4,9 +4,9 @@
             <h1>{{ $t('advanced.title') }}</h1>
         </div>
         <TokenListModal ref="token_list"></TokenListModal>
-        <div class="buts grid_box">
-            <button @click="openTokenlist">Manage Token Lists</button>
-        </div>
+        <!--        <div class="buts grid_box">-->
+        <!--            <button @click="openTokenlist">Manage Token Lists</button>-->
+        <!--        </div>-->
         <div class="grids">
             <ChainImport class="grid_box"></ChainImport>
             <SignMessage class="grid_box"></SignMessage>
