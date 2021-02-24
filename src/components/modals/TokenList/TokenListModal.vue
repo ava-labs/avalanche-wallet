@@ -175,10 +175,10 @@ export default class TokenListModal extends Vue {
 
 .buts {
     font-size: 0.8em;
-    color: var(--primary-color-light);
+    color: var(--secondary-color);
 
     &:hover {
-        color: var(--secondary-color);
+        color: var(--primary-color);
     }
 }
 </style>
