@@ -689,8 +689,10 @@
             "desc": "Please confirm these actions on your ledger device."
         },
         "ledger_upgrade": {
-            "submit": "Upgrade",
-            "title": "Upgrade Available"
+            "done": "Done",
+            "upgrade": "Upgrade",
+            "title": "Trouble Connecting",
+            "desc": "We're having trouble connecting to your device. Please make sure you have the Avalanche app open and upgraded to the latest version."
         },
         "tokenlist": {
             "title": "Token lists"
