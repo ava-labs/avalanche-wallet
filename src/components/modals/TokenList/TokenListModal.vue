@@ -1,5 +1,10 @@
 <template>
-    <modal ref="modal" :title="$t('modal.tokenlist.title')" class="modal_main">
+    <modal
+        ref="modal"
+        :title="$t('modal.tokenlist.title')"
+        class="modal_main"
+        @beforeClose="beforeClose"
+    >
         <div class="tokenlist_modal">
             <label>Add a list</label>
             <div class="add_list">
@@ -64,6 +69,11 @@ export default class TokenListModal extends Vue {
         return this.$store.state.Assets.tokenLists
     }
 
+    beforeClose() {
+        this.urlIn = ''
+        this.err = ''
+    }
+
     async addToken() {
         this.err = ''
         this.$store
@@ -108,14 +118,15 @@ export default class TokenListModal extends Vue {
         flex-grow: 1;
         background-color: var(--bg-light);
         margin-right: 8px;
-        height: 30px;
-        padding: 0px 12px;
+        height: 50px;
+        padding: 12px 24px;
         color: var(--primary-color);
         border-radius: 4px;
     }
 
     .v-btn {
-        height: 30px !important;
+        padding: 12px 24px;
+        height: 50px;
     }
 }
 

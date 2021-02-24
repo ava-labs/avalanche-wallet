@@ -15,6 +15,9 @@
         </div>
         <div>
             <label>{{ $t('cross_chain.form.destination') }}</label>
+            <p class="ledger_warn" v-if="!isEVMSupported">
+                C Chain is currently not supported on Ledger devices.
+            </p>
             <select @input="onChangeDestination" class="hover_border">
                 <option
                     v-for="option in destinationOptions"
@@ -289,5 +292,11 @@ select {
         text-align: right;
         background-color: var(--bg-light);
     }
+}
+
+.ledger_warn {
+    color: var(--info);
+    font-size: 13px;
+    margin-bottom: 4px !important;
 }
 </style>
