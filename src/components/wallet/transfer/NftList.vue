@@ -1,5 +1,10 @@
 <template>
     <div v-if="!isEmpty">
+        <AvmNftSelectModal
+            ref="select_modal"
+            @select="addNft"
+            :disabled-ids="usedNftIds"
+        ></AvmNftSelectModal>
         <div class="added_list">
             <NftListItem
                 v-for="utxo in addedNfts"
@@ -7,21 +12,15 @@
                 @remove="remove"
                 :key="utxo.getUTXOID()"
                 :sample="utxo"
+                :disabled="disabled"
                 @change="setGroupUtxos"
             ></NftListItem>
             <div class="nft_icon card nft_add">
-                <button @click="showPopup" class="add_but">
+                <button @click="showPopup" class="add_but" v-if="!disabled">
                     <fa icon="plus"></fa>
                     <br />
                     Add Collectible
                 </button>
-                <BalancePopup
-                    ref="popup"
-                    :is-nft="true"
-                    @select="addNft"
-                    :disabled-ids="usedNftIds"
-                    class="bal_popup"
-                ></BalancePopup>
             </div>
         </div>
     </div>
@@ -38,9 +37,11 @@ import { getPayloadFromUTXO } from '@/helpers/helper'
 import NftListItem from '@/components/wallet/transfer/NftListItem.vue'
 import { IGroupDict, IGroupQuantity } from '@/components/wallet/studio/mint/types'
 import { bintools } from '@/AVA'
+import AvmNftSelectModal from '@/components/modals/AvmNftSelectModal.vue'
 
 @Component({
     components: {
+        AvmNftSelectModal,
         BalancePopup,
         NftListItem,
     },
@@ -52,7 +53,10 @@ export default class NftList extends Vue {
 
     $refs!: {
         popup: BalancePopup
+        select_modal: AvmNftSelectModal
     }
+
+    @Prop({ default: false }) disabled!: boolean
 
     // @Watch('addedNfts')
     // onlistchange(val: UTXO[]) {
@@ -141,7 +145,8 @@ export default class NftList extends Vue {
     }
 
     showPopup() {
-        this.$refs.popup.isActive = true
+        this.$refs.select_modal.open()
+        // this.$refs.popup.isActive = true
     }
 
     deactivated() {

@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div class="modal_main" v-show="isActive">
+        <div class="modal_main" v-if="isActive">
             <div class="modal_bg" @click="bgclick" :icy="icy"></div>
             <div class="modal_body">
                 <div class="modal_topbar">
@@ -46,9 +46,10 @@ export default class Modal extends Vue {
 @use '../../main';
 
 .modal_topbar {
-    background-color: var(--bg-light);
+    background-color: var(--bg);
     border-bottom: var(--bg);
     color: var(--primary-color);
+    border-bottom: 2px solid var(--bg-wallet);
     position: relative;
     padding: 10px 22px;
     display: flex;
@@ -65,6 +66,10 @@ export default class Modal extends Vue {
 .modalClose {
     font-size: 22px;
     font-weight: lighter;
+    opacity: 0.5;
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .modal_main {
@@ -99,9 +104,10 @@ export default class Modal extends Vue {
     max-width: 90%;
     min-height: 30px;
     background-color: var(--bg);
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
     margin: auto;
     z-index: 2;
-    border-radius: 2px;
+    border-radius: 22px;
     overflow: hidden;
 }
 
@@ -113,6 +119,7 @@ export default class Modal extends Vue {
         margin: 0;
         padding-bottom: 20px;
         max-width: none;
+        border-radius: 0px;
         border-top-right-radius: 30px;
         border-top-left-radius: 30px;
     }

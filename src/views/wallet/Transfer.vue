@@ -6,50 +6,51 @@
         </div>
         <div class="card_body" v-else>
             <FormC v-show="formType === 'C'">
-                <ChainInput v-model="formType"></ChainInput>
+                <ChainInput v-model="formType" :disabled="isConfirm"></ChainInput>
             </FormC>
             <div class="new_order_Form" v-show="formType === 'X'">
                 <div class="lists">
-                    <ChainInput v-model="formType"></ChainInput>
-                    <div v-show="!isConfirm">
-                        <tx-list class="tx_list" ref="txList" @change="updateTxList"></tx-list>
+                    <ChainInput v-model="formType" :disabled="isConfirm"></ChainInput>
+                    <div>
+                        <tx-list
+                            class="tx_list"
+                            ref="txList"
+                            @change="updateTxList"
+                            :disabled="isConfirm"
+                        ></tx-list>
                         <template v-if="hasNFT">
-                            <NftList @change="updateNftList" ref="nftList"></NftList>
+                            <NftList
+                                @change="updateNftList"
+                                ref="nftList"
+                                :disabled="isConfirm"
+                            ></NftList>
                         </template>
-                    </div>
-                    <div v-show="isConfirm">
-                        <TxSummary
-                            class="lists"
-                            :orders="formOrders"
-                            :nft-orders="formNftOrders"
-                        ></TxSummary>
                     </div>
                 </div>
                 <div>
                     <div class="to_address">
                         <h4>{{ $t('transfer.to') }}</h4>
                         <qr-input
-                            v-if="!isConfirm"
                             v-model="addressIn"
                             class="qrIn hover_border"
                             placeholder="xxx"
+                            :disabled="isConfirm"
                         ></qr-input>
-                        <p class="confirm_val" v-else>{{ formAddress }}</p>
                     </div>
                     <div>
-                        <template v-if="isConfirm && formMemo.length > 0">
-                            <h4>Memo (Optional)</h4>
-                            <p class="confirm_val">{{ formMemo }}</p>
-                        </template>
-                        <template v-else-if="!isConfirm">
-                            <h4>{{ $t('transfer.memo') }}</h4>
-                            <textarea
-                                class="memo"
-                                maxlength="256"
-                                placeholder="Memo"
-                                v-model="memo"
-                            ></textarea>
-                        </template>
+                        <!--                        <template v-if="isConfirm && formMemo.length > 0">-->
+                        <!--                            <h4>Memo (Optional)</h4>-->
+                        <!--                            <p class="confirm_val">{{ formMemo }}</p>-->
+                        <!--                        </template>-->
+                        <h4 v-if="memo || !isConfirm">{{ $t('transfer.memo') }}</h4>
+                        <textarea
+                            class="memo"
+                            maxlength="256"
+                            placeholder="Memo"
+                            v-model="memo"
+                            v-if="memo || !isConfirm"
+                            :disabled="isConfirm"
+                        ></textarea>
                     </div>
                     <div class="fees">
                         <p>
@@ -432,11 +433,6 @@ export default class Transfer extends Vue {
         return this.$store.state.activeWallet
     }
 
-    // TODO: Remove after ledger support
-    get isLedger() {
-        return this.wallet.type === 'ledger'
-    }
-
     get txFee(): Big {
         let fee = avm.getTxFee()
         return bnToBig(fee, 9)
@@ -459,6 +455,15 @@ export default class Transfer extends Vue {
     }
     activated() {
         this.clearForm()
+
+        if (this.$route.query.chain) {
+            let chain = this.$route.query.chain as string
+            if (chain === 'X') {
+                this.formType = 'X'
+            } else {
+                this.formType = 'C'
+            }
+        }
     }
 }
 </script>

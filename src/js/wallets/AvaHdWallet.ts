@@ -48,6 +48,8 @@ import { digestMessage } from '@/helpers/helper'
 import { buildExportTransaction } from '@/js/TxHelper'
 import { ChainIdType } from '@/constants'
 import { KeyChain } from 'avalanche/dist/apis/evm'
+import Erc20Token from '@/js/Erc20Token'
+import store from '@/store'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -55,7 +57,8 @@ import { KeyChain } from 'avalanche/dist/apis/evm'
 
 const AVA_TOKEN_INDEX: string = '9000'
 export const AVA_ACCOUNT_PATH: string = `m/44'/${AVA_TOKEN_INDEX}'/0'` // Change and index left out
-const ETH_ACCOUNT_PATH: string = `m/44'/60'/0'`
+export const ETH_ACCOUNT_PATH: string = `m/44'/60'/0'`
+export const LEDGER_ETH_ACCOUNT_PATH = ETH_ACCOUNT_PATH + '/0/0'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 const SCAN_SIZE: number = 70 // the total number of utxos to look at initially to calculate last index
@@ -146,6 +149,49 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         }
 
         let signedTx = await account.signTransaction(txConfig)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+
+        const txConfig = {
+            from: from,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            to: token.data.address,
+            data: tx.encodeABI(),
+        }
+
+        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+        let signedTx = await account.signTransaction(txConfig)
+
         let err,
             receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
 
@@ -344,6 +390,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
             )) as AVMUnsignedTx
 
             let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
+
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let destinationAddr = this.getCurrentAddress()

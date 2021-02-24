@@ -23,7 +23,7 @@ import {
     PlatformVMConstants,
 } from 'avalanche/dist/apis/platformvm'
 
-import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm'
+import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/evm'
 import { ChainIdType } from '@/constants'
 
 import { web3 } from '@/evm'
@@ -310,4 +310,9 @@ export enum ParseablePlatformEnum {
     'Add Delegator' = PlatformVMConstants.ADDDELEGATORTX,
     'Import' = PlatformVMConstants.IMPORTTX,
     'Export' = PlatformVMConstants.EXPORTTX,
+}
+
+export enum ParseableEvmTxEnum {
+    'Import' = EVMConstants.IMPORTTX,
+    'Export' = EVMConstants.EXPORTTX,
 }

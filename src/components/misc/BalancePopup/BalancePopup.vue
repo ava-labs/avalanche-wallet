@@ -1,3 +1,5 @@
+<!-- NO LONGER IN USE-->
+
 <template>
     <div class="balance_popup" v-show="isActive">
         <div class="bg" @click="closePopup"></div>

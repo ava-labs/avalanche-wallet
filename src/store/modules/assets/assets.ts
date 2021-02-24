@@ -1,5 +1,11 @@
 import { Module } from 'vuex'
-import { AssetAPI, AssetsDict, AssetsState } from '@/store/modules/assets/types'
+import {
+    AddTokenListInput,
+    AssetsDict,
+    AssetsState,
+    TokenList,
+    TokenListToken,
+} from '@/store/modules/assets/types'
 import {
     IWalletAssetsDict,
     IWalletBalanceDict,
@@ -8,7 +14,7 @@ import {
     RootState,
     WalletType,
 } from '@/store/types'
-import { ava, avm, bintools } from '@/AVA'
+import { ava, avm, bintools, cChain } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 
@@ -24,6 +30,14 @@ import { UnixNow } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
+import axios from 'axios'
+import Erc20Token from '@/js/Erc20Token'
+import { AvaNetwork } from '@/js/AvaNetwork'
+import { web3 } from '@/evm'
+
+const TOKEN_LISTS = [
+    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
+]
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -37,6 +51,12 @@ const assets_module: Module<AssetsState, RootState> = {
         balanceDict: {},
         nftUTXOs: [],
         nftMintUTXOs: [],
+        erc20Tokens: [],
+        erc20TokensCustom: [],
+        evmChainId: 0,
+        tokenLists: [],
+        tokenListUrls: [],
+        tokenListsCustom: [],
     },
     mutations: {
         addAsset(state, asset: AvaAsset) {
@@ -65,11 +85,34 @@ const assets_module: Module<AssetsState, RootState> = {
             state.balanceDict = {}
             state.AVA_ASSET_ID = null
         },
+        saveCustomErc20Tokens(state) {
+            let tokens: Erc20Token[] = state.erc20TokensCustom
+
+            let tokenRawData: TokenListToken[] = tokens.map((token) => {
+                return token.data
+            })
+            localStorage.setItem('erc20_tokens', JSON.stringify(tokenRawData))
+        },
+        loadCustomErc20Tokens(state) {
+            let tokensRaw = localStorage.getItem('erc20_tokens') || '[]'
+            let tokens: TokenListToken[] = JSON.parse(tokensRaw)
+            for (var i = 0; i < tokens.length; i++) {
+                state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
+            }
+        },
+        saveCustomTokenLists(state) {
+            let lists = JSON.stringify(state.tokenListsCustom)
+            localStorage.setItem('token_lists', lists)
+        },
         // setIsUpdateBalance(state, val) {
         //     state.isUpdateBalance = val
         // },
     },
     actions: {
+        async onNetworkChange({ state }, network: AvaNetwork) {
+            let id = await web3.eth.getChainId()
+            state.evmChainId = id
+        },
         // Called on a logout event
         onlogout({ state, commit }) {
             // state.isUpdateBalance = false
@@ -117,6 +160,114 @@ const assets_module: Module<AssetsState, RootState> = {
             state.nftMintUTXOs = nftMintUtxos
         },
 
+        async addErc20Token({ state, rootState }, token: TokenListToken) {
+            let tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
+
+            // Make sure its not added before
+            for (var i = 0; i < tokens.length; i++) {
+                let t = tokens[i]
+                if (token.address === t.data.address && token.chainId === t.data.chainId) {
+                    throw new Error('ERC20 Token already added.')
+                }
+            }
+
+            let t = new Erc20Token(token)
+            state.erc20Tokens.push(t)
+        },
+
+        async addCustomErc20Token({ state, rootState, commit }, token: TokenListToken) {
+            let tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
+
+            // Make sure its not added before
+            for (var i = 0; i < tokens.length; i++) {
+                let t = tokens[i]
+                if (token.address === t.data.address && token.chainId === t.data.chainId) {
+                    throw new Error('ERC20 Token already added.')
+                }
+            }
+
+            let t = new Erc20Token(token)
+            // Save token state to storage
+            state.erc20TokensCustom.push(t)
+
+            let w = rootState.activeWallet
+            if (w) {
+                t.updateBalance(w.ethAddress)
+            }
+
+            commit('saveCustomErc20Tokens')
+
+            return t
+        },
+
+        async removeTokenList({ state, commit }, list: TokenList) {
+            // Remove token list object
+            for (var i = 0; i <= state.tokenLists.length; i++) {
+                let l = state.tokenLists[i]
+
+                if (l.url === list.url) {
+                    state.tokenLists.splice(i, 1)
+                    break
+                }
+            }
+
+            // Remove custom Token list urls
+            let index = state.tokenListsCustom.indexOf(list.url)
+            state.tokenListsCustom.splice(index, 1)
+
+            // Update local storage
+            commit('saveCustomTokenLists')
+        },
+
+        async addTokenList({ dispatch, state, commit }, data: AddTokenListInput) {
+            // Make sure URL is not already added
+            if (state.tokenListUrls.includes(data.url)) throw 'Already added.'
+            if (state.tokenListsCustom.includes(data.url)) throw 'Already added.'
+
+            let url = data.url
+            let res = await axios.get(url)
+            let tokenList: TokenList = res.data
+            tokenList.url = url
+            tokenList.readonly = data.readonly
+            let tokens: TokenListToken[] = tokenList.tokens
+            state.tokenLists.push(tokenList)
+            for (var i = 0; i < tokens.length; i++) {
+                dispatch('addErc20Token', tokens[i])
+            }
+
+            if (!data.readonly) {
+                state.tokenListsCustom.push(data.url)
+                commit('saveCustomTokenLists')
+            } else {
+                state.tokenListUrls.push(data.url)
+            }
+        },
+
+        loadCustomTokenLists({ state, dispatch }) {
+            let listRaw = localStorage.getItem('token_lists')
+            if (!listRaw) return
+            let urls: string[] = JSON.parse(listRaw)
+
+            urls.forEach((url) => {
+                dispatch('addTokenList', {
+                    url: url,
+                    readonly: false,
+                })
+            })
+        },
+
+        async initErc20List({ state, dispatch, commit }) {
+            TOKEN_LISTS.forEach((url) => {
+                dispatch('addTokenList', {
+                    url: url,
+                    readonly: true,
+                })
+            })
+
+            dispatch('loadCustomTokenLists')
+            commit('loadCustomErc20Tokens')
+        },
+
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
         addUnknownAssets({ state, getters, rootGetters, dispatch }) {
             let balanceDict: IWalletBalanceDict = state.balanceDict
@@ -151,7 +302,22 @@ const assets_module: Module<AssetsState, RootState> = {
 
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
+            dispatch('updateERC20Balances')
             commit('updateActiveAddress', null, { root: true })
+        },
+
+        async updateERC20Balances({ state, rootState, getters }) {
+            let wallet: WalletType | null = rootState.activeWallet
+            if (!wallet) return
+            // Old ledger wallets do not have an eth address
+            if (!wallet.ethAddress) return
+
+            let networkID = state.evmChainId
+            let tokens: Erc20Token[] = getters.networkErc20Tokens
+            tokens.forEach((token) => {
+                if (token.data.chainId !== networkID) return
+                token.updateBalance(wallet!.ethAddress)
+            })
         },
 
         // What is the AVA coin in the network
@@ -217,22 +383,6 @@ const assets_module: Module<AssetsState, RootState> = {
             return dict
         },
 
-        // fetch every asset from the explorer, if explorer exists
-        // We can use it later
-        // updateAssets({state, rootState, commit}){
-        //     //@ts-ignore
-        //     let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
-        //     if(explorerApi){
-        //         explorer_api.get('/x/assets').then(res => {
-        //             let assets:AssetAPI[] = res.data.assets;
-        //             assets.forEach(asset => {
-        //                 let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
-        //                 commit('addAsset', newAsset)
-        //             });
-        //         });
-        //     }
-        // },
-
         // Adds an unknown asset id to the assets dictionary
         async addUnknownAsset({ state, commit }, assetId: string) {
             // get info about the asset
@@ -252,69 +402,27 @@ const assets_module: Module<AssetsState, RootState> = {
         },
     },
     getters: {
-        // avmAvaxUtxos(state, getters, rootState): AVMUTXO[] {
-        //     let wallet = rootState.activeWallet
-        //     // let avaxAsset: AvaAsset|null = getters.AssetAVA
-        //
-        //     if (!wallet) return []
-        //     // if (avaxAsset === null) return []
-        //
-        //     let utxoSet: AVMUTXOSet | null = getters.walletAvmUtxoSet
-        //     if (!utxoSet) return []
-        //
-        //     let avaxID = state.AVA_ASSET_ID
-        //
-        //     let utxos = utxoSet.getAllUTXOs()
-        //
-        //     let avaxUtxos = utxos.filter((utxo) => {
-        //         let outId = utxo.getOutput().getOutputID()
-        //         if (outId !== 7) return false
-        //
-        //         let utxoOut = utxo.getOutput() as AmountOutput
-        //         let locktime = utxoOut.getLocktime()
-        //         let assetIdBuff = utxo.getAssetID()
-        //         let assetId = bintools.cb58Encode(assetIdBuff)
-        //
-        //         if (assetId !== avaxID) {
-        //             return false
-        //         }
-        //         return true
-        //     })
-        //     return avaxUtxos
-        // },
-        //
-        // avmAvaxBalanceUnlocked(state, getters, rootState): BN {
-        //     let wallet = rootState.activeWallet
-        //     if (!wallet) return new BN(0)
-        //
-        //     // let utxoSet: AVMUTXOSet|null = getters.walletAvmUtxoSet
-        //     // if(!utxoSet) return new BN(0)
-        //
-        //     // let utxos = utxoSet.getAllUTXOs()
-        //     let avaxUtxos = getters.avmAvaxUtxos
-        //     console.log(avaxUtxos)
-        //
-        //     let now = UnixNow()
-        //
-        //     let tot = new BN(0)
-        //     for (var i = 0; i < avaxUtxos.length; i++) {
-        //         let utxo = avaxUtxos[i]
-        //         // let outId = utxo.getOutput().getOutputID()
-        //         //
-        //         // Process only SECP256K1 Transfer Output utxos, outputid === 07
-        //         // if (outId !== 7) continue
-        //         let utxoOut = utxo.getOutput() as AmountOutput
-        //         let locktime = utxoOut.getLocktime()
-        //         let amount = utxoOut.getAmount()
-        //         let assetIdBuff = utxo.getAssetID()
-        //         let assetId = bintools.cb58Encode(assetIdBuff)
-        //
-        //         if (locktime.lt(now)) {
-        //             tot = tot.add(amount)
-        //         }
-        //     }
-        //     return tot
-        // },
+        networkErc20Tokens(state: AssetsState, getters, rootState: RootState): Erc20Token[] {
+            let tokens = state.erc20Tokens.concat(state.erc20TokensCustom)
+            let chainId = state.evmChainId
+
+            let filt = tokens.filter((t) => {
+                if (t.data.chainId !== chainId) return false
+                return true
+            })
+            return filt
+        },
+
+        findErc20: (state) => (contractAddr: string) => {
+            let tokens: Erc20Token[] = state.erc20Tokens.concat(state.erc20TokensCustom)
+            for (var i = 0; i < tokens.length; i++) {
+                let t = tokens[i]
+                if (t.data.address === contractAddr) {
+                    return t
+                }
+            }
+            return null
+        },
 
         // assset id -> utxos
         walletNftDict(state, getters, rootState) {

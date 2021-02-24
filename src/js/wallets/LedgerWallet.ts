@@ -1,14 +1,20 @@
 // import AppBtc from "@ledgerhq/hw-app-btc";
 //@ts-ignore
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
+//@ts-ignore
+import Eth from '@ledgerhq/hw-app-eth'
+
+import EthereumjsCommon from '@ethereumjs/common'
+import { Transaction } from '@ethereumjs/tx'
 
 import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-var bippath = require('bip32-path')
+const bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
+import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
 
 import { UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
@@ -34,19 +40,44 @@ import {
     PlatformVMConstants,
 } from 'avalanche/dist/apis/platformvm'
 
-import { Credential, SigIdx, Signature } from 'avalanche/dist/common'
+import {
+    UTXOSet as EVMUTXOSet,
+    UnsignedTx as EVMUnsignedTx,
+    ExportTx as EVMExportTx,
+    Tx as EvmTx,
+    EVMConstants,
+    EVMInput,
+} from 'avalanche/dist/apis/evm'
+
+import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig, WalletNameType } from '@/store/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
-import { AVA_ACCOUNT_PATH } from './AvaHdWallet'
+import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './AvaHdWallet'
 import { ChainIdType } from '@/constants'
-import { ParseableAvmTxEnum, ParseablePlatformEnum } from '../TxHelper'
+import {
+    buildExportTransaction,
+    ParseableAvmTxEnum,
+    ParseablePlatformEnum,
+    ParseableEvmTxEnum,
+} from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
+import Erc20Token from '@/js/Erc20Token'
+
+export const MIN_EVM_SUPPORT_V = '0.4.0'
+
+const isOdd = (str: string) => str.length % 2 !== 0
+const toHex = (value: BN | number) => {
+    const hex = value.toString(16)
+
+    return isOdd(hex) ? `0x0${hex}` : `0x${hex}`
+}
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
+    ethApp: Eth
     type: WalletNameType
 
     ethAddress: string
@@ -54,33 +85,59 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: ILedgerAppConfig
 
-    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig) {
+    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth?: HDKey, ethApp?: Eth) {
         super(hdkey)
         this.app = app
+        this.ethApp = ethApp
         this.type = 'ledger'
         this.config = config
 
-        // TODO: Add actual values
-        this.ethAddress = ''
-        this.ethBalance = new BN(0)
-        this.ethAddressBech = ''
+        if (hdEth) {
+            const ethKey = hdEth
+            const ethPublic = importPublic(ethKey.publicKey)
+            this.ethAddress = publicToAddress(ethPublic).toString('hex')
+            this.ethBalance = new BN(0)
+            this.ethAddressBech = bintools.addressToString(
+                ava.getHRP(),
+                'C',
+                // @ts-ignore
+                hdEth.pubKeyHash
+            )
+        } else {
+            this.ethAddress = ''
+            this.ethAddressBech = ''
+            this.ethBalance = new BN(0)
+        }
     }
 
-    static async fromApp(app: AppAvax, config: ILedgerAppConfig) {
+    static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
 
         let hd = new HDKey()
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        return new LedgerWallet(app, hd, config)
+        let hdEth
+        // TODO: enable when we want users upgrading after ledger fixes a few issues
+        // const versionCheck = config.version >= MIN_EVM_SUPPORT_V
+        const versionCheck = false
+        if (versionCheck) {
+            let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
+            hdEth = new HDKey()
+            // @ts-ignore
+            hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
+            // @ts-ignore
+            hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
+        }
+
+        return new LedgerWallet(app, hd, config, hdEth, eth)
     }
 
     // Returns an array of derivation paths that need to sign this transaction
     // Used with signTransactionHash and signTransactionParsable
     getTransactionPaths<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
-        isAVM: boolean = true
+        chainId: ChainIdType
     ): { paths: string[]; isAvaxOnly: boolean } {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
@@ -96,13 +153,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
 
         let items = ins
-        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+        if (
+            (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P')
+        ) {
             items = (tx as ImportTx).getImportInputs()
         }
 
         let hrp = getPreferredHRP(ava.getNetworkID())
-        let chainId = isAVM ? 'X' : 'P'
-
         let paths: string[] = []
 
         let isAvaxOnly = true
@@ -162,10 +220,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return bip32Paths
     }
 
-    getChangeBipPath<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getChangeBipPath<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
-        chainId: ChainAlias
+        chainId: ChainIdType
     ) {
+        if (chainId === 'C') {
+            return null
+        }
+
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
@@ -191,27 +253,40 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return bippath.fromString(`${AVA_ACCOUNT_PATH}/${chainChangePath}/${changeIdx}`)
     }
 
-    getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         paths: string[],
-        sigMap: any
+        sigMap: any,
+        chainId: ChainIdType
     ): Credential[] {
         let creds: Credential[] = []
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
-        let ins = tx.getIns()
+        // @ts-ignore
+        let ins = tx.getIns ? tx.getIns() : []
+        let operations: TransferableOperation[] = []
+        let evmInputs: EVMInput[] = []
 
         let items = ins
-        if (txType === AVMConstants.IMPORTTX || txType === PlatformVMConstants.IMPORTTX) {
+        if (
+            (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
+            (txType === EVMConstants.IMPORTTX && chainId === 'C')
+        ) {
             items = (tx as ImportTx).getImportInputs()
         }
-
-        let operations: TransferableOperation[] = []
 
         // Try to get operations, it will fail if there are none, ignore and continue
         try {
             operations = (tx as OperationTx).getOperations()
+        } catch (e) {
+            console.log(e)
+        }
+
+        // Try to get evm inputs, it will fail if there are none, ignore and continue
+        try {
+            evmInputs = (tx as EVMExportTx).getInputs()
         } catch (e) {
             console.log(e)
         }
@@ -251,15 +326,33 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             creds.push(cred)
         }
 
+        for (let i = 0; i < evmInputs.length; i++) {
+            let evmInput = evmInputs[i]
+            const sigidxs: SigIdx[] = evmInput.getSigIdxs()
+            const cred: Credential = SelectCredentialClass(evmInput.getCredentialID())
+
+            for (let j = 0; j < sigidxs.length; j++) {
+                let pathIndex = items.length + i + j
+                let pathStr = paths[pathIndex]
+
+                let sigRaw = sigMap.get(pathStr)
+                let sigBuff = Buffer.from(sigRaw)
+                const sig: Signature = new Signature()
+                sig.fromBuffer(sigBuff)
+                cred.addSignature(sig)
+            }
+            creds.push(cred)
+        }
+
         return creds
     }
 
     // Used for non parsable transactions.
     // Ideally we wont use this function at all, but ledger is not ready yet.
     async signTransactionHash<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx | EvmTx
+    >(unsignedTx: UnsignedTx, paths: string[], chainId: ChainIdType): Promise<SignedTx> {
         let txbuff = unsignedTx.toBuffer()
         const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
 
@@ -277,14 +370,26 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let sigMap = await this.app.signHash(accountPath, bip32Paths, msg)
             store.commit('Ledger/closeModal')
 
-            let sigs: Credential[] = this.getCredentials<UnsignedTx>(unsignedTx, paths, sigMap)
+            let creds: Credential[] = this.getCredentials<UnsignedTx>(
+                unsignedTx,
+                paths,
+                sigMap,
+                chainId
+            )
 
             let signedTx
-            if (isAVM) {
-                signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, sigs)
-            } else {
-                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, sigs)
+            switch (chainId) {
+                case 'X':
+                    signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, creds)
+                    break
+                case 'P':
+                    signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, creds)
+                    break
+                case 'C':
+                    signedTx = new EvmTx(unsignedTx as EVMUnsignedTx, creds)
+                    break
             }
+
             return signedTx as SignedTx
         } catch (e) {
             store.commit('Ledger/closeModal')
@@ -295,22 +400,28 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     // Used for signing transactions that are parsable
     async signTransactionParsable<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, paths: string[], isAVM: boolean = true): Promise<SignedTx> {
+        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx,
+        SignedTx extends AVMTx | PlatformTx | EvmTx
+    >(unsignedTx: UnsignedTx, paths: string[], chainId: ChainIdType): Promise<SignedTx> {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
-        let chainId: ChainAlias = isAVM ? 'X' : 'P'
-        let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
+        let parseableTxs = {
+            X: ParseableAvmTxEnum,
+            P: ParseablePlatformEnum,
+            C: ParseableEvmTxEnum,
+        }[chainId]
 
         let title = `Sign ${parseableTxs[txType]}`
 
         let bip32Paths = this.pathsToUniqueBipPaths(paths)
 
-        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+        const accountPath =
+            chainId === 'C'
+                ? bippath.fromString(`${ETH_ACCOUNT_PATH}`)
+                : bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         let txbuff = unsignedTx.toBuffer()
         let changePath = this.getChangeBipPath(unsignedTx, chainId)
-        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, isAVM, changePath)
+        let messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, chainId, changePath)
 
         try {
             store.commit('Ledger/openModal', {
@@ -325,16 +436,23 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 txbuff,
                 changePath
             )
-            let sigMap = ledgerSignedTx.signatures
 
-            let creds = this.getCredentials<UnsignedTx>(unsignedTx, paths, sigMap)
+            let sigMap = ledgerSignedTx.signatures
+            let creds = this.getCredentials<UnsignedTx>(unsignedTx, paths, sigMap, chainId)
 
             let signedTx
-            if (isAVM) {
-                signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, creds)
-            } else {
-                signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, creds)
+            switch (chainId) {
+                case 'X':
+                    signedTx = new AVMTx(unsignedTx as AVMUnsignedTx, creds)
+                    break
+                case 'P':
+                    signedTx = new PlatformTx(unsignedTx as PlatformUnsignedTx, creds)
+                    break
+                case 'C':
+                    signedTx = new EvmTx(unsignedTx as EVMUnsignedTx, creds)
+                    break
             }
+
             return signedTx as SignedTx
         } catch (e) {
             store.commit('Ledger/closeModal')
@@ -343,65 +461,81 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    getOutputMessages<Outputs extends AVMTransferableOutput[] | PlatformTransferableOutput[]>(
-        outs: Outputs,
-        isAVM: boolean,
+    getOutputMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        chainId: ChainIdType,
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
-        let chainId: ChainAlias = isAVM ? 'X' : 'P'
         let hrp = getPreferredHRP(ava.getNetworkID())
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
 
-        let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
-        let changeAddr = this.getChangeFromIndex(changeIdx, chainId)
+        // @ts-ignore
+        let outs
+        if (
+            (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.EXPORTTX && chainId === 'P')
+        ) {
+            outs = (tx as ExportTx).getExportOutputs()
+        } else if (txType === EVMConstants.EXPORTTX && chainId === 'C') {
+            outs = (tx as EVMExportTx).getExportedOutputs()
+        } else {
+            outs = (tx as ExportTx).getOuts()
+        }
 
-        for (let i = 0; i < outs.length; i++) {
-            outs[i]
-                .getOutput()
-                .getAddresses()
-                .forEach((value) => {
-                    const addr = bintools.addressToString(hrp, chainId, value)
-                    // @ts-ignore
-                    const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
+        let destinationChain = chainId
+        if (chainId === 'C' && txType === EVMConstants.EXPORTTX) destinationChain = 'X'
 
-                    if (!changePath || changeAddr !== addr)
-                        messages.push({
-                            title: 'Output',
-                            value: `${addr} - ${amt.toString()} AVAX`,
-                        })
+        if (destinationChain === 'C') {
+            for (let i = 0; i < outs.length; i++) {
+                // @ts-ignore
+                const value = outs[i].getAddress()
+                const addr = bintools.addressToString(hrp, chainId, value)
+                // @ts-ignore
+                const amt = bnToBig(outs[i].getAmount(), 9)
+
+                messages.push({
+                    title: 'Output',
+                    value: `${addr} - ${amt.toString()} AVAX`,
                 })
+            }
+        } else {
+            let changeIdx = changePath?.toPathArray()[changePath?.toPathArray().length - 1]
+            let changeAddr = this.getChangeFromIndex(changeIdx, destinationChain)
+
+            for (let i = 0; i < outs.length; i++) {
+                outs[i]
+                    .getOutput()
+                    .getAddresses()
+                    .forEach((value) => {
+                        const addr = bintools.addressToString(hrp, chainId, value)
+                        // @ts-ignore
+                        const amt = bnToBig(outs[i].getOutput().getAmount(), 9)
+
+                        if (!changePath || changeAddr !== addr)
+                            messages.push({
+                                title: 'Output',
+                                value: `${addr} - ${amt.toString()} AVAX`,
+                            })
+                    })
+            }
         }
 
         return messages
     }
 
-    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
-    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
+    getValidateDelegateMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx>(
         unsignedTx: UnsignedTx,
-        isAVM: boolean = true,
-        changePath: null | { toPathArray: () => number[] }
+        chainId: ChainIdType
     ): ILedgerBlockMessage[] {
+        let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
+        let txType = tx.getTxType()
         let messages: ILedgerBlockMessage[] = []
 
-        let tx = unsignedTx.getTransaction()
-        let txType = tx.getTxType()
-        let outs = tx.getOuts()
-        let outputMessages = this.getOutputMessages(outs, isAVM, changePath)
-
-        // regular output messages, if any
-        messages.push(...outputMessages)
-
-        if (txType === AVMConstants.EXPORTTX || txType === PlatformVMConstants.EXPORTTX) {
-            outs = (tx as ExportTx).getExportOutputs()
-            // export output messages, if any
-            outputMessages = this.getOutputMessages(outs, isAVM, changePath)
-            messages.push(...outputMessages)
-        }
-
-        // TODO: Construct the messages array depending on transaction type
         if (
-            txType === PlatformVMConstants.ADDDELEGATORTX ||
-            txType === PlatformVMConstants.ADDVALIDATORTX
+            (txType === PlatformVMConstants.ADDDELEGATORTX && chainId === 'P') ||
+            (txType === PlatformVMConstants.ADDVALIDATORTX && chainId === 'P')
         ) {
             const format = 'YYYY-MM-DD H:mm:ss UTC'
             // @ts-ignore
@@ -435,19 +569,59 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
             messages.push({ title: 'Fee', value: '0' })
         }
+
+        return messages
+    }
+
+    getFeeMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        chainId: ChainIdType
+    ): ILedgerBlockMessage[] {
+        let tx = unsignedTx.getTransaction()
+        let txType = tx.getTxType()
+        let messages = []
+
         if (
-            txType === AVMConstants.EXPORTTX ||
-            txType === AVMConstants.IMPORTTX ||
-            txType === PlatformVMConstants.EXPORTTX ||
-            txType === PlatformVMConstants.IMPORTTX ||
-            txType === AVMConstants.BASETX
+            (txType === AVMConstants.BASETX && chainId === 'X') ||
+            (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
+            (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
+            (txType === PlatformVMConstants.EXPORTTX && chainId === 'P') ||
+            (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
+            (txType === EVMConstants.EXPORTTX && chainId === 'C')
         ) {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
+        } else if (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C') {
+            messages.push({ title: 'Fee', value: `0 AVAX` })
         }
 
         return messages
     }
 
+    // Given the unsigned transaction returns an array of messages that will be displayed on ledgegr window
+    getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
+        unsignedTx: UnsignedTx,
+        chainId: ChainIdType,
+        changePath: null | { toPathArray: () => number[] }
+    ): ILedgerBlockMessage[] {
+        let messages: ILedgerBlockMessage[] = []
+
+        const outputMessages = this.getOutputMsgs(unsignedTx, chainId, changePath)
+        messages.push(...outputMessages)
+
+        const validateDelegateMessages = this.getValidateDelegateMsgs(
+            unsignedTx as AVMUnsignedTx | PlatformUnsignedTx,
+            chainId
+        )
+        messages.push(...validateDelegateMessages)
+
+        const feeMessages = this.getFeeMsgs(unsignedTx, chainId)
+        messages.push(...feeMessages)
+
+        return messages
+    }
+
+    // need to add destination chain param to know if it's C Chain because obsidian
+    // app does not support x => c and p => c parsing txs
     async sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx
@@ -455,11 +629,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         // Check if transaction can be parsed by ledger
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
-        let chainId = isAVM ? 'X' : 'P'
+        let chainId: ChainIdType = isAVM ? 'X' : 'P'
 
         let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
 
-        let { paths, isAvaxOnly } = this.getTransactionPaths<UnsignedTx>(unsignedTx, isAVM)
+        let { paths, isAvaxOnly } = this.getTransactionPaths<UnsignedTx>(unsignedTx, chainId)
         // If ledger doesnt support parsing, sign hash
         let canLedgerParse = this.config.version >= '0.3.1'
         let isParsableType = txType in parseableTxs && isAvaxOnly
@@ -469,13 +643,13 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(
                 unsignedTx,
                 paths,
-                isAVM
+                chainId
             )
         } else {
             signedTx = await this.signTransactionHash<UnsignedTx, SignedTx>(
                 unsignedTx,
                 paths,
-                isAVM
+                chainId
             )
         }
 
@@ -489,9 +663,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async getEthBalance() {
-        console.error('Not implemented')
-        // let bal = await web3.eth.getBalance(this.ethAddress)
-        this.ethBalance = new BN(0)
+        if (this.ethAddress) {
+            let bal = await web3.eth.getBalance(this.ethAddress)
+            this.ethBalance = new BN(bal)
+        } else {
+            console.error('Not implemented')
+            this.ethBalance = new BN(0)
+        }
+
         return this.ethBalance
     }
 
@@ -529,6 +708,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             return `1/${intIndex}`
         } else if (platformIndex >= 0) {
             return `0/${platformIndex}`
+        } else if (address[0] === 'C') {
+            return '0/0'
         } else {
             throw 'Unable to find source address.'
         }
@@ -557,33 +738,45 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return txId
     }
 
-    async chainTransfer(amt: BN, sourceChain: string = 'X'): Promise<string> {
+    async chainTransfer(
+        amt: BN,
+        sourceChain: string = 'X',
+        destinationChain: ChainIdType
+    ): Promise<string> {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
+        if (destinationChain === 'C') {
+            // C Chain imports/exports do not have a fee
+            amtFee = amt
+        }
         // EXPORT
-        let pId = pChain.getBlockchainID()
         let xId = avm.getBlockchainID()
-        let txId
 
         if (sourceChain === 'X') {
-            let toAddress = this.platformHelper.getCurrentAddress()
-            let xChangeAddr = this.internalHelper.getCurrentAddress()
-            let fromAddrs = this.getDerivedAddresses()
-
-            let exportTx = await avm.buildExportTx(
+            let destinationAddr
+            if (destinationChain === 'P') {
+                destinationAddr = this.getCurrentPlatformAddress()
+            } else {
+                destinationAddr = this.ethAddressBech
+            }
+            let fromAddresses = this.getAllAddressesX()
+            let changeAddress = this.getChangeAddress()
+            let exportTx = await buildExportTransaction(
+                sourceChain,
+                destinationChain,
                 this.utxoset,
+                fromAddresses,
+                destinationAddr,
                 amtFee,
-                pId,
-                [toAddress],
-                fromAddrs,
-                [xChangeAddr]
+                changeAddress
             )
-            let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
+            let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx as AVMUnsignedTx)
             return avm.issueTx(tx)
         } else if (sourceChain === 'P') {
             let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
-            let toAddress = this.externalHelper.getCurrentAddress()
+            let destinationAddr = this.externalHelper.getCurrentAddress()
+
             let pChangeAddr = this.platformHelper.getCurrentAddress()
             let fromAddrs = this.platformHelper.getAllDerivedAddresses()
 
@@ -591,13 +784,35 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 utxoSet,
                 amtFee,
                 xId,
-                [toAddress],
+                [destinationAddr],
                 fromAddrs,
                 [pChangeAddr]
             )
 
             let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
             return pChain.issueTx(tx)
+        } else if (sourceChain === 'C') {
+            let destinationAddr = this.getCurrentAddress()
+            let fromAddresses = [this.ethAddress]
+            let changeAddress = this.ethAddressBech
+            let utxos = this.getPlatformUTXOSet()
+
+            let exportTx = (await buildExportTransaction(
+                sourceChain,
+                destinationChain,
+                utxos,
+                fromAddresses,
+                destinationAddr,
+                amtFee,
+                changeAddress,
+                this.ethAddressBech
+            )) as EVMUnsignedTx
+
+            let tx = (await this.signTransactionParsable(exportTx, ['0/0'], 'C')) as EvmTx
+
+            store.commit('Ledger/closeModal')
+
+            return cChain.issueTx(tx)
         } else {
             throw 'Invalid source chain.'
         }
@@ -683,8 +898,39 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async importToCChain(): Promise<string> {
-        console.error('Not implemented.')
-        return ''
+        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
+            this.ethAddressBech,
+            avm.getBlockchainID()
+        )
+        const utxoSet: EVMUTXOSet = utxoResponse.utxos
+
+        if (utxoSet.getAllUTXOs().length === 0) {
+            throw new Error('Nothing to import.')
+        }
+
+        let ownerAddresses = [this.ethAddressBech]
+        let fromAddresses = ownerAddresses
+        let sourceChain = avm.getBlockchainID()
+
+        let toAddress = '0x' + this.ethAddress
+
+        const unsignedTx = await cChain.buildImportTx(
+            utxoSet,
+            toAddress,
+            ownerAddresses,
+            sourceChain,
+            fromAddresses
+        )
+
+        let tx = (await this.signTransactionParsable(
+            unsignedTx,
+            Array(utxoSet.getAllUTXOs().length).fill('0/0'),
+            'C'
+        )) as EvmTx
+
+        store.commit('Ledger/closeModal')
+
+        return cChain.issueTx(tx)
     }
 
     async delegate(
@@ -856,9 +1102,109 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         return await avm.issueTx(signed)
     }
-    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
-        console.error('Not available yet.')
-        return 'NOT AVAILABLE'
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number, txParams?: any) {
+        const nonce = await web3.eth.getTransactionCount(this.ethAddress)
+        const chainId = await web3.eth.getChainId()
+        const networkId = await web3.eth.net.getId()
+        const chainParams = {
+            common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+        }
+        const partialTxParams = txParams || {
+            to,
+            nonce: toHex(nonce),
+            gasPrice: toHex(gasPrice),
+            gasLimit: toHex(gasLimit),
+            value: toHex(amount),
+        }
+
+        const unsignedTx = Transaction.fromTxData({ ...partialTxParams }, chainParams)
+
+        const rawUnsignedTx = rlp.encode([
+            bnToRlp(unsignedTx.nonce),
+            bnToRlp(unsignedTx.gasPrice),
+            bnToRlp(unsignedTx.gasLimit),
+            unsignedTx.to !== undefined ? unsignedTx.to.buf : Buffer.from([]),
+            bnToRlp(unsignedTx.value),
+            unsignedTx.data,
+            bnToRlp(new BN(chainId)),
+            Buffer.from([]),
+            Buffer.from([]),
+        ])
+
+        // Ledger cannot parse amounts greater than 2^64
+        // 2^64 = 1.8446744e+19
+        // nAVAX is denominated in GWEI so obsidian adds 9 decimals
+        // 20 AVAX = 20000000000 GWEI = 20000000000000000000 WEI
+        // Remove when this constraint is fixed
+        const MAX = '18446744000000000000'
+
+        let signature = {} as { v: string; r: string; s: string }
+        if (unsignedTx.value.gte(new BN(MAX))) {
+            // let bip32Paths = this.pathsToUniqueBipPaths(['0/0'])
+            // const accountPath = bippath.fromString(`${ETH_ACCOUNT_PATH}`)
+            // const sigMap = await this.app.signHash(accountPath, bip32Paths, unsignedTx.hash())
+            // const response = sigMap.get('0/0')
+            // signature.v = '150f5'
+            // signature.r = response.slice(1, 1 + 32).toString('hex')
+            // signature.s = response.slice(1 + 32, 1 + 32 + 32).toString('hex')
+            throw 'Amount too big. Must be less than 18 AVAX.'
+        } else {
+            signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
+        }
+
+        const signatureBN = {
+            v: new BN(signature.v, 16),
+            r: new BN(signature.r, 16),
+            s: new BN(signature.s, 16),
+        }
+        const signedTx = Transaction.fromTxData({ ...partialTxParams, ...signatureBN }, chainParams)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(
+                '0x' + signedTx.serialize().toString('hex')
+            )
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
+        const tx = token.createTransferTx(to, amount)
+        let from = '0x' + this.ethAddress
+
+        const nonce = await web3.eth.getTransactionCount(this.ethAddress)
+
+        const partialTxParams = {
+            to: token.data.address,
+            from,
+            nonce: toHex(nonce),
+            gasPrice: toHex(gasPrice),
+            gasLimit: toHex(gasLimit),
+            value: toHex(0),
+            data: tx.encodeABI(),
+        }
+
+        return this.sendEth(token.data.address, amount, gasPrice, gasLimit, partialTxParams)
     }
 }
 
