@@ -28,26 +28,26 @@ export default class ChainSelect extends Vue {
 </script>
 <style scoped lang="scss">
 .chain_select {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     font-size: 13px;
     color: var(--primary-color-light);
+    background-color: var(--bg-wallet);
 }
 button {
-    margin-right: 6px;
-    border-radius: 3px;
-    background-color: var(--bg-light);
-    padding: 0px 5px;
+    padding: 8px 5px;
     opacity: 0.8;
     outline: none !important;
-
+    font-weight: bold;
+    background-color: rgba(var(--bg-1), 0.5);
     &:hover {
         opacity: 1;
-        color: var(--primary-color);
+        color: var(--secondary-color);
     }
     &[active] {
         opacity: 1;
-        background-color: var(--primary-color);
-        color: var(--bg);
+        background-color: var(--bg);
+        color: var(--primary-color);
     }
 }
 </style>

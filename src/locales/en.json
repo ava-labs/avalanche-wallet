@@ -154,7 +154,7 @@
             "token": "Token"
         },
         "source_chain": {
-            "title": "Select Source Chain"
+            "title": "Source Chain"
         },
         "c_chain": {
             "gasPrice": "Gas Price (GWEI)",
@@ -691,6 +691,9 @@
         "ledger_upgrade": {
             "submit": "Upgrade",
             "title": "Upgrade Available"
+        },
+        "tokenlist": {
+            "title": "Token lists"
         }
     },
     "nav": {

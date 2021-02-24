@@ -52,6 +52,10 @@ export default class QRModal extends Vue {
     open() {
         // @ts-ignore
         this.$refs.modal.open()
+
+        Vue.nextTick(() => {
+            this.updateQR()
+        })
     }
     updateQR() {
         if (!this.address) return
@@ -68,13 +72,8 @@ export default class QRModal extends Vue {
             },
             function (error) {
                 if (error) console.error(error)
-                // console.log('success!');
             }
         )
-    }
-
-    mounted() {
-        this.updateQR()
     }
 }
 </script>

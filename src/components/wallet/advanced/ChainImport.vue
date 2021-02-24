@@ -133,8 +133,6 @@ export default class ChainImport extends Vue {
             message: txId,
         })
 
-        this.$store.commit('Ledger/closeModal')
-
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
@@ -142,7 +140,6 @@ export default class ChainImport extends Vue {
     }
 
     onError(err: Error) {
-        this.$store.commit('Ledger/closeModal')
         this.isLoading = false
         let msg = ''
         if (err.message.includes('No atomic')) {

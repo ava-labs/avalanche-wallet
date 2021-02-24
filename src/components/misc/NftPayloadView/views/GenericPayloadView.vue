@@ -63,6 +63,8 @@ export default class UtfPayloadView extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../../main';
+
 .generic_view {
     position: relative;
     width: 100%;
@@ -118,5 +120,11 @@ img {
     text-align: center;
     padding: 14px;
     background-color: #000000bb;
+}
+
+@include main.mobile-device {
+    .generic_view {
+        height: 100%;
+    }
 }
 </style>

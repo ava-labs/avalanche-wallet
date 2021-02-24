@@ -1,5 +1,7 @@
 <template>
     <div class="fungibles_view">
+        <AddERC20TokenModal ref="add_token_modal"></AddERC20TokenModal>
+        <TokenListModal ref="tokenlist_modal"></TokenListModal>
         <div class="headers">
             <p class="name_col">{{ $t('portfolio.name') }}</p>
             <p></p>
@@ -13,13 +15,26 @@
             <div v-if="walletBalances.length === 0" class="empty">
                 <p>{{ $t('portfolio.nobalance') }}</p>
             </div>
-            <div class="scrollable" v-else>
-                <fungible-row
-                    lass="asset"
-                    v-for="asset in walletBalances"
-                    :key="asset.id"
-                    :asset="asset"
-                ></fungible-row>
+            <div class="scrollable no_scroll_bar" v-else>
+                <div class="scrollabe_cont">
+                    <fungible-row
+                        class="asset"
+                        v-for="asset in walletBalances"
+                        :key="asset.id"
+                        :asset="asset"
+                    ></fungible-row>
+                    <ERC20Row
+                        class="asset"
+                        v-for="erc in erc20Balances"
+                        :key="erc.data.address"
+                        :token="erc"
+                    ></ERC20Row>
+                    <div class="asset add_token_row" v-if="!isLedger">
+                        <button @click="addToken">Add Token</button>
+                        <span>or</span>
+                        <button @click="addTokenList">Add Token List</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -31,9 +46,17 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import FaucetLink from '@/components/misc/FaucetLink.vue'
 import FungibleRow from '@/components/wallet/portfolio/FungibleRow.vue'
 import AvaAsset from '@/js/AvaAsset'
+import Erc20Token from '@/js/Erc20Token'
+import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
+import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
+import { WalletType } from '@/store/types'
+import TokenListModal from '@/components/modals/TokenList/TokenListModal.vue'
 
 @Component({
     components: {
+        TokenListModal,
+        AddERC20TokenModal,
+        ERC20Row,
         FaucetLink,
         FungibleRow,
     },
@@ -41,9 +64,28 @@ import AvaAsset from '@/js/AvaAsset'
 export default class Fungibles extends Vue {
     @Prop() search!: string
 
+    $refs!: {
+        add_token_modal: AddERC20TokenModal
+        tokenlist_modal: TokenListModal
+    }
+
     get networkStatus(): string {
         let stat = this.$store.state.Network.status
         return stat
+    }
+
+    addToken() {
+        this.$refs.add_token_modal.open()
+    }
+
+    addTokenList() {
+        this.$refs.tokenlist_modal.open()
+    }
+
+    get isLedger() {
+        let w: WalletType | null = this.$store.state.activeWallet
+        if (!w) return false
+        return w.type === 'ledger'
     }
 
     get walletBalancesSorted(): AvaAsset[] {
@@ -85,6 +127,15 @@ export default class Fungibles extends Vue {
 
     get avaxToken(): AvaAsset {
         return this.$store.getters['Assets/AssetAVA']
+    }
+
+    get erc20Balances(): Erc20Token[] {
+        let tokens: Erc20Token[] = this.$store.getters['Assets/networkErc20Tokens']
+        let filt = tokens.filter((token) => {
+            if (token.balanceBN.isZero()) return false
+            return true
+        })
+        return filt
     }
 
     get walletBalances(): AvaAsset[] {
@@ -139,19 +190,48 @@ export default class Fungibles extends Vue {
 .headers {
     border-bottom: 1px solid var(--bg-light);
     font-size: 12px;
-    padding: 53.76px 0 14px;
+    padding: 12px 0;
     color: var(--primary-color-light);
     font-weight: bold;
 }
 
 .scrollable {
     overflow-y: scroll;
-    height: 450px;
+    height: 100%;
     flex-grow: 1;
 }
 
+.scrollabe_cont {
+    height: 50px;
+}
 .asset {
     border-bottom: 1px solid var(--bg-light);
+}
+
+.add_token_row {
+    display: flex !important;
+    justify-content: center;
+    padding: 24px;
+    border: none !important;
+
+    span {
+        color: var(--primary-color-light);
+        align-self: center;
+        margin: 0px 12px;
+    }
+
+    button {
+        border: 1px solid var(--primary-color-light);
+        border-radius: 22px;
+        padding: 8px 24px;
+        border-color: var(--secondary-color);
+        color: var(--secondary-color);
+        &:hover {
+            opacity: 0.6;
+            //border-color: var(--secondary-color);
+            //color: var(--secondary-color);
+        }
+    }
 }
 
 .send_col {
@@ -172,7 +252,7 @@ export default class Fungibles extends Vue {
     white-space: nowrap;
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@include main.mobile-device {
     .headers,
     .asset {
         grid-template-columns: 50px 1fr 1fr 50px;
@@ -198,6 +278,10 @@ export default class Fungibles extends Vue {
         .send_col {
             display: none;
         }
+    }
+
+    .scrollable {
+        height: 90vh;
     }
 }
 
@@ -227,7 +311,7 @@ export default class Fungibles extends Vue {
     .headers,
     .asset {
         display: grid;
-        grid-template-columns: 50px 1fr 100px 1fr;
+        grid-template-columns: max-content 1fr 100px 1fr;
     }
 }
 
@@ -235,7 +319,7 @@ export default class Fungibles extends Vue {
     .fungibles_view {
         .headers,
         .asset {
-            grid-template-columns: 50px 1fr 1fr 50px;
+            grid-template-columns: max-content 1fr 1fr 50px;
         }
 
         .balance_col {
