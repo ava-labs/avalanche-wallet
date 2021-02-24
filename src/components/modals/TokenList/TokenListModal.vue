@@ -82,11 +82,16 @@ export default class TokenListModal extends Vue {
                 readonly: false,
             })
             .then((res) => {
-                this.urlIn = ''
+                this.onSuccess()
             })
             .catch((e) => {
                 this.onError(e)
             })
+    }
+
+    onSuccess() {
+        this.urlIn = ''
+        this.$store.dispatch('Assets/updateERC20Balances')
     }
 
     async removeList(list: TokenList) {
