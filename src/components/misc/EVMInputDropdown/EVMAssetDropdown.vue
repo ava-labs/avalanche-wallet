@@ -4,18 +4,6 @@
             {{ symbol }}
         </button>
         <EVMTokenSelectModal ref="select_modal" @select="select"></EVMTokenSelectModal>
-        <!--        <div class="list">-->
-        <!--            <div class="token_row" @click="select('native')">-->
-        <!--                <img src="/img/ava_icon.png" />-->
-        <!--                <p>AVAX</p>-->
-        <!--                <p class="col_bal">{{ avaxBalance.toLocaleString() }}</p>-->
-        <!--            </div>-->
-        <!--            <div v-for="t in tokens" :key="t.data.address" class="token_row" @click="select(t)">-->
-        <!--                <img :src="t.data.logoURI" />-->
-        <!--                <p>{{ t.data.symbol }}</p>-->
-        <!--                <p class="col_bal">{{ t.balanceBig.toLocaleString() }}</p>-->
-        <!--            </div>-->
-        <!--        </div>-->
     </div>
 </template>
 <script lang="ts">
