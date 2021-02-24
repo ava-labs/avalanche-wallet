@@ -247,7 +247,6 @@ const assets_module: Module<AssetsState, RootState> = {
             let listRaw = localStorage.getItem('token_lists')
             if (!listRaw) return
             let urls: string[] = JSON.parse(listRaw)
-            console.log(urls)
 
             urls.forEach((url) => {
                 dispatch('addTokenList', {
@@ -384,22 +383,6 @@ const assets_module: Module<AssetsState, RootState> = {
             return dict
         },
 
-        // fetch every asset from the explorer, if explorer exists
-        // We can use it later
-        // updateAssets({state, rootState, commit}){
-        //     //@ts-ignore
-        //     let explorerApi = rootState.Network.selectedNetwork.explorerUrl;
-        //     if(explorerApi){
-        //         explorer_api.get('/x/assets').then(res => {
-        //             let assets:AssetAPI[] = res.data.assets;
-        //             assets.forEach(asset => {
-        //                 let newAsset = new AvaAsset(asset.id, asset.name, asset.symbol, asset.denomination);
-        //                 commit('addAsset', newAsset)
-        //             });
-        //         });
-        //     }
-        // },
-
         // Adds an unknown asset id to the assets dictionary
         async addUnknownAsset({ state, commit }, assetId: string) {
             // get info about the asset
@@ -440,69 +423,6 @@ const assets_module: Module<AssetsState, RootState> = {
             }
             return null
         },
-        // avmAvaxUtxos(state, getters, rootState): AVMUTXO[] {
-        //     let wallet = rootState.activeWallet
-        //     // let avaxAsset: AvaAsset|null = getters.AssetAVA
-        //
-        //     if (!wallet) return []
-        //     // if (avaxAsset === null) return []
-        //
-        //     let utxoSet: AVMUTXOSet | null = getters.walletAvmUtxoSet
-        //     if (!utxoSet) return []
-        //
-        //     let avaxID = state.AVA_ASSET_ID
-        //
-        //     let utxos = utxoSet.getAllUTXOs()
-        //
-        //     let avaxUtxos = utxos.filter((utxo) => {
-        //         let outId = utxo.getOutput().getOutputID()
-        //         if (outId !== 7) return false
-        //
-        //         let utxoOut = utxo.getOutput() as AmountOutput
-        //         let locktime = utxoOut.getLocktime()
-        //         let assetIdBuff = utxo.getAssetID()
-        //         let assetId = bintools.cb58Encode(assetIdBuff)
-        //
-        //         if (assetId !== avaxID) {
-        //             return false
-        //         }
-        //         return true
-        //     })
-        //     return avaxUtxos
-        // },
-        //
-        // avmAvaxBalanceUnlocked(state, getters, rootState): BN {
-        //     let wallet = rootState.activeWallet
-        //     if (!wallet) return new BN(0)
-        //
-        //     // let utxoSet: AVMUTXOSet|null = getters.walletAvmUtxoSet
-        //     // if(!utxoSet) return new BN(0)
-        //
-        //     // let utxos = utxoSet.getAllUTXOs()
-        //     let avaxUtxos = getters.avmAvaxUtxos
-        //     console.log(avaxUtxos)
-        //
-        //     let now = UnixNow()
-        //
-        //     let tot = new BN(0)
-        //     for (var i = 0; i < avaxUtxos.length; i++) {
-        //         let utxo = avaxUtxos[i]
-        //         // let outId = utxo.getOutput().getOutputID()
-        //         //
-        //         // Process only SECP256K1 Transfer Output utxos, outputid === 07
-        //         // if (outId !== 7) continue
-        //         let utxoOut = utxo.getOutput() as AmountOutput
-        //         let locktime = utxoOut.getLocktime()
-        //         let amount = utxoOut.getAmount()
-        //         let assetIdBuff = utxo.getAssetID()
-        //         let assetId = bintools.cb58Encode(assetIdBuff)
-        //
-        //         if (locktime.lt(now)) {
-        //             tot = tot.add(amount)
-        //         }
-        //     }
-        //     return tot
-        // },
 
         // assset id -> utxos
         walletNftDict(state, getters, rootState) {
