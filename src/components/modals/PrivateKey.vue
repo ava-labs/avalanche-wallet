@@ -30,7 +30,6 @@ export default class PrivateKey extends Vue {
     width: 520px;
     max-width: 100%;
     padding: 10px 20px;
-    background-color: var(--bg-light);
 }
 
 .copyBut {

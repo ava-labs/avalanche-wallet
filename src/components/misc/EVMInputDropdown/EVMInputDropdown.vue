@@ -23,7 +23,7 @@
             ref="dropdown"
         ></EVMAssetDropdown>
         <div class="bal_col">
-            <p class="bal">Balance: {{ balance }}</p>
+            <p class="bal">Balance: {{ balance.toLocaleString() }}</p>
         </div>
         <!--        </div>-->
     </div>

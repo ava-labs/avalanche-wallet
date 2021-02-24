@@ -1,6 +1,7 @@
 <template>
     <div class="fungibles_view">
         <AddERC20TokenModal ref="add_token_modal"></AddERC20TokenModal>
+        <TokenListModal ref="tokenlist_modal"></TokenListModal>
         <div class="headers">
             <p class="name_col">{{ $t('portfolio.name') }}</p>
             <p></p>
@@ -30,6 +31,8 @@
                     ></ERC20Row>
                     <div class="asset add_token_row" v-if="!isLedger">
                         <button @click="addToken">Add Token</button>
+                        <span>or</span>
+                        <button @click="addTokenList">Add Token List</button>
                     </div>
                 </div>
             </div>
@@ -47,9 +50,11 @@ import Erc20Token from '@/js/Erc20Token'
 import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
 import { WalletType } from '@/store/types'
+import TokenListModal from '@/components/modals/TokenList/TokenListModal.vue'
 
 @Component({
     components: {
+        TokenListModal,
         AddERC20TokenModal,
         ERC20Row,
         FaucetLink,
@@ -61,6 +66,7 @@ export default class Fungibles extends Vue {
 
     $refs!: {
         add_token_modal: AddERC20TokenModal
+        tokenlist_modal: TokenListModal
     }
 
     get networkStatus(): string {
@@ -70,6 +76,10 @@ export default class Fungibles extends Vue {
 
     addToken() {
         this.$refs.add_token_modal.open()
+    }
+
+    addTokenList() {
+        this.$refs.tokenlist_modal.open()
     }
 
     get isLedger() {
@@ -203,6 +213,12 @@ export default class Fungibles extends Vue {
     justify-content: center;
     padding: 24px;
     border: none !important;
+
+    span {
+        color: var(--primary-color-light);
+        align-self: center;
+        margin: 0px 12px;
+    }
 
     button {
         border: 1px solid var(--primary-color-light);

@@ -1,5 +1,11 @@
 import { Module } from 'vuex'
-import { AssetsDict, AssetsState, TokenListToken } from '@/store/modules/assets/types'
+import {
+    AddTokenListInput,
+    AssetsDict,
+    AssetsState,
+    TokenList,
+    TokenListToken,
+} from '@/store/modules/assets/types'
 import {
     IWalletAssetsDict,
     IWalletBalanceDict,
@@ -29,6 +35,10 @@ import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
 
+const TOKEN_LISTS = [
+    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
+]
+
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
     state: {
@@ -44,6 +54,9 @@ const assets_module: Module<AssetsState, RootState> = {
         erc20Tokens: [],
         erc20TokensCustom: [],
         evmChainId: 0,
+        tokenLists: [],
+        tokenListUrls: [],
+        tokenListsCustom: [],
     },
     mutations: {
         addAsset(state, asset: AvaAsset) {
@@ -86,6 +99,10 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
             }
+        },
+        saveCustomTokenLists(state) {
+            let lists = JSON.stringify(state.tokenListsCustom)
+            localStorage.setItem('token_lists', lists)
         },
         // setIsUpdateBalance(state, val) {
         //     state.isUpdateBalance = val
@@ -144,6 +161,16 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async addErc20Token({ state, rootState }, token: TokenListToken) {
+            let tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
+
+            // Make sure its not added before
+            for (var i = 0; i < tokens.length; i++) {
+                let t = tokens[i]
+                if (token.address === t.data.address && token.chainId === t.data.chainId) {
+                    throw new Error('ERC20 Token already added.')
+                }
+            }
+
             let t = new Erc20Token(token)
             state.erc20Tokens.push(t)
         },
@@ -173,20 +200,72 @@ const assets_module: Module<AssetsState, RootState> = {
             return t
         },
 
-        async initERc20List({ dispatch, commit }) {
-            const tokenLists = [
-                'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
-            ]
+        async removeTokenList({ state, commit }, list: TokenList) {
+            // Remove token list object
+            for (var i = 0; i <= state.tokenLists.length; i++) {
+                let l = state.tokenLists[i]
 
-            tokenLists.forEach((url) => {
-                axios.get(url).then((res) => {
-                    let tokens: TokenListToken[] = res.data.tokens
-                    for (var i = 0; i < tokens.length; i++) {
-                        dispatch('addErc20Token', tokens[i])
-                    }
+                if (l.url === list.url) {
+                    state.tokenLists.splice(i, 1)
+                    break
+                }
+            }
+
+            // Remove custom Token list urls
+            let index = state.tokenListsCustom.indexOf(list.url)
+            state.tokenListsCustom.splice(index, 1)
+
+            // Update local storage
+            commit('saveCustomTokenLists')
+        },
+
+        async addTokenList({ dispatch, state, commit }, data: AddTokenListInput) {
+            // Make sure URL is not already added
+            if (state.tokenListUrls.includes(data.url)) throw 'Already added.'
+            if (state.tokenListsCustom.includes(data.url)) throw 'Already added.'
+
+            let url = data.url
+            let res = await axios.get(url)
+            let tokenList: TokenList = res.data
+            tokenList.url = url
+            tokenList.readonly = data.readonly
+            let tokens: TokenListToken[] = tokenList.tokens
+            state.tokenLists.push(tokenList)
+            for (var i = 0; i < tokens.length; i++) {
+                dispatch('addErc20Token', tokens[i])
+            }
+
+            if (!data.readonly) {
+                state.tokenListsCustom.push(data.url)
+                commit('saveCustomTokenLists')
+            } else {
+                state.tokenListUrls.push(data.url)
+            }
+        },
+
+        loadCustomTokenLists({ state, dispatch }) {
+            let listRaw = localStorage.getItem('token_lists')
+            if (!listRaw) return
+            let urls: string[] = JSON.parse(listRaw)
+            console.log(urls)
+
+            urls.forEach((url) => {
+                dispatch('addTokenList', {
+                    url: url,
+                    readonly: false,
+                })
+            })
+        },
+
+        async initERc20List({ state, dispatch, commit }) {
+            TOKEN_LISTS.forEach((url) => {
+                dispatch('addTokenList', {
+                    url: url,
+                    readonly: true,
                 })
             })
 
+            dispatch('loadCustomTokenLists')
             commit('loadCustomErc20Tokens')
         },
 

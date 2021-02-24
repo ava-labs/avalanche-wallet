@@ -691,6 +691,9 @@
         "ledger_upgrade": {
             "submit": "Upgrade",
             "title": "Upgrade Available"
+        },
+        "tokenlist": {
+            "title": "Token lists"
         }
     },
     "nav": {
