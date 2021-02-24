@@ -1189,7 +1189,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        console.log('Sending: ', token)
         const tx = token.createTransferTx(to, amount)
         let from = '0x' + this.ethAddress
 

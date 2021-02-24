@@ -37,7 +37,6 @@ export default {
                 let app = new AppAvax(transport)
                 // Wait for app config
                 await this.waitForConfig(app)
-                console.log(this.config)
 
                 // Close the initial prompt modal if exists
                 this.$store.commit('Ledger/closeModal')

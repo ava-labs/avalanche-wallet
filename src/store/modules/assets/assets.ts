@@ -257,7 +257,7 @@ const assets_module: Module<AssetsState, RootState> = {
             })
         },
 
-        async initERc20List({ state, dispatch, commit }) {
+        async initErc20List({ state, dispatch, commit }) {
             TOKEN_LISTS.forEach((url) => {
                 dispatch('addTokenList', {
                     url: url,

@@ -45,7 +45,7 @@ export default {
         }
 
         await this.$store.dispatch('Network/init')
-        this.$store.dispatch('Assets/initERc20List')
+        this.$store.dispatch('Assets/initErc20List')
         this.$store.dispatch('updateAvaxPrice')
     },
     computed: {
