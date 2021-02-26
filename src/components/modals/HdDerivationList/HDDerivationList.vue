@@ -63,6 +63,10 @@
                 ></HdDerivationListRow>
             </v-tab-item>
         </v-tabs>
+        <div>
+            <p>Do not use addresses</p>
+            <button>View Unused Addresses</button>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -91,8 +95,11 @@ export default class HDDerivationList extends Vue {
     @Prop() wallet!: AvaHdWallet | LedgerWallet
 
     addrsExternal: string[] = []
+    addrsExternalExtra: string[] = []
     addrsInternal: string[] = []
+    addrsInternalExtra: string[] = []
     addrsPlatform: string[] = []
+    addrsPlatformExtra: string[] = []
 
     @Watch('wallet.internalHelper.utxoSet', { immediate: true })
     onInternalUtxoChange() {
