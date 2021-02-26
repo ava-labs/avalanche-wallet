@@ -61,11 +61,25 @@
                     :path="0"
                     class="list_row"
                 ></HdDerivationListRow>
+                <div v-if="addrsPlatformExtra.length > 0" class="warn_row">
+                    <p>
+                        Do not use addresses below. These are managed by the wallet automatically
+                        can cause loss of funds.
+                    </p>
+                </div>
+                <HdDerivationListRow
+                    v-for="(addr, i) in addrsPlatformExtra"
+                    :key="addr"
+                    :index="addrsPlatform.length + i"
+                    :address="addr"
+                    :balance="keyBalancesPlatform[i]"
+                    :path="0"
+                    class="list_row"
+                ></HdDerivationListRow>
             </v-tab-item>
         </v-tabs>
-        <div>
-            <p>Do not use addresses</p>
-            <button>View Unused Addresses</button>
+        <div class="more_address">
+            <button @click="showMore">Show More Addresses</button>
         </div>
     </div>
 </template>
@@ -177,6 +191,12 @@ export default class HDDerivationList extends Vue {
         let addrs = this.addrsPlatform
         return this.utxoSetToBalanceDict(utxoSet, addrs)
     }
+
+    showMore() {
+        this.addrsPlatformExtra.push('P-avax1...')
+        this.addrsExternalExtra.push('X-avax1...')
+        this.addrsInternalExtra.push('X-avax1...')
+    }
 }
 </script>
 <style lang="scss">
@@ -235,5 +255,20 @@ export default class HDDerivationList extends Vue {
     width: 100%;
     text-align: center;
     padding: 30px;
+}
+
+.warn_row {
+    padding: 14px;
+    text-align: center;
+}
+
+.more_address {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    button {
+        color: var(--secondary-color);
+    }
 }
 </style>
