@@ -692,6 +692,12 @@
             "submit": "Upgrade",
             "title": "Upgrade Available"
         },
+        "hd": {
+            "future_warn_title": "DO NOT USE THE ADDRESSES BELOW",
+            "future_warn_desc": "These are managed by the wallet and can cause loss of funds.",
+            "show_more": "Show Future Addresses",
+            "no_use": "Do Not Use"
+        },
         "tokenlist": {
             "title": "Token lists"
         }
