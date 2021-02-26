@@ -1,6 +1,6 @@
 <template>
     <div class="list_cont no_scroll_bar">
-        <v-tabs grow v-model="tabNow">
+        <v-tabs grow>
             <v-tab>Internal</v-tab>
             <v-tab>External</v-tab>
             <v-tab>Platform</v-tab>
@@ -63,20 +63,9 @@ import HdChainTable from '@/components/modals/HdDerivationList/HdChainTable.vue'
 export default class HDDerivationList extends Vue {
     @Prop() wallet!: AvaHdWallet | LedgerWallet
 
-    tabNow = 0
     addrsExternal: string[] = []
-    addrsExternalExtra: string[] = []
     addrsInternal: string[] = []
-    addrsInternalExtra: string[] = []
     addrsPlatform: string[] = []
-    addrsPlatformExtra: string[] = []
-
-    @Watch('tabNow')
-    onTabChange() {
-        this.addrsPlatformExtra = []
-        this.addrsExternalExtra = []
-        this.addrsInternalExtra = []
-    }
 
     @Watch('wallet.internalHelper.utxoSet', { immediate: true })
     onInternalUtxoChange() {
@@ -135,14 +124,6 @@ export default class HDDerivationList extends Vue {
         return res
     }
 
-    get numExternalKeys() {
-        return this.addrsExternal.length
-    }
-
-    get numInternalKeys() {
-        return this.addrsInternal.length
-    }
-
     get keyBalancesExternal(): DerivationListBalanceDict[] {
         let wallet = this.wallet
         let utxoSet = wallet.externalHelper.utxoSet as AVMUTXOSet
@@ -164,50 +145,6 @@ export default class HDDerivationList extends Vue {
         let addrs = this.addrsPlatform
         return this.utxoSetToBalanceDict(utxoSet, addrs)
     }
-
-    // showMore() {
-    //     switch (this.tabNow) {
-    //         case 0:
-    //             this.addInternalAddress(10)
-    //             break
-    //         case 1:
-    //             this.addExternalAddress(10)
-    //             break
-    //         case 2:
-    //             this.addPlatformAddress(10)
-    //             break
-    //     }
-    // }
-
-    // addExternalAddress(amt: number) {
-    //     let indexNow = this.addrsExternal.length + this.addrsExternalExtra.length
-    //     let addrs = []
-    //     for (var i = indexNow; i < indexNow + amt; i++) {
-    //         let addr = this.wallet.externalHelper.getAddressForIndex(i)
-    //         addrs.push(addr)
-    //     }
-    //     this.addrsExternalExtra.push(...addrs)
-    // }
-    //
-    // addInternalAddress(amt: number) {
-    //     let indexNow = this.addrsInternal.length + this.addrsInternalExtra.length
-    //     let addrs = []
-    //     for (var i = indexNow; i < indexNow + amt; i++) {
-    //         let addr = this.wallet.internalHelper.getAddressForIndex(i)
-    //         addrs.push(addr)
-    //     }
-    //     this.addrsInternalExtra.push(...addrs)
-    // }
-    //
-    // addPlatformAddress(amt: number) {
-    //     let indexNow = this.addrsPlatform.length + this.addrsPlatformExtra.length
-    //     let addrs = []
-    //     for (var i = indexNow; i < indexNow + amt; i++) {
-    //         let addr = this.wallet.platformHelper.getAddressForIndex(i)
-    //         addrs.push(addr)
-    //     }
-    //     this.addrsPlatformExtra.push(...addrs)
-    // }
 }
 </script>
 
