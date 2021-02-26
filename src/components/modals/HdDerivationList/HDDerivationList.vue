@@ -44,20 +44,15 @@ import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { ava, bintools } from '@/AVA'
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
-import HdDerivationListRow from '@/components/modals/HdDerivationList/HdDerivationListRow.vue'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
-import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 import { bnToBig } from '@/helpers/helper'
 import { BN } from 'avalanche'
-import HdEmptyAddressRow from '@/components/modals/HdDerivationList/HdEmptyAddressRow.vue'
 import HdChainTable from '@/components/modals/HdDerivationList/HdChainTable.vue'
 
 @Component({
     components: {
         HdChainTable,
-        HdEmptyAddressRow,
-        HdDerivationListRow,
     },
 })
 export default class HDDerivationList extends Vue {
