@@ -1,86 +1,37 @@
 <template>
-    <div class="list_cont">
-        <v-tabs grow>
+    <div class="list_cont no_scroll_bar">
+        <v-tabs grow v-model="tabNow">
             <v-tab>Internal</v-tab>
             <v-tab>External</v-tab>
             <v-tab>Platform</v-tab>
             <v-tab-item>
-                <div v-if="numInternalKeys > 0" class="list">
-                    <div class="headers">
-                        <p style="text-align: center">#</p>
-                        <p>{{ $t('portfolio.address') }}</p>
-                        <p class="col_bal">{{ $t('portfolio.balance') }}</p>
-                    </div>
-                    <HdDerivationListRow
-                        v-for="(addr, i) in addrsInternal"
-                        :key="addr"
-                        :index="i"
-                        :address="addr"
-                        :balance="keyBalancesInternal[i]"
-                        :path="1"
-                        class="list_row"
-                    ></HdDerivationListRow>
-                </div>
-                <div v-else>
-                    <p class="empty">You do not have any past addresses.</p>
-                </div>
+                <HdChainTable
+                    :addresses="addrsInternal"
+                    :balance-dict="keyBalancesInternal"
+                    :wallet="wallet"
+                    :path="1"
+                    :helper="internalHelper"
+                ></HdChainTable>
             </v-tab-item>
             <v-tab-item>
-                <div v-if="numExternalKeys > 0" class="list">
-                    <div class="headers">
-                        <p style="text-align: center">#</p>
-                        <p>{{ $t('portfolio.address') }}</p>
-                        <p class="col_bal">{{ $t('portfolio.balance') }}</p>
-                    </div>
-                    <HdDerivationListRow
-                        v-for="(addr, i) in addrsExternal"
-                        :key="addr"
-                        :index="i"
-                        :address="addr"
-                        :balance="keyBalancesExternal[i]"
-                        :path="0"
-                        class="list_row"
-                    ></HdDerivationListRow>
-                </div>
-                <div v-else>
-                    <p class="empty">{{ $t('portfolio.noaddresses') }}</p>
-                </div>
+                <HdChainTable
+                    :addresses="addrsExternal"
+                    :balance-dict="keyBalancesExternal"
+                    :wallet="wallet"
+                    :path="0"
+                    :helper="externalHelper"
+                ></HdChainTable>
             </v-tab-item>
             <v-tab-item>
-                <div class="headers">
-                    <p style="text-align: center">#</p>
-                    <p>{{ $t('portfolio.address') }}</p>
-                    <p class="col_bal">{{ $t('portfolio.balance') }}</p>
-                </div>
-                <HdDerivationListRow
-                    v-for="(addr, i) in addrsPlatform"
-                    :key="addr"
-                    :index="i"
-                    :address="addr"
-                    :balance="keyBalancesPlatform[i]"
+                <HdChainTable
+                    :addresses="addrsPlatform"
+                    :balance-dict="keyBalancesPlatform"
+                    :wallet="wallet"
                     :path="0"
-                    class="list_row"
-                ></HdDerivationListRow>
-                <div v-if="addrsPlatformExtra.length > 0" class="warn_row">
-                    <p>
-                        Do not use addresses below. These are managed by the wallet automatically
-                        can cause loss of funds.
-                    </p>
-                </div>
-                <HdDerivationListRow
-                    v-for="(addr, i) in addrsPlatformExtra"
-                    :key="addr"
-                    :index="addrsPlatform.length + i"
-                    :address="addr"
-                    :balance="keyBalancesPlatform[i]"
-                    :path="0"
-                    class="list_row"
-                ></HdDerivationListRow>
+                    :helper="platformHelper"
+                ></HdChainTable>
             </v-tab-item>
         </v-tabs>
-        <div class="more_address">
-            <button @click="showMore">Show More Addresses</button>
-        </div>
     </div>
 </template>
 <script lang="ts">
@@ -99,21 +50,33 @@ import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 import { bnToBig } from '@/helpers/helper'
 import { BN } from 'avalanche'
+import HdEmptyAddressRow from '@/components/modals/HdDerivationList/HdEmptyAddressRow.vue'
+import HdChainTable from '@/components/modals/HdDerivationList/HdChainTable.vue'
 
 @Component({
     components: {
+        HdChainTable,
+        HdEmptyAddressRow,
         HdDerivationListRow,
     },
 })
 export default class HDDerivationList extends Vue {
     @Prop() wallet!: AvaHdWallet | LedgerWallet
 
+    tabNow = 0
     addrsExternal: string[] = []
     addrsExternalExtra: string[] = []
     addrsInternal: string[] = []
     addrsInternalExtra: string[] = []
     addrsPlatform: string[] = []
     addrsPlatformExtra: string[] = []
+
+    @Watch('tabNow')
+    onTabChange() {
+        this.addrsPlatformExtra = []
+        this.addrsExternalExtra = []
+        this.addrsInternalExtra = []
+    }
 
     @Watch('wallet.internalHelper.utxoSet', { immediate: true })
     onInternalUtxoChange() {
@@ -130,16 +93,18 @@ export default class HDDerivationList extends Vue {
         this.addrsPlatform = this.wallet.platformHelper.getAllDerivedAddresses()
     }
 
-    get assetsDict() {
-        return this.$store.state.Assets.assetsDict
+    get internalHelper() {
+        return this.wallet.internalHelper
+    }
+    get externalHelper() {
+        return this.wallet.externalHelper
+    }
+    get platformHelper() {
+        return this.wallet.platformHelper
     }
 
-    get keyBalancesExternal(): DerivationListBalanceDict[] {
-        let wallet = this.wallet
-        let utxoSet = wallet.externalHelper.utxoSet as AVMUTXOSet
-        let addrs = this.addrsExternal
-
-        return this.utxoSetToBalanceDict(utxoSet, addrs)
+    get assetsDict() {
+        return this.$store.state.Assets.assetsDict
     }
 
     utxoSetToBalanceDict(
@@ -178,6 +143,14 @@ export default class HDDerivationList extends Vue {
         return this.addrsInternal.length
     }
 
+    get keyBalancesExternal(): DerivationListBalanceDict[] {
+        let wallet = this.wallet
+        let utxoSet = wallet.externalHelper.utxoSet as AVMUTXOSet
+        let addrs = this.addrsExternal
+
+        return this.utxoSetToBalanceDict(utxoSet, addrs)
+    }
+
     get keyBalancesInternal(): DerivationListBalanceDict[] {
         let wallet = this.wallet
         let utxoSet = wallet.internalHelper.utxoSet
@@ -192,26 +165,52 @@ export default class HDDerivationList extends Vue {
         return this.utxoSetToBalanceDict(utxoSet, addrs)
     }
 
-    showMore() {
-        this.addrsPlatformExtra.push('P-avax1...')
-        this.addrsExternalExtra.push('X-avax1...')
-        this.addrsInternalExtra.push('X-avax1...')
-    }
+    // showMore() {
+    //     switch (this.tabNow) {
+    //         case 0:
+    //             this.addInternalAddress(10)
+    //             break
+    //         case 1:
+    //             this.addExternalAddress(10)
+    //             break
+    //         case 2:
+    //             this.addPlatformAddress(10)
+    //             break
+    //     }
+    // }
+
+    // addExternalAddress(amt: number) {
+    //     let indexNow = this.addrsExternal.length + this.addrsExternalExtra.length
+    //     let addrs = []
+    //     for (var i = indexNow; i < indexNow + amt; i++) {
+    //         let addr = this.wallet.externalHelper.getAddressForIndex(i)
+    //         addrs.push(addr)
+    //     }
+    //     this.addrsExternalExtra.push(...addrs)
+    // }
+    //
+    // addInternalAddress(amt: number) {
+    //     let indexNow = this.addrsInternal.length + this.addrsInternalExtra.length
+    //     let addrs = []
+    //     for (var i = indexNow; i < indexNow + amt; i++) {
+    //         let addr = this.wallet.internalHelper.getAddressForIndex(i)
+    //         addrs.push(addr)
+    //     }
+    //     this.addrsInternalExtra.push(...addrs)
+    // }
+    //
+    // addPlatformAddress(amt: number) {
+    //     let indexNow = this.addrsPlatform.length + this.addrsPlatformExtra.length
+    //     let addrs = []
+    //     for (var i = indexNow; i < indexNow + amt; i++) {
+    //         let addr = this.wallet.platformHelper.getAddressForIndex(i)
+    //         addrs.push(addr)
+    //     }
+    //     this.addrsPlatformExtra.push(...addrs)
+    // }
 }
 </script>
-<style lang="scss">
-.list_cont {
-    .list_row:last-of-type {
-        > .col_index,
-        .col_addr {
-            /*border-left: 2px solid var(--secondary-color);*/
-            /*position: relative;*/
-            color: var(--primary-color);
-            /*background-color: #42b983;*/
-        }
-    }
-}
-</style>
+
 <style scoped lang="scss">
 .list_cont {
     max-height: 60vh;
@@ -260,6 +259,8 @@ export default class HDDerivationList extends Vue {
 .warn_row {
     padding: 14px;
     text-align: center;
+    color: #fff;
+    background-color: var(--secondary-color);
 }
 
 .more_address {
