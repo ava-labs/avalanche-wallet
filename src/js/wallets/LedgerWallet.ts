@@ -1127,26 +1127,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             Buffer.from([]),
         ])
 
-        // Ledger cannot parse amounts greater than 2^64
-        // 2^64 = 1.8446744e+19
-        // nAVAX is denominated in GWEI so obsidian adds 9 decimals
-        // 20 AVAX = 20000000000 GWEI = 20000000000000000000 WEI
-        // Remove when this constraint is fixed
-        const MAX = '18446744000000000000'
-
-        let signature = {} as { v: string; r: string; s: string }
-        if (unsignedTx.value.gte(new BN(MAX))) {
-            // let bip32Paths = this.pathsToUniqueBipPaths(['0/0'])
-            // const accountPath = bippath.fromString(`${ETH_ACCOUNT_PATH}`)
-            // const sigMap = await this.app.signHash(accountPath, bip32Paths, unsignedTx.hash())
-            // const response = sigMap.get('0/0')
-            // signature.v = '150f5'
-            // signature.r = response.slice(1, 1 + 32).toString('hex')
-            // signature.s = response.slice(1 + 32, 1 + 32 + 32).toString('hex')
-            throw 'Amount too big. Must be less than 18 AVAX.'
-        } else {
-            signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
-        }
+        const signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
 
         const signatureBN = {
             v: new BN(signature.v, 16),
