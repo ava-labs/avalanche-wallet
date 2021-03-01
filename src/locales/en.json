@@ -694,6 +694,12 @@
             "title": "Trouble Connecting",
             "desc": "We're having trouble connecting to your device. Please make sure you have the Avalanche app open and upgraded to the latest version."
         },
+        "hd": {
+            "future_warn_title": "DO NOT USE THE ADDRESSES BELOW",
+            "future_warn_desc": "These are managed by the wallet and can cause loss of funds.",
+            "show_more": "Show Future Addresses",
+            "no_use": "Do Not Use"
+        },
         "tokenlist": {
             "title": "Token lists"
         }
