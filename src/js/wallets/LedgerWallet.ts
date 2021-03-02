@@ -110,7 +110,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
+    static async fromApp(app: AppAvax, eth: Eth, versionCheck: boolean, config: ILedgerAppConfig) {
         let res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
 
         let hd = new HDKey()
@@ -118,9 +118,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         hd.chainCode = res.chain_code
 
         let hdEth
-        // TODO: enable when we want users upgrading after ledger fixes a few issues
-        // const versionCheck = config.version >= MIN_EVM_SUPPORT_V
-        const versionCheck = false
         if (versionCheck) {
             let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
             hdEth = new HDKey()
