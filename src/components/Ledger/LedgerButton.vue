@@ -4,14 +4,18 @@
         <Spinner v-else class="spinner"></Spinner>
     </button>
 </template>
-<script>
+<script lang="ts">
+// @ts-ignore
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
-import Spinner from '@/components/misc/Spinner.vue'
-import LedgerBlock from '@/components/modals/LedgerBlock'
-import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
-import AppAvax from '@obsidiansystems/hw-app-avalanche'
+// @ts-ignore
 import Eth from '@ledgerhq/hw-app-eth'
+// @ts-ignore
+import AppAvax from '@obsidiansystems/hw-app-avalanche'
+import Spinner from '@/components/misc/Spinner.vue'
+import LedgerBlock from '@/components/modals/LedgerBlock.vue'
+import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
+import { ILedgerAppConfig } from '@/store/types'
 
 export const LEDGER_EXCHANGE_TIMEOUT = 90_000
 
@@ -77,7 +81,12 @@ export default {
                     messages,
                 })
 
-                let wallet = await LedgerWallet.fromApp(app, eth, versionCheck, this.config)
+                let wallet = await LedgerWallet.fromApp(
+                    app,
+                    eth,
+                    versionCheck,
+                    (this.config as unknown) as ILedgerAppConfig
+                )
                 try {
                     await this.$store.dispatch('accessWalletLedger', wallet)
                     this.onsuccess()
@@ -91,7 +100,7 @@ export default {
                 this.onerror(e)
             }
         },
-        async waitForConfig(app) {
+        async waitForConfig(app: any) {
             // Config is found immediately if the device is connected and the app is open.
             // If no config was found that means user has not opened the Avalanche app.
             setTimeout(() => {
@@ -109,7 +118,7 @@ export default {
             this.isLoading = false
             this.$store.commit('Ledger/closeModal')
         },
-        onerror(err) {
+        onerror(err: any) {
             this.isLoading = false
             this.$store.commit('Ledger/closeModal')
             console.error(err)
