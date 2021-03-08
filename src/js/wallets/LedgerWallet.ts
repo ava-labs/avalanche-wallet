@@ -1126,13 +1126,16 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         ])
 
         try {
+            let amtNano = bnToBig(amount, 9)
+            let totFee = gasPrice.mul(new BN(gasLimit))
+            let feeNano = bnToBig(totFee, 9)
             // Open Modal Prompt
             store.commit('Ledger/openModal', {
                 title: 'Transfer',
                 messages: [
                     {
                         title: 'Amount',
-                        value: `${amount.toString()} nAVAX`,
+                        value: `${amtNano.toLocaleString(0)} nAVAX`,
                     },
                     {
                         title: 'To',
@@ -1140,7 +1143,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                     },
                     {
                         title: 'Fee',
-                        value: `${gasPrice.mul(new BN(gasLimit))} GWEI`,
+                        value: `${feeNano.toLocaleString(0)} GWEI`,
                     },
                 ],
                 info: null,
