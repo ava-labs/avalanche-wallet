@@ -117,10 +117,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        let hdEth
-
         let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
-        hdEth = new HDKey()
+        let hdEth = new HDKey()
         // @ts-ignore
         hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
         // @ts-ignore
