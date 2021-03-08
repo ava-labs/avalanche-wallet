@@ -1125,25 +1125,58 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             Buffer.from([]),
         ])
 
-        const signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
+        try {
+            // Open Modal Prompt
+            store.commit('Ledger/openModal', {
+                title: 'Transfer',
+                messages: [
+                    {
+                        title: 'Amount',
+                        value: `${amount.toString()} nAVAX`,
+                    },
+                    {
+                        title: 'To',
+                        value: `${to}`,
+                    },
+                    {
+                        title: 'Fee',
+                        value: `${gasPrice.mul(new BN(gasLimit))} GWEI`,
+                    },
+                ],
+                info: null,
+            })
+            const signature = await this.ethApp.signTransaction(
+                LEDGER_ETH_ACCOUNT_PATH,
+                rawUnsignedTx
+            )
+            store.commit('Ledger/closeModal')
 
-        const signatureBN = {
-            v: new BN(signature.v, 16),
-            r: new BN(signature.r, 16),
-            s: new BN(signature.s, 16),
-        }
-        const signedTx = Transaction.fromTxData({ ...partialTxParams, ...signatureBN }, chainParams)
-        let err,
-            receipt = await web3.eth.sendSignedTransaction(
-                '0x' + signedTx.serialize().toString('hex')
+            const signatureBN = {
+                v: new BN(signature.v, 16),
+                r: new BN(signature.r, 16),
+                s: new BN(signature.s, 16),
+            }
+            const signedTx = Transaction.fromTxData(
+                { ...partialTxParams, ...signatureBN },
+                chainParams
             )
 
-        if (err) {
-            console.error(err)
-            throw err
-        }
+            let err,
+                receipt = await web3.eth.sendSignedTransaction(
+                    '0x' + signedTx.serialize().toString('hex')
+                )
 
-        return receipt.transactionHash
+            if (err) {
+                console.error(err)
+                throw err
+            }
+
+            return receipt.transactionHash
+        } catch (e) {
+            store.commit('Ledger/closeModal')
+            console.error(e)
+            throw e
+        }
     }
 
     // TODO: Move to shared file
