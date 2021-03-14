@@ -23,7 +23,7 @@ export default {
             document.execCommand('copy')
             this.$store.dispatch('Notifications/add', {
                 title: ' Copied',
-                message: 'Copied to clipoard.',
+                message: 'Copied to clipboard.',
             })
         },
     },
