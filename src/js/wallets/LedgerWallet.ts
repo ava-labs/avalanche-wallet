@@ -22,7 +22,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import {
     AVMConstants,
     OperationTx,
-    SelectCredentialClass,
+    SelectCredentialClass as AVMSelectCredentialClass,
     TransferableOperation,
     TransferableOutput as AVMTransferableOutput,
     Tx as AVMTx,
@@ -38,6 +38,7 @@ import {
     UnsignedTx as PlatformUnsignedTx,
     UTXOSet as PlatformUTXOSet,
     PlatformVMConstants,
+    SelectCredentialClass as PlatformSelectCredentialClass,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
@@ -47,6 +48,7 @@ import {
     Tx as EvmTx,
     EVMConstants,
     EVMInput,
+    SelectCredentialClass as EVMSelectCredentialClass,
 } from 'avalanche/dist/apis/evm'
 
 import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
@@ -278,6 +280,15 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             console.log(e)
         }
 
+        let CredentialClass
+        if (chainId === 'X') {
+            CredentialClass = AVMSelectCredentialClass
+        } else if (chainId === 'P') {
+            CredentialClass = PlatformSelectCredentialClass
+        } else {
+            CredentialClass = EVMSelectCredentialClass
+        }
+
         // Try to get evm inputs, it will fail if there are none, ignore and continue
         try {
             evmInputs = (tx as EVMExportTx).getInputs()
@@ -287,8 +298,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         for (let i = 0; i < items.length; i++) {
             const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
-            const cred: Credential = SelectCredentialClass(items[i].getInput().getCredentialID())
-
+            const cred: Credential = CredentialClass(items[i].getInput().getCredentialID())
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = i + j
                 let pathStr = paths[pathIndex]
@@ -305,7 +315,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         for (let i = 0; i < operations.length; i++) {
             let op = operations[i].getOperation()
             const sigidxs: SigIdx[] = op.getSigIdxs()
-            const cred: Credential = SelectCredentialClass(op.getCredentialID())
+            const cred: Credential = CredentialClass(op.getCredentialID())
 
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = items.length + i + j
@@ -323,7 +333,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         for (let i = 0; i < evmInputs.length; i++) {
             let evmInput = evmInputs[i]
             const sigidxs: SigIdx[] = evmInput.getSigIdxs()
-            const cred: Credential = SelectCredentialClass(evmInput.getCredentialID())
+            const cred: Credential = CredentialClass(evmInput.getCredentialID())
 
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = items.length + i + j

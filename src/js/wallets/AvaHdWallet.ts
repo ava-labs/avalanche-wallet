@@ -43,11 +43,12 @@ import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import createHash from 'create-hash'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
-import { StandardTx, StandardUnsignedTx, UTXOResponse } from 'avalanche/dist/common'
+import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { digestMessage } from '@/helpers/helper'
 import { buildExportTransaction } from '@/js/TxHelper'
 import { ChainIdType } from '@/constants'
 import { KeyChain } from 'avalanche/dist/apis/evm'
+// import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
 import Erc20Token from '@/js/Erc20Token'
 import store from '@/store'
 
@@ -438,10 +439,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
     // TODO: Move to Core HD file
     async importToCChain(): Promise<string> {
-        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
-            this.ethAddressBech,
-            avm.getBlockchainID()
-        )
+        const utxoResponse = await cChain.getUTXOs(this.ethAddressBech, avm.getBlockchainID())
         const utxoSet: EVMUTXOSet = utxoResponse.utxos
 
         if (utxoSet.getAllUTXOs().length === 0) {
