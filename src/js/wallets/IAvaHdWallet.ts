@@ -23,6 +23,7 @@ import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { ChainIdType } from '@/constants'
+import Erc20Token from '@/js/Erc20Token'
 
 // export type wallet_type = "hd" | "singleton";
 
@@ -34,6 +35,7 @@ export type ChainAlias = 'X' | 'P'
 
 // Every AVA Wallet must implement this.
 export interface AvaWalletCore {
+    id: string // a random string assigned as ID to distinguish between wallets
     type: WalletNameType
     chainId: string
     utxoset: UTXOSet
@@ -73,6 +75,14 @@ export interface AvaWalletCore {
     getEthBalance(): Promise<BN>
     getEvmAddress(): string
     sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number): Promise<string>
+    sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string>
+    estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number>
     sign<
         UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
         SignedTx extends AVMTx | PlatformTx

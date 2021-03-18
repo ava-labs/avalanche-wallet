@@ -4,7 +4,7 @@
             <div class="card_body">
                 <header>
                     <h1>{{ $t('keys.title') }}</h1>
-                    <div class="button_container" v-if="walletType === 'mnemonic'">
+                    <div class="button_container" v-if="canEncryptWallet">
                         <button
                             v-if="hasVolatile"
                             @click="openRememberKeys"
@@ -63,6 +63,10 @@ export default class ManageKeys extends Vue {
     openRememberKeys() {
         // @ts-ignore
         this.$refs.remember_modal.open()
+    }
+
+    get canEncryptWallet() {
+        return ['mnemonic', 'singleton'].includes(this.walletType)
     }
 
     get walletType(): WalletNameType {

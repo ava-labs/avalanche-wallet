@@ -4,7 +4,7 @@ import { Buffer, BN } from 'avalanche'
 import AvaAsset from '@/js/AvaAsset'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { KeyFile } from '@/js/IKeystore'
+import { AllKeyFileTypes } from '@/js/IKeystore'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
@@ -100,7 +100,7 @@ export interface IssueTxInput {
 
 export interface ImportKeyfileInput {
     password: string
-    data: KeyFile
+    data: AllKeyFileTypes
 }
 
 export interface ExportWalletsInput {
@@ -111,5 +111,10 @@ export interface ExportWalletsInput {
 export type SessionPersistFile = SessionPersistKey[]
 
 export interface SessionPersistKey {
+    key: string
+}
+
+export interface AccessWalletMultipleInput {
+    type: Extract<'mnemonic' | 'singleton', WalletNameType>
     key: string
 }

@@ -15,7 +15,7 @@
         <!--        <div v-else-if="isUpdating">-->
         <!--            <p class="empty">{{ $t('transactions.loading') }}</p>-->
         <!--        </div>-->
-        <div class="list" v-else>
+        <div class="list no_scroll_bar" v-else>
             <tx-history-row
                 v-for="tx in transactions"
                 :key="tx.id"

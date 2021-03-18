@@ -2,108 +2,93 @@
     <div class="add_delegator">
         <NodeSelection v-if="!selected" @select="onselect" class="node_selection"></NodeSelection>
         <div class="cols" v-else>
+            <div class="node_col">
+                <button @click="selected = null" class="close_but button_secondary">
+                    <fa icon="sync"></fa>
+                    Change Node
+                </button>
+                <NodeCard :node="selected"></NodeCard>
+            </div>
             <transition-group name="fade" mode="out-in">
                 <div class="ins_col" key="form" v-show="!isConfirm">
-                    <div>
-                        <div class="selected">
-                            <button @click="selected = null" class="close_but">
-                                <fa icon="times"></fa>
-                            </button>
-                            <div class="id_box">
-                                <p style="font-size: 13px; color: var(--primary-color-light)">
-                                    {{ $t('earn.delegate.node.selected') }}
-                                </p>
-                                <p class="node_id" style="word-break: break-all">
-                                    {{ selected.nodeID }}
-                                </p>
-                            </div>
-                            <div>
-                                <p style="font-size: 13px; color: var(--primary-color-light)">
-                                    {{ $t('earn.delegate.node.fee') }}
-                                </p>
-                                <p class="node_id">{{ delegationFee }} %</p>
-                            </div>
-                            <div>
-                                <p style="font-size: 13px; color: var(--primary-color-light)">
-                                    {{ $t('earn.delegate.node.start') }}
-                                </p>
-                                <p class="node_id">
-                                    {{ selected.startTime.toLocaleString() }}
-                                </p>
-                            </div>
-                            <div>
-                                <p style="font-size: 13px; color: var(--primary-color-light)">
-                                    {{ $t('earn.delegate.node.end') }}
-                                </p>
-                                <p class="node_id">
-                                    {{ selected.endTime.toLocaleString() }}
-                                </p>
-                            </div>
-                        </div>
-                        <div style="margin: 30px 0">
-                            <h4>{{ $t('earn.delegate.form.period.label') }}</h4>
-                            <p class="desc">
-                                {{ $t('earn.delegate.form.period.desc') }}
-                            </p>
-                            <DateForm
-                                @change_start="setStart"
-                                @change_end="setEnd"
-                                :max-end-date="endMaxDate"
-                            ></DateForm>
-                        </div>
-                        <div style="margin: 30px 0">
-                            <h4>{{ $t('earn.delegate.form.amount.label') }}</h4>
-                            <p class="desc">
-                                {{ $t('earn.delegate.form.amount.desc') }}
-                            </p>
-                            <p class="desc">
-                                {{ $t('earn.delegate.form.amount.desc2', [remainingAmtText]) }}
-                            </p>
-                            <AvaxInput v-model="stakeAmt" :max="maxAmt" class="amt_in"></AvaxInput>
-                        </div>
-                        <div class="reward_in" style="margin: 30px 0" :type="rewardDestination">
-                            <h4>{{ $t('earn.delegate.form.reward.label') }}</h4>
-                            <p class="desc">
-                                {{ $t('earn.delegate.form.reward.desc') }}
-                            </p>
-                            <v-chip-group mandatory @change="rewardSelect">
-                                <v-chip small value="local">
-                                    {{ $t('earn.delegate.form.reward.chip_1') }}
-                                </v-chip>
-                                <v-chip small value="custom">
-                                    {{ $t('earn.delegate.form.reward.chip_2') }}
-                                </v-chip>
-                            </v-chip-group>
-                            <QrInput
-                                v-model="rewardIn"
-                                placeholder="Reward Address"
-                                class="reward_addr_in"
-                            ></QrInput>
-                        </div>
-                        <Expandable>
-                            <template v-slot:triggerOn>
-                                <p>
-                                    {{ $t('earn.shared.advanced.toggle_on') }}
-                                </p>
-                            </template>
-                            <template v-slot:triggerOff>
-                                <p>
-                                    {{ $t('earn.shared.advanced.toggle_off') }}
-                                </p>
-                            </template>
-                            <template v-slot:content>
-                                <UtxoSelectForm
-                                    style="margin: 10px 0"
-                                    v-model="formUtxos"
-                                ></UtxoSelectForm>
-                            </template>
-                        </Expandable>
+                    <div style="margin-bottom: 30px">
+                        <h4>{{ $t('earn.delegate.form.period.label') }}</h4>
+                        <p class="desc">
+                            {{ $t('earn.delegate.form.period.desc') }}
+                        </p>
+                        <DateForm @change_end="setEnd" :max-end-date="endMaxDate"></DateForm>
                     </div>
+                    <div style="margin: 30px 0; margin-bottom: 50px">
+                        <h4>{{ $t('earn.delegate.form.amount.label') }}</h4>
+                        <p class="desc">
+                            {{ $t('earn.delegate.form.amount.desc') }}
+                        </p>
+                        <!--                        <p class="desc">-->
+                        <!--                            {{ $t('earn.delegate.form.amount.desc2', [remainingAmtText]) }}-->
+                        <!--                        </p>-->
+                        <AvaxInput
+                            v-model="stakeAmt"
+                            :max="maxAmt"
+                            class="amt_in"
+                            :balance="utxosBalanceBig"
+                        ></AvaxInput>
+                    </div>
+                    <div class="reward_in" style="margin: 30px 0" :type="rewardDestination">
+                        <h4>{{ $t('earn.delegate.form.reward.label') }}</h4>
+                        <p class="desc">
+                            {{ $t('earn.delegate.form.reward.desc') }}
+                        </p>
+                        <div class="reward_tabs">
+                            <button
+                                @click="rewardSelect('local')"
+                                :selected="this.rewardDestination === 'local'"
+                            >
+                                {{ $t('earn.delegate.form.reward.chip_1') }}
+                            </button>
+                            <span>or</span>
+                            <button
+                                @click="rewardSelect('custom')"
+                                :selected="this.rewardDestination === 'custom'"
+                            >
+                                {{ $t('earn.delegate.form.reward.chip_2') }}
+                            </button>
+                        </div>
+                        <!--                        <v-chip-group mandatory @change="rewardSelect">-->
+                        <!--                            <v-chip small value="local">-->
+                        <!--                                {{ $t('earn.delegate.form.reward.chip_1') }}-->
+                        <!--                            </v-chip>-->
+                        <!--                            <v-chip small value="custom">-->
+                        <!--                                {{ $t('earn.delegate.form.reward.chip_2') }}-->
+                        <!--                            </v-chip>-->
+                        <!--                        </v-chip-group>-->
+                        <QrInput
+                            v-model="rewardIn"
+                            placeholder="Reward Address"
+                            class="reward_addr_in"
+                        ></QrInput>
+                    </div>
+                    <Expandable>
+                        <template v-slot:triggerOn>
+                            <p>
+                                {{ $t('earn.shared.advanced.toggle_on') }}
+                            </p>
+                        </template>
+                        <template v-slot:triggerOff>
+                            <p>
+                                {{ $t('earn.shared.advanced.toggle_off') }}
+                            </p>
+                        </template>
+                        <template v-slot:content>
+                            <UtxoSelectForm
+                                style="margin: 10px 0"
+                                v-model="formUtxos"
+                            ></UtxoSelectForm>
+                        </template>
+                    </Expandable>
                 </div>
                 <ConfirmPage
                     v-show="isConfirm"
                     key="confirm"
-                    :start="formStart"
                     :end="formEnd"
                     :amount="formAmt"
                     :reward-destination="rewardDestination"
@@ -113,7 +98,10 @@
             </transition-group>
             <div>
                 <div v-if="!isSuccess" class="summary">
-                    <CurrencySelect v-model="currency_type"></CurrencySelect>
+                    <CurrencySelect
+                        v-model="currency_type"
+                        currency="currency_sel"
+                    ></CurrencySelect>
                     <div>
                         <label>{{ $t('earn.delegate.summary.duration') }} *</label>
                         <p>{{ stakingDurationText }}</p>
@@ -198,6 +186,9 @@
                         <label>{{ $t('earn.delegate.success.reason') }}</label>
                         <p>{{ txReason }}</p>
                     </div>
+                    <v-btn @click="cancel" block class="button_secondary" depressed v-if="txStatus">
+                        Back to Earn
+                    </v-btn>
                 </div>
             </div>
         </div>
@@ -232,6 +223,7 @@ import { WalletType } from '@/store/types'
 
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
+import NodeCard from '@/components/wallet/earn/Delegate/NodeCard.vue'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -239,6 +231,7 @@ const DAY_MS = HOUR_MS * 24
 
 @Component({
     components: {
+        NodeCard,
         UtxoSelectForm,
         DateForm,
         Spinner,
@@ -256,7 +249,7 @@ export default class AddDelegator extends Vue {
     search: string = ''
     selected: ValidatorListItem | null = null
     stakeAmt: BN = new BN(0)
-    startDate: string = new Date().toISOString()
+    startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
     rewardIn: string = ''
     rewardDestination = 'local' // local || custom
@@ -271,14 +264,13 @@ export default class AddDelegator extends Vue {
     formNodeID = ''
     formUtxos: UTXO[] = []
     formAmt = new BN(0)
-    formStart: Date = new Date()
     formEnd: Date = new Date()
     formRewardAddr = ''
 
     currency_type = 'AVAX'
 
-    setStart(val: string) {
-        this.startDate = val
+    mounted() {
+        this.rewardSelect('local')
     }
     setEnd(val: string) {
         this.endDate = val
@@ -299,17 +291,22 @@ export default class AddDelegator extends Vue {
 
         let wallet: WalletType = this.$store.state.activeWallet
 
+        // Start delegation in 5 minutes
+        let startDate = new Date(Date.now() + 5 * MIN_MS)
+
         try {
             this.isLoading = false
             let txId = await wallet.delegate(
                 this.formNodeID,
                 this.formAmt,
-                this.formStart,
+                startDate,
                 this.formEnd,
                 this.formRewardAddr,
                 this.formUtxos
             )
-            this.onsuccess(txId)
+            this.isSuccess = true
+            this.txId = txId
+            this.updateTxStatus(txId)
         } catch (e) {
             this.onerror(e)
             this.isLoading = false
@@ -317,15 +314,16 @@ export default class AddDelegator extends Vue {
     }
 
     onsuccess(txId: string) {
-        this.txId = txId
-        this.isSuccess = true
-        // this.$store.dispatch('Notifications/add', {
-        //     type: 'success',
-        //     title: 'Delegator Added',
-        //     message: 'Your tokens will now be delegated for staking.'
-        // })
+        this.$store.dispatch('Notifications/add', {
+            type: 'success',
+            title: 'Delegator Added',
+            message: 'Your tokens are now locked for staking.',
+        })
 
-        this.updateTxStatus(txId)
+        // Update History
+        setTimeout(() => {
+            this.$store.dispatch('History/updateTransactionHistory')
+        }, 3000)
     }
 
     async updateTxStatus(txId: string) {
@@ -346,6 +344,10 @@ export default class AddDelegator extends Vue {
         } else {
             this.txStatus = status
             this.txReason = reason
+
+            if (status === 'Committed') {
+                this.onsuccess(txId)
+            }
         }
     }
 
@@ -468,7 +470,6 @@ export default class AddDelegator extends Vue {
     updateFormData() {
         this.formNodeID = this.selected!.nodeID
         this.formAmt = this.stakeAmt
-        this.formStart = new Date(this.startDate)
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
     }
@@ -578,6 +579,10 @@ export default class AddDelegator extends Vue {
         }, new BN(0))
     }
 
+    get utxosBalanceBig(): Big {
+        return bnToBig(this.utxosBalance, 9)
+    }
+
     get maxAmt(): BN {
         let zero = new BN(0)
 
@@ -588,6 +593,11 @@ export default class AddDelegator extends Vue {
         if (totAvailable.gt(this.remainingAmt)) return this.remainingAmt
 
         return totAvailable
+    }
+
+    // Go Back to earn
+    cancel() {
+        this.$emit('cancel')
     }
 
     // get stakeAmtText() {
@@ -622,20 +632,23 @@ export default class AddDelegator extends Vue {
 
 .cols {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: max-content 1fr 340px;
     column-gap: 2vw;
 }
 
 .ins_col {
+    margin: 0px auto;
+    align-self: flex-end;
+    justify-self: flex-end;
     max-width: 490px;
     padding-bottom: 8vh;
 }
+
 form {
     width: 100%;
 }
 
 h4 {
-    margin: 14px 0px 4px;
     font-weight: bold;
 }
 
@@ -645,6 +658,14 @@ label {
     font-size: 14px;
     margin-bottom: 3px;
 }
+
+.close_but {
+    padding: 2px 14px;
+    font-size: 13px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+}
+
 .selected {
     display: flex;
     flex-wrap: wrap;
@@ -661,11 +682,6 @@ label {
 
     .id_box {
         //grid-column: 1/3;
-    }
-    .close_but {
-        position: absolute;
-        top: 6px;
-        left: 12px;
     }
 
     button {
@@ -723,6 +739,26 @@ label {
     }
 }
 
+.reward_tabs {
+    margin-bottom: 8px;
+    font-size: 13px;
+    button {
+        color: var(--primary-color-light);
+
+        &:hover {
+            color: var(--primary-color);
+        }
+
+        &[selected] {
+            color: var(--secondary-color);
+        }
+    }
+
+    span {
+        margin: 0px 12px;
+    }
+}
+
 .desc {
     font-size: 13px;
     margin-bottom: 8px !important;
@@ -733,7 +769,7 @@ label {
     border-left: 2px solid var(--bg-light);
     padding-left: 30px;
     > div {
-        margin: 14px 0;
+        margin-bottom: 14px;
         p {
             font-size: 24px;
         }
@@ -748,6 +784,10 @@ label {
         margin-top: 14px;
     }
 }
+
+//.currency_sel {
+//    margin-top: 0 !important;
+//}
 
 .tx_status {
     display: flex;
@@ -782,6 +822,21 @@ label {
     }
 }
 
+@include main.medium-device {
+    .summary {
+        > div {
+            margin-bottom: 10px;
+            p {
+                font-size: 18px;
+            }
+        }
+    }
+
+    .cols {
+        grid-template-columns: 220px 2fr 240px;
+    }
+}
+
 @include main.mobile-device {
     .cols {
         grid-template-columns: 1fr;
@@ -805,6 +860,15 @@ label {
     .ins_col {
         width: 100%;
         max-width: 100%;
+    }
+
+    .close_but {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .node_col {
+        margin-bottom: 24px;
     }
 }
 </style>

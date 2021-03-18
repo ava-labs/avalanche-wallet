@@ -19,13 +19,15 @@
                                     <h2>{{ $t('home.access.title') }}</h2>
                                     <p>{{ $t('home.access.desc') }}</p>
                                 </header>
-                                <router-link
-                                    data-cy="access"
-                                    to="/access"
-                                    class="ava_button button_primary"
-                                >
-                                    {{ $t('home.access.submit') }}
-                                </router-link>
+                                <div>
+                                    <router-link
+                                        data-cy="access"
+                                        to="/access"
+                                        class="ava_button button_primary submit_but"
+                                    >
+                                        {{ $t('home.access.submit') }}
+                                    </router-link>
+                                </div>
                             </div>
                             <div class="login_option">
                                 <header>
@@ -44,15 +46,18 @@
                                     <h2>{{ $t('home.create.title') }}</h2>
                                     <p>{{ $t('home.create.desc') }}</p>
                                 </header>
-                                <router-link
-                                    data-cy="create"
-                                    to="/create"
-                                    class="ava_button button_secondary"
-                                >
-                                    {{ $t('home.create.submit') }}
-                                </router-link>
+                                <div>
+                                    <router-link
+                                        data-cy="create"
+                                        to="/create"
+                                        class="ava_button button_secondary submit_but"
+                                    >
+                                        {{ $t('home.create.submit') }}
+                                    </router-link>
+                                </div>
                             </div>
                         </div>
+                        <ToS class="tos" style="align-self: center; margin: 30px !important"></ToS>
                     </div>
                 </b-col>
             </b-row>
@@ -63,9 +68,11 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import ToS from '@/components/misc/ToS.vue'
 
 @Component({
     name: 'home',
+    components: { ToS },
 })
 export default class Home extends Vue {}
 </script>
@@ -145,6 +152,13 @@ export default class Home extends Vue {}
     }
 }
 
+.tos {
+    margin-top: 14px !important;
+}
+
+.submit_but {
+    width: max-content;
+}
 /* ==========================================
    Nav
    ========================================== */

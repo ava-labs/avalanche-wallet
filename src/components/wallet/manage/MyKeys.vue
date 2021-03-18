@@ -13,7 +13,7 @@
             <key-row
                 v-for="wallet in wallets"
                 :wallet="wallet"
-                :key="wallet.seed.substr(0, 4)"
+                :key="wallet.id"
                 class="key_row"
                 @select="selectWallet"
                 @remove="removeWallet"

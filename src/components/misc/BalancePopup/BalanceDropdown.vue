@@ -1,17 +1,23 @@
 <template>
     <div class="dropdown hover_border" :active="isPopup">
-        <button @click="showPopup">
+        <button @click="showPopup" :disabled="disabled">
             {{ symbol }}
-            <fa icon="caret-down" style="float: right"></fa>
+            <!--            <fa icon="caret-down" style="float: right"></fa>-->
         </button>
-        <BalancePopup
-            :assets="assetArray"
-            ref="popup"
-            class="popup"
+        <!--        <BalancePopup-->
+        <!--            :assets="assetArray"-->
+        <!--            ref="popup"-->
+        <!--            class="popup"-->
+        <!--            @select="onselect"-->
+        <!--            :disabled-ids="disabledIds"-->
+        <!--            @close="onclose"-->
+        <!--        ></BalancePopup>-->
+        <AvmTokenSelect
+            ref="token_modal"
             @select="onselect"
+            :assets="assetArray"
             :disabled-ids="disabledIds"
-            @close="onclose"
-        ></BalancePopup>
+        ></AvmTokenSelect>
     </div>
 </template>
 <script lang="ts">
@@ -20,9 +26,11 @@ import { Vue, Component, Prop, Ref, Model } from 'vue-property-decorator'
 
 import BalancePopup from '@/components/misc/BalancePopup/BalancePopup.vue'
 import AvaAsset from '@/js/AvaAsset'
+import AvmTokenSelect from '@/components/modals/AvmTokenSelect.vue'
 
 @Component({
     components: {
+        AvmTokenSelect,
         BalancePopup,
     },
 })
@@ -30,6 +38,7 @@ export default class BalanceDropdown extends Vue {
     isPopup: boolean = false
 
     @Prop({ default: () => [] }) disabled_assets!: AvaAsset[]
+    @Prop({ default: false }) disabled!: boolean
     @Model('change', { type: AvaAsset }) readonly asset!: AvaAsset
 
     get assetArray(): AvaAsset[] {
@@ -37,7 +46,10 @@ export default class BalanceDropdown extends Vue {
         return this.$store.getters['Assets/walletAssetsArray']
     }
 
-    @Ref('popup') readonly balancePopup!: BalancePopup
+    $refs!: {
+        popup: BalancePopup
+        token_modal: AvmTokenSelect
+    }
 
     get disabledIds(): string[] {
         let disabledIds = this.disabled_assets.map((a) => a.id)
@@ -57,18 +69,19 @@ export default class BalanceDropdown extends Vue {
     // }
 
     showPopup() {
-        this.balancePopup.isActive = true
-        this.isPopup = true
+        this.$refs.token_modal.open()
+        // this.balancePopup.isActive = true
+        // this.isPopup = true
     }
 
     onclose() {
-        this.isPopup = false
+        // this.isPopup = false
     }
 
     onselect(asset: AvaAsset) {
         // this.selected = asset;
-        this.balancePopup.isActive = false
-        this.isPopup = false
+        // this.balancePopup.isActive = false
+        // this.isPopup = false
 
         this.$emit('change', asset)
     }
@@ -82,6 +95,7 @@ button {
     width: 100%;
     height: 100%;
     text-align: left;
+    font-size: 15px;
 
     svg {
         transition-duration: 0.2s;
@@ -92,6 +106,9 @@ button {
     position: relative;
     &:focus-within {
         outline: 1px solid var(--secondary-color);
+    }
+    > button {
+        text-align: center;
     }
 }
 

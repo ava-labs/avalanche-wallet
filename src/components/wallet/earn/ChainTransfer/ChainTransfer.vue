@@ -319,7 +319,7 @@ export default class ChainTransfer extends Vue {
     }
 
     // STEP 2
-    async waitExportStatus(txId: string, nonce?: number) {
+    async waitExportStatus(txId: string, nonce?: number, remainingTries = 15) {
         let status
         if (this.sourceChain === 'X') {
             status = await avm.getTxStatus(txId)
@@ -343,9 +343,16 @@ export default class ChainTransfer extends Vue {
         this.exportStatus = status
 
         if (status === 'Unknown' || status === 'Processing') {
+            // If out of tries
+            if (remainingTries <= 0) {
+                this.exportState = TxState.failed
+                this.exportStatus = 'Timeout'
+                return false
+            }
+
             // if not confirmed ask again
             setTimeout(() => {
-                this.waitExportStatus(txId, nonce)
+                this.waitExportStatus(txId, nonce, remainingTries - 1)
             }, 1000)
             return false
         } else if (status === 'Dropped') {
@@ -370,7 +377,6 @@ export default class ChainTransfer extends Vue {
     // STEP 3
     async chainImport() {
         let wallet: AvaHdWallet = this.$store.state.activeWallet
-
         let importTxId
         try {
             if (this.targetChain === 'P') {

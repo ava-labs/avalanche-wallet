@@ -17,7 +17,6 @@
                 <v-btn
                     class="ava_button button_primary"
                     @click="access"
-                    color="#4C2E56"
                     :loading="isLoading"
                     :disabled="!canSubmit"
                     depressed
@@ -32,7 +31,6 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { ImportKeyfileInput } from '@/store/types'
-import { KeyFile } from '@/js/IKeystore'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { privateToAddress } from 'ethereumjs-util'
 import { bintools } from '@/AVA'
@@ -50,20 +48,8 @@ export default class PrivateKey extends Vue {
         this.isLoading = true
         let key = this.privatekey
 
-        // if ethereum private key
-
         try {
-            let keyBuf = Buffer.from(key, 'hex')
-            // @ts-ignore
-            privateToAddress(keyBuf)
-            key = `PrivateKey-${bintools.cb58Encode(keyBuf)}`
-        } catch (e) {
-            //
-        }
-
-        try {
-            let wallet = new SingletonWallet(key)
-            let res = await this.$store.dispatch('accessWalletSingleton', wallet)
+            let res = await this.$store.dispatch('accessWalletSingleton', key)
             this.onsuccess()
         } catch (e) {
             this.onerror('Invalid Private Key.')

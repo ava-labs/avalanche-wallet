@@ -1,13 +1,16 @@
 <template>
     <div class="asset">
-        <div class="icon">
-            <hexagon class="hex_bg" :is-ava="isAvaxToken"></hexagon>
-            <div class="icon_img">
-                <img v-if="iconUrl" :src="iconUrl" />
-                <p v-else>?</p>
-            </div>
+        <div class="icon" :avax="isAvaxToken">
+            <!--            <hexagon class="hex_bg" :is-ava="isAvaxToken"></hexagon>-->
+            <!--            <div class="icon_img">-->
+            <img v-if="iconUrl" :src="iconUrl" />
+            <p v-else>?</p>
+            <!--            </div>-->
         </div>
-        <p class="name_col not_mobile">{{ name }} ({{ symbol }})</p>
+        <p class="name_col not_mobile">
+            {{ name }} ({{ symbol }})
+            <span v-if="!isAvaxToken">ANT</span>
+        </p>
         <p class="name_col mobile_only">{{ symbol }}</p>
         <router-link :to="sendLink" class="send_col" v-if="isBalance">
             <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
@@ -16,8 +19,7 @@
         <p v-else></p>
         <p class="balance_col" v-if="isBalance">
             <span>
-                {{ asset.toStringTotal() }}
-                &nbsp;{{ symbol }}
+                {{ amtBig.toLocaleString() }}
             </span>
             <br />
             <span class="fiat" v-if="isAvaxToken">
@@ -25,10 +27,7 @@
                 &nbsp;USD
             </span>
         </p>
-        <p class="balance_col" v-else>
-            0
-            <span>{{ symbol }}</span>
-        </p>
+        <p class="balance_col" v-else>0</p>
     </div>
 </template>
 <script lang="ts">
@@ -39,7 +38,7 @@ import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
 import BN from 'bn.js'
 import { bnToBig } from '../../../helpers/helper'
-import { priceDict } from '../../../store/types'
+import { priceDict, WalletType } from '../../../store/types'
 import Big from 'big.js'
 
 @Component({
@@ -54,7 +53,7 @@ export default class FungibleRow extends Vue {
         if (!this.asset) return null
 
         if (this.isAvaxToken) {
-            return '/ava_letter_icon.png'
+            return '/img/avax_icon_circle.png'
         }
 
         return null
@@ -71,7 +70,7 @@ export default class FungibleRow extends Vue {
     get totalUSD(): Big {
         if (!this.isAvaxToken) return Big(0)
         let usdPrice = this.priceDict.usd
-        let bigAmt = bnToBig(this.asset.getTotalAmount(), this.asset.denomination)
+        let bigAmt = bnToBig(this.amount, this.asset.denomination)
         let usdBig = bigAmt.times(usdPrice)
         return usdBig
     }
@@ -82,7 +81,7 @@ export default class FungibleRow extends Vue {
 
     get sendLink(): string {
         if (!this.asset) return `/wallet/transfer`
-        return `/wallet/transfer?asset=${this.asset.id}`
+        return `/wallet/transfer?asset=${this.asset.id}&chain=X`
     }
 
     get avaxToken(): AvaAsset {
@@ -112,6 +111,27 @@ export default class FungibleRow extends Vue {
         // TODO: Remove this hack after network change
         if (sym === 'AVA') return 'AVAX'
         return sym
+    }
+
+    get amount() {
+        let amt = this.asset.getTotalAmount()
+        return amt.add(this.evmAvaxBalance)
+    }
+
+    get amtBig() {
+        return bnToBig(this.amount, this.asset.denomination)
+    }
+
+    get evmAvaxBalance(): BN {
+        let wallet: WalletType | null = this.$store.state.activeWallet
+
+        if (!this.isAvaxToken || !wallet) {
+            return new BN(0)
+        }
+        // Convert to 9 decimal places
+        let bal = wallet.ethBalance
+        let balRnd = bal.divRound(new BN(Math.pow(10, 9).toString()))
+        return balRnd
     }
 }
 </script>
@@ -144,6 +164,10 @@ export default class FungibleRow extends Vue {
 
     .send_col {
         text-align: center;
+        opacity: 0.4;
+        &:hover {
+            opacity: 1;
+        }
         img {
             width: 18px;
             object-fit: contain;
@@ -151,27 +175,26 @@ export default class FungibleRow extends Vue {
     }
 }
 
+$icon_w: 40px;
 .icon {
     position: relative;
-    width: 100%;
-    height: 100%;
     align-self: center;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
     transition-duration: 1s;
+    width: $icon_w;
+    height: $icon_w;
+    border-radius: $icon_w;
+    background-color: var(--bg-light);
 
     p {
-        color: #aaa;
+        color: var(--primary-color-light);
     }
-}
-
-.icon_img {
-    position: absolute;
 
     img {
-        width: 18px;
+        width: 100%;
         object-fit: contain;
     }
 }
@@ -185,9 +208,16 @@ export default class FungibleRow extends Vue {
     display: none;
 }
 
+.name_col {
+    span {
+        font-size: 12px;
+        color: var(--secondary-color);
+    }
+}
+
 @include main.medium-device {
     .asset {
-        padding: 4px 0;
+        padding: 6px 0;
     }
 
     .balance_col {
@@ -206,8 +236,11 @@ export default class FungibleRow extends Vue {
         font-size: 14px;
     }
 
+    $icon_w: 30px;
     .icon {
-        padding: 6px;
+        width: $icon_w;
+        height: $icon_w;
+        border-radius: $icon_w;
     }
 }
 @include main.mobile-device {

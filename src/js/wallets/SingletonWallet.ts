@@ -39,8 +39,11 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
+import Erc20Token from '@/js/Erc20Token'
+var uniqid = require('uniqid')
 
 class SingletonWallet implements AvaWalletCore, UnsafeWallet {
+    id: string
     keyChain: AVMKeyChain
     keyPair: AVMKeyPair
     utxoset: AVMUTXOSet
@@ -68,6 +71,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     isFetchUtxos: boolean
     isInit: boolean
     constructor(pk: string) {
+        this.id = uniqid()
         this.key = pk
 
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
@@ -703,6 +707,49 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         }
 
         let signedTx = await account.signTransaction(txConfig)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+
+        const txConfig = {
+            from: from,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            to: token.data.address,
+            data: tx.encodeABI(),
+        }
+
+        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+        let signedTx = await account.signTransaction(txConfig)
+
         let err,
             receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
 

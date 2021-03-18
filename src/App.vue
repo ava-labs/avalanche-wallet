@@ -12,6 +12,7 @@
             </template>
         </v-main>
         <LedgerBlock ref="ledger_block"></LedgerBlock>
+        <LedgerUpgrade></LedgerUpgrade>
         <NetworkLoadingBlock></NetworkLoadingBlock>
         <notifications></notifications>
         <TestNetBanner></TestNetBanner>
@@ -22,6 +23,7 @@ import Notifications from '@/components/Notifications'
 import Navbar from './components/Navbar'
 import RememberWalletModal from '@/components/modals/RememberWallet/RememberWalletModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
+import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
 import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 
@@ -29,6 +31,7 @@ export default {
     components: {
         NetworkLoadingBlock,
         LedgerBlock,
+        LedgerUpgrade,
         RememberWalletModal,
         Navbar,
         Notifications,
@@ -42,6 +45,7 @@ export default {
         }
 
         await this.$store.dispatch('Network/init')
+        this.$store.dispatch('Assets/initErc20List')
         this.$store.dispatch('updateAvaxPrice')
     },
     computed: {

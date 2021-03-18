@@ -4,7 +4,7 @@
         <p>{{ $t('advanced.import.desc') }}</p>
         <div v-if="isSuccess" class="is_success">
             <label>Tx ID</label>
-            <p>{{ txId }}</p>
+            <p class="tx_id">{{ txId }}</p>
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
@@ -15,8 +15,8 @@
                 {{ $t('advanced.import.submit_p') }}
             </v-btn>
             <v-btn
+                v-if="isEVMSupported"
                 block
-                v-if="!isLedger"
                 class="button_secondary"
                 depressed
                 @click="atomicImportC"
@@ -48,24 +48,41 @@ export default class ChainImport extends Vue {
         return wallet
     }
 
-    // TODO: Remove after ledger support
-    get isLedger() {
+    get isEVMSupported() {
         if (!this.wallet) return false
-        if (this.wallet.type === 'ledger') return true
-        return false
+        return this.wallet.ethAddress
     }
+
     async atomicImportX() {
         this.beforeSubmit()
         if (!this.wallet) return
+
+        let err
+        let hasUTXOs
+        // Import from P
         try {
             let txId = await this.wallet.importToXChain('P')
-            // TODO: Change after ledger support
-            if (this.wallet.type !== 'ledger') {
-                let txId2 = await this.wallet.importToXChain('C')
-            }
             this.onSuccess(txId)
+            hasUTXOs = true
         } catch (e) {
-            this.onError(e)
+            if (this.isSuccess) return
+            err = e
+        }
+
+        // Import from C
+        try {
+            if (this.isEVMSupported) {
+                let txId2 = await this.wallet.importToXChain('C')
+                this.onSuccess(txId2)
+                hasUTXOs = true
+            }
+        } catch (e) {
+            if (this.isSuccess) return
+            err = e
+        }
+
+        if (!hasUTXOs) {
+            this.onError(err)
         }
     }
 
@@ -116,13 +133,14 @@ export default class ChainImport extends Vue {
             message: txId,
         })
 
-        this.$store.dispatch('Assets/updateUTXOs')
-        this.$store.dispatch('History/updateTransactionHistory')
+        setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
+        }, 3000)
     }
 
     onError(err: Error) {
         this.isLoading = false
-        console.error(err)
         let msg = ''
         if (err.message.includes('No atomic')) {
             this.err = 'Nothing found to import.'
@@ -147,5 +165,10 @@ export default class ChainImport extends Vue {
 .spinner {
     color: var(--primary-color) !important;
     margin: 14px auto !important;
+}
+
+.tx_id {
+    font-size: 13px;
+    word-break: break-all;
 }
 </style>
