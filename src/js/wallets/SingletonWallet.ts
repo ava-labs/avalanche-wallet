@@ -424,10 +424,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     }
 
     async importToCChain(): Promise<string> {
-        const utxoResponse = await cChain.getUTXOs(
-            this.ethAddressBech,
-            avm.getBlockchainID()
-        )
+        const utxoResponse = await cChain.getUTXOs(this.ethAddressBech, avm.getBlockchainID())
         const utxoSet: EVMUTXOSet = utxoResponse.utxos
 
         if (utxoSet.getAllUTXOs().length === 0) {
