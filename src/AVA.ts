@@ -5,6 +5,7 @@ import Avalanche from 'avalanche'
 import BinTools from 'avalanche/dist/utils/bintools'
 import { EVMAPI } from 'avalanche/dist/apis/evm'
 
+const ALLOW_CREDENTIALS = process.env.VUE_APP_ALLOW_CREDENTIALS
 // Connect to TestNet by default
 // Doesn't really matter how we initialize, it will get changed by the network module later
 let ip: string = 'bootstrap.ava.network'
@@ -14,6 +15,11 @@ let network_id: number = 2
 let chain_id: string = 'X'
 let bintools: BinTools = BinTools.getInstance()
 let ava: Avalanche = new Avalanche(ip, port, protocol, network_id, chain_id)
+
+// Add credentials if turned on
+if (ALLOW_CREDENTIALS) {
+    ava.setHeader('Access-Control-Allow-Credentials', ALLOW_CREDENTIALS)
+}
 let avm: AVMAPI = ava.XChain()
 let cChain: EVMAPI = ava.CChain()
 
