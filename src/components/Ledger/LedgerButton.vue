@@ -39,43 +39,30 @@ export default class LedgerButton extends Vue {
         try {
             let transport = await TransportU2F.create()
             transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
-            let app = new AppAvax(transport)
+            let app = new AppAvax(transport, 'w0w')
+            let eth = new Eth(transport, 'w0w')
+
             // Wait for app config
             await this.waitForConfig(app)
 
             // Close the initial prompt modal if exists
-            this.$store.commit('Ledger/closeModal')
+            this.$store.commit('Ledger/setIsUpgradeRequired', false)
             this.isLoading = true
 
             // Otherwise timer does not reset
-            await setTimeout(() => null, 10)
+            // await setTimeout(() => null, 10)
 
-            let eth, title, messages
-            // TODO: enable when we want users upgrading after ledger fixes a few issues
-            // let versionCheck = config.version >= MIN_EVM_SUPPORT_V
-            let versionCheck = false
-            if (versionCheck) {
-                eth = new Eth(transport, 'Avalanche')
-                title = 'Provide Public Keys'
-                messages = [
-                    {
-                        title: 'Derivation Path',
-                        value: AVA_ACCOUNT_PATH,
-                    },
-                    {
-                        title: 'Derivation Path',
-                        value: LEDGER_ETH_ACCOUNT_PATH,
-                    },
-                ]
-            } else {
-                title = 'Provide Public Key'
-                messages = [
-                    {
-                        title: 'Derivation Path',
-                        value: AVA_ACCOUNT_PATH,
-                    },
-                ]
-            }
+            let title = 'Provide Public Keys'
+            let messages = [
+                {
+                    title: 'Derivation Path',
+                    value: AVA_ACCOUNT_PATH,
+                },
+                {
+                    title: 'Derivation Path',
+                    value: LEDGER_ETH_ACCOUNT_PATH,
+                },
+            ]
 
             this.$store.commit('Ledger/openModal', {
                 title,
@@ -85,7 +72,6 @@ export default class LedgerButton extends Vue {
             let wallet = await LedgerWallet.fromApp(
                 app,
                 eth,
-                versionCheck,
                 (this.config as unknown) as ILedgerAppConfig
             )
             try {
@@ -97,30 +83,28 @@ export default class LedgerButton extends Vue {
                 this.onerror(e)
             }
         } catch (e) {
-            console.log(e)
             this.onerror(e)
         }
     }
-    async waitForConfig(app: any) {
+
+    async waitForConfig(app: AppAvax) {
         // Config is found immediately if the device is connected and the app is open.
         // If no config was found that means user has not opened the Avalanche app.
         setTimeout(() => {
             if (this.config) return
-            this.$store.commit('Ledger/openModal', {
-                title: 'Open the Avalanche app on your Ledger Device',
-                messages: [],
-                isPrompt: true,
-            })
+            this.$store.commit('Ledger/setIsUpgradeRequired', true)
         }, 1000)
 
         this.config = await app.getAppConfiguration()
     }
     onsuccess() {
         this.isLoading = false
+        this.config = undefined
         this.$store.commit('Ledger/closeModal')
     }
     onerror(err: any) {
         this.isLoading = false
+        this.config = undefined
         this.$store.commit('Ledger/closeModal')
         console.error(err)
 

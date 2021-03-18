@@ -34,6 +34,11 @@
                         <span>or</span>
                         <button @click="addTokenList">Add Token List</button>
                     </div>
+                    <div class="asset add_token_row" v-else>
+                        <p style="font-size: 13px; color: var(--info)">
+                            ERC20 Tokens are not supported for Ledger devices.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
