@@ -12,6 +12,7 @@
         "lint": "vue-cli-service lint",
         "release": "release-it",
         "serve": "vue-cli-service serve",
+        "start": "node server/index.js",
         "test_watch": "jest --verbose --watch ./tests",
         "test_debug": "node --inspect-brk node_modules/.bin/jest ./tests --runInBand",
         "test": "jest --verbose ./tests"
