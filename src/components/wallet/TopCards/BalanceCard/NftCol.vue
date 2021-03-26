@@ -4,13 +4,6 @@
         <p v-if="isEmpty">{{ $t('top.nftempty') }}</p>
         <div v-else class="rows">
             <p>{{ statusText }}</p>
-            <!--            <div class="cards_cont">-->
-            <!--                <NftFamilyCardsPreview-->
-            <!--                    :utxos="nftArray"-->
-            <!--                    :spread="true"-->
-            <!--                    :max="15"-->
-            <!--                ></NftFamilyCardsPreview>-->
-            <!--            </div>-->
             <div class="nft_list">
                 <div class="nft_item" v-for="(utxo, i) in nftArray" :key="utxo.getUTXOID()">
                     <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
@@ -23,7 +16,6 @@
 <script lang="ts">
 import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
 import { IWalletNftDict } from '@/store/types'
-// import {UTXO} from "avalanche";
 import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import NftCard from '@/components/wallet/portfolio/NftCard.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
@@ -46,17 +38,14 @@ let payloadtypes = PayloadTypes.getInstance()
 })
 export default class NftCol extends Vue {
     get isEmpty(): boolean {
-        // return this.$store.getters.walletNftUTXOs.length === 0
         return this.$store.state.Assets.nftUTXOs.length === 0
     }
 
     get nftDict(): IWalletNftDict {
-        // return this.$store.getters.walletNftDict
         return this.$store.getters['Assets/walletNftDict']
     }
 
     get nftArray(): UTXO[] {
-        // let utxos: UTXO[] = this.$store.getters.walletNftUTXOs
         let utxos: UTXO[] = this.$store.state.Assets.nftUTXOs
 
         let ids: string[] = []
@@ -96,18 +85,12 @@ export default class NftCol extends Vue {
     }
 
     get collectedAmt(): number {
-        // return this.$store.getters.walletNftUTXOs.length
         return this.$store.state.Assets.nftUTXOs.length
     }
 
     get collectionAmt(): number {
         let fams = this.$store.state.Assets.nftFams
         return fams.length
-        // let count = 0
-        // for (var col in this.nftDict) {
-        //     count++
-        // }
-        // return count
     }
 
     get statusText(): string {
@@ -130,15 +113,9 @@ $nft_w: 35px;
 
 .nft_list {
     margin-top: 8px;
-    //display: grid;
-    //grid-template-columns: repeat(5, $nft_w);
     grid-gap: 8px;
     display: grid;
     grid-template-columns: repeat(5, $nft_w);
-    //flex-wrap: wrap;
-    //justify-content: space-between;
-    /*display: flex;*/
-    /*flex-wrap: wrap;*/
 }
 
 .nft_item {
@@ -155,11 +132,6 @@ $nft_w: 35px;
 
 .dummy_item {
     opacity: 0.2;
-}
-
-.rows {
-    //display: flex;
-    //flex-direction: column;
 }
 
 .cards_cont {
