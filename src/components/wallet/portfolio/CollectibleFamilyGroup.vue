@@ -1,22 +1,36 @@
 <template>
     <div class="family_group" @mouseleave="mouseLeave">
+        <NFTViewModal ref="modal" :payload="payload"></NFTViewModal>
         <p class="count" v-if="quantity > 1">{{ quantity }}</p>
-        <div class="nft_card" @click="flip" :flip="isFlip">
-            <div class="front">
-                <NftPayloadView :payload="payload" class="view"></NftPayloadView>
-            </div>
-            <div class="back">
-                <div class="nft_info">
-                    <p>
-                        <b>{{ $t('portfolio.collectibles.quantity') }}:</b>
-                        {{ quantity }}
+        <div class="nft_card">
+            <NftPayloadView :payload="payload" class="view"></NftPayloadView>
+            <div class="nft_info">
+                <div class="meta_bar">
+                    <div>
+                        <p>
+                            <b>{{ $t('portfolio.collectibles.group') }}:</b>
+                            {{ groupID }}
+                        </p>
+                        <p style="margin-left: 6px !important">{{ payloadTypeName }}</p>
+                    </div>
+
+                    <div>
+                        <Tooltip text="Send" @click.native="transfer" class="nft_button">
+                            <fa icon="share"></fa>
+                        </Tooltip>
+                        <Tooltip text="Expand" @click.native="expand" class="nft_button">
+                            <fa icon="expand"></fa>
+                        </Tooltip>
+                    </div>
+                </div>
+                <div class="generic_nft_meta" v-if="nftTitle || nftDesc">
+                    <p class="nft_title" v-if="nftTitle">
+                        {{ nftTitle }}
                     </p>
-                    <p>
-                        <b>{{ $t('portfolio.collectibles.group') }}:</b>
-                        {{ groupID }}
+                    <p class="nft_desc" v-if="nftDesc">
+                        {{ nftDesc }}
                     </p>
                 </div>
-                <v-btn @click="transfer" small>{{ $t('portfolio.collectibles.send') }}</v-btn>
             </div>
         </div>
     </div>
@@ -28,13 +42,20 @@ import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { Buffer } from 'avalanche'
 import { PayloadTypes } from 'avalanche/dist/utils'
+import Tooltip from '@/components/misc/Tooltip.vue'
+import NFTViewModal from '@/components/modals/NFTViewModal.vue'
 
 let payloadtypes = PayloadTypes.getInstance()
 @Component({
-    components: { NftPayloadView },
+    components: { NFTViewModal, Tooltip, NftPayloadView },
 })
 export default class CollectibleFamilyGroup extends Vue {
     @Prop() utxos!: UTXO[]
+
+    $refs!: {
+        modal: NFTViewModal
+    }
+
     isFlip = false
 
     mouseLeave() {
@@ -62,6 +83,36 @@ export default class CollectibleFamilyGroup extends Vue {
         return payloadbase
     }
 
+    get payloadTypeID() {
+        return this.payload.typeID()
+    }
+
+    get payloadTypeName() {
+        return payloadtypes.lookupType(this.payloadTypeID) || 'Unknown Type'
+    }
+
+    get payloadContent() {
+        return this.payload.getContent().toString()
+    }
+
+    get nftTitle() {
+        try {
+            let json = JSON.parse(this.payloadContent)
+            return json.avalanche.title
+        } catch (err) {
+            return ''
+        }
+    }
+
+    get nftDesc() {
+        try {
+            let json = JSON.parse(this.payloadContent)
+            return json.avalanche.desc
+        } catch (err) {
+            return ''
+        }
+    }
+
     flip() {
         this.isFlip = !this.isFlip
     }
@@ -77,6 +128,10 @@ export default class CollectibleFamilyGroup extends Vue {
                 chain: 'X',
             },
         })
+    }
+
+    expand() {
+        this.$refs.modal.open()
     }
 }
 </script>
@@ -102,21 +157,14 @@ $countW: 28px;
 }
 .family_group {
     position: relative;
-    //background-color: var(--bg-light);
-    //min-height: 40px;
 }
 
 .nft_card {
-    max-height: 100%;
     height: 100%;
     position: relative;
-    transform-origin: center;
-    transition: all 0.5s ease;
-    transform-style: preserve-3d;
-
-    &[flip] {
-        transform: rotateY(180deg);
-    }
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--bg-light);
 }
 
 .back {
@@ -132,7 +180,9 @@ $countW: 28px;
 }
 
 .view {
-    height: 100%;
+    width: 100%;
+    //height: 100%;
+    height: 300px;
 }
 
 .front,
@@ -142,9 +192,9 @@ $countW: 28px;
     top: 0;
     left: 0;
     width: 100%;
-    border-radius: 14px;
+    //border-radius: 14px;
     overflow: auto;
-    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
+    //box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 .back {
@@ -155,9 +205,54 @@ $countW: 28px;
     height: 100%;
 }
 
+.generic_nft_meta {
+    //border-top: 2px solid var(--bg-light);
+    padding-top: 0 !important;
+
+    .nft_title {
+        font-weight: bold;
+    }
+}
 .nft_info {
+    border-top: 2px solid var(--bg-light);
     font-size: 12px;
-    margin: 30px 0;
+
+    > * {
+        padding: 8px 12px;
+    }
+
+    .meta_bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .nft_button {
+            opacity: 0.5;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        > div {
+            display: flex;
+            flex-direction: row;
+        }
+
+        p,
+        button {
+            opacity: 0.5;
+        }
+
+        button,
+        .nft_button {
+            margin: 0px 4px;
+        }
+
+        button:hover {
+            opacity: 1;
+        }
+    }
 }
 
 @include main.mobile-device {

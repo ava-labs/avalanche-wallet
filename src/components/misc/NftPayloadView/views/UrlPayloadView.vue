@@ -1,13 +1,14 @@
 <template>
-    <div class="url_payload_view">
-        <img :src="url" v-if="img_types.includes(fileType)" />
-        <div v-else class="unknown">
-            <p>
-                <span>URL</span>
-            </p>
-            <a :href="url" target="_blank">{{ url }}</a>
-            <p class="warn">Do NOT click links you do not trust.</p>
-        </div>
+    <div class="url_payload_view" @mouseenter="isHover = true" @mouseleave="isHover = false">
+        <img :src="url" @load="isImage = true" v-show="isImage" />
+        <video
+            :src="url"
+            @loadedmetadata="isVideo = true"
+            v-show="isVideo"
+            :controls="isHover"
+            loop
+            muted
+        />
     </div>
 </template>
 <script lang="ts">
@@ -20,7 +21,9 @@ export default class UrlPayloadView extends Vue {
 
     img_types = ['jpeg', 'jpg', 'gif', 'png', 'apng', 'svg', 'bmp', 'ico', 'webp']
     valid_types = this.img_types.concat(['pdf'])
-
+    isImage = false
+    isVideo = false
+    isHover = false
     get url() {
         return this.payload.getContent().toString()
     }
@@ -45,11 +48,12 @@ export default class UrlPayloadView extends Vue {
     //border-radius: 14px;
     //overflow: hidden;
 }
-img {
+img,
+video {
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .unknown {
