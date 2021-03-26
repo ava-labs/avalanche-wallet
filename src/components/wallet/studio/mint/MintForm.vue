@@ -27,10 +27,6 @@
                             <label>{{ $t('studio.mint.utxo_col.label2') }}</label>
                             <p>{{ family.symbol }}</p>
                         </div>
-                        <div>
-                            <label>{{ $t('studio.mint.utxo_col.label3') }}</label>
-                            <p style="word-break: break-all">{{ groupId }}</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -529,7 +525,8 @@ $col_pad: 24px;
 }
 
 .payload_view_cont {
-    min-height: 280px;
+    min-height: 260px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
