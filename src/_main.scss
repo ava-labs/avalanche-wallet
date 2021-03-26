@@ -95,6 +95,11 @@ $s-size-mobile: 14px;
 }
 
 
+video{
+    outline: none;
+}
+
+
 
 *[tooltip]:hover:before {
     border-radius: 4px;

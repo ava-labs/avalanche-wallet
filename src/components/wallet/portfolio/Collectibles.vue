@@ -136,16 +136,6 @@ $flip_dur: 0.6s;
     }
 }
 
-.list {
-    //display: grid;
-    //padding: 30px 0;
-    //grid-template-columns: repeat(4, 1fr);
-    //grid-row-gap: 15px;
-    //grid-column-gap: 15px;
-    //display: flex;
-    //flex-wrap: wrap;
-}
-
 .nft_card {
     transition-duration: 0.3s;
     width: 140px;
@@ -153,26 +143,8 @@ $flip_dur: 0.6s;
 }
 
 @include main.mobile-device {
-    //.list {
-    //    grid-template-columns: repeat(2, 1fr);
-    //}
     .collectibles_view {
         height: 90vh;
     }
 }
-//@include main.large-device {
-//    .list {
-//        grid-template-columns: repeat(4, 1fr);
-//    }
-//}
-//@include main.xl-device {
-//    .list {
-//        grid-template-columns: repeat(4, 1fr);
-//    }
-//}
-//@include main.largest-device {
-//    .list {
-//        grid-template-columns: repeat(6, 1fr);
-//    }
-//}
 </style>

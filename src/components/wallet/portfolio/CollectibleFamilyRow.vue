@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="nft_family_row">
         <div class="fam_header">
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>
@@ -117,6 +117,9 @@ export default class CollectibleFamilyRow extends Vue {
 <style scoped lang="scss">
 @use '../../../main';
 
+.nft_family_row {
+    margin-bottom: 4vh;
+}
 .fam_header {
     width: 100%;
     margin: 12px 0;
@@ -145,48 +148,36 @@ export default class CollectibleFamilyRow extends Vue {
 }
 
 .list {
-    display: flex;
-    flex-wrap: wrap;
+    padding-right: 10px;
+    display: grid;
+    grid-gap: 1em;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 }
 
 .group {
-    align-self: flex-end;
-    width: 180px;
-    max-width: 100%;
-    height: 220px;
-    margin-right: 14px;
-    margin-bottom: 14px;
+    align-self: flex-start;
+    width: 100%;
+    height: 100%;
 }
 
 .mint_card {
-    border-radius: 14px;
     font-size: 13px;
     border: 1px dashed var(--primary-color-light);
     padding: 12px 12px;
     color: var(--primary-color);
     display: flex;
+    height: 100%;
     flex-direction: column;
     justify-content: space-between;
 }
 
 @include main.medium-device {
-    .group {
-        width: 120px;
-        height: 180px;
-    }
 }
 
 @include main.mobile-device {
     .fam_header {
         grid-template-columns: max-content 1fr;
     }
-
-    .group {
-        //height: 80vh;
-        height: 40vh;
-        width: 80vw;
-    }
-
     .fam_id {
         grid-column: 1/3;
         text-align: left;
@@ -195,6 +186,7 @@ export default class CollectibleFamilyRow extends Vue {
         height: max-content;
     }
     .list {
+        grid-template-columns: 1fr;
     }
 }
 </style>

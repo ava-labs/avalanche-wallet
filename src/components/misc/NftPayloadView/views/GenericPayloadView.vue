@@ -2,16 +2,32 @@
 
 <template>
     <div class="generic_payload_view">
-        <template v-if="!isError">
+        <div
+            v-if="!isError"
+            class="payload_rows"
+            @mouseenter="isHover = true"
+            @mouseleave="isHover = false"
+        >
             <div class="generic_view">
-                <img :src="img" />
-                <p class="nft_title" v-if="title">{{ title }}</p>
-                <div class="desc" v-if="desc">{{ desc }}</div>
+                <img :src="img" @load="isImage = true" v-show="isImage" />
+                <video
+                    :src="img"
+                    @loadedmetadata="onVideoMeta"
+                    v-show="isVideo"
+                    :controls="isHover"
+                    loop
+                    muted
+                    controlsList="nodownload"
+                />
             </div>
-        </template>
-        <template v-else>
+            <!--            <div class="generic_meta" v-if="title || desc" v-show="isHover">-->
+            <!--                <p class="nft_title" v-if="title">{{ title }}</p>-->
+            <!--                <div class="desc" v-if="desc">{{ desc }}</div>-->
+            <!--            </div>-->
+        </div>
+        <div v-else>
             <p>Failed to load generic collectible payload.</p>
-        </template>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -21,9 +37,19 @@ import { IGenericNft } from '@/components/wallet/studio/mint/types'
 
 @Component
 export default class UtfPayloadView extends Vue {
+    $refs!: {
+        image: HTMLImageElement
+        video: HTMLVideoElement
+    }
     @Prop() payload!: JSONPayload
+
+    isVideo = false
+    isImage = false
+    isAudio = false
+
     isError = false
     jsonData: IGenericNft | null = null
+    isHover = false
 
     get content(): string {
         return this.payload.getContent().toString()
@@ -41,9 +67,10 @@ export default class UtfPayloadView extends Vue {
         return this.jsonData?.title
     }
 
-    // get data() {
-    //     return JSON.parse(this.content)
-    // }
+    onVideoMeta(ev: any) {
+        this.isVideo = true
+    }
+
     mounted() {
         try {
             this.jsonData = JSON.parse(this.content).avalanche
@@ -65,66 +92,56 @@ export default class UtfPayloadView extends Vue {
 <style scoped lang="scss">
 @use '../../../../main';
 
+.generic_payload_view {
+    position: relative;
+}
 .generic_view {
     position: relative;
     width: 100%;
-    height: 220px;
-    max-height: 100%;
-    overflow: hidden;
-}
-p {
-    font-size: 13px;
-    padding: 12px 24px;
-    word-break: break-word;
-    overflow: scroll;
-    background-color: var(--bg-light);
-    color: var(--primary-color);
+    //height: 100%;
+    flex-grow: 1;
+    overflow: auto;
 }
 
-img {
+.generic_meta {
+    position: absolute;
+    border-top: 2px solid var(--bg-light);
+    padding: 16px 12px;
+    height: 100%;
+    width: 100%;
+    background-color: #000d;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+img,
+video {
     display: block;
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
     height: 100%;
-    position: absolute;
+    outline: none;
+    //position: absolute;
+}
+
+.payload_rows {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .nft_title {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    font-size: 13px;
-    background-color: #000000aa;
-    color: #fff;
-    transition-duration: 0.2s;
+    font-size: 1.2em;
+    text-align: left;
+    font-weight: bold;
 }
 
-.generic_view:hover {
-    .desc {
-        opacity: 1;
-    }
-    .nft_title {
-        opacity: 0;
-    }
-}
 .desc {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    opacity: 0;
+    margin-top: 4px;
     font-size: 13px;
-    transition-duration: 0.2s;
-    color: #fff;
-    text-align: center;
-    padding: 14px;
-    background-color: #000000bb;
 }
 
 @include main.mobile-device {
-    .generic_view {
-        height: 100%;
-    }
 }
 </style>
