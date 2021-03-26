@@ -4,7 +4,8 @@
     <div class="generic_payload_view">
         <template v-if="!isError">
             <div class="generic_view">
-                <img :src="img" />
+                <img :src="img" @load="isImage = true" v-show="isImage" />
+                <video :src="img" @loadedmetadata="isVideo = true" v-show="isVideo" muted />
             </div>
         </template>
         <template v-else>
@@ -22,6 +23,8 @@ export default class UtfPayloadView extends Vue {
     @Prop() payload!: JSONPayload
     isError = false
     jsonData: IGenericNft | null = null
+    isImage = false
+    isVideo = false
 
     get content(): string {
         return this.payload.getContent().toString()
@@ -83,9 +86,10 @@ p {
     color: var(--primary-color);
 }
 
-img {
+img,
+video {
     display: block;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
     width: 100%;
     height: 100%;
