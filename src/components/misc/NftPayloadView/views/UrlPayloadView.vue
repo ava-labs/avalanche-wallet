@@ -8,6 +8,7 @@
             :controls="isHover"
             loop
             muted
+            controlsList="nodownload"
         />
         <div v-if="!isImage && !isVideo" class="unknown">
             <p style="font-size: 2em">

@@ -1,5 +1,5 @@
 <template>
-    <modal title="NFT Preview" ref="modal">
+    <modal :title="$t('modal.nft.title')" ref="modal">
         <div class="nft_view_body">
             <NftPayloadView :payload="payload" class="view"></NftPayloadView>
         </div>

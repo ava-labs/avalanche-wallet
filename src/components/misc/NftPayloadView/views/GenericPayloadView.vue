@@ -17,6 +17,7 @@
                     :controls="isHover"
                     loop
                     muted
+                    controlsList="nodownload"
                 />
             </div>
             <!--            <div class="generic_meta" v-if="title || desc" v-show="isHover">-->

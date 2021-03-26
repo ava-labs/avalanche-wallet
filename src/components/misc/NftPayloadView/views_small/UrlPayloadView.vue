@@ -1,7 +1,13 @@
 <template>
     <div class="url_payload_view">
         <img :src="url" @load="isImage = true" v-show="isImage" />
-        <video :src="url" @loadedmetadata="isVideo = true" v-show="isVideo" muted />
+        <video
+            :src="url"
+            @loadedmetadata="isVideo = true"
+            v-show="isVideo"
+            muted
+            controlsList="nodownload"
+        />
         <div v-if="!isVideo && !isImage" class="unknown">
             <p><fa icon="link"></fa></p>
         </div>

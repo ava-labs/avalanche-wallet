@@ -97,11 +97,9 @@
             <div class="right_col">
                 <div class="preview">
                     <label>{{ $t('studio.mint.preview.label1') }}</label>
-                    <NftPayloadView
-                        v-if="payloadPreview"
-                        class="nft_preview"
-                        :payload="payloadPreview"
-                    ></NftPayloadView>
+                    <div class="payload_view_cont" v-if="payloadPreview">
+                        <NftCard :payload="payloadPreview" :group-i-d="groupId"></NftCard>
+                    </div>
                     <div class="nft_preview preview_holder" v-else>
                         <p>{{ $t('studio.mint.preview.info1') }}</p>
                     </div>
@@ -151,11 +149,13 @@ import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from 'avalanche/dis
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
+import NftCard from '@/components/wallet/portfolio/NftCard.vue'
 
 type NftType = 'utf8' | 'url' | 'json'
 
 @Component({
     components: {
+        NftCard,
         NftFamilyCardsPreview,
         GenericForm,
         SelectMintUTXO,
@@ -216,6 +216,29 @@ export default class MintNft extends Vue {
                 return JsonForm
             default:
                 return Utf8Form
+        }
+    }
+
+    get payloadContent() {
+        if (!this.payloadPreview) return null
+        return this.payloadPreview.getContent().toString()
+    }
+
+    get nftTitle() {
+        try {
+            let json = JSON.parse(this.payloadContent || '')
+            return json.avalanche.title
+        } catch (err) {
+            return ''
+        }
+    }
+
+    get nftDesc() {
+        try {
+            let json = JSON.parse(this.payloadContent || '')
+            return json.avalanche.desc
+        } catch (err) {
+            return ''
         }
     }
 
@@ -406,18 +429,10 @@ export default class MintNft extends Vue {
     }
 }
 .utxo {
-    //background-color: var(--bg-light);
     display: flex;
     flex-direction: column;
     position: relative;
-    //font-size: 13px;
-    //width: max-content;
-
-    //display: grid;
-    //grid-template-columns: repeat(3, max-content) 40px;
-    //column-gap: 14px;
     height: max-content;
-    //margin-bottom: 22px;
 
     button {
         //position: absolute;
@@ -453,9 +468,8 @@ $col_pad: 24px;
 }
 
 .nft_preview {
-    width: 180px;
+    width: 220px;
     max-height: 320px;
-    border-radius: 14px;
     overflow: scroll;
 
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
@@ -512,6 +526,13 @@ $col_pad: 24px;
     justify-content: center;
     color: var(--primary-color-light);
     border: 2px dashed var(--primary-color-light);
+}
+
+.payload_view_cont {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 @include main.medium-device {

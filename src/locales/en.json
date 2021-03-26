@@ -337,7 +337,8 @@
             "mint_submit": "Mint",
             "quantity": "Quantity",
             "group": "Group",
-            "send": "Send"
+            "send": "Send",
+            "expand": "Expand"
         }
     },
     "earn": {
@@ -703,6 +704,9 @@
         },
         "tokenlist": {
             "title": "Token lists"
+        },
+        "nft": {
+            "title": "NFT Preview"
         }
     },
     "nav": {

@@ -5,7 +5,13 @@
         <template v-if="!isError">
             <div class="generic_view">
                 <img :src="img" @load="isImage = true" v-show="isImage" />
-                <video :src="img" @loadedmetadata="isVideo = true" v-show="isVideo" muted />
+                <video
+                    :src="img"
+                    @loadedmetadata="isVideo = true"
+                    v-show="isVideo"
+                    muted
+                    controlsList="nodownload"
+                />
             </div>
         </template>
         <template v-else>
