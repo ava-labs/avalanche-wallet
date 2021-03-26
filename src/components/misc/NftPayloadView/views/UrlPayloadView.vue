@@ -9,6 +9,13 @@
             loop
             muted
         />
+        <div v-if="!isImage && !isVideo" class="unknown">
+            <p style="font-size: 2em">
+                <fa icon="link"></fa>
+            </p>
+            <p class="warn">Do NOT click links you do not trust.</p>
+            <a :href="url" target="_blank">{{ url }}</a>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -61,12 +68,15 @@ video {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    a {
+        margin: 14px 0;
+    }
 }
 .unknown,
 .warn {
-    background-color: var(--bg-light);
     text-align: center;
-    padding: 12px 8px;
+    padding: 12px;
     word-break: break-all;
     font-size: 13px;
     span {
@@ -76,9 +86,10 @@ video {
 }
 
 .warn {
-    color: var(--error);
+    color: var(--secondary-color);
     word-break: normal;
-    font-size: 11px;
+    font-size: 1.2em;
+    font-weight: bold;
     opacity: 0.6;
 }
 </style>

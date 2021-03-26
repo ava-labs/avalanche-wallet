@@ -2,19 +2,19 @@
     <div class="nft_col">
         <h4>{{ $t('top.balance.collectibles') }}</h4>
         <p v-if="isEmpty">{{ $t('top.nftempty') }}</p>
-        <div v-else>
+        <div v-else class="rows">
             <p>{{ statusText }}</p>
+            <!--            <div class="cards_cont">-->
+            <!--                <NftFamilyCardsPreview-->
+            <!--                    :utxos="nftArray"-->
+            <!--                    :spread="true"-->
+            <!--                    :max="15"-->
+            <!--                ></NftFamilyCardsPreview>-->
+            <!--            </div>-->
             <div class="nft_list">
                 <div class="nft_item" v-for="(utxo, i) in nftArray" :key="utxo.getUTXOID()">
                     <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
                 </div>
-                <!--                <NftCard-->
-                <!--                    v-for="nft in nftArray"-->
-                <!--                    class="nft_item"-->
-                <!--                    :key="nft.id"-->
-                <!--                    :mini="true"-->
-                <!--                    :utxo="nft"-->
-                <!--                ></NftCard>-->
                 <div v-for="i in dummyAmt" class="nft_item dummy_item" :key="i"></div>
             </div>
         </div>
@@ -31,11 +31,15 @@ import { PayloadBase } from 'avalanche/dist/utils'
 import { Buffer } from 'avalanche'
 import { PayloadTypes } from 'avalanche/dist/utils'
 import { bintools } from '@/AVA'
+import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
+
+const NFT_COUNT = 15
 
 let payloadtypes = PayloadTypes.getInstance()
 
 @Component({
     components: {
+        NftFamilyCardsPreview,
         NftCard,
         NftPayloadView,
     },
@@ -71,7 +75,7 @@ export default class NftCol extends Vue {
             }
         })
 
-        return utxos.slice(0, 10)
+        return utxos.slice(0, NFT_COUNT)
     }
 
     get nftPayloads(): PayloadBase[] {
@@ -88,7 +92,7 @@ export default class NftCol extends Vue {
     }
 
     get dummyAmt(): number {
-        return 10 - this.nftArray.length
+        return NFT_COUNT - this.nftArray.length
     }
 
     get collectedAmt(): number {
@@ -129,9 +133,10 @@ $nft_w: 35px;
     //display: grid;
     //grid-template-columns: repeat(5, $nft_w);
     grid-gap: 8px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(5, $nft_w);
+    //flex-wrap: wrap;
+    //justify-content: space-between;
     /*display: flex;*/
     /*flex-wrap: wrap;*/
 }
@@ -150,5 +155,18 @@ $nft_w: 35px;
 
 .dummy_item {
     opacity: 0.2;
+}
+
+.rows {
+    //display: flex;
+    //flex-direction: column;
+}
+
+.cards_cont {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 </style>
