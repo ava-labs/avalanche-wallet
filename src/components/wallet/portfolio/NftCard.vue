@@ -144,8 +144,7 @@ $countW: 28px;
 
 .view {
     width: 100%;
-    //height: 100%;
-    height: 300px;
+    height: 240px;
 }
 
 .generic_nft_meta {

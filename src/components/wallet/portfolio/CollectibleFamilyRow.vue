@@ -151,7 +151,7 @@ export default class CollectibleFamilyRow extends Vue {
     padding-right: 10px;
     display: grid;
     grid-gap: 1em;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 }
 
 .group {
