@@ -53,6 +53,7 @@ import { bnToBig } from '@/helpers/helper'
 import { avm } from '@/AVA'
 import { BN } from 'avalanche'
 @Component({
+    name: 'studio',
     components: {
         NewCollectibleFamily,
     },
