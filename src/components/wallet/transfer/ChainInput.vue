@@ -1,28 +1,24 @@
 <template>
     <div v-if="isEVMSupported">
-        <h4>{{ $t('transfer.source_chain.title') }}</h4>
+        <label>{{ $t('transfer.source_chain.title') }}</label>
         <div class="chain_select">
-            <div :active="formType === 'X'" @click="set('X')" class="hover_border">
-                <h2>X</h2>
-                <p>Exchange</p>
-            </div>
-            <div :active="formType === 'C'" @click="set('C')" class="hover_border">
-                <h2>C</h2>
-                <p>Contract</p>
-            </div>
+            <button :active="formType === 'X'" @click="set('X')">X</button>
+            <button :active="formType === 'C'" @click="set('C')">C</button>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Model } from 'vue-property-decorator'
+import { Vue, Component, Model, Prop } from 'vue-property-decorator'
 import { ChainIdType } from '@/constants'
 import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 
 @Component
 export default class ChainInput extends Vue {
     @Model('change', { type: String }) readonly formType!: CurrencyType
+    @Prop({ default: false }) disabled!: boolean
 
     set(val: ChainIdType) {
+        if (this.disabled) return
         this.$emit('change', val)
     }
 
@@ -37,34 +33,33 @@ export default class ChainInput extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
-h4 {
-    margin: 12px 0;
+label {
+    color: var(--primary-color-light);
 }
 .chain_select {
     display: flex;
-    > div {
+    width: max-content;
+    > button {
         //border: 1px solid var(--primary-color);
-        margin-right: 14px;
-        padding: 4px 14px;
-        opacity: 0.5;
-        border-radius: 4px;
-        transition-duration: 0.2s;
+        //margin-right: 14px;
+        padding-right: 14px;
+        opacity: 0.2;
+        transition-duration: 0.1s;
         cursor: pointer;
         color: var(--primary-color);
-        background-color: var(--bg-light);
+        //background-color: var(--bg-light);
         display: flex;
         align-items: center;
+        font-size: 28px;
 
         &:hover {
-            background-color: var(--bg-light);
-        }
-        &[active] {
-            border-color: var(--primary-color-light);
             opacity: 1;
         }
-
-        > p {
-            margin-left: 12px !important;
+        &[active] {
+            //background-color: var(--secondary-color);
+            color: var(--secondary-color);
+            //border-color: var(--primary-color-light);
+            opacity: 1;
         }
     }
 }
@@ -75,9 +70,18 @@ h4 {
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: 14px;
-        > div {
+        > button {
             margin: 0;
             justify-content: center;
+            text-align: center;
+            background-color: var(--bg-light);
+            color: var(--primary-color-light);
+
+            &[active] {
+                //background-color: var(--secondary-color);
+                color: var(--primary-color);
+                //color: #fff;
+            }
         }
     }
 }

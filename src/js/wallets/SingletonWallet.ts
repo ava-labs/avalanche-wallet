@@ -18,7 +18,8 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 
-import { StandardTx, StandardUnsignedTx, UTXOResponse } from 'avalanche/dist/common'
+// import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
+import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import {
@@ -38,6 +39,7 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
+import Erc20Token from '@/js/Erc20Token'
 var uniqid = require('uniqid')
 
 class SingletonWallet implements AvaWalletCore, UnsafeWallet {
@@ -422,10 +424,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     }
 
     async importToCChain(): Promise<string> {
-        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
-            this.ethAddressBech,
-            avm.getBlockchainID()
-        )
+        const utxoResponse = await cChain.getUTXOs(this.ethAddressBech, avm.getBlockchainID())
         const utxoSet: EVMUTXOSet = utxoResponse.utxos
 
         if (utxoSet.getAllUTXOs().length === 0) {
@@ -705,6 +704,49 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
         }
 
         let signedTx = await account.signTransaction(txConfig)
+        let err,
+            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+
+        if (err) {
+            console.error(err)
+            throw err
+        }
+
+        return receipt.transactionHash
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+
+        const txConfig = {
+            from: from,
+            gasPrice: gasPrice,
+            gas: gasLimit,
+            to: token.data.address,
+            data: tx.encodeABI(),
+        }
+
+        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+        let signedTx = await account.signTransaction(txConfig)
+
         let err,
             receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
 

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div v-if="!isEmpty">
+    <div class="collectibles_view no_scroll_bar" @scroll="onScroll" :scroll="isScroll">
+        <div v-if="!isEmpty" class="list">
             <CollectibleFamilyRow
                 v-for="fam in nftFamsArray"
                 :key="fam.id"
@@ -32,6 +32,7 @@ import { NftFamilyDict } from '@/store/modules/assets/types'
 })
 export default class Collectibles extends Vue {
     @Prop() search!: string
+    isScroll = false
 
     get isEmpty(): boolean {
         // let nftUtxos = this.$store.getters.walletNftUTXOs.length
@@ -90,12 +91,35 @@ export default class Collectibles extends Vue {
         let dict = this.$store.state.Assets.nftFamsDict
         return dict
     }
+
+    onScroll(ev: any) {
+        let val = ev.target.scrollTop
+        if (val > 0) {
+            this.isScroll = true
+        } else {
+            this.isScroll = false
+        }
+    }
 }
 </script>
 <style lang="scss" scoped>
 @use '../../../main';
 
 $flip_dur: 0.6s;
+
+.collectibles_view {
+    height: 100%;
+    overflow: scroll;
+    transition-duration: 0.2s;
+    border-top: 0px solid transparent;
+    &[scroll] {
+        border-top: 3px solid var(--bg-wallet);
+    }
+}
+
+.list {
+    max-height: 50px;
+}
 
 .coming_soon {
     padding-top: 60px;
@@ -112,16 +136,6 @@ $flip_dur: 0.6s;
     }
 }
 
-.list {
-    //display: grid;
-    //padding: 30px 0;
-    //grid-template-columns: repeat(4, 1fr);
-    //grid-row-gap: 15px;
-    //grid-column-gap: 15px;
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .nft_card {
     transition-duration: 0.3s;
     width: 140px;
@@ -129,23 +143,8 @@ $flip_dur: 0.6s;
 }
 
 @include main.mobile-device {
-    .list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@include main.large-device {
-    .list {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-@include main.xl-device {
-    .list {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-@include main.largest-device {
-    .list {
-        grid-template-columns: repeat(6, 1fr);
+    .collectibles_view {
+        height: 90vh;
     }
 }
 </style>

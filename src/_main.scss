@@ -94,9 +94,12 @@ $s-size-mobile: 14px;
     }
 }
 
-.hover_border {
-    @include highlight-border;
+
+video{
+    outline: none;
 }
+
+
 
 *[tooltip]:hover:before {
     border-radius: 4px;
@@ -120,6 +123,18 @@ button {
 textarea,
 input {
     @include highlight-border;
+
+    &[disabled]{
+        border-color: transparent !important;
+    }
+}
+
+.hover_border {
+    @include highlight-border;
+
+    &[disabled]{
+        border-color: transparent !important;
+    }
 }
 
 input[type='number']{
@@ -364,6 +379,10 @@ textarea {
         border-color: var(--primary-color-light) !important;
         color: var(--primary-color-light) !important;
     }
+
+    &[disabled]{
+        border-color: transparent !important;
+    }
 }
 
 .v-chip {
@@ -398,10 +417,11 @@ textarea {
     color: var(--primary-color) !important;
     font-size: 13px;
 
-    @include highlight-border //&:focus-within {
-        //  outline: 1px solid var(--secondary-color);
-        //}
-;
+    @include highlight-border;
+
+    &[disabled]{
+        border-color: transparent !important;
+    }
 }
 
 html[data-theme='day'] {
@@ -451,6 +471,14 @@ p.err {
     color: var(--error);
     font-size: 0.9rem;
     margin: 4px 0;
+}
+
+.no_scroll_bar{
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 @include medium-device {

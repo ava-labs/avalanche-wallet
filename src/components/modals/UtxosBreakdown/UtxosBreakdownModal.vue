@@ -84,13 +84,15 @@ export default class UtxosBreakdownModal extends Vue {
     }
 
     get avmUTXOs(): AVMUTXO[] {
-        let utxos = this.wallet!.getUTXOSet().getAllUTXOs()
+        if (!this.wallet) return []
+        let utxos = this.wallet.getUTXOSet().getAllUTXOs()
         let sorted = utxos.sort(this.sortFnc)
         return sorted
     }
 
     get platformUTXOs(): PlatformUTXO[] {
-        let utxos = this.wallet!.getPlatformUTXOSet().getAllUTXOs()
+        if (!this.wallet) return []
+        let utxos = this.wallet.getPlatformUTXOSet().getAllUTXOs()
         let sorted = utxos.sort(this.sortFnc)
         return sorted
     }

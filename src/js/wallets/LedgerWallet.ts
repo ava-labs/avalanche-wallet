@@ -22,7 +22,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import {
     AVMConstants,
     OperationTx,
-    SelectCredentialClass,
+    SelectCredentialClass as AVMSelectCredentialClass,
     TransferableOperation,
     TransferableOutput as AVMTransferableOutput,
     Tx as AVMTx,
@@ -38,6 +38,7 @@ import {
     UnsignedTx as PlatformUnsignedTx,
     UTXOSet as PlatformUTXOSet,
     PlatformVMConstants,
+    SelectCredentialClass as PlatformSelectCredentialClass,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
@@ -47,6 +48,7 @@ import {
     Tx as EvmTx,
     EVMConstants,
     EVMInput,
+    SelectCredentialClass as EVMSelectCredentialClass,
 } from 'avalanche/dist/apis/evm'
 
 import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
@@ -64,8 +66,9 @@ import {
     ParseableEvmTxEnum,
 } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
+import Erc20Token from '@/js/Erc20Token'
 
-export const MIN_EVM_SUPPORT_V = '0.4.0'
+export const MIN_EVM_SUPPORT_V = '0.4.2'
 
 const isOdd = (str: string) => str.length % 2 !== 0
 const toHex = (value: BN | number) => {
@@ -116,18 +119,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         hd.publicKey = res.public_key
         hd.chainCode = res.chain_code
 
-        let hdEth
-        // TODO: enable when we want users upgrading after ledger fixes a few issues
-        // const versionCheck = config.version >= MIN_EVM_SUPPORT_V
-        const versionCheck = false
-        if (versionCheck) {
-            let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
-            hdEth = new HDKey()
-            // @ts-ignore
-            hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
-            // @ts-ignore
-            hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
-        }
+        let ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
+        let hdEth = new HDKey()
+        // @ts-ignore
+        hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
+        // @ts-ignore
+        hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
 
         return new LedgerWallet(app, hd, config, hdEth, eth)
     }
@@ -283,6 +280,15 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             console.log(e)
         }
 
+        let CredentialClass
+        if (chainId === 'X') {
+            CredentialClass = AVMSelectCredentialClass
+        } else if (chainId === 'P') {
+            CredentialClass = PlatformSelectCredentialClass
+        } else {
+            CredentialClass = EVMSelectCredentialClass
+        }
+
         // Try to get evm inputs, it will fail if there are none, ignore and continue
         try {
             evmInputs = (tx as EVMExportTx).getInputs()
@@ -292,8 +298,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         for (let i = 0; i < items.length; i++) {
             const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
-            const cred: Credential = SelectCredentialClass(items[i].getInput().getCredentialID())
-
+            const cred: Credential = CredentialClass(items[i].getInput().getCredentialID())
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = i + j
                 let pathStr = paths[pathIndex]
@@ -310,7 +315,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         for (let i = 0; i < operations.length; i++) {
             let op = operations[i].getOperation()
             const sigidxs: SigIdx[] = op.getSigIdxs()
-            const cred: Credential = SelectCredentialClass(op.getCredentialID())
+            const cred: Credential = CredentialClass(op.getCredentialID())
 
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = items.length + i + j
@@ -328,7 +333,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         for (let i = 0; i < evmInputs.length; i++) {
             let evmInput = evmInputs[i]
             const sigidxs: SigIdx[] = evmInput.getSigIdxs()
-            const cred: Credential = SelectCredentialClass(evmInput.getCredentialID())
+            const cred: Credential = CredentialClass(evmInput.getCredentialID())
 
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = items.length + i + j
@@ -637,6 +642,19 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let canLedgerParse = this.config.version >= '0.3.1'
         let isParsableType = txType in parseableTxs && isAvaxOnly
 
+        if (!isAVM) {
+            // TODO: Remove after ledger is fixed
+            // If UTXOS contain lockedStakeable funds always use sign hash
+            let txIns = unsignedTx.getTransaction().getIns()
+            for (var i = 0; i < txIns.length; i++) {
+                let typeID = txIns[i].getInput().getTypeID()
+                if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
+                    canLedgerParse = false
+                    break
+                }
+            }
+        }
+
         let signedTx
         if (canLedgerParse && isParsableType) {
             signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(
@@ -927,6 +945,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             'C'
         )) as EvmTx
 
+        store.commit('Ledger/closeModal')
+
         return cChain.issueTx(tx)
     }
 
@@ -1099,14 +1119,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
         return await avm.issueTx(signed)
     }
-    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
+    async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number, txParams?: any) {
         const nonce = await web3.eth.getTransactionCount(this.ethAddress)
         const chainId = await web3.eth.getChainId()
         const networkId = await web3.eth.net.getId()
         const chainParams = {
             common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
         }
-        const partialTxParams = {
+        const partialTxParams = txParams || {
             to,
             nonce: toHex(nonce),
             gasPrice: toHex(gasPrice),
@@ -1128,44 +1148,97 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             Buffer.from([]),
         ])
 
-        // Ledger cannot parse amounts greater than 2^64
-        // 2^64 = 1.8446744e+19
-        // nAVAX is denominated in GWEI so obsidian adds 9 decimals
-        // 20 AVAX = 20000000000 GWEI = 20000000000000000000 WEI
-        // Remove when this constraint is fixed
-        const MAX = '18446744000000000000'
+        try {
+            let amtNano = bnToBig(amount, 9)
+            let totFee = gasPrice.mul(new BN(gasLimit))
+            let feeNano = bnToBig(totFee, 9)
+            // Open Modal Prompt
+            store.commit('Ledger/openModal', {
+                title: 'Transfer',
+                messages: [
+                    {
+                        title: 'Amount',
+                        value: `${amtNano.toLocaleString(0)} nAVAX`,
+                    },
+                    {
+                        title: 'To',
+                        value: `${to}`,
+                    },
+                    {
+                        title: 'Fee',
+                        value: `${feeNano.toLocaleString(0)} GWEI`,
+                    },
+                ],
+                info: null,
+            })
+            const signature = await this.ethApp.signTransaction(
+                LEDGER_ETH_ACCOUNT_PATH,
+                rawUnsignedTx
+            )
+            store.commit('Ledger/closeModal')
 
-        let signature = {} as { v: string; r: string; s: string }
-        if (unsignedTx.value.gte(new BN(MAX))) {
-            // let bip32Paths = this.pathsToUniqueBipPaths(['0/0'])
-            // const accountPath = bippath.fromString(`${ETH_ACCOUNT_PATH}`)
-            // const sigMap = await this.app.signHash(accountPath, bip32Paths, unsignedTx.hash())
-            // const response = sigMap.get('0/0')
-            // signature.v = '150f5'
-            // signature.r = response.slice(1, 1 + 32).toString('hex')
-            // signature.s = response.slice(1 + 32, 1 + 32 + 32).toString('hex')
-            throw 'Amount too big. Must be less than 18 AVAX.'
-        } else {
-            signature = await this.ethApp.signTransaction(LEDGER_ETH_ACCOUNT_PATH, rawUnsignedTx)
-        }
-
-        const signatureBN = {
-            v: new BN(signature.v, 16),
-            r: new BN(signature.r, 16),
-            s: new BN(signature.s, 16),
-        }
-        const signedTx = Transaction.fromTxData({ ...partialTxParams, ...signatureBN }, chainParams)
-        let err,
-            receipt = await web3.eth.sendSignedTransaction(
-                '0x' + signedTx.serialize().toString('hex')
+            const signatureBN = {
+                v: new BN(signature.v, 16),
+                r: new BN(signature.r, 16),
+                s: new BN(signature.s, 16),
+            }
+            const signedTx = Transaction.fromTxData(
+                { ...partialTxParams, ...signatureBN },
+                chainParams
             )
 
-        if (err) {
-            console.error(err)
-            throw err
+            let err,
+                receipt = await web3.eth.sendSignedTransaction(
+                    '0x' + signedTx.serialize().toString('hex')
+                )
+
+            if (err) {
+                console.error(err)
+                throw err
+            }
+
+            return receipt.transactionHash
+        } catch (e) {
+            store.commit('Ledger/closeModal')
+            console.error(e)
+            throw e
+        }
+    }
+
+    // TODO: Move to shared file
+    async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
+        let from = '0x' + this.ethAddress
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
+    }
+
+    async sendERC20(
+        to: string,
+        amount: BN,
+        gasPrice: BN,
+        gasLimit: number,
+        token: Erc20Token
+    ): Promise<string> {
+        const tx = token.createTransferTx(to, amount)
+        let from = '0x' + this.ethAddress
+
+        const nonce = await web3.eth.getTransactionCount(this.ethAddress)
+
+        const partialTxParams = {
+            to: token.data.address,
+            from,
+            nonce: toHex(nonce),
+            gasPrice: toHex(gasPrice),
+            gasLimit: toHex(gasLimit),
+            value: toHex(0),
+            data: tx.encodeABI(),
         }
 
-        return receipt.transactionHash
+        return this.sendEth(token.data.address, amount, gasPrice, gasLimit, partialTxParams)
     }
 }
 

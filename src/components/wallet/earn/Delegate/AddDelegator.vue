@@ -304,7 +304,9 @@ export default class AddDelegator extends Vue {
                 this.formRewardAddr,
                 this.formUtxos
             )
-            this.onsuccess(txId)
+            this.isSuccess = true
+            this.txId = txId
+            this.updateTxStatus(txId)
         } catch (e) {
             this.onerror(e)
             this.isLoading = false
@@ -312,15 +314,11 @@ export default class AddDelegator extends Vue {
     }
 
     onsuccess(txId: string) {
-        this.txId = txId
-        this.isSuccess = true
         this.$store.dispatch('Notifications/add', {
             type: 'success',
             title: 'Delegator Added',
-            message: 'Your tokens are now locked to stake.',
+            message: 'Your tokens are now locked for staking.',
         })
-
-        this.updateTxStatus(txId)
 
         // Update History
         setTimeout(() => {
@@ -346,6 +344,10 @@ export default class AddDelegator extends Vue {
         } else {
             this.txStatus = status
             this.txReason = reason
+
+            if (status === 'Committed') {
+                this.onsuccess(txId)
+            }
         }
     }
 

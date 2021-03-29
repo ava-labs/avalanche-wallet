@@ -1,5 +1,5 @@
 <template>
-    <div v-if="utxos.length > 0">
+    <div v-if="utxos.length > 0" class="collectible_family">
         <p class="fam_title">{{ family.name }}</p>
         <div class="group_grid">
             <div
@@ -79,16 +79,19 @@ export default class CollectibleFamily extends Vue {
 <style scoped lang="scss">
 @use '../../../main';
 
-.fam_title {
-    border-bottom: 2px solid var(--bg-light);
+.collectible_family {
+    display: grid;
+    grid-template-columns: 1fr max-content;
 }
-$card_w: 40px;
+//.fam_title {
+//    border-bottom: 2px solid var(--bg-light);
+//}
+$card_w: 80px;
 
 .group_grid {
     display: grid;
     grid-template-columns: repeat(5, $card_w);
     gap: 12px;
-    padding: 8px 0;
 }
 
 .card {
@@ -118,13 +121,23 @@ $card_w: 40px;
 }
 
 @include main.mobile-device {
-    .group_grid {
-        grid-template-columns: repeat(5, 1fr);
+    $card_w: 60px;
+
+    .collectible_family {
+        display: block;
+    }
+    .fam_title {
+        color: var(--primary-color-light);
+        font-size: 12px;
+        margin-bottom: 8px !important;
     }
 
+    .group_grid {
+        grid-template-columns: repeat(5, $card_w);
+    }
     .card {
-        width: 100%;
-        padding-top: 100%;
+        width: $card_w;
+        height: $card_w;
     }
 }
 </style>

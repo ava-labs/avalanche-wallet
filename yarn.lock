@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@avalabs/vue_components@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.7.4.tgz#8fffe7005764cb2ab8daf3cfcdf0776df617af96"
-  integrity sha512-cITC5rcuNTKC/1ioGm5Bn2dKqPr1M4VduqCy7tgtCyL82n/o7V06VpLgJrZOtFrwWBwyuBRir/dhyU4ebT3JUg==
+"@avalabs/vue_components@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.8.1.tgz#894247bab91bbd5247610589e5af5a404d8a7c53"
+  integrity sha512-HrFk2bdKQVCdsnV9Tnm7I2jIAfUnxkffZJw3Q7eq/AgEQJbKEzHByEVdSMoy0r2qieeSj1MrwstqCk0S5scvXg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.27"
     "@fortawesome/free-solid-svg-icons" "^5.12.1"
@@ -15,7 +15,6 @@
     bn.js "^5.1.1"
     core-js "^3.6.4"
     vue "^2.6.11"
-    vue-currency-input "^1.21.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.11", "@babel/code-frame@^7.8.3":
   version "7.12.11"
@@ -1685,6 +1684,11 @@
     "@octokit/openapi-types" "^2.0.0"
     "@types/node" ">= 8"
 
+"@openzeppelin/contracts@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.4.0.tgz#9a1669ad5f9fdfb6e273bb5a4fed10cb4cc35eb0"
+  integrity sha512-qh+EiHWzfY/9CORr+eRUkeEUP1WiFUcq3974bLHwyYzLBUtK6HPaMkIUHi74S1rDTZ0sNz42DwPc5A4IJvN3rg==
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.1.tgz#a21117b19ee9be70c379ec1877537ef2e1c63301"
@@ -3115,17 +3119,17 @@ available-typed-arrays@^1.0.2:
   dependencies:
     array-filter "^1.0.0"
 
-avalanche@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.1.0.tgz#e13b5b5a069192be8d6ff8fe576f05afb6bebea9"
-  integrity sha512-WgGWBOfqCWAaBuTeiMbpmNk2Gn6EoI2oWreRSJQT5DfUcwh+YvVxpXr/IXP56l9mp2LH99G3myoz4yt0R5VxvA==
+avalanche@3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.2.2.tgz#20374e94d8b73059d0611a3e258b32d143793cca"
+  integrity sha512-jicncDx5mr/FuGDGaILRm8Rpv6mNxVO69IDtTO+j0fBxtE+ZeZL9ZPxcVin55ddP8u/buBdSBK/WCwiXpzw4nw==
   dependencies:
-    axios "0.19.2"
+    axios "0.21.1"
     bech32 "1.1.4"
     bn.js "4.11.8"
     buffer "5.5.0"
     create-hash "1.2.0"
-    elliptic "6.5.3"
+    elliptic "6.5.4"
     node-forge "^0.10.0"
     secp256k1 "4.0.2"
     store2 "2.11.0"
@@ -3141,13 +3145,6 @@ aws4@^1.8.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
-
-axios@0.19.2:
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
-  integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
-  dependencies:
-    follow-redirects "1.5.10"
 
 axios@0.21.1:
   version "0.21.1"
@@ -3640,7 +3637,7 @@ broadcast-channel@^3.1.0:
     rimraf "3.0.2"
     unload "2.2.0"
 
-brorand@^1.0.1:
+brorand@^1.0.1, brorand@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
@@ -5186,13 +5183,6 @@ debug@4.3.1, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "2.1.2"
 
-debug@=3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
-  integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
-  dependencies:
-    ms "2.0.0"
-
 debug@^3.1.0, debug@^3.1.1, debug@^3.2.6:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
@@ -5630,6 +5620,19 @@ elliptic@6.5.3, elliptic@^6.4.0, elliptic@^6.5.2, elliptic@^6.5.3:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+elliptic@6.5.4:
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.4.tgz#da37cebd31e79a1367e941b592ed1fbebd58abbb"
+  integrity sha512-iLhC6ULemrljPZb+QutR5TQGB+pdW6KGD5RSegS+8sorOZT+rdQFbsQFJgvN3eRqNALqJer4oQ16YvJHlU8hzQ==
+  dependencies:
+    bn.js "^4.11.9"
+    brorand "^1.1.0"
+    hash.js "^1.0.0"
+    hmac-drbg "^1.0.1"
+    inherits "^2.0.4"
+    minimalistic-assert "^1.0.1"
+    minimalistic-crypto-utils "^1.0.1"
+
 emittery@^0.7.1:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.7.2.tgz#25595908e13af0f5674ab419396e2fb394cdfa82"
@@ -6038,7 +6041,7 @@ ethereumjs-common@^1.3.2, ethereumjs-common@^1.5.0:
   resolved "https://registry.yarnpkg.com/ethereumjs-common/-/ethereumjs-common-1.5.2.tgz#2065dbe9214e850f2e955a80e650cb6999066979"
   integrity sha512-hTfZjwGX52GS2jcVO6E2sx4YuFnf0Fhp5ylo4pEPhEffNln7vS59Hr5sLnp3/QCazFLluuBZ+FZ6J5HTp0EqCA==
 
-ethereumjs-tx@^2.1.1:
+ethereumjs-tx@^2.1.1, ethereumjs-tx@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ethereumjs-tx/-/ethereumjs-tx-2.1.2.tgz#5dfe7688bf177b45c9a23f86cf9104d47ea35fed"
   integrity sha512-zZEK1onCeiORb0wyCXUvg94Ve5It/K6GD1K+26KfFKodiBiS6d9lfCXlUKGBBdQ+bv7Day+JK0tj1K+BeNFRAw==
@@ -6632,13 +6635,6 @@ flush-write-stream@^1.0.0:
   dependencies:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
-
-follow-redirects@1.5.10:
-  version "1.5.10"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.10.tgz#7b7a9f9aea2fdff36786a94ff643ed07f4ff5e2a"
-  integrity sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
-  dependencies:
-    debug "=3.1.0"
 
 follow-redirects@^1.0.0, follow-redirects@^1.10.0:
   version "1.13.1"
@@ -7321,7 +7317,7 @@ highlight.js@^10.0.0:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.5.0.tgz#3f09fede6a865757378f2d9ebdcbc15ba268f98f"
   integrity sha512-xTmvd9HiIHR6L53TMC7TKolEj65zG1XU+Onr8oi86mYa+nLcIbxTTWkpW7CsEwv/vK7u1zb8alZIMLDqqN6KTw==
 
-hmac-drbg@^1.0.0:
+hmac-drbg@^1.0.0, hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
   integrity sha1-0nRXAQJabHdabFRXk+1QL8DGSaE=
@@ -13829,11 +13825,6 @@ vue-country-flag@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/vue-country-flag/-/vue-country-flag-2.0.2.tgz#a2df339378761285699c28b840da5da02253f85f"
   integrity sha512-hRK0ZLcbQNdTo5H4UFOUoN6Tqy0BwepmaG1BNuf6cMyEWRQCkcbwBv0CQJXiNhPI+VYt/DyndQMT+E1/H82F/Q==
-
-vue-currency-input@^1.21.0:
-  version "1.22.4"
-  resolved "https://registry.yarnpkg.com/vue-currency-input/-/vue-currency-input-1.22.4.tgz#f0474ab6f069f857df5d6c8879e5e4ce3bde735b"
-  integrity sha512-7HSMBhMnQTE9Ict16OHv7hlafh4TC9Vtf8A/u1hFIA6hLKB80s94RREDqMjaurdikgTCfJ/yGoMBRu4JWefAbw==
 
 vue-datetime@1.0.0-beta.14:
   version "1.0.0-beta.14"

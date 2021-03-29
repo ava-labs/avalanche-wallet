@@ -303,7 +303,7 @@ export default class BalanceCard extends Vue {
         if (bigBal.lt(Big('1'))) {
             return bigBal.toString()
         } else {
-            return bigBal.toLocaleString(3)
+            return bigBal.toLocaleString()
         }
     }
 
