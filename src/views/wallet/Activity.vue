@@ -82,6 +82,7 @@ const YEAR_MIN = 2020
 const MONTH_MIN = 8
 
 @Component({
+    name: 'activity',
     components: {
         Spinner,
         TxRow,
@@ -106,13 +107,6 @@ export default class Activity extends Vue {
     yearNow = 0
 
     listH = 100
-    activated() {
-        let now = new Date()
-        this.yearNow = now.getFullYear()
-        this.monthNow = now.getMonth()
-        this.scrollToTop()
-        this.setScrollHeight()
-    }
 
     get showList(): boolean {
         if (this.isUpdatingAll || this.isLoading) return false
@@ -150,6 +144,11 @@ export default class Activity extends Vue {
 
     mounted() {
         this.updateHistory()
+
+        let now = new Date()
+        this.yearNow = now.getFullYear()
+        this.monthNow = now.getMonth()
+        this.scrollToTop()
         this.setScrollHeight()
     }
     deleted() {}

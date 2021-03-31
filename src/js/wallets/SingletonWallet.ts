@@ -18,7 +18,8 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 
-import { StandardTx, StandardUnsignedTx, UTXOResponse } from 'avalanche/dist/common'
+// import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
+import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import BN from 'bn.js'
 import {
@@ -423,10 +424,7 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     }
 
     async importToCChain(): Promise<string> {
-        const utxoResponse: UTXOResponse = await cChain.getUTXOs(
-            this.ethAddressBech,
-            avm.getBlockchainID()
-        )
+        const utxoResponse = await cChain.getUTXOs(this.ethAddressBech, avm.getBlockchainID())
         const utxoSet: EVMUTXOSet = utxoResponse.utxos
 
         if (utxoSet.getAllUTXOs().length === 0) {

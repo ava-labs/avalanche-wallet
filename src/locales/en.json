@@ -307,6 +307,7 @@
         "import_mnemonic_err": "Invalid key phrase.",
         "tooltip": "This key will be forgotten when you refresh the browser.",
         "view_priv_key": "View Private Key",
+        "view_priv_key_c": "View C Chain Private Key",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -335,8 +336,9 @@
             "mint_more": "Mint more of this collectible family in the Studio.",
             "mint_submit": "Mint",
             "quantity": "Quantity",
-            "group": "Group ID",
-            "send": "Send"
+            "group": "Group",
+            "send": "Send",
+            "expand": "Expand"
         }
     },
     "earn": {
@@ -689,8 +691,10 @@
             "desc": "Please confirm these actions on your ledger device."
         },
         "ledger_upgrade": {
-            "submit": "Upgrade",
-            "title": "Upgrade Available"
+            "done": "Done",
+            "upgrade": "Upgrade",
+            "title": "Trouble Connecting",
+            "desc": "We're having trouble connecting to your device. Please make sure you have the Avalanche app open and upgraded to the latest version."
         },
         "hd": {
             "future_warn_title": "DO NOT USE THE ADDRESSES BELOW",
@@ -700,6 +704,9 @@
         },
         "tokenlist": {
             "title": "Token lists"
+        },
+        "nft": {
+            "title": "NFT Preview"
         }
     },
     "nav": {

@@ -42,6 +42,7 @@ import RememberKeysModal from '@/components/modals/RememberWallet/RememberKeysMo
 import { WalletNameType } from '@/store/types'
 
 @Component({
+    name: 'manage',
     components: {
         MyKeys,
         ImportKeys,
