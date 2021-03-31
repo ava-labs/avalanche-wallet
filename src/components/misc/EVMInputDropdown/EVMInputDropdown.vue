@@ -50,7 +50,7 @@ import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSele
 export default class EVMInputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
     @Prop({ default: false }) disabled!: boolean
-    @Prop({ default: 470 }) gasPrice!: number
+    @Prop({ default: 225 }) gasPrice!: number
     @Prop({ default: 21000 }) gasLimit!: number
     amt = new BN(0)
 

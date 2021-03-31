@@ -153,7 +153,7 @@ export default class FormC extends Vue {
     isSuccess = false
     addressIn = ''
     amountIn = new BN(0)
-    gasPrice = 470
+    gasPrice = 225
     gasLimit = 21000
     err = ''
     isLoading = false
@@ -177,7 +177,7 @@ export default class FormC extends Vue {
         this.formToken = token
 
         if (token === 'native') {
-            this.gasPrice = 470
+            this.gasPrice = 225
             this.gasLimit = 21000
         } else {
             // this.gasPrice = token.getTransferGasPrice()
@@ -315,7 +315,7 @@ export default class FormC extends Vue {
 
         this.amountIn = new BN(0)
         this.gasLimit = 21000
-        this.gasPrice = 470
+        this.gasPrice = 225
         this.addressIn = ''
     }
 
