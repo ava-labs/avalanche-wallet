@@ -162,7 +162,7 @@
             "confirm": "Confirm",
             "cancel": "Cancel",
             "success": {
-                "desc": "Transaction Send",
+                "desc": "Transaction Sent",
                 "label1": "Transaction Hash"
             },
             "reset": "Start Again"

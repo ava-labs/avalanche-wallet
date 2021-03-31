@@ -299,6 +299,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         for (let i = 0; i < items.length; i++) {
             const sigidxs: SigIdx[] = items[i].getInput().getSigIdxs()
             const cred: Credential = CredentialClass(items[i].getInput().getCredentialID())
+
             for (let j = 0; j < sigidxs.length; j++) {
                 let pathIndex = i + j
                 let pathStr = paths[pathIndex]

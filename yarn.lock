@@ -3119,10 +3119,10 @@ available-typed-arrays@^1.0.2:
   dependencies:
     array-filter "^1.0.0"
 
-avalanche@3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.2.2.tgz#20374e94d8b73059d0611a3e258b32d143793cca"
-  integrity sha512-jicncDx5mr/FuGDGaILRm8Rpv6mNxVO69IDtTO+j0fBxtE+ZeZL9ZPxcVin55ddP8u/buBdSBK/WCwiXpzw4nw==
+avalanche@3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.2.5.tgz#d988f055ecbff4628b299b9515673874c1c8f0de"
+  integrity sha512-gNWczhcP0ShDOarlpvhjme6e+531UOe7sD62joE7qFpTK8YHD9QtaDX8tjF2K0nHYVFGv6vykP8QNhIZKQSZPA==
   dependencies:
     axios "0.21.1"
     bech32 "1.1.4"
