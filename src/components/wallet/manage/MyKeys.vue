@@ -27,7 +27,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import KeyRow from '@/components/wallet/manage/KeyRow.vue'
 import RememberKey from '@/components/misc/RememberKey.vue'
-import { AvaWallet } from '@/js/AvaWallet'
+import { WalletType } from '@/store/types'
 
 @Component({
     components: {
@@ -36,11 +36,11 @@ import { AvaWallet } from '@/js/AvaWallet'
     },
 })
 export default class MyKeys extends Vue {
-    selectWallet(wallet: AvaWallet) {
+    selectWallet(wallet: WalletType) {
         this.$store.dispatch('activateWallet', wallet)
         this.$store.dispatch('History/updateTransactionHistory')
     }
-    async removeWallet(wallet: AvaWallet) {
+    async removeWallet(wallet: WalletType) {
         let msg = this.$t('keys.del_check') as string
         let isConfirm = confirm(msg)
 
@@ -53,8 +53,8 @@ export default class MyKeys extends Vue {
         }
     }
 
-    get wallets(): AvaWallet[] {
-        let wallets: AvaWallet[] = this.$store.state.wallets
+    get wallets(): WalletType[] {
+        let wallets: WalletType[] = this.$store.state.wallets
 
         let res = wallets.filter((wallet) => {
             if (this.activeWallet === wallet) return false
@@ -64,7 +64,7 @@ export default class MyKeys extends Vue {
         return res
     }
 
-    get activeWallet() {
+    get activeWallet(): WalletType {
         return this.$store.state.activeWallet
     }
 }

@@ -43,7 +43,8 @@ import {
 import { Tx as EvmTx, UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletCore } from '@/js/wallets/WalletCore'
-import { avmGetAllUTXOs, platformGetAllUTXOs, WalletHelper } from '@/helpers/wallet_helper'
+import { WalletHelper } from '@/helpers/wallet_helper'
+import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { KeyChain as PlatformVMKeyChain } from 'avalanche/dist/apis/platformvm/keychain'
 import { Transaction } from '@ethereumjs/tx'
@@ -525,17 +526,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         this.getUTXOs()
     }
 
-    // async sign<
-    //     UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-    //     SignedTx extends AVMTx | PlatformTx
-    // >(unsignedTx: UnsignedTx, isAVM = true): Promise<SignedTx> {
-    //     if (isAVM) {
-    //         return (unsignedTx as AVMUnsignedTx).sign(this.keyChain) as SignedTx
-    //     } else {
-    //         return (unsignedTx as PlatformUnsignedTx).sign(this.platformKeyChain) as SignedTx
-    //     }
-    // }
-
     async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
         let keychain = this.keyChain
 
@@ -557,9 +547,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     async signEvm(tx: Transaction) {
         let keyBuff = Buffer.from(this.ethKey, 'hex')
         return tx.sign(keyBuff)
-        // let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
-        // let signedTx = await account.signTransaction(txConfig)
-        // return signedTx
     }
 
     async signMessage(msgStr: string): Promise<string> {

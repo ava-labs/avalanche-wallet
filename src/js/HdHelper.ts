@@ -20,11 +20,8 @@ import { getAddressChains } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/IAvaHdWallet'
-import {
-    avmGetAllUTXOs,
-    getAtomicUTXOsForAllAddresses,
-    platformGetAllUTXOs,
-} from '@/helpers/wallet_helper'
+import { getAtomicUTXOsForAllAddresses } from '@/helpers/wallet_helper'
+import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 

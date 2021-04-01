@@ -449,7 +449,6 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         // return cChain.issueTx(tx)
     }
 
-    // TODO: Move to Core HD file
     async importToCChain(): Promise<string> {
         return await WalletHelper.importToCChain(this)
         //
