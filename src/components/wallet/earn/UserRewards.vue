@@ -52,7 +52,7 @@ export default class UserRewards extends Vue {
         let wallet: AvaWalletCore = this.$store.state.activeWallet
         if (!wallet) return []
 
-        return wallet.getExtendedPlatformAddresses()
+        return wallet.getAllAddressesP()
     }
 
     get validators(): ValidatorRaw[] {

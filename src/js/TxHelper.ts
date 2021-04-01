@@ -27,6 +27,7 @@ import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/e
 import { ChainIdType } from '@/constants'
 
 import { web3 } from '@/evm'
+import { AvmExportChainType } from '@/js/wallets/IAvaHdWallet'
 
 export async function buildUnsignedTransaction(
     orders: (ITransaction | AVMUTXO)[],
@@ -214,21 +215,79 @@ export async function buildMintNftTx(
     )
     return mintTx
 }
-export async function buildExportTransaction(
-    sourceChain: ChainIdType,
-    destinationChain: ChainIdType,
-    utxoSet: AVMUTXOSet | PlatformUTXOSet,
+
+// export async function buildExportTransaction(
+//     sourceChain: ChainIdType,
+//     destinationChain: ChainIdType,
+//     utxoSet: AVMUTXOSet | PlatformUTXOSet,
+//     fromAddresses: string[],
+//     toAddress: string,
+//     amount: BN, // export amount + fee
+//     sourceChangeAddress: string,
+//     evmBechAddress?: string // Used ONLY for c chain exports
+// ): Promise<AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx> {
+//     let destinationChainId
+//     switch (destinationChain) {
+//         case 'X':
+//             destinationChainId = avm.getBlockchainID()
+//             break
+//         case 'P':
+//             destinationChainId = pChain.getBlockchainID()
+//             break
+//         case 'C':
+//             destinationChainId = cChain.getBlockchainID()
+//             break
+//     }
+//     if (sourceChain === 'X') {
+//         return await avm.buildExportTx(
+//             utxoSet as AVMUTXOSet,
+//             amount,
+//             destinationChainId,
+//             [toAddress],
+//             fromAddresses,
+//             [sourceChangeAddress]
+//         )
+//     } else if (sourceChain === 'P') {
+//         return await pChain.buildExportTx(
+//             utxoSet as PlatformUTXOSet,
+//             amount,
+//             destinationChainId,
+//             [toAddress],
+//             fromAddresses,
+//             [sourceChangeAddress]
+//         )
+//     } else if (sourceChain === 'C') {
+//         const txcount = await web3.eth.getTransactionCount(fromAddresses[0])
+//         const nonce: number = txcount
+//         const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
+//         const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
+//
+//         let fromAddressHex = fromAddresses[0]
+//         let fromAddressBech = evmBechAddress!
+//
+//         return await cChain.buildExportTx(
+//             amount,
+//             avaxAssetIDStr,
+//             destinationChainId,
+//             fromAddressHex,
+//             fromAddressBech,
+//             [toAddress],
+//             nonce
+//         )
+//     }
+//     throw 'Invalid source chain.'
+// }
+
+export async function buildAvmExportTransaction(
+    destinationChain: AvmExportChainType,
+    utxoSet: AVMUTXOSet,
     fromAddresses: string[],
     toAddress: string,
     amount: BN, // export amount + fee
-    sourceChangeAddress: string,
-    evmBechAddress?: string // Used ONLY for c chain exports
-): Promise<AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx> {
+    sourceChangeAddress: string
+) {
     let destinationChainId
     switch (destinationChain) {
-        case 'X':
-            destinationChainId = avm.getBlockchainID()
-            break
         case 'P':
             destinationChainId = pChain.getBlockchainID()
             break
@@ -236,44 +295,59 @@ export async function buildExportTransaction(
             destinationChainId = cChain.getBlockchainID()
             break
     }
-    if (sourceChain === 'X') {
-        return await avm.buildExportTx(
-            utxoSet as AVMUTXOSet,
-            amount,
-            destinationChainId,
-            [toAddress],
-            fromAddresses,
-            [sourceChangeAddress]
-        )
-    } else if (sourceChain === 'P') {
-        return await pChain.buildExportTx(
-            utxoSet as PlatformUTXOSet,
-            amount,
-            destinationChainId,
-            [toAddress],
-            fromAddresses,
-            [sourceChangeAddress]
-        )
-    } else if (sourceChain === 'C') {
-        const txcount = await web3.eth.getTransactionCount(fromAddresses[0])
-        const nonce: number = txcount
-        const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
-        const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
 
-        let fromAddressHex = fromAddresses[0]
-        let fromAddressBech = evmBechAddress!
+    return await avm.buildExportTx(
+        utxoSet as AVMUTXOSet,
+        amount,
+        destinationChainId,
+        [toAddress],
+        fromAddresses,
+        [sourceChangeAddress]
+    )
+}
 
-        return await cChain.buildExportTx(
-            amount,
-            avaxAssetIDStr,
-            destinationChainId,
-            fromAddressHex,
-            fromAddressBech,
-            [toAddress],
-            nonce
-        )
-    }
-    throw 'Invalid source chain.'
+export async function buildPlatformExportTransaction(
+    utxoSet: PlatformUTXOSet,
+    fromAddresses: string[],
+    toAddress: string,
+    amount: BN, // export amount + fee
+    sourceChangeAddress: string
+) {
+    let destinationChainId = avm.getBlockchainID()
+
+    return await pChain.buildExportTx(
+        utxoSet,
+        amount,
+        destinationChainId,
+        [toAddress],
+        fromAddresses,
+        [sourceChangeAddress]
+    )
+}
+
+export async function buildEvmExportTransaction(
+    fromAddresses: string[],
+    toAddress: string,
+    amount: BN, // export amount + fee
+    fromAddressBech: string
+) {
+    let destinationChainId = avm.getBlockchainID()
+
+    const nonce = await web3.eth.getTransactionCount(fromAddresses[0])
+    const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
+    const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
+
+    let fromAddressHex = fromAddresses[0]
+
+    return await cChain.buildExportTx(
+        amount,
+        avaxAssetIDStr,
+        destinationChainId,
+        fromAddressHex,
+        fromAddressBech,
+        [toAddress],
+        nonce
+    )
 }
 
 export enum AvmTxNameEnum {

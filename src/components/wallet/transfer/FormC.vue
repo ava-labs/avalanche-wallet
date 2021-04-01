@@ -406,6 +406,8 @@ export default class FormC extends Vue {
         this.err = err
         this.isLoading = false
 
+        console.error(err)
+
         this.$store.dispatch('Notifications/add', {
             title: this.$t('transfer.error_title'),
             message: this.$t('transfer.error_msg'),

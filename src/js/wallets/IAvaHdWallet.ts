@@ -15,7 +15,11 @@ import {
     UTXO as PlatformUTXO,
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
-import { KeyChain as EVMKeyChain } from 'avalanche/dist/apis/evm'
+import {
+    KeyChain as EVMKeyChain,
+    UnsignedTx as EVMUnsignedTx,
+    Tx as EVMTx,
+} from 'avalanche/dist/apis/evm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
@@ -25,6 +29,8 @@ import { PayloadBase } from 'avalanche/dist/utils'
 import { ChainIdType } from '@/constants'
 import Erc20Token from '@/js/Erc20Token'
 
+import { Transaction } from '@ethereumjs/tx'
+
 // export type wallet_type = "hd" | "singleton";
 
 export interface IIndexKeyCache {
@@ -32,48 +38,70 @@ export interface IIndexKeyCache {
 }
 
 export type ChainAlias = 'X' | 'P'
+export type AvmImportChainType = 'P' | 'C'
+export type AvmExportChainType = 'P' | 'C'
+
+interface IAddressManager {
+    getCurrentAddressAvm(): string
+    getCurrentAddressPlatform(): string
+    // getChangeAddress(): string
+    getChangeAddressAvm(): string
+    getChangeAddressPlatform(): string
+    getDerivedAddresses(): string[]
+    getDerivedAddressesP(): string[]
+    getAllDerivedExternalAddresses(): string[]
+    getAllAddressesX(): string[] // returns all addresses this wallet own on the X chain
+    getAllAddressesP(): string[] // returns all addresses this wallet own on the P chain
+    getHistoryAddresses(): string[]
+    // getExtendedPlatformAddresses(): string[]
+    getPlatformRewardAddress(): string
+    getBaseAddress(): string
+    getEvmAddress(): string
+    getEvmAddressBech(): string
+    getFirstAvailableAddressPlatform(): string
+}
 
 // Every AVA Wallet must implement this.
-export interface AvaWalletCore {
+export interface AvaWalletCore extends IAddressManager {
     id: string // a random string assigned as ID to distinguish between wallets
     type: WalletNameType
     chainId: string
     utxoset: UTXOSet
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
-    buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
-    buildMintNftTx(
-        mintUtxo: AVMUTXO,
-        payload: PayloadBase,
-        quantity: number,
-        ownerAddress: string,
-        changeAddress: string
-    ): Promise<UnsignedTx>
+    // buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
+    // buildMintNftTx(
+    //     mintUtxo: AVMUTXO,
+    //     payload: PayloadBase,
+    //     quantity: number,
+    //     ownerAddress: string,
+    //     changeAddress: string
+    // ): Promise<UnsignedTx>
     ethAddress: string
     ethAddressBech: string
     ethBalance: BN
     isFetchUtxos: boolean // true if fetching utxos
     isInit: boolean // True once the wallet can be used (ex. when HD index is found)
-    getCurrentAddress(): string
-    getChangeAddress(): string
-    getDerivedAddresses(): string[]
-    getAllDerivedExternalAddresses(): string[]
-    getAllAddressesX(): string[] // returns all addresses this wallet own on the X chain
-    getAllAddressesP(): string[] // returns all addresses this wallet own on the P chain
-    getHistoryAddresses(): string[]
-    getExtendedPlatformAddresses(): string[]
+    // getCurrentAddress(): string
+    // getChangeAddress(): string
+    // getDerivedAddresses(): string[]
+    // getAllDerivedExternalAddresses(): string[]
+    // getAllAddressesX(): string[] // returns all addresses this wallet own on the X chain
+    // getAllAddressesP(): string[] // returns all addresses this wallet own on the P chain
+    // getHistoryAddresses(): string[]
+    // getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void
     getUTXOs(): Promise<void>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
-    getCurrentPlatformAddress(): string
+    // getCurrentPlatformAddress(): string
     getPlatformUTXOSet(): PlatformUTXOSet
-    getPlatformRewardAddress(): string
+    // getPlatformRewardAddress(): string
     createNftFamily(name: string, symbol: string, groupNum: number): Promise<string>
     mintNft(mintUtxo: AVMUTXO, payload: PayloadBase, quantity: number): Promise<string>
-    getBaseAddress(): string
+    // getBaseAddress(): string
     getEthBalance(): Promise<BN>
-    getEvmAddress(): string
+    // getEvmAddress(): string
     sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number): Promise<string>
     sendERC20(
         to: string,
@@ -83,13 +111,18 @@ export interface AvaWalletCore {
         token: Erc20Token
     ): Promise<string>
     estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number>
-    sign<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
-    >(
-        unsignedTx: UnsignedTx,
-        isAVM: boolean
-    ): Promise<StandardTx<any, any, any>>
+    // sign<
+    //     UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+    //     SignedTx extends AVMTx | PlatformTx
+    // >(
+    //     unsignedTx: UnsignedTx,
+    //     isAVM: boolean
+    // ): Promise<StandardTx<any, any, any>>
+
+    signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
+    signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
+    signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
+    signEvm(tx: Transaction): Promise<Transaction>
     validate(
         nodeID: string,
         amt: BN,
@@ -107,7 +140,11 @@ export interface AvaWalletCore {
         rewardAddress?: string,
         utxos?: PlatformUTXO[]
     ): Promise<string>
-    chainTransfer(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType): Promise<string>
+    // chainTransfer(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType): Promise<string>
+    exportFromXChain(amt: BN, destinationChain: AvmExportChainType): Promise<string>
+    exportFromPChain(amt: BN): Promise<string>
+    exportFromCChain(amt: BN): Promise<string>
+
     importToPlatformChain(): Promise<string>
     importToXChain(sourceChain: ChainIdType): Promise<string>
     importToCChain(): Promise<string>

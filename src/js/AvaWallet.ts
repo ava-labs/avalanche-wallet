@@ -45,9 +45,9 @@ export class AvaWallet implements AvaWalletCore {
         return this.wallet.getKeyChain()
     }
 
-    getCurrentAddress(): string {
-        return this.wallet.getCurrentAddress()
-    }
+    // getCurrentAddress(): string {
+    //     return this.wallet.getCurrentAddress()
+    // }
 
     getUTXOs(): Promise<UTXOSet> {
         return this.wallet.getUTXOs()

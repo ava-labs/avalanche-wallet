@@ -83,7 +83,7 @@ export default new Vuex.Store({
             if (!state.activeWallet) {
                 state.address = null
             } else {
-                let addrNow = state.activeWallet.getCurrentAddress()
+                let addrNow = state.activeWallet.getCurrentAddressAvm()
                 state.address = addrNow
             }
         },

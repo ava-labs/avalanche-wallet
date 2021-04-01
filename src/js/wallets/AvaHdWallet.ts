@@ -29,13 +29,19 @@ import {
     UTXOSet as EVMUTXOSet,
     KeyChain as EVMKeyChain,
     UnsignedTx as EVMUnsignedTx,
+    Tx as EvmTx,
 } from 'avalanche/dist/apis/evm'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 
 import * as bip39 from 'bip39'
-import { BN, Buffer } from 'avalanche'
+import { BN, Buffer as BufferAvalanche } from 'avalanche'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-import { IAvaHdWallet, IIndexKeyCache } from '@/js/wallets/IAvaHdWallet'
+import {
+    AvmExportChainType,
+    AvmImportChainType,
+    IAvaHdWallet,
+    IIndexKeyCache,
+} from '@/js/wallets/IAvaHdWallet'
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { HdHelper } from '@/js/HdHelper'
@@ -45,12 +51,14 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { digestMessage } from '@/helpers/helper'
-import { buildExportTransaction } from '@/js/TxHelper'
+import { buildAvmExportTransaction, buildEvmExportTransaction } from '@/js/TxHelper'
 import { ChainIdType } from '@/constants'
 import { KeyChain } from 'avalanche/dist/apis/evm'
 // import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
 import Erc20Token from '@/js/Erc20Token'
 import store from '@/store'
+import { WalletHelper } from '@/helpers/wallet_helper'
+import { Transaction } from '@ethereumjs/tx'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -107,7 +115,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
         this.ethBalance = new BN(0)
 
-        let cPrivKey = `PrivateKey-` + bintools.cb58Encode(Buffer.from(ethPrivateKey))
+        let cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(ethPrivateKey))
         this.ethKeyBech = cPrivKey
 
         let cKeyChain = new KeyChain(ava.getHRP(), 'C')
@@ -127,38 +135,43 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return this.ethAddress
     }
 
+    getEvmAddressBech(): string {
+        return this.ethAddressBech
+    }
+
     async getEthBalance() {
-        let bal = await web3.eth.getBalance(this.ethAddress)
-        this.ethBalance = new BN(bal)
-        return this.ethBalance
+        let bal = await WalletHelper.getEthBalance(this)
+        this.ethBalance = bal
+        return bal
     }
 
     async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
-        let receiver = to
-        let txAmount = amount
-        let fromAddr = this.ethAddress
-
-        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
-
-        const txConfig = {
-            from: fromAddr,
-            gasPrice: gasPrice,
-            gas: gasLimit,
-            to: receiver,
-            value: txAmount.toString(), // in wei
-            data: '',
-        }
-
-        let signedTx = await account.signTransaction(txConfig)
-        let err,
-            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
-
-        if (err) {
-            console.error(err)
-            throw err
-        }
-
-        return receipt.transactionHash
+        return await WalletHelper.sendEth(this, to, amount, gasPrice, gasLimit)
+        // let receiver = to
+        // let txAmount = amount
+        // let fromAddr = this.ethAddress
+        //
+        // let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+        //
+        // const txConfig = {
+        //     from: fromAddr,
+        //     gasPrice: gasPrice,
+        //     gas: gasLimit,
+        //     to: receiver,
+        //     value: txAmount.toString(), // in wei
+        //     data: '',
+        // }
+        //
+        // let signedTx = await account.signTransaction(txConfig)
+        // let err,
+        //     receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+        //
+        // if (err) {
+        //     console.error(err)
+        //     throw err
+        // }
+        //
+        // return receipt.transactionHash
     }
 
     // TODO: Move to shared file
@@ -179,29 +192,30 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        let from = '0x' + this.ethAddress
-        let tx = token.createTransferTx(to, amount)
-
-        const txConfig = {
-            from: from,
-            gasPrice: gasPrice,
-            gas: gasLimit,
-            to: token.data.address,
-            data: tx.encodeABI(),
-        }
-
-        let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
-        let signedTx = await account.signTransaction(txConfig)
-
-        let err,
-            receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
-
-        if (err) {
-            console.error(err)
-            throw err
-        }
-
-        return receipt.transactionHash
+        return await WalletHelper.sendErc20(this, to, amount, gasPrice, gasLimit, token)
+        // let from = '0x' + this.ethAddress
+        // let tx = token.createTransferTx(to, amount)
+        //
+        // const txConfig = {
+        //     from: from,
+        //     gasPrice: gasPrice,
+        //     gas: gasLimit,
+        //     to: token.data.address,
+        //     data: tx.encodeABI(),
+        // }
+        //
+        // let account = web3.eth.accounts.privateKeyToAccount(this.ethKey)
+        // let signedTx = await account.signTransaction(txConfig)
+        //
+        // let err,
+        //     receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction as string)
+        //
+        // if (err) {
+        //     console.error(err)
+        //     throw err
+        // }
+        //
+        // return receipt.transactionHash
     }
 
     async getUTXOs(): Promise<void> {
@@ -219,6 +233,7 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         }
 
         super.getUTXOs()
+        this.getStake()
         this.getEthBalance()
         return
     }
@@ -248,53 +263,16 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         rewardAddress?: string,
         utxos?: PlatformUTXO[]
     ): Promise<string> {
-        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
-
-        // If given custom UTXO set use that
-        if (utxos) {
-            utxoSet = new PlatformUTXOSet()
-            utxoSet.addArray(utxos)
-        }
-
-        let pAddressStrings = keychain.getAddressStrings()
-
-        let stakeAmount = amt
-
-        // If reward address isn't given use index 0 address
-        if (!rewardAddress) {
-            rewardAddress = this.getPlatformRewardAddress()
-        }
-
-        // For change address use first available on the platform chain
-        let changeAddress = this.platformHelper.getFirstAvailableAddress()
-
-        // Stake is always returned to address at index 0
-        let stakeReturnAddr = this.getPlatformRewardAddress()
-
-        // Convert dates to unix time
-        let startTime = new BN(Math.round(start.getTime() / 1000))
-        let endTime = new BN(Math.round(end.getTime() / 1000))
-
-        const unsignedTx = await pChain.buildAddValidatorTx(
-            utxoSet,
-            [stakeReturnAddr],
-            pAddressStrings, // from
-            [changeAddress], // change
+        return await WalletHelper.validate(
+            this,
             nodeID,
-            startTime,
-            endTime,
-            stakeAmount,
-            [rewardAddress],
-            delegationFee
+            amt,
+            start,
+            end,
+            delegationFee,
+            rewardAddress,
+            utxos
         )
-        let tx = unsignedTx.sign(keychain)
-
-        // Update UTXOS
-        setTimeout(async () => {
-            this.getUTXOs()
-        }, 3000)
-        return pChain.issueTx(tx)
     }
 
     // Delegates AVAX to the given node ID
@@ -306,261 +284,286 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         rewardAddress?: string,
         utxos?: PlatformUTXO[]
     ): Promise<string> {
-        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
-
-        // If given custom UTXO set use that
-        if (utxos) {
-            utxoSet = new PlatformUTXOSet()
-            utxoSet.addArray(utxos)
-        }
-
-        let pAddressStrings = keychain.getAddressStrings()
-        let stakeAmount = amt
-
-        // If reward address isn't given use index 0 address
-        if (!rewardAddress) {
-            rewardAddress = this.getPlatformRewardAddress()
-        }
-
-        // For change address use first available on the platform chain
-        let changeAddr = this.platformHelper.getFirstAvailableAddress()
-
-        // Stake is always returned to address at index 0
-        let stakeReturnAddr = this.getPlatformRewardAddress()
-
-        // Convert dates to unix time
-        let startTime = new BN(Math.round(start.getTime() / 1000))
-        let endTime = new BN(Math.round(end.getTime() / 1000))
-
-        const unsignedTx = await pChain.buildAddDelegatorTx(
-            utxoSet,
-            [stakeReturnAddr],
-            pAddressStrings,
-            [changeAddr],
-            nodeID,
-            startTime,
-            endTime,
-            stakeAmount,
-            [rewardAddress] // reward address
-        )
-        const tx = unsignedTx.sign(keychain)
-        // Update UTXOS
-        setTimeout(async () => {
-            this.getUTXOs()
-        }, 3000)
-
-        return pChain.issueTx(tx)
+        return await WalletHelper.delegate(this, nodeID, amt, start, end, rewardAddress, utxos)
+        // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
+        // let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
+        //
+        // // If given custom UTXO set use that
+        // if (utxos) {
+        //     utxoSet = new PlatformUTXOSet()
+        //     utxoSet.addArray(utxos)
+        // }
+        //
+        // let pAddressStrings = keychain.getAddressStrings()
+        // let stakeAmount = amt
+        //
+        // // If reward address isn't given use index 0 address
+        // if (!rewardAddress) {
+        //     rewardAddress = this.getPlatformRewardAddress()
+        // }
+        //
+        // // For change address use first available on the platform chain
+        // let changeAddr = this.platformHelper.getFirstAvailableAddress()
+        //
+        // // Stake is always returned to address at index 0
+        // let stakeReturnAddr = this.getPlatformRewardAddress()
+        //
+        // // Convert dates to unix time
+        // let startTime = new BN(Math.round(start.getTime() / 1000))
+        // let endTime = new BN(Math.round(end.getTime() / 1000))
+        //
+        // const unsignedTx = await pChain.buildAddDelegatorTx(
+        //     utxoSet,
+        //     [stakeReturnAddr],
+        //     pAddressStrings,
+        //     [changeAddr],
+        //     nodeID,
+        //     startTime,
+        //     endTime,
+        //     stakeAmount,
+        //     [rewardAddress] // reward address
+        // )
+        // const tx = unsignedTx.sign(keychain)
+        // // Update UTXOS
+        // setTimeout(async () => {
+        //     this.getUTXOs()
+        // }, 3000)
+        //
+        // return pChain.issueTx(tx)
     }
 
-    async chainTransfer(
-        amt: BN,
-        sourceChain: ChainIdType,
-        destinationChain: ChainIdType
-    ): Promise<string> {
-        let fee = avm.getTxFee()
-        let amtFee = amt.add(fee)
+    // async chainTransfer(
+    //     amt: BN,
+    //     sourceChain: ChainIdType,
+    //     destinationChain: ChainIdType
+    // ): Promise<string> {
+    //     let fee = avm.getTxFee()
+    //     let amtFee = amt.add(fee)
+    //
+    //     if (destinationChain === 'C') {
+    //         // C Chain imports/exports do not have a fee
+    //         amtFee = amt
+    //     }
+    //
+    //     // Get from addresses
+    //     if (sourceChain === 'X') {
+    //         let destinationAddr
+    //         if (destinationChain === 'P') {
+    //             destinationAddr = this.getCurrentAddressPlatform()
+    //         } else {
+    //             // C Chain
+    //             // todo: replace with shared wallet class method
+    //             destinationAddr = this.ethAddressBech
+    //         }
+    //
+    //         let fromAddresses = this.getAllAddressesX()
+    //         let changeAddress = this.getChangeAddressAvm()
+    //         let utxos = this.getUTXOSet()
+    //         let exportTx = (await buildExportTransaction(
+    //             sourceChain,
+    //             destinationChain,
+    //             utxos,
+    //             fromAddresses,
+    //             destinationAddr,
+    //             amtFee,
+    //             changeAddress
+    //         )) as AVMUnsignedTx
+    //
+    //         let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
+    //
+    //         return avm.issueTx(tx)
+    //     } else if (sourceChain === 'P') {
+    //         let destinationAddr = this.getCurrentAddressAvm()
+    //         let fromAddresses = this.getAllAddressesP()
+    //
+    //         let changeAddress = this.getCurrentAddressPlatform()
+    //         let utxos = this.getPlatformUTXOSet()
+    //
+    //         let exportTx = (await buildExportTransaction(
+    //             sourceChain,
+    //             destinationChain,
+    //             utxos,
+    //             fromAddresses,
+    //             destinationAddr,
+    //             amtFee,
+    //             changeAddress
+    //         )) as PlatformUnsignedTx
+    //
+    //         let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
+    //
+    //         return pChain.issueTx(tx)
+    //     } else if (sourceChain === 'C') {
+    //         let destinationAddr = this.getCurrentAddressAvm()
+    //         let fromAddresses = [this.ethAddress]
+    //         let changeAddress = this.ethAddressBech
+    //         let utxos = this.getPlatformUTXOSet()
+    //
+    //         let exportTx = (await buildExportTransaction(
+    //             sourceChain,
+    //             destinationChain,
+    //             utxos,
+    //             fromAddresses,
+    //             destinationAddr,
+    //             amtFee,
+    //             changeAddress,
+    //             this.ethAddressBech
+    //         )) as EVMUnsignedTx
+    //
+    //         let tx = await exportTx.sign(this.ethKeyChain)
+    //         return cChain.issueTx(tx)
+    //     } else {
+    //         throw 'Invalid source chain.'
+    //     }
+    // }
 
-        if (destinationChain === 'C') {
-            // C Chain imports/exports do not have a fee
-            amtFee = amt
-        }
+    async getStake(): Promise<BN> {
+        this.stakeAmount = await WalletHelper.getStake(this)
+        return this.stakeAmount
+    }
 
-        // Get from addresses
-        if (sourceChain === 'X') {
-            let destinationAddr
-            if (destinationChain === 'P') {
-                destinationAddr = this.getCurrentPlatformAddress()
-            } else {
-                // C Chain
-                // todo: replace with shared wallet class method
-                destinationAddr = this.ethAddressBech
-            }
+    async exportFromPChain(amt: BN) {
+        return await WalletHelper.exportFromPChain(this, amt)
+    }
 
-            let fromAddresses = this.getAllAddressesX()
-            let changeAddress = this.getChangeAddress()
-            let utxos = this.getUTXOSet()
-            let exportTx = (await buildExportTransaction(
-                sourceChain,
-                destinationChain,
-                utxos,
-                fromAddresses,
-                destinationAddr,
-                amtFee,
-                changeAddress
-            )) as AVMUnsignedTx
+    async exportFromXChain(amt: BN, destinationChain: AvmExportChainType) {
+        return await WalletHelper.exportFromXChain(this, amt, destinationChain)
+    }
 
-            let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx)
-
-            return avm.issueTx(tx)
-        } else if (sourceChain === 'P') {
-            let destinationAddr = this.getCurrentAddress()
-            let fromAddresses = this.getAllAddressesP()
-
-            let changeAddress = this.getCurrentPlatformAddress()
-            let utxos = this.getPlatformUTXOSet()
-
-            let exportTx = (await buildExportTransaction(
-                sourceChain,
-                destinationChain,
-                utxos,
-                fromAddresses,
-                destinationAddr,
-                amtFee,
-                changeAddress
-            )) as PlatformUnsignedTx
-
-            let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
-
-            return pChain.issueTx(tx)
-        } else if (sourceChain === 'C') {
-            let destinationAddr = this.getCurrentAddress()
-            let fromAddresses = [this.ethAddress]
-            let changeAddress = this.ethAddressBech
-            let utxos = this.getPlatformUTXOSet()
-
-            let exportTx = (await buildExportTransaction(
-                sourceChain,
-                destinationChain,
-                utxos,
-                fromAddresses,
-                destinationAddr,
-                amtFee,
-                changeAddress,
-                this.ethAddressBech
-            )) as EVMUnsignedTx
-
-            let tx = await exportTx.sign(this.ethKeyChain)
-            return cChain.issueTx(tx)
-        } else {
-            throw 'Invalid source chain.'
-        }
+    async exportFromCChain(amt: BN) {
+        return await WalletHelper.exportFromCChain(this, amt)
+        // let fee = avm.getTxFee()
+        // let amtFee = amt.add(fee)
+        //
+        // let destinationAddr = this.getCurrentAddressAvm()
+        // let fromAddresses = [this.getEvmAddress()]
+        // let fromAddrBech = this.getEvmAddressBech()
+        //
+        // let exportTx = (await buildEvmExportTransaction(
+        //     fromAddresses,
+        //     destinationAddr,
+        //     amtFee,
+        //     fromAddrBech
+        // )) as EVMUnsignedTx
+        //
+        // let tx = await exportTx.sign(this.ethKeyChain)
+        // return cChain.issueTx(tx)
     }
 
     // TODO: Move to Core HD file
     async importToCChain(): Promise<string> {
-        const utxoResponse = await cChain.getUTXOs(this.ethAddressBech, avm.getBlockchainID())
-        const utxoSet: EVMUTXOSet = utxoResponse.utxos
-
-        if (utxoSet.getAllUTXOs().length === 0) {
-            throw new Error('Nothing to import.')
-        }
-
-        let toAddress = '0x' + this.ethAddress
-        let ownerAddresses = [this.ethAddressBech]
-        let fromAddresses = ownerAddresses
-        let sourceChain = avm.getBlockchainID()
-
-        const unsignedTx = await cChain.buildImportTx(
-            utxoSet,
-            toAddress,
-            ownerAddresses,
-            sourceChain,
-            fromAddresses
-        )
-        let keyChain = this.ethKeyChain
-        const tx = unsignedTx.sign(keyChain)
-        let id = await cChain.issueTx(tx)
-
-        return id
+        return await WalletHelper.importToCChain(this)
+        //
+        // const utxoResponse = await cChain.getUTXOs(this.ethAddressBech, avm.getBlockchainID())
+        // const utxoSet: EVMUTXOSet = utxoResponse.utxos
+        //
+        // if (utxoSet.getAllUTXOs().length === 0) {
+        //     throw new Error('Nothing to import.')
+        // }
+        //
+        // let toAddress = '0x' + this.ethAddress
+        // let ownerAddresses = [this.ethAddressBech]
+        // let fromAddresses = ownerAddresses
+        // let sourceChain = avm.getBlockchainID()
+        //
+        // const unsignedTx = await cChain.buildImportTx(
+        //     utxoSet,
+        //     toAddress,
+        //     ownerAddresses,
+        //     sourceChain,
+        //     fromAddresses
+        // )
+        // let keyChain = this.ethKeyChain
+        // const tx = unsignedTx.sign(keyChain)
+        // let id = await cChain.issueTx(tx)
+        //
+        // return id
     }
 
     // TODO: Move to Core HD file
     async importToPlatformChain(): Promise<string> {
-        // await this.platformHelper.findHdIndex();
-        const utxoSet = (await this.platformHelper.getAtomicUTXOs()) as PlatformUTXOSet
+        return await WalletHelper.importToPlatformChain(this)
 
-        if (utxoSet.getAllUTXOs().length === 0) {
-            throw new Error('Nothing to import.')
-        }
-
-        let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain
-        let pAddrs = keyChain.getAddressStrings()
-        // Owner addresses, the addresses we exported to
-        let pToAddr = this.platformHelper.getCurrentAddress()
-
-        let hrp = ava.getHRP()
-        let utxoAddrs = utxoSet
-            .getAddresses()
-            .map((addr) => bintools.addressToString(hrp, 'P', addr))
-        let fromAddrs = utxoAddrs
-        let ownerAddrs = utxoAddrs
-
-        const unsignedTx = await pChain.buildImportTx(
-            utxoSet,
-            ownerAddrs,
-            avm.getBlockchainID(),
-            [pToAddr],
-            [pToAddr],
-            [pToAddr],
-            undefined,
-            undefined
-        )
-        const tx = unsignedTx.sign(keyChain)
-
-        return pChain.issueTx(tx)
+        // // await this.platformHelper.findHdIndex();
+        // const utxoSet = (await this.platformHelper.getAtomicUTXOs()) as PlatformUTXOSet
+        //
+        // if (utxoSet.getAllUTXOs().length === 0) {
+        //     throw new Error('Nothing to import.')
+        // }
+        //
+        // let keyChain = this.platformHelper.getKeychain() as PlatformVMKeyChain
+        // let pAddrs = keyChain.getAddressStrings()
+        // // Owner addresses, the addresses we exported to
+        // let pToAddr = this.platformHelper.getCurrentAddress()
+        //
+        // let hrp = ava.getHRP()
+        // let utxoAddrs = utxoSet
+        //     .getAddresses()
+        //     .map((addr) => bintools.addressToString(hrp, 'P', addr))
+        // let fromAddrs = utxoAddrs
+        // let ownerAddrs = utxoAddrs
+        //
+        // const unsignedTx = await pChain.buildImportTx(
+        //     utxoSet,
+        //     ownerAddrs,
+        //     avm.getBlockchainID(),
+        //     [pToAddr],
+        //     [pToAddr],
+        //     [pToAddr],
+        //     undefined,
+        //     undefined
+        // )
+        // const tx = unsignedTx.sign(keyChain)
+        //
+        // return pChain.issueTx(tx)
     }
 
     // TODO: Move to Core HD file
-    async importToXChain(sourceChain: ChainIdType) {
-        const utxoSet = (await this.externalHelper.getAtomicUTXOs()) as AVMUTXOSet
-
-        if (utxoSet.getAllUTXOs().length === 0) {
-            throw new Error('Nothing to import.')
-        }
-
-        let keyChain = this.getKeyChain() as AVMKeyChain
-        // let xAddrs = keyChain.getAddressStrings()
-        let xToAddr = this.externalHelper.getCurrentAddress()
-
-        let hrp = ava.getHRP()
-        let utxoAddrs = utxoSet
-            .getAddresses()
-            .map((addr) => bintools.addressToString(hrp, 'X', addr))
-
-        let fromAddrs = utxoAddrs
-        let ownerAddrs = utxoAddrs
-
-        let sourceChainId
-        if (sourceChain === 'P') {
-            sourceChainId = pChain.getBlockchainID()
-        } else {
-            sourceChainId = cChain.getBlockchainID()
-        }
-        // Owner addresses, the addresses we exported to
-        const unsignedTx = await avm.buildImportTx(
-            utxoSet,
-            ownerAddrs,
-            sourceChainId,
-            [xToAddr],
-            fromAddrs,
-            [xToAddr]
-        )
-        const tx = unsignedTx.sign(keyChain)
-
-        return avm.issueTx(tx)
+    async importToXChain(sourceChain: AvmImportChainType) {
+        return await WalletHelper.importToXChain(this, sourceChain)
+        // const utxoSet = (await this.externalHelper.getAtomicUTXOs()) as AVMUTXOSet
+        //
+        // if (utxoSet.getAllUTXOs().length === 0) {
+        //     throw new Error('Nothing to import.')
+        // }
+        //
+        // let keyChain = this.getKeyChain() as AVMKeyChain
+        // // let xAddrs = keyChain.getAddressStrings()
+        // let xToAddr = this.externalHelper.getCurrentAddress()
+        //
+        // let hrp = ava.getHRP()
+        // let utxoAddrs = utxoSet
+        //     .getAddresses()
+        //     .map((addr) => bintools.addressToString(hrp, 'X', addr))
+        //
+        // let fromAddrs = utxoAddrs
+        // let ownerAddrs = utxoAddrs
+        //
+        // let sourceChainId
+        // if (sourceChain === 'P') {
+        //     sourceChainId = pChain.getBlockchainID()
+        // } else {
+        //     sourceChainId = cChain.getBlockchainID()
+        // }
+        // // Owner addresses, the addresses we exported to
+        // const unsignedTx = await avm.buildImportTx(
+        //     utxoSet,
+        //     ownerAddrs,
+        //     sourceChainId,
+        //     [xToAddr],
+        //     fromAddrs,
+        //     [xToAddr]
+        // )
+        // const tx = unsignedTx.sign(keyChain)
+        //
+        // return avm.issueTx(tx)
     }
 
     async issueBatchTx(
         orders: (ITransaction | AVMUTXO)[],
         addr: string,
-        memo: Buffer | undefined
+        memo: BufferAvalanche | undefined
     ): Promise<string> {
-        let unsignedTx = await this.buildUnsignedTransaction(orders, addr, memo)
-        let keychain = this.getKeyChain()
-
-        const tx = unsignedTx.sign(keychain)
-        const txId: string = await avm.issueTx(tx)
-
-        // // TODO: This might not be necessary anymore
-        // setTimeout(async () => {
-        //     // Find the new HD index
-        //     this.internalHelper.findHdIndex()
-        //     this.externalHelper.findHdIndex()
-        //     this.platformHelper.findHdIndex()
-        // }, 2000)
-
-        return txId
+        return await WalletHelper.issueBatchTx(this, orders, addr, memo)
     }
 
     // returns a keychain that has all the derived private/public keys for X chain
@@ -596,20 +599,43 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         return keychain
     }
 
-    async sign<
-        UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-        SignedTx extends AVMTx | PlatformTx
-    >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
-        let keychain = this.getKeyChain()
-        let keychainP = this.platformHelper.getKeychain() as PlatformVMKeyChain
+    // async sign<
+    //     UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
+    //     SignedTx extends AVMTx | PlatformTx
+    // >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
+    //     let keychain = this.getKeyChain()
+    //     let keychainP = this.platformHelper.getKeychain() as PlatformVMKeyChain
+    //
+    //     if (isAVM) {
+    //         const tx = (unsignedTx as AVMUnsignedTx).sign(keychain)
+    //         return tx as SignedTx
+    //     } else {
+    //         const tx = (unsignedTx as PlatformUnsignedTx).sign(keychainP)
+    //         return tx as SignedTx
+    //     }
+    // }
 
-        if (isAVM) {
-            const tx = (unsignedTx as AVMUnsignedTx).sign(keychain)
-            return tx as SignedTx
-        } else {
-            const tx = (unsignedTx as PlatformUnsignedTx).sign(keychainP)
-            return tx as SignedTx
-        }
+    async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
+        let keychain = this.getKeyChain()
+
+        const tx = unsignedTx.sign(keychain)
+        return tx
+    }
+
+    async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx> {
+        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
+        const tx = unsignedTx.sign(keychain)
+        return tx
+    }
+
+    async signC(unsignedTx: EVMUnsignedTx): Promise<EvmTx> {
+        let keyChain = this.ethKeyChain
+        return unsignedTx.sign(keyChain)
+    }
+
+    async signEvm(tx: Transaction) {
+        let keyBuff = Buffer.from(this.ethKey, 'hex')
+        return tx.sign(keyBuff)
     }
 
     async signMessage(msgStr: string, address: string): Promise<string> {
@@ -622,28 +648,17 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
 
         // Convert to the other Buffer and sign
         let digestHex = digest.toString('hex')
-        let digestBuff = Buffer.from(digestHex, 'hex')
+        let digestBuff = BufferAvalanche.from(digestHex, 'hex')
         let signed = key.sign(digestBuff)
 
         return bintools.cb58Encode(signed)
     }
 
     async createNftFamily(name: string, symbol: string, groupNum: number) {
-        let tx = await this.buildCreateNftFamilyTx(name, symbol, groupNum)
-        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
-        return await avm.issueTx(signed)
+        return await WalletHelper.createNftFamily(this, name, symbol, groupNum)
     }
 
     async mintNft(mintUtxo: AVMUTXO, payload: PayloadBase, quantity: number) {
-        let tx = await this.buildMintNftTx(
-            mintUtxo,
-            payload,
-            quantity,
-            this.getCurrentAddress(),
-            this.getChangeAddress()
-        )
-        let signed = await this.sign<AVMUnsignedTx, AVMTx>(tx)
-        let txId = await avm.issueTx(signed)
-        return txId
+        return await WalletHelper.mintNft(this, mintUtxo, payload, quantity)
     }
 }

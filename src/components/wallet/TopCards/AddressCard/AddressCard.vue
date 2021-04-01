@@ -137,7 +137,7 @@ export default class AddressCard extends Vue {
         if (!wallet) {
             return '-'
         }
-        return wallet.getCurrentAddress()
+        return wallet.getCurrentAddressAvm()
     }
 
     get addressPVM() {
@@ -146,7 +146,7 @@ export default class AddressCard extends Vue {
             return '-'
         }
 
-        return wallet.getCurrentPlatformAddress()
+        return wallet.getCurrentAddressPlatform()
     }
 
     get addressEVM() {

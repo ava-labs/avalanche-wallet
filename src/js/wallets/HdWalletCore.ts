@@ -23,32 +23,23 @@ import createHash from 'create-hash'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { OutputOwners } from 'avalanche/dist/common'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
-var uniqid = require('uniqid')
+import { WalletCore } from '@/js/wallets/WalletCore'
+import { WalletHelper } from '@/helpers/wallet_helper'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
 
-class HdWalletCore {
-    id: string
+class HdWalletCore extends WalletCore {
     chainId: string
-    utxoset: UTXOSet
-    platformUtxoset: PlatformUTXOSet
-    stakeAmount: BN
 
     internalHelper: HdHelper
     externalHelper: HdHelper
     platformHelper: HdHelper
-    isFetchUtxos: boolean // true if fetching utxos
-    isInit: boolean
 
     constructor(accountHdKey: HDKey, isPublic = true) {
-        this.id = uniqid()
+        super()
+
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
-        this.utxoset = new AVMUTXOSet()
-        this.platformUtxoset = new PlatformUTXOSet()
-        this.stakeAmount = new BN(0)
-        this.isFetchUtxos = false
-        this.isInit = false
         this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
@@ -77,71 +68,75 @@ class HdWalletCore {
         this.utxoset = joined
     }
 
-    // TODO: This function can be moved to a Core wallet class
-    async buildCreateNftFamilyTx(
-        name: string,
-        symbol: string,
-        groupNum: number = 1
-    ): Promise<UnsignedTx> {
-        let fromAddresses = this.getDerivedAddresses()
-        let changeAddress = this.getChangeAddress()
-
-        let minterAddress = this.getCurrentAddress()
-
-        let unsignedTx = await buildCreateNftFamilyTx(
-            name,
-            symbol,
-            groupNum,
-            fromAddresses,
-            minterAddress,
-            changeAddress,
-            this.utxoset
-        )
-
-        // const minterSets: MinterSet[] = []
-        //
-        // // Create the groups
-        // for (var i = 0; i < groupNum; i++) {
-        //     const minterSet: MinterSet = new MinterSet(1, [minterAddress])
-        //     minterSets.push(minterSet)
-        // }
-        //
-        // let utxoSet: UTXOSet = this.utxoset
-        //
-        // let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
-        //     utxoSet,
-        //     fromAddresses,
-        //     [changeAddress],
-        //     minterSets,
-        //     name,
-        //     symbol
-        // )
-
-        return unsignedTx
+    getFirstAvailableAddressPlatform(): string {
+        return this.platformHelper.getFirstAvailableAddress()
     }
+
+    // TODO: This function can be moved to a Core wallet class
+    // async buildCreateNftFamilyTx(
+    //     name: string,
+    //     symbol: string,
+    //     groupNum: number = 1
+    // ): Promise<UnsignedTx> {
+    //     let fromAddresses = this.getDerivedAddresses()
+    //     let changeAddress = this.getChangeAddressAvm()
+    //
+    //     let minterAddress = this.getCurrentAddressAvm()
+    //
+    //     let unsignedTx = await buildCreateNftFamilyTx(
+    //         name,
+    //         symbol,
+    //         groupNum,
+    //         fromAddresses,
+    //         minterAddress,
+    //         changeAddress,
+    //         this.utxoset
+    //     )
+    //
+    //     // const minterSets: MinterSet[] = []
+    //     //
+    //     // // Create the groups
+    //     // for (var i = 0; i < groupNum; i++) {
+    //     //     const minterSet: MinterSet = new MinterSet(1, [minterAddress])
+    //     //     minterSets.push(minterSet)
+    //     // }
+    //     //
+    //     // let utxoSet: UTXOSet = this.utxoset
+    //     //
+    //     // let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
+    //     //     utxoSet,
+    //     //     fromAddresses,
+    //     //     [changeAddress],
+    //     //     minterSets,
+    //     //     name,
+    //     //     symbol
+    //     // )
+    //
+    //     return unsignedTx
+    // }
 
     // TODO: Can be moved to a core wallet class
-    async buildMintNftTx(
-        mintUtxo: UTXO,
-        payload: PayloadBase,
-        quantity: number,
-        ownerAddress: string,
-        changeAddress: string
-    ): Promise<UnsignedTx> {
-        let sourceAddresses = this.getDerivedAddresses()
-
-        let mintTx = buildMintNftTx(
-            mintUtxo,
-            payload,
-            quantity,
-            ownerAddress,
-            changeAddress,
-            sourceAddresses,
-            this.utxoset
-        )
-
-        return mintTx
-    }
+    // async buildMintNftTx(
+    //     mintUtxo: UTXO,
+    //     payload: PayloadBase,
+    //     quantity: number,
+    //     ownerAddress: string,
+    //     changeAddress: string
+    // ): Promise<UnsignedTx> {
+    //     let sourceAddresses = this.getDerivedAddresses()
+    //
+    //     let mintTx = buildMintNftTx(
+    //         mintUtxo,
+    //         payload,
+    //         quantity,
+    //         ownerAddress,
+    //         changeAddress,
+    //         sourceAddresses,
+    //         this.utxoset
+    //     )
+    //
+    //     return mintTx
+    // }
 
     updateFetchState() {
         this.isFetchUtxos =
@@ -173,7 +168,6 @@ class HdWalletCore {
             this.updateFetchState()
         })
 
-        this.getStake()
         // let joined = setInternal.merge(setExternal)
         // this.utxoset = joined
         // return joined
@@ -212,25 +206,33 @@ class HdWalletCore {
         return internal.concat(external)
     }
 
-    getExtendedPlatformAddresses(): string[] {
-        let index = this.platformHelper.hdIndex
-        let addrs = this.platformHelper.getAllDerivedAddresses(index + 20)
-        return addrs
-    }
+    // getExtendedPlatformAddresses(): string[] {
+    //     let index = this.platformHelper.hdIndex
+    //     let addrs = this.platformHelper.getAllDerivedAddresses(index + 20)
+    //     return addrs
+    // }
 
-    getCurrentAddress(): string {
+    getCurrentAddressAvm(): string {
         return this.externalHelper.getCurrentAddress()
     }
 
-    getChangeAddress(chainId?: ChainAlias): string {
-        switch (chainId) {
-            case 'P':
-                return this.platformHelper.getCurrentAddress()
-            case 'X':
-            default:
-                return this.internalHelper.getCurrentAddress()
-        }
+    getChangeAddressAvm() {
+        return this.internalHelper.getCurrentAddress()
     }
+
+    getChangeAddressPlatform() {
+        return this.platformHelper.getCurrentAddress()
+    }
+
+    // getChangeAddress(chainId?: ChainAlias): string {
+    //     switch (chainId) {
+    //         case 'P':
+    //             return this.platformHelper.getCurrentAddress()
+    //         case 'X':
+    //         default:
+    //             return this.internalHelper.getCurrentAddress()
+    //     }
+    // }
 
     getChangePath(chainId?: ChainAlias): string {
         switch (chainId) {
@@ -268,7 +270,7 @@ class HdWalletCore {
         return this.platformHelper.getCurrentAddress()
     }
 
-    getCurrentPlatformAddress(): string {
+    getCurrentAddressPlatform(): string {
         return this.platformHelper.getCurrentAddress()
     }
 
@@ -302,16 +304,17 @@ class HdWalletCore {
         }
     }
 
-    async getStake(): Promise<BN> {
-        // let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
-        // let pIndex = Math.max(this.platformHelper.hdIndex);
-        // let uptoIndex = Math.max(xIndex, pIndex);
-        let uptoIndex = this.platformHelper.hdIndex + 40
-        let addrs = this.platformHelper.getAllDerivedAddresses(uptoIndex)
-        let res = await this.getAllStake(addrs)
-        this.stakeAmount = res
-        return res
-    }
+    // async getStake(): Promise<BN> {
+    //     WalletHelper.getStake(this)
+    //     // let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
+    //     // let pIndex = Math.max(this.platformHelper.hdIndex);
+    //     // let uptoIndex = Math.max(xIndex, pIndex);
+    //     let uptoIndex = this.platformHelper.hdIndex + 40
+    //     let addrs = this.platformHelper.getAllDerivedAddresses(uptoIndex)
+    //     let res = await this.getAllStake(addrs)
+    //     this.stakeAmount = res
+    //     return res
+    // }
 
     onnetworkchange(): void {
         this.isInit = false
@@ -331,7 +334,7 @@ class HdWalletCore {
     }
 
     async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {
-        const changeAddress = this.getChangeAddress()
+        const changeAddress = this.getChangeAddressAvm()
         const derivedAddresses: string[] = this.getDerivedAddresses()
         const utxoset = this.getUTXOSet()
 
