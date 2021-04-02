@@ -1,7 +1,8 @@
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
-import { WalletNameType } from '@/store/types'
+import { WalletNameType } from '@/js/wallets/types'
+
 import { Buffer as BufferAvalanche } from 'avalanche'
 import {
     KeyPair as AVMKeyPair,
@@ -17,24 +18,18 @@ import {
     UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
-// import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
-import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
-import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
+import { PayloadBase } from 'avalanche/dist/utils'
 import BN from 'bn.js'
-import { buildUnsignedTransaction, buildCreateNftFamilyTx, buildMintNftTx } from '../TxHelper'
+import { buildUnsignedTransaction } from '../TxHelper'
 import {
     AvaWalletCore,
     AvmExportChainType,
     AvmImportChainType,
     ChainAlias,
     UnsafeWallet,
-} from './IAvaHdWallet'
+} from './types'
 import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
 import { privateToAddress } from 'ethereumjs-util'
-import { web3 } from '@/evm'
-import Web3 from 'web3'
-
-import { ChainIdType } from '@/constants'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import {
     Tx as PlatformTx,
@@ -46,7 +41,6 @@ import { WalletCore } from '@/js/wallets/WalletCore'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
-import { KeyChain as PlatformVMKeyChain } from 'avalanche/dist/apis/platformvm/keychain'
 import { Transaction } from '@ethereumjs/tx'
 
 class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
@@ -93,11 +87,11 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         // Derive EVM key and address
         let pkBuf = bintools.cb58Decode(pk.split('-')[1])
         let pkHex = pkBuf.toString('hex')
+        let pkBuffNative = Buffer.from(pkHex, 'hex')
+
         this.ethKey = pkHex
-        // @ts-ignore
-        this.ethAddress = privateToAddress(pkBuf).toString('hex')
+        this.ethAddress = privateToAddress(pkBuffNative).toString('hex')
         this.ethBalance = new BN(0)
-        this.ethAddressBech = ''
 
         let cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(pkBuf))
         this.ethKeyBech = cPrivKey

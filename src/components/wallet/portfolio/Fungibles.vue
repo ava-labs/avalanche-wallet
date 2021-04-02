@@ -54,8 +54,8 @@ import AvaAsset from '@/js/AvaAsset'
 import Erc20Token from '@/js/Erc20Token'
 import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
-import { WalletType } from '@/store/types'
 import TokenListModal from '@/components/modals/TokenList/TokenListModal.vue'
+import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {

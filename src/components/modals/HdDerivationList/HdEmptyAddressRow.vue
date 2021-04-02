@@ -13,7 +13,8 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { ava } from '@/AVA'
 import { getPreferredHRP } from 'avalanche/dist/utils'

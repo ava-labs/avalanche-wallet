@@ -102,7 +102,8 @@ import Big from 'big.js'
 import { BN } from 'avalanche/dist'
 import { ONEAVAX } from 'avalanche/dist/utils'
 import { bnToBig } from '@/helpers/helper'
-import { priceDict, WalletType } from '@/store/types'
+import { priceDict } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdownModal.vue'
 
 @Component({

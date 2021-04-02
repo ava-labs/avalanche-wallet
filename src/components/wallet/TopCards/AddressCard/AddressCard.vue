@@ -53,7 +53,8 @@ import QRModal from '@/components/modals/QRModal.vue'
 import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import { WalletNameType, WalletType } from '@/store/types'
+import { WalletType, WalletNameType } from '@/js/wallets/types'
+
 import AvaHdWallet, { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 

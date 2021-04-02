@@ -131,9 +131,8 @@ import { ChainIdType } from '@/constants'
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 import { web3 } from '@/evm'
-import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/IAvaHdWallet'
-import Wallet from '@/views/Wallet.vue'
-import { WalletType } from '@/store/types'
+import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
+import { WalletType } from '@/js/wallets/types'
 
 const IMPORT_DELAY = 4000 // in ms
 

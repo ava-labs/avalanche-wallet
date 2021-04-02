@@ -22,7 +22,7 @@ import {
     AvmExportChainType,
     AvmImportChainType,
     ChainAlias,
-} from '@/js/wallets/IAvaHdWallet'
+} from '@/js/wallets/types'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
     AVMConstants,
@@ -59,7 +59,8 @@ import {
 import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { ILedgerAppConfig, WalletNameType } from '@/store/types'
+import { ILedgerAppConfig } from '@/store/types'
+import { WalletNameType } from '@/js/wallets/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './AvaHdWallet'

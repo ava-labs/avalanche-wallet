@@ -5,7 +5,8 @@ import {
     UTXO as PlatformUTXO,
 } from 'avalanche/dist/apis/platformvm/utxos'
 import { UTXOSet as AVMUTXOSet, UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { BN, Buffer } from 'avalanche'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import {
@@ -21,7 +22,7 @@ import {
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
-import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/IAvaHdWallet'
+import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
 import { ChainIdType } from '@/constants'
 import { web3 } from '@/evm'
 import EthereumjsCommon from '@ethereumjs/common'
@@ -30,8 +31,6 @@ import Erc20Token from '@/js/Erc20Token'
 import { getAtomicUTXOsForAllAddresses, getStakeForAddresses } from '@/helpers/utxo_helper'
 
 class WalletHelper {
-    constructor() {}
-
     static async getStake(wallet: WalletType): Promise<BN> {
         let addrs = wallet.getAllAddressesP()
         return await getStakeForAddresses(addrs)

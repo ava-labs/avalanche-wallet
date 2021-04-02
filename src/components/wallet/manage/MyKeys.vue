@@ -27,7 +27,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import KeyRow from '@/components/wallet/manage/KeyRow.vue'
 import RememberKey from '@/components/misc/RememberKey.vue'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {

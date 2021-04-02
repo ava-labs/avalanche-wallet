@@ -15,10 +15,10 @@ import {
     IssueBatchTxInput,
     ImportKeyfileInput,
     ExportWalletsInput,
-    WalletType,
     AccessWalletMultipleInput,
 } from '@/store/types'
 
+import { WalletType } from '@/js/wallets/types'
 import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 
 Vue.use(Vuex)

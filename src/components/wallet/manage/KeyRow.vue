@@ -125,7 +125,8 @@ import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
-import { WalletNameType, WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/js/wallets/types'
+
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 
 interface IKeyBalanceDict {

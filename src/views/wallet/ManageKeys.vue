@@ -39,7 +39,7 @@ import ImportKeys from '@/components/modals/ImportKeys.vue'
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import RememberKeysModal from '@/components/modals/RememberWallet/RememberKeysModal.vue'
-import { WalletNameType } from '@/store/types'
+import { WalletNameType } from '@/js/wallets/types'
 
 @Component({
     name: 'manage',

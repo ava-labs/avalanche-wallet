@@ -9,6 +9,7 @@ import { UTXO } from 'avalanche/dist/apis/avm'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { UTXO as TxUTXO } from './modules/history/types'
+import { WalletNameType, WalletType } from '@/js/wallets/types'
 
 export interface RootState {
     isAuth: boolean
@@ -19,10 +20,6 @@ export interface RootState {
     warnUpdateKeyfile: boolean
     prices: priceDict // USD value of 1 AVAX
 }
-
-export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
-
-export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
 
 export interface ILedgerAppConfig {
     version: string

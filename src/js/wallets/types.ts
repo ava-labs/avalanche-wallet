@@ -23,13 +23,15 @@ import {
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
-import { WalletNameType } from '@/store/types'
 import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { ChainIdType } from '@/constants'
 import Erc20Token from '@/js/Erc20Token'
 
 import { Transaction } from '@ethereumjs/tx'
+import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 // export type wallet_type = "hd" | "singleton";
 
@@ -40,6 +42,9 @@ export interface IIndexKeyCache {
 export type ChainAlias = 'X' | 'P'
 export type AvmImportChainType = 'P' | 'C'
 export type AvmExportChainType = 'P' | 'C'
+
+export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
+export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
 
 interface IAddressManager {
     getCurrentAddressAvm(): string

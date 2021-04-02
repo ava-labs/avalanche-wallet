@@ -27,7 +27,7 @@ import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/e
 import { ChainIdType } from '@/constants'
 
 import { web3 } from '@/evm'
-import { AvmExportChainType } from '@/js/wallets/IAvaHdWallet'
+import { AvmExportChainType } from '@/js/wallets/types'
 
 export async function buildUnsignedTransaction(
     orders: (ITransaction | AVMUTXO)[],

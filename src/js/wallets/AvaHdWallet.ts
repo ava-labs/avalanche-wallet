@@ -14,19 +14,16 @@ import {
     UTXOSet,
 } from 'avalanche/dist/apis/avm'
 
-import { web3 } from '@/evm'
 import { privateToAddress } from 'ethereumjs-util'
 
 import {
     KeyChain as PlatformVMKeyChain,
-    UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
     UTXO as PlatformUTXO,
     Tx as PlatformTx,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
-    UTXOSet as EVMUTXOSet,
     KeyChain as EVMKeyChain,
     UnsignedTx as EVMUnsignedTx,
     Tx as EvmTx,
@@ -36,27 +33,15 @@ import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import * as bip39 from 'bip39'
 import { BN, Buffer as BufferAvalanche } from 'avalanche'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-import {
-    AvmExportChainType,
-    AvmImportChainType,
-    IAvaHdWallet,
-    IIndexKeyCache,
-} from '@/js/wallets/IAvaHdWallet'
+import { AvmExportChainType, AvmImportChainType, IAvaHdWallet } from '@/js/wallets/types'
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { HdHelper } from '@/js/HdHelper'
 import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
-import createHash from 'create-hash'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { WalletNameType } from '@/store/types'
-import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
+import { WalletNameType } from '@/js/wallets/types'
 import { digestMessage } from '@/helpers/helper'
-import { buildAvmExportTransaction, buildEvmExportTransaction } from '@/js/TxHelper'
-import { ChainIdType } from '@/constants'
 import { KeyChain } from 'avalanche/dist/apis/evm'
-// import { iEVMUTXOResponse } from 'avalanche/dist/apis/evm/interfaces'
 import Erc20Token from '@/js/Erc20Token'
-import store from '@/store'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'
 

@@ -32,7 +32,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import createHash from 'create-hash'
 import { Buffer } from 'avalanche'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 
 @Component
 export default class SignMessage extends Vue {

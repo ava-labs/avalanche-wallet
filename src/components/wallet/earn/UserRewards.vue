@@ -30,7 +30,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { AvaWalletCore } from '../../../js/wallets/IAvaHdWallet'
+import { AvaWalletCore } from '../../../js/wallets/types'
 import {
     DelegatorPendingRaw,
     DelegatorRaw,

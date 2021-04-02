@@ -19,7 +19,7 @@ import store from '@/store'
 import { getAddressChains } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { ChainAlias } from './wallets/IAvaHdWallet'
+import { ChainAlias } from './wallets/types'
 import { getAtomicUTXOsForAllAddresses } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 

@@ -1,4 +1,4 @@
-import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
+import { ChainAlias } from '@/js/wallets/types'
 import {
     AssetAmountDestination,
     BaseTx,
@@ -19,12 +19,8 @@ import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import HDKey from 'hdkey'
 import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import createHash from 'create-hash'
-import { PayloadBase } from 'avalanche/dist/utils'
-import { OutputOwners } from 'avalanche/dist/common'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
 import { WalletCore } from '@/js/wallets/WalletCore'
-import { WalletHelper } from '@/helpers/wallet_helper'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this

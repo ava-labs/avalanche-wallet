@@ -239,7 +239,7 @@ import DateForm from '@/components/wallet/earn/DateForm.vue'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 import { AmountOutput, UTXO } from 'avalanche/dist/apis/platformvm'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
