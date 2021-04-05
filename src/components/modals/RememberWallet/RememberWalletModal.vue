@@ -52,9 +52,9 @@ export default class RememberWalletModal extends Vue {
     password: string = ''
     isLoading: boolean = false
     err: string = ''
-    mounted() {
-        this.openIfValid()
-    }
+    // mounted() {
+    //     this.openIfValid()
+    // }
 
     @Watch('$store.state.isAuth')
     onauthchange(val: boolean) {
