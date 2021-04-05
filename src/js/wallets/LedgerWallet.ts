@@ -544,8 +544,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         ) {
             const format = 'YYYY-MM-DD H:mm:ss UTC'
 
-            console.log(tx)
-
             const nodeID = bintools.cb58Encode(tx.getNodeID())
             const startTime = moment(tx.getStartTime().toNumber() * 1000)
                 .utc()
