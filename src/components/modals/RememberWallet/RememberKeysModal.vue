@@ -9,6 +9,7 @@
                     @is-valid="isVolatileRememberValid"
                     ref="rememberForm"
                 ></RememberKey>
+                <input v-model="accountName" name="accountName" placeholder="Account Name" />
                 <v-btn
                     class="button_primary"
                     :disabled="!canSubmit"
@@ -27,6 +28,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 import RememberKey from '@/components/misc/RememberKey.vue'
+import { SaveAccountInput } from '@/store/types'
 
 @Component({
     components: {
@@ -41,6 +43,7 @@ export default class RememberWalletModal extends Vue {
     password: string = ''
     isLoading: boolean = false
     err: string = ''
+    accountName = ''
 
     $refs!: {
         //@ts-ignore
@@ -51,6 +54,7 @@ export default class RememberWalletModal extends Vue {
         if (!this.rememberPass) return false
         if (!this.rememberChecked) return false
         if (!this.rememberPassValid) return false
+        if (!this.accountName) return false
         return true
     }
 
@@ -66,7 +70,12 @@ export default class RememberWalletModal extends Vue {
         this.isLoading = true
 
         let pass = this.rememberPass
-        await this.$store.dispatch('rememberWallets', pass)
+        let accountName = this.accountName
+        let input: SaveAccountInput = {
+            accountName: accountName,
+            password: pass,
+        }
+        await this.$store.dispatch('saveAccount', input)
         this.isLoading = false
         this.onsuccess()
         this.close()
