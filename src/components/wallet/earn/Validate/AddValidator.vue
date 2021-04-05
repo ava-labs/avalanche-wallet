@@ -576,6 +576,7 @@ export default class AddValidator extends Vue {
 
         // Update History
         setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
         }, 3000)
     }

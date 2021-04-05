@@ -44,6 +44,8 @@ import {
     UTXOSet as PlatformUTXOSet,
     PlatformVMConstants,
     SelectCredentialClass as PlatformSelectCredentialClass,
+    AddDelegatorTx,
+    AddValidatorTx,
 } from 'avalanche/dist/apis/platformvm'
 
 import {
@@ -529,7 +531,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         unsignedTx: UnsignedTx,
         chainId: ChainIdType
     ): ILedgerBlockMessage[] {
-        let tx = (unsignedTx as AVMUnsignedTx | PlatformUnsignedTx).getTransaction()
+        let tx =
+            ((unsignedTx as
+                | AVMUnsignedTx
+                | PlatformUnsignedTx).getTransaction() as AddValidatorTx) || AddDelegatorTx
         let txType = tx.getTxType()
         let messages: ILedgerBlockMessage[] = []
 
@@ -538,18 +543,29 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === PlatformVMConstants.ADDVALIDATORTX && chainId === 'P')
         ) {
             const format = 'YYYY-MM-DD H:mm:ss UTC'
-            // @ts-ignore
-            const nodeID = bintools.cb58Encode(tx.nodeID)
-            // @ts-ignore
-            const startTime = moment(parseInt(tx.getStartTime()) * 1000)
+
+            console.log(tx)
+
+            const nodeID = bintools.cb58Encode(tx.getNodeID())
+            const startTime = moment(tx.getStartTime().toNumber() * 1000)
                 .utc()
                 .format(format)
-            // @ts-ignore
-            const endTime = moment(parseInt(tx.getEndTime()) * 1000)
+
+            const endTime = moment(tx.getEndTime().toNumber() * 1000)
                 .utc()
                 .format(format)
-            // @ts-ignore
+
             const stakeAmt = bnToBig(tx.getStakeAmount(), 9)
+
+            const rewardOwners = tx.getRewardOwners()
+            let hrp = ava.getHRP()
+            const rewardAddrs = rewardOwners
+                .getOutput()
+                .getAddresses()
+                .map((addr) => {
+                    return bintools.addressToString(hrp, chainId, addr)
+                })
+
             messages.push({ title: 'NodeID', value: nodeID })
             messages.push({ title: 'Start Time', value: startTime })
             messages.push({ title: 'End Time', value: endTime })
@@ -560,7 +576,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             })
             messages.push({
                 title: 'Reward to',
-                value: `${this.platformHelper.getCurrentAddress()}`,
+                value: `${rewardAddrs.join('\n')}`,
             })
             // @ts-ignore
             if (tx.delegationFee) {
@@ -904,86 +920,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return await WalletHelper.issueBatchTx(this, orders, addr, memo)
     }
 
-    // async chainTransfer(
-    //     amt: BN,
-    //     sourceChain: string = 'X',
-    //     destinationChain: ChainIdType
-    // ): Promise<string> {
-    //     let fee = avm.getTxFee()
-    //     let amtFee = amt.add(fee)
-    //
-    //     if (destinationChain === 'C') {
-    //         // C Chain imports/exports do not have a fee
-    //         amtFee = amt
-    //     }
-    //     // EXPORT
-    //     let xId = avm.getBlockchainID()
-    //
-    //     if (sourceChain === 'X') {
-    //         let destinationAddr
-    //         if (destinationChain === 'P') {
-    //             destinationAddr = this.getCurrentAddressPlatform()
-    //         } else {
-    //             destinationAddr = this.ethAddressBech
-    //         }
-    //         let fromAddresses = this.getAllAddressesX()
-    //         let changeAddress = this.getChangeAddressAvm()
-    //         let exportTx = await buildExportTransaction(
-    //             sourceChain,
-    //             destinationChain,
-    //             this.utxoset,
-    //             fromAddresses,
-    //             destinationAddr,
-    //             amtFee,
-    //             changeAddress
-    //         )
-    //         let tx = await this.sign<AVMUnsignedTx, AVMTx>(exportTx as AVMUnsignedTx)
-    //         return avm.issueTx(tx)
-    //     } else if (sourceChain === 'P') {
-    //         let utxoSet = this.platformHelper.utxoSet as PlatformUTXOSet
-    //         let destinationAddr = this.externalHelper.getCurrentAddress()
-    //
-    //         let pChangeAddr = this.platformHelper.getCurrentAddress()
-    //         let fromAddrs = this.platformHelper.getAllDerivedAddresses()
-    //
-    //         let exportTx = await pChain.buildExportTx(
-    //             utxoSet,
-    //             amtFee,
-    //             xId,
-    //             [destinationAddr],
-    //             fromAddrs,
-    //             [pChangeAddr]
-    //         )
-    //
-    //         let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(exportTx, false)
-    //         return pChain.issueTx(tx)
-    //     } else if (sourceChain === 'C') {
-    //         let destinationAddr = this.getCurrentAddressAvm()
-    //         let fromAddresses = [this.ethAddress]
-    //         let changeAddress = this.ethAddressBech
-    //         let utxos = this.getPlatformUTXOSet()
-    //
-    //         let exportTx = (await buildExportTransaction(
-    //             sourceChain,
-    //             destinationChain,
-    //             utxos,
-    //             fromAddresses,
-    //             destinationAddr,
-    //             amtFee,
-    //             changeAddress,
-    //             this.ethAddressBech
-    //         )) as EVMUnsignedTx
-    //
-    //         let tx = (await this.signTransactionParsable(exportTx, ['0/0'], 'C')) as EvmTx
-    //
-    //         store.commit('Ledger/closeModal')
-    //
-    //         return cChain.issueTx(tx)
-    //     } else {
-    //         throw 'Invalid source chain.'
-    //     }
-    // }
-
     async exportFromPChain(amt: BN) {
         return await WalletHelper.exportFromPChain(this, amt)
     }
@@ -998,123 +934,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async importToPlatformChain(): Promise<string> {
         return await WalletHelper.importToPlatformChain(this)
-        //
-        // // await this.platformHelper.findHdIndex();
-        // const utxoSet = (await this.platformHelper.getAtomicUTXOs()) as PlatformUTXOSet
-        //
-        // if (utxoSet.getAllUTXOs().length === 0) {
-        //     throw new Error('Nothing to import.')
-        // }
-        //
-        // // let pAddrs = this.platformHelper.getAllDerivedAddresses()
-        // // Owner addresses, the addresses we exported to
-        // let pToAddr = this.platformHelper.getCurrentAddress()
-        //
-        // let hrp = ava.getHRP()
-        // let utxoAddrs = utxoSet
-        //     .getAddresses()
-        //     .map((addr) => bintools.addressToString(hrp, 'P', addr))
-        // // let fromAddrs = utxoAddrs
-        // let ownerAddrs = utxoAddrs
-        //
-        // const unsignedTx = await pChain.buildImportTx(
-        //     utxoSet,
-        //     ownerAddrs,
-        //     avm.getBlockchainID(),
-        //     [pToAddr],
-        //     [pToAddr],
-        //     [pToAddr],
-        //     undefined,
-        //     undefined
-        // )
-        // const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
-        //
-        // return pChain.issueTx(tx)
     }
 
-    // TODO: Move to Core HD file
     async importToXChain(sourceChain: AvmImportChainType): Promise<string> {
         return await WalletHelper.importToXChain(this, sourceChain)
-
-        // const utxoSet = (await this.externalHelper.getAtomicUTXOs()) as AVMUTXOSet
-        //
-        // if (utxoSet.getAllUTXOs().length === 0) {
-        //     throw new Error('Nothing to import.')
-        // }
-        //
-        // // let externalIndex = this.externalHelper.hdIndex
-        // // let xAddrs = this.externalHelper.getAllDerivedAddresses()
-        // let xToAddr = this.externalHelper.getCurrentAddress()
-        // // let externalAddresses = this.externalHelper.getExtendedAddresses()
-        // // let xAddrs = this.getDerivedAddresses()
-        // // let xToAddr = this.externalHelper.getAllDerivedAddresses(externalIndex+10);
-        //
-        // let hrp = ava.getHRP()
-        // let utxoAddrs = utxoSet
-        //     .getAddresses()
-        //     .map((addr) => bintools.addressToString(hrp, 'X', addr))
-        //
-        // let fromAddrs = utxoAddrs
-        // let ownerAddrs = utxoAddrs
-        //
-        // let sourceChainId
-        // if (sourceChain === 'P') {
-        //     sourceChainId = pChain.getBlockchainID()
-        // } else {
-        //     sourceChainId = cChain.getBlockchainID()
-        // }
-        //
-        // // Owner addresses, the addresses we exported to
-        // const unsignedTx = await avm.buildImportTx(
-        //     utxoSet,
-        //     ownerAddrs,
-        //     sourceChainId,
-        //     [xToAddr],
-        //     fromAddrs,
-        //     [xToAddr]
-        // )
-        //
-        // let tx = await this.sign<AVMUnsignedTx, AVMTx>(unsignedTx)
-        //
-        // return avm.issueTx(tx)
     }
 
     async importToCChain(): Promise<string> {
         return await WalletHelper.importToCChain(this)
-        //
-        // const utxoResponse: UTXOResponse = await cChain.getUTXOs(
-        //     this.ethAddressBech,
-        //     avm.getBlockchainID()
-        // )
-        // const utxoSet: EVMUTXOSet = utxoResponse.utxos
-        //
-        // if (utxoSet.getAllUTXOs().length === 0) {
-        //     throw new Error('Nothing to import.')
-        // }
-        //
-        // let ownerAddresses = [this.ethAddressBech]
-        // let fromAddresses = ownerAddresses
-        // let sourceChain = avm.getBlockchainID()
-        //
-        // let toAddress = '0x' + this.ethAddress
-        //
-        // const unsignedTx = await cChain.buildImportTx(
-        //     utxoSet,
-        //     toAddress,
-        //     ownerAddresses,
-        //     sourceChain,
-        //     fromAddresses
-        // )
-        //
-        // let tx = (await this.signTransactionParsable(
-        //     unsignedTx,
-        //     Array(utxoSet.getAllUTXOs().length).fill('0/0'),
-        //     'C'
-        // )) as EvmTx
-        //
-        // store.commit('Ledger/closeModal')
-        //
-        // return cChain.issueTx(tx)
     }
 
     async delegate(
@@ -1126,54 +953,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         utxos?: PlatformUTXO[]
     ): Promise<string> {
         return await WalletHelper.delegate(this, nodeID, amt, start, end, rewardAddress, utxos)
-        //
-        // // let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain;
-        // let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
-        // let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
-        // let stakeAmount = amt
-        //
-        // // If given custom UTXO set use that
-        // if (utxos) {
-        //     utxoSet = new PlatformUTXOSet()
-        //     utxoSet.addArray(utxos)
-        // }
-        //
-        // // If reward address isn't given use index 0 address
-        // if (!rewardAddress) {
-        //     rewardAddress = this.getPlatformRewardAddress()
-        // }
-        //
-        // let stakeReturnAddr = this.getPlatformRewardAddress()
-        //
-        // // For change address use first available on the platform chain
-        // let changeAddress = this.platformHelper.getFirstAvailableAddress()
-        // // Causes Ledger to crash because change and reward address are the same
-        // // let changeAddress = this.platformHelper.getCurrentAddress()
-        //
-        // // Convert dates to unix time
-        // let startTime = new BN(Math.round(start.getTime() / 1000))
-        // let endTime = new BN(Math.round(end.getTime() / 1000))
-        //
-        // const unsignedTx = await pChain.buildAddDelegatorTx(
-        //     utxoSet,
-        //     [stakeReturnAddr],
-        //     pAddressStrings,
-        //     [changeAddress],
-        //     nodeID,
-        //     startTime,
-        //     endTime,
-        //     stakeAmount,
-        //     [rewardAddress] // reward address
-        // )
-        //
-        // const tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
-        //
-        // // Update UTXOS
-        // setTimeout(async () => {
-        //     this.getUTXOs()
-        // }, 3000)
-        //
-        // return pChain.issueTx(tx)
     }
 
     async validate(
@@ -1195,62 +974,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             rewardAddress,
             utxos
         )
-
-        // let utxoSet: PlatformUTXOSet = this.platformHelper.utxoSet as PlatformUTXOSet
-        //
-        // // If given custom UTXO set use that
-        // if (utxos) {
-        //     utxoSet = new PlatformUTXOSet()
-        //     utxoSet.addArray(utxos)
-        // }
-        //
-        // let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
-        //
-        // let stakeAmount = amt
-        //
-        // // If reward address isn't given use index 0 address
-        // if (!rewardAddress) {
-        //     rewardAddress = this.getPlatformRewardAddress()
-        // }
-        //
-        // // For change address use first available on the platform chain
-        // let changeAddress = this.platformHelper.getFirstAvailableAddress()
-        // // Causes Ledger to crash because change and reward address are the same
-        // // let changeAddress = this.platformHelper.getCurrentAddress()
-        //
-        // // Stake is always returned to address at index 0
-        // let stakeReturnAddr = this.getPlatformRewardAddress()
-        //
-        // // Convert dates to unix time
-        // let startTime = new BN(Math.round(start.getTime() / 1000))
-        // let endTime = new BN(Math.round(end.getTime() / 1000))
-        //
-        // const unsignedTx = await pChain.buildAddValidatorTx(
-        //     utxoSet,
-        //     [stakeReturnAddr],
-        //     pAddressStrings, // from
-        //     [changeAddress], // change
-        //     nodeID,
-        //     startTime,
-        //     endTime,
-        //     stakeAmount,
-        //     [rewardAddress],
-        //     delegationFee
-        // )
-        //
-        // // console.log(unsignedTx.serialize('display'));
-        // // console.log(unsignedTx.toBuffer().toString('hex'))
-        //
-        // let tx = await this.sign<PlatformUnsignedTx, PlatformTx>(unsignedTx, false)
-        //
-        // // console.log(tx.toBuffer().toString('hex'));
-        // // console.log((tx.serialize()))
-        // // console.log((tx.serialize('display')))
-        // // Update UTXOS
-        // setTimeout(async () => {
-        //     this.getUTXOs()
-        // }, 3000)
-        // return pChain.issueTx(tx)
     }
 
     async signMessage(msgStr: string, address: string): Promise<string> {
@@ -1292,89 +1015,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {
         return await WalletHelper.sendEth(this, to, amount, gasPrice, gasLimit)
-        // const nonce = await web3.eth.getTransactionCount(this.ethAddress)
-        // const chainId = await web3.eth.getChainId()
-        // const networkId = await web3.eth.net.getId()
-        // const chainParams = {
-        //     common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
-        // }
-        // const partialTxParams = txParams || {
-        //     to,
-        //     nonce: toHex(nonce),
-        //     gasPrice: toHex(gasPrice),
-        //     gasLimit: toHex(gasLimit),
-        //     value: toHex(amount),
-        // }
-        //
-        // const unsignedTx = Transaction.fromTxData({ ...partialTxParams }, chainParams)
-        //
-        // const rawUnsignedTx = rlp.encode([
-        //     bnToRlp(unsignedTx.nonce),
-        //     bnToRlp(unsignedTx.gasPrice),
-        //     bnToRlp(unsignedTx.gasLimit),
-        //     unsignedTx.to !== undefined ? unsignedTx.to.buf : Buffer.from([]),
-        //     bnToRlp(unsignedTx.value),
-        //     unsignedTx.data,
-        //     bnToRlp(new BN(chainId)),
-        //     Buffer.from([]),
-        //     Buffer.from([]),
-        // ])
-        //
-        // try {
-        //     let amtNano = bnToBig(amount, 9)
-        //     let totFee = gasPrice.mul(new BN(gasLimit))
-        //     let feeNano = bnToBig(totFee, 9)
-        //     // Open Modal Prompt
-        //     store.commit('Ledger/openModal', {
-        //         title: 'Transfer',
-        //         messages: [
-        //             {
-        //                 title: 'Amount',
-        //                 value: `${amtNano.toLocaleString(0)} nAVAX`,
-        //             },
-        //             {
-        //                 title: 'To',
-        //                 value: `${to}`,
-        //             },
-        //             {
-        //                 title: 'Fee',
-        //                 value: `${feeNano.toLocaleString(0)} GWEI`,
-        //             },
-        //         ],
-        //         info: null,
-        //     })
-        //     const signature = await this.ethApp.signTransaction(
-        //         LEDGER_ETH_ACCOUNT_PATH,
-        //         rawUnsignedTx
-        //     )
-        //     store.commit('Ledger/closeModal')
-        //
-        //     const signatureBN = {
-        //         v: new BN(signature.v, 16),
-        //         r: new BN(signature.r, 16),
-        //         s: new BN(signature.s, 16),
-        //     }
-        //     const signedTx = Transaction.fromTxData(
-        //         { ...partialTxParams, ...signatureBN },
-        //         chainParams
-        //     )
-        //
-        //     let err,
-        //         receipt = await web3.eth.sendSignedTransaction(
-        //             '0x' + signedTx.serialize().toString('hex')
-        //         )
-        //
-        //     if (err) {
-        //         console.error(err)
-        //         throw err
-        //     }
-        //
-        //     return receipt.transactionHash
-        // } catch (e) {
-        //     store.commit('Ledger/closeModal')
-        //     console.error(e)
-        //     throw e
-        // }
     }
 
     // TODO: Move to shared file
