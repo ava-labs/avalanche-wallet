@@ -17,9 +17,11 @@ import {
     ExportWalletsInput,
     WalletType,
     AccessWalletMultipleInput,
+    SaveAccountInput,
+    iUserAccountEncrypted,
 } from '@/store/types'
 
-import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
+import { AllKeyFileDecryptedTypes, KeyFileV6 } from '@/js/IKeystore'
 
 Vue.use(Vuex)
 
@@ -49,6 +51,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
+import uuidv1 from 'uuid/v1'
 
 export default new Vuex.Store({
     modules: {
@@ -86,6 +89,12 @@ export default new Vuex.Store({
                 let addrNow = state.activeWallet.getCurrentAddressAvm()
                 state.address = addrNow
             }
+        },
+        addWalletToAccount(state, encodedWallet: iUserAccountEncrypted) {
+            let accountsRaw = localStorage.getItem('accounts')
+            let accounts: iUserAccountEncrypted[] = JSON.parse(accountsRaw) || []
+            accounts.push(encodedWallet)
+            localStorage.setItem('accounts', JSON.stringify(accounts))
         },
     },
     actions: {
@@ -296,6 +305,45 @@ export default new Vuex.Store({
                 dispatch('Notifications/add', {
                     title: 'Remember Wallet',
                     message: 'Error remembering wallet.',
+                    type: 'error',
+                })
+            }
+        },
+
+        // Creates a keystore file and saves to local storage
+        async saveAccount({ state, dispatch, commit }, data: SaveAccountInput) {
+            try {
+                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+                let pass = data.password
+                if (!pass || wallet?.type === 'ledger') return
+
+                let wallets = state.wallets as AvaHdWallet[]
+                if (!wallet) throw new Error('No active wallet.')
+                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
+
+                let file = await makeKeyfile(wallets, pass, activeIndex)
+
+                let uid = uuidv1()
+
+                let encryptedWallet: iUserAccountEncrypted = {
+                    id: uid,
+                    name: data.accountName,
+                    wallet: file,
+                }
+                commit('addWalletToAccount', encryptedWallet)
+
+                dispatch('Notifications/add', {
+                    title: 'Account Saved',
+                    message: 'Your Accounts are stored securely for easy access.',
+                    type: 'info',
+                })
+
+                // No more voltile wallets
+                state.volatileWallets = []
+            } catch (e) {
+                dispatch('Notifications/add', {
+                    title: 'Account Save',
+                    message: 'Error Saving Account.',
                     type: 'error',
                 })
             }
