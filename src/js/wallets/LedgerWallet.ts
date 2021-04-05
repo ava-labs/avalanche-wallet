@@ -32,10 +32,12 @@ import {
     TransferableOutput as AVMTransferableOutput,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
+    ImportTx as AVMImportTx,
+    ExportTx as AVMExportTx,
 } from 'avalanche/dist/apis/avm'
 
 import {
-    ImportTx,
+    ImportTx as PlatformImportTx,
     ExportTx,
     TransferableOutput as PlatformTransferableOutput,
     Tx as PlatformTx,
@@ -51,6 +53,7 @@ import {
 import {
     UTXOSet as EVMUTXOSet,
     UnsignedTx as EVMUnsignedTx,
+    ImportTx as EVMImportTx,
     ExportTx as EVMExportTx,
     Tx as EvmTx,
     EVMConstants,
@@ -150,7 +153,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
             (txType === PlatformVMConstants.IMPORTTX && chainId === 'P')
         ) {
-            items = (tx as ImportTx).getImportInputs()
+            items = ((tx as AVMImportTx) || PlatformImportTx).getImportInputs()
         }
 
         let hrp = getPreferredHRP(ava.getNetworkID())
@@ -267,14 +270,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
             (txType === EVMConstants.IMPORTTX && chainId === 'C')
         ) {
-            items = (tx as ImportTx).getImportInputs()
+            items = ((tx as AVMImportTx) || PlatformImportTx || EVMImportTx).getImportInputs()
         }
 
         // Try to get operations, it will fail if there are none, ignore and continue
         try {
             operations = (tx as OperationTx).getOperations()
         } catch (e) {
-            console.log(e)
+            console.error(e)
         }
 
         let CredentialClass
@@ -290,7 +293,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         try {
             evmInputs = (tx as EVMExportTx).getInputs()
         } catch (e) {
-            console.log(e)
+            console.error(e)
         }
 
         for (let i = 0; i < items.length; i++) {
@@ -395,7 +398,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             return signedTx as SignedTx
         } catch (e) {
             store.commit('Ledger/closeModal')
-            console.log(e)
+            console.error(e)
             throw e
         }
     }
@@ -458,7 +461,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             return signedTx as SignedTx
         } catch (e) {
             store.commit('Ledger/closeModal')
-            console.log(e)
+            console.error(e)
             throw e
         }
     }
@@ -762,9 +765,22 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     async signC(unsignedTx: EVMUnsignedTx): Promise<EvmTx> {
         // TODO: Might need to upgrade paths array to:
         //  paths = Array(utxoSet.getAllUTXOs().length).fill('0/0'),
-        let tx = (await this.signTransactionParsable(unsignedTx, ['0/0'], 'C')) as EvmTx
+        let tx = unsignedTx.getTransaction()
+        let typeId = tx.getTxType()
+
+        let exportImportIds = [EVMConstants.EXPORTTX, EVMConstants.IMPORTTX]
+        let paths = ['0/0']
+        if (typeId === EVMConstants.EXPORTTX) {
+            let ins = (tx as EVMExportTx).getInputs()
+            paths = ins.map((input) => '0/0')
+        } else if (typeId === EVMConstants.IMPORTTX) {
+            let ins = (tx as EVMImportTx).getImportInputs()
+            paths = ins.map((input) => '0/0')
+        }
+        console.log(paths)
+        let txSigned = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
         store.commit('Ledger/closeModal')
-        return tx
+        return txSigned
     }
 
     async signEvm(tx: Transaction) {
