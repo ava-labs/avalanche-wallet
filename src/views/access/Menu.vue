@@ -20,27 +20,77 @@
             <LedgerButton class="option button_primary"></LedgerButton>
             <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
+        <!-- {{ accounts }} -->
+        <div v-if="accounts.length">
+            <hr />
+            <h3>{{ $t('access.accounts_found') }}</h3>
+            <div class="flex_container" v-for="acct in accounts" :key="acct.baseAddress">
+                <router-link
+                    class="account_card option button_primary"
+                    :to="`/access/account/${acct.baseAddress}`"
+                >
+                    {{ acct.name }}
+                </router-link>
+                <fa icon="trash" @click="deleteAccount(acct.baseAddress)"></fa>
+            </div>
+            <hr />
+        </div>
+
         <ToS style="margin: 20px !important"></ToS>
         <router-link to="/" class="link">{{ $t('access.cancel') }}</router-link>
     </div>
 </template>
 
-<script>
+<script lang="ts">
 // import TorusGoogle from "@/components/Torus/TorusGoogle";
-import LedgerButton from '@/components/Ledger/LedgerButton'
-import ToS from '@/components/misc/ToS'
+import { Vue, Component } from 'vue-property-decorator'
+import LedgerButton from '@/components/Ledger/LedgerButton.vue'
+import ToS from '@/components/misc/ToS.vue'
+import { removeAccountByID } from '@/js/LocalStorage'
+import { iUserAccountEncrypted } from '@/store/types'
 
-export default {
+@Component({
     components: {
         ToS,
         LedgerButton,
     },
+})
+export default class Menu extends Vue {
+    accounts: iUserAccountEncrypted[] = []
+
+    created() {
+        this.refreshAccounts()
+    }
+    refreshAccounts() {
+        let accountsRaw = localStorage.getItem('accounts') || '{}'
+        this.accounts = JSON.parse(accountsRaw) || []
+    }
+    deleteAccount(id: string) {
+        let isConfirm = confirm('Are you sure you want to delete this account?')
+        if (isConfirm) {
+            removeAccountByID(id)
+            this.refreshAccounts()
+        }
+    }
 }
 </script>
 
 <style scoped lang="scss">
 @use "../../main";
-
+.flex_container {
+    display: flex;
+    align-items: center;
+    svg {
+        &:hover {
+            opacity: 0.8;
+            box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+.account_card {
+    margin: 30px auto;
+    display: grid;
+}
 .access_card {
     background-color: var(--bg-light) !important;
     padding: main.$container-padding;
