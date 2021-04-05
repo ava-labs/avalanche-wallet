@@ -323,10 +323,10 @@ export default new Vuex.Store({
 
                 let file = await makeKeyfile(wallets, pass, activeIndex)
 
-                let uid = uuidv1()
+                const baseAddress = wallet.getBaseAddress()
 
                 let encryptedWallet: iUserAccountEncrypted = {
-                    id: uid,
+                    baseAddress,
                     name: data.accountName,
                     wallet: file,
                 }

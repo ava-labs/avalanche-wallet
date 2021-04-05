@@ -126,12 +126,12 @@ export interface SaveAccountInput {
 
 export interface iUserAccountEncrypted {
     name: string
-    id: string
+    baseAddress: string
     wallet: AllKeyFileTypes
 }
 
 export interface iUserAccountDecrypted {
     name: string
-    id: string
+    baseAddress: string
     wallet: AllKeyFileDecryptedTypes
 }
