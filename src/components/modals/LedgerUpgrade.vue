@@ -20,7 +20,8 @@
 </template>
 <script lang="ts">
 import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import 'reflect-metadata'
 import { Vue, Component, Watch } from 'vue-property-decorator'
 

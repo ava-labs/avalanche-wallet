@@ -7,7 +7,7 @@
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
             <template v-else>
-                <div class="message block" v-for="message in messages" :key="message.value">
+                <div class="message block" v-for="(message, i) in messages" :key="i">
                     <p class="title">{{ message.title }}</p>
                     <p class="value">{{ message.value }}</p>
                 </div>

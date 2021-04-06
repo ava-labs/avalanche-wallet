@@ -12,12 +12,11 @@ import {
     IWalletNftDict,
     IWalletNftMintDict,
     RootState,
-    WalletType,
 } from '@/store/types'
 import { ava, avm, bintools, cChain } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
-
+import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import {
     AmountOutput,

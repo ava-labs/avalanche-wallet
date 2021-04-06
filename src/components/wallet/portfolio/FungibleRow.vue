@@ -38,7 +38,9 @@ import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
 import BN from 'bn.js'
 import { bnToBig } from '../../../helpers/helper'
-import { priceDict, WalletType } from '../../../store/types'
+import { priceDict } from '../../../store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import Big from 'big.js'
 
 @Component({

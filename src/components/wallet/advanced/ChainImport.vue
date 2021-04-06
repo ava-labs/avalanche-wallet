@@ -33,7 +33,8 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 @Component({
     components: { Spinner },
 })
