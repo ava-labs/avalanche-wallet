@@ -51,7 +51,6 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
-import uuidv1 from 'uuid/v1'
 
 export default new Vuex.Store({
     modules: {
@@ -323,10 +322,8 @@ export default new Vuex.Store({
 
                 let file = await makeKeyfile(wallets, pass, activeIndex)
 
-                const baseAddress = wallet.getBaseAddress()
-
                 let encryptedWallet: iUserAccountEncrypted = {
-                    baseAddress,
+                    baseAddress: wallet.ethAddress,
                     name: data.accountName,
                     wallet: file,
                 }
