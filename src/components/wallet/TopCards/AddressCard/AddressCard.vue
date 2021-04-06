@@ -55,7 +55,10 @@ import QRCode from 'qrcode'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import { WalletType, WalletNameType } from '@/js/wallets/types'
 
-import AvaHdWallet, { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet, {
+    AVA_ACCOUNT_PATH,
+    LEDGER_ETH_ACCOUNT_PATH,
+} from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
@@ -172,7 +175,7 @@ export default class AddressCard extends Vue {
     }
 
     get activeIdx(): number {
-        const wallet = this.activeWallet as AvaHdWallet
+        const wallet = this.activeWallet as MnemonicWallet
         const walletType = wallet.type
 
         if (walletType === 'singleton') return 0

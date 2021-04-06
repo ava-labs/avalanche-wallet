@@ -29,7 +29,7 @@ import { WalletType } from '@/js/wallets/types'
 
 import { ava } from '@/AVA'
 import { getPreferredHRP } from 'avalanche/dist/utils'
-import { AVA_ACCOUNT_PATH } from '../../../js/wallets/AvaHdWallet'
+import { AVA_ACCOUNT_PATH } from '../../../js/wallets/MnemonicWallet'
 
 @Component
 export default class HdDerivationListRow extends Vue {

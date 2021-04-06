@@ -227,7 +227,7 @@ import Big from 'big.js'
 //@ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import { bintools, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import ConfirmPage from '@/components/wallet/earn/Validate/ConfirmPage.vue'
 import moment from 'moment'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
@@ -309,7 +309,7 @@ export default class AddValidator extends Vue {
     }
 
     get rewardAddressLocal() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getPlatformRewardAddress()
     }
 

@@ -68,7 +68,7 @@ import { ILedgerAppConfig } from '@/store/types'
 import { WalletNameType } from '@/js/wallets/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
 import { web3 } from '@/evm'
-import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './AvaHdWallet'
+import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './MnemonicWallet'
 import { ChainIdType } from '@/constants'
 import { ParseableAvmTxEnum, ParseablePlatformEnum, ParseableEvmTxEnum } from '../TxHelper'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
@@ -637,57 +637,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return messages
     }
 
-    // need to add destination chain param to know if it's C Chain because obsidian
-    // app does not support x => c and p => c parsing txs
-    // async sign<
-    //     UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-    //     SignedTx extends AVMTx | PlatformTx
-    // >(unsignedTx: UnsignedTx, isAVM: boolean = true): Promise<SignedTx> {
-    //     // Check if transaction can be parsed by ledger
-    //     let tx = unsignedTx.getTransaction()
-    //     let txType = tx.getTxType()
-    //     let chainId: ChainIdType = isAVM ? 'X' : 'P'
-    //
-    //     let parseableTxs = chainId === 'X' ? ParseableAvmTxEnum : ParseablePlatformEnum
-    //
-    //     let { paths, isAvaxOnly } = this.getTransactionPaths<UnsignedTx>(unsignedTx, chainId)
-    //     // If ledger doesnt support parsing, sign hash
-    //     let canLedgerParse = this.config.version >= '0.3.1'
-    //     let isParsableType = txType in parseableTxs && isAvaxOnly
-    //
-    //     if (!isAVM) {
-    //         // TODO: Remove after ledger is fixed
-    //         // If UTXOS contain lockedStakeable funds always use sign hash
-    //         let txIns = unsignedTx.getTransaction().getIns()
-    //         for (var i = 0; i < txIns.length; i++) {
-    //             let typeID = txIns[i].getInput().getTypeID()
-    //             if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
-    //                 canLedgerParse = false
-    //                 break
-    //             }
-    //         }
-    //     }
-    //
-    //     let signedTx
-    //     if (canLedgerParse && isParsableType) {
-    //         signedTx = await this.signTransactionParsable<UnsignedTx, SignedTx>(
-    //             unsignedTx,
-    //             paths,
-    //             chainId
-    //         )
-    //     } else {
-    //         signedTx = await this.signTransactionHash<UnsignedTx, SignedTx>(
-    //             unsignedTx,
-    //             paths,
-    //             chainId
-    //         )
-    //     }
-    //
-    //     store.commit('Ledger/closeModal')
-    //
-    //     return signedTx
-    // }
-
     async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
@@ -768,7 +717,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction()
         let typeId = tx.getTxType()
 
-        let exportImportIds = [EVMConstants.EXPORTTX, EVMConstants.IMPORTTX]
         let paths = ['0/0']
         if (typeId === EVMConstants.EXPORTTX) {
             let ins = (tx as EVMExportTx).getInputs()
@@ -777,7 +725,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let ins = (tx as EVMImportTx).getImportInputs()
             paths = ins.map((input) => '0/0')
         }
-        console.log(paths)
+
         let txSigned = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
         store.commit('Ledger/closeModal')
         return txSigned
@@ -1031,15 +979,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return await WalletHelper.sendEth(this, to, amount, gasPrice, gasLimit)
     }
 
-    // TODO: Move to shared file
     async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
-        let from = '0x' + this.ethAddress
-        let tx = token.createTransferTx(to, amount)
-        let estGas = await tx.estimateGas({
-            from: from,
-        })
-        // Return 10% more
-        return Math.round(estGas * 1.1)
+        return await WalletHelper.estimateGas(this, to, amount, token)
     }
 
     async sendERC20(

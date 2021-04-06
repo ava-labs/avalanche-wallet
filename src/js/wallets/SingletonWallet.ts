@@ -670,15 +670,8 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         // return receipt.transactionHash
     }
 
-    // TODO: Move to shared file
     async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
-        let from = '0x' + this.ethAddress
-        let tx = token.createTransferTx(to, amount)
-        let estGas = await tx.estimateGas({
-            from: from,
-        })
-        // Return 10% more
-        return Math.round(estGas * 1.1)
+        return await WalletHelper.estimateGas(this, to, amount, token)
     }
 
     async sendERC20(

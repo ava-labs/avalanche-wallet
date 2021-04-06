@@ -29,7 +29,7 @@ import { ChainIdType } from '@/constants'
 import Erc20Token from '@/js/Erc20Token'
 
 import { Transaction } from '@ethereumjs/tx'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
@@ -44,7 +44,7 @@ export type AvmImportChainType = 'P' | 'C'
 export type AvmExportChainType = 'P' | 'C'
 
 export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
-export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
+export type WalletType = MnemonicWallet | LedgerWallet | SingletonWallet
 
 interface IAddressManager {
     getCurrentAddressAvm(): string

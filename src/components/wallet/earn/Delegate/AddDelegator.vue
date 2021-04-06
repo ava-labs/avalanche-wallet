@@ -211,7 +211,7 @@ import moment from 'moment'
 import { BN } from 'avalanche'
 import { AmountOutput, PlatformVMConstants, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
 import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
 import { Defaults, ONEAVAX } from 'avalanche/dist/utils'
 import { ValidatorListItem } from '@/store/modules/platform/types'
@@ -402,7 +402,7 @@ export default class AddDelegator extends Vue {
     }
 
     get rewardAddressLocal() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getPlatformRewardAddress()
     }
 

@@ -26,7 +26,7 @@ Vue.use(Vuex)
 import router from '@/router'
 
 import { avm, bintools } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
 import { UnixNow } from 'avalanche/dist/utils'
 import { UTXO, KeyPair as AVMKeyPair, AmountOutput, NFTMintOutput } from 'avalanche/dist/apis/avm'
@@ -92,8 +92,8 @@ export default new Vuex.Store({
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
         // TODO rename to accessWalletMenmonic
-        async accessWallet({ state, dispatch, commit }, mnemonic: string): Promise<AvaHdWallet> {
-            let wallet: AvaHdWallet = await dispatch('addWalletMnemonic', mnemonic)
+        async accessWallet({ state, dispatch, commit }, mnemonic: string): Promise<MnemonicWallet> {
+            let wallet: MnemonicWallet = await dispatch('addWalletMnemonic', mnemonic)
             await dispatch('activateWallet', wallet)
 
             dispatch('onAccess')
@@ -214,7 +214,7 @@ export default new Vuex.Store({
         async addWalletMnemonic(
             { state, dispatch },
             mnemonic: string
-        ): Promise<AvaHdWallet | null> {
+        ): Promise<MnemonicWallet | null> {
             // Cannot add mnemonic wallets on ledger mode
             if (state.activeWallet?.type === 'ledger') return null
 
@@ -222,13 +222,13 @@ export default new Vuex.Store({
             for (var i = 0; i < state.wallets.length; i++) {
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
-                    if ((w as AvaHdWallet).mnemonic === mnemonic) {
+                    if ((w as MnemonicWallet).mnemonic === mnemonic) {
                         throw new Error('Wallet already exists.')
                     }
                 }
             }
 
-            let wallet = new AvaHdWallet(mnemonic)
+            let wallet = new MnemonicWallet(mnemonic)
             state.wallets.push(wallet)
             state.volatileWallets.push(wallet)
             return wallet
@@ -264,7 +264,7 @@ export default new Vuex.Store({
             return wallet
         },
 
-        removeWallet({ state, dispatch }, wallet: AvaHdWallet) {
+        removeWallet({ state, dispatch }, wallet: MnemonicWallet) {
             // TODO: This might cause an error use wallet id instead
             let index = state.wallets.indexOf(wallet)
             state.wallets.splice(index, 1)
@@ -273,10 +273,10 @@ export default new Vuex.Store({
         // Creates a keystore file and saves to local storage
         async rememberWallets({ state, dispatch }, pass: string | undefined) {
             try {
-                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+                let wallet = state.activeWallet as MnemonicWallet | SingletonWallet | null
                 if (!pass || wallet?.type === 'ledger') return
 
-                let wallets = state.wallets as AvaHdWallet[]
+                let wallets = state.wallets as MnemonicWallet[]
                 if (!wallet) throw new Error('No active wallet.')
                 let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 
@@ -317,7 +317,7 @@ export default new Vuex.Store({
             }
         },
 
-        async activateWallet({ state, dispatch, commit }, wallet: AvaHdWallet | LedgerWallet) {
+        async activateWallet({ state, dispatch, commit }, wallet: MnemonicWallet | LedgerWallet) {
             state.activeWallet = wallet
 
             dispatch('Assets/updateAvaAsset')
@@ -329,7 +329,7 @@ export default new Vuex.Store({
             try {
                 let pass = input.password
                 let wallets = input.wallets
-                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+                let wallet = state.activeWallet as MnemonicWallet | SingletonWallet | null
                 if (!wallet) throw new Error('No active wallet.')
                 let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 

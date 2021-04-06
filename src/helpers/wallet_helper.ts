@@ -18,12 +18,7 @@ import {
 import { PayloadBase } from 'avalanche/dist/utils'
 import { ITransaction } from '@/components/wallet/transfer/types'
 
-import {
-    Tx as PlatformTx,
-    UnsignedTx as PlatformUnsignedTx,
-} from 'avalanche/dist/apis/platformvm/tx'
 import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
-import { ChainIdType } from '@/constants'
 import { web3 } from '@/evm'
 import EthereumjsCommon from '@ethereumjs/common'
 import { Transaction } from '@ethereumjs/tx'
@@ -246,6 +241,7 @@ class WalletHelper {
         } else {
             sourceChainId = cChain.getBlockchainID()
         }
+
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
@@ -255,6 +251,7 @@ class WalletHelper {
             fromAddrs,
             [xToAddr]
         )
+
         const tx = await wallet.signX(unsignedTx)
         return await avm.issueTx(tx)
     }
@@ -316,8 +313,6 @@ class WalletHelper {
             fromAddresses
         )
         let tx = await wallet.signC(unsignedTx)
-        // let keyChain = this.ethKeyChain
-        // const tx = unsignedTx.sign(keyChain)
         let id = await cChain.issueTx(tx)
 
         return id
@@ -480,6 +475,16 @@ class WalletHelper {
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
         return hash.transactionHash
+    }
+
+    static async estimateGas(wallet: WalletType, to: string, amount: BN, token: Erc20Token) {
+        let from = '0x' + wallet.getEvmAddress()
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
     }
 }
 

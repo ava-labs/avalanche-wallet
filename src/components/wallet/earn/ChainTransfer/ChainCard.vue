@@ -23,7 +23,7 @@ import { UTXO } from 'avalanche/dist/apis/platformvm'
 import { ChainIdType } from '@/constants'
 import { BN } from 'avalanche'
 import AvaAsset from '@/js/AvaAsset'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { WalletType } from '@/js/wallets/types'
 
 import { bnToBig } from '@/helpers/helper'
@@ -62,7 +62,7 @@ export default class ChainCard extends Vue {
     }
 
     get wallet(): WalletType {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
     }
 

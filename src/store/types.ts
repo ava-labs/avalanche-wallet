@@ -2,7 +2,7 @@ import Big from 'big.js'
 
 import { Buffer, BN } from 'avalanche'
 import AvaAsset from '@/js/AvaAsset'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { AllKeyFileTypes } from '@/js/IKeystore'
 import { UTXO } from 'avalanche/dist/apis/avm'
@@ -102,7 +102,7 @@ export interface ImportKeyfileInput {
 
 export interface ExportWalletsInput {
     password: string
-    wallets: AvaHdWallet[]
+    wallets: MnemonicWallet[]
 }
 
 export type SessionPersistFile = SessionPersistKey[]
