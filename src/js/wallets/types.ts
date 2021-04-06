@@ -23,7 +23,6 @@ import {
 
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
-import { StandardTx, StandardUnsignedTx } from 'avalanche/dist/common'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { ChainIdType } from '@/constants'
 import Erc20Token from '@/js/Erc20Token'
@@ -32,8 +31,6 @@ import { Transaction } from '@ethereumjs/tx'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-
-// export type wallet_type = "hd" | "singleton";
 
 export interface IIndexKeyCache {
     [index: number]: AVMKeyPair
@@ -49,7 +46,6 @@ export type WalletType = MnemonicWallet | LedgerWallet | SingletonWallet
 interface IAddressManager {
     getCurrentAddressAvm(): string
     getCurrentAddressPlatform(): string
-    // getChangeAddress(): string
     getChangeAddressAvm(): string
     getChangeAddressPlatform(): string
     getDerivedAddresses(): string[]
@@ -58,7 +54,6 @@ interface IAddressManager {
     getAllAddressesX(): string[] // returns all addresses this wallet own on the X chain
     getAllAddressesP(): string[] // returns all addresses this wallet own on the P chain
     getHistoryAddresses(): string[]
-    // getExtendedPlatformAddresses(): string[]
     getPlatformRewardAddress(): string
     getBaseAddress(): string
     getEvmAddress(): string
@@ -74,39 +69,19 @@ export interface AvaWalletCore extends IAddressManager {
     utxoset: UTXOSet
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
-    // buildCreateNftFamilyTx(name: string, symbol: string, groupNum: number): Promise<UnsignedTx>
-    // buildMintNftTx(
-    //     mintUtxo: AVMUTXO,
-    //     payload: PayloadBase,
-    //     quantity: number,
-    //     ownerAddress: string,
-    //     changeAddress: string
-    // ): Promise<UnsignedTx>
     ethAddress: string
     ethAddressBech: string
     ethBalance: BN
     isFetchUtxos: boolean // true if fetching utxos
     isInit: boolean // True once the wallet can be used (ex. when HD index is found)
-    // getCurrentAddress(): string
-    // getChangeAddress(): string
-    // getDerivedAddresses(): string[]
-    // getAllDerivedExternalAddresses(): string[]
-    // getAllAddressesX(): string[] // returns all addresses this wallet own on the X chain
-    // getAllAddressesP(): string[] // returns all addresses this wallet own on the P chain
-    // getHistoryAddresses(): string[]
-    // getExtendedPlatformAddresses(): string[]
     onnetworkchange(): void
     getUTXOs(): Promise<void>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>
-    // getCurrentPlatformAddress(): string
     getPlatformUTXOSet(): PlatformUTXOSet
-    // getPlatformRewardAddress(): string
     createNftFamily(name: string, symbol: string, groupNum: number): Promise<string>
     mintNft(mintUtxo: AVMUTXO, payload: PayloadBase, quantity: number): Promise<string>
-    // getBaseAddress(): string
     getEthBalance(): Promise<BN>
-    // getEvmAddress(): string
     sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number): Promise<string>
     sendERC20(
         to: string,
@@ -116,13 +91,6 @@ export interface AvaWalletCore extends IAddressManager {
         token: Erc20Token
     ): Promise<string>
     estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number>
-    // sign<
-    //     UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx,
-    //     SignedTx extends AVMTx | PlatformTx
-    // >(
-    //     unsignedTx: UnsignedTx,
-    //     isAVM: boolean
-    // ): Promise<StandardTx<any, any, any>>
 
     signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
     signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
