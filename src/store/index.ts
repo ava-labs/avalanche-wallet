@@ -79,6 +79,14 @@ export default new Vuex.Store({
             let addresses = wallet.getDerivedAddresses()
             return addresses
         },
+        baseAddresses(state: RootState): string[] {
+            let array: string[] = []
+            const { wallets } = state
+            wallets.map((x) => {
+                array.push(x.ethAddress)
+            })
+            return array
+        },
     },
     mutations: {
         updateActiveAddress(state) {
@@ -310,7 +318,7 @@ export default new Vuex.Store({
         },
 
         // Creates a keystore file and saves to local storage
-        async saveAccount({ state, dispatch, commit }, data: SaveAccountInput) {
+        async saveAccount({ state, dispatch, commit, getters }, data: SaveAccountInput) {
             try {
                 let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
                 let pass = data.password
@@ -321,9 +329,9 @@ export default new Vuex.Store({
                 let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 
                 let file = await makeKeyfile(wallets, pass, activeIndex)
-
+                let baseAddresses = getters.baseAddresses
                 let encryptedWallet: iUserAccountEncrypted = {
-                    baseAddress: wallet.ethAddress,
+                    baseAddress: baseAddresses,
                     name: data.accountName,
                     wallet: file,
                 }
