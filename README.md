@@ -30,11 +30,6 @@ When you go to the website on your browser, you might get a warning saying
 1.  Compile and minify to have a production ready application with `yarn build`.
 2.  Serve from the `/dist` directory.
 
-## .env Variables
-`VUE_APP_ALLOW_CREDENTIALS`
-
-If set to `true` it will add the `Access-Control-Allow-Credentials: true` header to each Avalanche JS call. Off by default.
-
 ## Releases
 
 1.  Generate a [personal access token](https://github.com/settings/tokens/new?scopes=repo&description=release-it)
