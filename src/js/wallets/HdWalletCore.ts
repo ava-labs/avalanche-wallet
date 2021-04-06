@@ -1,16 +1,5 @@
 import { ChainAlias } from '@/js/wallets/types'
-import {
-    AssetAmountDestination,
-    BaseTx,
-    MinterSet,
-    NFTMintOutput,
-    TransferableInput,
-    TransferableOutput,
-    Tx,
-    UnsignedTx,
-    UTXO,
-    UTXOSet,
-} from 'avalanche/dist/apis/avm'
+import { UTXO } from 'avalanche/dist/apis/avm'
 
 import { BN, Buffer } from 'avalanche'
 import { ITransaction } from '@/components/wallet/transfer/types'
@@ -68,72 +57,6 @@ class HdWalletCore extends WalletCore {
         return this.platformHelper.getFirstAvailableAddress()
     }
 
-    // TODO: This function can be moved to a Core wallet class
-    // async buildCreateNftFamilyTx(
-    //     name: string,
-    //     symbol: string,
-    //     groupNum: number = 1
-    // ): Promise<UnsignedTx> {
-    //     let fromAddresses = this.getDerivedAddresses()
-    //     let changeAddress = this.getChangeAddressAvm()
-    //
-    //     let minterAddress = this.getCurrentAddressAvm()
-    //
-    //     let unsignedTx = await buildCreateNftFamilyTx(
-    //         name,
-    //         symbol,
-    //         groupNum,
-    //         fromAddresses,
-    //         minterAddress,
-    //         changeAddress,
-    //         this.utxoset
-    //     )
-    //
-    //     // const minterSets: MinterSet[] = []
-    //     //
-    //     // // Create the groups
-    //     // for (var i = 0; i < groupNum; i++) {
-    //     //     const minterSet: MinterSet = new MinterSet(1, [minterAddress])
-    //     //     minterSets.push(minterSet)
-    //     // }
-    //     //
-    //     // let utxoSet: UTXOSet = this.utxoset
-    //     //
-    //     // let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
-    //     //     utxoSet,
-    //     //     fromAddresses,
-    //     //     [changeAddress],
-    //     //     minterSets,
-    //     //     name,
-    //     //     symbol
-    //     // )
-    //
-    //     return unsignedTx
-    // }
-
-    // TODO: Can be moved to a core wallet class
-    // async buildMintNftTx(
-    //     mintUtxo: UTXO,
-    //     payload: PayloadBase,
-    //     quantity: number,
-    //     ownerAddress: string,
-    //     changeAddress: string
-    // ): Promise<UnsignedTx> {
-    //     let sourceAddresses = this.getDerivedAddresses()
-    //
-    //     let mintTx = buildMintNftTx(
-    //         mintUtxo,
-    //         payload,
-    //         quantity,
-    //         ownerAddress,
-    //         changeAddress,
-    //         sourceAddresses,
-    //         this.utxoset
-    //     )
-    //
-    //     return mintTx
-    // }
-
     updateFetchState() {
         this.isFetchUtxos =
             this.externalHelper.isFetchUtxo ||
@@ -157,16 +80,11 @@ class HdWalletCore extends WalletCore {
             this.updateAvmUTXOSet()
         })
 
-        // let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
-        // let setExternal = (await this.externalHelper.updateUtxos()) as AVMUTXOSet
         // platform utxos are updated but not returned by function
         this.platformHelper.updateUtxos().then((utxoSet) => {
             this.updateFetchState()
         })
 
-        // let joined = setInternal.merge(setExternal)
-        // this.utxoset = joined
-        // return joined
         return
     }
 
@@ -202,12 +120,6 @@ class HdWalletCore extends WalletCore {
         return internal.concat(external)
     }
 
-    // getExtendedPlatformAddresses(): string[] {
-    //     let index = this.platformHelper.hdIndex
-    //     let addrs = this.platformHelper.getAllDerivedAddresses(index + 20)
-    //     return addrs
-    // }
-
     getCurrentAddressAvm(): string {
         return this.externalHelper.getCurrentAddress()
     }
@@ -219,16 +131,6 @@ class HdWalletCore extends WalletCore {
     getChangeAddressPlatform() {
         return this.platformHelper.getCurrentAddress()
     }
-
-    // getChangeAddress(chainId?: ChainAlias): string {
-    //     switch (chainId) {
-    //         case 'P':
-    //             return this.platformHelper.getCurrentAddress()
-    //         case 'X':
-    //         default:
-    //             return this.internalHelper.getCurrentAddress()
-    //     }
-    // }
 
     getChangePath(chainId?: ChainAlias): string {
         switch (chainId) {
