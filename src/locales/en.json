@@ -162,7 +162,7 @@
             "confirm": "Confirm",
             "cancel": "Cancel",
             "success": {
-                "desc": "Transaction Send",
+                "desc": "Transaction Sent",
                 "label1": "Transaction Hash"
             },
             "reset": "Start Again"
@@ -336,8 +336,9 @@
             "mint_more": "Mint more of this collectible family in the Studio.",
             "mint_submit": "Mint",
             "quantity": "Quantity",
-            "group": "Group ID",
-            "send": "Send"
+            "group": "Group",
+            "send": "Send",
+            "expand": "Expand"
         }
     },
     "earn": {
@@ -703,6 +704,9 @@
         },
         "tokenlist": {
             "title": "Token lists"
+        },
+        "nft": {
+            "title": "NFT Preview"
         }
     },
     "nav": {

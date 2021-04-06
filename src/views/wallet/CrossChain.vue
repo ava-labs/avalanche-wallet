@@ -14,6 +14,7 @@ import { Vue, Component } from 'vue-property-decorator'
 
 import ChainTransfer from '@/components/wallet/earn/ChainTransfer/ChainTransfer.vue'
 @Component({
+    name: 'cross_chain',
     components: {
         ChainTransfer,
     },

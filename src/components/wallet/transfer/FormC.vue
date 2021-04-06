@@ -131,7 +131,9 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { priceDict, WalletType } from '@/store/types'
+import { priceDict } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import Big from 'big.js'
@@ -153,7 +155,7 @@ export default class FormC extends Vue {
     isSuccess = false
     addressIn = ''
     amountIn = new BN(0)
-    gasPrice = 470
+    gasPrice = 225
     gasLimit = 21000
     err = ''
     isLoading = false
@@ -177,7 +179,7 @@ export default class FormC extends Vue {
         this.formToken = token
 
         if (token === 'native') {
-            this.gasPrice = 470
+            this.gasPrice = 225
             this.gasLimit = 21000
         } else {
             // this.gasPrice = token.getTransferGasPrice()
@@ -315,7 +317,7 @@ export default class FormC extends Vue {
 
         this.amountIn = new BN(0)
         this.gasLimit = 21000
-        this.gasPrice = 470
+        this.gasPrice = 225
         this.addressIn = ''
     }
 
@@ -405,6 +407,8 @@ export default class FormC extends Vue {
     onError(err: any) {
         this.err = err
         this.isLoading = false
+
+        console.error(err)
 
         this.$store.dispatch('Notifications/add', {
             title: this.$t('transfer.error_title'),

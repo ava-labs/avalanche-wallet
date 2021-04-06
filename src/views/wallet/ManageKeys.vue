@@ -37,11 +37,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import MyKeys from '@/components/wallet/manage/MyKeys.vue'
 import ImportKeys from '@/components/modals/ImportKeys.vue'
 import ExportKeys from '@/components/modals/ExportKeys.vue'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import RememberKeysModal from '@/components/modals/RememberWallet/RememberKeysModal.vue'
-import { WalletNameType } from '@/store/types'
+import { WalletNameType } from '@/js/wallets/types'
 
 @Component({
+    name: 'manage',
     components: {
         MyKeys,
         ImportKeys,
@@ -77,7 +78,7 @@ export default class ManageKeys extends Vue {
         return this.$store.state.volatileWallets.length > 0
     }
 
-    get allWallets(): AvaHdWallet[] {
+    get allWallets(): MnemonicWallet[] {
         return this.$store.state.wallets
     }
 

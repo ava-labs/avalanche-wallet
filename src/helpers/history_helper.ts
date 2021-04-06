@@ -4,7 +4,7 @@
 // }
 
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import { BN } from 'avalanche'
 import { AVMConstants } from 'avalanche/dist/apis/avm'
 

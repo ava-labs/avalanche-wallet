@@ -30,7 +30,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { AvaWalletCore } from '../../../js/wallets/IAvaHdWallet'
+import { AvaWalletCore } from '../../../js/wallets/types'
 import {
     DelegatorPendingRaw,
     DelegatorRaw,
@@ -52,7 +52,7 @@ export default class UserRewards extends Vue {
         let wallet: AvaWalletCore = this.$store.state.activeWallet
         if (!wallet) return []
 
-        return wallet.getExtendedPlatformAddresses()
+        return wallet.getAllAddressesP()
     }
 
     get validators(): ValidatorRaw[] {

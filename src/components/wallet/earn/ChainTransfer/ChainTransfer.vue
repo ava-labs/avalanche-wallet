@@ -120,7 +120,7 @@ import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
 import { avm, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
@@ -131,6 +131,8 @@ import { ChainIdType } from '@/constants'
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 import { web3 } from '@/evm'
+import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
+import { WalletType } from '@/js/wallets/types'
 
 const IMPORT_DELAY = 4000 // in ms
 
@@ -278,7 +280,7 @@ export default class ChainTransfer extends Vue {
     }
 
     get wallet() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
     }
 
@@ -299,7 +301,7 @@ export default class ChainTransfer extends Vue {
     // Triggers export from chain
     // STEP 1
     async chainExport(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType) {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         let exportTxId
         this.exportState = TxState.started
 
@@ -309,7 +311,20 @@ export default class ChainTransfer extends Vue {
         }
 
         try {
-            exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
+            switch (sourceChain) {
+                case 'X':
+                    exportTxId = await wallet.exportFromXChain(
+                        amt,
+                        destinationChain as AvmExportChainType
+                    )
+                    break
+                case 'P':
+                    exportTxId = await wallet.exportFromPChain(amt)
+                    break
+                case 'C':
+                    exportTxId = await wallet.exportFromCChain(amt)
+                    break
+            }
         } catch (e) {
             throw e
         }
@@ -376,13 +391,13 @@ export default class ChainTransfer extends Vue {
 
     // STEP 3
     async chainImport() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         let importTxId
         try {
             if (this.targetChain === 'P') {
                 importTxId = await wallet.importToPlatformChain()
             } else if (this.targetChain === 'X') {
-                importTxId = await wallet.importToXChain(this.sourceChain)
+                importTxId = await wallet.importToXChain(this.sourceChain as AvmImportChainType)
             } else {
                 importTxId = await wallet.importToCChain()
             }

@@ -36,7 +36,8 @@ import { BN } from 'avalanche'
 import EVMAssetDropdown from '@/components/misc/EVMInputDropdown/EVMAssetDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { bnToBig } from '@/helpers/helper'
 import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
 
@@ -50,7 +51,7 @@ import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSele
 export default class EVMInputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
     @Prop({ default: false }) disabled!: boolean
-    @Prop({ default: 470 }) gasPrice!: number
+    @Prop({ default: 225 }) gasPrice!: number
     @Prop({ default: 21000 }) gasLimit!: number
     amt = new BN(0)
 

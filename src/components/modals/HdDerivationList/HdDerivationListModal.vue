@@ -10,7 +10,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import HDDerivationList from '@/components/modals/HdDerivationList/HDDerivationList.vue'
 
 @Component({
@@ -20,7 +20,7 @@ import HDDerivationList from '@/components/modals/HdDerivationList/HDDerivationL
     },
 })
 export default class HdDerivationList extends Vue {
-    @Prop() wallet!: AvaHdWallet
+    @Prop() wallet!: MnemonicWallet
 
     open(): void {
         let modal = this.$refs.modal as Modal

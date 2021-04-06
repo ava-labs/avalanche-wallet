@@ -38,7 +38,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import HdDerivationListRow from '@/components/modals/HdDerivationList/HdDerivationListRow.vue'
@@ -48,7 +48,7 @@ import { HdHelper } from '@/js/HdHelper'
     components: { HdEmptyAddressRow, HdDerivationListRow },
 })
 export default class HdChainTable extends Vue {
-    @Prop() wallet!: AvaHdWallet | LedgerWallet
+    @Prop() wallet!: MnemonicWallet | LedgerWallet
     @Prop() addresses!: string[]
     @Prop() balanceDict!: DerivationListBalanceDict[]
     @Prop() path!: number

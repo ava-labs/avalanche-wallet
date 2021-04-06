@@ -120,12 +120,13 @@ import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
-import { WalletNameType, WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/js/wallets/types'
+
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 
 interface IKeyBalanceDict {
@@ -218,7 +219,7 @@ export default class KeyRow extends Vue {
     }
     get mnemonicPhrase(): string {
         if (this.walletType !== 'mnemonic') return '?'
-        let wallet = this.wallet as AvaHdWallet
+        let wallet = this.wallet as MnemonicWallet
         return wallet.getMnemonic()
     }
 
@@ -230,7 +231,7 @@ export default class KeyRow extends Vue {
 
     get privateKeyC(): string {
         if (this.walletType === 'ledger') return '?'
-        let wallet = this.wallet as SingletonWallet | AvaHdWallet
+        let wallet = this.wallet as SingletonWallet | MnemonicWallet
         return wallet.ethKey
     }
 
