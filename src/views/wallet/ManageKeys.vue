@@ -40,6 +40,7 @@ import ExportKeys from '@/components/modals/ExportKeys.vue'
 import AvaHdWallet from '@/js/wallets/AvaHdWallet'
 import RememberKeysModal from '@/components/modals/RememberWallet/RememberKeysModal.vue'
 import { WalletNameType } from '@/store/types'
+import { checkIfSavedLocally } from '@/js/LocalStorage'
 
 @Component({
     name: 'manage',
@@ -68,6 +69,10 @@ export default class ManageKeys extends Vue {
 
     get canEncryptWallet() {
         return ['mnemonic', 'singleton'].includes(this.walletType)
+    }
+
+    get existsInLocalStorage() {
+        return checkIfSavedLocally(this.$store.state.wallets)
     }
 
     get walletType(): WalletNameType {
