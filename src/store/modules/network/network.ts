@@ -169,19 +169,7 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({ state, commit, dispatch }) {
-            console.log(process.env)
-            // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'https://explorerapi.avax.network');
-
-            // let mainnet = new AvaNetwork(
-            //     'Mainnet',
-            //     'https://api.avax.network:443',
-            //     1,
-            //     'https://explorerapi.avax.network',
-            //     'https://explorer.avax.network',
-            //     true
-            // )
-
-            let mainnetCors = new AvaNetwork(
+            let mainnet = new AvaNetwork(
                 'Mainnet',
                 'https://private-api.avax.network:443',
                 1,
@@ -190,16 +178,7 @@ const network_module: Module<NetworkState, RootState> = {
                 true
             )
 
-            // let fuji = new AvaNetwork(
-            //     'Fuji',
-            //     'https://api.avax-test.network:443',
-            //     5,
-            //     'https://explorerapi.avax-test.network',
-            //     'https://explorer.avax-test.network',
-            //     true
-            // )
-
-            let fujiCors = new AvaNetwork(
+            let fuji = new AvaNetwork(
                 'Fuji',
                 'https://private-api.avax-test.network:443',
                 5,
@@ -215,11 +194,8 @@ const network_module: Module<NetworkState, RootState> = {
                 console.error(e)
             }
 
-            // commit('addNetwork', netTest);
-            // commit('addNetwork', mainnet)
-            // commit('addNetwork', fuji)
-            commit('addNetwork', mainnetCors)
-            commit('addNetwork', fujiCors)
+            commit('addNetwork', mainnet)
+            commit('addNetwork', fuji)
 
             try {
                 let isSet = await dispatch('loadSelectedNetwork')
