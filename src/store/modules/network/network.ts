@@ -103,6 +103,7 @@ const network_module: Module<NetworkState, RootState> = {
 
             // Chose if the network should use credentials
             await net.updateCredentials()
+            console.log('Credentials', net.withCredentials)
             ava.setRequestConfig('withCredentials', net.withCredentials)
             ava.setAddress(net.ip, net.port, net.protocol)
             ava.setNetworkID(net.networkId)
