@@ -144,6 +144,25 @@ export default class CustomPage extends Vue {
 
         return err
     }
+
+    async tryConnection(credential = false): Promise<number | null> {
+        try {
+            let resp = await axios.post(
+                this.url + '/ext/info',
+                {
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'info.getNetworkID',
+                },
+                {
+                    withCredentials: credential,
+                }
+            )
+            return resp.data.result.networkID
+        } catch (err) {
+            return null
+        }
+    }
     async submit() {
         this.err = null
         let err = this.errCheck()
@@ -153,9 +172,22 @@ export default class CustomPage extends Vue {
             return
         }
 
-        this.isAjax = true
         let netID = null
 
+        this.isAjax = true
+        let credNum = await this.tryConnection(true)
+        let noCredNum = await this.tryConnection()
+        this.isAjax = false
+
+        console.log(credNum, noCredNum)
+
+        let isValidUrl = credNum || noCredNum
+
+        if (!isValidUrl) {
+            this.err = 'Avalanche Network Not Found'
+            return
+        }
+        // TODO: FIX THIS
         try {
             let resp = await axios.post(this.url + '/ext/info', {
                 jsonrpc: '2.0',
@@ -163,11 +195,11 @@ export default class CustomPage extends Vue {
                 method: 'info.getNetworkID',
             })
             netID = resp.data.result.networkID
-            this.isAjax = false
+            // this.isAjax = false
         } catch (e) {
-            this.isAjax = false
-            this.err = 'Avalanche Network Not Found'
-            return
+            // this.isAjax = false
+            // this.err = 'Avalanche Network Not Found'
+            // return
         }
 
         let net = new AvaNetwork(this.name, this.url, netID, this.explorer_api, this.explorer_site)

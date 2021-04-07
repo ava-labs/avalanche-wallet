@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 let network_id: number = 0
 
 class AvaNetwork {
@@ -12,6 +14,7 @@ class AvaNetwork {
     explorerUrl: string | undefined
     explorerSiteUrl: string | undefined
     readonly: boolean
+    withCredentials = false
     // fee: BN
 
     constructor(
@@ -34,7 +37,29 @@ class AvaNetwork {
         this.networkId = networkId
         // this.chainId = chainId;
         this.readonly = readonly
+        this.updateCredentials()
         // this.fee = new BN(0);
+    }
+
+    async updateCredentials() {
+        axios
+            .post(
+                this.url + '/ext/info',
+                {
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'info.getNetworkID',
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+            .then((res) => {
+                this.withCredentials = true
+            })
+            .catch((err) => {
+                this.withCredentials = false
+            })
     }
 
     updateURL(url: string) {

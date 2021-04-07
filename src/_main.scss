@@ -183,10 +183,10 @@ label {
 
 .slide_right-enter-active,
 .slide_right-leave-active {
-    transition: opacity 0.2s;
+    transition: all 0.2s;
 }
 .slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    transform: translateX(100%);
+    transform: translateX(30px);
     opacity: 0;
 }
 

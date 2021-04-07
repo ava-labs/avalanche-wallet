@@ -22,8 +22,10 @@
             </button>
             <button v-else>{{ $t('network.status2') }}</button>
         </div>
-        <transition-group name="fade">
+        <transition name="fade">
             <div class="network_dispose_bg" v-if="isActive" key="bg" @click="closeMenu"></div>
+        </transition>
+        <transition name="slide_right">
             <div class="network_body" v-if="isActive" key="body">
                 <div class="header" data-cy="custom-network-option">
                     <template v-if="page === 'list'">
@@ -60,7 +62,7 @@
                     ></EditPage>
                 </transition>
             </div>
-        </transition-group>
+        </transition>
     </div>
 </template>
 <script lang="ts">
@@ -183,13 +185,15 @@ export default class NetworkMenu extends Vue {
     top: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
 }
 
 .network_body {
     position: fixed;
     z-index: 2;
-    top: 60px;
-    right: 15vw;
+    top: 0;
+    right: 0;
+    height: 100%;
     border: 1px solid var(--bg-light);
     border-radius: 4px;
     width: 340px;
