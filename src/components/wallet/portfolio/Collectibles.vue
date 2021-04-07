@@ -1,11 +1,20 @@
 <template>
     <div class="collectibles_view no_scroll_bar" @scroll="onScroll" :scroll="isScroll">
+        <AddERC721TokenModal ref="add_token_modal"></AddERC721TokenModal>
         <div v-if="!isEmpty" class="list">
             <CollectibleFamilyRow
                 v-for="fam in nftFamsArray"
                 :key="fam.id"
                 :family="fam"
             ></CollectibleFamilyRow>
+            <ERC721FamilyRow
+                v-for="token in erc721s"
+                :key="token.contractAddress"
+                :family="token"
+            ></ERC721FamilyRow>
+            <div>
+                <button @click="showModal">Add Collectible</button>
+            </div>
         </div>
         <div class="coming_soon" v-else>
             <!--            <img v-if="$root.theme === 'day'" src="@/assets/nft_preview.png" />-->
@@ -22,10 +31,15 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { IWalletNftDict, IWalletNftMintDict } from '@/store/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { NftFamilyDict } from '@/store/modules/assets/types'
+import AddERC721TokenModal from '@/components/modals/AddERC721TokenModal.vue'
+import ERC721Token from '@/js/ERC721Token'
+import ERC721FamilyRow from '@/components/wallet/portfolio/ERC721FamilyRow.vue'
 
 // const payloadTypes = PayloadTypes.getInstance();
 @Component({
     components: {
+        ERC721FamilyRow,
+        AddERC721TokenModal,
         NFTCard,
         CollectibleFamilyRow,
     },
@@ -33,6 +47,10 @@ import { NftFamilyDict } from '@/store/modules/assets/types'
 export default class Collectibles extends Vue {
     @Prop() search!: string
     isScroll = false
+
+    $refs!: {
+        add_token_modal: AddERC721TokenModal
+    }
 
     get isEmpty(): boolean {
         // let nftUtxos = this.$store.getters.walletNftUTXOs.length
@@ -92,6 +110,10 @@ export default class Collectibles extends Vue {
         return dict
     }
 
+    get erc721s(): ERC721Token[] {
+        return this.$store.state.Assets.erc721TokensCustom
+    }
+
     onScroll(ev: any) {
         let val = ev.target.scrollTop
         if (val > 0) {
@@ -99,6 +121,10 @@ export default class Collectibles extends Vue {
         } else {
             this.isScroll = false
         }
+    }
+
+    showModal() {
+        this.$refs.add_token_modal.open()
     }
 }
 </script>

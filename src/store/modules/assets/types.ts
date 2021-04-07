@@ -6,6 +6,7 @@ import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IWalletBalanceDict } from '@/store/types'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import Erc20Token from '@/js/Erc20Token'
+import ERC721Token from '@/js/ERC721Token'
 
 export interface AssetsState {
     // isUpdateBalance: boolean
@@ -19,6 +20,8 @@ export interface AssetsState {
     nftMintUTXOs: AVMUTXO[]
     erc20Tokens: Erc20Token[]
     erc20TokensCustom: Erc20Token[]
+    erc721Tokens: ERC721Token[]
+    erc721TokensCustom: ERC721Token[]
     evmChainId: number
     tokenLists: TokenList[]
     tokenListUrls: string[]
@@ -89,4 +92,11 @@ export interface TokenList {
 export interface AddTokenListInput {
     url: string
     readonly: boolean
+}
+
+export interface ERC721TokenInput {
+    address: string
+    chainId: number
+    name: string
+    symbol: string
 }

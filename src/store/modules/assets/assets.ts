@@ -3,6 +3,7 @@ import {
     AddTokenListInput,
     AssetsDict,
     AssetsState,
+    ERC721TokenInput,
     TokenList,
     TokenListToken,
 } from '@/store/modules/assets/types'
@@ -33,6 +34,7 @@ import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
+import ERC721Token from '@/js/ERC721Token'
 
 const TOKEN_LISTS = [
     'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
@@ -52,6 +54,8 @@ const assets_module: Module<AssetsState, RootState> = {
         nftMintUTXOs: [],
         erc20Tokens: [],
         erc20TokensCustom: [],
+        erc721Tokens: [],
+        erc721TokensCustom: [],
         evmChainId: 0,
         tokenLists: [],
         tokenListUrls: [],
@@ -97,6 +101,21 @@ const assets_module: Module<AssetsState, RootState> = {
             let tokens: TokenListToken[] = JSON.parse(tokensRaw)
             for (var i = 0; i < tokens.length; i++) {
                 state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
+            }
+        },
+
+        saveCustomErc721Tokens(state) {
+            let tokens = state.erc721TokensCustom
+            let tokenRawData = tokens.map((token) => {
+                return token.data
+            })
+            localStorage.setItem('erc721_tokens', JSON.stringify(tokenRawData))
+        },
+        loadCustomErc721Tokens(state) {
+            let tokensRaw = localStorage.getItem('erc721_tokens') || '[]'
+            let tokens: TokenListToken[] = JSON.parse(tokensRaw)
+            for (var i = 0; i < tokens.length; i++) {
+                state.erc721TokensCustom.push(new ERC721Token(tokens[i]))
             }
         },
         saveCustomTokenLists(state) {
@@ -199,6 +218,14 @@ const assets_module: Module<AssetsState, RootState> = {
             return t
         },
 
+        async addCustomErc721Token({ state, dispatch, commit }, data: ERC721TokenInput) {
+            let t = new ERC721Token(data)
+            state.erc721TokensCustom.push(t)
+
+            commit('saveCustomErc721Tokens')
+            return t
+        },
+
         async removeTokenList({ state, commit }, list: TokenList) {
             // Remove token list object
             for (var i = 0; i <= state.tokenLists.length; i++) {
@@ -265,6 +292,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             dispatch('loadCustomTokenLists')
             commit('loadCustomErc20Tokens')
+            commit('loadCustomErc721Tokens')
         },
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
