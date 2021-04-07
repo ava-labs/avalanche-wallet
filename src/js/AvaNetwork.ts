@@ -37,10 +37,28 @@ class AvaNetwork {
         this.networkId = networkId
         // this.chainId = chainId;
         this.readonly = readonly
-        this.updateCredentials()
         // this.fee = new BN(0);
     }
 
+    async testConnection(credentials = false) {
+        let resp = await axios
+            .post(
+                this.url + '/ext/info',
+                {
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'info.getNetworkID',
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+            .catch((err) => {
+                return false
+            })
+
+        return true
+    }
     async updateCredentials() {
         axios
             .post(

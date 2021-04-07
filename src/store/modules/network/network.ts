@@ -100,6 +100,8 @@ const network_module: Module<NetworkState, RootState> = {
         },
         async setNetwork({ state, dispatch, commit, rootState }, net: AvaNetwork) {
             state.status = 'connecting'
+            // Chose if the network should use credentials
+            ava.setRequestConfig('withCredentials', net.withCredentials)
             ava.setAddress(net.ip, net.port, net.protocol)
             ava.setNetworkID(net.networkId)
 
@@ -202,8 +204,8 @@ const network_module: Module<NetworkState, RootState> = {
                 true
             )
 
-            console.log(mainnet, fuji)
-            console.log(mainnetCors, fujiCors)
+            await mainnetCors.updateCredentials()
+            await fujiCors.updateCredentials()
 
             // Load custom networks if any
             try {
