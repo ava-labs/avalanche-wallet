@@ -104,6 +104,11 @@ const network_module: Module<NetworkState, RootState> = {
             // Chose if the network should use credentials
             await net.updateCredentials()
             console.log('Credentials', net.withCredentials)
+            if (net.withCredentials) {
+                ava.setHeader('Access-Control-Allow-Credentials', 'true')
+            } else {
+                ava.removeHeader('Access-Control-Allow-Credentials')
+            }
             ava.setRequestConfig('withCredentials', net.withCredentials)
             ava.setAddress(net.ip, net.port, net.protocol)
             ava.setNetworkID(net.networkId)
