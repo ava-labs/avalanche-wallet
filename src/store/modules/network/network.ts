@@ -193,8 +193,17 @@ const network_module: Module<NetworkState, RootState> = {
                 true
             )
 
+            let fujiCors = new AvaNetwork(
+                'Fuji Cors',
+                'https://private-api.avax-test.network:443',
+                5,
+                'https://explorerapi.avax-test.network',
+                'https://explorer.avax-test.network',
+                true
+            )
+
             console.log(mainnet, fuji)
-            console.log(mainnetCors)
+            console.log(mainnetCors, fujiCors)
 
             // Load custom networks if any
             try {
@@ -207,6 +216,7 @@ const network_module: Module<NetworkState, RootState> = {
             commit('addNetwork', mainnet)
             commit('addNetwork', fuji)
             commit('addNetwork', mainnetCors)
+            commit('addNetwork', fujiCors)
 
             try {
                 let isSet = await dispatch('loadSelectedNetwork')
