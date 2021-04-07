@@ -1,8 +1,8 @@
 <template>
     <div class="nft_card">
         <div class="view">
-            <template v-if="!isRaw">
-                <img :src="img" v-if="img" />
+            <template v-if="!isRaw && img">
+                <img :src="img" />
             </template>
             <template v-else>
                 <div class="raw_view no_scroll_bar">
@@ -98,12 +98,13 @@ img {
 
 .raw_view {
     overflow: scroll;
-    background-color: #111;
+    background-color: #000;
     height: 100%;
     padding: 12px;
     font-size: 12px;
     word-break: break-all;
-    color: var(--success);
+    color: #0f0;
+    font-family: monospace !important;
 }
 
 .raw_toggle {
