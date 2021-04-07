@@ -167,15 +167,17 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({ state, commit, dispatch }) {
+            console.log(process.env)
             // let netTest = new AvaNetwork("Everest TestNet", 'https://api.avax-test.network:443', 4, 'https://explorerapi.avax.network');
-            let mainnet = new AvaNetwork(
-                'Mainnet',
-                'https://api.avax.network:443',
-                1,
-                'https://explorerapi.avax.network',
-                'https://explorer.avax.network',
-                true
-            )
+
+            // let mainnet = new AvaNetwork(
+            //     'Mainnet',
+            //     'https://api.avax.network:443',
+            //     1,
+            //     'https://explorerapi.avax.network',
+            //     'https://explorer.avax.network',
+            //     true
+            // )
 
             let mainnetCors = new AvaNetwork(
                 'Mainnet Cors',
@@ -186,14 +188,14 @@ const network_module: Module<NetworkState, RootState> = {
                 true
             )
 
-            let fuji = new AvaNetwork(
-                'Fuji',
-                'https://api.avax-test.network:443',
-                5,
-                'https://explorerapi.avax-test.network',
-                'https://explorer.avax-test.network',
-                true
-            )
+            // let fuji = new AvaNetwork(
+            //     'Fuji',
+            //     'https://api.avax-test.network:443',
+            //     5,
+            //     'https://explorerapi.avax-test.network',
+            //     'https://explorer.avax-test.network',
+            //     true
+            // )
 
             let fujiCors = new AvaNetwork(
                 'Fuji Cors',
@@ -215,8 +217,8 @@ const network_module: Module<NetworkState, RootState> = {
             }
 
             // commit('addNetwork', netTest);
-            commit('addNetwork', mainnet)
-            commit('addNetwork', fuji)
+            // commit('addNetwork', mainnet)
+            // commit('addNetwork', fuji)
             commit('addNetwork', mainnetCors)
             commit('addNetwork', fujiCors)
 
