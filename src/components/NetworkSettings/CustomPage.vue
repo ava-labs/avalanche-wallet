@@ -172,37 +172,27 @@ export default class CustomPage extends Vue {
             return
         }
 
-        let netID = null
+        // let netID = null
 
         this.isAjax = true
         let credNum = await this.tryConnection(true)
         let noCredNum = await this.tryConnection()
         this.isAjax = false
 
-        console.log(credNum, noCredNum)
+        let validNetId = credNum || noCredNum
 
-        let isValidUrl = credNum || noCredNum
-
-        if (!isValidUrl) {
+        if (!validNetId) {
             this.err = 'Avalanche Network Not Found'
             return
         }
-        // TODO: FIX THIS
-        try {
-            let resp = await axios.post(this.url + '/ext/info', {
-                jsonrpc: '2.0',
-                id: 1,
-                method: 'info.getNetworkID',
-            })
-            netID = resp.data.result.networkID
-            // this.isAjax = false
-        } catch (e) {
-            // this.isAjax = false
-            // this.err = 'Avalanche Network Not Found'
-            // return
-        }
 
-        let net = new AvaNetwork(this.name, this.url, netID, this.explorer_api, this.explorer_site)
+        let net = new AvaNetwork(
+            this.name,
+            this.url,
+            validNetId,
+            this.explorer_api,
+            this.explorer_site
+        )
 
         this.$emit('add', net)
 

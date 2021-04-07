@@ -3,7 +3,6 @@
         <div class="name_col">
             <p class="name">{{ network.name }}</p>
             <p class="url">{{ endpoint }}</p>
-            <p class="credentials">Credentials: {{ network.withCredentials }}</p>
             <div v-if="!isSelected && !network.readonly" class="buts">
                 <button class="editBut" @click="edit">
                     <fa icon="cog"></fa>
@@ -62,8 +61,7 @@ export default class NetworkRow extends Vue {
     }
 
     edit() {
-        //@ts-ignore
-        this.$parent.$parent.$parent.onedit(this.network)
+        this.$emit('edit')
     }
 
     deleteNet() {
@@ -95,6 +93,7 @@ export default class NetworkRow extends Vue {
             this.$parent.$parent.isActive = false
         } catch (e) {
             this.$store.state.Network.selectedNetwork = null
+            this.$store.state.Network.status = 'disconnected'
             this.$store.dispatch(
                 'Notifications/add',
                 {

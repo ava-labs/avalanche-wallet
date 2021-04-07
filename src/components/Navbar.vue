@@ -10,7 +10,6 @@
 
         <div class="buts_right">
             <DayNightToggle class="action_but"></DayNightToggle>
-            <network-menu></network-menu>
             <template v-if="isAuth">
                 <button @click="logout">{{ $t('logout.button') }}</button>
             </template>
@@ -22,6 +21,7 @@
                     {{ $t('nav.create') }}
                 </router-link>
             </template>
+            <network-menu></network-menu>
             <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
 
@@ -155,11 +155,15 @@ button {
 .buts_right {
     display: flex;
     align-items: center;
+
+    a {
+        margin: 0;
+    }
 }
 
 .action_but {
     color: var(--primary-color) !important;
-    padding: 6px 18px;
+    padding: 0 12px;
     border-radius: 4px;
 }
 

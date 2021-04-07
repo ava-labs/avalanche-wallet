@@ -100,7 +100,9 @@ const network_module: Module<NetworkState, RootState> = {
         },
         async setNetwork({ state, dispatch, commit, rootState }, net: AvaNetwork) {
             state.status = 'connecting'
+
             // Chose if the network should use credentials
+            await net.updateCredentials()
             ava.setRequestConfig('withCredentials', net.withCredentials)
             ava.setAddress(net.ip, net.port, net.protocol)
             ava.setNetworkID(net.networkId)
@@ -180,7 +182,7 @@ const network_module: Module<NetworkState, RootState> = {
             // )
 
             let mainnetCors = new AvaNetwork(
-                'Mainnet Cors',
+                'Mainnet',
                 'https://private-api.avax.network:443',
                 1,
                 'https://explorerapi.avax.network',
@@ -198,16 +200,13 @@ const network_module: Module<NetworkState, RootState> = {
             // )
 
             let fujiCors = new AvaNetwork(
-                'Fuji Cors',
+                'Fuji',
                 'https://private-api.avax-test.network:443',
                 5,
                 'https://explorerapi.avax-test.network',
                 'https://explorer.avax-test.network',
                 true
             )
-
-            await mainnetCors.updateCredentials()
-            await fujiCors.updateCredentials()
 
             // Load custom networks if any
             try {

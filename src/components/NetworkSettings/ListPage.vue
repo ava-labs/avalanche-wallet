@@ -7,6 +7,7 @@
                 :key="net.id"
                 class="network_row"
                 :network="net"
+                @edit="onEdit(net)"
             ></network-row>
         </div>
     </div>
@@ -26,6 +27,10 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 export default class ListPage extends Vue {
     get networks(): AvaNetwork[] {
         return this.$store.getters['Network/allNetworks']
+    }
+
+    onEdit(net: AvaNetwork) {
+        this.$emit('edit', net)
     }
 }
 </script>
