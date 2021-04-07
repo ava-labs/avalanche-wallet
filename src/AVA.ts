@@ -15,12 +15,6 @@ let chain_id: string = 'X'
 let bintools: BinTools = BinTools.getInstance()
 let ava: Avalanche = new Avalanche(ip, port, protocol, network_id, chain_id)
 
-// Add credentials if turned on
-// if (ALLOW_CREDENTIALS) {
-// ava.setHeader('Access-Control-Allow-Credentials', ALLOW_CREDENTIALS)
-// ava.setRequestConfig('withCredentials', true)
-// }
-
 let avm: AVMAPI = ava.XChain()
 let cChain: EVMAPI = ava.CChain()
 
