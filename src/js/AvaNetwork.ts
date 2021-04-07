@@ -60,8 +60,8 @@ class AvaNetwork {
         return true
     }
     async updateCredentials() {
-        axios
-            .post(
+        try {
+            let res = await axios.post(
                 this.url + '/ext/info',
                 {
                     jsonrpc: '2.0',
@@ -72,12 +72,10 @@ class AvaNetwork {
                     withCredentials: true,
                 }
             )
-            .then((res) => {
-                this.withCredentials = true
-            })
-            .catch((err) => {
-                this.withCredentials = false
-            })
+            this.withCredentials = true
+        } catch (e) {
+            this.withCredentials = false
+        }
     }
 
     updateURL(url: string) {
