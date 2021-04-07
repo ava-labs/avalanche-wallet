@@ -99,9 +99,11 @@ export default new Vuex.Store({
         },
         addWalletToAccount(state, encodedWallet: iUserAccountEncrypted) {
             let accountsRaw = localStorage.getItem('accounts')
-            let accounts: iUserAccountEncrypted[] = JSON.parse(accountsRaw) || []
-            accounts.push(encodedWallet)
-            localStorage.setItem('accounts', JSON.stringify(accounts))
+            if (accountsRaw !== null) {
+                let accounts: iUserAccountEncrypted[] = JSON.parse(accountsRaw) || []
+                accounts.push(encodedWallet)
+                localStorage.setItem('accounts', JSON.stringify(accounts))
+            }
         },
     },
     actions: {
