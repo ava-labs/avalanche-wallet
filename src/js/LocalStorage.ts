@@ -1,5 +1,6 @@
 import { iUserAccountEncrypted } from '@/store/types.ts'
 import { SingletonWallet } from './wallets/SingletonWallet'
+import AvaHdWallet from './wallets/AvaHdWallet'
 import isEqual from 'lodash.isequal'
 
 const checkAccountsExist = (): boolean => {
@@ -24,13 +25,24 @@ export const removeAccountByID = (baseAddress: string) => {
     saveLocalStorageItem('accounts', updatedAccountsArray)
 }
 
-export const checkIfSavedLocally = (allWallets: SingletonWallet[]): boolean => {
+export const getAccountByBaseAddress = (baseAddress: string): iUserAccountEncrypted => {
+    let accounts: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
+
+    for (const each of accounts) {
+        const match = each.baseAddress[0] === baseAddress
+        if (match) {
+            return each
+        }
+    }
+}
+
+export const checkIfSavedLocally = (allWallets: any): boolean => {
     const exists = checkAccountsExist()
 
     if (!exists) return false
 
     let ethAddressArray: string[] = []
-    allWallets.map((x) => {
+    allWallets.map((x: SingletonWallet) => {
         ethAddressArray.push(x.ethAddress)
     })
 
@@ -51,7 +63,6 @@ export const getLocalStorageItem = (key: string) => {
         return JSON.parse(item)
     }
 }
-
 export const saveLocalStorageItem = (key: string, data: any) => {
     let formatted = JSON.stringify(data)
     localStorage.setItem(key, formatted)
@@ -60,4 +71,5 @@ export const saveLocalStorageItem = (key: string, data: any) => {
 export default {
     removeAccountByID,
     checkIfSavedLocally,
+    getAccountByBaseAddress,
 }
