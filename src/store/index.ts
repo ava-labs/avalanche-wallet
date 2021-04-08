@@ -51,6 +51,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
+import { checkIfSavedLocally } from '@/js/LocalStorage'
 
 export default new Vuex.Store({
     modules: {
@@ -71,6 +72,7 @@ export default new Vuex.Store({
         prices: {
             usd: 0,
         },
+        isSavedLocally: false,
     },
     getters: {
         addresses(state: RootState): string[] {
@@ -99,11 +101,15 @@ export default new Vuex.Store({
         },
         addWalletToAccount(state, encodedWallet: iUserAccountEncrypted) {
             let accountsRaw = localStorage.getItem('accounts')
+            let accounts: iUserAccountEncrypted[] = []
             if (accountsRaw !== null) {
-                let accounts: iUserAccountEncrypted[] = JSON.parse(accountsRaw) || []
-                accounts.push(encodedWallet)
-                localStorage.setItem('accounts', JSON.stringify(accounts))
+                accounts = JSON.parse(accountsRaw)
             }
+            accounts.push(encodedWallet)
+            localStorage.setItem('accounts', JSON.stringify(accounts))
+        },
+        accountSavedLocally(state) {
+            state.isSavedLocally = checkIfSavedLocally(state.wallets)
         },
     },
     actions: {
@@ -226,6 +232,7 @@ export default new Vuex.Store({
 
             state.wallets = []
             state.volatileWallets = []
+            state.isSavedLocally = false
         },
 
         // Add a HD wallet from mnemonic string
@@ -310,6 +317,7 @@ export default new Vuex.Store({
 
                 // No more voltile wallets
                 state.volatileWallets = []
+                commit('accountSavedLocally')
             } catch (e) {
                 dispatch('Notifications/add', {
                     title: 'Remember Wallet',
@@ -337,6 +345,7 @@ export default new Vuex.Store({
                     name: data.accountName,
                     wallet: file,
                 }
+
                 commit('addWalletToAccount', encryptedWallet)
 
                 dispatch('Notifications/add', {
@@ -347,6 +356,7 @@ export default new Vuex.Store({
 
                 // No more voltile wallets
                 state.volatileWallets = []
+                commit('accountSavedLocally')
             } catch (e) {
                 dispatch('Notifications/add', {
                     title: 'Account Save',
@@ -378,6 +388,7 @@ export default new Vuex.Store({
             dispatch('Assets/updateAvaAsset')
             commit('updateActiveAddress')
             dispatch('History/updateTransactionHistory')
+            commit('accountSavedLocally')
         },
 
         async exportWallets({ state, dispatch }, input: ExportWalletsInput) {
