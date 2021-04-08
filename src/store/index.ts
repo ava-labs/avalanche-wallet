@@ -296,7 +296,7 @@ export default new Vuex.Store({
         },
 
         // Creates a keystore file and saves to local storage
-        async rememberWallets({ state, dispatch }, pass: string | undefined) {
+        async rememberWallets({ state, dispatch, commit }, pass: string | undefined) {
             try {
                 let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
                 if (!pass || wallet?.type === 'ledger') return

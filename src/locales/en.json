@@ -58,7 +58,8 @@
             "submit": "Access Wallet",
             "cancel": "Cancel",
             "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space."
-        }
+        },
+        "accounts_found": "Accounts found on your device"
     },
     "wallet": {
         "sidebar": {
@@ -278,13 +279,13 @@
     },
     "keys": {
         "title": "My Keys",
-        "button1": "Remember Keys",
+        "button1": "Save Account",
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
         "subtitle": "Active Key",
         "remember_key_button": "REMEMBER",
         "remember_key_desc": "Encode your wallet with a password and store securely on this browser.",
-        "remember_key_check": "Remember Keys",
+        "remember_key_check": "Save Account",
         "remember_key_info": "You can later access your wallet on this browser with a password.",
         "export_key_button": "EXPORT WALLET",
         "export_key_title": "Export Keys",
