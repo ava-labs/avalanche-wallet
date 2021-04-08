@@ -25,7 +25,7 @@ export const removeAccountByID = (baseAddress: string) => {
     saveLocalStorageItem('accounts', updatedAccountsArray)
 }
 
-export const getAccountByBaseAddress = (baseAddress: string): iUserAccountEncrypted => {
+export const getAccountByBaseAddress = (baseAddress: string): iUserAccountEncrypted | undefined => {
     let accounts: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
 
     for (const each of accounts) {
@@ -34,6 +34,7 @@ export const getAccountByBaseAddress = (baseAddress: string): iUserAccountEncryp
             return each
         }
     }
+    return
 }
 
 export const checkIfSavedLocally = (allWallets: any): boolean => {

@@ -43,7 +43,7 @@ export default class Accounts extends Vue {
     password: string = ''
     isLoading: boolean = false
     error: string = ''
-    account: iUserAccountEncrypted | null = null
+    account: iUserAccountEncrypted | undefined
 
     created() {
         const { base_address } = this.$route.params
