@@ -6,7 +6,7 @@
                     <h1>{{ $t('keys.title') }}</h1>
                     <div class="button_container" v-if="canEncryptWallet">
                         <button
-                            v-if="hasVolatile"
+                            v-if="!existsInLocalStorage"
                             @click="openRememberKeys"
                             class="remember_keys ava_button_secondary"
                         >
@@ -72,7 +72,7 @@ export default class ManageKeys extends Vue {
     }
 
     get existsInLocalStorage() {
-        return checkIfSavedLocally(this.$store.state.wallets)
+        return this.$store.state.isSavedLocally
     }
 
     get walletType(): WalletNameType {
