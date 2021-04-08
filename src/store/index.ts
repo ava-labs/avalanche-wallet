@@ -296,38 +296,6 @@ export default new Vuex.Store({
         },
 
         // Creates a keystore file and saves to local storage
-        async rememberWallets({ state, dispatch, commit }, pass: string | undefined) {
-            try {
-                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
-                if (!pass || wallet?.type === 'ledger') return
-
-                let wallets = state.wallets as AvaHdWallet[]
-                if (!wallet) throw new Error('No active wallet.')
-                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
-
-                let file = await makeKeyfile(wallets, pass, activeIndex)
-                let fileString = JSON.stringify(file)
-                localStorage.setItem('w', fileString)
-
-                dispatch('Notifications/add', {
-                    title: 'Remember Wallet',
-                    message: 'Wallets are stored securely for easy access.',
-                    type: 'info',
-                })
-
-                // No more voltile wallets
-                state.volatileWallets = []
-                commit('accountSavedLocally')
-            } catch (e) {
-                dispatch('Notifications/add', {
-                    title: 'Remember Wallet',
-                    message: 'Error remembering wallet.',
-                    type: 'error',
-                })
-            }
-        },
-
-        // Creates a keystore file and saves to local storage
         async saveAccount({ state, dispatch, commit, getters }, data: SaveAccountInput) {
             try {
                 let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
@@ -468,6 +436,7 @@ export default new Vuex.Store({
                 if (version !== KEYSTORE_VERSION) {
                     store.state.warnUpdateKeyfile = true
                 }
+                store.state.volatileWallets = []
 
                 return {
                     success: true,
