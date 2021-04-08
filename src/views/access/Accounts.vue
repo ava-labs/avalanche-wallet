@@ -23,6 +23,9 @@
                 >
                     Access Wallet
                 </v-btn>
+                <small>{{ $t('keys.account_slow_warning') }}</small>
+                <br />
+                <br />
             </form>
             <router-link to="/access" class="link">Cancel</router-link>
         </div>
@@ -61,7 +64,7 @@ export default class Accounts extends Vue {
             password: this.password,
             data: account.wallet,
         }
-        console.log('data', data)
+
         setTimeout(() => {
             this.$store
                 .dispatch('importKeyfile', data)

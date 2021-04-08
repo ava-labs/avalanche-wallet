@@ -287,6 +287,7 @@
         "remember_key_desc": "Encode your wallet with a password and store securely on this browser.",
         "remember_key_check": "Save Account",
         "remember_key_info": "You can later access your wallet on this browser with a password.",
+        "account_slow_warning": "Accounts with multiple keys may take a long time to load.",
         "export_key_button": "EXPORT WALLET",
         "export_key_title": "Export Keys",
         "export_key_desc": "Enter a password to encode your private keys into a file. You can later use this file and your password to access your wallet.",
