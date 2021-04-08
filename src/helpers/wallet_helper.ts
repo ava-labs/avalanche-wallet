@@ -5,7 +5,8 @@ import {
     UTXO as PlatformUTXO,
 } from 'avalanche/dist/apis/platformvm/utxos'
 import { UTXOSet as AVMUTXOSet, UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { BN, Buffer } from 'avalanche'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import {
@@ -17,168 +18,14 @@ import {
 import { PayloadBase } from 'avalanche/dist/utils'
 import { ITransaction } from '@/components/wallet/transfer/types'
 
-import {
-    Tx as PlatformTx,
-    UnsignedTx as PlatformUnsignedTx,
-} from 'avalanche/dist/apis/platformvm/tx'
-import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/IAvaHdWallet'
-import { ChainIdType } from '@/constants'
+import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
 import { web3 } from '@/evm'
 import EthereumjsCommon from '@ethereumjs/common'
 import { Transaction } from '@ethereumjs/tx'
 import Erc20Token from '@/js/Erc20Token'
-
-async function getAtomicUTXOsForAllAddresses<
-    UtxoSet extends AVMUTXOSet | PlatformUTXOSet | EVMUTXOSet
->(addrs: string[], chainAlias: string): Promise<UtxoSet> {
-    let selection = addrs.slice(0, 1024)
-    let remaining = addrs.slice(1024)
-
-    let utxoSet
-    if (chainAlias === 'X') {
-        utxoSet = await avmGetAtomicUTXOs(selection)
-    } else if (chainAlias === 'P') {
-        utxoSet = await platformGetAtomicUTXOs(selection)
-    } else {
-        utxoSet = await evmGetAtomicUTXOs(selection)
-    }
-
-    if (remaining.length > 0) {
-        // @ts-ignore
-        let nextSet = await getAtomicUTXOsForAllAddresses<UtxoSet>(remaining, chainAlias)
-        // @ts-ignore
-        utxoSet = utxoSet.merge(nextSet)
-    }
-
-    return utxoSet as UtxoSet
-}
-
-// todo: Use end index to get ALL utxos
-async function avmGetAtomicUTXOs(addrs: string[]): Promise<AVMUTXOSet> {
-    if (addrs.length > 1024) {
-        throw 'Number of addresses can not be greater than 1024.'
-    }
-
-    let resultP: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
-    let resultC: AVMUTXOSet = (await avm.getUTXOs(addrs, cChain.getBlockchainID())).utxos
-    // TODO: Can you merge like this?
-    let result = resultP.merge(resultC)
-    return result
-}
-
-// todo: Use end index to get ALL utxos
-async function platformGetAtomicUTXOs(addrs: string[]): Promise<PlatformUTXOSet> {
-    if (addrs.length > 1024) {
-        throw 'Number of addresses can not be greater than 1024.'
-    }
-
-    let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID())).utxos
-    return result
-}
-
-// todo: Use end index to get ALL utxos
-async function evmGetAtomicUTXOs(addrs: string[]): Promise<EVMUTXOSet> {
-    if (addrs.length > 1024) {
-        throw 'Number of addresses can not be greater than 1024.'
-    }
-
-    let result: EVMUTXOSet = (await cChain.getUTXOs(addrs, avm.getBlockchainID())).utxos
-    return result
-}
-
-async function getStakeForAddresses(addrs: string[]): Promise<BN> {
-    if (addrs.length <= 256) {
-        return await pChain.getStake(addrs)
-    } else {
-        //Break the list in to 1024 chunks
-        let chunk = addrs.slice(0, 256)
-        let remainingChunk = addrs.slice(256)
-
-        let chunkStake = await pChain.getStake(chunk)
-        return chunkStake.add(await getStakeForAddresses(remainingChunk))
-    }
-}
-
-export async function avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet> {
-    if (addrs.length <= 1024) {
-        let utxos = await avmGetAllUTXOsForAddresses(addrs)
-        return utxos
-    } else {
-        //Break the list in to 1024 chunks
-        let chunk = addrs.slice(0, 1024)
-        let remainingChunk = addrs.slice(1024)
-
-        let newSet = await avmGetAllUTXOsForAddresses(chunk)
-        return newSet.merge(await avmGetAllUTXOs(remainingChunk))
-    }
-}
-
-async function avmGetAllUTXOsForAddresses(
-    addrs: string[],
-    endIndex: any = undefined
-): Promise<AVMUTXOSet> {
-    if (addrs.length > 1024) throw new Error('Maximum length of addresses is 1024')
-    let response
-    if (!endIndex) {
-        response = await avm.getUTXOs(addrs)
-    } else {
-        response = await avm.getUTXOs(addrs, undefined, 0, endIndex)
-    }
-
-    let utxoSet = response.utxos
-    let utxos = utxoSet.getAllUTXOs()
-    let nextEndIndex = response.endIndex
-    let len = response.numFetched
-
-    if (len >= 1024) {
-        let subUtxos = await avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
-        return utxoSet.merge(subUtxos)
-    }
-    return utxoSet
-}
-
-// helper method to get utxos for more than 1024 addresses
-export async function platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet> {
-    if (addrs.length <= 1024) {
-        let newSet = await platformGetAllUTXOsForAddresses(addrs)
-        return newSet
-    } else {
-        //Break the list in to 1024 chunks
-        let chunk = addrs.slice(0, 1024)
-        let remainingChunk = addrs.slice(1024)
-
-        let newSet = await platformGetAllUTXOsForAddresses(chunk)
-
-        return newSet.merge(await platformGetAllUTXOs(remainingChunk))
-    }
-}
-
-async function platformGetAllUTXOsForAddresses(
-    addrs: string[],
-    endIndex: any = undefined
-): Promise<PlatformUTXOSet> {
-    let response
-    if (!endIndex) {
-        response = await pChain.getUTXOs(addrs)
-    } else {
-        response = await pChain.getUTXOs(addrs, undefined, 0, endIndex)
-    }
-
-    let utxoSet = response.utxos
-    let nextEndIndex = response.endIndex
-    let len = response.numFetched
-
-    if (len >= 1024) {
-        let subUtxos = await platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
-        return utxoSet.merge(subUtxos)
-    }
-
-    return utxoSet
-}
+import { getAtomicUTXOsForAllAddresses, getStakeForAddresses } from '@/helpers/utxo_helper'
 
 class WalletHelper {
-    constructor() {}
-
     static async getStake(wallet: WalletType): Promise<BN> {
         let addrs = wallet.getAllAddressesP()
         return await getStakeForAddresses(addrs)
@@ -394,6 +241,7 @@ class WalletHelper {
         } else {
             sourceChainId = cChain.getBlockchainID()
         }
+
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
             utxoSet,
@@ -403,6 +251,7 @@ class WalletHelper {
             fromAddrs,
             [xToAddr]
         )
+
         const tx = await wallet.signX(unsignedTx)
         return await avm.issueTx(tx)
     }
@@ -464,8 +313,6 @@ class WalletHelper {
             fromAddresses
         )
         let tx = await wallet.signC(unsignedTx)
-        // let keyChain = this.ethKeyChain
-        // const tx = unsignedTx.sign(keyChain)
         let id = await cChain.issueTx(tx)
 
         return id
@@ -628,6 +475,16 @@ class WalletHelper {
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
         return hash.transactionHash
+    }
+
+    static async estimateGas(wallet: WalletType, to: string, amount: BN, token: Erc20Token) {
+        let from = '0x' + wallet.getEvmAddress()
+        let tx = token.createTransferTx(to, amount)
+        let estGas = await tx.estimateGas({
+            from: from,
+        })
+        // Return 10% more
+        return Math.round(estGas * 1.1)
     }
 }
 

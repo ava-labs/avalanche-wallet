@@ -120,7 +120,7 @@ import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
 import { avm, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
@@ -131,9 +131,8 @@ import { ChainIdType } from '@/constants'
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 import { web3 } from '@/evm'
-import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/IAvaHdWallet'
-import Wallet from '@/views/Wallet.vue'
-import { WalletType } from '@/store/types'
+import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
+import { WalletType } from '@/js/wallets/types'
 
 const IMPORT_DELAY = 4000 // in ms
 
@@ -281,7 +280,7 @@ export default class ChainTransfer extends Vue {
     }
 
     get wallet() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
     }
 
@@ -392,7 +391,7 @@ export default class ChainTransfer extends Vue {
 
     // STEP 3
     async chainImport() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         let importTxId
         try {
             if (this.targetChain === 'P') {
