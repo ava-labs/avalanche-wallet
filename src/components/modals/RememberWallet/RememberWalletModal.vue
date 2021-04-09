@@ -43,7 +43,7 @@ import { avm } from '@/AVA'
 import { keyToKeypair } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import { AccessWalletMultipleInput } from '@/store/types'
-import AvaHdWallet from '../../../js/wallets/AvaHdWallet'
+import MnemonicWallet from '../../../js/wallets/MnemonicWallet'
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 @Component({
     components: { Modal },
@@ -91,8 +91,11 @@ export default class RememberWalletModal extends Vue {
             })
 
             if (keyFile.version !== KEYSTORE_VERSION) {
-                let wallets = this.$store.state.wallets as AvaHdWallet[]
-                let wallet = this.$store.state.activeWallet as AvaHdWallet | SingletonWallet | null
+                let wallets = this.$store.state.wallets as MnemonicWallet[]
+                let wallet = this.$store.state.activeWallet as
+                    | MnemonicWallet
+                    | SingletonWallet
+                    | null
 
                 if (!wallet) throw new Error('No active wallet.')
                 let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)

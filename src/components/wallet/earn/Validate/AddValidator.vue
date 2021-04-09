@@ -227,7 +227,7 @@ import Big from 'big.js'
 //@ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import { bintools, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import ConfirmPage from '@/components/wallet/earn/Validate/ConfirmPage.vue'
 import moment from 'moment'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
@@ -239,7 +239,7 @@ import DateForm from '@/components/wallet/earn/DateForm.vue'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 import { AmountOutput, UTXO } from 'avalanche/dist/apis/platformvm'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -309,7 +309,7 @@ export default class AddValidator extends Vue {
     }
 
     get rewardAddressLocal() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getPlatformRewardAddress()
     }
 
@@ -576,6 +576,7 @@ export default class AddValidator extends Vue {
 
         // Update History
         setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
         }, 3000)
     }

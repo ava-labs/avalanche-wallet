@@ -131,7 +131,9 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { priceDict, WalletType } from '@/store/types'
+import { priceDict } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import Big from 'big.js'

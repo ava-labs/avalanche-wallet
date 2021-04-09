@@ -15,7 +15,7 @@ import Modal from './Modal.vue'
 import CopyText from '../misc/CopyText.vue'
 import QRCode from 'qrcode'
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 @Component({

@@ -30,7 +30,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
 
 @Component({
