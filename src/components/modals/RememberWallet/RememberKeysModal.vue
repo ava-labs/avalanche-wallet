@@ -3,13 +3,26 @@
         <div class="remember_modal">
             <form @submit.prevent="submit">
                 <p>{{ $t('keys.remember_key_desc') }}</p>
-                <RememberKey
-                    v-model="rememberPass"
-                    @checked="isChecked"
-                    @is-valid="isVolatileRememberValid"
-                    ref="rememberForm"
-                ></RememberKey>
+                <!--                <RememberKey-->
+                <!--                    v-model="rememberPass"-->
+                <!--                    @checked="isChecked"-->
+                <!--                    @is-valid="isVolatileRememberValid"-->
+                <!--                    ref="rememberForm"-->
+                <!--                ></RememberKey>-->
                 <input v-model="accountName" name="accountName" placeholder="Account Name" />
+                <!--                <div class="passwords">-->
+                <input
+                    type="password"
+                    :placeholder="$t('keys.export_placeholder1')"
+                    v-model="password"
+                />
+                <input
+                    type="password"
+                    :placeholder="$t('keys.export_placeholder2')"
+                    v-model="password_confirm"
+                />
+                <p class="err">{{ err }}</p>
+                <!--                </div>-->
                 <v-btn
                     class="button_primary"
                     :disabled="!canSubmit"
@@ -37,39 +50,37 @@ import { SaveAccountInput } from '@/store/types'
     },
 })
 export default class RememberWalletModal extends Vue {
-    rememberPass: string = ''
-    rememberPassValid: boolean = false
-    rememberChecked: boolean = false
     password: string = ''
+    password_confirm: string = ''
     isLoading: boolean = false
     err: string = ''
     accountName = ''
 
     $refs!: {
-        //@ts-ignore
-        rememberForm: RememberKey
+        modal: Modal
     }
 
     get canSubmit() {
-        if (!this.rememberPass) return false
-        if (!this.rememberChecked) return false
-        if (!this.rememberPassValid) return false
+        if (!this.password) return false
+        if (!this.password_confirm) return false
         if (!this.accountName) return false
         return true
     }
 
-    isChecked(val: boolean) {
-        this.rememberChecked = val
-    }
-
-    isVolatileRememberValid(val: boolean) {
-        this.rememberPassValid = val
-    }
+    // isChecked(val: boolean) {
+    //     this.rememberChecked = val
+    // }
+    //
+    // isVolatileRememberValid(val: boolean) {
+    //     this.rememberPassValid = val
+    // }
 
     async submit() {
         this.isLoading = true
 
-        let pass = this.rememberPass
+        // TODO: Verify passwords match, and at least 9 characters
+
+        let pass = this.password
         let accountName = this.accountName
         let input: SaveAccountInput = {
             accountName: accountName,
@@ -83,20 +94,15 @@ export default class RememberWalletModal extends Vue {
 
     onsuccess() {
         this.clear()
-        // @ts-ignore
-        this.$refs.rememberForm.clear()
     }
 
     clear() {
-        this.rememberChecked = false
-        this.rememberPass = ''
-        this.rememberPassValid = false
         this.password = ''
+        this.password_confirm = ''
+        this.accountName = ''
     }
     close() {
         this.clear()
-        // @ts-ignore
-        this.$refs.rememberForm.clear()
         //@ts-ignore
         this.$refs.modal.close()
     }
@@ -121,6 +127,12 @@ form {
     > * {
         margin: 6px 0px;
     }
+}
+
+input {
+    background-color: var(--bg-light);
+    color: var(--primary-color);
+    padding: 6px 14px;
 }
 
 .cancel_but {
