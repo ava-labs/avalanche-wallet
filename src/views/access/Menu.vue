@@ -27,7 +27,7 @@
             <div class="flex_container" v-for="acct in accounts" :key="acct.baseAddress">
                 <router-link
                     class="account_card option button_primary"
-                    :to="`/access/account/${acct.baseAddress[0]}`"
+                    :to="{ name: 'Account', params: { account: acct } }"
                 >
                     {{ acct.name }}
                 </router-link>
