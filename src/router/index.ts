@@ -69,6 +69,7 @@ const routes = [
             {
                 path: 'account/:base_address',
                 component: Account,
+                name: 'Account',
             },
         ],
         component: Access,
