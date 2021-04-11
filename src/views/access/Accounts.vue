@@ -39,8 +39,6 @@ import { privateToAddress } from 'ethereumjs-util'
 import { bintools } from '@/AVA'
 import { Buffer } from 'avalanche'
 
-import { getAccountByBaseAddress } from '@/js/LocalStorage'
-
 @Component
 export default class Accounts extends Vue {
     password: string = ''
@@ -49,8 +47,10 @@ export default class Accounts extends Vue {
     account: iUserAccountEncrypted | undefined
 
     created() {
-        const { base_address } = this.$route.params
-        this.account = getAccountByBaseAddress(base_address)
+        const account: iUserAccountEncrypted = JSON.parse(
+            JSON.stringify(this.$route.params.account)
+        )
+        this.account = account
     }
 
     async access() {
