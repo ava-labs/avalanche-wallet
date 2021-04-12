@@ -93,6 +93,10 @@ function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
     return payloadbase
 }
 
+const isInArray = (value: string, array: string[]): boolean => {
+    return array.indexOf(value) > -1
+}
+
 export {
     getAssetIcon,
     keyToKeypair,
@@ -100,4 +104,5 @@ export {
     bnToBig,
     digestMessage,
     getPayloadFromUTXO,
+    isInArray,
 }
