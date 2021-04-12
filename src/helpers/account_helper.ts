@@ -1,6 +1,5 @@
-import { iUserAccountEncrypted } from '@/store/types.ts'
-
-import MnemonicWallet from '@/js/wallets/MnemonicWallet'
+import { iUserAccountEncrypted } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import isEqual from 'lodash.isequal'
 
 const checkAccountsExist = (): boolean => {
@@ -8,7 +7,7 @@ const checkAccountsExist = (): boolean => {
 }
 
 export const removeAccountByID = (baseAddresses: string[]) => {
-    let old: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
+    let old: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
     let updatedAccountsArray: iUserAccountEncrypted[] = []
 
     for (const each of old) {
@@ -18,13 +17,13 @@ export const removeAccountByID = (baseAddresses: string[]) => {
         }
     }
 
-    saveLocalStorageItem('accounts', updatedAccountsArray)
+    saveLocalStorageJSONItem('accounts', updatedAccountsArray)
 }
 
 export const getAccountByBaseAddresses = (
     baseAddresses: string
 ): iUserAccountEncrypted | undefined => {
-    let accounts: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
+    let accounts: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
 
     for (const each of accounts) {
         const match = each.baseAddresses[0] === baseAddresses
@@ -35,17 +34,14 @@ export const getAccountByBaseAddresses = (
     return
 }
 
-export const checkIfSavedLocally = (allWallets: any): boolean => {
+export const checkIfSavedLocally = (allWallets: WalletType[]): boolean => {
     const exists = checkAccountsExist()
 
     if (!exists) return false
 
-    let ethAddressArray: string[] = []
-    allWallets.map((x: MnemonicWallet) => {
-        ethAddressArray.push(x.ethAddress)
-    })
+    let ethAddressArray: string[] = allWallets.map((x: WalletType) => x.ethAddress)
 
-    const savedAccounts: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
+    const savedAccounts: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
 
     for (const each of savedAccounts) {
         if (isEqual(each.baseAddresses, ethAddressArray)) {
@@ -56,13 +52,13 @@ export const checkIfSavedLocally = (allWallets: any): boolean => {
     return false
 }
 
-export const getLocalStorageItem = (key: string) => {
+export const getLocalStorageJSONItem = (key: string) => {
     let item = localStorage.getItem(key)
     if (item !== null) {
         return JSON.parse(item)
     }
 }
-export const saveLocalStorageItem = (key: string, data: any) => {
+export const saveLocalStorageJSONItem = (key: string, data: any) => {
     let formatted = JSON.stringify(data)
     localStorage.setItem(key, formatted)
 }

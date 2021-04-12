@@ -82,12 +82,8 @@ export default new Vuex.Store({
             return addresses
         },
         baseAddresses(state: RootState): string[] {
-            let array: string[] = []
             const { wallets } = state
-            wallets.map((x) => {
-                array.push(x.ethAddress)
-            })
-            return array
+            return wallets.map((x: WalletType) => x.ethAddress)
         },
     },
     mutations: {
@@ -99,7 +95,7 @@ export default new Vuex.Store({
                 state.address = addrNow
             }
         },
-        addWalletToAccount(state, encodedWallet: iUserAccountEncrypted) {
+        addAccountToStorage(state, encodedWallet: iUserAccountEncrypted) {
             let accountsRaw = localStorage.getItem('accounts')
             let accounts: iUserAccountEncrypted[] = []
             if (accountsRaw !== null) {
@@ -314,7 +310,7 @@ export default new Vuex.Store({
                     wallet: file,
                 }
 
-                commit('addWalletToAccount', encryptedWallet)
+                commit('addAccountToStorage', encryptedWallet)
 
                 dispatch('Notifications/add', {
                     title: 'Account Saved',
