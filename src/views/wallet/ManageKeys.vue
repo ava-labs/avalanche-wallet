@@ -7,8 +7,8 @@
                     <div class="button_container" v-if="canEncryptWallet">
                         <button
                             v-if="!existsInLocalStorage"
-                            @click="openRememberKeys"
-                            class="remember_keys ava_button_secondary"
+                            @click="openSaveAccount"
+                            class="save_account ava_button_secondary"
                         >
                             <fa icon="exclamation-triangle"></fa>
                             {{ $t('keys.button1') }}
@@ -22,7 +22,7 @@
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}
                         </button>
-                        <RememberKeysModal ref="remember_modal"></RememberKeysModal>
+                        <SaveAccountKeysModal ref="remember_modal"></SaveAccountKeysModal>
                         <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
@@ -38,9 +38,9 @@ import MyKeys from '@/components/wallet/manage/MyKeys.vue'
 import ImportKeys from '@/components/modals/ImportKeys.vue'
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import RememberKeysModal from '@/components/modals/RememberWallet/RememberKeysModal.vue'
-import { WalletNameType } from '@/store/types'
-import { checkIfSavedLocally } from '@/js/LocalStorage'
+import SaveAccountKeysModal from '@/components/modals/SaveAccount/SaveAccountKeysModal.vue'
+
+import { WalletNameType } from '@/js/wallets/types'
 
 @Component({
     name: 'manage',
@@ -48,7 +48,7 @@ import { checkIfSavedLocally } from '@/js/LocalStorage'
         MyKeys,
         ImportKeys,
         ExportKeys,
-        RememberKeysModal,
+        SaveAccountKeysModal,
     },
 })
 export default class ManageKeys extends Vue {
@@ -62,7 +62,7 @@ export default class ManageKeys extends Vue {
         this.$refs.export.open()
     }
 
-    openRememberKeys() {
+    openSaveAccount() {
         // @ts-ignore
         this.$refs.remember_modal.open()
     }
@@ -105,7 +105,7 @@ h1 {
     font-weight: lighter;
 }
 
-.remember_keys {
+.save_account {
     color: var(--warning);
 }
 
