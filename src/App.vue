@@ -4,7 +4,7 @@
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
-                    <RememberWalletModal></RememberWalletModal>
+                    <SaveAccountModal></SaveAccountModal>
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
@@ -21,7 +21,7 @@
 <script>
 import Notifications from '@/components/Notifications'
 import Navbar from './components/Navbar'
-import RememberWalletModal from '@/components/modals/RememberWallet/RememberWalletModal'
+import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
 import TestNetBanner from '@/components/TestNetBanner'
@@ -32,7 +32,7 @@ export default {
         NetworkLoadingBlock,
         LedgerBlock,
         LedgerUpgrade,
-        RememberWalletModal,
+        SaveAccountModal,
         Navbar,
         Notifications,
         TestNetBanner,

@@ -319,7 +319,8 @@
         "remove_success_title": "Key Removed",
         "remove_success_msg": "Private key and assets removed from the wallet.",
         "password_validation": "Password must be at least 9 characters long.",
-        "password_validation2": "Password do not match."
+        "password_validation2": "Password do not match.",
+        "account_name_required" : "Account Name Required."
     },
     "portfolio": {
         "assets": "Assets",

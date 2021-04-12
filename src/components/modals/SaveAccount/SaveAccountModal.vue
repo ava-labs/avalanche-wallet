@@ -1,16 +1,9 @@
 <template>
-    <Modal ref="modal" title="Remember Keys">
+    <Modal ref="modal" title="Save Account">
         <div class="remember_modal">
             <form @submit.prevent="submit">
                 <p>{{ $t('keys.remember_key_desc') }}</p>
-                <!--                <RememberKey-->
-                <!--                    v-model="rememberPass"-->
-                <!--                    @checked="isChecked"-->
-                <!--                    @is-valid="isVolatileRememberValid"-->
-                <!--                    ref="rememberForm"-->
-                <!--                ></RememberKey>-->
                 <input v-model="accountName" name="accountName" placeholder="Account Name" />
-                <!--                <div class="passwords">-->
                 <input
                     type="password"
                     :placeholder="$t('keys.export_placeholder1')"
@@ -22,7 +15,6 @@
                     v-model="password_confirm"
                 />
                 <p class="err">{{ err }}</p>
-                <!--                </div>-->
                 <v-btn
                     class="button_primary"
                     :disabled="!canSubmit"
@@ -40,20 +32,18 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
-import RememberKey from '@/components/misc/RememberKey.vue'
 import { SaveAccountInput } from '@/store/types'
 
 @Component({
     components: {
         Modal,
-        RememberKey,
     },
 })
-export default class RememberWalletModal extends Vue {
+export default class SaveAccountModal extends Vue {
     password: string = ''
     password_confirm: string = ''
     isLoading: boolean = false
-    err: string = ''
+    err: any = ''
     accountName = ''
 
     $refs!: {
@@ -63,17 +53,30 @@ export default class RememberWalletModal extends Vue {
     get canSubmit() {
         if (!this.password) return false
         if (!this.password_confirm) return false
-        if (!this.accountName) return false
+        if (this.accountName.length < 1) {
+            this.err = this.$t('keys.account_name_required')
+            return false
+        }
+
+        if (this.password.length < 9) {
+            this.err = this.$t('keys.password_validation')
+            return false
+        }
+
+        if (this.password !== this.password_confirm) {
+            this.err = this.$t('keys.password_validation2')
+            return false
+        }
+        this.err = ''
         return true
     }
 
     async submit() {
         this.isLoading = true
 
-        // TODO: Verify passwords match, and at least 9 characters
-
         let pass = this.password
         let accountName = this.accountName
+
         let input: SaveAccountInput = {
             accountName: accountName,
             password: pass,
@@ -92,6 +95,7 @@ export default class RememberWalletModal extends Vue {
         this.password = ''
         this.password_confirm = ''
         this.accountName = ''
+        this.err = ''
     }
     close() {
         this.clear()

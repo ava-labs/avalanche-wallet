@@ -22,7 +22,7 @@
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}
                         </button>
-                        <SaveAccountKeysModal ref="remember_modal"></SaveAccountKeysModal>
+                        <SaveAccountModal ref="remember_modal"></SaveAccountModal>
                         <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
@@ -38,7 +38,7 @@ import MyKeys from '@/components/wallet/manage/MyKeys.vue'
 import ImportKeys from '@/components/modals/ImportKeys.vue'
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import SaveAccountKeysModal from '@/components/modals/SaveAccount/SaveAccountKeysModal.vue'
+import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal.vue'
 
 import { WalletNameType } from '@/js/wallets/types'
 
@@ -48,7 +48,7 @@ import { WalletNameType } from '@/js/wallets/types'
         MyKeys,
         ImportKeys,
         ExportKeys,
-        SaveAccountKeysModal,
+        SaveAccountModal,
     },
 })
 export default class ManageKeys extends Vue {
