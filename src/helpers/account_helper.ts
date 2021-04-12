@@ -1,23 +1,19 @@
 import { iUserAccountEncrypted } from '@/store/types.ts'
-import { SingletonWallet } from './wallets/SingletonWallet'
-import AvaHdWallet from './wallets/AvaHdWallet'
+
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import isEqual from 'lodash.isequal'
 
 const checkAccountsExist = (): boolean => {
     return localStorage.getItem('accounts') !== null
 }
 
-const isInArray = (value: string, array: string[]): boolean => {
-    return array.indexOf(value) > -1
-}
-
-export const removeAccountByID = (baseAddress: string) => {
+export const removeAccountByID = (baseAddresses: string[]) => {
     let old: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
     let updatedAccountsArray: iUserAccountEncrypted[] = []
 
     for (const each of old) {
-        const addressArray: any = each.baseAddress
-        if (!isInArray(baseAddress, addressArray)) {
+        const addressArray: any = each.baseAddresses
+        if (!isEqual(baseAddresses, addressArray)) {
             updatedAccountsArray.push(each)
         }
     }
@@ -25,11 +21,13 @@ export const removeAccountByID = (baseAddress: string) => {
     saveLocalStorageItem('accounts', updatedAccountsArray)
 }
 
-export const getAccountByBaseAddress = (baseAddress: string): iUserAccountEncrypted | undefined => {
+export const getAccountByBaseAddresses = (
+    baseAddresses: string
+): iUserAccountEncrypted | undefined => {
     let accounts: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
 
     for (const each of accounts) {
-        const match = each.baseAddress[0] === baseAddress
+        const match = each.baseAddresses[0] === baseAddresses
         if (match) {
             return each
         }
@@ -43,14 +41,14 @@ export const checkIfSavedLocally = (allWallets: any): boolean => {
     if (!exists) return false
 
     let ethAddressArray: string[] = []
-    allWallets.map((x: SingletonWallet) => {
+    allWallets.map((x: MnemonicWallet) => {
         ethAddressArray.push(x.ethAddress)
     })
 
     const savedAccounts: iUserAccountEncrypted[] = getLocalStorageItem('accounts')
 
     for (const each of savedAccounts) {
-        if (isEqual(each.baseAddress, ethAddressArray)) {
+        if (isEqual(each.baseAddresses, ethAddressArray)) {
             return true
         }
     }
@@ -72,5 +70,5 @@ export const saveLocalStorageItem = (key: string, data: any) => {
 export default {
     removeAccountByID,
     checkIfSavedLocally,
-    getAccountByBaseAddress,
+    getAccountByBaseAddresses,
 }
