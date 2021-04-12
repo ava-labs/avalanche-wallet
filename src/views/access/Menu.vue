@@ -31,7 +31,7 @@
                 >
                     {{ acct.name }}
                 </router-link>
-                <fa icon="trash" @click="deleteAccount(acct.baseAddress[0])"></fa>
+                <fa icon="trash" @click="deleteAccount(acct.baseAddress)"></fa>
             </div>
             <hr />
         </div>
@@ -46,7 +46,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import LedgerButton from '@/components/Ledger/LedgerButton.vue'
 import ToS from '@/components/misc/ToS.vue'
-import { removeAccountByID } from '@/js/LocalStorage'
+import { removeAccountByID } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
 
 @Component({
@@ -65,10 +65,10 @@ export default class Menu extends Vue {
         let accountsRaw = localStorage.getItem('accounts') || '{}'
         this.accounts = JSON.parse(accountsRaw) || []
     }
-    deleteAccount(id: string) {
+    deleteAccount(baseAddressArray: string[]) {
         let isConfirm = confirm('Are you sure you want to delete this account?')
         if (isConfirm) {
-            removeAccountByID(id)
+            removeAccountByID(baseAddressArray)
             this.refreshAccounts()
         }
     }

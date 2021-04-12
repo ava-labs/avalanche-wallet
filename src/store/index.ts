@@ -20,7 +20,7 @@ import {
     iUserAccountEncrypted,
 } from '@/store/types'
 
-import { WalletType } from '@/js/wallets/types' 
+import { WalletType } from '@/js/wallets/types'
 import { AllKeyFileDecryptedTypes, KeyFileV6 } from '@/js/IKeystore'
 
 Vue.use(Vuex)
@@ -51,7 +51,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
-import { checkIfSavedLocally } from '@/js/LocalStorage'
+import { checkIfSavedLocally } from '@/helpers/account_helper'
 
 export default new Vuex.Store({
     modules: {
@@ -298,7 +298,7 @@ export default new Vuex.Store({
         // Creates a keystore file and saves to local storage
         async saveAccount({ state, dispatch, commit, getters }, data: SaveAccountInput) {
             try {
-                let wallet = state.activeWallet as AvaHdWallet | SingletonWallet | null
+                let wallet = state.activeWallet as MnemonicWallet | SingletonWallet | null
                 let pass = data.password
                 if (!pass || wallet?.type === 'ledger') return
 
@@ -309,7 +309,7 @@ export default new Vuex.Store({
                 let file = await makeKeyfile(wallets, pass, activeIndex)
                 let baseAddresses = getters.baseAddresses
                 let encryptedWallet: iUserAccountEncrypted = {
-                    baseAddress: baseAddresses,
+                    baseAddresses,
                     name: data.accountName,
                     wallet: file,
                 }
