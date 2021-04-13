@@ -20,21 +20,8 @@
             <LedgerButton class="option button_primary"></LedgerButton>
             <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
-        <!-- {{ accounts }} -->
-        <div v-if="accounts.length">
-            <hr />
-            <h3>{{ $t('access.accounts_found') }}</h3>
-            <div class="flex_container" v-for="acct in accounts" :key="acct.baseAddress">
-                <router-link
-                    class="account_card option button_primary"
-                    :to="{ name: 'Account', params: { account: acct } }"
-                >
-                    {{ acct.name }}
-                </router-link>
-                <fa icon="trash" @click="deleteAccount(acct.baseAddress)"></fa>
-            </div>
-            <hr />
-        </div>
+
+        <AccountsFound :accounts="accounts"></AccountsFound>
 
         <ToS style="margin: 20px !important"></ToS>
         <router-link to="/" class="link">{{ $t('access.cancel') }}</router-link>
@@ -45,6 +32,7 @@
 // import TorusGoogle from "@/components/Torus/TorusGoogle";
 import { Vue, Component } from 'vue-property-decorator'
 import LedgerButton from '@/components/Ledger/LedgerButton.vue'
+import AccountsFound from '@/components/misc/AccountsFound.vue'
 import ToS from '@/components/misc/ToS.vue'
 import { removeAccountByID } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
@@ -53,48 +41,14 @@ import { iUserAccountEncrypted } from '@/store/types'
     components: {
         ToS,
         LedgerButton,
+        AccountsFound,
     },
 })
-export default class Menu extends Vue {
-    accounts: iUserAccountEncrypted[] = []
-
-    created() {
-        this.refreshAccounts()
-    }
-    refreshAccounts() {
-        let accountsRaw = localStorage.getItem('accounts') || '{}'
-        this.accounts = JSON.parse(accountsRaw) || []
-    }
-    deleteAccount(baseAddressArray: string[]) {
-        let isConfirm = confirm('Are you sure you want to delete this account?')
-        if (isConfirm) {
-            removeAccountByID(baseAddressArray)
-            this.refreshAccounts()
-        }
-    }
-}
+export default class Menu extends Vue {}
 </script>
 
 <style scoped lang="scss">
 @use "../../main";
-.flex_container {
-    display: flex;
-    align-items: center;
-    svg {
-        &:hover {
-            opacity: 0.8;
-            box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.2);
-        }
-    }
-}
-.account_card {
-    margin: 30px auto;
-    display: grid;
-}
-.access_card {
-    background-color: var(--bg-light) !important;
-    padding: main.$container-padding;
-}
 
 img {
     width: main.$img-size;
