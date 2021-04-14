@@ -34,10 +34,6 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { ImportKeyfileInput, iUserAccountEncrypted } from '@/store/types'
-import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-import { privateToAddress } from 'ethereumjs-util'
-import { bintools } from '@/AVA'
-import { Buffer } from 'avalanche'
 
 @Component
 export default class Accounts extends Vue {
@@ -47,10 +43,18 @@ export default class Accounts extends Vue {
     account: iUserAccountEncrypted | undefined
 
     created() {
-        const account: iUserAccountEncrypted = JSON.parse(
-            JSON.stringify(this.$route.params.account)
-        )
+        //@ts-ignore
+        let account = this.$route.params.account as iUserAccountEncrypted
+
+        if (!account) {
+            this.$router.replace('/access')
+        }
+
         this.account = account
+        // console.log(this.$route.params.account)
+        // const account: iUserAccountEncrypted = JSON.parse(
+        //     JSON.stringify(this.$route.params.account)
+        // )
     }
 
     async access() {

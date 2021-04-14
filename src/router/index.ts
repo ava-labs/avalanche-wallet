@@ -67,7 +67,7 @@ const routes = [
                 component: Mnemonic,
             },
             {
-                path: 'account/:base_address',
+                path: 'account',
                 component: Account,
                 name: 'Account',
             },
