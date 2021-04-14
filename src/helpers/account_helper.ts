@@ -20,20 +20,6 @@ export const removeAccountByID = (baseAddresses: string[]) => {
     saveLocalStorageJSONItem('accounts', updatedAccountsArray)
 }
 
-export const getAccountByBaseAddresses = (
-    baseAddresses: string
-): iUserAccountEncrypted | undefined => {
-    let accounts: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
-
-    for (const each of accounts) {
-        const match = each.baseAddresses[0] === baseAddresses
-        if (match) {
-            return each
-        }
-    }
-    return
-}
-
 export const checkIfSavedLocally = (allWallets: WalletType[]): boolean => {
     const exists = checkAccountsExist()
 
@@ -66,5 +52,4 @@ export const saveLocalStorageJSONItem = (key: string, data: any) => {
 export default {
     removeAccountByID,
     checkIfSavedLocally,
-    getAccountByBaseAddresses,
 }
