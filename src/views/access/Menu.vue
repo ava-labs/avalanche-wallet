@@ -21,7 +21,7 @@
             <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
         </div>
 
-        <AccountsFound :accounts="accounts"></AccountsFound>
+        <AccountsFound></AccountsFound>
 
         <ToS style="margin: 20px !important"></ToS>
         <router-link to="/" class="link">{{ $t('access.cancel') }}</router-link>
@@ -49,6 +49,11 @@ export default class Menu extends Vue {}
 
 <style scoped lang="scss">
 @use "../../main";
+
+.access_card {
+    background-color: var(--bg-light) !important;
+    padding: main.$container-padding;
+}
 
 img {
     width: main.$img-size;

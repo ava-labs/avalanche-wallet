@@ -3,14 +3,14 @@
         <div v-if="accounts.length">
             <hr />
             <h3>{{ $t('access.accounts_found') }}</h3>
-            <div class="flex_container" v-for="acct in accounts" :key="acct.baseAddress">
+            <div class="flex_container" v-for="acct in accounts" :key="acct.baseAddresses.join('')">
                 <router-link
                     class="account_card option button_primary"
                     :to="{ name: 'Account', params: { account: acct } }"
                 >
                     {{ acct.name }}
                 </router-link>
-                <fa icon="trash" @click="deleteAccount(acct.baseAddress)"></fa>
+                <fa icon="trash" @click="deleteAccount(acct)"></fa>
             </div>
             <hr />
         </div>
@@ -21,11 +21,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { removeAccountByID } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
 
-@Component({
-    props: {
-        accounts: Array,
-    },
-})
+@Component
 export default class AccountsFound extends Vue {
     accounts: iUserAccountEncrypted[] = []
 
@@ -36,10 +32,10 @@ export default class AccountsFound extends Vue {
         let accountsRaw = localStorage.getItem('accounts') || '{}'
         this.accounts = JSON.parse(accountsRaw) || []
     }
-    deleteAccount(baseAddressArray: string[]) {
+    deleteAccount(acct: iUserAccountEncrypted) {
         let isConfirm = confirm('Are you sure you want to delete this account?')
         if (isConfirm) {
-            removeAccountByID(baseAddressArray)
+            removeAccountByID(acct.baseAddresses)
             this.refreshAccounts()
         }
     }

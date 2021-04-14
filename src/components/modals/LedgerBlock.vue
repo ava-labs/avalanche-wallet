@@ -34,7 +34,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 import Spinner from '@/components/misc/Spinner.vue'
 import Modal from './Modal.vue'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
-import { LEDGER_EXCHANGE_TIMEOUT } from '../Ledger/LedgerButton.vue'
+import { LEDGER_EXCHANGE_TIMEOUT } from '../../store/modules/ledger/types'
 
 @Component({
     components: {

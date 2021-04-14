@@ -18,8 +18,7 @@ import LedgerBlock from '@/components/modals/LedgerBlock.vue'
 import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
 import { ILedgerAppConfig } from '@/store/types'
-
-export const LEDGER_EXCHANGE_TIMEOUT = 90_000
+import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
 
 @Component({
     components: {
