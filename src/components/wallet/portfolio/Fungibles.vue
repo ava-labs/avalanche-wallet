@@ -167,6 +167,7 @@ export default class Fungibles extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
+@use './portfolio';
 
 .fungibles_view {
     display: flex;
@@ -211,32 +212,6 @@ export default class Fungibles extends Vue {
 }
 .asset {
     border-bottom: 1px solid var(--bg-light);
-}
-
-.add_token_row {
-    display: flex !important;
-    justify-content: center;
-    padding: 24px;
-    border: none !important;
-
-    span {
-        color: var(--primary-color-light);
-        align-self: center;
-        margin: 0px 12px;
-    }
-
-    button {
-        border: 1px solid var(--primary-color-light);
-        border-radius: 22px;
-        padding: 8px 24px;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-        &:hover {
-            opacity: 0.6;
-            //border-color: var(--secondary-color);
-            //color: var(--secondary-color);
-        }
-    }
 }
 
 .send_col {

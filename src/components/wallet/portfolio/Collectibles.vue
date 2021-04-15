@@ -12,7 +12,7 @@
                 :key="token.contractAddress"
                 :family="token"
             ></ERC721FamilyRow>
-            <div>
+            <div class="add_token_row">
                 <button @click="showModal">Add Collectible</button>
             </div>
         </div>
@@ -111,7 +111,7 @@ export default class Collectibles extends Vue {
     }
 
     get erc721s(): ERC721Token[] {
-        return this.$store.state.Assets.erc721TokensCustom
+        return this.$store.getters['Assets/networkErc721Tokens']
     }
 
     onScroll(ev: any) {
@@ -130,6 +130,7 @@ export default class Collectibles extends Vue {
 </script>
 <style lang="scss" scoped>
 @use '../../../main';
+@use './portfolio';
 
 $flip_dur: 0.6s;
 
