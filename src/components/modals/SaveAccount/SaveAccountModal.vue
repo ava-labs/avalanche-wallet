@@ -1,31 +1,41 @@
 <template>
-    <Modal ref="modal" title="Save Account">
-        <div class="remember_modal">
-            <form @submit.prevent="submit">
-                <p>{{ $t('keys.remember_key_desc') }}</p>
-                <input v-model="accountName" name="accountName" placeholder="Account Name" />
-                <input
-                    type="password"
-                    :placeholder="$t('keys.export_placeholder1')"
-                    v-model="password"
-                />
-                <input
-                    type="password"
-                    :placeholder="$t('keys.export_placeholder2')"
-                    v-model="password_confirm"
-                />
-                <p class="err">{{ err }}</p>
-                <v-btn
-                    class="button_primary"
-                    :disabled="!canSubmit"
-                    type="submit"
-                    :loading="isLoading"
-                >
-                    {{ $t('keys.remember_key_button') }}
-                </v-btn>
-            </form>
-        </div>
-    </Modal>
+    <div>
+        <Modal ref="modal" title="asdfa" v-if="!existsInLocalStorage">
+            exists already so logic
+        </Modal>
+        <Modal ref="modal" title="Save Account" v-if="existsInLocalStorage">
+            <div class="remember_modal">
+                <form @submit.prevent="submit">
+                    <p>{{ $t('keys.remember_key_desc') }}</p>
+                    <input
+                        v-model="accountName"
+                        name="accountName"
+                        :placeholder="`${foundAccount ? foundAccount.name : 'Account Name'}`"
+                        :disabled="existsInLocalStorage"
+                    />
+                    <input
+                        type="password"
+                        :placeholder="$t('keys.export_placeholder1')"
+                        v-model="password"
+                    />
+                    <input
+                        type="password"
+                        :placeholder="$t('keys.export_placeholder2')"
+                        v-model="password_confirm"
+                    />
+                    <p class="err">{{ err }}</p>
+                    <v-btn
+                        class="button_primary"
+                        :disabled="!canSubmit"
+                        type="submit"
+                        :loading="isLoading"
+                    >
+                        {{ $t('keys.remember_key_button') }}
+                    </v-btn>
+                </form>
+            </div>
+        </Modal>
+    </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
@@ -33,6 +43,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 import { SaveAccountInput } from '@/store/types'
+import {
+    getLocalStorageJSONItem,
+    saveLocalStorageJSONItem,
+    removeAccountByIndex,
+} from '@/helpers/account_helper'
+import { iUserAccountEncrypted } from '@/store/types'
 
 @Component({
     components: {
@@ -45,15 +61,23 @@ export default class SaveAccountModal extends Vue {
     isLoading: boolean = false
     err: any = ''
     accountName = ''
-
+    existsInLocalStorage: boolean = false
+    index: number = 0
+    foundAccount: iUserAccountEncrypted | undefined
     $refs!: {
         modal: Modal
+    }
+
+    created() {
+        this.existsInLocalStorage = getLocalStorageJSONItem('loggedInAccountIndex') !== undefined
+        this.index = this.existsInLocalStorage ? getLocalStorageJSONItem('loggedInAccountIndex') : 0
+        this.foundAccount = getLocalStorageJSONItem('accounts')[this.index]
     }
 
     get canSubmit() {
         if (!this.password) return false
         if (!this.password_confirm) return false
-        if (this.accountName.length < 1) {
+        if (this.foundAccount === undefined && this.accountName.length < 1) {
             this.err = this.$t('keys.account_name_required')
             return false
         }
@@ -71,20 +95,32 @@ export default class SaveAccountModal extends Vue {
         return true
     }
 
-    async submit() {
+    async submit(): Promise<void> {
         this.isLoading = true
-
+        const accountExistsLocally: boolean = this.foundAccount !== undefined
         let pass = this.password
-        let accountName = this.accountName
+        let accountName = accountExistsLocally ? this.foundAccount!.name : this.accountName
 
         let input: SaveAccountInput = {
             accountName: accountName,
             password: pass,
         }
         await this.$store.dispatch('saveAccount', input)
+        this.setInitialIndex()
+        if (accountExistsLocally) {
+            removeAccountByIndex(this.index)
+        }
         this.isLoading = false
         this.onsuccess()
         this.close()
+    }
+
+    // if the user immediately saves another account
+    setInitialIndex() {
+        const existsInLocalStorage = getLocalStorageJSONItem('accounts') !== undefined
+        if (!existsInLocalStorage) {
+            saveLocalStorageJSONItem('loggedInAccountIndex', 0)
+        }
     }
 
     onsuccess() {

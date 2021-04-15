@@ -37,6 +37,11 @@ export const checkIfSavedLocally = (allWallets: WalletType[]): boolean => {
 
     return false
 }
+export const removeAccountByIndex = (index: number): void => {
+    const accounts: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
+    accounts.splice(index, 1)
+    saveLocalStorageJSONItem('accounts', accounts)
+}
 
 export const getLocalStorageJSONItem = (key: string) => {
     let item = localStorage.getItem(key)
@@ -51,5 +56,6 @@ export const saveLocalStorageJSONItem = (key: string, data: any) => {
 
 export default {
     removeAccountByID,
+    removeAccountByIndex,
     checkIfSavedLocally,
 }

@@ -34,8 +34,6 @@ import { Vue, Component } from 'vue-property-decorator'
 import LedgerButton from '@/components/Ledger/LedgerButton.vue'
 import AccountsFound from '@/components/misc/AccountsFound.vue'
 import ToS from '@/components/misc/ToS.vue'
-import { removeAccountByID } from '@/helpers/account_helper'
-import { iUserAccountEncrypted } from '@/store/types'
 
 @Component({
     components: {
@@ -97,9 +95,6 @@ hr {
     &:hover {
         //transform: translateY(-5px);
         box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    h2 {
     }
 }
 

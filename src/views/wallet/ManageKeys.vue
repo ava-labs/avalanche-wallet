@@ -6,7 +6,7 @@
                     <h1>{{ $t('keys.title') }}</h1>
                     <div class="button_container" v-if="canEncryptWallet">
                         <button
-                            v-if="!existsInLocalStorage"
+                            v-if="!existsInLocalStorage || hasVolatile"
                             @click="openSaveAccount"
                             class="save_account ava_button_secondary"
                         >
