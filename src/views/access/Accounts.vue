@@ -34,6 +34,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { ImportKeyfileInput, iUserAccountEncrypted } from '@/store/types'
+import { saveLocalStorageJSONItem } from '@/helpers/account_helper'
 
 @Component
 export default class Accounts extends Vue {
@@ -41,6 +42,7 @@ export default class Accounts extends Vue {
     isLoading: boolean = false
     error: string = ''
     account: iUserAccountEncrypted | undefined
+    index: number | null = null
 
     created() {
         //@ts-ignore
@@ -49,12 +51,9 @@ export default class Accounts extends Vue {
         if (!account) {
             this.$router.replace('/access')
         }
-
         this.account = account
-        // console.log(this.$route.params.account)
-        // const account: iUserAccountEncrypted = JSON.parse(
-        //     JSON.stringify(this.$route.params.account)
-        // )
+        const index = parseFloat(this.$route.params.index)
+        this.index = index
     }
 
     async access() {
@@ -74,6 +73,7 @@ export default class Accounts extends Vue {
                 .dispatch('importKeyfile', data)
                 .then((res) => {
                     parent.isLoading = false
+                    saveLocalStorageJSONItem('loggedInAccountIndex', this.index)
                 })
                 .catch((err) => {
                     console.log(err)

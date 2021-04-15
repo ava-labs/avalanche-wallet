@@ -3,10 +3,14 @@
         <div v-if="accounts.length">
             <hr />
             <h3>{{ $t('access.accounts_found') }}</h3>
-            <div class="flex_container" v-for="acct in accounts" :key="acct.baseAddresses.join('')">
+            <div
+                class="flex_container"
+                v-for="(acct, index) in accounts"
+                :key="acct.baseAddresses.join('')"
+            >
                 <router-link
                     class="account_card option button_primary"
-                    :to="{ name: 'Account', params: { account: acct } }"
+                    :to="{ name: 'Account', params: { account: acct, index } }"
                 >
                     {{ acct.name }}
                 </router-link>
