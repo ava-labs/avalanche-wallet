@@ -28,6 +28,8 @@
         "@ledgerhq/hw-app-eth": "5.42.1",
         "@ledgerhq/hw-transport-u2f": "5.22.0",
         "@ledgerhq/hw-transport-webusb": "5.22.0",
+        "@metamask/contract-metadata": "^1.24.0",
+        "@metamask/jazzicon": "^2.0.0",
         "@obsidiansystems/hw-app-avalanche": "0.2.2",
         "@openzeppelin/contracts": "^3.4.0",
         "@toruslabs/torus-direct-web-sdk": "3.1.0",
