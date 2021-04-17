@@ -1,9 +1,6 @@
 <template>
     <div>
-        <Modal ref="modal" title="asdfa" v-if="!existsInLocalStorage">
-            exists already so logic
-        </Modal>
-        <Modal ref="modal" title="Save Account" v-if="existsInLocalStorage">
+        <Modal ref="modal" title="Save Account">
             <div class="remember_modal">
                 <form @submit.prevent="submit">
                     <p>{{ $t('keys.remember_key_desc') }}</p>
@@ -47,6 +44,8 @@ import {
     getLocalStorageJSONItem,
     saveLocalStorageJSONItem,
     removeAccountByIndex,
+    getNonVolatileWallets,
+    getIndexByWallet,
 } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
 
@@ -69,8 +68,22 @@ export default class SaveAccountModal extends Vue {
     }
 
     created() {
-        this.existsInLocalStorage = getLocalStorageJSONItem('loggedInAccountIndex') !== undefined
-        this.index = this.existsInLocalStorage ? getLocalStorageJSONItem('loggedInAccountIndex') : 0
+        this.findAccount()
+    }
+    updated() {
+        this.findAccount()
+    }
+
+    findAccount() {
+        const nonVolatileWallets = getNonVolatileWallets(
+            this.$store.state.wallets,
+            this.$store.state.volatileWallets
+        )
+
+        this.existsInLocalStorage = nonVolatileWallets.length > 0
+        this.index = this.existsInLocalStorage
+            ? getLocalStorageJSONItem('loggedInAccountIndex')
+            : getIndexByWallet(nonVolatileWallets)
         this.foundAccount = getLocalStorageJSONItem('accounts')[this.index]
     }
 
