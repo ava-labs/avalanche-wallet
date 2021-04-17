@@ -8,6 +8,7 @@
                 v-for="(acct, index) in accounts"
                 :key="acct.baseAddresses.join('')"
             >
+                <Identicon :address="acct.baseAddresses.join('')" diameter="40"></Identicon>
                 <router-link
                     class="account_card option button_primary"
                     :to="{ name: 'Account', params: { account: acct, index } }"
@@ -24,8 +25,13 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { removeAccountByID } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
+import Identicon from '@/components/misc/Identicon.vue'
 
-@Component
+@Component({
+    components: {
+        Identicon,
+    },
+})
 export default class AccountsFound extends Vue {
     accounts: iUserAccountEncrypted[] = []
 
