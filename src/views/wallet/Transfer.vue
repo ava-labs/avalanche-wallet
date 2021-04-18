@@ -110,7 +110,7 @@
                             </p>
                             <label style="word-break: break-all">
                                 <b>ID:</b>
-                                {{ txId }}
+                                <a target="_blank" v-bind:href="'https://explorer.avax.network/tx/' + txId">{{ txId }}</a>
                             </label>
                             <v-btn
                                 depressed
