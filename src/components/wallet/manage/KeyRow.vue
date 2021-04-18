@@ -95,6 +95,12 @@
                             </p>
                         </div>
                     </div>
+                    <div class="addressBalance bal_cols">
+                        <p>The extended public key is:</p>
+                        <div class="public_key_rows">
+                            <p>{{ publicExtendedKey }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -216,6 +222,12 @@ export default class KeyRow extends Vue {
         if (this.walletType !== 'singleton') return '?'
         let wallet = this.wallet as SingletonWallet
         return wallet.key
+    }
+
+    get publicExtendedKey(): string {
+        if (this.walletType === 'singleton') return 'No data'
+        let wallet = this.wallet as AvaHdWallet
+        return wallet.getPublicExtendedKey()
     }
 
     remove() {
@@ -382,6 +394,10 @@ export default class KeyRow extends Vue {
         font-weight: bold;
         padding: 0px 8px;
         margin-bottom: 4px;
+    }
+    .public_key_rows p {
+        font-size: 8px;
+        padding: 4px 0px 0px 8px;
     }
     p {
         border-radius: 3px;
