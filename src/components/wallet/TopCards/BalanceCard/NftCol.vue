@@ -85,12 +85,15 @@ export default class NftCol extends Vue {
     }
 
     get collectedAmt(): number {
-        return this.$store.state.Assets.nftUTXOs.length
+        let avmAmt = this.$store.state.Assets.nftUTXOs.length
+        let evmAmt = this.$store.getters['Assets/ERC721/totalOwned']
+        return avmAmt + evmAmt
     }
 
     get collectionAmt(): number {
-        let fams = this.$store.state.Assets.nftFams
-        return fams.length
+        let avmFamsAmt = this.$store.state.Assets.nftFams.length
+        let evmFamsAmt = this.$store.getters['Assets/ERC721/totalCollectionsOwned']
+        return avmFamsAmt + evmFamsAmt
     }
 
     get statusText(): string {

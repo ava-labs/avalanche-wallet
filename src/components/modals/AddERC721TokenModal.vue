@@ -33,7 +33,8 @@ import { web3 } from '@/evm'
 import ERC20Abi from '@openzeppelin/contracts/build/contracts/ERC20.json'
 import ERC721Abi from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import Erc20Token from '@/js/Erc20Token'
-import { ERC721TokenInput, TokenListToken } from '@/store/modules/assets/types'
+import { TokenListToken } from '@/store/modules/assets/types'
+import { ERC721TokenInput } from '@/store/modules/assets/modules/types'
 import { WalletType } from '@/js/wallets/types'
 import axios from 'axios'
 import ERC721Token from '@/js/ERC721Token'
@@ -103,7 +104,7 @@ export default class AddERC721TokenModal extends Vue {
                 chainId: this.$store.state.Assets.evmChainId,
             }
 
-            let token: ERC721Token = await this.$store.dispatch('Assets/addCustomErc721Token', data)
+            let token: ERC721Token = await this.$store.dispatch('Assets/ERC721/addCustom', data)
 
             this.$store.dispatch('Notifications/add', {
                 title: 'ERC721 Token Added',

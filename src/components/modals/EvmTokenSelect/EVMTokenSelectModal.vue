@@ -20,6 +20,15 @@
                     <p class="col_bal">{{ t.balanceBig.toLocaleString() }}</p>
                 </div>
             </div>
+            <div class="nft_list">
+                <ERC721Row
+                    class="nft_row"
+                    v-for="t in erc721s"
+                    :key="t.contractAddress"
+                    :token="t"
+                    @select="onERC721Select"
+                ></ERC721Row>
+            </div>
         </div>
     </modal>
 </template>
@@ -32,9 +41,14 @@ import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
 import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
+import ERC721Token from '@/js/ERC721Token'
+import ERC721Row from '@/components/modals/EvmTokenSelect/ERC721Row.vue'
+import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
+import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
 
 @Component({
     components: {
+        ERC721Row,
         Modal,
     },
 })
@@ -56,6 +70,12 @@ export default class EVMTokenSelectModal extends Vue {
         return filt
     }
 
+    get erc721s(): ERC721Token[] {
+        let w: WalletType = this.$store.state.activeWallet
+        if (w.type === 'ledger') return []
+        return this.$store.getters['Assets/ERC721/networkContracts']
+    }
+
     // get symbol() {
     //     if (this.selected === 'native') return 'AVAX'
     //     else return this.selected.data.symbol
@@ -69,8 +89,12 @@ export default class EVMTokenSelectModal extends Vue {
     }
 
     select(token: Erc20Token | 'native') {
-        // this.selected = token
         this.$emit('select', token)
+        this.close()
+    }
+
+    onERC721Select(val: iErc721SelectInput) {
+        this.$emit('selectCollectible', val)
         this.close()
     }
 
@@ -102,9 +126,16 @@ export default class EVMTokenSelectModal extends Vue {
 
 $logo_w: 38px;
 
+.token_row,
+.nft_row {
+    padding: 10px 20px;
+}
+
+.nft_row {
+    border-top: 1px solid var(--bg-light);
+}
 .token_row {
     font-size: 15px;
-    padding: 10px 20px;
     display: grid;
     grid-template-columns: max-content max-content 1fr;
     column-gap: 12px;

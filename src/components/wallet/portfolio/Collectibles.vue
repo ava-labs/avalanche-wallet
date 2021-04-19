@@ -34,6 +34,7 @@ import { NftFamilyDict } from '@/store/modules/assets/types'
 import AddERC721TokenModal from '@/components/modals/AddERC721TokenModal.vue'
 import ERC721Token from '@/js/ERC721Token'
 import ERC721FamilyRow from '@/components/wallet/portfolio/ERC721FamilyRow.vue'
+import { WalletType } from '@/js/wallets/types'
 
 // const payloadTypes = PayloadTypes.getInstance();
 @Component({
@@ -57,7 +58,8 @@ export default class Collectibles extends Vue {
         // let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
         let nftUtxos = this.$store.state.Assets.nftUTXOs.length
         let mintUTxos = this.$store.state.Assets.nftMintUTXOs.length
-        return nftUtxos + mintUTxos === 0
+        let erc721Bal = this.$store.getters['Assets/ERC721/totalOwned']
+        return nftUtxos + mintUTxos + erc721Bal === 0
     }
 
     get nftDict(): IWalletNftDict {
@@ -111,7 +113,9 @@ export default class Collectibles extends Vue {
     }
 
     get erc721s(): ERC721Token[] {
-        return this.$store.getters['Assets/networkErc721Tokens']
+        let w: WalletType = this.$store.state.activeWallet
+        if (w.type === 'ledger') return []
+        return this.$store.getters['Assets/ERC721/networkContracts']
     }
 
     onScroll(ev: any) {

@@ -3,7 +3,6 @@ import {
     AddTokenListInput,
     AssetsDict,
     AssetsState,
-    ERC721TokenInput,
     TokenList,
     TokenListToken,
 } from '@/store/modules/assets/types'
@@ -39,11 +38,14 @@ import ERC721Token from '@/js/ERC721Token'
 // const TOKEN_LISTS = [
 //     'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
 // ]
+import ERC721Module from './modules/erc721'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
-import ERC721_TOKEN_LIST from '@/ERC721Tokenlist.json'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
+    modules: {
+        ERC721: ERC721Module,
+    },
     state: {
         AVA_ASSET_ID: null,
         // isUpdateBalance: false,
@@ -56,8 +58,6 @@ const assets_module: Module<AssetsState, RootState> = {
         nftMintUTXOs: [],
         erc20Tokens: [],
         erc20TokensCustom: [],
-        erc721Tokens: [],
-        erc721TokensCustom: [],
         evmChainId: 0,
         tokenLists: [],
         tokenListUrls: [],
@@ -106,20 +106,6 @@ const assets_module: Module<AssetsState, RootState> = {
             }
         },
 
-        saveCustomErc721Tokens(state) {
-            let tokens = state.erc721TokensCustom
-            let tokenRawData = tokens.map((token) => {
-                return token.data
-            })
-            localStorage.setItem('erc721_tokens', JSON.stringify(tokenRawData))
-        },
-        loadCustomErc721Tokens(state) {
-            let tokensRaw = localStorage.getItem('erc721_tokens') || '[]'
-            let tokens: TokenListToken[] = JSON.parse(tokensRaw)
-            for (var i = 0; i < tokens.length; i++) {
-                state.erc721TokensCustom.push(new ERC721Token(tokens[i]))
-            }
-        },
         saveCustomTokenLists(state) {
             let lists = JSON.stringify(state.tokenListsCustom)
             localStorage.setItem('token_lists', lists)
@@ -220,14 +206,6 @@ const assets_module: Module<AssetsState, RootState> = {
             return t
         },
 
-        async addCustomErc721Token({ state, dispatch, commit }, data: ERC721TokenInput) {
-            let t = new ERC721Token(data)
-            state.erc721TokensCustom.push(t)
-
-            commit('saveCustomErc721Tokens')
-            return t
-        },
-
         async removeTokenList({ state, commit }, list: TokenList) {
             // Remove token list object
             for (var i = 0; i <= state.tokenLists.length; i++) {
@@ -315,15 +293,6 @@ const assets_module: Module<AssetsState, RootState> = {
             commit('loadCustomErc20Tokens')
         },
 
-        async initErc721List({ state, commit }) {
-            // Load default erc721 token contracts
-            let erc721Tokens = ERC721_TOKEN_LIST.tokens
-            for (var i = 0; i < erc721Tokens.length; i++) {
-                state.erc721Tokens.push(new ERC721Token(erc721Tokens[i]))
-            }
-            commit('loadCustomErc721Tokens')
-        },
-
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
         addUnknownAssets({ state, getters, rootGetters, dispatch }) {
             let balanceDict: IWalletBalanceDict = state.balanceDict
@@ -359,6 +328,7 @@ const assets_module: Module<AssetsState, RootState> = {
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
             dispatch('updateERC20Balances')
+            dispatch('ERC721/updateWalletBalance')
             commit('updateActiveAddress', null, { root: true })
         },
 
@@ -460,17 +430,6 @@ const assets_module: Module<AssetsState, RootState> = {
     getters: {
         networkErc20Tokens(state: AssetsState, getters, rootState: RootState): Erc20Token[] {
             let tokens = state.erc20Tokens.concat(state.erc20TokensCustom)
-            let chainId = state.evmChainId
-
-            let filt = tokens.filter((t) => {
-                if (t.data.chainId !== chainId) return false
-                return true
-            })
-            return filt
-        },
-
-        networkErc721Tokens(state: AssetsState, getters, rootState: RootState): ERC721Token[] {
-            let tokens = state.erc721Tokens.concat(state.erc721TokensCustom)
             let chainId = state.evmChainId
 
             let filt = tokens.filter((t) => {

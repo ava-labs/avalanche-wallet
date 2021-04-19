@@ -1,12 +1,13 @@
 <template>
     <div class="nft_card">
+        <ERC721ViewModal :token="token" :token-id="index" ref="view_modal"></ERC721ViewModal>
         <div class="view">
             <template v-if="!isRaw && img">
-                <img :src="img" />
+                <ERC721View :token="token" :index="index"></ERC721View>
             </template>
             <template v-else>
                 <div class="raw_view no_scroll_bar">
-                    <p>{{ data }}</p>
+                    <p>{{ metadata }}</p>
                 </div>
             </template>
         </div>
@@ -48,12 +49,21 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import axios from 'axios'
 import Tooltip from '@/components/misc/Tooltip.vue'
+import ERC721Token from '@/js/ERC721Token'
+import ERC721View from '@/components/misc/ERC721View.vue'
+import ERC721ViewModal from '@/components/modals/ERC721ViewModal.vue'
 @Component({
-    components: { Tooltip },
+    components: { ERC721ViewModal, ERC721View, Tooltip },
 })
-export default class ERC721View extends Vue {
-    @Prop() url!: string
-    data: any = ''
+export default class ERC721Card extends Vue {
+    @Prop() index!: string
+    @Prop() token!: ERC721Token
+
+    $refs!: {
+        view_modal: ERC721ViewModal
+    }
+
+    metadata: any = ''
     isRaw = false
 
     mounted() {
@@ -61,27 +71,39 @@ export default class ERC721View extends Vue {
     }
 
     get img() {
-        let data = this.data
+        let data = this.metadata
         if (!data) return null
         return data.img || data.image || null
     }
 
     get name() {
-        return this.data?.name
+        return this.metadata?.name
     }
 
     get description() {
-        return this.data?.description
+        return this.metadata?.description
     }
 
     async getData() {
-        let res = (await axios.get(this.url)).data
-        console.log(res)
-        this.data = res
+        let uri = await this.token.getTokenURI(parseInt(this.index))
+        let res = (await axios.get(uri)).data
+        this.metadata = res
     }
 
-    transfer() {}
-    expand() {}
+    transfer(ev: any) {
+        ev.stopPropagation()
+        this.$router.push({
+            path: '/wallet/transfer',
+            query: {
+                chain: 'C',
+                token: this.token.contractAddress,
+                tokenId: this.index,
+            },
+        })
+    }
+    expand() {
+        this.$refs.view_modal.open()
+    }
 
     toggleRaw() {
         this.isRaw = !this.isRaw

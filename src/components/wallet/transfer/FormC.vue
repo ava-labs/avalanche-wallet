@@ -10,6 +10,7 @@
                 <EVMInputDropdown
                     @amountChange="onAmountChange"
                     @tokenChange="onTokenChange"
+                    @collectibleChange="onCollectibleChange"
                     :disabled="isConfirm"
                     ref="token_in"
                     :gas-price="gasPrice"
@@ -40,7 +41,7 @@
                 </div>
                 <div>
                     <h4>{{ $t('transfer.c_chain.gasLimit') }}</h4>
-                    <template v-if="formToken === 'native'">
+                    <template v-if="formToken === 'native' && !isCollectible">
                         <input
                             type="number"
                             inputmode="numeric"
@@ -142,6 +143,8 @@ import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
+import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import { WalletHelper } from '@/helpers/wallet_helper'
 
 @Component({
     components: {
@@ -165,6 +168,9 @@ export default class FormC extends Vue {
     formToken: Erc20Token | 'native' = 'native'
     canSendAgain = false
 
+    isCollectible = false
+    formCollectible: iErc721SelectInput | null = null
+
     txHash = ''
 
     $refs!: {
@@ -177,6 +183,7 @@ export default class FormC extends Vue {
 
     onTokenChange(token: Erc20Token | 'native') {
         this.formToken = token
+        this.isCollectible = false
 
         if (token === 'native') {
             this.gasPrice = 225
@@ -184,6 +191,11 @@ export default class FormC extends Vue {
         } else {
             // this.gasPrice = token.getTransferGasPrice()
         }
+    }
+
+    onCollectibleChange(val: iErc721SelectInput) {
+        this.isCollectible = true
+        this.formCollectible = val
     }
 
     get wallet(): WalletType | null {
@@ -285,6 +297,31 @@ export default class FormC extends Vue {
     //     return res.divRound(new BN(Math.pow(10, 9)))
     // }
 
+    async estimateGas() {
+        if (!this.wallet) return
+
+        if (!this.isCollectible && this.formToken !== 'native') {
+            let tx = (this.formToken as Erc20Token).createTransferTx(
+                this.formAddress,
+                this.formAmount
+            )
+            let estGas = await WalletHelper.estimateTxGas(this.wallet, tx)
+            this.gasLimit = estGas
+        }
+
+        if (this.isCollectible && this.formCollectible) {
+            let fromAddr = '0x' + this.wallet.getEvmAddress()
+            let toAddr = this.formAddress
+            let tx = this.formCollectible.token.createTransferTx(
+                fromAddr,
+                toAddr,
+                this.formCollectible.id
+            )
+            let estGas = await WalletHelper.estimateTxGas(this.wallet, tx)
+            this.gasLimit = estGas
+        }
+    }
+
     confirm() {
         if (!this.wallet) return
         if (!this.validate()) return
@@ -292,12 +329,8 @@ export default class FormC extends Vue {
         this.formAmount = this.amountIn.clone()
         this.isConfirm = true
 
-        if (this.formToken !== 'native') {
-            this.wallet
-                .estimateGas(this.formAddress, this.formAmount, this.formToken)
-                .then((val: number) => {
-                    this.gasLimit = val
-                })
+        if (this.formToken !== 'native' || this.isCollectible) {
+            this.estimateGas()
         }
     }
 
@@ -325,24 +358,32 @@ export default class FormC extends Vue {
         this.startAgain()
 
         let tokenAddr = this.$route.query.token
+        let tokenId = this.$route.query.tokenId
+
         if (tokenAddr) {
             if (tokenAddr === 'native') {
-                //@ts-ignore
                 this.$refs.token_in.setToken(tokenAddr)
             } else {
                 let token = this.$store.getters['Assets/findErc20'](tokenAddr)
+                let erc721 = this.$store.getters['Assets/ERC721/find'](tokenAddr)
                 if (token) {
-                    //@ts-ignore
                     this.$refs.token_in.setToken(token)
+                } else if (erc721 && tokenId) {
+                    this.$refs.token_in.setErc721Token(erc721, tokenId as string)
                 }
             }
         }
     }
 
     get canConfirm() {
-        if (this.amountIn.isZero()) return false
+        if (!this.isCollectible) {
+            if (this.amountIn.isZero()) return false
+            if (this.gasLimit <= 0 && this.formToken == 'native') return false
+        }
+
+        if (this.gasPrice <= 0) return false
         if (this.addressIn.length < 6) return false
-        if (this.gasPrice <= 0 || (this.gasLimit <= 0 && this.formToken == 'native')) return false
+
         return true
     }
 
@@ -359,23 +400,36 @@ export default class FormC extends Vue {
         }
 
         try {
-            if (this.formToken === 'native') {
-                let formAmt = this.formAmount
+            if (!this.isCollectible) {
+                if (this.formToken === 'native') {
+                    let formAmt = this.formAmount
 
-                let txHash = await this.wallet.sendEth(
-                    toAddress,
-                    formAmt,
-                    gasPriceWei,
-                    this.gasLimit
-                )
-                this.onSuccess(txHash)
+                    let txHash = await this.wallet.sendEth(
+                        toAddress,
+                        formAmt,
+                        gasPriceWei,
+                        this.gasLimit
+                    )
+                    this.onSuccess(txHash)
+                } else {
+                    let txHash = await this.wallet.sendERC20(
+                        toAddress,
+                        this.formAmount,
+                        gasPriceWei,
+                        this.gasLimit,
+                        this.formToken
+                    )
+                    this.onSuccess(txHash)
+                }
             } else {
-                let txHash = await this.wallet.sendERC20(
+                if (!this.formCollectible) throw 'No collectible selected.'
+                let txHash = await WalletHelper.sendErc721(
+                    this.wallet,
                     toAddress,
-                    this.formAmount,
                     gasPriceWei,
                     this.gasLimit,
-                    this.formToken
+                    this.formCollectible.token,
+                    this.formCollectible.id
                 )
                 this.onSuccess(txHash)
             }

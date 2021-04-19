@@ -1,6 +1,16 @@
 import { web3 } from '@/evm'
 import ERC721Abi from '@openzeppelin/contracts/build/contracts/ERC721.json'
-import { ERC721TokenInput } from '@/store/modules/assets/types'
+import { ERC721TokenInput } from '@/store/modules/assets/modules/types'
+import axios from 'axios'
+import { BN } from 'avalanche'
+
+interface TokenDataCache {
+    [index: number]: string
+}
+
+interface URIDataCache {
+    [index: number]: string
+}
 
 class ERC721Token {
     contractAddress: string
@@ -8,6 +18,8 @@ class ERC721Token {
     name = ''
     symbol = ''
     data: ERC721TokenInput
+    tokenCache: TokenDataCache = {}
+    uriDataCache: URIDataCache = {}
 
     constructor(data: ERC721TokenInput) {
         this.contractAddress = data.address
@@ -23,7 +35,7 @@ class ERC721Token {
         return await this.contract.methods.balanceOf(address).call()
     }
 
-    async getAllTokensIds(address: string) {
+    async getAllTokensIds(address: string): Promise<string[]> {
         let bal = await this.getBalance(address)
 
         let res = []
@@ -40,9 +52,31 @@ class ERC721Token {
         let res = []
         for (var i = 0; i < ids.length; i++) {
             let id = ids[i]
-            let data = await this.contract.methods.tokenURI(id).call()
+            let data = await this.getTokenURI(parseInt(id))
             res.push(data)
         }
+        return res
+    }
+
+    createTransferTx(from: string, to: string, id: string) {
+        return this.contract.methods.transferFrom(from, to, id)
+    }
+
+    async getTokenURI(id: number) {
+        if (this.tokenCache[id]) return this.tokenCache[id]
+        let data = await this.contract.methods.tokenURI(id).call()
+        this.tokenCache[id] = data
+        return data
+    }
+
+    async getTokenURIData(id: number): Promise<any> {
+        //Check cache
+        if (this.uriDataCache[id]) return this.uriDataCache[id]
+        let uri = await this.getTokenURI(id)
+        if (!uri) return null
+        let res = (await axios.get(uri)).data
+        //Save to cache
+        this.uriDataCache[id] = res
         return res
     }
 }
