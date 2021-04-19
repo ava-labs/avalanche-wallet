@@ -7,7 +7,6 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 const blockies = require('@/js/blockies.js')
-//import { toDataUrl } from '@/js/blockies.js'
 
 // import jazzicon from '@metamask/jazzicon'
 // const iconFactoryGen = require('@/js/iconFactory')
