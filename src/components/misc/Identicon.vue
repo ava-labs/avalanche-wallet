@@ -6,7 +6,8 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { toDataUrl } from '@/js/blockies.js'
+const blockies = require('@/js/blockies.js')
+//import { toDataUrl } from '@/js/blockies.js'
 
 // import jazzicon from '@metamask/jazzicon'
 // const iconFactoryGen = require('@/js/iconFactory')
@@ -25,7 +26,7 @@ export default class Identicon extends Vue {
         this.generateBlockie(this.address)
     }
     generateBlockie(address: string) {
-        this.src = toDataUrl(address)
+        this.src = blockies.toDataUrl(address)
     }
 }
 </script>

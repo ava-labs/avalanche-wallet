@@ -27,7 +27,8 @@
         "src/**/*.tsx",
         "src/**/*.vue",
         "tests/**/*.ts",
-        "tests/**/*.tsx"
+        "tests/**/*.tsx",
+        "src/js/blockies.js"
     ],
-    "exclude": ["**/node_modules/*", "../avalanche.js/*", "src/js/blockies.js"]
+    "exclude": ["**/node_modules/*", "../avalanche.js/*"]
 }
