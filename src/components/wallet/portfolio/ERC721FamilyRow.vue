@@ -5,7 +5,7 @@
             <p class="symbol">{{ family.symbol }}</p>
             <p class="fam_id">{{ family.contractAddress }}</p>
         </div>
-        <div class="list">
+        <div class="list" v-if="family.canSupport">
             <ERC721View
                 v-for="tokenIndex in walletBalance"
                 :key="tokenIndex"
@@ -13,6 +13,9 @@
                 :index="tokenIndex"
                 :token="family"
             ></ERC721View>
+        </div>
+        <div v-else>
+            <p>This ERC721 Contract does not support the required interfaces.</p>
         </div>
     </div>
 </template>

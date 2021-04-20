@@ -12,6 +12,9 @@ interface URIDataCache {
     [index: number]: string
 }
 
+const ERC721MetadataID = '0x5b5e139f'
+const ERC721EnumerableID = '0x780e9d63'
+
 class ERC721Token {
     contractAddress: string
     contract: any
@@ -20,6 +23,7 @@ class ERC721Token {
     data: ERC721TokenInput
     tokenCache: TokenDataCache = {}
     uriDataCache: URIDataCache = {}
+    canSupport = false
 
     constructor(data: ERC721TokenInput) {
         this.contractAddress = data.address
@@ -28,7 +32,20 @@ class ERC721Token {
         this.data = data
         //@ts-ignore
         this.contract = new web3.eth.Contract(ERC721Abi.abi, this.contractAddress)
-        // this.getMetaData()
+        this.updateSupports()
+    }
+
+    async updateSupports() {
+        try {
+            let metadata = await this.contract.methods.supportsInterface(ERC721MetadataID).call()
+            let enumerable = await this.contract.methods
+                .supportsInterface(ERC721EnumerableID)
+                .call()
+            this.canSupport = metadata && enumerable
+            console.log(this.canSupport)
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     async getBalance(address: string) {
@@ -37,7 +54,6 @@ class ERC721Token {
 
     async getAllTokensIds(address: string): Promise<string[]> {
         let bal = await this.getBalance(address)
-
         let res = []
         for (var i = 0; i < bal; i++) {
             let tokenId = await this.contract.methods.tokenOfOwnerByIndex(address, i).call()

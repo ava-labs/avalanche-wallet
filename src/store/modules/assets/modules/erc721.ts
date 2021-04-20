@@ -71,9 +71,15 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             let contracts: ERC721Token[] = getters.networkContracts
             for (var i = 0; i < contracts.length; i++) {
                 let erc721 = contracts[i]
-                erc721.getAllTokensIds(walletAddr).then((tokenIds: string[]) => {
-                    Vue.set(state.walletBalance, erc721.contractAddress, tokenIds)
-                })
+                if (!erc721.canSupport) continue
+                erc721
+                    .getAllTokensIds(walletAddr)
+                    .then((tokenIds: string[]) => {
+                        Vue.set(state.walletBalance, erc721.contractAddress, tokenIds)
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
             }
         },
     },
