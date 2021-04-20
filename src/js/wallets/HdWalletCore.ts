@@ -288,6 +288,10 @@ class HdWalletCore {
         return this.externalHelper.getAddressForIndex(0)
     }
 
+    getPublicExtendedKey() {
+        return this.internalHelper.masterKey.publicExtendedKey;
+    }
+
     // helper method to get all stake for more than 256 addresses
     async getAllStake(addrs: string[]): Promise<BN> {
         if (addrs.length <= 256) {
