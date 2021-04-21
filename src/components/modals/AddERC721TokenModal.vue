@@ -69,7 +69,6 @@ export default class AddERC721TokenModal extends Vue {
         try {
             //@ts-ignore
             var tokenInst = new web3.eth.Contract(ERC721Abi.abi, val)
-            console.log(tokenInst)
             let name = await tokenInst.methods.name().call()
             let symbol = await tokenInst.methods.symbol().call()
 

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="hasBalance">
+    <div v-if="hasBalance || !family.canSupport">
         <div class="fam_header">
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>

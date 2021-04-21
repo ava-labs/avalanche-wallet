@@ -42,9 +42,9 @@ class ERC721Token {
                 .supportsInterface(ERC721EnumerableID)
                 .call()
             this.canSupport = metadata && enumerable
-            console.log(this.canSupport)
         } catch (err) {
-            console.error(err)
+            this.canSupport = false
+            // console.error(err)
         }
     }
 
