@@ -72,7 +72,6 @@ export default class EVMTokenSelectModal extends Vue {
 
     get erc721s(): ERC721Token[] {
         let w: WalletType = this.$store.state.activeWallet
-        if (w.type === 'ledger') return []
         return this.$store.getters['Assets/ERC721/networkContracts']
     }
 

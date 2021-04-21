@@ -37,7 +37,6 @@ class Erc20Token {
     }
 
     async updateBalance(address: string) {
-        if (store.state.activeWallet?.type === 'ledger') return
         let bal = await this.contract.methods.balanceOf('0x' + address).call()
         this.balanceRaw = bal
         this.balanceBN = new BN(bal)

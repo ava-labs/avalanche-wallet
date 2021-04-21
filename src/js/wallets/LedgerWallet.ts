@@ -990,8 +990,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        throw 'Not Implemented'
-        // return await WalletHelper.sendErc20(this, to, amount, gasPrice, gasLimit, token)
+        // throw 'Not Implemented'
+        return await WalletHelper.sendErc20(this, to, amount, gasPrice, gasLimit, token)
     }
 }
 
