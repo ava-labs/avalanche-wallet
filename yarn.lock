@@ -941,17 +941,17 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@ethereumjs/common@^2.0.0":
+"@ethereumjs/common@2.0.0", "@ethereumjs/common@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@ethereumjs/common/-/common-2.0.0.tgz#096880b144ed201ca1bc213333afc473758f50dc"
   integrity sha512-yL0zA7Xwgz8IFHKW0VoXGjdZDVxUJg8BQ/muMHvYPW7zHJNNC80gQmvLH+MpvIg1TCXZkFXxrpYRAyCElSm+aw==
   dependencies:
     crc-32 "^1.2.0"
 
-"@ethereumjs/tx@^3.0.0":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@ethereumjs/tx/-/tx-3.0.1.tgz#86667f526bc82eb0fd748a4a942e40a3156505c6"
-  integrity sha512-ABdW+IIWrNrAp++3Efsx3fwIOLeGM2sWCOKhQRhmqfinK7yugUsWtmTmST1keZGTze8L9ef/eWyOd7HXA3XaBA==
+"@ethereumjs/tx@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@ethereumjs/tx/-/tx-3.0.0.tgz#8dfd91ed6e91e63996e37b3ddc340821ebd48c81"
+  integrity sha512-H9tfy6qgYxPXvt1TSObfVmVjlF43OoQqoPQ3PJsG2JiuqaMHj5ettV1pGFEC3FamENDBkl6vD6niQEvIlXv/VQ==
   dependencies:
     "@ethereumjs/common" "^2.0.0"
     ethereumjs-util "^7.0.7"
@@ -2781,7 +2781,7 @@ abbrev@1:
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
 
-abi-decoder@^2.4.0:
+abi-decoder@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/abi-decoder/-/abi-decoder-2.4.0.tgz#99f72337c614d6ac45a28dbc83c08b44eba48ad5"
   integrity sha512-TOLU2q1HgYOjs1GKGtVzaqrYkar6I2fT9a80rzx6/9EJ/5crb4nCGuro0grZayixem93T7omrajYmLiMkYDLDA==
