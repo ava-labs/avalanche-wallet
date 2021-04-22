@@ -1,5 +1,5 @@
 <template>
-    <button class="ava_button" @click="submit">
+    <button class="button_primary" @click="submit">
         <template v-if="!isLoading">Ledger</template>
         <Spinner v-else class="spinner"></Spinner>
     </button>

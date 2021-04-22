@@ -1,18 +1,15 @@
 <template>
     <div class="access_card">
         <div class="content">
+            <Identicon :value="account.baseAddresses.join('')"></Identicon>
             <h1>{{ account.name }}</h1>
             <form @submit.prevent="access">
-                <v-text-field
-                    class="pass"
-                    label="Password"
-                    dense
-                    solo
-                    flat
+                <input
+                    class="single_line_input hover_border pass"
                     type="password"
+                    placeholder="Password"
                     v-model="password"
-                    hide-details
-                ></v-text-field>
+                />
                 <p class="err">{{ error }}</p>
                 <v-btn
                     class="ava_button button_primary"
@@ -34,9 +31,11 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { ImportKeyfileInput, iUserAccountEncrypted } from '@/store/types'
-import { saveLocalStorageJSONItem } from '@/helpers/account_helper'
+import Identicon from '@/components/misc/Identicon.vue'
 
-@Component
+@Component({
+    components: { Identicon },
+})
 export default class Accounts extends Vue {
     password: string = ''
     isLoading: boolean = false
@@ -73,10 +72,8 @@ export default class Accounts extends Vue {
                 .dispatch('importKeyfile', data)
                 .then((res) => {
                     parent.isLoading = false
-                    saveLocalStorageJSONItem('loggedInAccountIndex', this.index)
                 })
                 .catch((err) => {
-                    console.log(err)
                     if (err === 'INVALID_PASS') {
                         parent.error = this.$t('access.password_error').toString()
                     } else if (err === 'INVALID_VERSION') {
@@ -108,7 +105,8 @@ export default class Accounts extends Vue {
 <style scoped lang="scss">
 @use '../../main';
 .pass {
-    background-color: var(--bg) !important;
+    text-align: center;
+    background-color: var(--bg-light) !important;
 }
 .ava_button {
     width: 100%;
@@ -116,8 +114,8 @@ export default class Accounts extends Vue {
 }
 .access_card {
     /*max-width: 80vw;*/
-    background-color: var(--bg-light);
-    padding: main.$container-padding;
+    //background-color: var(--bg-light);
+    //padding: main.$container-padding;
     width: 100%;
     /*max-width: 240px;*/
     /*max-width: 1000px;*/
@@ -135,13 +133,16 @@ export default class Accounts extends Vue {
 h1 {
     font-size: main.$m-size;
     font-weight: 400;
-    margin-bottom: 30px;
+}
+
+form {
+    margin: 14px 0;
 }
 .file_in {
     margin: 30px auto 10px;
     font-size: 13px;
     border: none !important;
-    background-color: var(--bg) !important;
+    background-color: var(--bg-light) !important;
     /*min-width: 200px*/
 }
 a {

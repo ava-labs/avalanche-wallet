@@ -283,8 +283,15 @@
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
         "subtitle": "Active Key",
+        "save_account": {
+            "title": "Save Account",
+            "desc": "Encode your wallet with a password and store securely on this browser.",
+            "submit":  "Save",
+            "placeholder_1": "Account Name",
+            "placeholder_2": "Password",
+            "placeholder_3": "Confirm Password"
+        },
         "remember_key_button": "REMEMBER",
-        "remember_key_desc": "Encode your wallet with a password and store securely on this browser.",
         "remember_key_check": "Save Account",
         "remember_key_info": "You can later access your wallet on this browser with a password.",
         "account_slow_warning": "Accounts with multiple keys may take a long time to load.",

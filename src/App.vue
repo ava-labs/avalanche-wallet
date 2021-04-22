@@ -4,7 +4,7 @@
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
-                    <SaveAccountModal></SaveAccountModal>
+                    <!--                    <SaveAccountModal></SaveAccountModal>-->
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
@@ -45,6 +45,7 @@ export default {
         }
 
         await this.$store.dispatch('Network/init')
+        this.$store.commit('Accounts/loadAccounts')
         this.$store.dispatch('Assets/initErc20List')
         this.$store.dispatch('updateAvaxPrice')
     },

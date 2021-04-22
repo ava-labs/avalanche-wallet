@@ -22,7 +22,7 @@
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}
                         </button>
-                        <SaveAccountModal ref="remember_modal"></SaveAccountModal>
+                        <SaveAccountModal ref="account_modal"></SaveAccountModal>
                         <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
@@ -41,6 +41,7 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal.vue'
 
 import { WalletNameType } from '@/js/wallets/types'
+import { iUserAccountEncrypted } from '@/store/types'
 
 @Component({
     name: 'manage',
@@ -52,19 +53,26 @@ import { WalletNameType } from '@/js/wallets/types'
     },
 })
 export default class ManageKeys extends Vue {
+    $refs!: {
+        import: ImportKeys
+        export: ExportKeys
+        account_modal: SaveAccountModal
+    }
+
+    get accountIndex() {
+        return this.$store.getters['Accounts/accountIndex']
+    }
+
     importKeys() {
-        // @ts-ignore
         this.$refs.import.open()
     }
 
     exportKeys() {
-        // @ts-ignore
         this.$refs.export.open()
     }
 
     openSaveAccount() {
-        // @ts-ignore
-        this.$refs.remember_modal.open()
+        this.$refs.account_modal.open()
     }
 
     get canEncryptWallet() {
@@ -72,7 +80,7 @@ export default class ManageKeys extends Vue {
     }
 
     get existsInLocalStorage() {
-        return this.$store.state.isSavedLocally
+        return this.$store.state.Accounts.isSavedLocally
     }
 
     get walletType(): WalletNameType {
@@ -95,6 +103,11 @@ export default class ManageKeys extends Vue {
 <style scoped lang="scss">
 @use '../../main';
 
+.button_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 header {
     display: flex;
     align-items: center;

@@ -169,7 +169,7 @@ button {
 
 .mobile_bottom {
     position: absolute;
-    bottom: 14px;
+    bottom: 30px;
 }
 
 .lang_mobile,

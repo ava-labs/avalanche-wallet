@@ -1,23 +1,24 @@
 <template>
     <div>
-        <Modal ref="modal" title="Save Account">
+        <Modal ref="modal" :title="$t('keys.save_account.title')">
             <div class="remember_modal">
                 <form @submit.prevent="submit">
-                    <p>{{ $t('keys.remember_key_desc') }}</p>
+                    <p>{{ $t('keys.save_account.desc') }}</p>
                     <input
+                        v-if="!activeAccount"
                         v-model="accountName"
-                        name="accountName"
-                        :placeholder="`${foundAccount ? foundAccount.name : 'Account Name'}`"
+                        :name="$t('keys.save_account.placeholder_1')"
+                        placeholder="Account Name"
                         :disabled="existsInLocalStorage"
                     />
                     <input
                         type="password"
-                        :placeholder="$t('keys.export_placeholder1')"
+                        :placeholder="$t('keys.save_account.placeholder_2')"
                         v-model="password"
                     />
                     <input
                         type="password"
-                        :placeholder="$t('keys.export_placeholder2')"
+                        :placeholder="$t('keys.save_account.placeholder_3')"
                         v-model="password_confirm"
                     />
                     <p class="err">{{ err }}</p>
@@ -27,7 +28,7 @@
                         type="submit"
                         :loading="isLoading"
                     >
-                        {{ $t('keys.remember_key_button') }}
+                        {{ $t('keys.save_account.submit') }}
                     </v-btn>
                 </form>
             </div>
@@ -45,7 +46,7 @@ import {
     saveLocalStorageJSONItem,
     removeAccountByIndex,
     getNonVolatileWallets,
-    getIndexByWallet,
+    getIndexByWallets,
 } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
 
@@ -62,82 +63,101 @@ export default class SaveAccountModal extends Vue {
     accountName = ''
     existsInLocalStorage: boolean = false
     index: number = 0
-    foundAccount: iUserAccountEncrypted | undefined
+    foundAccount: iUserAccountEncrypted | null = null
     $refs!: {
         modal: Modal
     }
 
-    created() {
-        this.findAccount()
-    }
-    updated() {
-        this.findAccount()
-    }
+    // created() {
+    //     this.findAccount()
+    // }
 
-    findAccount() {
-        const nonVolatileWallets = getNonVolatileWallets(
-            this.$store.state.wallets,
-            this.$store.state.volatileWallets
-        )
+    // updated() {
+    //     this.findAccount()
+    // }
 
-        this.existsInLocalStorage = nonVolatileWallets.length > 0
-        this.index = this.existsInLocalStorage
-            ? getLocalStorageJSONItem('loggedInAccountIndex')
-            : getIndexByWallet(nonVolatileWallets)
-        this.foundAccount = getLocalStorageJSONItem('accounts')[this.index]
-    }
+    // findAccount() {
+    //     const nonVolatileWallets = getNonVolatileWallets(
+    //         this.$store.state.wallets,
+    //         this.$store.state.volatileWallets
+    //     )
+    //
+    //     this.existsInLocalStorage = nonVolatileWallets.length > 0
+    //     this.index = this.existsInLocalStorage
+    //         ? getLocalStorageJSONItem('loggedInAccountIndex')
+    //         : getIndexByWallets(nonVolatileWallets)
+    //     this.foundAccount = getLocalStorageJSONItem('accounts')[this.index]
+    // }
 
     get canSubmit() {
-        if (!this.password) return false
-        if (!this.password_confirm) return false
-        if (this.foundAccount === undefined && this.accountName.length < 1) {
-            this.err = this.$t('keys.account_name_required')
-            return false
-        }
-
-        if (this.password.length < 9) {
-            this.err = this.$t('keys.password_validation')
-            return false
-        }
-
-        if (this.password !== this.password_confirm) {
-            this.err = this.$t('keys.password_validation2')
-            return false
-        }
-        this.err = ''
+        if (this.error !== null) return false
         return true
+        // if (!this.password) return false
+        // if (!this.password_confirm) return false
+        // if (this.accountName.length < 1) {
+        //     this.err = this.$t('keys.account_name_required')
+        //     return false
+        // }
+        //
+        // if (this.password.length < 9) {
+        //     this.err = this.$t('keys.password_validation')
+        //     return false
+        // }
+        //
+        // if (this.password !== this.password_confirm) {
+        //     this.err = this.$t('keys.password_validation2')
+        //     return false
+        // }
+        // this.err = ''
+        // return true
+    }
+
+    get error() {
+        if (!this.password) return this.$t('keys.password_validation')
+        if (!this.password_confirm) return this.$t('keys.password_validation2')
+        if (!this.activeAccount && this.accountName.length < 1)
+            return this.$t('keys.account_name_required')
+        if (this.password.length < 9) return this.$t('keys.password_validation')
+        if (this.password !== this.password_confirm) return this.$t('keys.password_validation2')
+
+        return null
     }
 
     async submit(): Promise<void> {
         this.isLoading = true
-        const accountExistsLocally: boolean = this.foundAccount !== undefined
+        // const accountExistsLocally: boolean = this.foundAccount !== undefined
         let pass = this.password
-        let accountName = accountExistsLocally ? this.foundAccount!.name : this.accountName
+        let accountName = this.accountName
+        // let accountName = accountExistsLocally ? this.foundAccount!.name : this.accountName
 
         let input: SaveAccountInput = {
             accountName: accountName,
             password: pass,
         }
-        await this.$store.dispatch('saveAccount', input)
-        this.setInitialIndex()
-        if (accountExistsLocally) {
-            removeAccountByIndex(this.index)
-        }
+        await this.$store.dispatch('Accounts/saveAccount', input)
+        // this.setInitialIndex()
+        // if (accountExistsLocally) {
+        //     removeAccountByIndex(this.index)
+        // }
         this.isLoading = false
         this.onsuccess()
-        this.close()
     }
 
     // if the user immediately saves another account
-    setInitialIndex() {
-        const existsInLocalStorage = getLocalStorageJSONItem('accounts') !== undefined
-        if (!existsInLocalStorage) {
-            saveLocalStorageJSONItem('loggedInAccountIndex', 0)
-        }
-    }
+    // setInitialIndex() {
+    //     const existsInLocalStorage = getLocalStorageJSONItem('accounts') !== undefined
+    //     if (!existsInLocalStorage) {
+    //         saveLocalStorageJSONItem('loggedInAccountIndex', 0)
+    //     }
+    // }
 
     onsuccess() {
-        this.clear()
+        this.$store.dispatch('Notifications/add', {
+            title: 'Account Saved',
+            message: 'Your Accounts are stored securely for easy access.',
+            type: 'info',
+        })
+        this.close()
     }
 
     clear() {
@@ -155,6 +175,10 @@ export default class SaveAccountModal extends Vue {
     open() {
         //@ts-ignore
         this.$refs.modal.open()
+    }
+
+    get activeAccount() {
+        return this.$store.getters['Accounts/account']
     }
 }
 </script>

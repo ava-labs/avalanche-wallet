@@ -6,7 +6,7 @@
                 <img v-else src="@/assets/wallet_logo_dark.svg" />
             </div>
             <div class="links">
-                <router-link to="/wallet">
+                <router-link to="/wallet" class="wallet_link">
                     <img v-if="$root.theme === 'day'" src="@/assets/sidebar/portfolio_nav.png" />
                     <img v-else src="@/assets/sidebar/portfolio_nav_night.png" />
                     {{ $t('wallet.sidebar.portfolio') }}
@@ -49,6 +49,7 @@
                     <img v-else src="@/assets/sidebar/advanced_nav_night.png" />
                     {{ $t('wallet.sidebar.advanced') }}
                 </router-link>
+                <AccountMenu class="wallet_link"></AccountMenu>
             </div>
             <div class="bottom">
                 <LanguageSelect></LanguageSelect>
@@ -58,8 +59,10 @@
 </template>
 <script>
 import LanguageSelect from '@/components/misc/LanguageSelect/LanguageSelect'
+import AccountMenu from '@/components/wallet/sidebar/AccountMenu'
 export default {
     components: {
+        AccountMenu,
         LanguageSelect,
     },
 }
@@ -68,14 +71,10 @@ export default {
 @use "../../main";
 
 .wallet_sidebar {
-    position: relative;
-
     .stick {
-        position: sticky;
         display: flex;
         flex-direction: column;
         height: 100%;
-        top: 0;
     }
     .alert_icon {
         color: #f00;
@@ -101,10 +100,6 @@ export default {
         flex-direction: column;
 
         a {
-            display: flex;
-            align-items: center;
-            padding: 14px 24px;
-            white-space: nowrap;
             opacity: 0.6;
             color: var(--primary-color-light);
             text-decoration: none;
@@ -114,8 +109,14 @@ export default {
             }
         }
 
-        a.router-link-exact-active,
-        .wallet_link.router-link-active {
+        .wallet_link {
+            display: flex;
+            align-items: center;
+            padding: 14px 24px;
+            white-space: nowrap;
+        }
+
+        a.router-link-exact-active {
             color: var(--primary-color) !important;
             opacity: 1;
             background-color: var(--bg-wallet);
@@ -144,7 +145,11 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
+
+    > * {
+        padding: 0px 24px;
+    }
 }
 
 @include main.medium-device {

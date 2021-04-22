@@ -1,38 +1,37 @@
 <template>
-    <div class="identicon">
-        <img :src="src" alt="" :height="diameter" :width="diameter" />
-    </div>
+    <img ref="image_tag" :height="diameter" :width="diameter" />
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-const blockies = require('@/js/blockies.js')
-
-// import jazzicon from '@metamask/jazzicon'
-// const iconFactoryGen = require('@/js/iconFactory')
-// const iconFactory = iconFactoryGen(jazzicon)
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import makeBlockie from 'ethereum-blockies-base64'
 
 @Component
 export default class Identicon extends Vue {
-    image: HTMLImageElement | null = null
-    src!: string
+    $refs!: {
+        image_tag: HTMLImageElement
+    }
 
-    @Prop()
-    address!: string
+    @Prop() value!: string
     @Prop({ default: 40 }) diameter!: number
 
-    created() {
-        this.generateBlockie(this.address)
+    @Watch('value')
+    onValueChange() {
+        this.generateImage()
     }
-    generateBlockie(address: string) {
-        this.src = blockies.toDataUrl(address)
+
+    mounted() {
+        this.generateImage()
+    }
+
+    generateImage() {
+        let base64 = makeBlockie(this.value)
+        this.$refs.image_tag.src = base64
     }
 }
 </script>
 <style scoped lang="scss">
-.identicon {
-    img {
-        border-radius: 100%;
-    }
+img {
+    border-radius: 100%;
 }
 </style>
