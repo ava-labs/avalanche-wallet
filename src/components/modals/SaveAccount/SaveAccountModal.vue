@@ -154,7 +154,7 @@ export default class SaveAccountModal extends Vue {
     onsuccess() {
         this.$store.dispatch('Notifications/add', {
             title: 'Account Saved',
-            message: 'Your Accounts are stored securely for easy access.',
+            message: 'Your keys are now stored under a new local account.',
             type: 'info',
         })
         this.close()

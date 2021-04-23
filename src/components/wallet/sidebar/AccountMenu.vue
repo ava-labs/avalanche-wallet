@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!isLedger">
         <template v-if="account">
             <button class="account_but" @click="openSettings">
                 <Identicon :value="account.baseAddresses.join('')" diameter="18"></Identicon>
@@ -22,6 +22,7 @@ import { iUserAccountEncrypted } from '@/store/types'
 import Identicon from '@/components/misc/Identicon.vue'
 import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal.vue'
 import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSettingsModal.vue'
+import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {
@@ -38,6 +39,11 @@ export default class AccountMenu extends Vue {
 
     get account(): iUserAccountEncrypted | null {
         return this.$store.getters['Accounts/account']
+    }
+
+    get isLedger() {
+        let w: WalletType = this.$store.state.activeWallet
+        return w.type === 'ledger'
     }
 
     openSettings() {
@@ -58,11 +64,19 @@ export default class AccountMenu extends Vue {
     flex-direction: row;
     align-items: center;
     p {
+        text-align: left;
         margin-left: 8px !important;
+    }
+
+    &:hover {
+        opacity: 0.5;
     }
 }
 
 .save_account {
-    color: var(--error);
+    color: var(--warning);
+    &:hover {
+        opacity: 0.5;
+    }
 }
 </style>

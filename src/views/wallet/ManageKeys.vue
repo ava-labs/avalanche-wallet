@@ -6,8 +6,16 @@
                     <h1>{{ $t('keys.title') }}</h1>
                     <div class="button_container" v-if="canEncryptWallet">
                         <button
-                            v-if="!existsInLocalStorage || hasVolatile"
+                            v-if="!account"
                             @click="openSaveAccount"
+                            class="save_account ava_button_secondary"
+                        >
+                            <fa icon="exclamation-triangle"></fa>
+                            {{ $t('keys.button1') }}
+                        </button>
+                        <button
+                            v-if="hasVolatile & account"
+                            @click="openAccountSettings"
                             class="save_account ava_button_secondary"
                         >
                             <fa icon="exclamation-triangle"></fa>
@@ -23,6 +31,7 @@
                             {{ $t('keys.button3') }}
                         </button>
                         <SaveAccountModal ref="account_modal"></SaveAccountModal>
+                        <AccountSettingsModal ref="account_settings"></AccountSettingsModal>
                         <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
@@ -42,10 +51,12 @@ import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal.v
 
 import { WalletNameType } from '@/js/wallets/types'
 import { iUserAccountEncrypted } from '@/store/types'
+import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSettingsModal.vue'
 
 @Component({
     name: 'manage',
     components: {
+        AccountSettingsModal,
         MyKeys,
         ImportKeys,
         ExportKeys,
@@ -57,10 +68,11 @@ export default class ManageKeys extends Vue {
         import: ImportKeys
         export: ExportKeys
         account_modal: SaveAccountModal
+        account_settings: AccountSettingsModal
     }
 
-    get accountIndex() {
-        return this.$store.getters['Accounts/accountIndex']
+    get account() {
+        return this.$store.getters['Accounts/account']
     }
 
     importKeys() {
@@ -73,6 +85,10 @@ export default class ManageKeys extends Vue {
 
     openSaveAccount() {
         this.$refs.account_modal.open()
+    }
+
+    openAccountSettings() {
+        this.$refs.account_settings.open()
     }
 
     get canEncryptWallet() {

@@ -93,6 +93,9 @@ export default class AccountSettingsModal extends Vue {
 
 .header {
     margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .options {

@@ -10,11 +10,14 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSettingsModal.vue'
 
 @Component
 export default class SaveKeys extends Vue {
     pass = ''
     error = ''
+
+    $parent!: AccountSettingsModal
 
     get canSubmit() {
         if (this.pass.length < 1) return false
@@ -22,6 +25,7 @@ export default class SaveKeys extends Vue {
     }
 
     submit() {
+        this.error = ''
         this.$store
             .dispatch('Accounts/saveKeys', this.pass)
             .then((res) => {
@@ -29,6 +33,7 @@ export default class SaveKeys extends Vue {
                     title: 'Keys Saved',
                     message: 'Your account is updated with new keys.',
                 })
+                this.$parent.close()
             })
             .catch((err) => {
                 this.error = err

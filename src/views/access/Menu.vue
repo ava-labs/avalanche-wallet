@@ -3,7 +3,7 @@
         <h1>{{ $t('access.title') }}</h1>
         <router-link to="/create" class="link">{{ $t('access.create') }}</router-link>
         <div class="menus">
-            <AccountsFound></AccountsFound>
+            <AccountsFound class="accounts_menu"></AccountsFound>
             <div class="options">
                 <router-link to="/access/privatekey" class="menu_option button_primary">
                     {{ $t('access.but_private_key') }}
@@ -72,10 +72,13 @@ hr {
     opacity: 0.2;
 }
 
+.accounts_menu {
+    margin-bottom: 30px;
+}
+
 .options {
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
     //display: grid;
     //grid-template-columns: repeat(4, 1fr);
     //grid-gap: 30px;

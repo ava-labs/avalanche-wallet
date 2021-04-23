@@ -284,7 +284,7 @@ export default new Vuex.Store({
             return wallet
         },
 
-        removeWallet({ state, dispatch }, wallet: MnemonicWallet) {
+        removeWallet({ state, dispatch, getters }, wallet: MnemonicWallet) {
             // TODO: This might cause an error use wallet id instead
             let index = state.wallets.indexOf(wallet)
             state.wallets.splice(index, 1)

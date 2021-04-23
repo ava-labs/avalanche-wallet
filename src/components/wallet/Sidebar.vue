@@ -49,9 +49,9 @@
                     <img v-else src="@/assets/sidebar/advanced_nav_night.png" />
                     {{ $t('wallet.sidebar.advanced') }}
                 </router-link>
-                <AccountMenu class="wallet_link"></AccountMenu>
             </div>
             <div class="bottom">
+                <AccountMenu class="wallet_link"></AccountMenu>
                 <LanguageSelect></LanguageSelect>
             </div>
         </div>
@@ -149,6 +149,7 @@ export default {
 
     > * {
         padding: 0px 24px;
+        margin-top: 4px;
     }
 }
 

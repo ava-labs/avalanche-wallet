@@ -8,19 +8,19 @@ const checkAccountsExist = (): boolean => {
     return localStorage.getItem('accounts') !== null
 }
 
-export const removeAccountByID = (baseAddresses: string[]) => {
-    let old: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
-    let updatedAccountsArray: iUserAccountEncrypted[] = []
-
-    for (const each of old) {
-        const addressArray: any = each.baseAddresses
-        if (!isEqual(baseAddresses, addressArray)) {
-            updatedAccountsArray.push(each)
-        }
-    }
-
-    saveLocalStorageJSONItem('accounts', updatedAccountsArray)
-}
+// export const removeAccountByID = (baseAddresses: string[]) => {
+//     let old: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
+//     let updatedAccountsArray: iUserAccountEncrypted[] = []
+//
+//     for (const each of old) {
+//         const addressArray: any = each.baseAddresses
+//         if (!isEqual(baseAddresses, addressArray)) {
+//             updatedAccountsArray.push(each)
+//         }
+//     }
+//
+//     saveLocalStorageJSONItem('accounts', updatedAccountsArray)
+// }
 
 export function getAccountByIndex(index: number): iUserAccountEncrypted | null {
     return getLocalStorageAccounts()[index] || null
@@ -103,8 +103,13 @@ export async function verifyAccountPassword(account: iUserAccountEncrypted, pass
     }
 }
 
+export function overwriteAccountAtIndex(newAccount: iUserAccountEncrypted, index: number) {
+    let accts = getLocalStorageAccounts()
+    accts.splice(index, 1, newAccount)
+    saveLocalStorageJSONItem('accounts', accts)
+}
+
 export default {
-    removeAccountByID,
     removeAccountByIndex,
     checkIfSavedLocally,
     getNonVolatileWallets,

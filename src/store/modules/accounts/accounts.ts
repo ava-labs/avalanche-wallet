@@ -8,6 +8,7 @@ import {
     getAccountByIndex,
     getIndexByWallets,
     getLocalStorageAccounts,
+    overwriteAccountAtIndex,
     removeAccountByIndex,
     verifyAccountPassword,
 } from '@/helpers/account_helper'
@@ -149,6 +150,26 @@ const accounts_module: Module<AccountsState, RootState> = {
                 accountName: account.name,
             })
         },
+
+        // Remove the selected key from account and update local storage
+        async deleteKey({ getters, rootState, commit }, wallet: WalletType) {
+            if (!getters.account) return
+            let delIndex = rootState.wallets.indexOf(wallet)
+            let acctIndex = getters.accountIndex
+            let acct: iUserAccountEncrypted = getters.account
+
+            acct.baseAddresses.splice(delIndex, 1)
+            acct.wallet.keys.splice(delIndex, 1)
+
+            overwriteAccountAtIndex(acct, acctIndex)
+            commit('loadAccounts')
+        },
+        // removeWallet({getters, dispatch}){
+        //     let account = getters.account
+        //     if (account) {
+        //         dispatch('deleteKey', wallet)
+        //     }
+        // }
     },
     getters: {
         baseAddresses(state: AccountsState, getters, rootState: RootState) {

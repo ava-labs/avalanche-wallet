@@ -95,6 +95,10 @@ export default class LanguageSelect extends Vue {
     border-radius: 3px;
     position: relative;
     overflow: hidden;
+
+    &:hover {
+        opacity: 0.5;
+    }
 }
 
 .flag {

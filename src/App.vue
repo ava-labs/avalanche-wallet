@@ -48,6 +48,10 @@ export default {
         this.$store.commit('Accounts/loadAccounts')
         this.$store.dispatch('Assets/initErc20List')
         this.$store.dispatch('updateAvaxPrice')
+
+        if (this.$store.state.Accounts.accounts.length > 0) {
+            this.$router.push('/access')
+        }
     },
     computed: {
         isNavbar() {
