@@ -3,9 +3,8 @@
         <div class="confirm_body">
             <p style="text-align: center">
                 {{ $t('logout.confirmation') }}
-                <br />
-                {{ $t('logout.confirmation_message') }}
             </p>
+
             <div
                 style="display: flex; flex-direction: column; align-items: center; margin-top: 14px"
             >

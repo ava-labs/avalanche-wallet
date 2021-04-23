@@ -6,17 +6,8 @@
             :key="acct.baseAddresses.join('')"
             @click="selectAccount(acct)"
         >
-            <!--            <div>-->
             <Identicon :value="acct.baseAddresses.join('')" diameter="40"></Identicon>
             <p>{{ acct.name }}</p>
-            <!--                <router-link-->
-            <!--                    class="account_card option button_primary"-->
-            <!--                    :to="{ name: 'Account', params: { account: acct, index } }"-->
-            <!--                >-->
-            <!--                    {{ acct.name }}-->
-            <!--                </router-link>-->
-            <!--            </div>-->
-            <!--            <fa icon="trash" @click="deleteAccount(acct)"></fa>-->
         </div>
     </div>
 </template>
@@ -40,13 +31,6 @@ export default class AccountsFound extends Vue {
         let accountsRaw = localStorage.getItem('accounts') || '{}'
         this.accounts = JSON.parse(accountsRaw) || []
     }
-    // deleteAccount(acct: iUserAccountEncrypted) {
-    //     let isConfirm = confirm('Are you sure you want to delete this account?')
-    //     if (isConfirm) {
-    //         removeAccountByID(acct.baseAddresses)
-    //         this.refreshAccounts()
-    //     }
-    // }
 
     selectAccount(acct: iUserAccountEncrypted) {
         this.$router.push({
