@@ -65,7 +65,7 @@
         "luxon": "1.25.0",
         "moment": "2.27.0",
         "morgan": "1.9.1",
-        "node-sass": "4.14.1",
+        "node-sass": "5.0.0",
         "print-js": "1.0.63",
         "punycode": "2.1.1",
         "qr-scanner": "1.1.1",

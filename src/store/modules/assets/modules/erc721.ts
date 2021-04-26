@@ -6,7 +6,6 @@ import { RootState } from '@/store/types'
 import ERC721_TOKEN_LIST from '@/ERC721Tokenlist.json'
 import { WalletType } from '@/js/wallets/types'
 import Vue from 'vue'
-import Erc20Token from '@/js/Erc20Token'
 
 const erc721_module: Module<Erc721ModuleState, RootState> = {
     namespaced: true,
