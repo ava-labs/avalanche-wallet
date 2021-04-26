@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="erc721_view">
         <img :src="img" v-if="!isError && img" />
         <div v-if="isError" class="err_cont">
             <p>
@@ -50,6 +50,10 @@ export default class ERC721View extends Vue {
 }
 </script>
 <style scoped lang="scss">
+.erc721_view {
+    width: 100%;
+    height: 100%;
+}
 img,
 .err_cont {
     width: 100%;

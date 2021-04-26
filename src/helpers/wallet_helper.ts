@@ -495,7 +495,6 @@ class WalletHelper {
     ) {
         let fromAddr = '0x' + wallet.getEvmAddress()
         let tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
-        console.log(tx)
         let signedTx = await wallet.signEvm(tx)
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
