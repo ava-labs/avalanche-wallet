@@ -3,7 +3,7 @@
     "private": true,
     "version": "0.1.4",
     "engines": {
-        "node": ">=15.6.0"
+        "node": "15.x"
     },
     "scripts": {
         "build": "vue-cli-service build",

@@ -15,7 +15,7 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         walletBalance: {},
     },
     mutations: {
-        clear(state) {
+        clear(state: Erc721ModuleState) {
             state.walletBalance = {}
         },
         saveCustomContracts(state) {
