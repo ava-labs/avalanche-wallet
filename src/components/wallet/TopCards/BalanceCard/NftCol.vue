@@ -91,6 +91,9 @@ export default class NftCol extends Vue {
     }
 
     get erc721BalanceArray() {
+        // TODO: Remove after ledger support
+        if (this.$store.state.activeWallet.type === 'ledger') return []
+
         let res = []
         for (var tokenAddr in this.erc721Balance) {
             let erc721Token = this.$store.getters['Assets/ERC721/find'](tokenAddr)
