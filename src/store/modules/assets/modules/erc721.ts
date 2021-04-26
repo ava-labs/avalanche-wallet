@@ -35,6 +35,13 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         },
     },
     actions: {
+        async removeCustom({ state, commit }, data: ERC721Token) {
+            console.log(data)
+            let index = state.erc721TokensCustom.indexOf(data)
+            state.erc721TokensCustom.splice(index, 1)
+            commit('saveCustomContracts')
+        },
+
         async addCustom({ state, dispatch, commit }, data: ERC721TokenInput) {
             let tokens = state.erc721Tokens.concat(state.erc721TokensCustom)
 
@@ -94,6 +101,18 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             })
             return filt
         },
+
+        networkContractsCustom(
+            state: Erc721ModuleState,
+            getters,
+            rootState: RootState
+        ): ERC721Token[] {
+            let contracts: ERC721Token[] = getters.networkContracts
+            return contracts.filter((c) => {
+                return state.erc721TokensCustom.includes(c)
+            })
+        },
+
         totalOwned(state: Erc721ModuleState, getters, rootState: RootState) {
             let bal = state.walletBalance
             let tot = 0

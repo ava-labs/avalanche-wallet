@@ -58,6 +58,7 @@ import {
     faExpand,
     faShare,
     faVideo,
+    faUnlink,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faBtc, faGoogle } from '@fortawesome/free-brands-svg-icons'
@@ -119,7 +120,8 @@ library.add(
     faAngleRight,
     faExpand,
     faShare,
-    faVideo
+    faVideo,
+    faUnlink
 )
 
 Vue.component('fa', FontAwesomeIcon)

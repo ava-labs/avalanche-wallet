@@ -1,6 +1,11 @@
 <template>
     <div>
-        <img :src="img" />
+        <img :src="img" v-if="!isError && img" />
+        <div v-if="isError" class="err_cont">
+            <p>
+                <fa icon="unlink"></fa>
+            </p>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -13,6 +18,7 @@ export default class ERC721View extends Vue {
     @Prop() index!: string
     @Prop() token!: ERC721Token
     metadata: any = {}
+    isError = false
 
     mounted() {
         this.getData()
@@ -31,7 +37,12 @@ export default class ERC721View extends Vue {
     }
 
     async getData() {
-        this.metadata = await this.token.getTokenURIData(parseInt(this.index))
+        try {
+            this.metadata = await this.token.getTokenURIData(parseInt(this.index))
+            this.isError = false
+        } catch (e) {
+            this.isError = true
+        }
         // let uri = await this.token.getTokenURI(parseInt(this.index))
         // let res = (await axios.get(uri)).data
         // this.metadata = res
@@ -39,9 +50,19 @@ export default class ERC721View extends Vue {
 }
 </script>
 <style scoped lang="scss">
-img {
+img,
+.err_cont {
     width: 100%;
     height: 100%;
     object-fit: contain;
+}
+
+.err_cont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    text-align: center;
 }
 </style>

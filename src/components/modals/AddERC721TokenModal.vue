@@ -21,6 +21,16 @@
             <v-btn class="button_secondary" block depressed :disabled="!canAdd" @click="submit">
                 Add Collectible
             </v-btn>
+            <div class="already_added" v-if="networkTokens.length">
+                <h4>Already added</h4>
+                <div v-for="token in networkTokens" :key="token.contractAddress" class="flex-row">
+                    <div class="flex-column" style="flex-grow: 1">
+                        <p>{{ token.name }} {{ token.symbol }}</p>
+                        <p class="subtext">{{ token.contractAddress }}</p>
+                    </div>
+                    <button @click="removeToken(token)"><fa icon="times"></fa></button>
+                </div>
+            </div>
         </div>
     </modal>
 </template>
@@ -129,6 +139,14 @@ export default class AddERC721TokenModal extends Vue {
         // @ts-ignore
         this.$refs.modal.close()
     }
+
+    async removeToken(token: ERC721Token) {
+        await this.$store.dispatch('Assets/ERC721/removeCustom', token)
+    }
+
+    get networkTokens(): ERC721Token[] {
+        return this.$store.getters['Assets/ERC721/networkContractsCustom']
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -162,6 +180,10 @@ export default class AddERC721TokenModal extends Vue {
         font-size: 14px;
         color: var(--primary-color);
     }
+
+    > * {
+        margin: 6px 0;
+    }
 }
 
 .meta {
@@ -191,6 +213,31 @@ export default class AddERC721TokenModal extends Vue {
 .err {
     width: 100%;
     text-align: center;
+}
+
+.already_added {
+    text-align: left;
+    margin-top: 1em;
+
+    h4 {
+        text-align: center;
+        margin: 0px auto;
+    }
+    > div {
+        width: 100%;
+        align-items: center;
+        margin: 3px 0;
+
+        button {
+            align-self: baseline;
+            font-size: 0.8em;
+            opacity: 0.5;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 @include main.mobile-device {
