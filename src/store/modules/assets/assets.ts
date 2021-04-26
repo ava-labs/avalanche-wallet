@@ -254,21 +254,6 @@ const assets_module: Module<AssetsState, RootState> = {
             }
         },
 
-        // async addErc721TokenList({ state, dispatch, commit }, tokenList: TokenList) {
-        //     let tokens: TokenListToken[] = tokenList.tokens
-        //     state.tokenLists.push(tokenList)
-        //     for (var i = 0; i < tokens.length; i++) {
-        //         dispatch('addErc20Token', tokens[i])
-        //     }
-        //
-        //     if (!tokenList.readonly) {
-        //         state.tokenListsCustom.push(tokenList.url)
-        //         commit('saveCustomTokenLists')
-        //     } else {
-        //         state.tokenListUrls.push(tokenList.url)
-        //     }
-        // },
-
         loadCustomTokenLists({ state, dispatch }) {
             let listRaw = localStorage.getItem('token_lists')
             if (!listRaw) return
