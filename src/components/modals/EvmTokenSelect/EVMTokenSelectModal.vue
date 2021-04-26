@@ -184,6 +184,7 @@ $logo_w: 38px;
     .token_select_body {
         width: 100%;
         height: 40vh;
+        overflow: scroll;
     }
 }
 </style>
