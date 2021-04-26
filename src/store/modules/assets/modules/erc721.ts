@@ -38,6 +38,7 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             console.log(data)
             let index = state.erc721TokensCustom.indexOf(data)
             state.erc721TokensCustom.splice(index, 1)
+            Vue.delete(state.walletBalance, data.contractAddress)
             commit('saveCustomContracts')
         },
 
