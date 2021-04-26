@@ -348,6 +348,8 @@ export default class FormC extends Vue {
         this.isSuccess = false
         this.err = ''
 
+        this.$refs.token_in.clear()
+
         this.amountIn = new BN(0)
         this.gasLimit = 21000
         this.gasPrice = 225

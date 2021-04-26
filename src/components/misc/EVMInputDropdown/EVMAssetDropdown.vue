@@ -54,6 +54,10 @@ export default class EVMAssetDropdown extends Vue {
         this.$emit('change', token)
     }
 
+    clear() {
+        this.select('native')
+    }
+
     selectERC721(val: iErc721SelectInput) {
         this.selected = val.token
         this.$emit('changeCollectible', val)

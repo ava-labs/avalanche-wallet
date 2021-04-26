@@ -77,6 +77,10 @@ export default class EVMInputDropdown extends Vue {
         dropdown: EVMAssetDropdown
     }
 
+    clear() {
+        this.$refs.dropdown.clear()
+    }
+
     get usd_val(): Big {
         if (this.token != 'native') return Big(0)
 
