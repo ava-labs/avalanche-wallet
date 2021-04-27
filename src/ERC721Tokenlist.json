@@ -1,0 +1,33 @@
+{
+  "name": "Avalanche Wallet ERC721 Tokens",
+  "logoURI": "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7/logo.png",
+  "keywords": [
+    "avalanche",
+    "defi",
+    "ethereum"
+  ],
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "tokens": [
+    {
+      "chainId": 43114,
+      "address": "0x53d2230eac25643cd0772b310eebb569a100ea73",
+      "decimals": 0,
+      "name": "Avaxtars",
+      "symbol": "AVXT",
+      "logoURI": ""
+    },
+    {
+      "chainId": 43114,
+      "address": "0x0540E4EE0C5CdBA347C2f0E011ACF8651bB70Eb9",
+      "decimals": 0,
+      "name": "CryptoSeals",
+      "symbol": "SEAL",
+      "logoURI": ""
+    }
+  ],
+  "timestamp": "2021-04-15T00:21:05+00:00"
+}

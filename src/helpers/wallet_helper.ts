@@ -13,6 +13,9 @@ import {
     buildAvmExportTransaction,
     buildCreateNftFamilyTx,
     buildEvmExportTransaction,
+    buildEvmTransferErc20Tx,
+    buildEvmTransferErc721Tx,
+    buildEvmTransferNativeTx,
     buildMintNftTx,
 } from '@/js/TxHelper'
 import { PayloadBase } from 'avalanche/dist/utils'
@@ -24,6 +27,7 @@ import EthereumjsCommon from '@ethereumjs/common'
 import { Transaction } from '@ethereumjs/tx'
 import Erc20Token from '@/js/Erc20Token'
 import { getAtomicUTXOsForAllAddresses, getStakeForAddresses } from '@/helpers/utxo_helper'
+import ERC721Token from '@/js/ERC721Token'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -415,24 +419,8 @@ class WalletHelper {
         gasLimit: number
     ) {
         let fromAddr = '0x' + wallet.getEvmAddress()
-        const nonce = await web3.eth.getTransactionCount(fromAddr)
-        const chainId = await web3.eth.getChainId()
-        const networkId = await web3.eth.net.getId()
-        const chainParams = {
-            common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
-        }
 
-        let tx = new Transaction(
-            {
-                nonce: nonce,
-                gasPrice: gasPrice,
-                gasLimit: gasLimit,
-                to: to,
-                value: amount,
-                data: '0x',
-            },
-            chainParams
-        )
+        let tx = await buildEvmTransferNativeTx(fromAddr, to, amount, gasPrice, gasLimit)
 
         let signedTx = await wallet.signEvm(tx)
 
@@ -450,31 +438,34 @@ class WalletHelper {
         token: Erc20Token
     ) {
         let fromAddr = '0x' + wallet.getEvmAddress()
-        const nonce = await web3.eth.getTransactionCount(fromAddr)
-        const chainId = await web3.eth.getChainId()
-        const networkId = await web3.eth.net.getId()
-        const chainParams = {
-            common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
-        }
-
-        let tokenTx = token.createTransferTx(to, amount)
-
-        let tx = new Transaction(
-            {
-                nonce: nonce,
-                gasPrice: gasPrice,
-                gasLimit: gasLimit,
-                value: '0x0',
-                to: token.data.address,
-                data: tokenTx.encodeABI(),
-            },
-            chainParams
-        )
+        let tx = await buildEvmTransferErc20Tx(fromAddr, to, amount, gasPrice, gasLimit, token)
 
         let signedTx = await wallet.signEvm(tx)
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
         return hash.transactionHash
+    }
+
+    static async sendErc721(
+        wallet: WalletType,
+        to: string,
+        gasPrice: BN,
+        gasLimit: number,
+        token: ERC721Token,
+        tokenId: string
+    ) {
+        let fromAddr = '0x' + wallet.getEvmAddress()
+        let tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
+        let signedTx = await wallet.signEvm(tx)
+        let txHex = signedTx.serialize().toString('hex')
+        let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
+        return hash.transactionHash
+    }
+
+    static async estimateTxGas(wallet: WalletType, tx: any) {
+        let fromAddr = '0x' + wallet.getEvmAddress()
+        let estGas = await tx.estimateGas({ from: fromAddr })
+        return Math.round(estGas * 1.1)
     }
 
     static async estimateGas(wallet: WalletType, to: string, amount: BN, token: Erc20Token) {

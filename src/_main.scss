@@ -481,6 +481,21 @@ p.err {
     scrollbar-width: none;  /* Firefox */
 }
 
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.subtext{
+    color: var(--primary-color-light);
+    font-size: 0.8em;
+}
+
 @include medium-device {
     h1 {
         font-size: 25px;
