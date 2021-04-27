@@ -1,5 +1,5 @@
 <template>
-    <div class="nft_family_row">
+    <div class="nft_family_row" v-if="allUtxos.length">
         <div class="fam_header">
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>
@@ -116,49 +116,7 @@ export default class CollectibleFamilyRow extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
-
-.nft_family_row {
-    margin-bottom: 4vh;
-}
-.fam_header {
-    width: 100%;
-    margin: 12px 0;
-    margin-bottom: 16px;
-    font-size: 18px;
-    display: grid;
-    grid-template-columns: max-content max-content 1fr;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--bg-light);
-}
-
-.fam_id {
-    word-break: break-all;
-    text-align: right;
-    color: var(--primary-color-light);
-    font-size: 13px;
-    align-self: center;
-}
-.name {
-    padding-right: 10px;
-}
-.symbol {
-    padding-left: 10px;
-    color: var(--primary-color-light);
-    border-left: 1px solid var(--primary-color-light);
-}
-
-.list {
-    padding-right: 10px;
-    display: grid;
-    grid-gap: 1em;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-}
-
-.group {
-    align-self: flex-start;
-    width: 100%;
-    height: 100%;
-}
+@use "tokens";
 
 .mint_card {
     font-size: 13px;

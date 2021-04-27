@@ -47,6 +47,7 @@ export default {
         await this.$store.dispatch('Network/init')
         this.$store.commit('Accounts/loadAccounts')
         this.$store.dispatch('Assets/initErc20List')
+        this.$store.dispatch('Assets/ERC721/init')
         this.$store.dispatch('updateAvaxPrice')
 
         if (this.$store.state.Accounts.accounts.length > 0) {

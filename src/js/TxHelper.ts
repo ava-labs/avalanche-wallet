@@ -27,7 +27,11 @@ import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/e
 import { ChainIdType } from '@/constants'
 
 import { web3 } from '@/evm'
-import { AvmExportChainType } from '@/js/wallets/types'
+import { AvmExportChainType, WalletType } from '@/js/wallets/types'
+import ERC721Token from '@/js/ERC721Token'
+import { Transaction } from '@ethereumjs/tx'
+import EthereumjsCommon from '@ethereumjs/common'
+import Erc20Token from '@/js/Erc20Token'
 
 export async function buildUnsignedTransaction(
     orders: (ITransaction | AVMUTXO)[],
@@ -286,6 +290,96 @@ export async function buildEvmExportTransaction(
         [toAddress],
         nonce
     )
+}
+
+export async function buildEvmTransferNativeTx(
+    from: string,
+    to: string,
+    amount: BN, // in wei
+    gasPrice: BN,
+    gasLimit: number
+) {
+    const nonce = await web3.eth.getTransactionCount(from)
+    const chainId = await web3.eth.getChainId()
+    const networkId = await web3.eth.net.getId()
+    const chainParams = {
+        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+    }
+
+    let tx = new Transaction(
+        {
+            nonce: nonce,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            to: to,
+            value: amount,
+            data: '0x',
+        },
+        chainParams
+    )
+    return tx
+}
+
+export async function buildEvmTransferErc20Tx(
+    from: string,
+    to: string,
+    amount: BN, // in wei
+    gasPrice: BN,
+    gasLimit: number,
+    token: Erc20Token
+) {
+    const nonce = await web3.eth.getTransactionCount(from)
+    const chainId = await web3.eth.getChainId()
+    const networkId = await web3.eth.net.getId()
+    const chainParams = {
+        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+    }
+
+    let tokenTx = token.createTransferTx(to, amount)
+
+    let tx = new Transaction(
+        {
+            nonce: nonce,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            value: '0x0',
+            to: token.data.address,
+            data: tokenTx.encodeABI(),
+        },
+        chainParams
+    )
+    return tx
+}
+
+export async function buildEvmTransferErc721Tx(
+    from: string,
+    to: string,
+    gasPrice: BN,
+    gasLimit: number,
+    token: ERC721Token,
+    tokenId: string
+) {
+    const nonce = await web3.eth.getTransactionCount(from)
+    const chainId = await web3.eth.getChainId()
+    const networkId = await web3.eth.net.getId()
+    const chainParams = {
+        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+    }
+
+    let tokenTx = token.createTransferTx(from, to, tokenId)
+
+    let tx = new Transaction(
+        {
+            nonce: nonce,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            value: '0x0',
+            to: token.data.address,
+            data: tokenTx.encodeABI(),
+        },
+        chainParams
+    )
+    return tx
 }
 
 export enum AvmTxNameEnum {
