@@ -7,12 +7,24 @@
             <div class="options">
                 <router-link to="/access/privatekey" class="menu_option button_primary">
                     {{ $t('access.but_private_key') }}
+                    <ImageDayNight
+                        day="/img/access_icons/day/privatekey.svg"
+                        night="/img/access_icons/night/privatekey.svg"
+                    ></ImageDayNight>
                 </router-link>
                 <router-link to="/access/mnemonic" class="menu_option button_primary">
                     {{ $t('access.but_mnemonic') }}
+                    <ImageDayNight
+                        day="/img/access_icons/day/mnemonic.svg"
+                        night="/img/access_icons/night/mnemonic.svg"
+                    ></ImageDayNight>
                 </router-link>
                 <router-link to="/access/keystore" class="menu_option button_primary">
                     {{ $t('access.but_keystore') }}
+                    <ImageDayNight
+                        day="/img/access_icons/day/keystore.svg"
+                        night="/img/access_icons/night/keystore.svg"
+                    ></ImageDayNight>
                 </router-link>
                 <LedgerButton class="menu_option button_primary"></LedgerButton>
                 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
@@ -30,9 +42,11 @@ import { Vue, Component } from 'vue-property-decorator'
 import LedgerButton from '@/components/Ledger/LedgerButton.vue'
 import AccountsFound from '@/components/Access/AccountsFound.vue'
 import ToS from '@/components/misc/ToS.vue'
+import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 
 @Component({
     components: {
+        ImageDayNight,
         ToS,
         LedgerButton,
         AccountsFound,
@@ -82,6 +96,17 @@ hr {
     //display: grid;
     //grid-template-columns: repeat(4, 1fr);
     //grid-gap: 30px;
+}
+
+.menu_option {
+    justify-content: space-between;
+    align-items: center;
+    img {
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        object-fit: contain;
+    }
 }
 
 .menus {

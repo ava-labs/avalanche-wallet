@@ -4,7 +4,7 @@
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
-                    <!--                    <SaveAccountModal></SaveAccountModal>-->
+                    <UpgradeToAccountModal></UpgradeToAccountModal>
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
@@ -26,9 +26,11 @@ import LedgerBlock from '@/components/modals/LedgerBlock'
 import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
 import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
+import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
 
 export default {
     components: {
+        UpgradeToAccountModal,
         NetworkLoadingBlock,
         LedgerBlock,
         LedgerUpgrade,

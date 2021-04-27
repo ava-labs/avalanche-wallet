@@ -1,6 +1,13 @@
 <template>
     <button class="button_primary" @click="submit">
-        <template v-if="!isLoading">Ledger</template>
+        <template v-if="!isLoading">
+            Ledger
+            <ImageDayNight
+                day="/img/access_icons/day/ledger.svg"
+                night="/img/access_icons/night/ledger.svg"
+                class="ledger_img"
+            ></ImageDayNight>
+        </template>
         <Spinner v-else class="spinner"></Spinner>
     </button>
 </template>
@@ -19,9 +26,11 @@ import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
 import { ILedgerAppConfig } from '@/store/types'
 import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
+import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 
 @Component({
     components: {
+        ImageDayNight,
         Spinner,
         LedgerBlock,
     },
@@ -119,6 +128,12 @@ export default class LedgerButton extends Vue {
 .spinner {
     width: 100% !important;
     color: inherit;
+}
+
+.ledger_img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .spinner::v-deep p {
