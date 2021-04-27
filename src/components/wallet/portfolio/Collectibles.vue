@@ -29,6 +29,9 @@
             <!--            <img v-if="$root.theme === 'day'" src="@/assets/nft_preview.png" />-->
             <!--            <img v-else src="@/assets/nft_preview_night.png" />-->
             <p>{{ $t('portfolio.nobalance_nft') }}</p>
+            <div class="add_token_row">
+                <button @click="showModal">Add Collectible</button>
+            </div>
         </div>
     </div>
 </template>

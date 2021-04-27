@@ -53,6 +53,8 @@ class ERC721Token {
     }
 
     async getAllTokensIds(address: string): Promise<string[]> {
+        if (!this.canSupport) return []
+
         let bal = await this.getBalance(address)
         let res = []
         for (var i = 0; i < bal; i++) {

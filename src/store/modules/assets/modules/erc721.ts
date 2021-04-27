@@ -35,7 +35,6 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
     },
     actions: {
         async removeCustom({ state, commit }, data: ERC721Token) {
-            console.log(data)
             let index = state.erc721TokensCustom.indexOf(data)
             state.erc721TokensCustom.splice(index, 1)
             Vue.delete(state.walletBalance, data.contractAddress)
@@ -57,6 +56,9 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             state.erc721TokensCustom.push(t)
 
             commit('saveCustomContracts')
+            setTimeout(() => {
+                dispatch('updateWalletBalance')
+            }, 500)
             return t
         },
 
@@ -78,7 +80,6 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             let contracts: ERC721Token[] = getters.networkContracts
             for (var i = 0; i < contracts.length; i++) {
                 let erc721 = contracts[i]
-                if (!erc721.canSupport) continue
                 erc721
                     .getAllTokensIds(walletAddr)
                     .then((tokenIds: string[]) => {
