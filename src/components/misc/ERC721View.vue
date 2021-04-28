@@ -1,6 +1,6 @@
 <template>
     <div class="erc721_view">
-        <img :src="img" v-if="!isError && img" />
+        <img :src="parseURL(img)" v-if="!isError && img" />
         <div v-if="isError" class="err_cont">
             <p>
                 <fa icon="unlink"></fa>
@@ -13,6 +13,9 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import ERC721Token from '@/js/ERC721Token'
 import axios from 'axios'
 
+// If an image url is hosted on one of these urls, reroute through cloudflare.
+const REDIRECT_DOMAINS = ['gateway.pinata.cloud/ipfs']
+const CF_IPFS_BASE = 'https://cloudflare-ipfs.com/ipfs/'
 @Component
 export default class ERC721View extends Vue {
     @Prop() index!: string
@@ -28,6 +31,20 @@ export default class ERC721View extends Vue {
     @Watch('index')
     onIndexChange() {
         this.getData()
+    }
+
+    parseURL(val: string) {
+        let isRedirect = REDIRECT_DOMAINS.reduce((acc, domain) => {
+            if (acc) return acc
+            if (val.includes(domain)) return true
+            return false
+        }, false)
+
+        if (isRedirect) {
+            let ipfsHash = val.split('ipfs/')[1]
+            return CF_IPFS_BASE + ipfsHash
+        }
+        return val
     }
 
     get img() {
