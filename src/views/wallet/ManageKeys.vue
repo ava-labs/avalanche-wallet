@@ -95,10 +95,6 @@ export default class ManageKeys extends Vue {
         return ['mnemonic', 'singleton'].includes(this.walletType)
     }
 
-    get existsInLocalStorage() {
-        return this.$store.state.Accounts.isSavedLocally
-    }
-
     get walletType(): WalletNameType {
         return this.$store.state.activeWallet.type
     }

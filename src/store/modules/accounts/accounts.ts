@@ -10,9 +10,7 @@ import { AccountsState, ChangePasswordInput } from '@/store/modules/accounts/typ
 import { WalletType } from '@/js/wallets/types'
 import {
     addAccountToStorage,
-    checkIfSavedLocally,
     getAccountByIndex,
-    getIndexByWallets,
     getLocalStorageAccounts,
     overwriteAccountAtIndex,
     removeAccountByIndex,
@@ -21,48 +19,21 @@ import {
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { makeKeyfile } from '@/js/Keystore'
-import isEqual from 'lodash.isequal'
 
 const accounts_module: Module<AccountsState, RootState> = {
     namespaced: true,
     state: {
         accounts: [],
         accountIndex: null,
-        isSavedLocally: false,
     },
     mutations: {
         loadAccounts(state) {
             state.accounts = getLocalStorageAccounts()
         },
-        accountSavedLocally(state, wallets: WalletType[]) {
-            state.isSavedLocally = checkIfSavedLocally(wallets)
-        },
-        // updateAccountIndex(){
-        //     let accounts = state.accounts
-        //     let baseAddrs = getters.baseAddressesNonVolatile
-        //
-        //     for (var i = 0; i < accounts.length; i++) {
-        //         let acct = accounts[i]
-        //         console.log(acct.baseAddresses, baseAddrs)
-        //         if (isEqual(acct.baseAddresses, baseAddrs)) {
-        //             return i
-        //         }
-        //     }
-        //     return null
-        // }
-        // addAccountToStorage(state: AccountsState, encodedWallet: iUserAccountEncrypted) {
-        //     let accountsRaw = localStorage.getItem('accounts')
-        //     let accounts: iUserAccountEncrypted[] = []
-        //     if (accountsRaw !== null) {
-        //         accounts = JSON.parse(accountsRaw)
-        //     }
-        //     accounts.push(encodedWallet)
-        //     localStorage.setItem('accounts', JSON.stringify(accounts))
-        // },
     },
     actions: {
         onLogout({ state }) {
-            state.isSavedLocally = false
+            state.accountIndex = null
         },
 
         async accessAccount({ state, dispatch }, input: AccessAccountInput) {
@@ -107,17 +78,14 @@ const accounts_module: Module<AccountsState, RootState> = {
                 // Remove old account, add new one
                 if (accountIndex != null) {
                     overwriteAccountAtIndex(encryptedWallet, accountIndex)
-                    // removeAccountByIndex(accountIndex)
                 } else {
                     addAccountToStorage(encryptedWallet)
                 }
-                // commit('addAccountToStorage', encryptedWallet)
 
                 // No more volatile wallets
                 rootState.volatileWallets = []
                 commit('loadAccounts')
                 state.accountIndex = state.accounts.length - 1
-                commit('accountSavedLocally', rootState.wallets)
             } catch (e) {
                 dispatch('Notifications/add', {
                     title: 'Account Save',
@@ -196,12 +164,6 @@ const accounts_module: Module<AccountsState, RootState> = {
             overwriteAccountAtIndex(acct, acctIndex)
             commit('loadAccounts')
         },
-        // removeWallet({getters, dispatch}){
-        //     let account = getters.account
-        //     if (account) {
-        //         dispatch('deleteKey', wallet)
-        //     }
-        // }
     },
     getters: {
         baseAddresses(state: AccountsState, getters, rootState: RootState) {
@@ -220,19 +182,6 @@ const accounts_module: Module<AccountsState, RootState> = {
                 return w.getEvmAddress()
             })
         },
-
-        // accountIndex(state: AccountsState, getters, rootState: RootState): number | null {
-        //     let accounts = state.accounts
-        //     let baseAddrs = getters.baseAddressesNonVolatile
-        //
-        //     for (var i = 0; i < accounts.length; i++) {
-        //         let acct = accounts[i]
-        //         if (isEqual(acct.baseAddresses, baseAddrs)) {
-        //             return i
-        //         }
-        //     }
-        //     return null
-        // },
 
         account(state: AccountsState, getters): iUserAccountEncrypted | null {
             if (state.accountIndex === null) return null
