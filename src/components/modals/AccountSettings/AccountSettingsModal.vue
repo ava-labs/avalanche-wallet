@@ -4,6 +4,7 @@
             <div class="header">
                 <Identicon :value="account.baseAddresses.join('')"></Identicon>
                 <p style="text-align: center">{{ account.name }}</p>
+                <p class="subtext">This account exists only on this browser.</p>
             </div>
 
             <div class="options" v-if="!subComponent">
