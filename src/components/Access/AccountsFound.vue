@@ -3,7 +3,7 @@
         <div
             class="flex_container menu_option"
             v-for="(acct, i) in accounts"
-            :key="acct.name + acct.baseAddresses.join('')"
+            :key="i"
             @click="selectAccount(i)"
         >
             <Identicon :value="acct.baseAddresses.join('')" diameter="40"></Identicon>

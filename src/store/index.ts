@@ -20,7 +20,7 @@ import {
 } from '@/store/types'
 
 import { WalletType } from '@/js/wallets/types'
-import { AllKeyFileDecryptedTypes, KeyFileV6 } from '@/js/IKeystore'
+import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 
 Vue.use(Vuex)
 
