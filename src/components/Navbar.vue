@@ -72,6 +72,7 @@
                     <router-link to="/create">{{ $t('nav.create') }}</router-link>
                 </template>
                 <div class="mobile_bottom">
+                    <AccountMenu></AccountMenu>
                     <LanguageSelect class="lang_mobile"></LanguageSelect>
                 </div>
             </v-list>
@@ -170,6 +171,10 @@ button {
 .mobile_bottom {
     position: absolute;
     bottom: 30px;
+
+    > * {
+        padding: 4px 8px;
+    }
 }
 
 .lang_mobile,
@@ -217,6 +222,7 @@ button {
 </style>
 <style lang="scss">
 .mobile_menu {
+    overflow: visible !important;
     background-color: var(--bg-light) !important;
 
     .v-list-item,

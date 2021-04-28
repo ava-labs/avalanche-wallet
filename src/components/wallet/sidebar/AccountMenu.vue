@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!isLedger">
+    <div v-if="!isLedger && wallet">
         <template v-if="account">
             <button class="account_but" @click="openSettings">
                 <Identicon :value="account.baseAddresses.join('')" diameter="18"></Identicon>
@@ -41,8 +41,13 @@ export default class AccountMenu extends Vue {
         return this.$store.getters['Accounts/account']
     }
 
+    get wallet(): WalletType | null {
+        return this.$store.state.activeWallet
+    }
+
     get isLedger() {
-        let w: WalletType = this.$store.state.activeWallet
+        let w = this.wallet
+        if (!w) return false
         return w.type === 'ledger'
     }
 
@@ -60,6 +65,7 @@ export default class AccountMenu extends Vue {
     //padding: 4px 8px;
     //border-radius: 4px;
     //background-color: var(--bg-light);
+    color: var(--primary-color);
     display: flex;
     flex-direction: row;
     align-items: center;

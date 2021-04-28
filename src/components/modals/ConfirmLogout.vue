@@ -55,7 +55,7 @@ export default class ConfirmLogout extends Vue {
             message: 'You have successfully logged out of your wallet.',
         })
         this.isLoading = false
-        // this.close()
+        this.close()
     }
 }
 </script>
