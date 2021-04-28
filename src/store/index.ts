@@ -17,8 +17,6 @@ import {
     ImportKeyfileInput,
     ExportWalletsInput,
     AccessWalletMultipleInput,
-    SaveAccountInput,
-    iUserAccountEncrypted,
 } from '@/store/types'
 
 import { WalletType } from '@/js/wallets/types'
@@ -92,18 +90,6 @@ export default new Vuex.Store({
                 state.address = addrNow
             }
         },
-        // addAccountToStorage(state, encodedWallet: iUserAccountEncrypted) {
-        //     let accountsRaw = localStorage.getItem('accounts')
-        //     let accounts: iUserAccountEncrypted[] = []
-        //     if (accountsRaw !== null) {
-        //         accounts = JSON.parse(accountsRaw)
-        //     }
-        //     accounts.push(encodedWallet)
-        //     localStorage.setItem('accounts', JSON.stringify(accounts))
-        // },
-        // accountSavedLocally(state) {
-        //     state.isSavedLocally = checkIfSavedLocally(state.wallets)
-        // },
     },
     actions: {
         // Used in home page to access a user's wallet
@@ -227,7 +213,6 @@ export default new Vuex.Store({
 
             state.wallets = []
             state.volatileWallets = []
-            // state.isSavedLocally = false
         },
 
         // Add a HD wallet from mnemonic string
@@ -289,45 +274,6 @@ export default new Vuex.Store({
             let index = state.wallets.indexOf(wallet)
             state.wallets.splice(index, 1)
         },
-
-        // Creates a keystore file and saves to local storage
-        // async saveAccount({ state, dispatch, commit, getters }, data: SaveAccountInput) {
-        //     try {
-        //         let wallet = state.activeWallet as MnemonicWallet | SingletonWallet | null
-        //         let pass = data.password
-        //         if (!pass || wallet?.type === 'ledger') return
-        //
-        //         let wallets = state.wallets as MnemonicWallet[]
-        //         if (!wallet) throw new Error('No active wallet.')
-        //         let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
-        //
-        //         let file = await makeKeyfile(wallets, pass, activeIndex)
-        //         let baseAddresses = getters.baseAddresses
-        //         let encryptedWallet: iUserAccountEncrypted = {
-        //             baseAddresses,
-        //             name: data.accountName,
-        //             wallet: file,
-        //         }
-        //
-        //         commit('addAccountToStorage', encryptedWallet)
-        //
-        //         dispatch('Notifications/add', {
-        //             title: 'Account Saved',
-        //             message: 'Your Accounts are stored securely for easy access.',
-        //             type: 'info',
-        //         })
-        //
-        //         // No more voltile wallets
-        //         state.volatileWallets = []
-        //         commit('accountSavedLocally')
-        //     } catch (e) {
-        //         dispatch('Notifications/add', {
-        //             title: 'Account Save',
-        //             message: 'Error Saving Account.',
-        //             type: 'error',
-        //         })
-        //     }
-        // },
 
         async issueBatchTx({ state }, data: IssueBatchTxInput) {
             let wallet = state.activeWallet
