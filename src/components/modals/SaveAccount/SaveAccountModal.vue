@@ -8,7 +8,6 @@
                     </div>
                     <p>{{ $t('keys.save_account.desc') }}</p>
                     <input
-                        v-if="!activeAccount"
                         v-model="accountName"
                         :name="$t('keys.save_account.placeholder_1')"
                         placeholder="Account Name"
@@ -44,13 +43,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 import { SaveAccountInput } from '@/store/types'
-import {
-    getLocalStorageJSONItem,
-    saveLocalStorageJSONItem,
-    removeAccountByIndex,
-    getNonVolatileWallets,
-    getIndexByWallets,
-} from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
 import Identicon from '@/components/misc/Identicon.vue'
 
@@ -81,8 +73,7 @@ export default class SaveAccountModal extends Vue {
     get error() {
         if (!this.password) return this.$t('keys.password_validation')
         if (!this.password_confirm) return this.$t('keys.password_validation2')
-        if (!this.activeAccount && this.accountName.length < 1)
-            return this.$t('keys.account_name_required')
+        if (this.accountName.length < 1) return this.$t('keys.account_name_required')
         if (this.password.length < 9) return this.$t('keys.password_validation')
         if (this.password !== this.password_confirm) return this.$t('keys.password_validation2')
 
@@ -130,10 +121,6 @@ export default class SaveAccountModal extends Vue {
 
     get baseAddresses(): string[] {
         return this.$store.getters['Accounts/baseAddresses']
-    }
-
-    get activeAccount() {
-        return this.$store.getters['Accounts/account']
     }
 }
 </script>
