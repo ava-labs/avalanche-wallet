@@ -100,7 +100,7 @@ export default class UpgradeToAccountModal extends Vue {
             }
             await this.$store.dispatch('Accounts/saveAccount', accountIn)
 
-            // Won tbe using this anymore
+            // Wont be using this anymore
             localStorage.removeItem('w')
 
             // These are not volatile wallets since they are loaded from storage
