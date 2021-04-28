@@ -44,7 +44,7 @@ let payloadtypes = PayloadTypes.getInstance()
 })
 export default class NftCol extends Vue {
     get isEmpty(): boolean {
-        return this.$store.state.Assets.nftUTXOs.length === 0
+        return this.nftArray.length + this.erc721BalanceArray.length === 0
     }
 
     get nftDict(): IWalletNftDict {

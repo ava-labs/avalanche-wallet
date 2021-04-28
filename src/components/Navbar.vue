@@ -70,10 +70,9 @@
                 <template v-else>
                     <router-link to="/access">{{ $t('nav.access') }}</router-link>
                     <router-link to="/create">{{ $t('nav.create') }}</router-link>
-                    <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
-                    <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>
                 <div class="mobile_bottom">
+                    <AccountMenu></AccountMenu>
                     <LanguageSelect class="lang_mobile"></LanguageSelect>
                 </div>
             </v-list>
@@ -87,8 +86,10 @@ import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue'
 import DayNightToggle from '@/components/misc/DayNightToggle.vue'
 import NetworkMenu from './NetworkSettings/NetworkMenu.vue'
 import ConfirmLogout from '@/components/modals/ConfirmLogout.vue'
+import AccountMenu from '@/components/wallet/sidebar/AccountMenu.vue'
 @Component({
     components: {
+        AccountMenu,
         NetworkMenu,
         DayNightToggle,
         ConfirmLogout,
@@ -169,7 +170,11 @@ button {
 
 .mobile_bottom {
     position: absolute;
-    bottom: 14px;
+    bottom: 30px;
+
+    > * {
+        padding: 4px 8px;
+    }
 }
 
 .lang_mobile,
@@ -217,6 +222,7 @@ button {
 </style>
 <style lang="scss">
 .mobile_menu {
+    overflow: visible !important;
     background-color: var(--bg-light) !important;
 
     .v-list-item,

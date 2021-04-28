@@ -72,15 +72,13 @@ devServer: {
 
 and run `yarn serve` to reflect the change.
 
-# Local Storage Remember Wallet Spec
+# Accounts
 
-Basically same as storing the keystore file in the browser localstorage.
-
-If there is a remembered wallet it will be the Keystore JSON format.
+The wallet can encrypt your private keys into a secure file encrypted by a password.
 
 ```json
 {
-    "w": IKeystoreFile | undefined
+    "accounts": iUserAccountEncrypted[]
 }
 ```
 
