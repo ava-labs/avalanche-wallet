@@ -68,48 +68,9 @@ export default class SaveAccountModal extends Vue {
         modal: Modal
     }
 
-    // created() {
-    //     this.findAccount()
-    // }
-
-    // updated() {
-    //     this.findAccount()
-    // }
-
-    // findAccount() {
-    //     const nonVolatileWallets = getNonVolatileWallets(
-    //         this.$store.state.wallets,
-    //         this.$store.state.volatileWallets
-    //     )
-    //
-    //     this.existsInLocalStorage = nonVolatileWallets.length > 0
-    //     this.index = this.existsInLocalStorage
-    //         ? getLocalStorageJSONItem('loggedInAccountIndex')
-    //         : getIndexByWallets(nonVolatileWallets)
-    //     this.foundAccount = getLocalStorageJSONItem('accounts')[this.index]
-    // }
-
     get canSubmit() {
         if (this.error !== null) return false
         return true
-        // if (!this.password) return false
-        // if (!this.password_confirm) return false
-        // if (this.accountName.length < 1) {
-        //     this.err = this.$t('keys.account_name_required')
-        //     return false
-        // }
-        //
-        // if (this.password.length < 9) {
-        //     this.err = this.$t('keys.password_validation')
-        //     return false
-        // }
-        //
-        // if (this.password !== this.password_confirm) {
-        //     this.err = this.$t('keys.password_validation2')
-        //     return false
-        // }
-        // this.err = ''
-        // return true
     }
 
     get error() {
@@ -125,31 +86,18 @@ export default class SaveAccountModal extends Vue {
 
     async submit(): Promise<void> {
         this.isLoading = true
-        // const accountExistsLocally: boolean = this.foundAccount !== undefined
         let pass = this.password
         let accountName = this.accountName
-        // let accountName = accountExistsLocally ? this.foundAccount!.name : this.accountName
 
         let input: SaveAccountInput = {
             accountName: accountName,
             password: pass,
         }
         await this.$store.dispatch('Accounts/saveAccount', input)
-        // this.setInitialIndex()
-        // if (accountExistsLocally) {
-        //     removeAccountByIndex(this.index)
-        // }
+
         this.isLoading = false
         this.onsuccess()
     }
-
-    // if the user immediately saves another account
-    // setInitialIndex() {
-    //     const existsInLocalStorage = getLocalStorageJSONItem('accounts') !== undefined
-    //     if (!existsInLocalStorage) {
-    //         saveLocalStorageJSONItem('loggedInAccountIndex', 0)
-    //     }
-    // }
 
     onsuccess() {
         this.$store.dispatch('Notifications/add', {
@@ -168,12 +116,10 @@ export default class SaveAccountModal extends Vue {
     }
     close() {
         this.clear()
-        //@ts-ignore
         this.$refs.modal.close()
     }
 
     open() {
-        //@ts-ignore
         this.$refs.modal.open()
     }
 

@@ -8,20 +8,6 @@ const checkAccountsExist = (): boolean => {
     return localStorage.getItem('accounts') !== null
 }
 
-// export const removeAccountByID = (baseAddresses: string[]) => {
-//     let old: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
-//     let updatedAccountsArray: iUserAccountEncrypted[] = []
-//
-//     for (const each of old) {
-//         const addressArray: any = each.baseAddresses
-//         if (!isEqual(baseAddresses, addressArray)) {
-//             updatedAccountsArray.push(each)
-//         }
-//     }
-//
-//     saveLocalStorageJSONItem('accounts', updatedAccountsArray)
-// }
-
 export function getAccountByIndex(index: number): iUserAccountEncrypted | null {
     return getLocalStorageAccounts()[index] || null
 }

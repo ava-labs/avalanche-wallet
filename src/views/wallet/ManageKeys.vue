@@ -14,7 +14,7 @@
                             {{ $t('keys.button1') }}
                         </button>
                         <button
-                            v-if="hasVolatile & account"
+                            v-if="hasVolatile && account"
                             @click="openAccountSettings"
                             class="save_account ava_button_secondary"
                         >

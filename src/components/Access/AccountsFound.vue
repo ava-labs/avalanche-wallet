@@ -2,9 +2,9 @@
     <div v-if="accounts.length">
         <div
             class="flex_container menu_option"
-            v-for="acct in accounts"
-            :key="acct.baseAddresses.join('')"
-            @click="selectAccount(acct)"
+            v-for="(acct, i) in accounts"
+            :key="acct.name + acct.baseAddresses.join('')"
+            @click="selectAccount(i)"
         >
             <Identicon :value="acct.baseAddresses.join('')" diameter="40"></Identicon>
             <p>{{ acct.name }}</p>
@@ -32,14 +32,8 @@ export default class AccountsFound extends Vue {
         this.accounts = JSON.parse(accountsRaw) || []
     }
 
-    selectAccount(acct: iUserAccountEncrypted) {
-        this.$router.push({
-            name: 'Account',
-            params: {
-                // @ts-ignore
-                account: acct,
-            },
-        })
+    selectAccount(index: number) {
+        this.$router.push(`/access/account/${index}`)
     }
 }
 </script>

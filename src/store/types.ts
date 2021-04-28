@@ -121,6 +121,11 @@ export interface SaveAccountInput {
     accountName: string
 }
 
+export interface AccessAccountInput {
+    index: number
+    pass: string
+}
+
 export interface iUserAccountEncrypted {
     name: string
     baseAddresses: string[]

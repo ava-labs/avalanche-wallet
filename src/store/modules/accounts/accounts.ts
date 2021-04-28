@@ -1,5 +1,11 @@
 import { Module } from 'vuex'
-import { iUserAccountEncrypted, RootState, SaveAccountInput } from '@/store/types'
+import {
+    AccessAccountInput,
+    ImportKeyfileInput,
+    iUserAccountEncrypted,
+    RootState,
+    SaveAccountInput,
+} from '@/store/types'
 import { AccountsState, ChangePasswordInput } from '@/store/modules/accounts/types'
 import { WalletType } from '@/js/wallets/types'
 import {
@@ -58,12 +64,29 @@ const accounts_module: Module<AccountsState, RootState> = {
         onLogout({ state }) {
             state.isSavedLocally = false
         },
+
+        async accessAccount({ state, dispatch }, input: AccessAccountInput) {
+            let index = input.index
+            let pass = input.pass
+
+            let account = getAccountByIndex(index)
+            if (!account) throw new Error('Account not found.')
+
+            let data: ImportKeyfileInput = {
+                password: pass,
+                data: account.wallet,
+            }
+
+            await dispatch('importKeyfile', data, { root: true })
+            state.accountIndex = index
+        },
+
         // Creates a keystore file and saves to local storage
         async saveAccount({ state, dispatch, commit, getters, rootState }, data: SaveAccountInput) {
             try {
                 // If this is an active account, get its index
-                let accountIndex = getters.accountIndex
                 let activeAccount = getters.account
+                let accountIndex = state.accountIndex
                 let wallet = rootState.activeWallet as MnemonicWallet | SingletonWallet | null
                 let pass = data.password
                 if (!pass || wallet?.type === 'ledger') return
@@ -82,15 +105,18 @@ const accounts_module: Module<AccountsState, RootState> = {
                 }
 
                 // Remove old account, add new one
-                if (accountIndex) {
-                    removeAccountByIndex(accountIndex)
+                if (accountIndex != null) {
+                    overwriteAccountAtIndex(encryptedWallet, accountIndex)
+                    // removeAccountByIndex(accountIndex)
+                } else {
+                    addAccountToStorage(encryptedWallet)
                 }
-                addAccountToStorage(encryptedWallet)
                 // commit('addAccountToStorage', encryptedWallet)
 
                 // No more volatile wallets
                 rootState.volatileWallets = []
                 commit('loadAccounts')
+                state.accountIndex = state.accounts.length - 1
                 commit('accountSavedLocally', rootState.wallets)
             } catch (e) {
                 dispatch('Notifications/add', {
@@ -107,18 +133,22 @@ const accounts_module: Module<AccountsState, RootState> = {
 
             let passCorrect = await verifyAccountPassword(acct, password)
             if (!passCorrect) throw new Error('Invalid password.')
+            let index = state.accountIndex
 
-            let index = getters.accountIndex
+            if (!acct || !index) return
+
             removeAccountByIndex(index)
+            state.accountIndex = null
+
             // Update accounts
             commit('loadAccounts')
         },
 
         async changePassword({ state, getters, dispatch }, input: ChangePasswordInput) {
-            let index = getters.accountIndex
+            let index = state.accountIndex
             let account: iUserAccountEncrypted = getters.account
 
-            if (!account) return
+            if (!account || !index) return
 
             let oldPassCorrect = await verifyAccountPassword(account, input.passOld)
             if (!oldPassCorrect) throw new Error('Previous password invalid.')
@@ -133,11 +163,11 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
 
         // Used to save volatile keys into the active account
-        async saveKeys({ dispatch, getters }, pass: string) {
-            let index = getters.accountIndex
+        async saveKeys({ dispatch, getters, state }, pass: string) {
+            let index = state.accountIndex
             let account: iUserAccountEncrypted = getters.account
 
-            if (!account) return
+            if (!index) return
 
             let passCorrect = await verifyAccountPassword(account, pass)
             if (!passCorrect) throw new Error('Invalid password.')
@@ -152,11 +182,13 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
 
         // Remove the selected key from account and update local storage
-        async deleteKey({ getters, rootState, commit }, wallet: WalletType) {
+        async deleteKey({ state, getters, rootState, commit }, wallet: WalletType) {
             if (!getters.account) return
             let delIndex = rootState.wallets.indexOf(wallet)
-            let acctIndex = getters.accountIndex
+            let acctIndex = state.accountIndex
             let acct: iUserAccountEncrypted = getters.account
+
+            if (!acctIndex) throw new Error('Account not found.')
 
             acct.baseAddresses.splice(delIndex, 1)
             acct.wallet.keys.splice(delIndex, 1)
@@ -189,23 +221,22 @@ const accounts_module: Module<AccountsState, RootState> = {
             })
         },
 
-        accountIndex(state: AccountsState, getters, rootState: RootState): number | null {
-            let accounts = state.accounts
-            let baseAddrs = getters.baseAddressesNonVolatile
-
-            for (var i = 0; i < accounts.length; i++) {
-                let acct = accounts[i]
-                if (isEqual(acct.baseAddresses, baseAddrs)) {
-                    return i
-                }
-            }
-            return null
-        },
+        // accountIndex(state: AccountsState, getters, rootState: RootState): number | null {
+        //     let accounts = state.accounts
+        //     let baseAddrs = getters.baseAddressesNonVolatile
+        //
+        //     for (var i = 0; i < accounts.length; i++) {
+        //         let acct = accounts[i]
+        //         if (isEqual(acct.baseAddresses, baseAddrs)) {
+        //             return i
+        //         }
+        //     }
+        //     return null
+        // },
 
         account(state: AccountsState, getters): iUserAccountEncrypted | null {
-            let index = getters.accountIndex
-            if (index === null) return null
-            return state.accounts[index]
+            if (state.accountIndex === null) return null
+            return state.accounts[state.accountIndex]
         },
     },
 }

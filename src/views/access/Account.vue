@@ -36,23 +36,27 @@ import Identicon from '@/components/misc/Identicon.vue'
 @Component({
     components: { Identicon },
 })
-export default class Accounts extends Vue {
+export default class Account extends Vue {
     password: string = ''
     isLoading: boolean = false
     error: string = ''
-    account: iUserAccountEncrypted | undefined
-    index: number | null = null
+
+    get index() {
+        return this.$route.params.index
+    }
+    get accounts() {
+        return this.$store.state.Accounts.accounts
+    }
+
+    get account() {
+        return this.accounts[this.index]
+    }
 
     created() {
-        //@ts-ignore
-        let account = this.$route.params.account as iUserAccountEncrypted
-
-        if (!account) {
+        if (!this.account) {
             this.$router.replace('/access')
+            return
         }
-        this.account = account
-        const index = parseFloat(this.$route.params.index)
-        this.index = index
     }
 
     async access() {
@@ -69,7 +73,10 @@ export default class Accounts extends Vue {
 
         setTimeout(() => {
             this.$store
-                .dispatch('importKeyfile', data)
+                .dispatch('Accounts/accessAccount', {
+                    index: this.index,
+                    pass: this.password,
+                })
                 .then((res) => {
                     parent.isLoading = false
                 })

@@ -279,7 +279,7 @@
     },
     "keys": {
         "title": "My Keys",
-        "button1": "Save Account",
+        "button1": "Save Keys",
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
         "subtitle": "Active Key",

@@ -15,7 +15,7 @@ import WalletHome from '@/views/wallet/Portfolio.vue'
 import Earn from '@/views/wallet/Earn.vue'
 import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
 import Activity from '@/views/wallet/Activity.vue' // your vuex store
-import Account from '@/views/access/Accounts.vue' // your vuex store
+import Account from '@/views/access/Account.vue' // your vuex store
 
 Vue.use(VueRouter)
 
@@ -67,7 +67,7 @@ const routes = [
                 component: Mnemonic,
             },
             {
-                path: 'account',
+                path: 'account/:index',
                 component: Account,
                 name: 'Account',
             },
