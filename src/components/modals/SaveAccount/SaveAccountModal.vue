@@ -3,6 +3,9 @@
         <Modal ref="modal" :title="$t('keys.save_account.title')">
             <div class="remember_modal">
                 <form @submit.prevent="submit">
+                    <div class="flex-row" style="justify-content: center">
+                        <Identicon :value="baseAddresses.join('')"></Identicon>
+                    </div>
                     <p>{{ $t('keys.save_account.desc') }}</p>
                     <input
                         v-if="!activeAccount"
@@ -49,9 +52,11 @@ import {
     getIndexByWallets,
 } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
+import Identicon from '@/components/misc/Identicon.vue'
 
 @Component({
     components: {
+        Identicon,
         Modal,
     },
 })
@@ -123,6 +128,10 @@ export default class SaveAccountModal extends Vue {
         this.$refs.modal.open()
     }
 
+    get baseAddresses(): string[] {
+        return this.$store.getters['Accounts/baseAddresses']
+    }
+
     get activeAccount() {
         return this.$store.getters['Accounts/account']
     }
@@ -132,7 +141,9 @@ export default class SaveAccountModal extends Vue {
 @use '../../../main';
 
 .remember_modal {
-    padding: 30px;
+    width: 320px;
+    max-width: 100%;
+    padding: 12px 30px;
 }
 
 form {
