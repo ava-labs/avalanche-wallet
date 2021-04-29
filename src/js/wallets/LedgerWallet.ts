@@ -75,7 +75,7 @@ import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 
-export const MIN_EVM_SUPPORT_V = '0.4.2'
+export const MIN_EVM_SUPPORT_V = '0.5.2'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -649,7 +649,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let data = abiDecoder.decodeMethod(test)
 
             let callMsg: ILedgerBlockMessage = {
-                title: 'ContractCall',
+                title: 'Contract Call',
                 value: data.name,
             }
             let paramMsgs: ILedgerBlockMessage[] = data.params.map((param: any) => {

@@ -60,6 +60,18 @@ export default class LedgerButton extends Vue {
             // Otherwise timer does not reset
             // await setTimeout(() => null, 10)
 
+            if (!this.config) {
+                this.$store.commit('Ledger/setIsUpgradeRequired', true)
+                this.isLoading = false
+                throw new Error('')
+            }
+
+            if (this.config.version < MIN_EVM_SUPPORT_V) {
+                this.$store.commit('Ledger/setIsUpgradeRequired', true)
+                this.isLoading = false
+                return
+            }
+
             let title = 'Provide Public Keys'
             let messages = [
                 {
@@ -85,8 +97,6 @@ export default class LedgerButton extends Vue {
             try {
                 await this.$store.dispatch('accessWalletLedger', wallet)
                 this.onsuccess()
-                // TODO: enable when we want users upgrading after ledger fixes a few issues
-                // this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_EVM_SUPPORT_V)
             } catch (e) {
                 this.onerror(e)
             }

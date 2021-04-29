@@ -7,14 +7,14 @@
             <p style="margin-bottom: 14px !important; font-size: 16px">
                 {{ $t('modal.ledger_upgrade.desc') }}
             </p>
-            <div>
-                <a
-                    href="https://medium.com/avalancheavax/how-to-set-up-your-ledger-nano-s-with-avalanche-4e5d385410d4"
-                    target="_blank"
-                >
-                    {{ $t('modal.ledger_upgrade.upgrade') }}
-                </a>
-            </div>
+            <!--            <div>-->
+            <!--                <a-->
+            <!--                    href="https://medium.com/avalancheavax/how-to-set-up-your-ledger-nano-s-with-avalanche-4e5d385410d4"-->
+            <!--                    target="_blank"-->
+            <!--                >-->
+            <!--                    {{ $t('modal.ledger_upgrade.upgrade') }}-->
+            <!--                </a>-->
+            <!--            </div>-->
         </div>
     </modal>
 </template>
