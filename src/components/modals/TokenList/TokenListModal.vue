@@ -13,7 +13,7 @@
                     small
                     class="button_secondary"
                     depressed
-                    @click="addToken"
+                    @click="addTokenList"
                     :disabled="!canAdd"
                 >
                     Add
@@ -74,10 +74,10 @@ export default class TokenListModal extends Vue {
         this.err = ''
     }
 
-    async addToken() {
+    async addTokenList() {
         this.err = ''
         this.$store
-            .dispatch('Assets/addTokenList', {
+            .dispatch('Assets/addTokenListUrl', {
                 url: this.urlIn,
                 readonly: false,
             })

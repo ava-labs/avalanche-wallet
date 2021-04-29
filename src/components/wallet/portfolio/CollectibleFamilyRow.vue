@@ -1,5 +1,5 @@
 <template>
-    <div class="nft_family_row">
+    <div class="nft_family_row" v-if="allUtxos.length">
         <div class="fam_header">
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>

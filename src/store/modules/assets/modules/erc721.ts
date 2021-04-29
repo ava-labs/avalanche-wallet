@@ -6,7 +6,6 @@ import { RootState } from '@/store/types'
 import ERC721_TOKEN_LIST from '@/ERC721Tokenlist.json'
 import { WalletType } from '@/js/wallets/types'
 import Vue from 'vue'
-import Erc20Token from '@/js/Erc20Token'
 
 const erc721_module: Module<Erc721ModuleState, RootState> = {
     namespaced: true,
@@ -16,7 +15,7 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         walletBalance: {},
     },
     mutations: {
-        clear(state) {
+        clear(state: Erc721ModuleState) {
             state.walletBalance = {}
         },
         saveCustomContracts(state) {
@@ -35,6 +34,13 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         },
     },
     actions: {
+        async removeCustom({ state, commit }, data: ERC721Token) {
+            let index = state.erc721TokensCustom.indexOf(data)
+            state.erc721TokensCustom.splice(index, 1)
+            Vue.delete(state.walletBalance, data.contractAddress)
+            commit('saveCustomContracts')
+        },
+
         async addCustom({ state, dispatch, commit }, data: ERC721TokenInput) {
             let tokens = state.erc721Tokens.concat(state.erc721TokensCustom)
 
@@ -50,6 +56,9 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             state.erc721TokensCustom.push(t)
 
             commit('saveCustomContracts')
+            setTimeout(() => {
+                dispatch('updateWalletBalance')
+            }, 500)
             return t
         },
 
@@ -71,7 +80,6 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             let contracts: ERC721Token[] = getters.networkContracts
             for (var i = 0; i < contracts.length; i++) {
                 let erc721 = contracts[i]
-                if (!erc721.canSupport) continue
                 erc721
                     .getAllTokensIds(walletAddr)
                     .then((tokenIds: string[]) => {
@@ -94,6 +102,18 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             })
             return filt
         },
+
+        networkContractsCustom(
+            state: Erc721ModuleState,
+            getters,
+            rootState: RootState
+        ): ERC721Token[] {
+            let contracts: ERC721Token[] = getters.networkContracts
+            return contracts.filter((c) => {
+                return state.erc721TokensCustom.includes(c)
+            })
+        },
+
         totalOwned(state: Erc721ModuleState, getters, rootState: RootState) {
             let bal = state.walletBalance
             let tot = 0

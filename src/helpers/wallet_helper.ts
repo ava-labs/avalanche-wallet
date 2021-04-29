@@ -421,24 +421,6 @@ class WalletHelper {
         let fromAddr = '0x' + wallet.getEvmAddress()
 
         let tx = await buildEvmTransferNativeTx(fromAddr, to, amount, gasPrice, gasLimit)
-        // const nonce = await web3.eth.getTransactionCount(fromAddr)
-        // const chainId = await web3.eth.getChainId()
-        // const networkId = await web3.eth.net.getId()
-        // const chainParams = {
-        //     common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
-        // }
-        //
-        // let tx = new Transaction(
-        //     {
-        //         nonce: nonce,
-        //         gasPrice: gasPrice,
-        //         gasLimit: gasLimit,
-        //         to: to,
-        //         value: amount,
-        //         data: '0x',
-        //     },
-        //     chainParams
-        // )
 
         let signedTx = await wallet.signEvm(tx)
 
@@ -458,27 +440,6 @@ class WalletHelper {
         let fromAddr = '0x' + wallet.getEvmAddress()
         let tx = await buildEvmTransferErc20Tx(fromAddr, to, amount, gasPrice, gasLimit, token)
 
-        // const nonce = await web3.eth.getTransactionCount(fromAddr)
-        // const chainId = await web3.eth.getChainId()
-        // const networkId = await web3.eth.net.getId()
-        // const chainParams = {
-        //     common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
-        // }
-        //
-        // let tokenTx = token.createTransferTx(to, amount)
-        //
-        // let tx = new Transaction(
-        //     {
-        //         nonce: nonce,
-        //         gasPrice: gasPrice,
-        //         gasLimit: gasLimit,
-        //         value: '0x0',
-        //         to: token.data.address,
-        //         data: tokenTx.encodeABI(),
-        //     },
-        //     chainParams
-        // )
-
         let signedTx = await wallet.signEvm(tx)
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
@@ -495,7 +456,6 @@ class WalletHelper {
     ) {
         let fromAddr = '0x' + wallet.getEvmAddress()
         let tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
-        console.log(tx)
         let signedTx = await wallet.signEvm(tx)
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
