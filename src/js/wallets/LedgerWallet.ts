@@ -67,7 +67,7 @@ import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig } from '@/store/types'
 import { WalletNameType } from '@/js/wallets/types'
 import { bnToBig, digestMessage } from '@/helpers/helper'
-import { web3 } from '@/evm'
+import { abiDecoder, web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './MnemonicWallet'
 import { ChainIdType } from '@/constants'
 import { ParseableAvmTxEnum, ParseablePlatformEnum, ParseableEvmTxEnum } from '../TxHelper'
@@ -75,7 +75,7 @@ import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 
-export const MIN_EVM_SUPPORT_V = '0.4.2'
+export const MIN_EVM_SUPPORT_V = '0.5.2'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
@@ -637,6 +637,40 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return messages
     }
 
+    getEvmTransactionMessages(tx: Transaction): ILedgerBlockMessage[] {
+        let gasPrice = tx.gasPrice
+        let gasLimit = tx.gasLimit
+        let totFee = gasPrice.mul(new BN(gasLimit))
+        let feeNano = bnToBig(totFee, 9)
+
+        let msgs: ILedgerBlockMessage[] = []
+        try {
+            let test = '0x' + tx.data.toString('hex')
+            let data = abiDecoder.decodeMethod(test)
+
+            let callMsg: ILedgerBlockMessage = {
+                title: 'Contract Call',
+                value: data.name,
+            }
+            let paramMsgs: ILedgerBlockMessage[] = data.params.map((param: any) => {
+                return {
+                    title: param.name,
+                    value: param.value,
+                }
+            })
+
+            let feeMsg: ILedgerBlockMessage = {
+                title: 'Fee',
+                value: feeNano.toLocaleString() + ' nAVAX',
+            }
+
+            msgs = [callMsg, ...paramMsgs, feeMsg]
+        } catch (e) {
+            console.log(e)
+        }
+        return msgs
+    }
+
     async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
@@ -684,14 +718,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         // TODO: Remove after ledger is fixed
         // If UTXOS contain lockedStakeable funds always use sign hash
-        let txIns = unsignedTx.getTransaction().getIns()
-        for (var i = 0; i < txIns.length; i++) {
-            let typeID = txIns[i].getInput().getTypeID()
-            if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
-                canLedgerParse = false
-                break
-            }
-        }
+        // let txIns = unsignedTx.getTransaction().getIns()
+        // for (var i = 0; i < txIns.length; i++) {
+        //     let typeID = txIns[i].getInput().getTypeID()
+        //     if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
+        //         canLedgerParse = false
+        //         break
+        //     }
+        // }
 
         let signedTx
         if (canLedgerParse && isParsableType) {
@@ -745,30 +779,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         ])
 
         try {
-            let gasPrice = tx.gasPrice
-            let gasLimit = tx.gasLimit
-            let amount = tx.value
-            let to = tx.to
-            let amtNano = bnToBig(amount, 9)
-            let totFee = gasPrice.mul(new BN(gasLimit))
-            let feeNano = bnToBig(totFee, 9)
+            let msgs = this.getEvmTransactionMessages(tx)
+
             // Open Modal Prompt
             store.commit('Ledger/openModal', {
                 title: 'Transfer',
-                messages: [
-                    {
-                        title: 'Amount',
-                        value: `${amtNano.toLocaleString(0)} nAVAX`,
-                    },
-                    {
-                        title: 'To',
-                        value: `${to}`,
-                    },
-                    {
-                        title: 'Fee',
-                        value: `${feeNano.toLocaleString(0)} GWEI`,
-                    },
-                ],
+                messages: msgs,
                 info: null,
             })
             const signature = await this.ethApp.signTransaction(
@@ -990,8 +1006,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         gasLimit: number,
         token: Erc20Token
     ): Promise<string> {
-        throw 'Not Implemented'
-        // return await WalletHelper.sendErc20(this, to, amount, gasPrice, gasLimit, token)
+        // throw 'Not Implemented'
+        return await WalletHelper.sendErc20(this, to, amount, gasPrice, gasLimit, token)
     }
 }
 

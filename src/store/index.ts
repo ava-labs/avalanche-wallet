@@ -151,7 +151,6 @@ export default new Vuex.Store({
             store.dispatch('Platform/update')
             router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
-            store.commit('Accounts/accountSavedLocally', store.state.wallets)
         },
 
         // TODO: Parts can be shared with the logout function below

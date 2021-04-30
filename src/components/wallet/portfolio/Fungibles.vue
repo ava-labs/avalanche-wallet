@@ -29,15 +29,10 @@
                         :key="erc.data.address"
                         :token="erc"
                     ></ERC20Row>
-                    <div class="asset add_token_row" v-if="!isLedger">
+                    <div class="asset add_token_row">
                         <button @click="addToken">Add Token</button>
                         <span>or</span>
                         <button @click="addTokenList">Add Token List</button>
-                    </div>
-                    <div class="asset add_token_row" v-else>
-                        <p style="font-size: 13px; color: var(--info)">
-                            ERC20 Tokens are not supported for Ledger devices.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -85,12 +80,6 @@ export default class Fungibles extends Vue {
 
     addTokenList() {
         this.$refs.tokenlist_modal.open()
-    }
-
-    get isLedger() {
-        let w: WalletType | null = this.$store.state.activeWallet
-        if (!w) return false
-        return w.type === 'ledger'
     }
 
     get walletBalancesSorted(): AvaAsset[] {
