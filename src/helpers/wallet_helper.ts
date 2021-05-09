@@ -330,10 +330,10 @@ class WalletHelper {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
-        if (destinationChain === 'C') {
-            // C Chain imports/exports do not have a fee
-            amtFee = amt
-        }
+        // if (destinationChain === 'C') {
+        // C Chain imports/exports do not have a fee
+        // amtFee = amt
+        // }
 
         let destinationAddr
         if (destinationChain === 'P') {
