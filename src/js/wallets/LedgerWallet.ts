@@ -604,11 +604,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === AVMConstants.IMPORTTX && chainId === 'X') ||
             (txType === PlatformVMConstants.EXPORTTX && chainId === 'P') ||
             (txType === PlatformVMConstants.IMPORTTX && chainId === 'P') ||
-            (txType === EVMConstants.EXPORTTX && chainId === 'C')
+            (txType === EVMConstants.EXPORTTX && chainId === 'C') ||
+            (txType === EVMConstants.IMPORTTX && chainId === 'C')
         ) {
             messages.push({ title: 'Fee', value: `${0.001} AVAX` })
-        } else if (txType === EVMConstants.IMPORTTX && (chainId as ChainIdType) === 'C') {
-            messages.push({ title: 'Fee', value: `0 AVAX` })
         }
 
         return messages
