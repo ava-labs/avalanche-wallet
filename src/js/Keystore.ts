@@ -26,7 +26,7 @@ import {
 } from './IKeystore'
 import { avm, bintools } from '@/AVA'
 import { Buffer } from 'buffer/'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Crypto from '@/js/Crypto'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { AccessWalletMultipleInput } from '@/store/types'
@@ -319,7 +319,7 @@ function extractKeysFromDecryptedFile(file: AllKeyFileDecryptedTypes): AccessWal
 
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
 async function makeKeyfile(
-    wallets: (AvaHdWallet | SingletonWallet)[],
+    wallets: (MnemonicWallet | SingletonWallet)[],
     pass: string,
     activeIndex: number
 ): Promise<KeyFileV6> {
@@ -338,7 +338,7 @@ async function makeKeyfile(
             key = (wallet as SingletonWallet).key
             type = 'singleton'
         } else {
-            key = (wallet as AvaHdWallet).mnemonic
+            key = (wallet as MnemonicWallet).mnemonic
             type = 'mnemonic'
         }
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)

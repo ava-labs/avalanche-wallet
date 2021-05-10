@@ -4,7 +4,7 @@
             <template>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
-                    <RememberWalletModal></RememberWalletModal>
+                    <UpgradeToAccountModal></UpgradeToAccountModal>
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
@@ -21,18 +21,20 @@
 <script>
 import Notifications from '@/components/Notifications'
 import Navbar from './components/Navbar'
-import RememberWalletModal from '@/components/modals/RememberWallet/RememberWalletModal'
+import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
 import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
+import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
 
 export default {
     components: {
+        UpgradeToAccountModal,
         NetworkLoadingBlock,
         LedgerBlock,
         LedgerUpgrade,
-        RememberWalletModal,
+        SaveAccountModal,
         Navbar,
         Notifications,
         TestNetBanner,
@@ -45,8 +47,14 @@ export default {
         }
 
         await this.$store.dispatch('Network/init')
+        this.$store.commit('Accounts/loadAccounts')
         this.$store.dispatch('Assets/initErc20List')
+        this.$store.dispatch('Assets/ERC721/init')
         this.$store.dispatch('updateAvaxPrice')
+
+        if (this.$store.state.Accounts.accounts.length > 0) {
+            this.$router.push('/access')
+        }
     },
     computed: {
         isNavbar() {

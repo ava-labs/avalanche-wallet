@@ -54,7 +54,7 @@ import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import { ChainIdType } from '@/constants'
 import { avm } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import AvaAsset from '@/js/AvaAsset'
 import { ChainSwapFormData } from '@/components/wallet/earn/ChainTransfer/types'
 
@@ -136,7 +136,7 @@ export default class Form extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return balRaw.divRound(new BN(Math.pow(10, 9)))
+        return balRaw.div(new BN(Math.pow(10, 9)))
     }
 
     get balanceDestination() {
@@ -191,7 +191,7 @@ export default class Form extends Vue {
     }
 
     get wallet() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
     }
 

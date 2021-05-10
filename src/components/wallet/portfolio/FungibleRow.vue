@@ -1,11 +1,8 @@
 <template>
     <div class="asset">
         <div class="icon" :avax="isAvaxToken">
-            <!--            <hexagon class="hex_bg" :is-ava="isAvaxToken"></hexagon>-->
-            <!--            <div class="icon_img">-->
             <img v-if="iconUrl" :src="iconUrl" />
             <p v-else>?</p>
-            <!--            </div>-->
         </div>
         <p class="name_col not_mobile">
             {{ name }} ({{ symbol }})
@@ -38,7 +35,9 @@ import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
 import BN from 'bn.js'
 import { bnToBig } from '../../../helpers/helper'
-import { priceDict, WalletType } from '../../../store/types'
+import { priceDict } from '../../../store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import Big from 'big.js'
 
 @Component({
@@ -61,7 +60,7 @@ export default class FungibleRow extends Vue {
 
     get isBalance(): boolean {
         if (!this.asset) return false
-        if (this.asset.getTotalAmount().gt(new BN(0))) {
+        if (!this.amount.isZero()) {
             return true
         }
         return false

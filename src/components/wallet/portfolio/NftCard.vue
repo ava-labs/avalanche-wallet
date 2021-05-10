@@ -1,96 +1,120 @@
 <template>
     <div class="nft_card">
-        <component
-            :is="nftClass"
-            :payload="payloadBase"
-            :mini="mini"
-            :rawCard="rawCard"
-            :utxo="utxo"
-        ></component>
+        <p class="count" v-if="quantity > 1">{{ quantity }}</p>
+        <NFTViewModal ref="modal" :payload="payload"></NFTViewModal>
+        <NftPayloadView :payload="payload" class="view"></NftPayloadView>
+        <div class="nft_info">
+            <div class="meta_bar">
+                <div>
+                    <p>
+                        <b>{{ $t('portfolio.collectibles.group') }}:</b>
+                        {{ groupID }}
+                    </p>
+                    <p style="margin-left: 6px !important">{{ payloadTypeName }}</p>
+                </div>
+
+                <div>
+                    <Tooltip
+                        :text="$t('portfolio.collectibles.send')"
+                        @click.native="transfer"
+                        v-if="utxo"
+                        class="nft_button"
+                    >
+                        <fa icon="share"></fa>
+                    </Tooltip>
+                    <Tooltip
+                        :text="$t('portfolio.collectibles.expand')"
+                        @click.native="expand"
+                        class="nft_button"
+                    >
+                        <fa icon="expand"></fa>
+                    </Tooltip>
+                </div>
+            </div>
+            <div class="generic_nft_meta" v-if="nftTitle || nftDesc">
+                <p class="nft_title" v-if="nftTitle">
+                    {{ nftTitle }}
+                </p>
+                <p class="nft_desc" v-if="nftDesc">
+                    {{ nftDesc }}
+                </p>
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Buffer } from 'buffer/'
-
-import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import { PayloadTypes, PayloadBase } from 'avalanche/dist/utils'
-import * as jdenticon from 'jdenticon'
 
 const payloadtypes = PayloadTypes.getInstance()
 
-import UTF8_NFT from '@/components/NftCards/UTF8_NFT.vue'
-import URL_NFT from '@/components/NftCards/URL_NFT.vue'
-@Component
+import Tooltip from '@/components/misc/Tooltip.vue'
+import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
+import NFTViewModal from '@/components/modals/NFTViewModal.vue'
+import { UTXO } from 'avalanche/dist/apis/avm'
+@Component({
+    components: { NFTViewModal, NftPayloadView, Tooltip },
+})
 export default class NftCard extends Vue {
-    @Prop() utxo!: UTXO
-    @Prop({ default: false }) mini?: boolean
-    @Prop({ default: false }) rawCard?: boolean
+    @Prop() payload!: PayloadBase
+    @Prop({ default: 1 }) quantity!: number
+    @Prop() groupID!: number
+    @Prop() utxo?: UTXO
 
-    get payload() {
-        let output = this.utxo.getOutput() as NFTTransferOutput
-        let payload = output.getPayloadBuffer()
-        return payload
+    $refs!: {
+        modal: NFTViewModal
     }
 
-    get payloadBase() {
-        let payload = this.payload
+    transfer(ev: MouseEvent) {
+        ev.stopPropagation()
+        if (!this.utxo) return
 
-        let typeId = payloadtypes.getTypeID(payload)
-        let pl: Buffer = payloadtypes.getContent(payload)
-        let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
-
-        return payloadbase
+        let utxoId = this.utxo.getUTXOID()
+        this.$router.push({
+            path: '/wallet/transfer',
+            query: {
+                nft: utxoId,
+                chain: 'X',
+            },
+        })
     }
 
-    generateIdenticon() {
-        let canv = this.$refs['canvas'] as HTMLCanvasElement
-        let cont = canv.getContext('2d')
-        let text = this.payloadBase.toBuffer().toString('utf-8')
-        jdenticon.drawIcon(cont!, text, canv.width)
+    expand() {
+        this.$refs.modal.open()
     }
 
-    get nftClass() {
-        let res
-        switch (this.payloadBase.typeID()) {
-            case 1: // UTF 8
-                res = UTF8_NFT
-                break
-            case 27: // url
-                res = URL_NFT
-                break
-            default:
-                res = UTF8_NFT
+    get payloadTypeID() {
+        return this.payload.typeID()
+    }
+
+    get payloadTypeName() {
+        return payloadtypes.lookupType(this.payloadTypeID) || 'Unknown Type'
+    }
+
+    get payloadContent() {
+        return this.payload.getContent().toString()
+    }
+
+    get nftTitle() {
+        try {
+            let json = JSON.parse(this.payloadContent)
+            return json.avalanche.title
+        } catch (err) {
+            return ''
         }
-        return res
+    }
+
+    get nftDesc() {
+        try {
+            let json = JSON.parse(this.payloadContent)
+            return json.avalanche.desc
+        } catch (err) {
+            return ''
+        }
     }
 }
 </script>
 <style scoped lang="scss">
-.nft_card {
-    word-break: break-all;
-    max-width: 100%;
-    //width: 130px;
-    //max-height: 420px;
-    max-height: 100%;
-    /*overflow: hidden;*/
-}
-
-.nft_info {
-    padding: 30px;
-}
-
-.nft_raw {
-    word-break: break-all;
-    max-height: 90px;
-    overflow: scroll;
-    text-align: center;
-    padding: 4px;
-}
-
-canvas {
-    width: 100%;
-    height: 180px;
-}
+@use 'nft_card';
 </style>

@@ -20,6 +20,11 @@
             :privateKey="privateKey"
             ref="modal_priv_key"
         ></PrivateKey>
+        <PrivateKey
+            v-if="walletType !== 'ledger'"
+            :privateKey="privateKeyC"
+            ref="modal_priv_key_c"
+        ></PrivateKey>
         <div class="rows">
             <div class="header">
                 <template v-if="is_default">
@@ -70,12 +75,17 @@
                         >
                             <fa icon="upload"></fa>
                         </Tooltip>
-                        <button v-if="walletType == 'mnemonic'" @click="showModal">
-                            {{ $t('keys.view_key') }}
-                        </button>
-                        <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal">
-                            {{ $t('keys.view_priv_key') }}
-                        </button>
+                        <div class="text_buts">
+                            <button v-if="walletType == 'mnemonic'" @click="showModal">
+                                {{ $t('keys.view_key') }}
+                            </button>
+                            <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal">
+                                {{ $t('keys.view_priv_key') }}
+                            </button>
+                            <button v-if="walletType !== 'ledger'" @click="showPrivateKeyCModal">
+                                {{ $t('keys.view_priv_key_c') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,12 +120,13 @@ import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
-import { WalletNameType, WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/js/wallets/types'
+
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 
 interface IKeyBalanceDict {
@@ -208,7 +219,7 @@ export default class KeyRow extends Vue {
     }
     get mnemonicPhrase(): string {
         if (this.walletType !== 'mnemonic') return '?'
-        let wallet = this.wallet as AvaHdWallet
+        let wallet = this.wallet as MnemonicWallet
         return wallet.getMnemonic()
     }
 
@@ -216,6 +227,12 @@ export default class KeyRow extends Vue {
         if (this.walletType !== 'singleton') return '?'
         let wallet = this.wallet as SingletonWallet
         return wallet.key
+    }
+
+    get privateKeyC(): string {
+        if (this.walletType === 'ledger') return '?'
+        let wallet = this.wallet as SingletonWallet | MnemonicWallet
+        return wallet.ethKey
     }
 
     remove() {
@@ -245,6 +262,11 @@ export default class KeyRow extends Vue {
     showPrivateKeyModal() {
         //@ts-ignore
         this.$refs.modal_priv_key.open()
+    }
+
+    showPrivateKeyCModal() {
+        //@ts-ignore
+        this.$refs.modal_priv_key_c.open()
     }
 }
 </script>
@@ -298,6 +320,19 @@ export default class KeyRow extends Vue {
 
         &:hover {
             background-color: var(--bg);
+        }
+    }
+
+    .text_buts {
+        display: flex;
+        flex-direction: column;
+        > button {
+            text-align: right;
+            font-size: 13px;
+
+            &:hover {
+                color: var(--secondary-color);
+            }
         }
     }
 }

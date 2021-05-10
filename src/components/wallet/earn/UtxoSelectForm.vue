@@ -30,7 +30,8 @@
 import { Vue, Component, Model, Watch } from 'vue-property-decorator'
 import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
 import { AmountOutput, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'

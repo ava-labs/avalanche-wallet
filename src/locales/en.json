@@ -58,7 +58,8 @@
             "submit": "Access Wallet",
             "cancel": "Cancel",
             "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space."
-        }
+        },
+        "accounts_found": "Accounts found on your device"
     },
     "wallet": {
         "sidebar": {
@@ -278,14 +279,22 @@
     },
     "keys": {
         "title": "My Keys",
-        "button1": "Remember Keys",
+        "button1": "Save Keys",
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
         "subtitle": "Active Key",
+        "save_account": {
+            "title": "Save Account",
+            "desc": "Encode your wallet with a password and store securely on this browser.",
+            "submit":  "Save",
+            "placeholder_1": "Account Name",
+            "placeholder_2": "Password",
+            "placeholder_3": "Confirm Password"
+        },
         "remember_key_button": "REMEMBER",
-        "remember_key_desc": "Encode your wallet with a password and store securely on this browser.",
-        "remember_key_check": "Remember Keys",
+        "remember_key_check": "Save Account",
         "remember_key_info": "You can later access your wallet on this browser with a password.",
+        "account_slow_warning": "Accounts with multiple keys may take a long time to load.",
         "export_key_button": "EXPORT WALLET",
         "export_key_title": "Export Keys",
         "export_key_desc": "Enter a password to encode your private keys into a file. You can later use this file and your password to access your wallet.",
@@ -307,6 +316,7 @@
         "import_mnemonic_err": "Invalid key phrase.",
         "tooltip": "This key will be forgotten when you refresh the browser.",
         "view_priv_key": "View Private Key",
+        "view_priv_key_c": "View C Chain Private Key",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -316,7 +326,8 @@
         "remove_success_title": "Key Removed",
         "remove_success_msg": "Private key and assets removed from the wallet.",
         "password_validation": "Password must be at least 9 characters long.",
-        "password_validation2": "Password do not match."
+        "password_validation2": "Password do not match.",
+        "account_name_required" : "Account Name Required."
     },
     "portfolio": {
         "assets": "Assets",
@@ -335,8 +346,9 @@
             "mint_more": "Mint more of this collectible family in the Studio.",
             "mint_submit": "Mint",
             "quantity": "Quantity",
-            "group": "Group ID",
-            "send": "Send"
+            "group": "Group",
+            "send": "Send",
+            "expand": "Expand"
         }
     },
     "earn": {
@@ -689,8 +701,10 @@
             "desc": "Please confirm these actions on your ledger device."
         },
         "ledger_upgrade": {
-            "submit": "Upgrade",
-            "title": "Upgrade Available"
+            "done": "Done",
+            "upgrade": "Upgrade",
+            "title": "Trouble Connecting",
+            "desc": "We're having trouble connecting to your device. Please make sure you have the Avalanche app open and upgraded to the latest version."
         },
         "hd": {
             "future_warn_title": "DO NOT USE THE ADDRESSES BELOW",
@@ -700,6 +714,9 @@
         },
         "tokenlist": {
             "title": "Token lists"
+        },
+        "nft": {
+            "title": "NFT Preview"
         }
     },
     "nav": {

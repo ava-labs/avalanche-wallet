@@ -27,6 +27,11 @@ import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/e
 import { ChainIdType } from '@/constants'
 
 import { web3 } from '@/evm'
+import { AvmExportChainType, WalletType } from '@/js/wallets/types'
+import ERC721Token from '@/js/ERC721Token'
+import { Transaction } from '@ethereumjs/tx'
+import EthereumjsCommon from '@ethereumjs/common'
+import Erc20Token from '@/js/Erc20Token'
 
 export async function buildUnsignedTransaction(
     orders: (ITransaction | AVMUTXO)[],
@@ -214,21 +219,17 @@ export async function buildMintNftTx(
     )
     return mintTx
 }
-export async function buildExportTransaction(
-    sourceChain: ChainIdType,
-    destinationChain: ChainIdType,
-    utxoSet: AVMUTXOSet | PlatformUTXOSet,
+
+export async function buildAvmExportTransaction(
+    destinationChain: AvmExportChainType,
+    utxoSet: AVMUTXOSet,
     fromAddresses: string[],
     toAddress: string,
     amount: BN, // export amount + fee
-    sourceChangeAddress: string,
-    evmBechAddress?: string // Used ONLY for c chain exports
-): Promise<AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx> {
+    sourceChangeAddress: string
+) {
     let destinationChainId
     switch (destinationChain) {
-        case 'X':
-            destinationChainId = avm.getBlockchainID()
-            break
         case 'P':
             destinationChainId = pChain.getBlockchainID()
             break
@@ -236,44 +237,149 @@ export async function buildExportTransaction(
             destinationChainId = cChain.getBlockchainID()
             break
     }
-    if (sourceChain === 'X') {
-        return await avm.buildExportTx(
-            utxoSet as AVMUTXOSet,
-            amount,
-            destinationChainId,
-            [toAddress],
-            fromAddresses,
-            [sourceChangeAddress]
-        )
-    } else if (sourceChain === 'P') {
-        return await pChain.buildExportTx(
-            utxoSet as PlatformUTXOSet,
-            amount,
-            destinationChainId,
-            [toAddress],
-            fromAddresses,
-            [sourceChangeAddress]
-        )
-    } else if (sourceChain === 'C') {
-        const txcount = await web3.eth.getTransactionCount(fromAddresses[0])
-        const nonce: number = txcount
-        const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
-        const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
 
-        let fromAddressHex = fromAddresses[0]
-        let fromAddressBech = evmBechAddress!
+    return await avm.buildExportTx(
+        utxoSet as AVMUTXOSet,
+        amount,
+        destinationChainId,
+        [toAddress],
+        fromAddresses,
+        [sourceChangeAddress]
+    )
+}
 
-        return await cChain.buildExportTx(
-            amount,
-            avaxAssetIDStr,
-            destinationChainId,
-            fromAddressHex,
-            fromAddressBech,
-            [toAddress],
-            nonce
-        )
+export async function buildPlatformExportTransaction(
+    utxoSet: PlatformUTXOSet,
+    fromAddresses: string[],
+    toAddress: string,
+    amount: BN, // export amount + fee
+    sourceChangeAddress: string
+) {
+    let destinationChainId = avm.getBlockchainID()
+
+    return await pChain.buildExportTx(
+        utxoSet,
+        amount,
+        destinationChainId,
+        [toAddress],
+        fromAddresses,
+        [sourceChangeAddress]
+    )
+}
+
+export async function buildEvmExportTransaction(
+    fromAddresses: string[],
+    toAddress: string,
+    amount: BN, // export amount + fee
+    fromAddressBech: string
+) {
+    let destinationChainId = avm.getBlockchainID()
+
+    const nonce = await web3.eth.getTransactionCount(fromAddresses[0])
+    const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
+    const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
+
+    let fromAddressHex = fromAddresses[0]
+
+    return await cChain.buildExportTx(
+        amount,
+        avaxAssetIDStr,
+        destinationChainId,
+        fromAddressHex,
+        fromAddressBech,
+        [toAddress],
+        nonce
+    )
+}
+
+export async function buildEvmTransferNativeTx(
+    from: string,
+    to: string,
+    amount: BN, // in wei
+    gasPrice: BN,
+    gasLimit: number
+) {
+    const nonce = await web3.eth.getTransactionCount(from)
+    const chainId = await web3.eth.getChainId()
+    const networkId = await web3.eth.net.getId()
+    const chainParams = {
+        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
     }
-    throw 'Invalid source chain.'
+
+    let tx = new Transaction(
+        {
+            nonce: nonce,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            to: to,
+            value: amount,
+            data: '0x',
+        },
+        chainParams
+    )
+    return tx
+}
+
+export async function buildEvmTransferErc20Tx(
+    from: string,
+    to: string,
+    amount: BN, // in wei
+    gasPrice: BN,
+    gasLimit: number,
+    token: Erc20Token
+) {
+    const nonce = await web3.eth.getTransactionCount(from)
+    const chainId = await web3.eth.getChainId()
+    const networkId = await web3.eth.net.getId()
+    const chainParams = {
+        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+    }
+
+    let tokenTx = token.createTransferTx(to, amount)
+
+    let tx = new Transaction(
+        {
+            nonce: nonce,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            value: '0x0',
+            to: token.data.address,
+            data: tokenTx.encodeABI(),
+        },
+        chainParams
+    )
+    return tx
+}
+
+export async function buildEvmTransferErc721Tx(
+    from: string,
+    to: string,
+    gasPrice: BN,
+    gasLimit: number,
+    token: ERC721Token,
+    tokenId: string
+) {
+    const nonce = await web3.eth.getTransactionCount(from)
+    const chainId = await web3.eth.getChainId()
+    const networkId = await web3.eth.net.getId()
+    const chainParams = {
+        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+    }
+
+    let tokenTx = token.createTransferTx(from, to, tokenId)
+
+    let tx = new Transaction(
+        {
+            nonce: nonce,
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            value: '0x0',
+            to: token.data.address,
+            data: tokenTx.encodeABI(),
+        },
+        chainParams
+    )
+    return tx
 }
 
 export enum AvmTxNameEnum {

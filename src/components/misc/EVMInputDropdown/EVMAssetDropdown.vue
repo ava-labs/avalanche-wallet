@@ -3,22 +3,29 @@
         <button @click="showPopup" :disabled="disabled">
             {{ symbol }}
         </button>
-        <EVMTokenSelectModal ref="select_modal" @select="select"></EVMTokenSelectModal>
+        <EVMTokenSelectModal
+            ref="select_modal"
+            @select="select"
+            @selectCollectible="selectERC721"
+        ></EVMTokenSelectModal>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import Erc20Token from '@/js/Erc20Token'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
+import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERC721Token from '@/js/ERC721Token'
 @Component({
     components: { EVMTokenSelectModal },
 })
 export default class EVMAssetDropdown extends Vue {
     isPopup = false
-    selected: Erc20Token | 'native' = 'native'
+    selected: Erc20Token | ERC721Token | 'native' = 'native'
 
     @Prop({ default: false }) disabled!: boolean
 
@@ -45,6 +52,15 @@ export default class EVMAssetDropdown extends Vue {
     select(token: Erc20Token | 'native') {
         this.selected = token
         this.$emit('change', token)
+    }
+
+    clear() {
+        this.select('native')
+    }
+
+    selectERC721(val: iErc721SelectInput) {
+        this.selected = val.token
+        this.$emit('changeCollectible', val)
     }
 }
 </script>

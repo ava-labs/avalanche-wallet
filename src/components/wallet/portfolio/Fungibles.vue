@@ -29,7 +29,7 @@
                         :key="erc.data.address"
                         :token="erc"
                     ></ERC20Row>
-                    <div class="asset add_token_row" v-if="!isLedger">
+                    <div class="asset add_token_row">
                         <button @click="addToken">Add Token</button>
                         <span>or</span>
                         <button @click="addTokenList">Add Token List</button>
@@ -49,8 +49,8 @@ import AvaAsset from '@/js/AvaAsset'
 import Erc20Token from '@/js/Erc20Token'
 import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
-import { WalletType } from '@/store/types'
 import TokenListModal from '@/components/modals/TokenList/TokenListModal.vue'
+import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {
@@ -80,12 +80,6 @@ export default class Fungibles extends Vue {
 
     addTokenList() {
         this.$refs.tokenlist_modal.open()
-    }
-
-    get isLedger() {
-        let w: WalletType | null = this.$store.state.activeWallet
-        if (!w) return false
-        return w.type === 'ledger'
     }
 
     get walletBalancesSorted(): AvaAsset[] {
@@ -162,6 +156,7 @@ export default class Fungibles extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
+@use './portfolio';
 
 .fungibles_view {
     display: flex;
@@ -206,32 +201,6 @@ export default class Fungibles extends Vue {
 }
 .asset {
     border-bottom: 1px solid var(--bg-light);
-}
-
-.add_token_row {
-    display: flex !important;
-    justify-content: center;
-    padding: 24px;
-    border: none !important;
-
-    span {
-        color: var(--primary-color-light);
-        align-self: center;
-        margin: 0px 12px;
-    }
-
-    button {
-        border: 1px solid var(--primary-color-light);
-        border-radius: 22px;
-        padding: 8px 24px;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
-        &:hover {
-            opacity: 0.6;
-            //border-color: var(--secondary-color);
-            //color: var(--secondary-color);
-        }
-    }
 }
 
 .send_col {

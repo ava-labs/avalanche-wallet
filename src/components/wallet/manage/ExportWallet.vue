@@ -41,7 +41,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { ExportWalletsInput } from '@/store/types'
 
 @Component
@@ -51,7 +51,7 @@ export default class ExportWallet extends Vue {
     passConfirm: string = ''
     err: string = ''
 
-    @Prop() wallets!: AvaHdWallet[]
+    @Prop() wallets!: MnemonicWallet[]
     @Prop({ default: true }) isDesc!: boolean
 
     get isValid(): boolean {

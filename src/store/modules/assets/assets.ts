@@ -12,12 +12,11 @@ import {
     IWalletNftDict,
     IWalletNftMintDict,
     RootState,
-    WalletType,
 } from '@/store/types'
 import { ava, avm, bintools, cChain } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
-
+import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import {
     AmountOutput,
@@ -34,13 +33,19 @@ import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
+import ERC721Token from '@/js/ERC721Token'
 
-const TOKEN_LISTS = [
-    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
-]
+// const TOKEN_LISTS = [
+//     'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
+// ]
+import ERC721Module from './modules/erc721'
+import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
+    modules: {
+        ERC721: ERC721Module,
+    },
     state: {
         AVA_ASSET_ID: null,
         // isUpdateBalance: false,
@@ -100,6 +105,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
             }
         },
+
         saveCustomTokenLists(state) {
             let lists = JSON.stringify(state.tokenListsCustom)
             localStorage.setItem('token_lists', lists)
@@ -219,7 +225,7 @@ const assets_module: Module<AssetsState, RootState> = {
             commit('saveCustomTokenLists')
         },
 
-        async addTokenList({ dispatch, state, commit }, data: AddTokenListInput) {
+        async addTokenListUrl({ dispatch, state, commit }, data: AddTokenListInput) {
             // Make sure URL is not already added
             if (state.tokenListUrls.includes(data.url)) throw 'Already added.'
             if (state.tokenListsCustom.includes(data.url)) throw 'Already added.'
@@ -229,17 +235,22 @@ const assets_module: Module<AssetsState, RootState> = {
             let tokenList: TokenList = res.data
             tokenList.url = url
             tokenList.readonly = data.readonly
+
+            dispatch('addTokenList', tokenList)
+        },
+
+        async addTokenList({ state, dispatch, commit }, tokenList: TokenList) {
             let tokens: TokenListToken[] = tokenList.tokens
             state.tokenLists.push(tokenList)
             for (var i = 0; i < tokens.length; i++) {
                 dispatch('addErc20Token', tokens[i])
             }
 
-            if (!data.readonly) {
-                state.tokenListsCustom.push(data.url)
+            if (!tokenList.readonly) {
+                state.tokenListsCustom.push(tokenList.url)
                 commit('saveCustomTokenLists')
             } else {
-                state.tokenListUrls.push(data.url)
+                state.tokenListUrls.push(tokenList.url)
             }
         },
 
@@ -249,7 +260,7 @@ const assets_module: Module<AssetsState, RootState> = {
             let urls: string[] = JSON.parse(listRaw)
 
             urls.forEach((url) => {
-                dispatch('addTokenList', {
+                dispatch('addTokenListUrl', {
                     url: url,
                     readonly: false,
                 })
@@ -257,12 +268,11 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async initErc20List({ state, dispatch, commit }) {
-            TOKEN_LISTS.forEach((url) => {
-                dispatch('addTokenList', {
-                    url: url,
-                    readonly: true,
-                })
-            })
+            // Load default erc20 token contracts
+            let erc20Tokens = ERC20_TOKEN_LIST as TokenList
+            erc20Tokens.readonly = true
+            erc20Tokens.url = 'Default'
+            await dispatch('addTokenList', erc20Tokens)
 
             dispatch('loadCustomTokenLists')
             commit('loadCustomErc20Tokens')
@@ -303,6 +313,7 @@ const assets_module: Module<AssetsState, RootState> = {
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
             dispatch('updateERC20Balances')
+            dispatch('ERC721/updateWalletBalance')
             commit('updateActiveAddress', null, { root: true })
         },
 

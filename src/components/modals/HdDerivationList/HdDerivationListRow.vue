@@ -25,10 +25,11 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Big from 'big.js'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { ava } from '@/AVA'
 import { getPreferredHRP } from 'avalanche/dist/utils'
-import { AVA_ACCOUNT_PATH } from '../../../js/wallets/AvaHdWallet'
+import { AVA_ACCOUNT_PATH } from '../../../js/wallets/MnemonicWallet'
 
 @Component
 export default class HdDerivationListRow extends Vue {

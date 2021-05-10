@@ -33,7 +33,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 import Modal from '../Modal.vue'
 
 import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
 import QRCode from 'qrcode'
 import printjs from 'print-js'
@@ -80,7 +80,7 @@ export default class PaperWallet extends Vue {
 
     get address() {
         try {
-            let wallet: AvaHdWallet = this.$store.state.activeWallet
+            let wallet: MnemonicWallet = this.$store.state.activeWallet
             if (!wallet) return '-'
 
             let key = wallet.externalHelper.getKeyForIndex(0)
@@ -94,7 +94,7 @@ export default class PaperWallet extends Vue {
     }
 
     get mnemonic(): string {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         if (!wallet) return '-'
 
         return wallet.mnemonic || '-'

@@ -2,25 +2,26 @@
     <modal ref="modal" :title="$t('modal.ledger_upgrade.title')" @beforeClose="beforeClose">
         <div class="ledger_block">
             <p style="margin-bottom: 14px !important; font-size: 16px" v-if="config">
-                <b>Current Avalanche App: v{{ config.version }}</b>
+                <b>Min Version Required: v{{ minV }}.</b>
             </p>
             <p style="margin-bottom: 14px !important; font-size: 16px">
-                To support C-chain transfers and balance, please consider upgrading to v0.4.0.
+                {{ $t('modal.ledger_upgrade.desc') }}
             </p>
             <div>
                 <a
-                    href="https://medium.com/avalancheavax/how-to-set-up-your-ledger-nano-s-with-avalanche-4e5d385410d4"
+                    href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
                     target="_blank"
                 >
-                    {{ $t('modal.ledger_upgrade.submit') }}
+                    {{ $t('modal.ledger_upgrade.upgrade') }}
                 </a>
             </div>
         </div>
     </modal>
 </template>
 <script lang="ts">
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { WalletType } from '@/store/types'
+import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
+import { WalletType } from '@/js/wallets/types'
+
 import 'reflect-metadata'
 import { Vue, Component, Watch } from 'vue-property-decorator'
 
@@ -45,15 +46,19 @@ export default class LedgerUpgrade extends Vue {
     }
 
     beforeClose() {
-        this.$store.commit('Ledger/setIsUpgradeRecommended', false)
+        this.$store.commit('Ledger/setIsUpgradeRequired', false)
     }
 
     destroyed() {
-        this.$store.commit('Ledger/setIsUpgradeRecommended', false)
+        this.$store.commit('Ledger/setIsUpgradeRequired', false)
+    }
+
+    get minV() {
+        return MIN_EVM_SUPPORT_V
     }
 
     get isActive() {
-        return this.$store.state.Ledger.isUpgradeRecommended
+        return this.$store.state.Ledger.isUpgradeRequired
     }
 
     get wallet() {
@@ -70,6 +75,8 @@ export default class LedgerUpgrade extends Vue {
         if (!this.$refs.modal) return
         if (val) {
             this.open()
+        } else {
+            this.close()
         }
     }
 }

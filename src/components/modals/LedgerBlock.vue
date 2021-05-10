@@ -7,7 +7,7 @@
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
             <template v-else>
-                <div class="message block" v-for="message in messages" :key="message.value">
+                <div class="message block" v-for="(message, i) in messages" :key="i">
                     <p class="title">{{ message.title }}</p>
                     <p class="value">{{ message.value }}</p>
                 </div>
@@ -34,7 +34,7 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 import Spinner from '@/components/misc/Spinner.vue'
 import Modal from './Modal.vue'
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
-import { LEDGER_EXCHANGE_TIMEOUT } from '../Ledger/LedgerButton.vue'
+import { LEDGER_EXCHANGE_TIMEOUT } from '../../store/modules/ledger/types'
 
 @Component({
     components: {

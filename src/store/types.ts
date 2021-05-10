@@ -2,13 +2,14 @@ import Big from 'big.js'
 
 import { Buffer, BN } from 'avalanche'
 import AvaAsset from '@/js/AvaAsset'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { AllKeyFileTypes } from '@/js/IKeystore'
+import { AllKeyFileTypes, AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { UTXO as TxUTXO } from './modules/history/types'
+import { WalletNameType, WalletType } from '@/js/wallets/types'
 
 export interface RootState {
     isAuth: boolean
@@ -19,10 +20,6 @@ export interface RootState {
     warnUpdateKeyfile: boolean
     prices: priceDict // USD value of 1 AVAX
 }
-
-export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
-
-export type WalletType = AvaHdWallet | LedgerWallet | SingletonWallet
 
 export interface ILedgerAppConfig {
     version: string
@@ -105,7 +102,7 @@ export interface ImportKeyfileInput {
 
 export interface ExportWalletsInput {
     password: string
-    wallets: AvaHdWallet[]
+    wallets: MnemonicWallet[]
 }
 
 export type SessionPersistFile = SessionPersistKey[]
@@ -117,4 +114,26 @@ export interface SessionPersistKey {
 export interface AccessWalletMultipleInput {
     type: Extract<'mnemonic' | 'singleton', WalletNameType>
     key: string
+}
+
+export interface SaveAccountInput {
+    password: string
+    accountName: string
+}
+
+export interface AccessAccountInput {
+    index: number
+    pass: string
+}
+
+export interface iUserAccountEncrypted {
+    name: string
+    baseAddresses: string[]
+    wallet: AllKeyFileTypes
+}
+
+export interface iUserAccountDecrypted {
+    name: string
+    baseAddresses: string[]
+    wallet: AllKeyFileDecryptedTypes
 }

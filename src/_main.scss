@@ -95,6 +95,11 @@ $s-size-mobile: 14px;
 }
 
 
+video{
+    outline: none;
+}
+
+
 
 *[tooltip]:hover:before {
     border-radius: 4px;
@@ -254,6 +259,15 @@ label {
     &:hover {
         opacity: 0.7;
     }
+}
+
+.single_line_input{
+    display: block;
+    width: 100%;
+    padding: 5px 12px;
+    border: 1px solid var(--bg-light);
+    border-radius: 3px;
+    color: var(--primary-color);
 }
 
 @include mobile-device {
@@ -466,6 +480,7 @@ p.err {
     color: var(--error);
     font-size: 0.9rem;
     margin: 4px 0;
+    white-space: normal;
 }
 
 .no_scroll_bar{
@@ -474,6 +489,21 @@ p.err {
     }
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.subtext{
+    color: var(--primary-color-light);
+    font-size: 0.8em;
 }
 
 @include medium-device {
