@@ -75,7 +75,7 @@ import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 
-export const MIN_EVM_SUPPORT_V = '0.5.2'
+export const MIN_EVM_SUPPORT_V = '0.5.3'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     app: AppAvax
