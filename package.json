@@ -42,7 +42,7 @@
         "@types/vue-datetime": "1.0.0",
         "@zxing/library": "0.15.2",
         "abi-decoder": "2.4.0",
-        "avalanche": "3.2.5",
+        "avalanche": "3.4.0",
         "axios": "0.21.1",
         "big.js": "5.2.2",
         "bip32": "2.0.5",
