@@ -754,10 +754,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
-        if (destinationChain === 'C') {
-            // C Chain imports/exports do not have a fee
-            amtFee = amt
-        }
+        // if (destinationChain === 'C') {
+        // C Chain imports/exports do not have a fee
+        // amtFee = amt
+        // }
+
         // EXPORT
         let xId = avm.getBlockchainID()
 

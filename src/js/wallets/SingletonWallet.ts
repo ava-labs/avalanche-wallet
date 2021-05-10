@@ -118,10 +118,11 @@ class SingletonWallet implements AvaWalletCore, UnsafeWallet {
     ): Promise<string> {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
-        if (destinationChain === 'C') {
-            // C Chain imports/exports do not have a fee
-            amtFee = amt
-        }
+        // if (destinationChain === 'C') {
+        // C Chain imports/exports do not have a fee
+        // amtFee = amt
+        // }
+
         // EXPORT
         let pId = pChain.getBlockchainID()
         let xId = avm.getBlockchainID()

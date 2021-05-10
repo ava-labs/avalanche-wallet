@@ -360,10 +360,10 @@ export default class AvaHdWallet extends HdWalletCore implements IAvaHdWallet {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
 
-        if (destinationChain === 'C') {
-            // C Chain imports/exports do not have a fee
-            amtFee = amt
-        }
+        // if (destinationChain === 'C') {
+        // C Chain imports/exports do not have a fee
+        // amtFee = amt
+        // }
 
         // Get from addresses
         if (sourceChain === 'X') {
