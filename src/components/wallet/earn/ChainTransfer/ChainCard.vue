@@ -78,7 +78,7 @@ export default class ChainCard extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return balRaw.divRound(new BN(Math.pow(10, 9)))
+        return balRaw.div(new BN(Math.pow(10, 9)))
     }
 
     get balance() {
