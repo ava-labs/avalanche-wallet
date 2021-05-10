@@ -158,7 +158,7 @@ export default class BalanceCard extends Vue {
         if (!this.wallet) return new BN(0)
         // convert from ^18 to ^9
         let bal = this.wallet.ethBalance
-        return bal.divRound(new BN(Math.pow(10, 9).toString()))
+        return bal.div(new BN(Math.pow(10, 9).toString()))
     }
 
     get totalBalance(): BN {
