@@ -717,14 +717,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         // TODO: Remove after ledger is fixed
         // If UTXOS contain lockedStakeable funds always use sign hash
-        // let txIns = unsignedTx.getTransaction().getIns()
-        // for (var i = 0; i < txIns.length; i++) {
-        //     let typeID = txIns[i].getInput().getTypeID()
-        //     if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
-        //         canLedgerParse = false
-        //         break
-        //     }
-        // }
+        let txIns = unsignedTx.getTransaction().getIns()
+        for (var i = 0; i < txIns.length; i++) {
+            let typeID = txIns[i].getInput().getTypeID()
+            if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
+                canLedgerParse = false
+                break
+            }
+        }
 
         let signedTx
         if (canLedgerParse && isParsableType) {
