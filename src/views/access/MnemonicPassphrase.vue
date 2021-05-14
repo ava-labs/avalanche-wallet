@@ -5,7 +5,14 @@
                 <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
             <label>{{ $t('access.mnemonic.subtitle') }}</label>
-            <textarea @input="onPhraseIn" translate="no"></textarea>
+            <textarea v-model="phrase" translate="no"></textarea>
+            <label>{{ $t('access.mnemonic.passphrase_label') }}</label>
+            <input
+                v-model="passphrase"
+                translate="no"
+                id="passphrase"
+                :type="passphraseInputType"
+            />
             <div class="button_container">
                 <p class="err" v-if="err">{{ err }}</p>
                 <v-btn
@@ -40,18 +47,12 @@ import * as bip39 from 'bip39'
         MnemonicDisplay,
     },
 })
-export default class Mnemonic extends Vue {
+export default class MnemonicPassphrase extends Vue {
     phrase: string = ''
+    passphrase: string = ''
+    passphraseInputType: string = 'password'
     isLoading: boolean = false
     err: string = ''
-
-    beforeDestroy() {
-        this.phrase = ''
-    }
-
-    onPhraseIn(ev: any) {
-        this.phrase = ev.currentTarget.value
-    }
 
     errCheck() {
         let phrase = this.phrase
@@ -77,7 +78,7 @@ export default class Mnemonic extends Vue {
     }
 
     get canSubmit() {
-        if (this.wordCount !== 24) {
+        if (this.wordCount < 24 || this.passphrase === '') {
             return false
         }
 
@@ -85,9 +86,6 @@ export default class Mnemonic extends Vue {
     }
 
     async access() {
-        this.phrase = this.phrase.trim()
-        let phrase = this.phrase
-
         this.isLoading = true
 
         if (!this.errCheck()) {
@@ -95,12 +93,19 @@ export default class Mnemonic extends Vue {
             return
         }
 
+        const mnemonic = this.phrase.trim()
+        const passphrase = this.passphrase
+
         setTimeout(async () => {
             try {
-                await this.$store.dispatch('accessWallet', phrase)
+                await this.$store.dispatch('accessWalletMnemonicPassphrase', {
+                    mnemonic,
+                    passphrase,
+                })
                 this.isLoading = false
             } catch (e) {
                 this.isLoading = false
+                console.log(e)
                 this.err = `${this.$t('access.mnemonic.error')}`
             }
         }, 500)
@@ -150,6 +155,17 @@ textarea {
     background-color: var(--bg) !important;
     resize: none;
     min-height: 120px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+input#passphrase {
+    margin: 20px 0;
+    margin-bottom: main.$vertical-padding;
+    width: 100%;
+    background-color: var(--bg) !important;
+    resize: none;
     padding: 8px 16px;
     font-size: 14px;
     color: var(--primary-color);

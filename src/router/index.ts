@@ -7,6 +7,7 @@ import ManageKeys from '@/views/wallet/ManageKeys.vue'
 import Menu from '../views/access/Menu.vue'
 import Keystore from '../views/access/Keystore.vue'
 import Mnemonic from '@/views/access/Mnemonic.vue'
+import MnemonicPassphrase from '@/views/access/MnemonicPassphrase.vue'
 import PrivateKey from '@/views/access/PrivateKey.vue'
 import Access from '../views/access/Access.vue'
 import Create from '@/views/Create.vue'
@@ -66,6 +67,10 @@ const routes = [
             {
                 path: 'mnemonic',
                 component: Mnemonic,
+            },
+            {
+                path: 'mnemonic-passphrase',
+                component: MnemonicPassphrase,
             },
             {
                 path: 'account/:index',
