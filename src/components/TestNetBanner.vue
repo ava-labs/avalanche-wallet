@@ -11,7 +11,7 @@ export default {
         isVisible() {
             let network = this.$store.state.Network.selectedNetwork
             if (!network) return false
-            let netId = network.networkId
+            let netId = +network.networkId
 
             if (netId === 1) return false
             return true

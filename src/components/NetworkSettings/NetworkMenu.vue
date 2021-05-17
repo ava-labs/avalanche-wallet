@@ -129,7 +129,7 @@ export default class NetworkMenu extends Vue {
         let net = this.activeNetwork
 
         if (!net) return false
-        if (net.networkId !== 1) return true
+        if (+net.networkId !== 1) return true
         return false
     }
 }
