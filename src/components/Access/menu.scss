@@ -1,0 +1,21 @@
+
+.menu_option {
+  background-color: var(--bg-light) !important;
+  color: var(--primary) !important;
+  padding: 12px;
+  margin: 2px 0;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  p {
+    flex-grow: 1;
+    text-align: left;
+    padding: 0 1em;
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
+}

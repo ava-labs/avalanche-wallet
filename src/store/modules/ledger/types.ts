@@ -11,3 +11,5 @@ export interface LedgerState {
     title: string
     info: string
 }
+
+export const LEDGER_EXCHANGE_TIMEOUT = 90_000

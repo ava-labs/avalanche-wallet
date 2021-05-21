@@ -113,7 +113,7 @@ export default class Modal extends Vue {
 
 @include main.mobile-device {
     .modal_body {
-        position: fixed;
+        position: absolute;
         bottom: 0;
         width: 100%;
         margin: 0;

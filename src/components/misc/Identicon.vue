@@ -1,27 +1,37 @@
 <template>
-    <canvas ref="canvas"></canvas>
+    <img ref="image_tag" :height="diameter" :width="diameter" />
 </template>
-<script>
-import * as jdenticon from 'jdenticon'
 
-export default {
-    props: {
-        hash: {
-            type: String,
-            required: true,
-        },
-    },
-    methods: {
-        generateIdenticon() {
-            let canv = this.$refs['canvas']
-            let cont = canv.getContext('2d')
-            let text = this.payload.toString('hex')
-            jdenticon.drawIcon(cont, text, canv.width)
-        },
-    },
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import makeBlockie from 'ethereum-blockies-base64'
+
+@Component
+export default class Identicon extends Vue {
+    $refs!: {
+        image_tag: HTMLImageElement
+    }
+
+    @Prop() value!: string
+    @Prop({ default: 40 }) diameter!: number
+
+    @Watch('value')
+    onValueChange() {
+        this.generateImage()
+    }
+
+    mounted() {
+        this.generateImage()
+    }
+
+    generateImage() {
+        let base64 = makeBlockie(this.value)
+        this.$refs.image_tag.src = base64
+    }
 }
 </script>
 <style scoped lang="scss">
-canvas {
+img {
+    border-radius: 100%;
 }
 </style>

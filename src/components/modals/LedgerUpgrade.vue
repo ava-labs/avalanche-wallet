@@ -9,7 +9,7 @@
             </p>
             <div>
                 <a
-                    href="https://medium.com/avalancheavax/how-to-set-up-your-ledger-nano-s-with-avalanche-4e5d385410d4"
+                    href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
                     target="_blank"
                 >
                     {{ $t('modal.ledger_upgrade.upgrade') }}

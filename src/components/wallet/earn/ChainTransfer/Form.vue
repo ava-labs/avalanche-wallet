@@ -136,7 +136,7 @@ export default class Form extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return balRaw.divRound(new BN(Math.pow(10, 9)))
+        return balRaw.div(new BN(Math.pow(10, 9)))
     }
 
     get balanceDestination() {
@@ -180,9 +180,6 @@ export default class Form extends Vue {
         let feeX = avm.getTxFee()
         let totFee = feeX.mul(new BN(2))
 
-        if (this.targetChain === 'C') {
-            totFee = feeX
-        }
         let feeXBig = bnToBig(totFee, 9)
 
         return feeXBig

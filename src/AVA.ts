@@ -17,7 +17,6 @@ let ava: Avalanche = new Avalanche(ip, port, protocol, network_id, chain_id)
 
 let avm: AVMAPI = ava.XChain()
 let cChain: EVMAPI = ava.CChain()
-
 let pChain = ava.PChain()
 let infoApi: InfoAPI = ava.Info()
 let keyChain: AVMKeyChain = avm.keyChain()

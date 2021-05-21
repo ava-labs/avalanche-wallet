@@ -1,16 +1,6 @@
 <template>
     <div class="sel_locale">
-        <!--        <vue-select :options="items" label="name" v-model="selected" @input="select">-->
-        <!--            <template #selected-option="{ code, name }">-->
-        <!--                <div style="display: flex; align-items: baseline;">-->
-        <!--                    {{ name }}-->
-        <!--                </div>-->
-        <!--            </template>-->
-        <!--            <template v-slot:option="option">-->
-        <!--                {{ option.name }}-->
-        <!--            </template>-->
-        <!--        </vue-select>-->
-        <country-flag :country="flag" size="small"></country-flag>
+        <country-flag :country="flag" size="small" class="flag"></country-flag>
         <select v-model="locale">
             <option v-for="item in items" :key="item.code" :value="item.code">
                 {{ item.nativeName }}
@@ -97,7 +87,6 @@ export default class LanguageSelect extends Vue {
 </script>
 <style scoped lang="scss">
 .sel_locale {
-    margin: 0px 15px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -106,8 +95,15 @@ export default class LanguageSelect extends Vue {
     border-radius: 3px;
     position: relative;
     overflow: hidden;
+
+    &:hover {
+        opacity: 0.5;
+    }
 }
 
+.flag {
+    flex-shrink: 0;
+}
 .sel_locale p.selected {
     margin: 0;
     padding-left: 8px;
@@ -120,16 +116,16 @@ export default class LanguageSelect extends Vue {
 }
 
 .selected {
-    font-size: 13px;
+    //font-size: 13px;
 }
 
 select {
     outline: none;
     flex-grow: 1;
     margin-left: 10px;
-    color: var(--primary-color-light);
+    color: var(--primary-color);
     cursor: pointer;
-    font-size: 13px;
+    //font-size: 13px;
 
     &:hover {
         color: var(--primary-color);

@@ -6,6 +6,7 @@ import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IWalletBalanceDict } from '@/store/types'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import Erc20Token from '@/js/Erc20Token'
+import ERC721Token from '@/js/ERC721Token'
 
 export interface AssetsState {
     // isUpdateBalance: boolean
