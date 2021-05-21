@@ -228,7 +228,7 @@ export default class NetworkMenu extends Vue {
 
 .network_body {
     position: fixed;
-    z-index: 2;
+    z-index: 3;
     top: 0;
     right: 0;
     height: 100%;
