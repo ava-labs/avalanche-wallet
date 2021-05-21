@@ -89,7 +89,8 @@ const network_module: Module<NetworkState, RootState> = {
                     let newCustom = new AvaNetwork(
                         n.name,
                         n.url,
-                        n.networkId,
+                        //@ts-ignore
+                        parseInt(n.networkId),
                         n.explorerUrl,
                         n.explorerSiteUrl,
                         n.readonly

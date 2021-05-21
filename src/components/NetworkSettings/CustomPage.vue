@@ -158,7 +158,7 @@ export default class CustomPage extends Vue {
                     withCredentials: credential,
                 }
             )
-            return resp.data.result.networkID
+            return parseInt(resp.data.result.networkID)
         } catch (err) {
             return null
         }
