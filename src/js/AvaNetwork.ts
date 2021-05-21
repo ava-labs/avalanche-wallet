@@ -59,6 +59,8 @@ class AvaNetwork {
 
         return true
     }
+
+    // Checks if this network endpoint allows credentials
     async updateCredentials() {
         try {
             let res = await axios.post(
