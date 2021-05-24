@@ -134,7 +134,7 @@ import { web3 } from '@/evm'
 import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
 import { WalletType } from '@/js/wallets/types'
 
-const IMPORT_DELAY = 4000 // in ms
+const IMPORT_DELAY = 6000 // in ms
 
 @Component({
     name: 'chain_transfer',
