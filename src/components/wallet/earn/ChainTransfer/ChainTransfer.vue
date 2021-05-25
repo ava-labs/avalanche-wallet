@@ -37,7 +37,7 @@
                             <v-btn
                                 v-if="!isConfirm"
                                 data-cy="confirm"
-                                class="button_secondary"
+                                class="button_primary"
                                 @click="confirm"
                                 :disabled="!canSubmit"
                                 block
