@@ -25,87 +25,86 @@
         </div>
     </div>
 </template>
-<script>
-export default {
-    props: {
-        network: {
-            type: Object,
-            required: true,
-        },
-    },
-    computed: {
-        endpoint() {
-            let net = this.network
-            let portText = ''
-            if (net.port) {
-                portText = ':' + net.port
-            }
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import { AvaNetwork } from '@/js/AvaNetwork'
 
-            return `${net.protocol}://${net.ip}${portText}`
-        },
-        networkStatus() {
-            return this.$store.state.Network.status
-        },
-        isConnected() {
-            let state = this.$store.state.Network
-            if (this.network === state.selectedNetwork && this.networkStatus === 'connected') {
-                return true
-            }
-            return false
-        },
-        isSelected() {
-            let state = this.$store.state.Network
-            if (this.network === state.selectedNetwork) {
-                return true
-            }
-            return false
-        },
-    },
-    methods: {
-        edit() {
-            this.$parent.$parent.$parent.onedit(this.network)
-        },
+@Component
+export default class NetworkRow extends Vue {
+    @Prop() network!: AvaNetwork
 
-        deleteNet() {
-            this.$store.dispatch('Network/removeCustomNetwork', this.network)
+    get endpoint() {
+        let net = this.network
+        let portText = ''
+        if (net.port) {
+            portText = ':' + net.port
+        }
+
+        return `${net.protocol}://${net.ip}${portText}`
+    }
+    get networkStatus() {
+        return this.$store.state.Network.status
+    }
+    get isConnected() {
+        let state = this.$store.state.Network
+        if (this.network === state.selectedNetwork && this.networkStatus === 'connected') {
+            return true
+        }
+        return false
+    }
+    get isSelected() {
+        let state = this.$store.state.Network
+        if (this.network === state.selectedNetwork) {
+            return true
+        }
+        return false
+    }
+
+    edit() {
+        this.$emit('edit')
+    }
+
+    deleteNet() {
+        this.$store.dispatch('Network/removeCustomNetwork', this.network)
+        this.$store.dispatch(
+            'Notifications/add',
+            {
+                title: 'Network Removed',
+                message: 'Removed custom network.',
+            },
+            { root: true }
+        )
+    }
+    async select() {
+        let net = this.network
+        try {
+            let isSel = await this.$store.dispatch('Network/setNetwork', net)
+
             this.$store.dispatch(
                 'Notifications/add',
                 {
-                    title: 'Network Removed',
-                    message: 'Removed custom network.',
+                    title: 'Network Connected',
+                    message: 'Connected to ' + net.name,
+                    type: 'success',
                 },
                 { root: true }
             )
-        },
-        async select() {
-            let net = this.network
-            try {
-                let isSel = await this.$store.dispatch('Network/setNetwork', net)
-
-                this.$store.dispatch(
-                    'Notifications/add',
-                    {
-                        title: 'Network Connected',
-                        message: 'Connected to ' + net.name,
-                        type: 'success',
-                    },
-                    { root: true }
-                )
-                this.$parent.$parent.isActive = false
-            } catch (e) {
-                this.$store.state.Network.selectedNetwork = null
-                this.$store.dispatch(
-                    'Notifications/add',
-                    {
-                        title: 'Connection Failed',
-                        message: `Failed to connect ${net.name}`,
-                        type: 'error',
-                    },
-                    { root: true }
-                )
-            }
-        },
-    },
+            // @ts-ignore
+            this.$parent.$parent.isActive = false
+        } catch (e) {
+            this.$store.state.Network.selectedNetwork = null
+            this.$store.state.Network.status = 'disconnected'
+            this.$store.dispatch(
+                'Notifications/add',
+                {
+                    title: 'Connection Failed',
+                    message: `Failed to connect ${net.name}`,
+                    type: 'error',
+                },
+                { root: true }
+            )
+        }
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -173,7 +172,8 @@ img {
     animation-direction: alternate;
 }
 
-.url {
+.url,
+.credentials {
     color: main.$primary-color-light;
     font-size: 12px;
     word-break: break-all;

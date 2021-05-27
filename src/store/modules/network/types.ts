@@ -11,7 +11,7 @@ export interface NetworkState {
     txFee: BN
 }
 
-type NetworkStatus = 'disconnected' | 'connecting' | 'connected'
+export type NetworkStatus = 'disconnected' | 'connecting' | 'connected'
 
 export interface NetworkItem {
     name: string
