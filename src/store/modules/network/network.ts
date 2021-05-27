@@ -50,7 +50,7 @@ const network_module: Module<NetworkState, RootState> = {
             await dispatch('save')
         },
         saveSelectedNetwork({ state }) {
-            let data = JSON.stringify(state.selectedNetwork)
+            let data = JSON.stringify(state.selectedNetwork?.url)
             localStorage.setItem('network_selected', data)
         },
         async loadSelectedNetwork({ dispatch, getters }): Promise<boolean> {
@@ -62,7 +62,7 @@ const network_module: Module<NetworkState, RootState> = {
 
                 for (var i = 0; i < nets.length; i++) {
                     let net = nets[i]
-                    if (JSON.stringify(net) === data) {
+                    if (JSON.stringify(net.url) === data) {
                         dispatch('setNetwork', net)
                         return true
                     }
