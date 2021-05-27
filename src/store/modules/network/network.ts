@@ -172,7 +172,7 @@ const network_module: Module<NetworkState, RootState> = {
         async init({ state, commit, dispatch }) {
             let mainnet = new AvaNetwork(
                 'Mainnet',
-                'https://private-api.avax.network:443',
+                'https://api.avax.network:443',
                 1,
                 'https://explorerapi.avax.network',
                 'https://explorer.avax.network',
@@ -181,7 +181,7 @@ const network_module: Module<NetworkState, RootState> = {
 
             let fuji = new AvaNetwork(
                 'Fuji',
-                'https://private-api.avax-test.network:443',
+                'https://api.avax-test.network:443',
                 5,
                 'https://explorerapi.avax-test.network',
                 'https://explorer.avax-test.network',
