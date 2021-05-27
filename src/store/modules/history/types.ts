@@ -51,6 +51,7 @@ export interface UTXO {
     outputIndex: number
     outputType: number
     redeemingTransactionID: string
+    rewardUtxo: boolean
     stake?: boolean
     threshold: number
     timestamp: string

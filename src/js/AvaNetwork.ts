@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 let network_id: number = 0
 
 class AvaNetwork {
@@ -12,6 +14,7 @@ class AvaNetwork {
     explorerUrl: string | undefined
     explorerSiteUrl: string | undefined
     readonly: boolean
+    withCredentials = false
     // fee: BN
 
     constructor(
@@ -35,6 +38,46 @@ class AvaNetwork {
         // this.chainId = chainId;
         this.readonly = readonly
         // this.fee = new BN(0);
+    }
+
+    async testConnection(credentials = false) {
+        let resp = await axios
+            .post(
+                this.url + '/ext/info',
+                {
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'info.getNetworkID',
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+            .catch((err) => {
+                return false
+            })
+
+        return true
+    }
+
+    // Checks if this network endpoint allows credentials
+    async updateCredentials() {
+        try {
+            let res = await axios.post(
+                this.url + '/ext/info',
+                {
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'info.getNetworkID',
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+            this.withCredentials = true
+        } catch (e) {
+            this.withCredentials = false
+        }
     }
 
     updateURL(url: string) {

@@ -7,9 +7,14 @@ let prices = {
 }
 
 function updatePrices() {
-    axios.get(COINGECKO_URL).then((res) => {
-        prices.usd = res.data['avalanche-2'].usd
-    })
+    axios
+        .get(COINGECKO_URL)
+        .then((res) => {
+            prices.usd = res.data['avalanche-2'].usd
+        })
+        .catch((e) => {
+            console.error(e)
+        })
 }
 
 module.exports = {

@@ -36,7 +36,7 @@
             <div class="rowGroup">
                 <div>
                     <label>Network ID</label>
-                    <input type="number" placeholder="Network ID" v-model="networkId" />
+                    <input type="number" placeholder="Network ID" v-model.number="networkId" />
                 </div>
             </div>
             <p v-if="err" class="form_error">{{ err }}</p>
@@ -153,12 +153,15 @@ export default class EditPage extends Vue {
     deleteNetwork() {
         this.$emit('delete')
     }
-    saveNetwork() {
+    async saveNetwork() {
         let net = this.net
         net.name = this.name
         net.updateURL(this.url)
+        net.explorerUrl = this.explorer_api
         net.explorerSiteUrl = this.explorer_site
         net.networkId = this.networkId
+
+        await this.$store.dispatch('Network/save')
 
         this.$store.dispatch('Notifications/add', {
             title: 'Changes Saved',
