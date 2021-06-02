@@ -16,6 +16,10 @@ import 'reflect-metadata'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // @ts-ignore
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
+//@ts-ignore
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+//@ts-ignore
+import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 // @ts-ignore
 import Eth from '@ledgerhq/hw-app-eth'
 // @ts-ignore
@@ -43,10 +47,30 @@ export default class LedgerButton extends Vue {
         this.$store.commit('Ledger/closeModal')
     }
 
+    async getTransport() {
+        let transport
+
+        try {
+            transport = await TransportWebHID.create()
+            return transport
+        } catch (e) {
+            console.log('Web HID not supported.')
+        }
+
+        //@ts-ignore
+        if (window.USB) {
+            transport = await TransportWebUSB.create()
+        } else {
+            transport = await TransportU2F.create()
+        }
+        return transport
+    }
+
     async submit() {
         try {
-            let transport = await TransportU2F.create()
+            let transport = await this.getTransport()
             transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
+
             let app = new AppAvax(transport, 'w0w')
             let eth = new Eth(transport, 'w0w')
 
@@ -56,9 +80,6 @@ export default class LedgerButton extends Vue {
             // Close the initial prompt modal if exists
             this.$store.commit('Ledger/setIsUpgradeRequired', false)
             this.isLoading = true
-
-            // Otherwise timer does not reset
-            // await setTimeout(() => null, 10)
 
             if (!this.config) {
                 this.$store.commit('Ledger/setIsUpgradeRequired', true)
