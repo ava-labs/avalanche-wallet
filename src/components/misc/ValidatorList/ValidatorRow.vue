@@ -5,7 +5,7 @@
         <td class="amount">{{ remainingAmtText }}</td>
         <td style="text-align: center">{{ numDelegators }}</td>
         <td>{{ remainingTimeText }}</td>
-        <td>{{ uptimeText }}</td>
+        <!--        <td>{{ uptimeText }}</td>-->
         <td>{{ feeText }}%</td>
         <td>
             <button class="button_secondary" @click="select">Select</button>

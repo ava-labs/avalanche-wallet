@@ -8,6 +8,7 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 import 'reflect-metadata'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
+@Component
 export default class TestNetBanner extends Vue {
     get isVisible() {
         let network = this.$store.state.Network.selectedNetwork
