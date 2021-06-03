@@ -625,6 +625,7 @@ export default class AddDelegator extends Vue {
 
 .add_delegator {
     height: 100%;
+    padding-bottom: 5vh;
 }
 
 .node_selection {
@@ -667,6 +668,9 @@ label {
     margin-bottom: 14px;
 }
 
+.node_col {
+    max-width: 390px;
+}
 .selected {
     display: flex;
     flex-wrap: wrap;

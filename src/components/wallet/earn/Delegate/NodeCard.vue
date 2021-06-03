@@ -8,7 +8,14 @@
         </div>
         <div>
             <label>Uptime</label>
-            <p>{{ uptimeText }}</p>
+            <!--            <p>{{ uptimeText }}</p>-->
+            <p style="font-size: 0.8rem">
+                Please refer to
+                <a :href="vscoutURL" target="_blank">VScout</a>
+                or
+                <a :href="avascanURL" target="_blank">Avascan</a>
+                to get more information about a node's uptime.
+            </p>
         </div>
         <div>
             <label>Delegators</label>
@@ -44,6 +51,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 import { bnToBig } from '@/helpers/helper'
+import { AvaNetwork } from '@/js/AvaNetwork'
 
 @Component
 export default class NodeCard extends Vue {
@@ -67,6 +75,20 @@ export default class NodeCard extends Vue {
 
     get totalStakeBig() {
         return bnToBig(this.node.validatorStake.add(this.node.delegatedStake), 9)
+    }
+
+    get avascanURL() {
+        let activeNet: AvaNetwork = this.$store.state.Network.selectedNetwork
+
+        if (activeNet.networkId === 1) {
+            return `https://avascan.info/staking/validator/${this.node.nodeID}`
+        } else {
+            return `https://testnet.avascan.info/staking/validator/${this.node.nodeID}`
+        }
+    }
+
+    get vscoutURL() {
+        return `https://vscout.io/validator/${this.node.nodeID}`
     }
 }
 </script>
