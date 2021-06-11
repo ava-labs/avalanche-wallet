@@ -9,6 +9,7 @@ import BN from 'bn.js'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import router from '@/router'
 import { web3 } from '@/evm'
+import { setSocketNetwork } from '../../../../sockets'
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
@@ -136,6 +137,9 @@ const network_module: Module<NetworkState, RootState> = {
             // Set web3 Network Settings
             let web3Provider = `${net.protocol}://${net.ip}:${net.port}/ext/bc/C/rpc`
             web3.setProvider(web3Provider)
+
+            // Set socket connections
+            setSocketNetwork(net)
 
             commit('Assets/removeAllAssets', null, { root: true })
             await dispatch('Assets/updateAvaAsset', null, { root: true })

@@ -517,6 +517,7 @@ const assets_module: Module<AssetsState, RootState> = {
             let wallet = rootState.activeWallet
             if (!wallet) return new BN(0)
 
+            console.log(wallet.stakeAmount)
             return wallet.stakeAmount
         },
 

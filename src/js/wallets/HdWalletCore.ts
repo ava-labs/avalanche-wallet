@@ -10,6 +10,7 @@ import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
 import { WalletCore } from '@/js/wallets/WalletCore'
+import { updateFilterAddresses } from '../../../sockets'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
@@ -67,6 +68,11 @@ class HdWalletCore extends WalletCore {
     updateInitState() {
         this.isInit =
             this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+
+        if (this.isInit) {
+            console.log('Wallet is INIT')
+            updateFilterAddresses()
+        }
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {

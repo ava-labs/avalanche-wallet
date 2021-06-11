@@ -64,13 +64,15 @@ async function evmGetAtomicUTXOs(addrs: string[]): Promise<EVMUTXOSet> {
 
 export async function getStakeForAddresses(addrs: string[]): Promise<BN> {
     if (addrs.length <= 256) {
-        return await pChain.getStake(addrs)
+        let stakeData = await pChain.getStake(addrs)
+        return stakeData.staked
     } else {
         //Break the list in to 1024 chunks
         let chunk = addrs.slice(0, 256)
         let remainingChunk = addrs.slice(256)
 
-        let chunkStake = await pChain.getStake(chunk)
+        let stakeData = await pChain.getStake(chunk)
+        let chunkStake = stakeData.staked
         return chunkStake.add(await getStakeForAddresses(remainingChunk))
     }
 }
