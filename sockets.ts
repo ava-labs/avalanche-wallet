@@ -5,6 +5,8 @@ import { AvaNetwork } from './src/js/AvaNetwork'
 import store from '@/store'
 import { WalletType } from '@/js/wallets/types'
 
+const FILTER_ADDRESS_SIZE = 1000
+
 const wsOptions = {
     timeout: 30000, // ms
     // Enable auto reconnection
@@ -107,7 +109,6 @@ function updateWalletBalanceC() {
     wallet.getEthBalance()
 }
 
-const BLOOM_SIZE = 1000
 export function updateFilterAddresses(): void {
     let wallet: null | WalletType = store.state.activeWallet
     if (!socketX || !wallet) {
@@ -117,11 +118,14 @@ export function updateFilterAddresses(): void {
     console.log('Update filter addresses')
 
     // let wallets = WalletProvider.instances
-    let addrs = [wallet.getCurrentAddressAvm()]
+    let externalAddrs = wallet.getAllDerivedExternalAddresses()
+    let addrsLen = externalAddrs.length
+    let startIndex = Math.max(0, addrsLen - FILTER_ADDRESS_SIZE)
+    let addrs = externalAddrs.slice(startIndex)
     console.log(addrs)
 
     let pubsub = new PubSub()
-    let bloom = pubsub.newBloom(BLOOM_SIZE)
+    let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
     let addAddrs = pubsub.addAddresses(addrs)
 
     socketX.send(bloom)
