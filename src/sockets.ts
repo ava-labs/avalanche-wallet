@@ -39,7 +39,6 @@ function connectSocketX(network: AvaNetwork) {
         onmessage: xOnMessage,
         onerror: xOnError,
     })
-    // addListenersX(socketX)
 }
 
 function connectSocketEVM(network: AvaNetwork) {
@@ -58,48 +57,18 @@ function connectSocketEVM(network: AvaNetwork) {
     }
 }
 
-/**
- * Add the event listeners to the socket events.
- * @param socket The socket instance to add event listeners to.
- */
-// function addListenersX(socket: Socket) {
-//     socket.onopen = function () {
-//         console.log('Socket X connected')
-//         updateFilterAddresses()
-//     }
-//
-//     socket.onmessage = function () {
-//         console.log('X chain MSG, update balance')
-//         updateWalletBalanceX()
-//         // WalletProvider.refreshInstanceBalancesX()
-//     }
-//
-//     socket.onclose = () => {
-//         console.log('X socket closed')
-//     }
-//
-//     socket.onerror = (error: any) => {
-//         console.log(error)
-//     }
-// }
-
+// AVM Socket Listeners
 function xOnOpen() {
-    console.log('Socket X connected')
     updateFilterAddresses()
 }
 
 function xOnMessage() {
-    console.log('X chain MSG, update balance')
     updateWalletBalanceX()
 }
 
-function xOnClose() {
-    console.log('X socket closed')
-}
+function xOnClose() {}
 
-function xOnError() {
-    console.log('X error')
-}
+function xOnError() {}
 
 function addListenersEVM(provider: Web3) {
     let sub = provider.eth.subscribe('newBlockHeaders')
@@ -112,18 +81,23 @@ function onErrorEVM(err: any) {
 }
 
 function blockHeaderCallback() {
-    console.log('BLOCK HEADERS')
     updateWalletBalanceC()
-    // updateWalletBalance()
 }
 
 function updateWalletBalanceX() {
     let wallet: null | WalletType = store.state.activeWallet
     if (!wallet) return
     // Refresh the wallet balance
-    store.dispatch('Assets/updateUTXOs').then(() => {
+    store.dispatch('Assets/updateUTXOsExternal').then(() => {
         store.dispatch('History/updateTransactionHistory')
     })
+}
+
+// Clears the filter listening to X chain transactions
+function clearFilter() {
+    let pubsub = new PubSub()
+    let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
+    socketX.send(bloom)
 }
 
 function updateWalletBalanceC() {
@@ -139,8 +113,6 @@ export function updateFilterAddresses(): void {
         return
     }
 
-    console.log('Update filter addresses')
-
     // let wallets = WalletProvider.instances
     let externalAddrs = wallet.getAllDerivedExternalAddresses()
     let addrsLen = externalAddrs.length
@@ -149,6 +121,7 @@ export function updateFilterAddresses(): void {
 
     let pubsub = new PubSub()
     let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
+    socketX.send(bloom)
 
     // Divide addresses by 100 and send multiple messages
     // There is a max msg size ~10kb

@@ -76,22 +76,34 @@ class HdWalletCore extends WalletCore {
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {
-        this.internalHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-            this.updateAvmUTXOSet()
-        })
-
-        this.externalHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-            this.updateAvmUTXOSet()
-        })
+        this.updateUTXOsX()
 
         // platform utxos are updated but not returned by function
-        this.platformHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-        })
+        this.updateUTXOsP()
 
         return
+    }
+
+    async updateUTXOsX() {
+        this.updateUTXOsExternal()
+        this.updateUTXOsInternal()
+    }
+
+    async updateUTXOsExternal() {
+        let res = await this.externalHelper.updateUtxos()
+        this.updateFetchState()
+        this.updateAvmUTXOSet()
+    }
+
+    async updateUTXOsInternal() {
+        let utxoSet = await this.internalHelper.updateUtxos()
+        this.updateFetchState()
+        this.updateAvmUTXOSet()
+    }
+
+    async updateUTXOsP() {
+        let utxoSet = await this.platformHelper.updateUtxos()
+        this.updateFetchState()
     }
 
     getAllDerivedExternalAddresses(): string[] {
