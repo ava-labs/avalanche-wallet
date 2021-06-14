@@ -126,10 +126,17 @@ export function updateFilterAddresses(): void {
 
     let pubsub = new PubSub()
     let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
-    let addAddrs = pubsub.addAddresses(addrs)
-
     socketX.send(bloom)
-    socketX.send(addAddrs)
+    // Divide addresses by 100 and send multiple messages
+    // There is a max msg size ~10kb
+    const GROUP_AMOUNT = 100
+    let index = 0
+    while (index < addrs.length) {
+        let chunk = addrs.slice(index, index + GROUP_AMOUNT)
+        let addAddrs = pubsub.addAddresses(chunk)
+        socketX.send(addAddrs)
+        index += GROUP_AMOUNT
+    }
 }
 
 export let socketEVM: Web3
