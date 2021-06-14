@@ -22,7 +22,7 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/types'
 import { getAtomicUTXOsForAllAddresses } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
-import { updateFilterAddresses } from '../../sockets'
+import { updateFilterAddresses } from '../sockets'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 

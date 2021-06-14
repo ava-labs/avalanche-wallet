@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import Sockette from 'sockette'
 
 import { Socket, PubSub } from 'avalanche'
-import { AvaNetwork } from './src/js/AvaNetwork'
+import { AvaNetwork } from './js/AvaNetwork'
 import store from '@/store'
 import { WalletType } from '@/js/wallets/types'
 
