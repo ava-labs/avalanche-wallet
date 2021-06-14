@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+import Sockette from 'sockette'
 
 import { Socket, PubSub } from 'avalanche'
 import { AvaNetwork } from './src/js/AvaNetwork'
@@ -32,8 +33,13 @@ function connectSocketX(network: AvaNetwork) {
 
     // Setup the X chain socket connection
     let wsURL = network.getWsUrlX()
-    socketX = new Socket(wsURL)
-    addListenersX(socketX)
+    socketX = new Sockette(wsURL, {
+        onopen: xOnOpen,
+        onclose: xOnClose,
+        onmessage: xOnMessage,
+        onerror: xOnError,
+    })
+    // addListenersX(socketX)
 }
 
 function connectSocketEVM(network: AvaNetwork) {
@@ -56,25 +62,43 @@ function connectSocketEVM(network: AvaNetwork) {
  * Add the event listeners to the socket events.
  * @param socket The socket instance to add event listeners to.
  */
-function addListenersX(socket: Socket) {
-    socket.onopen = function () {
-        console.log('Socket X connected')
-        updateFilterAddresses()
-    }
+// function addListenersX(socket: Socket) {
+//     socket.onopen = function () {
+//         console.log('Socket X connected')
+//         updateFilterAddresses()
+//     }
+//
+//     socket.onmessage = function () {
+//         console.log('X chain MSG, update balance')
+//         updateWalletBalanceX()
+//         // WalletProvider.refreshInstanceBalancesX()
+//     }
+//
+//     socket.onclose = () => {
+//         console.log('X socket closed')
+//     }
+//
+//     socket.onerror = (error: any) => {
+//         console.log(error)
+//     }
+// }
 
-    socket.onmessage = function () {
-        console.log('X chain MSG, update balance')
-        updateWalletBalanceX()
-        // WalletProvider.refreshInstanceBalancesX()
-    }
+function xOnOpen() {
+    console.log('Socket X connected')
+    updateFilterAddresses()
+}
 
-    socket.onclose = () => {
-        console.log('X socket closed')
-    }
+function xOnMessage() {
+    console.log('X chain MSG, update balance')
+    updateWalletBalanceX()
+}
 
-    socket.onerror = (error: any) => {
-        console.log(error)
-    }
+function xOnClose() {
+    console.log('X socket closed')
+}
+
+function xOnError() {
+    console.log('X error')
 }
 
 function addListenersEVM(provider: Web3) {
@@ -122,11 +146,10 @@ export function updateFilterAddresses(): void {
     let addrsLen = externalAddrs.length
     let startIndex = Math.max(0, addrsLen - FILTER_ADDRESS_SIZE)
     let addrs = externalAddrs.slice(startIndex)
-    console.log(addrs)
 
     let pubsub = new PubSub()
     let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
-    socketX.send(bloom)
+
     // Divide addresses by 100 and send multiple messages
     // There is a max msg size ~10kb
     const GROUP_AMOUNT = 100
@@ -140,4 +163,4 @@ export function updateFilterAddresses(): void {
 }
 
 export let socketEVM: Web3
-export let socketX: Socket
+export let socketX: Sockette
