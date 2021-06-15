@@ -64,6 +64,7 @@
         "ethereum-blockies-base64": "1.0.2",
         "ethereumjs-tx": "2.1.2",
         "ethereumjs-util": "^7.0.7",
+        "ethers": "^5.3.1",
         "express": "4.17.1",
         "hdkey": "2.0.1",
         "helmet": "3.23.3",

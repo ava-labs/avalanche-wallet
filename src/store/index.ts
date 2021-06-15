@@ -51,7 +51,7 @@ import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
 import { checkIfSavedLocally } from '@/helpers/account_helper'
-import { updateFilterAddresses } from '../sockets'
+import { updateFilterAddresses } from '../providers'
 
 export default new Vuex.Store({
     modules: {
