@@ -113,7 +113,6 @@ export function updateFilterAddresses(): void {
         return
     }
 
-    // let wallets = WalletProvider.instances
     let externalAddrs = wallet.getAllDerivedExternalAddresses()
     let addrsLen = externalAddrs.length
     let startIndex = Math.max(0, addrsLen - FILTER_ADDRESS_SIZE)
