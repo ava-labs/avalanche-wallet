@@ -9,7 +9,7 @@ import BN from 'bn.js'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import router from '@/router'
 import { web3 } from '@/evm'
-import { setSocketNetwork } from '../../../sockets'
+import { setSocketNetwork } from '../../../providers'
 
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
