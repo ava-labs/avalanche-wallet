@@ -57,6 +57,7 @@ export function updateEVMSubscriptions() {
     // })
     removeBlockHeaderListener(socketEVM)
     addBlockHeaderListener(socketEVM)
+    resetContractListeners()
     // addLogsListenersEVM(socketEVM)
 }
 

@@ -42,7 +42,7 @@ import ERC721Module from './modules/erc721'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { updateEVMSubscriptions } from '@/providers'
+import { resetContractListeners, updateEVMSubscriptions } from '@/providers'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -183,6 +183,7 @@ const assets_module: Module<AssetsState, RootState> = {
             let t = new Erc20Token(token)
             state.erc20Tokens.push(t)
             // updateEVMSubscriptions()
+            resetContractListeners()
         },
 
         async addCustomErc20Token({ state, rootState, commit }, token: TokenListToken) {
@@ -207,6 +208,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             commit('saveCustomErc20Tokens')
             // updateEVMSubscriptions()
+            resetContractListeners()
 
             return t
         },
