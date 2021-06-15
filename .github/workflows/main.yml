@@ -45,7 +45,7 @@ jobs:
                   start: yarn serve --mode e2e
                   wait-on: 'http://localhost:5000/'
                   # wait for 2 minutes for the server to respond
-                  wait-on-timeout: 120
+                  wait-on-timeout: 180
                   browser: chrome
                   headless: true
 
