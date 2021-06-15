@@ -105,6 +105,16 @@ class AvaNetwork {
     getFullURL() {
         return `${this.protocol}://${this.ip}:${this.port}`
     }
+
+    getWsUrlX(): string {
+        let protocol = this.protocol === 'https' ? 'wss' : 'ws'
+        return `${protocol}://${this.ip}:${this.port}/ext/bc/X/events`
+    }
+
+    getWsUrlC(): string {
+        let protocol = this.protocol === 'https' ? 'wss' : 'ws'
+        return `${protocol}://${this.ip}:${this.port}/ext/bc/C/ws`
+    }
 }
 
 export { AvaNetwork }

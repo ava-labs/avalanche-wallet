@@ -51,6 +51,7 @@ import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
 import { checkIfSavedLocally } from '@/helpers/account_helper'
+import { updateFilterAddresses } from '../providers'
 
 export default new Vuex.Store({
     modules: {
@@ -88,6 +89,9 @@ export default new Vuex.Store({
             } else {
                 let addrNow = state.activeWallet.getCurrentAddressAvm()
                 state.address = addrNow
+
+                // Update the websocket addresses
+                updateFilterAddresses()
             }
         },
     },
@@ -296,6 +300,7 @@ export default new Vuex.Store({
             dispatch('Assets/updateAvaAsset')
             commit('updateActiveAddress')
             dispatch('History/updateTransactionHistory')
+            updateFilterAddresses()
         },
 
         async exportWallets({ state, dispatch }, input: ExportWalletsInput) {

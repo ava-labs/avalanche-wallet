@@ -115,13 +115,22 @@ export default class AddressCard extends Vue {
     get addressMsg(): string {
         switch (this.chainNow) {
             default:
-                return this.$t('top.address.desc_x') as string
+                return this.getAddressMsgX()
             case 'P':
                 return this.$t('top.address.desc_p') as string
             case 'C':
                 return this.$t('top.address.desc_c') as string
         }
     }
+
+    getAddressMsgX() {
+        if (this.activeWallet?.type === 'singleton') {
+            return this.$t('top.address.desc_x_1') as string
+        } else {
+            return `${this.$t('top.address.desc_x_1')} ${this.$t('top.address.desc_x_2')}` as string
+        }
+    }
+
     get isDayTheme(): boolean {
         //@ts-ignore
         return this.$root.theme === 'day'
