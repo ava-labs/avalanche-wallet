@@ -179,23 +179,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         return bal
     }
 
-    // async updateUtxos(
-    //     // TODO, type
-    //     chainId: ChainAlias
-    // ): Promise<AVMUTXOSet | PlatformUTXOSet> {
-    //     let result: AVMUTXOSet | PlatformUTXOSet
-    //
-    //     if (chainId === 'X') {
-    //         result = await avmGetAllUTXOs([this.getCurrentAddressAvm()])
-    //         this.utxoset = result // we can use local copy of utxos as cache for some functions
-    //     } else {
-    //         result = await platformGetAllUTXOs([this.getCurrentAddressPlatform()])
-    //         this.platformUtxoset = result
-    //     }
-    //
-    //     return result
-    // }
-
     async updateUTXOsX(): Promise<AVMUTXOSet> {
         let result = await avmGetAllUTXOs([this.getCurrentAddressAvm()])
         this.utxoset = result
@@ -210,9 +193,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
     async getUTXOs(): Promise<void> {
         this.isFetchUtxos = true
-        // let setInternal = (await this.updateUtxos('X')) as AVMUTXOSet
-        // platform utxos are updated but not returned by function
-        // let setPlatform = (await this.updateUtxos('P')) as PlatformUTXOSet
 
         await this.updateUTXOsX()
         await this.updateUTXOsP()
