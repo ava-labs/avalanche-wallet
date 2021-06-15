@@ -70,7 +70,6 @@ class HdWalletCore extends WalletCore {
             this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
 
         if (this.isInit) {
-            console.log('Wallet is INIT')
             updateFilterAddresses()
         }
     }
