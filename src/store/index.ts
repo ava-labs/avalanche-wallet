@@ -300,7 +300,6 @@ export default new Vuex.Store({
             dispatch('Assets/updateAvaAsset')
             commit('updateActiveAddress')
             dispatch('History/updateTransactionHistory')
-            console.log('Activate wallet.')
             updateFilterAddresses()
         },
 
