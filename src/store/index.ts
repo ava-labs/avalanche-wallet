@@ -51,7 +51,7 @@ import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
 import { checkIfSavedLocally } from '@/helpers/account_helper'
-import { updateFilterAddresses } from '../sockets'
+import { updateEVMSubscriptions, updateFilterAddresses } from '../sockets'
 
 export default new Vuex.Store({
     modules: {
@@ -302,6 +302,7 @@ export default new Vuex.Store({
             dispatch('History/updateTransactionHistory')
             console.log('Activate wallet.')
             updateFilterAddresses()
+            updateEVMSubscriptions()
         },
 
         async exportWallets({ state, dispatch }, input: ExportWalletsInput) {

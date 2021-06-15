@@ -1,10 +1,13 @@
 import Web3 from 'web3'
 import Sockette from 'sockette'
+import { ethers } from 'ethers'
 
-import { Socket, PubSub } from 'avalanche'
+import { PubSub } from 'avalanche'
 import { AvaNetwork } from './js/AvaNetwork'
 import store from '@/store'
 import { WalletType } from '@/js/wallets/types'
+import ERC721Token from '@/js/ERC721Token'
+import Erc20Token from '@/js/Erc20Token'
 
 const FILTER_ADDRESS_SIZE = 1000
 
@@ -41,22 +44,45 @@ function connectSocketX(network: AvaNetwork) {
     })
 }
 
-function connectSocketEVM(network: AvaNetwork) {
+async function connectSocketEVM(network: AvaNetwork) {
     try {
         let wsUrl = network.getWsUrlC()
-        let wsProvider = new Web3.providers.WebsocketProvider(wsUrl, wsOptions)
-
+        // let wsProvider = new Web3.providers.WebsocketProvider(wsUrl, wsOptions)
+        let wsProvider = new ethers.providers.WebSocketProvider(wsUrl)
         if (socketEVM) {
-            socketEVM.setProvider(wsProvider)
+            await socketEVM.destroy()
+            socketEVM = wsProvider
+            // socketEVM.setProvider(wsProvider)
         } else {
-            socketEVM = new Web3(wsProvider)
+            socketEVM = wsProvider
+            // socketEVM = new Web3(wsProvider)
         }
-        addListenersEVM(socketEVM)
+        updateEVMSubscriptions()
     } catch (e) {
         console.info('EVM Websocket connection failed.')
     }
 }
 
+let evmSubscriptionTimeout: NodeJS.Timeout
+const LOGS_SUBSCRIBE_TIMEOUT = 500
+export function updateEVMSubscriptions() {
+    if (!socketEVM) {
+        // try again later
+        if (evmSubscriptionTimeout) {
+            clearTimeout(evmSubscriptionTimeout)
+        }
+        evmSubscriptionTimeout = setTimeout(() => {
+            updateEVMSubscriptions()
+        }, LOGS_SUBSCRIBE_TIMEOUT)
+        return
+    }
+
+    //clear subscriptions
+    socketEVM.cl
+    socketEVM.eth.clearSubscriptions(() => {})
+    addListenersEVM(socketEVM)
+    addLogsListenersEVM(socketEVM)
+}
 // AVM Socket Listeners
 function xOnOpen() {
     updateFilterAddresses()
@@ -74,6 +100,42 @@ function addListenersEVM(provider: Web3) {
     let sub = provider.eth.subscribe('newBlockHeaders')
     sub.on('data', blockHeaderCallback)
     sub.on('error', onErrorEVM)
+}
+
+function addLogsListenersEVM(provider: Web3) {
+    // Get erc20 + erc721 contract addresses
+    let erc721Contracts: ERC721Token[] = store.getters['Assets/ERC721/networkContracts']
+    let erc721Addrs: string[] = erc721Contracts.map((contract) => contract.data.address)
+
+    let erc20Contracts: Erc20Token[] = store.getters['Assets/networkErc20Tokens']
+    let erc20Addrs: string[] = erc20Contracts.map((contract) => contract.data.address)
+
+    let addresses = [...erc721Addrs, ...erc20Addrs]
+
+    // Try to get wallet address
+    let activeWallet: WalletType | null = store.state.activeWallet
+    if (activeWallet) {
+        let walletAddr = activeWallet.getEvmAddress()
+        addresses.push(walletAddr)
+    }
+
+    const LOG_CONFIG = {
+        address: addresses,
+    }
+
+    console.log(LOG_CONFIG)
+    let subLogs = provider.eth.subscribe('logs', LOG_CONFIG)
+    subLogs.on('data', onLogsData)
+    subLogs.on('error', onLogsError)
+    subLogs.on('connected', (data: any) => console.log(data))
+}
+
+function onLogsData(data: any) {
+    console.log(data)
+}
+
+function onLogsError(err: any) {
+    console.log(err)
 }
 
 function onErrorEVM(err: any) {
@@ -134,5 +196,5 @@ export function updateFilterAddresses(): void {
     }
 }
 
-export let socketEVM: Web3
+export let socketEVM: ethers.providers.WebSocketProvider
 export let socketX: Sockette
