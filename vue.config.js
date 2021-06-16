@@ -1,5 +1,3 @@
-const { beforeMiddleware, onListening } = require('./server/configure')
-
 process.env.VUE_APP_VERSION = process.env.npm_package_version
 
 module.exports = {
@@ -11,8 +9,6 @@ module.exports = {
          */
         https: !process.env.USE_HTTP,
         port: 5000,
-        before: beforeMiddleware,
-        onListening: onListening,
     },
     // publicPath: '',
     configureWebpack: {

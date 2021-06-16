@@ -52,6 +52,7 @@ import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
 import { checkIfSavedLocally } from '@/helpers/account_helper'
 import { updateFilterAddresses } from '../providers'
+import { getAvaxPriceUSD } from '@/helpers/price_helper'
 
 export default new Vuex.Store({
     modules: {
@@ -392,10 +393,15 @@ export default new Vuex.Store({
         },
 
         async updateAvaxPrice(store) {
-            wallet_api.get('/price').then((res) => {
-                let prices = res.data
-                store.state.prices = prices
-            })
+            let usd = await getAvaxPriceUSD()
+
+            store.state.prices = {
+                usd,
+            }
+            // wallet_api.get('/price').then((res) => {
+            //     let prices = res.data
+            //     store.state.prices = prices
+            // })
         },
     },
 })
