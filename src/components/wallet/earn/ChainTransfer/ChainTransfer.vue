@@ -119,7 +119,7 @@ import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
-import { avm, pChain } from '@/AVA'
+import { avm, cChain, pChain } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig } from '@/helpers/helper'
 import Spinner from '@/components/misc/Spinner.vue'
@@ -301,11 +301,6 @@ export default class ChainTransfer extends Vue {
         let exportTxId
         this.exportState = TxState.started
 
-        let nonce = 0
-        if (this.sourceChain === 'C') {
-            nonce = await web3.eth.getTransactionCount(this.wallet.ethAddress)
-        }
-
         try {
             switch (sourceChain) {
                 case 'X':
@@ -326,11 +321,11 @@ export default class ChainTransfer extends Vue {
         }
 
         this.exportId = exportTxId
-        this.waitExportStatus(exportTxId, nonce)
+        this.waitExportStatus(exportTxId)
     }
 
     // STEP 2
-    async waitExportStatus(txId: string, nonce?: number, remainingTries = 15) {
+    async waitExportStatus(txId: string, remainingTries = 15) {
         let status
         if (this.sourceChain === 'X') {
             status = await avm.getTxStatus(txId)
@@ -343,13 +338,8 @@ export default class ChainTransfer extends Vue {
                 this.exportReason = resp.reason
             }
         } else {
-            // We can check the nonce to see when the tx is confirmed
-            let nonceNow = await web3.eth.getTransactionCount(this.wallet.ethAddress)
-            if (nonceNow === nonce) {
-                status = 'Processing'
-            } else {
-                status = 'Accepted'
-            }
+            let resp = await cChain.getAtomicTxStatus(txId)
+            status = resp
         }
         this.exportStatus = status
 
@@ -363,7 +353,7 @@ export default class ChainTransfer extends Vue {
 
             // if not confirmed ask again
             setTimeout(() => {
-                this.waitExportStatus(txId, nonce, remainingTries - 1)
+                this.waitExportStatus(txId, remainingTries - 1)
             }, 1000)
             return false
         } else if (status === 'Dropped') {
@@ -377,9 +367,7 @@ export default class ChainTransfer extends Vue {
             // Because the API nodes are behind a load balancer we are waiting for all api nodes to update
             this.importState = TxState.started
             this.importStatus = 'Waiting'
-            setTimeout(() => {
-                this.chainImport()
-            }, IMPORT_DELAY)
+            this.chainImport()
         }
 
         return true
@@ -423,8 +411,8 @@ export default class ChainTransfer extends Vue {
                 status = resp.status
             }
         } else {
-            // TODO: Add evm processing
-            status = 'Accepted'
+            let resp = await cChain.getAtomicTxStatus(txId)
+            status = resp
         }
 
         this.importStatus = status
