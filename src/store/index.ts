@@ -394,14 +394,9 @@ export default new Vuex.Store({
 
         async updateAvaxPrice(store) {
             let usd = await getAvaxPriceUSD()
-
             store.state.prices = {
                 usd,
             }
-            // wallet_api.get('/price').then((res) => {
-            //     let prices = res.data
-            //     store.state.prices = prices
-            // })
         },
     },
 })

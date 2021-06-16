@@ -4,6 +4,5 @@ const COINGECKO_URL =
 
 export async function getAvaxPriceUSD(): Promise<number> {
     let res = await axios.get(COINGECKO_URL)
-    console.log(res)
     return res.data['avalanche-2']['usd']
 }
