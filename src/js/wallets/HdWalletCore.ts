@@ -10,6 +10,7 @@ import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
 import { WalletCore } from '@/js/wallets/WalletCore'
+import { updateFilterAddresses } from '../../providers'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
@@ -67,25 +68,41 @@ class HdWalletCore extends WalletCore {
     updateInitState() {
         this.isInit =
             this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+
+        if (this.isInit) {
+            updateFilterAddresses()
+        }
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {
-        this.internalHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-            this.updateAvmUTXOSet()
-        })
-
-        this.externalHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-            this.updateAvmUTXOSet()
-        })
+        this.updateUTXOsX()
 
         // platform utxos are updated but not returned by function
-        this.platformHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-        })
+        this.updateUTXOsP()
 
         return
+    }
+
+    async updateUTXOsX() {
+        this.updateUTXOsExternal()
+        this.updateUTXOsInternal()
+    }
+
+    async updateUTXOsExternal() {
+        let res = await this.externalHelper.updateUtxos()
+        this.updateFetchState()
+        this.updateAvmUTXOSet()
+    }
+
+    async updateUTXOsInternal() {
+        let utxoSet = await this.internalHelper.updateUtxos()
+        this.updateFetchState()
+        this.updateAvmUTXOSet()
+    }
+
+    async updateUTXOsP() {
+        let utxoSet = await this.platformHelper.updateUtxos()
+        this.updateFetchState()
     }
 
     getAllDerivedExternalAddresses(): string[] {

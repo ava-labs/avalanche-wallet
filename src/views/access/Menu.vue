@@ -37,7 +37,6 @@
 </template>
 
 <script lang="ts">
-// import TorusGoogle from "@/components/Torus/TorusGoogle";
 import { Vue, Component } from 'vue-property-decorator'
 import LedgerButton from '@/components/Ledger/LedgerButton.vue'
 import AccountsFound from '@/components/Access/AccountsFound.vue'

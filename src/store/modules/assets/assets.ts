@@ -40,6 +40,8 @@ import ERC721Token from '@/js/ERC721Token'
 // ]
 import ERC721Module from './modules/erc721'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
+import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -314,6 +316,23 @@ const assets_module: Module<AssetsState, RootState> = {
             dispatch('onUtxosUpdated')
             dispatch('updateERC20Balances')
             dispatch('ERC721/updateWalletBalance')
+            commit('updateActiveAddress', null, { root: true })
+        },
+
+        // Only updates external utxos of the wallet
+        async updateUTXOsExternal({ commit, dispatch, rootState }) {
+            let wallet = rootState.activeWallet
+            if (!wallet) {
+                return false
+            }
+
+            if (wallet.type === 'ledger' || wallet.type === 'mnemonic') {
+                await (wallet as MnemonicWallet | LedgerWallet).updateUTXOsExternal()
+            } else {
+                await wallet.updateUTXOsX()
+            }
+
+            dispatch('onUtxosUpdated')
             commit('updateActiveAddress', null, { root: true })
         },
 
