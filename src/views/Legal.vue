@@ -19,10 +19,4 @@ export default class Legal extends Vue {}
     flex-direction: column;
     padding-bottom: 4vh;
 }
-iframe {
-    border: none;
-    width: 100%;
-    flex-grow: 1;
-    height: max-content;
-}
 </style>
