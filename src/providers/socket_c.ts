@@ -11,6 +11,7 @@ export function connectSocketC(network: AvaNetwork) {
         let wsProvider = new ethers.providers.WebSocketProvider(wsUrl)
 
         if (socketEVM) {
+            socketEVM._websocket.onclose = () => {}
             socketEVM.destroy()
             socketEVM = wsProvider
         } else {
