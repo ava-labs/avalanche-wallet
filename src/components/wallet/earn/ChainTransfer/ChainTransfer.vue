@@ -342,8 +342,6 @@ export default class ChainTransfer extends Vue {
         }
         this.exportStatus = status
 
-        console.log(status)
-
         if (status === 'Unknown' || status === 'Processing') {
             // If out of tries
             if (remainingTries <= 0) {
