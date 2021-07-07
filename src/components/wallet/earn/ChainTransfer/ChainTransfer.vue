@@ -134,6 +134,7 @@ import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
 import { WalletType } from '@/js/wallets/types'
 
 const IMPORT_DELAY = 2000 // in ms
+const BALANCE_DELAY = 2000 // in ms
 
 @Component({
     name: 'chain_transfer',
@@ -481,15 +482,10 @@ export default class ChainTransfer extends Vue {
             message: 'Funds transferred between chains.',
         })
 
-        if (this.targetChain === 'C') {
-            setTimeout(() => {
-                this.$store.dispatch('Assets/updateUTXOs')
-                this.$store.dispatch('History/updateTransactionHistory')
-            }, 3000)
-        } else {
+        setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
-        }
+        }, BALANCE_DELAY)
     }
 
     get canSubmit() {
