@@ -40,7 +40,6 @@ export default {
         TestNetBanner,
     },
     async created() {
-        console.log('DEV')
         // Init language preference
         let locale = localStorage.getItem('lang')
         if (locale) {
