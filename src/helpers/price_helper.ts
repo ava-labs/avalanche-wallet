@@ -25,7 +25,6 @@ async function getPriceHistory() {
     })
 
     priceHistory = res.data.prices
-    console.log(res.data.prices)
 }
 
 /**
@@ -36,15 +35,15 @@ export function getPriceAtUnixTime(time: number): number | undefined {
     let remainder = time % (24 * 60 * 60 * 1000)
     let dayTimestamp = time - remainder
 
-    console.log(time)
-    console.log(dayTimestamp)
+    // console.log(time)
+    // console.log(dayTimestamp)
     // console.log(priceHistory)
 
     let pricePair = priceHistory.find((value) => {
         return value[0] == dayTimestamp
     })
 
-    console.log(pricePair)
+    // console.log(pricePair)
 
     if (!pricePair) return undefined
     return pricePair[1]
