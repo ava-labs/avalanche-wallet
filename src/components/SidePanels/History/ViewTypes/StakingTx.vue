@@ -191,7 +191,7 @@ export default class StakingTx extends Vue {
         return price
     }
 
-    get totalRewardUSD(): number | undefined {
+    get totalRewardUSD(): Big | undefined {
         if (!this.rewardDateAvaxPrice) return undefined
         return this.rewardAmtBig.times(this.rewardDateAvaxPrice)
     }
