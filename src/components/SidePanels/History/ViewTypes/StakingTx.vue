@@ -15,6 +15,15 @@
                     {{ endDate.toLocaleTimeString() }}
                 </p>
             </div>
+            <div class="data_row reward_row">
+                <p>AVAX Price at reward date</p>
+                <p>{{ rewardDateAvaxPrice.toFixed(2) }} USD</p>
+            </div>
+            <div class="data_row reward_row">
+                <p>Total reward in USD</p>
+                <p v-if="totalRewardUSD">{{ totalRewardUSD.toLocaleString(2) }} USD</p>
+                <p v-else>-</p>
+            </div>
             <div class="data_row">
                 <p v-if="!isDelegatorReward">{{ $t('transactions.reward_amount') }}</p>
                 <p v-else>{{ $t('transactions.fee_amount') }}</p>
@@ -79,10 +88,10 @@ import { ITransactionData } from '@/store/modules/history/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { UnixNow } from 'avalanche/dist/utils'
-import { ValidatorListItem } from '@/store/modules/platform/types'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
-import moment from 'moment'
 import { WalletType } from '@/js/wallets/types'
+import { getPriceAtUnixTime } from '@/helpers/price_helper'
+import Big from 'big.js'
 
 @Component
 export default class StakingTx extends Vue {
@@ -169,6 +178,22 @@ export default class StakingTx extends Vue {
             return acc.add(new BN(out.amount))
         }, new BN(0))
         return tot
+    }
+
+    get rewardAmtBig(): Big {
+        return bnToBig(this.rewardAmt, 9)
+    }
+
+    get rewardDateAvaxPrice(): number | undefined {
+        if (!this.endDate) return undefined
+        let unixTime = this.endDate.getTime()
+        let price = getPriceAtUnixTime(unixTime)
+        return price
+    }
+
+    get totalRewardUSD(): number | undefined {
+        if (!this.rewardDateAvaxPrice) return undefined
+        return this.rewardAmtBig.times(this.rewardDateAvaxPrice)
     }
 
     get rewardAmtText() {
