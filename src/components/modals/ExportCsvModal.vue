@@ -76,6 +76,10 @@ function getOutputTotals(outs: UTXO[]) {
     }, new BN(0))
 }
 
+function getRewardOuts(outs: UTXO[]) {
+    return outs.filter((out) => out.rewardUtxo)
+}
+
 @Component({
     components: {
         Modal,
@@ -133,10 +137,10 @@ export default class ExportCsvModal extends Vue {
             if (!isRewarded) continue
 
             let stakeAmount = getStakeAmount(tx)
-            // let rewardDate = new Date(tx.rewardedTime)
             let rewardMoment = moment(tx.rewardedTime)
-            // let txDate = new Date(tx.timestamp)
             let txMoment = moment(tx.timestamp)
+
+            let nodeID = tx.validatorNodeID
 
             let avaxPrice = getPriceAtUnixTime(rewardMoment.unix() * 1000)
 
@@ -161,16 +165,17 @@ export default class ExportCsvModal extends Vue {
                 let type: CsvRowTxType = isInputOwner ? 'add_delegator' : 'fee_received'
 
                 let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
-                let myOutsAmt = getOutputTotals(myOuts)
-                let rewardAmt: BN
+                let rewardOuts = getRewardOuts(myOuts)
+                let rewardAmt = getOutputTotals(rewardOuts)
+                // let rewardAmt: BN
 
                 // If received delegation fee rewards dont subtract the ins
-                if (!isInputOwner) {
-                    rewardAmt = myOutsAmt
-                } else {
-                    rewardAmt = myOutsAmt.sub(stakeAmount)
-                    //TODO: What if reward went to another wallet?
-                }
+                // if (!isInputOwner) {
+                //     rewardAmt = myOutsAmt
+                // } else {
+                //     rewardAmt = myOutsAmt.sub(stakeAmount)
+                //     //TODO: What if reward went to another wallet?
+                // }
 
                 // TODO: How to handle if price is unknown?
                 let rewardAmtBig = bnToBig(rewardAmt, 9)
@@ -185,13 +190,16 @@ export default class ExportCsvModal extends Vue {
                     rewardAmtAvax: rewardAmtBig,
                     rewardAmtUsd: rewardAmtUsd,
                     avaxPrice: avaxPrice,
+                    nodeID: nodeID,
                 })
             } else {
                 // Skip if user did not want validation rewards
                 if (!this.showValidation) continue
 
-                let outVal = getOutputTotals(tx.outputs)
-                let rewardAmt = outVal.sub(stakeAmount)
+                let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
+                let rewardOuts = getRewardOuts(myOuts)
+                // let outVal = getOutputTotals(tx.outputs)
+                let rewardAmt = getOutputTotals(rewardOuts)
 
                 //TODO: What if reward went to another wallet?
 
@@ -209,6 +217,7 @@ export default class ExportCsvModal extends Vue {
                     rewardAmtAvax: rewardAmtBig,
                     rewardAmtUsd: rewardAmtUsd,
                     avaxPrice: avaxPrice,
+                    nodeID: nodeID,
                 })
             }
         }
@@ -217,22 +226,24 @@ export default class ExportCsvModal extends Vue {
             'Tx ID',
             'Type',
             'Tx Date',
+            'Node ID',
             'Stake Amount',
             'Reward Date',
+            'AVAX Price at Reward Date',
             'Reward Received (AVAX)',
             'Reward Received (USD)',
-            'AVAX Price at Reward Date',
         ]
         let rowArrays = rows.map((rowData) => {
             return [
                 rowData.txId,
                 rowData.txType,
                 rowData.txDate.format('MM/DD/YYYY'),
+                rowData.nodeID,
                 rowData.stakeAmount.toString(),
                 rowData.rewardDate.format('MM/DD/YYYY'),
-                rowData.rewardAmtAvax.toString(),
-                rowData.rewardAmtUsd?.toString() || '',
                 rowData.avaxPrice?.toFixed(2) || '',
+                rowData.rewardAmtAvax.toString(),
+                rowData.rewardAmtUsd?.toFixed(2) || '',
             ]
         })
 

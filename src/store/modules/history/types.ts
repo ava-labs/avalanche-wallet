@@ -89,5 +89,6 @@ export interface CsvRowData {
     rewardAmtAvax: Big
     rewardAmtUsd?: Big
     avaxPrice?: number
+    nodeID: string
 }
 // tx_id, tx_type, tx_date, stake_amount (AVAX), reward_date, reward_received_avax, avax_price, reward_received_usd
