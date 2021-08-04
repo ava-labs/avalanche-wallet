@@ -139,7 +139,15 @@
       "name": "Dai Stablecoin",
       "symbol": "DAI",
       "logoURI": "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a/logo.png"
+    },
+    {
+      "chainId": 43114,
+      "address": "0xFdf293FB7412863b3f3BF606E77A0d491f952923",
+      "decimals": 18,
+      "name": "Financial Freedom",
+      "symbol": "FINFREE",
+      "logoURI": "https://raw.githubusercontent.com/deficashflow/assets/main/images/FFTgold.png"
     }
   ],
-  "timestamp": "2021-04-15T00:21:05+00:00"
+  "timestamp": "2021-08-04T00:21:05+00:00"
 }
