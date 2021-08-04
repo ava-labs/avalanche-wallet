@@ -134,7 +134,7 @@ export default class ExportCsvModal extends Vue {
 
             let stakeAmount = getStakeAmount(tx)
             // let rewardDate = new Date(tx.rewardedTime)
-            let rewardMoment = moment(tx.timestamp)
+            let rewardMoment = moment(tx.rewardedTime)
             // let txDate = new Date(tx.timestamp)
             let txMoment = moment(tx.timestamp)
 
