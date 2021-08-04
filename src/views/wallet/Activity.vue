@@ -1,5 +1,6 @@
 <template>
     <div class="activity_page">
+        <ExportCsvModal ref="csv_modal"></ExportCsvModal>
         <div class="explorer_warning" v-if="!hasExplorer">
             <div class="warning_body">
                 <h1>{{ $t('activity.no_explorer.title') }}</h1>
@@ -12,6 +13,10 @@
                     <label>{{ $t('activity.label1') }}</label>
                     <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
                 </div>
+                <button @click="openCsvModal">
+                    Export CSV
+                    <fa icon="file-csv"></fa>
+                </button>
             </div>
             <div>
                 <div class="pagination">
@@ -75,6 +80,7 @@ type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 //@ts-ignore
 import VirtualList from 'vue-virtual-scroll-list'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import ExportCsvModal from '@/components/modals/ExportCsvModal.vue'
 
 const PAGE_LIMIT = 100
 
@@ -84,6 +90,7 @@ const MONTH_MIN = 8
 @Component({
     name: 'activity',
     components: {
+        ExportCsvModal,
         Spinner,
         TxRow,
         RadioButtons,
@@ -107,6 +114,14 @@ export default class Activity extends Vue {
     yearNow = 0
 
     listH = 100
+
+    $refs!: {
+        csv_modal: ExportCsvModal
+    }
+
+    openCsvModal() {
+        this.$refs.csv_modal.open()
+    }
 
     get showList(): boolean {
         if (this.isUpdatingAll || this.isLoading) return false
@@ -514,6 +529,7 @@ export default class Activity extends Vue {
 
     .filter_col {
         grid-row: 2;
+        justify-content: center;
     }
 
     .pagination {

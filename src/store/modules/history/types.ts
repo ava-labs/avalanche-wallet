@@ -1,3 +1,6 @@
+import Big from 'big.js'
+import moment from 'moment'
+
 export interface HistoryState {
     transactions: ITransactionData[]
     allTransactions: ITransactionData[]
@@ -73,3 +76,18 @@ export type TransactionType =
     | 'pvm_export'
     | 'advance_time'
     | 'reward_validator'
+
+// CSV Row
+
+export type CsvRowTxType = 'add_validator' | 'add_delegator' | 'fee_received'
+export interface CsvRowData {
+    txId: string
+    txType: CsvRowTxType
+    txDate: moment.Moment
+    stakeAmount: Big
+    rewardDate: moment.Moment
+    rewardAmtAvax: Big
+    rewardAmtUsd?: Big
+    avaxPrice?: number
+}
+// tx_id, tx_type, tx_date, stake_amount (AVAX), reward_date, reward_received_avax, avax_price, reward_received_usd

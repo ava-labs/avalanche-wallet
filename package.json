@@ -60,6 +60,7 @@
         "core-js": "3.4.4",
         "cors": "2.8.5",
         "create-hash": "1.2.0",
+        "csv": "^5.5.0",
         "ethereum-blockies-base64": "1.0.2",
         "ethereumjs-tx": "2.1.2",
         "ethereumjs-util": "^7.0.7",

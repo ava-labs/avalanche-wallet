@@ -109,6 +109,17 @@ const history_module: Module<HistoryState, RootState> = {
             state.isUpdatingAll = false
         },
     },
+    getters: {
+        stakingTxs(state) {
+            return state.allTransactions.filter((tx) => {
+                let types = ['add_validator', 'add_delegator']
+                if (types.includes(tx.type)) {
+                    return true
+                }
+                return false
+            })
+        },
+    },
 }
 
 export default history_module
