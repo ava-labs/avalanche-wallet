@@ -86,8 +86,6 @@ function getRewardOuts(outs: UTXO[]) {
     },
 })
 export default class ExportCsvModal extends Vue {
-    @Prop({ default: '' }) privateKey!: string
-
     showValidation = true
     showDelegation = true
     showFees = true
@@ -137,7 +135,8 @@ export default class ExportCsvModal extends Vue {
             if (!isRewarded) continue
 
             let stakeAmount = getStakeAmount(tx)
-            let rewardMoment = moment(tx.rewardedTime)
+            // Use validator end time for both delegation and validations as reward date
+            let rewardMoment = moment(tx.validatorEnd * 1000)
             let txMoment = moment(tx.timestamp)
 
             let nodeID = tx.validatorNodeID
@@ -167,15 +166,8 @@ export default class ExportCsvModal extends Vue {
                 let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
                 let rewardOuts = getRewardOuts(myOuts)
                 let rewardAmt = getOutputTotals(rewardOuts)
-                // let rewardAmt: BN
 
-                // If received delegation fee rewards dont subtract the ins
-                // if (!isInputOwner) {
-                //     rewardAmt = myOutsAmt
-                // } else {
-                //     rewardAmt = myOutsAmt.sub(stakeAmount)
-                //     //TODO: What if reward went to another wallet?
-                // }
+                //TODO: What if reward went to another wallet?
 
                 // TODO: How to handle if price is unknown?
                 let rewardAmtBig = bnToBig(rewardAmt, 9)
