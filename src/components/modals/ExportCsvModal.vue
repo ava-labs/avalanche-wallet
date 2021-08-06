@@ -80,6 +80,29 @@ function getRewardOuts(outs: UTXO[]) {
     return outs.filter((out) => out.rewardUtxo)
 }
 
+function durationToString(dur: moment.Duration): string {
+    let months = dur.months()
+    let days = dur.days()
+    let hours = dur.hours()
+
+    let res = ``
+
+    if (months) {
+        let name = months > 1 ? 'months' : 'month'
+        res += `${months} ${name} `
+    }
+
+    if (days) {
+        let name = days > 1 ? 'days' : 'day'
+        res += `${days} ${name} `
+    }
+
+    if (hours) {
+        let name = hours > 1 ? 'hours' : 'hour'
+        res += `${hours} ${name}`
+    }
+    return res
+}
 @Component({
     components: {
         Modal,
@@ -233,14 +256,13 @@ export default class ExportCsvModal extends Vue {
             'Reward Received (USD)',
         ]
         let rowArrays = rows.map((rowData) => {
-            let durr = rowData.stakeDuration
             return [
                 rowData.txId,
                 rowData.txType,
                 rowData.nodeID,
                 rowData.stakeAmount.toString(),
                 rowData.stakeDate.format('MM/DD/YYYY'),
-                durr.humanize(),
+                durationToString(rowData.stakeDuration),
                 rowData.rewardDate.format('MM/DD/YYYY'),
                 rowData.avaxPrice?.toFixed(2) || '',
                 rowData.rewardAmtAvax.toString(),
