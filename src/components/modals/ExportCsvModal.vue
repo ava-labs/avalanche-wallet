@@ -137,6 +137,8 @@ export default class ExportCsvModal extends Vue {
             let stakeAmount = getStakeAmount(tx)
             // Use validator end time for both delegation and validations as reward date
             let rewardMoment = moment(tx.validatorEnd * 1000)
+            let startMoment = moment(tx.validatorStart * 1000)
+            let durationMoment = moment.duration(rewardMoment.diff(startMoment))
             let txMoment = moment(tx.timestamp)
 
             let nodeID = tx.validatorNodeID
@@ -177,6 +179,8 @@ export default class ExportCsvModal extends Vue {
                     txId: txId,
                     txType: type,
                     txDate: txMoment,
+                    stakeDate: startMoment,
+                    stakeDuration: durationMoment,
                     stakeAmount: bnToBig(stakeAmount, 9),
                     rewardDate: rewardMoment,
                     rewardAmtAvax: rewardAmtBig,
@@ -204,6 +208,8 @@ export default class ExportCsvModal extends Vue {
                     txId: txId,
                     txType: 'add_validator',
                     txDate: txMoment,
+                    stakeDate: startMoment,
+                    stakeDuration: durationMoment,
                     stakeAmount: bnToBig(stakeAmount, 9),
                     rewardDate: rewardMoment,
                     rewardAmtAvax: rewardAmtBig,
@@ -217,21 +223,24 @@ export default class ExportCsvModal extends Vue {
         let headers = [
             'Tx ID',
             'Type',
-            'Tx Date',
             'Node ID',
             'Stake Amount',
+            'Stake Start Date',
+            'Stake Duration',
             'Reward Date',
             'AVAX Price at Reward Date',
             'Reward Received (AVAX)',
             'Reward Received (USD)',
         ]
         let rowArrays = rows.map((rowData) => {
+            let durr = rowData.stakeDuration
             return [
                 rowData.txId,
                 rowData.txType,
-                rowData.txDate.format('MM/DD/YYYY'),
                 rowData.nodeID,
                 rowData.stakeAmount.toString(),
+                rowData.stakeDate.format('MM/DD/YYYY'),
+                durr.humanize(),
                 rowData.rewardDate.format('MM/DD/YYYY'),
                 rowData.avaxPrice?.toFixed(2) || '',
                 rowData.rewardAmtAvax.toString(),

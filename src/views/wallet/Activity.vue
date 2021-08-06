@@ -10,13 +10,17 @@
         <div class="settings">
             <div class="filter_col">
                 <div class="filter_cont">
+                    <label>Export CSV File</label>
+                    <div>
+                        <v-btn x-small @click="openCsvModal" class="button_secondary" depressed>
+                            Export Rewards
+                        </v-btn>
+                    </div>
+                </div>
+                <div class="filter_cont">
                     <label>{{ $t('activity.label1') }}</label>
                     <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
                 </div>
-                <button @click="openCsvModal">
-                    Export CSV
-                    <fa icon="file-csv"></fa>
-                </button>
             </div>
             <div>
                 <div class="pagination">
@@ -485,6 +489,12 @@ export default class Activity extends Vue {
 
 .date_display {
     font-size: 24px;
+}
+
+.filter_col {
+    //display: flex;
+    //flex-direction: row;
+    //align-items: center;
 }
 
 .filter_cont {

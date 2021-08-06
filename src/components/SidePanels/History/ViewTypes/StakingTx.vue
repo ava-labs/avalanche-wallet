@@ -209,6 +209,7 @@ export default class StakingTx extends Vue {
         return this.transaction.rewarded
     }
 
+    // DO NOT use this as the date reward received. Use validator end time instead.
     get rewardTime() {
         return this.transaction.rewardedTime
     }

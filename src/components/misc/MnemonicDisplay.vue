@@ -14,6 +14,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class MnemonicDisplay extends Vue {
     @Prop({ default: '#FFFFFF' }) bgColor?: string
     @Prop({ default: 4 }) rowSize!: number
+    @Prop() phrase!: string
+
     wordNum: number = 24
 
     get phraseArray(): string[] {
@@ -26,8 +28,6 @@ export default class MnemonicDisplay extends Vue {
         }
         return res
     }
-
-    @Prop() phrase!: string
 }
 </script>
 <style scoped lang="scss">

@@ -221,11 +221,6 @@ export default class CreateWallet extends Vue {
 
         setTimeout(async () => {
             await parent.$store.dispatch('accessWallet', this.keyPhrase)
-
-            // if(this.rememberPassword && this.rememberValid){
-            //     // console.log("Will remember..");
-            //     parent.$store.dispatch('rememberWallets', this.rememberPassword);
-            // }
         }, 500)
     }
 }

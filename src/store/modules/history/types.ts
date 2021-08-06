@@ -84,6 +84,8 @@ export interface CsvRowData {
     txId: string
     txType: CsvRowTxType
     txDate: moment.Moment
+    stakeDate: moment.Moment
+    stakeDuration: moment.Duration
     stakeAmount: Big
     rewardDate: moment.Moment
     rewardAmtAvax: Big
