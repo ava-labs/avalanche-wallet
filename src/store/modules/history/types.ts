@@ -83,7 +83,6 @@ export type CsvRowTxType = 'add_validator' | 'add_delegator' | 'fee_received'
 export interface CsvRowData {
     txId: string
     txType: CsvRowTxType
-    txDate: moment.Moment
     stakeDate: moment.Moment
     stakeDuration: moment.Duration
     stakeAmount: Big

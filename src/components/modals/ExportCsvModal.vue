@@ -153,7 +153,7 @@ export default class ExportCsvModal extends Vue {
             let isRewarded = tx.rewarded
             let txId = tx.id
 
-            // We dont care abuout txs not rewarded
+            // We dont care about txs not rewarded
             // TODO: we might care later
             if (!isRewarded) continue
 
@@ -162,7 +162,6 @@ export default class ExportCsvModal extends Vue {
             let rewardMoment = moment(tx.validatorEnd * 1000)
             let startMoment = moment(tx.validatorStart * 1000)
             let durationMoment = moment.duration(rewardMoment.diff(startMoment))
-            let txMoment = moment(tx.timestamp)
 
             let nodeID = tx.validatorNodeID
 
@@ -201,7 +200,6 @@ export default class ExportCsvModal extends Vue {
                 rows.push({
                     txId: txId,
                     txType: type,
-                    txDate: txMoment,
                     stakeDate: startMoment,
                     stakeDuration: durationMoment,
                     stakeAmount: bnToBig(stakeAmount, 9),
@@ -217,7 +215,6 @@ export default class ExportCsvModal extends Vue {
 
                 let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
                 let rewardOuts = getRewardOuts(myOuts)
-                // let outVal = getOutputTotals(tx.outputs)
                 let rewardAmt = getOutputTotals(rewardOuts)
 
                 //TODO: What if reward went to another wallet?
@@ -230,7 +227,6 @@ export default class ExportCsvModal extends Vue {
                 rows.push({
                     txId: txId,
                     txType: 'add_validator',
-                    txDate: txMoment,
                     stakeDate: startMoment,
                     stakeDuration: durationMoment,
                     stakeAmount: bnToBig(stakeAmount, 9),
