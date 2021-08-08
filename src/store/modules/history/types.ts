@@ -87,6 +87,8 @@ export interface CsvRowData {
     stakeDuration: moment.Duration
     stakeAmount: Big
     rewardDate: moment.Moment
+    isInputOwner: boolean
+    isRewardOwner: boolean
     rewardAmtAvax: Big
     rewardAmtUsd?: Big
     avaxPrice?: number

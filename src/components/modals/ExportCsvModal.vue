@@ -43,66 +43,18 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import { CsvRowData, CsvRowTxType, ITransactionData, UTXO } from '@/store/modules/history/types'
 import { bnToBig } from '@/helpers/helper'
-import { BN } from 'avalanche'
-import Big from 'big.js'
 import { getPriceAtUnixTime } from '@/helpers/price_helper'
 const generate = require('csv-generate')
 import moment from 'moment'
+import {
+    dataToCsvRow,
+    durationToString,
+    getOutputTotals,
+    getOwnedOutputs,
+    getRewardOuts,
+    getStakeAmount,
+} from '@/store/modules/history/utils'
 
-function isArraysOverlap(arr1: any[], arr2: any[]): boolean {
-    let overlaps = arr1.filter((item) => arr2.includes(item))
-    return overlaps.length > 0
-}
-
-function getStakeAmount(tx: ITransactionData): BN {
-    let tot = new BN(0)
-    for (let assetId in tx.inputTotals) {
-        let val = new BN(tx.inputTotals[assetId])
-        tot = tot.add(val)
-    }
-    return tot
-}
-
-function getOwnedOutputs(outs: UTXO[], myAddrs: string[]) {
-    return outs.filter((out) => {
-        let outAddrs = out.addresses
-        return isArraysOverlap(myAddrs, outAddrs)
-    })
-}
-
-function getOutputTotals(outs: UTXO[]) {
-    return outs.reduce((acc, out) => {
-        return acc.add(new BN(out.amount))
-    }, new BN(0))
-}
-
-function getRewardOuts(outs: UTXO[]) {
-    return outs.filter((out) => out.rewardUtxo)
-}
-
-function durationToString(dur: moment.Duration): string {
-    let months = dur.months()
-    let days = dur.days()
-    let hours = dur.hours()
-
-    let res = ``
-
-    if (months) {
-        let name = months > 1 ? 'months' : 'month'
-        res += `${months} ${name} `
-    }
-
-    if (days) {
-        let name = days > 1 ? 'days' : 'day'
-        res += `${days} ${name} `
-    }
-
-    if (hours) {
-        let name = hours > 1 ? 'hours' : 'hour'
-        res += `${hours} ${name}`
-    }
-    return res
-}
 @Component({
     components: {
         Modal,
@@ -167,18 +119,23 @@ export default class ExportCsvModal extends Vue {
 
             let avaxPrice = getPriceAtUnixTime(rewardMoment.unix() * 1000)
 
+            let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
+            let rewardOuts = getRewardOuts(myOuts)
+            let rewardAmt = getOutputTotals(rewardOuts)
+            let rewardAmtBig = bnToBig(rewardAmt, 9)
+            let rewardAmtUsd = avaxPrice ? rewardAmtBig.mul(avaxPrice) : undefined
+
+            // Did this wallet receive any rewards?
+            let isRewardOwner = rewardOuts.length > 0
+
+            // Did we send this staking transaction
+            let inputOuts = tx.inputs.map((input) => input.output)
+            let myInputs = getOwnedOutputs(inputOuts, myAddresses)
+            let isInputOwner = myInputs.length > 0
+
             if (type === 'add_delegator') {
                 // Skip if user did not want delegation / fee rewards
                 if (!this.showDelegation && !this.showFees) continue
-
-                // Did we send this delegation transaction
-                let inputAddresses: string[] = []
-                tx.inputs.forEach((input) => {
-                    let addresses = input.output.addresses
-                    inputAddresses.push(...addresses)
-                })
-
-                let isInputOwner = isArraysOverlap(inputAddresses, myAddresses)
 
                 // If user does not want delegation fees received, continue
                 if (!isInputOwner && !this.showFees) continue
@@ -187,15 +144,9 @@ export default class ExportCsvModal extends Vue {
 
                 let type: CsvRowTxType = isInputOwner ? 'add_delegator' : 'fee_received'
 
-                let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
-                let rewardOuts = getRewardOuts(myOuts)
-                let rewardAmt = getOutputTotals(rewardOuts)
-
                 //TODO: What if reward went to another wallet?
-
-                // TODO: How to handle if price is unknown?
-                let rewardAmtBig = bnToBig(rewardAmt, 9)
-                let rewardAmtUsd = rewardAmtBig.mul(avaxPrice || 0)
+                // if (rewardOuts.length === 0) {
+                // }
 
                 rows.push({
                     txId: txId,
@@ -208,21 +159,12 @@ export default class ExportCsvModal extends Vue {
                     rewardAmtUsd: rewardAmtUsd,
                     avaxPrice: avaxPrice,
                     nodeID: nodeID,
+                    isRewardOwner: isRewardOwner,
+                    isInputOwner: isInputOwner,
                 })
             } else {
                 // Skip if user did not want validation rewards
                 if (!this.showValidation) continue
-
-                let myOuts = getOwnedOutputs(tx.outputs, myAddresses)
-                let rewardOuts = getRewardOuts(myOuts)
-                let rewardAmt = getOutputTotals(rewardOuts)
-
-                //TODO: What if reward went to another wallet?
-
-                let rewardAmtBig = bnToBig(rewardAmt, 9)
-
-                // TODO: How to handle if price is unknown?
-                let rewardAmtUsd = rewardAmtBig.mul(avaxPrice || 0)
 
                 rows.push({
                     txId: txId,
@@ -235,6 +177,8 @@ export default class ExportCsvModal extends Vue {
                     rewardAmtUsd: rewardAmtUsd,
                     avaxPrice: avaxPrice,
                     nodeID: nodeID,
+                    isRewardOwner: isRewardOwner,
+                    isInputOwner: isInputOwner,
                 })
             }
         }
@@ -251,20 +195,9 @@ export default class ExportCsvModal extends Vue {
             'Reward Received (AVAX)',
             'Reward Received (USD)',
         ]
-        let rowArrays = rows.map((rowData) => {
-            return [
-                rowData.txId,
-                rowData.txType,
-                rowData.nodeID,
-                rowData.stakeAmount.toString(),
-                rowData.stakeDate.format('MM/DD/YYYY'),
-                durationToString(rowData.stakeDuration),
-                rowData.rewardDate.format('MM/DD/YYYY'),
-                rowData.avaxPrice?.toFixed(2) || '',
-                rowData.rewardAmtAvax.toString(),
-                rowData.rewardAmtUsd?.toFixed(2) || '',
-            ]
-        })
+
+        // Convert data to valid CSV row string
+        let rowArrays = rows.map((rowData) => dataToCsvRow(rowData))
 
         let csvContent = 'data:text/csv;charset=utf-8,'
 
