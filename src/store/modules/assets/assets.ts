@@ -33,11 +33,12 @@ import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
-import ERC721Token from '@/js/ERC721Token'
+// import ERC721Token from '@/js/ERC721Token'
 
-// const TOKEN_LISTS = [
-//     'https://raw.githubusercontent.com/pangolindex/tokenlists/main/top15.tokenlist.json',
-// ]
+const TOKEN_LISTS = [
+    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json',
+]
+
 import ERC721Module from './modules/erc721'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
@@ -275,6 +276,13 @@ const assets_module: Module<AssetsState, RootState> = {
             erc20Tokens.readonly = true
             erc20Tokens.url = 'Default'
             await dispatch('addTokenList', erc20Tokens)
+
+            for (var i = 0; i < TOKEN_LISTS.length; i++) {
+                await dispatch('addTokenListUrl', {
+                    url: TOKEN_LISTS[i],
+                    readonly: true,
+                })
+            }
 
             dispatch('loadCustomTokenLists')
             commit('loadCustomErc20Tokens')
