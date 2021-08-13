@@ -104,7 +104,7 @@ export function stakingDataToCsvRow(rowData: CsvRowStakingData): string[] {
         rowData.txId,
         rowData.txType,
         rowData.nodeID,
-        rowData.stakeAmount.toString(),
+        rowData.stakeAmount.toFixed(),
         rowData.stakeDate.format('MM/DD/YYYY'),
         durationToString(rowData.stakeDuration),
         rowData.rewardDate.format('MM/DD/YYYY'),
@@ -125,7 +125,7 @@ export function avaxTransferDataToCsvRow(rowData: CsvRowAvaxTransferData): strin
         memo,
         froms,
         tos,
-        rowData.amount.toString(),
+        rowData.amount.toFixed(),
     ]
 }
 
