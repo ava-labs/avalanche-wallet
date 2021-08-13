@@ -1,7 +1,7 @@
 <template>
-    <modal ref="modal" title="Export CSV" class="modal_main">
+    <modal ref="modal" title="Export Rewards CSV" class="modal_main">
         <div class="csv_modal_body">
-            <p>Export rewards received as a CSV file. Only rewarded transactions will be shown.</p>
+            <p>Only rewarded transactions will be shown.</p>
             <div>
                 <v-checkbox
                     label="Validation Rewards"
@@ -41,19 +41,25 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import { CsvRowData, CsvRowTxType, ITransactionData, UTXO } from '@/store/modules/history/types'
+import {
+    CsvRowStakingData,
+    CsvRowStakingTxType,
+    ITransactionData,
+    UTXO,
+} from '@/store/modules/history/types'
 import { bnToBig } from '@/helpers/helper'
 import { getPriceAtUnixTime } from '@/helpers/price_helper'
 const generate = require('csv-generate')
 import moment from 'moment'
 import {
-    dataToCsvRow,
-    durationToString,
+    stakingDataToCsvRow,
+    downloadCSVFile,
     getOutputTotals,
     getOwnedOutputs,
     getRewardOuts,
     getStakeAmount,
-} from '@/store/modules/history/utils'
+    createCSVContent,
+} from '@/store/modules/history/history_utils'
 
 @Component({
     components: {
@@ -97,7 +103,7 @@ export default class ExportCsvModal extends Vue {
     submit() {
         let myAddresses = this.pAddressesStripped
 
-        let rows: CsvRowData[] = []
+        let rows: CsvRowStakingData[] = []
         for (var i = 0; i < this.stakingTxs.length; i++) {
             let tx = this.stakingTxs[i]
 
@@ -142,7 +148,7 @@ export default class ExportCsvModal extends Vue {
                 // If user does not want delegation rewards, continue
                 if (isInputOwner && !this.showDelegation) continue
 
-                let type: CsvRowTxType = isInputOwner ? 'add_delegator' : 'fee_received'
+                let type: CsvRowStakingTxType = isInputOwner ? 'add_delegator' : 'fee_received'
 
                 //TODO: What if reward went to another wallet?
                 // if (rewardOuts.length === 0) {
@@ -197,24 +203,12 @@ export default class ExportCsvModal extends Vue {
         ]
 
         // Convert data to valid CSV row string
-        let rowArrays = rows.map((rowData) => dataToCsvRow(rowData))
-
-        let csvContent = 'data:text/csv;charset=utf-8,'
+        let rowArrays = rows.map((rowData) => stakingDataToCsvRow(rowData))
 
         let allRows = [headers, ...rowArrays]
-        allRows.forEach(function (arr) {
-            let row = arr.join(',')
-            csvContent += row + '\r\n'
-        })
+        let csvContent = createCSVContent(allRows)
 
-        var encodedUri = encodeURI(csvContent)
-        var link = document.createElement('a')
-        link.setAttribute('href', encodedUri)
-        link.setAttribute('download', 'staking_rewards.csv')
-        document.body.appendChild(link) // Required for FF
-
-        link.click() // This will download the data file named "my_data.csv".
-        link.remove()
+        downloadCSVFile(csvContent, 'staking_rewards')
     }
 }
 </script>

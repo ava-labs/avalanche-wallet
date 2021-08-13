@@ -77,12 +77,11 @@ export type TransactionType =
     | 'advance_time'
     | 'reward_validator'
 
-// CSV Row
-
-export type CsvRowTxType = 'add_validator' | 'add_delegator' | 'fee_received'
-export interface CsvRowData {
+// CSV Staking Row
+export type CsvRowStakingTxType = 'add_validator' | 'add_delegator' | 'fee_received'
+export interface CsvRowStakingData {
     txId: string
-    txType: CsvRowTxType
+    txType: CsvRowStakingTxType
     stakeDate: moment.Moment
     stakeDuration: moment.Duration
     stakeAmount: Big
@@ -93,4 +92,14 @@ export interface CsvRowData {
     rewardAmtUsd?: Big
     avaxPrice?: number
     nodeID: string
+}
+
+// CSV AVAX Transaction Row
+export interface CsvRowAvaxTransferData {
+    txId: string
+    date: Date
+    from?: string[]
+    to?: string[]
+    amount: Big
+    memo?: string
 }
