@@ -102,4 +102,5 @@ export interface CsvRowAvaxTransferData {
     to?: string[]
     amount: Big
     memo?: string
+    isGain: boolean
 }

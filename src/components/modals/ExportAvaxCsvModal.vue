@@ -1,7 +1,7 @@
 <template>
-    <modal ref="modal" title="Export Rewards CSV" class="modal_main">
+    <modal ref="modal" title="Export AVAX Transfers" class="modal_main">
         <div class="csv_modal_body">
-            <p>Export all AVAX transfers from and to this wallet. X and P chains only.</p>
+            <p>Only X chain AVAX transactions will be exported.</p>
             <v-btn
                 class="button_secondary"
                 small
@@ -118,6 +118,9 @@ export default class ExportAvaxCsvModal extends Vue {
 
             let isGain = gain.gt(ZERO)
 
+            let fromOwnedAddrs = getAddresses(myIns)
+            let toOwnedAddrs = getAddresses(myOuts)
+
             let fromAddrs = getAddresses(otherIns)
             let toAddrs = getAddresses(otherOuts)
 
@@ -128,15 +131,16 @@ export default class ExportAvaxCsvModal extends Vue {
                 txId: tx.id,
                 date: new Date(tx.timestamp),
                 amount: bnToBig(sendAmt, 9),
-                from: isGain ? fromAddrs : undefined,
-                to: isGain ? undefined : toAddrs,
+                from: isGain ? fromAddrs : fromOwnedAddrs,
+                to: isGain ? toOwnedAddrs : toAddrs,
                 memo: parseMemo(tx.memo),
+                isGain: isGain,
             }
             rows.push(txParsed)
         }
 
         let csvRows = rows.map((row) => avaxTransferDataToCsvRow(row))
-        let headers = ['Tx ID', 'Date', 'Memo', 'From', 'To', 'Amount (AVAX)']
+        let headers = ['Tx ID', 'Date', 'Memo', 'From', 'To', 'Sent/Received', 'Amount (AVAX)']
         let allRows = [headers, ...csvRows]
 
         let csvContent = createCSVContent(allRows)

@@ -119,12 +119,15 @@ export function avaxTransferDataToCsvRow(rowData: CsvRowAvaxTransferData): strin
 
     let froms = rowData.from ? `"${rowData.from?.join('\n')}"` : '-'
     let tos = rowData.to ? `"${rowData.to?.join('\n')}"` : '-'
+
+    let sendReceive = rowData.isGain ? 'Received' : 'Sent'
     return [
         rowData.txId,
         rowData.date.toLocaleDateString(),
         memo,
         froms,
         tos,
+        sendReceive,
         rowData.amount.toFixed(),
     ]
 }
