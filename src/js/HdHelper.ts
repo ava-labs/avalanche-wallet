@@ -20,7 +20,7 @@ import { getAddressChains } from '@/explorer_api'
 import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/types'
-import { getAtomicUTXOsForAllAddresses } from '@/helpers/wallet_helper'
+// import { getAtomicUTXOsForAllAddresses } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { updateFilterAddresses } from '../providers'
 
@@ -179,12 +179,12 @@ class HdHelper {
         return this.getAllDerivedAddresses(hdIndex + INDEX_RANGE)
     }
 
-    async getAtomicUTXOs() {
-        let addrs: string[] = this.getAllDerivedAddresses()
-
-        let result = await getAtomicUTXOsForAllAddresses(addrs, this.chainId)
-        return result
-    }
+    // async getAtomicUTXOs() {
+    //     let addrs: string[] = this.getAllDerivedAddresses()
+    //
+    //     let result = await getAtomicUTXOsForAllAddresses(addrs, this.chainId)
+    //     return result
+    // }
 
     // Not used?
     getUtxos(): AVMUTXOSet | PlatformUTXOSet {

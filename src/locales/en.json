@@ -584,7 +584,8 @@
         "import": {
             "title": "Chain Import",
             "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
-            "submit_x": "Import X",
+            "submit_x": "Import X (From P Chain)",
+            "submit_c_x": "Import X (From C Chain)",
             "submit_p": "Import P",
             "submit_c": "Import C"
         },

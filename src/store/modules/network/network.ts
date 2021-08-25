@@ -10,7 +10,7 @@ import { getPreferredHRP } from 'avalanche/dist/utils'
 import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
-
+import { Network } from '@avalabs/avalanche-wallet-sdk'
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
@@ -162,6 +162,10 @@ const network_module: Module<NetworkState, RootState> = {
             // Update tx history
             dispatch('History/updateTransactionHistory', null, { root: true })
 
+            // Set the SDK Network
+            let sdkNetConf = await Network.getConfigFromUrl(net.getFullURL())
+            console.log(sdkNetConf)
+            await Network.setNetworkAsync(sdkNetConf)
             // state.isConnected = true;
             state.status = 'connected'
             return true
