@@ -180,6 +180,10 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         return this.mnemonic.getValue()
     }
 
+    getMnemonicEncrypted(): MnemonicPhrase {
+        return this.mnemonic
+    }
+
     async validate(
         nodeID: string,
         amt: BN,

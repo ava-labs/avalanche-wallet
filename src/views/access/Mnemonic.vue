@@ -59,7 +59,6 @@ export default class Mnemonic extends Vue {
     }
 
     onPhraseIn(ev: any) {
-        console.log(ev)
         this.phrase = ev.currentTarget.value
     }
 
@@ -111,7 +110,6 @@ export default class Mnemonic extends Vue {
                 this.isLoading = false
             } catch (e) {
                 this.isLoading = false
-                console.log(e)
                 this.err = `${this.$t('access.mnemonic.error')}`
             }
         }, 500)
