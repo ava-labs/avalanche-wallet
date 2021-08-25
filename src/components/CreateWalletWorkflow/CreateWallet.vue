@@ -48,7 +48,7 @@
                                                 verified: isVerified,
                                             }"
                                         >
-                                            {{ keyPhrase }}
+                                            {{ keyPhrase.getValue() }}
                                         </p>
                                         <div class="mneumonic_button_container" v-if="!isVerified">
                                             <button
@@ -153,6 +153,7 @@ import * as bip39 from 'bip39'
 import VerifyMnemonic from '@/components/modals/VerifyMnemonic.vue'
 import MnemonicCopied from '@/components/CreateWalletWorkflow/MnemonicCopied.vue'
 import ToS from '@/components/misc/ToS.vue'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component({
     components: {
@@ -170,13 +171,7 @@ import ToS from '@/components/misc/ToS.vue'
 export default class CreateWallet extends Vue {
     // TODO: We do not need to create keyPair, only mnemonic is sufficient
     isLoad: boolean = false
-    // rememberPassword:string|null = null;
-    // rememberValid:boolean = true;         // Will be true if the values in remember wallet checkbox are valid
-    // Mnemonic
-    // newPrivateKey: string|null =null;
-    keyPhrase: string = ''
-    // keyPair: KeyPair|null = null;
-    // Verify Mnemonic
+    keyPhrase: MnemonicPhrase | null = null
     isSecured: boolean = false
     isVerified: boolean = false
 
@@ -191,7 +186,7 @@ export default class CreateWallet extends Vue {
     createKey(): void {
         this.isSecured = false
         let mnemonic = bip39.generateMnemonic(256)
-        this.keyPhrase = mnemonic
+        this.keyPhrase = new MnemonicPhrase(mnemonic)
     }
 
     // Will be true if the values in remember wallet checkbox are valid
@@ -220,12 +215,7 @@ export default class CreateWallet extends Vue {
         let parent = this
 
         setTimeout(async () => {
-            await parent.$store.dispatch('accessWallet', this.keyPhrase)
-
-            // if(this.rememberPassword && this.rememberValid){
-            //     // console.log("Will remember..");
-            //     parent.$store.dispatch('rememberWallets', this.rememberPassword);
-            // }
+            await parent.$store.dispatch('accessWallet', this.keyPhrase!.getValue())
         }, 500)
     }
 }

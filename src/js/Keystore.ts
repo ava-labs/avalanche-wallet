@@ -338,7 +338,7 @@ async function makeKeyfile(
             key = (wallet as SingletonWallet).key
             type = 'singleton'
         } else {
-            key = (wallet as MnemonicWallet).mnemonic
+            key = (wallet as MnemonicWallet).getMnemonic()
             type = 'mnemonic'
         }
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)

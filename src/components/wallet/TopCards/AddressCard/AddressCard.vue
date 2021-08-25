@@ -1,7 +1,11 @@
 <template>
     <div class="addr_card">
         <q-r-modal ref="qr_modal" :address="activeAddress"></q-r-modal>
-        <paper-wallet ref="print_modal" v-if="walletType === 'mnemonic'"></paper-wallet>
+        <paper-wallet
+            ref="print_modal"
+            v-if="walletType === 'mnemonic'"
+            :wallet="activeWallet"
+        ></paper-wallet>
         <p class="addr_info">{{ addressMsg }}</p>
         <div class="bottom">
             <div class="col_qr">
