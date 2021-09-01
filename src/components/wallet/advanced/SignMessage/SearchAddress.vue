@@ -36,7 +36,6 @@ export default class SearchAddress extends Vue {
     @Model('change', { type: String }) readonly selectedAddress!: string | null
     @Prop() wallet!: MnemonicWallet | LedgerWallet
 
-    // selectedAddress: string | null = null
     address: string = ''
     matchingAddrs: string[] = []
 
@@ -78,15 +77,6 @@ export default class SearchAddress extends Vue {
 
         this.matchingAddrs = [...pAddrs.slice(0, 2), ...xAddrs.slice(0, 2)]
     }
-    // get matchingAddrs(): string[] {
-    //     let pAddrs = this.addrsP.filter((addr) => {
-    //         addr.includes(this.address)
-    //     })
-    //     let xAddrs = this.addrsX.filter((addr) => {
-    //         addr.includes(this.address)
-    //     })
-    //     return [...pAddrs, ...xAddrs]
-    // }
 }
 </script>
 <style scoped lang="scss">
