@@ -19,7 +19,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import ChainImport from '@/components/wallet/advanced/ChainImport.vue'
-import SignMessage from '@/components/wallet/advanced/SignMessage.vue'
+import SignMessage from '@/components/wallet/advanced/SignMessage/SignMessage.vue'
 import VerifyMessage from '@/components/wallet/advanced/VerifyMessage.vue'
 import TokenListModal from '@/components/modals/TokenList/TokenListModal.vue'
 
@@ -58,6 +58,7 @@ h1 {
     background-color: var(--bg-light);
     padding: 30px;
     border-radius: 4px;
+    overflow: auto;
 }
 
 @include main.mobile-device {
