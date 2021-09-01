@@ -238,7 +238,7 @@ abstract class HdWalletCore extends WalletCore {
         )
     }
 
-    findExternalAddressIndex(address: string) {
+    findExternalAddressIndex(address: string): number | null {
         // TODO: Look for P addresses too
         let indexX = this.externalHelper.findAddressIndex(address)
         let indexP = this.platformHelper.findAddressIndex(address)
@@ -251,7 +251,7 @@ abstract class HdWalletCore extends WalletCore {
 
     async signMessageByExternalAddress(msgStr: string, address: string) {
         let index = this.findExternalAddressIndex(address)
-        if (!index) throw new Error('Address not found.')
+        if (index === null) throw new Error('Address not found.')
         return await this.signMessageByExternalIndex(msgStr, index)
     }
 
