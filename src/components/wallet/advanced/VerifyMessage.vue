@@ -23,9 +23,10 @@
         >
             {{ $t('advanced.verify.submit') }}
         </v-btn>
-        <div v-if="address" class="result">
+        <div v-if="addressX" class="result">
             <label>{{ $t('advanced.verify.label3') }}</label>
-            <p class="address">{{ address }}</p>
+            <p class="address">{{ addressX }}</p>
+            <p class="address">{{ addressP }}</p>
         </div>
     </div>
 </template>
@@ -42,12 +43,14 @@ import { digestMessage } from '@/helpers/helper'
 @Component
 export default class VerifyMessage extends Vue {
     message: string = ''
-    address: string = ''
+    addressX: string = ''
+    addressP: string = ''
     signature = ''
     error = ''
 
     submit() {
-        this.address = ''
+        this.addressX = ''
+        this.addressP = ''
         this.error = ''
         try {
             this.verify()
@@ -68,15 +71,15 @@ export default class VerifyMessage extends Vue {
 
         let pubKey = keypair.recover(digestBuff, signedBuff)
         let addressBuff = keypair.addressFromPublicKey(pubKey)
-        let address = bintools.addressToString(hrp, 'X', addressBuff)
-
-        this.address = address
+        this.addressX = bintools.addressToString(hrp, 'X', addressBuff)
+        this.addressP = bintools.addressToString(hrp, 'P', addressBuff)
     }
 
     clear() {
         this.message = ''
         this.signature = ''
-        this.address = ''
+        this.addressX = ''
+        this.addressP = ''
         this.error = ''
     }
 
@@ -122,6 +125,7 @@ textarea {
 }
 
 .address {
+    margin-bottom: 1px !important;
     word-break: break-all;
 }
 </style>

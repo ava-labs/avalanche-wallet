@@ -6,7 +6,7 @@ import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 var uniqid = require('uniqid')
 
-class WalletCore {
+abstract class WalletCore {
     id: string
 
     utxoset: AVMUTXOSet
@@ -25,5 +25,7 @@ class WalletCore {
         this.isInit = false
         this.isFetchUtxos = false
     }
+
+    abstract async signMessage(msg: string, address?: string): Promise<string>
 }
 export { WalletCore }
