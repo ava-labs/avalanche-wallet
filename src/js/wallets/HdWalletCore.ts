@@ -251,6 +251,7 @@ abstract class HdWalletCore extends WalletCore {
 
     async signMessageByExternalAddress(msgStr: string, address: string) {
         let index = this.findExternalAddressIndex(address)
+        if (!index) throw new Error('Address not found.')
         return await this.signMessageByExternalIndex(msgStr, index)
     }
 
