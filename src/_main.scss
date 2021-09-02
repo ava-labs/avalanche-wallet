@@ -413,6 +413,12 @@ textarea {
     }
 }
 
+.v-input--checkbox{
+    label{
+        color: var(--primary-color) !important;
+    }
+}
+
 .vdatetime {
     background-color: var(--bg-light) !important;
     padding: 6px 12px !important;

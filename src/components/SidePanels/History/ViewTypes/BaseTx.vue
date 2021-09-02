@@ -345,7 +345,8 @@ export default class BaseTx extends Vue {
         let addrs: string[] = this.addresses
         let addrsRaw = addrs.map((addr) => addr.split('-')[1])
 
-        const isFromWallet = this.transaction.inputs.find((input) => {
+        let ins = this.transaction.inputs || []
+        const isFromWallet = ins.find((input) => {
             return input.output.addresses.find((value) => {
                 return addrsRaw.includes(value)
             })

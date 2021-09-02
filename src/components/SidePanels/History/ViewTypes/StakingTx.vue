@@ -15,6 +15,16 @@
                     {{ endDate.toLocaleTimeString() }}
                 </p>
             </div>
+            <div class="data_row reward_row">
+                <p>AVAX Price at reward date</p>
+                <p v-if="rewardDateAvaxPrice">{{ rewardDateAvaxPrice.toFixed(2) }} USD</p>
+                <p v-else>Unknown</p>
+            </div>
+            <div class="data_row reward_row">
+                <p>Total reward in USD</p>
+                <p v-if="totalRewardUSD">{{ totalRewardUSD.toLocaleString(2) }} USD</p>
+                <p v-else>-</p>
+            </div>
             <div class="data_row">
                 <p v-if="!isDelegatorReward">{{ $t('transactions.reward_amount') }}</p>
                 <p v-else>{{ $t('transactions.fee_amount') }}</p>
@@ -79,10 +89,10 @@ import { ITransactionData } from '@/store/modules/history/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { UnixNow } from 'avalanche/dist/utils'
-import { ValidatorListItem } from '@/store/modules/platform/types'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
-import moment from 'moment'
 import { WalletType } from '@/js/wallets/types'
+import { getPriceAtUnixTime } from '@/helpers/price_helper'
+import Big from 'big.js'
 
 @Component
 export default class StakingTx extends Vue {
@@ -111,7 +121,8 @@ export default class StakingTx extends Vue {
         if (this.isValidator) return false
 
         // If its a delegation, and the wallet does not own any of the inputs
-        let inUtxos = this.transaction.inputs.map((input) => input.output)
+        let ins = this.transaction.inputs || []
+        let inUtxos = ins.map((input) => input.output)
 
         let inAddrs = []
         for (var i = 0; i < inUtxos.length; i++) {
@@ -171,6 +182,22 @@ export default class StakingTx extends Vue {
         return tot
     }
 
+    get rewardAmtBig(): Big {
+        return bnToBig(this.rewardAmt, 9)
+    }
+
+    get rewardDateAvaxPrice(): number | undefined {
+        if (!this.endDate) return undefined
+        let unixTime = this.endDate.getTime()
+        let price = getPriceAtUnixTime(unixTime)
+        return price
+    }
+
+    get totalRewardUSD(): Big | undefined {
+        if (!this.rewardDateAvaxPrice) return undefined
+        return this.rewardAmtBig.times(this.rewardDateAvaxPrice)
+    }
+
     get rewardAmtText() {
         return bnToBig(this.rewardAmt, 9)
     }
@@ -184,6 +211,7 @@ export default class StakingTx extends Vue {
         return this.transaction.rewarded
     }
 
+    // DO NOT use this as the date reward received. Use validator end time instead.
     get rewardTime() {
         return this.transaction.rewardedTime
     }
