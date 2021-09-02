@@ -61,56 +61,19 @@ export default class ChainImport extends Vue {
         this.beforeSubmit()
         if (!this.wallet) return
 
-        // let err
-        // let hasUTXOs
         // Import from P
         try {
             let txId = await this.wallet.importToXChain('P')
             this.onSuccess(txId)
-            // hasUTXOs = true
         } catch (e) {
             if (this.isSuccess) return
-            // err = e
             this.onError(e)
         }
-
-        // if (!hasUTXOs) {
-        //   this.onError(err)
-        // }
-
-        // // Import from C
-        // try {
-        //     if (this.isEVMSupported) {
-        //         let txId2 = await this.wallet.importToXChain('C')
-        //         this.onSuccess(txId2)
-        //         hasUTXOs = true
-        //     }
-        // } catch (e) {
-        //     if (this.isSuccess) return
-        //     err = e
-        // }
     }
 
     async atomicImportXFromC() {
         this.beforeSubmit()
         if (!this.wallet) return
-
-        // let err
-        // let hasUTXOs
-        // Import from P
-        // try {
-        //   let txId = await this.wallet.importToXChain('P')
-        //   this.onSuccess(txId)
-        //   // hasUTXOs = true
-        // } catch (e) {
-        //   if (this.isSuccess) return
-        //   // err = e
-        //   this.onError(e)
-        // }
-
-        // if (!hasUTXOs) {
-        //   this.onError(err)
-        // }
 
         // // Import from C
         try {
