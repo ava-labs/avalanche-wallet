@@ -594,7 +594,7 @@
             "desc": "Sign a message with your private key and prove ownership of an address.",
             "label1": "Address",
             "label2": "Message",
-            "warn": "Do not sign messages you dont trust.",
+            "warn": "Do not sign messages you don't trust.",
             "submit": "Sign Message",
             "label3": "Signature"
         },
@@ -604,7 +604,7 @@
             "label1": "Message",
             "label2": "Signature",
             "submit": "Check Source",
-            "label3": "Source Address"
+            "label3": "Source Addresses"
         }
     },
     "activity": {

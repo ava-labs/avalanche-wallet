@@ -4,13 +4,9 @@
         <p style="margin-bottom: 14px !important">
             {{ $t('advanced.sign.desc') }}
         </p>
-        <div>
+        <div v-if="isHD">
             <label>{{ $t('advanced.sign.label1') }}</label>
-            <select name="address" v-model="sourceAddress">
-                <option v-for="addr in addresses" :key="addr" :value="addr">
-                    {{ addr }}
-                </option>
-            </select>
+            <SearchAddress :wallet="wallet" v-model="sourceAddress"></SearchAddress>
         </div>
         <div>
             <label>{{ $t('advanced.sign.label2') }}</label>
@@ -30,19 +26,17 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import createHash from 'create-hash'
-import { Buffer } from 'avalanche'
 import { WalletType } from '@/js/wallets/types'
-
-@Component
+import SearchAddress from '@/components/wallet/advanced/SignMessage/SearchAddress.vue'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+@Component({
+    components: { SearchAddress },
+})
 export default class SignMessage extends Vue {
-    sourceAddress = this.addresses[0]
+    sourceAddress = null
     message = ''
     signed = ''
     error = ''
-    get addresses(): string[] {
-        return this.wallet.getAllDerivedExternalAddresses()
-    }
 
     get wallet(): WalletType {
         return this.$store.state.activeWallet
@@ -53,7 +47,11 @@ export default class SignMessage extends Vue {
         try {
             // Convert the message to a hashed buffer
             // let hashMsg = this.msgToHash(this.message);
-            this.signed = await this.wallet.signMessage(this.message, this.sourceAddress)
+            if (this.wallet.type === 'singleton') {
+                this.signed = await (this.wallet as SingletonWallet).signMessage(this.message)
+            } else {
+                this.signed = await this.wallet.signMessage(this.message, this.sourceAddress!)
+            }
         } catch (e) {
             this.error = e
         }
@@ -69,13 +67,12 @@ export default class SignMessage extends Vue {
         this.clear()
     }
 
-    // msgToHash(msgStr: string): Buffer{
-    //     let msgBuf = Buffer.from(msgStr, 'utf8');
-    //     return  createHash('sha256').update(msgBuf).digest();
-    // }
+    get isHD() {
+        return this.wallet.type !== 'singleton'
+    }
 
     get canSubmit(): boolean {
-        if (!this.sourceAddress) return false
+        if (!this.sourceAddress && this.isHD) return false
         if (!this.message) return false
 
         return true
