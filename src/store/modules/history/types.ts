@@ -1,3 +1,6 @@
+import Big from 'big.js'
+import moment from 'moment'
+
 export interface HistoryState {
     transactions: ITransactionData[]
     allTransactions: ITransactionData[]
@@ -11,7 +14,7 @@ export interface ITransactionData {
     inputTotals: {
         [key: string]: string
     }
-    inputs: TransactionInput[]
+    inputs: TransactionInput[] | null
     memo: string
     outputTotals: {
         [key: string]: string
@@ -73,3 +76,31 @@ export type TransactionType =
     | 'pvm_export'
     | 'advance_time'
     | 'reward_validator'
+
+// CSV Staking Row
+export type CsvRowStakingTxType = 'add_validator' | 'add_delegator' | 'fee_received'
+export interface CsvRowStakingData {
+    txId: string
+    txType: CsvRowStakingTxType
+    stakeDate: moment.Moment
+    stakeDuration: moment.Duration
+    stakeAmount: Big
+    rewardDate: moment.Moment
+    isInputOwner: boolean
+    isRewardOwner: boolean
+    rewardAmtAvax: Big
+    rewardAmtUsd?: Big
+    avaxPrice?: number
+    nodeID: string
+}
+
+// CSV AVAX Transaction Row
+export interface CsvRowAvaxTransferData {
+    txId: string
+    date: Date
+    from?: string[]
+    to?: string[]
+    amount: Big
+    memo?: string
+    isGain: boolean
+}

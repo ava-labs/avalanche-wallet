@@ -130,10 +130,9 @@ import { ChainIdType } from '@/constants'
 
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
-import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
-import { WalletType } from '@/js/wallets/types'
+import { AvmExportChainType, AvmImportChainType, WalletType } from '@/js/wallets/types'
 
-const IMPORT_DELAY = 2000 // in ms
+const IMPORT_DELAY = 5000 // in ms
 const BALANCE_DELAY = 2000 // in ms
 
 @Component({
@@ -174,11 +173,6 @@ export default class ChainTransfer extends Vue {
     importStatus: string | null = null
     importReason: string | null = null
 
-    // switchChain() {
-    //     let temp = this.sourceChain
-    //     this.sourceChain = this.targetChain
-    //     this.targetChain = temp
-    // }
     activated() {
         this.$refs.form.clear()
     }
@@ -376,7 +370,7 @@ export default class ChainTransfer extends Vue {
     }
 
     // STEP 3
-    async chainImport() {
+    async chainImport(canRetry = true) {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         let importTxId
         try {
@@ -388,6 +382,13 @@ export default class ChainTransfer extends Vue {
                 importTxId = await wallet.importToCChain()
             }
         } catch (e) {
+            // Retry import one more time
+            if (canRetry) {
+                setTimeout(() => {
+                    this.chainImport(false)
+                }, IMPORT_DELAY)
+                return
+            }
             this.onerror(e)
             this.onErrorImport(e)
             return
@@ -450,6 +451,7 @@ export default class ChainTransfer extends Vue {
     }
 
     onErrorImport(err: any) {
+        this.importState = TxState.failed
         this.isImportErr = true
     }
 
