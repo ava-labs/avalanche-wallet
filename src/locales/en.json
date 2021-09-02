@@ -125,10 +125,10 @@
             "title_x": "Derived Wallet Address",
             "title_p": "Derived Platform Wallet Address",
             "title_c": "Derived EVM Wallet Address",
-            "desc_x_1": "This is your X Chain address to receive funds.",
-            "desc_x_2": "Your address will change after every deposit.",
-            "desc_p": "This is your Platform Chain address to receive staking rewards and cross chain transfers.",
-            "desc_c": "This is your Contract Chain address. Use it to interact with the ethereum virtual machine."
+            "desc_x_1": "This is your X-Chain address to receive funds.",
+            "desc_x_2": "Your address will change after every deposit. You can keep using previous addresses.",
+            "desc_p": "This is your P-Chain address to receive staking rewards and cross chain transfers.",
+            "desc_c": "This is your C-Chain address. Use it to interact with the ethereum virtual machine."
         }
     },
     "transfer": {
@@ -584,7 +584,8 @@
         "import": {
             "title": "Chain Import",
             "desc": "If you have funds stuck in a failed chain transfer, you can finish importing them here.",
-            "submit_x": "Import X",
+            "submit_x": "Import X (From P Chain)",
+            "submit_c_x": "Import X (From C Chain)",
             "submit_p": "Import P",
             "submit_c": "Import C"
         },
