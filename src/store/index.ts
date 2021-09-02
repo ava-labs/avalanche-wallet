@@ -161,44 +161,19 @@ export default new Vuex.Store({
         // TODO: Parts can be shared with the logout function below
         // Similar to logout but keeps the Remembered keys.
         async timeoutLogout(store) {
-            store.dispatch('removeAllKeys')
-            store.dispatch('Accounts/onLogout')
             await store.dispatch('Notifications/add', {
                 title: 'Session Timeout',
                 message: 'You are logged out due to inactivity.',
                 type: 'warning',
             })
 
-            // Remove other data
-            store.state.isAuth = false
-            store.state.activeWallet = null
-            store.state.address = null
-            store.state.warnUpdateKeyfile = false
-
-            await store.dispatch('Assets/onlogout')
-            await store.commit('History/clear')
-
-            router.push('/')
+            store.dispatch('logout')
         },
 
         async logout(store) {
-            // Clear local storage
             localStorage.removeItem('w')
-
-            // Remove other data
-            store.state.isAuth = false
-            store.state.activeWallet = null
-            store.state.address = null
-            store.state.warnUpdateKeyfile = false
-
-            router.push('/')
-
-            // Delete keys
-            store.dispatch('removeAllKeys')
-            store.dispatch('Accounts/onLogout')
-            // Clear Assets
-            await store.dispatch('Assets/onlogout')
-            await store.commit('History/clear')
+            // Go to the base URL with GET request not router
+            window.location.href = '/'
         },
 
         // used with logout

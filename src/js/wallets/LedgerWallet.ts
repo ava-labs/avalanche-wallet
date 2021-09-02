@@ -953,26 +953,18 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         )
     }
 
-    async signMessage(msgStr: string, address: string): Promise<string> {
-        let index = this.externalHelper.findAddressIndex(address)
-
-        if (index === null) throw 'Address not found.'
-
+    async signHashByExternalIndex(index: number, hash: Buffer) {
         let pathStr = `0/${index}`
         const addressPath = bippath.fromString(pathStr, false)
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
 
-        let digest = digestMessage(msgStr)
-        let digestBuff = Buffer.from(digest)
-        let digestHex = digestBuff.toString('hex')
-
         store.commit('Ledger/openModal', {
             title: `Sign Hash`,
-            info: digestHex.toUpperCase(),
+            info: hash.toString('hex').toUpperCase(),
         })
 
         try {
-            let sigMap = await this.app.signHash(accountPath, [addressPath], digestBuff)
+            let sigMap = await this.app.signHash(accountPath, [addressPath], hash)
             store.commit('Ledger/closeModal')
             let signed = sigMap.get(pathStr)
             return bintools.cb58Encode(signed)

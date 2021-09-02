@@ -72,6 +72,13 @@ export default class Wallet extends Vue {
         window.addEventListener('beforeunload', this.unload)
     }
 
+    beforeDestroy() {
+        let view = this.$refs.wallet_view as HTMLDivElement
+        // Remove Event Listeners
+        view.removeEventListener('mousemove', this.resetTimer)
+        view.removeEventListener('mousedown', this.resetTimer)
+        window.removeEventListener('beforeunload', this.unload)
+    }
     destroyed() {
         clearInterval(this.intervalId!)
     }

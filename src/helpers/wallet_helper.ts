@@ -23,12 +23,11 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 
 import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
 import { web3 } from '@/evm'
-import EthereumjsCommon from '@ethereumjs/common'
-import { Transaction } from '@ethereumjs/tx'
 import Erc20Token from '@/js/Erc20Token'
-import { getAtomicUTXOsForAllAddresses, getStakeForAddresses } from '@/helpers/utxo_helper'
+import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERC721Token from '@/js/ERC721Token'
 
+import { UtxoHelper } from '@avalabs/avalanche-wallet-sdk'
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
         let addrs = wallet.getAllAddressesP()
@@ -119,7 +118,6 @@ class WalletHelper {
         }
 
         let pAddressStrings = wallet.getAllAddressesP()
-        // let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
 
         let stakeAmount = amt
 
@@ -206,20 +204,17 @@ class WalletHelper {
 
     static async avmGetAtomicUTXOs(wallet: WalletType, sourceChain: AvmImportChainType) {
         let addrs = wallet.getAllAddressesX()
-        let result = await getAtomicUTXOsForAllAddresses<AVMUTXOSet>(addrs, 'X')
-        return result
+        return await UtxoHelper.avmGetAtomicUTXOs(addrs, sourceChain)
     }
 
     static async platformGetAtomicUTXOs(wallet: WalletType) {
         let addrs = wallet.getAllAddressesP()
-        let result = await getAtomicUTXOsForAllAddresses<PlatformUTXOSet>(addrs, 'P')
-        return result
+        return await UtxoHelper.platformGetAtomicUTXOs(addrs)
     }
 
     static async evmGetAtomicUTXOs(wallet: WalletType) {
         let addrs = [wallet.getEvmAddressBech()]
-        let result = await getAtomicUTXOsForAllAddresses<EVMUTXOSet>(addrs, 'C')
-        return result
+        return await UtxoHelper.evmGetAtomicUTXOs(addrs)
     }
 
     static async importToXChain(wallet: WalletType, sourceChain: AvmImportChainType) {
@@ -297,8 +292,7 @@ class WalletHelper {
         let bechAddr = wallet.getEvmAddressBech()
         let hexAddr = wallet.getEvmAddress()
 
-        const utxoResponse = await cChain.getUTXOs(bechAddr, avm.getBlockchainID())
-        const utxoSet: EVMUTXOSet = utxoResponse.utxos
+        let utxoSet = await this.evmGetAtomicUTXOs(wallet)
 
         if (utxoSet.getAllUTXOs().length === 0) {
             throw new Error('Nothing to import.')
@@ -329,11 +323,6 @@ class WalletHelper {
     ) {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
-
-        // if (destinationChain === 'C') {
-        // C Chain imports/exports do not have a fee
-        // amtFee = amt
-        // }
 
         let destinationAddr
         if (destinationChain === 'P') {
@@ -479,4 +468,4 @@ class WalletHelper {
     }
 }
 
-export { getAtomicUTXOsForAllAddresses, WalletHelper }
+export { WalletHelper }

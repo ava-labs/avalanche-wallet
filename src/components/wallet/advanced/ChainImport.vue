@@ -8,8 +8,11 @@
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
-            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>
+            <v-btn block class="button_secondary" depressed @click="atomicImportXFromP" small>
                 {{ $t('advanced.import.submit_x') }}
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportXFromC" small>
+                {{ $t('advanced.import.submit_c_x') }}
             </v-btn>
             <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
                 {{ $t('advanced.import.submit_p') }}
@@ -54,36 +57,31 @@ export default class ChainImport extends Vue {
         return this.wallet.ethAddress
     }
 
-    async atomicImportX() {
+    async atomicImportXFromP() {
         this.beforeSubmit()
         if (!this.wallet) return
 
-        let err
-        let hasUTXOs
         // Import from P
         try {
             let txId = await this.wallet.importToXChain('P')
             this.onSuccess(txId)
-            hasUTXOs = true
         } catch (e) {
             if (this.isSuccess) return
-            err = e
+            this.onError(e)
         }
+    }
 
-        // Import from C
+    async atomicImportXFromC() {
+        this.beforeSubmit()
+        if (!this.wallet) return
+
+        // // Import from C
         try {
-            if (this.isEVMSupported) {
-                let txId2 = await this.wallet.importToXChain('C')
-                this.onSuccess(txId2)
-                hasUTXOs = true
-            }
+            let txId = await this.wallet.importToXChain('C')
+            this.onSuccess(txId)
         } catch (e) {
             if (this.isSuccess) return
-            err = e
-        }
-
-        if (!hasUTXOs) {
-            this.onError(err)
+            this.onError(e)
         }
     }
 
