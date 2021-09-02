@@ -3,7 +3,6 @@ import {
     KeyPair as AVMKeyPair,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
-import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
@@ -17,10 +16,8 @@ import {
 import store from '@/store'
 
 import { getAddressChains } from '@/explorer_api'
-import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/types'
-// import { getAtomicUTXOsForAllAddresses } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { updateFilterAddresses } from '../providers'
 
@@ -178,13 +175,6 @@ class HdHelper {
         let hdIndex = this.hdIndex
         return this.getAllDerivedAddresses(hdIndex + INDEX_RANGE)
     }
-
-    // async getAtomicUTXOs() {
-    //     let addrs: string[] = this.getAllDerivedAddresses()
-    //
-    //     let result = await getAtomicUTXOsForAllAddresses(addrs, this.chainId)
-    //     return result
-    // }
 
     // Not used?
     getUtxos(): AVMUTXOSet | PlatformUTXOSet {
