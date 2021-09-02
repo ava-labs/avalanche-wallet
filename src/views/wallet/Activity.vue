@@ -11,7 +11,7 @@
         <div class="settings">
             <div class="filter_col">
                 <div class="filter_cont">
-                    <label>Export CSV File</label>
+                    <label>Export CSV File (BETA)</label>
                     <div class="csv_buttons">
                         <v-btn
                             x-small

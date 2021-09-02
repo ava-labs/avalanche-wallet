@@ -121,7 +121,8 @@ export default class StakingTx extends Vue {
         if (this.isValidator) return false
 
         // If its a delegation, and the wallet does not own any of the inputs
-        let inUtxos = this.transaction.inputs.map((input) => input.output)
+        let ins = this.transaction.inputs || []
+        let inUtxos = ins.map((input) => input.output)
 
         let inAddrs = []
         for (var i = 0; i < inUtxos.length; i++) {

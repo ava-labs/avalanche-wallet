@@ -135,7 +135,8 @@ export default class ExportCsvModal extends Vue {
             let isRewardOwner = rewardOuts.length > 0
 
             // Did we send this staking transaction
-            let inputOuts = tx.inputs.map((input) => input.output)
+            let ins = tx.inputs || []
+            let inputOuts = ins.map((input) => input.output)
             let myInputs = getOwnedOutputs(inputOuts, myAddresses)
             let isInputOwner = myInputs.length > 0
 

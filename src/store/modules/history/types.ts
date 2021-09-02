@@ -14,7 +14,7 @@ export interface ITransactionData {
     inputTotals: {
         [key: string]: string
     }
-    inputs: TransactionInput[]
+    inputs: TransactionInput[] | null
     memo: string
     outputTotals: {
         [key: string]: string

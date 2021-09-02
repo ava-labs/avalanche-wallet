@@ -97,7 +97,9 @@ export default class ExportAvaxCsvModal extends Vue {
 
         for (let i = 0; i < txs.length; i++) {
             let tx = txs[i]
-            let inUTXOs = tx.inputs.map((input) => input.output)
+
+            let ins = tx.inputs || []
+            let inUTXOs = ins.map((input) => input.output)
 
             let avaxIns = getAssetOutputs(inUTXOs, avaxID)
             let avaxOuts = getAssetOutputs(tx.outputs, avaxID)

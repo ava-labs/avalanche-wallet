@@ -26,6 +26,7 @@ export default class ImportExport extends Vue {
     }
 
     get fromChainId() {
+        if (!this.transaction.inputs) return '?'
         return this.transaction.inputs[0].output.chainID
     }
 
@@ -86,7 +87,8 @@ export default class ImportExport extends Vue {
             }, new BN(0))
             return sumAmt
         } else {
-            let sumAmt = this.transaction.inputs.reduce((acc, val) => {
+            let ins = this.transaction.inputs || []
+            let sumAmt = ins.reduce((acc, val) => {
                 let amt = new BN(val.output.amount)
                 return acc.add(amt)
             }, new BN(0))
