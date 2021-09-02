@@ -118,7 +118,6 @@ class WalletHelper {
         }
 
         let pAddressStrings = wallet.getAllAddressesP()
-        // let pAddressStrings = this.platformHelper.getAllDerivedAddresses()
 
         let stakeAmount = amt
 
@@ -216,8 +215,6 @@ class WalletHelper {
     static async evmGetAtomicUTXOs(wallet: WalletType) {
         let addrs = [wallet.getEvmAddressBech()]
         return await UtxoHelper.evmGetAtomicUTXOs(addrs)
-        // let result = await getAtomicUTXOsForAllAddresses<EVMUTXOSet>(addrs, 'C')
-        // return result
     }
 
     static async importToXChain(wallet: WalletType, sourceChain: AvmImportChainType) {
@@ -326,11 +323,6 @@ class WalletHelper {
     ) {
         let fee = avm.getTxFee()
         let amtFee = amt.add(fee)
-
-        // if (destinationChain === 'C') {
-        // C Chain imports/exports do not have a fee
-        // amtFee = amt
-        // }
 
         let destinationAddr
         if (destinationChain === 'P') {
