@@ -5,6 +5,7 @@ import moment from 'moment'
 
 import { HistoryState, ITransactionData } from '@/store/modules/history/types'
 import { avm, pChain } from '@/AVA'
+import { filterDuplicateTransactions } from '@/helpers/history_helper'
 
 const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
@@ -98,11 +99,14 @@ const history_module: Module<HistoryState, RootState> = {
 
             let limit = 0
 
-            let txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            let txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
             let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
-            let transactions = txs
-                .concat(txsP)
+            let txsXFiltered = filterDuplicateTransactions(txsX)
+            let txsPFiltered = filterDuplicateTransactions(txsP)
+
+            let transactions = txsXFiltered
+                .concat(txsPFiltered)
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
             state.allTransactions = transactions

@@ -17,7 +17,8 @@
             </div>
             <div class="data_row reward_row">
                 <p>AVAX Price at reward date</p>
-                <p>{{ rewardDateAvaxPrice.toFixed(2) }} USD</p>
+                <p v-if="rewardDateAvaxPrice">{{ rewardDateAvaxPrice.toFixed(2) }} USD</p>
+                <p v-else>Unknown</p>
             </div>
             <div class="data_row reward_row">
                 <p>Total reward in USD</p>
