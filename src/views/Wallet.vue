@@ -27,7 +27,7 @@ import Sidebar from '@/components/wallet/Sidebar.vue'
 import MainPanel from '@/components/SidePanels/MainPanel.vue'
 import UpdateKeystoreModal from '@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue'
 
-const TIMEOUT_DURATION = 2 * 7 // in seconds
+const TIMEOUT_DURATION = 3 * 7 // in seconds
 const TIMEOUT_DUR_MS = TIMEOUT_DURATION * 1000
 
 @Component({
