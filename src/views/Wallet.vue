@@ -28,6 +28,7 @@ import MainPanel from '@/components/SidePanels/MainPanel.vue'
 import UpdateKeystoreModal from '@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue'
 
 const TIMEOUT_DURATION = 60 * 7 // in seconds
+const TIMEOUT_DUR_MS = TIMEOUT_DURATION * 1000
 
 @Component({
     components: {
@@ -38,19 +39,27 @@ const TIMEOUT_DURATION = 60 * 7 // in seconds
     },
 })
 export default class Wallet extends Vue {
-    inactiveDur: number = TIMEOUT_DURATION
     intervalId: NodeJS.Timeout | null = null
+    logoutTimestamp = Date.now() + TIMEOUT_DUR_MS
 
+    // Set the logout timestamp to now + TIMEOUT_DUR_MS
     resetTimer() {
-        this.inactiveDur = TIMEOUT_DURATION
+        this.logoutTimestamp = Date.now() + TIMEOUT_DUR_MS
+    }
+
+    checkLogout() {
+        let now = Date.now()
+
+        // Logout if current time is passed the logout timestamp
+        if (now >= this.logoutTimestamp) {
+            this.$store.dispatch('timeoutLogout')
+        }
     }
 
     created() {
+        this.resetTimer()
         this.intervalId = setInterval(() => {
-            this.inactiveDur -= 1
-            if (this.inactiveDur <= 0) {
-                this.$store.dispatch('timeoutLogout')
-            }
+            this.checkLogout()
         }, 1000)
     }
 
@@ -79,6 +88,7 @@ export default class Wallet extends Vue {
         view.removeEventListener('mousedown', this.resetTimer)
         window.removeEventListener('beforeunload', this.unload)
     }
+
     destroyed() {
         clearInterval(this.intervalId!)
     }
