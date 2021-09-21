@@ -204,13 +204,6 @@ export default class FormC extends Vue {
     onTokenChange(token: Erc20Token | 'native') {
         this.formToken = token
         this.isCollectible = false
-
-        if (token === 'native') {
-            // this.gasPrice = 225
-            this.gasLimit = 21000
-        } else {
-            // this.gasPrice = token.getTransferGasPrice()
-        }
     }
 
     onCollectibleChange(val: iErc721SelectInput) {
