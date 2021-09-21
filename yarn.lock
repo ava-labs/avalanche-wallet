@@ -2,16 +2,16 @@
 # yarn lockfile v1
 
 
-"@avalabs/avalanche-wallet-sdk@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.9.1.tgz#cb30a65ac9f60f214102864740fcbb7955c0a3ee"
-  integrity sha512-rnO4NIB5x5X1qqtcgr9APH8g7gygthn660n8gzgboKPIeiduc6VXionAuRDMxKOFlp5s5yqMbhG/OpV2kdsxbA==
+"@avalabs/avalanche-wallet-sdk@0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.9.6.tgz#1e64aac362abb51c9b66e07395f35e2c27e845cc"
+  integrity sha512-O1ngdLXGoUICFLgqyik53U+DpKq32dIZWfLI5T36C6B+g3Lc30vjN3eyf2yRPLIlvNqhZTBse5iMdkf/jgIRgg==
   dependencies:
     "@ethereumjs/common" "2.4.0"
     "@ethereumjs/tx" "3.3.0"
     "@ledgerhq/hw-app-eth" "5.42.1"
     "@obsidiansystems/hw-app-avalanche" "0.2.2"
-    "@openzeppelin/contracts" "4.1.0"
+    "@openzeppelin/contracts" "4.3.2"
     "@types/dompurify" "^2.2.3"
     avalanche "3.8.1"
     big.js "^6.1.1"
@@ -2469,10 +2469,10 @@
   dependencies:
     "@octokit/openapi-types" "^7.3.2"
 
-"@openzeppelin/contracts@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.1.0.tgz#baec89a7f5f73e3d8ea582a78f1980134b605375"
-  integrity sha512-TihZitscnaHNcZgXGj9zDLDyCqjziytB4tMCwXq0XimfWkAjBYyk5/pOsDbbwcavhlc79HhpTEpQcrMnPVa1mw==
+"@openzeppelin/contracts@4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.3.2.tgz#ff80affd6d352dbe1bbc5b4e1833c41afd6283b6"
+  integrity sha512-AybF1cesONZStg5kWf6ao9OlqTZuPqddvprc0ky7lrUVOjXeKpmQ2Y9FK+6ygxasb+4aic4O5pneFBfwVsRRRg==
 
 "@openzeppelin/contracts@^3.4.2":
   version "3.4.2"
