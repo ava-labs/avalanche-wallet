@@ -68,7 +68,7 @@ export default class EVMInputDropdown extends Vue {
     isCollectible = false
     collectible: iErc721SelectInput | null = null
     @Prop({ default: false }) disabled!: boolean
-    @Prop({ default: 225 }) gasPrice!: number
+    @Prop() gasPrice!: BN // in wei
     @Prop({ default: 21000 }) gasLimit!: number
     amt = new BN(0)
 
@@ -92,10 +92,8 @@ export default class EVMInputDropdown extends Vue {
     get max_amount(): BN {
         // Subtract gas
         if (this.isNative) {
-            let mult = new BN(10).pow(new BN(9))
             let limit = new BN(this.gasLimit)
-            let price = new BN(this.gasPrice)
-            let fee = limit.mul(price).mul(mult)
+            let fee = limit.mul(this.gasPrice)
             return this.balanceBN.sub(fee)
         } else {
             return this.balanceBN

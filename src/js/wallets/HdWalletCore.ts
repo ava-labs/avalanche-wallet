@@ -11,11 +11,12 @@ import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
 import { WalletCore } from '@/js/wallets/WalletCore'
 import { updateFilterAddresses } from '../../providers'
+import { digestMessage } from '@/helpers/helper'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
 
-class HdWalletCore extends WalletCore {
+abstract class HdWalletCore extends WalletCore {
     chainId: string
 
     internalHelper: HdHelper
@@ -236,5 +237,38 @@ class HdWalletCore extends WalletCore {
             memo
         )
     }
+
+    findExternalAddressIndex(address: string): number | null {
+        // TODO: Look for P addresses too
+        let indexX = this.externalHelper.findAddressIndex(address)
+        let indexP = this.platformHelper.findAddressIndex(address)
+
+        let index = indexX !== null ? indexX : indexP
+
+        if (indexX === null && indexP === null) throw new Error('Address not found.')
+        return index
+    }
+
+    async signMessageByExternalAddress(msgStr: string, address: string) {
+        let index = this.findExternalAddressIndex(address)
+        if (index === null) throw new Error('Address not found.')
+        return await this.signMessageByExternalIndex(msgStr, index)
+    }
+
+    async signMessageByExternalIndex(msgStr: string, index: number): Promise<string> {
+        let digest = digestMessage(msgStr)
+
+        // Convert to the other Buffer and sign
+        let digestHex = digest.toString('hex')
+        let digestBuff = Buffer.from(digestHex, 'hex')
+
+        return await this.signHashByExternalIndex(index, digestBuff)
+    }
+
+    async signMessage(msg: string, address: string) {
+        return await this.signMessageByExternalAddress(msg, address)
+    }
+
+    abstract async signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
 }
 export { HdWalletCore }

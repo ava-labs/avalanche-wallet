@@ -18,6 +18,7 @@
         "test": "jest --verbose ./tests"
     },
     "dependencies": {
+        "@avalabs/avalanche-wallet-sdk": "0.9.6",
         "@avalabs/vue_components": "0.9.0",
         "@ethereumjs/common": "2.0.0",
         "@ethereumjs/tx": "3.0.0",
@@ -31,7 +32,7 @@
         "@ledgerhq/hw-transport-webhid": "^5.51.1",
         "@ledgerhq/hw-transport-webusb": "5.22.0",
         "@obsidiansystems/hw-app-avalanche": "0.2.2",
-        "@openzeppelin/contracts": "^3.4.0",
+        "@openzeppelin/contracts": "^3.4.2",
         "@types/big.js": "4.0.5",
         "@types/bn.js": "4.11.6",
         "@types/create-hash": "1.2.2",
@@ -44,7 +45,7 @@
         "@types/vue-datetime": "1.0.0",
         "@zxing/library": "0.15.2",
         "abi-decoder": "2.4.0",
-        "avalanche": "3.6.1",
+        "avalanche": "3.8.1",
         "axios": "0.21.1",
         "big.js": "5.2.2",
         "bip32": "2.0.5",
@@ -62,6 +63,7 @@
         "cors": "2.8.5",
         "create-hash": "1.2.0",
         "crypto-js": "^4.1.1",
+        "csv": "^5.5.0",
         "ethereum-blockies-base64": "1.0.2",
         "ethereumjs-tx": "2.1.2",
         "ethereumjs-util": "^7.0.7",

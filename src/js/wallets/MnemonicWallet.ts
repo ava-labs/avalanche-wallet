@@ -294,19 +294,9 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         return tx.sign(keyBuff)
     }
 
-    async signMessage(msgStr: string, address: string): Promise<string> {
-        let index = this.externalHelper.findAddressIndex(address)
-
-        if (index === null) throw 'Address not found.'
-
+    async signHashByExternalIndex(index: number, hash: BufferAvalanche) {
         let key = this.externalHelper.getKeyForIndex(index) as AVMKeyPair
-        let digest = digestMessage(msgStr)
-
-        // Convert to the other Buffer and sign
-        let digestHex = digest.toString('hex')
-        let digestBuff = BufferAvalanche.from(digestHex, 'hex')
-        let signed = key.sign(digestBuff)
-
+        let signed = key.sign(hash)
         return bintools.cb58Encode(signed)
     }
 
