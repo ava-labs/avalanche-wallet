@@ -2,7 +2,7 @@
     <modal ref="modal" :title="$t('modal.mnemonic.title')" class="modal_main">
         <div class="mnemonic_modal_body">
             <mnemonic-display :phrase="phrase" :row-size="3"></mnemonic-display>
-            <p class="phrase_raw">{{ phrase }}</p>
+            <p class="phrase_raw">{{ phrase.getValue() }}</p>
             <p class="warning_text">
                 Warning: Never disclose this mnemonic phrase. Anyone with your phrase can steal any
                 assets held in your wallet.
@@ -17,6 +17,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import CopyText from '@/components/misc/CopyText.vue'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component({
     components: {
@@ -25,8 +26,8 @@ import CopyText from '@/components/misc/CopyText.vue'
         CopyText,
     },
 })
-export default class MnemonicPhrase extends Vue {
-    @Prop({ default: '' }) phrase!: string
+export default class MnemonicPhraseModal extends Vue {
+    @Prop({ default: '' }) phrase!: MnemonicPhrase
 
     open(): void {
         let modal = this.$refs.modal as Modal

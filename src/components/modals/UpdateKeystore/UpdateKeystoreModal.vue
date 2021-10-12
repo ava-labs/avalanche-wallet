@@ -21,7 +21,6 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import CopyText from '@/components/misc/CopyText.vue'
 import ExportWallet from '@/components/wallet/manage/ExportWallet.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
@@ -29,7 +28,6 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 @Component({
     components: {
         Modal,
-        MnemonicDisplay,
         CopyText,
         ExportWallet,
     },

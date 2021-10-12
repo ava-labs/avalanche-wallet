@@ -5,11 +5,11 @@
             :wallets="[wallet]"
             ref="export_wallet"
         ></ExportKeys>
-        <mnemonic-phrase
+        <MnemonicPhraseModal
             v-if="walletType === 'mnemonic'"
             :phrase="mnemonicPhrase"
             ref="modal"
-        ></mnemonic-phrase>
+        ></MnemonicPhraseModal>
         <HdDerivationListModal
             :wallet="wallet"
             ref="modal_hd"
@@ -118,7 +118,7 @@ import { bintools, keyChain } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue'
+import MnemonicPhraseModal from '@/components/modals/MnemonicPhraseModal.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
@@ -128,6 +128,7 @@ import PrivateKey from '@/components/modals/PrivateKey.vue'
 import { WalletNameType, WalletType } from '@/js/wallets/types'
 
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -135,7 +136,7 @@ interface IKeyBalanceDict {
 
 @Component({
     components: {
-        MnemonicPhrase,
+        MnemonicPhraseModal,
         HdDerivationListModal,
         Tooltip,
         ExportKeys,
@@ -145,6 +146,13 @@ interface IKeyBalanceDict {
 export default class KeyRow extends Vue {
     @Prop() wallet!: WalletType
     @Prop({ default: false }) is_default?: boolean
+
+    $refs!: {
+        export_wallet: ExportKeys
+        modal: MnemonicPhraseModal
+        modal_hd: HdDerivationListModal
+        modal_priv_key: PrivateKey
+    }
 
     get isVolatile() {
         return this.$store.state.volatileWallets.includes(this.wallet)
@@ -217,20 +225,20 @@ export default class KeyRow extends Vue {
     get isHDWallet() {
         return ['mnemonic', 'ledger'].includes(this.walletType)
     }
-    get mnemonicPhrase(): string {
-        if (this.walletType !== 'mnemonic') return '?'
+    get mnemonicPhrase(): MnemonicPhrase | null {
+        if (this.walletType !== 'mnemonic') return null
         let wallet = this.wallet as MnemonicWallet
-        return wallet.getMnemonic()
+        return wallet.getMnemonicEncrypted()
     }
 
-    get privateKey(): string {
-        if (this.walletType !== 'singleton') return '?'
+    get privateKey(): string | null {
+        if (this.walletType !== 'singleton') return null
         let wallet = this.wallet as SingletonWallet
         return wallet.key
     }
 
-    get privateKeyC(): string {
-        if (this.walletType === 'ledger') return '?'
+    get privateKeyC(): string | null {
+        if (this.walletType === 'ledger') return null
         let wallet = this.wallet as SingletonWallet | MnemonicWallet
         return wallet.ethKey
     }
@@ -243,13 +251,13 @@ export default class KeyRow extends Vue {
     }
 
     showModal() {
-        let modal = this.$refs.modal as MnemonicPhrase
+        let modal = this.$refs.modal
         //@ts-ignore
         modal.open()
     }
 
     showPastAddresses() {
-        let modal = this.$refs.modal_hd as MnemonicPhrase
+        let modal = this.$refs.modal_hd
         //@ts-ignore
         modal.open()
     }
