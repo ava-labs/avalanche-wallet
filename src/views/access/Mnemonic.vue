@@ -24,11 +24,7 @@
         </div>
         <div class="right">
             <label>Preview</label>
-            <mnemonic-display
-                :phrase="encodedPhrase"
-                class="phrase_disp"
-                :rowSize="3"
-            ></mnemonic-display>
+            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
         </div>
     </div>
 </template>
@@ -38,7 +34,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import * as bip39 from 'bip39'
-import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component({
     components: {
@@ -49,10 +44,6 @@ export default class Mnemonic extends Vue {
     phrase: string = ''
     isLoading: boolean = false
     err: string = ''
-
-    get encodedPhrase() {
-        return new MnemonicPhrase(this.phrase)
-    }
 
     beforeDestroy() {
         this.phrase = ''
