@@ -28,7 +28,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 
@@ -59,6 +59,7 @@ export default class PaperWallet extends Vue {
     qrImg: HTMLImageElement | null = null
     mnemonicImg: HTMLImageElement | null = null
 
+    @Prop() wallet!: MnemonicWallet
     // Height and Width of the img and canvas
     width = 100
     height = 100
@@ -93,12 +94,12 @@ export default class PaperWallet extends Vue {
         }
     }
 
-    get mnemonic(): string {
-        let wallet: MnemonicWallet = this.$store.state.activeWallet
-        if (!wallet) return '-'
-
-        return wallet.mnemonic || '-'
-    }
+    // get mnemonic(): string {
+    //     let wallet: MnemonicWallet = this.$store.state.activeWallet
+    //     if (!wallet) return '-'
+    //
+    //     return wallet.getMnemonic() || '-'
+    // }
 
     get aspectRatio(): number {
         return PDF_W / PDF_H
@@ -166,7 +167,7 @@ export default class PaperWallet extends Vue {
         )
 
         // Mnemonic
-        let mnemonicWords: string[] = this.mnemonic.split(' ')
+        let mnemonicWords: string[] = this.wallet.getMnemonic().split(' ')
         let row1 = mnemonicWords.slice(0, 8).join(' ')
         let row2 = mnemonicWords.slice(8, 16).join(' ')
         let row3 = mnemonicWords.slice(16).join(' ')
@@ -199,7 +200,7 @@ export default class PaperWallet extends Vue {
         )
 
         QRCode.toDataURL(
-            this.mnemonic,
+            this.wallet.getMnemonic(),
             {
                 width: this.designPxToReal(90),
             },

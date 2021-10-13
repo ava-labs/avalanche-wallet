@@ -16,13 +16,9 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import MnemonicDisplay from '../../misc/MnemonicDisplay.vue'
 import * as bip39 from 'bip39'
-import { Buffer } from 'buffer/'
-import { keyChain } from '@/AVA'
-@Component({
-    components: { MnemonicDisplay },
-})
+
+@Component
 export default class AddMnemonic extends Vue {
     phrase: string = ''
     err: string = ''

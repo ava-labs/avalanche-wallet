@@ -5,7 +5,7 @@
                 <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
             <label>{{ $t('access.mnemonic.subtitle') }}</label>
-            <textarea v-model="phrase" translate="no"></textarea>
+            <textarea @input="onPhraseIn" translate="no"></textarea>
             <div class="button_container">
                 <p class="err" v-if="err">{{ err }}</p>
                 <v-btn
@@ -24,7 +24,11 @@
         </div>
         <div class="right">
             <label>Preview</label>
-            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
+            <mnemonic-display
+                :phrase="encodedPhrase"
+                class="phrase_disp"
+                :rowSize="3"
+            ></mnemonic-display>
         </div>
     </div>
 </template>
@@ -34,6 +38,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import * as bip39 from 'bip39'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component({
     components: {
@@ -44,6 +49,18 @@ export default class Mnemonic extends Vue {
     phrase: string = ''
     isLoading: boolean = false
     err: string = ''
+
+    get encodedPhrase() {
+        return new MnemonicPhrase(this.phrase)
+    }
+
+    beforeDestroy() {
+        this.phrase = ''
+    }
+
+    onPhraseIn(ev: any) {
+        this.phrase = ev.currentTarget.value
+    }
 
     errCheck() {
         let phrase = this.phrase
@@ -93,7 +110,6 @@ export default class Mnemonic extends Vue {
                 this.isLoading = false
             } catch (e) {
                 this.isLoading = false
-                console.log(e)
                 this.err = `${this.$t('access.mnemonic.error')}`
             }
         }, 500)

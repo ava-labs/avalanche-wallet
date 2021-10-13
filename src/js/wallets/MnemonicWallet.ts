@@ -44,6 +44,7 @@ import { KeyChain } from 'avalanche/dist/apis/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -64,7 +65,7 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE // How many items are actuall
 export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet {
     seed: string
     hdKey: HDKey
-    mnemonic: string
+    private mnemonic: MnemonicPhrase
     isLoading: boolean
     type: WalletNameType
     ethKey: string
@@ -112,7 +113,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')
         this.hdKey = masterHdKey
-        this.mnemonic = mnemonic
+        this.mnemonic = new MnemonicPhrase(mnemonic)
         this.isLoading = false
     }
 
@@ -172,7 +173,14 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         return this.externalHelper.getCurrentKey() as AVMKeyPair
     }
 
+    /**
+     * Returns the mnemonic phrase of this wallet
+     */
     getMnemonic(): string {
+        return this.mnemonic.getValue()
+    }
+
+    getMnemonicEncrypted(): MnemonicPhrase {
         return this.mnemonic
     }
 

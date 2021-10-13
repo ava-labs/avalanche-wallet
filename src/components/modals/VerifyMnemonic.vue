@@ -26,6 +26,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component({
     components: {
@@ -39,7 +40,7 @@ export default class VerifyMnemonic extends Vue {
     err: string = ''
     title: string = ''
 
-    @Prop() mnemonic?: string
+    @Prop() mnemonic?: MnemonicPhrase
 
     @Watch('mnemonic')
     onmnemonicchange(val: string) {
@@ -75,7 +76,7 @@ export default class VerifyMnemonic extends Vue {
     }
 
     get words() {
-        return this.mnemonic ? this.mnemonic.split(' ') : []
+        return this.mnemonic ? this.mnemonic.getValue().split(' ') : []
     }
 
     open() {
