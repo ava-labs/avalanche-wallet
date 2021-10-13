@@ -77,7 +77,7 @@ export default class Mnemonic extends Vue {
     }
 
     get canSubmit() {
-        if (this.wordCount < 24) {
+        if (this.wordCount !== 24) {
             return false
         }
 
