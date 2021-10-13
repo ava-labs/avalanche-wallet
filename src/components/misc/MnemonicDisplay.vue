@@ -9,17 +9,22 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component
 export default class MnemonicDisplay extends Vue {
     @Prop({ default: '#FFFFFF' }) bgColor?: string
     @Prop({ default: 4 }) rowSize!: number
-    @Prop() phrase!: string
+    @Prop() phrase!: string | MnemonicPhrase
 
     wordNum: number = 24
 
     get phraseArray(): string[] {
-        return this.phrase.split(' ')
+        if (typeof this.phrase === 'string') {
+            return this.phrase.split(' ')
+        } else {
+            return this.phrase.getValue().split(' ')
+        }
     }
 }
 </script>
