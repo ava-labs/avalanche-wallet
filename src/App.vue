@@ -13,6 +13,7 @@
         </v-main>
         <LedgerBlock ref="ledger_block"></LedgerBlock>
         <LedgerUpgrade></LedgerUpgrade>
+        <LedgerWalletLoading></LedgerWalletLoading>
         <NetworkLoadingBlock></NetworkLoadingBlock>
         <notifications></notifications>
         <TestNetBanner></TestNetBanner>
@@ -27,9 +28,11 @@ import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
 import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
+import LedgerWalletLoading from '@/components/modals/LedgerWalletLoading'
 
 export default {
     components: {
+        LedgerWalletLoading,
         UpgradeToAccountModal,
         NetworkLoadingBlock,
         LedgerBlock,

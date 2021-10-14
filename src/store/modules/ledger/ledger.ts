@@ -8,6 +8,7 @@ const ledger_module: Module<LedgerState, RootState> = {
         isBlock: false, // if true a modal blocks the window
         isPrompt: false,
         isUpgradeRequired: false,
+        isWalletLoading: false,
         messages: [],
         title: 'title',
         info: `info'`,
@@ -26,6 +27,9 @@ const ledger_module: Module<LedgerState, RootState> = {
         },
         setIsUpgradeRequired(state, val) {
             state.isUpgradeRequired = val
+        },
+        setIsWalletLoading(state, val) {
+            state.isWalletLoading = val
         },
     },
     actions: {},

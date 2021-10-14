@@ -1,20 +1,32 @@
 <template>
     <modal ref="modal" :title="$t('modal.ledger_upgrade.title')" @beforeClose="beforeClose">
         <div class="ledger_block">
-            <p style="margin-bottom: 14px !important; font-size: 16px" v-if="config">
-                <b>Min Version Required: v{{ minV }}.</b>
+            <ol>
+                <li>Connect the ledger device to your computer.</li>
+                <li>Enter your PIN and access your device.</li>
+                <li>
+                    Ensure you have installed the
+                    <b>Avalanche App v0.5.3</b>
+                    and open it on your device.
+                </li>
+            </ol>
+            <p style="margin-top: 12px !important">
+                <small>
+                    If you do not have the Avalanche app on your ledger, please add it through the
+                    <a href="https://www.ledger.com/ledger-live/download" target="_blank">
+                        Ledger Live
+                    </a>
+                    app manager. The minimum version required to use the app is version 0.5.3, more
+                    instructions can be found
+                    <a
+                        target="_blank"
+                        href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
+                    >
+                        here
+                    </a>
+                    .
+                </small>
             </p>
-            <p style="margin-bottom: 14px !important; font-size: 16px">
-                {{ $t('modal.ledger_upgrade.desc') }}
-            </p>
-            <div>
-                <a
-                    href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
-                    target="_blank"
-                >
-                    {{ $t('modal.ledger_upgrade.upgrade') }}
-                </a>
-            </div>
         </div>
     </modal>
 </template>
