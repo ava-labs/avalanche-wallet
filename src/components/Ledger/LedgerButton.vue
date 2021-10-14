@@ -116,7 +116,7 @@ export default class LedgerButton extends Vue {
                 (this.config as unknown) as ILedgerAppConfig
             )
             try {
-                await this.$store.dispatch('accessWalletLedger', wallet)
+                await this.loadWallet(wallet)
                 this.onsuccess()
             } catch (e) {
                 this.onerror(e)
@@ -136,10 +136,31 @@ export default class LedgerButton extends Vue {
 
         this.config = await app.getAppConfiguration()
     }
+
+    async loadWallet(wallet: LedgerWallet) {
+        this.showWalletLoading()
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                this.$store
+                    .dispatch('accessWalletLedger', wallet)
+                    .then(() => {
+                        resolve()
+                    })
+                    .catch((err) => {
+                        reject(err)
+                    })
+            }, 1000)
+        })
+    }
+
+    showWalletLoading() {
+        this.$store.commit('Ledger/closeModal')
+        this.$store.commit('Ledger/setIsWalletLoading', true)
+    }
     onsuccess() {
+        this.$store.commit('Ledger/setIsWalletLoading', false)
         this.isLoading = false
         this.config = undefined
-        this.$store.commit('Ledger/closeModal')
     }
     onerror(err: any) {
         this.isLoading = false
