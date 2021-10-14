@@ -708,7 +708,7 @@
         "ledger_upgrade": {
             "done": "Done",
             "upgrade": "Upgrade",
-            "title": "Trouble Connecting",
+            "title": "Trouble Connecting?",
             "desc": "We're having trouble connecting to your device. Please make sure you have the Avalanche app open and upgraded to the latest version."
         },
         "hd": {
