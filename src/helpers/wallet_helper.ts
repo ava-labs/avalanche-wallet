@@ -1,14 +1,13 @@
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
 } from 'avalanche/dist/apis/platformvm/utxos'
-import { UTXOSet as AVMUTXOSet, UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
+import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { WalletType } from '@/js/wallets/types'
 
 import { BN, Buffer } from 'avalanche'
-import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
+import { UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import {
     buildAvmExportTransaction,
     buildCreateNftFamilyTx,
