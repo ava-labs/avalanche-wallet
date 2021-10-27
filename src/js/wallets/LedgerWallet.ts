@@ -135,6 +135,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         unsignedTx: UnsignedTx,
         chainId: ChainIdType
     ): { paths: string[]; isAvaxOnly: boolean } {
+        // TODO: This is a nasty fix. Remove when AJS is updated.
+        unsignedTx.toBuffer()
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
@@ -160,7 +162,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let paths: string[] = []
 
         let isAvaxOnly = true
-        // Collect paths derivation paths for source addresses
+
+        // Collect derivation paths for source addresses
         for (let i = 0; i < items.length; i++) {
             let item = items[i]
 

@@ -263,7 +263,6 @@ class HdHelper {
 
                 let rawAddr = scanAddr.split('-')[1]
                 let chains: string[] = addrChains[rawAddr]
-
                 if (!chains) {
                     // If doesnt exist on any chain
                     gapSize++
