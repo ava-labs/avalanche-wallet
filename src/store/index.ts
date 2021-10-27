@@ -243,7 +243,7 @@ export default new Vuex.Store({
             for (var i = 0; i < state.wallets.length; i++) {
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
-                    if ((w as MnemonicWallet).mnemonic === mnemonic) {
+                    if ((w as MnemonicWallet).getMnemonic() === mnemonic) {
                         throw new Error('Wallet already exists.')
                     }
                 }
