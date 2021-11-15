@@ -87,7 +87,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethAddressBech: string
     config: ILedgerAppConfig
 
-    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth?: HDKey, ethApp?: Eth) {
+    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth: HDKey, ethApp: Eth) {
         super(hdkey)
         this.app = app
         this.ethApp = ethApp
@@ -791,7 +791,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             })
             const signature = await this.ethApp.signTransaction(
                 LEDGER_ETH_ACCOUNT_PATH,
-                rawUnsignedTx
+                rawUnsignedTx.toString('hex')
             )
             store.commit('Ledger/closeModal')
 

@@ -43,6 +43,7 @@ import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
 import moment from 'moment'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import getMemoFromByteString from '@/services/history/utils'
 
 @Component({
     components: {
@@ -95,12 +96,7 @@ export default class TxRow extends Vue {
 
     get memo(): string | null {
         const memo = this.source.memo
-        const memoText = new Buffer(memo, 'base64').toString('utf8')
-        // Bug that sets memo to empty string (AAAAAA==) for some
-        // tx types
-        if (!memoText.length || memo === 'AAAAAA==') return null
-
-        return memoText
+        return getMemoFromByteString(memo)
     }
 
     get mom() {
