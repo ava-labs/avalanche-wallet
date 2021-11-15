@@ -69,6 +69,7 @@
         "ethereumjs-util": "^7.0.7",
         "ethers": "^5.3.1",
         "express": "4.17.1",
+        "get-urls": "^10.0.1",
         "hdkey": "2.0.1",
         "helmet": "3.23.3",
         "jdenticon": "2.2.0",
