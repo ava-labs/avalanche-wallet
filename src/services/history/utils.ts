@@ -1,5 +1,5 @@
 import { Buffer } from 'avalanche'
-import getUrls from 'get-urls'
+import urlRegex from 'url-regex'
 
 export default function getMemoFromByteString(memo: string) {
     const memoText = new Buffer(memo, 'base64').toString('utf8')
@@ -8,6 +8,6 @@ export default function getMemoFromByteString(memo: string) {
     if (!memoText.length || memo === 'AAAAAA==') return null
 
     // If memo contains URL do not show memo
-    if (getUrls(memoText).size > 0) return null
+    if (urlRegex().test(memoText)) return null
     return memoText
 }
