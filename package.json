@@ -46,7 +46,7 @@
         "@zxing/library": "0.15.2",
         "abi-decoder": "2.4.0",
         "avalanche": "3.8.1",
-        "axios": "0.21.1",
+        "axios": "0.21.2",
         "big.js": "5.2.2",
         "bip32": "2.0.5",
         "bip32-path": "^0.4.2",
