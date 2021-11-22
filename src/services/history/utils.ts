@@ -8,6 +8,6 @@ export default function getMemoFromByteString(memo: string) {
     if (!memoText.length || memo === 'AAAAAA==') return null
 
     // If memo contains URL do not show memo
-    if (urlRegex().test(memoText)) return null
+    if (urlRegex({strict: false}).test(memoText)) return null
     return memoText
 }
