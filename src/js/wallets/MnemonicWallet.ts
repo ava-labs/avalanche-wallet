@@ -45,6 +45,7 @@ import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
+import { ExportChainsC, ExportChainsP } from '@avalabs/avalanche-wallet-sdk'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -220,30 +221,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     async getStake(): Promise<BN> {
         this.stakeAmount = await WalletHelper.getStake(this)
         return this.stakeAmount
-    }
-
-    async exportFromPChain(amt: BN) {
-        return await WalletHelper.exportFromPChain(this, amt)
-    }
-
-    async exportFromXChain(amt: BN, destinationChain: AvmExportChainType) {
-        return await WalletHelper.exportFromXChain(this, amt, destinationChain)
-    }
-
-    async exportFromCChain(amt: BN) {
-        return await WalletHelper.exportFromCChain(this, amt)
-    }
-
-    async importToCChain(): Promise<string> {
-        return await WalletHelper.importToCChain(this)
-    }
-
-    async importToPlatformChain(): Promise<string> {
-        return await WalletHelper.importToPlatformChain(this)
-    }
-
-    async importToXChain(sourceChain: AvmImportChainType) {
-        return await WalletHelper.importToXChain(this, sourceChain)
     }
 
     async issueBatchTx(

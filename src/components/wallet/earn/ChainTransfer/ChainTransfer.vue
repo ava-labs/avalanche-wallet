@@ -6,19 +6,31 @@
                     ref="form"
                     @change="onFormChange"
                     :is-confirm="isConfirm"
+                    :balance="balanceBig"
+                    :max-amt="maxAmt"
                 ></ChainSwapForm>
 
                 <div v-if="!isSuccess && !isLoading">
                     <div v-if="!isImportErr" class="fees">
                         <h4>{{ $t('earn.transfer.fee') }}</h4>
+
                         <p>
-                            {{ $t('earn.transfer.fee_name') }}
-                            <span>{{ fee.toString() }} AVAX</span>
+                            Export Fee
+                            <span>{{ exportFee.toLocaleString() }} AVAX</span>
+                        </p>
+                        <p>
+                            Import Fee
+                            <span>{{ importFee.toLocaleString() }} AVAX</span>
+                        </p>
+                        <p>
+                            <b>
+                                Total
+                                <span>{{ fee.toLocaleString() }} AVAX</span>
+                            </b>
                         </p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>
-                        <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
                         <template v-if="isImportErr">
                             <p>
                                 {{ $t('earn.transfer.err_desc') }}
@@ -81,14 +93,6 @@
                     <v-btn depressed class="button_secondary" small block @click="startAgain">
                         {{ $t('earn.transfer.success.again') }}
                     </v-btn>
-                    <!--                    <v-btn-->
-                    <!--                        depressed-->
-                    <!--                        small-->
-                    <!--                        block-->
-                    <!--                        text-->
-                    <!--                        @click="$emit('cancel')"-->
-                    <!--                        >{{ $t('earn.transfer.success.back') }}</v-btn-->
-                    <!--                    >-->
                 </div>
             </div>
             <div class="right_col">
@@ -116,7 +120,6 @@ import 'reflect-metadata'
 import { Component, Vue } from 'vue-property-decorator'
 import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
 import { avm, cChain, pChain } from '@/AVA'
@@ -130,7 +133,15 @@ import { ChainIdType } from '@/constants'
 
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
-import { AvmExportChainType, AvmImportChainType, WalletType } from '@/js/wallets/types'
+import { WalletType } from '@/js/wallets/types'
+import {
+    ExportChainsC,
+    ExportChainsP,
+    ExportChainsX,
+    GasHelper,
+    Utils,
+    Big,
+} from '@avalabs/avalanche-wallet-sdk'
 
 const IMPORT_DELAY = 5000 // in ms
 const BALANCE_DELAY = 2000 // in ms
@@ -160,7 +171,9 @@ export default class ChainTransfer extends Vue {
     isConfirm = false
     isSuccess = false
 
-    formAmt = new BN(0)
+    formAmt: BN = new BN(0)
+
+    baseFee: BN = new BN(0)
 
     // Transaction ids
     exportId: string = ''
@@ -175,6 +188,10 @@ export default class ChainTransfer extends Vue {
 
     activated() {
         this.$refs.form.clear()
+    }
+
+    created() {
+        this.updateBaseFee()
     }
 
     get ava_asset(): AvaAsset | null {
@@ -197,60 +214,89 @@ export default class ChainTransfer extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return balRaw.div(new BN(Math.pow(10, 9)))
+        return Utils.avaxCtoX(balRaw)
     }
 
-    get balance(): Big {
-        let bal: BN
+    get balanceBN(): BN {
         if (this.sourceChain === 'P') {
-            bal = this.platformUnlocked
+            return this.platformUnlocked
         } else if (this.sourceChain === 'C') {
-            bal = this.evmUnlocked
+            return this.evmUnlocked
         } else {
-            bal = this.avmUnlocked
+            return this.avmUnlocked
         }
+    }
 
-        let bigBal = bnToBig(bal, 9)
-
-        return bigBal
+    get balanceBig(): Big {
+        return Utils.bnToBig(this.balanceBN, 9)
     }
 
     get formAmtText() {
-        return bnToBig(this.formAmt, 9).toLocaleString()
+        return Utils.bnToAvaxX(this.formAmt)
     }
 
-    // Fee is 2 times the tx transfer fee
     get fee(): Big {
-        let feeX = avm.getTxFee()
-        let totFee = feeX.mul(new BN(2))
-
-        let feeXBig = bnToBig(totFee, 9)
-
-        return feeXBig
+        return this.exportFee.add(this.importFee)
     }
 
-    get maxAmt(): BN {
-        let max = this.balance.sub(this.fee)
-        let zero = Big(0)
-        if (zero.gt(max)) {
-            return new BN(0)
+    get feeBN(): BN {
+        return this.importFeeBN.add(this.exportFeeBN)
+    }
+
+    getFee(chain: ChainIdType, isExport: boolean): Big {
+        if (chain === 'X') {
+            return Utils.bnToBigAvaxX(avm.getTxFee())
+        } else if (chain === 'P') {
+            return Utils.bnToBigAvaxX(pChain.getTxFee())
         } else {
-            let bnStr = max.times(Big(Math.pow(10, 9))).toString()
-            return new BN(bnStr)
+            const fee = isExport
+                ? GasHelper.estimateExportGasFeeFromMockTx(
+                      this.targetChain as ExportChainsC,
+                      this.amt,
+                      this.wallet.getEvmAddress(),
+                      this.wallet.getCurrentAddressPlatform()
+                  )
+                : GasHelper.estimateImportGasFeeFromMockTx(
+                      this.sourceChain as ExportChainsC,
+                      this.amt,
+                      this.wallet.getEvmAddress()
+                  )
+
+            const totFeeWei = this.baseFee.mul(new BN(fee))
+            return Utils.bnToBigAvaxC(totFeeWei)
         }
     }
 
-    get amtTotalCost(): Big {
-        let amt = this.amtBig
-        let fee = this.fee
-        return amt.add(fee)
+    get importFee(): Big {
+        return this.getFee(this.targetChain, false)
     }
 
-    get amtBig(): Big {
-        let bn = this.amt
-        // let big = Big(bn.toString()).div(Math.pow(10,9));
-        let big = bnToBig(bn, 9)
-        return big
+    /**
+     * Returns the import fee in nAVAX
+     */
+    get importFeeBN(): BN {
+        return Utils.bigToBN(this.importFee, 9)
+    }
+
+    get exportFee(): Big {
+        return this.getFee(this.sourceChain, true)
+    }
+
+    get exportFeeBN(): BN {
+        return Utils.bigToBN(this.exportFee, 9)
+    }
+
+    /**
+     * The maximum amount that can be transferred in nAVAX
+     */
+    get maxAmt(): BN {
+        let max = this.balanceBN.sub(this.feeBN)
+
+        if (max.isNeg() || max.isZero()) {
+            return new BN(0)
+        } else {
+            return max
+        }
     }
 
     onFormChange(data: ChainSwapFormData) {
@@ -272,6 +318,10 @@ export default class ChainTransfer extends Vue {
     get wallet() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
+    }
+
+    async updateBaseFee() {
+        this.baseFee = await GasHelper.getBaseFeeRecommended()
     }
 
     async submit() {
@@ -300,14 +350,23 @@ export default class ChainTransfer extends Vue {
                 case 'X':
                     exportTxId = await wallet.exportFromXChain(
                         amt,
-                        destinationChain as AvmExportChainType
+                        destinationChain as ExportChainsX,
+                        this.importFeeBN
                     )
                     break
                 case 'P':
-                    exportTxId = await wallet.exportFromPChain(amt)
+                    exportTxId = await wallet.exportFromPChain(
+                        amt,
+                        destinationChain as ExportChainsP,
+                        this.importFeeBN
+                    )
                     break
                 case 'C':
-                    exportTxId = await wallet.exportFromCChain(amt)
+                    exportTxId = await wallet.exportFromCChain(
+                        amt,
+                        destinationChain as ExportChainsC,
+                        this.exportFeeBN
+                    )
                     break
             }
         } catch (e) {
@@ -375,11 +434,16 @@ export default class ChainTransfer extends Vue {
         let importTxId
         try {
             if (this.targetChain === 'P') {
-                importTxId = await wallet.importToPlatformChain()
+                importTxId = await wallet.importToPlatformChain(this.sourceChain as ExportChainsP)
             } else if (this.targetChain === 'X') {
-                importTxId = await wallet.importToXChain(this.sourceChain as AvmImportChainType)
+                importTxId = await wallet.importToXChain(this.sourceChain as ExportChainsX)
             } else {
-                importTxId = await wallet.importToCChain()
+                //TODO: Import only the exported UTXO
+
+                importTxId = await wallet.importToCChain(
+                    this.sourceChain as ExportChainsC,
+                    this.importFeeBN
+                )
             }
         } catch (e) {
             // Retry import one more time

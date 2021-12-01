@@ -3,7 +3,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
 import { WalletNameType } from '@/js/wallets/types'
 
-import { Buffer as BufferAvalanche } from 'avalanche'
+import { Buffer as BufferAvalanche, BN } from 'avalanche'
 import {
     KeyPair as AVMKeyPair,
     KeyChain as AVMKeyChain,
@@ -19,15 +19,8 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 import { PayloadBase } from 'avalanche/dist/utils'
-import BN from 'bn.js'
 import { buildUnsignedTransaction } from '../TxHelper'
-import {
-    AvaWalletCore,
-    AvmExportChainType,
-    AvmImportChainType,
-    ChainAlias,
-    UnsafeWallet,
-} from './types'
+import { AvaWalletCore, UnsafeWallet } from './types'
 import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
 import { privateToAddress } from 'ethereumjs-util'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
@@ -42,6 +35,7 @@ import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { Transaction } from '@ethereumjs/tx'
+import { ExportChainsC, ExportChainsP, ExportChainsX } from '@avalabs/avalanche-wallet-sdk'
 
 class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
     keyChain: AVMKeyChain
@@ -157,10 +151,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         return this.stakeAmount
     }
 
-    getUTXOSet(): AVMUTXOSet {
-        return this.utxoset
-    }
-
     getPlatformUTXOSet(): PlatformUTXOSet {
         return this.platformUtxoset
     }
@@ -203,30 +193,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         this.isFetchUtxos = false
 
         return
-    }
-
-    async exportFromPChain(amt: BN) {
-        return await WalletHelper.exportFromPChain(this, amt)
-    }
-
-    async exportFromXChain(amt: BN, destinationChain: AvmExportChainType) {
-        return await WalletHelper.exportFromXChain(this, amt, destinationChain)
-    }
-
-    async exportFromCChain(amt: BN) {
-        return await WalletHelper.exportFromCChain(this, amt)
-    }
-
-    async importToPlatformChain(): Promise<string> {
-        return await WalletHelper.importToPlatformChain(this)
-    }
-
-    async importToXChain(sourceChain: AvmImportChainType): Promise<string> {
-        return await WalletHelper.importToXChain(this, sourceChain)
-    }
-
-    async importToCChain(): Promise<string> {
-        return await WalletHelper.importToCChain(this)
     }
 
     async buildUnsignedTransaction(

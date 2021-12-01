@@ -1,4 +1,4 @@
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 export interface TransactionValueDict {
     [address: string]: number
 }

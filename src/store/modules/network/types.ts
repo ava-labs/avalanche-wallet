@@ -1,5 +1,5 @@
 import { AvaNetwork } from '@/js/AvaNetwork'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 
 export interface NetworkState {
     networks: AvaNetwork[]

@@ -7,11 +7,8 @@ import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { WalletType } from '@/js/wallets/types'
 
 import { BN, Buffer } from 'avalanche'
-import { UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import {
-    buildAvmExportTransaction,
     buildCreateNftFamilyTx,
-    buildEvmExportTransaction,
     buildEvmTransferErc20Tx,
     buildEvmTransferErc721Tx,
     buildEvmTransferNativeTx,
@@ -20,13 +17,11 @@ import {
 import { PayloadBase } from 'avalanche/dist/utils'
 import { ITransaction } from '@/components/wallet/transfer/types'
 
-import { AvmExportChainType, AvmImportChainType } from '@/js/wallets/types'
 import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERC721Token from '@/js/ERC721Token'
 
-import { UtxoHelper } from '@avalabs/avalanche-wallet-sdk'
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
         let addrs = wallet.getAllAddressesP()
@@ -199,199 +194,6 @@ class WalletHelper {
 
         const tx = await wallet.signP(unsignedTx)
         return await pChain.issueTx(tx)
-    }
-
-    static async avmGetAtomicUTXOs(wallet: WalletType, sourceChain: AvmImportChainType) {
-        let addrs = wallet.getAllAddressesX()
-        return await UtxoHelper.avmGetAtomicUTXOs(addrs, sourceChain)
-    }
-
-    static async platformGetAtomicUTXOs(wallet: WalletType) {
-        let addrs = wallet.getAllAddressesP()
-        return await UtxoHelper.platformGetAtomicUTXOs(addrs)
-    }
-
-    static async evmGetAtomicUTXOs(wallet: WalletType) {
-        let addrs = [wallet.getEvmAddressBech()]
-        return await UtxoHelper.evmGetAtomicUTXOs(addrs)
-    }
-
-    static async importToXChain(wallet: WalletType, sourceChain: AvmImportChainType) {
-        const utxoSet = await this.avmGetAtomicUTXOs(wallet, sourceChain)
-
-        if (utxoSet.getAllUTXOs().length === 0) {
-            throw new Error('Nothing to import.')
-        }
-
-        let xToAddr = wallet.getCurrentAddressAvm()
-
-        let hrp = ava.getHRP()
-        let utxoAddrs = utxoSet
-            .getAddresses()
-            .map((addr) => bintools.addressToString(hrp, 'X', addr))
-
-        let fromAddrs = utxoAddrs
-        let ownerAddrs = utxoAddrs
-
-        let sourceChainId
-        if (sourceChain === 'P') {
-            sourceChainId = pChain.getBlockchainID()
-        } else {
-            sourceChainId = cChain.getBlockchainID()
-        }
-
-        // Owner addresses, the addresses we exported to
-        const unsignedTx = await avm.buildImportTx(
-            utxoSet,
-            ownerAddrs,
-            sourceChainId,
-            [xToAddr],
-            fromAddrs,
-            [xToAddr]
-        )
-
-        const tx = await wallet.signX(unsignedTx)
-        return await avm.issueTx(tx)
-    }
-
-    static async importToPlatformChain(wallet: WalletType): Promise<string> {
-        const utxoSet = await this.platformGetAtomicUTXOs(wallet)
-
-        if (utxoSet.getAllUTXOs().length === 0) {
-            throw new Error('Nothing to import.')
-        }
-
-        // Owner addresses, the addresses we exported to
-        let pToAddr = wallet.getCurrentAddressPlatform()
-
-        let hrp = ava.getHRP()
-        let utxoAddrs = utxoSet
-            .getAddresses()
-            .map((addr) => bintools.addressToString(hrp, 'P', addr))
-
-        let fromAddrs = utxoAddrs
-        let ownerAddrs = utxoAddrs
-
-        const unsignedTx = await pChain.buildImportTx(
-            utxoSet,
-            ownerAddrs,
-            avm.getBlockchainID(),
-            [pToAddr],
-            [pToAddr],
-            [pToAddr],
-            undefined,
-            undefined
-        )
-        const tx = await wallet.signP(unsignedTx)
-
-        return pChain.issueTx(tx)
-    }
-
-    static async importToCChain(wallet: WalletType): Promise<string> {
-        let bechAddr = wallet.getEvmAddressBech()
-        let hexAddr = wallet.getEvmAddress()
-
-        let utxoSet = await this.evmGetAtomicUTXOs(wallet)
-
-        if (utxoSet.getAllUTXOs().length === 0) {
-            throw new Error('Nothing to import.')
-        }
-
-        let toAddress = '0x' + hexAddr
-        let ownerAddresses = [bechAddr]
-        let fromAddresses = ownerAddresses
-        let sourceChain = avm.getBlockchainID()
-
-        const unsignedTx = await cChain.buildImportTx(
-            utxoSet,
-            toAddress,
-            ownerAddresses,
-            sourceChain,
-            fromAddresses
-        )
-        let tx = await wallet.signC(unsignedTx)
-        let id = await cChain.issueTx(tx)
-
-        return id
-    }
-
-    static async exportFromXChain(
-        wallet: WalletType,
-        amt: BN,
-        destinationChain: AvmExportChainType
-    ) {
-        let fee = avm.getTxFee()
-        let amtFee = amt.add(fee)
-
-        let destinationAddr
-        if (destinationChain === 'P') {
-            destinationAddr = wallet.getCurrentAddressPlatform()
-        } else {
-            // C Chain
-            destinationAddr = wallet.getEvmAddressBech()
-        }
-
-        let fromAddresses = wallet.getAllAddressesX()
-        let changeAddress = wallet.getChangeAddressAvm()
-        let utxos = wallet.getUTXOSet()
-        let exportTx = (await buildAvmExportTransaction(
-            destinationChain,
-            utxos,
-            fromAddresses,
-            destinationAddr,
-            amtFee,
-            changeAddress
-        )) as AVMUnsignedTx
-
-        let tx = await wallet.signX(exportTx)
-
-        return avm.issueTx(tx)
-    }
-
-    static async exportFromPChain(wallet: WalletType, amt: BN) {
-        let fee = avm.getTxFee()
-        let amtFee = amt.add(fee)
-
-        let utxoSet = wallet.getPlatformUTXOSet()
-        let destinationAddr = wallet.getCurrentAddressAvm()
-
-        let pChangeAddr = wallet.getCurrentAddressPlatform()
-        let fromAddrs = wallet.getAllAddressesP()
-
-        let xId = avm.getBlockchainID()
-
-        let exportTx = await pChain.buildExportTx(
-            utxoSet,
-            amtFee,
-            xId,
-            [destinationAddr],
-            fromAddrs,
-            [pChangeAddr]
-        )
-
-        let tx = await wallet.signP(exportTx)
-        return await pChain.issueTx(tx)
-    }
-
-    static async exportFromCChain(wallet: WalletType, amt: BN) {
-        let fee = avm.getTxFee()
-        let amtFee = amt.add(fee)
-
-        let hexAddr = wallet.getEvmAddress()
-        let bechAddr = wallet.getEvmAddressBech()
-
-        let fromAddresses = [hexAddr]
-        let destinationAddr = wallet.getCurrentAddressAvm()
-
-        let exportTx = await buildEvmExportTransaction(
-            fromAddresses,
-            destinationAddr,
-            amtFee,
-            bechAddr
-        )
-
-        let tx = await wallet.signC(exportTx)
-        return cChain.issueTx(tx)
     }
 
     static async getEthBalance(wallet: WalletType) {

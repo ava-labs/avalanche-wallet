@@ -1,6 +1,6 @@
 import AvaAsset from '@/js/AvaAsset'
 import Big from 'big.js'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 // import {UTXO} from "avalanche";
 
 // type AssetType = "fungible" | "collectible"

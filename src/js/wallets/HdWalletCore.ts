@@ -42,10 +42,6 @@ abstract class HdWalletCore extends WalletCore {
         })
     }
 
-    getUTXOSet(): AVMUTXOSet {
-        return this.utxoset
-    }
-
     updateAvmUTXOSet(): void {
         // if (this.isFetchUtxos) return
         let setExternal = this.externalHelper.utxoSet as AVMUTXOSet

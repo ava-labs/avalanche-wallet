@@ -33,7 +33,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 import { bnToBig } from '../../../helpers/helper'
 import { priceDict } from '../../../store/types'
 import { WalletType } from '@/js/wallets/types'

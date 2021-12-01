@@ -8,24 +8,44 @@
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
-            <v-btn block class="button_secondary" depressed @click="atomicImportXFromP" small>
-                {{ $t('advanced.import.submit_x') }}
+            <v-btn block class="button_secondary" depressed @click="atomicImportX('P')" small>
+                Import X (From P)
             </v-btn>
-            <v-btn block class="button_secondary" depressed @click="atomicImportXFromC" small>
-                {{ $t('advanced.import.submit_c_x') }}
+            <v-btn block class="button_secondary" depressed @click="atomicImportX('C')" small>
+                Import X (From C)
             </v-btn>
-            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
-                {{ $t('advanced.import.submit_p') }}
+            <v-btn block class="button_secondary" depressed @click="atomicImportP('X')" small>
+                Import P (From X)
+            </v-btn>
+            <v-btn
+                block
+                class="button_secondary"
+                depressed
+                @click="atomicImportP('C')"
+                small
+                v-if="!isLedger && !isMainnet"
+            >
+                Import P (From C)
             </v-btn>
             <v-btn
                 v-if="isEVMSupported"
                 block
                 class="button_secondary"
                 depressed
-                @click="atomicImportC"
+                @click="atomicImportC('X')"
                 small
             >
-                {{ $t('advanced.import.submit_c') }}
+                Import C (from X)
+            </v-btn>
+            <v-btn
+                block
+                class="button_secondary"
+                depressed
+                @click="atomicImportC('P')"
+                small
+                v-if="!isLedger && !isMainnet"
+            >
+                Import C (from P)
             </v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
@@ -37,6 +57,14 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import { WalletType } from '@/js/wallets/types'
+import { BN } from 'avalanche'
+import {
+    ExportChainsC,
+    ExportChainsP,
+    ExportChainsX,
+    GasHelper,
+    Utils,
+} from '@avalabs/avalanche-wallet-sdk'
 
 @Component({
     components: { Spinner },
@@ -57,27 +85,23 @@ export default class ChainImport extends Vue {
         return this.wallet.ethAddress
     }
 
-    async atomicImportXFromP() {
-        this.beforeSubmit()
-        if (!this.wallet) return
-
-        // Import from P
-        try {
-            let txId = await this.wallet.importToXChain('P')
-            this.onSuccess(txId)
-        } catch (e) {
-            if (this.isSuccess) return
-            this.onError(e)
-        }
+    // TODO: Remove after ledger support
+    get isLedger() {
+        return this.wallet?.type === 'ledger'
+    }
+    // TODO: Remove after mainnet support
+    get isMainnet() {
+        const activeNet = this.$store.state.Network.selectedNetwork
+        return activeNet?.networkId === 1
     }
 
-    async atomicImportXFromC() {
+    async atomicImportX(sourceChain: ExportChainsX) {
         this.beforeSubmit()
         if (!this.wallet) return
 
         // // Import from C
         try {
-            let txId = await this.wallet.importToXChain('C')
+            let txId = await this.wallet.importToXChain(sourceChain)
             this.onSuccess(txId)
         } catch (e) {
             if (this.isSuccess) return
@@ -85,22 +109,29 @@ export default class ChainImport extends Vue {
         }
     }
 
-    async atomicImportP() {
+    async atomicImportP(source: ExportChainsP) {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToPlatformChain()
+            let txId = await this.wallet.importToPlatformChain(source)
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
         }
     }
 
-    async atomicImportC() {
+    async atomicImportC(source: ExportChainsC) {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToCChain()
+            const baseFee = await GasHelper.getBaseFeeRecommended()
+            const gas = GasHelper.estimateImportGasFeeFromMockTx(
+                source,
+                new BN(0),
+                this.wallet.getEvmAddress()
+            )
+            const totFee = baseFee.mul(new BN(gas))
+            let txId = await this.wallet.importToCChain(source, Utils.avaxCtoX(totFee))
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)

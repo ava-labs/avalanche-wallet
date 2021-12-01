@@ -31,12 +31,10 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Model } from 'vue-property-decorator'
-
+import { Utils, Big } from '@avalabs/avalanche-wallet-sdk'
 //@ts-ignore
 import { BigNumInput } from '@avalabs/vue_components'
 import { BN } from 'avalanche'
-import Big from 'big.js'
-import { bnToBig } from '../../helpers/helper'
 import { priceDict } from '../../store/types'
 
 @Component({
@@ -45,7 +43,7 @@ import { priceDict } from '../../store/types'
     },
 })
 export default class AvaxInput extends Vue {
-    @Model('change', { type: Object }) readonly amount!: boolean
+    @Model('change', { type: Object }) readonly amount!: BN
 
     @Prop({
         default: null,
@@ -67,8 +65,7 @@ export default class AvaxInput extends Vue {
 
     get amountUSD(): Big {
         let usdPrice = this.priceDict.usd
-        // @ts-ignore
-        let amount = bnToBig(this.amount, 9)
+        let amount = Utils.bnToBig(this.amount, 9)
         let usdBig = amount.times(usdPrice)
         return usdBig
     }

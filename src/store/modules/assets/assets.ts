@@ -26,7 +26,7 @@ import {
     NFTMintOutput,
 } from 'avalanche/dist/apis/avm'
 import { UnixNow } from 'avalanche/dist/utils'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import axios from 'axios'

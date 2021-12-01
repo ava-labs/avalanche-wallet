@@ -17,17 +17,11 @@ import {
 
 import { PayloadBase } from 'avalanche/dist/utils'
 import { OutputOwners } from 'avalanche/dist/common'
-import {
-    UTXOSet as PlatformUTXOSet,
-    UnsignedTx as PlatformUnsignedTx,
-    PlatformVMConstants,
-} from 'avalanche/dist/apis/platformvm'
+import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
 
 import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/evm'
-import { ChainIdType } from '@/constants'
 
 import { web3 } from '@/evm'
-import { AvmExportChainType, WalletType } from '@/js/wallets/types'
 import ERC721Token from '@/js/ERC721Token'
 import { Transaction } from '@ethereumjs/tx'
 import EthereumjsCommon from '@ethereumjs/common'
@@ -218,78 +212,6 @@ export async function buildMintNftTx(
         payload
     )
     return mintTx
-}
-
-export async function buildAvmExportTransaction(
-    destinationChain: AvmExportChainType,
-    utxoSet: AVMUTXOSet,
-    fromAddresses: string[],
-    toAddress: string,
-    amount: BN, // export amount + fee
-    sourceChangeAddress: string
-) {
-    let destinationChainId
-    switch (destinationChain) {
-        case 'P':
-            destinationChainId = pChain.getBlockchainID()
-            break
-        case 'C':
-            destinationChainId = cChain.getBlockchainID()
-            break
-    }
-
-    return await avm.buildExportTx(
-        utxoSet as AVMUTXOSet,
-        amount,
-        destinationChainId,
-        [toAddress],
-        fromAddresses,
-        [sourceChangeAddress]
-    )
-}
-
-export async function buildPlatformExportTransaction(
-    utxoSet: PlatformUTXOSet,
-    fromAddresses: string[],
-    toAddress: string,
-    amount: BN, // export amount + fee
-    sourceChangeAddress: string
-) {
-    let destinationChainId = avm.getBlockchainID()
-
-    return await pChain.buildExportTx(
-        utxoSet,
-        amount,
-        destinationChainId,
-        [toAddress],
-        fromAddresses,
-        [sourceChangeAddress]
-    )
-}
-
-export async function buildEvmExportTransaction(
-    fromAddresses: string[],
-    toAddress: string,
-    amount: BN, // export amount + fee
-    fromAddressBech: string
-) {
-    let destinationChainId = avm.getBlockchainID()
-
-    const nonce = await web3.eth.getTransactionCount(fromAddresses[0])
-    const avaxAssetIDBuf: Buffer = await avm.getAVAXAssetID()
-    const avaxAssetIDStr: string = bintools.cb58Encode(avaxAssetIDBuf)
-
-    let fromAddressHex = fromAddresses[0]
-
-    return await cChain.buildExportTx(
-        amount,
-        avaxAssetIDStr,
-        destinationChainId,
-        fromAddressHex,
-        fromAddressBech,
-        [toAddress],
-        nonce
-    )
 }
 
 export async function buildEvmTransferNativeTx(

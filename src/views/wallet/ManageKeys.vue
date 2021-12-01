@@ -21,11 +21,6 @@
                             <fa icon="exclamation-triangle"></fa>
                             {{ $t('keys.button1') }}
                         </button>
-                        <button class="but_primary ava_button_secondary" @click="importKeys">
-                            <fa icon="download"></fa>
-                            {{ $t('keys.button2') }}
-                        </button>
-                        <ImportKeys ref="import"></ImportKeys>
                         <button class="but_primary ava_button_secondary" @click="exportKeys">
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}

@@ -7,6 +7,7 @@
                         <Identicon :value="baseAddresses.join('')"></Identicon>
                     </div>
                     <p>{{ $t('keys.save_account.desc') }}</p>
+
                     <input
                         v-model="accountName"
                         :name="$t('keys.save_account.placeholder_1')"
@@ -24,6 +25,14 @@
                         v-model="password_confirm"
                     />
                     <p class="err">{{ err }}</p>
+                    <p class="err small" style="text-align: center">
+                        Clearing your browser cache will remove this account. Make sure you have
+                        your
+                        <b>mnemonic phrase</b>
+                        or
+                        <b>private key</b>
+                        saved.
+                    </p>
                     <v-btn
                         class="button_primary"
                         :disabled="!canSubmit"

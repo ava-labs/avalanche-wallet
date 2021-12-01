@@ -32,6 +32,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { AccessWalletMultipleInput } from '@/store/types'
 import { keyToKeypair } from '@/helpers/helper'
 import * as bip39 from 'bip39'
+import { Buffer as AjsBuffer } from 'avalanche'
 
 const cryptoHelpers = new Crypto()
 
@@ -62,7 +63,7 @@ async function readV2(data: KeyFileV2, pass: string) {
 
     let checkHashString: string
     let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
-    checkHashString = bintools.cb58Encode(checkHash)
+    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
@@ -78,7 +79,7 @@ async function readV2(data: KeyFileV2, pass: string) {
         let nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = bintools.cb58Encode(key_decrypt)
+        let key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
 
         keysDecrypt.push({
             key: key_string,
@@ -100,7 +101,7 @@ async function readV3(data: KeyFileV3, pass: string) {
 
     let checkHashString: string
     let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    checkHashString = bintools.cb58Encode(checkHash.hash)
+    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
@@ -116,7 +117,7 @@ async function readV3(data: KeyFileV3, pass: string) {
         let nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = bintools.cb58Encode(key_decrypt)
+        let key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
 
         keysDecrypt.push({
             key: key_string,
@@ -138,7 +139,7 @@ async function readV4(data: KeyFileV4, pass: string): Promise<KeyFileDecryptedV5
 
     let checkHashString: string
     let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    checkHashString = bintools.cb58Encode(checkHash.hash)
+    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
@@ -154,7 +155,7 @@ async function readV4(data: KeyFileV4, pass: string): Promise<KeyFileDecryptedV5
         let nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
         let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = bintools.cb58Encode(key_decrypt)
+        let key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
 
         keysDecrypt.push({
             key: key_string,
@@ -177,7 +178,7 @@ async function readV5(data: KeyFileV5, pass: string): Promise<KeyFileDecryptedV5
 
     let checkHashString: string
     let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    checkHashString = bintools.cb58Encode(checkHash.hash)
+    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
@@ -344,8 +345,8 @@ async function makeKeyfile(
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)
 
         let key_data: KeyFileKeyV6 = {
-            key: bintools.cb58Encode(pk_crypt.ciphertext),
-            iv: bintools.cb58Encode(pk_crypt.iv),
+            key: bintools.cb58Encode(AjsBuffer.from(pk_crypt.ciphertext)),
+            iv: bintools.cb58Encode(AjsBuffer.from(pk_crypt.iv)),
             type: type,
         }
         keys.push(key_data)
@@ -353,7 +354,7 @@ async function makeKeyfile(
 
     let file_data: KeyFileV6 = {
         version: KEYSTORE_VERSION,
-        salt: bintools.cb58Encode(salt),
+        salt: bintools.cb58Encode(AjsBuffer.from(salt)),
         activeIndex,
         keys: keys,
     }

@@ -1,7 +1,7 @@
 import { UTXO, UTXOSet } from 'avalanche/dist/apis/avm'
 
 import AvaAsset from '@/js/AvaAsset'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IWalletBalanceDict } from '@/store/types'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
