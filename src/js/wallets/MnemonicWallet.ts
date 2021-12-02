@@ -73,7 +73,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     ethKeyBech: string
     ethKeyChain: EVMKeyChain
     ethAddress: string
-    ethAddressBech: string
     ethBalance: BN
 
     // TODO : Move to hd core class
@@ -83,7 +82,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         // Update EVM values
         this.ethKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
         let cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
-        this.ethAddressBech = cKeypair.getAddressString()
         this.ethBalance = new BN(0)
     }
 
@@ -92,11 +90,11 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
         let masterHdKey: HDKey = HDKey.fromMasterSeed(seed)
         let accountHdKey = masterHdKey.derive(AVA_ACCOUNT_PATH)
+        let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
 
-        super(accountHdKey, false)
+        super(accountHdKey, ethAccountKey, false)
 
         // Derive EVM key and address
-        let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
         let ethPrivateKey = ethAccountKey.privateKey
         this.ethKey = ethPrivateKey.toString('hex')
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
@@ -109,7 +107,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         this.ethKeyChain = cKeyChain
 
         let cKeypair = cKeyChain.importKey(cPrivKey)
-        this.ethAddressBech = cKeypair.getAddressString()
 
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')
@@ -120,10 +117,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
 
     getEvmAddress(): string {
         return this.ethAddress
-    }
-
-    getEvmAddressBech(): string {
-        return this.ethAddressBech
     }
 
     async getEthBalance() {
@@ -160,7 +153,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
             setTimeout(() => {
                 this.getUTXOs()
             }, 1000)
-            // console.info('HD Not ready try again in 1 sec..')
             return
         }
 

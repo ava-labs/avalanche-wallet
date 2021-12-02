@@ -23,7 +23,7 @@
                 depressed
                 @click="atomicImportP('C')"
                 small
-                v-if="!isLedger && !isMainnet"
+                v-if="!isMainnet"
             >
                 Import P (From C)
             </v-btn>
@@ -43,7 +43,7 @@
                 depressed
                 @click="atomicImportC('P')"
                 small
-                v-if="!isLedger && !isMainnet"
+                v-if="!isMainnet"
             >
                 Import C (from P)
             </v-btn>
@@ -85,10 +85,6 @@ export default class ChainImport extends Vue {
         return this.wallet.ethAddress
     }
 
-    // TODO: Remove after ledger support
-    get isLedger() {
-        return this.wallet?.type === 'ledger'
-    }
     // TODO: Remove after mainnet support
     get isMainnet() {
         const activeNet = this.$store.state.Network.selectedNetwork

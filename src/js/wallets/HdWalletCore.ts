@@ -23,9 +23,11 @@ abstract class HdWalletCore extends WalletCore {
     externalHelper: HdHelper
     platformHelper: HdHelper
 
-    constructor(accountHdKey: HDKey, isPublic = true) {
-        super()
+    ethHdNode: HDKey
 
+    constructor(accountHdKey: HDKey, ethHdNode: HDKey, isPublic = true) {
+        super()
+        this.ethHdNode = ethHdNode
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
         this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
@@ -40,6 +42,15 @@ abstract class HdWalletCore extends WalletCore {
         this.platformHelper.oninit().then((res) => {
             this.updateInitState()
         })
+    }
+
+    getEvmAddressBech(): string {
+        return bintools.addressToString(
+            ava.getHRP(),
+            'C',
+            // @ts-ignore
+            this.ethHdNode.pubKeyHash
+        )
     }
 
     updateAvmUTXOSet(): void {

@@ -103,7 +103,7 @@ export default class Form extends Vue {
     }
 
     get destinationOptions(): ChainIdType[] {
-        return !this.isLedger && !this.isMainnet
+        return !this.isMainnet
             ? ({
                   X: ['P', 'C'],
                   P: ['X', 'C'],
@@ -131,10 +131,6 @@ export default class Form extends Vue {
     get isMainnet() {
         const activeNet = this.$store.state.Network.selectedNetwork
         return activeNet?.networkId === 1
-    }
-
-    get isLedger() {
-        return this.wallet.type === 'ledger'
     }
 
     get isEVMSupported() {

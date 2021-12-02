@@ -72,7 +72,6 @@ export interface AvaWalletCore extends IAddressManager {
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
     ethAddress: string
-    ethAddressBech: string
     ethBalance: BN
     isFetchUtxos: boolean // true if fetching utxos
     isInit: boolean // True once the wallet can be used (ex. when HD index is found)
