@@ -9,8 +9,6 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
-import * as BN from 'bn.js'
-import Big from 'big.js'
 
 @Component
 export default class BalanceRow extends Vue {

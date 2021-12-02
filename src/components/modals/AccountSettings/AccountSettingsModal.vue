@@ -4,7 +4,14 @@
             <div class="header">
                 <Identicon :value="account.baseAddresses.join('')"></Identicon>
                 <p style="text-align: center">{{ account.name }}</p>
-                <p class="subtext">This account exists only on this browser.</p>
+
+                <p class="err small" style="text-align: center">
+                    Clearing your browser cache will remove this account. Make sure you have your
+                    <b>mnemonic phrase</b>
+                    or
+                    <b>private key</b>
+                    saved.
+                </p>
             </div>
 
             <div class="options" v-if="!subComponent">

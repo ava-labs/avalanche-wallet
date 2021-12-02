@@ -23,25 +23,20 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import { CsvRowAvaxTransferData, ITransactionData, UTXO } from '@/store/modules/history/types'
 import { bnToBig } from '@/helpers/helper'
-import { getPriceAtUnixTime } from '@/helpers/price_helper'
 const generate = require('csv-generate')
-import moment from 'moment'
 import {
     avaxTransferDataToCsvRow,
-    durationToString,
     getOutputTotals,
     getOwnedOutputs,
     getNotOwnedOutputs,
     getAssetOutputs,
     getAddresses,
-    getRewardOuts,
-    getStakeAmount,
     createCSVContent,
     downloadCSVFile,
     parseMemo,
 } from '@/store/modules/history/history_utils'
 import { ava, avm } from '@/AVA'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
 
 @Component({
     components: {

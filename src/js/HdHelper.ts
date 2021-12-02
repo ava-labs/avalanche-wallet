@@ -8,7 +8,7 @@ import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import HDKey from 'hdkey'
-import { Buffer } from 'buffer/'
+import { Buffer } from 'avalanche'
 import {
     KeyChain as PlatformVMKeyChain,
     KeyPair as PlatformVMKeyPair,

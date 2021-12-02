@@ -13,7 +13,7 @@
 </template>
 <script>
 import Big from 'big.js'
-import * as BN from 'bn.js'
+import { BN } from 'avalanche'
 
 export default {
     data() {

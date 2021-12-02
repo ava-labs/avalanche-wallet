@@ -17,33 +17,24 @@ import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
 
 import { UTXO as AVMUTXO, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
-import {
-    AvaWalletCore,
-    AvmExportChainType,
-    AvmImportChainType,
-    ChainAlias,
-} from '@/js/wallets/types'
+import { AvaWalletCore } from '@/js/wallets/types'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
     AVMConstants,
     OperationTx,
     SelectCredentialClass as AVMSelectCredentialClass,
     TransferableOperation,
-    TransferableOutput as AVMTransferableOutput,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
     ImportTx as AVMImportTx,
-    ExportTx as AVMExportTx,
 } from 'avalanche/dist/apis/avm'
 
 import {
     ImportTx as PlatformImportTx,
-    ExportTx,
-    TransferableOutput as PlatformTransferableOutput,
+    ExportTx as PlatformExportTx,
     Tx as PlatformTx,
     UTXO as PlatformUTXO,
     UnsignedTx as PlatformUnsignedTx,
-    UTXOSet as PlatformUTXOSet,
     PlatformVMConstants,
     SelectCredentialClass as PlatformSelectCredentialClass,
     AddDelegatorTx,
@@ -51,7 +42,6 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 
 import {
-    UTXOSet as EVMUTXOSet,
     UnsignedTx as EVMUnsignedTx,
     ImportTx as EVMImportTx,
     ExportTx as EVMExportTx,
@@ -74,6 +64,7 @@ import { ParseableAvmTxEnum, ParseablePlatformEnum, ParseableEvmTxEnum } from '.
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
+import { Utils, NetworkHelper, Network } from '@avalabs/avalanche-wallet-sdk'
 
 export const MIN_EVM_SUPPORT_V = '0.5.3'
 
@@ -84,30 +75,24 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     ethAddress: string
     ethBalance: BN
-    ethAddressBech: string
     config: ILedgerAppConfig
+    ethHdNode: HDKey
 
     constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth: HDKey, ethApp: Eth) {
-        super(hdkey)
+        super(hdkey, hdEth)
         this.app = app
         this.ethApp = ethApp
         this.type = 'ledger'
         this.config = config
+        this.ethHdNode = hdEth
 
         if (hdEth) {
             const ethKey = hdEth
             const ethPublic = importPublic(ethKey.publicKey)
             this.ethAddress = publicToAddress(ethPublic).toString('hex')
             this.ethBalance = new BN(0)
-            this.ethAddressBech = bintools.addressToString(
-                ava.getHRP(),
-                'C',
-                // @ts-ignore
-                hdEth.pubKeyHash
-            )
         } else {
             this.ethAddress = ''
-            this.ethAddressBech = ''
             this.ethBalance = new BN(0)
         }
     }
@@ -374,7 +359,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             let bip32Paths = this.pathsToUniqueBipPaths(paths)
 
             // Sign the msg with ledger
-            const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
+            const accountPathSource = chainId === 'C' ? ETH_ACCOUNT_PATH : AVA_ACCOUNT_PATH
+            const accountPath = bippath.fromString(`${accountPathSource}`)
             let sigMap = await this.app.signHash(accountPath, bip32Paths, msg)
             store.commit('Ledger/closeModal')
 
@@ -485,11 +471,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === AVMConstants.EXPORTTX && chainId === 'X') ||
             (txType === PlatformVMConstants.EXPORTTX && chainId === 'P')
         ) {
-            outs = (tx as ExportTx).getExportOutputs()
+            outs = (tx as PlatformExportTx).getExportOutputs()
         } else if (txType === EVMConstants.EXPORTTX && chainId === 'C') {
             outs = (tx as EVMExportTx).getExportedOutputs()
         } else {
-            outs = (tx as ExportTx).getOuts()
+            outs = (tx as PlatformExportTx).getOuts()
         }
 
         let destinationChain = chainId
@@ -643,7 +629,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let gasPrice = tx.gasPrice
         let gasLimit = tx.gasLimit
         let totFee = gasPrice.mul(new BN(gasLimit))
-        let feeNano = bnToBig(totFee, 9)
+        let feeNano = Utils.bnToBig(totFee, 9)
 
         let msgs: ILedgerBlockMessage[] = []
         try {
@@ -729,6 +715,26 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             }
         }
 
+        // TODO: Remove after ledger update
+        // Ledger is not able to parse P/C atomic transactions
+        if (txType === PlatformVMConstants.EXPORTTX) {
+            const destChainBuff = (tx as PlatformExportTx).getDestinationChain()
+            // If destination chain is C chain, sign hash
+            const destChain = Network.idToChainAlias(bintools.cb58Encode(destChainBuff))
+            if (destChain === 'C') {
+                canLedgerParse = false
+            }
+        }
+        // TODO: Remove after ledger update
+        if (txType === PlatformVMConstants.IMPORTTX) {
+            const sourceChainBuff = (tx as PlatformImportTx).getSourceChain()
+            // If destination chain is C chain, sign hash
+            const sourceChain = Network.idToChainAlias(bintools.cb58Encode(sourceChainBuff))
+            if (sourceChain === 'C') {
+                canLedgerParse = false
+            }
+        }
+
         let signedTx
         if (canLedgerParse && isParsableType) {
             signedTx = await this.signTransactionParsable<PlatformUnsignedTx, PlatformTx>(
@@ -753,6 +759,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         let tx = unsignedTx.getTransaction()
         let typeId = tx.getTxType()
 
+        let canLedgerParse = true
+
         let paths = ['0/0']
         if (typeId === EVMConstants.EXPORTTX) {
             let ins = (tx as EVMExportTx).getInputs()
@@ -762,7 +770,32 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             paths = ins.map((input) => '0/0')
         }
 
-        let txSigned = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
+        // TODO: Remove after ledger update
+        // Ledger is not able to parse P/C atomic transactions
+        if (typeId === EVMConstants.EXPORTTX) {
+            const destChainBuff = (tx as EVMExportTx).getDestinationChain()
+            // If destination chain is C chain, sign hash
+            const destChain = Network.idToChainAlias(bintools.cb58Encode(destChainBuff))
+            if (destChain === 'P') {
+                canLedgerParse = false
+            }
+        }
+        // TODO: Remove after ledger update
+        if (typeId === EVMConstants.IMPORTTX) {
+            const sourceChainBuff = (tx as EVMImportTx).getSourceChain()
+            // If destination chain is C chain, sign hash
+            const sourceChain = Network.idToChainAlias(bintools.cb58Encode(sourceChainBuff))
+            if (sourceChain === 'P') {
+                canLedgerParse = false
+            }
+        }
+
+        let txSigned
+        if (canLedgerParse) {
+            txSigned = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
+        } else {
+            txSigned = (await this.signTransactionHash(unsignedTx, paths, 'C')) as EvmTx
+        }
         store.commit('Ledger/closeModal')
         return txSigned
     }
@@ -835,10 +868,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return this.ethAddress
     }
 
-    getEvmAddressBech(): string {
-        return this.ethAddressBech
-    }
-
     async getStake(): Promise<BN> {
         this.stakeAmount = await WalletHelper.getStake(this)
         return this.stakeAmount
@@ -860,7 +889,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             setTimeout(() => {
                 this.getUTXOs()
             }, 1000)
-            // console.info('HD Not ready try again in 1 sec..')
             return
         }
 
@@ -898,30 +926,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         memo: Buffer | undefined
     ): Promise<string> {
         return await WalletHelper.issueBatchTx(this, orders, addr, memo)
-    }
-
-    async exportFromPChain(amt: BN) {
-        return await WalletHelper.exportFromPChain(this, amt)
-    }
-
-    async exportFromXChain(amt: BN, destinationChain: AvmExportChainType) {
-        return await WalletHelper.exportFromXChain(this, amt, destinationChain)
-    }
-
-    async exportFromCChain(amt: BN) {
-        return await WalletHelper.exportFromCChain(this, amt)
-    }
-
-    async importToPlatformChain(): Promise<string> {
-        return await WalletHelper.importToPlatformChain(this)
-    }
-
-    async importToXChain(sourceChain: AvmImportChainType): Promise<string> {
-        return await WalletHelper.importToXChain(this, sourceChain)
-    }
-
-    async importToCChain(): Promise<string> {
-        return await WalletHelper.importToCChain(this)
     }
 
     async delegate(

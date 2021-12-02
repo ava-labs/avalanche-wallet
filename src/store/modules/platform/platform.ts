@@ -1,10 +1,9 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 
-import { ava, avm, infoApi, pChain } from '@/AVA'
-import { AvaNetwork } from '@/js/AvaNetwork'
-import { explorer_api } from '@/explorer_api'
-import BN from 'bn.js'
+import { BN } from 'avalanche'
+import { pChain } from '@/AVA'
+
 import {
     GetPendingValidatorsResponse,
     GetValidatorsResponse,

@@ -2,7 +2,7 @@
     <div class="swap_form">
         <div>
             <label>{{ $t('cross_chain.form.source') }}</label>
-            <select @input="onChangeSource" class="hover_border">
+            <select @input="onChangeSource" class="hover_border" v-model="sourceChain">
                 <option
                     v-for="option in sourceOptions"
                     :value="option"
@@ -18,7 +18,7 @@
             <p class="ledger_warn" v-if="!isEVMSupported">
                 C Chain is currently not supported on Ledger devices.
             </p>
-            <select @input="onChangeDestination" class="hover_border">
+            <select @input="onChangeDestination" class="hover_border" v-model="targetChain">
                 <option
                     v-for="option in destinationOptions"
                     :value="option"
@@ -57,12 +57,13 @@ import { avm } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import AvaAsset from '@/js/AvaAsset'
 import { ChainSwapFormData } from '@/components/wallet/earn/ChainTransfer/types'
+import { AvaNetwork } from '@/js/AvaNetwork'
 
 const chainTypes: ChainIdType[] = ['X', 'P', 'C']
 const chainNames = {
-    X: 'X Chain (Exchange)',
-    C: 'C Chain (Contract)',
-    P: 'P Chain (Platform)',
+    X: 'X Chain',
+    C: 'C Chain',
+    P: 'P Chain',
 }
 
 @Component({
@@ -75,6 +76,8 @@ export default class Form extends Vue {
     targetChain: ChainIdType = 'P'
     amt: BN = new BN(0)
 
+    @Prop() balance!: Big
+    @Prop() maxAmt!: BN
     @Prop() isConfirm!: boolean
 
     clear() {
@@ -100,16 +103,17 @@ export default class Form extends Vue {
     }
 
     get destinationOptions(): ChainIdType[] {
-        return this.isEVMSupported
+        return !this.isMainnet
             ? ({
                   X: ['P', 'C'],
-                  P: ['X'],
-                  C: ['X'],
+                  P: ['X', 'C'],
+                  C: ['X', 'P'],
               }[this.sourceChain] as ChainIdType[])
             : //   @ts-ignore
               ({
-                  X: ['P'],
+                  X: ['P', 'C'],
                   P: ['X'],
+                  C: ['X'],
               }[this.sourceChain] as ChainIdType[])
     }
 
@@ -119,80 +123,14 @@ export default class Form extends Vue {
         this.onChange()
     }
 
-    // @Watch('sourceOptions')
-    // onSourcesChange() {
-    //     this.targetChain = this.destinationOptions[0]
-    //     this.onChange()
-    // }
-
-    get platformUnlocked(): BN {
-        return this.$store.getters['Assets/walletPlatformBalance']
-    }
-
-    get avmUnlocked(): BN {
-        if (!this.ava_asset) return new BN(0)
-        return this.ava_asset.amount
-    }
-
-    get evmUnlocked(): BN {
-        let balRaw = this.wallet.ethBalance
-        return balRaw.div(new BN(Math.pow(10, 9)))
-    }
-
-    get balanceDestination() {
-        if (this.targetChain === 'X') {
-            return this.avmUnlocked
-        } else if (this.targetChain === 'P') {
-            return this.platformUnlocked
-        } else {
-            return this.evmUnlocked
-        }
-    }
-
-    get balance(): Big {
-        let bal: BN
-        if (this.sourceChain === 'P') {
-            bal = this.platformUnlocked
-        } else if (this.sourceChain === 'C') {
-            bal = this.evmUnlocked
-        } else {
-            bal = this.avmUnlocked
-        }
-
-        let bigBal = bnToBig(bal, 9)
-
-        return bigBal
-    }
-
-    get maxAmt(): BN {
-        let max = this.balance.sub(this.fee)
-        let zero = Big(0)
-        if (zero.gt(max)) {
-            return new BN(0)
-        } else {
-            let bnStr = max.times(Big(Math.pow(10, 9))).toString()
-            return new BN(bnStr)
-        }
-    }
-
-    // Fee is 2 times the tx transfer fee
-    get fee(): Big {
-        let feeX = avm.getTxFee()
-        let totFee = feeX.mul(new BN(2))
-
-        let feeXBig = bnToBig(totFee, 9)
-
-        return feeXBig
-    }
-
-    get ava_asset(): AvaAsset | null {
-        let ava = this.$store.getters['Assets/AssetAVA']
-        return ava
-    }
-
     get wallet() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
+    }
+
+    get isMainnet() {
+        const activeNet = this.$store.state.Network.selectedNetwork
+        return activeNet?.networkId === 1
     }
 
     get isEVMSupported() {
@@ -203,14 +141,12 @@ export default class Form extends Vue {
         let val: ChainIdType = ev.target.value
         this.sourceChain = val
         this.onChange()
-        // this.$emit('change', val)
     }
 
     onChangeDestination(ev: any) {
         let val: ChainIdType = ev.target.value
         this.targetChain = val
         this.onChange()
-        // this.$emit('change', val)
     }
 
     onAmtChange() {
@@ -240,10 +176,6 @@ export default class Form extends Vue {
     }
 
     padding-bottom: 14px;
-    //overflow: auto;
-    //display: grid;
-    //grid-template-columns: 1fr 1fr;
-    //column-gap: 20px;
 }
 label {
     color: var(--primary-color);

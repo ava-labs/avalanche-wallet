@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import * as bip39 from 'bip39'
-
 import Assets from './modules/assets/assets'
 import Network from './modules/network/network'
 import Notifications from './modules/notifications/notifications'
@@ -29,28 +27,16 @@ import router from '@/router'
 import { avm, bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
-import { UnixNow } from 'avalanche/dist/utils'
-import { UTXO, KeyPair as AVMKeyPair, AmountOutput, NFTMintOutput } from 'avalanche/dist/apis/avm'
-import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
-
-import AvaAsset from '@/js/AvaAsset'
 import {
     extractKeysFromDecryptedFile,
     KEYSTORE_VERSION,
     makeKeyfile,
     readKeyFile,
 } from '@/js/Keystore'
-import { AssetsDict } from '@/store/modules/assets/types'
-import { keyToKeypair } from '@/helpers/helper'
-import BN from 'bn.js'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
-import { wallet_api } from '@/wallet_api'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-import Wallet from '@/views/Wallet.vue'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
-import { checkIfSavedLocally } from '@/helpers/account_helper'
 import { updateFilterAddresses } from '../providers'
 import { getAvaxPriceUSD } from '@/helpers/price_helper'
 
