@@ -17,14 +17,7 @@
             <v-btn block class="button_secondary" depressed @click="atomicImportP('X')" small>
                 Import P (From X)
             </v-btn>
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportP('C')"
-                small
-                v-if="!isMainnet"
-            >
+            <v-btn block class="button_secondary" depressed @click="atomicImportP('C')" small>
                 Import P (From C)
             </v-btn>
             <v-btn
@@ -37,14 +30,7 @@
             >
                 Import C (from X)
             </v-btn>
-            <v-btn
-                block
-                class="button_secondary"
-                depressed
-                @click="atomicImportC('P')"
-                small
-                v-if="!isMainnet"
-            >
+            <v-btn block class="button_secondary" depressed @click="atomicImportC('P')" small>
                 Import C (from P)
             </v-btn>
         </template>
@@ -83,12 +69,6 @@ export default class ChainImport extends Vue {
     get isEVMSupported() {
         if (!this.wallet) return false
         return this.wallet.ethAddress
-    }
-
-    // TODO: Remove after mainnet support
-    get isMainnet() {
-        const activeNet = this.$store.state.Network.selectedNetwork
-        return activeNet?.networkId === 1
     }
 
     async atomicImportX(sourceChain: ExportChainsX) {

@@ -103,18 +103,11 @@ export default class Form extends Vue {
     }
 
     get destinationOptions(): ChainIdType[] {
-        return !this.isMainnet
-            ? ({
-                  X: ['P', 'C'],
-                  P: ['X', 'C'],
-                  C: ['X', 'P'],
-              }[this.sourceChain] as ChainIdType[])
-            : //   @ts-ignore
-              ({
-                  X: ['P', 'C'],
-                  P: ['X'],
-                  C: ['X'],
-              }[this.sourceChain] as ChainIdType[])
+        return {
+            X: ['P', 'C'],
+            P: ['X', 'C'],
+            C: ['X', 'P'],
+        }[this.sourceChain] as ChainIdType[]
     }
 
     @Watch('destinationOptions')
@@ -126,11 +119,6 @@ export default class Form extends Vue {
     get wallet() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
-    }
-
-    get isMainnet() {
-        const activeNet = this.$store.state.Network.selectedNetwork
-        return activeNet?.networkId === 1
     }
 
     get isEVMSupported() {
