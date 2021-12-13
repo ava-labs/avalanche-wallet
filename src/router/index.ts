@@ -75,9 +75,6 @@ const routes = [
                 name: 'Account',
             },
         ],
-        meta: {
-            title: 'Access Stored Crypto Assets | Avalanche Wallet',
-        },
         component: Access,
         beforeEnter: ifNotAuthenticated,
     },
@@ -139,12 +136,5 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 })
-
-// router.afterEach((to, from) => {
-//     Vue.nextTick(() => {
-//         document.title =
-//             to.meta.title || 'Fastest Performing and Secure DeFi Wallet | Avalanche Wallet'
-//     })
-// })
 
 export default router
