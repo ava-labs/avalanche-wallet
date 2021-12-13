@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter, { Route } from 'vue-router'
+import VueMeta from 'vue-meta'
 import Home from '../views/Home.vue'
 
 import Transfer from '@/views/wallet/Transfer.vue'
@@ -19,6 +20,7 @@ import Account from '@/views/access/Account.vue' // your vuex store
 import Legal from '@/views/Legal.vue'
 
 Vue.use(VueRouter)
+Vue.use(VueMeta)
 
 import store from '../store/index'
 import Studio from '@/views/wallet/Studio.vue'
@@ -73,6 +75,9 @@ const routes = [
                 name: 'Account',
             },
         ],
+        meta: {
+            title: 'Access Stored Crypto Assets | Avalanche Wallet',
+        },
         component: Access,
         beforeEnter: ifNotAuthenticated,
     },
@@ -134,5 +139,12 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes,
 })
+
+// router.afterEach((to, from) => {
+//     Vue.nextTick(() => {
+//         document.title =
+//             to.meta.title || 'Fastest Performing and Secure DeFi Wallet | Avalanche Wallet'
+//     })
+// })
 
 export default router
