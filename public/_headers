@@ -1,0 +1,8 @@
+/*
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Strict-Transport-Security: max-age=31536000; includeSubDomains
+    Referrer-Policy: no-referrer
+
+https://:project.pages.dev/*
+    X-Robots-Tag: noindex
