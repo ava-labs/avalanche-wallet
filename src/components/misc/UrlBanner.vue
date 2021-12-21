@@ -14,6 +14,7 @@ import { Vue, Component } from 'vue-property-decorator'
 @Component
 export default class UrlBanner extends Vue {
     dismiss() {
+        //@ts-ignore
         this.$refs.banner.toggle()
     }
 }
