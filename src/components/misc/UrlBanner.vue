@@ -24,10 +24,6 @@ export default class UrlBanner extends Vue {
     color: #fff;
     z-index: 3 !important;
 
-    .v-banner__actions {
-        margin-bottom: auto !important;
-    }
-
     .dismiss_but {
         margin-right: 8px;
         float: right;
