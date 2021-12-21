@@ -2,6 +2,7 @@
     <v-app>
         <v-main>
             <template>
+                <UrlBanner></UrlBanner>
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <UpgradeToAccountModal></UpgradeToAccountModal>
@@ -29,9 +30,11 @@ import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
 import LedgerWalletLoading from '@/components/modals/LedgerWalletLoading'
+import UrlBanner from '@/components/misc/UrlBanner'
 
 export default {
     components: {
+        UrlBanner,
         LedgerWalletLoading,
         UpgradeToAccountModal,
         NetworkLoadingBlock,
