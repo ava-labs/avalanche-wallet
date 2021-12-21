@@ -4,7 +4,9 @@
             <fa icon="exclamation-triangle"></fa>
             Make sure the URL is
             <b>wallet.avax.network</b>
-            <button @click="dismiss" class="dismiss_but"><fa icon="times"></fa></button>
+            <button @click="dismiss" class="dismiss_but" data-cy="dismiss_banner">
+                <fa icon="times"></fa>
+            </button>
         </template>
     </v-banner>
 </template>
