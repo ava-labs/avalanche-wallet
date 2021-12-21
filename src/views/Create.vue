@@ -13,6 +13,30 @@ import CreateWallet from '@/components/CreateWalletWorkflow/CreateWallet.vue'
     components: {
         CreateWallet,
     },
+    metaInfo: () => {
+        const description =
+            "Here at Avalanche, we've made storing digital assets easy. Create an Avalanche wallet today is see what the buzz is all about!"
+        return {
+            meta: [
+                {
+                    vmid: 'description',
+                    name: 'description',
+                    content: description,
+                },
+                {
+                    vmid: 'og:description',
+                    name: 'description',
+                    content: description,
+                },
+                {
+                    vmid: 'og:title',
+                    name: 'og:title',
+                    content: 'Create | Avalanche Wallet',
+                },
+            ],
+            title: 'Create',
+        }
+    },
 })
 export default class Create extends Vue {}
 </script>

@@ -5,6 +5,8 @@ const NETWORK_SWITCHER_BUTTON = '[data-cy="network-switcher"]'
 describe('Basic Functionality', () => {
     before(() => {
         cy.visit('/')
+        // Disable banner
+        cy.get('[data-cy="dismiss_banner"]').click()
     })
 
     it('has access/create wallet options', () => {

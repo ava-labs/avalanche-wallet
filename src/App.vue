@@ -70,6 +70,29 @@ export default {
             return true
         },
     },
+    metaInfo: {
+        meta: [
+            {
+                vmid: 'description',
+                name: 'description',
+                content:
+                    'Avalanche wallet is a simple, highly secure, non-custodial crypto wallet for storing AVAX.',
+            },
+            {
+                vmid: 'og:description',
+                name: 'description',
+                content:
+                    'Avalanche wallet is a simple, highly secure, non-custodial crypto wallet for storing AVAX.',
+            },
+            {
+                vmid: 'og:title',
+                name: 'og:title',
+                content: 'Fastest Performing and Secure DeFi Wallet | Avalanche Wallet',
+            },
+        ],
+        title: 'Fastest Performing and Secure DeFi Wallet',
+        titleTemplate: '%s | Avalanche Wallet',
+    },
 }
 </script>
 

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueMeta from 'vue-meta'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -10,6 +11,8 @@ import 'vue-datetime/dist/vue-datetime.css'
 import { BootstrapVue } from 'bootstrap-vue'
 // Install BootstrapVue
 Vue.use(BootstrapVue)
+
+Vue.use(VueMeta)
 
 Vue.component('datetime', Datetime)
 
