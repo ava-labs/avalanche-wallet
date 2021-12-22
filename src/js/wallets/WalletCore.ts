@@ -9,7 +9,6 @@ import {
     ExportChainsP,
     ExportChainsX,
     Network,
-    Utils,
     UtxoHelper,
     TxHelper,
     GasHelper,
@@ -23,7 +22,6 @@ import {
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import { AvmImportChainType, WalletType } from '@/js/wallets/types'
-import { WalletHelper } from '@/helpers/wallet_helper'
 var uniqid = require('uniqid')
 
 abstract class WalletCore {
@@ -108,7 +106,6 @@ abstract class WalletCore {
         }
 
         const unsignedTxFee = await this.createImportTxC(sourceChain, utxoSet, fee)
-
         let tx = await this.signC(unsignedTxFee)
         let id = await cChain.issueTx(tx.toString())
 
