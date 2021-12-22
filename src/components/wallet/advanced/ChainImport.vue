@@ -49,6 +49,8 @@ import {
     ExportChainsP,
     ExportChainsX,
     GasHelper,
+    Network,
+    NetworkHelper,
     Utils,
 } from '@avalabs/avalanche-wallet-sdk'
 
@@ -100,12 +102,23 @@ export default class ChainImport extends Vue {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
+            const utxoSet = await this.wallet.evmGetAtomicUTXOs(source)
+            const utxos = utxoSet.getAllUTXOs()
+
+            const numIns = utxos.length
             const baseFee = await GasHelper.getBaseFeeRecommended()
-            const gas = GasHelper.estimateImportGasFeeFromMockTx(
-                source,
-                new BN(0),
-                this.wallet.getEvmAddress()
-            )
+
+            if (numIns === 0) {
+                throw new Error('Nothing to import.')
+            }
+
+            // Calculate number of signatures
+            const numSigs = utxos.reduce((acc, utxo) => {
+                return acc + utxo.getOutput().getAddresses().length
+            }, 0)
+
+            const gas = GasHelper.estimateImportGasFeeFromMockTx(numIns, numSigs)
+
             const totFee = baseFee.mul(new BN(gas))
             let txId = await this.wallet.importToCChain(source, Utils.avaxCtoX(totFee))
             this.onSuccess(txId)
