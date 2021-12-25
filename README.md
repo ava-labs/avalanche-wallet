@@ -25,6 +25,22 @@ In order for the wallet to work, it needs the Avalanche network to operate on. B
 When you go to the website on your browser, you might get a warning saying
 "Site is not secure". This is because we are signing our own SSL Certificates. Please ignore and continue to the website.
 
+### Run in docker container
+
+Build the image locally by running
+
+```shell
+docker build -t ava-wallet:latest .
+```
+
+and start with
+
+```sh
+docker run --name ava-wallet --publish 8080:80 -d --restart=always ava-wallet:latest
+```
+
+and access on http://localhost:8080 .
+
 ## Deployment
 
 1.  Compile and minify to have a production ready application with `yarn build`.
