@@ -93,7 +93,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
 import NftCol from './NftCol.vue'
 import Tooltip from '@/components/misc/Tooltip.vue'
@@ -102,7 +102,8 @@ import Big from 'big.js'
 import { BN } from 'avalanche/dist'
 import { ONEAVAX } from 'avalanche/dist/utils'
 import { bnToBig } from '@/helpers/helper'
-import { priceDict, WalletType } from '@/store/types'
+import { priceDict } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdownModal.vue'
 
 @Component({
@@ -157,7 +158,7 @@ export default class BalanceCard extends Vue {
         if (!this.wallet) return new BN(0)
         // convert from ^18 to ^9
         let bal = this.wallet.ethBalance
-        return bal.divRound(new BN(Math.pow(10, 9).toString()))
+        return bal.div(new BN(Math.pow(10, 9).toString()))
     }
 
     get totalBalance(): BN {
@@ -303,7 +304,7 @@ export default class BalanceCard extends Vue {
         if (bigBal.lt(Big('1'))) {
             return bigBal.toString()
         } else {
-            return bigBal.toLocaleString(3)
+            return bigBal.toLocaleString()
         }
     }
 

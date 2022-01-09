@@ -1,7 +1,7 @@
 <template>
     <p>
         By using this application you agree to the
-        <a href="/ToS.pdf" target="_blank">Terms of Use</a>
+        <router-link to="/legal">Terms of Use</router-link>
         .
     </p>
 </template>

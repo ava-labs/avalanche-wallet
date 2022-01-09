@@ -2,6 +2,10 @@
     <modal ref="modal" :title="$t('modal.priv_key.title')" class="modal_main">
         <div class="singleton_modal_body">
             <p class="key_raw">{{ privateKey }}</p>
+            <p class="warning_text">
+                Warning: Never disclose this key. Anyone with your private keys can steal any assets
+                held in your wallet.
+            </p>
         </div>
     </modal>
 </template>
@@ -46,5 +50,12 @@ export default class PrivateKey extends Vue {
     margin: 15px 0px !important;
     border-radius: 2px;
     padding: 6px 12px;
+}
+
+.warning_text {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 3px;
 }
 </style>

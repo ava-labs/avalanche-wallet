@@ -50,7 +50,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { UTXOSet as AVMUTXOSet, UTXO as AVMUTXO, AVMConstants } from 'avalanche/dist/apis/avm'
 import {
     UTXOSet as PlatformUTXOSet,

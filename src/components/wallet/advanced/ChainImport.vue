@@ -8,21 +8,30 @@
         </div>
         <p class="err" v-else-if="err">{{ err }}</p>
         <template v-if="!isLoading">
-            <v-btn block class="button_secondary" depressed @click="atomicImportX" small>
-                {{ $t('advanced.import.submit_x') }}
+            <v-btn block class="button_secondary" depressed @click="atomicImportX('P')" small>
+                Import X (From P)
             </v-btn>
-            <v-btn block class="button_secondary" depressed @click="atomicImportP" small>
-                {{ $t('advanced.import.submit_p') }}
+            <v-btn block class="button_secondary" depressed @click="atomicImportX('C')" small>
+                Import X (From C)
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP('X')" small>
+                Import P (From X)
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportP('C')" small>
+                Import P (From C)
             </v-btn>
             <v-btn
                 v-if="isEVMSupported"
                 block
                 class="button_secondary"
                 depressed
-                @click="atomicImportC"
+                @click="atomicImportC('X')"
                 small
             >
-                {{ $t('advanced.import.submit_c') }}
+                Import C (from X)
+            </v-btn>
+            <v-btn block class="button_secondary" depressed @click="atomicImportC('P')" small>
+                Import C (from P)
             </v-btn>
         </template>
         <Spinner class="spinner" v-else></Spinner>
@@ -33,7 +42,18 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+import { BN } from 'avalanche'
+import {
+    ExportChainsC,
+    ExportChainsP,
+    ExportChainsX,
+    GasHelper,
+    Network,
+    NetworkHelper,
+    Utils,
+} from '@avalabs/avalanche-wallet-sdk'
+
 @Component({
     components: { Spinner },
 })
@@ -53,55 +73,54 @@ export default class ChainImport extends Vue {
         return this.wallet.ethAddress
     }
 
-    async atomicImportX() {
+    async atomicImportX(sourceChain: ExportChainsX) {
         this.beforeSubmit()
         if (!this.wallet) return
 
-        let err
-        let hasUTXOs
-        // Import from P
+        // // Import from C
         try {
-            let txId = await this.wallet.importToXChain('P')
+            let txId = await this.wallet.importToXChain(sourceChain)
             this.onSuccess(txId)
-            hasUTXOs = true
         } catch (e) {
             if (this.isSuccess) return
-            err = e
-        }
-
-        // Import from C
-        try {
-            if (this.isEVMSupported) {
-                let txId2 = await this.wallet.importToXChain('C')
-                this.onSuccess(txId2)
-                hasUTXOs = true
-            }
-        } catch (e) {
-            if (this.isSuccess) return
-            err = e
-        }
-
-        if (!hasUTXOs) {
-            this.onError(err)
+            this.onError(e)
         }
     }
 
-    async atomicImportP() {
+    async atomicImportP(source: ExportChainsP) {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToPlatformChain()
+            let txId = await this.wallet.importToPlatformChain(source)
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)
         }
     }
 
-    async atomicImportC() {
+    async atomicImportC(source: ExportChainsC) {
         this.beforeSubmit()
         if (!this.wallet) return
         try {
-            let txId = await this.wallet.importToCChain()
+            const utxoSet = await this.wallet.evmGetAtomicUTXOs(source)
+            const utxos = utxoSet.getAllUTXOs()
+
+            const numIns = utxos.length
+            const baseFee = await GasHelper.getBaseFeeRecommended()
+
+            if (numIns === 0) {
+                throw new Error('Nothing to import.')
+            }
+
+            // Calculate number of signatures
+            const numSigs = utxos.reduce((acc, utxo) => {
+                return acc + utxo.getOutput().getAddresses().length
+            }, 0)
+
+            const gas = GasHelper.estimateImportGasFeeFromMockTx(numIns, numSigs)
+
+            const totFee = baseFee.mul(new BN(gas))
+            let txId = await this.wallet.importToCChain(source, Utils.avaxCtoX(totFee))
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)

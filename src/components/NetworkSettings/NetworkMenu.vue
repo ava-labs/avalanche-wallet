@@ -6,24 +6,33 @@
         @keydown.esc="closeMenu"
     >
         <div class="toggle_but" @click="toggleMenu" :testnet="isTestnet">
-            <template v-if="status === 'disconnected' || status === 'connecting'">
-                <img v-if="$root.theme === 'day'" src="@/assets/network_off.png" />
-                <img v-else src="@/assets/network_off_night.svg" />
-            </template>
-            <template v-else>
-                <img v-if="$root.theme === 'day'" src="@/assets/network_on.png" />
-                <img v-else src="@/assets/network_off_night.svg" />
-            </template>
-            <button v-if="status === 'connected'">
-                {{ activeNetwork.name }}
-            </button>
-            <button v-else-if="status === 'connecting'">
-                {{ $t('network.status1') }}
-            </button>
-            <button v-else>{{ $t('network.status2') }}</button>
+            <span
+                :style="{
+                    backgroundColor: connectionColor,
+                }"
+            ></span>
+            <p v-if="activeNetwork">{{ activeNetwork.name }}</p>
+            <p v-else>Disconnected</p>
+            <!--            <template v-if="status === 'disconnected' || status === 'connecting'">-->
+            <!--                <img v-if="$root.theme === 'day'" src="@/assets/network_off.png" />-->
+            <!--                <img v-else src="@/assets/network_off_night.svg" />-->
+            <!--            </template>-->
+            <!--            <template v-else>-->
+            <!--                <img v-if="$root.theme === 'day'" src="@/assets/network_on.png" />-->
+            <!--                <img v-else src="@/assets/network_off_night.svg" />-->
+            <!--            </template>-->
+            <!--            <button v-if="status === 'connected'">-->
+            <!--                {{ activeNetwork.name }}-->
+            <!--            </button>-->
+            <!--            <button v-else-if="status === 'connecting'">-->
+            <!--                {{ $t('network.status1') }}-->
+            <!--            </button>-->
+            <!--            <button v-else>{{ $t('network.status2') }}</button>-->
         </div>
-        <transition-group name="fade">
+        <transition name="fade">
             <div class="network_dispose_bg" v-if="isActive" key="bg" @click="closeMenu"></div>
+        </transition>
+        <transition name="slide_right">
             <div class="network_body" v-if="isActive" key="body">
                 <div class="header" data-cy="custom-network-option">
                     <template v-if="page === 'list'">
@@ -51,7 +60,7 @@
                 </div>
 
                 <transition name="fade" mode="out-in">
-                    <ListPage v-if="page === 'list'"></ListPage>
+                    <ListPage v-if="page === 'list'" @edit="onedit"></ListPage>
                     <CustomPage v-if="page === 'custom'" @add="addCustomNetwork"></CustomPage>
                     <EditPage
                         v-if="page === 'edit'"
@@ -60,7 +69,7 @@
                     ></EditPage>
                 </transition>
             </div>
-        </transition-group>
+        </transition>
     </div>
 </template>
 <script lang="ts">
@@ -72,6 +81,7 @@ import CustomPage from './CustomPage.vue'
 import ListPage from './ListPage.vue'
 import EditPage from '@/components/NetworkSettings/EditPage.vue'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import { NetworkStatus } from '@/store/modules/network/types'
 
 @Component({
     components: {
@@ -104,6 +114,17 @@ export default class NetworkMenu extends Vue {
         this.page = 'list'
     }
 
+    get connectionColor(): string {
+        switch (this.status) {
+            case 'connecting':
+                return '#ffaa00'
+            case 'connected':
+                return '#0f0'
+            default:
+                return '#f00'
+        }
+    }
+
     networkUpdated() {
         this.page = 'list'
         this.$store.dispatch('Network/save')
@@ -114,7 +135,7 @@ export default class NetworkMenu extends Vue {
         this.page = 'edit'
     }
 
-    get status(): string {
+    get status(): NetworkStatus {
         return this.$store.state.Network.status
     }
     get activeNetwork(): null | AvaNetwork {
@@ -142,11 +163,30 @@ export default class NetworkMenu extends Vue {
 }
 
 .toggle_but {
+    //border: 2px solid var(--bg-light);
+    padding: 2px 10px;
+    //font-size: 13px;
     display: flex;
-    color: var(--primary-color);
     border-radius: 6px;
     position: relative;
     align-items: center;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--bg-light);
+    }
+
+    $dotW: 8px;
+    span {
+        width: $dotW;
+        height: $dotW;
+        border-radius: $dotW;
+        margin-right: 4px;
+    }
+
+    p {
+        user-select: none;
+    }
 
     button {
         outline: none !important;
@@ -183,13 +223,15 @@ export default class NetworkMenu extends Vue {
     top: 0;
     width: 100%;
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
 }
 
 .network_body {
     position: fixed;
-    z-index: 2;
-    top: 60px;
-    right: 15vw;
+    z-index: 3;
+    top: 0;
+    right: 0;
+    height: 100%;
     border: 1px solid var(--bg-light);
     border-radius: 4px;
     width: 340px;

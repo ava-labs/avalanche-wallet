@@ -1,12 +1,21 @@
 <template>
-    <div class="url_payload_view">
-        <img :src="url" v-if="img_types.includes(fileType)" />
-        <div v-else class="unknown">
-            <p>
-                <span>URL</span>
+    <div class="url_payload_view" @mouseenter="isHover = true" @mouseleave="isHover = false">
+        <img :src="url" @load="isImage = true" v-show="isImage" />
+        <video
+            :src="url"
+            @loadedmetadata="isVideo = true"
+            v-show="isVideo"
+            :controls="isHover"
+            loop
+            muted
+            controlsList="nodownload"
+        />
+        <div v-if="!isImage && !isVideo" class="unknown">
+            <p style="font-size: 2em">
+                <fa icon="link"></fa>
             </p>
-            <a :href="url" target="_blank">{{ url }}</a>
             <p class="warn">Do NOT click links you do not trust.</p>
+            <a :href="url" target="_blank">{{ url }}</a>
         </div>
     </div>
 </template>
@@ -20,7 +29,9 @@ export default class UrlPayloadView extends Vue {
 
     img_types = ['jpeg', 'jpg', 'gif', 'png', 'apng', 'svg', 'bmp', 'ico', 'webp']
     valid_types = this.img_types.concat(['pdf'])
-
+    isImage = false
+    isVideo = false
+    isHover = false
     get url() {
         return this.payload.getContent().toString()
     }
@@ -45,11 +56,12 @@ export default class UrlPayloadView extends Vue {
     //border-radius: 14px;
     //overflow: hidden;
 }
-img {
+img,
+video {
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .unknown {
@@ -57,12 +69,15 @@ img {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    a {
+        margin: 14px 0;
+    }
 }
 .unknown,
 .warn {
-    background-color: var(--bg-light);
     text-align: center;
-    padding: 12px 8px;
+    padding: 12px;
     word-break: break-all;
     font-size: 13px;
     span {
@@ -72,9 +87,10 @@ img {
 }
 
 .warn {
-    color: var(--error);
+    color: var(--secondary-color);
     word-break: normal;
-    font-size: 11px;
+    font-size: 1.2em;
+    font-weight: bold;
     opacity: 0.6;
 }
 </style>

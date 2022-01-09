@@ -5,7 +5,7 @@
                 <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
             <label>{{ $t('access.mnemonic.subtitle') }}</label>
-            <textarea v-model="phrase" translate="no"></textarea>
+            <textarea @input="onPhraseIn" translate="no"></textarea>
             <div class="button_container">
                 <p class="err" v-if="err">{{ err }}</p>
                 <v-btn
@@ -45,6 +45,14 @@ export default class Mnemonic extends Vue {
     isLoading: boolean = false
     err: string = ''
 
+    beforeDestroy() {
+        this.phrase = ''
+    }
+
+    onPhraseIn(ev: any) {
+        this.phrase = ev.currentTarget.value
+    }
+
     errCheck() {
         let phrase = this.phrase
         let words = phrase.split(' ')
@@ -69,7 +77,7 @@ export default class Mnemonic extends Vue {
     }
 
     get canSubmit() {
-        if (this.wordCount < 24) {
+        if (this.wordCount !== 24) {
             return false
         }
 
@@ -93,7 +101,6 @@ export default class Mnemonic extends Vue {
                 this.isLoading = false
             } catch (e) {
                 this.isLoading = false
-                console.log(e)
                 this.err = `${this.$t('access.mnemonic.error')}`
             }
         }, 500)

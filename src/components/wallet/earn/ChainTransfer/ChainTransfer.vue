@@ -6,19 +6,31 @@
                     ref="form"
                     @change="onFormChange"
                     :is-confirm="isConfirm"
+                    :balance="balanceBig"
+                    :max-amt="maxAmt"
                 ></ChainSwapForm>
 
                 <div v-if="!isSuccess && !isLoading">
                     <div v-if="!isImportErr" class="fees">
                         <h4>{{ $t('earn.transfer.fee') }}</h4>
+
                         <p>
-                            {{ $t('earn.transfer.fee_name') }}
-                            <span>{{ fee.toString() }} AVAX</span>
+                            Export Fee
+                            <span>{{ exportFee.toLocaleString() }} AVAX</span>
+                        </p>
+                        <p>
+                            Import Fee
+                            <span>{{ importFee.toLocaleString() }} AVAX</span>
+                        </p>
+                        <p>
+                            <b>
+                                Total
+                                <span>{{ fee.toLocaleString() }} AVAX</span>
+                            </b>
                         </p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>
-                        <!--                    <p v-if="maxAmt.isZero() && !isLoading" class="err">Insufficient funds to create the transactions.</p>-->
                         <template v-if="isImportErr">
                             <p>
                                 {{ $t('earn.transfer.err_desc') }}
@@ -37,7 +49,7 @@
                             <v-btn
                                 v-if="!isConfirm"
                                 data-cy="confirm"
-                                class="button_secondary"
+                                class="button_primary"
                                 @click="confirm"
                                 :disabled="!canSubmit"
                                 block
@@ -81,14 +93,6 @@
                     <v-btn depressed class="button_secondary" small block @click="startAgain">
                         {{ $t('earn.transfer.success.again') }}
                     </v-btn>
-                    <!--                    <v-btn-->
-                    <!--                        depressed-->
-                    <!--                        small-->
-                    <!--                        block-->
-                    <!--                        text-->
-                    <!--                        @click="$emit('cancel')"-->
-                    <!--                        >{{ $t('earn.transfer.success.back') }}</v-btn-->
-                    <!--                    >-->
                 </div>
             </div>
             <div class="right_col">
@@ -113,15 +117,13 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
-import { avm, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { bnToBig } from '@/helpers/helper'
+import { avm, cChain, pChain } from '@/AVA'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
 import TxStateCard from '@/components/wallet/earn/ChainTransfer/TxState.vue'
@@ -130,9 +132,18 @@ import { ChainIdType } from '@/constants'
 
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
-import { web3 } from '@/evm'
+import { WalletType } from '@/js/wallets/types'
+import {
+    ExportChainsC,
+    ExportChainsP,
+    ExportChainsX,
+    GasHelper,
+    Utils,
+    Big,
+} from '@avalabs/avalanche-wallet-sdk'
 
-const IMPORT_DELAY = 4000 // in ms
+const IMPORT_DELAY = 5000 // in ms
+const BALANCE_DELAY = 2000 // in ms
 
 @Component({
     name: 'chain_transfer',
@@ -159,7 +170,9 @@ export default class ChainTransfer extends Vue {
     isConfirm = false
     isSuccess = false
 
-    formAmt = new BN(0)
+    formAmt: BN = new BN(0)
+
+    baseFee: BN = new BN(0)
 
     // Transaction ids
     exportId: string = ''
@@ -172,13 +185,16 @@ export default class ChainTransfer extends Vue {
     importStatus: string | null = null
     importReason: string | null = null
 
-    // switchChain() {
-    //     let temp = this.sourceChain
-    //     this.sourceChain = this.targetChain
-    //     this.targetChain = temp
-    // }
-    activated() {
-        this.$refs.form.clear()
+    @Watch('sourceChain')
+    @Watch('targetChain')
+    onChainChange() {
+        if (this.sourceChain === 'C' || this.targetChain === 'C') {
+            this.updateBaseFee()
+        }
+    }
+
+    created() {
+        this.updateBaseFee()
     }
 
     get ava_asset(): AvaAsset | null {
@@ -201,64 +217,85 @@ export default class ChainTransfer extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return balRaw.divRound(new BN(Math.pow(10, 9)))
+        return Utils.avaxCtoX(balRaw)
     }
 
-    get balance(): Big {
-        let bal: BN
+    get balanceBN(): BN {
         if (this.sourceChain === 'P') {
-            bal = this.platformUnlocked
+            return this.platformUnlocked
         } else if (this.sourceChain === 'C') {
-            bal = this.evmUnlocked
+            return this.evmUnlocked
         } else {
-            bal = this.avmUnlocked
+            return this.avmUnlocked
         }
+    }
 
-        let bigBal = bnToBig(bal, 9)
-
-        return bigBal
+    get balanceBig(): Big {
+        return Utils.bnToBig(this.balanceBN, 9)
     }
 
     get formAmtText() {
-        return bnToBig(this.formAmt, 9).toLocaleString()
+        return Utils.bnToAvaxX(this.formAmt)
     }
 
-    // Fee is 2 times the tx transfer fee
     get fee(): Big {
-        let feeX = avm.getTxFee()
-        let totFee = feeX.mul(new BN(2))
-
-        if (this.targetChain === 'C') {
-            totFee = feeX
-        }
-
-        let feeXBig = bnToBig(totFee, 9)
-
-        return feeXBig
+        return this.exportFee.add(this.importFee)
     }
 
+    get feeBN(): BN {
+        return this.importFeeBN.add(this.exportFeeBN)
+    }
+
+    getFee(chain: ChainIdType, isExport: boolean): Big {
+        if (chain === 'X') {
+            return Utils.bnToBigAvaxX(avm.getTxFee())
+        } else if (chain === 'P') {
+            return Utils.bnToBigAvaxX(pChain.getTxFee())
+        } else {
+            const fee = isExport
+                ? GasHelper.estimateExportGasFeeFromMockTx(
+                      this.targetChain as ExportChainsC,
+                      this.amt,
+                      this.wallet.getEvmAddress(),
+                      this.wallet.getCurrentAddressPlatform()
+                  )
+                : GasHelper.estimateImportGasFeeFromMockTx(1, 1)
+
+            const totFeeWei = this.baseFee.mul(new BN(fee))
+            return Utils.bnToBigAvaxC(totFeeWei)
+        }
+    }
+
+    get importFee(): Big {
+        return this.getFee(this.targetChain, false)
+    }
+
+    /**
+     * Returns the import fee in nAVAX
+     */
+    get importFeeBN(): BN {
+        return Utils.bigToBN(this.importFee, 9)
+    }
+
+    get exportFee(): Big {
+        return this.getFee(this.sourceChain, true)
+    }
+
+    get exportFeeBN(): BN {
+        return Utils.bigToBN(this.exportFee, 9)
+    }
+
+    /**
+     * The maximum amount that can be transferred in nAVAX
+     */
     get maxAmt(): BN {
-        let max = this.balance.sub(this.fee)
-        let zero = Big(0)
-        if (zero.gt(max)) {
+        let max = this.balanceBN.sub(this.feeBN)
+
+        if (max.isNeg() || max.isZero()) {
             return new BN(0)
         } else {
-            let bnStr = max.times(Big(Math.pow(10, 9))).toString()
-            return new BN(bnStr)
+            return max
         }
-    }
-
-    get amtTotalCost(): Big {
-        let amt = this.amtBig
-        let fee = this.fee
-        return amt.add(fee)
-    }
-
-    get amtBig(): Big {
-        let bn = this.amt
-        // let big = Big(bn.toString()).div(Math.pow(10,9));
-        let big = bnToBig(bn, 9)
-        return big
     }
 
     onFormChange(data: ChainSwapFormData) {
@@ -278,8 +315,12 @@ export default class ChainTransfer extends Vue {
     }
 
     get wallet() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
+    }
+
+    async updateBaseFee() {
+        this.baseFee = await GasHelper.getBaseFeeRecommended()
     }
 
     async submit() {
@@ -299,27 +340,44 @@ export default class ChainTransfer extends Vue {
     // Triggers export from chain
     // STEP 1
     async chainExport(amt: BN, sourceChain: ChainIdType, destinationChain: ChainIdType) {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         let exportTxId
         this.exportState = TxState.started
 
-        let nonce = 0
-        if (this.sourceChain === 'C') {
-            nonce = await web3.eth.getTransactionCount(this.wallet.ethAddress)
-        }
-
         try {
-            exportTxId = await wallet.chainTransfer(amt, sourceChain, destinationChain)
+            switch (sourceChain) {
+                case 'X':
+                    exportTxId = await wallet.exportFromXChain(
+                        amt,
+                        destinationChain as ExportChainsX,
+                        this.importFeeBN
+                    )
+                    break
+                case 'P':
+                    exportTxId = await wallet.exportFromPChain(
+                        amt,
+                        destinationChain as ExportChainsP,
+                        this.importFeeBN
+                    )
+                    break
+                case 'C':
+                    exportTxId = await wallet.exportFromCChain(
+                        amt,
+                        destinationChain as ExportChainsC,
+                        this.exportFeeBN
+                    )
+                    break
+            }
         } catch (e) {
             throw e
         }
 
         this.exportId = exportTxId
-        this.waitExportStatus(exportTxId, nonce)
+        this.waitExportStatus(exportTxId)
     }
 
     // STEP 2
-    async waitExportStatus(txId: string, nonce?: number, remainingTries = 15) {
+    async waitExportStatus(txId: string, remainingTries = 15) {
         let status
         if (this.sourceChain === 'X') {
             status = await avm.getTxStatus(txId)
@@ -332,13 +390,8 @@ export default class ChainTransfer extends Vue {
                 this.exportReason = resp.reason
             }
         } else {
-            // We can check the nonce to see when the tx is confirmed
-            let nonceNow = await web3.eth.getTransactionCount(this.wallet.ethAddress)
-            if (nonceNow === nonce) {
-                status = 'Processing'
-            } else {
-                status = 'Accepted'
-            }
+            let resp = await cChain.getAtomicTxStatus(txId)
+            status = resp
         }
         this.exportStatus = status
 
@@ -352,7 +405,7 @@ export default class ChainTransfer extends Vue {
 
             // if not confirmed ask again
             setTimeout(() => {
-                this.waitExportStatus(txId, nonce, remainingTries - 1)
+                this.waitExportStatus(txId, remainingTries - 1)
             }, 1000)
             return false
         } else if (status === 'Dropped') {
@@ -375,18 +428,30 @@ export default class ChainTransfer extends Vue {
     }
 
     // STEP 3
-    async chainImport() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+    async chainImport(canRetry = true) {
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         let importTxId
         try {
             if (this.targetChain === 'P') {
-                importTxId = await wallet.importToPlatformChain()
+                importTxId = await wallet.importToPlatformChain(this.sourceChain as ExportChainsP)
             } else if (this.targetChain === 'X') {
-                importTxId = await wallet.importToXChain(this.sourceChain)
+                importTxId = await wallet.importToXChain(this.sourceChain as ExportChainsX)
             } else {
-                importTxId = await wallet.importToCChain()
+                //TODO: Import only the exported UTXO
+
+                importTxId = await wallet.importToCChain(
+                    this.sourceChain as ExportChainsC,
+                    this.importFeeBN
+                )
             }
         } catch (e) {
+            // Retry import one more time
+            if (canRetry) {
+                setTimeout(() => {
+                    this.chainImport(false)
+                }, IMPORT_DELAY)
+                return
+            }
             this.onerror(e)
             this.onErrorImport(e)
             return
@@ -412,8 +477,8 @@ export default class ChainTransfer extends Vue {
                 status = resp.status
             }
         } else {
-            // TODO: Add evm processing
-            status = 'Accepted'
+            let resp = await cChain.getAtomicTxStatus(txId)
+            status = resp
         }
 
         this.importStatus = status
@@ -449,6 +514,7 @@ export default class ChainTransfer extends Vue {
     }
 
     onErrorImport(err: any) {
+        this.importState = TxState.failed
         this.isImportErr = true
     }
 
@@ -481,15 +547,10 @@ export default class ChainTransfer extends Vue {
             message: 'Funds transferred between chains.',
         })
 
-        if (this.targetChain === 'C') {
-            setTimeout(() => {
-                this.$store.dispatch('Assets/updateUTXOs')
-                this.$store.dispatch('History/updateTransactionHistory')
-            }, 3000)
-        } else {
+        setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
-        }
+        }, BALANCE_DELAY)
     }
 
     get canSubmit() {

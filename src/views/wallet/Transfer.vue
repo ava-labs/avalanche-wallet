@@ -147,7 +147,8 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { Buffer, BN } from 'avalanche'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
-import { priceDict, IssueBatchTxInput, WalletType } from '@/store/types'
+import { priceDict, IssueBatchTxInput } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
 import * as bip39 from 'bip39'
 import FormC from '@/components/wallet/transfer/FormC.vue'
@@ -189,6 +190,11 @@ export default class Transfer extends Vue {
 
     canSendAgain = false
     txState: TxState | null = null
+
+    $refs!: {
+        txList: TxList
+        nftList: NftList
+    }
 
     confirm() {
         let isValid = this.formCheck()
@@ -266,6 +272,8 @@ export default class Transfer extends Vue {
     }
 
     startAgain() {
+        this.clearForm()
+
         this.txId = ''
         this.isSuccess = false
         this.cancelConfirm()
@@ -281,12 +289,10 @@ export default class Transfer extends Vue {
         this.memo = ''
 
         // Clear transactions list
-        // @ts-ignore
         this.$refs.txList.reset()
 
         // Clear NFT list
         if (this.hasNFT) {
-            // @ts-ignore
             this.$refs.nftList.clear()
         }
     }
@@ -294,7 +300,6 @@ export default class Transfer extends Vue {
     async onsuccess(txId: string) {
         this.isAjax = false
         this.isSuccess = true
-        this.clearForm()
 
         this.$store.dispatch('Notifications/add', {
             title: this.$t('transfer.success_title'),
@@ -453,6 +458,15 @@ export default class Transfer extends Vue {
     get priceDict(): priceDict {
         return this.$store.state.prices
     }
+
+    get nftUTXOs(): UTXO[] {
+        return this.$store.state.Assets.nftUTXOs
+    }
+
+    deactivated() {
+        this.startAgain()
+    }
+
     activated() {
         this.clearForm()
 
@@ -462,6 +476,17 @@ export default class Transfer extends Vue {
                 this.formType = 'X'
             } else {
                 this.formType = 'C'
+            }
+        }
+
+        if (this.$route.query.nft) {
+            let utxoId = this.$route.query.nft as string
+            let target = this.nftUTXOs.find((el) => {
+                return el.getUTXOID() === utxoId
+            })
+
+            if (target) {
+                this.$refs.nftList.addNft(target)
             }
         }
     }

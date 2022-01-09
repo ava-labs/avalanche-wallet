@@ -82,7 +82,8 @@ import { ITransactionData, UTXO } from '@/store/modules/history/types'
 import { TransactionValueDict } from '@/components/SidePanels/types'
 import { PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
 import { BN, Buffer } from 'avalanche'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { avm, pChain } from '@/AVA'
 
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
@@ -344,7 +345,8 @@ export default class BaseTx extends Vue {
         let addrs: string[] = this.addresses
         let addrsRaw = addrs.map((addr) => addr.split('-')[1])
 
-        const isFromWallet = this.transaction.inputs.find((input) => {
+        let ins = this.transaction.inputs || []
+        const isFromWallet = ins.find((input) => {
             return input.output.addresses.find((value) => {
                 return addrsRaw.includes(value)
             })

@@ -1,5 +1,7 @@
 <template>
     <div class="activity_page">
+        <ExportCsvModal ref="csv_modal"></ExportCsvModal>
+        <ExportAvaxCsvModal ref="avax_csv_modal"></ExportAvaxCsvModal>
         <div class="explorer_warning" v-if="!hasExplorer">
             <div class="warning_body">
                 <h1>{{ $t('activity.no_explorer.title') }}</h1>
@@ -8,6 +10,29 @@
         </div>
         <div class="settings">
             <div class="filter_col">
+                <div class="filter_cont">
+                    <label>Export CSV File (BETA)</label>
+                    <div class="csv_buttons">
+                        <v-btn
+                            x-small
+                            @click="openCsvModal"
+                            class="button_secondary"
+                            depressed
+                            :disabled="!showList"
+                        >
+                            Export Rewards
+                        </v-btn>
+                        <v-btn
+                            x-small
+                            @click="openAvaxCsvModal"
+                            class="button_secondary"
+                            depressed
+                            :disabled="!showList"
+                        >
+                            Export AVAX Transfers
+                        </v-btn>
+                    </div>
+                </div>
                 <div class="filter_cont">
                     <label>{{ $t('activity.label1') }}</label>
                     <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
@@ -75,6 +100,8 @@ type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 //@ts-ignore
 import VirtualList from 'vue-virtual-scroll-list'
 import { AvaNetwork } from '@/js/AvaNetwork'
+import ExportCsvModal from '@/components/modals/ExportCsvModal.vue'
+import ExportAvaxCsvModal from '@/components/modals/ExportAvaxCsvModal.vue'
 
 const PAGE_LIMIT = 100
 
@@ -82,7 +109,10 @@ const YEAR_MIN = 2020
 const MONTH_MIN = 8
 
 @Component({
+    name: 'activity',
     components: {
+        ExportAvaxCsvModal,
+        ExportCsvModal,
         Spinner,
         TxRow,
         RadioButtons,
@@ -106,12 +136,18 @@ export default class Activity extends Vue {
     yearNow = 0
 
     listH = 100
-    activated() {
-        let now = new Date()
-        this.yearNow = now.getFullYear()
-        this.monthNow = now.getMonth()
-        this.scrollToTop()
-        this.setScrollHeight()
+
+    $refs!: {
+        csv_modal: ExportCsvModal
+        avax_csv_modal: ExportAvaxCsvModal
+    }
+
+    openCsvModal() {
+        this.$refs.csv_modal.open()
+    }
+
+    openAvaxCsvModal() {
+        this.$refs.avax_csv_modal.open()
     }
 
     get showList(): boolean {
@@ -150,6 +186,11 @@ export default class Activity extends Vue {
 
     mounted() {
         this.updateHistory()
+
+        let now = new Date()
+        this.yearNow = now.getFullYear()
+        this.monthNow = now.getMonth()
+        this.scrollToTop()
         this.setScrollHeight()
     }
     deleted() {}
@@ -473,6 +514,12 @@ export default class Activity extends Vue {
     font-size: 24px;
 }
 
+.filter_col {
+    //display: flex;
+    //flex-direction: row;
+    //align-items: center;
+}
+
 .filter_cont {
     label {
         font-size: 12px;
@@ -498,6 +545,11 @@ export default class Activity extends Vue {
     }
 }
 
+.csv_buttons {
+    .v-btn {
+        margin-right: 1em;
+    }
+}
 @include main.medium-device {
     .pagination {
         p {
@@ -515,6 +567,7 @@ export default class Activity extends Vue {
 
     .filter_col {
         grid-row: 2;
+        justify-content: center;
     }
 
     .pagination {

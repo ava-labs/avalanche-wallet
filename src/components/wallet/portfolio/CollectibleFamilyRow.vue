@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="nft_family_row" v-if="allUtxos.length">
         <div class="fam_header">
             <p class="name">{{ family.name }}</p>
             <p class="symbol">{{ family.symbol }}</p>
@@ -116,77 +116,26 @@ export default class CollectibleFamilyRow extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../main';
-
-.fam_header {
-    width: 100%;
-    margin: 12px 0;
-    margin-bottom: 16px;
-    font-size: 18px;
-    display: grid;
-    grid-template-columns: max-content max-content 1fr;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--bg-light);
-}
-
-.fam_id {
-    word-break: break-all;
-    text-align: right;
-    color: var(--primary-color-light);
-    font-size: 13px;
-    align-self: center;
-}
-.name {
-    padding-right: 10px;
-}
-.symbol {
-    padding-left: 10px;
-    color: var(--primary-color-light);
-    border-left: 1px solid var(--primary-color-light);
-}
-
-.list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.group {
-    align-self: flex-end;
-    width: 180px;
-    max-width: 100%;
-    height: 220px;
-    margin-right: 14px;
-    margin-bottom: 14px;
-}
+@use "tokens";
 
 .mint_card {
-    border-radius: 14px;
     font-size: 13px;
     border: 1px dashed var(--primary-color-light);
     padding: 12px 12px;
     color: var(--primary-color);
     display: flex;
+    height: 100%;
     flex-direction: column;
     justify-content: space-between;
 }
 
 @include main.medium-device {
-    .group {
-        width: 120px;
-        height: 180px;
-    }
 }
 
 @include main.mobile-device {
     .fam_header {
         grid-template-columns: max-content 1fr;
     }
-
-    .group {
-        //height: 80vh;
-        height: 40vh;
-        width: 80vw;
-    }
-
     .fam_id {
         grid-column: 1/3;
         text-align: left;
@@ -195,6 +144,7 @@ export default class CollectibleFamilyRow extends Vue {
         height: max-content;
     }
     .list {
+        grid-template-columns: 1fr;
     }
 }
 </style>

@@ -2,15 +2,14 @@
     <div id="nav">
         <ConfirmLogout ref="logout"></ConfirmLogout>
         <router-link to="/" class="logo">
-            <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg" />
-            <img v-else src="@/assets/wallet_logo_dark.svg" />
+            <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.png" />
+            <img v-else src="@/assets/wallet_logo_dark.png" />
             <!--            <span class="slogan">by Avalanche</span>-->
         </router-link>
         <v-spacer></v-spacer>
 
         <div class="buts_right">
             <DayNightToggle class="action_but"></DayNightToggle>
-            <network-menu></network-menu>
             <template v-if="isAuth">
                 <button @click="logout">{{ $t('logout.button') }}</button>
             </template>
@@ -22,6 +21,7 @@
                     {{ $t('nav.create') }}
                 </router-link>
             </template>
+            <network-menu></network-menu>
             <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
 
@@ -70,10 +70,9 @@
                 <template v-else>
                     <router-link to="/access">{{ $t('nav.access') }}</router-link>
                     <router-link to="/create">{{ $t('nav.create') }}</router-link>
-                    <!--                    <v-list-item to="/access">Access Wallet</v-list-item>-->
-                    <!--                    <v-list-item to="/create" class="action_but">Get Started</v-list-item>-->
                 </template>
                 <div class="mobile_bottom">
+                    <AccountMenu></AccountMenu>
                     <LanguageSelect class="lang_mobile"></LanguageSelect>
                 </div>
             </v-list>
@@ -87,8 +86,10 @@ import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue'
 import DayNightToggle from '@/components/misc/DayNightToggle.vue'
 import NetworkMenu from './NetworkSettings/NetworkMenu.vue'
 import ConfirmLogout from '@/components/modals/ConfirmLogout.vue'
+import AccountMenu from '@/components/wallet/sidebar/AccountMenu.vue'
 @Component({
     components: {
+        AccountMenu,
         NetworkMenu,
         DayNightToggle,
         ConfirmLogout,
@@ -155,11 +156,15 @@ button {
 .buts_right {
     display: flex;
     align-items: center;
+
+    a {
+        margin: 0;
+    }
 }
 
 .action_but {
     color: var(--primary-color) !important;
-    padding: 6px 18px;
+    padding: 0 12px;
     border-radius: 4px;
 }
 
@@ -169,7 +174,11 @@ button {
 
 .mobile_bottom {
     position: absolute;
-    bottom: 14px;
+    bottom: 30px;
+
+    > * {
+        padding: 4px 8px;
+    }
 }
 
 .lang_mobile,
@@ -217,6 +226,7 @@ button {
 </style>
 <style lang="scss">
 .mobile_menu {
+    overflow: visible !important;
     background-color: var(--bg-light) !important;
 
     .v-list-item,

@@ -1,6 +1,13 @@
 <template>
-    <button class="ava_button" @click="submit">
-        <template v-if="!isLoading">Ledger</template>
+    <button class="button_primary" @click="submit">
+        <template v-if="!isLoading">
+            Ledger
+            <ImageDayNight
+                day="/img/access_icons/day/ledger.svg"
+                night="/img/access_icons/night/ledger.svg"
+                class="ledger_img"
+            ></ImageDayNight>
+        </template>
         <Spinner v-else class="spinner"></Spinner>
     </button>
 </template>
@@ -9,6 +16,10 @@ import 'reflect-metadata'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 // @ts-ignore
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
+//@ts-ignore
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
+//@ts-ignore
+import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 // @ts-ignore
 import Eth from '@ledgerhq/hw-app-eth'
 // @ts-ignore
@@ -16,13 +27,14 @@ import AppAvax from '@obsidiansystems/hw-app-avalanche'
 import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock.vue'
 import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
-import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/AvaHdWallet'
+import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
 import { ILedgerAppConfig } from '@/store/types'
-
-export const LEDGER_EXCHANGE_TIMEOUT = 90_000
+import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
+import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 
 @Component({
     components: {
+        ImageDayNight,
         Spinner,
         LedgerBlock,
     },
@@ -35,47 +47,63 @@ export default class LedgerButton extends Vue {
         this.$store.commit('Ledger/closeModal')
     }
 
+    async getTransport() {
+        let transport
+
+        try {
+            transport = await TransportWebHID.create()
+            return transport
+        } catch (e) {
+            console.log('Web HID not supported.')
+        }
+
+        //@ts-ignore
+        if (window.USB) {
+            transport = await TransportWebUSB.create()
+        } else {
+            transport = await TransportU2F.create()
+        }
+        return transport
+    }
+
     async submit() {
         try {
-            let transport = await TransportU2F.create()
+            let transport = await this.getTransport()
             transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
-            let app = new AppAvax(transport)
+
+            let app = new AppAvax(transport, 'w0w')
+            let eth = new Eth(transport, 'w0w')
+
             // Wait for app config
             await this.waitForConfig(app)
 
             // Close the initial prompt modal if exists
-            this.$store.commit('Ledger/closeModal')
+            this.$store.commit('Ledger/setIsUpgradeRequired', false)
             this.isLoading = true
 
-            // Otherwise timer does not reset
-            await setTimeout(() => null, 10)
-
-            let eth, title, messages
-            // TODO: enable when we want users upgrading after ledger fixes a few issues
-            // let versionCheck = config.version >= MIN_EVM_SUPPORT_V
-            let versionCheck = false
-            if (versionCheck) {
-                eth = new Eth(transport, 'Avalanche')
-                title = 'Provide Public Keys'
-                messages = [
-                    {
-                        title: 'Derivation Path',
-                        value: AVA_ACCOUNT_PATH,
-                    },
-                    {
-                        title: 'Derivation Path',
-                        value: LEDGER_ETH_ACCOUNT_PATH,
-                    },
-                ]
-            } else {
-                title = 'Provide Public Key'
-                messages = [
-                    {
-                        title: 'Derivation Path',
-                        value: AVA_ACCOUNT_PATH,
-                    },
-                ]
+            if (!this.config) {
+                this.$store.commit('Ledger/setIsUpgradeRequired', true)
+                this.isLoading = false
+                throw new Error('')
             }
+
+            if (this.config.version < MIN_EVM_SUPPORT_V) {
+                this.$store.commit('Ledger/setIsUpgradeRequired', true)
+                this.isLoading = false
+                return
+            }
+
+            let title = 'Provide Public Keys'
+            let messages = [
+                {
+                    title: 'Derivation Path',
+                    value: AVA_ACCOUNT_PATH,
+                },
+                {
+                    title: 'Derivation Path',
+                    value: LEDGER_ETH_ACCOUNT_PATH,
+                },
+            ]
 
             this.$store.commit('Ledger/openModal', {
                 title,
@@ -85,42 +113,58 @@ export default class LedgerButton extends Vue {
             let wallet = await LedgerWallet.fromApp(
                 app,
                 eth,
-                versionCheck,
                 (this.config as unknown) as ILedgerAppConfig
             )
             try {
-                await this.$store.dispatch('accessWalletLedger', wallet)
+                await this.loadWallet(wallet)
                 this.onsuccess()
-                // TODO: enable when we want users upgrading after ledger fixes a few issues
-                // this.$store.commit('Ledger/setIsUpgradeRecommended', config.version < MIN_EVM_SUPPORT_V)
             } catch (e) {
                 this.onerror(e)
             }
         } catch (e) {
-            console.log(e)
             this.onerror(e)
         }
     }
-    async waitForConfig(app: any) {
+
+    async waitForConfig(app: AppAvax) {
         // Config is found immediately if the device is connected and the app is open.
         // If no config was found that means user has not opened the Avalanche app.
         setTimeout(() => {
             if (this.config) return
-            this.$store.commit('Ledger/openModal', {
-                title: 'Open the Avalanche app on your Ledger Device',
-                messages: [],
-                isPrompt: true,
-            })
+            this.$store.commit('Ledger/setIsUpgradeRequired', true)
         }, 1000)
 
         this.config = await app.getAppConfiguration()
     }
-    onsuccess() {
-        this.isLoading = false
+
+    async loadWallet(wallet: LedgerWallet) {
+        this.showWalletLoading()
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                this.$store
+                    .dispatch('accessWalletLedger', wallet)
+                    .then(() => {
+                        resolve()
+                    })
+                    .catch((err) => {
+                        reject(err)
+                    })
+            }, 1000)
+        })
+    }
+
+    showWalletLoading() {
         this.$store.commit('Ledger/closeModal')
+        this.$store.commit('Ledger/setIsWalletLoading', true)
+    }
+    onsuccess() {
+        this.$store.commit('Ledger/setIsWalletLoading', false)
+        this.isLoading = false
+        this.config = undefined
     }
     onerror(err: any) {
         this.isLoading = false
+        this.config = undefined
         this.$store.commit('Ledger/closeModal')
         console.error(err)
 
@@ -136,6 +180,12 @@ export default class LedgerButton extends Vue {
 .spinner {
     width: 100% !important;
     color: inherit;
+}
+
+.ledger_img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .spinner::v-deep p {

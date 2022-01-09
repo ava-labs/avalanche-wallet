@@ -95,6 +95,11 @@ $s-size-mobile: 14px;
 }
 
 
+video{
+    outline: none;
+}
+
+
 
 *[tooltip]:hover:before {
     border-radius: 4px;
@@ -178,10 +183,10 @@ label {
 
 .slide_right-enter-active,
 .slide_right-leave-active {
-    transition: opacity 0.2s;
+    transition: all 0.2s;
 }
 .slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    transform: translateX(100%);
+    transform: translateX(30px);
     opacity: 0;
 }
 
@@ -254,6 +259,15 @@ label {
     &:hover {
         opacity: 0.7;
     }
+}
+
+.single_line_input{
+    display: block;
+    width: 100%;
+    padding: 5px 12px;
+    border: 1px solid var(--bg-light);
+    border-radius: 3px;
+    color: var(--primary-color);
 }
 
 @include mobile-device {
@@ -399,6 +413,12 @@ textarea {
     }
 }
 
+.v-input--checkbox{
+    label{
+        color: var(--primary-color) !important;
+    }
+}
+
 .vdatetime {
     background-color: var(--bg-light) !important;
     padding: 6px 12px !important;
@@ -466,6 +486,7 @@ p.err {
     color: var(--error);
     font-size: 0.9rem;
     margin: 4px 0;
+    white-space: normal;
 }
 
 .no_scroll_bar{
@@ -474,6 +495,21 @@ p.err {
     }
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+
+.subtext{
+    color: var(--primary-color-light);
+    font-size: 0.8em;
 }
 
 @include medium-device {

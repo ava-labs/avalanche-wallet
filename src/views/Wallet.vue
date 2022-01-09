@@ -7,7 +7,9 @@
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
             <transition name="page_fade" mode="out-in">
-                <keep-alive>
+                <keep-alive
+                    :exclude="['cross_chain', 'activity', 'advanced', 'earn', 'manage', 'studio']"
+                >
                     <router-view id="wallet_router" :key="$route.path"></router-view>
                 </keep-alive>
             </transition>
@@ -26,6 +28,7 @@ import MainPanel from '@/components/SidePanels/MainPanel.vue'
 import UpdateKeystoreModal from '@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue'
 
 const TIMEOUT_DURATION = 60 * 7 // in seconds
+const TIMEOUT_DUR_MS = TIMEOUT_DURATION * 1000
 
 @Component({
     components: {
@@ -36,28 +39,40 @@ const TIMEOUT_DURATION = 60 * 7 // in seconds
     },
 })
 export default class Wallet extends Vue {
-    inactiveDur: number = TIMEOUT_DURATION
     intervalId: NodeJS.Timeout | null = null
+    logoutTimestamp = Date.now() + TIMEOUT_DUR_MS
+    isLogOut = false
 
+    // Set the logout timestamp to now + TIMEOUT_DUR_MS
     resetTimer() {
-        this.inactiveDur = TIMEOUT_DURATION
+        this.logoutTimestamp = Date.now() + TIMEOUT_DUR_MS
+    }
+
+    checkLogout() {
+        let now = Date.now()
+
+        // Logout if current time is passed the logout timestamp
+        if (now >= this.logoutTimestamp && !this.isLogOut) {
+            this.isLogOut = true
+            this.$store.dispatch('timeoutLogout')
+        }
     }
 
     created() {
+        this.resetTimer()
         this.intervalId = setInterval(() => {
-            this.inactiveDur -= 1
-            if (this.inactiveDur <= 0) {
-                this.$store.dispatch('timeoutLogout')
-            }
+            this.checkLogout()
         }, 1000)
     }
 
     unload(event: BeforeUnloadEvent) {
         // user has no wallet saved
-        if (!localStorage.getItem('w') && this.hasVolatileWallets) {
+        if (!localStorage.getItem('w') && this.hasVolatileWallets && this.isLogOut) {
             event.preventDefault()
+            this.isLogOut = false
             event.returnValue = ''
             this.$router.push('/wallet/keys')
+            this.resetTimer()
         }
     }
 
@@ -68,6 +83,14 @@ export default class Wallet extends Vue {
         view.addEventListener('mousedown', this.resetTimer)
 
         window.addEventListener('beforeunload', this.unload)
+    }
+
+    beforeDestroy() {
+        let view = this.$refs.wallet_view as HTMLDivElement
+        // Remove Event Listeners
+        view.removeEventListener('mousemove', this.resetTimer)
+        view.removeEventListener('mousedown', this.resetTimer)
+        window.removeEventListener('beforeunload', this.unload)
     }
 
     destroyed() {

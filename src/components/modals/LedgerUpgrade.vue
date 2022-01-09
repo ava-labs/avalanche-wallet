@@ -1,26 +1,39 @@
 <template>
     <modal ref="modal" :title="$t('modal.ledger_upgrade.title')" @beforeClose="beforeClose">
         <div class="ledger_block">
-            <p style="margin-bottom: 14px !important; font-size: 16px" v-if="config">
-                <b>Current Avalanche App: v{{ config.version }}</b>
+            <ol>
+                <li>Connect the ledger device to your computer.</li>
+                <li>Enter your PIN and access your device.</li>
+                <li>
+                    Ensure you have installed the
+                    <b>Avalanche App v0.5.3</b>
+                    and open it on your device.
+                </li>
+            </ol>
+            <p style="margin-top: 12px !important">
+                <small>
+                    If you do not have the Avalanche app on your ledger, please add it through the
+                    <a href="https://www.ledger.com/ledger-live/download" target="_blank">
+                        Ledger Live
+                    </a>
+                    app manager. The minimum version required to use the app is version 0.5.3, more
+                    instructions can be found
+                    <a
+                        target="_blank"
+                        href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
+                    >
+                        here
+                    </a>
+                    .
+                </small>
             </p>
-            <p style="margin-bottom: 14px !important; font-size: 16px">
-                To support C-chain transfers and balance, please consider upgrading to v0.4.0.
-            </p>
-            <div>
-                <a
-                    href="https://medium.com/avalancheavax/how-to-set-up-your-ledger-nano-s-with-avalanche-4e5d385410d4"
-                    target="_blank"
-                >
-                    {{ $t('modal.ledger_upgrade.submit') }}
-                </a>
-            </div>
         </div>
     </modal>
 </template>
 <script lang="ts">
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { WalletType } from '@/store/types'
+import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
+import { WalletType } from '@/js/wallets/types'
+
 import 'reflect-metadata'
 import { Vue, Component, Watch } from 'vue-property-decorator'
 
@@ -45,15 +58,19 @@ export default class LedgerUpgrade extends Vue {
     }
 
     beforeClose() {
-        this.$store.commit('Ledger/setIsUpgradeRecommended', false)
+        this.$store.commit('Ledger/setIsUpgradeRequired', false)
     }
 
     destroyed() {
-        this.$store.commit('Ledger/setIsUpgradeRecommended', false)
+        this.$store.commit('Ledger/setIsUpgradeRequired', false)
+    }
+
+    get minV() {
+        return MIN_EVM_SUPPORT_V
     }
 
     get isActive() {
-        return this.$store.state.Ledger.isUpgradeRecommended
+        return this.$store.state.Ledger.isUpgradeRequired
     }
 
     get wallet() {
@@ -70,6 +87,8 @@ export default class LedgerUpgrade extends Vue {
         if (!this.$refs.modal) return
         if (val) {
             this.open()
+        } else {
+            this.close()
         }
     }
 }

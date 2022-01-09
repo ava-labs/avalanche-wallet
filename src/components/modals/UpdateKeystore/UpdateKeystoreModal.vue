@@ -21,15 +21,13 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import CopyText from '@/components/misc/CopyText.vue'
 import ExportWallet from '@/components/wallet/manage/ExportWallet.vue'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
 @Component({
     components: {
         Modal,
-        MnemonicDisplay,
         CopyText,
         ExportWallet,
     },
@@ -62,7 +60,7 @@ export default class MnemonicPhrase extends Vue {
         this.$store.dispatch('logout')
     }
 
-    get allWallets(): AvaHdWallet[] {
+    get allWallets(): MnemonicWallet[] {
         return this.$store.state.wallets
     }
 }

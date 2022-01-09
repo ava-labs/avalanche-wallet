@@ -52,7 +52,7 @@ button {
     display: flex;
     align-items: center;
     img {
-        max-height: 22px;
+        max-height: 18px;
     }
 }
 </style>

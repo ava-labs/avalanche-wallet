@@ -10,6 +10,7 @@
                 <EVMInputDropdown
                     @amountChange="onAmountChange"
                     @tokenChange="onTokenChange"
+                    @collectibleChange="onCollectibleChange"
                     :disabled="isConfirm"
                     ref="token_in"
                     :gas-price="gasPrice"
@@ -29,27 +30,23 @@
             </div>
             <div class="gas_cont">
                 <div>
-                    <h4>{{ $t('transfer.c_chain.gasPrice') }}</h4>
+                    <h4>
+                        {{ $t('transfer.c_chain.gasPrice') }}
+                        <br />
+                        <small>Adjusted automatically according to network load.</small>
+                    </h4>
+                    <p></p>
                     <input
                         type="number"
-                        v-model="gasPrice"
+                        v-model="gasPriceNumber"
                         min="0"
                         inputmode="numeric"
-                        :disabled="isConfirm"
+                        disabled
                     />
                 </div>
                 <div>
                     <h4>{{ $t('transfer.c_chain.gasLimit') }}</h4>
-                    <template v-if="formToken === 'native'">
-                        <input
-                            type="number"
-                            inputmode="numeric"
-                            v-model="gasLimit"
-                            min="0"
-                            :disabled="isConfirm"
-                        />
-                    </template>
-                    <template v-else>
+                    <template>
                         <p v-if="!isConfirm" style="font-size: 13px">
                             Gas Limit will be automatically calculated after you click Confirm.
                         </p>
@@ -58,15 +55,13 @@
                 </div>
             </div>
 
-            <div class="fees">
+            <div class="fees" v-if="isConfirm">
                 <p>
                     {{ $t('transfer.fee_tx') }}
                     <span>{{ maxFeeText }} AVAX</span>
                 </p>
-
-                <p v-if="totalUSD">
-                    {{ $t('transfer.total') }} USD
-                    <span v-if="totalUSD">{{ totalUSD.toLocaleString(2) }} USD</span>
+                <p>
+                    <span>${{ maxFeeUSD.toLocaleString(2) }} USD</span>
                 </p>
             </div>
             <template v-if="!isSuccess">
@@ -83,7 +78,7 @@
                 </v-btn>
                 <template v-else>
                     <v-btn
-                        class="button_primary"
+                        class="button_primary checkout"
                         depressed
                         block
                         @click="submit"
@@ -131,7 +126,10 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { priceDict, WalletType } from '@/store/types'
+import { priceDict } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+import { GasHelper, TxHelper, Utils } from '@avalabs/avalanche-wallet-sdk'
+
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
 import Big from 'big.js'
@@ -140,6 +138,8 @@ import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
+import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import { WalletHelper } from '@/helpers/wallet_helper'
 
 @Component({
     components: {
@@ -153,7 +153,8 @@ export default class FormC extends Vue {
     isSuccess = false
     addressIn = ''
     amountIn = new BN(0)
-    gasPrice = 470
+    gasPrice = new BN(225000000000)
+    gasPriceInterval: NodeJS.Timeout | undefined = undefined
     gasLimit = 21000
     err = ''
     isLoading = false
@@ -163,10 +164,37 @@ export default class FormC extends Vue {
     formToken: Erc20Token | 'native' = 'native'
     canSendAgain = false
 
+    isCollectible = false
+    formCollectible: iErc721SelectInput | null = null
+
     txHash = ''
 
     $refs!: {
         token_in: EVMInputDropdown
+    }
+
+    created() {
+        // Update gas price automatically
+        this.updateGasPrice()
+        this.gasPriceInterval = setInterval(() => {
+            if (!this.isConfirm) {
+                this.updateGasPrice()
+            }
+        }, 15000)
+    }
+
+    destroyed() {
+        if (this.gasPriceInterval) {
+            clearInterval(this.gasPriceInterval)
+        }
+    }
+
+    get gasPriceNumber() {
+        return Utils.bnToBigAvaxX(this.gasPrice).toFixed(0)
+    }
+
+    async updateGasPrice() {
+        this.gasPrice = await GasHelper.getAdjustedGasPrice()
     }
 
     onAmountChange(val: BN) {
@@ -175,13 +203,12 @@ export default class FormC extends Vue {
 
     onTokenChange(token: Erc20Token | 'native') {
         this.formToken = token
+        this.isCollectible = false
+    }
 
-        if (token === 'native') {
-            this.gasPrice = 470
-            this.gasLimit = 21000
-        } else {
-            // this.gasPrice = token.getTransferGasPrice()
-        }
+    onCollectibleChange(val: iErc721SelectInput) {
+        this.isCollectible = true
+        this.formCollectible = val
     }
 
     get wallet(): WalletType | null {
@@ -191,20 +218,6 @@ export default class FormC extends Vue {
     get priceDict(): priceDict {
         return this.$store.state.prices
     }
-
-    // get rawBalance(): BN {
-    //     if (!this.wallet) return new BN(0)
-    //     return this.wallet.ethBalance
-    // }
-
-    // get balance() {
-    //     let bal = this.rawBalance
-    //     return bal.divRound(new BN(Math.pow(10, 9).toString()))
-    // }
-
-    // get balanceBig() {
-    //     return bnToBig(this.balance, 9)
-    // }
 
     get denomination(): number {
         if (this.formToken === 'native') {
@@ -266,13 +279,16 @@ export default class FormC extends Vue {
     }
 
     get maxFee(): BN {
-        let priceWei = new BN(this.gasPrice).mul(new BN(Math.pow(10, 9)))
-        let res = priceWei.mul(new BN(this.gasLimit))
+        let res = this.gasPrice.mul(new BN(this.gasLimit))
         return res
     }
 
+    get maxFeeUSD() {
+        return Utils.bnToBigAvaxC(this.maxFee).times(this.priceDict.usd)
+    }
+
     get maxFeeText(): string {
-        return bnToBig(this.maxFee, 18).toLocaleString()
+        return Utils.bnToAvaxC(this.maxFee)
     }
 
     // balance - (gas * price)
@@ -283,6 +299,44 @@ export default class FormC extends Vue {
     //     return res.divRound(new BN(Math.pow(10, 9)))
     // }
 
+    async estimateGas() {
+        if (!this.wallet) return
+
+        if (!this.isCollectible) {
+            if (this.formToken === 'native') {
+                // For AVAX Transfers
+                let gasLimit = await TxHelper.estimateAvaxGas(
+                    this.wallet.getEvmAddress(),
+                    this.formAddress,
+                    this.formAmount,
+                    this.gasPrice
+                )
+                this.gasLimit = gasLimit
+            } else {
+                // For ERC20 tokens
+                let tx = (this.formToken as Erc20Token).createTransferTx(
+                    this.formAddress,
+                    this.formAmount
+                )
+                let estGas = await WalletHelper.estimateTxGas(this.wallet, tx)
+                this.gasLimit = estGas
+            }
+        }
+
+        // For erc721 transfers
+        if (this.isCollectible && this.formCollectible) {
+            let fromAddr = '0x' + this.wallet.getEvmAddress()
+            let toAddr = this.formAddress
+            let tx = this.formCollectible.token.createTransferTx(
+                fromAddr,
+                toAddr,
+                this.formCollectible.id
+            )
+            let estGas = await WalletHelper.estimateTxGas(this.wallet, tx)
+            this.gasLimit = estGas
+        }
+    }
+
     confirm() {
         if (!this.wallet) return
         if (!this.validate()) return
@@ -290,13 +344,7 @@ export default class FormC extends Vue {
         this.formAmount = this.amountIn.clone()
         this.isConfirm = true
 
-        if (this.formToken !== 'native') {
-            this.wallet
-                .estimateGas(this.formAddress, this.formAmount, this.formToken)
-                .then((val: number) => {
-                    this.gasLimit = val
-                })
-        }
+        this.estimateGas()
     }
 
     get formAmountBig() {
@@ -313,9 +361,10 @@ export default class FormC extends Vue {
         this.isSuccess = false
         this.err = ''
 
+        this.$refs.token_in.clear()
+
         this.amountIn = new BN(0)
         this.gasLimit = 21000
-        this.gasPrice = 470
         this.addressIn = ''
     }
 
@@ -323,24 +372,32 @@ export default class FormC extends Vue {
         this.startAgain()
 
         let tokenAddr = this.$route.query.token
+        let tokenId = this.$route.query.tokenId
+
         if (tokenAddr) {
             if (tokenAddr === 'native') {
-                //@ts-ignore
                 this.$refs.token_in.setToken(tokenAddr)
             } else {
                 let token = this.$store.getters['Assets/findErc20'](tokenAddr)
+                let erc721 = this.$store.getters['Assets/ERC721/find'](tokenAddr)
                 if (token) {
-                    //@ts-ignore
                     this.$refs.token_in.setToken(token)
+                } else if (erc721 && tokenId) {
+                    this.$refs.token_in.setErc721Token(erc721, tokenId as string)
                 }
             }
         }
     }
 
     get canConfirm() {
-        if (this.amountIn.isZero()) return false
+        if (!this.isCollectible) {
+            if (this.amountIn.isZero()) return false
+            if (this.gasLimit <= 0 && this.formToken == 'native') return false
+        }
+
+        // if (this.gasPrice <= 0) return false
         if (this.addressIn.length < 6) return false
-        if (this.gasPrice <= 0 || (this.gasLimit <= 0 && this.formToken == 'native')) return false
+
         return true
     }
 
@@ -349,7 +406,7 @@ export default class FormC extends Vue {
         this.isLoading = true
         // convert base 9 to 18
 
-        let gasPriceWei = new BN(this.gasPrice).mul(new BN(Math.pow(10, 9)))
+        let gasPriceWei = this.gasPrice
         let toAddress = this.formAddress
 
         if (toAddress.substring(0, 2) === 'C-') {
@@ -357,23 +414,36 @@ export default class FormC extends Vue {
         }
 
         try {
-            if (this.formToken === 'native') {
-                let formAmt = this.formAmount
+            if (!this.isCollectible) {
+                if (this.formToken === 'native') {
+                    let formAmt = this.formAmount
 
-                let txHash = await this.wallet.sendEth(
-                    toAddress,
-                    formAmt,
-                    gasPriceWei,
-                    this.gasLimit
-                )
-                this.onSuccess(txHash)
+                    let txHash = await this.wallet.sendEth(
+                        toAddress,
+                        formAmt,
+                        gasPriceWei,
+                        this.gasLimit
+                    )
+                    this.onSuccess(txHash)
+                } else {
+                    let txHash = await this.wallet.sendERC20(
+                        toAddress,
+                        this.formAmount,
+                        gasPriceWei,
+                        this.gasLimit,
+                        this.formToken
+                    )
+                    this.onSuccess(txHash)
+                }
             } else {
-                let txHash = await this.wallet.sendERC20(
+                if (!this.formCollectible) throw 'No collectible selected.'
+                let txHash = await WalletHelper.sendErc721(
+                    this.wallet,
                     toAddress,
-                    this.formAmount,
                     gasPriceWei,
                     this.gasLimit,
-                    this.formToken
+                    this.formCollectible.token,
+                    this.formCollectible.id
                 )
                 this.onSuccess(txHash)
             }
@@ -405,6 +475,8 @@ export default class FormC extends Vue {
     onError(err: any) {
         this.err = err
         this.isLoading = false
+
+        console.error(err)
 
         this.$store.dispatch('Notifications/add', {
             title: this.$t('transfer.error_title'),
@@ -474,6 +546,8 @@ label {
 }
 
 .fees {
+    display: flex;
+    flex-direction: column;
     margin-top: 14px;
     border-top: 1px solid var(--bg-light);
     padding-top: 14px;

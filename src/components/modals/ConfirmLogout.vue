@@ -3,9 +3,8 @@
         <div class="confirm_body">
             <p style="text-align: center">
                 {{ $t('logout.confirmation') }}
-                <br />
-                {{ $t('logout.confirmation_message') }}
             </p>
+
             <div
                 style="display: flex; flex-direction: column; align-items: center; margin-top: 14px"
             >
@@ -24,13 +23,11 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import CopyText from '@/components/misc/CopyText.vue'
 
 @Component({
     components: {
         Modal,
-        MnemonicDisplay,
         CopyText,
     },
 })
@@ -56,7 +53,7 @@ export default class ConfirmLogout extends Vue {
             message: 'You have successfully logged out of your wallet.',
         })
         this.isLoading = false
-        // this.close()
+        this.close()
     }
 }
 </script>

@@ -34,6 +34,7 @@ import { Buffer } from 'avalanche'
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
+import getMemoFromByteString from '@/services/history/utils'
 
 @Component({
     components: {
@@ -55,12 +56,7 @@ export default class TxHistoryRow extends Vue {
 
     get memo(): string | null {
         const memo = this.transaction.memo
-        const memoText = new Buffer(memo, 'base64').toString('utf8')
-        // Bug that sets memo to empty string (AAAAAA==) for some
-        // tx types
-        if (!memoText.length || memo === 'AAAAAA==') return null
-
-        return memoText
+        return getMemoFromByteString(memo)
     }
 
     get time() {

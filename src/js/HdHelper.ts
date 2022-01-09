@@ -3,13 +3,12 @@ import {
     KeyPair as AVMKeyPair,
     UTXOSet as AVMUTXOSet,
 } from 'avalanche/dist/apis/avm'
-import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import HDKey from 'hdkey'
-import { Buffer } from 'buffer/'
+import { Buffer } from 'avalanche'
 import {
     KeyChain as PlatformVMKeyChain,
     KeyPair as PlatformVMKeyPair,
@@ -17,10 +16,10 @@ import {
 import store from '@/store'
 
 import { getAddressChains } from '@/explorer_api'
-import { NetworkItem } from '@/store/modules/network/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { ChainAlias } from './wallets/IAvaHdWallet'
-import { getAtomicUTXOsForAddresses } from '@/helpers/wallet_helper'
+import { ChainAlias } from './wallets/types'
+import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
+import { updateFilterAddresses } from '../providers'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 
@@ -77,13 +76,6 @@ class HdHelper {
 
     async oninit() {
         await this.findHdIndex()
-        // this.hdIndex = await this.findAvailableIndexNode();
-        // this.hdIndex = await this.findAvailableIndexExplorer();
-
-        // if(!this.isPublic){
-        //     this.updateKeychain();
-        // }
-        // this.updateUtxos()
     }
 
     // When the wallet connects to a different network
@@ -121,6 +113,10 @@ class HdHelper {
         }
 
         this.hdIndex = newIndex
+
+        // Update websocket addresses with the new one
+        updateFilterAddresses()
+
         return newIndex
     }
 
@@ -143,83 +139,6 @@ class HdHelper {
         this.isInit = true
     }
 
-    async platformGetAllUTXOsForAddresses(
-        addrs: string[],
-        endIndex: any = undefined
-    ): Promise<PlatformUTXOSet> {
-        let response
-        if (!endIndex) {
-            response = await pChain.getUTXOs(addrs)
-        } else {
-            response = await pChain.getUTXOs(addrs, undefined, 0, endIndex)
-        }
-
-        let utxoSet = response.utxos
-        let nextEndIndex = response.endIndex
-        let len = response.numFetched
-
-        if (len >= 1024) {
-            let subUtxos = await this.platformGetAllUTXOsForAddresses(addrs, nextEndIndex)
-            return utxoSet.merge(subUtxos)
-        }
-
-        return utxoSet
-    }
-
-    async avmGetAllUTXOsForAddresses(
-        addrs: string[],
-        endIndex: any = undefined
-    ): Promise<AVMUTXOSet> {
-        let response
-        if (!endIndex) {
-            response = await avm.getUTXOs(addrs)
-        } else {
-            response = await avm.getUTXOs(addrs, undefined, 0, endIndex)
-        }
-
-        let utxoSet = response.utxos
-        let utxos = utxoSet.getAllUTXOs()
-        let nextEndIndex = response.endIndex
-        let len = response.numFetched
-
-        if (len >= 1024) {
-            let subUtxos = await this.avmGetAllUTXOsForAddresses(addrs, nextEndIndex)
-            return utxoSet.merge(subUtxos)
-        }
-        return utxoSet
-    }
-
-    // helper method to get utxos for more than 1024 addresses
-    async avmGetAllUTXOs(addrs: string[]): Promise<AVMUTXOSet> {
-        if (addrs.length <= 1024) {
-            let utxos = await this.avmGetAllUTXOsForAddresses(addrs)
-            return utxos
-        } else {
-            //Break the list in to 1024 chunks
-            let chunk = addrs.slice(0, 1024)
-            let remainingChunk = addrs.slice(1024)
-
-            let newSet = await this.avmGetAllUTXOsForAddresses(chunk)
-            return newSet.merge(await this.avmGetAllUTXOs(remainingChunk))
-        }
-    }
-
-    // helper method to get utxos for more than 1024 addresses
-    async platformGetAllUTXOs(addrs: string[]): Promise<PlatformUTXOSet> {
-        if (addrs.length <= 1024) {
-            let newSet = await this.platformGetAllUTXOsForAddresses(addrs)
-            return newSet
-        } else {
-            //Break the list in to 1024 chunks
-            let chunk = addrs.slice(0, 1024)
-            let remainingChunk = addrs.slice(1024)
-
-            let newSet = await this.platformGetAllUTXOsForAddresses(chunk)
-
-            return newSet.merge(await this.platformGetAllUTXOs(remainingChunk))
-        }
-    }
-
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet | PlatformUTXOSet> {
@@ -233,9 +152,9 @@ class HdHelper {
         let result: AVMUTXOSet | PlatformUTXOSet
 
         if (this.chainId === 'X') {
-            result = await this.avmGetAllUTXOs(addrs)
+            result = await avmGetAllUTXOs(addrs)
         } else {
-            result = await this.platformGetAllUTXOs(addrs)
+            result = await platformGetAllUTXOs(addrs)
         }
         this.utxoSet = result // we can use local copy of utxos as cache for some functions
 
@@ -255,24 +174,6 @@ class HdHelper {
     getExtendedAddresses() {
         let hdIndex = this.hdIndex
         return this.getAllDerivedAddresses(hdIndex + INDEX_RANGE)
-    }
-
-    async getAtomicUTXOs() {
-        let addrs: string[] = this.getAllDerivedAddresses()
-
-        let result = await getAtomicUTXOsForAddresses(addrs, this.chainId)
-        return result
-        // // console.log(addrs);
-        // if (this.chainId === 'P') {
-        //     let result: PlatformUTXOSet = (await pChain.getUTXOs(addrs, avm.getBlockchainID()))
-        //         .utxos
-        //     return result
-        // } else {
-        //     let result: AVMUTXOSet = (await avm.getUTXOs(addrs, pChain.getBlockchainID())).utxos
-        //
-        //     let resultC: AVMUTXOSet = (await avm.getUTXOs(addrs, cChain.getBlockchainID())).utxos
-        //     return result.merge(resultC)
-        // }
     }
 
     // Not used?
@@ -362,7 +263,6 @@ class HdHelper {
 
                 let rawAddr = scanAddr.split('-')[1]
                 let chains: string[] = addrChains[rawAddr]
-
                 if (!chains) {
                     // If doesnt exist on any chain
                     gapSize++

@@ -17,9 +17,9 @@ This is the frontend Vue.js application for the Avalanche (AVAX) Wallet.
 
 ## Running The Project
 
-In order for the wallet to work, it needs the Avalanche network to operate on. By default the wallet will connect to the Avalanche test network.
+In order for the wallet to work, it needs the Avalanche network to operate on. By default the wallet will connect to the Avalanche mainnet.
 
-1. If you want to connect to a local network, make sure you have installed and able to run a Gecko node properly.
+1. If you want to connect to a local network, make sure you have installed and able to run a AvlaancheGo node properly.
 2. Run the project with hot reloading `yarn serve`
 
 When you go to the website on your browser, you might get a warning saying
@@ -38,12 +38,11 @@ When you go to the website on your browser, you might get a warning saying
 
 ## Changing the Network
 
-By default the wallet will connect to the Avalanche test network. You can change to another network by clicking the button labeled `TestNet` on the navigation bar and selecting another network, or add a custom network.
+By default the wallet will connect to the Avalanche tmainnet. You can change to another network by clicking the button labeled `TestNet` on the navigation bar and selecting another network, or add a custom network.
 
 ## Explorer API
 
-# The wallet uses the Avalanche Explorer API to display wallet transaction history.
-
+A valid explorer API is required to correctly display balances for Mnemonic and Ledger type wallets.
 The wallet uses the Avalanche Explorer API to display wallet transaction history.
 
 WARNING: This history might be out of order and incomplete.
@@ -72,15 +71,13 @@ devServer: {
 
 and run `yarn serve` to reflect the change.
 
-# Local Storage Remember Wallet Spec
+# Accounts
 
-Basically same as storing the keystore file in the browser localstorage.
-
-If there is a remembered wallet it will be the Keystore JSON format.
+The wallet can encrypt your private keys into a secure file encrypted by a password.
 
 ```json
 {
-    "w": IKeystoreFile | undefined
+    "accounts": iUserAccountEncrypted[]
 }
 ```
 
@@ -117,3 +114,4 @@ By default, there are two network options to connect to: `Mainnet` and `Fuji`.
 
 -   Avalanche API: `https://api.avax-test.network:443`
 -   Explorer API: `https://explorerapi.avax-test.network`
+

@@ -4,7 +4,7 @@
 // }
 
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 import { BN } from 'avalanche'
 import { AVMConstants } from 'avalanche/dist/apis/avm'
 
@@ -329,6 +329,28 @@ function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
     }
 
     return sum
+}
+
+/**
+ * Given an array of transactions from the explorer, filter out duplicate transactions
+ * @param txs
+ */
+export function filterDuplicateTransactions(txs: ITransactionData[]) {
+    let txsIds: string[] = []
+    let filtered: ITransactionData[] = []
+
+    for (var i = 0; i < txs.length; i++) {
+        let tx = txs[i]
+        let txId = tx.id
+
+        if (txsIds.includes(txId)) {
+            continue
+        } else {
+            txsIds.push(txId)
+            filtered.push(tx)
+        }
+    }
+    return filtered
 }
 
 export { getTransactionSummary }

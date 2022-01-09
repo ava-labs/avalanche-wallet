@@ -3,20 +3,21 @@
         <p>{{ $t('network.not_mainnet') }}</p>
     </div>
 </template>
-<script>
+<script lang="ts">
 import { AvaNetwork } from '@/js/AvaNetwork'
+import 'reflect-metadata'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
-export default {
-    computed: {
-        isVisible() {
-            let network = this.$store.state.Network.selectedNetwork
-            if (!network) return false
-            let netId = network.networkId
+@Component
+export default class TestNetBanner extends Vue {
+    get isVisible() {
+        let network = this.$store.state.Network.selectedNetwork
+        if (!network) return false
+        let netId = parseInt(network.networkId)
 
-            if (netId === 1) return false
-            return true
-        },
-    },
+        if (netId == 1) return false
+        return true
+    }
 }
 </script>
 <style scoped lang="scss">

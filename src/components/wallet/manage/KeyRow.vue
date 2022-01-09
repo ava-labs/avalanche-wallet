@@ -5,11 +5,11 @@
             :wallets="[wallet]"
             ref="export_wallet"
         ></ExportKeys>
-        <mnemonic-phrase
+        <MnemonicPhraseModal
             v-if="walletType === 'mnemonic'"
             :phrase="mnemonicPhrase"
             ref="modal"
-        ></mnemonic-phrase>
+        ></MnemonicPhraseModal>
         <HdDerivationListModal
             :wallet="wallet"
             ref="modal_hd"
@@ -19,6 +19,11 @@
             v-if="walletType === 'singleton'"
             :privateKey="privateKey"
             ref="modal_priv_key"
+        ></PrivateKey>
+        <PrivateKey
+            v-if="walletType !== 'ledger'"
+            :privateKey="privateKeyC"
+            ref="modal_priv_key_c"
         ></PrivateKey>
         <div class="rows">
             <div class="header">
@@ -70,12 +75,17 @@
                         >
                             <fa icon="upload"></fa>
                         </Tooltip>
-                        <button v-if="walletType == 'mnemonic'" @click="showModal">
-                            {{ $t('keys.view_key') }}
-                        </button>
-                        <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal">
-                            {{ $t('keys.view_priv_key') }}
-                        </button>
+                        <div class="text_buts">
+                            <button v-if="walletType == 'mnemonic'" @click="showModal">
+                                {{ $t('keys.view_key') }}
+                            </button>
+                            <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal">
+                                {{ $t('keys.view_priv_key') }}
+                            </button>
+                            <button v-if="walletType !== 'ledger'" @click="showPrivateKeyCModal">
+                                {{ $t('keys.view_priv_key_c') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,15 +118,17 @@ import { bintools, keyChain } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
-import MnemonicPhrase from '@/components/modals/MnemonicPhrase.vue'
+import MnemonicPhraseModal from '@/components/modals/MnemonicPhraseModal.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
-import { WalletNameType, WalletType } from '@/store/types'
+import { WalletNameType, WalletType } from '@/js/wallets/types'
+
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
+import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -124,7 +136,7 @@ interface IKeyBalanceDict {
 
 @Component({
     components: {
-        MnemonicPhrase,
+        MnemonicPhraseModal,
         HdDerivationListModal,
         Tooltip,
         ExportKeys,
@@ -134,6 +146,13 @@ interface IKeyBalanceDict {
 export default class KeyRow extends Vue {
     @Prop() wallet!: WalletType
     @Prop({ default: false }) is_default?: boolean
+
+    $refs!: {
+        export_wallet: ExportKeys
+        modal: MnemonicPhraseModal
+        modal_hd: HdDerivationListModal
+        modal_priv_key: PrivateKey
+    }
 
     get isVolatile() {
         return this.$store.state.volatileWallets.includes(this.wallet)
@@ -206,16 +225,22 @@ export default class KeyRow extends Vue {
     get isHDWallet() {
         return ['mnemonic', 'ledger'].includes(this.walletType)
     }
-    get mnemonicPhrase(): string {
-        if (this.walletType !== 'mnemonic') return '?'
-        let wallet = this.wallet as AvaHdWallet
-        return wallet.getMnemonic()
+    get mnemonicPhrase(): MnemonicPhrase | null {
+        if (this.walletType !== 'mnemonic') return null
+        let wallet = this.wallet as MnemonicWallet
+        return wallet.getMnemonicEncrypted()
     }
 
-    get privateKey(): string {
-        if (this.walletType !== 'singleton') return '?'
+    get privateKey(): string | null {
+        if (this.walletType !== 'singleton') return null
         let wallet = this.wallet as SingletonWallet
         return wallet.key
+    }
+
+    get privateKeyC(): string | null {
+        if (this.walletType === 'ledger') return null
+        let wallet = this.wallet as SingletonWallet | MnemonicWallet
+        return wallet.ethKey
     }
 
     remove() {
@@ -226,13 +251,13 @@ export default class KeyRow extends Vue {
     }
 
     showModal() {
-        let modal = this.$refs.modal as MnemonicPhrase
+        let modal = this.$refs.modal
         //@ts-ignore
         modal.open()
     }
 
     showPastAddresses() {
-        let modal = this.$refs.modal_hd as MnemonicPhrase
+        let modal = this.$refs.modal_hd
         //@ts-ignore
         modal.open()
     }
@@ -245,6 +270,11 @@ export default class KeyRow extends Vue {
     showPrivateKeyModal() {
         //@ts-ignore
         this.$refs.modal_priv_key.open()
+    }
+
+    showPrivateKeyCModal() {
+        //@ts-ignore
+        this.$refs.modal_priv_key_c.open()
     }
 }
 </script>
@@ -298,6 +328,19 @@ export default class KeyRow extends Vue {
 
         &:hover {
             background-color: var(--bg);
+        }
+    }
+
+    .text_buts {
+        display: flex;
+        flex-direction: column;
+        > button {
+            text-align: right;
+            font-size: 13px;
+
+            &:hover {
+                color: var(--secondary-color);
+            }
         }
     }
 }

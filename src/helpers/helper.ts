@@ -1,4 +1,3 @@
-import store from '@/store/index'
 import { ava } from '@/AVA'
 
 import {
@@ -9,22 +8,10 @@ import {
 } from 'avalanche/dist/apis/avm'
 
 import { Defaults, getPreferredHRP, ONEAVAX, PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
-import { BN } from 'avalanche/dist'
 import Big from 'big.js'
 
-import { Buffer } from 'avalanche'
+import { Buffer, BN } from 'avalanche'
 import createHash from 'create-hash'
-
-function getAssetIcon(id: string) {
-    let url = '/question-solid.svg'
-    let AVA = store.getters['Assets/AssetAVA']
-
-    if (!AVA) return url
-    if (id === AVA.id) {
-        return '/ava_letter_icon.png'
-    }
-    return url
-}
 
 function bnToBig(val: BN, denomination = 0): Big {
     return new Big(val.toString()).div(Math.pow(10, denomination))
@@ -46,13 +33,13 @@ function calculateStakingReward(amount: BN, duration: number, currentSupply: BN)
         console.error('Network default values not found.')
         return new BN(0)
     }
-    defValues = defValues.P
+    const defPlatformVals = defValues.P
 
-    let maxConsumption: number = defValues.maxConsumption
-    let minConsumption: number = defValues.minConsumption
+    let maxConsumption: number = defPlatformVals.maxConsumption
+    let minConsumption: number = defPlatformVals.minConsumption
     let diffConsumption = maxConsumption - minConsumption
-    let maxSupply: BN = defValues.maxSupply
-    let maxStakingDuration: BN = defValues.maxStakingDuration
+    let maxSupply: BN = defPlatformVals.maxSupply
+    let maxStakingDuration: BN = defPlatformVals.maxStakingDuration
     let remainingSupply = maxSupply.sub(currentSupply)
 
     let amtBig = Big(amount.div(ONEAVAX).toString())
@@ -93,11 +80,4 @@ function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
     return payloadbase
 }
 
-export {
-    getAssetIcon,
-    keyToKeypair,
-    calculateStakingReward,
-    bnToBig,
-    digestMessage,
-    getPayloadFromUTXO,
-}
+export { keyToKeypair, calculateStakingReward, bnToBig, digestMessage, getPayloadFromUTXO }

@@ -28,15 +28,15 @@
                             <Tooltip text="Number of Delegators"><fa icon="users"></fa></Tooltip>
                         </th>
                         <th>{{ $t('earn.delegate.list.end') }}</th>
-                        <th>
-                            {{ $t('earn.delegate.list.up') }}
-                            <Tooltip
-                                style="display: inline-block"
-                                :text="$t('earn.delegate.list.up_tip')"
-                            >
-                                <fa icon="question-circle"></fa>
-                            </Tooltip>
-                        </th>
+                        <!--                        <th>-->
+                        <!--                            {{ $t('earn.delegate.list.up') }}-->
+                        <!--                            <Tooltip-->
+                        <!--                                style="display: inline-block"-->
+                        <!--                                :text="$t('earn.delegate.list.up_tip')"-->
+                        <!--                            >-->
+                        <!--                                <fa icon="question-circle"></fa>-->
+                        <!--                            </Tooltip>-->
+                        <!--                        </th>-->
                         <th>{{ $t('earn.delegate.list.fee') }}</th>
                         <th></th>
                     </tr>

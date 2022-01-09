@@ -1,31 +1,42 @@
 <template>
     <div class="evm_input_dropdown">
         <div class="col_in hover_border" :disabled="disabled">
-            <button class="max_but" @click="maxOut" :disabled="disabled">MAX</button>
-            <div class="col_big_in">
-                <BigNumInput
-                    :max="max_amount"
-                    :denomination="denomination"
-                    :step="stepSize"
-                    :placeholder="placeholder"
-                    ref="bigIn"
-                    @change="amount_in"
-                    class="bigIn"
-                    :disabled="disabled"
-                ></BigNumInput>
-                <p class="usd_val" :active="token === 'native'">${{ usd_val.toLocaleString(2) }}</p>
-            </div>
+            <template v-if="!isCollectible">
+                <button class="max_but" @click="maxOut" :disabled="disabled">MAX</button>
+                <div class="col_big_in">
+                    <BigNumInput
+                        :max="max_amount"
+                        :denomination="denomination"
+                        :step="stepSize"
+                        :placeholder="placeholder"
+                        ref="bigIn"
+                        @change="amount_in"
+                        class="bigIn"
+                        :disabled="disabled"
+                    ></BigNumInput>
+                    <p class="usd_val" :active="token === 'native'">
+                        ${{ usd_val.toLocaleString(2) }}
+                    </p>
+                </div>
+            </template>
+            <template v-else>
+                <ERC721View
+                    :token="collectible.token"
+                    :index="collectible.id"
+                    class="collectible_item"
+                ></ERC721View>
+                <p style="align-self: center; padding-left: 12px">TOKEN ID: {{ collectible.id }}</p>
+            </template>
         </div>
-        <!--        <div>-->
         <EVMAssetDropdown
             @change="onAssetChange"
+            @changeCollectible="onCollectibleChange"
             :disabled="disabled"
             ref="dropdown"
         ></EVMAssetDropdown>
-        <div class="bal_col">
+        <div class="bal_col" v-if="!isCollectible">
             <p class="bal">Balance: {{ balance.toLocaleString() }}</p>
         </div>
-        <!--        </div>-->
     </div>
 </template>
 <script lang="ts">
@@ -36,12 +47,17 @@ import { BN } from 'avalanche'
 import EVMAssetDropdown from '@/components/misc/EVMInputDropdown/EVMAssetDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
+
 import { bnToBig } from '@/helpers/helper'
 import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
+import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERC721View from '@/components/misc/ERC721View.vue'
+import ERC721Token from '@/js/ERC721Token'
 
 @Component({
     components: {
+        ERC721View,
         EVMTokenSelectModal,
         EVMAssetDropdown,
         BigNumInput,
@@ -49,14 +65,20 @@ import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSele
 })
 export default class EVMInputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
+    isCollectible = false
+    collectible: iErc721SelectInput | null = null
     @Prop({ default: false }) disabled!: boolean
-    @Prop({ default: 470 }) gasPrice!: number
+    @Prop() gasPrice!: BN // in wei
     @Prop({ default: 21000 }) gasLimit!: number
     amt = new BN(0)
 
     $refs!: {
         bigIn: BigNumInput
         dropdown: EVMAssetDropdown
+    }
+
+    clear() {
+        this.$refs.dropdown.clear()
     }
 
     get usd_val(): Big {
@@ -70,10 +92,8 @@ export default class EVMInputDropdown extends Vue {
     get max_amount(): BN {
         // Subtract gas
         if (this.isNative) {
-            let mult = new BN(10).pow(new BN(9))
             let limit = new BN(this.gasLimit)
-            let price = new BN(this.gasPrice)
-            let fee = limit.mul(price).mul(mult)
+            let fee = limit.mul(this.gasPrice)
             return this.balanceBN.sub(fee)
         } else {
             return this.balanceBN
@@ -149,14 +169,29 @@ export default class EVMInputDropdown extends Vue {
     }
 
     setToken(token: 'native' | Erc20Token) {
-        //@ts-ignore
         this.$refs.dropdown.select(token)
     }
 
+    setErc721Token(token: ERC721Token, tokenId: string) {
+        this.$refs.dropdown.selectERC721({
+            token: token,
+            id: tokenId,
+        })
+    }
+
     onAssetChange(token: Erc20Token | 'native') {
+        this.isCollectible = false
         this.token = token
-        this.$refs.bigIn.clear()
+        this.$nextTick(() => {
+            this.$refs.bigIn.clear()
+        })
         this.$emit('tokenChange', token)
+    }
+
+    onCollectibleChange(val: iErc721SelectInput) {
+        this.isCollectible = true
+        this.collectible = val
+        this.$emit('collectibleChange', val)
     }
 
     amount_in(amt: BN) {
@@ -225,5 +260,10 @@ export default class EVMInputDropdown extends Vue {
     &:hover {
         opacity: 1;
     }
+}
+
+.collectible_item {
+    height: 40px;
+    width: 40px;
 }
 </style>

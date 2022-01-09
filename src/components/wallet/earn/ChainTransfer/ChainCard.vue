@@ -23,8 +23,9 @@ import { UTXO } from 'avalanche/dist/apis/platformvm'
 import { ChainIdType } from '@/constants'
 import { BN } from 'avalanche'
 import AvaAsset from '@/js/AvaAsset'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
-import { WalletType } from '@/store/types'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
+import { WalletType } from '@/js/wallets/types'
+
 import { bnToBig } from '@/helpers/helper'
 import NumberCounter from '@/components/misc/NumberCounter.vue'
 
@@ -61,7 +62,7 @@ export default class ChainCard extends Vue {
     }
 
     get wallet(): WalletType {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet
     }
 
@@ -77,7 +78,7 @@ export default class ChainCard extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return balRaw.divRound(new BN(Math.pow(10, 9)))
+        return balRaw.div(new BN(Math.pow(10, 9)))
     }
 
     get balance() {

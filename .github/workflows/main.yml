@@ -27,7 +27,7 @@ jobs:
 
             - run: sudo npm install -g yarn
 
-            - run: yarn install
+            - run: yarn install --network-timeout 1000000
               env:
                   CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
 
@@ -44,8 +44,8 @@ jobs:
               with:
                   start: yarn serve --mode e2e
                   wait-on: 'http://localhost:5000/'
-                  # wait for 2 minutes for the server to respond
-                  wait-on-timeout: 120
+                  # wait for 3 minutes for the server to respond
+                  wait-on-timeout: 180
                   browser: chrome
                   headless: true
 

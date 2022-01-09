@@ -15,6 +15,8 @@ import WalletHome from '@/views/wallet/Portfolio.vue'
 import Earn from '@/views/wallet/Earn.vue'
 import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
 import Activity from '@/views/wallet/Activity.vue' // your vuex store
+import Account from '@/views/access/Account.vue' // your vuex store
+import Legal from '@/views/Legal.vue'
 
 Vue.use(VueRouter)
 
@@ -65,9 +67,19 @@ const routes = [
                 path: 'mnemonic',
                 component: Mnemonic,
             },
+            {
+                path: 'account/:index',
+                component: Account,
+                name: 'Account',
+            },
         ],
         component: Access,
         beforeEnter: ifNotAuthenticated,
+    },
+    {
+        path: '/legal',
+        name: 'legal',
+        component: Legal,
     },
     {
         path: '/create',

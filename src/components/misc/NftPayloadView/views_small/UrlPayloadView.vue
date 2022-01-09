@@ -1,7 +1,14 @@
 <template>
     <div class="url_payload_view">
-        <img :src="url" v-if="img_types.includes(fileType)" />
-        <div v-else class="unknown">
+        <img :src="url" @load="isImage = true" v-show="isImage" />
+        <video
+            :src="url"
+            @loadedmetadata="isVideo = true"
+            v-show="isVideo"
+            muted
+            controlsList="nodownload"
+        />
+        <div v-if="!isVideo && !isImage" class="unknown">
             <p><fa icon="link"></fa></p>
         </div>
     </div>
@@ -16,6 +23,8 @@ export default class UrlPayloadView extends Vue {
 
     img_types = ['jpeg', 'jpg', 'gif', 'png', 'apng', 'svg', 'bmp', 'ico', 'webp']
     valid_types = this.img_types.concat(['pdf'])
+    isImage = false
+    isVideo = false
 
     get url() {
         return this.payload.getContent().toString()
@@ -50,7 +59,8 @@ export default class UrlPayloadView extends Vue {
     //overflow: hidden;
 }
 
-img {
+img,
+video {
     width: 100%;
     height: 100%;
     display: block;

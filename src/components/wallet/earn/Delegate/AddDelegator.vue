@@ -211,7 +211,7 @@ import moment from 'moment'
 import { BN } from 'avalanche'
 import { AmountOutput, PlatformVMConstants, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
 import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
-import AvaHdWallet from '@/js/wallets/AvaHdWallet'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
 import { Defaults, ONEAVAX } from 'avalanche/dist/utils'
 import { ValidatorListItem } from '@/store/modules/platform/types'
@@ -219,7 +219,7 @@ import NodeSelection from '@/components/wallet/earn/Delegate/NodeSelection.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 import DateForm from '@/components/wallet/earn/DateForm.vue'
-import { WalletType } from '@/store/types'
+import { WalletType } from '@/js/wallets/types'
 
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
@@ -322,6 +322,7 @@ export default class AddDelegator extends Vue {
 
         // Update History
         setTimeout(() => {
+            this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
         }, 3000)
     }
@@ -401,7 +402,7 @@ export default class AddDelegator extends Vue {
     }
 
     get rewardAddressLocal() {
-        let wallet: AvaHdWallet = this.$store.state.activeWallet
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getPlatformRewardAddress()
     }
 
@@ -624,6 +625,7 @@ export default class AddDelegator extends Vue {
 
 .add_delegator {
     height: 100%;
+    padding-bottom: 5vh;
 }
 
 .node_selection {
@@ -666,6 +668,9 @@ label {
     margin-bottom: 14px;
 }
 
+.node_col {
+    max-width: 390px;
+}
 .selected {
     display: flex;
     flex-wrap: wrap;

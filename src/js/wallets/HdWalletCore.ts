@@ -1,16 +1,5 @@
-import { AvaWalletCore, ChainAlias } from '@/js/wallets/IAvaHdWallet'
-import {
-    AssetAmountDestination,
-    BaseTx,
-    MinterSet,
-    NFTMintOutput,
-    TransferableInput,
-    TransferableOutput,
-    Tx,
-    UnsignedTx,
-    UTXO,
-    UTXOSet,
-} from 'avalanche/dist/apis/avm'
+import { ChainAlias } from '@/js/wallets/types'
+import { UTXO } from 'avalanche/dist/apis/avm'
 
 import { BN, Buffer } from 'avalanche'
 import { ITransaction } from '@/components/wallet/transfer/types'
@@ -19,36 +8,27 @@ import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import HDKey from 'hdkey'
 import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import createHash from 'create-hash'
-import { PayloadBase } from 'avalanche/dist/utils'
-import { OutputOwners } from 'avalanche/dist/common'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
-var uniqid = require('uniqid')
+import { WalletCore } from '@/js/wallets/WalletCore'
+import { updateFilterAddresses } from '../../providers'
+import { digestMessage } from '@/helpers/helper'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
 
-class HdWalletCore {
-    id: string
+abstract class HdWalletCore extends WalletCore {
     chainId: string
-    utxoset: UTXOSet
-    platformUtxoset: PlatformUTXOSet
-    stakeAmount: BN
 
     internalHelper: HdHelper
     externalHelper: HdHelper
     platformHelper: HdHelper
-    isFetchUtxos: boolean // true if fetching utxos
-    isInit: boolean
 
-    constructor(accountHdKey: HDKey, isPublic = true) {
-        this.id = uniqid()
+    ethHdNode: HDKey
+
+    constructor(accountHdKey: HDKey, ethHdNode: HDKey, isPublic = true) {
+        super()
+        this.ethHdNode = ethHdNode
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
-        this.utxoset = new AVMUTXOSet()
-        this.platformUtxoset = new PlatformUTXOSet()
-        this.stakeAmount = new BN(0)
-        this.isFetchUtxos = false
-        this.isInit = false
         this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
@@ -64,8 +44,13 @@ class HdWalletCore {
         })
     }
 
-    getUTXOSet(): AVMUTXOSet {
-        return this.utxoset
+    getEvmAddressBech(): string {
+        return bintools.addressToString(
+            ava.getHRP(),
+            'C',
+            // @ts-ignore
+            this.ethHdNode.pubKeyHash
+        )
     }
 
     updateAvmUTXOSet(): void {
@@ -77,70 +62,8 @@ class HdWalletCore {
         this.utxoset = joined
     }
 
-    // TODO: This function can be moved to a Core wallet class
-    async buildCreateNftFamilyTx(
-        name: string,
-        symbol: string,
-        groupNum: number = 1
-    ): Promise<UnsignedTx> {
-        let fromAddresses = this.getDerivedAddresses()
-        let changeAddress = this.getChangeAddress()
-
-        let minterAddress = this.getCurrentAddress()
-
-        let unsignedTx = await buildCreateNftFamilyTx(
-            name,
-            symbol,
-            groupNum,
-            fromAddresses,
-            minterAddress,
-            changeAddress,
-            this.utxoset
-        )
-
-        // const minterSets: MinterSet[] = []
-        //
-        // // Create the groups
-        // for (var i = 0; i < groupNum; i++) {
-        //     const minterSet: MinterSet = new MinterSet(1, [minterAddress])
-        //     minterSets.push(minterSet)
-        // }
-        //
-        // let utxoSet: UTXOSet = this.utxoset
-        //
-        // let unsignedTx: UnsignedTx = await avm.buildCreateNFTAssetTx(
-        //     utxoSet,
-        //     fromAddresses,
-        //     [changeAddress],
-        //     minterSets,
-        //     name,
-        //     symbol
-        // )
-
-        return unsignedTx
-    }
-
-    // TODO: Can be moved to a core wallet class
-    async buildMintNftTx(
-        mintUtxo: UTXO,
-        payload: PayloadBase,
-        quantity: number,
-        ownerAddress: string,
-        changeAddress: string
-    ): Promise<UnsignedTx> {
-        let sourceAddresses = this.getDerivedAddresses()
-
-        let mintTx = buildMintNftTx(
-            mintUtxo,
-            payload,
-            quantity,
-            ownerAddress,
-            changeAddress,
-            sourceAddresses,
-            this.utxoset
-        )
-
-        return mintTx
+    getFirstAvailableAddressPlatform(): string {
+        return this.platformHelper.getFirstAvailableAddress()
     }
 
     updateFetchState() {
@@ -153,31 +76,41 @@ class HdWalletCore {
     updateInitState() {
         this.isInit =
             this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
+
+        if (this.isInit) {
+            updateFilterAddresses()
+        }
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {
-        this.internalHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-            this.updateAvmUTXOSet()
-        })
+        this.updateUTXOsX()
 
-        this.externalHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-            this.updateAvmUTXOSet()
-        })
-
-        // let setInternal = (await this.internalHelper.updateUtxos()) as AVMUTXOSet
-        // let setExternal = (await this.externalHelper.updateUtxos()) as AVMUTXOSet
         // platform utxos are updated but not returned by function
-        this.platformHelper.updateUtxos().then((utxoSet) => {
-            this.updateFetchState()
-        })
+        this.updateUTXOsP()
 
-        this.getStake()
-        // let joined = setInternal.merge(setExternal)
-        // this.utxoset = joined
-        // return joined
         return
+    }
+
+    async updateUTXOsX() {
+        this.updateUTXOsExternal()
+        this.updateUTXOsInternal()
+    }
+
+    async updateUTXOsExternal() {
+        let res = await this.externalHelper.updateUtxos()
+        this.updateFetchState()
+        this.updateAvmUTXOSet()
+    }
+
+    async updateUTXOsInternal() {
+        let utxoSet = await this.internalHelper.updateUtxos()
+        this.updateFetchState()
+        this.updateAvmUTXOSet()
+    }
+
+    async updateUTXOsP() {
+        let utxoSet = await this.platformHelper.updateUtxos()
+        this.updateFetchState()
     }
 
     getAllDerivedExternalAddresses(): string[] {
@@ -212,24 +145,16 @@ class HdWalletCore {
         return internal.concat(external)
     }
 
-    getExtendedPlatformAddresses(): string[] {
-        let index = this.platformHelper.hdIndex
-        let addrs = this.platformHelper.getAllDerivedAddresses(index + 20)
-        return addrs
-    }
-
-    getCurrentAddress(): string {
+    getCurrentAddressAvm(): string {
         return this.externalHelper.getCurrentAddress()
     }
 
-    getChangeAddress(chainId?: ChainAlias): string {
-        switch (chainId) {
-            case 'P':
-                return this.platformHelper.getCurrentAddress()
-            case 'X':
-            default:
-                return this.internalHelper.getCurrentAddress()
-        }
+    getChangeAddressAvm() {
+        return this.internalHelper.getCurrentAddress()
+    }
+
+    getChangeAddressPlatform() {
+        return this.platformHelper.getCurrentAddress()
     }
 
     getChangePath(chainId?: ChainAlias): string {
@@ -268,7 +193,7 @@ class HdWalletCore {
         return this.platformHelper.getCurrentAddress()
     }
 
-    getCurrentPlatformAddress(): string {
+    getCurrentAddressPlatform(): string {
         return this.platformHelper.getCurrentAddress()
     }
 
@@ -286,31 +211,6 @@ class HdWalletCore {
 
     getBaseAddress() {
         return this.externalHelper.getAddressForIndex(0)
-    }
-
-    // helper method to get all stake for more than 256 addresses
-    async getAllStake(addrs: string[]): Promise<BN> {
-        if (addrs.length <= 256) {
-            return await pChain.getStake(addrs)
-        } else {
-            //Break the list in to 1024 chunks
-            let chunk = addrs.slice(0, 256)
-            let remainingChunk = addrs.slice(256)
-
-            let chunkStake = await pChain.getStake(chunk)
-            return chunkStake.add(await this.getAllStake(remainingChunk))
-        }
-    }
-
-    async getStake(): Promise<BN> {
-        // let xIndex = Math.max(this.externalHelper.hdIndex,this.internalHelper.hdIndex);
-        // let pIndex = Math.max(this.platformHelper.hdIndex);
-        // let uptoIndex = Math.max(xIndex, pIndex);
-        let uptoIndex = this.platformHelper.hdIndex + 40
-        let addrs = this.platformHelper.getAllDerivedAddresses(uptoIndex)
-        let res = await this.getAllStake(addrs)
-        this.stakeAmount = res
-        return res
     }
 
     onnetworkchange(): void {
@@ -331,7 +231,7 @@ class HdWalletCore {
     }
 
     async buildUnsignedTransaction(orders: (ITransaction | UTXO)[], addr: string, memo?: Buffer) {
-        const changeAddress = this.getChangeAddress()
+        const changeAddress = this.getChangeAddressAvm()
         const derivedAddresses: string[] = this.getDerivedAddresses()
         const utxoset = this.getUTXOSet()
 
@@ -344,5 +244,38 @@ class HdWalletCore {
             memo
         )
     }
+
+    findExternalAddressIndex(address: string): number | null {
+        // TODO: Look for P addresses too
+        let indexX = this.externalHelper.findAddressIndex(address)
+        let indexP = this.platformHelper.findAddressIndex(address)
+
+        let index = indexX !== null ? indexX : indexP
+
+        if (indexX === null && indexP === null) throw new Error('Address not found.')
+        return index
+    }
+
+    async signMessageByExternalAddress(msgStr: string, address: string) {
+        let index = this.findExternalAddressIndex(address)
+        if (index === null) throw new Error('Address not found.')
+        return await this.signMessageByExternalIndex(msgStr, index)
+    }
+
+    async signMessageByExternalIndex(msgStr: string, index: number): Promise<string> {
+        let digest = digestMessage(msgStr)
+
+        // Convert to the other Buffer and sign
+        let digestHex = digest.toString('hex')
+        let digestBuff = Buffer.from(digestHex, 'hex')
+
+        return await this.signHashByExternalIndex(index, digestBuff)
+    }
+
+    async signMessage(msg: string, address: string) {
+        return await this.signMessageByExternalAddress(msg, address)
+    }
+
+    abstract async signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
 }
 export { HdWalletCore }
