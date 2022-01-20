@@ -2537,7 +2537,7 @@
   dependencies:
     invariant "2"
 
-"@ledgerhq/devices@^5.22.0", "@ledgerhq/devices@^5.40.0":
+"@ledgerhq/devices@^5.40.0":
   version "5.40.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-5.40.0.tgz#5f74d1931e23110287ec5954f7ab5f3b754d8d4d"
   integrity sha512-72P1fuiBN/lR+3PCB2lxsgfp+l4v3Uwvho7UnfOocCfWx//8HiojByRW3zutdW7RMeVzOA+qLXRC6OHooa0kkA==
@@ -2615,15 +2615,15 @@
     "@ledgerhq/hw-transport" "^5.51.1"
     "@ledgerhq/logs" "^5.50.0"
 
-"@ledgerhq/hw-transport-webusb@5.22.0":
-  version "5.22.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-webusb/-/hw-transport-webusb-5.22.0.tgz#f433b4ad8175e1b47b091766b85071c35175a27d"
-  integrity sha512-fPj9x+Ce48g1t7vv2RvT29KonDMUPhLMPGcsX7Kr+IRsheBnaJUhgUVzKXHevaNF1xWhkJEW/Sd8Wo5wyK1pOw==
+"@ledgerhq/hw-transport-webusb@5.53.1":
+  version "5.53.1"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-webusb/-/hw-transport-webusb-5.53.1.tgz#3df8c401417571e3bcacc378d8aca587214b05ae"
+  integrity sha512-A/f+xcrkIAZiJrvPpDvsrjxQX4cI2kbdiunQkwsYmOG3Bp4z89ZnsBiC7YBst4n2/g+QgTg0/KPVtODU5djooQ==
   dependencies:
-    "@ledgerhq/devices" "^5.22.0"
-    "@ledgerhq/errors" "^5.22.0"
-    "@ledgerhq/hw-transport" "^5.22.0"
-    "@ledgerhq/logs" "^5.22.0"
+    "@ledgerhq/devices" "^5.51.1"
+    "@ledgerhq/errors" "^5.50.0"
+    "@ledgerhq/hw-transport" "^5.51.1"
+    "@ledgerhq/logs" "^5.50.0"
 
 "@ledgerhq/hw-transport@^5.22.0", "@ledgerhq/hw-transport@^5.9.0":
   version "5.40.0"

@@ -30,7 +30,7 @@
         "@ledgerhq/hw-app-eth": "6.12.2",
         "@ledgerhq/hw-transport-u2f": "5.22.0",
         "@ledgerhq/hw-transport-webhid": "^5.51.1",
-        "@ledgerhq/hw-transport-webusb": "5.22.0",
+        "@ledgerhq/hw-transport-webusb": "5.53.1",
         "@obsidiansystems/hw-app-avalanche": "0.2.2",
         "@openzeppelin/contracts": "^3.4.2",
         "@types/big.js": "4.0.5",
