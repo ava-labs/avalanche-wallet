@@ -57,7 +57,7 @@
         "bs58check": "^2.1.2",
         "buffer": "5.4.3",
         "connect-history-api-fallback": "1.6.0",
-        "core-js": "3.4.4",
+        "core-js": "3.20.1",
         "cors": "2.8.5",
         "create-hash": "1.2.0",
         "crypto-js": "^4.1.1",
