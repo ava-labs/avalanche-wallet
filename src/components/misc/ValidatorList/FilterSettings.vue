@@ -111,7 +111,7 @@ const DAY_MS = HOUR_MS * 24
 export default class FilterSettings extends Vue {
     minDuration = 14
     maxFee = 10
-    minUptime = 70
+    minUptime = 90
     availableSpace = 25
     activeFilter: null | ValidatorListFilter = null
     count = 0
