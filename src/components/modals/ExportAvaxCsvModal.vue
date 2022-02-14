@@ -2,6 +2,7 @@
     <modal ref="modal" title="Export AVAX Transfers" class="modal_main">
         <div class="csv_modal_body">
             <p>Only X chain AVAX transactions will be exported.</p>
+            <p class="err" v-if="error">{{ error }}</p>
             <v-btn
                 class="button_secondary"
                 small
@@ -44,7 +45,10 @@ import { BN } from 'avalanche'
     },
 })
 export default class ExportAvaxCsvModal extends Vue {
+    error: Error | null = null
+
     open(): void {
+        this.error = null
         let modal = this.$refs.modal as Modal
         modal.open()
     }
@@ -73,7 +77,7 @@ export default class ExportAvaxCsvModal extends Vue {
         return this.$store.state.Assets.AVA_ASSET_ID
     }
 
-    submit() {
+    generateCSVFile() {
         let myAddresses = this.xAddressesStripped
         let avaxID = this.avaxID
 
@@ -142,6 +146,15 @@ export default class ExportAvaxCsvModal extends Vue {
 
         let csvContent = createCSVContent(allRows)
         downloadCSVFile(csvContent, 'avax_transfers')
+    }
+
+    submit() {
+        try {
+            this.error = null
+            this.generateCSVFile()
+        } catch (e) {
+            this.error = e
+        }
     }
 }
 </script>
