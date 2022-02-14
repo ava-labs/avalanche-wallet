@@ -22,6 +22,7 @@
                     v-model="showFees"
                 ></v-checkbox>
             </div>
+            <p class="err" v-if="error">{{ error }}</p>
             <v-btn
                 class="button_secondary"
                 small
@@ -70,8 +71,10 @@ export default class ExportCsvModal extends Vue {
     showValidation = true
     showDelegation = true
     showFees = true
+    error: Error | null = null
 
     open(): void {
+        this.error = null
         let modal = this.$refs.modal as Modal
         modal.open()
     }
@@ -100,7 +103,7 @@ export default class ExportCsvModal extends Vue {
         return this.pAddresses.map((addr: string) => addr.split('-')[1])
     }
 
-    submit() {
+    generateCSVData() {
         let myAddresses = this.pAddressesStripped
 
         let rows: CsvRowStakingData[] = []
@@ -210,6 +213,15 @@ export default class ExportCsvModal extends Vue {
         let csvContent = createCSVContent(allRows)
 
         downloadCSVFile(csvContent, 'staking_rewards')
+    }
+
+    submit() {
+        try {
+            this.error = null
+            this.generateCSVData()
+        } catch (e) {
+            this.error = e
+        }
     }
 }
 </script>
