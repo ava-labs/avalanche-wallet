@@ -43,6 +43,8 @@ import ERC721Module from './modules/erc721'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { getPayloadFromUTXO } from '@/helpers/helper'
+import { isUrlBanned } from '@/components/misc/NftPayloadView/blacklist'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -164,6 +166,14 @@ const assets_module: Module<AssetsState, RootState> = {
                     nftMintUtxos.push(utxo)
                 }
             }
+
+            // Filter NFT utxos
+
+            nftUtxos = nftUtxos.filter((utxo) => {
+                const payload = getPayloadFromUTXO(utxo)
+                const content = payload.getContent().toString()
+                return !isUrlBanned(content)
+            })
 
             state.nftUTXOs = nftUtxos
             state.nftMintUTXOs = nftMintUtxos
