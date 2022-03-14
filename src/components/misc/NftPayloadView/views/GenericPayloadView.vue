@@ -20,10 +20,6 @@
                     controlsList="nodownload"
                 />
             </div>
-            <!--            <div class="generic_meta" v-if="title || desc" v-show="isHover">-->
-            <!--                <p class="nft_title" v-if="title">{{ title }}</p>-->
-            <!--                <div class="desc" v-if="desc">{{ desc }}</div>-->
-            <!--            </div>-->
         </div>
         <div v-else>
             <p>Failed to load generic collectible payload.</p>

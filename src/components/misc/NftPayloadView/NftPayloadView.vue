@@ -1,5 +1,11 @@
 <template>
-    <Component v-if="!small" :is="viewer" :payload="payload" class="nft_payload_view"></Component>
+    <div class="nft_payload_view" v-if="isBanned"></div>
+    <Component
+        v-else-if="!small"
+        :is="viewer"
+        :payload="payload"
+        class="nft_payload_view"
+    ></Component>
     <Component v-else :is="viewerSmall" :payload="payload" class="nft_payload_view"></Component>
 </template>
 <script lang="ts">
@@ -13,6 +19,7 @@ import JsonPayloadView from '@/components/misc/NftPayloadView/views/JsonPayloadV
 import UrlPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/UrlPayloadView.vue'
 import UtfPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/UtfPayloadView.vue'
 import JsonPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/JsonPayloadView.vue'
+import { isUrlBanned } from '@/components/misc/NftPayloadView/blacklist'
 
 @Component({
     components: {
@@ -40,6 +47,14 @@ export default class NftPayloadView extends Vue {
             default:
                 return UtfPayloadView
         }
+    }
+
+    get content() {
+        return this.payload.getContent().toString()
+    }
+
+    get isBanned() {
+        return isUrlBanned(this.content)
     }
 
     get viewerSmall() {
