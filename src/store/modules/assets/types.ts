@@ -24,6 +24,7 @@ export interface AssetsState {
     tokenLists: TokenList[]
     tokenListUrls: string[]
     tokenListsCustom: string[]
+    nftWhitelist: string[]
 }
 
 export interface AssetDescriptions {

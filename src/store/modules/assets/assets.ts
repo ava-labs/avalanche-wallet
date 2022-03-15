@@ -67,6 +67,7 @@ const assets_module: Module<AssetsState, RootState> = {
         tokenLists: [],
         tokenListUrls: [],
         tokenListsCustom: [],
+        nftWhitelist: [],
     },
     mutations: {
         addAsset(state, asset: AvaAsset) {
@@ -115,9 +116,10 @@ const assets_module: Module<AssetsState, RootState> = {
             let lists = JSON.stringify(state.tokenListsCustom)
             localStorage.setItem('token_lists', lists)
         },
-        // setIsUpdateBalance(state, val) {
-        //     state.isUpdateBalance = val
-        // },
+
+        whitelistNFT(state, id: string) {
+            state.nftWhitelist.push(id)
+        },
     },
     actions: {
         async onNetworkChange({ state }, network: AvaNetwork) {

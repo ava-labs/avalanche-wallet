@@ -1,5 +1,17 @@
 <template>
     <div class="nft_payload_view" v-if="isBanned"></div>
+    <NftPayloadAllow
+        v-model="isShow"
+        v-else-if="!isShow"
+        :is-small="small"
+        :nft-i-d="payloadID"
+    ></NftPayloadAllow>
+    <Component
+        :is="viewer"
+        :payload="payload"
+        class="nft_payload_view"
+        v-else-if="!small"
+    ></Component>
     <Component
         v-else-if="!small"
         :is="viewer"
@@ -9,7 +21,7 @@
     <Component v-else :is="viewerSmall" :payload="payload" class="nft_payload_view"></Component>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { PayloadBase } from 'avalanche/dist/utils'
 
 import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
@@ -19,10 +31,13 @@ import JsonPayloadView from '@/components/misc/NftPayloadView/views/JsonPayloadV
 import UrlPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/UrlPayloadView.vue'
 import UtfPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/UtfPayloadView.vue'
 import JsonPayloadViewSmall from '@/components/misc/NftPayloadView/views_small/JsonPayloadView.vue'
+import NftPayloadAllow from '@/components/misc/NftPayloadView/NftPayloadAllow.vue'
 import { isUrlBanned } from '@/components/misc/NftPayloadView/blacklist'
+import { payloadToHash } from '@/utils/payloadToHash'
 
 @Component({
     components: {
+        NftPayloadAllow,
         UrlPayloadView,
         UtfPayloadView,
         JsonPayloadView,
@@ -35,8 +50,32 @@ export default class NftPayloadView extends Vue {
     @Prop() payload!: PayloadBase
     @Prop({ default: false }) small!: boolean
 
+    isShow = false
+
+    get nftWhitelist() {
+        return this.$store.state.Assets.nftWhitelist
+    }
+
+    get payloadID() {
+        const str = this.payload.getContent().toString()
+        return payloadToHash(str)
+    }
+
+    @Watch('nftWhitelist')
+    onListChange() {
+        if (this.nftWhitelist.includes(this.payloadID)) {
+            this.isShow = true
+        }
+    }
+
+    mounted() {
+        if (this.nftWhitelist) {
+            this.onListChange()
+        }
+    }
+
     get viewer() {
-        let typeID = this.payload.typeID()
+        let typeID = this.typeID
         switch (typeID) {
             case 1: // UTF 8
                 return UtfPayloadView
@@ -57,8 +96,12 @@ export default class NftPayloadView extends Vue {
         return isUrlBanned(this.content)
     }
 
+    get typeID() {
+        return this.payload.typeID()
+    }
+
     get viewerSmall() {
-        let typeID = this.payload.typeID()
+        let typeID = this.typeID
         switch (typeID) {
             case 1: // UTF 8
                 return UtfPayloadViewSmall
