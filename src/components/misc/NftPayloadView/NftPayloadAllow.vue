@@ -31,7 +31,7 @@ export default class NftPayloadAllow extends Vue {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: var(--bg-wallet);
+    background-color: var(--bg-light);
 
     button {
         font-size: 0.8em;
