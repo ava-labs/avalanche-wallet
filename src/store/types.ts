@@ -28,7 +28,7 @@ export interface ILedgerAppConfig {
 }
 
 export interface ISecuXConfig {
-    version: string
+    mcuFwVersion: string
     commit: string
     name: 'Avalanche'
 }

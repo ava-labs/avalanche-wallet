@@ -17,10 +17,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 // @ts-ignore
 import { SecuxWebUSB } from '@secux/transport-webusb'
 import { SecuxETH } from '@secux/app-eth'
+import {SecuxDevice } from '@secux/protocol-device'
+
 //@ts-ignore
 import AppAvax from '@secux/hw-app-avalanche'
 import Spinner from '@/components/misc/Spinner.vue'
-import { SecuXWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/SecuXWallet'
+import { SecuXWallet, MIN_MCU_FW_SUPPORT_V } from '@/js/wallets/SecuXWallet'
 import { AVA_ACCOUNT_PATH, SECUX_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
 import { ISecuXConfig } from '@/store/types'
 import ImageDayNight from '@/components/misc/ImageDayNight.vue'
@@ -33,12 +35,6 @@ import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 })
 export default class SecuXButton extends Vue {
     isLoading: boolean = false
-    config?: ISecuXConfig = {
-        version: '2.8.1',
-        commit: 'string',
-        name: 'Avalanche',
-    }
-
     destroyed() {
         this.$store.commit('SecuX/closeModal')
     }
@@ -58,24 +54,22 @@ export default class SecuXButton extends Vue {
         try {
             let transport = await this.getTransport()
             await transport.Connect()
+            console.log(SecuxDevice)
+            this.config = await SecuxDevice.getVersion(transport)
             let app = new AppAvax(transport)
 
             // Close the initial prompt modal if exists
             this.$store.commit('SecuX/setIsUpgradeRequired', false)
             this.isLoading = true
-            this.config = {
-                version: '2.8.1',
-                commit: 'string',
-                name: 'Avalanche',
-            }
             if (!this.config) {
                 this.$store.commit('SecuX/setIsUpgradeRequired', true)
                 this.isLoading = false
                 throw new Error('')
             }
 
-            if (this.config.version < MIN_EVM_SUPPORT_V) {
+            if (this.config.mcuFwVersion < MIN_MCU_FW_SUPPORT_V) {
                 this.$store.commit('SecuX/setIsUpgradeRequired', true)
+                throw new Error('')
                 this.isLoading = false
                 return
             }
@@ -159,7 +153,7 @@ export default class SecuXButton extends Vue {
         this.$store.dispatch('Notifications/add', {
             type: 'error',
             title: 'SecuX Access Failed',
-            message: 'Failed to get public key from SecuX device.',
+            message: 'Failed to get public key from SecuX device. Device firmware upgrade required',
         })
     }
 }

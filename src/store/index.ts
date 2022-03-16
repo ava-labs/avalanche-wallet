@@ -7,6 +7,7 @@ import Notifications from './modules/notifications/notifications'
 import History from './modules/history/history'
 import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
+import SecuX from './modules/secux/secux'
 import Accounts from './modules/accounts/accounts'
 
 import {
@@ -49,6 +50,7 @@ export default new Vuex.Store({
         History,
         Platform,
         Ledger,
+        SecuX,
         Accounts,
     },
     state: {

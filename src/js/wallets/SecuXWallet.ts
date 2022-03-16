@@ -67,7 +67,7 @@ import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Utils, NetworkHelper, Network } from '@avalabs/avalanche-wallet-sdk'
 
-export const MIN_EVM_SUPPORT_V = '0.5.3'
+export const MIN_MCU_FW_SUPPORT_V = '2.16.3'
 
 class SecuXWallet extends HdWalletCore implements AvaWalletCore {
     type: WalletNameType = 'SecuX'
@@ -657,7 +657,7 @@ class SecuXWallet extends HdWalletCore implements AvaWalletCore {
         let { paths, isAvaxOnly } = this.getTransactionPaths<AVMUnsignedTx>(unsignedTx, chainId)
 
         // If SecuX doesnt support parsing, sign hash
-        let canSecuXParse = this.config.version >= '2.8.0'
+        let canSecuXParse = this.config.mcuFwVersion >= MIN_MCU_FW_SUPPORT_V
         let isParsableType = txType in parseableTxs && isAvaxOnly
 
         let signedTx
@@ -690,7 +690,7 @@ class SecuXWallet extends HdWalletCore implements AvaWalletCore {
             chainId
         )
         // If SecuX doesnt support parsing, sign hash
-        let canSecuXParse = this.config.version >= '0.3.1'
+        let canSecuXParse = this.config.mcuFwVersion >= MIN_MCU_FW_SUPPORT_V
         let isParsableType = txType in parseableTxs && isAvaxOnly
 
         // TODO: Remove after SecuX is fixed
