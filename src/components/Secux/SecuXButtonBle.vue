@@ -55,6 +55,7 @@ export default class SecuXButtonBle extends Vue {
             await transport.Connect()
             await transport.SendOTP('42960705')
             let app = new AppAvax(transport)
+            this.config = await SecuxDevice.getVersion(transport)
 
             // Close the initial prompt modal if exists
             this.$store.commit('SecuX/setIsUpgradeRequired', false)
