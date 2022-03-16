@@ -17,6 +17,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 // @ts-ignore
 import { SecuxWebBLE } from '@secux/transport-webble'
 import { SecuxETH } from '@secux/app-eth'
+import { SecuxDevice } from '@secux/protocol-device'
 //@ts-ignore
 import AppAvax from '@secux/hw-app-avalanche'
 import Spinner from '@/components/misc/Spinner.vue'

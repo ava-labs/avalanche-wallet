@@ -17,7 +17,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 // @ts-ignore
 import { SecuxWebUSB } from '@secux/transport-webusb'
 import { SecuxETH } from '@secux/app-eth'
-import {SecuxDevice } from '@secux/protocol-device'
+import { SecuxDevice } from '@secux/protocol-device'
 
 //@ts-ignore
 import AppAvax from '@secux/hw-app-avalanche'
