@@ -25,6 +25,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Big from 'big.js'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SecuXWallet } from '@/js/wallets/SecuXWallet'
 import { WalletType } from '@/js/wallets/types'
 
 import { ava } from '@/AVA'

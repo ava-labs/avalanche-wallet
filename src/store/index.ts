@@ -34,6 +34,7 @@ import {
     readKeyFile,
 } from '@/js/Keystore'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SecuXWallet } from '@/js/wallets/SecuXWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { Buffer } from 'avalanche'
 import { privateToAddress } from 'ethereumjs-util'
@@ -121,6 +122,14 @@ export default new Vuex.Store({
         },
 
         async accessWalletLedger({ state, dispatch }, wallet: LedgerWallet) {
+            state.wallets = [wallet]
+
+            await dispatch('activateWallet', wallet)
+
+            dispatch('onAccess')
+        },
+
+        async accessWalletSecuX({ state, dispatch }, wallet: SecuXWallet) {
             state.wallets = [wallet]
 
             await dispatch('activateWallet', wallet)

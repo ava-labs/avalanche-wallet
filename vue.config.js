@@ -7,7 +7,7 @@ module.exports = {
          * For e2e testing we turn this off using vue cli --mode e2e
          * @link https://cli.vuejs.org/guide/mode-and-env.html#modes
          */
-        https: !process.env.USE_HTTP,
+         https: !process.env.USE_HTTP,
         port: 5000,
     },
     // publicPath: '',

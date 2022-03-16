@@ -64,6 +64,7 @@ import MnemonicWallet, {
     LEDGER_ETH_ACCOUNT_PATH,
 } from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SecuXWallet } from '@/js/wallets/SecuXWallet'
 
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
 import { ChainIdType } from '@/constants'

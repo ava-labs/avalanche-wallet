@@ -27,6 +27,12 @@ export interface ILedgerAppConfig {
     name: 'Avalanche'
 }
 
+export interface ISecuXConfig {
+    version: string
+    commit: string
+    name: 'Avalanche'
+}
+
 export interface priceDict {
     usd: number
 }
