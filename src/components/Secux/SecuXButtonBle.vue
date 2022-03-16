@@ -33,6 +33,7 @@ import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 })
 export default class SecuXButtonBle extends Vue {
     isLoading: boolean = false
+    config?: ISecuXConfig = undefined
 
     destroyed() {
         this.$store.commit('SecuX/closeModal')
