@@ -67,7 +67,7 @@ import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Utils, NetworkHelper, Network } from '@avalabs/avalanche-wallet-sdk'
 
-export const MIN_MCU_FW_SUPPORT_V = '2.16.3'
+export const MIN_MCU_FW_SUPPORT_V = '2.16'
 
 class SecuXWallet extends HdWalletCore implements AvaWalletCore {
     type: WalletNameType = 'SecuX'
