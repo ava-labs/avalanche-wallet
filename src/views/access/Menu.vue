@@ -28,7 +28,6 @@
                 </router-link>
                 <LedgerButton class="menu_option button_primary"></LedgerButton>
                 <SecuXButton class="menu_option button_primary"></SecuXButton>
-                <SecuXButtonBle class="menu_option button_primary"></SecuXButtonBle>
                 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
             </div>
         </div>
