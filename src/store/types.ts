@@ -28,9 +28,10 @@ export interface ILedgerAppConfig {
 }
 
 export interface ISecuXConfig {
-    mcuFwVersion: string
-    commit: string
-    name: 'Avalanche'
+    transportVersion: number;
+    seFwVersion: string;
+    mcuFwVersion: string;
+    bootloaderVersion: string;
 }
 
 export interface priceDict {
