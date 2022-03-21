@@ -16,16 +16,16 @@
 
                         <p>
                             Export Fee
-                            <span>{{ exportFee.toLocaleString() }} AVAX</span>
+                            <span>{{ exportFee.toLocaleString() }} {{ nativeAssetSymbol }}</span>
                         </p>
                         <p>
                             Import Fee
-                            <span>{{ importFee.toLocaleString() }} AVAX</span>
+                            <span>{{ importFee.toLocaleString() }} {{ nativeAssetSymbol }}</span>
                         </p>
                         <p>
                             <b>
                                 Total
-                                <span>{{ fee.toLocaleString() }} AVAX</span>
+                                <span>{{ fee.toLocaleString() }} {{ nativeAssetSymbol }}</span>
                             </b>
                         </p>
                     </div>
@@ -271,7 +271,7 @@ export default class ChainTransfer extends Vue {
     }
 
     /**
-     * Returns the import fee in nAVAX
+     * Returns the import fee in nNative
      */
     get importFeeBN(): BN {
         return Utils.bigToBN(this.importFee, 9)
@@ -286,7 +286,7 @@ export default class ChainTransfer extends Vue {
     }
 
     /**
-     * The maximum amount that can be transferred in nAVAX
+     * The maximum amount that can be transferred in nNative
      */
     get maxAmt(): BN {
         let max = this.balanceBN.sub(this.feeBN)
@@ -296,6 +296,10 @@ export default class ChainTransfer extends Vue {
         } else {
             return max
         }
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 
     onFormChange(data: ChainSwapFormData) {
@@ -567,7 +571,7 @@ export default class ChainTransfer extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../../main";
+@use '../../../../main';
 
 .cols {
     display: grid;

@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Password",
     "password_confirm": "Confirm Password",
     "private_key": "Private Key",
     "address": "Address",
     "add_pk": "Add Private Key",
     "home": {
-        "desc": "Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.",
+        "desc": "@.project:(0) Wallet is a simple, secure, non-custodial wallet for storing @.project:(0) assets.",
         "access": {
             "title": "Welcome Back!",
-            "desc": "Access your existing Avalanche wallet here.",
+            "desc": "Access your existing @.project:(0) wallet here.",
             "submit": "Access Wallet"
         },
         "create": {
-            "title": "New to Avalanche Wallet?",
-            "desc": "Create a new wallet to send, receive and swap Avalanche assets.",
+            "title": "New to @.project:(0) Wallet?",
+            "desc": "Create a new wallet to send, receive and swap @.project:(0) assets.",
             "submit": "Create New Wallet"
         }
     },
@@ -78,18 +79,18 @@
         }
     },
     "create": {
-        "generate": "Generate a new key phrase to setup your Avalanche Wallet.",
+        "generate": "Generate a new key phrase to setup your @.project:(0) Wallet.",
         "but_have": "Already have a wallet?",
         "submit": "Generate Key Phrase",
         "cancel": "Cancel",
         "mnemonic_title": "This is your key phrase.",
-        "mnemonic_desc": "Use these 24 words in sequential order to recover your Avalanche Wallet",
+        "mnemonic_desc": "Use these 24 words in sequential order to recover your @.project:(0) Wallet",
         "attention": "Attention!",
-        "warning": "Store this key phrase in a secure location. Anyone with this key phrase can access your Avalanche Wallet. There is no way to recover lost key phrases.",
+        "warning": "Store this key phrase in a secure location. Anyone with this key phrase can access your @.project:(0) Wallet. There is no way to recover lost key phrases.",
         "confirm": "I wrote down my key phrase in a secure location.",
         "regenerate": "Regenerate",
         "success_title": "Congratulations!",
-        "success_desc": "It's time to access your Avalanche Wallet.",
+        "success_desc": "It's time to access your @.project:(0) Wallet.",
         "success_submit": "Access Wallet",
         "verify": "Verify",
         "verifytitle": "Verify Mnemonic",
@@ -98,15 +99,15 @@
         "error_word": "The mnemonic phrase you entered for word not match the actual phrase."
     },
     "top": {
-        "title1": "Derived Avalanche Wallet Address",
+        "title1": "Derived @.project:(0) Wallet Address",
         "title2": "Balance",
         "title3": "Subnet",
         "title4": "Network",
         "nftcol": "NFTs",
         "nftempty": "You have not collected any non fungible tokens.",
         "locked": "Locked",
-        "info2": "I bought coins in the Token Sale. Where are my AVAX?",
-        "info2_desc": "This wallet is connected to the Avalanche Everest test network. Your purchase will appear in the wallet after the Avalanche Mainnet launch.",
+        "info2": "I bought coins in the Token Sale. Where are my @.native:(0)?",
+        "info2_desc": "This wallet is connected to the @.project:(0) Everest test network. Your purchase will appear in the wallet after the Mainnet launch.",
         "hover1": "View Address QR Code",
         "hover2": "Paper Wallet",
         "hover3": "Copy",
@@ -121,7 +122,7 @@
             "collectibles": "Collectibles"
         },
         "address": {
-            "derived": "Derived Avalanche Wallet Address",
+            "derived": "Derived @.project:(0) Wallet Address",
             "title_x": "Derived Wallet Address",
             "title_p": "Derived Platform Wallet Address",
             "title_c": "Derived EVM Wallet Address",
@@ -144,7 +145,7 @@
         "send": "Send Transaction",
         "summary": "Transaction Summary",
         "total": "Total",
-        "total_avax": "Total AVAX",
+        "total_@.native:(0)": "Total @.native:(0)",
         "chain_warn": "You can only send tokens on the X chain.",
         "disconnected": "Unable to send assets. Disconnected from the network.",
         "success_title": "Transaction Sent",
@@ -287,7 +288,7 @@
         "save_account": {
             "title": "Save Account",
             "desc": "Encode your wallet with a password and store securely on this browser.",
-            "submit":  "Save",
+            "submit": "Save",
             "placeholder_1": "Account Name",
             "placeholder_2": "Password",
             "placeholder_3": "Confirm Password"
@@ -328,7 +329,7 @@
         "remove_success_msg": "Private key and assets removed from the wallet.",
         "password_validation": "Password must be at least 9 characters long.",
         "password_validation2": "Password do not match.",
-        "account_name_required" : "Account Name Required."
+        "account_name_required": "Account Name Required."
     },
     "portfolio": {
         "assets": "Assets",
@@ -354,26 +355,26 @@
     },
     "earn": {
         "title": "Earn",
-        "desc": "You can earn more AVAX by staking your existing tokens.",
+        "desc": "You can earn more @.native:(0) by staking your existing tokens.",
         "subtitle1": "Validate",
         "subtitle2": "Delegate",
         "subtitle3": "Cross Chain Transfer",
         "subtitle4": "Estimated Rewards",
-        "warning_1": "You must have at least {0} AVAX on the P chain to become a validator.",
-        "warning_2": "You must have at least {0} AVAX on the P chain to become a delegator.",
+        "warning_1": "You must have at least {0} @.native:(0) on the P chain to become a validator.",
+        "warning_2": "You must have at least {0} @.native:(0) on the P chain to become a delegator.",
         "validate_card": {
             "title": "Validate",
-            "desc": "You have an Avalanche node that you want to stake with.",
+            "desc": "You have an @.project:(0) node that you want to stake with.",
             "submit": "Add Validator"
         },
         "delegate_card": {
             "title": "Delegate",
-            "desc": "You do not own an Avalanche node, but you want to stake using another node.",
+            "desc": "You do not own an @.project:(0) node, but you want to stake using another node.",
             "submit": "Add Delegator"
         },
         "transfer_card": {
             "title": "Cross Chain Transfer",
-            "desc": "Staking requires AVAX on the P chain. Transfer tokens between X and P.",
+            "desc": "Staking requires @.native:(0) on the P chain. Transfer tokens between X and P.",
             "submit": "Transfer"
         },
         "rewards_card": {
@@ -434,13 +435,13 @@
             "label_1": "Node ID",
             "duration": {
                 "label": "Staking End Date",
-                "desc": "Your AVAX tokens will be locked until this date.",
+                "desc": "Your @.native:(0) tokens will be locked until this date.",
                 "start": "Start Date & Time",
                 "end": "End Date & Time"
             },
             "amount": {
                 "label": "Stake Amount",
-                "desc": "The amount of AVAX to lock for staking."
+                "desc": "The amount of @.native:(0) to lock for staking."
             },
             "fee": {
                 "label": "Delegation Fee",
@@ -482,7 +483,7 @@
             "errs": {
                 "duration_warn": "WARNING: You must have at least 14 days remaining on your validation period to accept delegations.",
                 "date": "Start date must be in the future and end date must be after start date.",
-                "amount": "Stake amount must be at least {0} AVAX",
+                "amount": "Stake amount must be at least {0} @.native:(0)",
                 "id": "Invalid Node ID.",
                 "fee": "Delegation fee must be at least {0}%",
                 "address": "Invalid address. Reward address must be a valid P chain address."
@@ -527,14 +528,14 @@
             "form": {
                 "period": {
                     "label": "Staking End Date",
-                    "desc": "Your AVAX tokens will be locked until this date.",
+                    "desc": "Your @.native:(0) tokens will be locked until this date.",
                     "start": "Start Date & Time",
                     "end": "End Date & Time"
                 },
                 "amount": {
                     "label": "Stake Amount",
-                    "desc": "The amount of AVAX to lock for staking.",
-                    "desc2": "The available delegation amount for this node is {0} AVAX"
+                    "desc": "The amount of @.native:(0) to lock for staking.",
+                    "desc2": "The available delegation amount for this node is {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Reward Address",
@@ -560,7 +561,7 @@
                 "max_dur": "Maximum staking duration is 1 year.",
                 "no_node": "You must specify a validator.",
                 "val_end": "Delegation end date can not be longer than the validator's end date.",
-                "amt": "Delegation amount must be at least {0} AVAX."
+                "amt": "Delegation amount must be at least {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Staking Duration",
@@ -653,7 +654,7 @@
         "loading": "Loading transaction history..",
         "warn_loading": "This list might be incomplete and out of order.",
         "error_api": "Explorer API Not Found",
-        "error_api_desc": "You must provide an Avalanche Explorer API for this network to view transaction history.",
+        "error_api_desc": "You must provide an @.project:(0) Explorer API for this network to view transaction history.",
         "start": "Stake Start Date",
         "end": "Stake End Date",
         "date_reward": "Reward Date",
@@ -709,7 +710,7 @@
             "done": "Done",
             "upgrade": "Upgrade",
             "title": "Trouble Connecting?",
-            "desc": "We're having trouble connecting to your device. Please make sure you have the Avalanche app open and upgraded to the latest version."
+            "desc": "We're having trouble connecting to your device. Please make sure you have the @.project:(0) app open and upgraded to the latest version."
         },
         "hd": {
             "future_warn_title": "DO NOT USE THE ADDRESSES BELOW",

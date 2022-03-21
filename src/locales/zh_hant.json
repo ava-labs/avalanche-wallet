@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "密碼",
     "password_confirm": "確認密碼",
     "private_key": "私鑰",
     "address": "地址",
     "add_pk": "添加私鑰",
     "home": {
-        "desc": "Avalanche錢包是一個簡單、安全、無托管的錢包，用於存儲Avalanche資產。",
+        "desc": "@.project:(0)錢包是一個簡單、安全、無托管的錢包，用於存儲@.project:(0)資產。",
         "access": {
             "title": "歡迎回來！",
-            "desc": "在這裡“訪問”你現有的Avalanche錢包。",
+            "desc": "在這裡“訪問”你現有的@.project:(0)錢包。",
             "submit": "訪問錢包"
         },
         "create": {
-            "title": "第一次接觸Avalanche錢包。",
-            "desc": "“創建”一個新錢包來發送、接收和交換Avalanche資產。",
+            "title": "第一次接觸@.project:(0)錢包。",
+            "desc": "“創建”一個新錢包來發送、接收和交換@.project:(0)資產。",
             "submit": "創建新錢包"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "生成一個新的密鑰短語以設定你的Avalanche錢包。",
+        "generate": "生成一個新的密鑰短語以設定你的@.project:(0)錢包。",
         "but_have": "已有錢包？",
         "submit": "生成密鑰短語",
         "cancel": "取消",
         "mnemonic_title": "這是你的密鑰短語",
-        "mnemonic_desc": "按順序使用這24個單詞來恢復你的Avalanche錢包",
+        "mnemonic_desc": "按順序使用這24個單詞來恢復你的@.project:(0)錢包",
         "attention": "注意！",
-        "warning": "將此密鑰短語存儲在一個安全的位置。任何持有此密鑰短語的人都可以訪問你的Avalanche錢包。沒有辦法找回丟失的密鑰短語。",
+        "warning": "將此密鑰短語存儲在一個安全的位置。任何持有此密鑰短語的人都可以訪問你的@.project:(0)錢包。沒有辦法找回丟失的密鑰短語。",
         "confirm": "我在一個安全的地方寫下了我的密鑰短語。",
         "regenerate": "重新生成",
         "success_title": "恭喜！",
-        "success_desc": "是時候訪問你的Avalanche錢包了。",
+        "success_desc": "是時候訪問你的@.project:(0)錢包了。",
         "success_submit": "訪問錢包",
         "verify": "驗證",
         "verifytitle": "驗證助記詞",
@@ -78,15 +79,15 @@
         "error_word": "你輸入的助記短語與實際的短語不匹配。"
     },
     "top": {
-        "title1": "派生Avalanche錢包地址",
+        "title1": "派生@.project:(0)錢包地址",
         "title2": "餘額",
         "title3": "子網",
         "title4": "網路",
         "nftcol": "不可分割代幣（NFT）",
         "nftempty": "你沒有收集任何不可分割代幣。",
         "locked": "鎖定",
-        "info2": "我在代幣銷售中購買了貨幣。我的AVAX在哪裏？",
-        "info2_desc": "該錢包已連接到Avalanche Everest測試網路。Avalanche主網啟動後，你的購買將出現在錢包。",
+        "info2": "我在代幣銷售中購買了貨幣。我的@.native:(0)在哪裏？",
+        "info2_desc": "該錢包已連接到@.project:(0) Everest測試網路。@.project:(0)主網啟動後，你的購買將出現在錢包。",
         "hover1": "查看地址二維碼",
         "hover2": "列印",
         "hover3": "複製",
@@ -101,7 +102,7 @@
             "collectibles": "收藏品"
         },
         "address": {
-            "derived": "派生Avalanche錢包地址",
+            "derived": "派生@.project:(0)錢包地址",
             "desc": "這是你接收資金的地址。每次存款後你的地址都會改變。"
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "賺錢",
-        "desc": "你可以通過質押你的現有代幣賺取更多AVAX。",
+        "desc": "你可以通過質押你的現有代幣賺取更多@.native:(0)。",
         "subtitle1": "驗證",
         "subtitle2": "委託",
         "subtitle3": "跨鏈轉移",
         "subtitle4": "預計獎勵",
-        "warning_1": "你必須在P鏈擁有至少{0}AVAX以成為一個驗證者。",
-        "warning_2": "你必須在P鏈擁有至少{0}AVAX以成為一個委託者。",
+        "warning_1": "你必須在P鏈擁有至少{0}@.native:(0)以成為一個驗證者。",
+        "warning_2": "你必須在P鏈擁有至少{0}@.native:(0)以成為一個委託者。",
         "validate_card": {
             "title": "驗證",
-            "desc": "你有一個想用於質押的Avalanche節點。",
+            "desc": "你有一個想用於質押的@.project:(0)節點。",
             "submit": "添加驗證者"
         },
         "delegate_card": {
             "title": "委託",
-            "desc": "你沒有Avalanche節點，但你想使用另一個節點進行質押。",
+            "desc": "你沒有@.project:(0)節點，但你想使用另一個節點進行質押。",
             "submit": "添加委託者"
         },
         "transfer_card": {
             "title": "跨鏈轉移",
-            "desc": "質押需要P鏈上的AVAX。在X和P之間轉移代幣。",
+            "desc": "質押需要P鏈上的@.native:(0)。在X和P之間轉移代幣。",
             "submit": "轉移"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "質押數量",
-                "desc": "要鎖定用於質押的AVAX數量。"
+                "desc": "要鎖定用於質押的@.native:(0)數量。"
             },
             "fee": {
                 "label": "委託費用",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "開始日期必須在將來，結束日期必須在開始日期之後。",
-                "amount": "質押數量必須至少為{0}AVAX",
+                "amount": "質押數量必須至少為{0}@.native:(0)",
                 "id": "無效的節點ID。必須以“NodeID-”開頭",
                 "address": "無效的獎勵地址。"
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "質押數量",
-                    "desc": "要鎖定用於質押的AVAX數量。",
-                    "desc2": "此節點的可用委託數量為{0}AVAX"
+                    "desc": "要鎖定用於質押的@.native:(0)數量。",
+                    "desc2": "此節點的可用委託數量為{0}@.native:(0)"
                 },
                 "reward": {
                     "label": "獎勵地址",
@@ -345,7 +346,7 @@
                 "max_dur": "最大質押持續時間為1年。",
                 "no_node": "你必須指定一個驗證者。",
                 "val_end": "委託結束日期不能長於驗證者的結束日期。",
-                "amt": "委託數量必須至少為{0}AVAX"
+                "amt": "委託數量必須至少為{0}@.native:(0)"
             },
             "summary": {
                 "duration": "質押持續時間",

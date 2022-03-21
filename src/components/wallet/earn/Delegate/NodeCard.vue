@@ -26,11 +26,11 @@
         <!--        </div>-->
         <div>
             <label>Active Stake</label>
-            <p>{{ totalStakeBig.toLocaleString(0) }} AVAX</p>
+            <p>{{ totalStakeBig.toLocaleString(0) }} {{ nativeAssetSymbol }}</p>
         </div>
         <div>
             <label>Available Stake</label>
-            <p>{{ remainingStakeBig.toLocaleString(0) }} AVAX</p>
+            <p>{{ remainingStakeBig.toLocaleString(0) }} {{ nativeAssetSymbol }}</p>
         </div>
         <!--        <div class="dates"></div>-->
         <div class="date_row">
@@ -89,6 +89,10 @@ export default class NodeCard extends Vue {
 
     get vscoutURL() {
         return `https://vscout.io/validator/${this.node.nodeID}`
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

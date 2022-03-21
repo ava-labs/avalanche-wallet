@@ -90,7 +90,7 @@ abstract class WalletCore {
     /**
      *
      * @param sourceChain
-     * @param fee Fee to use in nAVAX
+     * @param fee Fee to use in nNative
      * @param utxoSet
      */
     async importToCChain(sourceChain: ExportChainsC, fee: BN, utxoSet?: EVMUTXOSet) {
@@ -98,7 +98,7 @@ abstract class WalletCore {
             utxoSet = await this.evmGetAtomicUTXOs(sourceChain)
         }
 
-        // TODO: Only use AVAX utxos
+        // TODO: Only use native Asset utxos
         // TODO?: If the import fee for a utxo is greater than the value of the utxo, ignore it
 
         if (utxoSet.getAllUTXOs().length === 0) {
@@ -185,9 +185,9 @@ abstract class WalletCore {
 
     /**
      *
-     * @param amt The amount to receive on the destination chain, in nAVAX.
+     * @param amt The amount to receive on the destination chain, in nNative.
      * @param destinationChain `X` or `P`
-     * @param fee Fee to use in the export transaction, given in nAVAX.
+     * @param fee Fee to use in the export transaction, given in nNative.
      */
     async exportFromCChain(amt: BN, destinationChain: ExportChainsC, exportFee: BN) {
         // Add import fee

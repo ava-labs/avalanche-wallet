@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Heslo",
     "password_confirm": "Potvrzení hesla",
     "private_key": "Soukromý klíč",
     "address": "Adresa",
     "add_pk": "Přidat soukromý klíč",
     "home": {
-        "desc": "Peněženka Avalanche je jednoduchá, bezpečná, nehlídaná peněženka na ukládání majetku Avalanche.",
+        "desc": "Peněženka @.project:(0) je jednoduchá, bezpečná, nehlídaná peněženka na ukládání majetku @.project:(0).",
         "access": {
             "title": "Vítej zpátky!",
-            "desc": "Tady můžete získat přístup ke své stávající peněžence Avalanche.",
+            "desc": "Tady můžete získat přístup ke své stávající peněžence @.project:(0).",
             "submit": "Přístup k peněžence"
         },
         "create": {
-            "title": "Je pro Vás peněženka Avalanche novinkou?",
-            "desc": "Vytvořte si novou peněženku k odesílání, přijímání a vyměňování majetku Avalanche.",
+            "title": "Je pro Vás peněženka @.project:(0) novinkou?",
+            "desc": "Vytvořte si novou peněženku k odesílání, přijímání a vyměňování majetku @.project:(0).",
             "submit": "Vytvořit novou peněženku"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Vytvořte si novou klíčovou frázi k nakonfigurování Vaší peněženky Avalanche.",
+        "generate": "Vytvořte si novou klíčovou frázi k nakonfigurování Vaší peněženky @.project:(0).",
         "but_have": "Máte už peněženku?",
         "submit": "Vygenerovat klíčovou frázi",
         "cancel": "Zrušit",
         "mnemonic_title": "Toto je Vaše klíčová fráze.",
-        "mnemonic_desc": "Chcete-li obnovit svou peněženku Avalanche, použijte těchto 24 slov v postupném pořadí",
+        "mnemonic_desc": "Chcete-li obnovit svou peněženku @.project:(0), použijte těchto 24 slov v postupném pořadí",
         "attention": "Pozor!",
-        "warning": "Tuto klíčovou frázi si uložte na bezpečné místo. Každý, kdo tuto klíčovou frázi bude mít, bude moci získat přístup k Vaší peněžence Avalanche. Ztracené klíčové fráze nelze nijak získat zpět.",
+        "warning": "Tuto klíčovou frázi si uložte na bezpečné místo. Každý, kdo tuto klíčovou frázi bude mít, bude moci získat přístup k Vaší peněžence @.project:(0). Ztracené klíčové fráze nelze nijak získat zpět.",
         "confirm": "Svou klíčovou frázi jsem si zapsala(a) na bezpečné místo.",
         "regenerate": "Regenerovat",
         "success_title": "Gratulujeme!",
-        "success_desc": "Je čas na přístup k Vaší peněžence Avalanche.",
+        "success_desc": "Je čas na přístup k Vaší peněžence @.project:(0).",
         "success_submit": "Přístup do peněženky",
         "verify": "Ověřit",
         "verifytitle": "Ověřte mnemotechniku",
@@ -78,15 +79,15 @@
         "error_word": "Mnemotechnická fráze, kterou jste zadali pro slovo, se neshoduje se skutečnou frází."
     },
     "top": {
-        "title1": "Odvozená adresa peněženky Avalanche",
+        "title1": "Odvozená adresa peněženky @.project:(0)",
         "title2": "Zůstatek",
         "title3": "Podsíť",
         "title4": "Síť",
         "nftcol": "NFT",
         "nftempty": "Neshromáždili jste žádné nepostradatelné žetony.",
         "locked": "Zamčené",
-        "info2": "Koupil jsem mince v Token Sale. Kde jsou moje AVAX?",
-        "info2_desc": "Tato peněženka je připojena k testovací síti Avalanche Everest. Váš nákup se v peněžence objeví po spuštění Avalanche Mainnet.",
+        "info2": "Koupil jsem mince v Token Sale. Kde jsou moje @.native:(0)?",
+        "info2_desc": "Tato peněženka je připojena k testovací síti @.project:(0) Everest. Váš nákup se v peněžence objeví po spuštění Mainnet.",
         "hover1": "Zobrazit QR kód adresy",
         "hover2": "Vytisknout",
         "hover3": "Kopírovat",
@@ -101,7 +102,7 @@
             "collectibles": "Sběratelské předměty"
         },
         "address": {
-            "derived": "Odvozená adresa peněženky Avalanche",
+            "derived": "Odvozená adresa peněženky @.project:(0)",
             "desc": "Toto je Vaše adresa pro příjem prostředků. Vaše adresa se po každém vkladu změní."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Vydělávat",
-        "desc": "Vsazováním svých stávajících tokenů můžete vydělat více AVAX.",
+        "desc": "Vsazováním svých stávajících tokenů můžete vydělat více @.native:(0).",
         "subtitle1": "Validovat",
         "subtitle2": "Delegovat",
         "subtitle3": "Křížový řetězový převod",
         "subtitle4": "Odhadované odměny",
-        "warning_1": "Abyste se stali validátorem, musíte mít alespoň {0} AVAX na řetězci P.",
-        "warning_2": "Abyste se stali delegátorem, musíte mít alespoň {0} AVAX na řetězci P.",
+        "warning_1": "Abyste se stali validátorem, musíte mít alespoň {0} @.native:(0) na řetězci P.",
+        "warning_2": "Abyste se stali delegátorem, musíte mít alespoň {0} @.native:(0) na řetězci P.",
         "validate_card": {
             "title": "Validovat",
-            "desc": "Máte uzel Avalanche, s kterým chcete vsazovat.",
+            "desc": "Máte uzel @.project:(0), s kterým chcete vsazovat.",
             "submit": "Přidat validátora"
         },
         "delegate_card": {
             "title": "Delegovat",
-            "desc": "Nevlastníte žádný uzel Avalanche, ale chcete vsazovat pomocí jiného uzlu.",
+            "desc": "Nevlastníte žádný uzel @.project:(0), ale chcete vsazovat pomocí jiného uzlu.",
             "submit": "Přidat delegátora"
         },
         "transfer_card": {
             "title": "Křížový řetězový převod",
-            "desc": "Vsazování vyžaduje AVAX na řetězci P. Převeďte tokeny mezi X a P.",
+            "desc": "Vsazování vyžaduje @.native:(0) na řetězci P. Převeďte tokeny mezi X a P.",
             "submit": "Převod"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Částka sázky",
-                "desc": "Množství AVAX k zablokování na vsazení."
+                "desc": "Množství @.native:(0) k zablokování na vsazení."
             },
             "fee": {
                 "label": "Delegační poplatek",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Datum začátku musí být v budoucnu a datum konce musí být pozdější než datum začátku.",
-                "amount": "Částka vsázky musí být alespoň {0} AVAX",
+                "amount": "Částka vsázky musí být alespoň {0} @.native:(0)",
                 "id": "Neplatné ID uzlu. Musí začínat na „NodeID-“",
                 "address": "Neplatná adresa pro odměny."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Částka sázky",
-                    "desc": "Množství AVAX k zablokování na vsazování.",
-                    "desc2": "Dostupná delegační částka pro tento uzel je {0} AVAX"
+                    "desc": "Množství @.native:(0) k zablokování na vsazování.",
+                    "desc2": "Dostupná delegační částka pro tento uzel je {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Adresa pro odměny",
@@ -345,7 +346,7 @@
                 "max_dur": "Maximální doba trvání vsazení je 1 rok.",
                 "no_node": "Musíte zadat validátora.",
                 "val_end": "Delegační datum konce nesmí být delší než datum konce validátora.",
-                "amt": "Delegační částka musí být alespoň {0} AVAX."
+                "amt": "Delegační částka musí být alespoň {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Doba trvání vsazení",

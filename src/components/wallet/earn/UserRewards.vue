@@ -2,7 +2,7 @@
     <div v-if="totLength > 0" class="user_rewards">
         <div>
             <label>{{ $t('earn.rewards.total') }}</label>
-            <p class="amt">{{ totalRewardBig.toLocaleString(9) }} AVAX</p>
+            <p class="amt">{{ totalRewardBig.toLocaleString(9) }} {{ nativeAssetSymbol }}</p>
         </div>
         <div v-if="validators.length > 0">
             <h3>{{ $t('earn.rewards.validation') }}</h3>
@@ -92,6 +92,10 @@ export default class UserRewards extends Vue {
 
     get totalRewardBig(): Big {
         return bnToBig(this.totalReward, 9)
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 
     cleanList(list: ValidatorRaw[] | DelegatorRaw[]) {

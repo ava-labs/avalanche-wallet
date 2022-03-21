@@ -119,7 +119,9 @@
                                     <fa icon="question-circle"></fa>
                                 </Tooltip>
                             </label>
-                            <p v-if="currency_type === 'AVAX'">{{ maxDelegationText }} AVAX</p>
+                            <p v-if="currency_type === 'NATIVE'">
+                                {{ maxDelegationText }} {{ nativeAssetSymbol }}
+                            </p>
                             <p v-if="currency_type === 'USD'">${{ maxDelegationUsdText }} USD</p>
                         </div>
                         <div>
@@ -128,8 +130,8 @@
                         </div>
                         <div>
                             <label>{{ $t('earn.validate.summary.rewards') }}</label>
-                            <p v-if="currency_type === 'AVAX'">
-                                {{ estimatedReward.toLocaleString(2) }} AVAX
+                            <p v-if="currency_type === 'NATIVE'">
+                                {{ estimatedReward.toLocaleString(2) }} {{ nativeAssetSymbol }}
                             </p>
                             <p v-if="currency_type === 'USD'">
                                 ${{ estimatedRewardUSD.toLocaleString(2) }} USD
@@ -289,7 +291,7 @@ export default class AddValidator extends Vue {
 
     isSuccess = false
 
-    currency_type = 'AVAX'
+    currency_type = 'NATIVE'
 
     mounted() {
         this.rewardSelect('local')
@@ -635,10 +637,14 @@ export default class AddValidator extends Vue {
             message: 'Failed to add validator.',
         })
     }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+    }
 }
 </script>
 <style scoped lang="scss">
-@use "../../../../main";
+@use '../../../../main';
 .cols {
     /*display: grid;*/
     /*grid-template-columns: 1fr 1fr;*/

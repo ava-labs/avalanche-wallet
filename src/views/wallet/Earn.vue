@@ -55,23 +55,6 @@
                     </div>
                     <div>
                         <h4 class="title">
-                            {{ $t('earn.transfer_card.title') }}
-                        </h4>
-                        <p style="flex-grow: 1">
-                            {{ $t('earn.transfer_card.desc') }}
-                        </p>
-                        <v-btn
-                            class="button_secondary"
-                            data-cy="swap"
-                            @click="transfer"
-                            depressed
-                            small
-                        >
-                            {{ $t('earn.transfer_card.submit') }}
-                        </v-btn>
-                    </div>
-                    <div>
-                        <h4 class="title">
                             {{ $t('earn.rewards_card.title') }}
                         </h4>
                         <p style="flex-grow: 1">
@@ -238,7 +221,7 @@ export default class Earn extends Vue {
 .options {
     margin: 30px 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 14px;
     //display: flex;
     //justify-content: space-evenly;

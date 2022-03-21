@@ -14,7 +14,7 @@
                             @input="onInputChange"
                             v-model="availableSpace"
                         />
-                        <p>AVAX</p>
+                        <p>{{ nativeAssetSymbol }}</p>
                     </div>
                 </div>
                 <div class="duration">
@@ -188,6 +188,10 @@ export default class FilterSettings extends Vue {
     get canApply() {
         if (this.count === 0) return false
         return true
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

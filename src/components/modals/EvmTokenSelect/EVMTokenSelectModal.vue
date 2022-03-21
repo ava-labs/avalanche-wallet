@@ -5,8 +5,8 @@
                 <div class="token_row" @click="select('native')">
                     <img src="/img/avax_icon_circle.png" class="col_img" />
                     <div class="col_name">
-                        <p>AVAX</p>
-                        <p>Avalanche</p>
+                        <p>{{ nativeAssetSymbol }}</p>
+                        <p>{{ nativeAssetName }}</p>
                     </div>
                     <p class="col_bal">{{ avaxBalance.toLocaleString() }}</p>
                 </div>
@@ -43,7 +43,6 @@ import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
 import ERC721Token from '@/js/ERC721Token'
 import ERC721Row from '@/components/modals/EvmTokenSelect/ERC721Row.vue'
-import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
 import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
 
 @Component({
@@ -75,10 +74,13 @@ export default class EVMTokenSelectModal extends Vue {
         return this.$store.getters['Assets/ERC721/networkContracts']
     }
 
-    // get symbol() {
-    //     if (this.selected === 'native') return 'AVAX'
-    //     else return this.selected.data.symbol
-    // }
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+    }
+
+    get nativeAssetName(): string {
+        return this.$store.getters['Assets/AssetAVA']?.name ?? ''
+    }
 
     get avaxBalance(): Big {
         let w: WalletType | null = this.$store.state.activeWallet

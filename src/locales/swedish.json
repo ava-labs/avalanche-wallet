@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Lösenord",
     "password_confirm": "Bekräfta lösenord",
     "private_key": "Privat Nyckel",
     "address": "Adress",
     "add_pk": "Lägg till Privat Nyckel",
     "home": {
-        "desc": "Avalanche Wallet är en enkel, säker, icke-depåplånbok för lagring av Avalanche-tillgångar.",
+        "desc": "@.project:(0) Wallet är en enkel, säker, icke-depåplånbok för lagring av @.project:(0)-tillgångar.",
         "access": {
             "title": "Välkommen tillbaka!",
-            "desc": "'Få tillgång' till din befintliga Avalanche-plånbok här.",
+            "desc": "'Få tillgång' till din befintliga @.project:(0)-plånbok här.",
             "submit": "Få tillgång till Wallet"
         },
         "create": {
-            "title": "Ny i Avalanche Wallet?",
-            "desc": "\"Skapa\" en ny plånbok för att skicka, ta emot och byta Avalanche-tillgångar.",
+            "title": "Ny i @.project:(0) Wallet?",
+            "desc": "\"Skapa\" en ny plånbok för att skicka, ta emot och byta @.project:(0)-tillgångar.",
             "submit": "Skapa ny Wallet"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Skapa en ny nyckelmening för att ställa in din Avalanche-plånbok.",
+        "generate": "Skapa en ny nyckelmening för att ställa in din @.project:(0)-plånbok.",
         "but_have": "Har du redan en plånbok?",
         "submit": "Skapa Nyckelmening",
         "cancel": "Avbryt",
         "mnemonic_title": "Denna är din nyckelmening.",
-        "mnemonic_desc": "Använd dessa 24 ord i följd för att återställa din Avalanche-plånbok",
+        "mnemonic_desc": "Använd dessa 24 ord i följd för att återställa din @.project:(0)-plånbok",
         "attention": "Observera!",
-        "warning": "Förvara den här nyckelmeningen på en säker plats. Vem som helst med denna nyckelmening kan komma åt din Avalanche-plånbok. Det finns inget sätt att återställa förlorade nyckelmeningar.",
+        "warning": "Förvara den här nyckelmeningen på en säker plats. Vem som helst med denna nyckelmening kan komma åt din @.project:(0)-plånbok. Det finns inget sätt att återställa förlorade nyckelmeningar.",
         "confirm": "Jag skrev min nyckelmening i en säker plats.",
         "regenerate": "Återskapa",
         "success_title": "Grattis!",
-        "success_desc": "Det är dags att komma åt din Avalanche-plånbok.",
+        "success_desc": "Det är dags att komma åt din @.project:(0)-plånbok.",
         "success_submit": "Tillgång till plånbok",
         "verify": "Verifiera",
         "verifytitle": "Verifiera Mnemoteknisk",
@@ -78,15 +79,15 @@
         "error_word": "Den mnemotekniska meningen du matade som ord matchar inte med den nuvarande meningen."
     },
     "top": {
-        "title1": "Härledd Avalanche-plånbok adress",
+        "title1": "Härledd @.project:(0)-plånbok adress",
         "title2": "Balans",
         "title3": "Subnät",
         "title4": "Nätverk",
         "nftcol": "NFT:s",
         "nftempty": "Du har inte samlat in några icke fungibla tokens.",
         "locked": "Låst",
-        "info2": "Jag köpte mynt i Tokenförsäljningen. Var är mina AVAX?",
-        "info2_desc": "Denna plånbok är ansluten till Avalanche Everest testnätverk. Ditt köp kommer att visas i plånboken efter lanseringen av Avalanche Mainnet.",
+        "info2": "Jag köpte mynt i Tokenförsäljningen. Var är mina @.native:(0)?",
+        "info2_desc": "Denna plånbok är ansluten till @.project:(0) Everest testnätverk. Ditt köp kommer att visas i plånboken efter lanseringen av Mainnet.",
         "hover1": "Visa Adress QR-kod",
         "hover2": "Skriv ut",
         "hover3": "Kopiera",
@@ -101,7 +102,7 @@
             "collectibles": "Samlingsföremål"
         },
         "address": {
-            "derived": "Härledd Avalanche-plånbok Adress",
+            "derived": "Härledd @.project:(0)-plånbok Adress",
             "desc": "Det här är din adress för att få medel. Din adress kommer att ändras efter varje insättning."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Tjäna",
-        "desc": "Du kan tjäna mer AVAX genom att placera dina befintliga tokens.",
+        "desc": "Du kan tjäna mer @.native:(0) genom att placera dina befintliga tokens.",
         "subtitle1": "Validera",
         "subtitle2": "Delegera",
         "subtitle3": "Cross Chain Överförelser",
         "subtitle4": "Beräknade belöningar",
-        "warning_1": "Du måste ha minst {0} AVAX i P-kedjan för att bli validerare.",
-        "warning_2": "Du måste ha minst {0} AVAX i P-kedjan för att bli delegator.",
+        "warning_1": "Du måste ha minst {0} @.native:(0) i P-kedjan för att bli validerare.",
+        "warning_2": "Du måste ha minst {0} @.native:(0) i P-kedjan för att bli delegator.",
         "validate_card": {
             "title": "Validera",
-            "desc": "Du har en Avalanche-nod som du vill placera med.",
+            "desc": "Du har en @.project:(0)-nod som du vill placera med.",
             "submit": "Lägg till Validerare"
         },
         "delegate_card": {
             "title": "Delegera",
-            "desc": "Du äger inte en Avalanche node, men du vill satsa med en annan node.",
+            "desc": "Du äger inte en @.project:(0) node, men du vill satsa med en annan node.",
             "submit": "Lägg till Delegerare"
         },
         "transfer_card": {
             "title": "Cross Chain Överföring",
-            "desc": "Satsa kräver AVAX i P-kedjan. Överför tokens mellan X och P.",
+            "desc": "Satsa kräver @.native:(0) i P-kedjan. Överför tokens mellan X och P.",
             "submit": "Överföring"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Satsningsbelopp",
-                "desc": "Mängden AVAX att låsa för satsning."
+                "desc": "Mängden @.native:(0) att låsa för satsning."
             },
             "fee": {
                 "label": "Delegeringsavgift",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Startdatum måste vara i framtiden och slutdatum måste vara efter startdatum.",
-                "amount": "Insatsbeloppet måste vara minst {0} AVAX",
+                "amount": "Insatsbeloppet måste vara minst {0} @.native:(0)",
                 "id": "Ogiltig Node ID. den måste börja med \"NodeID-\"",
                 "address": "Ogiltig belöningsadress."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Satsningsbelopp",
-                    "desc": "Antalet AVAX att låsas för satsning.",
-                    "desc2": "Det tillgängliga delegerade beloppet för denna node är {0} AVAX"
+                    "desc": "Antalet @.native:(0) att låsas för satsning.",
+                    "desc2": "Det tillgängliga delegerade beloppet för denna node är {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Belöningsadress",
@@ -345,7 +346,7 @@
                 "max_dur": "Högsta satsningstid är 1 år.",
                 "no_node": "Du måste ange en validerare.",
                 "val_end": "Delegationens slutdatum kan inte vara längre än validerings slutdatum.",
-                "amt": "Delegationsbeloppet måste vara minst {0} AVAX."
+                "amt": "Delegationsbeloppet måste vara minst {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Satsningstid",

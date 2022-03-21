@@ -198,7 +198,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         )
     }
 
-    // Delegates AVAX to the given node ID
+    // Delegates native Asset to the given node ID
     async delegate(
         nodeID: string,
         amt: BN,

@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Mật khẩu",
     "password_confirm": "Xác nhận mật khẩu",
     "private_key": "Khóa riêng tư",
     "address": "Địa chỉ",
     "add_pk": "Thêm khóa riêng tư",
     "home": {
-        "desc": "Avalanche Wallet là một chiếc ví đơn giản, bảo mật, không bị quản lý để lưu trữ các tài sản trên Avalanche",
+        "desc": "@.project:(0) Wallet là một chiếc ví đơn giản, bảo mật, không bị quản lý để lưu trữ các tài sản trên @.project:(0)",
         "access": {
             "title": "Chào mừng trở lại!",
-            "desc": "'Truy cập' ví Avalanche hiện có của bạn tại đây.",
+            "desc": "'Truy cập' ví @.project:(0) hiện có của bạn tại đây.",
             "submit": "Truy cập Ví"
         },
         "create": {
-            "title": "Bạn mới làm quen với Ví Avalanche?",
-            "desc": "Hãy 'Tạo' ví mới để gửi, nhận và hoán đổi tài sản Avalanche của bạn.",
+            "title": "Bạn mới làm quen với Ví @.project:(0)?",
+            "desc": "Hãy 'Tạo' ví mới để gửi, nhận và hoán đổi tài sản @.project:(0) của bạn.",
             "submit": "Tạo ví mới"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Tạo cụm từ khóa mới để thiết lập Ví Avalanche của bạn.",
+        "generate": "Tạo cụm từ khóa mới để thiết lập Ví @.project:(0) của bạn.",
         "but_have": "Đã có sẵn ví?",
         "submit": "Tạo cụm từ khóa",
         "cancel": "Huỷ bỏ",
         "mnemonic_title": "Đây là cụm từ khóa của bạn.",
-        "mnemonic_desc": "Hãy dùng 24 từ này theo thứ tự lần lượt để khôi phục Ví Avalanche của bạn",
+        "mnemonic_desc": "Hãy dùng 24 từ này theo thứ tự lần lượt để khôi phục Ví @.project:(0) của bạn",
         "attention": "Chú ý!",
-        "warning": "Hãy lưu cụm từ khóa này ở một vị trí an toàn. Bất kỳ ai có cụm từ khóa này đều có thể truy cập Ví Avalanche của bạn. Không có cách nào để khôi phục các cụm từ khóa bị mất.",
+        "warning": "Hãy lưu cụm từ khóa này ở một vị trí an toàn. Bất kỳ ai có cụm từ khóa này đều có thể truy cập Ví @.project:(0) của bạn. Không có cách nào để khôi phục các cụm từ khóa bị mất.",
         "confirm": "Tôi đã ghi lại cụm từ khóa của mình ở vị trí an toàn.",
         "regenerate": "Tạo lại",
         "success_title": "Xin chúc mừng!",
-        "success_desc": "Đã đến lúc truy cập Ví Avalanche của bạn.",
+        "success_desc": "Đã đến lúc truy cập Ví @.project:(0) của bạn.",
         "success_submit": "Truy cập ví",
         "verify": "Xác nhận",
         "verifytitle": "Xác nhận cụm từ ghi nhớ",
@@ -78,15 +79,15 @@
         "error_word": "Cụm từ ghi nhớ bạn đã nhập không khớp với cụm từ thực tế."
     },
     "top": {
-        "title1": "Nguồn gốc địa chỉ ví Avalanche",
+        "title1": "Nguồn gốc địa chỉ ví @.project:(0)",
         "title2": "Số dư ",
         "title3": "Mạng con",
         "title4": "Mạng",
         "nftcol": "NFTs",
         "nftempty": "Bạn chưa thu thập bất kỳ mã thông báo không thể thay thế nào.",
         "locked": "Đã khóa",
-        "info2": "Tôi đã mua AVAX trong đợt bán mã thông báo. AVAX của tôi ở đâu?",
-        "info2_desc": "Ví này được kết nối với mạng thử nghiệm Avalanche Everest. Các giao dịch mua sẽ xuất hiện trong ví của bạn sau khi mạng chính Avalanche khởi chạy.",
+        "info2": "Tôi đã mua @.native:(0) trong đợt bán mã thông báo. @.native:(0) của tôi ở đâu?",
+        "info2_desc": "Ví này được kết nối với mạng thử nghiệm @.project:(0) Everest. Các giao dịch mua sẽ xuất hiện trong ví của bạn sau khi mạng chính @.project:(0) khởi chạy.",
         "hover1": "Xem địa chỉ Mã QR",
         "hover2": "In",
         "hover3": "Sao chép",
@@ -101,7 +102,7 @@
             "collectibles": "Bộ sưu tầm"
         },
         "address": {
-            "derived": "Địa chỉ ví Avalanche phái sinh",
+            "derived": "Địa chỉ ví @.project:(0) phái sinh",
             "desc": "Đây là địa chỉ nhận tiền của bạn. Địa chỉ của bạn sẽ thay đổi sau mỗi lần gửi tiền."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Kiếm tiền",
-        "desc": "Bạn có thể kiếm thêm AVAX bằng cách stake số token hiện có của mình.",
+        "desc": "Bạn có thể kiếm thêm @.native:(0) bằng cách stake số token hiện có của mình.",
         "subtitle1": "Trình xác thực",
         "subtitle2": "Ủy quyền",
         "subtitle3": "Chuyển đổi giữa các Chain",
         "subtitle4": "Phần thưởng dự kiến",
-        "warning_1": "Bạn phải sở hữu tối thiểu {0} AVAX trên P-Chain để trở thành trình xác thực.",
-        "warning_2": "Bạn phải sở hữu tối thiểu {0} AVAX trên P-Chain để có thể ủy quyền.",
+        "warning_1": "Bạn phải sở hữu tối thiểu {0} @.native:(0) trên P-Chain để trở thành trình xác thực.",
+        "warning_2": "Bạn phải sở hữu tối thiểu {0} @.native:(0) trên P-Chain để có thể ủy quyền.",
         "validate_card": {
             "title": "Trình xác thực",
-            "desc": "Bạn sở hữu một nút Avalanche mà bạn muốn stake.",
+            "desc": "Bạn sở hữu một nút @.project:(0) mà bạn muốn stake.",
             "submit": "Thêm Trình xác thực"
         },
         "delegate_card": {
             "title": "Ủy quyền",
-            "desc": "Bạn không sở hữu nút Avalanche, nhưng bạn muốn stake bằng nút khác.",
+            "desc": "Bạn không sở hữu nút @.project:(0), nhưng bạn muốn stake bằng nút khác.",
             "submit": "Thêm ủy quyền"
         },
         "transfer_card": {
             "title": "Chuyển đổi Chain",
-            "desc": "Staking yêu cầu có AVAX trên P-Chain. Hãy chuyển token từ X sang P.",
+            "desc": "Staking yêu cầu có @.native:(0) trên P-Chain. Hãy chuyển token từ X sang P.",
             "submit": "Chuyển đổi"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Số tiền stake",
-                "desc": "Số lượng AVAX sẽ khóa để stake."
+                "desc": "Số lượng @.native:(0) sẽ khóa để stake."
             },
             "fee": {
                 "label": "Phí Ủy quyền",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Ngày bắt đầu phải ở trong tương lai và ngày kết thúc phải sau ngày bắt đầu.",
-                "amount": "Số tiền staking tối thiểu phải là {0} AVAX",
+                "amount": "Số tiền staking tối thiểu phải là {0} @.native:(0)",
                 "id": "ID Nút không hợp lệ. Phải bắt đầu bằng “NodeID-”",
                 "address": "Địa chỉ nhận thưởng không hợp lệ."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Số tiền stake",
-                    "desc": "Số lượng AVAX sẽ khóa để stake.",
-                    "desc2": "Số tiền có thể ủy quyền cho nút này là {0} AVAX"
+                    "desc": "Số lượng @.native:(0) sẽ khóa để stake.",
+                    "desc2": "Số tiền có thể ủy quyền cho nút này là {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Địa chỉ nhận thưởng",
@@ -345,7 +346,7 @@
                 "max_dur": "Thời gian staking tối đa là 1 năm.",
                 "no_node": "Bạn phải xác định một trình xác thực.",
                 "val_end": "Ngày kết thúc ủy quyền không thể xa hơn ngày kết thúc của trình xác thực.",
-                "amt": "Số tiền ủy quyền tối thiểu phải là {0} AVAX."
+                "amt": "Số tiền ủy quyền tối thiểu phải là {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Thời gian Staking",
@@ -388,7 +389,7 @@
         "loading": "Đang tải lịch sử giao dịch ..",
         "warn_loading": "Danh sách này có thể không đầy đủ và không theo thứ tự.",
         "error_api": "Không tìm thấy API Explorer",
-        "error_api_desc": "Bạn phải cung cấp một API AVAX Explorer cho mạng này để xem lịch sử giao dịch."
+        "error_api_desc": "Bạn phải cung cấp một API @.native:(0) Explorer cho mạng này để xem lịch sử giao dịch."
     },
     "modal": {
         "qr": {

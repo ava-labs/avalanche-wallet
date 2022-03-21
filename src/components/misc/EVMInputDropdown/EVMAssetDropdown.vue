@@ -34,7 +34,7 @@ export default class EVMAssetDropdown extends Vue {
     }
 
     get symbol() {
-        if (this.selected === 'native') return 'AVAX'
+        if (this.selected === 'native') return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
         else return this.selected.data.symbol
     }
 
@@ -65,7 +65,7 @@ export default class EVMAssetDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../main";
+@use '../../../main';
 .evm_dropdown {
     position: relative;
 }

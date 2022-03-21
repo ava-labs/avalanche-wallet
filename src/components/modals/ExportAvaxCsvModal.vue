@@ -1,7 +1,7 @@
 <template>
-    <modal ref="modal" title="Export AVAX Transfers" class="modal_main">
+    <modal ref="modal" title="Export Transfers" class="modal_main">
         <div class="csv_modal_body">
-            <p>Only X chain AVAX transactions will be exported.</p>
+            <p>Only X chain {{ nativeAssetSymbol }} transactions will be exported.</p>
             <p class="err" v-if="error">{{ error }}</p>
             <v-btn
                 class="button_secondary"
@@ -77,6 +77,10 @@ export default class ExportAvaxCsvModal extends Vue {
         return this.$store.state.Assets.AVA_ASSET_ID
     }
 
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+    }
+
     generateCSVFile() {
         let myAddresses = this.xAddressesStripped
         let avaxID = this.avaxID
@@ -141,7 +145,15 @@ export default class ExportAvaxCsvModal extends Vue {
         }
 
         let csvRows = rows.map((row) => avaxTransferDataToCsvRow(row))
-        let headers = ['Tx ID', 'Date', 'Memo', 'From', 'To', 'Sent/Received', 'Amount (AVAX)']
+        let headers = [
+            'Tx ID',
+            'Date',
+            'Memo',
+            'From',
+            'To',
+            'Sent/Received',
+            'Amount (' + this.$store.getters['Assets/AssetAVA'].symbol + ')',
+        ]
         let allRows = [headers, ...csvRows]
 
         let csvContent = createCSVContent(allRows)
@@ -153,7 +165,7 @@ export default class ExportAvaxCsvModal extends Vue {
             this.error = null
             this.generateCSVFile()
         } catch (e) {
-            this.error = e
+            this.error = e as Error
         }
     }
 }

@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Salasana",
     "password_confirm": "Vahvista Salasana",
     "private_key": "Private Key",
     "address": "Osoite",
     "add_pk": "Lisää Private Key",
     "home": {
-        "desc": "Avalanche-lompakko on yksinkertainen, turvallinen ja vastuuvapaa lompakko Avalanche-varojen säilyttämiseen.",
+        "desc": "@.project:(0)-lompakko on yksinkertainen, turvallinen ja vastuuvapaa lompakko @.project:(0)-varojen säilyttämiseen.",
         "access": {
             "title": "Tervetuloa Takaisin!",
-            "desc": "'Tarkastele' nykyistä Avalanche-lompakkoasi täällä.",
+            "desc": "'Tarkastele' nykyistä @.project:(0)-lompakkoasi täällä.",
             "submit": "Tarkastele Lompakkoa"
         },
         "create": {
-            "title": "Uusi Avalanche Lompakossa?",
-            "desc": "'Luo' uusi lompakko lähettääksesi, vastaanottaaksesi ja vaihtaaksesi Avalanche-varojasi.",
+            "title": "Uusi @.project:(0) Lompakossa?",
+            "desc": "'Luo' uusi lompakko lähettääksesi, vastaanottaaksesi ja vaihtaaksesi @.project:(0)-varojasi.",
             "submit": "Luo Uusi Lompakko"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Luo uusi avainlauseke Avalanche-lompakon määrittämiseksi.",
+        "generate": "Luo uusi avainlauseke @.project:(0)-lompakon määrittämiseksi.",
         "but_have": "Onko sinulla jo lompakko?",
         "submit": "Luo Avainlauseke",
         "cancel": "Peruuta",
         "mnemonic_title": "Tämä on avainlauseesi.",
-        "mnemonic_desc": "Käytä näitä 24 sanaa peräkkäin palauttaaksesi Avalanche-lompakon",
+        "mnemonic_desc": "Käytä näitä 24 sanaa peräkkäin palauttaaksesi @.project:(0)-lompakon",
         "attention": "Huomio!",
-        "warning": "Säilytä tämä avainlause turvallisessa paikassa. Kuka tahansa salasanan tietävä henkilö voi käyttää Avalanche-lompakkoasi. Kadonneita avainlauseita ei ole mahdollista palauttaa.",
+        "warning": "Säilytä tämä avainlause turvallisessa paikassa. Kuka tahansa salasanan tietävä henkilö voi käyttää @.project:(0)-lompakkoasi. Kadonneita avainlauseita ei ole mahdollista palauttaa.",
         "confirm": "Kirjoitin avainsanani turvalliseen paikkaan.",
         "regenerate": "Elvytä",
         "success_title": "Onneksi Olkoon!",
-        "success_desc": "On aika käyttää Avalanche-lompakkoasi.",
+        "success_desc": "On aika käyttää @.project:(0)-lompakkoasi.",
         "success_submit": "Tarkastele Lompakkoa",
         "verify": "Vahvista",
         "verifytitle": "Vahvista Muistilauseke",
@@ -78,15 +79,15 @@
         "error_word": "Sanalle kirjoittamasi muistilauseke ei vastaa todellista ilmausta."
     },
     "top": {
-        "title1": "Johdettu Avalanche-lompakon osoite",
+        "title1": "Johdettu @.project:(0)-lompakon osoite",
         "title2": "Saldo",
         "title3": "Aliverkko",
         "title4": "Verkko",
         "nftcol": "NFT:t",
         "nftempty": "Et ole kerännyt yhtään ei-korvattavaa rahaketta.",
         "locked": "Lukittu",
-        "info2": "Ostin kolikoita Token Sale -sivustolta. Missä AVAXINI on?",
-        "info2_desc": "Tämä lompakko on kytketty Avalanche Everest -testiverkkoon. Ostoksesi näkyvät lompakossa Avalanche Mainnetin käynnistämisen jälkeen.",
+        "info2": "Ostin kolikoita Token Sale -sivustolta. Missä @.native:(0)INI on?",
+        "info2_desc": "Tämä lompakko on kytketty @.project:(0) Everest -testiverkkoon. Ostoksesi näkyvät lompakossa Mainnetin käynnistämisen jälkeen.",
         "hover1": "Näytä Osoitteen QR-koodi",
         "hover2": "Tulosta",
         "hover3": "Kopioi",
@@ -101,7 +102,7 @@
             "collectibles": "Keräilyesineet"
         },
         "address": {
-            "derived": "Johdettu Avalanche-lompakon osoite",
+            "derived": "Johdettu @.project:(0)-lompakon osoite",
             "desc": "Tämä on osoitteesi varojen vastaanottamiseksi. Osoitteesi muuttuu jokaisen talletuksen jälkeen."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Ansaitse",
-        "desc": "Voit tienata enemmän AVAXIA panostamalla olemassa olevat rahakkeet.",
+        "desc": "Voit tienata enemmän @.native:(0)IA panostamalla olemassa olevat rahakkeet.",
         "subtitle1": "Vahvista",
         "subtitle2": "Delegoi",
         "subtitle3": "Cross Chain-Siirto",
         "subtitle4": "Arvioidut Palkkiot",
-        "warning_1": "Sinulla on oltava vähintään {0} AVAXIA P-ketjussa, jotta voit tulla vahvistajaksi.",
-        "warning_2": "Sinulla on oltava vähintään {0} AVAXIA P-ketjussa, jotta voit tulla delegoijaksi.",
+        "warning_1": "Sinulla on oltava vähintään {0} @.native:(0)IA P-ketjussa, jotta voit tulla vahvistajaksi.",
+        "warning_2": "Sinulla on oltava vähintään {0} @.native:(0)IA P-ketjussa, jotta voit tulla delegoijaksi.",
         "validate_card": {
             "title": "Vahvista",
-            "desc": "Sinulla on Avalanche-node, johon haluat panostaa.",
+            "desc": "Sinulla on @.project:(0)-node, johon haluat panostaa.",
             "submit": "Lisää Vahvistaja"
         },
         "delegate_card": {
             "title": "Delegoi",
-            "desc": "Et omista Avalanche-noodia, mutta haluat asettaa panoksen toisella noodilla.",
+            "desc": "Et omista @.project:(0)-noodia, mutta haluat asettaa panoksen toisella noodilla.",
             "submit": "Lisää Delegoija"
         },
         "transfer_card": {
             "title": "Cross Chain-Siirto",
-            "desc": "Panostaminen vaatii AVAXIN P-ketjussa. Siirrä rahakkeita X:n ja P:n välillä.",
+            "desc": "Panostaminen vaatii @.native:(0)IN P-ketjussa. Siirrä rahakkeita X:n ja P:n välillä.",
             "submit": "Siirrä"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Panossumma",
-                "desc": "Lukittavan AVAXIN määrä panostamista varten."
+                "desc": "Lukittavan @.native:(0)IN määrä panostamista varten."
             },
             "fee": {
                 "label": "Delegointimaksu",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Aloituspäivän on oltava tulevaisuudessa ja lopetuspäivän on oltava alkamispäivän jälkeen.",
-                "amount": "Panoksen määrän on oltava vähintään {0} AVAXIA",
+                "amount": "Panoksen määrän on oltava vähintään {0} @.native:(0)IA",
                 "id": "Väär Node ID. Tämän tulee alkaa \"NodeID-\"",
                 "address": "Väärä palkkio-osoite."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Panossumma",
-                    "desc": "Lukittavan AVAXIN määrä panostamista varten.",
-                    "desc2": "Tämän noodin käytettävissä oleva delegointimäärä on {0} AVAXIA"
+                    "desc": "Lukittavan @.native:(0)IN määrä panostamista varten.",
+                    "desc2": "Tämän noodin käytettävissä oleva delegointimäärä on {0} @.native:(0)IA"
                 },
                 "reward": {
                     "label": "Palkkion Osoite",
@@ -345,7 +346,7 @@
                 "max_dur": "Suurin panostuksen kesto on 1 vuosi.",
                 "no_node": "Sinun on määritettävä vahvistaja.",
                 "val_end": "Delegaation lopetuspäivä ei voi olla pidempi kuin vahvistajan lopetuspäivä.",
-                "amt": "Valtuutuksen määrän on oltava vähintään {0} AVAXIA."
+                "amt": "Valtuutuksen määrän on oltava vähintään {0} @.native:(0)IA."
             },
             "summary": {
                 "duration": "Panoksen Kesto",

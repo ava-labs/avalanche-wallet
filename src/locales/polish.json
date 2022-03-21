@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Hasło",
     "password_confirm": "Potwierdźic hasło",
     "private_key": "Prywatny klucz",
     "address": "Adres",
     "add_pk": "Dodać prywatny klucz",
     "home": {
-        "desc": "Portfel Avalanche to prosty, bezpieczny portfel bez zabezpieczenia do przechowywania aktywów Avalanche.",
+        "desc": "Portfel @.project:(0) to prosty, bezpieczny portfel bez zabezpieczenia do przechowywania aktywów @.project:(0).",
         "access": {
             "title": "Witamy z powrotem!",
-            "desc": "„Uzyskaj dostęp” do swojego istniejącego portfela Avalanche tutaj.",
+            "desc": "„Uzyskaj dostęp” do swojego istniejącego portfela @.project:(0) tutaj.",
             "submit": "Uzyskaj dostęp do Portfela"
         },
         "create": {
-            "title": "Nowy w portfelu Avalanche?",
-            "desc": "„Utwórz” nowy portfel, aby wysyłać, odbierać i wymieniać aktywa Avalanche.",
+            "title": "Nowy w portfelu @.project:(0)?",
+            "desc": "„Utwórz” nowy portfel, aby wysyłać, odbierać i wymieniać aktywa @.project:(0).",
             "submit": "Stworzyćz nowy portfel"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Wygeneruj nową frazę kluczową, aby skonfigurować portfel Avalanche.",
+        "generate": "Wygeneruj nową frazę kluczową, aby skonfigurować portfel @.project:(0).",
         "but_have": "Czy masz już portfel?",
         "submit": "Wygenerować Kluczowa Fraza",
         "cancel": "Anulować",
         "mnemonic_title": "To jest twoja kluczowa fraza.",
         "mnemonic_desc": "Użyj tych 24 słów w kolejności, aby odzyskać swój portfel lawinowy",
         "attention": "Uwaga!",
-        "warning": "Przechowuj tę frazę kluczową w bezpiecznym miejscu. Każdy, kto ma tę kluczową frazę, może uzyskać dostęp do Twojego portfela Avalanche. Nie ma sposobu na odzyskanie utraconych fraz kluczowych.",
+        "warning": "Przechowuj tę frazę kluczową w bezpiecznym miejscu. Każdy, kto ma tę kluczową frazę, może uzyskać dostęp do Twojego portfela @.project:(0). Nie ma sposobu na odzyskanie utraconych fraz kluczowych.",
         "confirm": "Zapisałem swoją kluczową frazę w bezpiecznym miejscu.",
         "regenerate": "Regenerować",
         "success_title": "Gratulujemy!",
-        "success_desc": "Nadszedł czas, aby uzyskać dostęp do portfela Avalanche.",
+        "success_desc": "Nadszedł czas, aby uzyskać dostęp do portfela @.project:(0).",
         "success_submit": "Dostęp do portfela",
         "verify": "Potwierdzać",
         "verifytitle": "Potwierdzać Mnemoniczną Frazę",
@@ -78,15 +79,15 @@
         "error_word": "Podana mnemoniczna fraza nie pasuje do rzeczywistej."
     },
     "top": {
-        "title1": "Otrzymany adres portfela Avalanche",
+        "title1": "Otrzymany adres portfela @.project:(0)",
         "title2": "Saldo",
         "title3": "Podsieć",
         "title4": "Sieć",
         "nftcol": "NFTs",
         "nftempty": "Nie masz żadnych zamienne tokenów.",
         "locked": "Zablokowane",
-        "info2": "Kupiłem monety podczas wyprzedaży. Gdzie są moje tokeny AVAX?",
-        "info2_desc": "Ten portfel jest połączony z testową Avalanche Everest siecią. Twój zakup pojawi się w portfelu po uruchomieniu Avalanche Mainnet.",
+        "info2": "Kupiłem monety podczas wyprzedaży. Gdzie są moje tokeny @.native:(0)?",
+        "info2_desc": "Ten portfel jest połączony z testową @.project:(0) Everest siecią. Twój zakup pojawi się w portfelu po uruchomieniu Mainnet.",
         "hover1": "Wyświetl QR kod adresu",
         "hover2": "Wydrukować",
         "hover3": "Kopiować",
@@ -101,7 +102,7 @@
             "collectibles": "Artykuły kolekcjonerskie"
         },
         "address": {
-            "derived": "Pochodny adres portfela Avalanche",
+            "derived": "Pochodny adres portfela @.project:(0)",
             "desc": "To jest Twój adres, na który należy przekazywać środki. Twój adres zmieni się po każdej wpłacie."
         }
     },
@@ -172,16 +173,16 @@
     },
     "earn": {
         "title": "Zarabiaj",
-        "desc": "Możesz zarobić więcej AVAX, stawiając swoje istniejące tokeny.",
+        "desc": "Możesz zarobić więcej @.native:(0), stawiając swoje istniejące tokeny.",
         "subtitle1": "Ratyfikuj",
         "subtitle2": "Delegat",
         "subtitle3": "Transfer krzyżowy",
         "subtitle4": "Szacowane nagrody",
-        "warning_1": "Aby zostać walidatorem, musisz mieć co najmniej {0} AVAX w łańcuchu P.",
-        "warning_2": "Aby zostać delegatem, musisz mieć co najmniej {0} AVAX w łańcuchu P.",
+        "warning_1": "Aby zostać walidatorem, musisz mieć co najmniej {0} @.native:(0) w łańcuchu P.",
+        "warning_2": "Aby zostać delegatem, musisz mieć co najmniej {0} @.native:(0) w łańcuchu P.",
         "validate_card": {
             "title": "Waliduj",
-            "desc": "Masz węzeł Avalanche, z którym chcesz postawić.",
+            "desc": "Masz węzeł @.project:(0), z którym chcesz postawić.",
             "submit": "Dodaj walidatora"
         },
         "delegate_card": {
@@ -191,7 +192,7 @@
         },
         "transfer_card": {
             "title": "Transfer krzyżowy",
-            "desc": "Staking wymaga AVAX w łańcuchu P. Przenieś tokeny między X i P.",
+            "desc": "Staking wymaga @.native:(0) w łańcuchu P. Przenieś tokeny między X i P.",
             "submit": "Transfer"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Kwota stake",
-                "desc": "Kwota AVAX do zablokowania do obstawienia."
+                "desc": "Kwota @.native:(0) do zablokowania do obstawienia."
             },
             "fee": {
                 "label": "Opłata delegacyjna",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Data rozpoczęcia musi przypadać w przyszłości, a data zakończenia musi być późniejsza niż data rozpoczęcia.",
-                "amount": "Kwota stawki musi wynosić co najmniej {0} AVAX",
+                "amount": "Kwota stawki musi wynosić co najmniej {0} @.native:(0)",
                 "id": "Nieprawidłowy identyfikator węzła. Musi zaczynać się od „NodeID-”",
                 "address": "Nieprawidłowy adres nagrody."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Kwota stake",
-                    "desc": "Kwota AVAX do zablokowania do obstawienia.",
-                    "desc2": "Dostępna kwota delegowania dla tego węzła to {0} AVAX"
+                    "desc": "Kwota @.native:(0) do zablokowania do obstawienia.",
+                    "desc2": "Dostępna kwota delegowania dla tego węzła to {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Adres nagrody",
@@ -345,7 +346,7 @@
                 "max_dur": "Maksymalny okres obstawiania to 1 rok.",
                 "no_node": "Musisz określić walidator.",
                 "val_end": "Data zakończenia delegacji nie może być dłuższa niż data zakończenia walidatora.",
-                "amt": "Kwota delegacji musi wynosić co najmniej {0} AVAX."
+                "amt": "Kwota delegacji musi wynosić co najmniej {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Czas trwania obstawiania",

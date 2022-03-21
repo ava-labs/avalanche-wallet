@@ -9,7 +9,7 @@ class AvaAsset {
     denomination: number
     amount: BN
     amountLocked: BN
-    // AVAX P chain, Wallet Staking
+    // Native asset P chain, Wallet Staking
     amountExtra: BN
     private readonly pow: Big
     constructor(id: string, name: string, symbol: string, denomination: number) {

@@ -77,6 +77,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     ethBalance: BN
     config: ILedgerAppConfig
     ethHdNode: HDKey
+    nativeAssetSymbol: string
 
     constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth: HDKey, ethApp: Eth) {
         super(hdkey, hdEth)
@@ -85,6 +86,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         this.type = 'ledger'
         this.config = config
         this.ethHdNode = hdEth
+        this.nativeAssetSymbol = ava.getPrimaryAssetAlias()
 
         if (hdEth) {
             const ethKey = hdEth
@@ -491,7 +493,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
                 messages.push({
                     title: 'Output',
-                    value: `${addr} - ${amt.toString()} AVAX`,
+                    value: `${addr} - ${amt.toString()} ${this.nativeAssetSymbol}`,
                 })
             }
         } else {
@@ -510,7 +512,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                         if (!changePath || changeAddr !== addr)
                             messages.push({
                                 title: 'Output',
-                                value: `${addr} - ${amt.toString()} AVAX`,
+                                value: `${addr} - ${amt.toString()} ${this.nativeAssetSymbol}`,
                             })
                     })
             }
@@ -559,7 +561,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             messages.push({ title: 'NodeID', value: nodeID })
             messages.push({ title: 'Start Time', value: startTime })
             messages.push({ title: 'End Time', value: endTime })
-            messages.push({ title: 'Total Stake', value: `${stakeAmt} AVAX` })
+            messages.push({ title: 'Total Stake', value: `${stakeAmt} ${this.nativeAssetSymbol}` })
             messages.push({
                 title: 'Stake',
                 value: `${stakeAmt} to ${this.platformHelper.getCurrentAddress()}`,
@@ -596,7 +598,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             (txType === EVMConstants.EXPORTTX && chainId === 'C') ||
             (txType === EVMConstants.IMPORTTX && chainId === 'C')
         ) {
-            messages.push({ title: 'Fee', value: `${0.001} AVAX` })
+            messages.push({ title: 'Fee', value: `${0.001} ${this.nativeAssetSymbol}` })
         }
 
         return messages
@@ -649,7 +651,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
             let feeMsg: ILedgerBlockMessage = {
                 title: 'Fee',
-                value: feeNano.toLocaleString() + ' nAVAX',
+                value: feeNano.toLocaleString() + ` n${this.nativeAssetSymbol}`,
             }
 
             msgs = [callMsg, ...paramMsgs, feeMsg]

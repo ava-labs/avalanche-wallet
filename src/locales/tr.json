@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Parola",
     "password_confirm": "Parolayı Doğrula",
     "private_key": "Özel Anahtar",
     "address": "Adres",
     "add_pk": "Özel Anahtar Ekle",
     "home": {
-        "desc": "Avalanche Cüzdan, dijital varlıklarınızı saklamaya yönelik basit, güvenli, gözetimsiz bir cüzdandır.",
+        "desc": "@.project:(0) Cüzdan, dijital varlıklarınızı saklamaya yönelik basit, güvenli, gözetimsiz bir cüzdandır.",
         "access": {
             "title": "Tekrar Hoşgeldiniz!",
-            "desc": "Mevcut AVAX cüzdanınızı buradan açabilirsiniz.",
+            "desc": "Mevcut @.native:(0) cüzdanınızı buradan açabilirsiniz.",
             "submit": "Cüzdanı Aç"
         },
         "create": {
-            "title": "Avalanche Cüzdan'da yeni misiniz?",
-            "desc": "Avalanche varlıklarınızı göndermek, almak ve takas etmek için yeni bir cüzdan oluşturun.",
+            "title": "@.project:(0) Cüzdan'da yeni misiniz?",
+            "desc": "@.project:(0) varlıklarınızı göndermek, almak ve takas etmek için yeni bir cüzdan oluşturun.",
             "submit": "Yeni Cüzdan Oluşturun"
         }
     },
@@ -69,18 +70,18 @@
         }
     },
     "create": {
-        "generate": "Avalanche Cüzdanınızı kurmak için yeni bir anahtar cümle oluşturun.",
+        "generate": "@.project:(0) Cüzdanınızı kurmak için yeni bir anahtar cümle oluşturun.",
         "but_have": "Halihazırda bir cüzdanınız var mı?",
         "submit": "Anımsatıcı Anahtar Cümle Oluştur",
         "cancel": "İptal",
         "mnemonic_title": "Bu sizin anahtar cümleniz.",
-        "mnemonic_desc": "Avalanche Cüzdanınızı tekrar yaratmak için bu 24 kelimeyi sıralı şekilde kullanın",
+        "mnemonic_desc": "@.project:(0) Cüzdanınızı tekrar yaratmak için bu 24 kelimeyi sıralı şekilde kullanın",
         "attention": "Dikkat!",
-        "warning": "Bu anahtar cümleyi güvenli bir yerde saklayın. Bu anahtar cümleye sahip olan herkes Avalanche Cüzdanınıza erişebilir. Kayıp anahtar cümleleri kurtarmanın hiçbir yolu yok.",
+        "warning": "Bu anahtar cümleyi güvenli bir yerde saklayın. Bu anahtar cümleye sahip olan herkes @.project:(0) Cüzdanınıza erişebilir. Kayıp anahtar cümleleri kurtarmanın hiçbir yolu yok.",
         "confirm": "Anahtar cümlemi güvenli bir yere yazdım.",
         "regenerate": "Tekrar Oluştur",
         "success_title": "Tebrikler!",
-        "success_desc": "Avalanche Cüzdanınıza erişmenin tam zamanı.",
+        "success_desc": "@.project:(0) Cüzdanınıza erişmenin tam zamanı.",
         "success_submit": "Cüzdanı Aç",
         "verify": "Doğrula",
         "verifytitle": "Anımsatıcı Kelime Öbeğinizi Doğrulayın",
@@ -89,15 +90,15 @@
         "error_word": "Girmiş olduğunuz anımsatıcı kelimeler gerçek kelime öbeği ile eşleşmedi."
     },
     "top": {
-        "title1": "Türetilmiş Avalanche Cüzdan Adresi",
+        "title1": "Türetilmiş @.project:(0) Cüzdan Adresi",
         "title2": "Bakiye",
         "title3": "Alt Ağ",
         "title4": "Ağ",
         "nftcol": "NFT'ler",
         "nftempty": "Hiç NFT sahibi değilsiniz.",
         "locked": "Kilitli",
-        "info2": "Token satışından AVAX aldım. Almış olduğum AVAX'lar nerede?",
-        "info2_desc": "Bu cüzdan Avalanche Everest test ağına bağlandı. Satın almış olduğunuz AVAX'lar Avalanche Ana Ağı hayata geçince cüzdanınızda görünebilir olacak.",
+        "info2": "Token satışından @.native:(0) aldım. Almış olduğum @.native:(0)'lar nerede?",
+        "info2_desc": "Bu cüzdan @.project:(0) Everest test ağına bağlandı. Satın almış olduğunuz @.native:(0)'lar @.project:(0) Ana Ağı hayata geçince cüzdanınızda görünebilir olacak.",
         "hover1": "Adresin QR Kodunu Görüntüle",
         "hover2": "Yazdır",
         "hover3": "Kopyala",
@@ -112,14 +113,14 @@
             "collectibles": "Koleksiyon"
         },
         "address": {
-            "derived": "Türetilmiş Avalanche Cüzdan Adresi",
+            "derived": "Türetilmiş @.project:(0) Cüzdan Adresi",
             "desc": "Bu ödeme alacağınız adrestir. Adresiniz her para yatırma işleminden sonra değişecektir."
         }
     },
     "transfer": {
         "title": "Gönder",
         "no_cash": "İşlem yapabilmek için cüzdanınızda varlığa sahip olmalısınız.",
-        "faucet": "AVAX musluğunu kontrol ettiniz mi?",
+        "faucet": "@.native:(0) musluğunu kontrol ettiniz mi?",
         "to": "Gönderilecek Cüzdan Adresi",
         "fees": "Gönderim Ücreti",
         "fee_tx": "İşlem Masrafı",
@@ -190,26 +191,26 @@
     },
     "earn": {
         "title": "Kazan",
-        "desc": "Var olan coinleriniz stake yaparak daha fazla AVAX kazanabilirsiniz.",
+        "desc": "Var olan coinleriniz stake yaparak daha fazla @.native:(0) kazanabilirsiniz.",
         "subtitle1": "Doğrula",
         "subtitle2": "Devret",
         "subtitle3": "Çapraz Zincir Transferi",
         "subtitle4": "Tahmini Ödüller",
-        "warning_1": "Doğrulayıcı olabilmeniz için P zincirinde en az {0} AVAX'ınızın olması gerekir.",
-        "warning_2": "Devredici olabilmeniz için P zincirinde en az {0} AVAX'ınızın olması gerekir.",
+        "warning_1": "Doğrulayıcı olabilmeniz için P zincirinde en az {0} @.native:(0)'ınızın olması gerekir.",
+        "warning_2": "Devredici olabilmeniz için P zincirinde en az {0} @.native:(0)'ınızın olması gerekir.",
         "validate_card": {
             "title": "Doğrula",
-            "desc": "Stake yapmak istediğiniz bir Avalanche düğümünüz var.",
+            "desc": "Stake yapmak istediğiniz bir @.project:(0) düğümünüz var.",
             "submit": "Doğrulayıcı Ekle"
         },
         "delegate_card": {
             "title": "Devret",
-            "desc": "Bir Avalanche düğümüne sahip değilsiniz ancak bir başka düğüm kullanarak stake yapmak istiyorsunuz.",
+            "desc": "Bir @.project:(0) düğümüne sahip değilsiniz ancak bir başka düğüm kullanarak stake yapmak istiyorsunuz.",
             "submit": "Devredici Ekle"
         },
         "transfer_card": {
             "title": "Çapraz Zincir Transferi",
-            "desc": "Staking, P zincirinde AVAX gerektirir. X ve P arasında coin transferi yap.",
+            "desc": "Staking, P zincirinde @.native:(0) gerektirir. X ve P arasında coin transferi yap.",
             "submit": "Transfer"
         },
         "rewards_card": {
@@ -260,7 +261,7 @@
             },
             "amount": {
                 "label": "Stake Miktarı",
-                "desc": "Stake için kilitlenecek AVAX miktarı."
+                "desc": "Stake için kilitlenecek @.native:(0) miktarı."
             },
             "fee": {
                 "label": "Devretme Masrafı",
@@ -301,9 +302,9 @@
             "errs": {
                 "duration_warn": "UYARI: Delegatörleri kabul etmek için validasyon sürenizin en az 14 günü olmalıdır.",
                 "date": "Başlangıç tarihi gelecekte olmalıdır ve bitiş tarihi de başlangıç tarihinden sonra olmalıdır.",
-                "amount": "Stake miktarı en az {0} AVAX olmalıdır",
+                "amount": "Stake miktarı en az {0} @.native:(0) olmalıdır",
                 "id": "Geçersiz Düğüm Kimliği.",
-                "fee": "Delegasyon ücretiniz en az {0} Avax olmalıdır",
+                "fee": "Delegasyon ücretiniz en az {0} @.native:(0) olmalıdır",
                 "address": "Geçersiz adres. Ödül adresi geçerli bir P zinciri adresi olmalıdır."
             }
         },
@@ -352,8 +353,8 @@
                 },
                 "amount": {
                     "label": "Stake Miktarı",
-                    "desc": "Stake için kilitlenecek AVAX miktarı.",
-                    "desc2": "Bu düğüme yönelik uygun devretme miktarı {0} AVAX'tır"
+                    "desc": "Stake için kilitlenecek @.native:(0) miktarı.",
+                    "desc2": "Bu düğüme yönelik uygun devretme miktarı {0} @.native:(0)'tır"
                 },
                 "reward": {
                     "label": "Ödül Adresi",
@@ -378,7 +379,7 @@
                 "max_dur": "Maksimum stake süresi 1 yıldır.",
                 "no_node": "Bir doğrulayıcı belirtmelisiniz.",
                 "val_end": "Devretme bitiş tarihi, doğrulayıcının bitiş tarihinden daha uzun olamaz.",
-                "amt": "Devretme miktarı en az {0} AVAX olmalıdır."
+                "amt": "Devretme miktarı en az {0} @.native:(0) olmalıdır."
             },
             "summary": {
                 "duration": "Stake Süresi",

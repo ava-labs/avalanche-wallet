@@ -76,22 +76,21 @@ export default {
                 vmid: 'description',
                 name: 'description',
                 content:
-                    'Avalanche wallet is a simple, highly secure, non-custodial crypto wallet for storing AVAX.',
+                    'Camino wallet is a simple, highly secure, non-custodial crypto wallet for storing CAM.',
             },
             {
                 vmid: 'og:description',
                 name: 'description',
                 content:
-                    'Avalanche wallet is a simple, highly secure, non-custodial crypto wallet for storing AVAX.',
+                    'Camino wallet is a simple, highly secure, non-custodial crypto wallet for storing CAM.',
             },
             {
                 vmid: 'og:title',
                 name: 'og:title',
-                content: 'Fastest Performing and Secure DeFi Wallet | Avalanche Wallet',
+                content: 'Secure Camino Wallet',
             },
         ],
-        title: 'Fastest Performing and Secure DeFi Wallet',
-        titleTemplate: '%s | Avalanche Wallet',
+        title: 'Secure Camino Wallet',
     },
 }
 </script>

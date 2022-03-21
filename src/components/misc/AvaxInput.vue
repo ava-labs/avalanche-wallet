@@ -12,7 +12,7 @@
                 @change="amount_in"
             ></BigNumInput>
         </div>
-        <p class="ticker">AVAX</p>
+        <p class="ticker">{{ nativeAssetSymbol }}</p>
         <div v-if="balance" class="balance">
             <div>
                 <p>
@@ -51,6 +51,7 @@ export default class AvaxInput extends Vue {
     max?: BN | null
 
     @Prop() balance?: Big | null
+    @Prop() alias?: string
 
     maxOut(ev: MouseEvent) {
         ev.preventDefault()
@@ -72,6 +73,10 @@ export default class AvaxInput extends Vue {
 
     get priceDict(): priceDict {
         return this.$store.state.prices
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

@@ -73,7 +73,7 @@
                     <div class="fee">
                         <p>
                             {{ $t('studio.mint.form_col.fee') }}
-                            <span>{{ txFee.toLocaleString() }} AVAX</span>
+                            <span>{{ txFee.toLocaleString() }} {{ nativeAssetSymbol }}</span>
                         </p>
                     </div>
                     <v-btn
@@ -352,6 +352,10 @@ export default class MintNft extends Vue {
     onError(err: any) {
         this.isLoading = false
     }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+    }
 }
 </script>
 <style lang="scss">
@@ -392,7 +396,7 @@ export default class MintNft extends Vue {
 }
 </style>
 <style lang="scss" scoped>
-@use "../../../../main";
+@use '../../../../main';
 .mint_form {
     padding: 10px 0;
 }

@@ -13,7 +13,7 @@
             <div>
                 <label>{{ $t('earn.shared.utxo_select.available') }}</label>
                 <p>
-                    <span>{{ selectedBalanceText }} AVAX</span>
+                    <span>{{ selectedBalanceText }} {{ nativeAssetSymbol }}</span>
                 </p>
             </div>
 
@@ -32,7 +32,6 @@ import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
 import { AmountOutput, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
 import { WalletType } from '@/js/wallets/types'
 
-import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 @Component({
@@ -100,6 +99,10 @@ export default class UtxoSelectForm extends Vue {
     }
     get selectedBalanceText() {
         return bnToBig(this.selectedBalance, 9).toLocaleString()
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 
     @Watch('platformUtxos')

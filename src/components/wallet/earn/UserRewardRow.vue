@@ -19,11 +19,11 @@
             </div>
             <div>
                 <label>{{ $t('earn.rewards.row.stake') }}</label>
-                <p class="reward">{{ stakeBig.toLocaleString() }} AVAX</p>
+                <p class="reward">{{ stakeBig.toLocaleString() }} {{ nativeAssetSymbol }}</p>
             </div>
             <div style="text-align: right">
                 <label>{{ $t('earn.rewards.row.reward') }}</label>
-                <p class="reward">{{ rewardBig.toLocaleString() }} AVAX</p>
+                <p class="reward">{{ rewardBig.toLocaleString() }} {{ nativeAssetSymbol }}</p>
             </div>
         </div>
     </div>
@@ -90,6 +90,10 @@ export default class UserRewardRow extends Vue {
         let range = this.endtime - this.startTime
         let res = (this.now - this.startTime) / range
         return Math.min(res, 1)
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

@@ -98,18 +98,11 @@ export default class FungibleRow extends Vue {
     }
 
     get name(): string {
-        let name = this.asset.name
-        // TODO: Remove this hack after network change
-        if (name === 'AVA') return 'AVAX'
-        return name
+        return this.asset.name
     }
 
     get symbol(): string {
-        let sym = this.asset.symbol
-
-        // TODO: Remove this hack after network change
-        if (sym === 'AVA') return 'AVAX'
-        return sym
+        return this.asset.symbol
     }
 
     get amount() {

@@ -37,7 +37,10 @@
                     />
                 </div>
                 <div>
-                    <p>{{ $t('studio.family.fee') }}: {{ txFee.toLocaleString() }} AVAX</p>
+                    <p>
+                        {{ $t('studio.family.fee') }}: {{ txFee.toLocaleString() }}
+                        {{ nativeAssetSymbol }}
+                    </p>
                 </div>
                 <p v-if="error" class="err">{{ error }}</p>
                 <v-btn :loading="isLoading" type="submit" class="button_secondary" small>
@@ -166,6 +169,10 @@ export default class NewCollectibleFamily extends Vue {
     get mintUtxos() {
         // return this.$store.getters.walletNftMintUTXOs
         return this.$store.state.Assets.nftMintUTXOs
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

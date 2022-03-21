@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Senha",
     "password_confirm": "Confirmar Senha",
     "private_key": "Private Key",
     "address": "Endereço",
     "add_pk": "Adicionar Private Key",
     "home": {
-        "desc": "A Avalanche Wallet é uma carteira simples, segura e sem custódia para armazenar os ativos do Avalanche.",
+        "desc": "A @.project:(0) Wallet é uma carteira simples, segura e sem custódia para armazenar os ativos do @.project:(0).",
         "access": {
             "title": "Bem Vindo de Volta!",
-            "desc": "'Acesse' sua Avalanche wallet existente aqui.",
+            "desc": "'Acesse' sua @.project:(0) wallet existente aqui.",
             "submit": "Acessar a Wallet"
         },
         "create": {
-            "title": "Você é novo na Avalanche Wallet?",
-            "desc": "'Criar' uma nova wallet para enviar, receber e trocar os ativos do Avalanche.",
+            "title": "Você é novo na @.project:(0) Wallet?",
+            "desc": "'Criar' uma nova wallet para enviar, receber e trocar os ativos do @.project:(0).",
             "submit": "Criar Nova Wallet"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Gerar uma nova frase-chave para configurar sua Avalanche Wallet.",
+        "generate": "Gerar uma nova frase-chave para configurar sua @.project:(0) Wallet.",
         "but_have": "Já tem uma wallet?",
         "submit": "Gerar Frase-Chave",
         "cancel": "Cancelar",
         "mnemonic_title": "Esta é sua frase-chave.",
-        "mnemonic_desc": "Use estas 24 palavras em ordem sequencial para recuperar sua Avalanche Wallet",
+        "mnemonic_desc": "Use estas 24 palavras em ordem sequencial para recuperar sua @.project:(0) Wallet",
         "attention": "Atenção!",
-        "warning": "Armazene esta frase-chave em um local seguro. Qualquer pessoa com esta frase-chave pode acessar sua Avalanche Wallet. As frases-chave perdidas não podem ser recuperadas.",
+        "warning": "Armazene esta frase-chave em um local seguro. Qualquer pessoa com esta frase-chave pode acessar sua @.project:(0) Wallet. As frases-chave perdidas não podem ser recuperadas.",
         "confirm": "Eu anotei a minha frase-chave em um local seguro.",
         "regenerate": "Recriado",
         "success_title": "Parabéns!",
-        "success_desc": "É hora de acessar sua Avalanche Wallet.",
+        "success_desc": "É hora de acessar sua @.project:(0) Wallet.",
         "success_submit": "Acessar Wallet",
         "verify": "Verificar",
         "verifytitle": "Verificar Mnemônico",
@@ -78,15 +79,15 @@
         "error_word": "A frase mnemônica que você inseriu para a palavra não corresponde à frase real."
     },
     "top": {
-        "title1": "Endereço da Wallet Avalanche Gerado",
+        "title1": "Endereço da Wallet @.project:(0) Gerado",
         "title2": "Saldo",
         "title3": "Sub-rede",
         "title4": "Rede",
         "nftcol": "Tokens Não Fungíveis",
         "nftempty": "Você não coletou qualquer token não fungível.",
         "locked": "Bloqueado",
-        "info2": "Eu comprei moedas na Venda de Tokens. Onde está meu AVAX?",
-        "info2_desc": "Esta wallet está conectada à rede de teste Avalanche Everest. Sua compra aparecerá na wallet após o lançamento da Mainnet do Avalanche.",
+        "info2": "Eu comprei moedas na Venda de Tokens. Onde está meu @.native:(0)?",
+        "info2_desc": "Esta wallet está conectada à rede de teste @.project:(0) Everest. Sua compra aparecerá na wallet após o lançamento da Mainnet.",
         "hover1": "Ver o endereço do código QR",
         "hover2": "Imprimir",
         "hover3": "Copiar",
@@ -101,7 +102,7 @@
             "collectibles": "Colecionáveis"
         },
         "address": {
-            "derived": "Derivado do Endereço da Avalanche Wallet",
+            "derived": "Derivado do Endereço da @.project:(0) Wallet",
             "desc": "Este é o seu endereço para receber fundos. Seu endereço mudará após cada depósito."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Ganhar",
-        "desc": "Você pode ganhar mais AVAX apostando seus tokens existentes.",
+        "desc": "Você pode ganhar mais @.native:(0) apostando seus tokens existentes.",
         "subtitle1": "Validar",
         "subtitle2": "Delegar",
         "subtitle3": "Transferência de Cadeia Cruzada",
         "subtitle4": "Recompensas Estimadas",
-        "warning_1": "Você deve ter, pelo menos, {0} AVAX na 'P chain' para se tornar um validador.",
-        "warning_2": "Você deve ter, pelo menos, {0} AVAX na 'P chain' para se tornar um delegado.",
+        "warning_1": "Você deve ter, pelo menos, {0} @.native:(0) na 'P chain' para se tornar um validador.",
+        "warning_2": "Você deve ter, pelo menos, {0} @.native:(0) na 'P chain' para se tornar um delegado.",
         "validate_card": {
             "title": "Validar",
-            "desc": "Você tem um nó Avalanche com o qual você deseja apostar.",
+            "desc": "Você tem um nó @.project:(0) com o qual você deseja apostar.",
             "submit": "Adicionar Validador"
         },
         "delegate_card": {
             "title": "Delegar",
-            "desc": "Você não possui um nó Avalanche, mas deseja apostar usando outro nó.",
+            "desc": "Você não possui um nó @.project:(0), mas deseja apostar usando outro nó.",
             "submit": "Adicionar Delegado"
         },
         "transfer_card": {
             "title": "Transferência de Cadeia Cruzada",
-            "desc": "Apostar requer AVAX na 'P chain'. Transfira tokens entre X e P.",
+            "desc": "Apostar requer @.native:(0) na 'P chain'. Transfira tokens entre X e P.",
             "submit": "Transferência"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Valor de Aposta",
-                "desc": "O valor de AVAX que será bloqueado para aposta."
+                "desc": "O valor de @.native:(0) que será bloqueado para aposta."
             },
             "fee": {
                 "label": "Taxa de Delegação",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "A data de início deve estar no futuro e a data de término deve ser posterior ao início.",
-                "amount": "O valor da aposta deve ser pelo menos {0} AVAX",
+                "amount": "O valor da aposta deve ser pelo menos {0} @.native:(0)",
                 "id": "O ID do nó é inválido. Isso deve começar com \"NodeID-\"",
                 "address": "O endereço de recompensa é inválido."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Valor de Aposta",
-                    "desc": "O valor de AVAX que será bloqueado para aposta.",
-                    "desc2": "O valor de delegação disponível para este nó é {0} AVAX"
+                    "desc": "O valor de @.native:(0) que será bloqueado para aposta.",
+                    "desc2": "O valor de delegação disponível para este nó é {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Endereço da Recompensa",
@@ -345,7 +346,7 @@
                 "max_dur": "A duração máxima de aposta é 1 ano.",
                 "no_node": "Você deve especificar um validador.",
                 "val_end": "A data de término da delegação não pode ser maior que a data de término do validador.",
-                "amt": "O valor da delegação deve ser pelo menos {0} AVAX."
+                "amt": "O valor da delegação deve ser pelo menos {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Duração da Aposta",

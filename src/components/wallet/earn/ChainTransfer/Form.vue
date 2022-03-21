@@ -42,7 +42,7 @@
         </div>
         <div class="confirmation_val" v-else>
             <label>{{ $t('earn.transfer.amount') }}</label>
-            <p>{{ formAmtText }} AVAX</p>
+            <p>{{ formAmtText }} {{ nativeAssetSymbol }}</p>
         </div>
     </div>
 </template>
@@ -123,6 +123,10 @@ export default class Form extends Vue {
 
     get isEVMSupported() {
         return this.wallet.ethAddress
+    }
+
+    get nativeAssetSymbol() {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 
     onChangeSource(ev: any) {

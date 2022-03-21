@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Passwort",
     "password_confirm": "Passwort bestätigen",
     "private_key": "privater Schlüssel",
     "address": "Adresse",
     "add_pk": "Privaten Schlüssel hinzufügen",
     "home": {
-        "desc": "Avalanche Wallet ist eine einfache, sichere, \"ohne Aufsicht\" Wallet zur Aufbewahrung von Avalanche Vermögenswerten.",
+        "desc": "@.project:(0) Wallet ist eine einfache, sichere, \"ohne Aufsicht\" Wallet zur Aufbewahrung von @.project:(0) Vermögenswerten.",
         "access": {
             "title": "Willkommen zurück!",
-            "desc": "Hier auf dein bestehendes Avalanche Wallet zugreifen.",
+            "desc": "Hier auf dein bestehendes @.project:(0) Wallet zugreifen.",
             "submit": "Auf Wallet zugreifen"
         },
         "create": {
-            "title": "Neu bei Avalanche Wallet?",
-            "desc": "Erstelle eine neue Wallet zum Senden, Empfangen und Tauschen von Avalanche Vermögenswerten.",
+            "title": "Neu bei @.project:(0) Wallet?",
+            "desc": "Erstelle eine neue Wallet zum Senden, Empfangen und Tauschen von @.project:(0) Vermögenswerten.",
             "submit": "Neue Wallet erstellen"
         }
     },
@@ -63,13 +64,13 @@
         "submit": "Schlüsselphrase erstellen",
         "cancel": "Abbrechen",
         "mnemonic_title": "Dies ist Ihr Schlüsselsatz.",
-        "mnemonic_desc": "Verwende diese 24 Wörter in der Reihenfolge, um deine Avalanche Wallet wiederzuherstellen",
+        "mnemonic_desc": "Verwende diese 24 Wörter in der Reihenfolge, um deine @.project:(0) Wallet wiederzuherstellen",
         "attention": "Achtung!",
-        "warning": "Speichere diese Schlüsselphrase an einem sicheren Ort. Jeder mit dieser Schlüsselphrase kann auf deine Avalanche Wallet zugreifen. Es gibt keine Möglichkeit, verlorene Schlüsselphrasen wiederherzustellen.",
+        "warning": "Speichere diese Schlüsselphrase an einem sicheren Ort. Jeder mit dieser Schlüsselphrase kann auf deine @.project:(0) Wallet zugreifen. Es gibt keine Möglichkeit, verlorene Schlüsselphrasen wiederherzustellen.",
         "confirm": "Ich habe meine Schlüsselphrase an einem sicheren Ort notiert.",
         "regenerate": "Wiederherstellen",
         "success_title": "Herzlichen Glückwunsch!",
-        "success_desc": "Es ist an der Zeit, deine Avalanche Wallet zu öffnen.",
+        "success_desc": "Es ist an der Zeit, deine @.project:(0) Wallet zu öffnen.",
         "success_submit": "Auf Wallet zugreifen",
         "verify": "Verifizieren",
         "verifytitle": "Verifiziere Mnemonic",
@@ -78,15 +79,15 @@
         "error_word": "Deine eingegebene Mnemonic Phrase, stimmt mit der aktuellen Phrase nicht überein."
     },
     "top": {
-        "title1": "Hergeleitete AVAX Wallet Adresse",
+        "title1": "Hergeleitete @.native:(0) Wallet Adresse",
         "title2": "Guthaben",
         "title3": "Subnetz",
         "title4": "Netzwerk",
         "nftcol": "NFTs",
         "nftempty": "Du hast noch keine \"non-fungible\" Tokens (NFTs) gesammelt.",
         "locked": "Gesperrt",
-        "info2": "Ich habe beim Token Sale, Coins gekauft. Wo sind meine AVAX?",
-        "info2_desc": "Diese Wallet ist mit dem Avalanche Everest Testnetzwerk verbunden. Dein Kauf erscheint nach dem Start von Avalanche Mainnet in der Wallet.",
+        "info2": "Ich habe beim Token Sale, Coins gekauft. Wo sind meine @.native:(0)?",
+        "info2_desc": "Diese Wallet ist mit dem Columbus Testnetzwerk verbunden. Dein Kauf erscheint nach dem Start von Mainnet in der Wallet.",
         "hover1": "Adresse als QR Code anzeigen",
         "hover2": "Drucken",
         "hover3": "Kopieren",
@@ -101,7 +102,7 @@
             "collectibles": "Kollektion"
         },
         "address": {
-            "derived": "Abgeleitete AVAX Wallet-Adresse",
+            "derived": "Abgeleitete @.native:(0) Wallet-Adresse",
             "desc": "Dies ist Ihre Adresse, um Gelder zu erhalten. Ihre Adresse wird sich nach jeder Einzahlung ändern."
         }
     },
@@ -171,27 +172,27 @@
         "noaddresses": "Du hast keine früheren Adressen."
     },
     "earn": {
-        "title": "Einnehmen",
-        "desc": "Das Staking deiner vorhandenen Tokens vermehrt deine AVAX.",
+        "title": "Einnahmen",
+        "desc": "Das Staking deiner vorhandenen Tokens vermehrt deine @.native:(0).",
         "subtitle1": "Validieren",
         "subtitle2": "Delegieren",
         "subtitle3": "\"Cross Chain\" Transfer",
         "subtitle4": "Geschätzte Prämien",
-        "warning_1": "Du musst mindestens {0} AVAX auf der P-Chain haben, um ein Validator zu werden.",
-        "warning_2": "Du musst mindestens {0} AVAX auf der P-Chain haben, um ein Delegator zu werden.",
+        "warning_1": "Du musst mindestens {0} @.native:(0) auf der P-Chain haben, um ein Validator zu werden.",
+        "warning_2": "Du musst mindestens {0} @.native:(0) auf der P-Chain haben, um ein Delegator zu werden.",
         "validate_card": {
             "title": "Validieren",
-            "desc": "Du hast einen Avalanche Knoten, mit dem Du staken möchtest.",
+            "desc": "Du hast einen @.project:(0) Knoten, mit dem Du staken möchtest.",
             "submit": "Validator hinzufügen"
         },
         "delegate_card": {
             "title": "Delegieren",
-            "desc": "Du hast keine Avalanche Node, aber Du möchtest mit einer anderen Node staken.",
+            "desc": "Du hast keine @.project:(0) Node, aber Du möchtest mit einer anderen Node staken.",
             "submit": "Delegierer hinzufügen"
         },
         "transfer_card": {
             "title": "\"Cross Chain\" Transfer",
-            "desc": "Staking erfordert AVAX auf der P-Chain. Transferiere deine Tokens zwischen X und P.",
+            "desc": "Staking erfordert @.native:(0) auf der P-Chain. Transferiere deine Tokens zwischen X und P.",
             "submit": "Transfer"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Staking Betrag",
-                "desc": "Der AVAX Betrag der fürs Staking gesperrt ist."
+                "desc": "Der @.native:(0) Betrag der fürs Staking gesperrt ist."
             },
             "fee": {
                 "label": "Delegationsgebühr",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Das Startdatum muss in der Zukunft liegen und das Enddatum muss nach dem Startdatum liegen.",
-                "amount": "Der Staking Betrag muss mindestens {0} AVAX betragen",
+                "amount": "Der Staking Betrag muss mindestens {0} @.native:(0) betragen",
                 "id": "Ungültige Node ID. Muss mit \"NodeID-\" beginnen",
                 "address": "Ungültige Prämienadresse."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Einsatzbetrag",
-                    "desc": "Der AVAX Betrag der fürs Staking gesperrt ist.",
-                    "desc2": "Der verfügbare Delegationsbetrag für diese Node beträgt {0} AVAX"
+                    "desc": "Der @.native:(0) Betrag der fürs Staking gesperrt ist.",
+                    "desc2": "Der verfügbare Delegationsbetrag für diese Node beträgt {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Prämienadresse",
@@ -345,7 +346,7 @@
                 "max_dur": "Maximum Stakingzeitraum beträgt 1 Jahr.",
                 "no_node": "Du musst einen Validator angeben.",
                 "val_end": "Das Enddatum der Delegation darf nicht länger als das Enddatum des Validators sein.",
-                "amt": "Der Betrag der Delegation muss mindestens {0} AVAX betragen."
+                "amt": "Der Betrag der Delegation muss mindestens {0} @.native:(0) betragen."
             },
             "summary": {
                 "duration": "Stakingzeitraum",

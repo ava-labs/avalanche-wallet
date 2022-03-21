@@ -21,7 +21,7 @@ module.exports = {
         },
     },
     pwa: {
-        name: 'AVAX Wallet',
+        name: 'Camino Wallet',
         manifestOptions: {
             start_url: '/',
         },

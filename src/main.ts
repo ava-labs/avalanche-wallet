@@ -1,25 +1,19 @@
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
+import { BootstrapVue } from 'bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import VueI18n from 'vue-i18n'
 //@ts-ignore
 import { Datetime } from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
+import vuetify from './plugins/vuetify'
+import i18n from './plugins/i18n'
 
-import { BootstrapVue } from 'bootstrap-vue'
 // Install BootstrapVue
 Vue.use(BootstrapVue)
-
 Vue.use(VueMeta)
-
 Vue.component('datetime', Datetime)
-
-import vuetify from './plugins/vuetify'
-
-// @ts-ignore
-import i18n from './plugins/i18n.js'
 
 Vue.config.productionTip = false
 

@@ -94,12 +94,9 @@ $s-size-mobile: 14px;
     }
 }
 
-
-video{
+video {
     outline: none;
 }
-
-
 
 *[tooltip]:hover:before {
     border-radius: 4px;
@@ -124,7 +121,7 @@ textarea,
 input {
     @include highlight-border;
 
-    &[disabled]{
+    &[disabled] {
         border-color: transparent !important;
     }
 }
@@ -132,13 +129,14 @@ input {
 .hover_border {
     @include highlight-border;
 
-    &[disabled]{
+    &[disabled] {
         border-color: transparent !important;
     }
 }
 
-input[type='number']{
-    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+input[type='number'] {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
@@ -261,7 +259,7 @@ label {
     }
 }
 
-.single_line_input{
+.single_line_input {
     display: block;
     width: 100%;
     padding: 5px 12px;
@@ -389,7 +387,7 @@ textarea {
         color: var(--primary-color-light) !important;
     }
 
-    &[disabled]{
+    &[disabled] {
         border-color: transparent !important;
     }
 }
@@ -413,8 +411,8 @@ textarea {
     }
 }
 
-.v-input--checkbox{
-    label{
+.v-input--checkbox {
+    label {
         color: var(--primary-color) !important;
     }
 }
@@ -434,7 +432,7 @@ textarea {
 
     @include highlight-border;
 
-    &[disabled]{
+    &[disabled] {
         border-color: transparent !important;
     }
 }
@@ -489,25 +487,25 @@ p.err {
     white-space: normal;
 }
 
-.no_scroll_bar{
+.no_scroll_bar {
     &::-webkit-scrollbar {
         display: none;
     }
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
-.flex-row{
+.flex-row {
     display: flex;
     flex-direction: row;
 }
 
-.flex-column{
+.flex-column {
     display: flex;
     flex-direction: column;
 }
 
-.subtext{
+.subtext {
     color: var(--primary-color-light);
     font-size: 0.8em;
 }

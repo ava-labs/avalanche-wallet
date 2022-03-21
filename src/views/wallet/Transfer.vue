@@ -55,7 +55,7 @@
                     <div class="fees">
                         <p>
                             {{ $t('transfer.fee_tx') }}
-                            <span>{{ txFee.toLocaleString(9) }} AVAX</span>
+                            <span>{{ txFee.toLocaleString(9) }} {{ nativeAssetSymbol }}</span>
                         </p>
                         <p>
                             {{ $t('transfer.total_avax') }}
@@ -461,6 +461,10 @@ export default class Transfer extends Vue {
 
     get nftUTXOs(): UTXO[] {
         return this.$store.state.Assets.nftUTXOs
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 
     deactivated() {

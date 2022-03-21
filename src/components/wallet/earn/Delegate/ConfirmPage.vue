@@ -6,7 +6,7 @@
         <!--        </div>-->
         <div>
             <label>{{ $t('earn.delegate.confirmation.amount') }}</label>
-            <p>{{ amtText }} AVAX</p>
+            <p>{{ amtText }} {{ nativeAssetSymbol }}</p>
         </div>
         <div>
             <label>{{ $t('earn.delegate.confirmation.start') }}</label>
@@ -60,6 +60,10 @@ export default class ConfirmPage extends Vue {
     get amtText(): string {
         let amt = this.amtBig
         return amt.toLocaleString(9)
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

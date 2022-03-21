@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "密码",
     "password_confirm": "确认密码",
     "private_key": "私钥",
     "address": "地址",
     "add_pk": "添加私钥",
     "home": {
-        "desc": "Avalanche 钱包是一个简单、安全、无托管的钱包，用于存储 Avalanche 上的资产。",
+        "desc": "@.project:(0) 钱包是一个简单、安全、无托管的钱包，用于存储 @.project:(0) 上的资产。",
         "access": {
             "title": "欢迎回来！",
-            "desc": "在这里访问你现有的 Avalanche 钱包。",
+            "desc": "在这里访问你现有的 @.project:(0) 钱包。",
             "submit": "访问钱包"
         },
         "create": {
-            "title": "第一次使用 Avalanche 钱包？",
-            "desc": "点击“创建”来创建一个新钱包来发送、接收和交换 Avalanche 上的资产。",
+            "title": "第一次使用 @.project:(0) 钱包？",
+            "desc": "点击“创建”来创建一个新钱包来发送、接收和交换 @.project:(0) 上的资产。",
             "submit": "创建新钱包"
         }
     },
@@ -29,7 +30,7 @@
     },
     "access": {
         "title": "你想如何访问你的钱包？",
-        "create": "还没有 Avalanche 钱包？",
+        "create": "还没有 @.project:(0) 钱包？",
         "but_mnemonic": "助记词",
         "but_keystore": "密钥存储文件",
         "cancel": "取消",
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "生成一个新的助记词以设置你的Avalanche钱包。",
+        "generate": "生成一个新的助记词以设置你的@.project:(0)钱包。",
         "but_have": "已有钱包？",
         "submit": "生成助记词",
         "cancel": "取消",
         "mnemonic_title": "这是你的助记词。",
-        "mnemonic_desc": "按顺序使用这 24 个单词来恢复你的 Avalanche 钱包",
+        "mnemonic_desc": "按顺序使用这 24 个单词来恢复你的 @.project:(0) 钱包",
         "attention": "注意！",
-        "warning": "将此助记词存储在一个安全的位置。任何持有此助记词的人都可以访问你的Avalanche钱包。没有办法找回丢失的助记词。",
+        "warning": "将此助记词存储在一个安全的位置。任何持有此助记词的人都可以访问你的@.project:(0)钱包。没有办法找回丢失的助记词。",
         "confirm": "我已经在一个安全的地方写下了我的助记词。",
         "regenerate": "重新生成",
         "success_title": "恭喜！",
-        "success_desc": "是时候访问你的Avalanche钱包了。",
+        "success_desc": "是时候访问你的@.project:(0)钱包了。",
         "success_submit": "访问钱包",
         "verify": "验证",
         "verifytitle": "验证助记词",
@@ -78,15 +79,15 @@
         "error_word": "你输入的助记词与实际的不匹配。"
     },
     "top": {
-        "title1": "派生Avalanche钱包地址",
+        "title1": "派生@.project:(0)钱包地址",
         "title2": "余额",
         "title3": "子网",
         "title4": "网络",
         "nftcol": "不可分割代币（NFT）\n",
         "nftempty": "你没有收集任何不可分割代币。",
         "locked": "锁定",
-        "info2": "我在代币销售中购买了货币。我的AVAX在哪里？",
-        "info2_desc": "该钱包已连接到Avalanche Everest测试网络。Avalanche主网启动后，你的购买将出现在钱包。",
+        "info2": "我在代币销售中购买了货币。我的@.native:(0)在哪里？",
+        "info2_desc": "该钱包已连接到@.project:(0) Everest测试网络。@.project:(0)主网启动后，你的购买将出现在钱包。",
         "hover1": "查看地址二维码",
         "hover2": "打印",
         "hover3": "复制",
@@ -101,7 +102,7 @@
             "collectibles": "收藏品"
         },
         "address": {
-            "derived": "派生Avalanche钱包地址",
+            "derived": "派生@.project:(0)钱包地址",
             "desc": "这是你接收资金的地址。每次存款后你的地址都会改变。"
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "赚钱",
-        "desc": "你可以通过质押你的现有代币赚取更多AVAX。",
+        "desc": "你可以通过质押你的现有代币赚取更多@.native:(0)。",
         "subtitle1": "验证",
         "subtitle2": "委托",
         "subtitle3": "跨链转移",
         "subtitle4": "预计奖励",
-        "warning_1": "你必须在P链拥有至少{0}AVAX以成为一个验证者。",
-        "warning_2": "你必须在P链拥有至少{0}AVAX以成为一个委托者。",
+        "warning_1": "你必须在P链拥有至少{0}@.native:(0)以成为一个验证者。",
+        "warning_2": "你必须在P链拥有至少{0}@.native:(0)以成为一个委托者。",
         "validate_card": {
             "title": "验证",
-            "desc": "你有一个想用于质押的Avalanche节点。",
+            "desc": "你有一个想用于质押的@.project:(0)节点。",
             "submit": "添加验证者"
         },
         "delegate_card": {
             "title": "委托",
-            "desc": "你没有Avalanche节点，但你想使用另一个节点进行质押。",
+            "desc": "你没有@.project:(0)节点，但你想使用另一个节点进行质押。",
             "submit": "添加委托者"
         },
         "transfer_card": {
             "title": "跨链转账",
-            "desc": "质押需要P链上的AVAX。在X链和P链之间转移代币。",
+            "desc": "质押需要P链上的@.native:(0)。在X链和P链之间转移代币。",
             "submit": "转账"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "质押数量",
-                "desc": "要锁定用于质押的AVAX数量。"
+                "desc": "要锁定用于质押的@.native:(0)数量。"
             },
             "fee": {
                 "label": "委托费用",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "开始日期必须在将来，结束日期必须在开始日期之后。",
-                "amount": "质押数量必须至少为{0}AVAX",
+                "amount": "质押数量必须至少为{0}@.native:(0)",
                 "id": "无效的节点ID。必须以“NodeID-”开头",
                 "address": "无效的奖励地址。"
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "质押数量",
-                    "desc": "要锁定用于质押的AVAX数量。",
-                    "desc2": "此节点的可用委托数量为{0}AVAX"
+                    "desc": "要锁定用于质押的@.native:(0)数量。",
+                    "desc2": "此节点的可用委托数量为{0}@.native:(0)"
                 },
                 "reward": {
                     "label": "奖励地址",
@@ -345,7 +346,7 @@
                 "max_dur": "最大质押持续时间为1年。",
                 "no_node": "你必须指定一个验证者。",
                 "val_end": "委托结束日期不能长于验证者的结束日期。",
-                "amt": "委托数量必须至少为{0}AVAX"
+                "amt": "委托数量必须至少为{0}@.native:(0)"
             },
             "summary": {
                 "duration": "质押持续时间",

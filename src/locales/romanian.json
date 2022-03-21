@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Parolă",
     "password_confirm": "Confirmă Parola",
     "private_key": "Private Key",
     "address": "Adresă",
     "add_pk": "Adaugă Private Key",
     "home": {
-        "desc": "Portofelul Avalanche este un portofel simplu, sigur, protector pentru depozitarea activelor Avalanche.",
+        "desc": "Portofelul @.project:(0) este un portofel simplu, sigur, protector pentru depozitarea activelor @.project:(0).",
         "access": {
             "title": "Bun venit înapoi!",
-            "desc": "„Accesează” aici portofelul tău Avalanche existent.",
+            "desc": "„Accesează” aici portofelul tău @.project:(0) existent.",
             "submit": "Accesează Wallet"
         },
         "create": {
-            "title": "Nou la Avalanche Wallet?",
-            "desc": "„Creează” un nou portofel pentru a trimite, primi și schimba activele Avalanche.",
+            "title": "Nou la @.project:(0) Wallet?",
+            "desc": "„Creează” un nou portofel pentru a trimite, primi și schimba activele @.project:(0).",
             "submit": "Creați un wallet nou"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Generează o nouă frază cheie pentru configurarea Portofelului tău Avalanche.",
+        "generate": "Generează o nouă frază cheie pentru configurarea Portofelului tău @.project:(0).",
         "but_have": "Aveți deja un wallet?",
         "submit": "Generați o frază cheie",
         "cancel": "Anulare",
         "mnemonic_title": "Aceasta este fraza ta cheie.",
-        "mnemonic_desc": "Utilizează aceste 24 de cuvinte în ordine continuă pentru a-ți recupera Portofelul Avalanche",
+        "mnemonic_desc": "Utilizează aceste 24 de cuvinte în ordine continuă pentru a-ți recupera Portofelul @.project:(0)",
         "attention": "Atenție!",
-        "warning": "Stochează această frază cheie într-un loc sigur. Cu această cheie oricine poate accesa Portofelul tău Avalanche. Nu există nicio cale de recuperare a frazelor cheie pierdute.",
+        "warning": "Stochează această frază cheie într-un loc sigur. Cu această cheie oricine poate accesa Portofelul tău @.project:(0). Nu există nicio cale de recuperare a frazelor cheie pierdute.",
         "confirm": "Mi-am notat fraza mea cheie într-un loc sigur.",
         "regenerate": "Regenerează",
         "success_title": "Felicitări!",
-        "success_desc": "Este timpul să accesezi Portofelul tău Avalanche.",
+        "success_desc": "Este timpul să accesezi Portofelul tău @.project:(0).",
         "success_submit": "Accesează Wallet",
         "verify": "Verifica",
         "verifytitle": "Verificați Mnemonic",
@@ -78,15 +79,15 @@
         "error_word": "Expresia Mnemonică pe care ați introdus-o pentru cuvânt nu se potrivește cu expresia reală."
     },
     "top": {
-        "title1": "Adresă portofel Avalanche derivată",
+        "title1": "Adresă portofel @.project:(0) derivată",
         "title2": "Sold",
         "title3": "Subrețea",
         "title4": "Rețea",
         "nftcol": "NFT-uri",
         "nftempty": "Nu ați adunat niciun token nefungibil.",
         "locked": "Blocat",
-        "info2": "Am cumpărat monede în Token Sale. Unde sunt AVAX-ul meu?",
-        "info2_desc": "Acest wallet este conectat la rețeaua de testare Avalanche Everest. Achiziția dvs. va apărea în portofel după lansarea Avalanche Mainnet.",
+        "info2": "Am cumpărat monede în Token Sale. Unde sunt @.native:(0)-ul meu?",
+        "info2_desc": "Acest wallet este conectat la rețeaua de testare @.project:(0) Everest. Achiziția dvs. va apărea în portofel după lansarea Mainnet.",
         "hover1": "Vizualizați codul QR al adresei",
         "hover2": "Imprimare",
         "hover3": "Copie",
@@ -101,7 +102,7 @@
             "collectibles": "Sume de încasat"
         },
         "address": {
-            "derived": "Adresa Portofelului Avalanche derivată",
+            "derived": "Adresa Portofelului @.project:(0) derivată",
             "desc": "Această este adresa ta de primire fonduri. Adresa ta se va modifica după fiecare depunere."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Câștigă",
-        "desc": "Poți câștiga mai multe AVAX mizând jetoanele tale existente.",
+        "desc": "Poți câștiga mai multe @.native:(0) mizând jetoanele tale existente.",
         "subtitle1": "Validează",
         "subtitle2": "Deleagă",
         "subtitle3": "Transfer Încrucișat",
         "subtitle4": "Recompense Estimate",
-        "warning_1": "Trebuie să ai cel puțin {0} AVAX în lanțul P pentru a deveni un validator.",
-        "warning_2": "Trebuie să ai cel puțin {0} AVAX în lanțul P pentru a deveni un delegatar.",
+        "warning_1": "Trebuie să ai cel puțin {0} @.native:(0) în lanțul P pentru a deveni un validator.",
+        "warning_2": "Trebuie să ai cel puțin {0} @.native:(0) în lanțul P pentru a deveni un delegatar.",
         "validate_card": {
             "title": "Validează",
-            "desc": "Ai un nod Avalanche cu care dorești să mizezi.",
+            "desc": "Ai un nod @.project:(0) cu care dorești să mizezi.",
             "submit": "Adaugă Validatorul"
         },
         "delegate_card": {
             "title": "Deleagă",
-            "desc": "Nu deții un nod Avalanche, dar vrei să mizezi utilizând alt nod.",
+            "desc": "Nu deții un nod @.project:(0), dar vrei să mizezi utilizând alt nod.",
             "submit": "Adaugă Delegatarul"
         },
         "transfer_card": {
             "title": "Transfer Încrucișat",
-            "desc": "Miza necesită AVAX în lanțul P. Transferă jetoane între X și P.",
+            "desc": "Miza necesită @.native:(0) în lanțul P. Transferă jetoane între X și P.",
             "submit": "Transferă"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Suma Mizată",
-                "desc": "Suma AVAX blocată pentru miză."
+                "desc": "Suma @.native:(0) blocată pentru miză."
             },
             "fee": {
                 "label": "Comision de Delegare",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "Data de Început trebuie să fie în viitor, iar data de sfârșit trebuie să fie după data de început.",
-                "amount": "Suma mizată trebuie să fie de cel puțin {0} AVAX",
+                "amount": "Suma mizată trebuie să fie de cel puțin {0} @.native:(0)",
                 "id": "ID Nod invalid. Trebuie să înceapă cu „IDNod-”",
                 "address": "Adresă de recompensă invalidă."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Suma Mizei",
-                    "desc": "Suma AVAX blocată pentru miză.",
-                    "desc2": "Suma delegării disponibilă pentru acest nod este de {0} AVAX"
+                    "desc": "Suma @.native:(0) blocată pentru miză.",
+                    "desc2": "Suma delegării disponibilă pentru acest nod este de {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Adresa Recompensei",
@@ -345,7 +346,7 @@
                 "max_dur": "Durata maximă a mizei este de 1 an.",
                 "no_node": "Trebuie să menționezi un validator.",
                 "val_end": "Data de sfârșit a delegării nu poate fi mai mare decât data de sfârșit a validatorului.",
-                "amt": "Suma delegării trebuie să fie de cel puțin {0} AVAX."
+                "amt": "Suma delegării trebuie să fie de cel puțin {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Durata Mizei",

@@ -1,14 +1,15 @@
 {
+    "0":"",
     "password": "Wachtwoord",
     "password_confirm": "Wachtwoord bevestigen",
     "private_key": "Privé code",
     "address": "Adres",
     "add_pk": "Privé code toevoegen",
     "home": {
-        "desc": "Avalanche Wallet is een eenvoudige en veilige portomonnee zonder bewaarneming voor het opbergen van activa van Avalanche.",
+        "desc": "@.project:(0) Wallet is een eenvoudige en veilige portomonnee zonder bewaarneming voor het opbergen van activa van @.project:(0).",
         "access": {
             "title": "Welkom terug!",
-            "desc": "\"Open\" hier uw bestaande Avalanche-portemonnee.",
+            "desc": "\"Open\" hier uw bestaande @.project:(0)-portemonnee.",
             "submit": "Portemonnee openen"
         },
         "create": {
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Genereer een nieuwe sleutelzin om uw Avalanche Wallet in te stellen.",
+        "generate": "Genereer een nieuwe sleutelzin om uw @.project:(0) Wallet in te stellen.",
         "but_have": "Heeft u al een portemonnee?",
         "submit": "Genereer een sleutelzin",
         "cancel": "Annuleren",
         "mnemonic_title": "Dit is uw sleutelzin.",
-        "mnemonic_desc": "Gebruik deze 24 woorden op volgorde om uw Avalanche Wallet te herstellen.",
+        "mnemonic_desc": "Gebruik deze 24 woorden op volgorde om uw @.project:(0) Wallet te herstellen.",
         "attention": "Attentie!",
-        "warning": "Berg deze sleutelzin op een veilige locatie op. Iedereen met deze sleutelzin heeft toegang tot uw Avalanche Wallet. Het is niet mogelijk verloren geraakte sleutelzinnen te herstellen.",
+        "warning": "Berg deze sleutelzin op een veilige locatie op. Iedereen met deze sleutelzin heeft toegang tot uw @.project:(0) Wallet. Het is niet mogelijk verloren geraakte sleutelzinnen te herstellen.",
         "confirm": "Ik heb mijn sleutelzin op een veilige locatie opgeschreven.",
         "regenerate": "Opnieuw genereren",
         "success_title": "Gefeliciteerd!",
-        "success_desc": "Het is tijd om uw Avalanche Wallet te openen.",
+        "success_desc": "Het is tijd om uw @.project:(0) Wallet te openen.",
         "success_submit": "Portemonnee openen",
         "verify": "Verifiëren",
         "verifytitle": "Geheugensteun verifiëren",
@@ -78,15 +79,15 @@
         "error_word": "De door u ingevoerde mnemonische zin komt niet overeen met de daadwerkelijke zin."
     },
     "top": {
-        "title1": "Afgeleid adres Avalanche-portemonne",
+        "title1": "Afgeleid adres @.project:(0)-portemonne",
         "title2": "Saldo",
         "title3": "Subnet",
         "title4": "Netwerk",
         "nftcol": "NFTs",
         "nftempty": "U hebt geen onvervangbare tokens verzameld.",
         "locked": "Vergrendeld",
-        "info2": "Ik heb munten in de Token verkoop gekocht. Waar zijn mijn AVAX?",
-        "info2_desc": "Deze portemonnee is verbonden met het testnetwerk van Avalanche Everest. Uw aankoop zal in de portemonnee verschijnen nadat het hoofdnet van Avalanche werd gestart.",
+        "info2": "Ik heb munten in de Token verkoop gekocht. Waar zijn mijn @.native:(0)?",
+        "info2_desc": "Deze portemonnee is verbonden met het testnetwerk van @.project:(0) Everest. Uw aankoop zal in de portemonnee verschijnen nadat het hoofdnet van @.project:(0) werd gestart.",
         "hover1": "Adres QR-code bekijken",
         "hover2": "Afdrukken",
         "hover3": "Kopiëren",
@@ -101,7 +102,7 @@
             "collectibles": "Inningen"
         },
         "address": {
-            "derived": "Afgeleid adres Avalanche-portemonne",
+            "derived": "Afgeleid adres @.project:(0)-portemonne",
             "desc": "Dit is het adres waar u fondsen ontvangt. U adres zal na elke storting worden gewijzigd."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Verdienen",
-        "desc": "U kunt meer AVAX verdienen door uw bestaande tokens in te zetten.",
+        "desc": "U kunt meer @.native:(0) verdienen door uw bestaande tokens in te zetten.",
         "subtitle1": "Valideren",
         "subtitle2": "Delegeren",
         "subtitle3": "Cross-keten overboeking",
         "subtitle4": "Geschatte beloningen",
-        "warning_1": "U moet ten minste {0} AVAX-punten op de P-keten hebben om een validator te worden.",
-        "warning_2": "U moet ten minste {0} AVAX-punten op de P-keten hebben om een delegatielid te worden.",
+        "warning_1": "U moet ten minste {0} @.native:(0)-punten op de P-keten hebben om een validator te worden.",
+        "warning_2": "U moet ten minste {0} @.native:(0)-punten op de P-keten hebben om een delegatielid te worden.",
         "validate_card": {
             "title": "Valideren",
-            "desc": "U hebt een Avalanche-nodus die u wilt inzetten.",
+            "desc": "U hebt een @.project:(0)-nodus die u wilt inzetten.",
             "submit": "Validator toevoegen"
         },
         "delegate_card": {
             "title": "Delegeren",
-            "desc": "U hebt geen Avalanche-nodus, maar u wilt inzetten met een andere nodus.",
+            "desc": "U hebt geen @.project:(0)-nodus, maar u wilt inzetten met een andere nodus.",
             "submit": "Delegatielid toevoegen"
         },
         "transfer_card": {
             "title": "Cross-keten overboeking",
-            "desc": "Voor het inzetten is AVAX op de P-keten nodig. Boek tokens over tussen X en P.",
+            "desc": "Voor het inzetten is @.native:(0) op de P-keten nodig. Boek tokens over tussen X en P.",
             "submit": "Overboeken"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Bedrag inzet",
-                "desc": "De hoeveelheid AVAX te vergrendelen om in te zetten."
+                "desc": "De hoeveelheid @.native:(0) te vergrendelen om in te zetten."
             },
             "fee": {
                 "label": "Delegatiekosten",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "De startdatum moet in de toekomst liggen en de enddatum moet later zijn dan de startdatum.",
-                "amount": "Het bedrag van de inzet moet minstens {0} AVAX zijn.",
+                "amount": "Het bedrag van de inzet moet minstens {0} @.native:(0) zijn.",
                 "id": "Ongeldige Nodus ID. Moet beginnen met \"NodeID-\".",
                 "address": "Ongeldig adres beloning."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Bedrag inzet",
-                    "desc": "De hoeveelheid AVAX te vergrendelen om in te zetten.",
-                    "desc2": "Het beschikbare delegatiebedrag voor deze nodus is {0} AVAX."
+                    "desc": "De hoeveelheid @.native:(0) te vergrendelen om in te zetten.",
+                    "desc2": "Het beschikbare delegatiebedrag voor deze nodus is {0} @.native:(0)."
                 },
                 "reward": {
                     "label": "Adres beloning",
@@ -345,7 +346,7 @@
                 "max_dur": "De maximum inzet is 1 jaar.",
                 "no_node": "U moet een validator opgeven.",
                 "val_end": "De einddatum van de delegatie kan niet later zijn dan de einddatum van de validator.",
-                "amt": "Het bedrag van de delegatie moet minstens {0} AVAX zijn."
+                "amt": "Het bedrag van de delegatie moet minstens {0} @.native:(0) zijn."
             },
             "summary": {
                 "duration": "Tijdsduur inzet",

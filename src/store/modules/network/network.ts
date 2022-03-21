@@ -2,11 +2,10 @@ import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 import { NetworkState } from '@/store/modules/network/types'
 
-import { ava, avm, bintools, cChain, infoApi, pChain } from '@/AVA'
+import { ava, avm, cChain, infoApi, pChain } from '@/AVA'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
 import { BN } from 'avalanche'
-import { getPreferredHRP } from 'avalanche/dist/utils'
 import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
@@ -177,21 +176,12 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({ state, commit, dispatch }) {
-            let mainnet = new AvaNetwork(
-                'Mainnet',
-                'https://api.avax.network:443',
-                1,
-                'https://explorerapi.avax.network',
-                'https://explorer.avax.network',
-                true
-            )
-
-            let fuji = new AvaNetwork(
-                'Fuji',
-                'https://api.avax-test.network:443',
-                5,
-                'https://explorerapi.avax-test.network',
-                'https://explorer.avax-test.network',
+            let columbus = new AvaNetwork(
+                'Columbus',
+                'https://columbus.camino.foundation:9650',
+                1000,
+                '',
+                '',
                 true
             )
 
@@ -202,8 +192,7 @@ const network_module: Module<NetworkState, RootState> = {
                 console.error(e)
             }
 
-            commit('addNetwork', mainnet)
-            commit('addNetwork', fuji)
+            commit('addNetwork', columbus)
 
             try {
                 let isSet = await dispatch('loadSelectedNetwork')

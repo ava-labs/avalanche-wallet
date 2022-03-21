@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Mot de passe",
     "password_confirm": "Confirmez le mot de passe",
     "private_key": "Clé privée",
     "address": "Adresse",
     "add_pk": "Ajouter une clé privée",
     "home": {
-        "desc": "Le portefeuille Avalanche est simple, sécurisé et non-custodial pour stocker tous les actifs d'Avalanche.",
+        "desc": "Le portefeuille @.project:(0) est simple, sécurisé et non-custodial pour stocker tous les actifs d'@.project:(0).",
         "access": {
             "title": "Bienvenue !",
-            "desc": "Vous pouvez accéder à un portefeuille Avalanche déjà existant par ici.",
+            "desc": "Vous pouvez accéder à un portefeuille @.project:(0) déjà existant par ici.",
             "submit": "Accéder au portefeuille"
         },
         "create": {
-            "title": "Nouveau sur le portefeuille Avalanche ?",
-            "desc": "Créez un nouveau portefeuille pour envoyer, recevoir et échanger tous vos actifs d'Avalanche.",
+            "title": "Nouveau sur le portefeuille @.project:(0) ?",
+            "desc": "Créez un nouveau portefeuille pour envoyer, recevoir et échanger tous vos actifs d'@.project:(0).",
             "submit": "Créer un nouveau portefeuille"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Générez une nouvelle phrase clé pour configurer votre portefeuille Avalanche.",
+        "generate": "Générez une nouvelle phrase clé pour configurer votre portefeuille @.project:(0).",
         "but_have": "Vous avez déjà un portefeuille ?",
         "submit": "Générer une phrase de sécurité",
         "cancel": "Annuler",
         "mnemonic_title": "Voici votre phrase clé.",
-        "mnemonic_desc": "Utilisez ces 24 mots en ordre séquentiel pour récupérer votre portefeuille Avalanche",
+        "mnemonic_desc": "Utilisez ces 24 mots en ordre séquentiel pour récupérer votre portefeuille @.project:(0)",
         "attention": "Attention !",
-        "warning": "Conservez cette phrase clé dans un endroit sûr. Toute personne possédant cette phrase-clé peut accéder à votre portefeuille Avalanche. Il n'y a aucun moyen de récupérer les phrases-clés perdues.",
+        "warning": "Conservez cette phrase clé dans un endroit sûr. Toute personne possédant cette phrase-clé peut accéder à votre portefeuille @.project:(0). Il n'y a aucun moyen de récupérer les phrases-clés perdues.",
         "confirm": "J'ai écrit ma phrase clé dans un endroit sûr.",
         "regenerate": "Générer à nouveau",
         "success_title": "Félicitations !",
-        "success_desc": "Il est temps d'accéder à votre portefeuille Avalanche.",
+        "success_desc": "Il est temps d'accéder à votre portefeuille @.project:(0).",
         "success_submit": "Accéder au portefeuille",
         "verify": "Vérifier",
         "verifytitle": "Vérification de la phrase de sécurité",
@@ -78,15 +79,15 @@
         "error_word": "La phrase mnémotechnique que vous avez entré pour mot ne correspond pas à la phrase actuelle."
     },
     "top": {
-        "title1": "Adresse de portefeuille Avalanche dérivée",
+        "title1": "Adresse de portefeuille @.project:(0) dérivée",
         "title2": "Solde",
         "title3": "Subnet",
         "title4": "Réseau",
         "nftcol": "NFTs",
         "nftempty": "Vous n'avez pas encore collecté de jeton non fongible.",
         "locked": "Verrouillés",
-        "info2": "J'ai acheté des jetons à la vente publique. Où sont mes AVAX ?",
-        "info2_desc": "Ce portefeuille est connecté au réseau de test Avalanche Everest. Votre achat apparaîtra dans le portefeuille lorsque le Mainnet Avalanche sera lancé.",
+        "info2": "J'ai acheté des jetons à la vente publique. Où sont mes @.native:(0) ?",
+        "info2_desc": "Ce portefeuille est connecté au réseau de test @.project:(0) Everest. Votre achat apparaîtra dans le portefeuille lorsque le Mainnet sera lancé.",
         "hover1": "Voir le QR Code",
         "hover2": "Imprimer",
         "hover3": "Copier",
@@ -101,7 +102,7 @@
             "collectibles": "Collection"
         },
         "address": {
-            "derived": "Adresse de portefeuille Avalanche dérivée",
+            "derived": "Adresse de portefeuille @.project:(0) dérivée",
             "desc": "Il s'agit de votre adresse pour recevoir des fonds. Elle changera après chaque dépôt."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Gagner",
-        "desc": "Vous pouvez gagner plus d'AVAX en mettant en jeu vos jetons existants.",
+        "desc": "Vous pouvez gagner plus d'@.native:(0) en mettant en jeu vos jetons existants.",
         "subtitle1": "Valider",
         "subtitle2": "Déléguer",
         "subtitle3": "Transfert entre chaînes",
         "subtitle4": "Récompenses estimées",
-        "warning_1": "Vous devez avoir au moins {0} AVAX sur la P-Chain pour devenir un validateur.",
-        "warning_2": "Vous devez avoir au moins {0} AVAX sur la P-Chain pour devenir un délégateur.",
+        "warning_1": "Vous devez avoir au moins {0} @.native:(0) sur la P-Chain pour devenir un validateur.",
+        "warning_2": "Vous devez avoir au moins {0} @.native:(0) sur la P-Chain pour devenir un délégateur.",
         "validate_card": {
             "title": "Valider",
-            "desc": "Vous avez un nœud Avalanche avec lequel vous souhaitez faire un enjeu.",
+            "desc": "Vous avez un nœud @.project:(0) avec lequel vous souhaitez faire un enjeu.",
             "submit": "Ajouter un validateur"
         },
         "delegate_card": {
             "title": "Déléguer",
-            "desc": "Vous ne possédez pas de nœud Avalanche, mais vous voulez faire un enjeu sur un autre nœud.",
+            "desc": "Vous ne possédez pas de nœud @.project:(0), mais vous voulez faire un enjeu sur un autre nœud.",
             "submit": "Ajouter un délégué"
         },
         "transfer_card": {
             "title": "Transfert entre chaînes",
-            "desc": "La mise en jeu nécessite de l'AVAX sur la P-Chain. Transférer des jetons entre X et P.",
+            "desc": "La mise en jeu nécessite de l'@.native:(0) sur la P-Chain. Transférer des jetons entre X et P.",
             "submit": "Transfert"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Montant de l'enjeu",
-                "desc": "Le montant d'AVAX à bloquer pour la mise en jeu."
+                "desc": "Le montant d'@.native:(0) à bloquer pour la mise en jeu."
             },
             "fee": {
                 "label": "Frais de délégation",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "La date de début doit se situer dans le futur et la date de fin doit être postérieure à la date de début.",
-                "amount": "Le montant de l'enjeu doit être au moins de {0} AVAX",
+                "amount": "Le montant de l'enjeu doit être au moins de {0} @.native:(0)",
                 "id": "l'ID du nœud est invalide. Il doit commencer par « NodeID- »",
                 "address": "Adresse de récompense non valable."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Montant de l'enjeu",
-                    "desc": "Le montant d'AVAX à bloquer pour la mise en jeu.",
-                    "desc2": "Le montant de la délégation disponible pour ce nœud est de {0} AVAX"
+                    "desc": "Le montant d'@.native:(0) à bloquer pour la mise en jeu.",
+                    "desc2": "Le montant de la délégation disponible pour ce nœud est de {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Adresse de récompense",
@@ -345,7 +346,7 @@
                 "max_dur": "La durée maximale de la mise d'enjeu est 1 an.",
                 "no_node": "Vous devez préciser un validateur.",
                 "val_end": "La date de fin de la délégation ne peut être supérieure à la date de fin du validateur.",
-                "amt": "Le montant de la délégation doit être d'au moins {0} AVAX."
+                "amt": "Le montant de la délégation doit être d'au moins {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Durée de la mise en jeu",
@@ -388,7 +389,7 @@
         "loading": "Chargement de l'historique de transaction..",
         "warn_loading": "Cette liste peut être incomplète et hors d'usage.",
         "error_api": "API de l'explorateur non trouvée",
-        "error_api_desc": "Vous devez fournir une API de l'explorateur AVAX pour ce réseau afin de voir l'historique de transaction."
+        "error_api_desc": "Vous devez fournir une API de l'explorateur @.native:(0) pour ce réseau afin de voir l'historique de transaction."
     },
     "modal": {
         "qr": {

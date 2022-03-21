@@ -94,7 +94,7 @@ export interface CsvRowStakingData {
     nodeID: string
 }
 
-// CSV AVAX Transaction Row
+// CSV Native Transaction Row
 export interface CsvRowAvaxTransferData {
     txId: string
     date: Date

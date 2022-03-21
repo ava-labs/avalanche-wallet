@@ -35,9 +35,7 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
 // import ERC721Token from '@/js/ERC721Token'
 
-const TOKEN_LISTS = [
-    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json',
-]
+const TOKEN_LISTS: string[] = []
 
 import ERC721Module from './modules/erc721'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
@@ -188,7 +186,7 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
-                    throw new Error('ERC20 Token already added.')
+                    return
                 }
             }
 
@@ -203,7 +201,7 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
-                    throw new Error('ERC20 Token already added.')
+                    return
                 }
             }
 
@@ -372,7 +370,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // What is the AVA coin in the network
         async updateAvaAsset({ state, commit }) {
-            let res = await avm.getAssetDescription('AVAX')
+            let res = await avm.getAssetDescription(ava.getPrimaryAssetAlias())
             let id = bintools.cb58Encode(res.assetID)
             state.AVA_ASSET_ID = id
             let asset = new AvaAsset(id, res.name, res.symbol, res.denomination)

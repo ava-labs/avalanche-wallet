@@ -1,19 +1,20 @@
 {
+    "0":"",
     "password": "Password",
     "password_confirm": "Conferma password",
     "private_key": "Chiave privata",
     "address": "Indirizzo",
     "add_pk": "Aggiungi chiave privata",
     "home": {
-        "desc": "Con il Wallet Avalanche, non custodito, puoi archiviare asset Avalanche in modo semplice e sicuro.",
+        "desc": "Con il Wallet @.project:(0), non custodito, puoi archiviare asset @.project:(0) in modo semplice e sicuro.",
         "access": {
             "title": "Bentornato!",
-            "desc": "\"Accedi\" al tuo wallet Avalanche qui.",
+            "desc": "\"Accedi\" al tuo wallet @.project:(0) qui.",
             "submit": "Accedi al wallet"
         },
         "create": {
-            "title": "È la prima volta che usi un Wallet Avalanche?",
-            "desc": "\"Crea\" un nuovo wallet per inviare, ricevere e scambiare asset Avalanche.",
+            "title": "È la prima volta che usi un Wallet @.project:(0)?",
+            "desc": "\"Crea\" un nuovo wallet per inviare, ricevere e scambiare asset @.project:(0).",
             "submit": "Crea un nuovo wallet"
         }
     },
@@ -58,18 +59,18 @@
         }
     },
     "create": {
-        "generate": "Genera una nuova frase chiave per configurare il tuo Wallet Avalanche.",
+        "generate": "Genera una nuova frase chiave per configurare il tuo Wallet @.project:(0).",
         "but_have": "Hai già un wallet?",
         "submit": "Genera la frase chiave",
         "cancel": "Annulla",
         "mnemonic_title": "Questa è la tua frase chiave.",
-        "mnemonic_desc": "Usa queste 24 parole in ordine sequenziale per recuperare il tuo Wallet Avalanche",
+        "mnemonic_desc": "Usa queste 24 parole in ordine sequenziale per recuperare il tuo Wallet @.project:(0)",
         "attention": "Attenzione!",
-        "warning": "Conserva questa frase chiave in un luogo sicuro. Chiunque abbia questa frase chiave può accedere al tuo Wallet Avalanche. Non esiste un modo per recuperare le frasi chiave perse.",
+        "warning": "Conserva questa frase chiave in un luogo sicuro. Chiunque abbia questa frase chiave può accedere al tuo Wallet @.project:(0). Non esiste un modo per recuperare le frasi chiave perse.",
         "confirm": "Ho scritto la mia frase chiave in un luogo sicuro.",
         "regenerate": "Rigenera",
         "success_title": "Complimenti!",
-        "success_desc": "È ora di accedere al tuo Wallet Avalanche.",
+        "success_desc": "È ora di accedere al tuo Wallet @.project:(0).",
         "success_submit": "Accedi al wallet",
         "verify": "Verifica",
         "verifytitle": "Verifica la frase mnemonica",
@@ -78,15 +79,15 @@
         "error_word": "La frase mnemonica inserita non coincide con la frase reale."
     },
     "top": {
-        "title1": "Indirizzo del Wallet Avalanche derivato",
+        "title1": "Indirizzo del Wallet @.project:(0) derivato",
         "title2": "Saldo",
         "title3": "Subnet",
         "title4": "Rete",
         "nftcol": "NFT",
         "nftempty": "Non hai ancora collezionato alcun token non fungibile.",
         "locked": "Bloccato",
-        "info2": "Ho comprato delle monete durante la vendita pubblica. Dove sono i miei AVAX?",
-        "info2_desc": "Questo wallet è connesso alla rete di test Everest di Avalanche. Il tuo acquisto apparirà nel wallet dopo il lancio della mainnet di Avalanche.",
+        "info2": "Ho comprato delle monete durante la vendita pubblica. Dove sono i miei @.native:(0)?",
+        "info2_desc": "Questo wallet è connesso alla rete di test Everest di @.project:(0). Il tuo acquisto apparirà nel wallet dopo il lancio della mainnet di @.project:(0).",
         "hover1": "Vedi il codice QR dell'indirizzo",
         "hover2": "Stampa",
         "hover3": "Copia",
@@ -101,7 +102,7 @@
             "collectibles": "Collezionabili"
         },
         "address": {
-            "derived": "Indirizzo del Wallet Avalanche derivato",
+            "derived": "Indirizzo del Wallet @.project:(0) derivato",
             "desc": "Questo è il tuo indirizzo per ricevere fondi. Il tuo indirizzo cambierà dopo ogni deposito."
         }
     },
@@ -172,26 +173,26 @@
     },
     "earn": {
         "title": "Guadagna",
-        "desc": "Puoi guadagnare più AVAX utilizzando i tuoi token esistenti nello staking.",
+        "desc": "Puoi guadagnare più @.native:(0) utilizzando i tuoi token esistenti nello staking.",
         "subtitle1": "Validare",
         "subtitle2": "Delega",
         "subtitle3": "Trasferimento tra chain",
         "subtitle4": "Ricompense stimate",
-        "warning_1": "Devi avere almeno {0} AVAX sulla P-Chain per diventare un validatore.",
-        "warning_2": "Devi avere almeno {0} AVAX sulla P-chain per delegare.",
+        "warning_1": "Devi avere almeno {0} @.native:(0) sulla P-Chain per diventare un validatore.",
+        "warning_2": "Devi avere almeno {0} @.native:(0) sulla P-chain per delegare.",
         "validate_card": {
             "title": "Validare",
-            "desc": "Hai un nodo Avalanche con cui vuoi fare staking.",
+            "desc": "Hai un nodo @.project:(0) con cui vuoi fare staking.",
             "submit": "Aggiungi Validatore"
         },
         "delegate_card": {
             "title": "Delega",
-            "desc": "Non possiedi un nodo Avalanche, ma vuoi fare staking utilizzando un altro nodo.",
+            "desc": "Non possiedi un nodo @.project:(0), ma vuoi fare staking utilizzando un altro nodo.",
             "submit": "Aggiungi Delegante"
         },
         "transfer_card": {
             "title": "Trasferimento tra chain",
-            "desc": "Per lo staking è necessario avere AVAX sulla P-chain. Trasferisci token tra X e P.",
+            "desc": "Per lo staking è necessario avere @.native:(0) sulla P-chain. Trasferisci token tra X e P.",
             "submit": "Trasferimento"
         },
         "rewards_card": {
@@ -242,7 +243,7 @@
             },
             "amount": {
                 "label": "Importo dello staking",
-                "desc": "La quantità di AVAX da bloccare per lo staking."
+                "desc": "La quantità di @.native:(0) da bloccare per lo staking."
             },
             "fee": {
                 "label": "Commissione di delega",
@@ -281,7 +282,7 @@
             },
             "errs": {
                 "date": "La data di inizio deve essere futura e la data di fine deve essere successiva alla data di inizio.",
-                "amount": "L'importo dello staking deve essere almeno {0} AVAX",
+                "amount": "L'importo dello staking deve essere almeno {0} @.native:(0)",
                 "id": "ID nodo non valido. Deve iniziare con \"NodeID-\"",
                 "address": "Indirizzo per le ricompense non valido."
             }
@@ -319,8 +320,8 @@
                 },
                 "amount": {
                     "label": "Importo dello staking",
-                    "desc": "La quantità di AVAX da bloccare per lo staking.",
-                    "desc2": "L'importo della delega disponibile per questo nodo è {0} AVAX"
+                    "desc": "La quantità di @.native:(0) da bloccare per lo staking.",
+                    "desc2": "L'importo della delega disponibile per questo nodo è {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Indirizzo per le ricompense",
@@ -345,7 +346,7 @@
                 "max_dur": "La durata massima dello staking è di 1 anno.",
                 "no_node": "Devi specificare un validatore.",
                 "val_end": "La data finale della delega non può superare la data finale del validatore.",
-                "amt": "L'importo della delega deve essere almeno {0} AVAX."
+                "amt": "L'importo della delega deve essere almeno {0} @.native:(0)."
             },
             "summary": {
                 "duration": "Durata dello staking",
@@ -388,7 +389,7 @@
         "loading": "Caricamento della cronologia delle transazioni..",
         "warn_loading": "Questa lista potrebbe essere incompleta e non ordinata.",
         "error_api": "API dell'explorer non trovate",
-        "error_api_desc": "Devi fornire l'API dell'Explorer Avalanche per questa rete per vedere la cronologia delle transazioni."
+        "error_api_desc": "Devi fornire l'API dell'Explorer @.project:(0) per questa rete per vedere la cronologia delle transazioni."
     },
     "modal": {
         "qr": {

@@ -29,7 +29,7 @@
             </div>
             <div class="tot">
                 <label>{{ $t('modal.utxo_select.available') }}</label>
-                <p>{{ selectedBalanceText }} AVAX</p>
+                <p>{{ selectedBalanceText }} {{ nativeAssetSymbol }}</p>
             </div>
             <v-btn class="button_secondary" block depressed small @click="close">
                 {{ $t('modal.utxo_select.submit') }}
@@ -143,6 +143,10 @@ export default class UtxoSelect extends Vue {
 
     get selectedBalanceText() {
         return bnToBig(this.selectedBalance, 9).toLocaleString()
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

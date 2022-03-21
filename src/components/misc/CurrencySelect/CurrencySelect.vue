@@ -1,6 +1,8 @@
 <template>
     <div class="currency_select">
-        <button @click="setType('AVAX')" :active="currency === 'AVAX'">AVAX</button>
+        <button @click="setType('NATIVE')" :active="currency === 'NATIVE'">
+            {{ nativeAssetSymbol }}
+        </button>
         <button @click="setType('USD')" :active="currency === 'USD'">USD</button>
     </div>
 </template>
@@ -12,8 +14,11 @@ import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 @Component
 export default class CurrencySelect extends Vue {
     @Model('change', { type: String }) readonly currency!: CurrencyType
-    setType(val: CurrencyType) {
+    setType(val: CurrencyType): void {
         this.$emit('change', val)
+    }
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

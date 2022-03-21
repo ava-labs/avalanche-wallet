@@ -58,7 +58,7 @@
             <div class="fees" v-if="isConfirm">
                 <p>
                     {{ $t('transfer.fee_tx') }}
-                    <span>{{ maxFeeText }} AVAX</span>
+                    <span>{{ maxFeeText }} {{ nativeAssetSymbol }}</span>
                 </p>
                 <p>
                     <span>${{ maxFeeUSD.toLocaleString(2) }} USD</span>
@@ -125,6 +125,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import AvaAsset from '@/js/AvaAsset'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import { priceDict } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
@@ -227,9 +228,9 @@ export default class FormC extends Vue {
         }
     }
 
-    get symbol(): string {
-        if (this.formToken === 'native') return 'AVAX'
-        return this.formToken.data.symbol
+    get symbol() {
+        if (this.formToken === 'native') return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+        else return this.formToken.data.symbol
     }
 
     get totalUSD(): Big | null {
@@ -242,6 +243,10 @@ export default class FormC extends Vue {
         let bigFee = bnToBig(this.maxFee, 18)
         let usdBig = bigAmt.add(bigFee).times(usdPrice)
         return usdBig
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 
     validateAddress(addr: string) {
@@ -304,7 +309,7 @@ export default class FormC extends Vue {
 
         if (!this.isCollectible) {
             if (this.formToken === 'native') {
-                // For AVAX Transfers
+                // For native asset Transfers
                 let gasLimit = await TxHelper.estimateAvaxGas(
                     this.wallet.getEvmAddress(),
                     this.formAddress,

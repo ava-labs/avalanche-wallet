@@ -193,6 +193,8 @@ export default class ExportCsvModal extends Vue {
             }
         }
 
+        const symbol = this.$store.getters['Assets/AssetAVA'].symbol
+
         let headers = [
             'Tx ID',
             'Type',
@@ -201,8 +203,8 @@ export default class ExportCsvModal extends Vue {
             'Stake Start Date',
             'Stake Duration',
             'Reward Date',
-            'AVAX Price at Reward Date',
-            'Reward Received (AVAX)',
+            symbol + ' Price at Reward Date',
+            'Reward Received (' + symbol + ')',
             'Reward Received (USD)',
         ]
 
@@ -220,7 +222,7 @@ export default class ExportCsvModal extends Vue {
             this.error = null
             this.generateCSVData()
         } catch (e) {
-            this.error = e
+            this.error = e as Error
         }
     }
 }

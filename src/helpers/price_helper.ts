@@ -1,8 +1,7 @@
 const axios = require('axios')
 
-const COIN_ID = 'avalanche-2'
-const COINGECKO_URL =
-    'https://api.coingecko.com/api/v3/simple/price?ids=avalanche-2&vs_currencies=usd'
+const COIN_ID = 'camino'
+const COINGECKO_URL = ''
 
 const coingeckoApi = axios.create({
     baseURL: 'https://api.coingecko.com/api/v3',
@@ -10,13 +9,14 @@ const coingeckoApi = axios.create({
 })
 
 export async function getAvaxPriceUSD(): Promise<number> {
-    let res = await axios.get(COINGECKO_URL)
-    return res.data['avalanche-2']['usd']
+    //let res = await axios.get(COINGECKO_URL)
+    //return res.data[COIN_ID]['usd']
+    return 0.0
 }
 
 let priceHistory: [number, number][] = []
 async function getPriceHistory() {
-    let res = await coingeckoApi.get(`/coins/${COIN_ID}/market_chart`, {
+    /*let res = await coingeckoApi.get(`/coins/${COIN_ID}/market_chart`, {
         params: {
             vs_currency: 'usd',
             days: 'max',
@@ -24,7 +24,7 @@ async function getPriceHistory() {
         },
     })
 
-    priceHistory = res.data.prices
+    priceHistory = res.data.prices*/
 }
 
 /**

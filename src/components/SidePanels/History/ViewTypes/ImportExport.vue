@@ -2,11 +2,11 @@
     <div class="import_row" :export="isExport">
         <template v-if="isExport">
             <p>Export ({{ chainAlias }})</p>
-            <p class="amt">{{ isExport ? '-' : '' }}{{ amtText }} AVAX</p>
+            <p class="amt">{{ isExport ? '-' : '' }}{{ amtText }} {{ nativeAssetSymbol }}</p>
         </template>
         <template v-else>
             <p>Import ({{ chainAlias }})</p>
-            <p class="amt">{{ amtText }} AVAX</p>
+            <p class="amt">{{ amtText }} {{ nativeAssetSymbol }}</p>
         </template>
     </div>
 </template>
@@ -111,6 +111,10 @@ export default class ImportExport extends Vue {
 
         let big = bnToBig(total, 9)
         return big.toLocaleString()
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>

@@ -108,8 +108,8 @@
                     </div>
                     <div>
                         <label>{{ $t('earn.delegate.summary.reward') }}</label>
-                        <p v-if="currency_type === 'AVAX'">
-                            {{ estimatedReward.toLocaleString(2) }} AVAX
+                        <p v-if="currency_type === 'NATIVE'">
+                            {{ estimatedReward.toLocaleString(2) }} {{ nativeAssetSymbol }}
                         </p>
                         <p v-if="currency_type === 'USD'">
                             ${{ estimatedRewardUSD.toLocaleString(2) }} USD
@@ -117,8 +117,8 @@
                     </div>
                     <div>
                         <label>{{ $t('earn.delegate.summary.fee') }}</label>
-                        <p v-if="currency_type === 'AVAX'">
-                            {{ totalFeeBig.toLocaleString(2) }} AVAX
+                        <p v-if="currency_type === 'NATIVE'">
+                            {{ totalFeeBig.toLocaleString(2) }} {{ nativeAssetSymbol }}
                         </p>
                         <p v-if="currency_type === 'USD'">
                             ${{ totalFeeUsdBig.toLocaleString(2) }} USD
@@ -267,7 +267,7 @@ export default class AddDelegator extends Vue {
     formEnd: Date = new Date()
     formRewardAddr = ''
 
-    currency_type = 'AVAX'
+    currency_type = 'NATIVE'
 
     mounted() {
         this.rewardSelect('local')
@@ -596,6 +596,10 @@ export default class AddDelegator extends Vue {
         return totAvailable
     }
 
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+    }
+
     // Go Back to earn
     cancel() {
         this.$emit('cancel')
@@ -621,7 +625,7 @@ export default class AddDelegator extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../../main";
+@use '../../../../main';
 
 .add_delegator {
     height: 100%;
