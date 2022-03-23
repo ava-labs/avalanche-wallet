@@ -125,7 +125,7 @@ const assets_module: Module<AssetsState, RootState> = {
             state.evmChainId = id
         },
         // Called on a logout event
-        onlogout({ state, commit }) {
+        onLogout({ state, commit }) {
             // state.isUpdateBalance = false
             commit('removeAllAssets')
         },

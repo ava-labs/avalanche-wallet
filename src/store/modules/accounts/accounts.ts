@@ -166,6 +166,10 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
     },
     getters: {
+        hasAccounts(state: AccountsState, getters) {
+            return state.accounts.length > 0
+        },
+
         baseAddresses(state: AccountsState, getters, rootState: RootState) {
             let wallets = rootState.wallets
             return wallets.map((w: WalletType) => {

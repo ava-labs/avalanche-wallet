@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store } from 'vuex'
 
 import Assets from './modules/assets/assets'
 import Network from './modules/network/network'
@@ -158,9 +158,17 @@ export default new Vuex.Store({
 
         async logout(store) {
             localStorage.removeItem('w')
+            store.state.wallets = []
+            store.state.volatileWallets = []
+            store.state.activeWallet = null
+            store.state.address = null
             store.state.isAuth = false
+
+            store.dispatch('Accounts/onLogout')
+            store.dispatch('Assets/onLogout')
+
             // Go to the base URL with GET request not router
-            router.push(store.state.wallets.length > 0 ? '/access' : '/')
+            router.push(store.getters['Accounts/hasAccounts'] ? '/access' : '/')
         },
 
         // used with logout

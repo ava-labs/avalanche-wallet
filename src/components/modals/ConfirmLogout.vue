@@ -46,6 +46,7 @@ export default class ConfirmLogout extends Vue {
     }
 
     async submit() {
+        this.close()
         this.isLoading = true
         await this.$store.dispatch('logout')
         await this.$store.dispatch('Notifications/add', {
@@ -53,7 +54,6 @@ export default class ConfirmLogout extends Vue {
             message: 'You have successfully logged out of your wallet.',
         })
         this.isLoading = false
-        this.close()
     }
 }
 </script>
