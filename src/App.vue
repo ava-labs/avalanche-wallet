@@ -58,7 +58,7 @@ export default {
         this.$store.dispatch('Assets/ERC721/init')
         this.$store.dispatch('updateAvaxPrice')
 
-        if (this.$store.state.Accounts.accounts.length > 0) {
+        if (this.$route.path === '/' && this.$store.state.Accounts.accounts.length > 0) {
             this.$router.push('/access')
         }
     },
@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@use "./main";
+@use './main';
 
 .main_cols {
     &[wallet_view] {
@@ -131,7 +131,7 @@ export default {
 </style>
 
 <style lang="scss">
-@use "./main";
+@use './main';
 
 html {
     height: 100%;

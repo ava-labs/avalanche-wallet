@@ -158,8 +158,9 @@ export default new Vuex.Store({
 
         async logout(store) {
             localStorage.removeItem('w')
+            store.state.isAuth = false
             // Go to the base URL with GET request not router
-            window.location.href = '/'
+            router.push(store.state.wallets.length > 0 ? '/access' : '/')
         },
 
         // used with logout
