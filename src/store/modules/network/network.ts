@@ -178,8 +178,8 @@ const network_module: Module<NetworkState, RootState> = {
         async init({ state, commit, dispatch }) {
             let columbus = new AvaNetwork(
                 'Columbus',
-                'https://columbus.camino.foundation:9650',
-                1000,
+                'https://columbus.camino.foundation',
+                1001,
                 '',
                 '',
                 true
