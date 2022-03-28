@@ -47,6 +47,7 @@
                             class="memo"
                             maxlength="256"
                             placeholder="Memo"
+                            autocomplete="off"
                             v-model="memo"
                             v-if="memo || !isConfirm"
                             :disabled="isConfirm"
