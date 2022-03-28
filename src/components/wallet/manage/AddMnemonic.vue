@@ -1,6 +1,11 @@
 <template>
     <div class="add_mnemonic">
-        <textarea v-model="phrase" placeholder="web  jar  rack  cereal  inherit ...."></textarea>
+        <textarea
+            v-model="phrase"
+            placeholder="web  jar  rack  cereal  inherit ...."
+            autocomplete="off"
+            autocapitalize="off"
+        ></textarea>
         <p class="err">{{ err }}</p>
         <v-btn
             :disabled="!canSubmit"

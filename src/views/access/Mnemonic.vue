@@ -5,7 +5,12 @@
                 <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
             <label>{{ $t('access.mnemonic.subtitle') }}</label>
-            <textarea @input="onPhraseIn" translate="no"></textarea>
+            <textarea
+                @input="onPhraseIn"
+                translate="no"
+                autocomplete="off"
+                autocapitalize="off"
+            ></textarea>
             <div class="button_container">
                 <p class="err" v-if="err">{{ err }}</p>
                 <v-btn
