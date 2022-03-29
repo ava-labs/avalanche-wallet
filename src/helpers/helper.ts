@@ -24,22 +24,13 @@ function keyToKeypair(key: string, chainID: string = 'X'): AVMKeyPair {
 }
 
 function calculateStakingReward(amount: BN, duration: number, currentSupply: BN): BN {
-    let networkID = ava.getNetworkID()
+    const platform = ava.getNetwork().P
 
-    //@ts-ignore
-    let defValues = Defaults.network[networkID]
-
-    if (!defValues) {
-        console.error('Network default values not found.')
-        return new BN(0)
-    }
-    const defPlatformVals = defValues.P
-
-    let maxConsumption: number = defPlatformVals.maxConsumption
-    let minConsumption: number = defPlatformVals.minConsumption
+    let maxConsumption: number = platform.maxConsumption
+    let minConsumption: number = platform.minConsumption
     let diffConsumption = maxConsumption - minConsumption
-    let maxSupply: BN = defPlatformVals.maxSupply
-    let maxStakingDuration: BN = defPlatformVals.maxStakingDuration
+    let maxSupply: BN = platform.maxSupply
+    let maxStakingDuration: BN = platform.maxStakingDuration
     let remainingSupply = maxSupply.sub(currentSupply)
 
     let amtBig = Big(amount.div(ONEAVAX).toString())
