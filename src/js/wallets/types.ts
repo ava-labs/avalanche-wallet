@@ -6,7 +6,6 @@ import {
     UTXO as AVMUTXO,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
-    UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 
 import {
@@ -24,7 +23,6 @@ import {
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
 import { PayloadBase } from 'avalanche/dist/utils'
-import { ChainIdType } from '@/constants'
 import Erc20Token from '@/js/Erc20Token'
 
 import { Transaction } from '@ethereumjs/tx'

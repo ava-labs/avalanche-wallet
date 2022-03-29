@@ -49,9 +49,7 @@ import {
     ExportChainsP,
     ExportChainsX,
     GasHelper,
-    Network,
-    NetworkHelper,
-    Utils,
+    avaxCtoX,
 } from '@avalabs/avalanche-wallet-sdk'
 
 @Component({
@@ -83,7 +81,7 @@ export default class ChainImport extends Vue {
             this.onSuccess(txId)
         } catch (e) {
             if (this.isSuccess) return
-            this.onError(e)
+            this.onError(e as Error)
         }
     }
 
@@ -94,7 +92,7 @@ export default class ChainImport extends Vue {
             let txId = await this.wallet.importToPlatformChain(source)
             this.onSuccess(txId)
         } catch (e) {
-            this.onError(e)
+            this.onError(e as Error)
         }
     }
 
@@ -120,10 +118,10 @@ export default class ChainImport extends Vue {
             const gas = GasHelper.estimateImportGasFeeFromMockTx(numIns, numSigs)
 
             const totFee = baseFee.mul(new BN(gas))
-            let txId = await this.wallet.importToCChain(source, Utils.avaxCtoX(totFee))
+            let txId = await this.wallet.importToCChain(source, avaxCtoX(totFee))
             this.onSuccess(txId)
         } catch (e) {
-            this.onError(e)
+            this.onError(e as Error)
         }
     }
 

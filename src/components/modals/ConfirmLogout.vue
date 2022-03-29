@@ -46,7 +46,6 @@ export default class ConfirmLogout extends Vue {
     }
 
     async submit() {
-        this.close()
         this.isLoading = true
         await this.$store.dispatch('logout')
         await this.$store.dispatch('Notifications/add', {

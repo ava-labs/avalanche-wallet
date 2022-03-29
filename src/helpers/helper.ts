@@ -7,7 +7,7 @@ import {
     UTXO,
 } from 'avalanche/dist/apis/avm'
 
-import { Defaults, getPreferredHRP, ONEAVAX, PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
+import { ONEAVAX, PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
 import Big from 'big.js'
 
 import { Buffer, BN } from 'avalanche'
@@ -18,7 +18,7 @@ function bnToBig(val: BN, denomination = 0): Big {
 }
 
 function keyToKeypair(key: string, chainID: string = 'X'): AVMKeyPair {
-    let hrp = getPreferredHRP(ava.getNetworkID())
+    let hrp = ava.getHRP()
     let keychain = new AVMKeyChain(hrp, chainID)
     return keychain.importKey(key)
 }

@@ -9,7 +9,7 @@ import { BN } from 'avalanche'
 import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
-import { Network } from '@avalabs/avalanche-wallet-sdk'
+import { setAvalanche } from '@avalabs/avalanche-wallet-sdk'
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
@@ -105,23 +105,13 @@ const network_module: Module<NetworkState, RootState> = {
             // Chose if the network should use credentials
             await net.updateCredentials()
             ava.setRequestConfig('withCredentials', net.withCredentials)
-            ava.setAddress(net.ip, net.port, net.protocol)
-            ava.setNetworkID(net.networkId)
+            ava.setNetwork(net.ip, net.port, net.protocol, net.networkId)
 
             // Reset transaction history
             commit('History/clear', null, { root: true })
 
-            // Query the network to get network id
-            let chainIdX = await infoApi.getBlockchainID('X')
-            let chainIdP = await infoApi.getBlockchainID('P')
-            let chainIdC = await infoApi.getBlockchainID('C')
-
-            avm.refreshBlockchainID(chainIdX)
-            avm.setBlockchainAlias('X')
-            pChain.refreshBlockchainID(chainIdP)
-            pChain.setBlockchainAlias('P')
-            cChain.refreshBlockchainID(chainIdC)
-            cChain.setBlockchainAlias('C')
+            // Wait until network settings are fetched
+            await ava.fetchNetworkSettings()
 
             avm.getAVAXAssetID(true)
             pChain.getAVAXAssetID(true)
@@ -162,8 +152,7 @@ const network_module: Module<NetworkState, RootState> = {
             dispatch('History/updateTransactionHistory', null, { root: true })
 
             // Set the SDK Network
-            let sdkNetConf = await Network.getConfigFromUrl(net.getFullURL())
-            await Network.setNetworkAsync(sdkNetConf)
+            setAvalanche(ava)
             // state.isConnected = true;
             state.status = 'connected'
             return true

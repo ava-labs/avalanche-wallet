@@ -28,7 +28,6 @@ import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { WalletType } from '@/js/wallets/types'
 
 import { ava } from '@/AVA'
-import { getPreferredHRP } from 'avalanche/dist/utils'
 import { AVA_ACCOUNT_PATH } from '../../../js/wallets/MnemonicWallet'
 
 @Component
@@ -69,7 +68,7 @@ export default class HdDerivationListRow extends Vue {
         const wallet = this.wallet as LedgerWallet
 
         let networkId = ava.getNetworkID()
-        let hrp = getPreferredHRP(networkId)
+        let hrp = ava.getHRP()
 
         wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/${this.path}/${this.index}`, hrp)
     }

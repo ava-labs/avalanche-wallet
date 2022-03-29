@@ -28,24 +28,21 @@ import {
     UnsignedTx as EVMUnsignedTx,
     Tx as EvmTx,
 } from 'avalanche/dist/apis/evm'
-import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
+import { PayloadBase } from 'avalanche/dist/utils'
 
 import * as bip39 from 'bip39'
 import { BN, Buffer as BufferAvalanche } from 'avalanche'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-import { AvmExportChainType, AvmImportChainType, IAvaHdWallet } from '@/js/wallets/types'
+import { ava, bintools } from '@/AVA'
+import { IAvaHdWallet } from '@/js/wallets/types'
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/js/wallets/types'
-import { digestMessage } from '@/helpers/helper'
 import { KeyChain } from 'avalanche/dist/apis/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
-import { ExportChainsC, ExportChainsP } from '@avalabs/avalanche-wallet-sdk'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -229,10 +226,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[]
 
         let allKeys = internal.concat(external)
-        let keychain: AVMKeyChain = new AVMKeyChain(
-            getPreferredHRP(ava.getNetworkID()),
-            this.chainId
-        )
+        let keychain: AVMKeyChain = new AVMKeyChain(ava.getHRP(), this.chainId)
 
         for (var i = 0; i < allKeys.length; i++) {
             keychain.addKey(allKeys[i])

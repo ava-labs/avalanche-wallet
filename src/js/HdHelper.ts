@@ -5,8 +5,7 @@ import {
 } from 'avalanche/dist/apis/avm'
 
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
-import { getPreferredHRP } from 'avalanche/dist/utils'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, avm, bintools, pChain } from '@/AVA'
 import HDKey from 'hdkey'
 import { Buffer } from 'avalanche'
 import {
@@ -56,7 +55,7 @@ class HdHelper {
         this.isInit = false
 
         this.chainId = chainId
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         if (chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, chainId)
             this.utxoSet = new AVMUTXOSet()
@@ -83,7 +82,7 @@ class HdHelper {
     async onNetworkChange() {
         this.clearCache()
         this.isInit = false
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         if (this.chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, this.chainId)
             this.utxoSet = new AVMUTXOSet()
@@ -183,7 +182,7 @@ class HdHelper {
 
     // Updates the helper keychain to contain keys upto the HD Index
     updateKeychain(): AVMKeyChain | PlatformVMKeyChain {
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         let keychain: AVMKeyChain | PlatformVMKeyChain
 
         if (this.chainId === 'X') {
@@ -417,7 +416,7 @@ class HdHelper {
 
         let pkHex = key.publicKey.toString('hex')
         let pkBuff = Buffer.from(pkHex, 'hex')
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
 
         let chainId = this.chainId
 

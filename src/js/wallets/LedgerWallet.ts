@@ -10,13 +10,13 @@ import { Transaction } from '@ethereumjs/tx'
 import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 const bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
 
-import { UTXO as AVMUTXO, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
+import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore } from '@/js/wallets/types'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
@@ -51,12 +51,12 @@ import {
     SelectCredentialClass as EVMSelectCredentialClass,
 } from 'avalanche/dist/apis/evm'
 
-import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
-import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
+import { Credential, SigIdx, Signature } from 'avalanche/dist/common'
+import { PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig } from '@/store/types'
 import { WalletNameType } from '@/js/wallets/types'
-import { bnToBig, digestMessage } from '@/helpers/helper'
+import { bnToBig } from '@/helpers/helper'
 import { abiDecoder, web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './MnemonicWallet'
 import { ChainIdType } from '@/constants'
@@ -64,7 +64,7 @@ import { ParseableAvmTxEnum, ParseablePlatformEnum, ParseableEvmTxEnum } from '.
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
-import { Utils, NetworkHelper, Network } from '@avalabs/avalanche-wallet-sdk'
+import { idToChainAlias } from '@avalabs/avalanche-wallet-sdk'
 
 export const MIN_EVM_SUPPORT_V = '0.5.3'
 
@@ -145,7 +145,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             items = ((tx as AVMImportTx) || PlatformImportTx).getImportInputs()
         }
 
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         let paths: string[] = []
 
         let isAvaxOnly = true
@@ -463,7 +463,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         changePath: null | { toPathArray: () => number[] }
     ): ILedgerBlockMessage[] {
         let messages: ILedgerBlockMessage[] = []
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
 
@@ -630,8 +630,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getEvmTransactionMessages(tx: Transaction): ILedgerBlockMessage[] {
         let gasPrice = tx.gasPrice
         let gasLimit = tx.gasLimit
-        let totFee = gasPrice.mul(new BN(gasLimit))
-        let feeNano = Utils.bnToBig(totFee, 9)
+        let totFee = gasPrice.mul(new BN(gasLimit.toString()))
+        let feeNano = bnToBig(new BN(totFee.toString()), 9)
 
         let msgs: ILedgerBlockMessage[] = []
         try {
@@ -722,7 +722,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (txType === PlatformVMConstants.EXPORTTX) {
             const destChainBuff = (tx as PlatformExportTx).getDestinationChain()
             // If destination chain is C chain, sign hash
-            const destChain = Network.idToChainAlias(bintools.cb58Encode(destChainBuff))
+            const destChain = idToChainAlias(bintools.cb58Encode(destChainBuff))
             if (destChain === 'C') {
                 canLedgerParse = false
             }
@@ -731,7 +731,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (txType === PlatformVMConstants.IMPORTTX) {
             const sourceChainBuff = (tx as PlatformImportTx).getSourceChain()
             // If destination chain is C chain, sign hash
-            const sourceChain = Network.idToChainAlias(bintools.cb58Encode(sourceChainBuff))
+            const sourceChain = idToChainAlias(bintools.cb58Encode(sourceChainBuff))
             if (sourceChain === 'C') {
                 canLedgerParse = false
             }
@@ -777,7 +777,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (typeId === EVMConstants.EXPORTTX) {
             const destChainBuff = (tx as EVMExportTx).getDestinationChain()
             // If destination chain is C chain, sign hash
-            const destChain = Network.idToChainAlias(bintools.cb58Encode(destChainBuff))
+            const destChain = idToChainAlias(bintools.cb58Encode(destChainBuff))
             if (destChain === 'P') {
                 canLedgerParse = false
             }
@@ -786,7 +786,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         if (typeId === EVMConstants.IMPORTTX) {
             const sourceChainBuff = (tx as EVMImportTx).getSourceChain()
             // If destination chain is C chain, sign hash
-            const sourceChain = Network.idToChainAlias(bintools.cb58Encode(sourceChainBuff))
+            const sourceChain = idToChainAlias(bintools.cb58Encode(sourceChainBuff))
             if (sourceChain === 'P') {
                 canLedgerParse = false
             }

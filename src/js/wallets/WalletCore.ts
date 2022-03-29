@@ -5,10 +5,10 @@ import { BN } from 'avalanche'
 import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import {
+    chainIdFromAlias,
     ExportChainsC,
     ExportChainsP,
     ExportChainsX,
-    Network,
     UtxoHelper,
     TxHelper,
     GasHelper,
@@ -22,6 +22,8 @@ import {
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import { AvmImportChainType, WalletType } from '@/js/wallets/types'
+import { ExportTx as PlatformExportTx } from 'avalanche/dist/apis/platformvm'
+
 var uniqid = require('uniqid')
 
 abstract class WalletCore {
@@ -75,7 +77,7 @@ abstract class WalletCore {
         let toAddress = '0x' + hexAddr
         let ownerAddresses = [bechAddr]
         let fromAddresses = ownerAddresses
-        const sourceChainId = Network.chainIdFromAlias(sourceChain)
+        const sourceChainId = chainIdFromAlias(sourceChain)
 
         return await cChain.buildImportTx(
             utxoSet,
@@ -140,6 +142,19 @@ abstract class WalletCore {
             destinationAddr,
             amtFee,
             changeAddress
+        )
+
+        const eTx = (exportTx.getTransaction() as unknown) as PlatformExportTx
+        console.log(bintools.cb58Encode(exportTx.getTransaction().getOuts()[0].getAssetID()))
+        console.log(
+            bintools.addressToString('Y', 'X', eTx.getExportOutputs()[0].getOutput().getAddress(0))
+        )
+        console.log(
+            bintools.addressToString(
+                'Y',
+                'X',
+                exportTx.getTransaction().getOuts()[0].getOutput().getAddress(0)
+            )
         )
 
         let tx = await this.signX(exportTx)
@@ -258,7 +273,7 @@ abstract class WalletCore {
             throw new Error('Nothing to import.')
         }
 
-        const sourceChainId = Network.chainIdFromAlias(sourceChain)
+        const sourceChainId = chainIdFromAlias(sourceChain)
         // Owner addresses, the addresses we exported to
         let pToAddr = this.getCurrentAddressPlatform()
 
@@ -302,7 +317,7 @@ abstract class WalletCore {
         let fromAddrs = utxoAddrs
         let ownerAddrs = utxoAddrs
 
-        let sourceChainId = Network.chainIdFromAlias(sourceChain)
+        let sourceChainId = chainIdFromAlias(sourceChain)
 
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(
