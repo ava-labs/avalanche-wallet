@@ -1,4 +1,4 @@
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { BN, Buffer } from 'avalanche'
 import {
@@ -46,7 +46,7 @@ export async function buildUnsignedTransaction(
 
     // TODO: use internal asset ID
     // This does not update on network change, causing issues
-    const AVAX_ID_BUF = await avm.getAVAXAssetID()
+    const AVAX_ID_BUF = await ava.XChain().getAVAXAssetID()
     const AVAX_ID_STR = AVAX_ID_BUF.toString('hex')
     const TO_BUF = bintools.stringToAddress(addr)
 
@@ -68,7 +68,7 @@ export async function buildUnsignedTransaction(
             let amt: BN = tx.amount
 
             if (assetId.toString('hex') === AVAX_ID_STR) {
-                aad.addAssetAmount(assetId, amt, avm.getTxFee())
+                aad.addAssetAmount(assetId, amt, ava.XChain().getTxFee())
                 isFeeAdded = true
             } else {
                 aad.addAssetAmount(assetId, amt, ZERO)
@@ -78,8 +78,8 @@ export async function buildUnsignedTransaction(
 
     // If fee isn't added, add it
     if (!isFeeAdded) {
-        if (avm.getTxFee().gt(ZERO)) {
-            aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getTxFee())
+        if (ava.XChain().getTxFee().gt(ZERO)) {
+            aad.addAssetAmount(AVAX_ID_BUF, ZERO, ava.XChain().getTxFee())
         }
     }
 
@@ -103,7 +103,7 @@ export async function buildUnsignedTransaction(
     // If transferring an NFT, build the transaction on top of an NFT tx
     let unsignedTx: AVMUnsignedTx
     let networkId: number = ava.getNetworkID()
-    let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID())
+    let chainId: Buffer = bintools.cb58Decode(ava.XChain().getBlockchainID())
 
     if (nftUtxos.length > 0) {
         let nftSet = new AVMUTXOSet()
@@ -170,14 +170,9 @@ export async function buildCreateNftFamilyTx(
         minterSets.push(minterSet)
     }
 
-    let unsignedTx: AVMUnsignedTx = await avm.buildCreateNFTAssetTx(
-        utxoSet,
-        fromAddresses,
-        [changeAddress],
-        minterSets,
-        name,
-        symbol
-    )
+    let unsignedTx: AVMUnsignedTx = await ava
+        .XChain()
+        .buildCreateNFTAssetTx(utxoSet, fromAddresses, [changeAddress], minterSets, name, symbol)
     return unsignedTx
 }
 
@@ -202,15 +197,17 @@ export async function buildMintNftTx(
 
     let groupID = (mintUtxo.getOutput() as NFTMintOutput).getGroupID()
 
-    let mintTx = await avm.buildCreateNFTMintTx(
-        utxoSet,
-        owners,
-        sourceAddresses,
-        [changeAddress],
-        mintUtxo.getUTXOID(),
-        groupID,
-        payload
-    )
+    let mintTx = await ava
+        .XChain()
+        .buildCreateNFTMintTx(
+            utxoSet,
+            owners,
+            sourceAddresses,
+            [changeAddress],
+            mintUtxo.getUTXOID(),
+            groupID,
+            payload
+        )
     return mintTx
 }
 

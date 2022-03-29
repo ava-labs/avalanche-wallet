@@ -1,4 +1,4 @@
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
@@ -52,7 +52,7 @@ class WalletHelper {
         )
 
         let signed = await wallet.signX(unsignedTx)
-        return await avm.issueTx(signed)
+        return await ava.XChain().issueTx(signed)
     }
 
     static async mintNft(
@@ -77,7 +77,7 @@ class WalletHelper {
             utxoSet
         )
         let signed = await wallet.signX(tx)
-        return await avm.issueTx(signed)
+        return await ava.XChain().issueTx(signed)
     }
 
     static async issueBatchTx(
@@ -88,7 +88,7 @@ class WalletHelper {
     ): Promise<string> {
         let unsignedTx = await wallet.buildUnsignedTransaction(orders, addr, memo)
         const tx = await wallet.signX(unsignedTx)
-        const txId: string = await avm.issueTx(tx)
+        const txId: string = await ava.XChain().issueTx(tx)
 
         return txId
     }
@@ -129,7 +129,7 @@ class WalletHelper {
         let startTime = new BN(Math.round(start.getTime() / 1000))
         let endTime = new BN(Math.round(end.getTime() / 1000))
 
-        const unsignedTx = await pChain.buildAddValidatorTx(
+        const unsignedTx = await ava.PChain().buildAddValidatorTx(
             utxoSet,
             [stakeReturnAddr],
             pAddressStrings, // from
@@ -143,7 +143,7 @@ class WalletHelper {
         )
 
         let tx = await wallet.signP(unsignedTx)
-        return await pChain.issueTx(tx)
+        return await ava.PChain().issueTx(tx)
     }
 
     static async delegate(
@@ -180,7 +180,7 @@ class WalletHelper {
         let startTime = new BN(Math.round(start.getTime() / 1000))
         let endTime = new BN(Math.round(end.getTime() / 1000))
 
-        const unsignedTx = await pChain.buildAddDelegatorTx(
+        const unsignedTx = await ava.PChain().buildAddDelegatorTx(
             utxoSet,
             [stakeReturnAddr],
             pAddressStrings,
@@ -193,7 +193,7 @@ class WalletHelper {
         )
 
         const tx = await wallet.signP(unsignedTx)
-        return await pChain.issueTx(tx)
+        return await ava.PChain().issueTx(tx)
     }
 
     static async getEthBalance(wallet: WalletType) {

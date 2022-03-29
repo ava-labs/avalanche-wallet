@@ -13,7 +13,7 @@ import {
     TxHelper,
     GasHelper,
 } from '@avalabs/avalanche-wallet-sdk'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm/utxos'
 import { Tx as EVMTx, UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
 import {
@@ -44,11 +44,11 @@ abstract class WalletCore {
     abstract getAllAddressesP(): string[]
     abstract getAllAddressesX(): string[]
 
-    abstract async signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
-    abstract async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
-    abstract async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
+    abstract signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
+    abstract signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
+    abstract signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
 
-    abstract async signMessage(msg: string, address?: string): Promise<string>
+    abstract signMessage(msg: string, address?: string): Promise<string>
     abstract getPlatformUTXOSet(): PlatformUTXOSet
 
     getUTXOSet(): AVMUTXOSet {
@@ -79,14 +79,9 @@ abstract class WalletCore {
         let fromAddresses = ownerAddresses
         const sourceChainId = chainIdFromAlias(sourceChain)
 
-        return await cChain.buildImportTx(
-            utxoSet,
-            toAddress,
-            ownerAddresses,
-            sourceChainId,
-            fromAddresses,
-            fee
-        )
+        return await ava
+            .CChain()
+            .buildImportTx(utxoSet, toAddress, ownerAddresses, sourceChainId, fromAddresses, fee)
     }
 
     /**
@@ -109,7 +104,7 @@ abstract class WalletCore {
 
         const unsignedTxFee = await this.createImportTxC(sourceChain, utxoSet, fee)
         let tx = await this.signC(unsignedTxFee)
-        let id = await cChain.issueTx(tx.toString())
+        let id = await ava.CChain().issueTx(tx.toString())
 
         return id
     }
@@ -128,7 +123,7 @@ abstract class WalletCore {
         if (importFee) {
             amtFee = amt.add(importFee)
         } else if (destinationChain === 'P') {
-            let fee = pChain.getTxFee()
+            let fee = ava.PChain().getTxFee()
             amtFee = amt.add(fee)
         }
 
@@ -159,7 +154,7 @@ abstract class WalletCore {
 
         let tx = await this.signX(exportTx)
 
-        return avm.issueTx(tx)
+        return ava.XChain().issueTx(tx)
     }
 
     async exportFromPChain(amt: BN, destinationChain: ExportChainsP, importFee?: BN) {
@@ -177,7 +172,7 @@ abstract class WalletCore {
             amtFee = amt.add(importFee)
         } else if (destinationChain === 'X') {
             // We can add the import fee for X chain
-            let fee = avm.getTxFee()
+            let fee = ava.XChain().getTxFee()
             amtFee = amt.add(fee)
         }
 
@@ -195,7 +190,7 @@ abstract class WalletCore {
         )
 
         let tx = await this.signP(exportTx)
-        return await pChain.issueTx(tx)
+        return await ava.PChain().issueTx(tx)
     }
 
     /**
@@ -207,7 +202,7 @@ abstract class WalletCore {
     async exportFromCChain(amt: BN, destinationChain: ExportChainsC, exportFee: BN) {
         // Add import fee
         // X and P have the same fee
-        let importFee = avm.getTxFee()
+        let importFee = ava.XChain().getTxFee()
         let amtFee = amt.add(importFee)
 
         let hexAddr = this.getEvmAddress()
@@ -230,7 +225,7 @@ abstract class WalletCore {
         )
 
         let tx = await this.signC(exportTx)
-        return cChain.issueTx(tx.toString())
+        return ava.CChain().issueTx(tx.toString())
     }
 
     /**
@@ -285,19 +280,21 @@ abstract class WalletCore {
         let fromAddrs = utxoAddrs
         let ownerAddrs = utxoAddrs
 
-        const unsignedTx = await pChain.buildImportTx(
-            utxoSet,
-            ownerAddrs,
-            sourceChainId,
-            [pToAddr],
-            [pToAddr],
-            [pToAddr],
-            undefined,
-            undefined
-        )
+        const unsignedTx = await ava
+            .PChain()
+            .buildImportTx(
+                utxoSet,
+                ownerAddrs,
+                sourceChainId,
+                [pToAddr],
+                [pToAddr],
+                [pToAddr],
+                undefined,
+                undefined
+            )
         const tx = await this.signP(unsignedTx)
         // Pass in string because AJS fails to verify Tx type
-        return pChain.issueTx(tx.toString())
+        return ava.PChain().issueTx(tx.toString())
     }
 
     async importToXChain(sourceChain: AvmImportChainType) {
@@ -320,17 +317,12 @@ abstract class WalletCore {
         let sourceChainId = chainIdFromAlias(sourceChain)
 
         // Owner addresses, the addresses we exported to
-        const unsignedTx = await avm.buildImportTx(
-            utxoSet,
-            ownerAddrs,
-            sourceChainId,
-            [xToAddr],
-            fromAddrs,
-            [xToAddr]
-        )
+        const unsignedTx = await ava
+            .XChain()
+            .buildImportTx(utxoSet, ownerAddrs, sourceChainId, [xToAddr], fromAddrs, [xToAddr])
 
         const tx = await this.signX(unsignedTx)
-        return await avm.issueTx(tx.toString())
+        return await ava.XChain().issueTx(tx.toString())
     }
 }
 export { WalletCore }

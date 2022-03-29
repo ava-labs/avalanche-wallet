@@ -36,7 +36,7 @@ import {
     downloadCSVFile,
     parseMemo,
 } from '@/store/modules/history/history_utils'
-import { ava, avm } from '@/AVA'
+import { ava } from '@/AVA'
 import { BN } from 'avalanche'
 
 @Component({
@@ -93,7 +93,7 @@ export default class ExportAvaxCsvModal extends Vue {
             return tx.type === 'base' || tx.type === 'operation'
         })
 
-        let txFee = avm.getTxFee()
+        let txFee = ava.XChain().getTxFee()
 
         let rows: CsvRowAvaxTransferData[] = []
         const ZERO = new BN(0)

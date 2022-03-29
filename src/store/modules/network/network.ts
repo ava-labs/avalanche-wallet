@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 import { NetworkState } from '@/store/modules/network/types'
 
-import { ava, avm, cChain, infoApi, pChain } from '@/AVA'
+import { ava, infoApi } from '@/AVA'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
 import { BN } from 'avalanche'
@@ -113,9 +113,9 @@ const network_module: Module<NetworkState, RootState> = {
             // Wait until network settings are fetched
             await ava.fetchNetworkSettings()
 
-            avm.getAVAXAssetID(true)
-            pChain.getAVAXAssetID(true)
-            cChain.getAVAXAssetID(true)
+            ava.XChain().getAVAXAssetID(true)
+            ava.PChain().getAVAXAssetID(true)
+            ava.CChain().getAVAXAssetID(true)
 
             state.selectedNetwork = net
             dispatch('saveSelectedNetwork')
@@ -161,7 +161,7 @@ const network_module: Module<NetworkState, RootState> = {
         async updateTxFee({ state }) {
             let txFee = await infoApi.getTxFee()
             state.txFee = txFee.txFee
-            avm.setTxFee(txFee.txFee)
+            ava.XChain().setTxFee(txFee.txFee)
         },
 
         async init({ state, commit, dispatch }) {

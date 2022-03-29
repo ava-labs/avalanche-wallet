@@ -53,11 +53,8 @@ import { BN } from 'avalanche'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import { ChainIdType } from '@/constants'
-import { avm } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import AvaAsset from '@/js/AvaAsset'
 import { ChainSwapFormData } from '@/components/wallet/earn/ChainTransfer/types'
-import { AvaNetwork } from '@/js/AvaNetwork'
 
 const chainTypes: ChainIdType[] = ['X', 'P', 'C']
 const chainNames = {

@@ -2,7 +2,7 @@ import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 
 import { BN } from 'avalanche'
-import { pChain } from '@/AVA'
+import { ava } from '@/AVA'
 
 import {
     GetPendingValidatorsResponse,
@@ -10,8 +10,6 @@ import {
     PlatformState,
     ValidatorDelegatorDict,
     ValidatorDelegatorPendingDict,
-    ValidatorDict,
-    ValidatorGroup,
     ValidatorListItem,
 } from '@/store/modules/platform/types'
 import {
@@ -43,11 +41,11 @@ const platform_module: Module<PlatformState, RootState> = {
     },
     actions: {
         async updateCurrentSupply({ state }) {
-            state.currentSupply = await pChain.getCurrentSupply()
+            state.currentSupply = await ava.PChain().getCurrentSupply()
         },
 
         async updateMinStakeAmount({ state }) {
-            let res = await pChain.getMinStake(true)
+            let res = await ava.PChain().getMinStake(true)
             state.minStake = res.minValidatorStake
             state.minStakeDelegation = res.minDelegatorStake
 
@@ -62,14 +60,14 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         async updateValidators({ state, commit }) {
-            let res = (await pChain.getCurrentValidators()) as GetValidatorsResponse
+            let res = (await ava.PChain().getCurrentValidators()) as GetValidatorsResponse
             let validators = res.validators
 
             commit('setValidators', validators)
         },
 
         async updateValidatorsPending({ state, commit }) {
-            let res = (await pChain.getPendingValidators()) as GetPendingValidatorsResponse
+            let res = (await ava.PChain().getPendingValidators()) as GetPendingValidatorsResponse
             let validators = res.validators
             let delegators = res.delegators
 

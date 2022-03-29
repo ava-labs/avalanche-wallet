@@ -3,12 +3,12 @@ import { UTXO } from 'avalanche/dist/apis/avm'
 
 import { BN, Buffer } from 'avalanche'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import HDKey from 'hdkey'
 import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
+import { buildUnsignedTransaction } from '../TxHelper'
 import { WalletCore } from '@/js/wallets/WalletCore'
 import { updateFilterAddresses } from '../../providers'
 import { digestMessage } from '@/helpers/helper'
@@ -28,7 +28,7 @@ abstract class HdWalletCore extends WalletCore {
     constructor(accountHdKey: HDKey, ethHdNode: HDKey, isPublic = true) {
         super()
         this.ethHdNode = ethHdNode
-        this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
+        this.chainId = ava.XChain().getBlockchainAlias() || ava.XChain().getBlockchainID()
         this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
@@ -276,6 +276,6 @@ abstract class HdWalletCore extends WalletCore {
         return await this.signMessageByExternalAddress(msg, address)
     }
 
-    abstract async signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
+    abstract signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
 }
 export { HdWalletCore }

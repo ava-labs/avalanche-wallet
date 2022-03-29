@@ -1,18 +1,18 @@
 import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import { avm, cChain, pChain } from '@/AVA'
+import { ava } from '@/AVA'
 import { BN } from 'avalanche'
 
 export async function getStakeForAddresses(addrs: string[]): Promise<BN> {
     if (addrs.length <= 256) {
-        let stakeData = await pChain.getStake(addrs)
+        let stakeData = await ava.PChain().getStake(addrs)
         return stakeData.staked
     } else {
         //Break the list in to 1024 chunks
         let chunk = addrs.slice(0, 256)
         let remainingChunk = addrs.slice(256)
 
-        let stakeData = await pChain.getStake(chunk)
+        let stakeData = await ava.PChain().getStake(chunk)
         let chunkStake = stakeData.staked
         return chunkStake.add(await getStakeForAddresses(remainingChunk))
     }
@@ -39,9 +39,9 @@ export async function avmGetAllUTXOsForAddresses(
     if (addrs.length > 1024) throw new Error('Maximum length of addresses is 1024')
     let response
     if (!endIndex) {
-        response = await avm.getUTXOs(addrs)
+        response = await ava.XChain().getUTXOs(addrs)
     } else {
-        response = await avm.getUTXOs(addrs, undefined, 0, endIndex)
+        response = await ava.XChain().getUTXOs(addrs, undefined, 0, endIndex)
     }
 
     let utxoSet = response.utxos
@@ -78,9 +78,9 @@ export async function platformGetAllUTXOsForAddresses(
 ): Promise<PlatformUTXOSet> {
     let response
     if (!endIndex) {
-        response = await pChain.getUTXOs(addrs)
+        response = await ava.PChain().getUTXOs(addrs)
     } else {
-        response = await pChain.getUTXOs(addrs, undefined, 0, endIndex)
+        response = await ava.PChain().getUTXOs(addrs, undefined, 0, endIndex)
     }
 
     let utxoSet = response.utxos

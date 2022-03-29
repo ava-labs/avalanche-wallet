@@ -1,4 +1,4 @@
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
 import { WalletNameType } from '@/js/wallets/types'
@@ -65,8 +65,8 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
         this.key = pk
 
-        this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
-        this.chainIdP = pChain.getBlockchainAlias() || pChain.getBlockchainID()
+        this.chainId = ava.XChain().getBlockchainAlias() || ava.XChain().getBlockchainID()
+        this.chainIdP = ava.PChain().getBlockchainAlias() || ava.PChain().getBlockchainID()
 
         let hrp = ava.getHRP()
 

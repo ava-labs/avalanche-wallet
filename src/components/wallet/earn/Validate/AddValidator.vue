@@ -228,7 +228,7 @@ import { BN } from 'avalanche'
 import Big from 'big.js'
 //@ts-ignore
 import { QrInput } from '@avalabs/vue_components'
-import { bintools, pChain } from '@/AVA'
+import { bintools, ava } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import ConfirmPage from '@/components/wallet/earn/Validate/ConfirmPage.vue'
 import moment from 'moment'
@@ -366,7 +366,7 @@ export default class AddValidator extends Vue {
     }
 
     get feeAmt(): BN {
-        return pChain.getTxFee()
+        return ava.PChain().getTxFee()
     }
 
     get utxosBalance(): BN {
@@ -584,7 +584,7 @@ export default class AddValidator extends Vue {
     }
 
     async updateTxStatus(txId: string) {
-        let res = await pChain.getTxStatus(txId)
+        let res = await ava.PChain().getTxStatus(txId)
 
         let status
         let reason = null

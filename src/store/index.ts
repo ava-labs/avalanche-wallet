@@ -24,7 +24,7 @@ Vue.use(Vuex)
 
 import router from '@/router'
 
-import { avm, bintools } from '@/AVA'
+import { bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
 import {

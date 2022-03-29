@@ -48,10 +48,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import NewCollectibleFamily from '@/components/wallet/studio/NewCollectibleFamily.vue'
 import MintNft from '@/components/wallet/studio/mint/MintNft.vue'
 import { IWalletNftMintDict } from '@/store/types'
-import Big from 'big.js'
-import { bnToBig } from '@/helpers/helper'
-import { avm } from '@/AVA'
-import { BN } from 'avalanche'
 @Component({
     name: 'studio',
     components: {

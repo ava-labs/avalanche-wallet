@@ -12,7 +12,7 @@
     "@metamask/eth-sig-util" "^4.0.0"
     "@obsidiansystems/hw-app-avalanche" "0.2.2"
     "@openzeppelin/contracts" "4.5.0"
-    avalanche "file:../../.cache/yarn/v6/npm-@avalabs-avalanche-wallet-sdk-0.11.1-rc1-4692fc40-4091-4039-be86-5b9636468de4-1648548395873/node_modules/avalanchejs/package"
+    avalanche "file:C:/Users/mpfau/AppData/Local/Yarn/Cache/v6/npm-@avalabs-avalanche-wallet-sdk-0.11.1-rc1-616eb977-3d11-4cd4-a882-049f136482f5-1648568176738/node_modules/avalanchejs/package"
     big.js "^6.1.1"
     bip32 "^2.0.6"
     bip32-path "^0.4.2"
@@ -15593,6 +15593,11 @@ tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
+tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
+
 tslint@^5.20.1:
   version "5.20.1"
   resolved "https://registry.npmjs.org/tslint/-/tslint-5.20.1.tgz"
@@ -15734,7 +15739,7 @@ typescript-transform-paths@^2.2.3:
   dependencies:
     minimatch "^3.0.4"
 
-typescript@4.0:
+typescript@4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.8.tgz#5739105541db80a971fdbd0d56511d1a6f17d37f"
   integrity sha512-oz1765PN+imfz1MlZzSZPtC/tqcwsCyIYA8L47EkRnRW97ztRk83SzMiWLrnChC0vqoYxSU1fcFUDA5gV/ZiPg==

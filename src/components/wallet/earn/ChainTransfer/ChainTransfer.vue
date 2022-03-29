@@ -122,7 +122,7 @@ import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import AvaAsset from '@/js/AvaAsset'
 import { BN } from 'avalanche'
-import { avm, cChain, pChain } from '@/AVA'
+import { ava } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
@@ -241,9 +241,9 @@ export default class ChainTransfer extends Vue {
 
     getFee(chain: ChainIdType, isExport: boolean): SDK.Big {
         if (chain === 'X') {
-            return SDK.bnToBigAvaxX(avm.getTxFee())
+            return SDK.bnToBigAvaxX(ava.XChain().getTxFee())
         } else if (chain === 'P') {
-            return SDK.bnToBigAvaxX(pChain.getTxFee())
+            return SDK.bnToBigAvaxX(ava.PChain().getTxFee())
         } else {
             const fee = isExport
                 ? SDK.GasHelper.estimateExportGasFeeFromMockTx(
@@ -377,9 +377,9 @@ export default class ChainTransfer extends Vue {
     async waitExportStatus(txId: string, remainingTries = 15) {
         let status
         if (this.sourceChain === 'X') {
-            status = await avm.getTxStatus(txId)
+            status = await ava.XChain().getTxStatus(txId)
         } else if (this.sourceChain === 'P') {
-            let resp = await pChain.getTxStatus(txId)
+            let resp = await ava.PChain().getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
             } else {
@@ -387,7 +387,7 @@ export default class ChainTransfer extends Vue {
                 this.exportReason = resp.reason
             }
         } else {
-            let resp = await cChain.getAtomicTxStatus(txId)
+            let resp = await ava.CChain().getAtomicTxStatus(txId)
             status = resp
         }
         this.exportStatus = status
@@ -467,16 +467,16 @@ export default class ChainTransfer extends Vue {
         let status
 
         if (this.targetChain === 'X') {
-            status = await avm.getTxStatus(txId)
+            status = await ava.XChain().getTxStatus(txId)
         } else if (this.targetChain === 'P') {
-            let resp = await pChain.getTxStatus(txId)
+            let resp = await ava.PChain().getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
             } else {
                 status = resp.status
             }
         } else {
-            let resp = await cChain.getAtomicTxStatus(txId)
+            let resp = await ava.CChain().getAtomicTxStatus(txId)
             status = resp
         }
 

@@ -5,7 +5,7 @@ import {
 } from 'avalanche/dist/apis/avm'
 
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
-import { ava, avm, bintools, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import HDKey from 'hdkey'
 import { Buffer } from 'avalanche'
 import {
@@ -248,9 +248,9 @@ class HdHelper {
 
         let chainID
         if (this.chainId === 'X') {
-            chainID = avm.getBlockchainID()
+            chainID = ava.XChain().getBlockchainID()
         } else {
-            chainID = pChain.getBlockchainID()
+            chainID = ava.PChain().getBlockchainID()
         }
 
         for (var i = 0; i < addrs.length - INDEX_RANGE; i++) {
@@ -297,9 +297,9 @@ class HdHelper {
         let utxoSet
 
         if (this.chainId === 'X') {
-            utxoSet = (await avm.getUTXOs(addrs)).utxos
+            utxoSet = (await ava.XChain().getUTXOs(addrs)).utxos
         } else {
-            utxoSet = (await pChain.getUTXOs(addrs)).utxos
+            utxoSet = (await ava.PChain().getUTXOs(addrs)).utxos
         }
 
         // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE

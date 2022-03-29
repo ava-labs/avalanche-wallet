@@ -13,7 +13,7 @@ import {
     IWalletNftMintDict,
     RootState,
 } from '@/store/types'
-import { ava, avm, bintools, cChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 import { WalletType } from '@/js/wallets/types'
@@ -370,7 +370,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // What is the AVA coin in the network
         async updateAvaAsset({ state, commit }) {
-            let res = await avm.getAssetDescription(ava.getPrimaryAssetAlias())
+            let res = await ava.XChain().getAssetDescription(ava.getPrimaryAssetAlias())
             let id = bintools.cb58Encode(res.assetID)
             state.AVA_ASSET_ID = id
             let asset = new AvaAsset(id, res.name, res.symbol, res.denomination)

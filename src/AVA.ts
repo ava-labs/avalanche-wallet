@@ -1,9 +1,7 @@
-import { KeyChain as AVMKeyChain, AVMAPI } from 'avalanche/dist/apis/avm'
 import { InfoAPI } from 'avalanche/dist/apis/info'
 import Avalanche from 'avalanche'
 //@ts-ignore
 import BinTools from 'avalanche/dist/utils/bintools'
-import { EVMAPI } from 'avalanche/dist/apis/evm'
 import { TestNetworkID } from 'avalanche/dist/utils'
 
 // Connect to TestNet by default
@@ -14,12 +12,7 @@ let protocol: string = 'http'
 let network_id: number = TestNetworkID
 let bintools: BinTools = BinTools.getInstance()
 let ava: Avalanche = new Avalanche(ip, port, protocol, network_id)
-
-let avm: AVMAPI = ava.XChain()
-let cChain: EVMAPI = ava.CChain()
-let pChain = ava.PChain()
 let infoApi: InfoAPI = ava.Info()
-let keyChain: AVMKeyChain = avm.keyChain()
 
 function isValidAddress(addr: string) {
     try {
@@ -30,4 +23,4 @@ function isValidAddress(addr: string) {
     }
 }
 
-export { ava, avm, pChain, cChain, infoApi, bintools, isValidAddress, keyChain }
+export { ava, infoApi, bintools, isValidAddress }

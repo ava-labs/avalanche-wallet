@@ -209,7 +209,7 @@ import moment from 'moment'
 
 import { BN } from 'avalanche'
 import { AmountOutput, PlatformVMConstants, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
-import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
 import { ONEAVAX } from 'avalanche/dist/utils'
@@ -327,7 +327,7 @@ export default class AddDelegator extends Vue {
     }
 
     async updateTxStatus(txId: string) {
-        let res = await pChain.getTxStatus(txId)
+        let res = await ava.PChain().getTxStatus(txId)
         let status
         let reason = null
         if (typeof res === 'string') {
@@ -526,7 +526,7 @@ export default class AddDelegator extends Vue {
         let delegationFee = Big(this.delegationFee).div(Big(100))
         let cut = this.estimatedReward.times(delegationFee)
 
-        let txFee: BN = pChain.getTxFee()
+        let txFee: BN = ava.PChain().getTxFee()
         let cutBN = new BN(cut.times(Math.pow(10, 9)).toFixed(0))
         let totFee = txFee.add(cutBN)
         return totFee
@@ -541,7 +541,7 @@ export default class AddDelegator extends Vue {
     }
 
     get txFee(): BN {
-        return pChain.getTxFee()
+        return ava.PChain().getTxFee()
     }
 
     get txFeeBig(): Big {

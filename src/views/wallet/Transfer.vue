@@ -141,7 +141,7 @@ import NftList from '@/components/wallet/transfer/NftList.vue'
 
 //@ts-ignore
 import { QrInput } from '@avalabs/vue_components'
-import { ava, avm, isValidAddress } from '../../AVA'
+import { ava, isValidAddress } from '../../AVA'
 import FaucetLink from '@/components/misc/FaucetLink.vue'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from 'avalanche/dist/apis/avm'
@@ -359,7 +359,7 @@ export default class Transfer extends Vue {
     }
 
     async waitTxConfirm(txId: string) {
-        let status = await avm.getTxStatus(txId)
+        let status = await ava.XChain().getTxStatus(txId)
         if (status === 'Unknown' || status === 'Processing') {
             // if not confirmed ask again
             setTimeout(() => {
@@ -439,12 +439,12 @@ export default class Transfer extends Vue {
     }
 
     get txFee(): Big {
-        let fee = avm.getTxFee()
+        let fee = ava.XChain().getTxFee()
         return bnToBig(fee, 9)
     }
 
     get totalUSD(): Big {
-        let totalAsset = this.avaxTxSize.add(avm.getTxFee())
+        let totalAsset = this.avaxTxSize.add(ava.XChain().getTxFee())
         let bigAmt = bnToBig(totalAsset, 9)
         let usdPrice = this.priceDict.usd
         let usdBig = bigAmt.times(usdPrice)

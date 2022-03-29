@@ -114,7 +114,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import { bintools, keyChain } from '@/AVA'
+import { bintools } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
 import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'

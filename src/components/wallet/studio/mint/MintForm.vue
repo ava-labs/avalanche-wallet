@@ -133,7 +133,7 @@ import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
 import { NFTMintOutput, NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import { avm, bintools, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import {
     GenericFormType,
     JsonFormType,
@@ -243,7 +243,7 @@ export default class MintNft extends Vue {
     }
 
     get txFee(): Big {
-        return bnToBig(avm.getTxFee(), 9)
+        return bnToBig(ava.XChain().getTxFee(), 9)
     }
 
     onInput(form: NftMintFormType | null) {
