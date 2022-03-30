@@ -172,7 +172,7 @@
         "noaddresses": "Du hast keine früheren Adressen."
     },
     "earn": {
-        "title": "Einnahmen",
+        "title": "Verdienen",
         "desc": "Das Staking deiner vorhandenen Tokens vermehrt deine @.native:(0).",
         "subtitle1": "Validieren",
         "subtitle2": "Delegieren",
@@ -217,7 +217,7 @@
                 "export": "Export Transaktions-ID:",
                 "import": "Import Transaktions-ID:",
                 "message": "Du hast erfolgreich zwischen \"Chains\" übertragen.",
-                "back": "Zurück zu \"Einnehmen\""
+                "back": "Zurück zu \"Verdienen\""
             }
         },
         "rewards": {

@@ -2,8 +2,7 @@
     <div class="wallet_sidebar">
         <div class="stick">
             <div class="brand">
-                <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.png" />
-                <img v-else src="@/assets/wallet_logo_dark.png" />
+                <img src="@/assets/camino_logo.png" />
             </div>
             <div class="links">
                 <router-link to="/wallet" class="wallet_link">

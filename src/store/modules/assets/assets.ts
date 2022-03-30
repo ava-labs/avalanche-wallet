@@ -514,7 +514,7 @@ const assets_module: Module<AssetsState, RootState> = {
                     asset.addBalanceLocked(balanceAmt.locked)
                 }
 
-                // Add extras for AVAX token
+                // Add extras for Native token
                 // @ts-ignore
                 if (asset.id === state.AVA_ASSET_ID) {
                     asset.addExtra(getters.walletStakingBalance)
@@ -567,7 +567,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             let now = UnixNow()
 
-            // The only type of asset is AVAX on the P chain
+            // The only type of asset is Native on the P chain
             let amt = new BN('0')
 
             let utxos = utxoSet.getAllUTXOs()
@@ -602,7 +602,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             let now = UnixNow()
 
-            // The only type of asset is AVAX on the P chain
+            // The only type of asset is native token on the P chain
             let amt = new BN(0)
 
             let utxos = utxoSet.getAllUTXOs()
@@ -628,7 +628,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             utxoSet = wallet.getPlatformUTXOSet()
 
-            // The only type of asset is AVAX on the P chain
+            // The only type of asset is native token on the P chain
             let amt = new BN(0)
             let unixNow = UnixNow()
 

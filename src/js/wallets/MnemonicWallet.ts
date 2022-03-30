@@ -1,17 +1,11 @@
-// A simple wrapper thar combines avalanche.js, bip39 and HDWallet
+// A simple wrapper thar combines caminojs, bip39 and HDWallet
 
 import {
     KeyPair as AVMKeyPair,
     KeyChain as AVMKeyChain,
-    UTXOSet as AVMUTXOSet,
-    TransferableInput,
-    TransferableOutput,
-    BaseTx,
     UnsignedTx as AVMUnsignedTx,
     Tx as AVMTx,
     UTXO as AVMUTXO,
-    AssetAmountDestination,
-    UTXOSet,
 } from 'avalanche/dist/apis/avm'
 
 import { privateToAddress } from 'ethereumjs-util'
@@ -82,7 +76,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         this.ethBalance = new BN(0)
     }
 
-    // The master key from avalanche.js
+    // The master key from caminojs
     constructor(mnemonic: string) {
         let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
         let masterHdKey: HDKey = HDKey.fromMasterSeed(seed)

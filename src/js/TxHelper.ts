@@ -137,7 +137,7 @@ export async function buildUnsignedTransaction(
         let outsNft = rawTx.getOuts()
         let insNft = rawTx.getIns()
 
-        // TODO: This is a hackish way of doing this, need methods in avalanche.js
+        // TODO: This is a hackish way of doing this, need methods in caminojs
         //@ts-ignore
         rawTx.outs = outsNft.concat(outs)
         //@ts-ignore
