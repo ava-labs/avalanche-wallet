@@ -9,7 +9,7 @@
         "desc": "@.project:(0) Wallet ist eine einfache, sichere, \"ohne Aufsicht\" Wallet zur Aufbewahrung von @.project:(0) Vermögenswerten.",
         "access": {
             "title": "Willkommen zurück!",
-            "desc": "Hier auf dein bestehendes @.project:(0) Wallet zugreifen.",
+            "desc": "Hier auf deine bestehende @.project:(0) Wallet zugreifen.",
             "submit": "Auf Wallet zugreifen"
         },
         "create": {
@@ -103,12 +103,12 @@
         },
         "address": {
             "derived": "Abgeleitete @.native:(0) Wallet-Adresse",
-            "desc": "Dies ist Ihre Adresse, um Gelder zu erhalten. Ihre Adresse wird sich nach jeder Einzahlung ändern."
+            "desc": "Dies ist deine Adresse, um Gelder zu erhalten. Deine Adresse wird sich nach jeder Einzahlung ändern."
         }
     },
     "transfer": {
         "title": "Senden",
-        "no_cash": "Sie müssen in Ihrer Wallet Assets vorweisen, um eine Transaktion zu ermöglichen.",
+        "no_cash": "Du mußt in deiner Wallet @.native:(0) Guthaben vorweisen, um eine Transaktion zu ermöglichen.",
         "faucet": "Hast Du unsere \"faucet\" überprüft?",
         "to": "Zur Adresse",
         "fees": "Gebühren",
@@ -187,7 +187,7 @@
         },
         "delegate_card": {
             "title": "Delegieren",
-            "desc": "Du hast keine @.project:(0) Node, aber Du möchtest mit einer anderen Node staken.",
+            "desc": "Du hast keinen @.project:(0) Knoten, aber Du möchtest mit einem anderen Knoten staken.",
             "submit": "Delegierer hinzufügen"
         },
         "transfer_card": {
@@ -234,7 +234,7 @@
             }
         },
         "validate": {
-            "label_1": "Node ID",
+            "label_1": "Knoten ID",
             "duration": {
                 "label": "Staking Zeitraum",
                 "desc": "Die Dauer, in der deine Tokens fürs Staking gesperrt sind.",
@@ -247,7 +247,7 @@
             },
             "fee": {
                 "label": "Delegationsgebühr",
-                "desc": "Auf deinem Node wirst Du diese % der Prämien von den Delegierenden einfordern."
+                "desc": "Auf deinem Knoten wirst Du diese % der Prämien von den Delegierenden einfordern."
             },
             "reward": {
                 "label": "Prämienadresse",
@@ -283,22 +283,22 @@
             "errs": {
                 "date": "Das Startdatum muss in der Zukunft liegen und das Enddatum muss nach dem Startdatum liegen.",
                 "amount": "Der Staking Betrag muss mindestens {0} @.native:(0) betragen",
-                "id": "Ungültige Node ID. Muss mit \"NodeID-\" beginnen",
+                "id": "Ungültige Knoten ID. Muss mit \"KnotenID-\" beginnen",
                 "address": "Ungültige Prämienadresse."
             }
         },
         "delegate": {
             "list": {
-                "prompt": "Wähle einen zu delegierenden Node aus",
-                "search": "Node ID suchen",
-                "id": "Node ID",
+                "prompt": "Wähle einen zu delegierenden Knoten aus",
+                "search": "Knoten ID suchen",
+                "id": "Knoten ID",
                 "val_stake": "Validator Stake",
                 "aval_stake": "Verfügbar",
                 "aval_stake_tip": "Wie viel noch an diesen Validator delegiert werden kann.",
                 "users_tip": "Anzahl der Delegierenden",
                 "end": "Endzeit",
                 "up": "Betriebszeit",
-                "up_tip": "Bezogen auf die Node, mit dem diese Wallet verbunden ist.",
+                "up_tip": "Bezogen auf den Knoten, mit dem diese Wallet verbunden ist.",
                 "fee": "Gebühr",
                 "empty": {
                     "title": "Keine Validatoren gefunden",
@@ -306,7 +306,7 @@
                 }
             },
             "node": {
-                "selected": "Ausgewählte Node",
+                "selected": "Ausgewählte Knoten",
                 "fee": "Delegationsgebühr",
                 "start": "Validator Startdatum",
                 "end": "Validator Enddatum"
@@ -321,7 +321,7 @@
                 "amount": {
                     "label": "Einsatzbetrag",
                     "desc": "Der @.native:(0) Betrag der fürs Staking gesperrt ist.",
-                    "desc2": "Der verfügbare Delegationsbetrag für diese Node beträgt {0} @.native:(0)"
+                    "desc2": "Der verfügbare Delegationsbetrag für diese Knoten beträgt {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Prämienadresse",
@@ -331,7 +331,7 @@
                 }
             },
             "confirmation": {
-                "node": "Node ID",
+                "node": "Knoten ID",
                 "amount": "Staking Betrag",
                 "start": "Startdatum",
                 "end": "Enddatum",
