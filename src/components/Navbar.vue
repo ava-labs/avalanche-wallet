@@ -19,10 +19,11 @@
                     {{ $t('nav.create') }}
                 </router-link>
             </template>
-            <network-menu></network-menu>
+        </div>
+        <network-menu />
+        <div class="buts_right">
             <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
-
         <div class="mobile_right">
             <v-btn @click="isDrawer = !isDrawer" icon class="mobile_drawer">
                 <fa icon="bars"></fa>

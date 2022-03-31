@@ -35,6 +35,7 @@
         <transition name="slide_right">
             <div class="network_body" v-if="isActive" key="body">
                 <div class="header" data-cy="custom-network-option">
+                    <span id="menu_close" @click="closeMenu"><fa icon="times"></fa></span>
                     <template v-if="page === 'list'">
                         <h4>{{ $t('network.title') }}</h4>
                         <button
@@ -159,7 +160,12 @@ export default class NetworkMenu extends Vue {
 @use '../../main';
 
 .network_menu {
+    margin-right: 16px;
     position: relative;
+}
+
+#menu_close {
+    margin-right: 8px;
 }
 
 .toggle_but {

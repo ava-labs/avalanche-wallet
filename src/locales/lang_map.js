@@ -161,7 +161,7 @@ var isoLangs = {
     },
     nl: {
         name: 'Dutch',
-        nativeName: 'Nederlands, Vlaams',
+        nativeName: 'Nederlands',
     },
     en: {
         name: 'English',
@@ -189,7 +189,7 @@ var isoLangs = {
     },
     fi: {
         name: 'Finnish',
-        nativeName: 'suomi, suomen kieli',
+        nativeName: 'suomi',
     },
     fr: {
         name: 'French',
