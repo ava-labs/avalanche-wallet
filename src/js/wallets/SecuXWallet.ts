@@ -703,29 +703,8 @@ class SecuXWallet extends HdWalletCore implements AvaWalletCore {
                 break
             }
         }
-
-        // TODO: Remove after SecuX update
-        // SecuX is not able to parse P/C atomic transactions
-        if (txType === PlatformVMConstants.EXPORTTX) {
-            const destChainBuff = (tx as PlatformExportTx).getDestinationChain()
-            // If destination chain is C chain, sign hash
-            const destChain = Network.idToChainAlias(bintools.cb58Encode(destChainBuff))
-            if (destChain === 'C') {
-                canSecuXParse = false
-            }
-        }
-        // TODO: Remove after SecuX update
-        if (txType === PlatformVMConstants.IMPORTTX) {
-            const sourceChainBuff = (tx as PlatformImportTx).getSourceChain()
-            // If destination chain is C chain, sign hash
-            const sourceChain = Network.idToChainAlias(bintools.cb58Encode(sourceChainBuff))
-            if (sourceChain === 'C') {
-                canSecuXParse = false
-            }
-        }
-
         let signedTx
-        if (canSecuXParse && isParsableType) {
+        if (canSecuXParse) {
             signedTx = await this.signTransactionParsable<PlatformUnsignedTx, PlatformTx>(
                 unsignedTx,
                 paths,
@@ -757,26 +736,6 @@ class SecuXWallet extends HdWalletCore implements AvaWalletCore {
         } else if (typeId === EVMConstants.IMPORTTX) {
             let ins = (tx as EVMImportTx).getImportInputs()
             paths = ins.map((input) => '0/0')
-        }
-
-        // TODO: Remove after SecuX update
-        // SecuX is not able to parse P/C atomic transactions
-        if (typeId === EVMConstants.EXPORTTX) {
-            const destChainBuff = (tx as EVMExportTx).getDestinationChain()
-            // If destination chain is C chain, sign hash
-            const destChain = Network.idToChainAlias(bintools.cb58Encode(destChainBuff))
-            if (destChain === 'P') {
-                canSecuXParse = false
-            }
-        }
-        // TODO: Remove after SecuX update
-        if (typeId === EVMConstants.IMPORTTX) {
-            const sourceChainBuff = (tx as EVMImportTx).getSourceChain()
-            // If destination chain is C chain, sign hash
-            const sourceChain = Network.idToChainAlias(bintools.cb58Encode(sourceChainBuff))
-            if (sourceChain === 'P') {
-                canSecuXParse = false
-            }
         }
 
         let txSigned
