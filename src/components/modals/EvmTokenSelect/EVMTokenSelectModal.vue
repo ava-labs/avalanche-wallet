@@ -3,7 +3,7 @@
         <div class="token_select_body">
             <div class="list">
                 <div class="token_row" @click="select('native')">
-                    <img src="/img/avax_icon_circle.png" class="col_img" />
+                    <img src="/img/native_token.png" class="col_img" />
                     <div class="col_name">
                         <p>{{ nativeAssetSymbol }}</p>
                         <p>{{ nativeAssetName }}</p>

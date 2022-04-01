@@ -52,7 +52,7 @@ export default class FungibleRow extends Vue {
         if (!this.asset) return null
 
         if (this.isAvaxToken) {
-            return '/img/avax_icon_circle.png'
+            return '/img/native_token.png'
         }
 
         return null
