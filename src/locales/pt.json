@@ -37,10 +37,10 @@
         "json_error": "Não foi possível analisar o arquivo JSON.",
         "keystore_error": "Esta versão de chave não é suportada.",
         "password_error": "Senha Inválida.",
+        "submit": "Acessar Wallet",
         "mnemonic": {
             "title": "Digite sua frase MNEMÔNICA",
             "subtitle": "Pressione 'ESPAÇO' após cada entrada de palavra bem-sucedida.",
-            "submit": "Acessar Wallet",
             "cancel": "Cancelar",
             "error": "Frase-chave inválida. Sua frase deve ter 24 palavras separadas por um único espaço."
         }

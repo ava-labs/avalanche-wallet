@@ -37,10 +37,10 @@
         "json_error": "Het is niet gelukt het JSON-bestand te verwerken.",
         "keystore_error": "Deze keystore-versie wordt niet ondersteunt.",
         "password_error": "Ongeldig wachtwoord.",
+        "submit": "Portemonnee openen",
         "mnemonic": {
             "title": "Voer uw MNEMONISCHE zin in\n",
             "subtitle": "Druk na elk ingevoerd woord op \"SPATIE\".",
-            "submit": "Portemonnee openen",
             "cancel": "Annuleren",
             "error": "Ongeldige sleutelzin. Uw zin moet uit ten minste 24 woorden gescheiden door een spatie bestaan."
         }

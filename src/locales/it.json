@@ -37,10 +37,10 @@
         "json_error": "Impossibile analizzare il file JSON.",
         "keystore_error": "Questa versione del keystore non è supportata.",
         "password_error": "Password non valida.",
+        "submit": "Accedi al wallet",
         "mnemonic": {
             "title": "Digita la tua frase mnemonica\n",
             "subtitle": "Premi 'SPAZIO' dopo il corretto inserimento di ogni parola.",
-            "submit": "Accedi al wallet",
             "cancel": "Annulla",
             "error": "Frase chiave invalida. La tua frase deve avere 24 parole separate da un singolo spazio."
         }

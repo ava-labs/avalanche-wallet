@@ -37,10 +37,10 @@
         "json_error": "Nie można przeanalizować JSON plik.",
         "keystore_error": "Ten wersja keystore nie jest obsługiwana.",
         "password_error": "Nieprawidłowe hasło.",
+        "submit": "Dostęp do portfela",
         "mnemonic": {
             "title": "Wprowadź swoją mnemoniczną frazę\n",
             "subtitle": "Naciśnij SPACJĘ po każdym prawidłowa wpisaniu słowa.",
-            "submit": "Dostęp do portfela",
             "cancel": "Anulować",
             "error": "Nieprawidłowe kluczowa fraza. Twoje kluczowa fraza musi składać się z 24 słów oddzielonych jedną spacją."
         }

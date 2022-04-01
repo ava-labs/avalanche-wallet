@@ -37,10 +37,10 @@
         "json_error": "Kan ikke analysere JSON-filen.",
         "keystore_error": "Denne keystore-version understøttes ikke.",
         "password_error": "Forkert kodeord.",
+        "submit": "Adgang til tegnebogen",
         "mnemonic": {
             "title": "Indtast din MNEMONIC sætning\n",
             "subtitle": "Tryk 'MELLEMRUM' efter hver vellykket ordindtastning.",
-            "submit": "Adgang til tegnebogen",
             "cancel": "Annuller",
             "error": "Ugyldig nøglesætning. Din sætning skal bestå af 24 ord adskilt af et enkelt mellemrum."
         }

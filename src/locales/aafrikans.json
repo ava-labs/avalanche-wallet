@@ -37,10 +37,10 @@
         "json_error": "Kan nie JSON-lêer ontleed nie.",
         "keystore_error": "Hierdie sleutelstoorweergawe word nie ondersteun nie.",
         "password_error": "Ongeldige Wagwoord.",
+        "submit": "Kry Toegang tot Beursie",
         "mnemonic": {
             "title": "Voer u MNEMONIC-frase in\n",
             "subtitle": "Druk 'SPACE' na elke suksesvolle woordvoeging.",
-            "submit": "Kry Toegang tot Beursie",
             "cancel": "Kanselleer",
             "error": "Ongeldige sleutelfrase. U frase moet 24 woorde wees wat deur een spasie geskei is."
         }

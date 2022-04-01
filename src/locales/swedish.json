@@ -37,10 +37,10 @@
         "json_error": "Det går inte att tolka JSON-fil.",
         "keystore_error": "Denna keystore-version stöds inte.",
         "password_error": "Ogiltigt lösenord.",
+        "submit": "Tillgång till plånbok",
         "mnemonic": {
             "title": "Lägg till din MNEMNOTEKNISKA mening",
             "subtitle": "Tryck på \"MELLANSLAG\" efter varje framgångsrik ordinmatning.",
-            "submit": "Tillgång till plånbok",
             "cancel": "Avbryt",
             "error": "Ogiltig nyckelmening. Din mening måste bestå av 24 ord åtskilda av ett enda mellanslag."
         }

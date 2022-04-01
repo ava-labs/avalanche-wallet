@@ -48,10 +48,10 @@
         "json_error": "JSON dosyası ayrıştırılamıyor.",
         "keystore_error": "Anahtar dosyası versiyonu desteklenmiyor.",
         "password_error": "Geçersiz Parola.",
+        "submit": "Cüzdanı Aç",
         "mnemonic": {
             "title": "Anımsatıcı Anahtar Cümlenizi Giriniz\n",
             "subtitle": "Her başarılı kelime girişinden sonra BOŞLUK tuşuna basın.",
-            "submit": "Cüzdanı Aç",
             "cancel": "İptal Et",
             "error": "Geçersiz anahtar cümle. Tek bir boşlukla ayrılmış 24 kelime girmelisiniz."
         }

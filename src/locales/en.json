@@ -53,10 +53,10 @@
         "json_error": "Unable to parse JSON file.",
         "keystore_error": "This keystore version is not supported.",
         "password_error": "Invalid Password.",
+        "submit": "Access Wallet",
         "mnemonic": {
             "title": "Enter your MNEMONIC phrase\n",
             "subtitle": "Hit ‘SPACE’ after every successful word entry.",
-            "submit": "Access Wallet",
             "cancel": "Cancel",
             "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space."
         },

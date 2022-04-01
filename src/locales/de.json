@@ -37,10 +37,10 @@
         "json_error": "Die JSON Datei ist nicht lesbar.",
         "keystore_error": "Diese Keystore Version wird nicht unterstützt.",
         "password_error": "Ungültiges Passwort.",
+        "submit": "Auf Wallet zugreifen",
         "mnemonic": {
             "title": "Gib deine MNEMONIC Phrase ein\n",
             "subtitle": "Drücke die 'LEERTASTE' nach jeder erfolgreichen Eingabe.",
-            "submit": "Auf Wallet zugreifen",
             "cancel": "Abbrechen",
             "error": "Ungültige Schlüsselphrase. Deine Schlüsselphrase, muss aus 24 einzelnen Wörtern bestehen."
         }
@@ -51,7 +51,8 @@
             "manage": "Verwalten",
             "send": "Senden",
             "earn": "Verdienen",
-            "advanced": "Erweitert"
+            "advanced": "Erweitert",
+            "activity": "Aktivität"
         },
         "address_card": {},
         "collectibles": {
@@ -103,7 +104,13 @@
         },
         "address": {
             "derived": "Abgeleitete @.native:(0) Wallet-Adresse",
-            "desc": "Dies ist deine Adresse, um Gelder zu erhalten. Deine Adresse wird sich nach jeder Einzahlung ändern."
+            "title_x": "Abgeleitete Wallet-Addresse",
+            "title_p": "Abgeleitete Platform Wallet Address",
+            "title_c": "Abgeleitete EVM Wallet Addresse",
+            "desc_x_1": "Dies ist deine Adresse um Gelder zu erhalten.",
+            "desc_x_2": "Deine Adresse wird sich nach jeder Einzahlung ändern, du kannst die vorherige aber weiter verwenden",
+            "desc_p": "Dies ist deine P-Chain Addresse, welche Staking Verdienste und Cross-Chain Gebühren verwaltet.",
+            "desc_c": "Dies ist deine C-Chain Addresse. Benutze sie, um mit Smart-Contracts auf der C-Chain zu interagieren."
         }
     },
     "transfer": {
@@ -121,7 +128,46 @@
         "success_title": "Transaktion gesendet",
         "success_msg": "Du hast deine Transaktion erfolgreich gesendet.",
         "error_title": "Fehler beim Senden der Transaktion",
-        "error_msg": "Versenden der Transaktion ist fehlgeschlagen."
+        "error_msg": "Versenden der Transaktion ist fehlgeschlagen.",
+        "tx_list": {
+            "amount": "Betrag",
+            "token": "Token"
+        },
+        "source_chain": {
+            "title": "Quell Chain"
+        },
+        "c_chain": {
+            "gasPrice": "Gas Preis (GWEI)",
+            "gasLimit": "Gas Grenze",
+            "confirm": "Bestätigen",
+            "cancel": "Abbruch",
+            "success": {
+                "desc": "Transaktion Gesendet",
+                "label1": "Transaktions Hash"
+            },
+            "reset": "Nochmal Starten"
+        }
+    },
+    "cross_chain": {
+        "title": "Cross Chain",
+        "desc": "Transferiere Token zwischen X-, P- und C- Chains.",
+        "card": {
+            "source": "Quelle",
+            "destination": "Ziel",
+            "name": "Name",
+            "balance": "Guthaben"
+        },
+        "state": {
+            "export": "Export",
+            "import": "Import",
+            "status": "Status",
+            "not_started": "Nicht gestartet",
+            "reason": "Grund"
+        },
+        "form": {
+            "source": "Quell Chain",
+            "destination": "Ziel Chain"
+        }
     },
     "keys": {
         "title": "Meine Schlüssel",
@@ -133,6 +179,7 @@
         "remember_key_desc": "Verschlüssle deine Wallet mit einem Passwort, für eine sichere Aufbewahrung im Browser.",
         "remember_key_check": "Schlüssel merken",
         "remember_key_info": "Greife später auf deine Wallet in diesem Browser mit einem Passwort zu.",
+        "account_slow_warning": "Konten mit mehreren Schlüsseln benötigen länger zum Laden",
         "export_key_button": "WALLET EXPORTIEREN",
         "export_key_title": "Schlüssel Exportieren",
         "export_key_desc": "Gib ein Passwort ein, um deine privaten Schlüssel in eine Datei zu verschlüsseln. Du kannst später diese Datei, und dein Passwort benutzen, um auf deine Wallet zuzugreifen.",
@@ -425,5 +472,8 @@
     "nav": {
         "access": "Auf Wallet zugreifen",
         "create": "Eine neue Wallet erstellen"
+    },
+    "misc": {
+        "balance": "Guthaben"
     }
 }

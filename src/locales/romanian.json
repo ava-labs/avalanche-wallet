@@ -37,10 +37,10 @@
         "json_error": "Imposibil de analizat fișierul JSON.",
         "keystore_error": "Această versiune de depozit de chei nu este acceptată.",
         "password_error": "Parolă Invalidă.",
+        "submit": "Accesează Portofelul",
         "mnemonic": {
             "title": "Introdu fraza ta MNEMONICĂ\n",
             "subtitle": "Apasă butonul „SPAȚIU” după fiecare cuvânt introdus cu succes.",
-            "submit": "Accesează Portofelul",
             "cancel": "Anulează",
             "error": "Fraza cheie nevalidă. Fraza dvs. trebuie să fie de 24 de cuvinte separate printr-un singur spațiu."
         }

@@ -37,10 +37,10 @@
         "json_error": "Soubor JSON nelze analyzovat.",
         "keystore_error": "Tato verze úložiště klíčů není podporována.",
         "password_error": "Neplatné heslo.",
+        "submit": "Přístup do peněženky",
         "mnemonic": {
             "title": "Zadejte svou mnemonickou frázi\n",
             "subtitle": "Po každém úspěšném zadání slova stiskněte mezerník.",
-            "submit": "Přístup do peněženky",
             "cancel": "Zrušení",
             "error": "Neplatná klíčová fráze. Fráze musí obsahovat 24 slov oddělovaných jednotlivými mezerami."
         }

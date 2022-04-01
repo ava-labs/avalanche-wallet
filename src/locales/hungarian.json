@@ -37,10 +37,10 @@
         "json_error": "Nem sikerült elemezni a JSON fájlt.",
         "keystore_error": "Ez a kulcstár verzió nem támogatott.",
         "password_error": "Érvénytelen jelszó.",
+        "submit": "Hozzáférés pénztárcád",
         "mnemonic": {
             "title": "Írja be a MNEMONIKUS kulcsmondatot\n",
             "subtitle": "Minden sikeres szóbejegyzés után nyomja meg a „SPACE” gombot.",
-            "submit": "Hozzáférés pénztárcád",
             "cancel": "Megszünteti",
             "error": "Érvénytelen kulcsmondat. A kifejezésnek 24 szóból kell állnia, egyetlen szóközzel elválasztva."
         }

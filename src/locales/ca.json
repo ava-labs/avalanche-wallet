@@ -37,10 +37,10 @@
         "json_error": "No es pot analitzar el fitxer JSON.",
         "keystore_error": "Aquesta versió del magatzem de claus no és compatible.",
         "password_error": "Contrasenya invàlida.",
+        "submit": "Accedeix a la cartera",
         "mnemonic": {
             "title": "Introdueix la teva frase MNEMONIC\n",
             "subtitle": "Prem \"ESPAI\" després de entrar cada paraula correcte.",
-            "submit": "Accedeix a la cartera",
             "cancel": "Cancel·lar",
             "error": "Frase clau no vàlida. La teva frase ha de tenir 24 paraules separades per un sol espai."
         }

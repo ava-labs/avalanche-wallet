@@ -18,7 +18,7 @@
                     :disabled="!canSubmit"
                     depressed
                 >
-                    Access Wallet
+                    {{ $t('access.submit') }}
                 </v-btn>
                 <small>{{ $t('keys.account_slow_warning') }}</small>
                 <br />

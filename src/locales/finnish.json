@@ -37,10 +37,10 @@
         "json_error": "JSON-tiedoston jäsentäminen epäonnistui.",
         "keystore_error": "Tätä avainvarastoversiota ei tueta.",
         "password_error": "Väärä Salasana.",
+        "submit": "Tarkastele Lompakkoa",
         "mnemonic": {
             "title": "Anna MUISTILAUSE",
             "subtitle": "Paina 'VÄLILYÖNTI' jokaisen oikean sanan jälkeen.",
-            "submit": "Tarkastele Lompakkoa",
             "cancel": "Peruuta",
             "error": "Väärä avainlauseke. Lausekkeen tulee olla 24 sanaa pitkä ja erotettu yhdellä välilyönnillä."
         }

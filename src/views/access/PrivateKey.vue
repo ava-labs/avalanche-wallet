@@ -21,7 +21,7 @@
                     :disabled="!canSubmit"
                     depressed
                 >
-                    Access Wallet
+                    {{ $t('access.submit') }}
                 </v-btn>
             </form>
             <router-link to="/access" class="link">Cancel</router-link>
@@ -30,11 +30,6 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { ImportKeyfileInput } from '@/store/types'
-import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-import { privateToAddress } from 'ethereumjs-util'
-import { bintools } from '@/AVA'
-import { Buffer } from 'avalanche'
 
 @Component
 export default class PrivateKey extends Vue {
@@ -49,7 +44,7 @@ export default class PrivateKey extends Vue {
         let key = this.privatekey
 
         try {
-            let res = await this.$store.dispatch('accessWalletSingleton', key)
+            await this.$store.dispatch('accessWalletSingleton', key)
             this.onsuccess()
         } catch (e) {
             this.onerror('Invalid Private Key.')

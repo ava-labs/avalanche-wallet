@@ -37,10 +37,10 @@
         "json_error": "無法解析JSON檔案。",
         "keystore_error": "不支援此密鑰存儲庫版本。",
         "password_error": "無效密碼",
+        "submit": "訪問錢包",
         "mnemonic": {
             "title": "輸入你的助記短語\n",
             "subtitle": "在每次成功輸入單詞後按空白鍵。",
-            "submit": "訪問錢包",
             "cancel": "取消",
             "error": "無效的密鑰短語。你的短語必須是24個單詞，之間用一個空格隔開。"
         }

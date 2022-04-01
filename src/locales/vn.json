@@ -37,10 +37,10 @@
         "json_error": "Không thể phân tích cú pháp tệp tin JSON.",
         "keystore_error": "Phiên bản tệp tin khóa này không được hỗ trợ.",
         "password_error": "Mật khẩu không hợp lệ.",
+        "submit": "Truy cập ví",
         "mnemonic": {
             "title": "Nhập cụm từ GHI NHỚ của bạn",
             "subtitle": "Nhấn 'PHÍM CÁCH' sau mỗi lần nhập từ thành công.",
-            "submit": "Truy cập ví",
             "cancel": "Huỷ bỏ",
             "error": "Cụm từ khóa không hợp lệ. Cụm từ khóa của bạn phải có 24 ký tự và được phân tách bằng dấu cách."
         }
