@@ -918,18 +918,15 @@ class SecuXWallet extends HdWalletCore implements AvaWalletCore {
 
     async signHashByExternalIndex(index: number, hash: Buffer) {
         let pathStr = `0/${index}`
-        const addressPath = bippath.fromString(pathStr, false)
-        const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
-
         store.commit('SecuX/openModal', {
             title: `Sign Hash`,
             info: hash.toString('hex').toUpperCase(),
         })
 
         try {
-            let sigMap = await this.transport.signHash(accountPath, [addressPath], hash)
+            let sigMap = await this.app.signHash(AVA_ACCOUNT_PATH, [pathStr], hash)
             store.commit('SecuX/closeModal')
-            let signed = sigMap.get(pathStr)
+            let signed = sigMap.signatures.get(pathStr)
             return bintools.cb58Encode(signed)
         } catch (e) {
             store.commit('SecuX/closeModal')
