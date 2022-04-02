@@ -331,13 +331,9 @@ export default class BalanceCard extends Vue {
 @use '../../../../main';
 .balance_card {
     display: grid;
-    grid-template-columns: 1fr 230px;
     column-gap: 20px;
 }
 
-.nft_card {
-    border-left: 2px solid var(--bg-light);
-}
 .fungible_card {
     height: 100%;
     display: grid !important;
@@ -466,10 +462,6 @@ h4 {
     }
 }
 
-.nft_card {
-    padding-left: 20px;
-}
-
 .breakdown_toggle {
     color: var(--primary-color-light);
     font-size: 13px;
@@ -478,79 +470,6 @@ h4 {
 
     &:hover {
         color: var(--secondary-color);
-    }
-}
-
-@include main.medium-device {
-    .balance_card {
-        display: block;
-        //grid-template-columns: 1fr 120px;
-    }
-
-    .balance {
-        font-size: 1.8rem !important;
-    }
-
-    .balance_usd {
-        font-size: 11px;
-    }
-    .nft_col {
-        display: none;
-    }
-
-    .alt_info {
-        font-size: 12px;
-    }
-}
-
-@include main.mobile-device {
-    .balance_card {
-        grid-template-columns: none;
-        display: block !important;
-    }
-
-    .nft_col {
-        display: none;
-    }
-
-    .nft_card {
-        padding: 0;
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid var(--primary-color-light);
-        border-left: none;
-    }
-
-    .balance {
-        font-size: 2em !important;
-    }
-
-    .where_info {
-    }
-
-    .alt_info {
-        > div {
-            text-align: left;
-            grid-template-columns: none;
-            column-gap: 0;
-        }
-
-        .alt_non_breakdown,
-        .alt_breakdown {
-            > div {
-                padding: 8px 0;
-                border-right: none;
-                border-bottom: 1px solid var(--bg-light);
-
-                &:last-of-type {
-                    border: none;
-                }
-            }
-        }
-    }
-
-    .alt_non_breakdown {
-        display: none !important;
     }
 }
 </style>

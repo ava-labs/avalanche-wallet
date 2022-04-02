@@ -24,7 +24,7 @@
                 <br />
                 <br />
             </form>
-            <router-link to="/access" class="link">Cancel</router-link>
+            <router-link to="/access" class="link">{{ $t('access.cancel') }}</router-link>
         </div>
     </div>
 </template>

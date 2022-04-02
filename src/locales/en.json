@@ -730,6 +730,7 @@
         "create": "Create New Wallet"
     },
     "misc": {
-        "balance": "Balance"
+        "balance": "Balance",
+        "cancel": "Cancel"
     }
 }

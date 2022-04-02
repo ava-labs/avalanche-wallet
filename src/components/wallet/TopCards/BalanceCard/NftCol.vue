@@ -30,7 +30,7 @@ import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
 import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
 import ERC721View from '@/components/misc/ERC721View.vue'
 
-const NFT_COUNT = 15
+const NFT_COUNT = 10
 
 let payloadtypes = PayloadTypes.getInstance()
 
@@ -135,6 +135,7 @@ export default class NftCol extends Vue {
 @use '../../../../main';
 
 .nft_col {
+    margin-top: 10px;
     p {
         font-size: 12px;
         color: var(--primary-color-light);
@@ -147,7 +148,7 @@ $nft_w: 35px;
     margin-top: 8px;
     grid-gap: 8px;
     display: grid;
-    grid-template-columns: repeat(5, $nft_w);
+    grid-template-columns: repeat(auto-fill, $nft_w);
 }
 
 .nft_item {

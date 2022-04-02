@@ -15,7 +15,7 @@
             </transition>
         </div>
         <transition name="fade" mode="out-in">
-            <main-panel class="panel"></main-panel>
+            <main-panel />
         </transition>
     </div>
 </template>
@@ -118,21 +118,20 @@ export default class Wallet extends Vue {
     display: grid;
     grid-template-columns: 200px 1fr 300px;
     column-gap: 15px;
-    height: 100%;
+    min-height: 100%;
     background-color: var(--bg-wallet);
 }
 
 .sidenav {
     background-color: var(--bg-wallet-light);
+    margin-top: 8px;
 }
 
 .panel {
-    overflow: auto;
-    height: 100%;
+    overflow: hidden;
 }
 
 .wallet_main {
-    height: 100%;
     display: grid;
     grid-template-rows: max-content 1fr;
     grid-gap: 15px;

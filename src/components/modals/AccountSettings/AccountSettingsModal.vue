@@ -29,7 +29,7 @@
             </div>
             <template v-else>
                 <component v-if="subComponent" :is="subComponent"></component>
-                <button @click="clear">Cancel</button>
+                <button @click="clear">{{ $t('access.cancel') }}</button>
             </template>
         </div>
     </modal>

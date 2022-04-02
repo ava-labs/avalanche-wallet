@@ -100,7 +100,7 @@
                                 style="margin-top: 20px !important; color: var(--primary-color)"
                                 @click="cancelConfirm"
                             >
-                                Cancel
+                                {{ $t('misc.cancel') }}
                             </v-btn>
                         </template>
                         <template v-else-if="isSuccess">

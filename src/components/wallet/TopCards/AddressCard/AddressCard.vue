@@ -381,43 +381,4 @@ $qr_width: 110px;
     color: var(--primary-color);
     min-height: 55px;
 }
-
-@include main.medium-device {
-    //.bottom{
-    //    display: block;
-    //}
-    .bottom_rest {
-        justify-content: space-between;
-    }
-
-    .addr_info {
-        display: none;
-    }
-    canvas {
-        display: block;
-        margin: 0px auto;
-    }
-
-    .buts {
-        justify-content: space-evenly;
-
-        > * {
-            margin: 0;
-        }
-    }
-
-    .addr_text {
-        font-size: 13px;
-    }
-}
-
-.bottom_tabs {
-    width: 100%;
-}
-
-@include main.mobile-device {
-    .addr_info {
-        display: none;
-    }
-}
 </style>

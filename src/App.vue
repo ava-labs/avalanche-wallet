@@ -17,7 +17,6 @@
         <LedgerWalletLoading></LedgerWalletLoading>
         <NetworkLoadingBlock></NetworkLoadingBlock>
         <notifications></notifications>
-        <TestNetBanner></TestNetBanner>
     </v-app>
 </template>
 <script>
@@ -26,7 +25,6 @@ import Navbar from './components/Navbar'
 import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
-import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
 import LedgerWalletLoading from '@/components/modals/LedgerWalletLoading'
@@ -43,7 +41,6 @@ export default {
         SaveAccountModal,
         Navbar,
         Notifications,
-        TestNetBanner,
     },
     async created() {
         // Init language preference
@@ -103,31 +100,21 @@ export default {
         height: 100vh;
 
         #router_view {
-            overflow: auto;
             padding: 0;
             padding-bottom: 0px;
         }
     }
 
     #router_view {
-        min-height: calc(100vh - 80px);
         position: relative;
         padding: main.$container_padding_m;
     }
 }
 
 #router_view {
-    min-height: calc(100vh - 80px);
     position: relative;
     padding: main.$container_padding_m;
-    overflow: auto;
 }
-
-/*.panel {*/
-/*    background-color: #fff;*/
-/*    overflow: auto;*/
-/*    height: 100%;*/
-/*}*/
 </style>
 
 <style lang="scss">
@@ -177,12 +164,6 @@ p {
         display: flex !important;
     }
 
-    /*.main_cols {*/
-    /*    grid-template-columns: 1fr !important;*/
-    /*    &[wallet_view] {*/
-    /*        height: auto !important;*/
-    /*    }*/
-    /*}*/
     .panel {
         display: none !important;
     }

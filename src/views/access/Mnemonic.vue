@@ -18,7 +18,7 @@
                     {{ $t('access.submit') }}
                 </v-btn>
                 <router-link to="/access" class="link">
-                    {{ $t('access.mnemonic.cancel') }}
+                    {{ $t('access.cancel') }}
                 </router-link>
             </div>
         </div>

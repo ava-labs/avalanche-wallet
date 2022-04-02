@@ -11,29 +11,27 @@
         <div v-show="networkStatus !== 'connected'" class="empty">
             <p>{{ $t('portfolio.error_network') }}</p>
         </div>
-        <div v-show="networkStatus === 'connected'" style="flex-grow: 1">
+        <div v-show="networkStatus === 'connected'" class="scrollable no_scroll_bar">
             <div v-if="walletBalances.length === 0" class="empty">
                 <p>{{ $t('portfolio.nobalance') }}</p>
             </div>
-            <div class="scrollable no_scroll_bar" v-else>
-                <div class="scrollabe_cont">
-                    <fungible-row
-                        class="asset"
-                        v-for="asset in walletBalances"
-                        :key="asset.id"
-                        :asset="asset"
-                    ></fungible-row>
-                    <ERC20Row
-                        class="asset"
-                        v-for="erc in erc20Balances"
-                        :key="erc.data.address"
-                        :token="erc"
-                    ></ERC20Row>
-                    <div class="asset add_token_row">
-                        <button @click="addToken">Add Token</button>
-                        <span>or</span>
-                        <button @click="addTokenList">Add Token List</button>
-                    </div>
+            <div v-else>
+                <fungible-row
+                    class="asset"
+                    v-for="asset in walletBalances"
+                    :key="asset.id"
+                    :asset="asset"
+                ></fungible-row>
+                <ERC20Row
+                    class="asset"
+                    v-for="erc in erc20Balances"
+                    :key="erc.data.address"
+                    :token="erc"
+                ></ERC20Row>
+                <div class="asset add_token_row">
+                    <button @click="addToken">Add Token</button>
+                    <span>or</span>
+                    <button @click="addTokenList">Add Token List</button>
                 </div>
             </div>
         </div>
@@ -50,7 +48,6 @@ import Erc20Token from '@/js/Erc20Token'
 import ERC20Row from '@/components/wallet/portfolio/ERC20Row.vue'
 import AddERC20TokenModal from '@/components/modals/AddERC20TokenModal.vue'
 import TokenListModal from '@/components/modals/TokenList/TokenListModal.vue'
-import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {
@@ -192,13 +189,9 @@ export default class Fungibles extends Vue {
 
 .scrollable {
     overflow-y: scroll;
-    height: 100%;
     flex-grow: 1;
 }
 
-.scrollabe_cont {
-    height: 50px;
-}
 .asset {
     border-bottom: 1px solid var(--bg-light);
 }
@@ -247,10 +240,6 @@ export default class Fungibles extends Vue {
         .send_col {
             display: none;
         }
-    }
-
-    .scrollable {
-        height: 90vh;
     }
 }
 

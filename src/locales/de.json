@@ -140,7 +140,7 @@
             "gasPrice": "Gas Preis (GWEI)",
             "gasLimit": "Gas Grenze",
             "confirm": "Bestätigen",
-            "cancel": "Abbruch",
+            "cancel": "Abbrechen",
             "success": {
                 "desc": "Transaktion Gesendet",
                 "label1": "Transaktions Hash"
@@ -474,6 +474,7 @@
         "create": "Eine neue Wallet erstellen"
     },
     "misc": {
-        "balance": "Guthaben"
+        "balance": "Guthaben",
+        "cancel": "Abbrechen"
     }
 }

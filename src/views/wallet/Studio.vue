@@ -151,8 +151,9 @@ export default class Studio extends Vue {
 
 .options {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     column-gap: 14px;
+    row-gap: 14px;
     > div {
         border-radius: 4px;
         border: 1px solid var(--bg-light);

@@ -123,7 +123,7 @@
                                                         {{ $t('create.success_submit') }}
                                                     </button>
                                                     <router-link to="/" class="link">
-                                                        Cancel
+                                                        {{ $t('create.cancel') }}
                                                     </router-link>
                                                     <ToS style="margin: 30px 0 !important"></ToS>
                                                 </div>
