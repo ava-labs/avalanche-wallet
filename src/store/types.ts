@@ -27,6 +27,13 @@ export interface ILedgerAppConfig {
     name: 'Avalanche'
 }
 
+export interface ISecuXConfig {
+    transportVersion: number;
+    seFwVersion: string;
+    mcuFwVersion: string;
+    bootloaderVersion: string;
+}
+
 export interface priceDict {
     usd: number
 }

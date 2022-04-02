@@ -40,6 +40,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
+import { SecuXWallet } from '@/js/wallets/SecuXWallet'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import HdDerivationListRow from '@/components/modals/HdDerivationList/HdDerivationListRow.vue'
 import HdEmptyAddressRow from '@/components/modals/HdDerivationList/HdEmptyAddressRow.vue'
@@ -48,7 +49,7 @@ import { HdHelper } from '@/js/HdHelper'
     components: { HdEmptyAddressRow, HdDerivationListRow },
 })
 export default class HdChainTable extends Vue {
-    @Prop() wallet!: MnemonicWallet | LedgerWallet
+    @Prop() wallet!: MnemonicWallet | LedgerWallet | SecuXWallet
     @Prop() addresses!: string[]
     @Prop() balanceDict!: DerivationListBalanceDict[]
     @Prop() path!: number
