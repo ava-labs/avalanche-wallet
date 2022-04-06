@@ -14,7 +14,7 @@
         <div class="nft_info">
             <div class="meta_bar">
                 <div>
-                    <p>ERC721</p>
+                    <p>ERC721 ({{ count }})</p>
                 </div>
                 <div>
                     <button @click="toggleRaw" :active="isRaw" class="raw_toggle">SOURCE</button>
@@ -58,6 +58,7 @@ import ERC721ViewModal from '@/components/modals/ERC721ViewModal.vue'
 export default class ERC721Card extends Vue {
     @Prop() index!: string
     @Prop() token!: ERC721Token
+    @Prop() count!: number
 
     $refs!: {
         view_modal: ERC721ViewModal
@@ -100,7 +101,7 @@ export default class ERC721Card extends Vue {
             path: '/wallet/transfer',
             query: {
                 chain: 'C',
-                token: this.token.contractAddress,
+                token: this.token.data.address,
                 tokenId: this.index,
             },
         })

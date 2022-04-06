@@ -29,8 +29,8 @@
                     {{ balanceTextLeft }} {{ nativeAssetSymbol }}
                 </p>
                 <p class="balance" data-cy="wallet_balance" v-else>
-                    {{ balanceTextLeft }}
-                    <span>.{{ balanceTextRight }}</span>
+                    <span>{{ balanceTextLeft }}</span>
+                    <span class="smaller">.{{ balanceTextRight }}</span>
                     {{ nativeAssetSymbol }}
                 </p>
                 <div style="display: flex; flex-direction: row">
@@ -93,7 +93,6 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
-import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
 import NftCol from './NftCol.vue'
 import Tooltip from '@/components/misc/Tooltip.vue'
@@ -121,7 +120,7 @@ import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdo
     },
 })
 export default class BalanceCard extends Vue {
-    isBreakdown = true
+    isBreakdown = false
 
     $refs!: {
         utxos_modal: UtxosBreakdownModal
@@ -372,7 +371,7 @@ h4 {
     /*font-weight: bold;*/
     font-family: Rubik !important;
 
-    span {
+    span.smaller {
         font-size: 0.8em;
         /*color: var(--primary-color-light);*/
     }

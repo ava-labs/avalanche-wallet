@@ -8,7 +8,7 @@
     "scripts": {
         "build": "vue-cli-service build",
         "cypress": "cypress run",
-        "format": "prettier '**/*.{js,ts,vue}' --write",
+        "format": "prettier src/**/*.{js,ts,vue} --write",
         "lint": "vue-cli-service lint",
         "release": "release-it",
         "serve": "vue-cli-service serve",

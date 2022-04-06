@@ -8,10 +8,11 @@
         <div class="items">
             <ERC721View
                 v-for="tokenIndex in walletBalance"
-                :key="tokenIndex"
+                :key="tokenIndex.tokenId"
                 class="item"
                 :token="token"
-                :index="tokenIndex"
+                :index="tokenIndex.tokenId"
+                :count="tokenIndex.count"
                 @click.native="selectToken(tokenIndex)"
             ></ERC721View>
         </div>
@@ -22,7 +23,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import ERC721Token from '@/js/ERC721Token'
 import ERC721View from '@/components/misc/ERC721View.vue'
 import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
-import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
+import { ERC721Balance, ERC721WalletBalance } from '@/store/modules/assets/modules/types'
 
 @Component({
     components: { ERC721View },
@@ -34,8 +35,8 @@ export default class ERC721Row extends Vue {
     //     this.getItems()
     // }
 
-    get walletBalance(): string[] {
-        return this.$store.state.Assets.ERC721.walletBalance[this.token.contractAddress] || []
+    get walletBalance(): ERC721Balance[] {
+        return this.$store.state.Assets.ERC721.walletBalance[this.token.data.address] || []
     }
 
     get hasBalance(): boolean {

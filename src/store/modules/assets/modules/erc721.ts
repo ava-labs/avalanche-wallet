@@ -1,7 +1,11 @@
 import { Module } from 'vuex'
-import { AssetsState, TokenListToken } from '@/store/modules/assets/types'
+import { TokenListToken } from '@/store/modules/assets/types'
 import ERC721Token from '@/js/ERC721Token'
-import { Erc721ModuleState, ERC721TokenInput } from '@/store/modules/assets/modules/types'
+import {
+    ERC721Balance,
+    Erc721ModuleState,
+    ERC721TokenInput,
+} from '@/store/modules/assets/modules/types'
 import { RootState } from '@/store/types'
 import ERC721_TOKEN_LIST from '@/ERC721Tokenlist.json'
 import { WalletType } from '@/js/wallets/types'
@@ -37,7 +41,7 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         async removeCustom({ state, commit }, data: ERC721Token) {
             let index = state.erc721TokensCustom.indexOf(data)
             state.erc721TokensCustom.splice(index, 1)
-            Vue.delete(state.walletBalance, data.contractAddress)
+            Vue.delete(state.walletBalance, data.data.address)
             commit('saveCustomContracts')
         },
 
@@ -82,8 +86,8 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
                 let erc721 = contracts[i]
                 erc721
                     .getAllTokensIds(walletAddr)
-                    .then((tokenIds: string[]) => {
-                        Vue.set(state.walletBalance, erc721.contractAddress, tokenIds)
+                    .then((tokenIds: ERC721Balance[]) => {
+                        Vue.set(state.walletBalance, erc721.data.address, tokenIds)
                     })
                     .catch((err) => {
                         console.error(err)
@@ -117,9 +121,10 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         totalOwned(state: Erc721ModuleState, getters, rootState: RootState) {
             let bal = state.walletBalance
             let tot = 0
-            for (let contractAddrress in bal) {
-                let len = bal[contractAddrress].length
-                tot += len
+            for (let contractAddress in bal) {
+                for (let erc721Balance of bal[contractAddress]) {
+                    tot += erc721Balance.count
+                }
             }
             return tot
         },

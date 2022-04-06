@@ -63,7 +63,7 @@ const network_module: Module<NetworkState, RootState> = {
                 for (var i = 0; i < nets.length; i++) {
                     let net = nets[i]
                     if (JSON.stringify(net.url) === data) {
-                        dispatch('setNetwork', net)
+                        await dispatch('setNetwork', net)
                         return true
                     }
                 }

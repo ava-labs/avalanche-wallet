@@ -11,7 +11,6 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import ERC721Token from '@/js/ERC721Token'
-import axios from 'axios'
 
 // If an image url is hosted on one of these urls, reroute through cloudflare.
 const REDIRECT_DOMAINS = ['gateway.pinata.cloud/ipfs']
@@ -60,9 +59,6 @@ export default class ERC721View extends Vue {
         } catch (e) {
             this.isError = true
         }
-        // let uri = await this.token.getTokenURI(parseInt(this.index))
-        // let res = (await axios.get(uri)).data
-        // this.metadata = res
     }
 }
 </script>

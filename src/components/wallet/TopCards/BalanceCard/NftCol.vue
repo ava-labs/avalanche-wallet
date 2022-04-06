@@ -8,8 +8,12 @@
                 <div class="nft_item" v-for="(utxo, i) in nftArray" :key="utxo.getUTXOID()">
                     <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
                 </div>
-                <div class="nft_item" v-for="item in erc721BalanceArray" :key="item.id">
-                    <ERC721View :token="item.token" :index="item.id"></ERC721View>
+                <div class="nft_item" v-for="item in erc721BalanceArray" :key="item.id.tokenId">
+                    <ERC721View
+                        :token="item.token"
+                        :index="item.id"
+                        :count="item.count"
+                    ></ERC721View>
                 </div>
                 <div v-for="i in dummyAmt" class="nft_item dummy_item" :key="i"></div>
             </div>
@@ -17,7 +21,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { IWalletNftDict } from '@/store/types'
 import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import NftCard from '@/components/wallet/portfolio/NftCard.vue'
@@ -101,7 +105,8 @@ export default class NftCol extends Vue {
             let tokens = tokenIds.map((id) => {
                 return {
                     token: erc721Token,
-                    id: id,
+                    id: id.tokenId,
+                    count: id.count,
                 }
             })
             res.push(...tokens)

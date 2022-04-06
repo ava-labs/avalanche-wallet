@@ -60,9 +60,10 @@ export default class Wallet extends Vue {
 
     created() {
         this.resetTimer()
-        this.intervalId = setInterval(() => {
-            this.checkLogout()
-        }, 1000)
+        if (document.domain !== 'localhost')
+            this.intervalId = setInterval(() => {
+                this.checkLogout()
+            }, 1000)
     }
 
     unload(event: BeforeUnloadEvent) {

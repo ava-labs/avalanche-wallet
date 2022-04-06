@@ -6,8 +6,13 @@ export interface Erc721ModuleState {
     walletBalance: ERC721WalletBalance
 }
 
+export interface ERC721Balance {
+    tokenId: string
+    count: number
+}
+
 export interface ERC721WalletBalance {
-    [id: string]: string[]
+    [id: string]: ERC721Balance[]
 }
 
 export interface ERC721TokenInput {
@@ -15,4 +20,5 @@ export interface ERC721TokenInput {
     chainId: number
     name: string
     symbol: string
+    tokenId?: number
 }

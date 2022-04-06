@@ -140,18 +140,6 @@ abstract class WalletCore {
         )
 
         const eTx = (exportTx.getTransaction() as unknown) as PlatformExportTx
-        console.log(bintools.cb58Encode(exportTx.getTransaction().getOuts()[0].getAssetID()))
-        console.log(
-            bintools.addressToString('Y', 'X', eTx.getExportOutputs()[0].getOutput().getAddress(0))
-        )
-        console.log(
-            bintools.addressToString(
-                'Y',
-                'X',
-                exportTx.getTransaction().getOuts()[0].getOutput().getAddress(0)
-            )
-        )
-
         let tx = await this.signX(exportTx)
 
         return ava.XChain().issueTx(tx)

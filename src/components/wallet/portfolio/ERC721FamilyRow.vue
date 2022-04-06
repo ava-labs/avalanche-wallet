@@ -8,10 +8,11 @@
         <div class="list" v-if="family.canSupport">
             <ERC721View
                 v-for="tokenIndex in walletBalance"
-                :key="tokenIndex"
+                :key="tokenIndex.tokenId"
                 class="group"
-                :index="tokenIndex"
+                :index="tokenIndex.tokenId"
                 :token="family"
+                :count="tokenIndex.count"
             ></ERC721View>
         </div>
         <div v-else>
@@ -22,17 +23,17 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import ERC721Token from '@/js/ERC721Token'
-import { WalletType } from '@/js/wallets/types'
 import ERC721View from '@/components/wallet/portfolio/ERC721Card.vue'
-import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
+import { ERC721Balance } from '@/store/modules/assets/modules/types'
+
 @Component({
     components: { ERC721View },
 })
 export default class ERC721FamilyRow extends Vue {
     @Prop() family!: ERC721Token
 
-    get walletBalance(): string[] {
-        return this.$store.state.Assets.ERC721.walletBalance[this.family.contractAddress] || []
+    get walletBalance(): ERC721Balance[] {
+        return this.$store.state.Assets.ERC721.walletBalance[this.family.data.address] || []
     }
 
     get hasBalance() {

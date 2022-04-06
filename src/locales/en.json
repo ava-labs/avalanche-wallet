@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Password",
     "password_confirm": "Confirm Password",
     "private_key": "Private Key",
@@ -71,7 +71,8 @@
             "earn": "Earn",
             "studio": "Studio",
             "advanced": "Advanced",
-            "activity": "Activity"
+            "activity": "Activity",
+            "launch": "Launch"
         },
         "address_card": {},
         "collectibles": {
@@ -635,6 +636,11 @@
             "10": "November",
             "11": "December"
         }
+    },
+    "launch": {
+        "title": "Launch",
+        "subtitle": "Launch URL in new browser tab",
+        "submit": "Launch"
     },
     "logout": {
         "button": "Log Out",

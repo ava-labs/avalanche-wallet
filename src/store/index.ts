@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
+import Vuex from 'vuex'
 
 import Assets from './modules/assets/assets'
 import Network from './modules/network/network'
@@ -8,6 +8,7 @@ import History from './modules/history/history'
 import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
 import Accounts from './modules/accounts/accounts'
+import Launch from './modules/launch/launch'
 
 import {
     RootState,
@@ -49,6 +50,7 @@ export default new Vuex.Store({
         Platform,
         Ledger,
         Accounts,
+        Launch,
     },
     state: {
         isAuth: false,
@@ -142,6 +144,7 @@ export default new Vuex.Store({
             store.dispatch('Platform/update')
             router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
+            store.dispatch('Launch/initialize')
         },
 
         // TODO: Parts can be shared with the logout function below
@@ -166,6 +169,7 @@ export default new Vuex.Store({
 
             store.dispatch('Accounts/onLogout')
             store.dispatch('Assets/onLogout')
+            store.dispatch('Launch/onLogout')
 
             // Go to the base URL with GET request not router
             router.push(store.getters['Accounts/hasAccounts'] ? '/access' : '/')
