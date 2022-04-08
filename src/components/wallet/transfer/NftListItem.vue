@@ -22,7 +22,6 @@ import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { getPayloadFromUTXO } from '@/helpers/helper'
 import { bintools } from '@/AVA'
-import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IGroupQuantity } from '@/components/wallet/studio/mint/types'
 
 @Component({

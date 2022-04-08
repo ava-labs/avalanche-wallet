@@ -28,7 +28,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Ref, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransaction } from './types'
 import { UTXO } from 'avalanche/dist/apis/avm'
 import { BN } from 'avalanche'

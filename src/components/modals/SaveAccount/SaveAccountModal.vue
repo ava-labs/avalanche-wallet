@@ -48,7 +48,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 import { SaveAccountInput } from '@/store/types'

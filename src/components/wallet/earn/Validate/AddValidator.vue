@@ -221,7 +221,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 //@ts-ignore
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import { BN } from 'avalanche'
@@ -233,7 +233,6 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import ConfirmPage from '@/components/wallet/earn/Validate/ConfirmPage.vue'
 import moment from 'moment'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
-import { ONEAVAX } from 'avalanche/dist/utils'
 import Tooltip from '@/components/misc/Tooltip.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'

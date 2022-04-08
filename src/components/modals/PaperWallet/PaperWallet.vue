@@ -32,7 +32,6 @@ import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 
-import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
 import QRCode from 'qrcode'
@@ -40,7 +39,6 @@ import printjs from 'print-js'
 
 const PDF_W = 8.5
 const PDF_H = 11
-const PDF_ASPECT_RATIO = PDF_W / PDF_H
 
 // Contents of the pdf are set according to this value
 const designWidth = 525 - 60

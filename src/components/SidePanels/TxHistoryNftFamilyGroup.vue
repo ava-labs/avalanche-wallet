@@ -8,13 +8,10 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { NFTTransferOutput } from 'avalanche/dist/apis/avm'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { Buffer } from 'avalanche'
 import { PayloadTypes } from 'avalanche/dist/utils'
-import { NftGroupDict } from '../wallet/portfolio/types'
-import { AvaNftFamily } from '../../js/AvaNftFamily'
 import { UTXO } from '@/store/modules/history/types'
 
 let payloadtypes = PayloadTypes.getInstance()

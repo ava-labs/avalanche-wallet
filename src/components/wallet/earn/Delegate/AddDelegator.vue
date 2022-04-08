@@ -196,7 +196,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 //@ts-ignore
@@ -208,11 +208,10 @@ import Big from 'big.js'
 import moment from 'moment'
 
 import { BN } from 'avalanche'
-import { AmountOutput, PlatformVMConstants, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
+import { AmountOutput, UTXO } from 'avalanche/dist/apis/platformvm'
 import { ava, bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
-import { ONEAVAX } from 'avalanche/dist/utils'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 import NodeSelection from '@/components/wallet/earn/Delegate/NodeSelection.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'

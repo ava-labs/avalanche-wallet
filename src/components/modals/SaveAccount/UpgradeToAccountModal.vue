@@ -24,22 +24,10 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import Modal from '../Modal.vue'
-import {
-    AllKeyFileDecryptedTypes,
-    AllKeyFileTypes,
-    KeyFileDecryptedV6,
-    KeystoreFileKeyType,
-} from '@/js/IKeystore'
-import {
-    extractKeysFromDecryptedFile,
-    KEYSTORE_VERSION,
-    makeKeyfile,
-    readKeyFile,
-} from '@/js/Keystore'
-import MnemonicWallet from '../../../js/wallets/MnemonicWallet'
-import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
+import { AllKeyFileDecryptedTypes, AllKeyFileTypes } from '@/js/IKeystore'
+import { extractKeysFromDecryptedFile, readKeyFile } from '@/js/Keystore'
 import { SaveAccountInput } from '@/store/types'
 @Component({
     components: { Modal },

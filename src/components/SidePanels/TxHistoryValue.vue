@@ -18,7 +18,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Big from 'big.js'
 import AvaAsset from '@/js/AvaAsset'
 import { TransactionType } from '@/store/modules/history/types'
-import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
 @Component
 export default class TxHistoryValue extends Vue {

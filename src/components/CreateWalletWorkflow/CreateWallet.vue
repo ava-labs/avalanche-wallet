@@ -142,7 +142,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import TextDisplayCopy from '@/components/misc/TextDisplayCopy.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 // import TorusGoogle from "@/components/Torus/TorusGoogle.vue";

@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { UrlFormType, UtfFormType } from '@/components/wallet/studio/mint/types'
+import { UtfFormType } from '@/components/wallet/studio/mint/types'
 
 @Component
 export default class Utf8Form extends Vue {

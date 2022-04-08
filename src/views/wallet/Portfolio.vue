@@ -136,10 +136,6 @@ export default {
     }
 }
 
-.pages {
-    /*margin-top: 30px;*/
-}
-
 @include main.mobile-device {
     .header {
         display: block;
@@ -158,11 +154,6 @@ export default {
 
     .search {
         margin: 15px 0px;
-    }
-
-    .pages {
-        /*min-height: 100vh;*/
-        /*padding-bottom: 30px;*/
     }
 }
 

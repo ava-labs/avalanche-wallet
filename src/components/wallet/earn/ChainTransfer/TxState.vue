@@ -31,16 +31,8 @@
     </div>
 </template>
 <script lang="ts">
-import { Component, Model, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import Spinner from '@/components/misc/Spinner.vue'
-import { UTXO } from 'avalanche/dist/apis/platformvm'
-import { ChainIdType } from '@/constants'
-import { BN } from 'avalanche'
-import AvaAsset from '@/js/AvaAsset'
-import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import { WalletType } from '@/js/wallets/types'
-
-import { bnToBig } from '@/helpers/helper'
 import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
 
 @Component({
@@ -96,16 +88,11 @@ export default class TxStateCard extends Vue {
 }
 
 .data_row {
-    //display: grid;
-    //grid-template-columns: 50px 1fr;
     margin: 4px 0;
 
     label {
         font-size: 12px;
         color: var(--primary-color-light);
-    }
-    p {
-        //text-align: right;
     }
 }
 </style>

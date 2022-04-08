@@ -23,7 +23,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import ERC721Token from '@/js/ERC721Token'
 import ERC721View from '@/components/misc/ERC721View.vue'
 import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
-import { ERC721Balance, ERC721WalletBalance } from '@/store/modules/assets/modules/types'
+import { ERC721Balance } from '@/store/modules/assets/modules/types'
 
 @Component({
     components: { ERC721View },

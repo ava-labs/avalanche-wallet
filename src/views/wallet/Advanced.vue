@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import ChainImport from '@/components/wallet/advanced/ChainImport.vue'
 import SignMessage from '@/components/wallet/advanced/SignMessage/SignMessage.vue'

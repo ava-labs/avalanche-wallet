@@ -19,7 +19,7 @@ import { PayloadBase } from 'avalanche/dist/utils'
 import { OutputOwners } from 'avalanche/dist/common'
 import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
 
-import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/evm'
+import { EVMConstants } from 'avalanche/dist/apis/evm'
 
 import { web3 } from '@/evm'
 import ERC721Token from '@/js/ERC721Token'

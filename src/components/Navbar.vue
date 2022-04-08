@@ -82,7 +82,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue'
 import DayNightToggle from '@/components/misc/DayNightToggle.vue'
 import NetworkMenu from './NetworkSettings/NetworkMenu.vue'

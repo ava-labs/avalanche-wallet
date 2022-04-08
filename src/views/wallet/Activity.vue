@@ -514,12 +514,6 @@ export default class Activity extends Vue {
     font-size: 24px;
 }
 
-.filter_col {
-    //display: flex;
-    //flex-direction: row;
-    //align-items: center;
-}
-
 .filter_cont {
     label {
         font-size: 12px;

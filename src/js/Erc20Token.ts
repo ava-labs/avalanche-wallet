@@ -3,7 +3,6 @@ import { web3 } from '@/evm'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
-import store from '@/store'
 
 import ERC20Abi from '@openzeppelin/contracts/build/contracts/ERC20.json'
 

@@ -21,7 +21,7 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
-import { AvmImportChainType, WalletType } from '@/js/wallets/types'
+import { AvmImportChainType } from '@/js/wallets/types'
 import { ExportTx as PlatformExportTx } from 'avalanche/dist/apis/platformvm'
 
 var uniqid = require('uniqid')

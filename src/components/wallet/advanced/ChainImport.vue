@@ -39,7 +39,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import { WalletType } from '@/js/wallets/types'

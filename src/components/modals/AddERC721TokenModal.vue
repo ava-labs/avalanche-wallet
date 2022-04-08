@@ -38,7 +38,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import Modal from './Modal.vue'
 import { web3 } from '@/evm'

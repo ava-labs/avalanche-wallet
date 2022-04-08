@@ -1,4 +1,4 @@
-import { ava, bintools } from '@/AVA'
+import { ava } from '@/AVA'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,

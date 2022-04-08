@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import AddKeyFile from '@/components/wallet/manage/AddKeyFile.vue'
 import AddKeyString from '@/components/wallet/manage/AddKeyString.vue'

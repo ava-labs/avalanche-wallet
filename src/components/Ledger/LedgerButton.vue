@@ -139,7 +139,7 @@ export default class LedgerButton extends Vue {
 
     async loadWallet(wallet: LedgerWallet) {
         this.showWalletLoading()
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 this.$store
                     .dispatch('accessWalletLedger', wallet)

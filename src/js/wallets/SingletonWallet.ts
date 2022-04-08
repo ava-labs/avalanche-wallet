@@ -9,13 +9,11 @@ import {
     KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     UTXO,
-    UnsignedTx,
 } from 'avalanche/dist/apis/avm'
 import {
     KeyPair as PlatformKeyPair,
     KeyChain as PlatformKeyChain,
     UTXOSet as PlatformUTXOSet,
-    UTXOSet,
 } from 'avalanche/dist/apis/platformvm'
 import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm'
 import { PayloadBase } from 'avalanche/dist/utils'
@@ -35,7 +33,6 @@ import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { Transaction } from '@ethereumjs/tx'
-import { ExportChainsC, ExportChainsP, ExportChainsX } from '@avalabs/avalanche-wallet-sdk'
 
 class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
     keyChain: AVMKeyChain
