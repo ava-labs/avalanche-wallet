@@ -12,7 +12,6 @@
                 class="item"
                 :token="token"
                 :index="tokenIndex.tokenId"
-                :count="tokenIndex.count"
                 @click.native="selectToken(tokenIndex)"
             ></ERC721View>
         </div>
@@ -50,12 +49,6 @@ export default class ERC721Row extends Vue {
         }
         this.$emit('select', data)
     }
-
-    // async getItems() {
-    //     let w: WalletType = this.$store.state.activeWallet
-    //     let items = await this.token.getAllTokenData('0x' + w.ethAddress)
-    //     this.nftItems = items
-    // }
 }
 </script>
 <style scoped lang="scss">

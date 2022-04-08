@@ -73,7 +73,7 @@ class ERC721Token {
 
         const bal = await this.getBalance(address)
 
-        if (this.data.tokenId !== undefined) {
+        if (this.data.tokenId !== undefined && bal) {
             return [{ tokenId: this.data.tokenId.toString(), count: bal }]
         }
         const res = []

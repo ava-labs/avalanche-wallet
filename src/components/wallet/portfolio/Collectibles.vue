@@ -27,7 +27,6 @@
     </div>
 </template>
 <script lang="ts">
-import NFTCard from './NftCard.vue'
 import CollectibleFamilyRow from '@/components/wallet/portfolio/CollectibleFamilyRow.vue'
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -44,7 +43,6 @@ import { WalletType } from '@/js/wallets/types'
     components: {
         ERC721FamilyRow,
         AddERC721TokenModal,
-        NFTCard,
         CollectibleFamilyRow,
     },
 })

@@ -124,7 +124,6 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUtxo/SelectMintUTXO.vue'
 import UrlForm from '@/components/wallet/studio/mint/forms/UrlForm.vue'
 import Utf8Form from '@/components/wallet/studio/mint/forms/Utf8Form.vue'
 import JsonForm from '@/components/wallet/studio/mint/forms/JsonForm.vue'
@@ -154,7 +153,6 @@ type NftType = 'utf8' | 'url' | 'json'
         NftCard,
         NftFamilyCardsPreview,
         GenericForm,
-        SelectMintUTXO,
         UrlForm,
         NftPayloadView,
         Utf8Form,

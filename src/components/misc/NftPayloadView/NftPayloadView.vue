@@ -12,12 +12,6 @@
         class="nft_payload_view"
         v-else-if="!small"
     ></Component>
-    <Component
-        v-else-if="!small"
-        :is="viewer"
-        :payload="payload"
-        class="nft_payload_view"
-    ></Component>
     <Component v-else :is="viewerSmall" :payload="payload" class="nft_payload_view"></Component>
 </template>
 <script lang="ts">

@@ -1,5 +1,6 @@
 <template>
     <div class="nft_card">
+        <p class="count" v-if="quantity > 1">{{ quantity }}</p>
         <ERC721ViewModal :token="token" :token-id="index" ref="view_modal"></ERC721ViewModal>
         <div class="view">
             <template v-if="!isRaw && img">
@@ -14,7 +15,7 @@
         <div class="nft_info">
             <div class="meta_bar">
                 <div>
-                    <p>ERC721 ({{ count }})</p>
+                    <p>ERC721</p>
                 </div>
                 <div>
                     <button @click="toggleRaw" :active="isRaw" class="raw_toggle">SOURCE</button>
@@ -58,7 +59,7 @@ import ERC721ViewModal from '@/components/modals/ERC721ViewModal.vue'
 export default class ERC721Card extends Vue {
     @Prop() index!: string
     @Prop() token!: ERC721Token
-    @Prop() count!: number
+    @Prop() quantity!: number
 
     $refs!: {
         view_modal: ERC721ViewModal

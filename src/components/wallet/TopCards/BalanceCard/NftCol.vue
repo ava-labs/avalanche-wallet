@@ -9,11 +9,7 @@
                     <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
                 </div>
                 <div class="nft_item" v-for="item in erc721BalanceArray" :key="item.id.tokenId">
-                    <ERC721View
-                        :token="item.token"
-                        :index="item.id"
-                        :count="item.count"
-                    ></ERC721View>
+                    <ERC721View :token="item.token" :index="item.id"></ERC721View>
                 </div>
                 <div v-for="i in dummyAmt" class="nft_item dummy_item" :key="i"></div>
             </div>
@@ -24,13 +20,11 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { IWalletNftDict } from '@/store/types'
 import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
-import NftCard from '@/components/wallet/portfolio/NftCard.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { PayloadBase } from 'avalanche/dist/utils'
 import { Buffer } from 'avalanche'
 import { PayloadTypes } from 'avalanche/dist/utils'
 import { bintools } from '@/AVA'
-import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
 import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
 import ERC721View from '@/components/misc/ERC721View.vue'
 
@@ -41,8 +35,6 @@ let payloadtypes = PayloadTypes.getInstance()
 @Component({
     components: {
         ERC721View,
-        NftFamilyCardsPreview,
-        NftCard,
         NftPayloadView,
     },
 })
