@@ -1,52 +1,52 @@
 import { Module } from 'vuex'
 import { TokenListToken } from '@/store/modules/assets/types'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 import {
-    ERC721Balance,
-    Erc721ModuleState,
-    ERC721TokenInput,
+    ERCNftBalance,
+    ERCNftModuleState,
+    ERCNftTokenInput,
 } from '@/store/modules/assets/modules/types'
 import { RootState } from '@/store/types'
-import ERC721_TOKEN_LIST from '@/ERC721Tokenlist.json'
+import ERCNft_TOKEN_LIST from '@/ERC721Tokenlist.json'
 import { WalletType } from '@/js/wallets/types'
 import Vue from 'vue'
 
-const erc721_module: Module<Erc721ModuleState, RootState> = {
+const ercNFT_module: Module<ERCNftModuleState, RootState> = {
     namespaced: true,
     state: {
-        erc721Tokens: [],
-        erc721TokensCustom: [],
+        ercNFTTokens: [],
+        ercNFTTokensCustom: [],
         walletBalance: {},
     },
     mutations: {
-        clear(state: Erc721ModuleState) {
+        clear(state: ERCNftModuleState) {
             state.walletBalance = {}
         },
         saveCustomContracts(state) {
-            let tokens = state.erc721TokensCustom
+            let tokens = state.ercNFTTokensCustom
             let tokenRawData = tokens.map((token) => {
                 return token.data
             })
-            localStorage.setItem('erc721_tokens', JSON.stringify(tokenRawData))
+            localStorage.setItem('ercNFT_tokens', JSON.stringify(tokenRawData))
         },
         loadCustomContracts(state) {
-            let tokensRaw = localStorage.getItem('erc721_tokens') || '[]'
-            let tokens: TokenListToken[] = JSON.parse(tokensRaw)
+            let tokensRaw = localStorage.getItem('ercNFT_tokens') || '[]'
+            let tokens: ERCNftTokenInput[] = JSON.parse(tokensRaw)
             for (var i = 0; i < tokens.length; i++) {
-                state.erc721TokensCustom.push(new ERC721Token(tokens[i]))
+                state.ercNFTTokensCustom.push(new ERCNftToken(tokens[i]))
             }
         },
     },
     actions: {
-        async removeCustom({ state, commit }, data: ERC721Token) {
-            let index = state.erc721TokensCustom.indexOf(data)
-            state.erc721TokensCustom.splice(index, 1)
+        async removeCustom({ state, commit }, data: ERCNftToken) {
+            let index = state.ercNFTTokensCustom.indexOf(data)
+            state.ercNFTTokensCustom.splice(index, 1)
             Vue.delete(state.walletBalance, data.data.address)
             commit('saveCustomContracts')
         },
 
-        async addCustom({ state, dispatch, commit }, data: ERC721TokenInput) {
-            let tokens = state.erc721Tokens.concat(state.erc721TokensCustom)
+        async addCustom({ state, dispatch, commit }, data: ERCNftTokenInput) {
+            let tokens = state.ercNFTTokens.concat(state.ercNFTTokensCustom)
 
             // Make sure its not added before
             for (var i = 0; i < tokens.length; i++) {
@@ -56,8 +56,8 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
                 }
             }
 
-            let t = new ERC721Token(data)
-            state.erc721TokensCustom.push(t)
+            let t = new ERCNftToken(data)
+            state.ercNFTTokensCustom.push(t)
 
             commit('saveCustomContracts')
             setTimeout(() => {
@@ -67,10 +67,10 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         },
 
         async init({ state, commit }) {
-            // Load default erc721 token contracts
-            let erc721Tokens = ERC721_TOKEN_LIST.tokens
-            for (var i = 0; i < erc721Tokens.length; i++) {
-                state.erc721Tokens.push(new ERC721Token(erc721Tokens[i]))
+            // Load default ercNFT token contracts
+            let ercNFTTokens: ERCNftTokenInput[] = ERCNft_TOKEN_LIST.tokens
+            for (var i = 0; i < ercNFTTokens.length; i++) {
+                state.ercNFTTokens.push(new ERCNftToken(ercNFTTokens[i]))
             }
             commit('loadCustomContracts')
         },
@@ -81,13 +81,13 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             let walletAddr = '0x' + w.getEvmAddress()
 
             // Loop through contracts and update wallet balance object
-            let contracts: ERC721Token[] = getters.networkContracts
+            let contracts: ERCNftToken[] = getters.networkContracts
             for (var i = 0; i < contracts.length; i++) {
-                let erc721 = contracts[i]
-                erc721
+                let ercNFT = contracts[i]
+                ercNFT
                     .getAllTokensIds(walletAddr)
-                    .then((tokenIds: ERC721Balance[]) => {
-                        Vue.set(state.walletBalance, erc721.data.address, tokenIds)
+                    .then((tokenIds: ERCNftBalance[]) => {
+                        Vue.set(state.walletBalance, ercNFT.data.address, tokenIds)
                     })
                     .catch((err) => {
                         console.error(err)
@@ -96,8 +96,8 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         },
     },
     getters: {
-        networkContracts(state: Erc721ModuleState, getters, rootState: RootState): ERC721Token[] {
-            let tokens = state.erc721Tokens.concat(state.erc721TokensCustom)
+        networkContracts(state: ERCNftModuleState, getters, rootState: RootState): ERCNftToken[] {
+            let tokens = state.ercNFTTokens.concat(state.ercNFTTokensCustom)
             //@ts-ignore
             let chainId = rootState.Assets.evmChainId
             let filt = tokens.filter((t) => {
@@ -108,27 +108,27 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
         },
 
         networkContractsCustom(
-            state: Erc721ModuleState,
+            state: ERCNftModuleState,
             getters,
             rootState: RootState
-        ): ERC721Token[] {
-            let contracts: ERC721Token[] = getters.networkContracts
+        ): ERCNftToken[] {
+            let contracts: ERCNftToken[] = getters.networkContracts
             return contracts.filter((c) => {
-                return state.erc721TokensCustom.includes(c)
+                return state.ercNFTTokensCustom.includes(c)
             })
         },
 
-        totalOwned(state: Erc721ModuleState, getters, rootState: RootState) {
+        totalOwned(state: ERCNftModuleState, getters, rootState: RootState) {
             let bal = state.walletBalance
             let tot = 0
             for (let contractAddress in bal) {
-                for (let erc721Balance of bal[contractAddress]) {
-                    tot += erc721Balance.count
+                for (let ercNFTBalance of bal[contractAddress]) {
+                    tot += ercNFTBalance.quantity
                 }
             }
             return tot
         },
-        totalCollectionsOwned(state: Erc721ModuleState, getters, rootState: RootState) {
+        totalCollectionsOwned(state: ERCNftModuleState, getters, rootState: RootState) {
             let bal = state.walletBalance
             let tot = 0
             for (let contractAddrress in bal) {
@@ -138,7 +138,7 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             return tot
         },
         find: (state, getters) => (contractAddr: string) => {
-            let tokens: ERC721Token[] = getters.networkContracts
+            let tokens: ERCNftToken[] = getters.networkContracts
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (t.data.address === contractAddr) {
@@ -150,4 +150,4 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
     },
 }
 
-export default erc721_module
+export default ercNFT_module

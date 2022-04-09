@@ -8,7 +8,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch, Model } from 'vue-property-decorator'
+import { Vue, Component, Model } from 'vue-property-decorator'
 import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 
 @Component

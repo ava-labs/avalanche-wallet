@@ -20,11 +20,11 @@
                 </div>
             </template>
             <template v-else>
-                <ERC721View
+                <ERCNftView
                     :token="collectible.token"
                     :index="collectible.id"
                     class="collectible_item"
-                ></ERC721View>
+                ></ERCNftView>
                 <p style="align-self: center; padding-left: 12px">TOKEN ID: {{ collectible.id }}</p>
             </template>
         </div>
@@ -50,15 +50,13 @@ import Big from 'big.js'
 import { WalletType } from '@/js/wallets/types'
 
 import { bnToBig } from '@/helpers/helper'
-import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
-import ERC721View from '@/components/misc/ERC721View.vue'
-import ERC721Token from '@/js/ERC721Token'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERCNftView from '@/components/misc/ERCNftView.vue'
+import ERCNftToken from '@/js/ERCNftToken'
 
 @Component({
     components: {
-        ERC721View,
-        EVMTokenSelectModal,
+        ERCNftView,
         EVMAssetDropdown,
         BigNumInput,
     },
@@ -66,7 +64,7 @@ import ERC721Token from '@/js/ERC721Token'
 export default class EVMInputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
     isCollectible = false
-    collectible: iErc721SelectInput | null = null
+    collectible: iERCNftSelectInput | null = null
     @Prop({ default: false }) disabled!: boolean
     @Prop() gasPrice!: BN // in wei
     @Prop({ default: 21000 }) gasLimit!: number
@@ -172,8 +170,8 @@ export default class EVMInputDropdown extends Vue {
         this.$refs.dropdown.select(token)
     }
 
-    setErc721Token(token: ERC721Token, tokenId: string) {
-        this.$refs.dropdown.selectERC721({
+    setERCNftToken(token: ERCNftToken, tokenId: string) {
+        this.$refs.dropdown.selectERCNft({
             token: token,
             id: tokenId,
         })
@@ -188,7 +186,7 @@ export default class EVMInputDropdown extends Vue {
         this.$emit('tokenChange', token)
     }
 
-    onCollectibleChange(val: iErc721SelectInput) {
+    onCollectibleChange(val: iERCNftSelectInput) {
         this.isCollectible = true
         this.collectible = val
         this.$emit('collectibleChange', val)

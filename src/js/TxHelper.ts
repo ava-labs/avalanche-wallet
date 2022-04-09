@@ -22,7 +22,7 @@ import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
 import { EVMConstants } from 'avalanche/dist/apis/evm'
 
 import { web3 } from '@/evm'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 import { Transaction } from '@ethereumjs/tx'
 import EthereumjsCommon from '@ethereumjs/common'
 import Erc20Token from '@/js/Erc20Token'
@@ -270,12 +270,12 @@ export async function buildEvmTransferErc20Tx(
     return tx
 }
 
-export async function buildEvmTransferErc721Tx(
+export async function buildEvmTransferERCNftTx(
     from: string,
     to: string,
     gasPrice: BN,
     gasLimit: number,
-    token: ERC721Token,
+    token: ERCNftToken,
     tokenId: string
 ) {
     const nonce = await web3.eth.getTransactionCount(from)

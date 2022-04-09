@@ -144,7 +144,7 @@ import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
 import { WalletHelper } from '@/helpers/wallet_helper'
 
 @Component({
@@ -171,7 +171,7 @@ export default class FormC extends Vue {
     canSendAgain = false
 
     isCollectible = false
-    formCollectible: iErc721SelectInput | null = null
+    formCollectible: iERCNftSelectInput | null = null
 
     txHash = ''
 
@@ -212,7 +212,7 @@ export default class FormC extends Vue {
         this.isCollectible = false
     }
 
-    onCollectibleChange(val: iErc721SelectInput) {
+    onCollectibleChange(val: iERCNftSelectInput) {
         this.isCollectible = true
         this.formCollectible = val
     }
@@ -333,7 +333,7 @@ export default class FormC extends Vue {
             }
         }
 
-        // For erc721 transfers
+        // For ercNFT transfers
         if (this.isCollectible && this.formCollectible) {
             let fromAddr = '0x' + this.wallet.getEvmAddress()
             let toAddr = this.formAddress
@@ -389,11 +389,11 @@ export default class FormC extends Vue {
                 this.$refs.token_in.setToken(tokenAddr)
             } else {
                 let token = this.$store.getters['Assets/findErc20'](tokenAddr)
-                let erc721 = this.$store.getters['Assets/ERC721/find'](tokenAddr)
+                let ercNFT = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
                 if (token) {
                     this.$refs.token_in.setToken(token)
-                } else if (erc721 && tokenId) {
-                    this.$refs.token_in.setErc721Token(erc721, tokenId as string)
+                } else if (ercNFT && tokenId) {
+                    this.$refs.token_in.setERCNftToken(ercNFT, tokenId as string)
                 }
             }
         }
@@ -447,7 +447,7 @@ export default class FormC extends Vue {
                 }
             } else {
                 if (!this.formCollectible) throw 'No collectible selected.'
-                let txHash = await WalletHelper.sendErc721(
+                let txHash = await WalletHelper.sendERCNft(
                     this.wallet,
                     toAddress,
                     gasPriceWei,

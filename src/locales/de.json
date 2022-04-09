@@ -69,7 +69,7 @@
         "attention": "Achtung!",
         "warning": "Speichere diese Schlüsselphrase an einem sicheren Ort. Jeder mit dieser Schlüsselphrase kann auf deine @.project:(0) Wallet zugreifen. Es gibt keine Möglichkeit, verlorene Schlüsselphrasen wiederherzustellen.",
         "confirm": "Ich habe meine Schlüsselphrase an einem sicheren Ort notiert.",
-        "regenerate": "Wiederherstellen",
+        "regenerate": "Neu Erstellen",
         "success_title": "Herzlichen Glückwunsch!",
         "success_desc": "Es ist an der Zeit, deine @.project:(0) Wallet zu öffnen.",
         "success_submit": "Auf Wallet zugreifen",

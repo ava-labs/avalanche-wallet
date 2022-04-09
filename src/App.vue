@@ -51,7 +51,7 @@ export default {
 
         await this.$store.dispatch('Network/init')
         this.$store.dispatch('Assets/initErc20List')
-        this.$store.dispatch('Assets/ERC721/init')
+        this.$store.dispatch('Assets/ERCNft/init')
         this.$store.dispatch('updateAvaxPrice')
     },
     computed: {

@@ -21,13 +21,13 @@
                 </div>
             </div>
             <div class="nft_list">
-                <ERC721Row
+                <ERCNftRow
                     class="nft_row"
-                    v-for="t in erc721s"
+                    v-for="t in ercNFTs"
                     :key="t.contractAddress"
                     :token="t"
-                    @select="onERC721Select"
-                ></ERC721Row>
+                    @select="onERCNftSelect"
+                ></ERCNftRow>
             </div>
         </div>
     </modal>
@@ -41,13 +41,13 @@ import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
 import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
-import ERC721Token from '@/js/ERC721Token'
-import ERC721Row from '@/components/modals/EvmTokenSelect/ERC721Row.vue'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERCNftToken from '@/js/ERCNftToken'
+import ERCNftRow from '@/components/modals/EvmTokenSelect/ERCNftRow.vue'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
 
 @Component({
     components: {
-        ERC721Row,
+        ERCNftRow,
         Modal,
     },
 })
@@ -69,9 +69,9 @@ export default class EVMTokenSelectModal extends Vue {
         return filt
     }
 
-    get erc721s(): ERC721Token[] {
+    get ercNFTs(): ERCNftToken[] {
         let w: WalletType = this.$store.state.activeWallet
-        return this.$store.getters['Assets/ERC721/networkContracts']
+        return this.$store.getters['Assets/ERCNft/networkContracts']
     }
 
     get nativeAssetSymbol(): string {
@@ -94,7 +94,7 @@ export default class EVMTokenSelectModal extends Vue {
         this.close()
     }
 
-    onERC721Select(val: iErc721SelectInput) {
+    onERCNftSelect(val: iERCNftSelectInput) {
         this.$emit('selectCollectible', val)
         this.close()
     }

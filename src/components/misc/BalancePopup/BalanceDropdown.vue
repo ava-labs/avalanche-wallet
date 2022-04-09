@@ -2,16 +2,7 @@
     <div class="dropdown hover_border" :active="isPopup">
         <button @click="showPopup" :disabled="disabled">
             {{ symbol }}
-            <!--            <fa icon="caret-down" style="float: right"></fa>-->
         </button>
-        <!--        <BalancePopup-->
-        <!--            :assets="assetArray"-->
-        <!--            ref="popup"-->
-        <!--            class="popup"-->
-        <!--            @select="onselect"-->
-        <!--            :disabled-ids="disabledIds"-->
-        <!--            @close="onclose"-->
-        <!--        ></BalancePopup>-->
         <AvmTokenSelect
             ref="token_modal"
             @select="onselect"

@@ -10,7 +10,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 //@ts-ignore
 import langMap from '@/locales/lang_map'

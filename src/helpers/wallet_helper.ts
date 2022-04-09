@@ -10,7 +10,7 @@ import { BN, Buffer } from 'avalanche'
 import {
     buildCreateNftFamilyTx,
     buildEvmTransferErc20Tx,
-    buildEvmTransferErc721Tx,
+    buildEvmTransferERCNftTx,
     buildEvmTransferNativeTx,
     buildMintNftTx,
 } from '@/js/TxHelper'
@@ -20,7 +20,7 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -236,16 +236,16 @@ class WalletHelper {
         return hash.transactionHash
     }
 
-    static async sendErc721(
+    static async sendERCNft(
         wallet: WalletType,
         to: string,
         gasPrice: BN,
         gasLimit: number,
-        token: ERC721Token,
+        token: ERCNftToken,
         tokenId: string
     ) {
         let fromAddr = '0x' + wallet.getEvmAddress()
-        let tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
+        let tx = await buildEvmTransferERCNftTx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
         let signedTx = await wallet.signEvm(tx)
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)

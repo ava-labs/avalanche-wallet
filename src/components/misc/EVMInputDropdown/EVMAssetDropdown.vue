@@ -6,7 +6,7 @@
         <EVMTokenSelectModal
             ref="select_modal"
             @select="select"
-            @selectCollectible="selectERC721"
+            @selectCollectible="selectERCNft"
         ></EVMTokenSelectModal>
     </div>
 </template>
@@ -18,14 +18,14 @@ import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
-import ERC721Token from '@/js/ERC721Token'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERCNftToken from '@/js/ERCNftToken'
 @Component({
     components: { EVMTokenSelectModal },
 })
 export default class EVMAssetDropdown extends Vue {
     isPopup = false
-    selected: Erc20Token | ERC721Token | 'native' = 'native'
+    selected: Erc20Token | ERCNftToken | 'native' = 'native'
 
     @Prop({ default: false }) disabled!: boolean
 
@@ -58,7 +58,7 @@ export default class EVMAssetDropdown extends Vue {
         this.select('native')
     }
 
-    selectERC721(val: iErc721SelectInput) {
+    selectERCNft(val: iERCNftSelectInput) {
         this.selected = val.token
         this.$emit('changeCollectible', val)
     }

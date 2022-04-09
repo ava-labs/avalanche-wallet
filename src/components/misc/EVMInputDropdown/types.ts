@@ -1,6 +1,6 @@
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 
-export interface iErc721SelectInput {
+export interface iERCNftSelectInput {
     id: string
-    token: ERC721Token
+    token: ERCNftToken
 }

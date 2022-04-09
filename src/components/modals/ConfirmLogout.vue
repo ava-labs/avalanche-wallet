@@ -23,12 +23,10 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import CopyText from '@/components/misc/CopyText.vue'
 
 @Component({
     components: {
         Modal,
-        CopyText,
     },
 })
 export default class ConfirmLogout extends Vue {

@@ -1,5 +1,5 @@
 <template>
-    <div class="erc721_view">
+    <div class="ercNFT_view">
         <img :src="parseURL(img)" v-if="!isError && img" />
         <div v-if="isError" class="err_cont">
             <p>
@@ -10,15 +10,15 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 
 // If an image url is hosted on one of these urls, reroute through cloudflare.
 const REDIRECT_DOMAINS = ['gateway.pinata.cloud/ipfs']
 const CF_IPFS_BASE = 'https://cloudflare-ipfs.com/ipfs/'
 @Component
-export default class ERC721View extends Vue {
+export default class ERCNftView extends Vue {
     @Prop() index!: string
-    @Prop() token!: ERC721Token
+    @Prop() token!: ERCNftToken
     metadata: any = {}
     isError = false
 
@@ -63,7 +63,7 @@ export default class ERC721View extends Vue {
 }
 </script>
 <style scoped lang="scss">
-.erc721_view {
+.ercNFT_view {
     width: 100%;
     height: 100%;
 }

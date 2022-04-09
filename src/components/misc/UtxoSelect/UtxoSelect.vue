@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { UTXOSet } from 'avalanche/dist/apis/platformvm'
 import { UnixNow } from 'avalanche/dist/utils'
 type Selection = 'all' | 'unlocked' | 'locked'

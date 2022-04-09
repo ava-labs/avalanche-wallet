@@ -2,7 +2,7 @@
     <modal ref="modal" title="Add Collectible" @beforeClose="beforeClose">
         <div class="add_token_body">
             <div>
-                <label>ERC721 Contract Address</label>
+                <label>ERCNft Contract Address</label>
                 <input v-model="tokenAddress" placeholder="0x" />
                 <label>ERC1155 Token ID</label>
                 <input v-model="tokenId" />
@@ -42,16 +42,17 @@ import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import Modal from './Modal.vue'
 import { web3 } from '@/evm'
-import ERC721Abi from '@openzeppelin/contracts/build/contracts/ERC721.json'
-import { ERC721TokenInput } from '@/store/modules/assets/modules/types'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftAbi from '@openzeppelin/contracts/build/contracts/ERC721.json'
+import { ERCNftTokenInput } from '@/store/modules/assets/modules/types'
+import ERCNftToken from '@/js/ERCNftToken'
+import { BN } from 'avalanche'
 
 @Component({
     components: {
         Modal,
     },
 })
-export default class AddERC721TokenModal extends Vue {
+export default class AddERCNftTokenModal extends Vue {
     tokenAddress = ''
     name = ''
     symbol = ''
@@ -76,7 +77,7 @@ export default class AddERC721TokenModal extends Vue {
         }
         try {
             //@ts-ignore
-            var tokenInst = new web3.eth.Contract(ERC721Abi.abi, val)
+            var tokenInst = new web3.eth.Contract(ERCNftAbi.abi, val)
             let name = await tokenInst.methods.name().call()
             let symbol = await tokenInst.methods.symbol().call()
 
@@ -105,18 +106,18 @@ export default class AddERC721TokenModal extends Vue {
 
     async submit() {
         try {
-            let data: ERC721TokenInput = {
+            let data: ERCNftTokenInput = {
                 address: this.tokenAddress,
                 name: this.name,
                 symbol: this.symbol,
                 chainId: this.$store.state.Assets.evmChainId,
-                tokenId: this.tokenId ? parseInt(this.tokenId) : undefined,
+                erc1155TokenIds: this.tokenId ? [new BN(this.tokenId)] : [],
             }
 
-            let token: ERC721Token = await this.$store.dispatch('Assets/ERC721/addCustom', data)
+            let token: ERCNftToken = await this.$store.dispatch('Assets/ERCNft/addCustom', data)
 
             this.$store.dispatch('Notifications/add', {
-                title: 'ERC721 Token Added',
+                title: 'ERCNft Token Added',
                 message: token.data.name,
             })
             this.close()
@@ -140,12 +141,12 @@ export default class AddERC721TokenModal extends Vue {
         this.$refs.modal.close()
     }
 
-    async removeToken(token: ERC721Token) {
-        await this.$store.dispatch('Assets/ERC721/removeCustom', token)
+    async removeToken(token: ERCNftToken) {
+        await this.$store.dispatch('Assets/ERCNft/removeCustom', token)
     }
 
-    get networkTokens(): ERC721Token[] {
-        return this.$store.getters['Assets/ERC721/networkContractsCustom']
+    get networkTokens(): ERCNftToken[] {
+        return this.$store.getters['Assets/ERCNft/networkContractsCustom']
     }
 }
 </script>

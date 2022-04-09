@@ -1,24 +1,25 @@
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
+import { BN } from 'avalanche'
 
-export interface Erc721ModuleState {
-    erc721Tokens: ERC721Token[]
-    erc721TokensCustom: ERC721Token[]
-    walletBalance: ERC721WalletBalance
+export interface ERCNftModuleState {
+    ercNFTTokens: ERCNftToken[]
+    ercNFTTokensCustom: ERCNftToken[]
+    walletBalance: ERCNftWalletBalance
 }
 
-export interface ERC721Balance {
+export interface ERCNftBalance {
     tokenId: string
-    count: number
+    quantity: number
 }
 
-export interface ERC721WalletBalance {
-    [id: string]: ERC721Balance[]
+export interface ERCNftWalletBalance {
+    [id: string]: ERCNftBalance[]
 }
 
-export interface ERC721TokenInput {
+export interface ERCNftTokenInput {
     address: string
     chainId: number
     name: string
     symbol: string
-    tokenId?: number
+    erc1155TokenIds: BN[]
 }

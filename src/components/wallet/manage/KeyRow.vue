@@ -117,7 +117,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { bintools } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
-import { AmountOutput, KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
+import { AmountOutput } from 'avalanche/dist/apis/avm'
 import MnemonicPhraseModal from '@/components/modals/MnemonicPhraseModal.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
@@ -355,7 +355,6 @@ export default class KeyRow extends Vue {
 .addressItem .selBut {
     flex-shrink: 0;
     flex-grow: 1;
-    /*background-color: #C0C0CD;*/
     color: #867e89;
     padding: 4px 8px;
 
@@ -365,16 +364,10 @@ export default class KeyRow extends Vue {
     }
 }
 
-.addressItem {
-    .selBut {
-    }
-}
-
 .header {
     display: grid;
     grid-template-columns: 32px 1fr;
     grid-gap: 14px;
-    /*align-items: center;*/
 }
 
 .header_cols {
@@ -387,9 +380,6 @@ export default class KeyRow extends Vue {
     overflow: auto;
     display: flex;
     align-items: center;
-
-    /*grid-template-columns: max-content max-content;*/
-    /*column-gap: 15px;*/
 }
 
 .label {
