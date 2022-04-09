@@ -14,7 +14,7 @@ module.exports = {
     // publicPath: '',
     configureWebpack: {
         optimization: {
-            minimize: true,
+            minimize: process.env.NODE_ENV  === 'production',
             minimizer: [new TerserPlugin()],
             splitChunks: {
                 chunks: 'all',

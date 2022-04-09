@@ -1,14 +1,14 @@
 <template>
     <div class="access_view">
-        <b-container>
-            <b-row align-h="center">
-                <b-col md="12" lg="10">
+        <div class="grid-container">
+            <div class="align-h">
+                <div>
                     <transition name="fade" mode="out-in">
                         <router-view class="access_card"></router-view>
                     </transition>
-                </b-col>
-            </b-row>
-        </b-container>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -42,7 +42,7 @@ import { Vue, Component } from 'vue-property-decorator'
 export default class Access extends Vue {}
 </script>
 <style scoped lang="scss">
-@use "../../main";
+@use '../../main';
 
 .access_view {
     display: flex;

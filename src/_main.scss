@@ -7,6 +7,14 @@ $container_padding_m: 30px 160px;
 $container_padding_s: 30px 3vw;
 $container_padding_mobile: 10px 10px;
 
+.grid-container {
+    display: grid;
+}
+
+.align-h {
+    text-align:center
+}
+
 @mixin mobile-device {
     @media only screen and (max-width: $mobile_width) {
         @content;

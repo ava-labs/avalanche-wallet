@@ -20,6 +20,10 @@ const app = new Vue({
     vuetify,
     i18n,
     render: (h) => h(App),
+    created: () => {
+        store.commit('Accounts/loadAccounts')
+        if (store.getters['Accounts/hasAccounts'] > 0) router.replace('/access')
+    },
     mounted() {
         // Reveal app version
         console.log(`App Version: ${process.env.VUE_APP_VERSION}`)
