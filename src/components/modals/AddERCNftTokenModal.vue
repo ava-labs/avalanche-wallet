@@ -103,7 +103,7 @@ export default class AddERCNftTokenModal extends Vue {
         try {
             let data: ERCNftTokenInput = {
                 type: undefined,
-                address: this.tokenAddress,
+                address: web3.utils.toChecksumAddress(this.tokenAddress),
                 name: this.name,
                 symbol: this.symbol,
                 chainId: this.$store.state.Assets.evmChainId,

@@ -101,7 +101,7 @@ class ERCNftToken {
                 ],
             })
             for (const log of logs) {
-                let entry = collector.get(log.address.toLowerCase())
+                let entry = collector.get(log.address)
                 if (entry) {
                     let parserInput
                     switch (log.topics[0]) {
@@ -217,6 +217,10 @@ class ERCNftToken {
         //Save to cache
         this.uriDataCache[id] = res
         return res
+    }
+
+    static toChecksumAddress(address: string): string {
+        return web3.utils.toChecksumAddress(address)
     }
 }
 

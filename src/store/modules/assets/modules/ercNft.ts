@@ -123,6 +123,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
             // Load default ercNft token contracts
             let ercNftTokens: ERCNftTokenInput[] = ERCNft_TOKEN_LIST.tokens
             for (var i = 0; i < ercNftTokens.length; i++) {
+                ercNftTokens[i].address = web3.utils.toChecksumAddress(ercNftTokens[i].address)
                 const token = new ERCNftToken(ercNftTokens[i])
                 state.ercNftTokens.push(token)
                 await token.updateSupports()
@@ -158,7 +159,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
                     })
             }
         },
-        async scanNewNfts({ state, getters, commit }) {
+        async scanNewNfts({ state, getters, commit, dispatch }) {
             const contracts: ERCNftToken[] = getters['networkContracts']
             let changed = false
 
@@ -191,10 +192,12 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
             if (changed) {
                 const search = new Set<ERCNftToken>(state.ercNftTokenIds)
                 contracts.forEach((c) => {
-                    if (c.data.ercTokenIds.length > 0 && !search.has(c))
+                    if (c.data.ercTokenIds.length > 0 && !search.has(c)) {
                         state.ercNftTokenIds.push(c)
+                    }
                 })
                 commit('saveTokenIds')
+                dispatch('updateWalletBalance')
             }
         },
     },
