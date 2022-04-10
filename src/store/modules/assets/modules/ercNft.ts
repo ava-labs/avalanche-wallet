@@ -139,14 +139,14 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
             commit('loadTokenIds')
             commit('loadLastScannedBlock')
         },
-        updateWalletBalance({ state, rootState }, token: ERCNftToken) {
+        updateWalletBalance({ state, rootState }, token: ERCNftToken[]) {
             let w: WalletType | null = rootState.activeWallet
             if (!w) return
 
             let walletAddr = '0x' + w.getEvmAddress()
 
             // Loop through contracts and update wallet balance object
-            let contracts: ERCNftToken[] = token ? [token] : state.ercNftTokenIds
+            let contracts: ERCNftToken[] = token ?? state.ercNftTokenIds
             for (var i = 0; i < contracts.length; i++) {
                 let ercNft = contracts[i]
                 ercNft
@@ -191,13 +191,15 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
 
             if (changed) {
                 const search = new Set<ERCNftToken>(state.ercNftTokenIds)
+                const updates: ERCNftToken[] = []
                 contracts.forEach((c) => {
                     if (c.data.ercTokenIds.length > 0 && !search.has(c)) {
                         state.ercNftTokenIds.push(c)
+                        updates.push(c)
                     }
                 })
                 commit('saveTokenIds')
-                dispatch('updateWalletBalance')
+                dispatch('updateWalletBalance', updates)
             }
         },
     },
