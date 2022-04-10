@@ -30,6 +30,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
         loadCustomContracts(state) {
             let tokensRaw = localStorage.getItem('ercNft_tokens') || '[]'
             let tokens: ERCNftTokenInput[] = JSON.parse(tokensRaw)
+            state.ercNftTokensCustom = []
             for (var i = 0; i < tokens.length; i++) {
                 const token = new ERCNftToken(tokens[i])
                 state.ercNftTokensCustom.push(token)
@@ -44,6 +45,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
             if (state.walletPrefix === '') return
 
             let tokensRaw = localStorage.getItem(state.walletPrefix + '_tokens') ?? '[]'
+            state.ercNftTokenIds = []
             let tokens: ERCNftTokenInput[] = JSON.parse(tokensRaw)
             for (var i = 0; i < tokens.length; i++) {
                 const token = new ERCNftToken(tokens[i])
@@ -136,6 +138,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
 
             state.evmAddress = '0x' + wallet.getEvmAddress()
             state.walletPrefix = wallet.chainId + '_' + wallet.getEvmAddress()
+            commit('clear')
             commit('loadTokenIds')
             commit('loadLastScannedBlock')
         },
