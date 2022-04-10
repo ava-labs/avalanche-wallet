@@ -1,5 +1,5 @@
 <template>
-    <div class="ercNFT_view">
+    <div class="ercNft_view">
         <img :src="parseURL(img)" v-if="!isError && img" />
         <div v-if="isError" class="err_cont">
             <p>
@@ -63,7 +63,7 @@ export default class ERCNftView extends Vue {
 }
 </script>
 <style scoped lang="scss">
-.ercNFT_view {
+.ercNft_view {
     width: 100%;
     height: 100%;
 }

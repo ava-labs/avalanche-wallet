@@ -1,9 +1,9 @@
 <template>
     <div v-if="hasBalance || !family.canSupport">
         <div class="fam_header">
-            <p class="name">{{ family.name }}</p>
-            <p class="symbol">{{ family.symbol }}</p>
-            <p class="fam_id">{{ family.contractAddress }}</p>
+            <p class="name">{{ family.data.name }}</p>
+            <p class="symbol">{{ family.data.symbol }}</p>
+            <p class="fam_id">{{ family.data.address }}</p>
         </div>
         <div class="list" v-if="family.canSupport">
             <ERCNftCard

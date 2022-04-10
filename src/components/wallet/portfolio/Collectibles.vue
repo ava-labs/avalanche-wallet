@@ -8,7 +8,7 @@
                 :family="fam"
             ></CollectibleFamilyRow>
             <ERCNftFamilyRow
-                v-for="token in ercNFTs"
+                v-for="token in ercNfts"
                 :key="token.data.address"
                 :family="token"
             ></ERCNftFamilyRow>
@@ -59,8 +59,8 @@ export default class Collectibles extends Vue {
         // let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
         let nftUtxos = this.$store.state.Assets.nftUTXOs.length
         let mintUTxos = this.$store.state.Assets.nftMintUTXOs.length
-        let ercNFTBal = this.$store.getters['Assets/ERCNft/totalOwned']
-        return nftUtxos + mintUTxos + ercNFTBal === 0
+        let ercNftBal = this.$store.getters['Assets/ERCNft/totalOwned']
+        return nftUtxos + mintUTxos + ercNftBal === 0
     }
 
     get nftDict(): IWalletNftDict {
@@ -113,7 +113,7 @@ export default class Collectibles extends Vue {
         return dict
     }
 
-    get ercNFTs(): ERCNftToken[] {
+    get ercNfts(): ERCNftToken[] {
         let w: WalletType = this.$store.state.activeWallet
         return this.$store.getters['Assets/ERCNft/networkContracts']
     }

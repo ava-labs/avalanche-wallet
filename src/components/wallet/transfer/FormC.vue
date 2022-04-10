@@ -333,7 +333,7 @@ export default class FormC extends Vue {
             }
         }
 
-        // For ercNFT transfers
+        // For ercNft transfers
         if (this.isCollectible && this.formCollectible) {
             let fromAddr = '0x' + this.wallet.getEvmAddress()
             let toAddr = this.formAddress
@@ -389,11 +389,11 @@ export default class FormC extends Vue {
                 this.$refs.token_in.setToken(tokenAddr)
             } else {
                 let token = this.$store.getters['Assets/findErc20'](tokenAddr)
-                let ercNFT = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
+                let ercNft = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
                 if (token) {
                     this.$refs.token_in.setToken(token)
-                } else if (ercNFT && tokenId) {
-                    this.$refs.token_in.setERCNftToken(ercNFT, tokenId as string)
+                } else if (ercNft && tokenId) {
+                    this.$refs.token_in.setERCNftToken(ercNft, tokenId as string)
                 }
             }
         }

@@ -23,7 +23,7 @@
             <div class="nft_list">
                 <ERCNftRow
                     class="nft_row"
-                    v-for="t in ercNFTs"
+                    v-for="t in ercNfts"
                     :key="t.contractAddress"
                     :token="t"
                     @select="onERCNftSelect"
@@ -69,7 +69,7 @@ export default class EVMTokenSelectModal extends Vue {
         return filt
     }
 
-    get ercNFTs(): ERCNftToken[] {
+    get ercNfts(): ERCNftToken[] {
         let w: WalletType = this.$store.state.activeWallet
         return this.$store.getters['Assets/ERCNft/networkContracts']
     }

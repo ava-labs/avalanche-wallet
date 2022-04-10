@@ -8,7 +8,7 @@
                 <div class="nft_item" v-for="(utxo, i) in nftArray" :key="utxo.getUTXOID()">
                     <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
                 </div>
-                <div class="nft_item" v-for="item in ercNFTBalanceArray" :key="item.id.tokenId">
+                <div class="nft_item" v-for="item in ercNftBalanceArray" :key="item.id.tokenId">
                     <ERCNftView :token="item.token" :index="item.id"></ERCNftView>
                 </div>
                 <div v-for="i in dummyAmt" class="nft_item dummy_item" :key="i"></div>
@@ -40,7 +40,7 @@ let payloadtypes = PayloadTypes.getInstance()
 })
 export default class NftCol extends Vue {
     get isEmpty(): boolean {
-        return this.nftArray.length + this.ercNFTBalanceArray.length === 0
+        return this.nftArray.length + this.ercNftBalanceArray.length === 0
     }
 
     get nftDict(): IWalletNftDict {
@@ -82,21 +82,21 @@ export default class NftCol extends Vue {
         })
     }
 
-    get ercNFTBalance(): ERCNftWalletBalance {
+    get ercNftBalance(): ERCNftWalletBalance {
         return this.$store.state.Assets.ERCNft.walletBalance
     }
 
-    get ercNFTBalanceArray() {
+    get ercNftBalanceArray() {
         // TODO: Remove after ledger support
         if (this.$store.state.activeWallet.type === 'ledger') return []
 
         let res = []
-        for (var tokenAddr in this.ercNFTBalance) {
-            let ercNFTToken = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
-            let tokenIds = this.ercNFTBalance[tokenAddr]
+        for (var tokenAddr in this.ercNftBalance) {
+            let ercNftToken = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
+            let tokenIds = this.ercNftBalance[tokenAddr]
             let tokens = tokenIds.map((id) => {
                 return {
-                    token: ercNFTToken,
+                    token: ercNftToken,
                     id: id.tokenId,
                     quantity: id.quantity,
                 }
@@ -107,7 +107,7 @@ export default class NftCol extends Vue {
     }
 
     get dummyAmt(): number {
-        return NFT_COUNT - (this.nftArray.length + this.ercNFTBalanceArray.length)
+        return NFT_COUNT - (this.nftArray.length + this.ercNftBalanceArray.length)
     }
 
     get collectedAmt(): number {

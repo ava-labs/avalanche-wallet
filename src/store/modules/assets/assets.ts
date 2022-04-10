@@ -118,6 +118,11 @@ const assets_module: Module<AssetsState, RootState> = {
             let id = await web3.eth.getChainId()
             state.evmChainId = id
         },
+        // Called everytime a new wallet is selected
+        updateWallet({ dispatch }) {
+            dispatch('ERCNft/updateUserNfts')
+            dispatch('ERCNft/scanNewNfts')
+        },
         // Called on a logout event
         onLogout({ state, commit }) {
             // state.isUpdateBalance = false

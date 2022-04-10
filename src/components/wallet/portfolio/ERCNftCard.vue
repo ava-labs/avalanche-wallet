@@ -87,7 +87,7 @@ export default class ERCNftCard extends Vue {
     }
 
     get ercNftType() {
-        return this.token.data.erc1155TokenIds.length > 0 ? 'ERC1155' : 'ERC721'
+        return this.token.data.type
     }
 
     async getData() {

@@ -272,6 +272,7 @@ export default new Vuex.Store({
         async activateWallet({ state, dispatch, commit }, wallet: MnemonicWallet | LedgerWallet) {
             state.activeWallet = wallet
 
+            await dispatch('Assets/updateWallet')
             dispatch('Assets/updateAvaAsset')
             commit('updateActiveAddress')
             dispatch('History/updateTransactionHistory')
