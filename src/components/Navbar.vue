@@ -107,6 +107,7 @@ export default class Navbar extends Vue {
     logout(): void {
         // @ts-ignore
         this.$refs.logout.open()
+        this.isDrawer = false
     }
 }
 </script>

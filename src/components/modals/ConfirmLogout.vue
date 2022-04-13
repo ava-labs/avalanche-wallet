@@ -31,7 +31,12 @@ import Modal from '@/components/modals/Modal.vue'
 })
 export default class ConfirmLogout extends Vue {
     isLoading = false
+    isDestroyed = false
     @Prop({ default: '' }) phrase!: string
+
+    destroyed() {
+        this.isDestroyed = true
+    }
 
     open(): void {
         let modal = this.$refs.modal as Modal
@@ -51,6 +56,7 @@ export default class ConfirmLogout extends Vue {
             message: 'You have successfully logged out of your wallet.',
         })
         this.isLoading = false
+        if (!this.isDestroyed) this.close()
     }
 }
 </script>
