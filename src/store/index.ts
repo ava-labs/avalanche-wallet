@@ -201,17 +201,20 @@ export default new Vuex.Store({
             // Cannot add mnemonic wallets on ledger mode
             if (state.activeWallet?.type === 'ledger') return null
 
+            // Split mnemonic and seed hash
+            const mParts = mnemonic.split('\n')
+
             // Make sure wallet doesnt exist already
             for (var i = 0; i < state.wallets.length; i++) {
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
-                    if ((w as MnemonicWallet).getMnemonic() === mnemonic) {
+                    if ((w as MnemonicWallet).getMnemonic() === mParts[0]) {
                         throw new Error('Wallet already exists.')
                     }
                 }
             }
 
-            let wallet = new MnemonicWallet(mnemonic)
+            let wallet = new MnemonicWallet(mParts[0], mParts[1])
             state.wallets.push(wallet)
             state.volatileWallets.push(wallet)
             return wallet

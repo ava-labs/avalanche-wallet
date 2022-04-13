@@ -77,8 +77,11 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     }
 
     // The master key from caminojs
-    constructor(mnemonic: string) {
-        let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
+    constructor(mnemonic: string, seedStr?: string) {
+        const seed: globalThis.Buffer = seedStr
+            ? Buffer.from(seedStr, 'hex')
+            : bip39.mnemonicToSeedSync(mnemonic)
+
         let masterHdKey: HDKey = HDKey.fromMasterSeed(seed)
         let accountHdKey = masterHdKey.derive(AVA_ACCOUNT_PATH)
         let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
@@ -166,6 +169,10 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
 
     getMnemonicEncrypted(): MnemonicPhrase {
         return this.mnemonic
+    }
+
+    getSeed(): string {
+        return this.seed
     }
 
     async validate(
