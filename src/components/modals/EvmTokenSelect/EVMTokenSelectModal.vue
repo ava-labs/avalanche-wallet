@@ -108,19 +108,12 @@ export default class EVMTokenSelectModal extends Vue {
 @use '../../../main';
 
 .token_select_body {
-    width: 420px;
+    width: 520px;
     max-width: 100%;
-    //padding: 10px 20px;
 }
 
 .list {
-    //position: absolute;
-    //top: 0;
-    //left: 100%;
-    //width: 260px;
-    //max-height: 0px;
     max-height: 70vh;
-    overflow: scroll;
     z-index: 2;
     border-radius: 4px;
 }
@@ -184,8 +177,8 @@ $logo_w: 38px;
 @include main.mobile-device {
     .token_select_body {
         width: 100%;
-        height: 40vh;
-        overflow: scroll;
+        max-height: 40vh;
+        overflow: auto;
     }
 }
 </style>

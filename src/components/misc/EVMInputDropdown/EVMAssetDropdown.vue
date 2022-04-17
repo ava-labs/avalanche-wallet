@@ -85,7 +85,6 @@ button {
     left: 100%;
     width: 260px;
     max-height: 0px;
-    overflow: scroll;
     z-index: 2;
     border-radius: 4px;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);

@@ -12,7 +12,7 @@
                 class="item"
                 :token="token"
                 :index="tokenIndex.tokenId"
-                @click.native="selectToken(tokenIndex)"
+                @click.native="selectToken(tokenIndex.tokenId)"
             ></ERCNftView>
         </div>
     </div>
