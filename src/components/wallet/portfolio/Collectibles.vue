@@ -172,10 +172,4 @@ $flip_dur: 0.6s;
     width: 140px;
     height: 220px;
 }
-
-@include main.mobile-device {
-    .collectibles_view {
-        height: 90vh;
-    }
-}
 </style>
