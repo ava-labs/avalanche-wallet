@@ -172,4 +172,10 @@ $flip_dur: 0.6s;
     width: 140px;
     height: 220px;
 }
+
+@include main.mobile-device {
+    .list {
+        max-height: none;
+    }
+}
 </style>
