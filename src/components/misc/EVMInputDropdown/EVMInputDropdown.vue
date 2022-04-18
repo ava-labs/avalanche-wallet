@@ -25,7 +25,9 @@
                     :index="collectible.id"
                     class="collectible_item"
                 ></ERCNftView>
-                <p style="align-self: center; padding-left: 12px">TOKEN ID: {{ collectible.id }}</p>
+                <p style="align-self: center; padding-left: 12px">
+                    TOKEN ID: {{ collectible.id.tokenId }}
+                </p>
             </template>
         </div>
         <EVMAssetDropdown
@@ -36,6 +38,9 @@
         ></EVMAssetDropdown>
         <div class="bal_col" v-if="!isCollectible">
             <p class="bal">Balance: {{ balance.toLocaleString() }}</p>
+        </div>
+        <div class="bal_col" v-else>
+            <p class="bal">Balance: {{ collectible.id.quantity }}</p>
         </div>
     </div>
 </template>
@@ -53,6 +58,7 @@ import { bnToBig } from '@/helpers/helper'
 import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
 import ERCNftView from '@/components/misc/ERCNftView.vue'
 import ERCNftToken from '@/js/ERCNftToken'
+import { ERCNftBalance } from '@/store/modules/assets/modules/types'
 
 @Component({
     components: {
@@ -76,7 +82,7 @@ export default class EVMInputDropdown extends Vue {
     }
 
     clear() {
-        this.$refs.dropdown.clear()
+        if (this.$refs.dropdown) this.$refs.dropdown.clear()
     }
 
     get usd_val(): Big {
@@ -170,7 +176,7 @@ export default class EVMInputDropdown extends Vue {
         this.$refs.dropdown.select(token)
     }
 
-    setERCNftToken(token: ERCNftToken, tokenId: string) {
+    setERCNftToken(token: ERCNftToken, tokenId: ERCNftBalance) {
         this.$refs.dropdown.selectERCNft({
             token: token,
             id: tokenId,

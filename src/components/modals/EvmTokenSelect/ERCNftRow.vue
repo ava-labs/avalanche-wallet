@@ -11,8 +11,8 @@
                 :key="tokenIndex.tokenId"
                 class="item"
                 :token="token"
-                :index="tokenIndex.tokenId"
-                @click.native="selectToken(tokenIndex.tokenId)"
+                :index="tokenIndex"
+                @click.native="selectToken(tokenIndex)"
             ></ERCNftView>
         </div>
     </div>
@@ -42,7 +42,7 @@ export default class ERCNftRow extends Vue {
         return this.walletBalance.length > 0
     }
 
-    selectToken(index: string) {
+    selectToken(index: ERCNftBalance) {
         let data: iERCNftSelectInput = {
             id: index,
             token: this.token,

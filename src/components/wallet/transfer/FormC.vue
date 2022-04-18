@@ -340,7 +340,7 @@ export default class FormC extends Vue {
             let tx = this.formCollectible.token.createTransferTx(
                 fromAddr,
                 toAddr,
-                this.formCollectible.id
+                this.formCollectible.id.tokenId
             )
             let estGas = await WalletHelper.estimateTxGas(this.wallet, tx)
             this.gasLimit = estGas
@@ -381,8 +381,8 @@ export default class FormC extends Vue {
     activated() {
         this.startAgain()
 
-        let tokenAddr = this.$route.query.token
-        let tokenId = this.$route.query.tokenId
+        let tokenAddr = this.$route.query.token as string
+        let tokenId = this.$route.query.tokenId as string
 
         if (tokenAddr) {
             if (tokenAddr === 'native') {
@@ -393,7 +393,8 @@ export default class FormC extends Vue {
                 if (token) {
                     this.$refs.token_in.setToken(token)
                 } else if (ercNft && tokenId) {
-                    this.$refs.token_in.setERCNftToken(ercNft, tokenId as string)
+                    const quantity = this.$store.getters['Assets/ERCNft/owned'](tokenAddr, tokenId)
+                    this.$refs.token_in.setERCNftToken(ercNft, { tokenId, quantity })
                 }
             }
         }
@@ -453,7 +454,7 @@ export default class FormC extends Vue {
                     gasPriceWei,
                     this.gasLimit,
                     this.formCollectible.token,
-                    this.formCollectible.id
+                    this.formCollectible.id.tokenId
                 )
                 this.onSuccess(txHash)
             }

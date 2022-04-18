@@ -224,12 +224,15 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
                 return state.ercNftTokensCustom.includes(c)
             })
         },
-
-        totalOwned(state: ERCNftModuleState, getters, rootState: RootState) {
+        owned: (state: ERCNftModuleState) => (contractAddr: string, tokenId: string) => {
+            let bal = state.walletBalance[contractAddr]
+            return bal.find((erc) => erc.tokenId === tokenId)?.quantity
+        },
+        totalOwned(state: ERCNftModuleState) {
             let bal = state.walletBalance
             let tot = 0
-            for (let contractAddress in bal) {
-                for (let ercNftBalance of bal[contractAddress]) {
+            for (let contractAddr in bal) {
+                for (let ercNftBalance of bal[contractAddr]) {
                     tot += ercNftBalance.quantity
                 }
             }
@@ -238,8 +241,8 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
         totalCollectionsOwned(state: ERCNftModuleState) {
             let bal = state.walletBalance
             let tot = 0
-            for (let contractAddrress in bal) {
-                let len = bal[contractAddrress].length
+            for (let contractAddress in bal) {
+                let len = bal[contractAddress].length
                 if (len > 0) tot++
             }
             return tot

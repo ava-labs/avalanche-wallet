@@ -10,9 +10,8 @@
                 v-for="tokenIndex in walletBalance"
                 :key="tokenIndex.tokenId"
                 class="group"
-                :index="tokenIndex.tokenId"
+                :index="tokenIndex"
                 :token="family"
-                :quantity="tokenIndex.quantity"
             ></ERCNftCard>
         </div>
         <div v-else>
@@ -42,5 +41,5 @@ export default class ERCNftFamilyRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "tokens";
+@use 'tokens';
 </style>

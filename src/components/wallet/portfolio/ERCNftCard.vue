@@ -1,7 +1,11 @@
 <template>
     <div class="nft_card">
-        <p class="count" v-if="quantity > 1">{{ quantity }}</p>
-        <ERCNftViewModal :token="token" :token-id="index" ref="view_modal"></ERCNftViewModal>
+        <p class="count" v-if="index.quantity > 1">{{ index.quantity }}</p>
+        <ERCNftViewModal
+            :token="token"
+            :token-id="index.tokenId"
+            ref="view_modal"
+        ></ERCNftViewModal>
         <div class="view">
             <template v-if="!isRaw && img">
                 <ERCNftView :token="token" :index="index"></ERCNftView>
@@ -53,13 +57,13 @@ import Tooltip from '@/components/misc/Tooltip.vue'
 import ERCNftToken from '@/js/ERCNftToken'
 import ERCNftView from '@/components/misc/ERCNftView.vue'
 import ERCNftViewModal from '@/components/modals/ERCNftViewModal.vue'
+import { ERCNftBalance } from '@/store/modules/assets/modules/types'
 @Component({
     components: { ERCNftViewModal, ERCNftView, Tooltip },
 })
 export default class ERCNftCard extends Vue {
-    @Prop() index!: string
+    @Prop() index!: ERCNftBalance
     @Prop() token!: ERCNftToken
-    @Prop() quantity!: number
 
     $refs!: {
         view_modal: ERCNftViewModal
@@ -92,7 +96,7 @@ export default class ERCNftCard extends Vue {
 
     async getData() {
         try {
-            let uri = await this.token.getTokenURI(parseInt(this.index))
+            let uri = await this.token.getTokenURI(parseInt(this.index.tokenId))
             let res = (await axios.get(uri)).data
             this.metadata = res
         } catch (e) {
@@ -107,7 +111,7 @@ export default class ERCNftCard extends Vue {
             query: {
                 chain: 'C',
                 token: this.token.data.address,
-                tokenId: this.index,
+                tokenId: this.index.tokenId,
             },
         })
     }

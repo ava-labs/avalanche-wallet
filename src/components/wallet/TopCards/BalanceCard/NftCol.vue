@@ -8,7 +8,11 @@
                 <div class="nft_item" v-for="(utxo, i) in nftArray" :key="utxo.getUTXOID()">
                     <NftPayloadView :payload="nftPayloads[i]" small="true"></NftPayloadView>
                 </div>
-                <div class="nft_item" v-for="item in ercNftBalanceArray" :key="item.id.tokenId">
+                <div
+                    class="nft_item"
+                    v-for="item in ercNftBalanceArray"
+                    :key="'ba_' + item.id.tokenId"
+                >
                     <ERCNftView :token="item.token" :index="item.id"></ERCNftView>
                 </div>
                 <div v-for="i in dummyAmt" class="nft_item dummy_item" :key="i"></div>
@@ -27,6 +31,7 @@ import { PayloadTypes } from 'avalanche/dist/utils'
 import { bintools } from '@/AVA'
 import { ERCNftWalletBalance } from '@/store/modules/assets/modules/types'
 import ERCNftView from '@/components/misc/ERCNftView.vue'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
 
 const NFT_COUNT = 10
 
@@ -90,15 +95,14 @@ export default class NftCol extends Vue {
         // TODO: Remove after ledger support
         if (this.$store.state.activeWallet.type === 'ledger') return []
 
-        let res = []
+        let res: iERCNftSelectInput[] = []
         for (var tokenAddr in this.ercNftBalance) {
             let ercNftToken = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
             let tokenIds = this.ercNftBalance[tokenAddr]
             let tokens = tokenIds.map((id) => {
                 return {
                     token: ercNftToken,
-                    id: id.tokenId,
-                    quantity: id.quantity,
+                    id,
                 }
             })
             res.push(...tokens)
