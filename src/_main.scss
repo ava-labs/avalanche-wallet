@@ -12,7 +12,7 @@ $container_padding_mobile: 10px 10px;
 }
 
 .align-h {
-    text-align:center
+    text-align: center
 }
 
 @mixin mobile-device {
@@ -78,6 +78,7 @@ $s-size-mobile: 14px;
     transition-duration: 0.1s;
     border: 1px solid transparent;
     outline: none !important;
+
     &:hover {
         border-color: var(--primary-color-light);
     }
@@ -110,6 +111,7 @@ video {
 button {
     outline: none !important;
 }
+
 textarea,
 input {
     @include highlight-border;
@@ -128,11 +130,13 @@ input {
 }
 
 input[type='number'] {
+
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
+
     -moz-appearance: textfield;
 }
 
@@ -160,7 +164,12 @@ label {
 .fade-leave-active {
     transition: opacity 0.2s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+    {
     opacity: 0;
 }
 
@@ -168,7 +177,12 @@ label {
 .float-leave-active {
     transition: all 0.2s;
 }
-.float-enter, .float-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.float-enter,
+.float-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+    {
     transform: translateY(30px);
 }
 
@@ -176,7 +190,12 @@ label {
 .slide_right-leave-active {
     transition: all 0.2s;
 }
-.slide_right-enter, .slide_right-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.slide_right-enter,
+.slide_right-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+    {
     transform: translateX(30px);
     opacity: 0;
 }
@@ -185,7 +204,12 @@ label {
 .slide_bottom-leave-active {
     transition: opacity 0.2s;
 }
-.slide_bottom-enter, .slide_bottom-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.slide_bottom-enter,
+.slide_bottom-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+    {
     transform: translateY(100%);
     opacity: 0;
 }
@@ -194,7 +218,12 @@ label {
 .shrink-leave-active {
     transition: opacity 0.2s;
 }
-.shrink-enter, .shrink-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.shrink-enter,
+.shrink-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+    {
     transform: translateX(100%);
     opacity: 0;
 }
@@ -265,6 +294,10 @@ label {
     .link {
         margin-bottom: 0;
     }
+
+    .mobile_hidden {
+        visibility: hidden;
+    }
 }
 
 $purple: #4c2e56;
@@ -300,6 +333,7 @@ h4 {
     background-color: var(--primary-color) !important;
     color: var(--bg) !important;
     text-decoration: none;
+
     &:hover {
         opacity: 0.7;
     }
@@ -311,10 +345,12 @@ h4 {
         cursor: not-allowed !important;
     }
 }
+
 .button_secondary {
     background-color: var(--secondary-color) !important;
     color: #fff !important;
     text-decoration: none;
+
     &:hover {
         opacity: 0.7;
     }
@@ -336,6 +372,7 @@ h4 {
 .v-input--selection-controls__ripple {
     color: var(--secondary-color) !important;
 }
+
 textarea {
     color: var(--primary-color);
     background-color: var(--bg);
@@ -343,6 +380,7 @@ textarea {
 
 .v-input__slot {
     background-color: var(--bg) !important;
+
     input {
         color: var(--primary-color) !important;
     }
@@ -356,6 +394,7 @@ textarea {
 .v-tab {
     color: var(--primary-color-light) !important;
 }
+
 .v-tab--active {
     color: var(--primary-color) !important;
 }
@@ -367,6 +406,7 @@ textarea {
 .v-text-field {
     @include highlight-border;
     color: var(--primary-color) !important;
+
     label {
         color: var(--primary-color-light) !important;
     }
@@ -375,6 +415,7 @@ textarea {
         outline: none;
         border: none;
     }
+
     .v-input__slot:before {
         border-color: var(--primary-color-light) !important;
         color: var(--primary-color-light) !important;
@@ -389,6 +430,7 @@ textarea {
     background-color: var(--bg-light) !important;
     color: var(--primary-color) !important;
 }
+
 .v-chip--active {
     background-color: var(--primary-color) !important;
     color: var(--bg-wallet) !important;
@@ -413,6 +455,7 @@ textarea {
 .vdatetime {
     background-color: var(--bg-light) !important;
     padding: 6px 12px !important;
+
     input {
         color: var(--primary-color) !important;
     }
@@ -484,8 +527,11 @@ p.err {
     &::-webkit-scrollbar {
         display: none;
     }
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .flex-row {
