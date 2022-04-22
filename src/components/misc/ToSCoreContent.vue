@@ -1,8 +1,7 @@
 <template>
     <div class="content">
         <h1 style="padding-top: 2pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
-            <strong>CORE - </strong>
-            <strong>TERMS OF USE</strong>
+            <strong>CORE - TERMS OF USE</strong>
         </h1>
         <h4 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             <strong>Effective April 7, 2022</strong>
