@@ -8,7 +8,7 @@
             <strong>Effective April 7, 2022</strong>
         </h4>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>AGREEMENT TO TERMS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -29,7 +29,15 @@
             evaluating, downloading, purchasing and/or using any of the Services offered through the
             App or any of the Third Party Services you may interact with, you expressly acknowledge
             that you have read and agree to be bound by all of these Terms and the
-            <u>Important Notice</u>
+            <u>
+                <a
+                    href="https://assets.website-files.com/602e8e4411398ca20cfcafd3/60ec9607c853cd466383f1ad_Important%20Notice%20-%20avalabs.org.pdf"
+                    rel="nofollow"
+                    target="_blank"
+                >
+                    Important Notice
+                </a>
+            </u>
             , which is hereby incorporated herein by reference. IF YOU DO NOT AGREE WITH SUCH TERMS,
             THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE APP AND THE SERVICES AND YOU MUST
             DISCONTINUE USE IMMEDIATELY.
@@ -110,12 +118,16 @@
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             Please refer to our
-            <u>Privacy Policy</u>
+            <u>
+                <a href="https://www.avalabs.org/privacy-policy" rel="nofollow" target="_blank">
+                    Privacy Policy
+                </a>
+            </u>
             for information about how we collect, use, share and otherwise process information about
             you.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>INTELLECTUAL PROPERTY RIGHTS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -151,7 +163,7 @@
             is for display purposes only.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>THIRD PARTY SERVICES</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -164,9 +176,21 @@
             services and dapps and will be subject to their terms, policies and fees. Please review
             the terms, policies and fees of any third party with which you are interacting,
             including MoonPay (available
-            <u>here</u>
+            <u>
+                <a
+                    href="https://www.moonpay.com/legal/terms_of_use_usa"
+                    rel="nofollow"
+                    target="_blank"
+                >
+                    here
+                </a>
+            </u>
             and
-            <u>here</u>
+            <u>
+                <a href="https://www.moonpay.com/legal/terms_of_use" rel="nofollow" target="_blank">
+                    here
+                </a>
+            </u>
             ), which will be in addition to these Terms.
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -186,7 +210,7 @@
             respect to the Third Party Services or seek to do so.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>USER REPRESENTATIONS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -208,7 +232,7 @@
             otherwise applied any sanctions.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>ACCEPTABLE USE POLICY</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -358,7 +382,7 @@
             among other things, termination or suspension of your rights to use the App.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>SUBMISSIONS</strong>
         </h2>
 
@@ -375,7 +399,7 @@
             proprietary right in your Submissions.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>APP</strong>
             <strong>MANAGEMENT</strong>
         </h2>
@@ -389,7 +413,7 @@
             rights and property and to facilitate the proper functioning of the App.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>TERM AND TERMINATION</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -403,7 +427,7 @@
             DISCRETION.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>MODIFICATIONS, CORRECTIONS AND INTERRUPTIONS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -434,7 +458,7 @@
             connection therewith.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>GOVERNING LAW</strong>
         </h2>
 
@@ -445,10 +469,10 @@
             law principles.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>DISPUTE RESOLUTION</strong>
         </h2>
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h3 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>Binding Arbitration</strong>
         </h3>
 
@@ -493,8 +517,7 @@
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You may opt out of the binding arbitration described in this section by sending us
             written notice of your desire to do so by email at
-            <u>legal@</u>
-            <u>avalabs.org</u>
+            <u><a href="mailto:legal@avalabs.org" rel="nofollow">legal@avalabs.org</a></u>
             (such notice, an “Arbitration Opt-out Notice”) within 30 days following the date you
             first agree to these Terms. The Arbitration Opt-out Notice must include your full name
             and address and clearly indicate your intent to opt out of binding arbitration. If you
@@ -574,7 +597,7 @@
             its entirety, then the entire Dispute Resolution section will be deemed void.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>JUDICIAL FORUM FOR DISPUTES</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -585,7 +608,7 @@
             jurisdiction and venue in such courts.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>RISKS RELATING TO DIGITAL ASSETS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -634,7 +657,7 @@
             taxes to the appropriate tax authorities.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>DISCLAIMER</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -676,7 +699,7 @@
             WHERE APPROPRIATE.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>LIMITATIONS OF LIABILITY</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -699,7 +722,7 @@
             DISCLAIMERS OR LIMITATIONS MAY NOT APPLY TO YOU, AND YOU MAY HAVE ADDITIONAL RIGHTS.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>INDEMNIFICATION</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -730,7 +753,7 @@
             jurisdiction, you waive any comparable statute or doctrine.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>USER DATA</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -743,7 +766,7 @@
             corruption of such data.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>ELECTRONIC COMMUNICATIONS, TRANSACTIONS AND SIGNATURES</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -760,7 +783,7 @@
             means other than electronic means.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>CALIFORNIA USERS AND RESIDENTS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -770,7 +793,7 @@
             California 95834 or by telephone at (800) 952-5210 or (916) 445-1254.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>MISCELLANEOUS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -791,7 +814,7 @@
             the lack of signing by the parties hereto to execute these Terms.
         </p>
 
-        <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
+        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
             <strong>CONTACT US</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
