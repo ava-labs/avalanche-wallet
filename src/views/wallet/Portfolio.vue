@@ -1,5 +1,5 @@
 <template>
-    <div class="home_view no_scroll_bar">
+    <div class="home_view">
         <div class="header">
             <h1>{{ $t('portfolio.assets') }}</h1>
             <div>
@@ -69,7 +69,6 @@ export default {
 .home_view {
     display: grid;
     grid-template-rows: max-content 1fr;
-    overflow: scroll;
 }
 .header {
     display: flex;

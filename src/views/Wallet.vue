@@ -144,6 +144,14 @@ export default class Wallet extends Vue {
     padding: 22px 20px;
     background-color: var(--bg-wallet-light);
     border-radius: 4px;
+    overflow: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .page_fade-enter-active,
