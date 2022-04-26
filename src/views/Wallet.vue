@@ -137,6 +137,7 @@ export default class Wallet extends Vue {
     grid-template-rows: max-content 1fr;
     grid-gap: 15px;
     padding-top: 8px;
+    height: 100vh;
 }
 
 #wallet_router {
@@ -162,6 +163,7 @@ export default class Wallet extends Vue {
     .wallet_main {
         grid-gap: 9px;
         padding-top: 0;
+        height: unset;
     }
 
     .wallet_sidebar {
