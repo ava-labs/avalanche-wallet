@@ -436,7 +436,7 @@
         "loading": "Lade vergangene Transaktionen ...",
         "warn_loading": "Diese Liste ist möglicherweise unvollständig und nicht mehr aktuell.",
         "error_api": "Explorer API nicht gefunden",
-        "error_api_desc": "Du musst eine AVA Explorer API für dieses Netzwerk zur Verfügung stellen, um den Transaktionsverlauf einzusehen."
+        "error_api_desc": "Du musst eine Magellan Explorer API für dieses Netzwerk zur Verfügung stellen, um den Transaktionsverlauf einzusehen."
     },
     "modal": {
         "qr": {

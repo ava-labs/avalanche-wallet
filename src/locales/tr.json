@@ -423,7 +423,7 @@
         "loading": "İşlem geçmişi yükleniyor..",
         "warn_loading": "Bu liste eksik ve bozuk olabilir.",
         "error_api": "Explorer API Bulunamadı",
-        "error_api_desc": "Bu ağın işlem geçmişini görüntülemek için bir AVA Explorer API sağlamalısınız."
+        "error_api_desc": "Bu ağın işlem geçmişini görüntülemek için bir Magellan Explorer API sağlamalısınız."
     },
     "modal": {
         "qr": {

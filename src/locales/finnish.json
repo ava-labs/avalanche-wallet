@@ -389,7 +389,7 @@
         "loading": "Ladataan tapahtumahistoria ..",
         "warn_loading": "Tämä luettelo saattaa olla epätäydellinen ja epäkunnossa.",
         "error_api": "Explorer-sovellusliittymää ei löydy",
-        "error_api_desc": "Sinun on annettava tälle verkolle AVA Explorer -sovellusliittymä, jotta voit tarkastella tapahtumahistoriaa."
+        "error_api_desc": "Sinun on annettava tälle verkolle Magellan Explorer -sovellusliittymä, jotta voit tarkastella tapahtumahistoriaa."
     },
     "modal": {
         "qr": {

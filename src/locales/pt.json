@@ -389,7 +389,7 @@
         "loading": "Carregando histórico de transações.",
         "warn_loading": "Esta lista pode estar incompleta e fora de ordem.",
         "error_api": "Explorer API Não Encontrada",
-        "error_api_desc": "Você deve fornecer um AVA Explorer API para esta rede visualizar o histórico de transações."
+        "error_api_desc": "Você deve fornecer um Magellan Explorer API para esta rede visualizar o histórico de transações."
     },
     "modal": {
         "qr": {

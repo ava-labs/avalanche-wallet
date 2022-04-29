@@ -389,7 +389,7 @@
         "loading": "Indlæser transaktionshistorik..",
         "warn_loading": "Denne liste kan være ufuldstændig og ude af drift.",
         "error_api": "Explorer API ikke fundet",
-        "error_api_desc": "Du skal give en AVA Explorer API til dette netværk for at se transaktionshistorik."
+        "error_api_desc": "Du skal give en Magellan Explorer API til dette netværk for at se transaktionshistorik."
     },
     "modal": {
         "qr": {

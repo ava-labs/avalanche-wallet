@@ -241,7 +241,7 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
-        let upTo = 512
+        let upTo = SCAN_SIZE
 
         let addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
         let addrChains = await getAddressChains(addrs)

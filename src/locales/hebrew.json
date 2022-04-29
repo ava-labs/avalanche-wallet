@@ -389,7 +389,7 @@
         "loading": "טוען היסטוריית עסקה..",
         "warn_loading": "יתכן שהרשימה אינה שלמה ובלתי תקינה.",
         "error_api": "לא נמצא Explorer API",
-        "error_api_desc": "עליך לספק AVA Explorer API לרשת זו כדי לצפות בהיסטוריית העסקה."
+        "error_api_desc": "עליך לספק Magellan Explorer API לרשת זו כדי לצפות בהיסטוריית העסקה."
     },
     "modal": {
         "qr": {

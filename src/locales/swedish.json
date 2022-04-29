@@ -389,7 +389,7 @@
         "loading": "Laddar transaktionshistorik..",
         "warn_loading": "Listan kan vara ofullständig och ur funktion.",
         "error_api": "Sökar-API hittades inte",
-        "error_api_desc": "Du måste tillhandahålla ett AVA Explorer API för detta nätverk för att se transaktionshistoriken."
+        "error_api_desc": "Du måste tillhandahålla ett Magellan Explorer API för detta nätverk för att se transaktionshistoriken."
     },
     "modal": {
         "qr": {

@@ -389,7 +389,7 @@
         "loading": "De transactiegeschiedenis wordt geladen...",
         "warn_loading": "Deze lijst is misschien onvolledig en niet op volgorde.",
         "error_api": "Explorer API niet gevonden.",
-        "error_api_desc": "U moet een AVA Explorer API opgeven voor dit netwerk om de transactiegeschiedenis te kunnen bekijken."
+        "error_api_desc": "U moet een Magellan Explorer API opgeven voor dit netwerk om de transactiegeschiedenis te kunnen bekijken."
     },
     "modal": {
         "qr": {

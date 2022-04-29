@@ -389,7 +389,7 @@
         "loading": "Wczytuję historię transakcji..",
         "warn_loading": "Ta lista może być niekompletna i nieaktualna.",
         "error_api": "Nie znaleziono interfejsu Explorer API",
-        "error_api_desc": "Aby wyświetlić historię transakcji, musisz udostępnić interfejs API AVA Explorer dla tej sieci."
+        "error_api_desc": "Aby wyświetlić historię transakcji, musisz udostępnić interfejs API Magellan Explorer dla tej sieci."
     },
     "modal": {
         "qr": {

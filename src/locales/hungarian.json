@@ -389,7 +389,7 @@
         "loading": "Tranzakciós előzmények betöltése..",
         "warn_loading": "Lehet, hogy ez a lista hiányos és nem működik.",
         "error_api": "Az Explorer API nem található",
-        "error_api_desc": "A tranzakciós előzmények megtekintéséhez meg kell adnia egy AVA Explorer API-t ehhez a hálózathoz."
+        "error_api_desc": "A tranzakciós előzmények megtekintéséhez meg kell adnia egy Magellan Explorer API-t ehhez a hálózathoz."
     },
     "modal": {
         "qr": {

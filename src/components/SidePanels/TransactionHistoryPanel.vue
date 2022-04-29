@@ -1,6 +1,6 @@
 <template>
     <div class="tx_history_panel">
-        <div class="history_block" :disabled="!isActivityPage"></div>
+        <!--div class="history_block" :disabled="!isActivityPage"></div-->
         <div class="header">
             <h2>Transactions</h2>
             <Spinner v-if="isUpdating" class="spinner"></Spinner>

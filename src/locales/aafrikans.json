@@ -389,7 +389,7 @@
         "loading": "Laai tans transaksiegeskiedenis..",
         "warn_loading": "Hierdie lys is miskien onvolledig en nie in orde nie.",
         "error_api": "Explorer API nie gevind nie",
-        "error_api_desc": "U moet 'n AVA Explorer API vir hierdie netwerk verskaf om die transaksiegeskiedenis te sien."
+        "error_api_desc": "U moet 'n Magellan Explorer API vir hierdie netwerk verskaf om die transaksiegeskiedenis te sien."
     },
     "modal": {
         "qr": {
