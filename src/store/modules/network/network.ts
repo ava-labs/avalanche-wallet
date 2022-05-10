@@ -171,7 +171,7 @@ const network_module: Module<NetworkState, RootState> = {
                 'https://columbus.camino.foundation',
                 1001,
                 'https://columbus.camino.foundation/magellan',
-                'https://explorer.camino.foundation/',
+                'https://explorer.camino.foundation/#',
                 true
             )
 
