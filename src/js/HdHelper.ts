@@ -127,7 +127,12 @@ class HdHelper {
         let explorerUrl = network.explorerUrl
 
         if (explorerUrl) {
-            this.hdIndex = await this.findAvailableIndexExplorer()
+            try {
+                this.hdIndex = await this.findAvailableIndexExplorer()
+            } catch (e) {
+                console.log('Explorer exception -> Fallback')
+                this.hdIndex = await this.findAvailableIndexNode()
+            }
         } else {
             this.hdIndex = await this.findAvailableIndexNode()
         }

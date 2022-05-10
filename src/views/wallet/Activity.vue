@@ -62,7 +62,6 @@
             <div class="tx_list" v-show="showList">
                 <virtual-list
                     v-show="txs.length > 0"
-                    :style="{ height: `${listH}px`, overflowY: 'auto' }"
                     :data-key="'id'"
                     :data-sources="txsProcessed"
                     :data-component="RowComponent"
@@ -416,8 +415,6 @@ export default class Activity extends Vue {
 }
 
 .tx_table {
-    height: 100%;
-    overflow: auto;
     border-top: 2px solid var(--bg-wallet);
 }
 
