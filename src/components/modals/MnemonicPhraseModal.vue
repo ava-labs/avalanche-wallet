@@ -2,9 +2,8 @@
     <modal ref="modal" :title="$t('modal.mnemonic.title')" class="modal_main">
         <div class="mnemonic_modal_body">
             <mnemonic-display :phrase="phrase" :row-size="3"></mnemonic-display>
-            <p class="phrase_raw">{{ phrase.getValue() }}</p>
             <p class="warning_text">
-                Warning: Never disclose this mnemonic phrase. Anyone with your phrase can steal any
+                Warning: Never disclose this mnemonic phrase. Anyone with your phrase can steal
                 assets held in your wallet.
             </p>
         </div>
@@ -63,6 +62,7 @@ export default class MnemonicPhraseModal extends Vue {
 .warning_text {
     background-color: var(--secondary-color);
     color: #fff;
+    margin-top: 15px !important;
     padding: 4px 14px;
     border-radius: 3px;
 }

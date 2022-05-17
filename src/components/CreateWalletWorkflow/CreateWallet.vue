@@ -39,26 +39,9 @@
                                     <div class="mnemonic_disp">
                                         <mnemonic-display
                                             :phrase="keyPhrase"
-                                            :bgColor="verificatiionColor"
+                                            :bgColor="verificationColor"
                                             class="mnemonic_display"
                                         ></mnemonic-display>
-                                        <p
-                                            class="phrase_raw"
-                                            v-bind:class="{
-                                                verified: isVerified,
-                                            }"
-                                        >
-                                            {{ keyPhrase.getValue() }}
-                                        </p>
-                                        <div class="mneumonic_button_container" v-if="!isVerified">
-                                            <button
-                                                @click="createKey"
-                                                class="ava_button but_randomize button_primary"
-                                            >
-                                                <fa icon="sync"></fa>
-                                                <span>{{ $t('create.regenerate') }}</span>
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                                 <!-- RIGHT -->
@@ -96,11 +79,11 @@
                                             v-model="isSecured"
                                             :explain="$t('create.confirm')"
                                         ></MnemonicCopied>
-                                        <VerifyMnemonic
+                                        <VerifyMnemonic2
                                             :mnemonic="keyPhrase"
                                             ref="verify"
                                             @complete="complete"
-                                        ></VerifyMnemonic>
+                                        ></VerifyMnemonic2>
                                         <button
                                             class="but_primary ava_button button_secondary"
                                             @click="verifyMnemonic"
@@ -150,7 +133,7 @@ import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import CopyText from '@/components/misc/CopyText.vue'
 import * as bip39 from 'bip39'
 
-import VerifyMnemonic from '@/components/modals/VerifyMnemonic.vue'
+import VerifyMnemonic2 from '@/components/modals/VerifyMnemonic2.vue'
 import MnemonicCopied from '@/components/CreateWalletWorkflow/MnemonicCopied.vue'
 import ToS from '@/components/misc/ToS.vue'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
@@ -164,7 +147,7 @@ import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
         MnemonicDisplay,
         Spinner,
         // TorusGoogle,
-        VerifyMnemonic,
+        VerifyMnemonic2,
         MnemonicCopied,
     },
 })
@@ -179,7 +162,7 @@ export default class CreateWallet extends Vue {
         return this.isSecured ? true : false
     }
 
-    get verificatiionColor() {
+    get verificationColor() {
         return this.isVerified ? '#a9efbf' : '#F5F6FA'
     }
 
@@ -189,13 +172,7 @@ export default class CreateWallet extends Vue {
         this.keyPhrase = new MnemonicPhrase(mnemonic)
     }
 
-    // Will be true if the values in remember wallet checkbox are valid
-    // isRememberValid(val: boolean){
-    //     this.rememberValid = val;
-    // }
-
     get canSubmit(): boolean {
-        // if(!this.rememberValid) return false;
         return true
     }
     verifyMnemonic() {
@@ -342,7 +319,7 @@ a {
         color: #222;
     }
 
-    .mneumonic_button_container {
+    .mnemonic_button_container {
         .but_randomize {
             span {
                 margin-left: 12px;
@@ -472,7 +449,7 @@ a {
             margin: 0 auto;
         }
 
-        .mneumonic_button_container {
+        .mnemonic_button_container {
             display: flex;
             flex-direction: column;
             align-items: flex-start;

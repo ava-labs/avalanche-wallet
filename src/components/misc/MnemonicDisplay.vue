@@ -1,30 +1,41 @@
 <template>
     <div class="mnemonic_display" :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }">
-        <div v-for="i in wordNum" :key="i" class="word">
-            <p class="index">{{ i }}.</p>
-            <p class="phrase_word">{{ phraseArray[i - 1] }}</p>
-        </div>
+        <template v-for="(word, i) in phraseArray" class="word">
+            <div v-if="i % 2 == 0" :key="i" class="word">
+                <p class="index">{{ i / 2 + 1 }}.</p>
+                <span class="phrase_word">{{ word }}</span>
+            </div>
+            <div v-else class="fake" :key="i">
+                <p class="index">{{ i }}.</p>
+                <span class="phrase_word">{{ word }}</span>
+            </div>
+        </template>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
+import { getRandomMnemonicWord } from '@/helpers/getRandomMnemonicWord'
 
 @Component
 export default class MnemonicDisplay extends Vue {
     @Prop({ default: '#FFFFFF' }) bgColor?: string
     @Prop({ default: 4 }) rowSize!: number
-    @Prop() phrase!: string | MnemonicPhrase
-
-    wordNum: number = 24
+    @Prop() phrase!: MnemonicPhrase
 
     get phraseArray(): string[] {
-        if (typeof this.phrase === 'string') {
-            return this.phrase.split(' ')
-        } else {
-            return this.phrase.getValue().split(' ')
+        const words = this.phrase.getValue().split(' ')
+        const mixedMnemonic = []
+        for (let i in words) {
+            mixedMnemonic.push(words[i])
+            mixedMnemonic.push(this.getFakeWord())
         }
+        return mixedMnemonic
+    }
+
+    getFakeWord() {
+        return getRandomMnemonicWord()
     }
 }
 </script>
@@ -73,6 +84,15 @@ p {
 
 span {
     text-align: center;
+    user-select: none;
+}
+
+.fake {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+    opacity: 0;
 }
 
 @include main.mobile-device {

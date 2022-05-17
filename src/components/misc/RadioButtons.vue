@@ -52,9 +52,9 @@ button {
     //}
 
     &[active] {
-        color: var(--primary-color);
+        color: var(--bg-wallet);
         //border-color: #285599;
-        background-color: var(--bg-light);
+        background-color: var(--primary-color);
     }
 }
 

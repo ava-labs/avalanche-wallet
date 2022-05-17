@@ -28,9 +28,7 @@
                     <p class="err small" style="text-align: center">
                         Clearing your browser cache will remove this account. Make sure you have
                         your
-                        <b>mnemonic phrase</b>
-                        or
-                        <b>private key</b>
+                        <b>{{ walletType == 'mnemonic' ? 'mnemonic phrase' : 'private key' }}</b>
                         saved.
                     </p>
                     <v-btn
@@ -72,6 +70,10 @@ export default class SaveAccountModal extends Vue {
     foundAccount: iUserAccountEncrypted | null = null
     $refs!: {
         modal: Modal
+    }
+
+    get walletType() {
+        return this.$store.state.activeWallet.type
     }
 
     get canSubmit() {
