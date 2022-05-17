@@ -94,13 +94,6 @@ export default class PaperWallet extends Vue {
         }
     }
 
-    // get mnemonic(): string {
-    //     let wallet: MnemonicWallet = this.$store.state.activeWallet
-    //     if (!wallet) return '-'
-    //
-    //     return wallet.getMnemonic() || '-'
-    // }
-
     get aspectRatio(): number {
         return PDF_W / PDF_H
     }
