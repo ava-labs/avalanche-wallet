@@ -39,7 +39,7 @@ class WalletHelper {
 
         let minterAddress = wallet.getCurrentAddressAvm()
 
-        let utxoSet = wallet.utxoset
+        let utxoSet = wallet.getUTXOSet()
 
         let unsignedTx = await buildCreateNftFamilyTx(
             name,
@@ -66,7 +66,7 @@ class WalletHelper {
 
         let sourceAddresses = wallet.getDerivedAddresses()
 
-        let utxoSet = wallet.utxoset
+        let utxoSet = wallet.getUTXOSet()
         let tx = await buildMintNftTx(
             mintUtxo,
             payload,

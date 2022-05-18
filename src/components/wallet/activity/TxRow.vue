@@ -27,6 +27,10 @@
             </div>
             <div class="tx_detail">
                 <component :is="tx_comp" :transaction="source"></component>
+                <p v-if="hasMultisig" class="multisig_warn">
+                    <fa icon="exclamation-triangle"></fa>
+                    Contains Shared Balance (Multisig)
+                </p>
             </div>
         </div>
     </div>
@@ -62,6 +66,10 @@ export default class TxRow extends Vue {
             return `${network.explorerSiteUrl}/tx/${this.source.id}`
         }
         return null
+    }
+
+    get hasMultisig() {
+        return this.source.outputs.filter((utxo) => utxo.addresses.length > 1).length > 0
     }
 
     get date() {
@@ -207,6 +215,10 @@ export default class TxRow extends Vue {
 label {
     font-size: 12px;
     color: var(--primary-color-light);
+}
+
+.multisig_warn {
+    color: var(--error);
 }
 
 @include main.mobile-device {

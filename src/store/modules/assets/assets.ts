@@ -28,7 +28,7 @@ import {
 import { UnixNow } from 'avalanche/dist/utils'
 import { BN } from 'avalanche'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
+import { PlatformVMConstants, StakeableLockOut } from 'avalanche/dist/apis/platformvm'
 import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
@@ -72,7 +72,6 @@ const assets_module: Module<AssetsState, RootState> = {
     mutations: {
         addAsset(state, asset: AvaAsset) {
             if (state.assetsDict[asset.id]) {
-                // console.info(`Failed to add asset. Asset already exists. (${asset.id})`)
                 return
             }
             state.assets.push(asset)
@@ -80,7 +79,6 @@ const assets_module: Module<AssetsState, RootState> = {
         },
         addNftFamily(state, family: AvaNftFamily) {
             if (state.nftFamsDict[family.id]) {
-                // console.info(`Failed to add NFT Family. Asset already exists. (${family.id})`)
                 return
             }
             state.nftFams.push(family)
@@ -405,23 +403,42 @@ const assets_module: Module<AssetsState, RootState> = {
                 let assetIdBuff = utxo.getAssetID()
                 let assetId = bintools.cb58Encode(assetIdBuff)
 
-                // if not locked
-                if (locktime.lte(unixNox)) {
+                const owners = utxoOut.getAddresses()
+
+                // Which category should the utxo fall under
+                const isMultisig = owners.length > 1
+                const isLocked = locktime.gt(unixNox)
+
+                if (isMultisig) {
+                    if (!dict[assetId]) {
+                        dict[assetId] = {
+                            locked: ZERO,
+                            available: ZERO.clone(),
+                            multisig: amount.clone(),
+                        }
+                    } else {
+                        let amt = dict[assetId].multisig
+                        dict[assetId].multisig = amt.add(amount)
+                    }
+                } else if (!isLocked) {
                     if (!dict[assetId]) {
                         dict[assetId] = {
                             locked: ZERO,
                             available: amount.clone(),
+                            multisig: ZERO.clone(),
                         }
                     } else {
                         let amt = dict[assetId].available
                         dict[assetId].available = amt.add(amount)
                     }
-                } else {
-                    // If locked
+                }
+                // If locked
+                else {
                     if (!dict[assetId]) {
                         dict[assetId] = {
                             locked: amount.clone(),
                             available: ZERO,
+                            multisig: ZERO,
                         }
                     } else {
                         let amt = dict[assetId].locked
@@ -495,7 +512,6 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         walletAssetsDict(state, getters, rootState, rootGetters): IWalletAssetsDict {
-            // let balanceDict: IWalletBalanceDict = getters.walletBalanceDict
             //@ts-ignore
             let balanceDict: IWalletBalanceDict = state.balanceDict
             // @ts-ignore
@@ -514,15 +530,17 @@ const assets_module: Module<AssetsState, RootState> = {
                     asset.resetBalance()
                     asset.addBalance(balanceAmt.available)
                     asset.addBalanceLocked(balanceAmt.locked)
+                    asset.addBalanceMultisig(balanceAmt.multisig)
                 }
 
                 // Add extras for AVAX token
                 // @ts-ignore
                 if (asset.id === state.AVA_ASSET_ID) {
                     asset.addExtra(getters.walletStakingBalance)
-                    asset.addExtra(getters.walletPlatformBalance)
-                    asset.addExtra(getters.walletPlatformBalanceLocked)
-                    asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
+                    asset.addExtra(getters.walletPlatformBalance.available)
+                    asset.addExtra(getters.walletPlatformBalance.locked)
+                    asset.addExtra(getters.walletPlatformBalance.lockedStakeable)
+                    asset.addExtra(getters.walletPlatformBalance.multisig)
                 }
 
                 res[assetId] = asset
@@ -531,7 +549,6 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         walletAssetsArray(state, getters): AvaAsset[] {
-            // let assetsDict: IWalletAssetsDict = getters.walletAssetsDict
             let assetsDict: IWalletAssetsDict = getters.walletAssetsDict
             let res: AvaAsset[] = []
 
@@ -559,98 +576,83 @@ const assets_module: Module<AssetsState, RootState> = {
             return wallet.stakeAmount
         },
 
-        walletPlatformBalance(state, getters, rootState): BN {
+        /**
+         * Calculates balances (available, locked, lockedStakeable, multisig) from the active wallet's UTXO set.
+         * @param state
+         * @param getters
+         * @param rootState
+         */
+        walletPlatformBalance(
+            state,
+            getters,
+            rootState
+        ): {
+            available: BN
+            locked: BN
+            lockedStakeable: BN
+            multisig: BN
+        } {
             let wallet = rootState.activeWallet
-            if (!wallet) return new BN(0)
+            const balances = {
+                available: new BN(0),
+                locked: new BN(0),
+                lockedStakeable: new BN(0),
+                multisig: new BN(0),
+            }
 
-            let utxoSet: PlatformUTXOSet
+            if (!wallet) return balances
 
-            utxoSet = wallet.getPlatformUTXOSet()
+            let utxoSet: PlatformUTXOSet = wallet.getPlatformUTXOSet()
 
             let now = UnixNow()
 
             // The only type of asset is AVAX on the P chain
-            let amt = new BN('0')
 
             let utxos = utxoSet.getAllUTXOs()
             for (var n = 0; n < utxos.length; n++) {
                 let utxo = utxos[n]
                 let utxoOut = utxo.getOutput()
                 let outId = utxoOut.getOutputID()
+                const threshold = utxoOut.getThreshold()
+
+                // If its multisig utxo
+                if (threshold > 1) {
+                    balances.multisig.iadd((utxoOut as AmountOutput).getAmount())
+                    continue
+                }
+
+                const isStakeableLock = outId === PlatformVMConstants.STAKEABLELOCKOUTID
 
                 let locktime
-                if (outId === 22) {
+                if (isStakeableLock) {
                     locktime = (utxoOut as StakeableLockOut).getStakeableLocktime()
                 } else {
                     locktime = (utxoOut as AmountOutput).getLocktime()
                 }
 
-                // Filter out locked tokens and stakeable locked tokens
+                // If normal unlocked utxo (includes stakeable lock that is in the past)
                 if (locktime.lte(now)) {
-                    amt.iadd((utxoOut as AmountOutput).getAmount())
+                    balances.available.iadd((utxoOut as AmountOutput).getAmount())
+                }
+                // If locked utxo
+                else if (!isStakeableLock) {
+                    balances.locked.iadd((utxoOut as AmountOutput).getAmount())
+                }
+                // If stakeable lock utxo
+                else if (isStakeableLock) {
+                    balances.lockedStakeable.iadd((utxoOut as AmountOutput).getAmount())
                 }
             }
 
-            return amt
+            return balances
         },
 
         walletPlatformBalanceLocked(state, getters, rootState): BN {
-            let wallet = rootState.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            let now = UnixNow()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN(0)
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as AmountOutput
-                let locktime = utxoOut.getLocktime()
-
-                // Filter unlocked tokens
-                if (locktime.gt(now)) {
-                    amt.iadd(utxoOut.getAmount())
-                }
-            }
-
-            return amt
+            return getters.walletPlatformBalance.locked
         },
 
         walletPlatformBalanceLockedStakeable(state, getters, rootState): BN {
-            let wallet = rootState.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            // The only type of asset is AVAX on the P chain
-            let amt = new BN(0)
-            let unixNow = UnixNow()
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as StakeableLockOut
-                let outType = utxoOut.getOutputID()
-
-                // Type ID 22 is stakeable but locked tokens
-                if (outType === 22) {
-                    let locktime = utxoOut.getStakeableLocktime()
-                    // Make sure the locktime is in the future
-                    if (locktime.gt(unixNow)) {
-                        amt.iadd(utxoOut.getAmount())
-                    }
-                }
-            }
-
-            return amt
+            return getters.walletPlatformBalance.lockedStakeable
         },
 
         nftMintDict(state): IWalletNftMintDict {

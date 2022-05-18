@@ -13,12 +13,17 @@
                     <fa icon="search"></fa>
                 </a>
             </p>
+
             <div v-if="memo" class="memo">
                 <p>Memo</p>
                 <p>{{ memo }}</p>
             </div>
         </div>
         <component :is="viewComponent" :transaction="transaction"></component>
+        <p v-if="hasMultisig" class="multisig_warn">
+            <fa icon="exclamation-triangle"></fa>
+            Contains Shared Balance (Multisig)
+        </p>
     </div>
 </template>
 <script lang="ts">
@@ -52,6 +57,10 @@ export default class TxHistoryRow extends Vue {
             return `${network.explorerSiteUrl}/tx/${this.transaction.id}`
         }
         return null
+    }
+
+    get hasMultisig() {
+        return this.transaction.outputs.filter((utxo) => utxo.addresses.length > 1).length > 0
     }
 
     get memo(): string | null {
@@ -177,6 +186,11 @@ export default class TxHistoryRow extends Vue {
     > div {
         margin-left: 5px;
     }
+}
+
+.multisig_warn {
+    color: var(--error);
+    font-size: 0.8em;
 }
 
 @include main.medium-device {

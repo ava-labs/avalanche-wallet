@@ -67,8 +67,7 @@ export default class ChainCard extends Vue {
     }
 
     get platformUnlocked(): BN {
-        // return this.$store.getters.walletPlatformBalance
-        return this.$store.getters['Assets/walletPlatformBalance']
+        return this.$store.getters['Assets/walletPlatformBalance'].available
     }
 
     get avmUnlocked(): BN {

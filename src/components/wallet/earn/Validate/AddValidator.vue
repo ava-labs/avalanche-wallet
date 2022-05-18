@@ -356,7 +356,7 @@ export default class AddValidator extends Vue {
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters['Assets/walletPlatformBalance']
+        return this.$store.getters['Assets/walletPlatformBalance'].available
     }
 
     get platformLockedStakeable(): BN {

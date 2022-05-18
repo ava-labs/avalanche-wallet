@@ -202,12 +202,12 @@ export default class ChainTransfer extends Vue {
         return ava
     }
 
-    get platformUnlocked(): BN {
+    get platformBalance() {
         return this.$store.getters['Assets/walletPlatformBalance']
     }
 
-    get platformLocked(): BN {
-        return this.$store.getters['Assets/walletPlatformBalanceLocked']
+    get platformUnlocked(): BN {
+        return this.platformBalance.available
     }
 
     get avmUnlocked(): BN {
