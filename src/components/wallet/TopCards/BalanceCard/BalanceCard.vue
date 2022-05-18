@@ -53,9 +53,13 @@
                         <label>{{ $t('top.balance.available') }}</label>
                         <p>{{ unlockedText }} AVAX</p>
                     </div>
-                    <div>
+                    <div v-if="hasLocked">
                         <label>{{ $t('top.locked') }}</label>
                         <p>{{ balanceTextLocked }} AVAX</p>
+                    </div>
+                    <div v-if="hasMultisig">
+                        <label>Multisig</label>
+                        <p>{{ balanceTextMultisig }} AVAX</p>
                     </div>
                     <div>
                         <label>{{ $t('top.balance.stake') }}</label>
@@ -71,13 +75,19 @@
                         <label>{{ $t('top.balance.available') }} (C)</label>
                         <p>{{ evmUnlocked | cleanAvaxBN }} AVAX</p>
                     </div>
-                    <div>
+                    <div v-if="hasLocked">
                         <label>{{ $t('top.balance.locked') }} (X)</label>
                         <p>{{ avmLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked') }} (P)</label>
                         <p>{{ platformLocked | cleanAvaxBN }} AVAX</p>
                         <label>{{ $t('top.balance.locked_stake') }} (P)</label>
                         <p>{{ platformLockedStakeable | cleanAvaxBN }} AVAX</p>
+                    </div>
+                    <div v-if="hasMultisig">
+                        <label>Multisig (X)</label>
+                        <p>{{ avmMultisig | cleanAvaxBN }} AVAX</p>
+                        <label>Multisig (P)</label>
+                        <p>{{ platformMultisig | cleanAvaxBN }} AVAX</p>
                     </div>
                     <div>
                         <label>{{ $t('top.balance.stake') }}</label>
@@ -241,16 +251,43 @@ export default class BalanceCard extends Vue {
         }
     }
 
-    get platformUnlocked(): BN {
+    get balanceTextMultisig() {
+        if (this.isUpdateBalance) return '--'
+
+        if (this.ava_asset !== null) {
+            let denom = this.ava_asset.denomination
+            return bnToBig(this.avmMultisig.add(this.platformMultisig), denom).toLocaleString()
+        } else {
+            return '--'
+        }
+    }
+
+    get avmMultisig(): BN {
+        if (this.ava_asset !== null) {
+            return this.ava_asset.amountMultisig
+        } else {
+            return new BN(0)
+        }
+    }
+
+    get platformBalance() {
         return this.$store.getters['Assets/walletPlatformBalance']
     }
 
+    get platformUnlocked(): BN {
+        return this.platformBalance.available
+    }
+
+    get platformMultisig(): BN {
+        return this.platformBalance.multisig
+    }
+
     get platformLocked(): BN {
-        return this.$store.getters['Assets/walletPlatformBalanceLocked']
+        return this.platformBalance.locked
     }
 
     get platformLockedStakeable(): BN {
-        return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
+        return this.platformBalance.lockedStakeable
     }
 
     get unlockedText() {
@@ -319,6 +356,17 @@ export default class BalanceCard extends Vue {
 
     get priceDict(): priceDict {
         return this.$store.state.prices
+    }
+
+    get hasLocked(): boolean {
+        return (
+            !this.avmLocked.isZero() ||
+            !this.platformLocked.isZero() ||
+            !this.platformLockedStakeable.isZero()
+        )
+    }
+    get hasMultisig(): boolean {
+        return !this.avmMultisig.isZero() || !this.platformMultisig.isZero()
     }
 }
 </script>
@@ -440,7 +488,7 @@ h4 {
 
 .alt_info > div {
     display: grid;
-    grid-template-columns: repeat(3, max-content);
+    grid-template-columns: repeat(4, max-content);
     column-gap: 0px;
     margin-top: 12px;
     > div {

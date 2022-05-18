@@ -48,6 +48,7 @@ export interface IWalletBalanceDict {
     [assetId: string]: {
         available: BN
         locked: BN
+        multisig: BN
     }
 }
 

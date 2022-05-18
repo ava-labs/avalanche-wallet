@@ -35,6 +35,7 @@ import { WalletType } from '@/js/wallets/types'
 import { CurrencyType } from '@/components/misc/CurrencySelect/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
+import { UnixNow } from 'avalanche/dist/utils'
 @Component({
     components: {
         UtxoSelectModal,
@@ -82,7 +83,16 @@ export default class UtxoSelectForm extends Vue {
     get platformUtxos(): UTXO[] {
         let wallet: WalletType | null = this.$store.state.activeWallet
         if (!wallet) return []
-        return wallet.getPlatformUTXOSet().getAllUTXOs()
+        const utxos = wallet.getPlatformUTXOSet().getAllUTXOs()
+        const now = UnixNow()
+        return utxos.filter((utxo) => {
+            // Filter out locked and multisig utxos
+            const locktime = utxo.getOutput().getLocktime()
+            const threshold = utxo.getOutput().getThreshold()
+            if (locktime.gt(now)) return false
+            if (threshold > 1) return false
+            return true
+        })
     }
 
     get selectedBalance(): BN {

@@ -9,6 +9,7 @@ class AvaAsset {
     denomination: number
     amount: BN
     amountLocked: BN
+    amountMultisig: BN
     // AVAX P chain, Wallet Staking
     amountExtra: BN
     private readonly pow: Big
@@ -20,6 +21,7 @@ class AvaAsset {
         this.amount = new BN(0, 10)
         this.amountLocked = new BN(0, 10)
         this.amountExtra = new BN(0, 10)
+        this.amountMultisig = new BN(0, 10)
         this.pow = Big(10).pow(denomination)
     }
 
@@ -30,6 +32,9 @@ class AvaAsset {
     addBalanceLocked(val: BN): void {
         this.amountLocked = this.amountLocked.add(val)
     }
+    addBalanceMultisig(val: BN): void {
+        this.amountMultisig = this.amountMultisig.add(val)
+    }
 
     addExtra(val: BN): void {
         this.amountExtra = this.amountExtra.add(val)
@@ -39,6 +44,7 @@ class AvaAsset {
         this.amount = new BN(0, 10)
         this.amountLocked = new BN(0, 10)
         this.amountExtra = new BN(0, 10)
+        this.amountMultisig = new BN(0, 10)
     }
 
     getAmount(locked: boolean = false): Big {
@@ -58,7 +64,7 @@ class AvaAsset {
     }
 
     getTotalAmount(): BN {
-        return this.amount.add(this.amountLocked).add(this.amountExtra)
+        return this.amount.add(this.amountLocked).add(this.amountExtra).add(this.amountMultisig)
     }
 
     toStringTotal(): string {
@@ -69,12 +75,6 @@ class AvaAsset {
     toString() {
         let big: Big = Big(this.amount.toString(10)).div(this.pow)
         return big.toLocaleString(this.denomination)
-        // if(big.lt(Big('0.001'))){
-        //     return big.toLocaleString(this.denomination);
-        // }else{
-        //     let min = Math.min(this.denomination, 2);
-        //     return big.toLocaleString(min);
-        // }
     }
 }
 
