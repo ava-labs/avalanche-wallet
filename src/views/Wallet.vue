@@ -6,7 +6,7 @@
         </transition>
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
-            <transition name="page_fade" mode="out-in">
+            <transition name="fade" mode="out-in">
                 <keep-alive
                     :exclude="['cross_chain', 'activity', 'advanced', 'earn', 'manage', 'studio']"
                 >
