@@ -117,6 +117,7 @@ export default {
 
 html {
     height: 100%;
+    overflow-y: auto;
 }
 
 body {
@@ -150,10 +151,6 @@ p {
 }
 
 @include main.mobile-device {
-    #router_view {
-        padding: 9px !important;
-    }
-
     #nav {
         padding: main.$container_padding_mobile;
         display: flex !important;

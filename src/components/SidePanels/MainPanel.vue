@@ -42,7 +42,8 @@ export default {
     display: grid;
     grid-template-rows: max-content 1fr;
     row-gap: 6px;
-    margin-top: 8px;
+    padding-top: 8px;
+    height: 100vh;
 }
 .panel_nav {
     background-color: var(--bg-wallet-light);
@@ -77,6 +78,9 @@ export default {
 }
 
 @include main.medium-device {
+    .main_panel {
+        height: unset;
+    }
     .panel_nav {
         padding: 12px 16px;
     }
