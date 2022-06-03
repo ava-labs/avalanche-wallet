@@ -79,7 +79,7 @@ export default class Modal extends Vue {
     left: 0;
     width: 100vw;
     height: 100vh;
-    overflow: scroll;
+    overflow: auto;
     display: flex;
 }
 
