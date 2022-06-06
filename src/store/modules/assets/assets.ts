@@ -36,7 +36,7 @@ import { web3 } from '@/evm'
 // import ERC721Token from '@/js/ERC721Token'
 
 const TOKEN_LISTS = [
-    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/ab.tokenlist.json',
+    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/43114.tokenlist.json',
 ]
 
 import ERC721Module from './modules/erc721'
@@ -186,7 +186,8 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
-                    throw new Error('ERC20 Token already added.')
+                    console.log('ERC20 Token already added.')
+                    return
                 }
             }
 
@@ -201,7 +202,8 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
-                    throw new Error('ERC20 Token already added.')
+                    console.log('ERC20 Token already added.')
+                    return
                 }
             }
 

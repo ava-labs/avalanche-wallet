@@ -48,7 +48,8 @@ const erc721_module: Module<Erc721ModuleState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (data.address === t.data.address && data.chainId === t.data.chainId) {
-                    throw new Error('ERC20 Token already added.')
+                    console.log('ERC721 Token already added.')
+                    return
                 }
             }
 
