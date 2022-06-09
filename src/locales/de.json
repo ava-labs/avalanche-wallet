@@ -330,7 +330,7 @@
             "errs": {
                 "date": "Das Startdatum muss in der Zukunft liegen und das Enddatum muss nach dem Startdatum liegen.",
                 "amount": "Der Staking Betrag muss mindestens {0} @.native:(0) betragen",
-                "id": "Ungültige Knoten ID. Muss mit \"KnotenID-\" beginnen",
+                "id": "Ungültige Knoten ID. Muss mit \"NodeID-\" beginnen",
                 "address": "Ungültige Prämienadresse."
             }
         },
