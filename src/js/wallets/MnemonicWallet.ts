@@ -86,8 +86,8 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     }
 
     // The master key from avalanche.js
-    constructor(mnemonic: string) {
-        let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
+    constructor(mnemonic: string, passphrase?: string) {
+        let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic, passphrase)
         let masterHdKey: HDKey = HDKey.fromMasterSeed(seed)
         let accountHdKey = masterHdKey.derive(AVA_ACCOUNT_PATH)
         let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')

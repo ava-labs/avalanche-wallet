@@ -94,6 +94,27 @@ export default new Vuex.Store({
             return wallet
         },
 
+        // Used to access wallet with a BIP39 mnemonic + passphrase
+        async accessWalletMnemonicPassphrase(
+            { state, dispatch, commit },
+            {
+                mnemonic,
+                passphrase,
+            }: {
+                mnemonic: string
+                passphrase: string
+            }
+        ): Promise<MnemonicWallet> {
+            let wallet: MnemonicWallet = await dispatch('addWalletMnemonicPassphrase', {
+                mnemonic,
+                passphrase,
+            })
+            await dispatch('activateWallet', wallet)
+
+            dispatch('onAccess')
+            return wallet
+        },
+
         // Only for singletons and mnemonics
         async accessWalletMultiple(
             { state, dispatch, commit },
@@ -199,6 +220,36 @@ export default new Vuex.Store({
             }
 
             let wallet = new MnemonicWallet(mnemonic)
+            state.wallets.push(wallet)
+            state.volatileWallets.push(wallet)
+            return wallet
+        },
+
+        // Add a HD wallet from mnemonic string
+        async addWalletMnemonicPassphrase(
+            { state, dispatch },
+            {
+                mnemonic,
+                passphrase,
+            }: {
+                mnemonic: string
+                passphrase: string
+            }
+        ): Promise<MnemonicWallet | null> {
+            // Cannot add mnemonic wallets on ledger mode
+            if (state.activeWallet?.type === 'ledger') return null
+
+            // Make sure wallet doesnt exist already
+            for (var i = 0; i < state.wallets.length; i++) {
+                let w = state.wallets[i] as WalletType
+                if (w.type === 'mnemonic') {
+                    if ((w as MnemonicWallet).getMnemonic() === mnemonic) {
+                        throw new Error('Wallet already exists.')
+                    }
+                }
+            }
+
+            let wallet = new MnemonicWallet(mnemonic, passphrase)
             state.wallets.push(wallet)
             state.volatileWallets.push(wallet)
             return wallet

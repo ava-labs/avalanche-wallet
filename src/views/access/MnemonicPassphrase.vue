@@ -4,7 +4,15 @@
             <header>
                 <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
-            <MnemonicPasswordInput @change="onPhraseIn"></MnemonicPasswordInput>
+            <label>{{ $t('access.mnemonic.subtitle') }}</label>
+            <textarea v-model="phrase" translate="no"></textarea>
+            <label>{{ $t('access.mnemonic.passphrase_label') }}</label>
+            <input
+                v-model="passphrase"
+                translate="no"
+                id="passphrase"
+                :type="passphraseInputType"
+            />
             <div class="button_container">
                 <p class="err" v-if="err">{{ err }}</p>
                 <v-btn
@@ -21,43 +29,33 @@
                 </router-link>
             </div>
         </div>
+        <div class="right">
+            <label>Preview</label>
+            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
+        </div>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
+import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import * as bip39 from 'bip39'
-import MnemonicPasswordInput from '@/components/misc/MnemonicPasswordInput.vue'
-import { CypherAES } from '@/js/CypherAES'
 
 @Component({
     components: {
-        MnemonicPasswordInput,
+        MnemonicDisplay,
     },
 })
-export default class Mnemonic extends Vue {
-    phrase: CypherAES | undefined = undefined
+export default class MnemonicPassphrase extends Vue {
+    phrase: string = ''
+    passphrase: string = ''
+    passphraseInputType: string = 'password'
     isLoading: boolean = false
     err: string = ''
-    canSubmit = false
-
-    beforeDestroy() {
-        this.phrase = undefined
-    }
-
-    onPhraseIn(val: string) {
-        this.phrase = new CypherAES(val)
-        this.formCheck()
-    }
 
     errCheck() {
-        let phrase = this.phrase?.getValue()
-
-        if (!phrase) {
-            return
-        }
-
+        let phrase = this.phrase
         let words = phrase.split(' ')
 
         // not a valid key phrase
@@ -75,22 +73,19 @@ export default class Mnemonic extends Vue {
         return true
     }
 
-    getWordCount() {
-        const phrase = this.phrase?.getValue() || ''
-        return phrase.trim().split(' ').length
+    get wordCount(): number {
+        return this.phrase.trim().split(' ').length
     }
 
-    formCheck() {
-        if (this.getWordCount() !== 24) {
-            this.canSubmit = false
-            return
+    get canSubmit() {
+        if (this.wordCount < 24 || this.passphrase === '') {
+            return false
         }
-        this.canSubmit = true
+
+        return true
     }
 
     async access() {
-        const phrase = (this.phrase?.getValue() || '').trim()
-
         this.isLoading = true
 
         if (!this.errCheck()) {
@@ -98,12 +93,19 @@ export default class Mnemonic extends Vue {
             return
         }
 
+        const mnemonic = this.phrase.trim()
+        const passphrase = this.passphrase
+
         setTimeout(async () => {
             try {
-                await this.$store.dispatch('accessWallet', phrase)
+                await this.$store.dispatch('accessWalletMnemonicPassphrase', {
+                    mnemonic,
+                    passphrase,
+                })
                 this.isLoading = false
             } catch (e) {
                 this.isLoading = false
+                console.log(e)
                 this.err = `${this.$t('access.mnemonic.error')}`
             }
         }, 500)
@@ -114,10 +116,13 @@ export default class Mnemonic extends Vue {
 @use '../../main';
 
 .mnemonic_auth {
-    margin: 0px auto;
-    width: max-content;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 60px;
     background-color: var(--bg-light);
     padding: main.$container-padding;
+    width: 100%;
+    max-width: 1200px;
 
     .left,
     .right {
@@ -127,7 +132,7 @@ export default class Mnemonic extends Vue {
         justify-content: flex-start;
     }
     > * {
-        //width: 100%;
+        width: 100%;
     }
 }
 
@@ -143,14 +148,24 @@ label {
     margin-bottom: 20px;
 }
 
-textarea,
-input[type='password'] {
+textarea {
     margin: 20px 0;
     margin-bottom: main.$vertical-padding;
     width: 100%;
     background-color: var(--bg) !important;
     resize: none;
     min-height: 120px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+input#passphrase {
+    margin: 20px 0;
+    margin-bottom: main.$vertical-padding;
+    width: 100%;
+    background-color: var(--bg) !important;
+    resize: none;
     padding: 8px 16px;
     font-size: 14px;
     color: var(--primary-color);

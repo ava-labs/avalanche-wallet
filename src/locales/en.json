@@ -47,6 +47,7 @@
         "create": "Don't have a wallet?",
         "but_private_key": "Private Key",
         "but_mnemonic": "Mnemonic Key Phrase",
+        "but_mnemonic_passphrase": "Mnemonic + Passphrase",
         "but_keystore": "Keystore File",
         "cancel": "Cancel",
         "json_error": "Unable to parse JSON file.",
@@ -57,7 +58,8 @@
             "subtitle": "Hit ‘SPACE’ after every successful word entry.",
             "submit": "Access Wallet",
             "cancel": "Cancel",
-            "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space."
+            "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space.",
+            "passphrase_label": "Enter your BIP39 passphrase\n"
         },
         "accounts_found": "Accounts found on your device"
     },

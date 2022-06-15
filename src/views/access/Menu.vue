@@ -19,6 +19,13 @@
                         night="/img/access_icons/night/mnemonic.svg"
                     ></ImageDayNight>
                 </router-link>
+                <router-link to="/access/mnemonic-passphrase" class="menu_option button_primary">
+                    {{ $t('access.but_mnemonic_passphrase') }}
+                    <ImageDayNight
+                        day="/img/access_icons/day/mnemonic.svg"
+                        night="/img/access_icons/night/mnemonic.svg"
+                    ></ImageDayNight>
+                </router-link>
                 <router-link to="/access/keystore" class="menu_option button_primary">
                     {{ $t('access.but_keystore') }}
                     <ImageDayNight
