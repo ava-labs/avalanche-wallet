@@ -18,16 +18,16 @@ function bnToBig(val: BN, denomination = 0): Big {
 }
 
 function keyToKeypair(key: string, chainID: string = 'X'): AVMKeyPair {
-    let hrp = getPreferredHRP(ava.getNetworkID())
-    let keychain = new AVMKeyChain(hrp, chainID)
+    const hrp = getPreferredHRP(ava.getNetworkID())
+    const keychain = new AVMKeyChain(hrp, chainID)
     return keychain.importKey(key)
 }
 
 function calculateStakingReward(amount: BN, duration: number, currentSupply: BN): BN {
-    let networkID = ava.getNetworkID()
+    const networkID = ava.getNetworkID()
 
     //@ts-ignore
-    let defValues = Defaults.network[networkID]
+    const defValues = Defaults.network[networkID]
 
     if (!defValues) {
         console.error('Network default values not found.')
@@ -35,47 +35,47 @@ function calculateStakingReward(amount: BN, duration: number, currentSupply: BN)
     }
     const defPlatformVals = defValues.P
 
-    let maxConsumption: number = defPlatformVals.maxConsumption
-    let minConsumption: number = defPlatformVals.minConsumption
-    let diffConsumption = maxConsumption - minConsumption
-    let maxSupply: BN = defPlatformVals.maxSupply
-    let maxStakingDuration: BN = defPlatformVals.maxStakingDuration
-    let remainingSupply = maxSupply.sub(currentSupply)
+    const maxConsumption: number = defPlatformVals.maxConsumption
+    const minConsumption: number = defPlatformVals.minConsumption
+    const diffConsumption = maxConsumption - minConsumption
+    const maxSupply: BN = defPlatformVals.maxSupply
+    const maxStakingDuration: BN = defPlatformVals.maxStakingDuration
+    const remainingSupply = maxSupply.sub(currentSupply)
 
-    let amtBig = Big(amount.div(ONEAVAX).toString())
-    let currentSupplyBig = Big(currentSupply.div(ONEAVAX).toString())
-    let remainingSupplyBig = Big(remainingSupply.div(ONEAVAX).toString())
-    let portionOfExistingSupplyBig = amtBig.div(currentSupplyBig)
+    const amtBig = Big(amount.div(ONEAVAX).toString())
+    const currentSupplyBig = Big(currentSupply.div(ONEAVAX).toString())
+    const remainingSupplyBig = Big(remainingSupply.div(ONEAVAX).toString())
+    const portionOfExistingSupplyBig = amtBig.div(currentSupplyBig)
 
-    let portionOfStakingDuration = duration / maxStakingDuration.toNumber()
-    let mintingRate = minConsumption + diffConsumption * portionOfStakingDuration
+    const portionOfStakingDuration = duration / maxStakingDuration.toNumber()
+    const mintingRate = minConsumption + diffConsumption * portionOfStakingDuration
 
     let rewardBig: Big = remainingSupplyBig.times(portionOfExistingSupplyBig)
     rewardBig = rewardBig.times(Big(mintingRate * portionOfStakingDuration))
 
-    let rewardStr = rewardBig.times(Math.pow(10, 9)).toFixed(0)
-    let rewardBN = new BN(rewardStr)
+    const rewardStr = rewardBig.times(Math.pow(10, 9)).toFixed(0)
+    const rewardBN = new BN(rewardStr)
 
     return rewardBN
 }
 
 function digestMessage(msgStr: string) {
-    let mBuf = Buffer.from(msgStr, 'utf8')
-    let msgSize = Buffer.alloc(4)
+    const mBuf = Buffer.from(msgStr, 'utf8')
+    const msgSize = Buffer.alloc(4)
     msgSize.writeUInt32BE(mBuf.length, 0)
-    let msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`, 'utf8')
+    const msgBuf = Buffer.from(`\x1AAvalanche Signed Message:\n${msgSize}${msgStr}`, 'utf8')
     return createHash('sha256').update(msgBuf).digest()
 }
 
-let payloadtypes = PayloadTypes.getInstance()
+const payloadtypes = PayloadTypes.getInstance()
 
 function getPayloadFromUTXO(utxo: UTXO): PayloadBase {
-    let out = utxo.getOutput() as NFTTransferOutput
-    let payload = out.getPayloadBuffer()
+    const out = utxo.getOutput() as NFTTransferOutput
+    const payload = out.getPayloadBuffer()
 
-    let typeId = payloadtypes.getTypeID(payload)
-    let pl: Buffer = payloadtypes.getContent(payload)
-    let payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
+    const typeId = payloadtypes.getTypeID(payload)
+    const pl: Buffer = payloadtypes.getContent(payload)
+    const payloadbase: PayloadBase = payloadtypes.select(typeId, pl)
 
     return payloadbase
 }

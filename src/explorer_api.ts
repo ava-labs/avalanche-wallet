@@ -18,16 +18,16 @@ async function getAddressHistory(
     endTime?: string
 ): Promise<ITransactionData[]> {
     const ADDR_SIZE = 1024
-    let selection = addrs.slice(0, ADDR_SIZE)
-    let remaining = addrs.slice(ADDR_SIZE)
+    const selection = addrs.slice(0, ADDR_SIZE)
+    const remaining = addrs.slice(ADDR_SIZE)
 
-    let addrsRaw = selection.map((addr) => {
+    const addrsRaw = selection.map((addr) => {
         return addr.split('-')[1]
     })
 
-    let rootUrl = 'v2/transactions'
+    const rootUrl = 'v2/transactions'
 
-    let req = {
+    const req = {
         address: addrsRaw,
         sort: ['timestamp-desc'],
         disableCount: ['1'],
@@ -46,22 +46,22 @@ async function getAddressHistory(
         req.endTime = [endTime]
     }
 
-    let res = await explorer_api.post(rootUrl, req)
+    const res = await explorer_api.post(rootUrl, req)
     let txs = res.data.transactions
-    let next: string | undefined = res.data.next
+    const next: string | undefined = res.data.next
 
     if (txs === null) txs = []
 
     // If we need to fetch more for this address
     if (next && !limit) {
-        let endTime = next.split('&')[0].split('=')[1]
-        let nextRes = await getAddressHistory(selection, limit, chainID, endTime)
+        const endTime = next.split('&')[0].split('=')[1]
+        const nextRes = await getAddressHistory(selection, limit, chainID, endTime)
         txs.push(...nextRes)
     }
 
     // If there are addresses left, fetch them too
     if (remaining.length > 0) {
-        let nextRes = await getAddressHistory(remaining, limit, chainID)
+        const nextRes = await getAddressHistory(remaining, limit, chainID)
         txs.push(...nextRes)
     }
 
@@ -69,10 +69,10 @@ async function getAddressHistory(
 }
 
 async function isAddressUsedX(addr: string) {
-    let addrRaw = addr.split('-')[1]
-    let url = `/x/transactions?address=${addrRaw}&limit=1&disableCount=1`
+    const addrRaw = addr.split('-')[1]
+    const url = `/x/transactions?address=${addrRaw}&limit=1&disableCount=1`
     try {
-        let res = await explorer_api.get(url)
+        const res = await explorer_api.get(url)
         // console.log(res);
         if (res.data.transactions.length > 0) return true
         else return false
@@ -82,11 +82,11 @@ async function isAddressUsedX(addr: string) {
 }
 
 async function getAddressDetailX(addr: string) {
-    let addrRaw = addr.split('-')[1]
-    let url = `/x/addresses/${addrRaw}`
+    const addrRaw = addr.split('-')[1]
+    const url = `/x/addresses/${addrRaw}`
 
     try {
-        let res = await explorer_api.get(url)
+        const res = await explorer_api.get(url)
         return res.data
     } catch (e) {
         throw e
@@ -95,13 +95,13 @@ async function getAddressDetailX(addr: string) {
 
 async function getAddressChains(addrs: string[]) {
     // Strip the prefix
-    let rawAddrs = addrs.map((addr) => {
+    const rawAddrs = addrs.map((addr) => {
         return addr.split('-')[1]
     })
 
-    let urlRoot = `/v2/addressChains`
+    const urlRoot = `/v2/addressChains`
 
-    let res = await explorer_api.post(urlRoot, {
+    const res = await explorer_api.post(urlRoot, {
         address: rawAddrs,
         disableCount: ['1'],
     })

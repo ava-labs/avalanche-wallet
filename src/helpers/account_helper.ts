@@ -17,7 +17,7 @@ export const checkIfSavedLocally = (allWallets: WalletType[]): boolean => {
 
     if (!exists) return false
 
-    let ethAddressArray: string[] = allWallets.map((x: WalletType) => x.ethAddress)
+    const ethAddressArray: string[] = allWallets.map((x: WalletType) => x.ethAddress)
 
     const savedAccounts: iUserAccountEncrypted[] = getLocalStorageJSONItem('accounts')
 
@@ -36,7 +36,7 @@ export const removeAccountByIndex = (index: number): void => {
 }
 
 export const getLocalStorageJSONItem = (key: string) => {
-    let item = localStorage.getItem(key)
+    const item = localStorage.getItem(key)
     if (item !== null) {
         return JSON.parse(item)
     }
@@ -47,16 +47,16 @@ export function getLocalStorageAccounts(): iUserAccountEncrypted[] {
 }
 
 export const saveLocalStorageJSONItem = (key: string, data: any) => {
-    let formatted = JSON.stringify(data)
+    const formatted = JSON.stringify(data)
     localStorage.setItem(key, formatted)
 }
 
 export const getIndexByWallets = (wallets: WalletType[]): number | null => {
-    let ethAddressArray: string[] = wallets.map((x: WalletType) => x.getEvmAddress())
+    const ethAddressArray: string[] = wallets.map((x: WalletType) => x.getEvmAddress())
     const savedAccounts: iUserAccountEncrypted[] = getLocalStorageAccounts()
-    let index = 0
-    for (var i = 0; i < savedAccounts.length; i++) {
-        let acct = savedAccounts[i]
+    const index = 0
+    for (let i = 0; i < savedAccounts.length; i++) {
+        const acct = savedAccounts[i]
         if (isEqual(acct.baseAddresses, ethAddressArray)) {
             return index
         }
@@ -68,13 +68,13 @@ export const getNonVolatileWallets = (
     allWallets: WalletType[],
     volatileWallets: WalletType[]
 ): WalletType[] | [] => {
-    let diff = differenceBy(allWallets, volatileWallets, 'ethAddress')
+    const diff = differenceBy(allWallets, volatileWallets, 'ethAddress')
     diff === undefined ? [] : diff
     return diff
 }
 
 export function addAccountToStorage(account: iUserAccountEncrypted) {
-    let accounts = getLocalStorageAccounts()
+    const accounts = getLocalStorageAccounts()
     accounts.push(account)
     saveLocalStorageJSONItem('accounts', accounts)
 }
@@ -82,7 +82,7 @@ export function addAccountToStorage(account: iUserAccountEncrypted) {
 // Given a password and an account, will verify if its the correct password
 export async function verifyAccountPassword(account: iUserAccountEncrypted, password: string) {
     try {
-        let res = await readKeyFile(account.wallet, password)
+        const res = await readKeyFile(account.wallet, password)
         return true
     } catch (err) {
         return false
@@ -90,7 +90,7 @@ export async function verifyAccountPassword(account: iUserAccountEncrypted, pass
 }
 
 export function overwriteAccountAtIndex(newAccount: iUserAccountEncrypted, index: number) {
-    let accts = getLocalStorageAccounts()
+    const accts = getLocalStorageAccounts()
     accts.splice(index, 1, newAccount)
     saveLocalStorageJSONItem('accounts', accts)
 }

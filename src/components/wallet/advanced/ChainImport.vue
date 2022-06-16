@@ -45,13 +45,11 @@ import Spinner from '@/components/misc/Spinner.vue'
 import { WalletType } from '@/js/wallets/types'
 import { BN } from 'avalanche'
 import {
+    avaxCtoX,
     ExportChainsC,
     ExportChainsP,
     ExportChainsX,
     GasHelper,
-    Network,
-    NetworkHelper,
-    Utils,
 } from '@avalabs/avalanche-wallet-sdk'
 
 @Component({
@@ -120,7 +118,7 @@ export default class ChainImport extends Vue {
             const gas = GasHelper.estimateImportGasFeeFromMockTx(numIns, numSigs)
 
             const totFee = baseFee.mul(new BN(gas))
-            let txId = await this.wallet.importToCChain(source, Utils.avaxCtoX(totFee))
+            let txId = await this.wallet.importToCChain(source, avaxCtoX(totFee))
             this.onSuccess(txId)
         } catch (e) {
             this.onError(e)

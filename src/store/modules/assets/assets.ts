@@ -36,7 +36,7 @@ import { web3 } from '@/evm'
 // import ERC721Token from '@/js/ERC721Token'
 
 const TOKEN_LISTS = [
-    'https://raw.githubusercontent.com/pangolindex/tokenlists/main/43114.tokenlist.json',
+    'https://raw.githubusercontent.com/pangolindex/tokenlists/1896f8607efa01c82a273c0012e3f99eee25db81/43114.tokenlist.json',
 ]
 
 import ERC721Module from './modules/erc721'
@@ -95,23 +95,23 @@ const assets_module: Module<AssetsState, RootState> = {
             state.AVA_ASSET_ID = null
         },
         saveCustomErc20Tokens(state) {
-            let tokens: Erc20Token[] = state.erc20TokensCustom
+            const tokens: Erc20Token[] = state.erc20TokensCustom
 
-            let tokenRawData: TokenListToken[] = tokens.map((token) => {
+            const tokenRawData: TokenListToken[] = tokens.map((token) => {
                 return token.data
             })
             localStorage.setItem('erc20_tokens', JSON.stringify(tokenRawData))
         },
         loadCustomErc20Tokens(state) {
-            let tokensRaw = localStorage.getItem('erc20_tokens') || '[]'
-            let tokens: TokenListToken[] = JSON.parse(tokensRaw)
-            for (var i = 0; i < tokens.length; i++) {
+            const tokensRaw = localStorage.getItem('erc20_tokens') || '[]'
+            const tokens: TokenListToken[] = JSON.parse(tokensRaw)
+            for (let i = 0; i < tokens.length; i++) {
                 state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
             }
         },
 
         saveCustomTokenLists(state) {
-            let lists = JSON.stringify(state.tokenListsCustom)
+            const lists = JSON.stringify(state.tokenListsCustom)
             localStorage.setItem('token_lists', lists)
         },
 
@@ -121,7 +121,7 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     actions: {
         async onNetworkChange({ state }, network: AvaNetwork) {
-            let id = await web3.eth.getChainId()
+            const id = await web3.eth.getChainId()
             state.evmChainId = id
         },
         // Called on a logout event
@@ -132,7 +132,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Called when the active wallet finishes fetching utxos
         async onUtxosUpdated({ state, dispatch, rootState }) {
-            let wallet: WalletType | null = rootState.activeWallet
+            const wallet: WalletType | null = rootState.activeWallet
             if (!wallet) return
 
             if (wallet.isFetchUtxos) {
@@ -148,17 +148,17 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         updateUtxoArrays({ state, rootState, getters }) {
-            let utxoSet = getters.walletAvmUtxoSet
+            const utxoSet = getters.walletAvmUtxoSet
             if (utxoSet === null) return {}
 
-            let utxos = utxoSet.getAllUTXOs()
+            const utxos = utxoSet.getAllUTXOs()
 
             let nftUtxos = []
-            let nftMintUtxos = []
+            const nftMintUtxos = []
 
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let outId = utxo.getOutput().getOutputID()
+            for (let n = 0; n < utxos.length; n++) {
+                const utxo = utxos[n]
+                const outId = utxo.getOutput().getOutputID()
 
                 if (outId === 11) {
                     nftUtxos.push(utxo)
@@ -180,38 +180,38 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async addErc20Token({ state, rootState }, token: TokenListToken) {
-            let tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
+            const tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
 
             // Make sure its not added before
-            for (var i = 0; i < tokens.length; i++) {
-                let t = tokens[i]
+            for (let i = 0; i < tokens.length; i++) {
+                const t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
                     console.log('ERC20 Token already added.')
                     return
                 }
             }
 
-            let t = new Erc20Token(token)
+            const t = new Erc20Token(token)
             state.erc20Tokens.push(t)
         },
 
         async addCustomErc20Token({ state, rootState, commit }, token: TokenListToken) {
-            let tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
+            const tokens: Erc20Token[] = state.erc20TokensCustom.concat(state.erc20Tokens)
 
             // Make sure its not added before
-            for (var i = 0; i < tokens.length; i++) {
-                let t = tokens[i]
+            for (let i = 0; i < tokens.length; i++) {
+                const t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
                     console.log('ERC20 Token already added.')
                     return
                 }
             }
 
-            let t = new Erc20Token(token)
+            const t = new Erc20Token(token)
             // Save token state to storage
             state.erc20TokensCustom.push(t)
 
-            let w = rootState.activeWallet
+            const w = rootState.activeWallet
             if (w) {
                 t.updateBalance(w.ethAddress)
             }
@@ -223,8 +223,8 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async removeTokenList({ state, commit }, list: TokenList) {
             // Remove token list object
-            for (var i = 0; i <= state.tokenLists.length; i++) {
-                let l = state.tokenLists[i]
+            for (let i = 0; i <= state.tokenLists.length; i++) {
+                const l = state.tokenLists[i]
 
                 if (l.url === list.url) {
                     state.tokenLists.splice(i, 1)
@@ -233,7 +233,7 @@ const assets_module: Module<AssetsState, RootState> = {
             }
 
             // Remove custom Token list urls
-            let index = state.tokenListsCustom.indexOf(list.url)
+            const index = state.tokenListsCustom.indexOf(list.url)
             state.tokenListsCustom.splice(index, 1)
 
             // Update local storage
@@ -245,9 +245,9 @@ const assets_module: Module<AssetsState, RootState> = {
             if (state.tokenListUrls.includes(data.url)) throw 'Already added.'
             if (state.tokenListsCustom.includes(data.url)) throw 'Already added.'
 
-            let url = data.url
-            let res = await axios.get(url)
-            let tokenList: TokenList = res.data
+            const url = data.url
+            const res = await axios.get(url)
+            const tokenList: TokenList = res.data
             tokenList.url = url
             tokenList.readonly = data.readonly
 
@@ -255,9 +255,9 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async addTokenList({ state, dispatch, commit }, tokenList: TokenList) {
-            let tokens: TokenListToken[] = tokenList.tokens
+            const tokens: TokenListToken[] = tokenList.tokens
             state.tokenLists.push(tokenList)
-            for (var i = 0; i < tokens.length; i++) {
+            for (let i = 0; i < tokens.length; i++) {
                 dispatch('addErc20Token', tokens[i])
             }
 
@@ -270,9 +270,9 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         loadCustomTokenLists({ state, dispatch }) {
-            let listRaw = localStorage.getItem('token_lists')
+            const listRaw = localStorage.getItem('token_lists')
             if (!listRaw) return
-            let urls: string[] = JSON.parse(listRaw)
+            const urls: string[] = JSON.parse(listRaw)
 
             urls.forEach((url) => {
                 dispatch('addTokenListUrl', {
@@ -284,12 +284,12 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async initErc20List({ state, dispatch, commit }) {
             // Load default erc20 token contracts
-            let erc20Tokens = ERC20_TOKEN_LIST as TokenList
+            const erc20Tokens = ERC20_TOKEN_LIST as TokenList
             erc20Tokens.readonly = true
             erc20Tokens.url = 'Default'
             await dispatch('addTokenList', erc20Tokens)
 
-            for (var i = 0; i < TOKEN_LISTS.length; i++) {
+            for (let i = 0; i < TOKEN_LISTS.length; i++) {
                 await dispatch('addTokenListUrl', {
                     url: TOKEN_LISTS[i],
                     readonly: true,
@@ -302,23 +302,23 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Gets the balances of the active wallet and gets descriptions for unknown asset ids
         addUnknownAssets({ state, getters, rootGetters, dispatch }) {
-            let balanceDict: IWalletBalanceDict = state.balanceDict
-            let nftDict: IWalletNftDict = getters.walletNftDict
-            let nftMintDict: IWalletNftMintDict = getters.nftMintDict
+            const balanceDict: IWalletBalanceDict = state.balanceDict
+            const nftDict: IWalletNftDict = getters.walletNftDict
+            const nftMintDict: IWalletNftMintDict = getters.nftMintDict
 
-            for (var id in balanceDict) {
+            for (const id in balanceDict) {
                 if (!state.assetsDict[id]) {
                     dispatch('addUnknownAsset', id)
                 }
             }
 
-            for (var nft_id in nftDict) {
+            for (const nft_id in nftDict) {
                 if (!state.nftFamsDict[nft_id]) {
                     dispatch('addUnknownNftFamily', nft_id)
                 }
             }
 
-            for (var familyId in nftMintDict) {
+            for (const familyId in nftMintDict) {
                 if (!state.nftFamsDict[familyId]) {
                     dispatch('addUnknownNftFamily', familyId)
                 }
@@ -327,7 +327,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Update the utxos for the current active wallet
         async updateUTXOs({ state, commit, dispatch, rootState }) {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             if (!wallet) {
                 return false
             }
@@ -341,7 +341,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // Only updates external utxos of the wallet
         async updateUTXOsExternal({ commit, dispatch, rootState }) {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             if (!wallet) {
                 return false
             }
@@ -357,13 +357,13 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         async updateERC20Balances({ state, rootState, getters }) {
-            let wallet: WalletType | null = rootState.activeWallet
+            const wallet: WalletType | null = rootState.activeWallet
             if (!wallet) return
             // Old ledger wallets do not have an eth address
             if (!wallet.ethAddress) return
 
-            let networkID = state.evmChainId
-            let tokens: Erc20Token[] = getters.networkErc20Tokens
+            const networkID = state.evmChainId
+            const tokens: Erc20Token[] = getters.networkErc20Tokens
             tokens.forEach((token) => {
                 if (token.data.chainId !== networkID) return
                 token.updateBalance(wallet!.ethAddress)
@@ -372,38 +372,38 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // What is the AVA coin in the network
         async updateAvaAsset({ state, commit }) {
-            let res = await avm.getAssetDescription('AVAX')
-            let id = bintools.cb58Encode(res.assetID)
+            const res = await avm.getAssetDescription('AVAX')
+            const id = bintools.cb58Encode(res.assetID)
             state.AVA_ASSET_ID = id
-            let asset = new AvaAsset(id, res.name, res.symbol, res.denomination)
+            const asset = new AvaAsset(id, res.name, res.symbol, res.denomination)
             commit('addAsset', asset)
         },
 
         updateBalanceDict({ state, rootState, getters }): IWalletBalanceDict {
-            let utxoSet = getters.walletAvmUtxoSet
+            const utxoSet = getters.walletAvmUtxoSet
             if (utxoSet === null) return {}
 
-            let dict: IWalletBalanceDict = {}
+            const dict: IWalletBalanceDict = {}
 
-            let unixNox = UnixNow()
+            const unixNox = UnixNow()
             const ZERO = new BN(0)
 
-            let addrUtxos = utxoSet.getAllUTXOs()
+            const addrUtxos = utxoSet.getAllUTXOs()
 
-            for (var n = 0; n < addrUtxos.length; n++) {
-                let utxo = addrUtxos[n]
+            for (let n = 0; n < addrUtxos.length; n++) {
+                const utxo = addrUtxos[n]
 
                 // Process only SECP256K1 Transfer Output utxos, outputid === 07
-                let outId = utxo.getOutput().getOutputID()
+                const outId = utxo.getOutput().getOutputID()
 
                 if (outId !== 7) continue
 
-                let utxoOut = utxo.getOutput() as AmountOutput
+                const utxoOut = utxo.getOutput() as AmountOutput
 
-                let locktime = utxoOut.getLocktime()
-                let amount = utxoOut.getAmount()
-                let assetIdBuff = utxo.getAssetID()
-                let assetId = bintools.cb58Encode(assetIdBuff)
+                const locktime = utxoOut.getLocktime()
+                const amount = utxoOut.getAmount()
+                const assetIdBuff = utxo.getAssetID()
+                const assetId = bintools.cb58Encode(assetIdBuff)
 
                 const owners = utxoOut.getAddresses()
 
@@ -419,7 +419,7 @@ const assets_module: Module<AssetsState, RootState> = {
                             multisig: amount.clone(),
                         }
                     } else {
-                        let amt = dict[assetId].multisig
+                        const amt = dict[assetId].multisig
                         dict[assetId].multisig = amt.add(amount)
                     }
                 } else if (!isLocked) {
@@ -430,7 +430,7 @@ const assets_module: Module<AssetsState, RootState> = {
                             multisig: ZERO.clone(),
                         }
                     } else {
-                        let amt = dict[assetId].available
+                        const amt = dict[assetId].available
                         dict[assetId].available = amt.add(amount)
                     }
                 }
@@ -443,7 +443,7 @@ const assets_module: Module<AssetsState, RootState> = {
                             multisig: ZERO,
                         }
                     } else {
-                        let amt = dict[assetId].locked
+                        const amt = dict[assetId].locked
                         dict[assetId].locked = amt.add(amount)
                     }
                 }
@@ -455,16 +455,16 @@ const assets_module: Module<AssetsState, RootState> = {
         // Adds an unknown asset id to the assets dictionary
         async addUnknownAsset({ state, commit }, assetId: string) {
             // get info about the asset
-            let desc = await ava.XChain().getAssetDescription(assetId)
-            let newAsset = new AvaAsset(assetId, desc.name, desc.symbol, desc.denomination)
+            const desc = await ava.XChain().getAssetDescription(assetId)
+            const newAsset = new AvaAsset(assetId, desc.name, desc.symbol, desc.denomination)
 
             await commit('addAsset', newAsset)
             return desc
         },
 
         async addUnknownNftFamily({ state, commit }, assetId: string) {
-            let desc = await ava.XChain().getAssetDescription(assetId)
-            let newFam = new AvaNftFamily(assetId, desc.name, desc.symbol)
+            const desc = await ava.XChain().getAssetDescription(assetId)
+            const newFam = new AvaNftFamily(assetId, desc.name, desc.symbol)
 
             await commit('addNftFamily', newFam)
             return desc
@@ -472,10 +472,10 @@ const assets_module: Module<AssetsState, RootState> = {
     },
     getters: {
         networkErc20Tokens(state: AssetsState, getters, rootState: RootState): Erc20Token[] {
-            let tokens = state.erc20Tokens.concat(state.erc20TokensCustom)
-            let chainId = state.evmChainId
+            const tokens = state.erc20Tokens.concat(state.erc20TokensCustom)
+            const chainId = state.evmChainId
 
-            let filt = tokens.filter((t) => {
+            const filt = tokens.filter((t) => {
                 if (t.data.chainId !== chainId) return false
                 return true
             })
@@ -483,9 +483,9 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         findErc20: (state) => (contractAddr: string) => {
-            let tokens: Erc20Token[] = state.erc20Tokens.concat(state.erc20TokensCustom)
-            for (var i = 0; i < tokens.length; i++) {
-                let t = tokens[i]
+            const tokens: Erc20Token[] = state.erc20Tokens.concat(state.erc20TokensCustom)
+            for (let i = 0; i < tokens.length; i++) {
+                const t = tokens[i]
                 if (t.data.address === contractAddr) {
                     return t
                 }
@@ -495,14 +495,14 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // assset id -> utxos
         walletNftDict(state, getters, rootState) {
-            let utxos = state.nftUTXOs
-            let res: IWalletNftDict = {}
+            const utxos = state.nftUTXOs
+            const res: IWalletNftDict = {}
 
-            for (var i = 0; i < utxos.length; i++) {
-                let utxo = utxos[i]
-                let assetIdBuff = utxo.getAssetID()
+            for (let i = 0; i < utxos.length; i++) {
+                const utxo = utxos[i]
+                const assetIdBuff = utxo.getAssetID()
                 // TODO: Encoding might be taking too much time
-                let assetId = bintools.cb58Encode(assetIdBuff)
+                const assetId = bintools.cb58Encode(assetIdBuff)
 
                 if (res[assetId]) {
                     res[assetId].push(utxo)
@@ -515,13 +515,13 @@ const assets_module: Module<AssetsState, RootState> = {
 
         walletAssetsDict(state, getters, rootState, rootGetters): IWalletAssetsDict {
             //@ts-ignore
-            let balanceDict: IWalletBalanceDict = state.balanceDict
+            const balanceDict: IWalletBalanceDict = state.balanceDict
             // @ts-ignore
-            let assetsDict: AssetsDict = state.assetsDict
-            let res: IWalletAssetsDict = {}
+            const assetsDict: AssetsDict = state.assetsDict
+            const res: IWalletAssetsDict = {}
 
-            for (var assetId in assetsDict) {
-                let balanceAmt = balanceDict[assetId]
+            for (const assetId in assetsDict) {
+                const balanceAmt = balanceDict[assetId]
 
                 let asset: AvaAsset
                 if (!balanceAmt) {
@@ -551,18 +551,18 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         walletAssetsArray(state, getters): AvaAsset[] {
-            let assetsDict: IWalletAssetsDict = getters.walletAssetsDict
-            let res: AvaAsset[] = []
+            const assetsDict: IWalletAssetsDict = getters.walletAssetsDict
+            const res: AvaAsset[] = []
 
-            for (var id in assetsDict) {
-                let asset = assetsDict[id]
+            for (const id in assetsDict) {
+                const asset = assetsDict[id]
                 res.push(asset)
             }
             return res
         },
 
         walletAvmUtxoSet(state, getters, rootState): AVMUTXOSet | null {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             if (!wallet) return null
             return wallet.utxoset
         },
@@ -572,7 +572,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         walletStakingBalance(state, getters, rootState, rootGetters): BN {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             if (!wallet) return new BN(0)
 
             return wallet.stakeAmount
@@ -594,7 +594,7 @@ const assets_module: Module<AssetsState, RootState> = {
             lockedStakeable: BN
             multisig: BN
         } {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             const balances = {
                 available: new BN(0),
                 locked: new BN(0),
@@ -604,17 +604,17 @@ const assets_module: Module<AssetsState, RootState> = {
 
             if (!wallet) return balances
 
-            let utxoSet: PlatformUTXOSet = wallet.getPlatformUTXOSet()
+            const utxoSet: PlatformUTXOSet = wallet.getPlatformUTXOSet()
 
-            let now = UnixNow()
+            const now = UnixNow()
 
             // The only type of asset is AVAX on the P chain
 
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput()
-                let outId = utxoOut.getOutputID()
+            const utxos = utxoSet.getAllUTXOs()
+            for (let n = 0; n < utxos.length; n++) {
+                const utxo = utxos[n]
+                const utxoOut = utxo.getOutput()
+                const outId = utxoOut.getOutputID()
                 const threshold = utxoOut.getThreshold()
 
                 // If its multisig utxo
@@ -658,14 +658,14 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         nftMintDict(state): IWalletNftMintDict {
-            let res: IWalletNftMintDict = {}
-            let mintUTXOs = state.nftMintUTXOs
+            const res: IWalletNftMintDict = {}
+            const mintUTXOs = state.nftMintUTXOs
 
-            for (var i = 0; i < mintUTXOs.length; i++) {
-                let utxo: UTXO = mintUTXOs[i]
-                let assetId = bintools.cb58Encode(utxo.getAssetID())
+            for (let i = 0; i < mintUTXOs.length; i++) {
+                const utxo: UTXO = mintUTXOs[i]
+                const assetId = bintools.cb58Encode(utxo.getAssetID())
 
-                let target = res[assetId]
+                const target = res[assetId]
                 if (target) {
                     target.push(utxo)
                 } else {
@@ -674,10 +674,10 @@ const assets_module: Module<AssetsState, RootState> = {
             }
 
             // sort by groupID
-            for (var id in res) {
+            for (const id in res) {
                 res[id].sort((a, b) => {
-                    let idA = (a.getOutput() as NFTMintOutput).getGroupID()
-                    let idB = (b.getOutput() as NFTMintOutput).getGroupID()
+                    const idA = (a.getOutput() as NFTMintOutput).getGroupID()
+                    const idB = (b.getOutput() as NFTMintOutput).getGroupID()
 
                     return idA - idB
                 })
@@ -691,8 +691,8 @@ const assets_module: Module<AssetsState, RootState> = {
             })
         },
         AssetAVA(state, getters, rootState, rootGetters): AvaAsset | null {
-            let walletBalanceDict = getters.walletAssetsDict
-            let AVA_ASSET_ID = state.AVA_ASSET_ID
+            const walletBalanceDict = getters.walletAssetsDict
+            const AVA_ASSET_ID = state.AVA_ASSET_ID
             if (AVA_ASSET_ID) {
                 if (walletBalanceDict[AVA_ASSET_ID]) {
                     return walletBalanceDict[AVA_ASSET_ID]

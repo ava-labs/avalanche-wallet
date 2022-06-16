@@ -128,7 +128,13 @@ import { Vue, Component } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import { priceDict } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
-import { GasHelper, TxHelper, Utils } from '@avalabs/avalanche-wallet-sdk'
+import {
+    GasHelper,
+    TxHelper,
+    bnToBigAvaxX,
+    bnToBigAvaxC,
+    bnToAvaxC,
+} from '@avalabs/avalanche-wallet-sdk'
 
 // @ts-ignore
 import { QrInput } from '@avalabs/vue_components'
@@ -154,7 +160,7 @@ export default class FormC extends Vue {
     addressIn = ''
     amountIn = new BN(0)
     gasPrice = new BN(225000000000)
-    gasPriceInterval: NodeJS.Timeout | undefined = undefined
+    gasPriceInterval: ReturnType<typeof setTimeout> | undefined = undefined
     gasLimit = 21000
     err = ''
     isLoading = false
@@ -190,7 +196,7 @@ export default class FormC extends Vue {
     }
 
     get gasPriceNumber() {
-        return Utils.bnToBigAvaxX(this.gasPrice).toFixed(0)
+        return bnToBigAvaxX(this.gasPrice).toFixed(0)
     }
 
     async updateGasPrice() {
@@ -284,11 +290,11 @@ export default class FormC extends Vue {
     }
 
     get maxFeeUSD() {
-        return Utils.bnToBigAvaxC(this.maxFee).times(this.priceDict.usd)
+        return bnToBigAvaxC(this.maxFee).times(this.priceDict.usd)
     }
 
     get maxFeeText(): string {
-        return Utils.bnToAvaxC(this.maxFee)
+        return bnToAvaxC(this.maxFee)
     }
 
     // balance - (gas * price)

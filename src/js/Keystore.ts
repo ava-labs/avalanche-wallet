@@ -58,28 +58,27 @@ async function readV2(data: KeyFileV2, pass: string) {
     const version: string = data.version
     cryptoHelpers.keygenIterations = ITERATIONS_V2
 
-    let salt: Buffer = bintools.cb58Decode(data.salt)
-    let pass_hash: string = data.pass_hash
+    const salt: Buffer = bintools.cb58Decode(data.salt)
+    const pass_hash: string = data.pass_hash
 
-    let checkHashString: string
-    let checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
-    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash))
+    const checkHash: Buffer = await cryptoHelpers._pwcleaner(pass, salt)
+    const checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
     }
 
-    let keys: KeyFileKeyV2[] = data.keys
-    let keysDecrypt: KeyFileKeyDecryptedV2[] = []
+    const keys: KeyFileKeyV2[] = data.keys
+    const keysDecrypt: KeyFileKeyDecryptedV2[] = []
 
     for (let i: number = 0; i < keys.length; i++) {
-        let key_data: KeyFileKeyV2 = keys[i]
+        const key_data: KeyFileKeyV2 = keys[i]
 
-        let key: Buffer = bintools.cb58Decode(key_data.key)
-        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        const key: Buffer = bintools.cb58Decode(key_data.key)
+        const nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
-        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
+        const key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        const key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
 
         keysDecrypt.push({
             key: key_string,
@@ -96,28 +95,27 @@ async function readV3(data: KeyFileV3, pass: string) {
     const version: string = data.version
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
-    let salt: Buffer = bintools.cb58Decode(data.salt)
-    let pass_hash: string = data.pass_hash
+    const salt: Buffer = bintools.cb58Decode(data.salt)
+    const pass_hash: string = data.pass_hash
 
-    let checkHashString: string
-    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
+    const checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
+    const checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
     }
 
-    let keys: KeyFileKeyV3[] = data.keys
-    let keysDecrypt: KeyFileKeyDecryptedV3[] = []
+    const keys: KeyFileKeyV3[] = data.keys
+    const keysDecrypt: KeyFileKeyDecryptedV3[] = []
 
     for (let i: number = 0; i < keys.length; i++) {
-        let key_data: KeyFileKeyV3 = keys[i]
+        const key_data: KeyFileKeyV3 = keys[i]
 
-        let key: Buffer = bintools.cb58Decode(key_data.key)
-        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        const key: Buffer = bintools.cb58Decode(key_data.key)
+        const nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
-        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
+        const key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        const key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
 
         keysDecrypt.push({
             key: key_string,
@@ -134,28 +132,27 @@ async function readV4(data: KeyFileV4, pass: string): Promise<KeyFileDecryptedV5
     const version: string = data.version
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
-    let salt: Buffer = bintools.cb58Decode(data.salt)
-    let pass_hash: string = data.pass_hash
+    const salt: Buffer = bintools.cb58Decode(data.salt)
+    const pass_hash: string = data.pass_hash
 
-    let checkHashString: string
-    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
+    const checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
+    const checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
     }
 
-    let keys: KeyFileKeyV4[] = data.keys
-    let keysDecrypt: KeyFileKeyDecryptedV4[] = []
+    const keys: KeyFileKeyV4[] = data.keys
+    const keysDecrypt: KeyFileKeyDecryptedV4[] = []
 
     for (let i: number = 0; i < keys.length; i++) {
-        let key_data: KeyFileKeyV4 = keys[i]
+        const key_data: KeyFileKeyV4 = keys[i]
 
-        let key: Buffer = bintools.cb58Decode(key_data.key)
-        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        const key: Buffer = bintools.cb58Decode(key_data.key)
+        const nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
-        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
+        const key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        const key_string = bintools.cb58Encode(AjsBuffer.from(key_decrypt))
 
         keysDecrypt.push({
             key: key_string,
@@ -173,28 +170,27 @@ async function readV5(data: KeyFileV5, pass: string): Promise<KeyFileDecryptedV5
     const version: string = data.version
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
-    let salt: Buffer = bintools.cb58Decode(data.salt)
-    let pass_hash = data.pass_hash
+    const salt: Buffer = bintools.cb58Decode(data.salt)
+    const pass_hash = data.pass_hash
 
-    let checkHashString: string
-    let checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
-    checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
+    const checkHash: IHash = await cryptoHelpers.pwhash(pass, salt)
+    const checkHashString = bintools.cb58Encode(AjsBuffer.from(checkHash.hash))
 
     if (checkHashString !== pass_hash) {
         throw 'INVALID_PASS'
     }
 
-    let keys: KeyFileKeyV5[] = data.keys
-    let keysDecrypt: KeyFileKeyDecryptedV5[] = []
+    const keys: KeyFileKeyV5[] = data.keys
+    const keysDecrypt: KeyFileKeyDecryptedV5[] = []
 
     for (let i: number = 0; i < keys.length; i++) {
-        let key_data: KeyFileKeyV5 = keys[i]
+        const key_data: KeyFileKeyV5 = keys[i]
 
-        let key: Buffer = bintools.cb58Decode(key_data.key)
-        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        const key: Buffer = bintools.cb58Decode(key_data.key)
+        const nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
-        let key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
-        let key_string = key_decrypt.toString()
+        const key_decrypt: Buffer = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        const key_string = key_decrypt.toString()
 
         keysDecrypt.push({
             key: key_string,
@@ -213,17 +209,17 @@ async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6
     const activeIndex = data.activeIndex
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
-    let salt: Buffer = bintools.cb58Decode(data.salt)
+    const salt: Buffer = bintools.cb58Decode(data.salt)
 
-    let keys: KeyFileKeyV6[] = data.keys
-    let keysDecrypt: KeyFileKeyDecryptedV6[] = []
+    const keys: KeyFileKeyV6[] = data.keys
+    const keysDecrypt: KeyFileKeyDecryptedV6[] = []
 
     for (let i: number = 0; i < keys.length; i++) {
-        let key_data: KeyFileKeyV6 = keys[i]
+        const key_data: KeyFileKeyV6 = keys[i]
 
-        let key: Buffer = bintools.cb58Decode(key_data.key)
-        let type: KeystoreFileKeyType = key_data.type
-        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+        const key: Buffer = bintools.cb58Decode(key_data.key)
+        const type: KeystoreFileKeyType = key_data.type
+        const nonce: Buffer = bintools.cb58Decode(key_data.iv)
 
         let key_decrypt: Buffer
         try {
@@ -267,18 +263,18 @@ async function readKeyFile(data: AllKeyFileTypes, pass: string): Promise<AllKeyF
 function extractKeysV2(
     file: KeyFileDecryptedV2 | KeyFileDecryptedV3 | KeyFileDecryptedV4
 ): AccessWalletMultipleInput[] {
-    let chainID = avm.getBlockchainAlias()
-    let keys = (file as KeyFileDecryptedV2 | KeyFileDecryptedV3 | KeyFileDecryptedV4).keys
+    const chainID = avm.getBlockchainAlias()
+    const keys = (file as KeyFileDecryptedV2 | KeyFileDecryptedV3 | KeyFileDecryptedV4).keys
 
     return keys.map((key) => {
         // Private keys from the keystore file do not have the PrivateKey- prefix
-        let pk = 'PrivateKey-' + key.key
-        let keypair = keyToKeypair(pk, chainID)
+        const pk = 'PrivateKey-' + key.key
+        const keypair = keyToKeypair(pk, chainID)
 
-        let keyBuf = keypair.getPrivateKey()
-        let keyHex: string = keyBuf.toString('hex')
-        let paddedKeyHex = keyHex.padStart(64, '0')
-        let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
+        const keyBuf = keypair.getPrivateKey()
+        const keyHex: string = keyBuf.toString('hex')
+        const paddedKeyHex = keyHex.padStart(64, '0')
+        const mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
 
         return {
             key: mnemonic,
@@ -327,12 +323,12 @@ async function makeKeyfile(
     // 3.0 and above uses 200,000
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
-    let salt: Buffer = await cryptoHelpers.makeSalt()
+    const salt: Buffer = await cryptoHelpers.makeSalt()
 
-    let keys: KeyFileKeyV6[] = []
+    const keys: KeyFileKeyV6[] = []
 
     for (let i: number = 0; i < wallets.length; i++) {
-        let wallet = wallets[i]
+        const wallet = wallets[i]
         let key
         let type: KeystoreFileKeyType
         if (wallet.type === 'singleton') {
@@ -342,9 +338,9 @@ async function makeKeyfile(
             key = (wallet as MnemonicWallet).getMnemonic()
             type = 'mnemonic'
         }
-        let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)
+        const pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)
 
-        let key_data: KeyFileKeyV6 = {
+        const key_data: KeyFileKeyV6 = {
             key: bintools.cb58Encode(AjsBuffer.from(pk_crypt.ciphertext)),
             iv: bintools.cb58Encode(AjsBuffer.from(pk_crypt.iv)),
             type: type,
@@ -352,7 +348,7 @@ async function makeKeyfile(
         keys.push(key_data)
     }
 
-    let file_data: KeyFileV6 = {
+    const file_data: KeyFileV6 = {
         version: KEYSTORE_VERSION,
         salt: bintools.cb58Encode(AjsBuffer.from(salt)),
         activeIndex,

@@ -55,10 +55,10 @@ abstract class HdWalletCore extends WalletCore {
 
     updateAvmUTXOSet(): void {
         // if (this.isFetchUtxos) return
-        let setExternal = this.externalHelper.utxoSet as AVMUTXOSet
-        let setInternal = this.internalHelper.utxoSet as AVMUTXOSet
+        const setExternal = this.externalHelper.utxoSet as AVMUTXOSet
+        const setInternal = this.internalHelper.utxoSet as AVMUTXOSet
 
-        let joined = setInternal.merge(setExternal)
+        const joined = setInternal.merge(setExternal)
         this.utxoset = joined
     }
 
@@ -97,19 +97,19 @@ abstract class HdWalletCore extends WalletCore {
     }
 
     async updateUTXOsExternal() {
-        let res = await this.externalHelper.updateUtxos()
+        const res = await this.externalHelper.updateUtxos()
         this.updateFetchState()
         this.updateAvmUTXOSet()
     }
 
     async updateUTXOsInternal() {
-        let utxoSet = await this.internalHelper.updateUtxos()
+        const utxoSet = await this.internalHelper.updateUtxos()
         this.updateFetchState()
         this.updateAvmUTXOSet()
     }
 
     async updateUTXOsP() {
-        let utxoSet = await this.platformHelper.updateUtxos()
+        const utxoSet = await this.platformHelper.updateUtxos()
         this.updateFetchState()
     }
 
@@ -118,8 +118,8 @@ abstract class HdWalletCore extends WalletCore {
     }
 
     getDerivedAddresses(): string[] {
-        let internal = this.internalHelper.getAllDerivedAddresses()
-        let external = this.externalHelper.getAllDerivedAddresses()
+        const internal = this.internalHelper.getAllDerivedAddresses()
+        const external = this.externalHelper.getAllDerivedAddresses()
         return internal.concat(external)
     }
 
@@ -136,12 +136,12 @@ abstract class HdWalletCore extends WalletCore {
     }
     // Returns addresses to check for history
     getHistoryAddresses(): string[] {
-        let internalIndex = this.internalHelper.hdIndex
+        const internalIndex = this.internalHelper.hdIndex
         // They share the same address space, so whatever has the highest index
-        let externalIndex = Math.max(this.externalHelper.hdIndex, this.platformHelper.hdIndex)
+        const externalIndex = Math.max(this.externalHelper.hdIndex, this.platformHelper.hdIndex)
 
-        let internal = this.internalHelper.getAllDerivedAddresses(internalIndex)
-        let external = this.externalHelper.getAllDerivedAddresses(externalIndex)
+        const internal = this.internalHelper.getAllDerivedAddresses(internalIndex)
+        const external = this.externalHelper.getAllDerivedAddresses(externalIndex)
         return internal.concat(external)
     }
 
@@ -247,27 +247,27 @@ abstract class HdWalletCore extends WalletCore {
 
     findExternalAddressIndex(address: string): number | null {
         // TODO: Look for P addresses too
-        let indexX = this.externalHelper.findAddressIndex(address)
-        let indexP = this.platformHelper.findAddressIndex(address)
+        const indexX = this.externalHelper.findAddressIndex(address)
+        const indexP = this.platformHelper.findAddressIndex(address)
 
-        let index = indexX !== null ? indexX : indexP
+        const index = indexX !== null ? indexX : indexP
 
         if (indexX === null && indexP === null) throw new Error('Address not found.')
         return index
     }
 
     async signMessageByExternalAddress(msgStr: string, address: string) {
-        let index = this.findExternalAddressIndex(address)
+        const index = this.findExternalAddressIndex(address)
         if (index === null) throw new Error('Address not found.')
         return await this.signMessageByExternalIndex(msgStr, index)
     }
 
     async signMessageByExternalIndex(msgStr: string, index: number): Promise<string> {
-        let digest = digestMessage(msgStr)
+        const digest = digestMessage(msgStr)
 
         // Convert to the other Buffer and sign
-        let digestHex = digest.toString('hex')
-        let digestBuff = Buffer.from(digestHex, 'hex')
+        const digestHex = digest.toString('hex')
+        const digestBuff = Buffer.from(digestHex, 'hex')
 
         return await this.signHashByExternalIndex(index, digestBuff)
     }

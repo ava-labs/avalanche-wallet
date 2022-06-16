@@ -24,7 +24,7 @@ import ERC721Token from '@/js/ERC721Token'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
-        let addrs = wallet.getAllAddressesP()
+        const addrs = wallet.getAllAddressesP()
         return await getStakeForAddresses(addrs)
     }
 
@@ -34,14 +34,14 @@ class WalletHelper {
         symbol: string,
         groupNum: number
     ) {
-        let fromAddresses = wallet.getDerivedAddresses()
-        let changeAddress = wallet.getChangeAddressAvm()
+        const fromAddresses = wallet.getDerivedAddresses()
+        const changeAddress = wallet.getChangeAddressAvm()
 
-        let minterAddress = wallet.getCurrentAddressAvm()
+        const minterAddress = wallet.getCurrentAddressAvm()
 
-        let utxoSet = wallet.getUTXOSet()
+        const utxoSet = wallet.getUTXOSet()
 
-        let unsignedTx = await buildCreateNftFamilyTx(
+        const unsignedTx = await buildCreateNftFamilyTx(
             name,
             symbol,
             groupNum,
@@ -51,7 +51,7 @@ class WalletHelper {
             utxoSet
         )
 
-        let signed = await wallet.signX(unsignedTx)
+        const signed = await wallet.signX(unsignedTx)
         return await avm.issueTx(signed)
     }
 
@@ -61,13 +61,13 @@ class WalletHelper {
         payload: PayloadBase,
         quantity: number
     ) {
-        let ownerAddress = wallet.getCurrentAddressAvm()
-        let changeAddress = wallet.getChangeAddressAvm()
+        const ownerAddress = wallet.getCurrentAddressAvm()
+        const changeAddress = wallet.getChangeAddressAvm()
 
-        let sourceAddresses = wallet.getDerivedAddresses()
+        const sourceAddresses = wallet.getDerivedAddresses()
 
-        let utxoSet = wallet.getUTXOSet()
-        let tx = await buildMintNftTx(
+        const utxoSet = wallet.getUTXOSet()
+        const tx = await buildMintNftTx(
             mintUtxo,
             payload,
             quantity,
@@ -76,7 +76,7 @@ class WalletHelper {
             sourceAddresses,
             utxoSet
         )
-        let signed = await wallet.signX(tx)
+        const signed = await wallet.signX(tx)
         return await avm.issueTx(signed)
     }
 
@@ -86,7 +86,7 @@ class WalletHelper {
         addr: string,
         memo: Buffer | undefined
     ): Promise<string> {
-        let unsignedTx = await wallet.buildUnsignedTransaction(orders, addr, memo)
+        const unsignedTx = await wallet.buildUnsignedTransaction(orders, addr, memo)
         const tx = await wallet.signX(unsignedTx)
         const txId: string = await avm.issueTx(tx)
 
@@ -111,9 +111,9 @@ class WalletHelper {
             utxoSet.addArray(utxos)
         }
 
-        let pAddressStrings = wallet.getAllAddressesP()
+        const pAddressStrings = wallet.getAllAddressesP()
 
-        let stakeAmount = amt
+        const stakeAmount = amt
 
         // If reward address isn't given use index 0 address
         if (!rewardAddress) {
@@ -121,13 +121,13 @@ class WalletHelper {
         }
 
         // For change address use first available on the platform chain
-        let changeAddress = wallet.getFirstAvailableAddressPlatform()
+        const changeAddress = wallet.getFirstAvailableAddressPlatform()
 
-        let stakeReturnAddr = wallet.getCurrentAddressPlatform()
+        const stakeReturnAddr = wallet.getCurrentAddressPlatform()
 
         // Convert dates to unix time
-        let startTime = new BN(Math.round(start.getTime() / 1000))
-        let endTime = new BN(Math.round(end.getTime() / 1000))
+        const startTime = new BN(Math.round(start.getTime() / 1000))
+        const endTime = new BN(Math.round(end.getTime() / 1000))
 
         const unsignedTx = await pChain.buildAddValidatorTx(
             utxoSet,
@@ -142,7 +142,7 @@ class WalletHelper {
             delegationFee
         )
 
-        let tx = await wallet.signP(unsignedTx)
+        const tx = await wallet.signP(unsignedTx)
         return await pChain.issueTx(tx)
     }
 
@@ -156,9 +156,9 @@ class WalletHelper {
         utxos?: PlatformUTXO[]
     ): Promise<string> {
         let utxoSet = wallet.getPlatformUTXOSet()
-        let pAddressStrings = wallet.getAllAddressesP()
+        const pAddressStrings = wallet.getAllAddressesP()
 
-        let stakeAmount = amt
+        const stakeAmount = amt
 
         // If given custom UTXO set use that
         if (utxos) {
@@ -171,14 +171,14 @@ class WalletHelper {
             rewardAddress = wallet.getPlatformRewardAddress()
         }
 
-        let stakeReturnAddr = wallet.getPlatformRewardAddress()
+        const stakeReturnAddr = wallet.getPlatformRewardAddress()
 
         // For change address use first available on the platform chain
-        let changeAddress = wallet.getFirstAvailableAddressPlatform()
+        const changeAddress = wallet.getFirstAvailableAddressPlatform()
 
         // Convert dates to unix time
-        let startTime = new BN(Math.round(start.getTime() / 1000))
-        let endTime = new BN(Math.round(end.getTime() / 1000))
+        const startTime = new BN(Math.round(start.getTime() / 1000))
+        const endTime = new BN(Math.round(end.getTime() / 1000))
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
             utxoSet,
@@ -197,7 +197,7 @@ class WalletHelper {
     }
 
     static async getEthBalance(wallet: WalletType) {
-        let bal = await web3.eth.getBalance(wallet.ethAddress)
+        const bal = await web3.eth.getBalance(wallet.ethAddress)
         return new BN(bal)
     }
 
@@ -208,14 +208,14 @@ class WalletHelper {
         gasPrice: BN,
         gasLimit: number
     ) {
-        let fromAddr = '0x' + wallet.getEvmAddress()
+        const fromAddr = '0x' + wallet.getEvmAddress()
 
-        let tx = await buildEvmTransferNativeTx(fromAddr, to, amount, gasPrice, gasLimit)
+        const tx = await buildEvmTransferNativeTx(fromAddr, to, amount, gasPrice, gasLimit)
 
-        let signedTx = await wallet.signEvm(tx)
+        const signedTx = await wallet.signEvm(tx)
 
-        let txHex = signedTx.serialize().toString('hex')
-        let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
+        const txHex = signedTx.serialize().toString('hex')
+        const hash = await web3.eth.sendSignedTransaction('0x' + txHex)
         return hash.transactionHash
     }
 
@@ -227,12 +227,12 @@ class WalletHelper {
         gasLimit: number,
         token: Erc20Token
     ) {
-        let fromAddr = '0x' + wallet.getEvmAddress()
-        let tx = await buildEvmTransferErc20Tx(fromAddr, to, amount, gasPrice, gasLimit, token)
+        const fromAddr = '0x' + wallet.getEvmAddress()
+        const tx = await buildEvmTransferErc20Tx(fromAddr, to, amount, gasPrice, gasLimit, token)
 
-        let signedTx = await wallet.signEvm(tx)
-        let txHex = signedTx.serialize().toString('hex')
-        let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
+        const signedTx = await wallet.signEvm(tx)
+        const txHex = signedTx.serialize().toString('hex')
+        const hash = await web3.eth.sendSignedTransaction('0x' + txHex)
         return hash.transactionHash
     }
 
@@ -244,24 +244,24 @@ class WalletHelper {
         token: ERC721Token,
         tokenId: string
     ) {
-        let fromAddr = '0x' + wallet.getEvmAddress()
-        let tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
-        let signedTx = await wallet.signEvm(tx)
-        let txHex = signedTx.serialize().toString('hex')
-        let hash = await web3.eth.sendSignedTransaction('0x' + txHex)
+        const fromAddr = '0x' + wallet.getEvmAddress()
+        const tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
+        const signedTx = await wallet.signEvm(tx)
+        const txHex = signedTx.serialize().toString('hex')
+        const hash = await web3.eth.sendSignedTransaction('0x' + txHex)
         return hash.transactionHash
     }
 
     static async estimateTxGas(wallet: WalletType, tx: any) {
-        let fromAddr = '0x' + wallet.getEvmAddress()
-        let estGas = await tx.estimateGas({ from: fromAddr })
+        const fromAddr = '0x' + wallet.getEvmAddress()
+        const estGas = await tx.estimateGas({ from: fromAddr })
         return Math.round(estGas * 1.1)
     }
 
     static async estimateGas(wallet: WalletType, to: string, amount: BN, token: Erc20Token) {
-        let from = '0x' + wallet.getEvmAddress()
-        let tx = token.createTransferTx(to, amount)
-        let estGas = await tx.estimateGas({
+        const from = '0x' + wallet.getEvmAddress()
+        const tx = token.createTransferTx(to, amount)
+        const estGas = await tx.estimateGas({
             from: from,
         })
         // Return 10% more

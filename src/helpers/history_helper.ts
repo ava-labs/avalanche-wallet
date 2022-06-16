@@ -55,7 +55,7 @@ function addToDict(
     if (dict[assetId]) {
         dict[assetId].amount = dict[assetId].amount.add(amount)
 
-        let addrDiff = addresses.filter((addr) => !dict[assetId].addresses.includes(addr))
+        const addrDiff = addresses.filter((addr) => !dict[assetId].addresses.includes(addr))
         dict[assetId].addresses.push(...addrDiff)
     } else {
         dict[assetId] = {
@@ -68,8 +68,8 @@ function addToDict(
 }
 
 function getNFTsSummary(tx: ITransactionData, wallet: WalletType): BaseTxNFTSummary {
-    let nftLoss = getLossNFT(tx, wallet)
-    let nftGain = getGainNFT(tx, wallet)
+    const nftLoss = getLossNFT(tx, wallet)
+    const nftGain = getGainNFT(tx, wallet)
     return {
         sent: nftLoss,
         received: nftGain,
@@ -77,35 +77,35 @@ function getNFTsSummary(tx: ITransactionData, wallet: WalletType): BaseTxNFTSumm
 }
 
 function getLossNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultDict {
-    let walletAddrs = wallet.getHistoryAddresses()
-    let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
+    const walletAddrs = wallet.getHistoryAddresses()
+    const addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
 
-    let inputs = tx.inputs || []
-    let outputs = tx.outputs
+    const inputs = tx.inputs || []
+    const outputs = tx.outputs
 
-    let loss: NFTSummaryResultDict = {
+    const loss: NFTSummaryResultDict = {
         assets: {},
         addresses: [],
     }
 
-    let nfts = inputs.filter((input) => {
-        let type = input.output.outputType
+    const nfts = inputs.filter((input) => {
+        const type = input.output.outputType
         if (type === AVMConstants.NFTXFEROUTPUTID) return true
         return false
     })
 
-    let nftsOuts = outputs.filter((output) => {
-        let type = output.outputType
+    const nftsOuts = outputs.filter((output) => {
+        const type = output.outputType
         if (type === AVMConstants.NFTXFEROUTPUTID) return true
         return false
     })
 
-    for (var i = 0; i < nfts.length; i++) {
-        let utxo = nfts[i].output
-        let owners = utxo.addresses
-        let assetID = utxo.assetID
+    for (let i = 0; i < nfts.length; i++) {
+        const utxo = nfts[i].output
+        const owners = utxo.addresses
+        const assetID = utxo.assetID
 
-        let intersect = owners.filter((addr) => addrsStripped.includes(addr))
+        const intersect = owners.filter((addr) => addrsStripped.includes(addr))
 
         // Did we lose it?
         if (intersect.length > 0) {
@@ -116,10 +116,12 @@ function getLossNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
             }
 
             // Who did we lose it to?
-            for (var n = 0; i < nftsOuts.length; n++) {
-                let nftOut = nftsOuts[n]
-                let doesMatch = nftOut.groupID === utxo.groupID && nftOut.assetID === utxo.assetID
-                let addrNotAdded = nftOut.addresses.filter((addr) => !loss.addresses.includes(addr))
+            for (let n = 0; i < nftsOuts.length; n++) {
+                const nftOut = nftsOuts[n]
+                const doesMatch = nftOut.groupID === utxo.groupID && nftOut.assetID === utxo.assetID
+                const addrNotAdded = nftOut.addresses.filter(
+                    (addr) => !loss.addresses.includes(addr)
+                )
                 if (doesMatch) {
                     loss.addresses.push(...addrNotAdded)
                     break
@@ -132,35 +134,35 @@ function getLossNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
 }
 
 function getGainNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultDict {
-    let walletAddrs = wallet.getHistoryAddresses()
-    let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
+    const walletAddrs = wallet.getHistoryAddresses()
+    const addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
 
-    let inputs = tx.inputs || []
-    let outputs = tx.outputs
+    const inputs = tx.inputs || []
+    const outputs = tx.outputs
 
-    let gain: NFTSummaryResultDict = {
+    const gain: NFTSummaryResultDict = {
         assets: {},
         addresses: [],
     }
 
-    let nftsIns = inputs.filter((input) => {
-        let type = input.output.outputType
+    const nftsIns = inputs.filter((input) => {
+        const type = input.output.outputType
         if (type === AVMConstants.NFTXFEROUTPUTID) return true
         return false
     })
 
-    let nftsOuts = outputs.filter((output) => {
-        let type = output.outputType
+    const nftsOuts = outputs.filter((output) => {
+        const type = output.outputType
         if (type === AVMConstants.NFTXFEROUTPUTID) return true
         return false
     })
 
-    for (var i = 0; i < nftsOuts.length; i++) {
-        let utxo = nftsOuts[i]
-        let owners = utxo.addresses
-        let assetID = utxo.assetID
+    for (let i = 0; i < nftsOuts.length; i++) {
+        const utxo = nftsOuts[i]
+        const owners = utxo.addresses
+        const assetID = utxo.assetID
 
-        let intersect = owners.filter((addr) => addrsStripped.includes(addr))
+        const intersect = owners.filter((addr) => addrsStripped.includes(addr))
 
         // Did we gain it?
         if (intersect.length > 0) {
@@ -171,10 +173,12 @@ function getGainNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
             }
 
             // Who did we gain it from?
-            for (var n = 0; n < nftsIns.length; n++) {
-                let nftIn = nftsIns[n].output
-                let doesMatch = nftIn.groupID === utxo.groupID && nftIn.assetID === utxo.assetID
-                let addrNotAdded = nftIn.addresses.filter((addr) => !gain.addresses.includes(addr))
+            for (let n = 0; n < nftsIns.length; n++) {
+                const nftIn = nftsIns[n].output
+                const doesMatch = nftIn.groupID === utxo.groupID && nftIn.assetID === utxo.assetID
+                const addrNotAdded = nftIn.addresses.filter(
+                    (addr) => !gain.addresses.includes(addr)
+                )
                 if (doesMatch) {
                     gain.addresses.push(...addrNotAdded)
                 }
@@ -186,40 +190,40 @@ function getGainNFT(tx: ITransactionData, wallet: WalletType): NFTSummaryResultD
 }
 
 function getLoss(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
-    let ins = tx.inputs || []
-    let outs = tx.outputs
+    const ins = tx.inputs || []
+    const outs = tx.outputs
 
-    let walletAddrs = wallet.getHistoryAddresses()
-    let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
+    const walletAddrs = wallet.getHistoryAddresses()
+    const addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
 
-    let loss: TokenSummaryResult = {}
+    const loss: TokenSummaryResult = {}
 
     if (ins) {
         for (let i = 0; i < ins.length; i++) {
-            let input = ins[i]
-            let utxo = input.output
-            let outputType = utxo.outputType
-            let isNft = outputType === AVMConstants.NFTXFEROUTPUTID
+            const input = ins[i]
+            const utxo = input.output
+            const outputType = utxo.outputType
+            const isNft = outputType === AVMConstants.NFTXFEROUTPUTID
 
             if (isNft) continue
 
-            let addrs = utxo.addresses
+            const addrs = utxo.addresses
 
-            let intersect = addrs.filter((addr) => addrsStripped.includes(addr))
+            const intersect = addrs.filter((addr) => addrsStripped.includes(addr))
 
             if (intersect.length === 0) continue
 
-            let assetId = utxo.assetID
-            let amount = utxo.amount
-            let amountBN = new BN(amount)
+            const assetId = utxo.assetID
+            const amount = utxo.amount
+            const amountBN = new BN(amount)
 
             // Get who received this asset
-            let receivers: string[] = []
+            const receivers: string[] = []
             outs.forEach((utxo) => {
                 if (utxo.assetID === assetId) {
-                    let outAddrs = utxo.addresses
+                    const outAddrs = utxo.addresses
                     // If not a wallet address and not added to receivers
-                    let targets = outAddrs.filter(
+                    const targets = outAddrs.filter(
                         (addr: string) => !addrsStripped.includes(addr) && !receivers.includes(addr)
                     )
                     receivers.push(...targets)
@@ -234,41 +238,41 @@ function getLoss(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
 }
 
 function getProfit(tx: ITransactionData, wallet: WalletType): TokenSummaryResult {
-    let outs = tx.outputs
-    let ins = tx.inputs || []
+    const outs = tx.outputs
+    const ins = tx.inputs || []
 
-    let walletAddrs = wallet.getHistoryAddresses()
-    let addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
+    const walletAddrs = wallet.getHistoryAddresses()
+    const addrsStripped = walletAddrs.map((addr) => addr.split('-')[1])
 
-    let profit: TokenSummaryResult = {}
+    const profit: TokenSummaryResult = {}
 
     if (outs) {
         for (let i = 0; i < outs.length; i++) {
-            let utxo = outs[i]
-            let outputType = utxo.outputType
-            let isNft = outputType === AVMConstants.NFTXFEROUTPUTID
+            const utxo = outs[i]
+            const outputType = utxo.outputType
+            const isNft = outputType === AVMConstants.NFTXFEROUTPUTID
 
             // Skip NFTs
             if (isNft) continue
 
-            let addrs = utxo.addresses
+            const addrs = utxo.addresses
 
-            let intersect = addrs.filter((addr) => addrsStripped.includes(addr))
+            const intersect = addrs.filter((addr) => addrsStripped.includes(addr))
 
             if (intersect.length === 0) continue
 
-            let assetId = utxo.assetID
-            let amount = utxo.amount
-            let amountBN = new BN(amount)
+            const assetId = utxo.assetID
+            const amount = utxo.amount
+            const amountBN = new BN(amount)
 
             // Get who sent this to you
-            let senders: string[] = []
+            const senders: string[] = []
             ins.forEach((input) => {
-                let utxo = input.output
+                const utxo = input.output
                 if (utxo.assetID === assetId) {
-                    let outAddrs = utxo.addresses
+                    const outAddrs = utxo.addresses
                     // If not a wallet address and not added to senders
-                    let targets = outAddrs.filter(
+                    const targets = outAddrs.filter(
                         (addr: string) => !addrsStripped.includes(addr) && !senders.includes(addr)
                     )
                     senders.push(...targets)
@@ -284,16 +288,16 @@ function getProfit(tx: ITransactionData, wallet: WalletType): TokenSummaryResult
 
 // Finds the absolute gains and losses for the active wallet given transaction data from the explorer
 function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
-    let losses = getLoss(tx, wallet)
-    let profits = getProfit(tx, wallet)
+    const losses = getLoss(tx, wallet)
+    const profits = getProfit(tx, wallet)
 
-    let nftSummary = getNFTsSummary(tx, wallet)
+    const nftSummary = getNFTsSummary(tx, wallet)
 
     // let nftLoss = getLossNFT(tx, wallet)
     // let nftGain = getGainNFT()NFT(tx, wallet)
     // console.log(nftLoss)
 
-    let sum: BaseTxSummary = {
+    const sum: BaseTxSummary = {
         tokens: {},
         collectibles: {
             sent: nftSummary.sent,
@@ -302,8 +306,8 @@ function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
     }
 
     // First the losses
-    for (let assetId in losses) {
-        let loss = losses[assetId]
+    for (const assetId in losses) {
+        const loss = losses[assetId]
 
         sum.tokens[assetId] = {
             amount: loss.amount.mul(new BN(-1)),
@@ -313,8 +317,8 @@ function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
         }
     }
 
-    for (let assetId in profits) {
-        let profit = profits[assetId]
+    for (const assetId in profits) {
+        const profit = profits[assetId]
 
         if (sum.tokens[assetId]) {
             sum.tokens[assetId].amount = sum.tokens[assetId].amount.add(profit.amount)
@@ -336,12 +340,12 @@ function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
  * @param txs
  */
 export function filterDuplicateTransactions(txs: ITransactionData[]) {
-    let txsIds: string[] = []
-    let filtered: ITransactionData[] = []
+    const txsIds: string[] = []
+    const filtered: ITransactionData[] = []
 
-    for (var i = 0; i < txs.length; i++) {
-        let tx = txs[i]
-        let txId = tx.id
+    for (let i = 0; i < txs.length; i++) {
+        const tx = txs[i]
+        const txId = tx.id
 
         if (txsIds.includes(txId)) {
             continue

@@ -39,7 +39,7 @@ const TIMEOUT_DUR_MS = TIMEOUT_DURATION * 1000
     },
 })
 export default class Wallet extends Vue {
-    intervalId: NodeJS.Timeout | null = null
+    intervalId: ReturnType<typeof setTimeout> | null = null
     logoutTimestamp = Date.now() + TIMEOUT_DUR_MS
     isLogOut = false
 

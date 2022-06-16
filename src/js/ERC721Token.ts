@@ -1,8 +1,7 @@
 import { web3 } from '@/evm'
-import ERC721Abi from '@openzeppelin/contracts/build/contracts/ERC721.json'
+import ERC721Abi from '@openzeppelin/contracts/build/contracts/ERC721Enumerable.json'
 import { ERC721TokenInput } from '@/store/modules/assets/modules/types'
 import axios from 'axios'
-import { BN } from 'avalanche'
 
 interface TokenDataCache {
     [index: number]: string
@@ -37,14 +36,13 @@ class ERC721Token {
 
     async updateSupports() {
         try {
-            let metadata = await this.contract.methods.supportsInterface(ERC721MetadataID).call()
-            let enumerable = await this.contract.methods
+            const metadata = await this.contract.methods.supportsInterface(ERC721MetadataID).call()
+            const enumerable = await this.contract.methods
                 .supportsInterface(ERC721EnumerableID)
                 .call()
             this.canSupport = metadata && enumerable
         } catch (err) {
             this.canSupport = false
-            // console.error(err)
         }
     }
 
@@ -55,22 +53,22 @@ class ERC721Token {
     async getAllTokensIds(address: string): Promise<string[]> {
         if (!this.canSupport) return []
 
-        let bal = await this.getBalance(address)
-        let res = []
-        for (var i = 0; i < bal; i++) {
-            let tokenId = await this.contract.methods.tokenOfOwnerByIndex(address, i).call()
+        const bal = await this.getBalance(address)
+        const res = []
+        for (let i = 0; i < bal; i++) {
+            const tokenId = await this.contract.methods.tokenOfOwnerByIndex(address, i).call()
             res.push(tokenId)
         }
         return res
     }
 
     async getAllTokenData(address: string) {
-        let ids = await this.getAllTokensIds(address)
+        const ids = await this.getAllTokensIds(address)
 
-        let res = []
-        for (var i = 0; i < ids.length; i++) {
-            let id = ids[i]
-            let data = await this.getTokenURI(parseInt(id))
+        const res = []
+        for (let i = 0; i < ids.length; i++) {
+            const id = ids[i]
+            const data = await this.getTokenURI(parseInt(id))
             res.push(data)
         }
         return res
@@ -82,7 +80,7 @@ class ERC721Token {
 
     async getTokenURI(id: number) {
         if (this.tokenCache[id]) return this.tokenCache[id]
-        let data = await this.contract.methods.tokenURI(id).call()
+        const data = await this.contract.methods.tokenURI(id).call()
         this.tokenCache[id] = data
         return data
     }
@@ -90,9 +88,9 @@ class ERC721Token {
     async getTokenURIData(id: number): Promise<any> {
         //Check cache
         if (this.uriDataCache[id]) return this.uriDataCache[id]
-        let uri = await this.getTokenURI(id)
+        const uri = await this.getTokenURI(id)
         if (!uri) return null
-        let res = (await axios.get(uri)).data
+        const res = (await axios.get(uri)).data
         //Save to cache
         this.uriDataCache[id] = res
         return res

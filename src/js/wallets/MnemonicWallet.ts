@@ -81,32 +81,32 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
 
         // Update EVM values
         this.ethKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
-        let cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
+        const cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
         this.ethBalance = new BN(0)
     }
 
     // The master key from avalanche.js
     constructor(mnemonic: string) {
-        let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
-        let masterHdKey: HDKey = HDKey.fromMasterSeed(seed)
-        let accountHdKey = masterHdKey.derive(AVA_ACCOUNT_PATH)
-        let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
+        const seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
+        const masterHdKey: HDKey = HDKey.fromMasterSeed(seed)
+        const accountHdKey = masterHdKey.derive(AVA_ACCOUNT_PATH)
+        const ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
 
         super(accountHdKey, ethAccountKey, false)
 
         // Derive EVM key and address
-        let ethPrivateKey = ethAccountKey.privateKey
+        const ethPrivateKey = ethAccountKey.privateKey
         this.ethKey = ethPrivateKey.toString('hex')
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
         this.ethBalance = new BN(0)
 
-        let cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(ethPrivateKey))
+        const cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(ethPrivateKey))
         this.ethKeyBech = cPrivKey
 
-        let cKeyChain = new KeyChain(ava.getHRP(), 'C')
+        const cKeyChain = new KeyChain(ava.getHRP(), 'C')
         this.ethKeyChain = cKeyChain
 
-        let cKeypair = cKeyChain.importKey(cPrivKey)
+        const cKeypair = cKeyChain.importKey(cPrivKey)
 
         this.type = 'mnemonic'
         this.seed = seed.toString('hex')
@@ -120,7 +120,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     }
 
     async getEthBalance() {
-        let bal = await WalletHelper.getEthBalance(this)
+        const bal = await WalletHelper.getEthBalance(this)
         this.ethBalance = bal
         return bal
     }
@@ -147,7 +147,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         // TODO: Move to shared file
         this.isFetchUtxos = true
         // If we are waiting for helpers to initialize delay the call
-        let isInit =
+        const isInit =
             this.externalHelper.isInit && this.internalHelper.isInit && this.platformHelper.isInit
         if (!isInit) {
             setTimeout(() => {
@@ -225,47 +225,47 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
 
     // returns a keychain that has all the derived private/public keys for X chain
     getKeyChain(): AVMKeyChain {
-        let internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[]
-        let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[]
+        const internal = this.internalHelper.getAllDerivedKeys() as AVMKeyPair[]
+        const external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[]
 
-        let allKeys = internal.concat(external)
-        let keychain: AVMKeyChain = new AVMKeyChain(
+        const allKeys = internal.concat(external)
+        const keychain: AVMKeyChain = new AVMKeyChain(
             getPreferredHRP(ava.getNetworkID()),
             this.chainId
         )
 
-        for (var i = 0; i < allKeys.length; i++) {
+        for (let i = 0; i < allKeys.length; i++) {
             keychain.addKey(allKeys[i])
         }
         return keychain
     }
 
     async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
-        let keychain = this.getKeyChain()
+        const keychain = this.getKeyChain()
 
         const tx = unsignedTx.sign(keychain)
         return tx
     }
 
     async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx> {
-        let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
+        const keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
         const tx = unsignedTx.sign(keychain)
         return tx
     }
 
     async signC(unsignedTx: EVMUnsignedTx): Promise<EvmTx> {
-        let keyChain = this.ethKeyChain
+        const keyChain = this.ethKeyChain
         return unsignedTx.sign(keyChain)
     }
 
     async signEvm(tx: Transaction) {
-        let keyBuff = Buffer.from(this.ethKey, 'hex')
+        const keyBuff = Buffer.from(this.ethKey, 'hex')
         return tx.sign(keyBuff)
     }
 
     async signHashByExternalIndex(index: number, hash: BufferAvalanche) {
-        let key = this.externalHelper.getKeyForIndex(index) as AVMKeyPair
-        let signed = key.sign(hash)
+        const key = this.externalHelper.getKeyForIndex(index) as AVMKeyPair
+        const signed = key.sign(hash)
         return bintools.cb58Encode(signed)
     }
 

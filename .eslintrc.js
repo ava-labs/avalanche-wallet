@@ -15,6 +15,8 @@ module.exports = {
     },
     rules: {
         'no-console': 'off',
+        'no-unused-vars': 'off',
+        'prefer-const': 'off',
         'vue/no-unused-components': 'off',
         'vue/multiline-html-element-content-newline': 'off',
         'no-unreachable': 'off',

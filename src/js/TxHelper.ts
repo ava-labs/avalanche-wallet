@@ -40,9 +40,9 @@ export async function buildUnsignedTransaction(
         throw 'Unable to issue transaction. Ran out of change index.'
     }
 
-    let fromAddrsStr: string[] = derivedAddresses
-    let fromAddrs: Buffer[] = fromAddrsStr.map((val) => bintools.parseAddress(val, 'X'))
-    let changeAddr: Buffer = bintools.stringToAddress(changeAddress)
+    const fromAddrsStr: string[] = derivedAddresses
+    const fromAddrs: Buffer[] = fromAddrsStr.map((val) => bintools.parseAddress(val, 'X'))
+    const changeAddr: Buffer = bintools.stringToAddress(changeAddress)
 
     // TODO: use internal asset ID
     // This does not update on network change, causing issues
@@ -58,14 +58,14 @@ export async function buildUnsignedTransaction(
 
     // Aggregate Fungible ins & outs
     for (let i: number = 0; i < orders.length; i++) {
-        let order: ITransaction | AVMUTXO = orders[i]
+        const order: ITransaction | AVMUTXO = orders[i]
 
         if ((order as ITransaction).asset) {
             // if fungible
-            let tx: ITransaction = order as ITransaction
+            const tx: ITransaction = order as ITransaction
 
-            let assetId = bintools.cb58Decode(tx.asset.id)
-            let amt: BN = tx.amount
+            const assetId = bintools.cb58Decode(tx.asset.id)
+            const amt: BN = tx.amount
 
             if (assetId.toString('hex') === AVAX_ID_STR) {
                 aad.addAssetAmount(assetId, amt, avm.getTxFee())
@@ -95,21 +95,21 @@ export async function buildUnsignedTransaction(
     }
 
     //@ts-ignore
-    let nftUtxos: UTXO[] = orders.filter((val) => {
+    const nftUtxos: UTXO[] = orders.filter((val) => {
         if ((val as ITransaction).asset) return false
         return true
     })
 
     // If transferring an NFT, build the transaction on top of an NFT tx
     let unsignedTx: AVMUnsignedTx
-    let networkId: number = ava.getNetworkID()
-    let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID())
+    const networkId: number = ava.getNetworkID()
+    const chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID())
 
     if (nftUtxos.length > 0) {
-        let nftSet = new AVMUTXOSet()
+        const nftSet = new AVMUTXOSet()
         nftSet.addArray(nftUtxos)
 
-        let utxoIds: string[] = nftSet.getUTXOIDs()
+        const utxoIds: string[] = nftSet.getUTXOIDs()
 
         // Sort nft utxos
         utxoIds.sort((a, b) => {
@@ -133,9 +133,9 @@ export async function buildUnsignedTransaction(
             memo
         )
 
-        let rawTx = unsignedTx.getTransaction()
-        let outsNft = rawTx.getOuts()
-        let insNft = rawTx.getIns()
+        const rawTx = unsignedTx.getTransaction()
+        const outsNft = rawTx.getOuts()
+        const insNft = rawTx.getIns()
 
         // TODO: This is a hackish way of doing this, need methods in avalanche.js
         //@ts-ignore
@@ -143,7 +143,7 @@ export async function buildUnsignedTransaction(
         //@ts-ignore
         rawTx.ins = insNft.concat(ins)
     } else {
-        let baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins, memo)
+        const baseTx: BaseTx = new BaseTx(networkId, chainId, outs, ins, memo)
         unsignedTx = new AVMUnsignedTx(baseTx)
     }
     return unsignedTx
@@ -158,19 +158,19 @@ export async function buildCreateNftFamilyTx(
     changeAddr: string,
     utxoSet: UTXOSet
 ) {
-    let fromAddresses = fromAddrs
-    let changeAddress = changeAddr
-    let minterAddress = minterAddr
+    const fromAddresses = fromAddrs
+    const changeAddress = changeAddr
+    const minterAddress = minterAddr
 
     const minterSets: MinterSet[] = []
 
     // Create the groups
-    for (var i = 0; i < groupNum; i++) {
+    for (let i = 0; i < groupNum; i++) {
         const minterSet: MinterSet = new MinterSet(1, [minterAddress])
         minterSets.push(minterSet)
     }
 
-    let unsignedTx: AVMUnsignedTx = await avm.buildCreateNFTAssetTx(
+    const unsignedTx: AVMUnsignedTx = await avm.buildCreateNFTAssetTx(
         utxoSet,
         fromAddresses,
         [changeAddress],
@@ -190,19 +190,19 @@ export async function buildMintNftTx(
     fromAddresses: string[],
     utxoSet: UTXOSet
 ): Promise<AVMUnsignedTx> {
-    let addrBuf = bintools.parseAddress(ownerAddress, 'X')
-    let owners = []
+    const addrBuf = bintools.parseAddress(ownerAddress, 'X')
+    const owners = []
 
-    let sourceAddresses = fromAddresses
+    const sourceAddresses = fromAddresses
 
-    for (var i = 0; i < quantity; i++) {
-        let owner = new OutputOwners([addrBuf])
+    for (let i = 0; i < quantity; i++) {
+        const owner = new OutputOwners([addrBuf])
         owners.push(owner)
     }
 
-    let groupID = (mintUtxo.getOutput() as NFTMintOutput).getGroupID()
+    const groupID = (mintUtxo.getOutput() as NFTMintOutput).getGroupID()
 
-    let mintTx = await avm.buildCreateNFTMintTx(
+    const mintTx = await avm.buildCreateNFTMintTx(
         utxoSet,
         owners,
         sourceAddresses,
@@ -228,7 +228,7 @@ export async function buildEvmTransferNativeTx(
         common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
     }
 
-    let tx = new Transaction(
+    const tx = new Transaction(
         {
             nonce: nonce,
             gasPrice: gasPrice,
@@ -257,9 +257,9 @@ export async function buildEvmTransferErc20Tx(
         common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
     }
 
-    let tokenTx = token.createTransferTx(to, amount)
+    const tokenTx = token.createTransferTx(to, amount)
 
-    let tx = new Transaction(
+    const tx = new Transaction(
         {
             nonce: nonce,
             gasPrice: gasPrice,
@@ -288,9 +288,9 @@ export async function buildEvmTransferErc721Tx(
         common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
     }
 
-    let tokenTx = token.createTransferTx(from, to, tokenId)
+    const tokenTx = token.createTransferTx(from, to, tokenId)
 
-    let tx = new Transaction(
+    const tx = new Transaction(
         {
             nonce: nonce,
             gasPrice: gasPrice,

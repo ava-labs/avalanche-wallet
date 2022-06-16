@@ -87,8 +87,7 @@ export default class ERC721Card extends Vue {
     async getData() {
         try {
             let uri = await this.token.getTokenURI(parseInt(this.index))
-            let res = (await axios.get(uri)).data
-            this.metadata = res
+            this.metadata = (await axios.get(uri)).data
         } catch (e) {
             this.metadata = null
         }

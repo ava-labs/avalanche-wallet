@@ -60,7 +60,10 @@ export default class TxHistoryRow extends Vue {
     }
 
     get hasMultisig() {
-        return this.transaction.outputs.filter((utxo) => utxo.addresses.length > 1).length > 0
+        return (
+            this.transaction.outputs?.filter((utxo) => utxo.addresses.length > 1).length > 0 ||
+            false
+        )
     }
 
     get memo(): string | null {
