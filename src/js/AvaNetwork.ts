@@ -41,7 +41,7 @@ class AvaNetwork {
     }
 
     async testConnection(credentials = false) {
-        let resp = await axios
+        const resp = await axios
             .post(
                 this.url + '/ext/info',
                 {
@@ -63,7 +63,7 @@ class AvaNetwork {
     // Checks if this network endpoint allows credentials
     async updateCredentials() {
         try {
-            let res = await axios.post(
+            const res = await axios.post(
                 this.url + '/ext/info',
                 {
                     jsonrpc: '2.0',
@@ -81,15 +81,15 @@ class AvaNetwork {
     }
 
     updateURL(url: string) {
-        let split: string[] = url.split('://')
+        const split: string[] = url.split('://')
 
         this.protocol = split[0]
 
         // port is set
         if (split[1].includes(':')) {
-            let urlSplit: string[] = split[1].split(':')
-            let ip: string = urlSplit[0]
-            let port: string = urlSplit[1]
+            const urlSplit: string[] = split[1].split(':')
+            const ip: string = urlSplit[0]
+            const port: string = urlSplit[1]
 
             this.ip = ip
             this.port = parseInt(port)
@@ -107,12 +107,12 @@ class AvaNetwork {
     }
 
     getWsUrlX(): string {
-        let protocol = this.protocol === 'https' ? 'wss' : 'ws'
+        const protocol = this.protocol === 'https' ? 'wss' : 'ws'
         return `${protocol}://${this.ip}:${this.port}/ext/bc/X/events`
     }
 
     getWsUrlC(): string {
-        let protocol = this.protocol === 'https' ? 'wss' : 'ws'
+        const protocol = this.protocol === 'https' ? 'wss' : 'ws'
         return `${protocol}://${this.ip}:${this.port}/ext/bc/C/ws`
     }
 }

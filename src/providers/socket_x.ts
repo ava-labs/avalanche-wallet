@@ -14,7 +14,7 @@ export function connectSocketX(network: AvaNetwork) {
     }
 
     // Setup the X chain socket connection
-    let wsURL = network.getWsUrlX()
+    const wsURL = network.getWsUrlX()
     socketX = new Sockette(wsURL, {
         onopen: xOnOpen,
         onclose: xOnClose,
@@ -24,18 +24,18 @@ export function connectSocketX(network: AvaNetwork) {
 }
 
 export function updateFilterAddresses(): void {
-    let wallet: null | WalletType = store.state.activeWallet
+    const wallet: null | WalletType = store.state.activeWallet
     if (!socketX || !wallet) {
         return
     }
 
-    let externalAddrs = wallet.getAllDerivedExternalAddresses()
-    let addrsLen = externalAddrs.length
-    let startIndex = Math.max(0, addrsLen - FILTER_ADDRESS_SIZE)
-    let addrs = externalAddrs.slice(startIndex)
+    const externalAddrs = wallet.getAllDerivedExternalAddresses()
+    const addrsLen = externalAddrs.length
+    const startIndex = Math.max(0, addrsLen - FILTER_ADDRESS_SIZE)
+    const addrs = externalAddrs.slice(startIndex)
 
-    let pubsub = new PubSub()
-    let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
+    const pubsub = new PubSub()
+    const bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
     socketX.send(bloom)
 
     // Divide addresses by 100 and send multiple messages
@@ -43,8 +43,8 @@ export function updateFilterAddresses(): void {
     const GROUP_AMOUNT = 100
     let index = 0
     while (index < addrs.length) {
-        let chunk = addrs.slice(index, index + GROUP_AMOUNT)
-        let addAddrs = pubsub.addAddresses(chunk)
+        const chunk = addrs.slice(index, index + GROUP_AMOUNT)
+        const addAddrs = pubsub.addAddresses(chunk)
         socketX.send(addAddrs)
         index += GROUP_AMOUNT
     }
@@ -52,13 +52,13 @@ export function updateFilterAddresses(): void {
 
 // Clears the filter listening to X chain transactions
 function clearFilter() {
-    let pubsub = new PubSub()
-    let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
+    const pubsub = new PubSub()
+    const bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
     socketX.send(bloom)
 }
 
 function updateWalletBalanceX() {
-    let wallet: null | WalletType = store.state.activeWallet
+    const wallet: null | WalletType = store.state.activeWallet
     if (!wallet) return
     // Refresh the wallet balance
     store.dispatch('Assets/updateUTXOsExternal').then(() => {

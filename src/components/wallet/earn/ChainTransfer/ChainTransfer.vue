@@ -138,8 +138,13 @@ import {
     ExportChainsP,
     ExportChainsX,
     GasHelper,
-    Utils,
     Big,
+    bnToBig,
+    bnToAvaxX,
+    bnToBigAvaxX,
+    bnToBigAvaxC,
+    bigToBN,
+    avaxCtoX,
 } from '@avalabs/avalanche-wallet-sdk'
 
 const IMPORT_DELAY = 5000 // in ms
@@ -217,7 +222,7 @@ export default class ChainTransfer extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return Utils.avaxCtoX(balRaw)
+        return avaxCtoX(balRaw)
     }
 
     get balanceBN(): BN {
@@ -231,11 +236,11 @@ export default class ChainTransfer extends Vue {
     }
 
     get balanceBig(): Big {
-        return Utils.bnToBig(this.balanceBN, 9)
+        return bnToBig(this.balanceBN, 9)
     }
 
     get formAmtText() {
-        return Utils.bnToAvaxX(this.formAmt)
+        return bnToAvaxX(this.formAmt)
     }
 
     get fee(): Big {
@@ -248,9 +253,9 @@ export default class ChainTransfer extends Vue {
 
     getFee(chain: ChainIdType, isExport: boolean): Big {
         if (chain === 'X') {
-            return Utils.bnToBigAvaxX(avm.getTxFee())
+            return bnToBigAvaxX(avm.getTxFee())
         } else if (chain === 'P') {
-            return Utils.bnToBigAvaxX(pChain.getTxFee())
+            return bnToBigAvaxX(pChain.getTxFee())
         } else {
             const fee = isExport
                 ? GasHelper.estimateExportGasFeeFromMockTx(
@@ -262,7 +267,7 @@ export default class ChainTransfer extends Vue {
                 : GasHelper.estimateImportGasFeeFromMockTx(1, 1)
 
             const totFeeWei = this.baseFee.mul(new BN(fee))
-            return Utils.bnToBigAvaxC(totFeeWei)
+            return bnToBigAvaxC(totFeeWei)
         }
     }
 
@@ -274,7 +279,7 @@ export default class ChainTransfer extends Vue {
      * Returns the import fee in nAVAX
      */
     get importFeeBN(): BN {
-        return Utils.bigToBN(this.importFee, 9)
+        return bigToBN(this.importFee, 9)
     }
 
     get exportFee(): Big {
@@ -282,7 +287,7 @@ export default class ChainTransfer extends Vue {
     }
 
     get exportFeeBN(): BN {
-        return Utils.bigToBN(this.exportFee, 9)
+        return bigToBN(this.exportFee, 9)
     }
 
     /**

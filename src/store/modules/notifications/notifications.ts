@@ -15,10 +15,10 @@ const notifications_module: Module<NotifState, RootState> = {
     mutations: {},
     actions: {
         add(store, data: NotificationInput) {
-            let id = notif_id++
+            const id = notif_id++
             // let color = data.color || NOTIF_COLOR;
-            let type = data.type || 'success'
-            let duration = data.duration || 5000
+            const type = data.type || 'success'
+            const duration = data.duration || 5000
             let color = COLOR_SUCCESS
 
             switch (type) {
@@ -33,7 +33,7 @@ const notifications_module: Module<NotifState, RootState> = {
                     break
             }
 
-            let item: Notification = {
+            const item: Notification = {
                 id: id,
                 title: data.title,
                 message: data.message,
@@ -42,8 +42,8 @@ const notifications_module: Module<NotifState, RootState> = {
             }
 
             setTimeout(() => {
-                for (var i = 0; i < store.state.items.length; i++) {
-                    let item = store.state.items[i]
+                for (let i = 0; i < store.state.items.length; i++) {
+                    const item = store.state.items[i]
                     if (item.id === id) {
                         store.state.items.splice(i, 1)
                     }

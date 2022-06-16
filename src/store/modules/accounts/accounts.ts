@@ -37,13 +37,13 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
 
         async accessAccount({ state, dispatch }, input: AccessAccountInput) {
-            let index = input.index
-            let pass = input.pass
+            const index = input.index
+            const pass = input.pass
 
-            let account = getAccountByIndex(index)
+            const account = getAccountByIndex(index)
             if (!account) throw new Error('Account not found.')
 
-            let data: ImportKeyfileInput = {
+            const data: ImportKeyfileInput = {
                 password: pass,
                 data: account.wallet,
             }
@@ -56,20 +56,20 @@ const accounts_module: Module<AccountsState, RootState> = {
         async saveAccount({ state, dispatch, commit, getters, rootState }, data: SaveAccountInput) {
             try {
                 // If this is an active account, get its index
-                let activeAccount = getters.account
-                let accountIndex = state.accountIndex
-                let wallet = rootState.activeWallet as MnemonicWallet | SingletonWallet | null
-                let pass = data.password
+                const activeAccount = getters.account
+                const accountIndex = state.accountIndex
+                const wallet = rootState.activeWallet as MnemonicWallet | SingletonWallet | null
+                const pass = data.password
                 if (!pass || wallet?.type === 'ledger') return
 
-                let wallets = rootState.wallets as (MnemonicWallet | SingletonWallet)[]
+                const wallets = rootState.wallets as (MnemonicWallet | SingletonWallet)[]
 
                 if (!wallet) throw new Error('No active wallet.')
-                let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
+                const activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
 
-                let file = await makeKeyfile(wallets, pass, activeIndex)
-                let baseAddresses = getters.baseAddresses
-                let encryptedWallet: iUserAccountEncrypted = {
+                const file = await makeKeyfile(wallets, pass, activeIndex)
+                const baseAddresses = getters.baseAddresses
+                const encryptedWallet: iUserAccountEncrypted = {
                     baseAddresses,
                     name: activeAccount?.name || data.accountName,
                     wallet: file,
@@ -97,11 +97,11 @@ const accounts_module: Module<AccountsState, RootState> = {
 
         // If there is an active account, will remove it from local storage
         async deleteAccount({ state, dispatch, getters, commit }, password) {
-            let acct = getters.account
+            const acct = getters.account
 
-            let passCorrect = await verifyAccountPassword(acct, password)
+            const passCorrect = await verifyAccountPassword(acct, password)
             if (!passCorrect) throw new Error('Invalid password.')
-            let index = state.accountIndex
+            const index = state.accountIndex
 
             if (!acct || !index) return
 
@@ -113,12 +113,12 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
 
         async changePassword({ state, getters, dispatch }, input: ChangePasswordInput) {
-            let index = state.accountIndex
-            let account: iUserAccountEncrypted = getters.account
+            const index = state.accountIndex
+            const account: iUserAccountEncrypted = getters.account
 
             if (!account || !index) return
 
-            let oldPassCorrect = await verifyAccountPassword(account, input.passOld)
+            const oldPassCorrect = await verifyAccountPassword(account, input.passOld)
             if (!oldPassCorrect) throw new Error('Previous password invalid.')
 
             // Remove current wallet file
@@ -132,12 +132,12 @@ const accounts_module: Module<AccountsState, RootState> = {
 
         // Used to save volatile keys into the active account
         async saveKeys({ dispatch, getters, state }, pass: string) {
-            let index = state.accountIndex
-            let account: iUserAccountEncrypted = getters.account
+            const index = state.accountIndex
+            const account: iUserAccountEncrypted = getters.account
 
             if (!index) return
 
-            let passCorrect = await verifyAccountPassword(account, pass)
+            const passCorrect = await verifyAccountPassword(account, pass)
             if (!passCorrect) throw new Error('Invalid password.')
 
             // Remove current wallet file
@@ -152,9 +152,9 @@ const accounts_module: Module<AccountsState, RootState> = {
         // Remove the selected key from account and update local storage
         async deleteKey({ state, getters, rootState, commit }, wallet: WalletType) {
             if (!getters.account) return
-            let delIndex = rootState.wallets.indexOf(wallet)
-            let acctIndex = state.accountIndex
-            let acct: iUserAccountEncrypted = getters.account
+            const delIndex = rootState.wallets.indexOf(wallet)
+            const acctIndex = state.accountIndex
+            const acct: iUserAccountEncrypted = getters.account
 
             if (!acctIndex) throw new Error('Account not found.')
 
@@ -167,14 +167,14 @@ const accounts_module: Module<AccountsState, RootState> = {
     },
     getters: {
         baseAddresses(state: AccountsState, getters, rootState: RootState) {
-            let wallets = rootState.wallets
+            const wallets = rootState.wallets
             return wallets.map((w: WalletType) => {
                 return w.getEvmAddress()
             })
         },
 
         baseAddressesNonVolatile(state: AccountsState, getters, rootState: RootState) {
-            let wallets = rootState.wallets.filter((w) => {
+            const wallets = rootState.wallets.filter((w) => {
                 return !rootState.volatileWallets.includes(w)
             })
 

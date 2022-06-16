@@ -15,7 +15,7 @@ export default class MnemonicPhrase {
     }
 
     public getValue() {
-        let decrypted = AES.decrypt(this.encrypted, this.pass).toString(CryptoJS.enc.Utf8)
+        const decrypted = AES.decrypt(this.encrypted, this.pass).toString(CryptoJS.enc.Utf8)
         if (!bip39.validateMnemonic(decrypted)) throw new Error('Decrypted mnemonic is not valid.')
         return decrypted
     }

@@ -21,14 +21,14 @@ class Erc20Token {
         this.balanceBig = Big(0)
 
         //@ts-ignore
-        var tokenInst = new web3.eth.Contract(ERC20Abi.abi, tokenData.address)
+        const tokenInst = new web3.eth.Contract(ERC20Abi.abi, tokenData.address)
         this.contract = tokenInst
     }
 
     // Returns a new instance of the token, given only the erc20 address
     static fromAddress(address: string) {
         //@ts-ignore
-        var tokenInst = new web3.eth.Contract(ERC20Abi.abi, address)
+        const tokenInst = new web3.eth.Contract(ERC20Abi.abi, address)
         console.log(tokenInst)
     }
 
@@ -37,7 +37,7 @@ class Erc20Token {
     }
 
     async updateBalance(address: string) {
-        let bal = await this.contract.methods.balanceOf('0x' + address).call()
+        const bal = await this.contract.methods.balanceOf('0x' + address).call()
         this.balanceRaw = bal
         this.balanceBN = new BN(bal)
         this.balanceBig = bnToBig(this.balanceBN, parseInt(this.data.decimals as string))

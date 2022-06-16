@@ -68,12 +68,12 @@ class AvaAsset {
     }
 
     toStringTotal(): string {
-        let big: Big = Big(this.getTotalAmount().toString(10)).div(this.pow)
+        const big: Big = Big(this.getTotalAmount().toString(10)).div(this.pow)
         return big.toLocaleString(this.denomination)
     }
 
     toString() {
-        let big: Big = Big(this.amount.toString(10)).div(this.pow)
+        const big: Big = Big(this.amount.toString(10)).div(this.pow)
         return big.toLocaleString(this.denomination)
     }
 }

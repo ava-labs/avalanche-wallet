@@ -69,7 +69,7 @@ export default class TxRow extends Vue {
     }
 
     get hasMultisig() {
-        return this.source.outputs.filter((utxo) => utxo.addresses.length > 1).length > 0
+        return this.source.outputs?.filter((utxo) => utxo.addresses.length > 1).length > 0 || false
     }
 
     get date() {

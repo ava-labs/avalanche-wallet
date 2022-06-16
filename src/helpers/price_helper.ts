@@ -10,13 +10,13 @@ const coingeckoApi = axios.create({
 })
 
 export async function getAvaxPriceUSD(): Promise<number> {
-    let res = await axios.get(COINGECKO_URL)
+    const res = await axios.get(COINGECKO_URL)
     return res.data['avalanche-2']['usd']
 }
 
 let priceHistory: [number, number][] = []
 async function getPriceHistory() {
-    let res = await coingeckoApi.get(`/coins/${COIN_ID}/market_chart`, {
+    const res = await coingeckoApi.get(`/coins/${COIN_ID}/market_chart`, {
         params: {
             vs_currency: 'usd',
             days: 'max',
@@ -32,10 +32,10 @@ async function getPriceHistory() {
  * @param time
  */
 export function getPriceAtUnixTime(time: number): number | undefined {
-    let remainder = time % (24 * 60 * 60 * 1000)
-    let dayTimestamp = time - remainder
+    const remainder = time % (24 * 60 * 60 * 1000)
+    const dayTimestamp = time - remainder
 
-    let pricePair = priceHistory.find((value) => {
+    const pricePair = priceHistory.find((value) => {
         return value[0] == dayTimestamp
     })
 

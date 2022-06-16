@@ -68,7 +68,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         this.chainId = avm.getBlockchainAlias() || avm.getBlockchainID()
         this.chainIdP = pChain.getBlockchainAlias() || pChain.getBlockchainID()
 
-        let hrp = ava.getHRP()
+        const hrp = ava.getHRP()
 
         this.keyChain = new AVMKeyChain(hrp, this.chainId)
         this.keyPair = this.keyChain.importKey(pk)
@@ -79,20 +79,20 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         this.stakeAmount = new BN(0)
 
         // Derive EVM key and address
-        let pkBuf = bintools.cb58Decode(pk.split('-')[1])
-        let pkHex = pkBuf.toString('hex')
-        let pkBuffNative = Buffer.from(pkHex, 'hex')
+        const pkBuf = bintools.cb58Decode(pk.split('-')[1])
+        const pkHex = pkBuf.toString('hex')
+        const pkBuffNative = Buffer.from(pkHex, 'hex')
 
         this.ethKey = pkHex
         this.ethAddress = privateToAddress(pkBuffNative).toString('hex')
         this.ethBalance = new BN(0)
 
-        let cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(pkBuf))
+        const cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(pkBuf))
         this.ethKeyBech = cPrivKey
-        let cKeyChain = new KeyChain(ava.getHRP(), 'C')
+        const cKeyChain = new KeyChain(ava.getHRP(), 'C')
         this.ethKeyChain = cKeyChain
 
-        let cKeypair = cKeyChain.importKey(cPrivKey)
+        const cKeypair = cKeyChain.importKey(cPrivKey)
         this.ethAddressBech = cKeypair.getAddressString()
 
         this.type = 'singleton'
@@ -112,7 +112,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     getDerivedAddresses(): string[] {
-        let addr = this.getCurrentAddressAvm()
+        const addr = this.getCurrentAddressAvm()
         return [addr]
     }
 
@@ -125,12 +125,12 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     getExtendedPlatformAddresses(): string[] {
-        let addr = this.platformKeyPair.getAddressString()
+        const addr = this.platformKeyPair.getAddressString()
         return [addr]
     }
 
     getHistoryAddresses(): string[] {
-        let addr = this.getCurrentAddressAvm()
+        const addr = this.getCurrentAddressAvm()
         return [addr]
     }
 
@@ -164,19 +164,19 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     async getEthBalance() {
-        let bal = await WalletHelper.getEthBalance(this)
+        const bal = await WalletHelper.getEthBalance(this)
         this.ethBalance = bal
         return bal
     }
 
     async updateUTXOsX(): Promise<AVMUTXOSet> {
-        let result = await avmGetAllUTXOs([this.getCurrentAddressAvm()])
+        const result = await avmGetAllUTXOs([this.getCurrentAddressAvm()])
         this.utxoset = result
         return result
     }
 
     async updateUTXOsP(): Promise<PlatformUTXOSet> {
-        let result = await platformGetAllUTXOs([this.getCurrentAddressPlatform()])
+        const result = await platformGetAllUTXOs([this.getCurrentAddressPlatform()])
         this.platformUtxoset = result
         return result
     }
@@ -227,7 +227,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     onnetworkchange(): void {
-        let hrp = ava.getHRP()
+        const hrp = ava.getHRP()
 
         this.keyChain = new AVMKeyChain(hrp, this.chainId)
         this.utxoset = new AVMUTXOSet()
@@ -239,7 +239,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
         // Update EVM values
         this.ethKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
-        let cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
+        const cKeypair = this.ethKeyChain.importKey(this.ethKeyBech)
         this.ethAddressBech = cKeypair.getAddressString()
         this.ethBalance = new BN(0)
 
@@ -247,34 +247,34 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
-        let keychain = this.keyChain
+        const keychain = this.keyChain
 
         const tx = unsignedTx.sign(keychain)
         return tx
     }
 
     async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx> {
-        let keychain = this.platformKeyChain
+        const keychain = this.platformKeyChain
         const tx = unsignedTx.sign(keychain)
         return tx
     }
 
     async signC(unsignedTx: EVMUnsignedTx): Promise<EvmTx> {
-        let keyChain = this.ethKeyChain
+        const keyChain = this.ethKeyChain
         return unsignedTx.sign(keyChain)
     }
 
     async signEvm(tx: Transaction) {
-        let keyBuff = Buffer.from(this.ethKey, 'hex')
+        const keyBuff = Buffer.from(this.ethKey, 'hex')
         return tx.sign(keyBuff)
     }
 
     async signMessage(msgStr: string): Promise<string> {
-        let digest = digestMessage(msgStr)
+        const digest = digestMessage(msgStr)
 
-        let digestHex = digest.toString('hex')
-        let digestBuff = BufferAvalanche.from(digestHex, 'hex')
-        let signed = this.keyPair.sign(digestBuff)
+        const digestHex = digest.toString('hex')
+        const digestBuff = BufferAvalanche.from(digestHex, 'hex')
+        const signed = this.keyPair.sign(digestBuff)
 
         return bintools.cb58Encode(signed)
     }

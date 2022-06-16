@@ -8,10 +8,10 @@ import {
     ExportChainsC,
     ExportChainsP,
     ExportChainsX,
-    Network,
     UtxoHelper,
     TxHelper,
     GasHelper,
+    chainIdFromAlias,
 } from '@avalabs/avalanche-wallet-sdk'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm/utxos'
@@ -22,7 +22,7 @@ import {
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import { AvmImportChainType, WalletType } from '@/js/wallets/types'
-var uniqid = require('uniqid')
+const uniqid = require('uniqid')
 
 abstract class WalletCore {
     id: string
@@ -64,18 +64,18 @@ abstract class WalletCore {
     }
 
     async evmGetAtomicUTXOs(sourceChain: ExportChainsC) {
-        let addrs = [this.getEvmAddressBech()]
+        const addrs = [this.getEvmAddressBech()]
         return await UtxoHelper.evmGetAtomicUTXOs(addrs, sourceChain)
     }
 
     async createImportTxC(sourceChain: ExportChainsC, utxoSet: EVMUTXOSet, fee: BN) {
-        let bechAddr = this.getEvmAddressBech()
-        let hexAddr = this.getEvmAddress()
+        const bechAddr = this.getEvmAddressBech()
+        const hexAddr = this.getEvmAddress()
 
-        let toAddress = '0x' + hexAddr
-        let ownerAddresses = [bechAddr]
-        let fromAddresses = ownerAddresses
-        const sourceChainId = Network.chainIdFromAlias(sourceChain)
+        const toAddress = '0x' + hexAddr
+        const ownerAddresses = [bechAddr]
+        const fromAddresses = ownerAddresses
+        const sourceChainId = chainIdFromAlias(sourceChain)
 
         return await cChain.buildImportTx(
             utxoSet,
@@ -106,8 +106,8 @@ abstract class WalletCore {
         }
 
         const unsignedTxFee = await this.createImportTxC(sourceChain, utxoSet, fee)
-        let tx = await this.signC(unsignedTxFee)
-        let id = await cChain.issueTx(tx.toString())
+        const tx = await this.signC(unsignedTxFee)
+        const id = await cChain.issueTx(tx.toString())
 
         return id
     }
@@ -119,21 +119,21 @@ abstract class WalletCore {
         let amtFee = amt.clone()
 
         // Get destination address
-        let destinationAddr =
+        const destinationAddr =
             destinationChain === 'P' ? this.getCurrentAddressPlatform() : this.getEvmAddressBech()
 
         // Add import fee to transaction
         if (importFee) {
             amtFee = amt.add(importFee)
         } else if (destinationChain === 'P') {
-            let fee = pChain.getTxFee()
+            const fee = pChain.getTxFee()
             amtFee = amt.add(fee)
         }
 
-        let fromAddresses = this.getAllAddressesX()
-        let changeAddress = this.getChangeAddressAvm()
-        let utxos = this.getUTXOSet()
-        let exportTx = await TxHelper.buildAvmExportTransaction(
+        const fromAddresses = this.getAllAddressesX()
+        const changeAddress = this.getChangeAddressAvm()
+        const utxos = this.getUTXOSet()
+        const exportTx = await TxHelper.buildAvmExportTransaction(
             destinationChain,
             utxos,
             fromAddresses,
@@ -142,16 +142,16 @@ abstract class WalletCore {
             changeAddress
         )
 
-        let tx = await this.signX(exportTx)
+        const tx = await this.signX(exportTx)
 
         return avm.issueTx(tx)
     }
 
     async exportFromPChain(amt: BN, destinationChain: ExportChainsP, importFee?: BN) {
-        let utxoSet = this.getPlatformUTXOSet()
+        const utxoSet = this.getPlatformUTXOSet()
 
-        let pChangeAddr = this.getCurrentAddressPlatform()
-        let fromAddrs = this.getAllAddressesP()
+        const pChangeAddr = this.getCurrentAddressPlatform()
+        const fromAddrs = this.getAllAddressesP()
 
         if (destinationChain === 'C' && !importFee)
             throw new Error('Exports to C chain must specify an import fee.')
@@ -162,12 +162,12 @@ abstract class WalletCore {
             amtFee = amt.add(importFee)
         } else if (destinationChain === 'X') {
             // We can add the import fee for X chain
-            let fee = avm.getTxFee()
+            const fee = avm.getTxFee()
             amtFee = amt.add(fee)
         }
 
         // Get the destination address for the right chain
-        let destinationAddr =
+        const destinationAddr =
             destinationChain === 'C' ? this.getEvmAddressBech() : this.getCurrentAddressAvm()
 
         const exportTx = await TxHelper.buildPlatformExportTransaction(
@@ -179,7 +179,7 @@ abstract class WalletCore {
             destinationChain
         )
 
-        let tx = await this.signP(exportTx)
+        const tx = await this.signP(exportTx)
         return await pChain.issueTx(tx)
     }
 
@@ -192,20 +192,20 @@ abstract class WalletCore {
     async exportFromCChain(amt: BN, destinationChain: ExportChainsC, exportFee: BN) {
         // Add import fee
         // X and P have the same fee
-        let importFee = avm.getTxFee()
-        let amtFee = amt.add(importFee)
+        const importFee = avm.getTxFee()
+        const amtFee = amt.add(importFee)
 
-        let hexAddr = this.getEvmAddress()
-        let bechAddr = this.getEvmAddressBech()
+        const hexAddr = this.getEvmAddress()
+        const bechAddr = this.getEvmAddressBech()
 
-        let fromAddresses = [hexAddr]
+        const fromAddresses = [hexAddr]
 
-        let destinationAddr =
+        const destinationAddr =
             destinationChain === 'X'
                 ? this.getCurrentAddressAvm()
                 : this.getCurrentAddressPlatform()
 
-        let exportTx = await TxHelper.buildEvmExportTransaction(
+        const exportTx = await TxHelper.buildEvmExportTransaction(
             fromAddresses,
             destinationAddr,
             amtFee,
@@ -214,7 +214,7 @@ abstract class WalletCore {
             exportFee
         )
 
-        let tx = await this.signC(exportTx)
+        const tx = await this.signC(exportTx)
         return cChain.issueTx(tx.toString())
     }
 
@@ -224,10 +224,10 @@ abstract class WalletCore {
      * @param amount
      */
     async estimateExportFee(destinationChain: ExportChainsC, amount: BN): Promise<number> {
-        let hexAddr = this.getEvmAddress()
-        let bechAddr = this.getEvmAddressBech()
+        const hexAddr = this.getEvmAddress()
+        const bechAddr = this.getEvmAddressBech()
 
-        let destinationAddr =
+        const destinationAddr =
             destinationChain === 'X'
                 ? this.getCurrentAddressAvm()
                 : this.getCurrentAddressPlatform()
@@ -242,12 +242,12 @@ abstract class WalletCore {
     }
 
     async avmGetAtomicUTXOs(sourceChain: ExportChainsX) {
-        let addrs = this.getAllAddressesX()
+        const addrs = this.getAllAddressesX()
         return await UtxoHelper.avmGetAtomicUTXOs(addrs, sourceChain)
     }
 
     async platformGetAtomicUTXOs(sourceChain: ExportChainsP) {
-        let addrs = this.getAllAddressesP()
+        const addrs = this.getAllAddressesP()
         return await UtxoHelper.platformGetAtomicUTXOs(addrs, sourceChain)
     }
 
@@ -258,17 +258,17 @@ abstract class WalletCore {
             throw new Error('Nothing to import.')
         }
 
-        const sourceChainId = Network.chainIdFromAlias(sourceChain)
+        const sourceChainId = chainIdFromAlias(sourceChain)
         // Owner addresses, the addresses we exported to
-        let pToAddr = this.getCurrentAddressPlatform()
+        const pToAddr = this.getCurrentAddressPlatform()
 
-        let hrp = ava.getHRP()
-        let utxoAddrs = utxoSet
+        const hrp = ava.getHRP()
+        const utxoAddrs = utxoSet
             .getAddresses()
             .map((addr) => bintools.addressToString(hrp, 'P', addr))
 
-        let fromAddrs = utxoAddrs
-        let ownerAddrs = utxoAddrs
+        const fromAddrs = utxoAddrs
+        const ownerAddrs = utxoAddrs
 
         const unsignedTx = await pChain.buildImportTx(
             utxoSet,
@@ -292,17 +292,17 @@ abstract class WalletCore {
             throw new Error('Nothing to import.')
         }
 
-        let xToAddr = this.getCurrentAddressAvm()
+        const xToAddr = this.getCurrentAddressAvm()
 
-        let hrp = ava.getHRP()
-        let utxoAddrs = utxoSet
+        const hrp = ava.getHRP()
+        const utxoAddrs = utxoSet
             .getAddresses()
             .map((addr) => bintools.addressToString(hrp, 'X', addr))
 
-        let fromAddrs = utxoAddrs
-        let ownerAddrs = utxoAddrs
+        const fromAddrs = utxoAddrs
+        const ownerAddrs = utxoAddrs
 
-        let sourceChainId = Network.chainIdFromAlias(sourceChain)
+        const sourceChainId = chainIdFromAlias(sourceChain)
 
         // Owner addresses, the addresses we exported to
         const unsignedTx = await avm.buildImportTx(

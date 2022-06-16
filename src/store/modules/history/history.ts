@@ -23,12 +23,12 @@ const history_module: Module<HistoryState, RootState> = {
     },
     actions: {
         async updateTransactionHistory({ state, rootState, rootGetters, dispatch }) {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             if (!wallet) return
 
             // If wallet is still loading delay
             // @ts-ignore
-            let network = rootState.Network.selectedNetwork
+            const network = rootState.Network.selectedNetwork
 
             if (!wallet.isInit) {
                 setTimeout(() => {
@@ -44,8 +44,8 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.isUpdating = true
 
-            let avmAddrs: string[] = wallet.getAllAddressesX()
-            let pvmAddrs: string[] = wallet.getAllAddressesP()
+            const avmAddrs: string[] = wallet.getAllAddressesX()
+            const pvmAddrs: string[] = wallet.getAllAddressesP()
 
             // this shouldnt ever happen, but to avoid getting every transaction...
             if (avmAddrs.length === 0) {
@@ -53,12 +53,11 @@ const history_module: Module<HistoryState, RootState> = {
                 return
             }
 
-            let limit = 20
+            const limit = 20
+            const txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            const txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
-            let txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
-
-            let transactions = txs
+            const transactions = txs
                 .concat(txsP)
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
@@ -67,12 +66,12 @@ const history_module: Module<HistoryState, RootState> = {
         },
 
         async updateAllTransactionHistory({ state, rootState, rootGetters, dispatch }) {
-            let wallet = rootState.activeWallet
+            const wallet = rootState.activeWallet
             if (!wallet) return
 
             // If wallet is still loading delay
             // @ts-ignore
-            let network = rootState.Network.selectedNetwork
+            const network = rootState.Network.selectedNetwork
 
             if (!wallet.isInit) {
                 setTimeout(() => {
@@ -88,8 +87,8 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.isUpdatingAll = true
 
-            let avmAddrs: string[] = wallet.getAllAddressesX()
-            let pvmAddrs: string[] = wallet.getAllAddressesP()
+            const avmAddrs: string[] = wallet.getAllAddressesX()
+            const pvmAddrs: string[] = wallet.getAllAddressesP()
 
             // this shouldnt ever happen, but to avoid getting every transaction...
             if (avmAddrs.length === 0) {
@@ -97,15 +96,15 @@ const history_module: Module<HistoryState, RootState> = {
                 return
             }
 
-            let limit = 0
+            const limit = 0
 
-            let txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
+            const txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+            const txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
-            let txsXFiltered = filterDuplicateTransactions(txsX)
-            let txsPFiltered = filterDuplicateTransactions(txsP)
+            const txsXFiltered = filterDuplicateTransactions(txsX)
+            const txsPFiltered = filterDuplicateTransactions(txsP)
 
-            let transactions = txsXFiltered
+            const transactions = txsXFiltered
                 .concat(txsPFiltered)
                 .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
@@ -116,7 +115,7 @@ const history_module: Module<HistoryState, RootState> = {
     getters: {
         stakingTxs(state) {
             return state.allTransactions.filter((tx) => {
-                let types = ['add_validator', 'add_delegator']
+                const types = ['add_validator', 'add_delegator']
                 if (types.includes(tx.type)) {
                     return true
                 }

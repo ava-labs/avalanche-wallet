@@ -56,7 +56,7 @@ class HdHelper {
         this.isInit = false
 
         this.chainId = chainId
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        const hrp = getPreferredHRP(ava.getNetworkID())
         if (chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, chainId)
             this.utxoSet = new AVMUTXOSet()
@@ -83,7 +83,7 @@ class HdHelper {
     async onNetworkChange() {
         this.clearCache()
         this.isInit = false
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        const hrp = getPreferredHRP(ava.getNetworkID())
         if (this.chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, this.chainId)
             this.utxoSet = new AVMUTXOSet()
@@ -98,16 +98,16 @@ class HdHelper {
     // Increments the hd index by one and adds the key
     // returns the new keypair
     incrementIndex(): number {
-        let newIndex: number = this.hdIndex + 1
+        const newIndex: number = this.hdIndex + 1
 
         if (!this.isPublic) {
             if (this.chainId === 'X') {
-                let keychain = this.keyChain as AVMKeyChain
-                let newKey = this.getKeyForIndex(newIndex) as AVMKeyPair
+                const keychain = this.keyChain as AVMKeyChain
+                const newKey = this.getKeyForIndex(newIndex) as AVMKeyPair
                 keychain.addKey(newKey)
             } else {
-                let keychain = this.keyChain as PlatformVMKeyChain
-                let newKey = this.getKeyForIndex(newIndex) as PlatformVMKeyPair
+                const keychain = this.keyChain as PlatformVMKeyChain
+                const newKey = this.getKeyForIndex(newIndex) as PlatformVMKeyPair
                 keychain.addKey(newKey)
             }
         }
@@ -124,8 +124,8 @@ class HdHelper {
         // Check if explorer is available
 
         // @ts-ignore
-        let network: AvaNetwork = store.state.Network.selectedNetwork
-        let explorerUrl = network.explorerUrl
+        const network: AvaNetwork = store.state.Network.selectedNetwork
+        const explorerUrl = network.explorerUrl
 
         if (explorerUrl) {
             this.hdIndex = await this.findAvailableIndexExplorer()
@@ -148,7 +148,7 @@ class HdHelper {
             console.error('HD Index not found yet.')
         }
 
-        let addrs: string[] = this.getAllDerivedAddresses()
+        const addrs: string[] = this.getAllDerivedAddresses()
         let result: AVMUTXOSet | PlatformUTXOSet
 
         if (this.chainId === 'X') {
@@ -159,9 +159,9 @@ class HdHelper {
         this.utxoSet = result // we can use local copy of utxos as cache for some functions
 
         // If the hd index is full, increment
-        let currentAddr = this.getCurrentAddress()
-        let currentAddrBuf = bintools.parseAddress(currentAddr, this.chainId)
-        let currentUtxos = result.getUTXOIDs([currentAddrBuf])
+        const currentAddr = this.getCurrentAddress()
+        const currentAddrBuf = bintools.parseAddress(currentAddr, this.chainId)
+        const currentUtxos = result.getUTXOIDs([currentAddrBuf])
 
         if (currentUtxos.length > 0) {
             this.incrementIndex()
@@ -172,7 +172,7 @@ class HdHelper {
 
     // Returns more addresses than the current index
     getExtendedAddresses() {
-        let hdIndex = this.hdIndex
+        const hdIndex = this.hdIndex
         return this.getAllDerivedAddresses(hdIndex + INDEX_RANGE)
     }
 
@@ -183,7 +183,7 @@ class HdHelper {
 
     // Updates the helper keychain to contain keys upto the HD Index
     updateKeychain(): AVMKeyChain | PlatformVMKeyChain {
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        const hrp = getPreferredHRP(ava.getNetworkID())
         let keychain: AVMKeyChain | PlatformVMKeyChain
 
         if (this.chainId === 'X') {
@@ -212,13 +212,13 @@ class HdHelper {
 
     // Returns all key pairs up to hd index
     getAllDerivedKeys(upTo = this.hdIndex): AVMKeyPair[] | PlatformVMKeyPair[] {
-        let set: AVMKeyPair[] | PlatformVMKeyPair[] = []
-        for (var i = 0; i <= upTo; i++) {
+        const set: AVMKeyPair[] | PlatformVMKeyPair[] = []
+        for (let i = 0; i <= upTo; i++) {
             if (this.chainId === 'X') {
-                let key = this.getKeyForIndex(i) as AVMKeyPair
+                const key = this.getKeyForIndex(i) as AVMKeyPair
                 ;(set as AVMKeyPair[]).push(key)
             } else {
-                let key = this.getKeyForIndex(i) as PlatformVMKeyPair
+                const key = this.getKeyForIndex(i) as PlatformVMKeyPair
                 ;(set as PlatformVMKeyPair[]).push(key)
             }
         }
@@ -226,9 +226,9 @@ class HdHelper {
     }
 
     getAllDerivedAddresses(upTo = this.hdIndex, start = 0): string[] {
-        let res = []
-        for (var i = start; i <= upTo; i++) {
-            let addr = this.getAddressForIndex(i)
+        const res = []
+        for (let i = start; i <= upTo; i++) {
+            const addr = this.getAddressForIndex(i)
             res.push(addr)
         }
         return res
@@ -242,10 +242,10 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
-        let upTo = 512
+        const upTo = 512
 
-        let addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
-        let addrChains = await getAddressChains(addrs)
+        const addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
+        const addrChains = await getAddressChains(addrs)
 
         let chainID
         if (this.chainId === 'X') {
@@ -254,15 +254,15 @@ class HdHelper {
             chainID = pChain.getBlockchainID()
         }
 
-        for (var i = 0; i < addrs.length - INDEX_RANGE; i++) {
+        for (let i = 0; i < addrs.length - INDEX_RANGE; i++) {
             let gapSize: number = 0
 
-            for (var n = 0; n < INDEX_RANGE; n++) {
-                let scanIndex = i + n
-                let scanAddr = addrs[scanIndex]
+            for (let n = 0; n < INDEX_RANGE; n++) {
+                const scanIndex = i + n
+                const scanAddr = addrs[scanIndex]
 
-                let rawAddr = scanAddr.split('-')[1]
-                let chains: string[] = addrChains[rawAddr]
+                const rawAddr = scanAddr.split('-')[1]
+                const chains: string[] = addrChains[rawAddr]
                 if (!chains) {
                     // If doesnt exist on any chain
                     gapSize++
@@ -287,11 +287,11 @@ class HdHelper {
     // Uses the node to find last used HD index
     // Only used when there is no explorer API available
     async findAvailableIndexNode(start: number = 0): Promise<number> {
-        let addrs: string[] = []
+        const addrs: string[] = []
 
         // Get keys for indexes start to start+scan_size
         for (let i: number = start; i < start + SCAN_SIZE; i++) {
-            let address = this.getAddressForIndex(i)
+            const address = this.getAddressForIndex(i)
             addrs.push(address)
         }
 
@@ -308,10 +308,10 @@ class HdHelper {
             let gapSize: number = 0
             // console.log(`Scan index: ${this.chainId} ${this.changePath}/${i+start}`);
             for (let n: number = 0; n < INDEX_RANGE; n++) {
-                let scanIndex: number = i + n
-                let addr: string = addrs[scanIndex]
-                let addrBuf = bintools.parseAddress(addr, this.chainId)
-                let addrUTXOs: string[] = utxoSet.getUTXOIDs([addrBuf])
+                const scanIndex: number = i + n
+                const addr: string = addrs[scanIndex]
+                const addrBuf = bintools.parseAddress(addr, this.chainId)
+                const addrUTXOs: string[] = utxoSet.getUTXOIDs([addrBuf])
                 if (addrUTXOs.length === 0) {
                     gapSize++
                 } else {
@@ -323,7 +323,7 @@ class HdHelper {
 
             // If we found a gap of 20, we can return the last fullIndex+1
             if (gapSize === INDEX_RANGE) {
-                let targetIndex = start + i
+                const targetIndex = start + i
                 return targetIndex
             }
         }
@@ -331,10 +331,10 @@ class HdHelper {
     }
 
     getFirstAvailableIndex(): number {
-        for (var i = 0; i < this.hdIndex; i++) {
-            let addr = this.getAddressForIndex(i)
-            let addrBuf = bintools.parseAddress(addr, this.chainId)
-            let utxoIds = this.utxoSet.getUTXOIDs([addrBuf])
+        for (let i = 0; i < this.hdIndex; i++) {
+            const addr = this.getAddressForIndex(i)
+            const addrBuf = bintools.parseAddress(addr, this.chainId)
+            const utxoIds = this.utxoSet.getUTXOIDs([addrBuf])
             if (utxoIds.length === 0) {
                 return i
             }
@@ -350,12 +350,12 @@ class HdHelper {
     }
 
     getCurrentKey(): AVMKeyPair | PlatformVMKeyPair {
-        let index: number = this.hdIndex
+        const index: number = this.hdIndex
         return this.getKeyForIndex(index)
     }
 
     getCurrentAddress(): string {
-        let index = this.hdIndex
+        const index = this.hdIndex
         return this.getAddressForIndex(index)
     }
 
@@ -372,7 +372,7 @@ class HdHelper {
 
         if (cacheExternal) return cacheExternal
 
-        let derivationPath: string = `${this.changePath}/${index.toString()}`
+        const derivationPath: string = `${this.changePath}/${index.toString()}`
 
         // Get key from cache, if not generate it
         let key: HDKey
@@ -390,8 +390,8 @@ class HdHelper {
             pkHex = key.publicKey.toString('hex')
         }
 
-        let pkBuf: Buffer = new Buffer(pkHex, 'hex')
-        let keypair = this.keyChain.importKey(pkBuf)
+        const pkBuf: Buffer = new Buffer(pkHex, 'hex')
+        const keypair = this.keyChain.importKey(pkBuf)
 
         // save to cache
         this.keyCache[index] = keypair
@@ -403,7 +403,7 @@ class HdHelper {
             return this.addressCache[index]
         }
 
-        let derivationPath: string = `${this.changePath}/${index.toString()}`
+        const derivationPath: string = `${this.changePath}/${index.toString()}`
         // let key: HDKey = this.masterKey.derive(derivationPath) as HDKey;
 
         // Get key from cache, if not generate it
@@ -415,16 +415,16 @@ class HdHelper {
             this.hdCache[index] = key
         }
 
-        let pkHex = key.publicKey.toString('hex')
-        let pkBuff = Buffer.from(pkHex, 'hex')
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        const pkHex = key.publicKey.toString('hex')
+        const pkBuff = Buffer.from(pkHex, 'hex')
+        const hrp = getPreferredHRP(ava.getNetworkID())
 
-        let chainId = this.chainId
+        const chainId = this.chainId
 
         // No need for PlatformKeypair because addressToString uses chainID to decode
-        let keypair = new AVMKeyPair(hrp, chainId)
-        let addrBuf = keypair.addressFromPublicKey(pkBuff)
-        let addr = bintools.addressToString(hrp, chainId, addrBuf)
+        const keypair = new AVMKeyPair(hrp, chainId)
+        const addrBuf = AVMKeyPair.addressFromPublicKey(pkBuff)
+        const addr = bintools.addressToString(hrp, chainId, addrBuf)
 
         this.addressCache[index] = addr
         return addr
@@ -432,8 +432,8 @@ class HdHelper {
 
     // Given an address find the derived index
     findAddressIndex(addr: string): number | null {
-        let addrs = this.getAllDerivedAddresses()
-        let index = addrs.indexOf(addr)
+        const addrs = this.getAllDerivedAddresses()
+        const index = addrs.indexOf(addr)
 
         if (index < 0) return null
         return index

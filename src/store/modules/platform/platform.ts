@@ -47,7 +47,7 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         async updateMinStakeAmount({ state }) {
-            let res = await pChain.getMinStake(true)
+            const res = await pChain.getMinStake(true)
             state.minStake = res.minValidatorStake
             state.minStakeDelegation = res.minDelegatorStake
 
@@ -62,16 +62,16 @@ const platform_module: Module<PlatformState, RootState> = {
         },
 
         async updateValidators({ state, commit }) {
-            let res = (await pChain.getCurrentValidators()) as GetValidatorsResponse
-            let validators = res.validators
+            const res = (await pChain.getCurrentValidators()) as GetValidatorsResponse
+            const validators = res.validators
 
             commit('setValidators', validators)
         },
 
         async updateValidatorsPending({ state, commit }) {
-            let res = (await pChain.getPendingValidators()) as GetPendingValidatorsResponse
-            let validators = res.validators
-            let delegators = res.delegators
+            const res = (await pChain.getPendingValidators()) as GetPendingValidatorsResponse
+            const validators = res.validators
+            const delegators = res.delegators
 
             //@ts-ignore
             state.validatorsPending = validators
@@ -81,15 +81,15 @@ const platform_module: Module<PlatformState, RootState> = {
     getters: {
         validatorListEarn(state, getters): ValidatorListItem[] {
             // Filter validators we do not need
-            let now = Date.now()
+            const now = Date.now()
 
             let validators = state.validators
             validators = validators.filter((v) => {
-                let endTime = parseInt(v.endTime) * 1000
-                let dif = endTime - now
+                const endTime = parseInt(v.endTime) * 1000
+                const dif = endTime - now
 
                 // If End time is less than 2 weeks + 1 hour, remove from list they are no use
-                let threshold = DAY_MS * 14 + 10 * MINUTE_MS
+                const threshold = DAY_MS * 14 + 10 * MINUTE_MS
                 if (dif <= threshold) {
                     return false
                 }
@@ -97,18 +97,19 @@ const platform_module: Module<PlatformState, RootState> = {
                 return true
             })
 
-            let delegatorMap: ValidatorDelegatorDict = getters.nodeDelegatorMap
-            let delegatorPendingMap: ValidatorDelegatorPendingDict = getters.nodeDelegatorPendingMap
+            const delegatorMap: ValidatorDelegatorDict = getters.nodeDelegatorMap
+            const delegatorPendingMap: ValidatorDelegatorPendingDict =
+                getters.nodeDelegatorPendingMap
 
             let res: ValidatorListItem[] = []
 
-            for (var i = 0; i < validators.length; i++) {
-                let v = validators[i]
+            for (let i = 0; i < validators.length; i++) {
+                const v = validators[i]
 
-                let nodeID = v.nodeID
+                const nodeID = v.nodeID
 
-                let delegators: DelegatorRaw[] = delegatorMap[nodeID] || []
-                let delegatorsPending: DelegatorPendingRaw[] = delegatorPendingMap[nodeID] || []
+                const delegators: DelegatorRaw[] = delegatorMap[nodeID] || []
+                const delegatorsPending: DelegatorPendingRaw[] = delegatorPendingMap[nodeID] || []
 
                 let delegatedAmt = new BN(0)
                 let delegatedPendingAmt = new BN(0)
@@ -128,19 +129,19 @@ const platform_module: Module<PlatformState, RootState> = {
                     )
                 }
 
-                let startTime = new Date(parseInt(v.startTime) * 1000)
-                let endTime = new Date(parseInt(v.endTime) * 1000)
+                const startTime = new Date(parseInt(v.startTime) * 1000)
+                const endTime = new Date(parseInt(v.endTime) * 1000)
 
-                let delegatedStake = delegatedAmt.add(delegatedPendingAmt)
-                let validatorStake = new BN(v.stakeAmount)
+                const delegatedStake = delegatedAmt.add(delegatedPendingAmt)
+                const validatorStake = new BN(v.stakeAmount)
                 // Calculate remaining stake
-                let absMaxStake = ONEAVAX.mul(new BN(3000000))
-                let relativeMaxStake = validatorStake.mul(new BN(5))
-                let stakeLimit = BN.min(absMaxStake, relativeMaxStake)
+                const absMaxStake = ONEAVAX.mul(new BN(3000000))
+                const relativeMaxStake = validatorStake.mul(new BN(5))
+                const stakeLimit = BN.min(absMaxStake, relativeMaxStake)
 
-                let remainingStake = stakeLimit.sub(validatorStake).sub(delegatedStake)
+                const remainingStake = stakeLimit.sub(validatorStake).sub(delegatedStake)
 
-                let listItem: ValidatorListItem = {
+                const listItem: ValidatorListItem = {
                     nodeID: v.nodeID,
                     validatorStake: validatorStake,
                     delegatedStake: delegatedStake,
@@ -156,7 +157,7 @@ const platform_module: Module<PlatformState, RootState> = {
 
             res = res.filter((v) => {
                 // Remove if remaining space is less than minimum
-                let min = state.minStakeDelegation
+                const min = state.minStakeDelegation
                 if (v.remainingStake.lt(min)) return false
                 return true
             })
@@ -167,23 +168,23 @@ const platform_module: Module<PlatformState, RootState> = {
         // Maps delegators to a node id
 
         nodeDelegatorMap(state): ValidatorDelegatorDict {
-            let res: ValidatorDelegatorDict = {}
-            let validators = state.validators
-            for (var i = 0; i < validators.length; i++) {
-                let validator = validators[i]
-                let nodeID = validator.nodeID
+            const res: ValidatorDelegatorDict = {}
+            const validators = state.validators
+            for (let i = 0; i < validators.length; i++) {
+                const validator = validators[i]
+                const nodeID = validator.nodeID
                 res[nodeID] = validator.delegators || []
             }
             return res
         },
 
         nodeDelegatorPendingMap(state): ValidatorDelegatorPendingDict {
-            let res: ValidatorDelegatorPendingDict = {}
-            let delegators = state.delegatorsPending
-            for (var i = 0; i < delegators.length; i++) {
-                let delegator = delegators[i]
-                let nodeID = delegator.nodeID
-                let target = res[nodeID]
+            const res: ValidatorDelegatorPendingDict = {}
+            const delegators = state.delegatorsPending
+            for (let i = 0; i < delegators.length; i++) {
+                const delegator = delegators[i]
+                const nodeID = delegator.nodeID
+                const target = res[nodeID]
 
                 if (target) {
                     res[nodeID].push(delegator)
@@ -196,14 +197,14 @@ const platform_module: Module<PlatformState, RootState> = {
 
         // Given a validator list item, calculate the max stake of this item
         validatorMaxStake: (state, getters) => (validator: ValidatorListItem) => {
-            let stakeAmt = validator.validatorStake
+            const stakeAmt = validator.validatorStake
 
             // 5 times the validator's stake
-            let relativeMaxStake = stakeAmt.mul(new BN(5))
+            const relativeMaxStake = stakeAmt.mul(new BN(5))
 
             // absolute max stake
-            let mult = new BN(10).pow(new BN(6 + 9))
-            let absMaxStake = new BN(3).mul(mult)
+            const mult = new BN(10).pow(new BN(6 + 9))
+            const absMaxStake = new BN(3).mul(mult)
 
             if (relativeMaxStake.lt(absMaxStake)) {
                 return relativeMaxStake

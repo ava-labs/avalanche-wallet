@@ -31,7 +31,7 @@ export default class ImportExport extends Vue {
     }
 
     get destinationChainId() {
-        let outs = this.transaction.outputs
+        let outs = this.transaction.outputs || []
 
         for (var i = 0; i < outs.length; i++) {
             let out = outs[i]
