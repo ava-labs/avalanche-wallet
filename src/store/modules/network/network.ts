@@ -164,7 +164,11 @@ const network_module: Module<NetworkState, RootState> = {
 
             // Set the SDK Network
             const sdkNetConf = await getConfigFromUrl(net.getFullURL())
-            await setNetworkAsync(sdkNetConf)
+            await setNetworkAsync({
+                ...sdkNetConf,
+                explorerURL: net.explorerUrl,
+                explorerSiteURL: net.explorerSiteUrl,
+            })
             // state.isConnected = true;
             state.status = 'connected'
             return true

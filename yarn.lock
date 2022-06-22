@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@avalabs/avalanche-wallet-sdk@0.17.3":
-  version "0.17.3"
-  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.17.3.tgz#d893f15ecd1762a51c0e2048de3f81255f55f5f5"
-  integrity sha512-+4wtYdmA13AHfwssNiL2Ba//G4ui0vrExNQigT5aoKVcavc5blVvNQPpTaMedat/3C57QKigOjLSoMzhwVVF2w==
+"@avalabs/avalanche-wallet-sdk@0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.18.0.tgz#038139c176fb306aecf7ad431d687848affe4ba8"
+  integrity sha512-cGhEFzgnH/oVaD+clrJQfEhz11WHO5tlMZ54nIqdQoJPw7ZpxYrplJMug1KYx6EDt3wkgZ5UwUPs3Sdfukbf0g==
   dependencies:
     "@ethereumjs/common" "2.6.0"
     "@ethereumjs/tx" "3.4.0"

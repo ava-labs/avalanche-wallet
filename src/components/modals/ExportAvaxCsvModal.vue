@@ -8,6 +8,7 @@
                 small
                 @click="submit"
                 :disabled="!canSubmit"
+                :loading="isLoading"
                 depressed
                 block
                 style="margin-top: 12px"
@@ -36,6 +37,7 @@ import {
     downloadCSVFile,
     parseMemo,
 } from '@/store/modules/history/history_utils'
+import { createCsvNormal, getHistoryForOwnedAddresses } from '@avalabs/avalanche-wallet-sdk'
 import { ava, avm } from '@/AVA'
 import { BN } from 'avalanche'
 
@@ -46,6 +48,7 @@ import { BN } from 'avalanche'
 })
 export default class ExportAvaxCsvModal extends Vue {
     error: Error | null = null
+    isLoading = false
 
     open(): void {
         this.error = null
@@ -77,75 +80,24 @@ export default class ExportAvaxCsvModal extends Vue {
         return this.$store.state.Assets.AVA_ASSET_ID
     }
 
-    generateCSVFile() {
-        let myAddresses = this.xAddressesStripped
-        let avaxID = this.avaxID
+    async generateCSVFile() {
+        this.isLoading = true
 
-        let txs = this.transactions.filter((tx) => {
-            let avaxOutAmt = tx.outputTotals[avaxID]
+        try {
+            const hist = await getHistoryForOwnedAddresses(
+                this.wallet.getAllAddressesX(),
+                this.wallet.getAllAddressesP(),
+                this.wallet.getEvmAddressBech(),
+                this.wallet.getEvmAddress()
+            )
 
-            if (!avaxOutAmt) return false
-
-            return tx.type === 'base' || tx.type === 'operation'
-        })
-
-        let txFee = avm.getTxFee()
-
-        let rows: CsvRowAvaxTransferData[] = []
-        const ZERO = new BN(0)
-
-        for (let i = 0; i < txs.length; i++) {
-            let tx = txs[i]
-
-            let ins = tx.inputs || []
-            let inUTXOs = ins.map((input) => input.output)
-
-            let avaxIns = getAssetOutputs(inUTXOs, avaxID)
-            let avaxOuts = getAssetOutputs(tx.outputs, avaxID)
-
-            let myIns = getOwnedOutputs(avaxIns, myAddresses)
-            let myOuts = getOwnedOutputs(avaxOuts, myAddresses)
-
-            let inTot = getOutputTotals(myIns)
-            let outTot = getOutputTotals(myOuts)
-
-            let gain = outTot.sub(inTot)
-
-            let otherIns = getNotOwnedOutputs(avaxIns, myAddresses)
-            let otherOuts = getNotOwnedOutputs(avaxOuts, myAddresses)
-
-            // If its only the fee, continue
-            if (gain.abs().lte(txFee)) continue
-
-            let isGain = gain.gt(ZERO)
-
-            let fromOwnedAddrs = getAddresses(myIns)
-            let toOwnedAddrs = getAddresses(myOuts)
-
-            let fromAddrs = getAddresses(otherIns)
-            let toAddrs = getAddresses(otherOuts)
-
-            // Subtract the fee if we sent it
-            let sendAmt = isGain ? gain : gain.add(txFee)
-
-            let txParsed: CsvRowAvaxTransferData = {
-                txId: tx.id,
-                date: new Date(tx.timestamp),
-                amount: bnToBig(sendAmt, 9),
-                from: isGain ? fromAddrs : fromOwnedAddrs,
-                to: isGain ? toOwnedAddrs : toAddrs,
-                memo: parseMemo(tx.memo),
-                isGain: isGain,
-            }
-            rows.push(txParsed)
+            const encoding = 'data:text/csv;charset=utf-8,'
+            const csvContent = createCsvNormal(hist)
+            downloadCSVFile(encoding + csvContent, 'avax_transfers')
+        } catch (e) {
+            this.error = e
         }
-
-        let csvRows = rows.map((row) => avaxTransferDataToCsvRow(row))
-        let headers = ['Tx ID', 'Date', 'Memo', 'From', 'To', 'Sent/Received', 'Amount (AVAX)']
-        let allRows = [headers, ...csvRows]
-
-        let csvContent = createCSVContent(allRows)
-        downloadCSVFile(csvContent, 'avax_transfers')
+        this.isLoading = false
     }
 
     submit() {
