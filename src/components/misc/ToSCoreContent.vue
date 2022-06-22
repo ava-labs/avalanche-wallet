@@ -4,12 +4,8 @@
             <strong>CORE - TERMS OF USE</strong>
         </h1>
         <h4 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
-            <strong>Effective April 7, 2022</strong>
+            <strong>Effective June 21, 2022</strong>
         </h4>
-
-        <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>AGREEMENT TO TERMS</strong>
-        </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             These Terms of Use (these “Terms”) constitute a legally binding agreement made between
             you, whether personally or on behalf of an entity (“you”) and Ava Labs, Inc. (together
@@ -21,22 +17,23 @@
             the Avalanche Bridge on a peer-to-peer basis, directly interact with other third party
             services and access other functionality that may be developed from time to time
             (collectively, the “Services”). The Services include, without limitation, services
-            provided by third parties and dapps (collectively, “Third Party Services”).
+            provided by third parties and dapps (collectively, “Third Party Services”) and support
+            channels, including third party platforms such as Telegram and Discord, and help
+            articles, including the FAQs.
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You agree that by accessing or using the App in any way, including, without limitation,
             evaluating, downloading, purchasing and/or using any of the Services offered through the
             App or any of the Third Party Services you may interact with, you expressly acknowledge
             that you have read and agree to be bound by all of these Terms and the
-            <u>
-                <a
-                    href="https://assets.website-files.com/602e8e4411398ca20cfcafd3/60ec9607c853cd466383f1ad_Important%20Notice%20-%20avalabs.org.pdf"
-                    rel="nofollow"
-                    target="_blank"
-                >
-                    Important Notice
-                </a>
-            </u>
+            <a
+                href="https://assets.website-files.com/602e8e4411398ca20cfcafd3/60ec9607c853cd466383f1ad_Important%20Notice%20-%20avalabs.org.pdf"
+                rel="nofollow"
+                class="s7"
+                target="_blank"
+            >
+                <u>Important Notice</u>
+            </a>
             , which is hereby incorporated herein by reference. IF YOU DO NOT AGREE WITH SUCH TERMS,
             THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE APP AND THE SERVICES AND YOU MUST
             DISCONTINUE USE IMMEDIATELY.
@@ -48,40 +45,45 @@
         <ol>
             <li style="margin: 24px 0">
                 <p class="s4" style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
-                    Your responsibility: The App is self-custodial in nature. You are therefore
-                    solely responsible for the safeguarding, retention and security of your seed
-                    phrase, private keys and password. If you lose your seed phrase, private keys or
-                    password, you will not be able to access your digital assets.
+                    <strong>Your responsibility:</strong>
+                    The App is self-custodial in nature. You are therefore solely responsible for
+                    the safeguarding, retention and security of your seed phrase, private keys and
+                    password. If you lose your seed phrase, private keys or password, you will not
+                    be able to access your digital assets.
                 </p>
             </li>
             <li style="margin: 24px 0">
                 <p class="s4" style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
-                    ARBITRATION: THESE TERMS INCLUDE, AMONG OTHER THINGS, A BINDING ARBITRATION
-                    CLAUSE AND A CLASS ACTION WAIVER. PLEASE REFER TO THE SECTION ENTITLED “DISPUTE
-                    RESOLUTION” BELOW FOR MORE INFORMATION.
+                    <strong>ARBITRATION:</strong>
+                    THESE TERMS INCLUDE, AMONG OTHER THINGS, A BINDING ARBITRATION CLAUSE AND A
+                    CLASS ACTION WAIVER. PLEASE REFER TO THE SECTION ENTITLED “DISPUTE RESOLUTION”
+                    BELOW FOR MORE INFORMATION.
                 </p>
             </li>
             <li style="margin: 24px 0">
                 <p class="s4" style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
-                    Third Party Services: Third Party Services are made available through the App
-                    and provided directly by third parties. If you choose to access Third Party
-                    Services, including without limitation MoonPay and ParaSwap, you will be
-                    interacting directly with such services and will be subject to their terms,
-                    policies and fees. We are not liable for any loss or damages you may incur
-                    arising from or in connection with Third Party Services.
+                    <strong>Third Party Services:</strong>
+                    Third Party Services are made available through the App and provided directly by
+                    third parties. If you choose to access Third Party Services, including without
+                    limitation MoonPay and ParaSwap, you will be interacting directly with such
+                    services and will be subject to their terms, policies and fees. We are not
+                    liable for any loss or damages you may incur arising from or in connection with
+                    Third Party Services.
                 </p>
             </li>
             <li style="margin: 24px 0">
                 <p class="s4" style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
-                    Liability: We are not liable for any special or consequential damages arising
-                    from your use of the App and other scenarios. Our aggregate liability to you
-                    shall not exceed $100.
+                    <strong>Liability:</strong>
+                    We are not liable for any special or consequential damages arising from your use
+                    of the App and other scenarios. Our aggregate liability to you shall not exceed
+                    $100.
                 </p>
             </li>
             <li style="margin: 24px 0">
                 <p class="s4" style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
-                    Indemnity: You will indemnify us for any third party claim in connection with
-                    your use of the App and other scenarios.
+                    <strong>Indemnity:</strong>
+                    You will indemnify us for any third party claim in connection with your use of
+                    the App and other scenarios.
                 </p>
             </li>
         </ol>
@@ -106,8 +108,8 @@
             compliance with local laws, if and to the extent local laws are applicable.
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
-            The App is intended for users who are at least 18 years old. Persons under the age of 18
-            are not permitted to download, access or use the App.
+            The App is intended for users who are at least 18 years old. Persons under this age are
+            not permitted to download, access or use the App.
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             If you breach any of the Terms, your authorization to use the App and the Services will
@@ -117,17 +119,20 @@
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             Please refer to our
-            <u>
-                <a href="https://www.avalabs.org/privacy-policy" rel="nofollow" target="_blank">
-                    Privacy Policy
-                </a>
-            </u>
+            <a
+                href="https://www.avalabs.org/privacy-policy"
+                rel="nofollow"
+                class="s7"
+                target="_blank"
+            >
+                <u>Privacy Policy</u>
+            </a>
             for information about how we collect, use, share and otherwise process information about
             you.
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>INTELLECTUAL PROPERTY RIGHTS</strong>
+            <strong>1. INTELLECTUAL PROPERTY RIGHTS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             Unless otherwise indicated, the App is our proprietary property and all source code,
@@ -163,7 +168,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>THIRD PARTY SERVICES</strong>
+            <strong>2. THIRD PARTY SERVICES</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             In addition to the Services made accessible through the App, the App may provide access
@@ -171,26 +176,29 @@
             parties and dapps, including third party links to other websites. Third Party Services
             include, without limitation, MoonPay and ParaSwap, which enable users to interact
             directly with such services and dapps to purchase and sell digital assets. If you access
-            Third Party Services, please note that you will be interacting directly with such
+            or use Third Party Services, please note that you will be interacting directly with such
             services and dapps and will be subject to their terms, policies and fees. Please review
             the terms, policies and fees of any third party with which you are interacting,
             including MoonPay (available
-            <u>
-                <a
-                    href="https://www.moonpay.com/legal/terms_of_use_usa"
-                    rel="nofollow"
-                    target="_blank"
-                >
-                    here
-                </a>
-            </u>
+            <a
+                href="https://www.moonpay.com/legal/terms_of_use_usa"
+                rel="nofollow"
+                class="s7"
+                target="_blank"
+            >
+                <u>here</u>
+            </a>
             and
-            <u>
-                <a href="https://www.moonpay.com/legal/terms_of_use" rel="nofollow" target="_blank">
-                    here
-                </a>
-            </u>
-            ), which will be in addition to these Terms.
+            <a
+                href="https://www.moonpay.com/legal/terms_of_use"
+                rel="nofollow"
+                class="s7"
+                target="_blank"
+            >
+                <u>here</u>
+            </a>
+            ), which will be in addition to these Terms. You acknowledge that we may receive a fee
+            from third parties that provide such Third Party Services.
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             We provide access to Third Party Services only as a convenience. As the App is
@@ -210,7 +218,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>USER REPRESENTATIONS</strong>
+            <strong>3. USER REPRESENTATIONS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             By using the App or the Services, you represent and warrant that: (1) you have the legal
@@ -232,7 +240,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>ACCEPTABLE USE POLICY</strong>
+            <strong>4. ACCEPTABLE USE POLICY</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You may not download, access or use the App for any purpose other than that for which we
@@ -382,7 +390,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>SUBMISSIONS</strong>
+            <strong>5. SUBMISSIONS</strong>
         </h2>
 
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -399,8 +407,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>APP</strong>
-            <strong>MANAGEMENT</strong>
+            <strong>6. APP MANAGEMENT</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             We reserve the right, but not the obligation, to: (1) monitor the App for violations of
@@ -413,7 +420,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>TERM AND TERMINATION</strong>
+            <strong>7. TERM AND TERMINATION</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             These Terms shall remain in full force and effect while you use the Site. WITHOUT
@@ -427,7 +434,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>MODIFICATIONS, CORRECTIONS AND INTERRUPTIONS</strong>
+            <strong>8. MODIFICATIONS, CORRECTIONS AND INTERRUPTIONS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             We reserve the right to change, modify, or remove the contents of the App at any time or
@@ -435,7 +442,7 @@
             update any information on the App. We also reserve the right to modify or discontinue
             all or part of the App or the Services without notice at any time. We make no
             representation as to the availability, functionality and quality of the App, including
-            any features, hardware, or communications, We will not be liable to you or any third
+            any features, hardware, or communications. We will not be liable to you or any third
             party for any modification, price change, suspension, or discontinuance of any or all of
             the App.
         </p>
@@ -458,7 +465,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>GOVERNING LAW</strong>
+            <strong>9. GOVERNING LAW</strong>
         </h2>
 
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -469,12 +476,10 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>DISPUTE RESOLUTION</strong>
+            <strong>10. DISPUTE RESOLUTION</strong>
         </h2>
-        <h3 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Binding Arbitration</strong>
-        </h3>
 
+        <h3><strong>10.1 Binding Arbitration</strong></h3>
         <h4 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             <strong>
                 THIS SECTION CONTAINS A BINDING ARBITRATION CLAUSE AND CLASS ACTION WAIVER. THEY
@@ -483,9 +488,7 @@
             </strong>
         </h4>
 
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Agreement to Arbitrate</strong>
-        </h3>
+        <h3><strong>10.2 Agreement to Arbitrate</strong></h3>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You and the Company agree that the sole and exclusive forum and remedy for a Dispute
             shall be final and binding arbitration pursuant to this section entitled “Dispute
@@ -498,10 +501,7 @@
             further agree to waive our right to a jury trial.
         </p>
 
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Exceptions to Arbitration</strong>
-        </h3>
-
+        <h3><strong>10.3 Exceptions to Arbitration</strong></h3>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You and the Company agree that the following Disputes are not subject to the above
             provisions concerning binding arbitration: (a) any Disputes seeking to enforce or
@@ -509,14 +509,13 @@
             party; (b) any claim for injunctive relief; and (c) any Dispute that may be brought in
             small claims court.
         </p>
-
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Opt Out of Arbitration</strong>
-        </h3>
-        <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
+        <h3><strong>10.4 Opt Out of Arbitration</strong></h3>
+        <h3>
             You may opt out of the binding arbitration described in this section by sending us
             written notice of your desire to do so by email at
-            <u><a href="mailto:legal@avalabs.org" rel="nofollow">legal@avalabs.org</a></u>
+            <a href="mailto:legal@avalabs.org" rel="nofollow" class="s7" target="_blank">
+                <u>legal@avalabs.org</u>
+            </a>
             (such notice, an “Arbitration Opt-out Notice”) within 30 days following the date you
             first agree to these Terms. The Arbitration Opt-out Notice must include your full name
             and address and clearly indicate your intent to opt out of binding arbitration. If you
@@ -524,11 +523,9 @@
             you will be deemed to have knowingly and intentionally waived your right to litigate any
             Dispute except as expressly set forth in the “Exceptions to Arbitration” provision
             above.
-        </p>
-
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Arbitration Rules</strong>
         </h3>
+
+        <h3><strong>10.5 Arbitration Rules</strong></h3>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             The Federal Arbitration Act governs the interpretation and enforcement of this Dispute
             Resolution section. All Disputes will be arbitrated before a single arbitrator
@@ -547,23 +544,22 @@
             relief only in favor of the claimant and only to the extent necessary to provide relief
             warranted by the claimant’s individual claim. The JAMS Rules and instructions for how to
             initiate an arbitration are available from JAMS at
-            <u><a href="http://www.jamsadr.com" rel="nofollow">http://www.jamsadr.com</a></u>
+            <u>
+                <a href="http://www.jamsadr.com" rel="nofollow" class="s7" target="_blank">
+                    http://www.jamsadr.com
+                </a>
+            </u>
             .
         </p>
 
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Arbitration Location and Procedure</strong>
-        </h3>
+        <h3><strong>10.6 Arbitration Location and Procedure</strong></h3>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             Arbitration proceedings will be held in New York County, New York. The results of the
             arbitration procedure will be considered confidential information of you and us. Any
             arbitration decision rendered will be final and binding, and judgment thereon may be
             entered in any court of competent jurisdiction.
         </p>
-
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>Arbitration Fees</strong>
-        </h3>
+        <h3><strong>10.7 Arbitration Fees</strong></h3>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             If we elect arbitration, we shall pay all JAMS filing costs and administrative fees
             (other than hearing fees). If you elect arbitration, filing costs and administrative
@@ -573,10 +569,7 @@
             statute gives you the right to recover any of these fees, these statutory rights shall
             apply in the arbitration notwithstanding anything to the contrary herein.
         </p>
-
-        <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>No Class Actions</strong>
-        </h3>
+        <h3><strong>10.8 No Class Actions</strong></h3>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You and the Company agree that any arbitration shall be limited to the Dispute between
             the parties individually. TO THE FULL EXTENT PERMITTED BY LAW, (A) NO ARBITRATION SHALL
@@ -597,7 +590,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>JUDICIAL FORUM FOR DISPUTES</strong>
+            <strong>11. JUDICIAL FORUM FOR DISPUTES</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             In the event that a Dispute falls within one of the abovementioned exceptions to
@@ -608,7 +601,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>RISKS RELATING TO DIGITAL ASSETS</strong>
+            <strong>12. RISKS RELATING TO DIGITAL ASSETS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             THE APP, THE SERVICES AND THIRD PARTY SERVICES ARE DEVELOPED WITH AND MADE AVAILABLE ON
@@ -657,7 +650,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>DISCLAIMER</strong>
+            <strong>13. DISCLAIMERS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             THE APP, THE SERVICES AND THE THIRD PARTY SERVICES ARE PROVIDED ON AN “AS-IS” AND
@@ -699,7 +692,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>LIMITATIONS OF LIABILITY</strong>
+            <strong>14. LIMITATIONS OF LIABILITY</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             IN NO EVENT WILL WE OR THE FOUNDATION OR OUR RESPECTIVE OFFICERS, DIRECTORS,
@@ -722,7 +715,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>INDEMNIFICATION</strong>
+            <strong>15. INDEMNIFICATION</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You agree to defend, release, indemnify, and hold us and Avalanche Foundation Limited,
@@ -753,7 +746,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>USER DATA</strong>
+            <strong>16. USER DATA</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             We will maintain certain data that you transmit to the App for the purpose of managing
@@ -766,7 +759,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>ELECTRONIC COMMUNICATIONS, TRANSACTIONS AND SIGNATURES</strong>
+            <strong>17. ELECTRONIC COMMUNICATIONS, TRANSACTIONS AND SIGNATURES</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             Visiting the App, sending us emails, and completing online forms constitute electronic
@@ -783,7 +776,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>CALIFORNIA USERS AND RESIDENTS</strong>
+            <strong>18. CALIFORNIA USERS AND RESIDENTS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             If any complaint with us is not satisfactorily resolved, you can contact the Complaint
@@ -793,7 +786,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>MISCELLANEOUS</strong>
+            <strong>19. MISCELLANEOUS</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             These Terms and any policies or operating rules posted by us on the App or in respect to
@@ -814,7 +807,7 @@
         </p>
 
         <h2 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: left">
-            <strong>CONTACT US</strong>
+            <strong>20. CONTACT US</strong>
         </h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             In order to resolve a complaint regarding the App or to receive further information
@@ -833,7 +826,9 @@
             New York, NY 10036
         </p>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
-            support@avalabs.org
+            <a href="mailto:support@avalabs.org" rel="nofollow" class="s7" target="_blank">
+                support@avalabs.org
+            </a>
         </p>
     </div>
 </template>
