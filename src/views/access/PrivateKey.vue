@@ -35,6 +35,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { privateToAddress } from 'ethereumjs-util'
 import { bintools } from '@/AVA'
 import { Buffer } from 'avalanche'
+import { strip0x } from '@avalabs/avalanche-wallet-sdk'
 
 @Component
 export default class PrivateKey extends Vue {
@@ -46,7 +47,7 @@ export default class PrivateKey extends Vue {
         let parent = this
         this.error = ''
         this.isLoading = true
-        let key = this.privatekey
+        let key = strip0x(this.privatekey)
 
         try {
             let res = await this.$store.dispatch('accessWalletSingleton', key)
