@@ -25,6 +25,7 @@
             :privateKey="privateKeyC"
             ref="modal_priv_key_c"
         ></PrivateKey>
+        <XpubModal :xpub="xpubXP" v-if="isHDWallet" ref="modal_xpub"></XpubModal>
         <div class="rows">
             <div class="header">
                 <template v-if="is_default">
@@ -85,6 +86,7 @@
                             <button v-if="walletType !== 'ledger'" @click="showPrivateKeyCModal">
                                 {{ $t('keys.view_priv_key_c') }}
                             </button>
+                            <button v-if="isHDWallet" @click="showXpub">Show XPUB</button>
                         </div>
                     </div>
                 </div>
@@ -129,6 +131,8 @@ import { WalletNameType, WalletType } from '@/js/wallets/types'
 
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
+import XpubModal from '@/components/modals/XpubModal.vue'
+import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -141,6 +145,7 @@ interface IKeyBalanceDict {
         Tooltip,
         ExportKeys,
         PrivateKey,
+        XpubModal,
     },
 })
 export default class KeyRow extends Vue {
@@ -152,6 +157,7 @@ export default class KeyRow extends Vue {
         modal: MnemonicPhraseModal
         modal_hd: HdDerivationListModal
         modal_priv_key: PrivateKey
+        modal_xpub: XpubModal
     }
 
     get isVolatile() {
@@ -243,6 +249,16 @@ export default class KeyRow extends Vue {
         return wallet.ethKey
     }
 
+    /**
+     * Extended public key of m/44'/9000'/0' used for X and P chain addresses
+     */
+    get xpubXP() {
+        if (this.isHDWallet) {
+            return (this.wallet as HdWalletCore).getXpubXP()
+        }
+        return null
+    }
+
     remove() {
         this.$emit('remove', this.wallet)
     }
@@ -254,6 +270,10 @@ export default class KeyRow extends Vue {
         let modal = this.$refs.modal
         //@ts-ignore
         modal.open()
+    }
+
+    showXpub() {
+        this.$refs.modal_xpub.open()
     }
 
     showPastAddresses() {
