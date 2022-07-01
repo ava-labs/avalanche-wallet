@@ -134,12 +134,12 @@ import {
     bnToAvaxC,
     bnToBigAvaxC,
     bnToBigAvaxX,
-} from '@c4tplatform/avalanche-wallet-sdk'
+} from '@c4tplatform/camino-wallet-sdk'
 
 // @ts-ignore
 import { QrInput } from '@c4tplatform/vue_components'
 import Big from 'big.js'
-import { BN } from '@c4tplatform/avalanche'
+import { BN } from '@c4tplatform/camino'
 import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'

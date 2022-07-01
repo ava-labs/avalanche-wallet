@@ -86,9 +86,9 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData } from '@/store/modules/history/types'
-import { BN } from '@c4tplatform/avalanche'
+import { BN } from '@c4tplatform/camino'
 import { bnToBig } from '@/helpers/helper'
-import { UnixNow } from '@c4tplatform/avalanche/dist/utils'
+import { UnixNow } from '@c4tplatform/camino/dist/utils'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { WalletType } from '@/js/wallets/types'
 import { getPriceAtUnixTime } from '@/helpers/price_helper'

@@ -1,5 +1,5 @@
 import { ChainIdType } from '@/constants'
-import { BN } from '@c4tplatform/avalanche'
+import { BN } from '@c4tplatform/camino'
 
 export enum TxState {
     failed = -1,

@@ -35,7 +35,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Emit, Watch } from 'vue-property-decorator'
-import { BN } from '@c4tplatform/avalanche'
+import { BN } from '@c4tplatform/camino'
 
 // @ts-ignore
 import { BigNumInput } from '@c4tplatform/vue_components'

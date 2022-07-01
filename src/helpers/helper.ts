@@ -5,12 +5,12 @@ import {
     KeyPair as AVMKeyPair,
     NFTTransferOutput,
     UTXO,
-} from '@c4tplatform/avalanche/dist/apis/avm'
+} from '@c4tplatform/camino/dist/apis/avm'
 
-import { ONEAVAX, PayloadBase, PayloadTypes } from '@c4tplatform/avalanche/dist/utils'
+import { ONEAVAX, PayloadBase, PayloadTypes } from '@c4tplatform/camino/dist/utils'
 import Big from 'big.js'
 
-import { Buffer, BN } from '@c4tplatform/avalanche'
+import { Buffer, BN } from '@c4tplatform/camino'
 import createHash from 'create-hash'
 
 function bnToBig(val: BN, denomination = 0): Big {

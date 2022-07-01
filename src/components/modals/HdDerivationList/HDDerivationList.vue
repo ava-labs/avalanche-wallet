@@ -39,14 +39,14 @@ import 'reflect-metadata'
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import { UTXOSet as AVMUTXOSet } from '@c4tplatform/avalanche/dist/apis/avm'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/avalanche/dist/apis/platformvm'
+import { UTXOSet as AVMUTXOSet } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm'
 import { bintools } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 import { bnToBig } from '@/helpers/helper'
-import { BN } from '@c4tplatform/avalanche'
+import { BN } from '@c4tplatform/camino'
 import HdChainTable from '@/components/modals/HdDerivationList/HdChainTable.vue'
 
 @Component({

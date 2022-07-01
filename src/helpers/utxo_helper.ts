@@ -1,7 +1,7 @@
-import { UTXOSet as AVMUTXOSet } from '@c4tplatform/avalanche/dist/apis/avm/utxos'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/avalanche/dist/apis/platformvm/utxos'
+import { UTXOSet as AVMUTXOSet } from '@c4tplatform/camino/dist/apis/avm/utxos'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm/utxos'
 import { ava } from '@/AVA'
-import { BN } from '@c4tplatform/avalanche'
+import { BN } from '@c4tplatform/camino'
 
 export async function getStakeForAddresses(addrs: string[]): Promise<BN> {
     if (addrs.length <= 256) {

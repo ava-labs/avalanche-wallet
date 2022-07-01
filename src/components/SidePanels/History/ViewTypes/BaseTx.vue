@@ -80,8 +80,8 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
 import { TransactionValueDict } from '@/components/SidePanels/types'
-import { PayloadBase, PayloadTypes } from '@c4tplatform/avalanche/dist/utils'
-import { BN, Buffer } from '@c4tplatform/avalanche'
+import { PayloadBase, PayloadTypes } from '@c4tplatform/camino/dist/utils'
+import { BN, Buffer } from '@c4tplatform/camino'
 import { WalletType } from '@/js/wallets/types'
 
 import { ava } from '@/AVA'

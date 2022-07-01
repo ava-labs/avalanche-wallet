@@ -877,12 +877,12 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@c4tplatform/avalanche-wallet-sdk@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@c4tplatform/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.0.2.tgz#a1b619f563807d7749dcca84a6050cfe624e1e05"
-  integrity sha512-Tm2Gha1Q3vCeNeqJTF4wTSYHzrb/HMthVwJXkxnDPfHD8wMLd3E+wTKwNtveQAztz7lSBju2ENwYiZaqVxJQKQ==
+"@c4tplatform/camino-wallet-sdk@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/camino-wallet-sdk/-/camino-wallet-sdk-0.0.1.tgz#0c02cf20280e60d1c6cd1c15b0f1e17abf193d78"
+  integrity sha512-6Et6uQJZz9LcHy15r0GLVUTsv1AmLYmvQedWTVyeyqudxZtom+MNR5x2zSdfmTF3HBNdx4StUahHopIzQmT3cA==
   dependencies:
-    "@c4tplatform/avalanche" "0.0.1"
+    "@c4tplatform/camino" "0.0.2"
     "@ethereumjs/common" "2.6.0"
     "@ethereumjs/tx" "3.4.0"
     "@ledgerhq/hw-app-eth" "6.12.2"
@@ -909,10 +909,10 @@
     web3-eth-contract "1.6.0"
     xss "^1.0.10"
 
-"@c4tplatform/avalanche@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@c4tplatform/avalanche/-/avalanche-0.0.1.tgz#86af328a35c314e8bfcea1ee22f4168f472351ef"
-  integrity sha512-sQKQ6jME4ps38CvLN5eXs52+hgR9hq1dQORvfwKp9fTt9YC+bGhWh1P7Ohu1uUHYcxXKqw7fOO7a4+19G9QJMQ==
+"@c4tplatform/camino@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/camino/-/camino-0.0.2.tgz#80c495f2afedbaf72e67e6cc84b8c65d590c1c09"
+  integrity sha512-vlH59Z/KKOxSXQCijEpzqKWNalElFaTQsoOVG+r2YsnZWx56klftZNqkf4NsWWXba24zSss4wpmnt/iFPYpX4w==
   dependencies:
     assert "2.0.0"
     axios "0.24.0"
@@ -931,10 +931,10 @@
     stream-browserify "3.0.0"
     ws "8.2.3"
 
-"@c4tplatform/vue_components@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@c4tplatform/vue_components/-/vue_components-0.0.2.tgz#a426523467745978092bbe1c9ac51eba49732d4f"
-  integrity sha512-RMp+bl3WQpkFZcxdOE5AVs/G9g2iL9PK3Xjenn0k5UlTP6HN3dntxl260Yzs+SsMm9HxG63OkejOXDn5GrbqKg==
+"@c4tplatform/vue_components@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/vue_components/-/vue_components-0.0.3.tgz#3ad7b8f55d4cc4ba9e3ae6b2d78ea4cffc374f9d"
+  integrity sha512-0SK9R7697dkPG8QUGwzjg0pxA/GjZ295hetdVgrE8+/dfNKERIT6JfhUHbZ8C2PJofAdk1lHb94H0asTNHrWrQ==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.27"
     "@fortawesome/free-solid-svg-icons" "^5.12.1"
