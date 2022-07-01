@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@avalabs/avalanche-wallet-sdk@0.18.0":
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.18.0.tgz#038139c176fb306aecf7ad431d687848affe4ba8"
-  integrity sha512-cGhEFzgnH/oVaD+clrJQfEhz11WHO5tlMZ54nIqdQoJPw7ZpxYrplJMug1KYx6EDt3wkgZ5UwUPs3Sdfukbf0g==
+"@avalabs/avalanche-wallet-sdk@0.18.1":
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/@avalabs/avalanche-wallet-sdk/-/avalanche-wallet-sdk-0.18.1.tgz#ff1c0423a5788c17f7ecadddd45af1dbc9c63506"
+  integrity sha512-8sA/gXTSR9dXerk2nLCbh2/A6JBoEHlbPRTDP2WPHxSDqfO5wO2NuiHzKZ33DgsR/bcF67XbWt11i3R/dtlOng==
   dependencies:
     "@ethereumjs/common" "2.6.0"
     "@ethereumjs/tx" "3.4.0"
@@ -14,7 +14,6 @@
     "@metamask/eth-sig-util" "4.0.0"
     "@obsidiansystems/hw-app-avalanche" "0.2.2"
     "@openzeppelin/contracts" "4.5.0"
-    avalanche "3.15.1"
     big.js "^6.1.1"
     bip32 "2.0.6"
     bip32-path "0.4.2"
@@ -4075,29 +4074,6 @@ available-typed-arrays@^1.0.2:
   integrity sha512-XWX3OX8Onv97LMk/ftVyBibpGwY5a8SmuxZPzeOxqmuEqUCOM9ZE+uIaD1VNJ5QnvU2UQusvmKbuM1FR8QWGfQ==
   dependencies:
     array-filter "^1.0.0"
-
-avalanche@3.15.1:
-  version "3.15.1"
-  resolved "https://registry.yarnpkg.com/avalanche/-/avalanche-3.15.1.tgz#a316ef3e94fdd21b39e86366e07659f69f767cc7"
-  integrity sha512-vlKym4WpG4feNQp6S6XyHogeu+IGtClxALOQSCPNoYlhm4UXSw91XfbgwwIningoo1/PhVGhW0IBMuw5VM8w3g==
-  dependencies:
-    assert "2.0.0"
-    axios "0.27.2"
-    bech32 "2.0.0"
-    bip39 "3.0.4"
-    bn.js "5.2.1"
-    buffer "6.0.3"
-    create-hash "1.2.0"
-    crypto-browserify "3.12.0"
-    elliptic "6.5.4"
-    ethers "5.6.8"
-    hdkey "2.0.1"
-    isomorphic-ws "4.0.1"
-    randombytes "^2.1.0"
-    store2 "2.13.2"
-    stream-browserify "3.0.0"
-    ws "8.8.0"
-    xss "1.0.13"
 
 avalanche@3.15.2:
   version "3.15.2"
@@ -9810,11 +9786,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
-
-isomorphic-ws@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
-  integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
 
 isomorphic-ws@5.0.0:
   version "5.0.0"
