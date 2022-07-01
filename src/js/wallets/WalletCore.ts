@@ -12,6 +12,7 @@ import {
     TxHelper,
     GasHelper,
     chainIdFromAlias,
+    xChain,
 } from '@avalabs/avalanche-wallet-sdk'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm/utxos'
@@ -22,6 +23,7 @@ import {
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import { AvmImportChainType, WalletType } from '@/js/wallets/types'
+import { issueC, issueP, issueX } from '@/helpers/issueTx'
 const uniqid = require('uniqid')
 
 abstract class WalletCore {
@@ -107,9 +109,19 @@ abstract class WalletCore {
 
         const unsignedTxFee = await this.createImportTxC(sourceChain, utxoSet, fee)
         const tx = await this.signC(unsignedTxFee)
-        const id = await cChain.issueTx(tx.toString())
+        return this.issueC(tx)
+    }
 
-        return id
+    protected async issueX(tx: AVMTx) {
+        return issueX(tx)
+    }
+
+    protected async issueP(tx: PlatformTx) {
+        return issueP(tx)
+    }
+
+    protected async issueC(tx: EVMTx) {
+        return issueC(tx)
     }
 
     async exportFromXChain(amt: BN, destinationChain: ExportChainsX, importFee?: BN) {
@@ -144,7 +156,7 @@ abstract class WalletCore {
 
         const tx = await this.signX(exportTx)
 
-        return avm.issueTx(tx)
+        return this.issueX(tx)
     }
 
     async exportFromPChain(amt: BN, destinationChain: ExportChainsP, importFee?: BN) {
@@ -180,7 +192,7 @@ abstract class WalletCore {
         )
 
         const tx = await this.signP(exportTx)
-        return await pChain.issueTx(tx)
+        return await this.issueP(tx)
     }
 
     /**
@@ -215,7 +227,7 @@ abstract class WalletCore {
         )
 
         const tx = await this.signC(exportTx)
-        return cChain.issueTx(tx.toString())
+        return this.issueC(tx)
     }
 
     /**
@@ -282,7 +294,7 @@ abstract class WalletCore {
         )
         const tx = await this.signP(unsignedTx)
         // Pass in string because AJS fails to verify Tx type
-        return pChain.issueTx(tx.toString())
+        return this.issueP(tx)
     }
 
     async importToXChain(sourceChain: AvmImportChainType) {
@@ -315,7 +327,7 @@ abstract class WalletCore {
         )
 
         const tx = await this.signX(unsignedTx)
-        return await avm.issueTx(tx.toString())
+        return this.issueX(tx)
     }
 }
 export { WalletCore }
