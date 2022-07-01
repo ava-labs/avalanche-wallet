@@ -21,6 +21,7 @@ import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERC721Token from '@/js/ERC721Token'
+import { issueP, issueX } from '@/helpers/issueTx'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -52,7 +53,7 @@ class WalletHelper {
         )
 
         const signed = await wallet.signX(unsignedTx)
-        return await avm.issueTx(signed)
+        return issueX(signed)
     }
 
     static async mintNft(
@@ -77,7 +78,7 @@ class WalletHelper {
             utxoSet
         )
         const signed = await wallet.signX(tx)
-        return await avm.issueTx(signed)
+        return issueX(signed)
     }
 
     static async issueBatchTx(
@@ -88,7 +89,7 @@ class WalletHelper {
     ): Promise<string> {
         const unsignedTx = await wallet.buildUnsignedTransaction(orders, addr, memo)
         const tx = await wallet.signX(unsignedTx)
-        const txId: string = await avm.issueTx(tx)
+        const txId: string = await issueX(tx)
 
         return txId
     }
@@ -143,7 +144,7 @@ class WalletHelper {
         )
 
         const tx = await wallet.signP(unsignedTx)
-        return await pChain.issueTx(tx)
+        return issueP(tx)
     }
 
     static async delegate(
@@ -193,7 +194,7 @@ class WalletHelper {
         )
 
         const tx = await wallet.signP(unsignedTx)
-        return await pChain.issueTx(tx)
+        return issueP(tx)
     }
 
     static async getEthBalance(wallet: WalletType) {
