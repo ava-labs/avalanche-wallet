@@ -6,7 +6,7 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { JSONPayload } from 'avalanche/dist/utils'
+import { JSONPayload } from '@c4tplatform/avalanche/dist/utils'
 
 import GenericPayloadView from '@/components/misc/NftPayloadView/views/GenericPayloadView.vue'
 

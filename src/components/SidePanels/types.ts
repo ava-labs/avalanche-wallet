@@ -1,4 +1,4 @@
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/avalanche'
 export interface TransactionValueDict {
     [address: string]: number
 }

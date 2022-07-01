@@ -1,6 +1,6 @@
 import { ava, bintools } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { BN, Buffer } from 'avalanche'
+import { BN, Buffer } from '@c4tplatform/avalanche'
 import {
     AssetAmountDestination,
     BaseTx,
@@ -13,13 +13,13 @@ import {
     UTXOSet,
     UTXOSet as AVMUTXOSet,
     AVMConstants,
-} from 'avalanche/dist/apis/avm'
+} from '@c4tplatform/avalanche/dist/apis/avm'
 
-import { PayloadBase } from 'avalanche/dist/utils'
-import { OutputOwners } from 'avalanche/dist/common'
-import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
+import { PayloadBase } from '@c4tplatform/avalanche/dist/utils'
+import { OutputOwners } from '@c4tplatform/avalanche/dist/common'
+import { PlatformVMConstants } from '@c4tplatform/avalanche/dist/apis/platformvm'
 
-import { EVMConstants } from 'avalanche/dist/apis/evm'
+import { EVMConstants } from '@c4tplatform/avalanche/dist/apis/evm'
 
 import { web3 } from '@/evm'
 import ERCNftToken from '@/js/ERCNftToken'

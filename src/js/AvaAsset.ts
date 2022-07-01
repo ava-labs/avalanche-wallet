@@ -1,5 +1,5 @@
 // Manages BigNumber and Ava conversion and arithmetic
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/avalanche'
 import Big from 'big.js'
 
 class AvaAsset {

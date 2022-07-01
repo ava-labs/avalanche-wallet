@@ -2,7 +2,7 @@ import Sockette from 'sockette'
 import { WalletType } from '@/js/wallets/types'
 import store from '@/store'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { PubSub } from 'avalanche'
+import { PubSub } from '@c4tplatform/avalanche'
 
 const FILTER_ADDRESS_SIZE = 1000
 

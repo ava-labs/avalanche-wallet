@@ -32,7 +32,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { DelegatorRaw, ValidatorRaw } from '../../misc/ValidatorList/types'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/avalanche'
 import Big from 'big.js'
 
 @Component

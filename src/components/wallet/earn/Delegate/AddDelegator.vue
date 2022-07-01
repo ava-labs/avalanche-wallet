@@ -200,15 +200,15 @@ import { Vue, Component } from 'vue-property-decorator'
 
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 //@ts-ignore
-import { QrInput } from '@avalabs/vue_components'
+import { QrInput } from '@c4tplatform/vue_components'
 import ValidatorsList from '@/components/misc/ValidatorList/ValidatorsList.vue'
 import StakingCalculator from '@/components/wallet/earn/StakingCalculator.vue'
 import ConfirmPage from '@/components/wallet/earn/Delegate/ConfirmPage.vue'
 import Big from 'big.js'
 import moment from 'moment'
 
-import { BN } from 'avalanche'
-import { AmountOutput, UTXO } from 'avalanche/dist/apis/platformvm'
+import { BN } from '@c4tplatform/avalanche'
+import { AmountOutput, UTXO } from '@c4tplatform/avalanche/dist/apis/platformvm'
 import { ava, bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
