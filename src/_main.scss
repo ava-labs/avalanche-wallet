@@ -475,12 +475,12 @@ textarea {
 }
 
 html[data-theme='day'] {
-    --bg: #FAFAFA;
+    --bg: #F1F5F9;
     --bg-1: 255, 255, 255;
     --bg-light: #fff;
     --bg-light-1: 245, 246, 250;
 
-    --primary-color: #424242;
+    --primary-color: #0F172A;
     --primary-color-light: #757575;
     --secondary-color: #4BA6EE;
     --selection-color: #6a91d8;
@@ -497,9 +497,9 @@ html[data-theme='day'] {
 }
 
 html[data-theme='night'] {
-    --bg: #212121;
+    --bg: #0F172A;
     --bg-1: 36, 39, 41;
-    --bg-light: #323232;
+    --bg-light: #1E293B;
     --bg-light-1: 46, 50, 52;
     --primary-color: #F5F5F5;
     --primary-color-light: #6e7479;
