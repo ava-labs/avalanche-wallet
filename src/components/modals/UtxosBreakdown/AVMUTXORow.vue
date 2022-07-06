@@ -24,16 +24,16 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { AmountOutput, AVMConstants, UTXO as AVMUTXO } from 'avalanche/dist/apis/avm'
+import { AmountOutput, AVMConstants, UTXO as AVMUTXO } from '@c4tplatform/camino/dist/apis/avm'
 import {
     PlatformVMConstants,
     StakeableLockOut,
     UTXO as PlatformUTXO,
-} from 'avalanche/dist/apis/platformvm'
+} from '@c4tplatform/camino/dist/apis/platformvm'
 import { ava, bintools } from '@/AVA'
 import AvaAsset from '@/js/AvaAsset'
 import { bnToBig } from '@/helpers/helper'
-import { UnixNow } from 'avalanche/dist/utils'
+import { UnixNow } from '@c4tplatform/camino/dist/utils'
 import { AvaNetwork } from '@/js/AvaNetwork'
 
 @Component

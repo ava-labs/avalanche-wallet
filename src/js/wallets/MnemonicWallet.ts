@@ -6,7 +6,7 @@ import {
     UnsignedTx as AVMUnsignedTx,
     Tx as AVMTx,
     UTXO as AVMUTXO,
-} from 'avalanche/dist/apis/avm'
+} from '@c4tplatform/camino/dist/apis/avm'
 
 import { privateToAddress } from 'ethereumjs-util'
 
@@ -15,24 +15,24 @@ import {
     UnsignedTx as PlatformUnsignedTx,
     UTXO as PlatformUTXO,
     Tx as PlatformTx,
-} from 'avalanche/dist/apis/platformvm'
+} from '@c4tplatform/camino/dist/apis/platformvm'
 
 import {
     KeyChain as EVMKeyChain,
     UnsignedTx as EVMUnsignedTx,
     Tx as EvmTx,
-} from 'avalanche/dist/apis/evm'
-import { PayloadBase } from 'avalanche/dist/utils'
+} from '@c4tplatform/camino/dist/apis/evm'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
 
 import * as bip39 from 'bip39'
-import { BN, Buffer as BufferAvalanche } from 'avalanche'
+import { BN, Buffer as BufferAvalanche } from '@c4tplatform/camino'
 import { ava, bintools } from '@/AVA'
 import { IAvaHdWallet } from '@/js/wallets/types'
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/js/wallets/types'
-import { KeyChain } from 'avalanche/dist/apis/evm'
+import { KeyChain } from '@c4tplatform/camino/dist/apis/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'

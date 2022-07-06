@@ -35,10 +35,10 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Emit, Watch } from 'vue-property-decorator'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 
 // @ts-ignore
-import { BigNumInput } from '@avalabs/vue_components'
+import { BigNumInput } from '@c4tplatform/vue_components'
 import AvaAsset from '@/js/AvaAsset'
 import { ICurrencyInputDropdownValue } from '@/components/wallet/transfer/types'
 import { IWalletAssetsDict, priceDict } from '@/store/types'
