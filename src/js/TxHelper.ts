@@ -1,6 +1,6 @@
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { BN, Buffer } from 'avalanche'
+import { BN, Buffer } from '@c4tplatform/camino'
 import {
     AssetAmountDestination,
     BaseTx,
@@ -13,16 +13,16 @@ import {
     UTXOSet,
     UTXOSet as AVMUTXOSet,
     AVMConstants,
-} from 'avalanche/dist/apis/avm'
+} from '@c4tplatform/camino/dist/apis/avm'
 
-import { PayloadBase } from 'avalanche/dist/utils'
-import { OutputOwners } from 'avalanche/dist/common'
-import { PlatformVMConstants } from 'avalanche/dist/apis/platformvm'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { OutputOwners } from '@c4tplatform/camino/dist/common'
+import { PlatformVMConstants } from '@c4tplatform/camino/dist/apis/platformvm'
 
-import { UnsignedTx as EVMUnsignedTx, EVMConstants } from 'avalanche/dist/apis/evm'
+import { EVMConstants } from '@c4tplatform/camino/dist/apis/evm'
 
 import { web3 } from '@/evm'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 import { Transaction } from '@ethereumjs/tx'
 import EthereumjsCommon from '@ethereumjs/common'
 import Erc20Token from '@/js/Erc20Token'
@@ -46,7 +46,7 @@ export async function buildUnsignedTransaction(
 
     // TODO: use internal asset ID
     // This does not update on network change, causing issues
-    const AVAX_ID_BUF = await avm.getAVAXAssetID()
+    const AVAX_ID_BUF = await ava.XChain().getAVAXAssetID()
     const AVAX_ID_STR = AVAX_ID_BUF.toString('hex')
     const TO_BUF = bintools.stringToAddress(addr)
 
@@ -68,7 +68,7 @@ export async function buildUnsignedTransaction(
             let amt: BN = tx.amount
 
             if (assetId.toString('hex') === AVAX_ID_STR) {
-                aad.addAssetAmount(assetId, amt, avm.getTxFee())
+                aad.addAssetAmount(assetId, amt, ava.XChain().getTxFee())
                 isFeeAdded = true
             } else {
                 aad.addAssetAmount(assetId, amt, ZERO)
@@ -78,8 +78,8 @@ export async function buildUnsignedTransaction(
 
     // If fee isn't added, add it
     if (!isFeeAdded) {
-        if (avm.getTxFee().gt(ZERO)) {
-            aad.addAssetAmount(AVAX_ID_BUF, ZERO, avm.getTxFee())
+        if (ava.XChain().getTxFee().gt(ZERO)) {
+            aad.addAssetAmount(AVAX_ID_BUF, ZERO, ava.XChain().getTxFee())
         }
     }
 
@@ -103,7 +103,7 @@ export async function buildUnsignedTransaction(
     // If transferring an NFT, build the transaction on top of an NFT tx
     let unsignedTx: AVMUnsignedTx
     let networkId: number = ava.getNetworkID()
-    let chainId: Buffer = bintools.cb58Decode(avm.getBlockchainID())
+    let chainId: Buffer = bintools.cb58Decode(ava.XChain().getBlockchainID())
 
     if (nftUtxos.length > 0) {
         let nftSet = new AVMUTXOSet()
@@ -137,7 +137,7 @@ export async function buildUnsignedTransaction(
         let outsNft = rawTx.getOuts()
         let insNft = rawTx.getIns()
 
-        // TODO: This is a hackish way of doing this, need methods in avalanche.js
+        // TODO: This is a hackish way of doing this, need methods in caminojs
         //@ts-ignore
         rawTx.outs = outsNft.concat(outs)
         //@ts-ignore
@@ -170,14 +170,9 @@ export async function buildCreateNftFamilyTx(
         minterSets.push(minterSet)
     }
 
-    let unsignedTx: AVMUnsignedTx = await avm.buildCreateNFTAssetTx(
-        utxoSet,
-        fromAddresses,
-        [changeAddress],
-        minterSets,
-        name,
-        symbol
-    )
+    let unsignedTx: AVMUnsignedTx = await ava
+        .XChain()
+        .buildCreateNFTAssetTx(utxoSet, fromAddresses, [changeAddress], minterSets, name, symbol)
     return unsignedTx
 }
 
@@ -202,15 +197,17 @@ export async function buildMintNftTx(
 
     let groupID = (mintUtxo.getOutput() as NFTMintOutput).getGroupID()
 
-    let mintTx = await avm.buildCreateNFTMintTx(
-        utxoSet,
-        owners,
-        sourceAddresses,
-        [changeAddress],
-        mintUtxo.getUTXOID(),
-        groupID,
-        payload
-    )
+    let mintTx = await ava
+        .XChain()
+        .buildCreateNFTMintTx(
+            utxoSet,
+            owners,
+            sourceAddresses,
+            [changeAddress],
+            mintUtxo.getUTXOID(),
+            groupID,
+            payload
+        )
     return mintTx
 }
 
@@ -273,12 +270,12 @@ export async function buildEvmTransferErc20Tx(
     return tx
 }
 
-export async function buildEvmTransferErc721Tx(
+export async function buildEvmTransferERCNftTx(
     from: string,
     to: string,
     gasPrice: BN,
     gasLimit: number,
-    token: ERC721Token,
+    token: ERCNftToken,
     tokenId: string
 ) {
     const nonce = await web3.eth.getTransactionCount(from)

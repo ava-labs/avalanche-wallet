@@ -79,7 +79,6 @@ export default class PrivateKey extends Vue {
     display: flex;
     flex-direction: column;
     max-height: 60vh;
-    overflow: scroll;
 
     > div {
         display: grid;

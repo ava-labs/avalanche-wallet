@@ -121,8 +121,8 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import AvaAsset from '@/js/AvaAsset'
-import { BN } from 'avalanche'
-import { avm, cChain, pChain } from '@/AVA'
+import { BN } from '@c4tplatform/camino'
+import { ava } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
 import ChainCard from '@/components/wallet/earn/ChainTransfer/ChainCard.vue'
@@ -133,14 +133,7 @@ import { ChainIdType } from '@/constants'
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 import { WalletType } from '@/js/wallets/types'
-import {
-    ExportChainsC,
-    ExportChainsP,
-    ExportChainsX,
-    GasHelper,
-    Utils,
-    Big,
-} from '@avalabs/avalanche-wallet-sdk'
+import * as SDK from '@c4tplatform/camino-wallet-sdk'
 
 const IMPORT_DELAY = 5000 // in ms
 const BALANCE_DELAY = 2000 // in ms
@@ -217,7 +210,7 @@ export default class ChainTransfer extends Vue {
 
     get evmUnlocked(): BN {
         let balRaw = this.wallet.ethBalance
-        return Utils.avaxCtoX(balRaw)
+        return SDK.avaxCtoX(balRaw)
     }
 
     get balanceBN(): BN {
@@ -230,15 +223,15 @@ export default class ChainTransfer extends Vue {
         }
     }
 
-    get balanceBig(): Big {
-        return Utils.bnToBig(this.balanceBN, 9)
+    get balanceBig(): SDK.Big {
+        return SDK.bnToBig(this.balanceBN, 9)
     }
 
     get formAmtText() {
-        return Utils.bnToAvaxX(this.formAmt)
+        return SDK.bnToAvaxX(this.formAmt)
     }
 
-    get fee(): Big {
+    get fee(): SDK.Big {
         return this.exportFee.add(this.importFee)
     }
 
@@ -246,27 +239,27 @@ export default class ChainTransfer extends Vue {
         return this.importFeeBN.add(this.exportFeeBN)
     }
 
-    getFee(chain: ChainIdType, isExport: boolean): Big {
+    getFee(chain: ChainIdType, isExport: boolean): SDK.Big {
         if (chain === 'X') {
-            return Utils.bnToBigAvaxX(avm.getTxFee())
+            return SDK.bnToBigAvaxX(ava.XChain().getTxFee())
         } else if (chain === 'P') {
-            return Utils.bnToBigAvaxX(pChain.getTxFee())
+            return SDK.bnToBigAvaxX(ava.PChain().getTxFee())
         } else {
             const fee = isExport
-                ? GasHelper.estimateExportGasFeeFromMockTx(
-                      this.targetChain as ExportChainsC,
+                ? SDK.GasHelper.estimateExportGasFeeFromMockTx(
+                      this.targetChain as SDK.ExportChainsC,
                       this.amt,
                       this.wallet.getEvmAddress(),
                       this.wallet.getCurrentAddressPlatform()
                   )
-                : GasHelper.estimateImportGasFeeFromMockTx(1, 1)
+                : SDK.GasHelper.estimateImportGasFeeFromMockTx(1, 1)
 
             const totFeeWei = this.baseFee.mul(new BN(fee))
-            return Utils.bnToBigAvaxC(totFeeWei)
+            return SDK.bnToBigAvaxC(totFeeWei)
         }
     }
 
-    get importFee(): Big {
+    get importFee(): SDK.Big {
         return this.getFee(this.targetChain, false)
     }
 
@@ -274,15 +267,15 @@ export default class ChainTransfer extends Vue {
      * Returns the import fee in nNative
      */
     get importFeeBN(): BN {
-        return Utils.bigToBN(this.importFee, 9)
+        return SDK.bigToBN(this.importFee, 9)
     }
 
-    get exportFee(): Big {
+    get exportFee(): SDK.Big {
         return this.getFee(this.sourceChain, true)
     }
 
     get exportFeeBN(): BN {
-        return Utils.bigToBN(this.exportFee, 9)
+        return SDK.bigToBN(this.exportFee, 9)
     }
 
     /**
@@ -324,7 +317,7 @@ export default class ChainTransfer extends Vue {
     }
 
     async updateBaseFee() {
-        this.baseFee = await GasHelper.getBaseFeeRecommended()
+        this.baseFee = await SDK.GasHelper.getBaseFeeRecommended()
     }
 
     async submit() {
@@ -353,21 +346,21 @@ export default class ChainTransfer extends Vue {
                 case 'X':
                     exportTxId = await wallet.exportFromXChain(
                         amt,
-                        destinationChain as ExportChainsX,
+                        destinationChain as SDK.ExportChainsX,
                         this.importFeeBN
                     )
                     break
                 case 'P':
                     exportTxId = await wallet.exportFromPChain(
                         amt,
-                        destinationChain as ExportChainsP,
+                        destinationChain as SDK.ExportChainsP,
                         this.importFeeBN
                     )
                     break
                 case 'C':
                     exportTxId = await wallet.exportFromCChain(
                         amt,
-                        destinationChain as ExportChainsC,
+                        destinationChain as SDK.ExportChainsC,
                         this.exportFeeBN
                     )
                     break
@@ -384,9 +377,9 @@ export default class ChainTransfer extends Vue {
     async waitExportStatus(txId: string, remainingTries = 15) {
         let status
         if (this.sourceChain === 'X') {
-            status = await avm.getTxStatus(txId)
+            status = await ava.XChain().getTxStatus(txId)
         } else if (this.sourceChain === 'P') {
-            let resp = await pChain.getTxStatus(txId)
+            let resp = await ava.PChain().getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
             } else {
@@ -394,7 +387,7 @@ export default class ChainTransfer extends Vue {
                 this.exportReason = resp.reason
             }
         } else {
-            let resp = await cChain.getAtomicTxStatus(txId)
+            let resp = await ava.CChain().getAtomicTxStatus(txId)
             status = resp
         }
         this.exportStatus = status
@@ -437,14 +430,16 @@ export default class ChainTransfer extends Vue {
         let importTxId
         try {
             if (this.targetChain === 'P') {
-                importTxId = await wallet.importToPlatformChain(this.sourceChain as ExportChainsP)
+                importTxId = await wallet.importToPlatformChain(
+                    this.sourceChain as SDK.ExportChainsP
+                )
             } else if (this.targetChain === 'X') {
-                importTxId = await wallet.importToXChain(this.sourceChain as ExportChainsX)
+                importTxId = await wallet.importToXChain(this.sourceChain as SDK.ExportChainsX)
             } else {
                 //TODO: Import only the exported UTXO
 
                 importTxId = await wallet.importToCChain(
-                    this.sourceChain as ExportChainsC,
+                    this.sourceChain as SDK.ExportChainsC,
                     this.importFeeBN
                 )
             }
@@ -472,16 +467,16 @@ export default class ChainTransfer extends Vue {
         let status
 
         if (this.targetChain === 'X') {
-            status = await avm.getTxStatus(txId)
+            status = await ava.XChain().getTxStatus(txId)
         } else if (this.targetChain === 'P') {
-            let resp = await pChain.getTxStatus(txId)
+            let resp = await ava.PChain().getTxStatus(txId)
             if (typeof resp === 'string') {
                 status = resp
             } else {
                 status = resp.status
             }
         } else {
-            let resp = await cChain.getAtomicTxStatus(txId)
+            let resp = await ava.CChain().getAtomicTxStatus(txId)
             status = resp
         }
 

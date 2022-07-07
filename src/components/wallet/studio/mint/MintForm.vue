@@ -124,16 +124,15 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUtxo/SelectMintUTXO.vue'
 import UrlForm from '@/components/wallet/studio/mint/forms/UrlForm.vue'
 import Utf8Form from '@/components/wallet/studio/mint/forms/Utf8Form.vue'
 import JsonForm from '@/components/wallet/studio/mint/forms/JsonForm.vue'
 import GenericForm from '@/components/wallet/studio/mint/forms/GenericForm.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
-import { NFTMintOutput, NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
+import { NFTMintOutput, NFTTransferOutput, UTXO } from '@c4tplatform/camino/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import { avm, bintools, pChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import {
     GenericFormType,
     JsonFormType,
@@ -141,7 +140,7 @@ import {
     UrlFormType,
     UtfFormType,
 } from '@/components/wallet/studio/mint/types'
-import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from 'avalanche/dist/utils'
+import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from '@c4tplatform/camino/dist/utils'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'
@@ -154,7 +153,6 @@ type NftType = 'utf8' | 'url' | 'json'
         NftCard,
         NftFamilyCardsPreview,
         GenericForm,
-        SelectMintUTXO,
         UrlForm,
         NftPayloadView,
         Utf8Form,
@@ -243,7 +241,7 @@ export default class MintNft extends Vue {
     }
 
     get txFee(): Big {
-        return bnToBig(avm.getTxFee(), 9)
+        return bnToBig(ava.XChain().getTxFee(), 9)
     }
 
     onInput(form: NftMintFormType | null) {

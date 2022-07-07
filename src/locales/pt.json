@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Senha",
     "password_confirm": "Confirmar Senha",
     "private_key": "Private Key",
@@ -37,10 +37,10 @@
         "json_error": "Não foi possível analisar o arquivo JSON.",
         "keystore_error": "Esta versão de chave não é suportada.",
         "password_error": "Senha Inválida.",
+        "submit": "Acessar Wallet",
         "mnemonic": {
             "title": "Digite sua frase MNEMÔNICA",
             "subtitle": "Pressione 'ESPAÇO' após cada entrada de palavra bem-sucedida.",
-            "submit": "Acessar Wallet",
             "cancel": "Cancelar",
             "error": "Frase-chave inválida. Sua frase deve ter 24 palavras separadas por um único espaço."
         }
@@ -389,7 +389,7 @@
         "loading": "Carregando histórico de transações.",
         "warn_loading": "Esta lista pode estar incompleta e fora de ordem.",
         "error_api": "Explorer API Não Encontrada",
-        "error_api_desc": "Você deve fornecer um AVA Explorer API para esta rede visualizar o histórico de transações."
+        "error_api_desc": "Você deve fornecer um Magellan Explorer API para esta rede visualizar o histórico de transações."
     },
     "modal": {
         "qr": {

@@ -4,13 +4,13 @@
             TERMS OF USE
         </h1>
         <h4 style="padding-top: 16pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
-            Last updated September 22, 2020
+            Last updated March 25, 2022
         </h4>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: justify">AGREEMENT TO TERMS</h2>
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             These Terms of Use constitute a legally binding agreement made between you, whether
-            personally or on behalf of an entity (“you”) and Avalanche (BVI) Inc. (&quot;
+            personally or on behalf of an entity (“you”) and Chain4Travel AG. (&quot;
             <b>Company</b>
             &quot;, “
             <b>we</b>
@@ -19,13 +19,13 @@
             ”, or “
             <b>our</b>
             ”), concerning your access to and use of the
-            <span class="s1">https://wallet.avax.network/</span>
-            website and related features and services, including but not limited to the AVAX wallet
-            functionality, as well as any other media form, media channel, mobile website or mobile
-            application related, linked, or otherwise connected thereto, (collectively, the “Site”).
-            You agree that by accessing the Site, you have read, understood, and agreed to be bound
-            by all of these Terms of Use. IF YOU DO NOT AGREE WITH ALL OF THESE TERMS OF USE, THEN
-            YOU ARE EXPRESSLY PROHIBITED FROM USING THE SITE AND YOU MUST DISCONTINUE USE
+            <span class="s1">https://wallet.camino.foundation/</span>
+            website and related features and services, including but not limited to the Camino
+            wallet functionality, as well as any other media form, media channel, mobile website or
+            mobile application related, linked, or otherwise connected thereto, (collectively, the
+            “Site”). You agree that by accessing the Site, you have read, understood, and agreed to
+            be bound by all of these Terms of Use. IF YOU DO NOT AGREE WITH ALL OF THESE TERMS OF
+            USE, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING THE SITE AND YOU MUST DISCONTINUE USE
             IMMEDIATELY.
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
@@ -80,14 +80,13 @@
             and graphics on the Site (collectively, the “Content”) and the trademarks, service
             marks, and logos contained therein (the “Marks”) are owned or controlled by us or
             licensed to us, and are protected by copyright and trademark laws and various other
-            intellectual property rights and unfair competition laws of the United States,
-            international copyright laws, and international conventions. The Content and the Marks
-            are provided on the Site “AS IS” for your information and personal use only. Except as
-            expressly provided in these Terms of Use, no part of the Site and no Content or Marks
-            may be copied, reproduced, aggregated, republished, uploaded, posted, publicly
-            displayed, encoded, translated, transmitted, distributed, sold, licensed, or otherwise
-            exploited for any commercial purpose whatsoever, without our express prior written
-            permission.
+            intellectual property rights and unfair competition laws of Switzerland, international
+            copyright laws, and international conventions. The Content and the Marks are provided on
+            the Site “AS IS” for your information and personal use only. Except as expressly
+            provided in these Terms of Use, no part of the Site and no Content or Marks may be
+            copied, reproduced, aggregated, republished, uploaded, posted, publicly displayed,
+            encoded, translated, transmitted, distributed, sold, licensed, or otherwise exploited
+            for any commercial purpose whatsoever, without our express prior written permission.
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -607,17 +606,17 @@
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
             We care about data privacy and security. Please review our Privacy Policy:
-            <a href="http://www.avalabs.org/privacy-policy" class="s7" target="_blank">
-                https://www.avalabs.org/privacy-policy
+            <a href="https://camino.foundation/privacy-policy" class="s7" target="_blank">
+                https://camino.foundation/privacy-policy
             </a>
-            <a href="http://www.avalabs.org/privacy-policy" class="a" target="_blank">.</a>
+            <a href="https://camino.foundation/privacy-policy" class="a" target="_blank">.</a>
             By using the Site, you agree to be bound by our Privacy Policy, which is incorporated
-            into these Terms of Use. Please be advised the Site is hosted in the United States. If
-            you access the Site from any other region of the world with laws or other requirements
-            governing personal data collection, use, or disclosure that differ from applicable laws
-            in the United States, then through your continued use of the Site, you are transferring
-            your data to the United States, and you agree to have your data transferred to and
-            processed in the United States.
+            into these Terms of Use. Please be advised the Site is hosted in EU-West. If you access
+            the Site from any other region of the world with laws or other requirements governing
+            personal data collection, use, or disclosure that differ from applicable laws in the
+            EU-West, then through your continued use of the site, you are transferring your data to
+            the EU-West, and you agree to have your data transferred to and processed in the
+            EU-West.
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
@@ -677,9 +676,8 @@
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
             These Terms of Use and your use of the Site are governed by and construed in accordance
-            with the laws of the State of New York applicable to agreements made and to be entirely
-            performed within the State of New York, without regard to its conflict of law
-            principles.
+            with the laws of Switzerland applicable to agreements made and to be entirely performed
+            within Switzerland, without regard to its conflict of law principles.
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <h2 style="padding-left: 5pt; text-indent: 0pt; text-align: left">DISPUTE RESOLUTION</h2>
@@ -695,9 +693,9 @@
         <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">Governing Law</h3>
         <p style="padding-top: 13pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             These Terms of Use and performance by you and us hereunder shall be construed in
-            accordance with the laws of the State of New York and applicable United States law,
-            without giving effect to any conflict-of-laws principles that may provide for the
-            application of the law of another jurisdiction.
+            accordance with the laws of Switzerland and applicable Swiss law, without giving effect
+            to any conflict-of-laws principles that may provide for the application of the law of
+            another jurisdiction.
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <h3 style="padding-left: 5pt; text-indent: 0pt; text-align: left">
@@ -733,7 +731,9 @@
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You may opt out of the binding arbitration described in this section by sending us
             written notice of your desire to do so by email at
-            <a href="mailto:support@avax.network" class="a" target="_blank">support@avax.network</a>
+            <a href="mailto:support@chain4travel.com" class="a" target="_blank">
+                support@chain4travel.com
+            </a>
             (such notice, an “Arbitration Opt-out Notice”) within thirty (30) days following the
             date you first agree to these Terms of Use, or within thirty (30) days of the date we
             modify this Dispute Resolution section as indicated in the “Last updated” date above or
@@ -993,15 +993,15 @@
             regarding use of the Site, please contact us at:
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
-        <p style="padding-left: 5pt; text-indent: 0pt; text-align: left">Avalanche (BVI) Inc.</p>
+        <p style="padding-left: 5pt; text-indent: 0pt; text-align: left">Chain4Travel AG</p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            Floor 4, Banco Popular Building
+            Arbachstrasse 2
             <br />
-            Road Town, Tortola VG1110
+            6340 Baar
             <br />
-            British Virgin Islands
+            Switzerland
             <br />
-            <a href="mailto:support@avax.network" target="_blank">support@avax.network</a>
+            <a href="mailto:support@chain4travel.com" target="_blank">support@chain4travel.com</a>
         </p>
     </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tooltip bottom>
+        <v-tooltip bottom :content-class="contentClass">
             <template v-slot:activator="{ on, attrs }">
                 <button v-bind="attrs" v-on="on">
                     <slot></slot>
@@ -14,6 +14,7 @@
 export default {
     props: {
         text: String,
+        contentClass: String,
     },
 }
 </script>

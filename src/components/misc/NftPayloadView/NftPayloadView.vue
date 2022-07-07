@@ -12,17 +12,11 @@
         class="nft_payload_view"
         v-else-if="!small"
     ></Component>
-    <Component
-        v-else-if="!small"
-        :is="viewer"
-        :payload="payload"
-        class="nft_payload_view"
-    ></Component>
     <Component v-else :is="viewerSmall" :payload="payload" class="nft_payload_view"></Component>
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { PayloadBase } from 'avalanche/dist/utils'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
 
 import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
 import UtfPayloadView from '@/components/misc/NftPayloadView/views/UtfPayloadView.vue'

@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Passwort",
     "password_confirm": "Passwort bestätigen",
     "private_key": "privater Schlüssel",
@@ -9,7 +9,7 @@
         "desc": "@.project:(0) Wallet ist eine einfache, sichere, \"ohne Aufsicht\" Wallet zur Aufbewahrung von @.project:(0) Vermögenswerten.",
         "access": {
             "title": "Willkommen zurück!",
-            "desc": "Hier auf dein bestehendes @.project:(0) Wallet zugreifen.",
+            "desc": "Hier auf deine bestehende @.project:(0) Wallet zugreifen.",
             "submit": "Auf Wallet zugreifen"
         },
         "create": {
@@ -37,10 +37,10 @@
         "json_error": "Die JSON Datei ist nicht lesbar.",
         "keystore_error": "Diese Keystore Version wird nicht unterstützt.",
         "password_error": "Ungültiges Passwort.",
+        "submit": "Auf Wallet zugreifen",
         "mnemonic": {
             "title": "Gib deine MNEMONIC Phrase ein\n",
             "subtitle": "Drücke die 'LEERTASTE' nach jeder erfolgreichen Eingabe.",
-            "submit": "Auf Wallet zugreifen",
             "cancel": "Abbrechen",
             "error": "Ungültige Schlüsselphrase. Deine Schlüsselphrase, muss aus 24 einzelnen Wörtern bestehen."
         }
@@ -51,7 +51,8 @@
             "manage": "Verwalten",
             "send": "Senden",
             "earn": "Verdienen",
-            "advanced": "Erweitert"
+            "advanced": "Erweitert",
+            "activity": "Aktivität"
         },
         "address_card": {},
         "collectibles": {
@@ -68,7 +69,7 @@
         "attention": "Achtung!",
         "warning": "Speichere diese Schlüsselphrase an einem sicheren Ort. Jeder mit dieser Schlüsselphrase kann auf deine @.project:(0) Wallet zugreifen. Es gibt keine Möglichkeit, verlorene Schlüsselphrasen wiederherzustellen.",
         "confirm": "Ich habe meine Schlüsselphrase an einem sicheren Ort notiert.",
-        "regenerate": "Wiederherstellen",
+        "regenerate": "Neu Erstellen",
         "success_title": "Herzlichen Glückwunsch!",
         "success_desc": "Es ist an der Zeit, deine @.project:(0) Wallet zu öffnen.",
         "success_submit": "Auf Wallet zugreifen",
@@ -103,12 +104,18 @@
         },
         "address": {
             "derived": "Abgeleitete @.native:(0) Wallet-Adresse",
-            "desc": "Dies ist Ihre Adresse, um Gelder zu erhalten. Ihre Adresse wird sich nach jeder Einzahlung ändern."
+            "title_x": "Abgeleitete Wallet-Addresse",
+            "title_p": "Abgeleitete Platform Wallet Address",
+            "title_c": "Abgeleitete EVM Wallet Addresse",
+            "desc_x_1": "Dies ist deine Adresse um Gelder zu erhalten.",
+            "desc_x_2": "Deine Adresse wird sich nach jeder Einzahlung ändern, du kannst die vorherige aber weiter verwenden",
+            "desc_p": "Dies ist deine P-Chain Addresse, welche Staking Verdienste und Cross-Chain Gebühren verwaltet.",
+            "desc_c": "Dies ist deine C-Chain Addresse. Benutze sie, um mit Smart-Contracts auf der C-Chain zu interagieren."
         }
     },
     "transfer": {
         "title": "Senden",
-        "no_cash": "Sie müssen in Ihrer Wallet Assets vorweisen, um eine Transaktion zu ermöglichen.",
+        "no_cash": "Du mußt in deiner Wallet @.native:(0) Guthaben vorweisen, um eine Transaktion zu ermöglichen.",
         "faucet": "Hast Du unsere \"faucet\" überprüft?",
         "to": "Zur Adresse",
         "fees": "Gebühren",
@@ -121,7 +128,46 @@
         "success_title": "Transaktion gesendet",
         "success_msg": "Du hast deine Transaktion erfolgreich gesendet.",
         "error_title": "Fehler beim Senden der Transaktion",
-        "error_msg": "Versenden der Transaktion ist fehlgeschlagen."
+        "error_msg": "Versenden der Transaktion ist fehlgeschlagen.",
+        "tx_list": {
+            "amount": "Betrag",
+            "token": "Token"
+        },
+        "source_chain": {
+            "title": "Quell Chain"
+        },
+        "c_chain": {
+            "gasPrice": "Gas Preis (GWEI)",
+            "gasLimit": "Gas Grenze",
+            "confirm": "Bestätigen",
+            "cancel": "Abbrechen",
+            "success": {
+                "desc": "Transaktion Gesendet",
+                "label1": "Transaktions Hash"
+            },
+            "reset": "Nochmal Starten"
+        }
+    },
+    "cross_chain": {
+        "title": "Cross Chain",
+        "desc": "Transferiere Token zwischen X-, P- und C- Chains.",
+        "card": {
+            "source": "Quelle",
+            "destination": "Ziel",
+            "name": "Name",
+            "balance": "Guthaben"
+        },
+        "state": {
+            "export": "Export",
+            "import": "Import",
+            "status": "Status",
+            "not_started": "Nicht gestartet",
+            "reason": "Grund"
+        },
+        "form": {
+            "source": "Quell Chain",
+            "destination": "Ziel Chain"
+        }
     },
     "keys": {
         "title": "Meine Schlüssel",
@@ -133,6 +179,7 @@
         "remember_key_desc": "Verschlüssle deine Wallet mit einem Passwort, für eine sichere Aufbewahrung im Browser.",
         "remember_key_check": "Schlüssel merken",
         "remember_key_info": "Greife später auf deine Wallet in diesem Browser mit einem Passwort zu.",
+        "account_slow_warning": "Konten mit mehreren Schlüsseln benötigen länger zum Laden",
         "export_key_button": "WALLET EXPORTIEREN",
         "export_key_title": "Schlüssel Exportieren",
         "export_key_desc": "Gib ein Passwort ein, um deine privaten Schlüssel in eine Datei zu verschlüsseln. Du kannst später diese Datei, und dein Passwort benutzen, um auf deine Wallet zuzugreifen.",
@@ -172,7 +219,7 @@
         "noaddresses": "Du hast keine früheren Adressen."
     },
     "earn": {
-        "title": "Einnahmen",
+        "title": "Verdienen",
         "desc": "Das Staking deiner vorhandenen Tokens vermehrt deine @.native:(0).",
         "subtitle1": "Validieren",
         "subtitle2": "Delegieren",
@@ -187,7 +234,7 @@
         },
         "delegate_card": {
             "title": "Delegieren",
-            "desc": "Du hast keine @.project:(0) Node, aber Du möchtest mit einer anderen Node staken.",
+            "desc": "Du hast keinen @.project:(0) Knoten, aber Du möchtest mit einem anderen Knoten staken.",
             "submit": "Delegierer hinzufügen"
         },
         "transfer_card": {
@@ -217,7 +264,7 @@
                 "export": "Export Transaktions-ID:",
                 "import": "Import Transaktions-ID:",
                 "message": "Du hast erfolgreich zwischen \"Chains\" übertragen.",
-                "back": "Zurück zu \"Einnehmen\""
+                "back": "Zurück zu \"Verdienen\""
             }
         },
         "rewards": {
@@ -234,7 +281,7 @@
             }
         },
         "validate": {
-            "label_1": "Node ID",
+            "label_1": "Knoten ID",
             "duration": {
                 "label": "Staking Zeitraum",
                 "desc": "Die Dauer, in der deine Tokens fürs Staking gesperrt sind.",
@@ -247,7 +294,7 @@
             },
             "fee": {
                 "label": "Delegationsgebühr",
-                "desc": "Auf deinem Node wirst Du diese % der Prämien von den Delegierenden einfordern."
+                "desc": "Auf deinem Knoten wirst Du diese % der Prämien von den Delegierenden einfordern."
             },
             "reward": {
                 "label": "Prämienadresse",
@@ -283,22 +330,22 @@
             "errs": {
                 "date": "Das Startdatum muss in der Zukunft liegen und das Enddatum muss nach dem Startdatum liegen.",
                 "amount": "Der Staking Betrag muss mindestens {0} @.native:(0) betragen",
-                "id": "Ungültige Node ID. Muss mit \"NodeID-\" beginnen",
+                "id": "Ungültige Knoten ID. Muss mit \"NodeID-\" beginnen",
                 "address": "Ungültige Prämienadresse."
             }
         },
         "delegate": {
             "list": {
-                "prompt": "Wähle einen zu delegierenden Node aus",
-                "search": "Node ID suchen",
-                "id": "Node ID",
+                "prompt": "Wähle einen zu delegierenden Knoten aus",
+                "search": "Knoten ID suchen",
+                "id": "Knoten ID",
                 "val_stake": "Validator Stake",
                 "aval_stake": "Verfügbar",
                 "aval_stake_tip": "Wie viel noch an diesen Validator delegiert werden kann.",
                 "users_tip": "Anzahl der Delegierenden",
                 "end": "Endzeit",
                 "up": "Betriebszeit",
-                "up_tip": "Bezogen auf die Node, mit dem diese Wallet verbunden ist.",
+                "up_tip": "Bezogen auf den Knoten, mit dem diese Wallet verbunden ist.",
                 "fee": "Gebühr",
                 "empty": {
                     "title": "Keine Validatoren gefunden",
@@ -306,7 +353,7 @@
                 }
             },
             "node": {
-                "selected": "Ausgewählte Node",
+                "selected": "Ausgewählte Knoten",
                 "fee": "Delegationsgebühr",
                 "start": "Validator Startdatum",
                 "end": "Validator Enddatum"
@@ -321,7 +368,7 @@
                 "amount": {
                     "label": "Einsatzbetrag",
                     "desc": "Der @.native:(0) Betrag der fürs Staking gesperrt ist.",
-                    "desc2": "Der verfügbare Delegationsbetrag für diese Node beträgt {0} @.native:(0)"
+                    "desc2": "Der verfügbare Delegationsbetrag für diese Knoten beträgt {0} @.native:(0)"
                 },
                 "reward": {
                     "label": "Prämienadresse",
@@ -331,7 +378,7 @@
                 }
             },
             "confirmation": {
-                "node": "Node ID",
+                "node": "Knoten ID",
                 "amount": "Staking Betrag",
                 "start": "Startdatum",
                 "end": "Enddatum",
@@ -389,7 +436,7 @@
         "loading": "Lade vergangene Transaktionen ...",
         "warn_loading": "Diese Liste ist möglicherweise unvollständig und nicht mehr aktuell.",
         "error_api": "Explorer API nicht gefunden",
-        "error_api_desc": "Du musst eine AVA Explorer API für dieses Netzwerk zur Verfügung stellen, um den Transaktionsverlauf einzusehen."
+        "error_api_desc": "Du musst eine Magellan Explorer API für dieses Netzwerk zur Verfügung stellen, um den Transaktionsverlauf einzusehen."
     },
     "modal": {
         "qr": {
@@ -425,5 +472,9 @@
     "nav": {
         "access": "Auf Wallet zugreifen",
         "create": "Eine neue Wallet erstellen"
+    },
+    "misc": {
+        "balance": "Guthaben",
+        "cancel": "Abbrechen"
     }
 }

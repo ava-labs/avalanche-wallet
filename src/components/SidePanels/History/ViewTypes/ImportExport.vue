@@ -13,8 +13,8 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData } from '@/store/modules/history/types'
-import { avm, pChain } from '@/AVA'
-import { BN } from 'avalanche'
+import { ava } from '@/AVA'
+import { BN } from '@c4tplatform/camino'
 import { bnToBig } from '@/helpers/helper'
 
 @Component
@@ -59,9 +59,9 @@ export default class ImportExport extends Vue {
             chainId = this.destinationChainId
         }
 
-        if (chainId === pChain.getBlockchainID()) {
+        if (chainId === ava.PChain().getBlockchainID()) {
             return 'P'
-        } else if (chainId === avm.getBlockchainID()) {
+        } else if (chainId === ava.XChain().getBlockchainID()) {
             return 'X'
         }
         return chainId

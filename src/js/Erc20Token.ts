@@ -1,11 +1,10 @@
 import { TokenListToken } from '@/store/modules/assets/types'
 import { web3 } from '@/evm'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
-import store from '@/store'
 
-import ERC20Abi from '@openzeppelin/contracts/build/contracts/ERC20.json'
+import ERC20Abi from '@/abi/IERC20.json'
 
 class Erc20Token {
     data: TokenListToken
@@ -21,14 +20,14 @@ class Erc20Token {
         this.balanceBig = Big(0)
 
         //@ts-ignore
-        var tokenInst = new web3.eth.Contract(ERC20Abi.abi, tokenData.address)
+        var tokenInst = new web3.eth.Contract(ERC20Abi, tokenData.address)
         this.contract = tokenInst
     }
 
     // Returns a new instance of the token, given only the erc20 address
     static fromAddress(address: string) {
         //@ts-ignore
-        var tokenInst = new web3.eth.Contract(ERC20Abi.abi, address)
+        var tokenInst = new web3.eth.Contract(ERC20Abi, address)
         console.log(tokenInst)
     }
 

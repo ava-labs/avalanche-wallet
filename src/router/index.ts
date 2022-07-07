@@ -13,9 +13,10 @@ import Create from '@/views/Create.vue'
 import Wallet from '@/views/Wallet.vue'
 import WalletHome from '@/views/wallet/Portfolio.vue'
 import Earn from '@/views/wallet/Earn.vue'
-import Advanced from '@/views/wallet/Advanced.vue' // your vuex store
-import Activity from '@/views/wallet/Activity.vue' // your vuex store
+import Advanced from '@/views/wallet/Advanced.vue'
+import Activity from '@/views/wallet/Activity.vue'
 import Account from '@/views/access/Account.vue' // your vuex store
+import Launch from '@/views/wallet/Launch.vue'
 import Legal from '@/views/Legal.vue'
 
 Vue.use(VueRouter)
@@ -122,6 +123,10 @@ const routes = [
             {
                 path: 'activity',
                 component: Activity,
+            },
+            {
+                path: 'launch',
+                component: Launch,
             },
         ],
         component: Wallet,

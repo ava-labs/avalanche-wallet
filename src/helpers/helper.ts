@@ -5,12 +5,12 @@ import {
     KeyPair as AVMKeyPair,
     NFTTransferOutput,
     UTXO,
-} from 'avalanche/dist/apis/avm'
+} from '@c4tplatform/camino/dist/apis/avm'
 
-import { Defaults, getPreferredHRP, ONEAVAX, PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
+import { ONEAVAX, PayloadBase, PayloadTypes } from '@c4tplatform/camino/dist/utils'
 import Big from 'big.js'
 
-import { Buffer, BN } from 'avalanche'
+import { Buffer, BN } from '@c4tplatform/camino'
 import createHash from 'create-hash'
 
 function bnToBig(val: BN, denomination = 0): Big {
@@ -18,28 +18,19 @@ function bnToBig(val: BN, denomination = 0): Big {
 }
 
 function keyToKeypair(key: string, chainID: string = 'X'): AVMKeyPair {
-    let hrp = getPreferredHRP(ava.getNetworkID())
+    let hrp = ava.getHRP()
     let keychain = new AVMKeyChain(hrp, chainID)
     return keychain.importKey(key)
 }
 
 function calculateStakingReward(amount: BN, duration: number, currentSupply: BN): BN {
-    let networkID = ava.getNetworkID()
+    const platform = ava.getNetwork().P
 
-    //@ts-ignore
-    let defValues = Defaults.network[networkID]
-
-    if (!defValues) {
-        console.error('Network default values not found.')
-        return new BN(0)
-    }
-    const defPlatformVals = defValues.P
-
-    let maxConsumption: number = defPlatformVals.maxConsumption
-    let minConsumption: number = defPlatformVals.minConsumption
+    let maxConsumption: number = platform.maxConsumption
+    let minConsumption: number = platform.minConsumption
     let diffConsumption = maxConsumption - minConsumption
-    let maxSupply: BN = defPlatformVals.maxSupply
-    let maxStakingDuration: BN = defPlatformVals.maxStakingDuration
+    let maxSupply: BN = platform.maxSupply
+    let maxStakingDuration: BN = platform.maxStakingDuration
     let remainingSupply = maxSupply.sub(currentSupply)
 
     let amtBig = Big(amount.div(ONEAVAX).toString())

@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Jelszó",
     "password_confirm": "Jelszó megerősítése",
     "private_key": "Privát kulcs",
@@ -37,10 +37,10 @@
         "json_error": "Nem sikerült elemezni a JSON fájlt.",
         "keystore_error": "Ez a kulcstár verzió nem támogatott.",
         "password_error": "Érvénytelen jelszó.",
+        "submit": "Hozzáférés pénztárcád",
         "mnemonic": {
             "title": "Írja be a MNEMONIKUS kulcsmondatot\n",
             "subtitle": "Minden sikeres szóbejegyzés után nyomja meg a „SPACE” gombot.",
-            "submit": "Hozzáférés pénztárcád",
             "cancel": "Megszünteti",
             "error": "Érvénytelen kulcsmondat. A kifejezésnek 24 szóból kell állnia, egyetlen szóközzel elválasztva."
         }
@@ -389,7 +389,7 @@
         "loading": "Tranzakciós előzmények betöltése..",
         "warn_loading": "Lehet, hogy ez a lista hiányos és nem működik.",
         "error_api": "Az Explorer API nem található",
-        "error_api_desc": "A tranzakciós előzmények megtekintéséhez meg kell adnia egy AVA Explorer API-t ehhez a hálózathoz."
+        "error_api_desc": "A tranzakciós előzmények megtekintéséhez meg kell adnia egy Magellan Explorer API-t ehhez a hálózathoz."
     },
     "modal": {
         "qr": {

@@ -49,15 +49,12 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import { ChainIdType } from '@/constants'
-import { avm } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import AvaAsset from '@/js/AvaAsset'
 import { ChainSwapFormData } from '@/components/wallet/earn/ChainTransfer/types'
-import { AvaNetwork } from '@/js/AvaNetwork'
 
 const chainTypes: ChainIdType[] = ['X', 'P', 'C']
 const chainNames = {

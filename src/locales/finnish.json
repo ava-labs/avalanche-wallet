@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Salasana",
     "password_confirm": "Vahvista Salasana",
     "private_key": "Private Key",
@@ -37,10 +37,10 @@
         "json_error": "JSON-tiedoston jäsentäminen epäonnistui.",
         "keystore_error": "Tätä avainvarastoversiota ei tueta.",
         "password_error": "Väärä Salasana.",
+        "submit": "Tarkastele Lompakkoa",
         "mnemonic": {
             "title": "Anna MUISTILAUSE",
             "subtitle": "Paina 'VÄLILYÖNTI' jokaisen oikean sanan jälkeen.",
-            "submit": "Tarkastele Lompakkoa",
             "cancel": "Peruuta",
             "error": "Väärä avainlauseke. Lausekkeen tulee olla 24 sanaa pitkä ja erotettu yhdellä välilyönnillä."
         }
@@ -389,7 +389,7 @@
         "loading": "Ladataan tapahtumahistoria ..",
         "warn_loading": "Tämä luettelo saattaa olla epätäydellinen ja epäkunnossa.",
         "error_api": "Explorer-sovellusliittymää ei löydy",
-        "error_api_desc": "Sinun on annettava tälle verkolle AVA Explorer -sovellusliittymä, jotta voit tarkastella tapahtumahistoriaa."
+        "error_api_desc": "Sinun on annettava tälle verkolle Magellan Explorer -sovellusliittymä, jotta voit tarkastella tapahtumahistoriaa."
     },
     "modal": {
         "qr": {

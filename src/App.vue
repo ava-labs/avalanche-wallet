@@ -2,7 +2,7 @@
     <v-app>
         <v-main>
             <template>
-                <UrlBanner></UrlBanner>
+                <!--UrlBanner></UrlBanner-->
                 <navbar v-show="isNavbar"></navbar>
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <UpgradeToAccountModal></UpgradeToAccountModal>
@@ -17,7 +17,6 @@
         <LedgerWalletLoading></LedgerWalletLoading>
         <NetworkLoadingBlock></NetworkLoadingBlock>
         <notifications></notifications>
-        <TestNetBanner></TestNetBanner>
     </v-app>
 </template>
 <script>
@@ -26,7 +25,6 @@ import Navbar from './components/Navbar'
 import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
-import TestNetBanner from '@/components/TestNetBanner'
 import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
 import LedgerWalletLoading from '@/components/modals/LedgerWalletLoading'
@@ -43,7 +41,6 @@ export default {
         SaveAccountModal,
         Navbar,
         Notifications,
-        TestNetBanner,
     },
     async created() {
         // Init language preference
@@ -53,14 +50,9 @@ export default {
         }
 
         await this.$store.dispatch('Network/init')
-        this.$store.commit('Accounts/loadAccounts')
         this.$store.dispatch('Assets/initErc20List')
-        this.$store.dispatch('Assets/ERC721/init')
+        this.$store.dispatch('Assets/ERCNft/init')
         this.$store.dispatch('updateAvaxPrice')
-
-        if (this.$store.state.Accounts.accounts.length > 0) {
-            this.$router.push('/access')
-        }
     },
     computed: {
         isNavbar() {
@@ -96,45 +88,36 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@use "./main";
+@use './main';
 
 .main_cols {
     &[wallet_view] {
         height: 100vh;
 
         #router_view {
-            overflow: auto;
             padding: 0;
             padding-bottom: 0px;
         }
     }
 
     #router_view {
-        min-height: calc(100vh - 80px);
         position: relative;
         padding: main.$container_padding_m;
     }
 }
 
 #router_view {
-    min-height: calc(100vh - 80px);
     position: relative;
     padding: main.$container_padding_m;
-    overflow: auto;
 }
-
-/*.panel {*/
-/*    background-color: #fff;*/
-/*    overflow: auto;*/
-/*    height: 100%;*/
-/*}*/
 </style>
 
 <style lang="scss">
-@use "./main";
+@use './main';
 
 html {
     height: 100%;
+    overflow-y: auto;
 }
 
 body {
@@ -168,21 +151,11 @@ p {
 }
 
 @include main.mobile-device {
-    #router_view {
-        padding: 9px !important;
-    }
-
     #nav {
         padding: main.$container_padding_mobile;
         display: flex !important;
     }
 
-    /*.main_cols {*/
-    /*    grid-template-columns: 1fr !important;*/
-    /*    &[wallet_view] {*/
-    /*        height: auto !important;*/
-    /*    }*/
-    /*}*/
     .panel {
         display: none !important;
     }

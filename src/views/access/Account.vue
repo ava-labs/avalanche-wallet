@@ -18,13 +18,13 @@
                     :disabled="!canSubmit"
                     depressed
                 >
-                    Access Wallet
+                    {{ $t('access.submit') }}
                 </v-btn>
                 <small>{{ $t('keys.account_slow_warning') }}</small>
                 <br />
                 <br />
             </form>
-            <router-link to="/access" class="link">Cancel</router-link>
+            <router-link to="/access" class="link">{{ $t('access.cancel') }}</router-link>
         </div>
     </div>
 </template>

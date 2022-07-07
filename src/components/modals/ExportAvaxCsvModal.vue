@@ -19,12 +19,11 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
-import { CsvRowAvaxTransferData, ITransactionData, UTXO } from '@/store/modules/history/types'
+import { CsvRowAvaxTransferData, ITransactionData } from '@/store/modules/history/types'
 import { bnToBig } from '@/helpers/helper'
-const generate = require('csv-generate')
 import {
     avaxTransferDataToCsvRow,
     getOutputTotals,
@@ -36,8 +35,8 @@ import {
     downloadCSVFile,
     parseMemo,
 } from '@/store/modules/history/history_utils'
-import { ava, avm } from '@/AVA'
-import { BN } from 'avalanche'
+import { ava } from '@/AVA'
+import { BN } from '@c4tplatform/camino'
 
 @Component({
     components: {
@@ -93,7 +92,7 @@ export default class ExportAvaxCsvModal extends Vue {
             return tx.type === 'base' || tx.type === 'operation'
         })
 
-        let txFee = avm.getTxFee()
+        let txFee = ava.XChain().getTxFee()
 
         let rows: CsvRowAvaxTransferData[] = []
         const ZERO = new BN(0)

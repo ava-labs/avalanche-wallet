@@ -10,18 +10,16 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { NFTTransferOutput, UTXO } from 'avalanche/dist/apis/avm'
-import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
-import { PayloadBase } from 'avalanche/dist/utils'
-import { Buffer } from 'avalanche'
-import { PayloadTypes } from 'avalanche/dist/utils'
-import Tooltip from '@/components/misc/Tooltip.vue'
+import { NFTTransferOutput, UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { Buffer } from '@c4tplatform/camino'
+import { PayloadTypes } from '@c4tplatform/camino/dist/utils'
 import NFTViewModal from '@/components/modals/NFTViewModal.vue'
 import NftCard from '@/components/wallet/portfolio/NftCard.vue'
 
 let payloadtypes = PayloadTypes.getInstance()
 @Component({
-    components: { NftCard, NFTViewModal, Tooltip, NftPayloadView },
+    components: { NftCard, NFTViewModal },
 })
 export default class CollectibleFamilyGroup extends Vue {
     @Prop() utxos!: UTXO[]
@@ -76,9 +74,7 @@ export default class CollectibleFamilyGroup extends Vue {
     top: 0;
     left: 0;
     width: 100%;
-    //border-radius: 14px;
     overflow: auto;
-    //box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 .back {

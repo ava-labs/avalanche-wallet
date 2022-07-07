@@ -49,11 +49,11 @@ import {
     StakeableLockOut,
     UTXO,
     UTXOSet,
-} from 'avalanche/dist/apis/platformvm'
+} from '@c4tplatform/camino/dist/apis/platformvm'
 
 import UtxoRow from '@/components/modals/UtxoSelect/UtxoRow.vue'
-import { BN } from 'avalanche'
-import { UnixNow } from 'avalanche/dist/utils'
+import { BN } from '@c4tplatform/camino'
+import { UnixNow } from '@c4tplatform/camino/dist/utils'
 import { bnToBig } from '@/helpers/helper'
 
 @Component({

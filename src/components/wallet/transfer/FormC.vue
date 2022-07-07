@@ -125,21 +125,26 @@
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import AvaAsset from '@/js/AvaAsset'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import { priceDict } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
-import { GasHelper, TxHelper, Utils } from '@avalabs/avalanche-wallet-sdk'
+import {
+    GasHelper,
+    TxHelper,
+    bnToAvaxC,
+    bnToBigAvaxC,
+    bnToBigAvaxX,
+} from '@c4tplatform/camino-wallet-sdk'
 
 // @ts-ignore
-import { QrInput } from '@avalabs/vue_components'
+import { QrInput } from '@c4tplatform/vue_components'
 import Big from 'big.js'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 import { bnToBig } from '@/helpers/helper'
 import { web3 } from '@/evm'
 import EVMInputDropdown from '@/components/misc/EVMInputDropdown/EVMInputDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
 import { WalletHelper } from '@/helpers/wallet_helper'
 
 @Component({
@@ -166,7 +171,7 @@ export default class FormC extends Vue {
     canSendAgain = false
 
     isCollectible = false
-    formCollectible: iErc721SelectInput | null = null
+    formCollectible: iERCNftSelectInput | null = null
 
     txHash = ''
 
@@ -191,7 +196,7 @@ export default class FormC extends Vue {
     }
 
     get gasPriceNumber() {
-        return Utils.bnToBigAvaxX(this.gasPrice).toFixed(0)
+        return bnToBigAvaxX(this.gasPrice).toFixed(0)
     }
 
     async updateGasPrice() {
@@ -207,7 +212,7 @@ export default class FormC extends Vue {
         this.isCollectible = false
     }
 
-    onCollectibleChange(val: iErc721SelectInput) {
+    onCollectibleChange(val: iERCNftSelectInput) {
         this.isCollectible = true
         this.formCollectible = val
     }
@@ -289,11 +294,11 @@ export default class FormC extends Vue {
     }
 
     get maxFeeUSD() {
-        return Utils.bnToBigAvaxC(this.maxFee).times(this.priceDict.usd)
+        return bnToBigAvaxC(this.maxFee).times(this.priceDict.usd)
     }
 
     get maxFeeText(): string {
-        return Utils.bnToAvaxC(this.maxFee)
+        return bnToAvaxC(this.maxFee)
     }
 
     // balance - (gas * price)
@@ -328,14 +333,14 @@ export default class FormC extends Vue {
             }
         }
 
-        // For erc721 transfers
+        // For ercNft transfers
         if (this.isCollectible && this.formCollectible) {
             let fromAddr = '0x' + this.wallet.getEvmAddress()
             let toAddr = this.formAddress
             let tx = this.formCollectible.token.createTransferTx(
                 fromAddr,
                 toAddr,
-                this.formCollectible.id
+                this.formCollectible.id.tokenId
             )
             let estGas = await WalletHelper.estimateTxGas(this.wallet, tx)
             this.gasLimit = estGas
@@ -376,19 +381,20 @@ export default class FormC extends Vue {
     activated() {
         this.startAgain()
 
-        let tokenAddr = this.$route.query.token
-        let tokenId = this.$route.query.tokenId
+        let tokenAddr = this.$route.query.token as string
+        let tokenId = this.$route.query.tokenId as string
 
         if (tokenAddr) {
             if (tokenAddr === 'native') {
                 this.$refs.token_in.setToken(tokenAddr)
             } else {
                 let token = this.$store.getters['Assets/findErc20'](tokenAddr)
-                let erc721 = this.$store.getters['Assets/ERC721/find'](tokenAddr)
+                let ercNft = this.$store.getters['Assets/ERCNft/find'](tokenAddr)
                 if (token) {
                     this.$refs.token_in.setToken(token)
-                } else if (erc721 && tokenId) {
-                    this.$refs.token_in.setErc721Token(erc721, tokenId as string)
+                } else if (ercNft && tokenId) {
+                    const quantity = this.$store.getters['Assets/ERCNft/owned'](tokenAddr, tokenId)
+                    this.$refs.token_in.setERCNftToken(ercNft, { tokenId, quantity })
                 }
             }
         }
@@ -442,13 +448,13 @@ export default class FormC extends Vue {
                 }
             } else {
                 if (!this.formCollectible) throw 'No collectible selected.'
-                let txHash = await WalletHelper.sendErc721(
+                let txHash = await WalletHelper.sendERCNft(
                     this.wallet,
                     toAddress,
                     gasPriceWei,
                     this.gasLimit,
                     this.formCollectible.token,
-                    this.formCollectible.id
+                    this.formCollectible.id.tokenId
                 )
                 this.onSuccess(txHash)
             }

@@ -28,8 +28,8 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
-import { BN } from 'avalanche'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { BN } from '@c4tplatform/camino'
 import Big from 'big.js'
 
 @Component

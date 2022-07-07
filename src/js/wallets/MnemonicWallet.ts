@@ -1,18 +1,12 @@
-// A simple wrapper thar combines avalanche.js, bip39 and HDWallet
+// A simple wrapper thar combines caminojs, bip39 and HDWallet
 
 import {
     KeyPair as AVMKeyPair,
     KeyChain as AVMKeyChain,
-    UTXOSet as AVMUTXOSet,
-    TransferableInput,
-    TransferableOutput,
-    BaseTx,
     UnsignedTx as AVMUnsignedTx,
     Tx as AVMTx,
     UTXO as AVMUTXO,
-    AssetAmountDestination,
-    UTXOSet,
-} from 'avalanche/dist/apis/avm'
+} from '@c4tplatform/camino/dist/apis/avm'
 
 import { privateToAddress } from 'ethereumjs-util'
 
@@ -21,31 +15,28 @@ import {
     UnsignedTx as PlatformUnsignedTx,
     UTXO as PlatformUTXO,
     Tx as PlatformTx,
-} from 'avalanche/dist/apis/platformvm'
+} from '@c4tplatform/camino/dist/apis/platformvm'
 
 import {
     KeyChain as EVMKeyChain,
     UnsignedTx as EVMUnsignedTx,
     Tx as EvmTx,
-} from 'avalanche/dist/apis/evm'
-import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
+} from '@c4tplatform/camino/dist/apis/evm'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
 
 import * as bip39 from 'bip39'
-import { BN, Buffer as BufferAvalanche } from 'avalanche'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-import { AvmExportChainType, AvmImportChainType, IAvaHdWallet } from '@/js/wallets/types'
+import { BN, Buffer as BufferAvalanche } from '@c4tplatform/camino'
+import { ava, bintools } from '@/AVA'
+import { IAvaHdWallet } from '@/js/wallets/types'
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { WalletNameType } from '@/js/wallets/types'
-import { digestMessage } from '@/helpers/helper'
-import { KeyChain } from 'avalanche/dist/apis/evm'
+import { KeyChain } from '@c4tplatform/camino/dist/apis/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
-import { ExportChainsC, ExportChainsP } from '@avalabs/avalanche-wallet-sdk'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -85,9 +76,12 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         this.ethBalance = new BN(0)
     }
 
-    // The master key from avalanche.js
-    constructor(mnemonic: string) {
-        let seed: globalThis.Buffer = bip39.mnemonicToSeedSync(mnemonic)
+    // The master key from caminojs
+    constructor(mnemonic: string, seedStr?: string) {
+        const seed: globalThis.Buffer = seedStr
+            ? Buffer.from(seedStr, 'hex')
+            : bip39.mnemonicToSeedSync(mnemonic)
+
         let masterHdKey: HDKey = HDKey.fromMasterSeed(seed)
         let accountHdKey = masterHdKey.derive(AVA_ACCOUNT_PATH)
         let ethAccountKey = masterHdKey.derive(ETH_ACCOUNT_PATH + '/0/0')
@@ -177,6 +171,10 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         return this.mnemonic
     }
 
+    getSeed(): string {
+        return this.seed
+    }
+
     async validate(
         nodeID: string,
         amt: BN,
@@ -229,10 +227,7 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         let external = this.externalHelper.getAllDerivedKeys() as AVMKeyPair[]
 
         let allKeys = internal.concat(external)
-        let keychain: AVMKeyChain = new AVMKeyChain(
-            getPreferredHRP(ava.getNetworkID()),
-            this.chainId
-        )
+        let keychain: AVMKeyChain = new AVMKeyChain(ava.getHRP(), this.chainId)
 
         for (var i = 0; i < allKeys.length; i++) {
             keychain.addKey(allKeys[i])

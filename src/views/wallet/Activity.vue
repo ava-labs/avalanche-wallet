@@ -62,7 +62,6 @@
             <div class="tx_list" v-show="showList">
                 <virtual-list
                     v-show="txs.length > 0"
-                    :style="{ height: `${listH}px`, overflowY: 'auto' }"
                     :data-key="'id'"
                     :data-sources="txsProcessed"
                     :data-component="RowComponent"
@@ -416,19 +415,10 @@ export default class Activity extends Vue {
 }
 
 .tx_table {
-    height: 100%;
-    overflow: auto;
     border-top: 2px solid var(--bg-wallet);
-    //overflow: scroll;
-    //padding-right: 20px;
-    //margin-right: 20px;
-    //border-right: 1px solid var(--bg-light);
 }
 
 .tx_list {
-    //max-height: 480px;
-    //overflow: scroll;
-    height: 100%;
     position: relative;
 }
 
@@ -514,12 +504,6 @@ export default class Activity extends Vue {
     font-size: 24px;
 }
 
-.filter_col {
-    //display: flex;
-    //flex-direction: row;
-    //align-items: center;
-}
-
 .filter_cont {
     label {
         font-size: 12px;
@@ -580,10 +564,6 @@ export default class Activity extends Vue {
 
     .pagination_info {
         justify-content: flex-start;
-    }
-
-    .tx_list {
-        height: 90vh;
     }
 }
 </style>

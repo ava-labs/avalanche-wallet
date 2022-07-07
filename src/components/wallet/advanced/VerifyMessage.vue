@@ -32,12 +32,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { KeyPair } from 'avalanche/dist/apis/avm'
+import { KeyPair } from '@c4tplatform/camino/dist/apis/avm'
 import { ava, bintools } from '@/AVA'
-import createHash from 'create-hash'
-import { getPreferredHRP } from 'avalanche/dist/utils'
-import { avm } from '@/AVA'
-import { Buffer } from 'avalanche'
+import { Buffer } from '@c4tplatform/camino'
 import { digestMessage } from '@/helpers/helper'
 
 @Component
@@ -55,16 +52,14 @@ export default class VerifyMessage extends Vue {
         try {
             this.verify()
         } catch (e) {
-            this.error = e
+            this.error = (e as Error).message
         }
     }
     verify() {
         let digest = digestMessage(this.message)
         let digestBuff = Buffer.from(digest.toString('hex'), 'hex')
 
-        let networkId = ava.getNetworkID()
-
-        let hrp = getPreferredHRP(networkId)
+        let hrp = ava.getHRP()
         let keypair = new KeyPair(hrp, 'X')
 
         let signedBuff = bintools.cb58Decode(this.signature)

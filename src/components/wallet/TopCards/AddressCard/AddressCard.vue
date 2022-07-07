@@ -50,13 +50,12 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import CopyText from '@/components/misc/CopyText.vue'
 import QRModal from '@/components/modals/QRModal.vue'
 import PaperWallet from '@/components/modals/PaperWallet/PaperWallet.vue'
 import QRCode from 'qrcode'
-import { KeyPair as AVMKeyPair } from 'avalanche/dist/apis/avm'
 import { WalletType, WalletNameType } from '@/js/wallets/types'
 
 import MnemonicWallet, {
@@ -68,7 +67,7 @@ import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import ChainSelect from '@/components/wallet/TopCards/AddressCard/ChainSelect.vue'
 import { ChainIdType } from '@/constants'
 import { ava } from '@/AVA'
-import { getPreferredHRP } from 'avalanche/dist/utils'
+
 @Component({
     components: {
         CopyText,
@@ -238,8 +237,7 @@ export default class AddressCard extends Vue {
     async verifyLedgerAddress() {
         const wallet = this.activeWallet as LedgerWallet
 
-        let networkId = ava.getNetworkID()
-        let hrp = getPreferredHRP(networkId)
+        let hrp = ava.getHRP()
 
         switch (this.chainNow) {
             case 'X':
@@ -382,44 +380,5 @@ $qr_width: 110px;
     word-break: break-all;
     color: var(--primary-color);
     min-height: 55px;
-}
-
-@include main.medium-device {
-    //.bottom{
-    //    display: block;
-    //}
-    .bottom_rest {
-        justify-content: space-between;
-    }
-
-    .addr_info {
-        display: none;
-    }
-    canvas {
-        display: block;
-        margin: 0px auto;
-    }
-
-    .buts {
-        justify-content: space-evenly;
-
-        > * {
-            margin: 0;
-        }
-    }
-
-    .addr_text {
-        font-size: 13px;
-    }
-}
-
-.bottom_tabs {
-    width: 100%;
-}
-
-@include main.mobile-device {
-    .addr_info {
-        display: none;
-    }
 }
 </style>

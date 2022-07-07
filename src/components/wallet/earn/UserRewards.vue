@@ -29,18 +29,13 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { AvaWalletCore } from '../../../js/wallets/types'
-import {
-    DelegatorPendingRaw,
-    DelegatorRaw,
-    ValidatorPendingRaw,
-    ValidatorRaw,
-} from '@/components/misc/ValidatorList/types'
+import { DelegatorRaw, ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 
 @Component({
     components: {

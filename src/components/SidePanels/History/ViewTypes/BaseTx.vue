@@ -80,11 +80,11 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
 import { TransactionValueDict } from '@/components/SidePanels/types'
-import { PayloadBase, PayloadTypes } from 'avalanche/dist/utils'
-import { BN, Buffer } from 'avalanche'
+import { PayloadBase, PayloadTypes } from '@c4tplatform/camino/dist/utils'
+import { BN, Buffer } from '@c4tplatform/camino'
 import { WalletType } from '@/js/wallets/types'
 
-import { avm, pChain } from '@/AVA'
+import { ava } from '@/AVA'
 
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import TxHistoryValueFunctional from '@/components/SidePanels/History/TxHistoryValueFunctional.vue'
@@ -176,9 +176,9 @@ export default class BaseTx extends Vue {
 
         switch (this.transaction.type) {
             case 'export':
-                return utxo.chainID === avm.getBlockchainID()
+                return utxo.chainID === ava.XChain().getBlockchainID()
             case 'pvm_export':
-                return utxo.chainID === pChain.getBlockchainID()
+                return utxo.chainID === ava.PChain().getBlockchainID()
             case 'pvm_import':
             case 'import':
                 if (isInput) return false

@@ -48,7 +48,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Modal from '../Modal.vue'
 import { SaveAccountInput } from '@/store/types'
@@ -65,6 +65,7 @@ export default class SaveAccountModal extends Vue {
     password: string = ''
     password_confirm: string = ''
     isLoading: boolean = false
+    isDestroyed: boolean = false
     err: any = ''
     accountName = ''
     existsInLocalStorage: boolean = false
@@ -104,6 +105,10 @@ export default class SaveAccountModal extends Vue {
         this.onsuccess()
     }
 
+    destroyed() {
+        this.isDestroyed = true
+    }
+
     onsuccess() {
         this.$store.dispatch('Notifications/add', {
             title: 'Account Saved',
@@ -121,7 +126,7 @@ export default class SaveAccountModal extends Vue {
     }
     close() {
         this.clear()
-        this.$refs.modal.close()
+        if (!this.isDestroyed) this.$refs.modal.close()
     }
 
     open() {

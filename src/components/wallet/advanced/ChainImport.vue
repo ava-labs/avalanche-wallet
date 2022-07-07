@@ -39,20 +39,18 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import { WalletType } from '@/js/wallets/types'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 import {
     ExportChainsC,
     ExportChainsP,
     ExportChainsX,
     GasHelper,
-    Network,
-    NetworkHelper,
-    Utils,
-} from '@avalabs/avalanche-wallet-sdk'
+    avaxCtoX,
+} from '@c4tplatform/camino-wallet-sdk'
 
 @Component({
     components: { Spinner },
@@ -83,7 +81,7 @@ export default class ChainImport extends Vue {
             this.onSuccess(txId)
         } catch (e) {
             if (this.isSuccess) return
-            this.onError(e)
+            this.onError(e as Error)
         }
     }
 
@@ -94,7 +92,7 @@ export default class ChainImport extends Vue {
             let txId = await this.wallet.importToPlatformChain(source)
             this.onSuccess(txId)
         } catch (e) {
-            this.onError(e)
+            this.onError(e as Error)
         }
     }
 
@@ -120,10 +118,10 @@ export default class ChainImport extends Vue {
             const gas = GasHelper.estimateImportGasFeeFromMockTx(numIns, numSigs)
 
             const totFee = baseFee.mul(new BN(gas))
-            let txId = await this.wallet.importToCChain(source, Utils.avaxCtoX(totFee))
+            let txId = await this.wallet.importToCChain(source, avaxCtoX(totFee))
             this.onSuccess(txId)
         } catch (e) {
-            this.onError(e)
+            this.onError(e as Error)
         }
     }
 

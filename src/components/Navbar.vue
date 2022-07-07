@@ -2,9 +2,7 @@
     <div id="nav">
         <ConfirmLogout ref="logout"></ConfirmLogout>
         <router-link to="/" class="logo">
-            <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.png" />
-            <img v-else src="@/assets/wallet_logo_dark.png" />
-            <!--            <span class="slogan">by Avalanche</span>-->
+            <img src="@/assets/camino_logo.png" />
         </router-link>
         <v-spacer></v-spacer>
 
@@ -21,10 +19,11 @@
                     {{ $t('nav.create') }}
                 </router-link>
             </template>
-            <network-menu></network-menu>
+        </div>
+        <network-menu />
+        <div class="buts_right">
             <LanguageSelect class="lang_web"></LanguageSelect>
         </div>
-
         <div class="mobile_right">
             <v-btn @click="isDrawer = !isDrawer" icon class="mobile_drawer">
                 <fa icon="bars"></fa>
@@ -42,8 +41,7 @@
         >
             <v-list dense nav>
                 <div style="display: flex; justify-content: space-between; padding: 4px 8px">
-                    <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg" />
-                    <img v-else src="@/assets/wallet_logo_dark.svg" />
+                    <img src="@/assets/camino_logo.png" />
                     <DayNightToggle class="action_but"></DayNightToggle>
                 </div>
                 <template v-if="isAuth">
@@ -53,7 +51,10 @@
                         {{ $t('wallet.sidebar.export') }}
                     </router-link>
                     <router-link to="/wallet/earn">{{ $t('wallet.sidebar.earn') }}</router-link>
-                    <router-link to="/wallet/activity">Activity</router-link>
+                    <router-link to="/wallet/studio">{{ $t('wallet.sidebar.studio') }}</router-link>
+                    <router-link to="/wallet/activity">
+                        {{ $t('wallet.sidebar.activity') }}
+                    </router-link>
                     <router-link to="/wallet/keys">{{ $t('wallet.sidebar.manage') }}</router-link>
                     <router-link to="/wallet/advanced" data-cy="wallet_advanced">
                         {{ $t('wallet.sidebar.advanced') }}
@@ -81,7 +82,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue'
 import DayNightToggle from '@/components/misc/DayNightToggle.vue'
 import NetworkMenu from './NetworkSettings/NetworkMenu.vue'
@@ -106,12 +107,13 @@ export default class Navbar extends Vue {
     logout(): void {
         // @ts-ignore
         this.$refs.logout.open()
+        this.isDrawer = false
     }
 }
 </script>
 <style scoped lang="scss">
 @use '../main';
-@use "../light_theme";
+@use '../light_theme';
 
 img {
     max-height: 25px;

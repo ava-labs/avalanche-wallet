@@ -39,18 +39,16 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
 import {
     CsvRowStakingData,
     CsvRowStakingTxType,
     ITransactionData,
-    UTXO,
 } from '@/store/modules/history/types'
 import { bnToBig } from '@/helpers/helper'
 import { getPriceAtUnixTime } from '@/helpers/price_helper'
-const generate = require('csv-generate')
 import moment from 'moment'
 import {
     stakingDataToCsvRow,

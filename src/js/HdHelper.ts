@@ -2,17 +2,16 @@ import {
     KeyChain as AVMKeyChain,
     KeyPair as AVMKeyPair,
     UTXOSet as AVMUTXOSet,
-} from 'avalanche/dist/apis/avm'
+} from '@c4tplatform/camino/dist/apis/avm'
 
-import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
-import { getPreferredHRP } from 'avalanche/dist/utils'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm'
+import { ava, bintools } from '@/AVA'
 import HDKey from 'hdkey'
-import { Buffer } from 'avalanche'
+import { Buffer } from '@c4tplatform/camino'
 import {
     KeyChain as PlatformVMKeyChain,
     KeyPair as PlatformVMKeyPair,
-} from 'avalanche/dist/apis/platformvm'
+} from '@c4tplatform/camino/dist/apis/platformvm'
 import store from '@/store'
 
 import { getAddressChains } from '@/explorer_api'
@@ -56,7 +55,7 @@ class HdHelper {
         this.isInit = false
 
         this.chainId = chainId
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         if (chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, chainId)
             this.utxoSet = new AVMUTXOSet()
@@ -83,7 +82,7 @@ class HdHelper {
     async onNetworkChange() {
         this.clearCache()
         this.isInit = false
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         if (this.chainId === 'X') {
             this.keyChain = new AVMKeyChain(hrp, this.chainId)
             this.utxoSet = new AVMUTXOSet()
@@ -128,7 +127,12 @@ class HdHelper {
         let explorerUrl = network.explorerUrl
 
         if (explorerUrl) {
-            this.hdIndex = await this.findAvailableIndexExplorer()
+            try {
+                this.hdIndex = await this.findAvailableIndexExplorer()
+            } catch (e) {
+                console.log('Explorer exception -> Fallback')
+                this.hdIndex = await this.findAvailableIndexNode()
+            }
         } else {
             this.hdIndex = await this.findAvailableIndexNode()
         }
@@ -183,7 +187,7 @@ class HdHelper {
 
     // Updates the helper keychain to contain keys upto the HD Index
     updateKeychain(): AVMKeyChain | PlatformVMKeyChain {
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
         let keychain: AVMKeyChain | PlatformVMKeyChain
 
         if (this.chainId === 'X') {
@@ -242,16 +246,16 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
-        let upTo = 512
+        let upTo = SCAN_SIZE
 
         let addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
         let addrChains = await getAddressChains(addrs)
 
         let chainID
         if (this.chainId === 'X') {
-            chainID = avm.getBlockchainID()
+            chainID = ava.XChain().getBlockchainID()
         } else {
-            chainID = pChain.getBlockchainID()
+            chainID = ava.PChain().getBlockchainID()
         }
 
         for (var i = 0; i < addrs.length - INDEX_RANGE; i++) {
@@ -298,9 +302,9 @@ class HdHelper {
         let utxoSet
 
         if (this.chainId === 'X') {
-            utxoSet = (await avm.getUTXOs(addrs)).utxos
+            utxoSet = (await ava.XChain().getUTXOs(addrs)).utxos
         } else {
-            utxoSet = (await pChain.getUTXOs(addrs)).utxos
+            utxoSet = (await ava.PChain().getUTXOs(addrs)).utxos
         }
 
         // Scan UTXOs of these indexes and try to find a gap of INDEX_RANGE
@@ -417,7 +421,7 @@ class HdHelper {
 
         let pkHex = key.publicKey.toString('hex')
         let pkBuff = Buffer.from(pkHex, 'hex')
-        let hrp = getPreferredHRP(ava.getNetworkID())
+        let hrp = ava.getHRP()
 
         let chainId = this.chainId
 

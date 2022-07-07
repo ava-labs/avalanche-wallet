@@ -19,8 +19,6 @@ export default {
 }
 </script>
 <style scoped>
-li input {
-}
 li p {
     margin: 0;
     padding-left: 10px;

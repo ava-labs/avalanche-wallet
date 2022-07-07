@@ -13,31 +13,25 @@ import {
     IWalletNftMintDict,
     RootState,
 } from '@/store/types'
-import { ava, avm, bintools, cChain } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
-import {
-    AmountOutput,
-    UTXOSet as AVMUTXOSet,
-    UTXO as AVMUTXO,
-    UTXO,
-    NFTMintOutput,
-} from 'avalanche/dist/apis/avm'
-import { UnixNow } from 'avalanche/dist/utils'
-import { BN } from 'avalanche'
-import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import { StakeableLockOut } from 'avalanche/dist/apis/platformvm'
+import { AmountOutput, UTXOSet as AVMUTXOSet, UTXO, NFTMintOutput } from '@c4tplatform/camino/dist/apis/avm'
+import { UnixNow } from '@c4tplatform/camino/dist/utils'
+import { BN } from '@c4tplatform/camino'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm/utxos'
+import { StakeableLockOut } from '@c4tplatform/camino/dist/apis/platformvm'
 import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
-// import ERC721Token from '@/js/ERC721Token'
+// import ERCNftToken from '@/js/ERCNftToken'
 
 const TOKEN_LISTS: string[] = []
 
-import ERC721Module from './modules/erc721'
+import ERCNftModule from './modules/ercNft'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
@@ -47,7 +41,7 @@ import { isUrlBanned } from '@/components/misc/NftPayloadView/blacklist'
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
     modules: {
-        ERC721: ERC721Module,
+        ERCNft: ERCNftModule,
     },
     state: {
         AVA_ASSET_ID: null,
@@ -124,8 +118,13 @@ const assets_module: Module<AssetsState, RootState> = {
             let id = await web3.eth.getChainId()
             state.evmChainId = id
         },
+        // Called everytime a new wallet is selected
+        updateWallet({ dispatch }) {
+            dispatch('ERCNft/updateUserNfts')
+            dispatch('ERCNft/scanNewNfts')
+        },
         // Called on a logout event
-        onlogout({ state, commit }) {
+        onLogout({ state, commit }) {
             // state.isUpdateBalance = false
             commit('removeAllAssets')
         },
@@ -333,7 +332,7 @@ const assets_module: Module<AssetsState, RootState> = {
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
             dispatch('updateERC20Balances')
-            dispatch('ERC721/updateWalletBalance')
+            dispatch('ERCNft/updateWalletBalance')
             commit('updateActiveAddress', null, { root: true })
         },
 
@@ -370,7 +369,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         // What is the AVA coin in the network
         async updateAvaAsset({ state, commit }) {
-            let res = await avm.getAssetDescription(ava.getPrimaryAssetAlias())
+            let res = await ava.XChain().getAssetDescription(ava.getPrimaryAssetAlias())
             let id = bintools.cb58Encode(res.assetID)
             state.AVA_ASSET_ID = id
             let asset = new AvaAsset(id, res.name, res.symbol, res.denomination)
@@ -514,7 +513,7 @@ const assets_module: Module<AssetsState, RootState> = {
                     asset.addBalanceLocked(balanceAmt.locked)
                 }
 
-                // Add extras for AVAX token
+                // Add extras for Native token
                 // @ts-ignore
                 if (asset.id === state.AVA_ASSET_ID) {
                     asset.addExtra(getters.walletStakingBalance)
@@ -567,7 +566,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             let now = UnixNow()
 
-            // The only type of asset is AVAX on the P chain
+            // The only type of asset is Native on the P chain
             let amt = new BN('0')
 
             let utxos = utxoSet.getAllUTXOs()
@@ -602,7 +601,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             let now = UnixNow()
 
-            // The only type of asset is AVAX on the P chain
+            // The only type of asset is native token on the P chain
             let amt = new BN(0)
 
             let utxos = utxoSet.getAllUTXOs()
@@ -628,7 +627,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             utxoSet = wallet.getPlatformUTXOSet()
 
-            // The only type of asset is AVAX on the P chain
+            // The only type of asset is native token on the P chain
             let amt = new BN(0)
             let unixNow = UnixNow()
 

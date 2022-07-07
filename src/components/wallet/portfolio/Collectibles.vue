@@ -1,17 +1,17 @@
 <template>
     <div class="collectibles_view no_scroll_bar" @scroll="onScroll" :scroll="isScroll">
-        <AddERC721TokenModal ref="add_token_modal"></AddERC721TokenModal>
+        <AddERCNftTokenModal ref="add_token_modal"></AddERCNftTokenModal>
         <div v-if="!isEmpty" class="list">
             <CollectibleFamilyRow
                 v-for="fam in nftFamsArray"
                 :key="fam.id"
                 :family="fam"
             ></CollectibleFamilyRow>
-            <ERC721FamilyRow
-                v-for="token in erc721s"
-                :key="token.contractAddress"
+            <ERCNftFamilyRow
+                v-for="token in ercNfts"
+                :key="token.data.address"
                 :family="token"
-            ></ERC721FamilyRow>
+            ></ERCNftFamilyRow>
             <div class="add_token_row">
                 <button @click="showModal">Add Collectible</button>
             </div>
@@ -27,24 +27,22 @@
     </div>
 </template>
 <script lang="ts">
-import NFTCard from './NftCard.vue'
 import CollectibleFamilyRow from '@/components/wallet/portfolio/CollectibleFamilyRow.vue'
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { IWalletNftDict, IWalletNftMintDict } from '@/store/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import AddERC721TokenModal from '@/components/modals/AddERC721TokenModal.vue'
-import ERC721Token from '@/js/ERC721Token'
-import ERC721FamilyRow from '@/components/wallet/portfolio/ERC721FamilyRow.vue'
+import AddERCNftTokenModal from '@/components/modals/AddERCNftTokenModal.vue'
+import ERCNftToken from '@/js/ERCNftToken'
+import ERCNftFamilyRow from '@/components/wallet/portfolio/ERCNftFamilyRow.vue'
 import { WalletType } from '@/js/wallets/types'
 
 // const payloadTypes = PayloadTypes.getInstance();
 @Component({
     components: {
-        ERC721FamilyRow,
-        AddERC721TokenModal,
-        NFTCard,
+        ERCNftFamilyRow,
+        AddERCNftTokenModal,
         CollectibleFamilyRow,
     },
 })
@@ -53,7 +51,7 @@ export default class Collectibles extends Vue {
     isScroll = false
 
     $refs!: {
-        add_token_modal: AddERC721TokenModal
+        add_token_modal: AddERCNftTokenModal
     }
 
     get isEmpty(): boolean {
@@ -61,8 +59,8 @@ export default class Collectibles extends Vue {
         // let mintUTxos = this.$store.getters.walletNftMintUTXOs.length
         let nftUtxos = this.$store.state.Assets.nftUTXOs.length
         let mintUTxos = this.$store.state.Assets.nftMintUTXOs.length
-        let erc721Bal = this.$store.getters['Assets/ERC721/totalOwned']
-        return nftUtxos + mintUTxos + erc721Bal === 0
+        let ercNftBal = this.$store.getters['Assets/ERCNft/totalOwned']
+        return nftUtxos + mintUTxos + ercNftBal === 0
     }
 
     get nftDict(): IWalletNftDict {
@@ -115,9 +113,9 @@ export default class Collectibles extends Vue {
         return dict
     }
 
-    get erc721s(): ERC721Token[] {
+    get ercNfts(): ERCNftToken[] {
         let w: WalletType = this.$store.state.activeWallet
-        return this.$store.getters['Assets/ERC721/networkContracts']
+        return this.$store.getters['Assets/ERCNft/networkContracts']
     }
 
     onScroll(ev: any) {
@@ -150,10 +148,6 @@ $flip_dur: 0.6s;
     }
 }
 
-.list {
-    max-height: 50px;
-}
-
 .coming_soon {
     padding-top: 60px;
     text-align: center;
@@ -176,8 +170,8 @@ $flip_dur: 0.6s;
 }
 
 @include main.mobile-device {
-    .collectibles_view {
-        height: 90vh;
+    .list {
+        max-height: none;
     }
 }
 </style>

@@ -37,7 +37,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import MyKeys from '@/components/wallet/manage/MyKeys.vue'
 import ImportKeys from '@/components/modals/ImportKeys.vue'
 import ExportKeys from '@/components/modals/ExportKeys.vue'
@@ -45,7 +45,6 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal.vue'
 
 import { WalletNameType } from '@/js/wallets/types'
-import { iUserAccountEncrypted } from '@/store/types'
 import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSettingsModal.vue'
 
 @Component({

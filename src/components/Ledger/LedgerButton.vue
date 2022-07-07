@@ -13,7 +13,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 // @ts-ignore
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
 //@ts-ignore
@@ -25,7 +25,6 @@ import Eth from '@ledgerhq/hw-app-eth'
 // @ts-ignore
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
 import Spinner from '@/components/misc/Spinner.vue'
-import LedgerBlock from '@/components/modals/LedgerBlock.vue'
 import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
 import { ILedgerAppConfig } from '@/store/types'
@@ -36,7 +35,6 @@ import ImageDayNight from '@/components/misc/ImageDayNight.vue'
     components: {
         ImageDayNight,
         Spinner,
-        LedgerBlock,
     },
 })
 export default class LedgerButton extends Vue {
@@ -139,7 +137,7 @@ export default class LedgerButton extends Vue {
 
     async loadWallet(wallet: LedgerWallet) {
         this.showWalletLoading()
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 this.$store
                     .dispatch('accessWalletLedger', wallet)

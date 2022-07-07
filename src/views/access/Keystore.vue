@@ -25,7 +25,7 @@
                     :disabled="!canSubmit"
                     depressed
                 >
-                    {{ $t('access.mnemonic.submit') }}
+                    {{ $t('access.submit') }}
                 </v-btn>
             </form>
             <router-link to="/access" class="link">{{ $t('access.cancel') }}</router-link>

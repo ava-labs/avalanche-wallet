@@ -1,9 +1,10 @@
 <template>
     <div class="nft_card">
-        <ERC721ViewModal :token="token" :token-id="index" ref="view_modal"></ERC721ViewModal>
+        <p class="count" v-if="index.quantity > 1">{{ index.quantity }}</p>
+        <ERCNftViewModal :token="token" :index="index" ref="view_modal"></ERCNftViewModal>
         <div class="view">
             <template v-if="!isRaw && img">
-                <ERC721View :token="token" :index="index"></ERC721View>
+                <ERCNftView :token="token" :index="index"></ERCNftView>
             </template>
             <template v-else>
                 <div class="raw_view no_scroll_bar">
@@ -14,12 +15,13 @@
         <div class="nft_info">
             <div class="meta_bar">
                 <div>
-                    <p>ERC721</p>
+                    <p>{{ ercNftType }}</p>
                 </div>
                 <div>
                     <button @click="toggleRaw" :active="isRaw" class="raw_toggle">SOURCE</button>
                     <Tooltip
                         :text="$t('portfolio.collectibles.send')"
+                        contentClass="mobile_hidden"
                         @click.native="transfer"
                         class="nft_button"
                     >
@@ -27,6 +29,7 @@
                     </Tooltip>
                     <Tooltip
                         :text="$t('portfolio.collectibles.expand')"
+                        contentClass="mobile_hidden"
                         @click.native="expand"
                         class="nft_button"
                     >
@@ -49,18 +52,19 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import axios from 'axios'
 import Tooltip from '@/components/misc/Tooltip.vue'
-import ERC721Token from '@/js/ERC721Token'
-import ERC721View from '@/components/misc/ERC721View.vue'
-import ERC721ViewModal from '@/components/modals/ERC721ViewModal.vue'
+import ERCNftToken from '@/js/ERCNftToken'
+import ERCNftView from '@/components/misc/ERCNftView.vue'
+import ERCNftViewModal from '@/components/modals/ERCNftViewModal.vue'
+import { ERCNftBalance } from '@/store/modules/assets/modules/types'
 @Component({
-    components: { ERC721ViewModal, ERC721View, Tooltip },
+    components: { ERCNftViewModal, ERCNftView, Tooltip },
 })
-export default class ERC721Card extends Vue {
-    @Prop() index!: string
-    @Prop() token!: ERC721Token
+export default class ERCNftCard extends Vue {
+    @Prop() index!: ERCNftBalance
+    @Prop() token!: ERCNftToken
 
     $refs!: {
-        view_modal: ERC721ViewModal
+        view_modal: ERCNftViewModal
     }
 
     metadata: any = ''
@@ -84,9 +88,13 @@ export default class ERC721Card extends Vue {
         return this.metadata?.description
     }
 
+    get ercNftType() {
+        return this.token.data.type
+    }
+
     async getData() {
         try {
-            let uri = await this.token.getTokenURI(parseInt(this.index))
+            let uri = await this.token.getTokenURI(parseInt(this.index.tokenId))
             let res = (await axios.get(uri)).data
             this.metadata = res
         } catch (e) {
@@ -100,8 +108,8 @@ export default class ERC721Card extends Vue {
             path: '/wallet/transfer',
             query: {
                 chain: 'C',
-                token: this.token.contractAddress,
-                tokenId: this.index,
+                token: this.token.data.address,
+                tokenId: this.index.tokenId,
             },
         })
     }
@@ -114,6 +122,7 @@ export default class ERC721Card extends Vue {
     }
 }
 </script>
+
 <style scoped lang="scss">
 @use 'nft_card';
 

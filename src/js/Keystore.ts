@@ -24,7 +24,7 @@ import {
     KeyFileV6,
     KeystoreFileKeyType,
 } from './IKeystore'
-import { avm, bintools } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import { Buffer } from 'buffer/'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Crypto from '@/js/Crypto'
@@ -32,7 +32,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { AccessWalletMultipleInput } from '@/store/types'
 import { keyToKeypair } from '@/helpers/helper'
 import * as bip39 from 'bip39'
-import { Buffer as AjsBuffer } from 'avalanche'
+import { Buffer as AjsBuffer } from '@c4tplatform/camino'
 
 const cryptoHelpers = new Crypto()
 
@@ -267,7 +267,7 @@ async function readKeyFile(data: AllKeyFileTypes, pass: string): Promise<AllKeyF
 function extractKeysV2(
     file: KeyFileDecryptedV2 | KeyFileDecryptedV3 | KeyFileDecryptedV4
 ): AccessWalletMultipleInput[] {
-    let chainID = avm.getBlockchainAlias()
+    let chainID = ava.XChain().getBlockchainAlias()
     let keys = (file as KeyFileDecryptedV2 | KeyFileDecryptedV3 | KeyFileDecryptedV4).keys
 
     return keys.map((key) => {
@@ -339,7 +339,9 @@ async function makeKeyfile(
             key = (wallet as SingletonWallet).key
             type = 'singleton'
         } else {
-            key = (wallet as MnemonicWallet).getMnemonic()
+            key = (wallet as MnemonicWallet)
+                .getMnemonic()
+                .concat('\n', (wallet as MnemonicWallet).getSeed())
             type = 'mnemonic'
         }
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)

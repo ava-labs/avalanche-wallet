@@ -6,55 +6,49 @@
         </div>
 
         <div class="items">
-            <ERC721View
+            <ERCNftView
                 v-for="tokenIndex in walletBalance"
-                :key="tokenIndex"
+                :key="tokenIndex.tokenId"
                 class="item"
                 :token="token"
                 :index="tokenIndex"
                 @click.native="selectToken(tokenIndex)"
-            ></ERC721View>
+            ></ERCNftView>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import ERC721Token from '@/js/ERC721Token'
-import ERC721View from '@/components/misc/ERC721View.vue'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
-import { ERC721WalletBalance } from '@/store/modules/assets/modules/types'
+import ERCNftToken from '@/js/ERCNftToken'
+import ERCNftView from '@/components/misc/ERCNftView.vue'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
+import { ERCNftBalance } from '@/store/modules/assets/modules/types'
 
 @Component({
-    components: { ERC721View },
+    components: { ERCNftView },
 })
-export default class ERC721Row extends Vue {
-    @Prop() token!: ERC721Token
+export default class ERCNftRow extends Vue {
+    @Prop() token!: ERCNftToken
 
     // created() {
     //     this.getItems()
     // }
 
-    get walletBalance(): string[] {
-        return this.$store.state.Assets.ERC721.walletBalance[this.token.contractAddress] || []
+    get walletBalance(): ERCNftBalance[] {
+        return this.$store.state.Assets.ERCNft.walletBalance[this.token.data.address] || []
     }
 
     get hasBalance(): boolean {
         return this.walletBalance.length > 0
     }
 
-    selectToken(index: string) {
-        let data: iErc721SelectInput = {
+    selectToken(index: ERCNftBalance) {
+        let data: iERCNftSelectInput = {
             id: index,
             token: this.token,
         }
         this.$emit('select', data)
     }
-
-    // async getItems() {
-    //     let w: WalletType = this.$store.state.activeWallet
-    //     let items = await this.token.getAllTokenData('0x' + w.ethAddress)
-    //     this.nftItems = items
-    // }
 }
 </script>
 <style scoped lang="scss">

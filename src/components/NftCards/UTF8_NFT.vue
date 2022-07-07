@@ -13,10 +13,10 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
-import { PayloadBase } from 'avalanche/dist/utils'
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
 import BaseNftCard from '@/components/NftCards/BaseNftCard.vue'
-import { UTXO } from 'avalanche/dist/apis/avm'
+import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
 
 @Component({
     components: {

@@ -1,18 +1,32 @@
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 
-export interface Erc721ModuleState {
-    erc721Tokens: ERC721Token[]
-    erc721TokensCustom: ERC721Token[]
-    walletBalance: ERC721WalletBalance
+export interface ERCNftModuleState {
+    lastScannedBlock: number
+    scannedTokens: Set<string>
+    evmAddress: string
+    walletPrefix: string
+    ercNftTokens: ERCNftToken[]
+    ercNftTokensCustom: ERCNftToken[]
+    ercNftTokenIds: ERCNftToken[]
+    walletBalance: ERCNftWalletBalance
 }
 
-export interface ERC721WalletBalance {
-    [id: string]: string[]
+export interface ERCNftBalance {
+    tokenId: string
+    quantity: number
 }
 
-export interface ERC721TokenInput {
+export interface ERCNftWalletBalance {
+    [id: string]: ERCNftBalance[]
+}
+
+export type ERCNftTokenType = undefined | 'ERC721' | 'ERC1155'
+
+export interface ERCNftTokenInput {
+    type: ERCNftTokenType
     address: string
     chainId: number
     name: string
     symbol: string
+    ercTokenIds: string[]
 }

@@ -196,24 +196,22 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 //@ts-ignore
-import { QrInput } from '@avalabs/vue_components'
+import { QrInput } from '@c4tplatform/vue_components'
 import ValidatorsList from '@/components/misc/ValidatorList/ValidatorsList.vue'
-import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import StakingCalculator from '@/components/wallet/earn/StakingCalculator.vue'
 import ConfirmPage from '@/components/wallet/earn/Delegate/ConfirmPage.vue'
 import Big from 'big.js'
 import moment from 'moment'
 
-import { BN } from 'avalanche'
-import { AmountOutput, PlatformVMConstants, UTXO, UTXOSet } from 'avalanche/dist/apis/platformvm'
-import { ava, avm, bintools, infoApi, pChain } from '@/AVA'
+import { BN } from '@c4tplatform/camino'
+import { AmountOutput, UTXO } from '@c4tplatform/camino/dist/apis/platformvm'
+import { ava, bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { bnToBig, calculateStakingReward } from '@/helpers/helper'
-import { Defaults, ONEAVAX } from 'avalanche/dist/utils'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 import NodeSelection from '@/components/wallet/earn/Delegate/NodeSelection.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
@@ -328,7 +326,7 @@ export default class AddDelegator extends Vue {
     }
 
     async updateTxStatus(txId: string) {
-        let res = await pChain.getTxStatus(txId)
+        let res = await ava.PChain().getTxStatus(txId)
         let status
         let reason = null
         if (typeof res === 'string') {
@@ -527,7 +525,7 @@ export default class AddDelegator extends Vue {
         let delegationFee = Big(this.delegationFee).div(Big(100))
         let cut = this.estimatedReward.times(delegationFee)
 
-        let txFee: BN = pChain.getTxFee()
+        let txFee: BN = ava.PChain().getTxFee()
         let cutBN = new BN(cut.times(Math.pow(10, 9)).toFixed(0))
         let totFee = txFee.add(cutBN)
         return totFee
@@ -542,7 +540,7 @@ export default class AddDelegator extends Vue {
     }
 
     get txFee(): BN {
-        return pChain.getTxFee()
+        return ava.PChain().getTxFee()
     }
 
     get txFeeBig(): Big {

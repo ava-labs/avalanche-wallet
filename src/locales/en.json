@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Password",
     "password_confirm": "Confirm Password",
     "private_key": "Private Key",
@@ -53,10 +53,10 @@
         "json_error": "Unable to parse JSON file.",
         "keystore_error": "This keystore version is not supported.",
         "password_error": "Invalid Password.",
+        "submit": "Access Wallet",
         "mnemonic": {
             "title": "Enter your MNEMONIC phrase\n",
             "subtitle": "Hit ‘SPACE’ after every successful word entry.",
-            "submit": "Access Wallet",
             "cancel": "Cancel",
             "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space."
         },
@@ -71,7 +71,8 @@
             "earn": "Earn",
             "studio": "Studio",
             "advanced": "Advanced",
-            "activity": "Activity"
+            "activity": "Activity",
+            "launch": "Launch"
         },
         "address_card": {},
         "collectibles": {
@@ -145,7 +146,7 @@
         "send": "Send Transaction",
         "summary": "Transaction Summary",
         "total": "Total",
-        "total_@.native:(0)": "Total @.native:(0)",
+        "total_native": "Total @.native:(0)",
         "chain_warn": "You can only send tokens on the X chain.",
         "disconnected": "Unable to send assets. Disconnected from the network.",
         "success_title": "Transaction Sent",
@@ -636,6 +637,11 @@
             "11": "December"
         }
     },
+    "launch": {
+        "title": "Launch",
+        "subtitle": "Launch URL in new browser tab",
+        "submit": "Launch"
+    },
     "logout": {
         "button": "Log Out",
         "button_conf": "LOGOUT",
@@ -730,6 +736,7 @@
         "create": "Create New Wallet"
     },
     "misc": {
-        "balance": "Balance"
+        "balance": "Balance",
+        "cancel": "Cancel"
     }
 }

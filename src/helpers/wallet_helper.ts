@@ -1,26 +1,26 @@
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava } from '@/AVA'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
-} from 'avalanche/dist/apis/platformvm/utxos'
-import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
+} from '@c4tplatform/camino/dist/apis/platformvm/utxos'
+import { UTXO as AVMUTXO } from '@c4tplatform/camino/dist/apis/avm/utxos'
 import { WalletType } from '@/js/wallets/types'
 
-import { BN, Buffer } from 'avalanche'
+import { BN, Buffer } from '@c4tplatform/camino'
 import {
     buildCreateNftFamilyTx,
     buildEvmTransferErc20Tx,
-    buildEvmTransferErc721Tx,
+    buildEvmTransferERCNftTx,
     buildEvmTransferNativeTx,
     buildMintNftTx,
 } from '@/js/TxHelper'
-import { PayloadBase } from 'avalanche/dist/utils'
+import { PayloadBase } from '@c4tplatform/camino/dist/utils'
 import { ITransaction } from '@/components/wallet/transfer/types'
 
 import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
-import ERC721Token from '@/js/ERC721Token'
+import ERCNftToken from '@/js/ERCNftToken'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -52,7 +52,7 @@ class WalletHelper {
         )
 
         let signed = await wallet.signX(unsignedTx)
-        return await avm.issueTx(signed)
+        return await ava.XChain().issueTx(signed)
     }
 
     static async mintNft(
@@ -77,7 +77,7 @@ class WalletHelper {
             utxoSet
         )
         let signed = await wallet.signX(tx)
-        return await avm.issueTx(signed)
+        return await ava.XChain().issueTx(signed)
     }
 
     static async issueBatchTx(
@@ -88,7 +88,7 @@ class WalletHelper {
     ): Promise<string> {
         let unsignedTx = await wallet.buildUnsignedTransaction(orders, addr, memo)
         const tx = await wallet.signX(unsignedTx)
-        const txId: string = await avm.issueTx(tx)
+        const txId: string = await ava.XChain().issueTx(tx)
 
         return txId
     }
@@ -129,7 +129,7 @@ class WalletHelper {
         let startTime = new BN(Math.round(start.getTime() / 1000))
         let endTime = new BN(Math.round(end.getTime() / 1000))
 
-        const unsignedTx = await pChain.buildAddValidatorTx(
+        const unsignedTx = await ava.PChain().buildAddValidatorTx(
             utxoSet,
             [stakeReturnAddr],
             pAddressStrings, // from
@@ -143,7 +143,7 @@ class WalletHelper {
         )
 
         let tx = await wallet.signP(unsignedTx)
-        return await pChain.issueTx(tx)
+        return await ava.PChain().issueTx(tx)
     }
 
     static async delegate(
@@ -180,7 +180,7 @@ class WalletHelper {
         let startTime = new BN(Math.round(start.getTime() / 1000))
         let endTime = new BN(Math.round(end.getTime() / 1000))
 
-        const unsignedTx = await pChain.buildAddDelegatorTx(
+        const unsignedTx = await ava.PChain().buildAddDelegatorTx(
             utxoSet,
             [stakeReturnAddr],
             pAddressStrings,
@@ -193,7 +193,7 @@ class WalletHelper {
         )
 
         const tx = await wallet.signP(unsignedTx)
-        return await pChain.issueTx(tx)
+        return await ava.PChain().issueTx(tx)
     }
 
     static async getEthBalance(wallet: WalletType) {
@@ -236,16 +236,16 @@ class WalletHelper {
         return hash.transactionHash
     }
 
-    static async sendErc721(
+    static async sendERCNft(
         wallet: WalletType,
         to: string,
         gasPrice: BN,
         gasLimit: number,
-        token: ERC721Token,
+        token: ERCNftToken,
         tokenId: string
     ) {
         let fromAddr = '0x' + wallet.getEvmAddress()
-        let tx = await buildEvmTransferErc721Tx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
+        let tx = await buildEvmTransferERCNftTx(fromAddr, to, gasPrice, gasLimit, token, tokenId)
         let signedTx = await wallet.signEvm(tx)
         let txHex = signedTx.serialize().toString('hex')
         let hash = await web3.eth.sendSignedTransaction('0x' + txHex)

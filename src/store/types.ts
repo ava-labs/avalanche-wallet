@@ -1,13 +1,11 @@
 import Big from 'big.js'
 
-import { Buffer, BN } from 'avalanche'
+import { Buffer, BN } from '@c4tplatform/camino'
 import AvaAsset from '@/js/AvaAsset'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { AllKeyFileTypes, AllKeyFileDecryptedTypes } from '@/js/IKeystore'
-import { UTXO } from 'avalanche/dist/apis/avm'
-import { LedgerWallet } from '@/js/wallets/LedgerWallet'
-import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
 import { UTXO as TxUTXO } from './modules/history/types'
 import { WalletNameType, WalletType } from '@/js/wallets/types'
 
@@ -18,7 +16,7 @@ export interface RootState {
     address: String | null
     volatileWallets: WalletType[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
-    prices: priceDict // USD value of 1 AVAX
+    prices: priceDict // USD value of 1 native token
 }
 
 export interface ILedgerAppConfig {

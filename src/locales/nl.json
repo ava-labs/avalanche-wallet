@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Wachtwoord",
     "password_confirm": "Wachtwoord bevestigen",
     "private_key": "Privé code",
@@ -37,10 +37,10 @@
         "json_error": "Het is niet gelukt het JSON-bestand te verwerken.",
         "keystore_error": "Deze keystore-versie wordt niet ondersteunt.",
         "password_error": "Ongeldig wachtwoord.",
+        "submit": "Portemonnee openen",
         "mnemonic": {
             "title": "Voer uw MNEMONISCHE zin in\n",
             "subtitle": "Druk na elk ingevoerd woord op \"SPATIE\".",
-            "submit": "Portemonnee openen",
             "cancel": "Annuleren",
             "error": "Ongeldige sleutelzin. Uw zin moet uit ten minste 24 woorden gescheiden door een spatie bestaan."
         }
@@ -389,7 +389,7 @@
         "loading": "De transactiegeschiedenis wordt geladen...",
         "warn_loading": "Deze lijst is misschien onvolledig en niet op volgorde.",
         "error_api": "Explorer API niet gevonden.",
-        "error_api_desc": "U moet een AVA Explorer API opgeven voor dit netwerk om de transactiegeschiedenis te kunnen bekijken."
+        "error_api_desc": "U moet een Magellan Explorer API opgeven voor dit netwerk om de transactiegeschiedenis te kunnen bekijken."
     },
     "modal": {
         "qr": {

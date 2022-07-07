@@ -29,8 +29,8 @@
                     {{ balanceTextLeft }} {{ nativeAssetSymbol }}
                 </p>
                 <p class="balance" data-cy="wallet_balance" v-else>
-                    {{ balanceTextLeft }}
-                    <span>.{{ balanceTextRight }}</span>
+                    <span>{{ balanceTextLeft }}</span>
+                    <span class="smaller">.{{ balanceTextRight }}</span>
                     {{ nativeAssetSymbol }}
                 </p>
                 <div style="display: flex; flex-direction: row">
@@ -91,16 +91,15 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Ref, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
-import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
 import NftCol from './NftCol.vue'
 import Tooltip from '@/components/misc/Tooltip.vue'
 
 import Big from 'big.js'
-import { BN } from 'avalanche/dist'
-import { ONEAVAX } from 'avalanche/dist/utils'
+import { BN } from '@c4tplatform/camino/dist'
+import { ONEAVAX } from '@c4tplatform/camino/dist/utils'
 import { bnToBig } from '@/helpers/helper'
 import { priceDict } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
@@ -121,7 +120,7 @@ import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdo
     },
 })
 export default class BalanceCard extends Vue {
-    isBreakdown = true
+    isBreakdown = false
 
     $refs!: {
         utxos_modal: UtxosBreakdownModal
@@ -331,13 +330,9 @@ export default class BalanceCard extends Vue {
 @use '../../../../main';
 .balance_card {
     display: grid;
-    grid-template-columns: 1fr 230px;
     column-gap: 20px;
 }
 
-.nft_card {
-    border-left: 2px solid var(--bg-light);
-}
 .fungible_card {
     height: 100%;
     display: grid !important;
@@ -376,7 +371,7 @@ h4 {
     /*font-weight: bold;*/
     font-family: Rubik !important;
 
-    span {
+    span.smaller {
         font-size: 0.8em;
         /*color: var(--primary-color-light);*/
     }
@@ -466,10 +461,6 @@ h4 {
     }
 }
 
-.nft_card {
-    padding-left: 20px;
-}
-
 .breakdown_toggle {
     color: var(--primary-color-light);
     font-size: 13px;
@@ -478,79 +469,6 @@ h4 {
 
     &:hover {
         color: var(--secondary-color);
-    }
-}
-
-@include main.medium-device {
-    .balance_card {
-        display: block;
-        //grid-template-columns: 1fr 120px;
-    }
-
-    .balance {
-        font-size: 1.8rem !important;
-    }
-
-    .balance_usd {
-        font-size: 11px;
-    }
-    .nft_col {
-        display: none;
-    }
-
-    .alt_info {
-        font-size: 12px;
-    }
-}
-
-@include main.mobile-device {
-    .balance_card {
-        grid-template-columns: none;
-        display: block !important;
-    }
-
-    .nft_col {
-        display: none;
-    }
-
-    .nft_card {
-        padding: 0;
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid var(--primary-color-light);
-        border-left: none;
-    }
-
-    .balance {
-        font-size: 2em !important;
-    }
-
-    .where_info {
-    }
-
-    .alt_info {
-        > div {
-            text-align: left;
-            grid-template-columns: none;
-            column-gap: 0;
-        }
-
-        .alt_non_breakdown,
-        .alt_breakdown {
-            > div {
-                padding: 8px 0;
-                border-right: none;
-                border-bottom: 1px solid var(--bg-light);
-
-                &:last-of-type {
-                    border: none;
-                }
-            }
-        }
-    }
-
-    .alt_non_breakdown {
-        display: none !important;
     }
 }
 </style>

@@ -16,14 +16,12 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
 import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
-import CopyText from '@/components/misc/CopyText.vue'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 
 @Component({
     components: {
         Modal,
         MnemonicDisplay,
-        CopyText,
     },
 })
 export default class MnemonicPhraseModal extends Vue {
@@ -44,13 +42,6 @@ export default class MnemonicPhraseModal extends Vue {
     width: 100%;
     padding: 30px;
     background-color: var(--bg-light);
-}
-
-.copyBut {
-    width: 20px;
-    height: 20px;
-    margin: 15px auto;
-    margin-bottom: 0;
 }
 
 .phrase_raw {

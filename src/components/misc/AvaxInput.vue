@@ -31,10 +31,10 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Model } from 'vue-property-decorator'
-import { Utils, Big } from '@avalabs/avalanche-wallet-sdk'
+import { bnToBig, Big } from '@c4tplatform/camino-wallet-sdk'
 //@ts-ignore
-import { BigNumInput } from '@avalabs/vue_components'
-import { BN } from 'avalanche'
+import { BigNumInput } from '@c4tplatform/vue_components'
+import { BN } from '@c4tplatform/camino'
 import { priceDict } from '../../store/types'
 
 @Component({
@@ -66,7 +66,7 @@ export default class AvaxInput extends Vue {
 
     get amountUSD(): Big {
         let usdPrice = this.priceDict.usd
-        let amount = Utils.bnToBig(this.amount, 9)
+        let amount = bnToBig(this.amount, 9)
         let usdBig = amount.times(usdPrice)
         return usdBig
     }

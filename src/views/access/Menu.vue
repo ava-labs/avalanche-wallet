@@ -110,7 +110,6 @@ hr {
 
 .menus {
     width: 440px;
-    max-width: 100%;
     margin-top: 1em;
 }
 
@@ -157,10 +156,8 @@ hr {
         grid-template-columns: none;
     }
 
-    //.option {
-    //    width: 100%;
-    //    margin: 12px 0px;
-    //    display: block;
-    //}
+    .menus {
+        width: 100%;
+    }
 }
 </style>

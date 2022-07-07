@@ -123,7 +123,7 @@
                                                         {{ $t('create.success_submit') }}
                                                     </button>
                                                     <router-link to="/" class="link">
-                                                        Cancel
+                                                        {{ $t('create.cancel') }}
                                                     </router-link>
                                                     <ToS style="margin: 30px 0 !important"></ToS>
                                                 </div>
@@ -142,12 +142,8 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import TextDisplayCopy from '@/components/misc/TextDisplayCopy.vue'
+import { Vue, Component } from 'vue-property-decorator'
 import Spinner from '@/components/misc/Spinner.vue'
-// import TorusGoogle from "@/components/Torus/TorusGoogle.vue";
-import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
-import CopyText from '@/components/misc/CopyText.vue'
 import * as bip39 from 'bip39'
 
 import VerifyMnemonic from '@/components/modals/VerifyMnemonic.vue'
@@ -158,12 +154,7 @@ import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 @Component({
     components: {
         ToS,
-        CopyText,
-        // RememberKey,
-        TextDisplayCopy,
-        MnemonicDisplay,
         Spinner,
-        // TorusGoogle,
         VerifyMnemonic,
         MnemonicCopied,
     },

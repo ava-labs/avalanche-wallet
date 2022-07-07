@@ -33,7 +33,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import AvaAsset from '../../../js/AvaAsset'
 import Hexagon from '@/components/misc/Hexagon.vue'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 import { bnToBig } from '../../../helpers/helper'
 import { priceDict } from '../../../store/types'
 import { WalletType } from '@/js/wallets/types'
@@ -52,7 +52,7 @@ export default class FungibleRow extends Vue {
         if (!this.asset) return null
 
         if (this.isAvaxToken) {
-            return '/img/avax_icon_circle.png'
+            return '/img/native_token.png'
         }
 
         return null

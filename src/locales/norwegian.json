@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Passord",
     "password_confirm": "Bekreft passord",
     "private_key": "Privat nøkkel",
@@ -37,10 +37,10 @@
         "json_error": "Kunne ikke analysere JSON-fil.",
         "keystore_error": "Denne Keystore-versjonen støttes ikke.",
         "password_error": "Ugyldig passord.",
+        "submit": "Få tilgang til lommebok",
         "mnemonic": {
             "title": "Oppgi din MNEMONIC-frase\n",
             "subtitle": "Trykk på ‘MELLOMROM’ etter hver vellykkede innleggelse av ord.",
-            "submit": "Få tilgang til lommebok",
             "cancel": "Avbryt",
             "error": "Ugyldig nøkkelfrase. Frasen din må være 24 ord separert av et enkelt mellomrom."
         }
@@ -389,7 +389,7 @@
         "loading": "Laster inn transaksjonshistorikk ...",
         "warn_loading": "Denne listen kan være ufullstendige og ute av bruk.",
         "error_api": "Explorer API ikke funnet",
-        "error_api_desc": "Du må oppgi en AVA Explorer API for dette nettverket for å vise transaksjonshistorikken."
+        "error_api_desc": "Du må oppgi en Magellan Explorer API for dette nettverket for å vise transaksjonshistorikken."
     },
     "modal": {
         "qr": {

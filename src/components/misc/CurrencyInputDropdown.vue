@@ -35,32 +35,21 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Emit, Watch } from 'vue-property-decorator'
-
-import { BN } from 'avalanche'
-// import Big from 'big.js';
-import Dropdown from '@/components/misc/Dropdown.vue'
-// import BigNumInput from "@/components/misc/BigNumInput";
+import { BN } from '@c4tplatform/camino'
 
 // @ts-ignore
-import { BigNumInput } from '@avalabs/vue_components'
+import { BigNumInput } from '@c4tplatform/vue_components'
 import AvaAsset from '@/js/AvaAsset'
 import { ICurrencyInputDropdownValue } from '@/components/wallet/transfer/types'
-import { IWalletAssetsDict, IWalletBalanceDict, priceDict } from '@/store/types'
+import { IWalletAssetsDict, priceDict } from '@/store/types'
 
 import BalanceDropdown from '@/components/misc/BalancePopup/BalanceDropdown.vue'
-import { avm } from '@/AVA'
+import { ava } from '@/AVA'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
-interface IDropdownValue {
-    label: string
-    key: string
-    data: any
-    disabled: boolean
-}
 
 @Component({
     components: {
-        Dropdown,
         BigNumInput,
         BalanceDropdown,
     },
@@ -191,7 +180,7 @@ export default class CurrencyInputDropdown extends Vue {
 
         // Max amount is BALANCE - FEE for native Asset
         if (assetId === avaxId) {
-            let fee = avm.getTxFee()
+            let fee = ava.XChain().getTxFee()
             // console.log(fee);
             if (fee.gte(balance.amount)) {
                 return new BN(0)

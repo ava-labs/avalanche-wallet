@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Heslo",
     "password_confirm": "Potvrzení hesla",
     "private_key": "Soukromý klíč",
@@ -37,10 +37,10 @@
         "json_error": "Soubor JSON nelze analyzovat.",
         "keystore_error": "Tato verze úložiště klíčů není podporována.",
         "password_error": "Neplatné heslo.",
+        "submit": "Přístup do peněženky",
         "mnemonic": {
             "title": "Zadejte svou mnemonickou frázi\n",
             "subtitle": "Po každém úspěšném zadání slova stiskněte mezerník.",
-            "submit": "Přístup do peněženky",
             "cancel": "Zrušení",
             "error": "Neplatná klíčová fráze. Fráze musí obsahovat 24 slov oddělovaných jednotlivými mezerami."
         }
@@ -389,7 +389,7 @@
         "loading": "Načítání historie transakcí..",
         "warn_loading": "Tento seznam může být neúplný a nefunkční.",
         "error_api": "Průzkumník API nebyl nalezen",
-        "error_api_desc": "Pro zobrazení historie transakcí musíte pro tuto síť poskytnout API AVA Explorer."
+        "error_api_desc": "Pro zobrazení historie transakcí musíte pro tuto síť poskytnout API Magellan Explorer."
     },
     "modal": {
         "qr": {

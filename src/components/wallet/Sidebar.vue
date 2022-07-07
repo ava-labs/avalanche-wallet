@@ -2,8 +2,7 @@
     <div class="wallet_sidebar">
         <div class="stick">
             <div class="brand">
-                <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.png" />
-                <img v-else src="@/assets/wallet_logo_dark.png" />
+                <img src="@/assets/camino_logo.png" />
             </div>
             <div class="links">
                 <router-link to="/wallet" class="wallet_link">
@@ -49,6 +48,11 @@
                     <img v-else src="@/assets/sidebar/advanced_nav_night.png" />
                     {{ $t('wallet.sidebar.advanced') }}
                 </router-link>
+                <!--router-link to="/wallet/launch" data-cy="wallet_launch" class="wallet_link">
+                    <img v-if="$root.theme === 'day'" src="@/assets/sidebar/launch_nav_day.png" />
+                    <img v-else src="@/assets/sidebar/launch_nav_night.png" />
+                    {{ $t('wallet.sidebar.launch') }}
+                </router-link-->
             </div>
             <div class="bottom">
                 <AccountMenu class="wallet_link"></AccountMenu>
@@ -68,7 +72,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@use "../../main";
+@use '../../main';
 
 .wallet_sidebar {
     .stick {
@@ -83,7 +87,7 @@ export default {
     }
 
     .brand {
-        height: 150px;
+        height: 80px;
         display: flex;
         justify-content: center;
         align-items: center;

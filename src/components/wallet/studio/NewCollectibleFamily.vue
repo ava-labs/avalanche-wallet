@@ -77,8 +77,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
-import { BN } from 'avalanche'
-import { pChain } from '@/AVA'
+import { ava } from '@/AVA'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 
@@ -101,7 +100,7 @@ export default class NewCollectibleFamily extends Vue {
     }
 
     get txFee(): Big {
-        return bnToBig(pChain.getCreationTxFee(), 9)
+        return bnToBig(ava.PChain().getCreationTxFee(), 9)
     }
 
     validate(): boolean {

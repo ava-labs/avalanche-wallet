@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Mot de passe",
     "password_confirm": "Confirmez le mot de passe",
     "private_key": "Clé privée",
@@ -37,10 +37,10 @@
         "json_error": "Analyse impossible du fichier JSON.",
         "keystore_error": "Cette version de stockage de clés n'est pas supportée.",
         "password_error": "Mot de passe incorrect.",
+        "submit": "Accéder au portefeuille",
         "mnemonic": {
             "title": "Entrez votre phrase mnémotechnique\n",
             "subtitle": "Appuyez sur 'ESPACE' après avoir écrit chaque mot.",
-            "submit": "Accéder au portefeuille",
             "cancel": "Annuler",
             "error": "Phrase de sécurité invalide. Votre liste doit comporter 24 mots séparés par un espace."
         }

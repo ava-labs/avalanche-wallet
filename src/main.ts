@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueMeta from 'vue-meta'
-import { BootstrapVue } from 'bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -10,8 +9,6 @@ import 'vue-datetime/dist/vue-datetime.css'
 import vuetify from './plugins/vuetify'
 import i18n from './plugins/i18n'
 
-// Install BootstrapVue
-Vue.use(BootstrapVue)
 Vue.use(VueMeta)
 Vue.component('datetime', Datetime)
 
@@ -23,6 +20,10 @@ const app = new Vue({
     vuetify,
     i18n,
     render: (h) => h(App),
+    created: () => {
+        store.commit('Accounts/loadAccounts')
+        if (store.getters['Accounts/hasAccounts'] > 0) router.replace('/access')
+    },
     mounted() {
         // Reveal app version
         console.log(`App Version: ${process.env.VUE_APP_VERSION}`)

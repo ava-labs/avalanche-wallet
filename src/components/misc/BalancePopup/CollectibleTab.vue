@@ -17,14 +17,12 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Prop, Component } from 'vue-property-decorator'
-import NftCard from '@/components/wallet/portfolio/NftCard.vue'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import { UTXO } from 'avalanche/dist/apis/avm'
+import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
 
 import CollectibleFamily from '@/components/misc/BalancePopup/CollectibleFamily.vue'
 @Component({
     components: {
-        NftCard,
         CollectibleFamily,
     },
 })
@@ -59,8 +57,6 @@ export default class CollectibleTab extends Vue {
 }
 
 $card_w: 40px;
-.collectible_fam {
-}
 
 .fam_title {
     border-bottom: 2px solid var(--bg-light);

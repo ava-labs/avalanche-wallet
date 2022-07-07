@@ -1,16 +1,13 @@
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 const TEST_KEY = 'PrivateKey-r6yxM4MiGc93hZ4QxSHhixLEH5RtPjGw6Y85gzg8mgaia6HT3'
-const ADDR_X = 'X-fuji1np2h3agqvgxc29sqfh0dy2nvmedus0sa44ktlr'
+const ADDR_X = 'X-localnp2h3agqvgxc29sqfh0dy2nvmedus0sa44ktlr'
 const ADDR_C = '506433b9338e2a5706e3c0d6bce041d30688935f'
 
-import { ava, avm, cChain, pChain } from '@/AVA'
+import { ava } from '@/AVA'
 // import { avmGetAllUTXOs } from '@/helpers/utxo_helper'
 
-ava.setNetworkID(5)
-avm.setBlockchainAlias('X')
-pChain.setBlockchainAlias('P')
-cChain.setBlockchainAlias('C')
+ava.setNetwork('127.0.0.1',80,'http',12345)
 
 // jest.mock('avmGetAllUTXOs')
 

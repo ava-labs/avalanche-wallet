@@ -58,7 +58,7 @@
                             <span>{{ txFee.toLocaleString(9) }} {{ nativeAssetSymbol }}</span>
                         </p>
                         <p>
-                            {{ $t('transfer.total_avax') }}
+                            {{ $t('transfer.total_native') }}
                             <span>{{ totalUSD.toLocaleString(2) }} USD</span>
                         </p>
                     </div>
@@ -100,7 +100,7 @@
                                 style="margin-top: 20px !important; color: var(--primary-color)"
                                 @click="cancelConfirm"
                             >
-                                Cancel
+                                {{ $t('misc.cancel') }}
                             </v-btn>
                         </template>
                         <template v-else-if="isSuccess">
@@ -140,12 +140,12 @@ import Big from 'big.js'
 import NftList from '@/components/wallet/transfer/NftList.vue'
 
 //@ts-ignore
-import { QrInput } from '@avalabs/vue_components'
-import { ava, avm, isValidAddress } from '../../AVA'
+import { QrInput } from '@c4tplatform/vue_components'
+import { ava, isValidAddress } from '../../AVA'
 import FaucetLink from '@/components/misc/FaucetLink.vue'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { UTXO } from 'avalanche/dist/apis/avm'
-import { Buffer, BN } from 'avalanche'
+import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { Buffer, BN } from '@c4tplatform/camino'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
 import { priceDict, IssueBatchTxInput } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
@@ -359,7 +359,7 @@ export default class Transfer extends Vue {
     }
 
     async waitTxConfirm(txId: string) {
-        let status = await avm.getTxStatus(txId)
+        let status = await ava.XChain().getTxStatus(txId)
         if (status === 'Unknown' || status === 'Processing') {
             // if not confirmed ask again
             setTimeout(() => {
@@ -439,12 +439,12 @@ export default class Transfer extends Vue {
     }
 
     get txFee(): Big {
-        let fee = avm.getTxFee()
+        let fee = ava.XChain().getTxFee()
         return bnToBig(fee, 9)
     }
 
     get totalUSD(): Big {
-        let totalAsset = this.avaxTxSize.add(avm.getTxFee())
+        let totalAsset = this.avaxTxSize.add(ava.XChain().getTxFee())
         let bigAmt = bnToBig(totalAsset, 9)
         let usdPrice = this.priceDict.usd
         let usdBig = bigAmt.times(usdPrice)

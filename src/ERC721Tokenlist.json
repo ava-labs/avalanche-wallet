@@ -1,5 +1,5 @@
 {
-    "name": "Camino Wallet ERC721 Tokens",
+    "name": "Camino Wallet ERCNft Tokens",
     "logoURI": "",
     "keywords": ["camino", "defi", "ethereum"],
     "version": {
@@ -7,15 +7,6 @@
         "minor": 0,
         "patch": 0
     },
-    "tokens": [
-        {
-            "chainId": 0,
-            "address": "",
-            "decimals": 0,
-            "name": "",
-            "symbol": "",
-            "logoURI": ""
-        }
-    ],
+    "tokens": [],
     "timestamp": "2022-03-20T00:00:00+00:00"
 }

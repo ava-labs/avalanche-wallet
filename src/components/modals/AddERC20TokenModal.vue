@@ -30,11 +30,11 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import Modal from './Modal.vue'
 import { web3 } from '@/evm'
-import ERC20Abi from '@openzeppelin/contracts/build/contracts/ERC20.json'
+import ERC20Abi from '@/abi/IERC20.json'
 import Erc20Token from '@/js/Erc20Token'
 import { TokenListToken } from '@/store/modules/assets/types'
 
@@ -116,7 +116,7 @@ export default class AddERC20TokenModal extends Vue {
             })
             this.close()
         } catch (e) {
-            this.err = e.message
+            this.err = (e as Error).message
             console.error(e)
         }
     }

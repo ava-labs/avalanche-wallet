@@ -1,7 +1,7 @@
 <template>
     <div class="main_panel">
         <ConfirmLogout ref="logout"></ConfirmLogout>
-        <div class="panel_nav">
+        <div class="panel_nav panel">
             <DayNightToggle class="hover_but"></DayNightToggle>
             <network-menu class="net_menu"></network-menu>
             <button @click="logout" class="logout">
@@ -42,15 +42,13 @@ export default {
     display: grid;
     grid-template-rows: max-content 1fr;
     row-gap: 6px;
+    padding-top: 8px;
+    height: 100vh;
 }
 .panel_nav {
     background-color: var(--bg-wallet-light);
-    /*display: flex;*/
-    /*align-items: center;*/
-    /*flex-direction: row;*/
     display: grid;
     grid-template-columns: max-content max-content 1fr;
-    /*justify-content: space-between;*/
     padding: 24px 16px;
     font-size: 14px;
 
@@ -80,6 +78,9 @@ export default {
 }
 
 @include main.medium-device {
+    .main_panel {
+        height: unset;
+    }
     .panel_nav {
         padding: 12px 16px;
     }

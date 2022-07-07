@@ -2,14 +2,14 @@ import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 import { NetworkState } from '@/store/modules/network/types'
 
-import { ava, avm, cChain, infoApi, pChain } from '@/AVA'
+import { ava, infoApi } from '@/AVA'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
-import { BN } from 'avalanche'
+import { BN } from '@c4tplatform/camino'
 import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
-import { Network } from '@avalabs/avalanche-wallet-sdk'
+import { setAvalanche } from '@c4tplatform/camino-wallet-sdk'
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
@@ -63,7 +63,7 @@ const network_module: Module<NetworkState, RootState> = {
                 for (var i = 0; i < nets.length; i++) {
                     let net = nets[i]
                     if (JSON.stringify(net.url) === data) {
-                        dispatch('setNetwork', net)
+                        await dispatch('setNetwork', net)
                         return true
                     }
                 }
@@ -105,27 +105,17 @@ const network_module: Module<NetworkState, RootState> = {
             // Chose if the network should use credentials
             await net.updateCredentials()
             ava.setRequestConfig('withCredentials', net.withCredentials)
-            ava.setAddress(net.ip, net.port, net.protocol)
-            ava.setNetworkID(net.networkId)
+            ava.setNetwork(net.ip, net.port, net.protocol, net.networkId)
 
             // Reset transaction history
             commit('History/clear', null, { root: true })
 
-            // Query the network to get network id
-            let chainIdX = await infoApi.getBlockchainID('X')
-            let chainIdP = await infoApi.getBlockchainID('P')
-            let chainIdC = await infoApi.getBlockchainID('C')
+            // Wait until network settings are fetched
+            await ava.fetchNetworkSettings()
 
-            avm.refreshBlockchainID(chainIdX)
-            avm.setBlockchainAlias('X')
-            pChain.refreshBlockchainID(chainIdP)
-            pChain.setBlockchainAlias('P')
-            cChain.refreshBlockchainID(chainIdC)
-            cChain.setBlockchainAlias('C')
-
-            avm.getAVAXAssetID(true)
-            pChain.getAVAXAssetID(true)
-            cChain.getAVAXAssetID(true)
+            ava.XChain().getAVAXAssetID(true)
+            ava.PChain().getAVAXAssetID(true)
+            ava.CChain().getAVAXAssetID(true)
 
             state.selectedNetwork = net
             dispatch('saveSelectedNetwork')
@@ -154,6 +144,7 @@ const network_module: Module<NetworkState, RootState> = {
             }
 
             await dispatch('Assets/onNetworkChange', net, { root: true })
+            await dispatch('Launch/onNetworkChange', net, { root: true })
             dispatch('Assets/updateUTXOs', null, { root: true })
             dispatch('Platform/update', null, { root: true })
             dispatch('Platform/updateMinStakeAmount', null, { root: true })
@@ -162,8 +153,7 @@ const network_module: Module<NetworkState, RootState> = {
             dispatch('History/updateTransactionHistory', null, { root: true })
 
             // Set the SDK Network
-            let sdkNetConf = await Network.getConfigFromUrl(net.getFullURL())
-            await Network.setNetworkAsync(sdkNetConf)
+            setAvalanche(ava)
             // state.isConnected = true;
             state.status = 'connected'
             return true
@@ -172,16 +162,34 @@ const network_module: Module<NetworkState, RootState> = {
         async updateTxFee({ state }) {
             let txFee = await infoApi.getTxFee()
             state.txFee = txFee.txFee
-            avm.setTxFee(txFee.txFee)
+            ava.XChain().setTxFee(txFee.txFee)
         },
 
         async init({ state, commit, dispatch }) {
+            let camino = new AvaNetwork(
+                'Camino',
+                'https://mainnet.camino.foundation',
+                1000,
+                'https://magellan.camino.foundation',
+                'https://explorer.camino.foundation/mainnet',
+                true
+            )
+
             let columbus = new AvaNetwork(
                 'Columbus',
-                'https://columbus.camino.foundation:9650',
-                1000,
-                '',
-                '',
+                'https://columbus.camino.foundation',
+                1001,
+                'https://magellan.columbus.camino.foundation',
+                'https://explorer.camino.foundation/columbus',
+                true
+            )
+
+            let avaxMain = new AvaNetwork(
+                'Avalanche',
+                'https://api.avax.network',
+                1,
+                'https://explorerapi.avax.network',
+                'https://explorer.avax.network',
                 true
             )
 
@@ -192,7 +200,9 @@ const network_module: Module<NetworkState, RootState> = {
                 console.error(e)
             }
 
+            commit('addNetwork', camino)
             commit('addNetwork', columbus)
+            commit('addNetwork', avaxMain)
 
             try {
                 let isSet = await dispatch('loadSelectedNetwork')

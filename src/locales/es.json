@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "Contraseña",
     "password_confirm": "Confirmar Contraseña",
     "private_key": "Llave Privada",
@@ -37,10 +37,10 @@
         "json_error": "No se puede analizar el archivo JSON.",
         "keystore_error": "Esta versión de keystore no cuenta con soporte.",
         "password_error": "Contraseña Inválida.",
+        "submit": "Acceder Wallet",
         "mnemonic": {
             "title": "Ingresa tu frase MNEMÓNICA\n",
             "subtitle": "Da \"ESPACIO\" después de introducir cada palabra exitosa.",
-            "submit": "Acceder Wallet",
             "cancel": "Cancelar",
             "error": "Frase clave inválida. Tu frase debe ser de 24 palabras separadas por un único espacio."
         }

@@ -8,6 +8,7 @@ import History from './modules/history/history'
 import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
 import Accounts from './modules/accounts/accounts'
+import Launch from './modules/launch/launch'
 
 import {
     RootState,
@@ -24,7 +25,7 @@ Vue.use(Vuex)
 
 import router from '@/router'
 
-import { avm, bintools } from '@/AVA'
+import { bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
 import {
@@ -35,7 +36,7 @@ import {
 } from '@/js/Keystore'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-import { Buffer } from 'avalanche'
+import { Buffer } from '@c4tplatform/camino'
 import { privateToAddress } from 'ethereumjs-util'
 import { updateFilterAddresses } from '../providers'
 import { getAvaxPriceUSD } from '@/helpers/price_helper'
@@ -49,6 +50,7 @@ export default new Vuex.Store({
         Platform,
         Ledger,
         Accounts,
+        Launch,
     },
     state: {
         isAuth: false,
@@ -142,6 +144,7 @@ export default new Vuex.Store({
             store.dispatch('Platform/update')
             router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
+            store.dispatch('Launch/initialize')
         },
 
         // TODO: Parts can be shared with the logout function below
@@ -158,8 +161,18 @@ export default new Vuex.Store({
 
         async logout(store) {
             localStorage.removeItem('w')
+            store.state.wallets = []
+            store.state.volatileWallets = []
+            store.state.activeWallet = null
+            store.state.address = null
+            store.state.isAuth = false
+
+            store.dispatch('Accounts/onLogout')
+            store.dispatch('Assets/onLogout')
+            store.dispatch('Launch/onLogout')
+
             // Go to the base URL with GET request not router
-            window.location.href = '/'
+            router.push(store.getters['Accounts/hasAccounts'] ? '/access' : '/')
         },
 
         // used with logout
@@ -188,17 +201,20 @@ export default new Vuex.Store({
             // Cannot add mnemonic wallets on ledger mode
             if (state.activeWallet?.type === 'ledger') return null
 
+            // Split mnemonic and seed hash
+            const mParts = mnemonic.split('\n')
+
             // Make sure wallet doesnt exist already
             for (var i = 0; i < state.wallets.length; i++) {
                 let w = state.wallets[i] as WalletType
                 if (w.type === 'mnemonic') {
-                    if ((w as MnemonicWallet).getMnemonic() === mnemonic) {
+                    if ((w as MnemonicWallet).getMnemonic() === mParts[0]) {
                         throw new Error('Wallet already exists.')
                     }
                 }
             }
 
-            let wallet = new MnemonicWallet(mnemonic)
+            let wallet = new MnemonicWallet(mParts[0], mParts[1])
             state.wallets.push(wallet)
             state.volatileWallets.push(wallet)
             return wallet
@@ -259,6 +275,7 @@ export default new Vuex.Store({
         async activateWallet({ state, dispatch, commit }, wallet: MnemonicWallet | LedgerWallet) {
             state.activeWallet = wallet
 
+            await dispatch('Assets/updateWallet')
             dispatch('Assets/updateAvaAsset')
             commit('updateActiveAddress')
             dispatch('History/updateTransactionHistory')
@@ -281,7 +298,7 @@ export default new Vuex.Store({
 
                 let utcDate = new Date()
                 let dateString = utcDate.toISOString().replace(' ', '_')
-                let filename = `AVAX_${dateString}.json`
+                let filename = `NATIVE_${dateString}.json`
 
                 var blob = new Blob([text], {
                     type: 'application/json',

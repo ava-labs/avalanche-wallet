@@ -107,6 +107,6 @@ By default, there is one network option to connect to: `Columbus`.
 
 ##### Columbus (Testnet)
 
--   Camino API: `https://columbus.camino.foundation:9650`
+-   Camino API: `https://columbus.camino.foundation`
 -   Explorer API: `tbd`
 

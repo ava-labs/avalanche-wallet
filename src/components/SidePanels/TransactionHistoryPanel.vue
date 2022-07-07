@@ -1,6 +1,6 @@
 <template>
     <div class="tx_history_panel">
-        <div class="history_block" :disabled="!isActivityPage"></div>
+        <!--div class="history_block" :disabled="!isActivityPage"></div-->
         <div class="header">
             <h2>Transactions</h2>
             <Spinner v-if="isUpdating" class="spinner"></Spinner>
@@ -28,13 +28,12 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import TxHistoryRow from '@/components/SidePanels/TxHistoryRow.vue'
 import { ITransactionData } from '@/store/modules/history/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { ITransaction } from '@/components/wallet/transfer/types'
 
 @Component({
     components: {

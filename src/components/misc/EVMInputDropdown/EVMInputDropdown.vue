@@ -20,12 +20,14 @@
                 </div>
             </template>
             <template v-else>
-                <ERC721View
+                <ERCNftView
                     :token="collectible.token"
                     :index="collectible.id"
                     class="collectible_item"
-                ></ERC721View>
-                <p style="align-self: center; padding-left: 12px">TOKEN ID: {{ collectible.id }}</p>
+                ></ERCNftView>
+                <p style="align-self: center; padding-left: 12px">
+                    TOKEN ID: {{ collectible.id.tokenId }}
+                </p>
             </template>
         </div>
         <EVMAssetDropdown
@@ -37,28 +39,30 @@
         <div class="bal_col" v-if="!isCollectible">
             <p class="bal">Balance: {{ balance.toLocaleString() }}</p>
         </div>
+        <div class="bal_col" v-else>
+            <p class="bal">Balance: {{ collectible.id.quantity }}</p>
+        </div>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 //@ts-ignore
-import { BigNumInput } from '@avalabs/vue_components'
-import { BN } from 'avalanche'
+import { BigNumInput } from '@c4tplatform/vue_components'
+import { BN } from '@c4tplatform/camino'
 import EVMAssetDropdown from '@/components/misc/EVMInputDropdown/EVMAssetDropdown.vue'
 import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
 import { WalletType } from '@/js/wallets/types'
 
 import { bnToBig } from '@/helpers/helper'
-import EVMTokenSelectModal from '@/components/modals/EvmTokenSelect/EVMTokenSelectModal.vue'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
-import ERC721View from '@/components/misc/ERC721View.vue'
-import ERC721Token from '@/js/ERC721Token'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERCNftView from '@/components/misc/ERCNftView.vue'
+import ERCNftToken from '@/js/ERCNftToken'
+import { ERCNftBalance } from '@/store/modules/assets/modules/types'
 
 @Component({
     components: {
-        ERC721View,
-        EVMTokenSelectModal,
+        ERCNftView,
         EVMAssetDropdown,
         BigNumInput,
     },
@@ -66,7 +70,7 @@ import ERC721Token from '@/js/ERC721Token'
 export default class EVMInputDropdown extends Vue {
     token: Erc20Token | 'native' = 'native'
     isCollectible = false
-    collectible: iErc721SelectInput | null = null
+    collectible: iERCNftSelectInput | null = null
     @Prop({ default: false }) disabled!: boolean
     @Prop() gasPrice!: BN // in wei
     @Prop({ default: 21000 }) gasLimit!: number
@@ -78,7 +82,7 @@ export default class EVMInputDropdown extends Vue {
     }
 
     clear() {
-        this.$refs.dropdown.clear()
+        if (this.$refs.dropdown) this.$refs.dropdown.clear()
     }
 
     get usd_val(): Big {
@@ -172,8 +176,8 @@ export default class EVMInputDropdown extends Vue {
         this.$refs.dropdown.select(token)
     }
 
-    setErc721Token(token: ERC721Token, tokenId: string) {
-        this.$refs.dropdown.selectERC721({
+    setERCNftToken(token: ERCNftToken, tokenId: ERCNftBalance) {
+        this.$refs.dropdown.selectERCNft({
             token: token,
             id: tokenId,
         })
@@ -188,7 +192,7 @@ export default class EVMInputDropdown extends Vue {
         this.$emit('tokenChange', token)
     }
 
-    onCollectibleChange(val: iErc721SelectInput) {
+    onCollectibleChange(val: iERCNftSelectInput) {
         this.isCollectible = true
         this.collectible = val
         this.$emit('collectibleChange', val)

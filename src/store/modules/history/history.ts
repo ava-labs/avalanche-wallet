@@ -4,7 +4,7 @@ import { getAddressHistory } from '@/explorer_api'
 import moment from 'moment'
 
 import { HistoryState, ITransactionData } from '@/store/modules/history/types'
-import { avm, pChain } from '@/AVA'
+import { ava } from '@/AVA'
 import { filterDuplicateTransactions } from '@/helpers/history_helper'
 
 const history_module: Module<HistoryState, RootState> = {
@@ -55,8 +55,8 @@ const history_module: Module<HistoryState, RootState> = {
 
             let limit = 20
 
-            let txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
+            let txs = await getAddressHistory(avmAddrs, limit, ava.XChain().getBlockchainID())
+            let txsP = await getAddressHistory(pvmAddrs, limit, ava.PChain().getBlockchainID())
 
             let transactions = txs
                 .concat(txsP)
@@ -99,8 +99,8 @@ const history_module: Module<HistoryState, RootState> = {
 
             let limit = 0
 
-            let txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            let txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
+            let txsX = await getAddressHistory(avmAddrs, limit, ava.XChain().getBlockchainID())
+            let txsP = await getAddressHistory(pvmAddrs, limit, ava.PChain().getBlockchainID())
 
             let txsXFiltered = filterDuplicateTransactions(txsX)
             let txsPFiltered = filterDuplicateTransactions(txsP)

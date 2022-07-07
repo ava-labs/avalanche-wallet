@@ -48,10 +48,6 @@ import { Component, Vue } from 'vue-property-decorator'
 import NewCollectibleFamily from '@/components/wallet/studio/NewCollectibleFamily.vue'
 import MintNft from '@/components/wallet/studio/mint/MintNft.vue'
 import { IWalletNftMintDict } from '@/store/types'
-import Big from 'big.js'
-import { bnToBig } from '@/helpers/helper'
-import { avm } from '@/AVA'
-import { BN } from 'avalanche'
 @Component({
     name: 'studio',
     components: {
@@ -155,8 +151,9 @@ export default class Studio extends Vue {
 
 .options {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     column-gap: 14px;
+    row-gap: 14px;
     > div {
         border-radius: 4px;
         border: 1px solid var(--bg-light);

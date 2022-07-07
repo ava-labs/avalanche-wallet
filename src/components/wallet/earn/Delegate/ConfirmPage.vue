@@ -25,7 +25,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { BN } from 'avalanche/dist'
+import { BN } from '@c4tplatform/camino/dist'
 import Big from 'big.js'
 
 @Component

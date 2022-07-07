@@ -1,3 +1,4 @@
+const TerserPlugin = require('terser-webpack-plugin')
 process.env.VUE_APP_VERSION = process.env.npm_package_version
 
 module.exports = {
@@ -13,6 +14,8 @@ module.exports = {
     // publicPath: '',
     configureWebpack: {
         optimization: {
+            minimize: process.env.NODE_ENV  === 'production',
+            minimizer: [new TerserPlugin()],
             splitChunks: {
                 chunks: 'all',
                 minSize: 600 * 1000,

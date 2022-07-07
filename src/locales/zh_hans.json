@@ -1,5 +1,5 @@
 {
-    "0":"",
+    "0": "",
     "password": "密码",
     "password_confirm": "确认密码",
     "private_key": "私钥",
@@ -37,10 +37,10 @@
         "json_error": "无法解析JSON文件。",
         "keystore_error": "不支持此密钥存储文件版本。",
         "password_error": "无效密码。",
+        "submit": "访问钱包",
         "mnemonic": {
             "title": "输入你的助记词\n",
             "subtitle": "每输入一个单词后添加一个空格区分单词。",
-            "submit": "访问钱包",
             "cancel": "取消",
             "error": "无效的助记词。你的助记词必须是24个单词，每个单词之间用一个空格隔开。"
         }

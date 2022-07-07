@@ -21,12 +21,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import {
-    GenericFormType,
-    IGenericNft,
-    UrlFormType,
-    UtfFormType,
-} from '@/components/wallet/studio/mint/types'
+import { GenericFormType, IGenericNft } from '@/components/wallet/studio/mint/types'
 
 @Component
 export default class GenericForm extends Vue {

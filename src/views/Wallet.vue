@@ -6,7 +6,7 @@
         </transition>
         <div class="wallet_main">
             <top-info class="wallet_top"></top-info>
-            <transition name="page_fade" mode="out-in">
+            <transition name="fade" mode="out-in">
                 <keep-alive
                     :exclude="['cross_chain', 'activity', 'advanced', 'earn', 'manage', 'studio']"
                 >
@@ -15,7 +15,7 @@
             </transition>
         </div>
         <transition name="fade" mode="out-in">
-            <main-panel class="panel"></main-panel>
+            <main-panel />
         </transition>
     </div>
 </template>
@@ -60,9 +60,10 @@ export default class Wallet extends Vue {
 
     created() {
         this.resetTimer()
-        this.intervalId = setInterval(() => {
-            this.checkLogout()
-        }, 1000)
+        if (document.domain !== 'localhost')
+            this.intervalId = setInterval(() => {
+                this.checkLogout()
+            }, 1000)
     }
 
     unload(event: BeforeUnloadEvent) {
@@ -118,31 +119,39 @@ export default class Wallet extends Vue {
     display: grid;
     grid-template-columns: 200px 1fr 300px;
     column-gap: 15px;
-    height: 100%;
+    min-height: 100%;
     background-color: var(--bg-wallet);
 }
 
 .sidenav {
     background-color: var(--bg-wallet-light);
+    margin-top: 8px;
 }
 
 .panel {
-    overflow: auto;
-    height: 100%;
+    overflow: hidden;
 }
 
 .wallet_main {
-    height: 100%;
     display: grid;
     grid-template-rows: max-content 1fr;
     grid-gap: 15px;
     padding-top: 8px;
+    height: 100vh;
 }
 
 #wallet_router {
     padding: 22px 20px;
     background-color: var(--bg-wallet-light);
     border-radius: 4px;
+    overflow: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 .page_fade-enter-active,
@@ -162,6 +171,7 @@ export default class Wallet extends Vue {
     .wallet_main {
         grid-gap: 9px;
         padding-top: 0;
+        height: unset;
     }
 
     .wallet_sidebar {

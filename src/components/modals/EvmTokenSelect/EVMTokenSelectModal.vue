@@ -3,7 +3,7 @@
         <div class="token_select_body">
             <div class="list">
                 <div class="token_row" @click="select('native')">
-                    <img src="/img/avax_icon_circle.png" class="col_img" />
+                    <img src="/img/native_token.png" class="col_img" />
                     <div class="col_name">
                         <p>{{ nativeAssetSymbol }}</p>
                         <p>{{ nativeAssetName }}</p>
@@ -21,33 +21,33 @@
                 </div>
             </div>
             <div class="nft_list">
-                <ERC721Row
+                <ERCNftRow
                     class="nft_row"
-                    v-for="t in erc721s"
+                    v-for="t in ercNfts"
                     :key="t.contractAddress"
                     :token="t"
-                    @select="onERC721Select"
-                ></ERC721Row>
+                    @select="onERCNftSelect"
+                ></ERCNftRow>
             </div>
         </div>
     </modal>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
 import Erc20Token from '@/js/Erc20Token'
 import Big from 'big.js'
 import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
-import ERC721Token from '@/js/ERC721Token'
-import ERC721Row from '@/components/modals/EvmTokenSelect/ERC721Row.vue'
-import { iErc721SelectInput } from '@/components/misc/EVMInputDropdown/types'
+import ERCNftToken from '@/js/ERCNftToken'
+import ERCNftRow from '@/components/modals/EvmTokenSelect/ERCNftRow.vue'
+import { iERCNftSelectInput } from '@/components/misc/EVMInputDropdown/types'
 
 @Component({
     components: {
-        ERC721Row,
+        ERCNftRow,
         Modal,
     },
 })
@@ -69,9 +69,9 @@ export default class EVMTokenSelectModal extends Vue {
         return filt
     }
 
-    get erc721s(): ERC721Token[] {
+    get ercNfts(): ERCNftToken[] {
         let w: WalletType = this.$store.state.activeWallet
-        return this.$store.getters['Assets/ERC721/networkContracts']
+        return this.$store.getters['Assets/ERCNft/networkContracts']
     }
 
     get nativeAssetSymbol(): string {
@@ -94,7 +94,7 @@ export default class EVMTokenSelectModal extends Vue {
         this.close()
     }
 
-    onERC721Select(val: iErc721SelectInput) {
+    onERCNftSelect(val: iERCNftSelectInput) {
         this.$emit('selectCollectible', val)
         this.close()
     }
@@ -108,19 +108,12 @@ export default class EVMTokenSelectModal extends Vue {
 @use '../../../main';
 
 .token_select_body {
-    width: 420px;
+    width: 520px;
     max-width: 100%;
-    //padding: 10px 20px;
 }
 
 .list {
-    //position: absolute;
-    //top: 0;
-    //left: 100%;
-    //width: 260px;
-    //max-height: 0px;
     max-height: 70vh;
-    overflow: scroll;
     z-index: 2;
     border-radius: 4px;
 }
@@ -184,8 +177,8 @@ $logo_w: 38px;
 @include main.mobile-device {
     .token_select_body {
         width: 100%;
-        height: 40vh;
-        overflow: scroll;
+        max-height: 40vh;
+        overflow: auto;
     }
 }
 </style>

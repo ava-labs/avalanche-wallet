@@ -29,5 +29,5 @@
         "tests/**/*.ts",
         "tests/**/*.tsx"
     ],
-    "exclude": ["**/node_modules/*", "../avalanche.js/*"]
+    "exclude": ["**/node_modules/*"]
 }
