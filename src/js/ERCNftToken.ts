@@ -169,7 +169,7 @@ class ERCNftToken {
                     }
                 }
             } catch (e) {
-                console.log(e)
+                console.error(e)
             }
         return res
     }

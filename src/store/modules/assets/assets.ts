@@ -18,7 +18,12 @@ import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
-import { AmountOutput, UTXOSet as AVMUTXOSet, UTXO, NFTMintOutput } from '@c4tplatform/camino/dist/apis/avm'
+import {
+    AmountOutput,
+    UTXOSet as AVMUTXOSet,
+    UTXO,
+    NFTMintOutput,
+} from '@c4tplatform/camino/dist/apis/avm'
 import { UnixNow } from '@c4tplatform/camino/dist/utils'
 import { BN } from '@c4tplatform/camino'
 import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm/utxos'
@@ -332,6 +337,7 @@ const assets_module: Module<AssetsState, RootState> = {
             await wallet.getUTXOs()
             dispatch('onUtxosUpdated')
             dispatch('updateERC20Balances')
+            dispatch('ERCNft/scanNewNfts')
             dispatch('ERCNft/updateWalletBalance')
             commit('updateActiveAddress', null, { root: true })
         },

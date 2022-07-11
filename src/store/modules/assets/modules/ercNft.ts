@@ -38,7 +38,9 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
             }
         },
         saveCustomContracts(state) {
-            let tokenRawData = state.ercNftTokensCustom.map((token) => token.data)
+            let tokenRawData = state.ercNftTokensCustom
+                .filter((token) => token.data.ercTokenIds.length > 0)
+                .map((token) => token.data)
             localStorage.setItem('ercNft_tokens', JSON.stringify(tokenRawData))
         },
         loadTokenIds(state) {
@@ -58,9 +60,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
 
             let tokenRawData = state.ercNftTokenIds
                 .filter((token) => token.data.ercTokenIds.length > 0)
-                .map((token) => {
-                    return token.data
-                })
+                .map((token) => token.data)
             localStorage.setItem(state.walletPrefix + '_tokens', JSON.stringify(tokenRawData))
         },
         loadLastScannedBlock(state) {
@@ -114,8 +114,7 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
 
             if (token.canSupport) {
                 state.ercNftTokensCustom.push(token)
-                commit('saveCustomContracts')
-                dispatch('scanNewNfts')
+                await dispatch('scanNewNfts')
                 return token
             }
             throw new Error('Unsupported contract.')
@@ -196,12 +195,28 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
                 const search = new Set<ERCNftToken>(state.ercNftTokenIds)
                 const updates: ERCNftToken[] = []
                 contracts.forEach((c) => {
-                    if (c.data.ercTokenIds.length > 0 && !search.has(c)) {
+                    if (
+                        c.data.ercTokenIds.length > 0 &&
+                        !state.ercNftTokenIds
+                            .map((tokenId) => tokenId.data.address)
+                            .includes(c.data.address)
+                    ) {
                         state.ercNftTokenIds.push(c)
+                        updates.push(c)
+                    } else if (
+                        state.ercNftTokenIds
+                            .map((tokenId) => tokenId.data.address)
+                            .includes(c.data.address)
+                    ) {
+                        const index = state.ercNftTokenIds.findIndex(
+                            (tokenId) => tokenId.data.address === c.data.address
+                        )
+                        state.ercNftTokenIds[index] = c
                         updates.push(c)
                     }
                 })
                 commit('saveTokenIds')
+                commit('saveCustomContracts')
                 dispatch('updateWalletBalance', updates)
             }
         },
