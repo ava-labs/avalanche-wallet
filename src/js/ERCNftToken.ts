@@ -157,15 +157,30 @@ class ERCNftToken {
                     })
                 } else {
                     for (const token of this.data.ercTokenIds) {
-                        res.push({
-                            tokenId: token,
-                            quantity:
-                                (
-                                    await this.contract?.methods.ownerOf(token).call()
-                                ).toLowerCase() === address
-                                    ? 1
-                                    : 0,
-                        })
+                        try {
+                            res.push({
+                                tokenId: token,
+                                quantity:
+                                    (
+                                        await this.contract?.methods.ownerOf(token).call()
+                                    ).toLowerCase() === address
+                                        ? 1
+                                        : 0,
+                            })
+                        } catch (err) {
+                            if (
+                                err.message.includes(
+                                    'Returned error: execution reverted: ERC721: invalid token ID'
+                                )
+                            ) {
+                                res.push({
+                                    tokenId: token,
+                                    quantity: 0,
+                                })
+                            } else {
+                                console.error(err)
+                            }
+                        }
                     }
                 }
             } catch (e) {
