@@ -57,8 +57,9 @@ export default {
         Collectibles,
     },
     watch: {
-        tab() {
+        async tab() {
             this.search = ''
+            await this.$store.dispatch('Assets/updateUTXOs')
         },
     },
 }
