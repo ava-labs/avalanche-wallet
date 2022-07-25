@@ -11,6 +11,7 @@ import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
 import { getConfigFromUrl, setNetworkAsync } from '@avalabs/avalanche-wallet-sdk'
+import { MainnetConfig, TestnetConfig } from '@/store/modules/network/constants'
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
@@ -181,24 +182,6 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({ state, commit, dispatch }) {
-            const mainnet = new AvaNetwork(
-                'Mainnet',
-                'https://api.avax.network:443',
-                1,
-                'https://explorerapi.avax.network',
-                'https://explorer.avax.network',
-                true
-            )
-
-            const fuji = new AvaNetwork(
-                'Fuji',
-                'https://api.avax-test.network:443',
-                5,
-                'https://explorerapi.avax-test.network',
-                'https://explorer.avax-test.network',
-                true
-            )
-
             // Load custom networks if any
             try {
                 await dispatch('load')
@@ -206,8 +189,8 @@ const network_module: Module<NetworkState, RootState> = {
                 console.error(e)
             }
 
-            commit('addNetwork', mainnet)
-            commit('addNetwork', fuji)
+            commit('addNetwork', MainnetConfig)
+            commit('addNetwork', TestnetConfig)
 
             try {
                 const isSet = await dispatch('loadSelectedNetwork')
