@@ -10,6 +10,7 @@ import vuetify from './plugins/vuetify'
 import i18n from './plugins/i18n'
 
 Vue.use(VueMeta)
+Vue.use(BootstrapVue)
 Vue.component('datetime', Datetime)
 
 Vue.config.productionTip = false
@@ -47,6 +48,7 @@ if (window.Cypress) {
 
 // Extending Big.js with a helper function
 import Big from 'big.js'
+import BootstrapVue from 'bootstrap-vue'
 
 declare module 'big.js' {
     interface Big {

@@ -144,6 +144,7 @@ export default new Vuex.Store({
             store.dispatch('Platform/update')
             router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
+            store.dispatch('Accounts/updateKycStatus')
             store.dispatch('Launch/initialize')
         },
 

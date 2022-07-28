@@ -19,12 +19,14 @@ import {
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { makeKeyfile } from '@/js/Keystore'
+import { checkVerificationStatus } from '@/kyc_api'
 
 const accounts_module: Module<AccountsState, RootState> = {
     namespaced: true,
     state: {
         accounts: [],
         accountIndex: null,
+        kycStatus: false,
     },
     mutations: {
         loadAccounts(state) {
@@ -164,6 +166,12 @@ const accounts_module: Module<AccountsState, RootState> = {
             overwriteAccountAtIndex(acct, acctIndex)
             commit('loadAccounts')
         },
+
+        async updateKycStatus({ state, rootState }) {
+            const wallet = rootState.activeWallet
+            if (!wallet) return
+            state.kycStatus = await checkVerificationStatus('0x' + wallet.ethAddress)
+        },
     },
     getters: {
         hasAccounts(state: AccountsState, getters) {
@@ -190,6 +198,10 @@ const accounts_module: Module<AccountsState, RootState> = {
         account(state: AccountsState, getters): iUserAccountEncrypted | null {
             if (state.accountIndex === null) return null
             return state.accounts[state.accountIndex]
+        },
+
+        kycStatus(state: AccountsState): boolean {
+            return state.kycStatus
         },
     },
 }

@@ -18,12 +18,11 @@ import Activity from '@/views/wallet/Activity.vue'
 import Account from '@/views/access/Account.vue' // your vuex store
 import Launch from '@/views/wallet/Launch.vue'
 import Legal from '@/views/Legal.vue'
-
-Vue.use(VueRouter)
-
 import store from '../store/index'
 import Studio from '@/views/wallet/Studio.vue'
 import Export from '@/views/wallet/CrossChain.vue'
+
+Vue.use(VueRouter)
 
 const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
     if (!store.state.isAuth) {
