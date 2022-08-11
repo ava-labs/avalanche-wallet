@@ -231,6 +231,7 @@ export default class CreateWallet extends Vue {
     justify-content: space-between;
     background-color: var(--bg-light);
     padding: main.$container-padding;
+    border-radius: 1rem;
     text-align: center;
     /*min-width: 1000px;*/
 
