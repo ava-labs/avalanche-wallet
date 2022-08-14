@@ -1,67 +1,39 @@
 <template>
     <div class="home">
-        <b-container>
-            <b-row>
-                <b-col>
-                    <div class="home_wrapper">
-                        <h1>{{ $t('home.desc') }}</h1>
-                        <div class="login_wrapper">
-                            <div class="login_option">
-                                <header>
-                                    <div class="img_container">
-                                        <img
-                                            v-if="$root.theme === 'day'"
-                                            src="@/assets/diamond-primary.svg"
-                                            alt
-                                        />
-                                        <img v-else src="@/assets/diamond-primary-night.svg" alt />
-                                    </div>
-                                    <h2>{{ $t('home.access.title') }}</h2>
-                                    <p>{{ $t('home.access.desc') }}</p>
-                                </header>
-                                <div>
-                                    <router-link
-                                        data-cy="access"
-                                        to="/access"
-                                        class="ava_button button_primary submit_but"
-                                    >
-                                        {{ $t('home.access.submit') }}
-                                    </router-link>
-                                </div>
-                            </div>
-                            <div class="login_option">
-                                <header>
-                                    <div class="img_container">
-                                        <img
-                                            v-if="$root.theme === 'day'"
-                                            src="@/assets/diamond-secondary.png"
-                                            alt
-                                        />
-                                        <img
-                                            v-else
-                                            src="@/assets/diamond-secondary-night.svg"
-                                            alt
-                                        />
-                                    </div>
-                                    <h2>{{ $t('home.create.title') }}</h2>
-                                    <p>{{ $t('home.create.desc') }}</p>
-                                </header>
-                                <div>
-                                    <router-link
-                                        data-cy="create"
-                                        to="/create"
-                                        class="ava_button button_secondary submit_but"
-                                    >
-                                        {{ $t('home.create.submit') }}
-                                    </router-link>
-                                </div>
-                            </div>
-                        </div>
-                        <ToS class="tos" style="align-self: center; margin: 30px !important"></ToS>
-                    </div>
-                </b-col>
-            </b-row>
-        </b-container>
+        <img class="blur" src="@/assets/ellipse.svg/" alt />
+        <div class="home--wrapper">
+            <div class="header">
+                <img src="@/assets/wallet-logo.svg" alt />
+                <div class="header--title">
+                    {{ $t('home.header') }}
+                </div>
+            </div>
+            <div class="content">
+                <h1 class="content--desc">{{ $t('home.desc') }}</h1>
+                <div class="content--access-create">{{ $t('home.access_create') }}</div>
+            </div>
+            <div class="buttons-wrapper">
+                <div>
+                    <router-link
+                        data-cy="access"
+                        to="/access"
+                        class="ava_button button_primary submit_but"
+                    >
+                        {{ $t('home.access.submit') }}
+                    </router-link>
+                </div>
+                <div>
+                    <router-link
+                        data-cy="create"
+                        to="/create"
+                        class="ava_button button_secondary submit_but"
+                    >
+                        {{ $t('home.create.submit') }}
+                    </router-link>
+                </div>
+            </div>
+            <ToS class="tos" style="align-self: center; margin: 30px !important"></ToS>
+        </div>
     </div>
 </template>
 
@@ -79,79 +51,62 @@ export default class Home extends Vue {}
 
 <style scoped lang="scss">
 @use "../main";
-
 .home {
     padding-top: 100px;
-    /*background-color: #fff;*/
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    position: relative;
-
-    a {
-        margin: 10px;
-        text-align: center;
-        display: block;
+    height: calc(100vh - 80px);
+    background-image: url('../assets/home_background.svg');
+    background-size: cover;
+    background-position: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    .blur {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
-
-    .home_wrapper {
+    &--wrapper {
+        z-index: 50;
+        margin-top: 100px;
+        max-width: 600px;
         display: flex;
         flex-direction: column;
-        align-content: center;
-        justify-content: center;
-
-        h1 {
-            text-align: center;
-            font-size: 22px;
-            font-weight: 400;
+        margin-top: 100px;
+        gap: 30px;
+        align-items: center;
+        .header {
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-
-        .login_wrapper {
-            margin-top: 60px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            column-gap: main.$container-padding;
-
-            .login_option {
-                display: flex;
-                flex-direction: column;
-                border-radius: 1rem;
-                align-items: flex-start;
-                justify-content: space-between;
-                background-color: var(--bg-light);
-                padding: 60px 90px main.$container-padding main.$container-padding;
-
-                header {
-                    margin-bottom: 60px;
-
-                    img {
-                        width: 89px;
-                        height: 89px;
-                        max-height: none;
-                    }
-
-                    h2 {
-                        padding-top: main.$s-size;
-                        font-family: 'DM Sans', sans-serif;
-                        font-size: main.$s-size;
-                        text-transform: uppercase;
-                        color: var(--primary-color-light);
-                    }
-
-                    p {
-                        margin-top: 10px !important;
-                        font-size: main.$l-size;
-                    }
-                }
-
-                a {
-                    margin: 0;
-                }
+        .content {
+            text-align: center;
+            /* background-image: url('../assets/ellipse.svg'); */
+            background-size: contain;
+            background-position: bottom;
+            &--desc {
+                margin-bottom: 30px;
+                font-size: 40px;
+            }
+            &--access-create {
+                margin-bottom: 30px;
+                font-size: 24px;
+                color: #cbd5e1;
             }
         }
     }
+    .buttons-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
 }
-
 .tos {
     margin-top: 14px !important;
 }
@@ -163,91 +118,18 @@ export default class Home extends Vue {}
    Nav
    ========================================== */
 
-@include main.night-mode {
-}
-.logo {
-    margin-bottom: 30px;
-}
-
-img {
-    max-height: 50px;
-    object-fit: contain;
-}
-
-@include main.medium-device {
-    .login_option {
-        padding: 30px 40px !important;
-        p {
-            font-size: 1.4rem !important;
+@include main.mobile-device {
+    .home {
+        /* display: none; */
+        .header {
+            &--title {
+                font-size: 16px;
+            }
         }
     }
 }
 
 @include main.mobile-device {
-    .auth {
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    .menu_option {
-        padding: 5vh 12px;
-    }
-    .menu_option button {
-        width: 100%;
-        padding: 8px;
-    }
-
-    .imgcover {
-        display: none;
-    }
-
-    .home {
-        .home_wrapper {
-            h1 {
-                font-size: main.$xl-size-mobile;
-            }
-
-            .login_wrapper {
-                grid-template-columns: none;
-                display: flex;
-                flex-direction: column;
-
-                .login_option {
-                    margin-bottom: main.$vertical-padding;
-                    padding: 30px 15px;
-                    align-items: center;
-
-                    header {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-
-                        margin-bottom: 30px;
-
-                        img {
-                            width: 40px;
-                            height: 40px;
-                        }
-
-                        h2 {
-                            padding-top: main.$s-size-mobile;
-                            font-size: main.$s-size-mobile;
-                        }
-
-                        p {
-                            margin-top: 10px !important;
-                            font-size: main.$l-size-mobile;
-                            text-align: center;
-                        }
-                    }
-
-                    a {
-                        margin: 0;
-                    }
-                }
-            }
-        }
-    }
 }
 
 @media only screen and (max-width: 600px) {

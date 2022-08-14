@@ -6,7 +6,9 @@
     "address": "Address",
     "add_pk": "Add Private Key",
     "home": {
+        "header": "@.project:(0) Wallet",
         "desc": "@.project:(0) Wallet is a simple, secure, non-custodial wallet for storing @.project:(0) assets.",
+        "access_create": "Access your existing Camino wallet here or create a new wallet to send, receive and swap Camino assets.",
         "access": {
             "title": "Welcome Back!",
             "desc": "Access your existing @.project:(0) wallet here.",
