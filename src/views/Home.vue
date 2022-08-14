@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <img class="blur" src="@/assets/ellipse.svg/" alt />
+        <img class="blur" v-if="$root.theme === 'night'" src="@/assets/ellipse.svg/" alt />
         <div class="home--wrapper">
             <div class="header">
                 <img src="@/assets/wallet-logo.svg" alt />
@@ -55,12 +55,13 @@ export default class Home extends Vue {}
     padding-top: 100px;
     display: flex;
     justify-content: center;
-    height: calc(100vh - 80px);
+    min-height: calc(100vh - 80px);
     background-image: url('../assets/home_background.svg');
     background-size: cover;
     background-position: center;
     align-items: center;
     background-repeat: no-repeat;
+    overflow: hidden;
     .blur {
         position: absolute;
         left: 50%;
@@ -70,31 +71,28 @@ export default class Home extends Vue {}
     &--wrapper {
         z-index: 50;
         margin-top: 100px;
-        max-width: 600px;
         display: flex;
         flex-direction: column;
         margin-top: 100px;
         gap: 30px;
         align-items: center;
         .header {
-            font-size: 26px;
+            font-size: main.$l-size;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 15px;
         }
         .content {
+            max-width: 700px;
             text-align: center;
-            /* background-image: url('../assets/ellipse.svg'); */
-            background-size: contain;
-            background-position: bottom;
             &--desc {
                 margin-bottom: 30px;
-                font-size: 40px;
+                font-size: main.$xl-size;
             }
             &--access-create {
                 margin-bottom: 30px;
-                font-size: 24px;
+                font-size: main.$m-size;
                 color: #cbd5e1;
             }
         }
@@ -102,13 +100,14 @@ export default class Home extends Vue {}
     .buttons-wrapper {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 30px;
         flex-wrap: wrap;
         align-items: center;
     }
 }
 .tos {
     margin-top: 14px !important;
+    text-align: center;
 }
 
 .submit_but {
@@ -120,16 +119,20 @@ export default class Home extends Vue {}
 
 @include main.mobile-device {
     .home {
-        /* display: none; */
         .header {
             &--title {
-                font-size: 16px;
+                font-size: main.$l-size-mobile;
+            }
+        }
+        .content {
+            &--desc {
+                font-size: main.$xl-size-mobile;
+            }
+            &--access-create {
+                font-size: main.$m-size-mobile;
             }
         }
     }
-}
-
-@include main.mobile-device {
 }
 
 @media only screen and (max-width: 600px) {

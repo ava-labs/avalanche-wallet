@@ -102,13 +102,13 @@ export default {
 
     #router_view {
         position: relative;
-        padding: main.$container_padding_m;
+        /* padding: main.$container_padding_m; */
     }
 }
 
 #router_view {
     position: relative;
-    padding: main.$container_padding_m;
+    /* padding: main.$container_padding_m; */
 }
 </style>
 
@@ -158,6 +158,21 @@ p {
 
     .panel {
         display: none !important;
+    }
+    .main_cols {
+        &[wallet_view] {
+            #router_view {
+                padding: 0;
+            }
+        }
+
+        #router_view {
+            padding: main.$container_padding_s;
+        }
+    }
+
+    #router_view {
+        padding: main.$container_padding_s;
     }
 }
 
