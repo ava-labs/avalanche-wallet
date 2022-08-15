@@ -1,0 +1,79 @@
+.ava_button {
+    padding: 10px 24px;
+    min-width: 140px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase !important;
+    font-size: $s-size;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &:disabled {
+        opacity: 0.5 !important;
+    }
+}
+
+.ava_button_secondary {
+    background-color: transparent !important;
+    padding: 10px 24px;
+    min-width: 140px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase !important;
+    font-size: $s-size;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &:disabled {
+        opacity: 0.5 !important;
+    }
+}
+
+.button_primary {
+    background-color: var(--primary-color) !important;
+    color: var(--bg) !important;
+    text-decoration: none;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &[disabled] {
+        background-color: var(--primary-color) !important;
+        color: var(--primary-color-light) !important;
+        opacity: 0.7;
+        cursor: not-allowed !important;
+    }
+}
+
+.button_secondary {
+    background: rgb(15,168,255);
+    background: linear-gradient(90deg, rgba(15,168,255,1) 0%, rgba(183,66,255,1) 100%);
+    color: #fff !important;
+    text-decoration: none;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.button_form_cancel {
+    color: var(--primary-color-light);
+    font-size: 12px;
+    text-align: center;
+    //opacity: 0.8;
+    margin: 6px 0 !important;
+
+    &:hover {
+        //opacity: 1;
+        color: var(--primary-color);
+    }
+}

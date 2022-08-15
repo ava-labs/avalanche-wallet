@@ -1,0 +1,49 @@
+@mixin mobile-device {
+    @media only screen and (max-width: $mobile_width) {
+        @content;
+    }
+}
+
+@mixin medium-device {
+    @media only screen and (min-width: $mobile_width) and (max-width: $width_m) {
+        @content;
+    }
+}
+
+@mixin large-device {
+    @media only screen and (min-width: 960px) and (max-width: 1200px) {
+        @content;
+    }
+}
+
+@mixin xl-device {
+    @media only screen and (min-width: 1200px) and (max-width: 1600px) {
+        @content;
+    }
+}
+
+@mixin largest-device {
+    @media only screen and (min-width: 1600px) {
+        @content;
+    }
+}
+
+@mixin night-mode {
+    html[data-theme='night'] {
+        @content;
+    }
+}
+
+@mixin highlight-border {
+    transition-duration: 0.1s;
+    border: 1px solid transparent;
+    outline: none !important;
+
+    &:hover {
+        border-color: var(--primary-color-light);
+    }
+
+    &:focus-within {
+        border-color: var(--selection-color);
+    }
+}

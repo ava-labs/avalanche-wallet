@@ -1,0 +1,17 @@
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-container {
+    display: grid;
+}
+
+.align-h {
+    text-align: center
+}

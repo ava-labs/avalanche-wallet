@@ -1,0 +1,12 @@
+.v-tabs-bar,
+.v-tabs-items {
+    background-color: var(--bg) !important;
+}
+
+.v-tab {
+    color: var(--primary-color-light) !important;
+}
+
+.v-tab--active {
+    color: var(--primary-color) !important;
+}

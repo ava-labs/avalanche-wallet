@@ -1,0 +1,90 @@
+.v-input--selection-controls__ripple {
+    color: var(--secondary-color) !important;
+}
+
+.v-input__slot {
+    background-color: var(--bg) !important;
+
+    input {
+        color: var(--primary-color) !important;
+    }
+}
+
+.v-text-field {
+    @include highlight-border;
+    color: var(--primary-color) !important;
+
+    label {
+        color: var(--primary-color-light) !important;
+    }
+
+    input {
+        outline: none;
+        border: none;
+    }
+
+    .v-input__slot:before {
+        border-color: var(--primary-color-light) !important;
+        color: var(--primary-color-light) !important;
+    }
+
+    &[disabled] {
+        border-color: transparent !important;
+    }
+}
+
+.v-chip {
+    background-color: var(--bg-light) !important;
+    color: var(--primary-color) !important;
+}
+
+.v-chip--active {
+    background-color: var(--primary-color) !important;
+    color: var(--bg-wallet) !important;
+}
+
+.vue__time-picker {
+    color: var(--primary-color);
+
+    input {
+        border: none !important;
+        background-color: var(--bg-light) !important;
+        color: var(--primary-color) !important;
+    }
+}
+
+.v-input--checkbox {
+    label {
+        color: var(--primary-color) !important;
+    }
+}
+
+.vdatetime {
+    background-color: var(--bg-light) !important;
+    padding: 6px 12px !important;
+
+    input {
+        color: var(--primary-color) !important;
+    }
+}
+
+.qr_input {
+    background-color: var(--bg-light) !important;
+    color: var(--primary-color) !important;
+    font-size: 13px;
+
+    @include highlight-border;
+
+    &[disabled] {
+        border-color: transparent !important;
+    }
+}
+
+.single_line_input {
+    display: block;
+    width: 100%;
+    padding: 5px 12px;
+    border: 1px solid var(--bg-light);
+    border-radius: 3px;
+    color: var(--primary-color);
+}

@@ -39,3 +39,33 @@ html[data-theme='night'] {
 
     --warning: #d49534;
 }
+
+$mobile_width: 900px;
+$width_s: 1300px;
+$width_m: 1300px;
+
+$container_padding_l: 30px 18vw;
+$container_padding_m: 30px 160px;
+$container_padding_s: 30px 3vw;
+$container_padding_mobile: 10px 10px;
+
+$vertical-padding: 40px;
+$container-padding: 40px;
+
+$purple: #4c2e56;
+$purple-light: #867e89;
+$pink: #e84970;
+$pink-light: #ff8080;
+$pink-extra-light: #ffe6e6;
+$gray: #f5f6fa;
+$white: #fff;
+$green: #6bc688;
+$green-light: #83f2a6;
+$green-extra-light: #a9efbf;
+
+$primary-color: $purple;
+$primary-color-light: $purple-light;
+$secondary-color: $pink;
+$secondary-color-light: $pink-light;
+$secondary-color-extra-light: $pink-extra-light;
+$background-color: $gray;
