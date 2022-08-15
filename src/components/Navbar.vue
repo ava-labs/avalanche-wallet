@@ -113,7 +113,6 @@ export default class Navbar extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../styles/main';
-@use '../styles/light_theme';
 
 img {
     max-height: 25px;
