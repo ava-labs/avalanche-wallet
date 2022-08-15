@@ -128,7 +128,7 @@ export default {
 </script>
 
 <style lang="scss">
-@use "../../main";
+@use "../../styles/main";
 
 .remember {
     .v-label {
@@ -150,7 +150,7 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-@use "../../main";
+@use "../../styles/main";
 .passwords {
     display: flex;
     flex-direction: column;

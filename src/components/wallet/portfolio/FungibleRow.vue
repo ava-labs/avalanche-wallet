@@ -128,7 +128,7 @@ export default class FungibleRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .asset {
     padding: 14px 0px;

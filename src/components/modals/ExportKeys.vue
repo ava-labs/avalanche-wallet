@@ -58,7 +58,7 @@ export default class ExportKeys extends Vue {
 </script>
 
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .export_body {
     padding: 30px;
@@ -87,7 +87,7 @@ export default class ExportKeys extends Vue {
 </style>
 
 <style lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .v-tab.v-tab {
     font-weight: 700;

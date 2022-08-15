@@ -77,7 +77,7 @@ export default class CollectibleFamily extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .collectible_family {
     display: grid;

@@ -203,7 +203,7 @@ export default class CustomPage extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .custom_network {
     padding: 0px 15px;

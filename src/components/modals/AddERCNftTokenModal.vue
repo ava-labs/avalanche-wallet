@@ -147,7 +147,7 @@ export default class AddERCNftTokenModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 .add_token_body {
     padding: 30px 22px;
     text-align: center;

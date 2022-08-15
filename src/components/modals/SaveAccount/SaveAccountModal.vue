@@ -139,7 +139,7 @@ export default class SaveAccountModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .remember_modal {
     width: 320px;

@@ -68,7 +68,7 @@ export default class TxHistoryNftFamilyGroup extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 $countW: 18px;
 .count {

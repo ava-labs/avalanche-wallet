@@ -131,7 +131,7 @@ export default class AddKeyFile extends Vue {
 }
 </style>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 .add_key_file {
     padding: 14px 0;
 }

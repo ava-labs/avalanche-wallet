@@ -81,7 +81,7 @@ export default class AvaxInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .avax_input {
     display: grid;

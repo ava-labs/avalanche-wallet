@@ -93,7 +93,7 @@ export default class TxHistoryRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .icons {
     justify-self: center;

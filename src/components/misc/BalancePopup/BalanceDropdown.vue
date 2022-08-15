@@ -79,7 +79,7 @@ export default class BalanceDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 button {
     padding: 4px 12px;

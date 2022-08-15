@@ -566,7 +566,7 @@ export default class ChainTransfer extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../main';
+@use '../../../../styles/main';
 
 .cols {
     display: grid;

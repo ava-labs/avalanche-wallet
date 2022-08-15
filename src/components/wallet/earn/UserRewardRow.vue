@@ -98,7 +98,7 @@ export default class UserRewardRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .node_id {
     word-break: break-all;

@@ -114,7 +114,7 @@ export default class TxHistoryValue extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .utxo {
     display: grid;

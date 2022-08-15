@@ -152,7 +152,7 @@ export default class Fungibles extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 @use './portfolio';
 
 .fungibles_view {
@@ -250,7 +250,7 @@ export default class Fungibles extends Vue {
 }
 </style>
 <style lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 .fungibles_view {
     .balance_col {
         text-align: right;

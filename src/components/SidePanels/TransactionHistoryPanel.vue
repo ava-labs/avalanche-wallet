@@ -91,7 +91,7 @@ export default class TransactionHistoryPanel extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .tx_history_panel {
     display: grid;

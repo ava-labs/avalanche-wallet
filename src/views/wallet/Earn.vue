@@ -188,7 +188,7 @@ export default class Earn extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 .earn_page {
     display: grid;
     grid-template-rows: max-content 1fr;

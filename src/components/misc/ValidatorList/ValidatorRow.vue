@@ -114,7 +114,7 @@ export default class ValidatorsList extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .amount {
     text-align: right;

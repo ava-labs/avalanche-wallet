@@ -80,7 +80,7 @@ export default class ImportKeys extends Vue {
 </script>
 
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .add_key_body {
     padding: 30px;
@@ -123,7 +123,7 @@ export default class ImportKeys extends Vue {
 </style>
 
 <style lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .v-tab.v-tab {
     font-weight: 700;

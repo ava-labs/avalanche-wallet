@@ -60,7 +60,7 @@ export default class BaseTxOutput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../../main";
+@use "../../../../styles/main";
 .tx_out {
     display: grid;
     grid-template-columns: 1fr 1fr;

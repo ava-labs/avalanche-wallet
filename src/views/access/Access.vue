@@ -42,7 +42,7 @@ import { Vue, Component } from 'vue-property-decorator'
 export default class Access extends Vue {}
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .access_view {
     display: flex;

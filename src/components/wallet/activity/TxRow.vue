@@ -115,7 +115,7 @@ export default class TxRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../../main";
+@use "../../../styles/main";
 .tx_row {
     //display: grid;
     //grid-template-columns: 1fr 1fr;

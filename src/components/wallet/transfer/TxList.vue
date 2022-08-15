@@ -176,7 +176,7 @@ export default class TxList extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 $right_pad: 60px;
 

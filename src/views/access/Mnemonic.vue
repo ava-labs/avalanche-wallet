@@ -108,7 +108,7 @@ export default class Mnemonic extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .mnemonic_auth {
     display: grid;

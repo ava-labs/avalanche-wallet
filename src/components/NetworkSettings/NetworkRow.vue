@@ -108,8 +108,7 @@ export default class NetworkRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
-
+@use '../../styles/main';
 .stat_col {
     font-size: 14px;
     color: var(--primary-color);

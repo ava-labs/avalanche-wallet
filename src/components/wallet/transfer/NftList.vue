@@ -154,7 +154,7 @@ export default class NftList extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 $nft_w: 90px;
 

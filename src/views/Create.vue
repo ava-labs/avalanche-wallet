@@ -41,7 +41,7 @@ import CreateWallet from '@/components/CreateWalletWorkflow/CreateWallet.vue'
 export default class Create extends Vue {}
 </script>
 <style scoped lang="scss">
-@use '../main';
+@use '../styles/main';
 
 .access_view {
     /*display: grid;*/

@@ -43,7 +43,7 @@ export default class Modal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .modal_topbar {
     background-color: var(--bg);

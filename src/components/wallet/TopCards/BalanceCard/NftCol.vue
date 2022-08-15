@@ -133,7 +133,7 @@ export default class NftCol extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../main';
+@use '../../../../styles/main';
 
 .nft_col {
     margin-top: 10px;

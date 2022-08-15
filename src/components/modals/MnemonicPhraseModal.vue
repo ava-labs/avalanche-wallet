@@ -34,7 +34,7 @@ export default class MnemonicPhraseModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .mnemonic_modal_body {
     /*width: 600px;*/

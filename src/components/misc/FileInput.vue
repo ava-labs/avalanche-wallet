@@ -62,7 +62,7 @@ export default class FileInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .file_input {
     position: relative;

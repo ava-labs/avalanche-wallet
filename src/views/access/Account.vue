@@ -110,7 +110,7 @@ export default class Account extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 .pass {
     text-align: center;
     background-color: var(--bg-light) !important;

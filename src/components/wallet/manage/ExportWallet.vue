@@ -120,8 +120,8 @@ export default class ExportWallet extends Vue {
 }
 </style>
 <style scoped lang="scss">
-@use '../../../main';
-@use '../../../light_theme';
+@use '../../../styles/main';
+@use '../../../styles/light_theme';
 
 .export_wallet {
     font-size: 12px;

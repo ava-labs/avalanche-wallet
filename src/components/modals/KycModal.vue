@@ -126,7 +126,7 @@ export default class KycModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .modal_main::v-deep {
     .modal_body {

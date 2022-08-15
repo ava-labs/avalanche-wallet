@@ -59,7 +59,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .utxo {
     display: grid;

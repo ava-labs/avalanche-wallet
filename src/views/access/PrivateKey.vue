@@ -68,7 +68,7 @@ export default class PrivateKey extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 .pass {
     background-color: var(--bg) !important;
 }

@@ -65,7 +65,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .home_view {
     display: grid;

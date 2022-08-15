@@ -33,7 +33,7 @@ export default class SelectMintUTXO extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../../main';
+@use '../../../../../styles/main';
 
 .families {
     grid-template-columns: repeat(5, 1fr);

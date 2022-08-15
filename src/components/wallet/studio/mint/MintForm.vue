@@ -394,7 +394,7 @@ export default class MintNft extends Vue {
 }
 </style>
 <style lang="scss" scoped>
-@use '../../../../main';
+@use '../../../../styles/main';
 .mint_form {
     padding: 10px 0;
 }

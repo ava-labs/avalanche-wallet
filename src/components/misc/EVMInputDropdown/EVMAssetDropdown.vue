@@ -65,7 +65,7 @@ export default class EVMAssetDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 .evm_dropdown {
     position: relative;
 }

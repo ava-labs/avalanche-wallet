@@ -498,7 +498,7 @@ export default class FormC extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 h4 {
     display: block;

@@ -107,7 +107,7 @@ export default class ManageKeys extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .button_container {
     display: flex;

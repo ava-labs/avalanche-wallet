@@ -517,7 +517,7 @@ export default class Transfer extends Vue {
 }
 </style>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 $padLeft: 24px;
 $padTop: 8px;

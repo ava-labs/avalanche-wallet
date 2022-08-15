@@ -86,7 +86,7 @@ export default class UtfPayloadView extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../main';
+@use '../../../../styles/main';
 
 .generic_payload_view {
     position: relative;

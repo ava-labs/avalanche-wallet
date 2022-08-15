@@ -73,7 +73,6 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 import ToS from '@/components/misc/ToS.vue'
-// import sv from '../assets/ellipse.svg'
 
 @Component({
     name: 'home',
@@ -83,7 +82,7 @@ export default class Home extends Vue {}
 </script>
 
 <style scoped lang="scss">
-@use "../main";
+@use "../styles/main";
 .home {
     padding-top: 100px;
     display: flex;
@@ -114,7 +113,6 @@ export default class Home extends Vue {}
         margin-top: 100px;
         display: flex;
         flex-direction: column;
-        margin-top: 100px;
         gap: 30px;
         align-items: center;
         .header {

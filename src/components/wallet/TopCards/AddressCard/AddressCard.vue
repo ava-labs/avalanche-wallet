@@ -255,7 +255,7 @@ export default class AddressCard extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../main';
+@use '../../../../styles/main';
 
 .addr_card {
     display: flex;

@@ -36,7 +36,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .main_panel {
     display: grid;

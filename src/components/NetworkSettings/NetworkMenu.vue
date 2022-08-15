@@ -157,7 +157,7 @@ export default class NetworkMenu extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .network_menu {
     margin-right: 16px;

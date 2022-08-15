@@ -26,7 +26,7 @@ export default class BalanceRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .symbol {
     background-color: var(--bg-light);

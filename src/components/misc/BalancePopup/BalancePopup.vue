@@ -97,7 +97,7 @@ export default class BalancePopup extends Vue {
 }
 </style>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 .bg {
     position: fixed;
     z-index: 2;

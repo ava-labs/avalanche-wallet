@@ -204,7 +204,7 @@ export default class CurrencyInputDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 .bigIn {
     width: 100%;

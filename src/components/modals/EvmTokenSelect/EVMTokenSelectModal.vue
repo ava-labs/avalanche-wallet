@@ -105,7 +105,7 @@ export default class EVMTokenSelectModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .token_select_body {
     width: 520px;

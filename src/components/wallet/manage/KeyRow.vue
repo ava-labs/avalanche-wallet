@@ -279,7 +279,7 @@ export default class KeyRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 
 .addressItem {
     font-size: 12px;

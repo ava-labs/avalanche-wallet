@@ -39,7 +39,7 @@ export default class Launch extends Vue {
 </script>
 
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 
 h1 {
     font-weight: normal;

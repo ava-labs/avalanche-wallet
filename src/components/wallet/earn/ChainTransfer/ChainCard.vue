@@ -101,7 +101,7 @@ export default class ChainCard extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../main';
+@use '../../../../styles/main';
 
 label {
     text-align: left;

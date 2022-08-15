@@ -32,7 +32,7 @@ export default class ChainInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../main';
+@use '../../../styles/main';
 label {
     color: var(--primary-color-light);
 }

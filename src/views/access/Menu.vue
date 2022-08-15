@@ -55,7 +55,7 @@ export default class Menu extends Vue {}
 </script>
 
 <style scoped lang="scss">
-@use "../../main";
+@use "../../styles/main";
 @use '/src/components/Access/menu';
 
 .access_card {

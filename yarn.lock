@@ -2,48 +2,6 @@
 # yarn lockfile v1
 
 
-"@avalabs/avalanche-wallet-sdk@file:../camino-wallet-sdk/package":
-  version "0.11.1-rc1"
-  dependencies:
-    "@ethereumjs/common" "2.6.0"
-    "@ethereumjs/tx" "3.4.0"
-    "@ledgerhq/hw-app-eth" "6.12.2"
-    "@ledgerhq/hw-transport" "^6.19.0"
-    "@metamask/eth-sig-util" "^4.0.0"
-    "@obsidiansystems/hw-app-avalanche" "0.2.2"
-    "@openzeppelin/contracts" "4.5.0"
-    avalanche "file:C:/Users/mpfau/AppData/Local/Yarn/Cache/v6/npm-@avalabs-avalanche-wallet-sdk-0.11.1-rc1-759cd591-30b2-407d-92c1-a8a5f3139591-1649595516860/node_modules/avalanchejs/package"
-    big.js "^6.1.1"
-    bip32 "^2.0.6"
-    bip32-path "^0.4.2"
-    bip39 "^3.0.4"
-    bitcoinjs-lib "5.2.0"
-    bn.js "5.1.1"
-    create-hash "1.2.0"
-    crypto-js "^4.1.1"
-    ethereumjs-util "^7.0.7"
-    ethers "^5.1.4"
-    moment "^2.29.1"
-    randomstring "^1.2.1"
-    sockette "^2.0.6"
-    typescript-transform-paths "^2.2.3"
-    url "^0.11.0"
-    web3 "1.6.0"
-    web3-eth-contract "1.6.0"
-    xss "^1.0.10"
-
-"@avalabs/vue_components@0.10.0":
-  version "0.10.0"
-  resolved "https://registry.npmjs.org/@avalabs/vue_components/-/vue_components-0.10.0.tgz"
-  integrity sha512-hQ+Th/5Ra4RWrRIWhIl2dYu+F38u8h1DHCqkfLNIGHRhIBHuQwKadIHh0iE6W1/GEau8dKl1O6QImNw5ZdI32A==
-  dependencies:
-    "@fortawesome/fontawesome-svg-core" "^1.2.27"
-    "@fortawesome/free-solid-svg-icons" "^5.12.1"
-    "@fortawesome/vue-fontawesome" "^0.1.9"
-    "@zxing/library" "^0.15.2"
-    core-js "^3.6.4"
-    vue "^2.6.11"
-
 "@babel/code-frame@^7.0.0":
   version "7.14.5"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.14.5.tgz"
@@ -918,6 +876,72 @@
   version "0.2.3"
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
+
+"@c4tplatform/camino-wallet-sdk@0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/camino-wallet-sdk/-/camino-wallet-sdk-0.0.1.tgz#0c02cf20280e60d1c6cd1c15b0f1e17abf193d78"
+  integrity sha512-6Et6uQJZz9LcHy15r0GLVUTsv1AmLYmvQedWTVyeyqudxZtom+MNR5x2zSdfmTF3HBNdx4StUahHopIzQmT3cA==
+  dependencies:
+    "@c4tplatform/camino" "0.0.2"
+    "@ethereumjs/common" "2.6.0"
+    "@ethereumjs/tx" "3.4.0"
+    "@ledgerhq/hw-app-eth" "6.12.2"
+    "@ledgerhq/hw-transport" "^6.19.0"
+    "@metamask/eth-sig-util" "^4.0.0"
+    "@obsidiansystems/hw-app-avalanche" "0.2.2"
+    "@openzeppelin/contracts" "4.5.0"
+    big.js "^6.1.1"
+    bip32 "^2.0.6"
+    bip32-path "^0.4.2"
+    bip39 "^3.0.4"
+    bitcoinjs-lib "5.2.0"
+    bn.js "5.1.1"
+    create-hash "1.2.0"
+    crypto-js "^4.1.1"
+    ethereumjs-util "^7.0.7"
+    ethers "^5.1.4"
+    moment "^2.29.1"
+    randomstring "^1.2.1"
+    sockette "^2.0.6"
+    typescript-transform-paths "^2.2.3"
+    url "^0.11.0"
+    web3 "1.6.0"
+    web3-eth-contract "1.6.0"
+    xss "^1.0.10"
+
+"@c4tplatform/camino@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/camino/-/camino-0.0.2.tgz#80c495f2afedbaf72e67e6cc84b8c65d590c1c09"
+  integrity sha512-vlH59Z/KKOxSXQCijEpzqKWNalElFaTQsoOVG+r2YsnZWx56klftZNqkf4NsWWXba24zSss4wpmnt/iFPYpX4w==
+  dependencies:
+    assert "2.0.0"
+    axios "0.24.0"
+    bech32 "2.0.0"
+    bip39 "3.0.4"
+    bn.js "5.2.0"
+    buffer "^6.0.3"
+    create-hash "1.2.0"
+    crypto-browserify "3.12.0"
+    elliptic "6.5.4"
+    ethers "5.5.1"
+    hdkey "2.0.1"
+    isomorphic-dompurify "^0.16.0"
+    isomorphic-ws "4.0.1"
+    store2 "2.12.0"
+    stream-browserify "3.0.0"
+    ws "8.2.3"
+
+"@c4tplatform/vue_components@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/vue_components/-/vue_components-0.0.3.tgz#3ad7b8f55d4cc4ba9e3ae6b2d78ea4cffc374f9d"
+  integrity sha512-0SK9R7697dkPG8QUGwzjg0pxA/GjZ295hetdVgrE8+/dfNKERIT6JfhUHbZ8C2PJofAdk1lHb94H0asTNHrWrQ==
+  dependencies:
+    "@fortawesome/fontawesome-svg-core" "^1.2.27"
+    "@fortawesome/free-solid-svg-icons" "^5.12.1"
+    "@fortawesome/vue-fontawesome" "^0.1.9"
+    "@zxing/library" "^0.15.2"
+    core-js "^3.6.4"
+    vue "^2.6.11"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
@@ -2758,6 +2782,15 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@nuxt/opencollective@^0.3.2":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.3.3.tgz#80ff0eb8f6fca1d0ed5a089b9688f41bff2dd8ab"
+  integrity sha512-6IKCd+gP0HliixqZT/p8nW3tucD6Sv/u/eR2A9X4rxT/6hXlMzA4GZQzq4d2qnBAwSwGpmKyzkyTjNjrhaA25A==
+  dependencies:
+    chalk "^4.1.0"
+    consola "^2.15.0"
+    node-fetch "^2.6.7"
+
 "@obsidiansystems/hw-app-avalanche@0.2.2":
   version "0.2.2"
   resolved "https://registry.npmjs.org/@obsidiansystems/hw-app-avalanche/-/hw-app-avalanche-0.2.2.tgz"
@@ -2919,6 +2952,11 @@
   version "1.0.2"
   resolved "https://registry.npmjs.org/@soda/get-current-script/-/get-current-script-1.0.2.tgz"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
+
+"@sumsub/websdk@^1.3.1":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@sumsub/websdk/-/websdk-1.3.4.tgz#5a32bc8903547bb8db96d94e0f30b18862672924"
+  integrity sha512-b7xjV/8IowEO6usEGfBHcn2MyJsWXkglh0u/yFwHeYZyMRJOAFZ2AzeNlYMwnjoc04OAVhdobiWc+N8TiHA+aA==
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -4468,26 +4506,6 @@ available-typed-arrays@^1.0.2:
   dependencies:
     array-filter "^1.0.0"
 
-"avalanche@file:../avalanchejs/package":
-  version "3.10.1"
-  dependencies:
-    assert "2.0.0"
-    axios "0.24.0"
-    bech32 "2.0.0"
-    bip39 "3.0.4"
-    bn.js "5.2.0"
-    buffer "^6.0.3"
-    create-hash "1.2.0"
-    crypto-browserify "3.12.0"
-    elliptic "6.5.4"
-    ethers "5.5.1"
-    hdkey "2.0.1"
-    isomorphic-dompurify "^0.16.0"
-    isomorphic-ws "4.0.1"
-    store2 "2.12.0"
-    stream-browserify "3.0.0"
-    ws "8.2.3"
-
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.npmjs.org/aws-sign2/-/aws-sign2-0.7.0.tgz"
@@ -4966,6 +4984,27 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
+
+bootstrap-vue@^2.22.0:
+  version "2.22.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.22.0.tgz#2b3d7926d24af0bd289ddce7ba76b07000aab3e5"
+  integrity sha512-denjR/ae0K7Jrcqud3TrZWw0p/crtyigeGUNunWQ4t+KFi+7rzJ6j6lx1W5/gpUtSSUgNbWrXcHH4lIWXzXOOQ==
+  dependencies:
+    "@nuxt/opencollective" "^0.3.2"
+    bootstrap "^4.6.1"
+    popper.js "^1.16.1"
+    portal-vue "^2.1.7"
+    vue-functional-data-merge "^3.1.0"
+
+bootstrap@^4.6.1:
+  version "4.6.2"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.6.2.tgz#8e0cd61611728a5bf65a3a2b8d6ff6c77d5d7479"
+  integrity sha512-51Bbp/Uxr9aTuy6ca/8FbFloBUJZLHwnhTcnjIeRn2suQWsWzcuJhGjKDB5eppVte/8oCdOL3VuwxvZDUggwGQ==
+
+bootstrap@^5.1.3:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-5.2.0.tgz#838727fb60f1630db370fe57c63cbcf2962bb3d3"
+  integrity sha512-qlnS9GL6YZE6Wnef46GxGv1UpGGzAwO0aPL1yOjzDIJpeApeMvqV24iL+pjr2kU4dduoBA9fINKWKgMToobx9A==
 
 bowser@2.9.0:
   version "2.9.0"
@@ -6019,6 +6058,11 @@ connect-history-api-fallback@1.6.0, connect-history-api-fallback@^1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/connect-history-api-fallback/-/connect-history-api-fallback-1.6.0.tgz"
   integrity sha512-e54B99q/OUoH64zYYRf3HBP5z24G38h5D3qXu23JGRoigpX5Ss4r9ZnDk3g0Z8uQC2x2lPaJ+UlWBc1ZWBWdLg==
+
+consola@^2.15.0:
+  version "2.15.3"
+  resolved "https://registry.yarnpkg.com/consola/-/consola-2.15.3.tgz#2e11f98d6a4be71ff72e0bdf07bd23e12cb61550"
+  integrity sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==
 
 console-browserify@^1.1.0:
   version "1.2.0"
@@ -12014,6 +12058,13 @@ node-fetch@^2.6.1:
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.1.tgz"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
+node-fetch@^2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
+  integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.npmjs.org/node-forge/-/node-forge-0.10.0.tgz"
@@ -12958,6 +13009,16 @@ pnp-webpack-plugin@^1.6.4:
   integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
   dependencies:
     ts-pnp "^1.1.6"
+
+popper.js@^1.16.1:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
+
+portal-vue@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
+  integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
 
 portfinder@^1.0.26:
   version "1.0.28"
@@ -15603,6 +15664,11 @@ tr46@^3.0.0:
   dependencies:
     punycode "^2.1.1"
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
+
 trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/trim-newlines/-/trim-newlines-1.0.0.tgz"
@@ -16275,6 +16341,11 @@ vue-eslint-parser@^5.0.0:
     espree "^4.1.0"
     esquery "^1.0.1"
     lodash "^4.17.11"
+
+vue-functional-data-merge@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
+  integrity sha512-leT4kdJVQyeZNY1kmnS1xiUlQ9z1B/kdBFCILIjYYQDqZgLqCLa0UhjSSeRX6c3mUe6U5qYeM8LrEqkHJ1B4LA==
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
@@ -16952,6 +17023,11 @@ web3@1.6.0:
     web3-shh "1.6.0"
     web3-utils "1.6.0"
 
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
+
 webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-4.0.2.tgz"
@@ -17163,6 +17239,14 @@ whatwg-url@^10.0.0:
   dependencies:
     tr46 "^3.0.0"
     webidl-conversions "^7.0.0"
+
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
 
 whatwg-url@^7.0.0:
   version "7.1.0"

@@ -643,7 +643,7 @@ export default class AddValidator extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../main';
+@use '../../../../styles/main';
 .cols {
     /*display: grid;*/
     /*grid-template-columns: 1fr 1fr;*/

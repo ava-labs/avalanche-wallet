@@ -55,7 +55,7 @@ export default class AvmNftSelectModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../main';
+@use '../../styles/main';
 .nft_sel_body {
     width: 650px;
     max-width: 100%;
