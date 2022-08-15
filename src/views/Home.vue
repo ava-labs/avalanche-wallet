@@ -160,6 +160,9 @@ export default class Home extends Vue {}
 
 @include main.mobile-device {
     .home {
+        svg {
+            width: 300px;
+        }
         .header {
             &--title {
                 font-size: main.$l-size-mobile;
