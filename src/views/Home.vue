@@ -9,7 +9,7 @@
             xmlns="http://www.w3.org/2000/svg"
         >
             <g filter="url(#filter0_f_2551_2336)">
-                <ellipse cx="509.5" cy="310.5" rx="369.5" ry="170.5" fill="#F1F5F9" />
+                <ellipse cx="509.5" cy="310.5" rx="369.5" ry="170.5" fill="none" />
             </g>
             <defs>
                 <filter
@@ -110,7 +110,7 @@ export default class Home extends Vue {}
     }
 
     &--wrapper {
-        z-index: 50;
+        z-index: 1;
         margin-top: 100px;
         display: flex;
         flex-direction: column;
