@@ -1,6 +1,38 @@
 <template>
     <div class="home">
-        <img class="blur" v-if="$root.theme === 'night'" src="@/assets/ellipse.svg/" alt />
+        <svg
+            class="blur"
+            width="1019"
+            height="621"
+            viewBox="0 0 1019 621"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g filter="url(#filter0_f_2551_2336)">
+                <ellipse cx="509.5" cy="310.5" rx="369.5" ry="170.5" fill="#F1F5F9" />
+            </g>
+            <defs>
+                <filter
+                    id="filter0_f_2551_2336"
+                    x="0"
+                    y="0"
+                    width="1019"
+                    height="621"
+                    filterUnits="userSpaceOnUse"
+                    color-interpolation-filters="sRGB"
+                >
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feBlend
+                        mode="normal"
+                        in="SourceGraphic"
+                        in2="BackgroundImageFix"
+                        result="shape"
+                    />
+                    <feGaussianBlur stdDeviation="70" result="effect1_foregroundBlur_2551_2336" />
+                </filter>
+            </defs>
+        </svg>
+        <!-- <img class="blur" src="@/assets/ellipse.svg/" alt /> -->
         <div class="home--wrapper">
             <div class="header">
                 <img src="@/assets/wallet-logo.svg" alt />
@@ -41,6 +73,7 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 import ToS from '@/components/misc/ToS.vue'
+// import sv from '../assets/ellipse.svg'
 
 @Component({
     name: 'home',
@@ -62,12 +95,20 @@ export default class Home extends Vue {}
     align-items: center;
     background-repeat: no-repeat;
     overflow: hidden;
+    svg {
+        g {
+            ellipse {
+                fill: var(--bg);
+            }
+        }
+    }
     .blur {
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
     }
+
     &--wrapper {
         z-index: 50;
         margin-top: 100px;
@@ -93,7 +134,7 @@ export default class Home extends Vue {}
             &--access-create {
                 margin-bottom: 30px;
                 font-size: main.$m-size;
-                color: #cbd5e1;
+                color: var(--primary-color-light);
             }
         }
     }
