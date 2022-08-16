@@ -55,8 +55,8 @@
 }
 
 .button_secondary {
-    background: rgb(15,168,255);
-    background: linear-gradient(90deg, rgba(15,168,255,1) 0%, rgba(183,66,255,1) 100%);
+    background: rgb(15, 168, 255);
+    background: linear-gradient(90deg, rgba(15, 168, 255, 1) 0%, rgba(183, 66, 255, 1) 100%);
     color: #fff !important;
     text-decoration: none;
 
@@ -76,4 +76,8 @@
         //opacity: 1;
         color: var(--primary-color);
     }
+}
+
+.v-btn__content {
+    color: var(--primary-contrast-text);
 }

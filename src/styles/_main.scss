@@ -1,11 +1,20 @@
 // @import "./theme";
-@import "./abstracts/variables";
-@import "./abstracts/mixins";
-@import "./core/typography";
-@import "./core/reset";
-@import "./components/buttons";
-@import "./components/inputs";
-@import "./components/link";
-@import "./components/tabs";
-@import "./layout/grid";
-@import "./pages/wallet"
+@import './abstracts/variables';
+@import './abstracts/mixins';
+
+// core
+@import './core/typography';
+@import './core/reset';
+
+// components
+@import './components/buttons';
+@import './components/inputs';
+@import './components/link';
+@import './components/tabs';
+@import './components/portfolio';
+
+// layout
+@import './layout/grid';
+
+// pages
+@import './pages/wallet';

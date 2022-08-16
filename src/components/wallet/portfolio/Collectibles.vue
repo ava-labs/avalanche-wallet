@@ -134,7 +134,6 @@ export default class Collectibles extends Vue {
 </script>
 <style lang="scss" scoped>
 @use '../../../styles/main';
-@use './portfolio';
 
 $flip_dur: 0.6s;
 

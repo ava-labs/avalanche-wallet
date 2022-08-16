@@ -153,7 +153,6 @@ export default class Fungibles extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../styles/main';
-@use './portfolio';
 
 .fungibles_view {
     display: flex;

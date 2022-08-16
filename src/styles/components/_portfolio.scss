@@ -11,15 +11,14 @@
     }
 
     button {
-        border: 1px solid var(--primary-color-light);
-        border-radius: 22px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: var(--border-radius-lg);
         padding: 8px 24px;
-        border-color: var(--secondary-color);
-        color: var(--secondary-color);
+        border-color: var(--primary-btn-border-color);
+        color: var(--primary-btn-border-color);
         &:hover {
             opacity: 0.6;
-            //border-color: var(--secondary-color);
-            //color: var(--secondary-color);
         }
     }
 }
