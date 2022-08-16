@@ -19,22 +19,30 @@ export default {
 @use '../../styles/main';
 
 .top_cards {
+    @include main.component-wrapper;
+    background-color: var(--bg-wallet-light);
     display: grid;
     grid-template-columns: 1fr 360px;
-    grid-gap: 15px;
+    // grid-gap: 15px;
+    overflow: hidden;
 }
+
 .top_card {
     flex-grow: 1;
     color: var(--primary-color);
     flex-shrink: 0;
 
-    border-radius: var(--border-radius-lg);
+    // border-radius: var(--border-radius-lg);
     border: 1px solid var(--border-radius-color);
     padding: 12px 20px;
     overflow: hidden;
     animation-name: fade;
     animation-duration: 0.6s;
     animation-timing-function: ease-out;
+}
+
+.top_card:not(:last-child) {
+    border-right: 1px solid var(--bg-light);
 }
 
 .balance_card {
@@ -109,7 +117,7 @@ export default {
 @include main.medium-device {
     .top_cards {
         grid-template-columns: 1fr 320px;
-        grid-gap: 9px;
+        // grid-gap: 9px;
     }
 }
 
@@ -117,7 +125,7 @@ export default {
     .top_cards {
         grid-template-columns: none;
         grid-template-rows: min-content;
-        grid-gap: 9px;
+        // grid-gap: 9px;
     }
 
     .top_card {
