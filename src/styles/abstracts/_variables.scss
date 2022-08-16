@@ -25,6 +25,8 @@ html[data-theme='day'] {
     --bg-wallet-light: #ffffff;
     --primary-border-color: rgba(203, 213, 225, 0.12);
     --primary-contrast-text: #0f172a;
+    --sidebar-links: rgb(100, 116, 139); 
+    --sidebar-background: #fff; 
 }
 
 html[data-theme='night'] {
@@ -45,6 +47,8 @@ html[data-theme='night'] {
     --bg-wallet-light: #0f172a;
     --primary-border-color: rgba(255, 255, 255, 0.12);
     --primary-contrast-text: #ffffff;
+    --sidebar-links: rgb(100, 116, 139); 
+    --sidebar-background: #1e293b; 
 }
 
 $mobile_width: 900px;
