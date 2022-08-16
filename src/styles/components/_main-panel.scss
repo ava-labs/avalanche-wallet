@@ -7,6 +7,7 @@
 }
 .panel_nav {
     @include component-wrapper;
+    background-color: var(--bg-wallet-light);
     display: grid;
     grid-template-columns: max-content max-content 1fr;
     padding: 24px 16px;

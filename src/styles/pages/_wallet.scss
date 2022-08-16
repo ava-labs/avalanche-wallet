@@ -1,4 +1,3 @@
-
 .wallet_view {
     padding-bottom: 0;
     display: grid;
@@ -26,9 +25,9 @@
 }
 
 #wallet_router {
+    @include component-wrapper;
     padding: 22px 20px;
     background-color: var(--bg-wallet-light);
-    border-radius: 4px;
     overflow: scroll;
     &::-webkit-scrollbar {
         display: none;

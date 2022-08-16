@@ -94,6 +94,7 @@ export default class TransactionHistoryPanel extends Vue {
 @use '../../styles/main';
 
 .tx_history_panel {
+    @include main.component-wrapper;
     display: grid;
     grid-template-rows: max-content 1fr;
     overflow: auto;
