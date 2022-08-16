@@ -3,14 +3,14 @@
     --border-radius-sm: 7px;
     --primary-btn-border-color: #149ded;
     --secondary-color: #149ded;
-    --primary-border : solid 1px rgba(255, 255, 255, 0.12);
+    --primary-border: solid 1px var(--primary-border-color);
     --box-shadow: rgb(0 0 0 / 10%) 0px 0px 5px;
 }
 
 html[data-theme='day'] {
     --bg: #f1f5f9;
     --bg-1: 255, 255, 255;
-    --bg-light: #fff;
+    --bg-light: #e2e8f0;
     --bg-light-1: 245, 246, 250;
     --primary-color: #0f172a;
     --primary-color-light: #757575;
@@ -21,8 +21,9 @@ html[data-theme='day'] {
     --info: #2c7490;
     --info-1: 44, 116, 144;
     --bg-wallet: #f5f6fa;
-    --bg-wallet-light: #fff;
     --warning: #ef8f4a;
+    --bg-wallet-light: #ffffff;
+    --primary-border-color: rgba(203, 213, 225, 0.12);
     --primary-contrast-text: #0f172a;
 }
 
@@ -40,8 +41,9 @@ html[data-theme='night'] {
     --info: #4c8caf;
     --info-1: 76, 140, 175;
     --bg-wallet: #181b1d;
-    --bg-wallet-light: #242729;
     --warning: #d49534;
+    --bg-wallet-light: #0f172a;
+    --primary-border-color: rgba(255, 255, 255, 0.12);
     --primary-contrast-text: #ffffff;
 }
 
