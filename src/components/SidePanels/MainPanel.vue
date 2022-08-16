@@ -35,54 +35,6 @@ export default {
     },
 }
 </script>
-<style scoped lang="scss">
+<!-- <style scoped lang="scss">
 @use '../../styles/main';
-
-.main_panel {
-    display: grid;
-    grid-template-rows: max-content 1fr;
-    row-gap: 6px;
-    padding-top: 8px;
-    height: 100vh;
-}
-.panel_nav {
-    background-color: var(--bg-wallet-light);
-    display: grid;
-    grid-template-columns: max-content max-content 1fr;
-    padding: 24px 16px;
-    font-size: 14px;
-
-    > * {
-        outline: none !important;
-        padding: 4px 8px;
-        border-radius: 4px;
-    }
-}
-
-.hover_but {
-    transition-duration: 0.2s;
-    cursor: pointer;
-    &:hover {
-        box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.3);
-    }
-}
-
-.panel_content {
-    overflow: auto;
-    background-color: var(--bg-wallet-light);
-    height: 100%;
-}
-
-.logout {
-    margin-left: auto;
-}
-
-@include main.medium-device {
-    .main_panel {
-        height: unset;
-    }
-    .panel_nav {
-        padding: 12px 16px;
-    }
-}
-</style>
+</style> -->

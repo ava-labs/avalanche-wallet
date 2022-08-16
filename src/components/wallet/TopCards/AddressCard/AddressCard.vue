@@ -96,7 +96,7 @@ export default class AddressCard extends Vue {
     onthemechange(val: string) {
         if (val === 'night') {
             this.colorDark = '#E5E5E5'
-            this.colorLight = '#242729'
+            this.colorLight = '#1e293b'
         } else {
             this.colorDark = '#242729'
             this.colorLight = '#FFF'
@@ -266,7 +266,7 @@ export default class AddressCard extends Vue {
     width: 100%;
     display: flex;
     align-items: center;
-    color: var(--primary-color-light);
+    color: var(--secondary-color);
     justify-content: flex-end;
 
     > * {

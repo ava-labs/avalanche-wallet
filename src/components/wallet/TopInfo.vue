@@ -27,11 +27,11 @@ export default {
     flex-grow: 1;
     color: var(--primary-color);
     flex-shrink: 0;
-    //display: flex;
-    background-color: var(--bg-wallet-light);
+
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-radius-color);
     padding: 12px 20px;
     overflow: hidden;
-    border-radius: 5px;
     animation-name: fade;
     animation-duration: 0.6s;
     animation-timing-function: ease-out;

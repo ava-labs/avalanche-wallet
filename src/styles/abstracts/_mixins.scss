@@ -47,3 +47,9 @@
         border-color: var(--selection-color);
     }
 }
+
+@mixin component-wrapper {
+    border: var(--primary-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+}
