@@ -96,7 +96,7 @@ export default class AddressCard extends Vue {
     onthemechange(val: string) {
         if (val === 'night') {
             this.colorDark = '#E5E5E5'
-            this.colorLight = '#1e293b'
+            this.colorLight = '#0f172a'
         } else {
             this.colorDark = '#242729'
             this.colorLight = '#FFF'

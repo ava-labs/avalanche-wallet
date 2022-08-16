@@ -1,4 +1,3 @@
-
 .wallet_sidebar {
     margin-top: 0px !important;
     .stick {
@@ -6,7 +5,8 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        border-right: solid 1px rgba(255, 255, 255, 0.12);
+        border-right: var(--primary-border);
+        box-shadow: var(--box-shadow);
     }
     .alert_icon {
         color: #f00;
