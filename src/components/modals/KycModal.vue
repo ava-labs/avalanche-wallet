@@ -6,7 +6,7 @@
             class="modal_main"
             @beforeClose="beforeClose"
         >
-            <div v-if="!userDataSubmitted" class="form">
+            <div v-if="!userDataSubmitted" class="KYCform">
                 <form @submit.prevent="submitUserData">
                     <div>
                         <label>{{ $t('kyc_process.your_email_address') }}</label>
@@ -28,7 +28,7 @@
                         type="submit"
                         :disabled="submitUserDataDisabled"
                         :loading="isLoading"
-                        class="button_primary"
+                        class="button_submit_form"
                     >
                         {{ $t('kyc_process.submit') }}
                     </v-btn>
@@ -146,31 +146,30 @@ h1 {
     font-weight: normal;
 }
 
-.form {
+.KYCform {
     padding: 20px;
     border-radius: 4px;
     overflow: auto;
-}
-
-form {
-    margin-top: 12px;
-
-    label {
-        font-size: 12px;
-    }
-
-    > div {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 5px;
+    form {
+        display: grid;
+        gap: 10px;
+        label {
+            font-size: 14px;
+            margin-bottom: 10px !important;
+        }
+        > div {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5px;
+        }
     }
 }
 
 input {
     color: var(--primary-color);
     background-color: var(--bg-light);
-    border-radius: 4px;
-    padding: 6px 6px;
+    border-radius: var(--border-radius-sm);
+    padding: 10px 10px;
     font-size: 13px;
     outline: none;
 }

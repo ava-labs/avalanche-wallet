@@ -8,7 +8,7 @@
         </template>
         <template v-else>
             <KycModal ref="kyc_modal"></KycModal>
-            <button class="warning_button" @click="openKyc">
+            <button class="sidebar_button button_secondary" @click="openKyc">
                 <fa icon="exclamation-triangle" class="volatile_alert"></fa>
                 {{ $t('kyc_process.verify_kyc') }}
             </button>
@@ -93,6 +93,7 @@ export default class AccountMenu extends Vue {
     display: flex;
     flex-direction: row;
     align-items: center;
+    text-transform: capitalize;
     p {
         text-align: left;
         margin-left: 8px !important;
@@ -101,6 +102,17 @@ export default class AccountMenu extends Vue {
     &:hover {
         opacity: 0.5;
     }
+}
+
+.sidebar_button {
+    width: max-content;
+    border-radius: var(--border-radius-sm);
+    height: 40px;
+    text-align: center;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .warning_button {

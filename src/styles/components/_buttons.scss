@@ -78,6 +78,27 @@
     }
 }
 
+.button_submit_form {
+    width: max-content;
+    background: var(--secondary-color) !important;
+    box-shadow: none;
+    color: var(--primary-contrast-text) !important;
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+
+    &:hover {
+        opacity: 0.7;
+    }
+
+    &[disabled] {
+        background-color: transparent !important;
+        color: var(--primary-color-light) !important;
+        border: var(--primary-border) !important;
+        opacity: 0.7;
+        cursor: not-allowed !important;
+    }
+}
+
 .v-btn__content {
     color: var(--primary-contrast-text);
 }
