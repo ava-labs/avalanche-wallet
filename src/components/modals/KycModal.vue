@@ -142,7 +142,6 @@ export default class KycModal extends Vue {
         @include main.mobile-device {
             max-width: none;
             width: 80%;
-            /* bottom: initial; */
             min-height: fit-content;
             position: absolute;
             left: 50%;
@@ -152,6 +151,7 @@ export default class KycModal extends Vue {
     }
 
     .modal_bg {
+        width: 100vw !important;
         position: fixed;
     }
 }
