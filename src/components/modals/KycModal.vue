@@ -7,6 +7,11 @@
             @beforeClose="beforeClose"
         >
             <div v-if="!userDataSubmitted" class="KYCform">
+                <div class="request-text">
+                    We need your email address and phone number to follow up with you in case your
+                    verfication requires clarification and to inform you about the verification
+                    result. Pleaser enter your contact details below.
+                </div>
                 <form @submit.prevent="submitUserData">
                     <div>
                         <label>{{ $t('kyc_process.your_email_address') }}</label>
@@ -131,9 +136,18 @@ export default class KycModal extends Vue {
 .modal_main::v-deep {
     .modal_body {
         width: 70%;
+        max-width: 650px;
+        height: auto !important;
+        border-radius: var(--border-radius-sm) !important;
         @include main.mobile-device {
-            width: 100%;
-            bottom: initial;
+            max-width: none;
+            width: 80%;
+            /* bottom: initial; */
+            min-height: fit-content;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
     }
 
@@ -150,6 +164,16 @@ h1 {
     padding: 20px;
     border-radius: 4px;
     overflow: auto;
+    .request-text {
+        padding: 1rem;
+        /* border: var(--primary-border); */
+        text-align: center;
+        color: var(----primary-color-light);
+        border-radius: var(--border-radius-sm);
+        margin-bottom: 25px;
+        box-shadow: var(--box-shadow);
+        background-color: var(--bg-light);
+    }
     form {
         display: grid;
         gap: 10px;
