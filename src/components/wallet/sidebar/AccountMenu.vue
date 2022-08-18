@@ -2,7 +2,7 @@
     <div v-if="!isLedger && wallet">
         <template v-if="kycStatus">
             <button class="success_button">
-                <fa icon="check-circle"></fa>
+                <v-icon>mdi-check-decagram</v-icon>
                 {{ $t('kyc_process.kyc_verified') }}
             </button>
         </template>
@@ -135,7 +135,11 @@ export default class AccountMenu extends Vue {
 }
 
 .success_button {
+    text-align: left;
     color: var(--success);
     pointer-events: none;
+    i {
+        color: var(--success);
+    }
 }
 </style>
