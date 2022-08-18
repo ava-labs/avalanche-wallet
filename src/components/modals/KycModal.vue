@@ -45,11 +45,13 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import { generateToken } from '@/kyc_api'
 import snsWebSdk from '@sumsub/websdk'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
+import { WalletType, WalletNameType } from '@c4tplatform/camino-wallet-sdk'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 interface UserData {
     email: string
@@ -62,17 +64,46 @@ interface UserData {
     },
 })
 export default class KycModal extends Vue {
+    @Prop() walle!: WalletType
     $refs!: {
         modal: Modal
     }
-
+    /**/
+    modalLight: string = '#FFF'
+    modalDark: string = '#242729'
+    background: string = 'body {background-color: red !important;}'
+    /**/
     userDataSubmitted: boolean = false
     isLoading: boolean = false
     userData: UserData = {
         email: '',
         phone: '',
     }
-
+    @Watch('$root.theme', { immediate: true })
+    onthemechange(val: string) {
+        if (val === 'night') {
+            this.background =
+                'body {background-color: var(--secondary-color) !important; min-height: 450px !important;} .line {background-color: black !important;}'
+        } else {
+            this.background = 'body {background-color: red !important;}'
+        }
+    }
+    // onthemechange(val: string) {
+    //     if (val === 'night') {
+    //         this.background =
+    //             'body {background-color: blue !important; min-height: 450px !important;} .line {background-color: black !important;}'
+    //     } else {
+    //         this.background = 'body {background-color: red !important;}'
+    //     }
+    // }
+    get walletType(): WalletNameType {
+        return this.wallet.type
+    }
+    get privateKeyC(): string | null {
+        if (this.walletType === 'ledger') return null
+        let wallet = this.wallet as SingletonWallet | MnemonicWallet
+        return wallet.ethKey
+    }
     get submitUserDataDisabled() {
         return !this.userData.email || !this.userData.phone || this.isLoading
     }
@@ -84,7 +115,7 @@ export default class KycModal extends Vue {
                 email: applicantEmail,
                 phone: applicantPhone,
                 uiConf: {
-                    customCssStr: 'body {background-color: whitesmoke !important;}',
+                    customCssStr: this.background,
                 },
             })
             .withOptions({ addViewportTag: false, adaptIframeHeight: true })
@@ -96,7 +127,7 @@ export default class KycModal extends Vue {
     }
 
     async getNewAccessToken() {
-        const result = await generateToken('0x' + this.wallet.getEvmAddress())
+        const result = await generateToken('0x' + this.wallet.getEvmAddress(), this.privateKeyC)
         return result.token
     }
 
@@ -138,6 +169,7 @@ export default class KycModal extends Vue {
         width: 70%;
         max-width: 650px;
         height: auto !important;
+        /* min-height: 450px !important; */
         border-radius: var(--border-radius-sm) !important;
         @include main.mobile-device {
             max-width: none;
@@ -147,6 +179,9 @@ export default class KycModal extends Vue {
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
+        }
+        .line {
+            background-color: black !important;
         }
     }
 
