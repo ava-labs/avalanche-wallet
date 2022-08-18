@@ -79,16 +79,18 @@
     justify-content: flex-end;
     padding-bottom: 30px;
 
+    > * {
+        display: grid;
+        padding: 0px 24px;
+    }
+}
+
+.sidebar_bottom {
     button:not(:last-of-type) {
         margin-bottom: 8px;
     }
     button:not(:first-of-type) {
         margin-top: 8px;
-    }
-
-    > * {
-        display: grid;
-        padding: 0px 24px;
     }
 }
 

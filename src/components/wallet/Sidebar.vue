@@ -54,7 +54,7 @@
                     {{ $t('wallet.sidebar.launch') }}
                 </router-link-->
             </div>
-            <div class="bottom">
+            <div class="bottom sidebar_bottom">
                 <AccountMenu></AccountMenu>
                 <LanguageSelect></LanguageSelect>
             </div>
