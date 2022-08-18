@@ -86,11 +86,12 @@ export default class LanguageSelect extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../styles/main';
 .sel_locale {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 4px 12px;
+    padding: 14px 24px;
     border: 1px solid transparent;
     border-radius: 3px;
     position: relative;
@@ -133,11 +134,17 @@ select {
 }
 
 @media only screen and (max-width: 600px) {
-    .sel_locale {
-        width: min-content;
-    }
+    // .sel_locale {
+    //     width: min-content;
+    // }
     p.selected {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 1300px) {
+    .sel_locale {
+        padding: 8px 8px;
     }
 }
 </style>

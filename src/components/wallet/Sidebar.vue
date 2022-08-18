@@ -55,7 +55,7 @@
                 </router-link-->
             </div>
             <div class="bottom">
-                <AccountMenu class="wallet_link"></AccountMenu>
+                <AccountMenu></AccountMenu>
                 <LanguageSelect></LanguageSelect>
             </div>
         </div>

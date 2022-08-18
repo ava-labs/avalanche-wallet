@@ -9,7 +9,7 @@
         <template v-else>
             <KycModal ref="kyc_modal"></KycModal>
             <button class="sidebar_button button_secondary" @click="openKyc">
-                <fa icon="exclamation-triangle" class="volatile_alert"></fa>
+                <v-icon color="#fff">mdi-check-decagram</v-icon>
                 {{ $t('kyc_process.verify_kyc') }}
             </button>
         </template>
@@ -85,6 +85,17 @@ export default class AccountMenu extends Vue {
 }
 </script>
 <style scoped lang="scss">
+.sidebar_account_menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // padding: 4px 12px;
+    padding: 14px 24px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+}
 .account_but {
     //padding: 4px 8px;
     //border-radius: 4px;
@@ -116,6 +127,7 @@ export default class AccountMenu extends Vue {
 }
 
 .warning_button {
+    text-align: left;
     color: var(--warning);
     &:hover {
         opacity: 0.5;

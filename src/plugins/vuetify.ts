@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib'
 import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loader
+import '@mdi/font/css/materialdesignicons.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
@@ -145,6 +146,6 @@ export default new Vuetify({
         },
     },
     icons: {
-        iconfont: 'fa',
+        iconfont: 'mdiSvg',
     },
 })

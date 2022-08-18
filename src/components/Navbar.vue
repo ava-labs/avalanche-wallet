@@ -39,42 +39,56 @@
             style="z-index: 999"
             hide-overlay
         >
-            <v-list dense nav>
-                <div style="display: flex; justify-content: space-between; padding: 4px 8px">
-                    <img src="@/assets/camino_logo.png" />
-                    <DayNightToggle class="action_but"></DayNightToggle>
+            <v-list dense nav class="sidebar-list">
+                <div class="mobile_top">
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            padding: 8px 8px 16px 8px;
+                        "
+                    >
+                        <img src="@/assets/camino_logo.png" />
+                        <DayNightToggle class="action_but"></DayNightToggle>
+                    </div>
+                    <template v-if="isAuth">
+                        <router-link to="/wallet">{{ $t('wallet.sidebar.portfolio') }}</router-link>
+                        <router-link to="/wallet/transfer">
+                            {{ $t('wallet.sidebar.send') }}
+                        </router-link>
+                        <router-link to="/wallet/cross_chain">
+                            {{ $t('wallet.sidebar.export') }}
+                        </router-link>
+                        <router-link to="/wallet/earn">{{ $t('wallet.sidebar.earn') }}</router-link>
+                        <router-link to="/wallet/studio">
+                            {{ $t('wallet.sidebar.studio') }}
+                        </router-link>
+                        <router-link to="/wallet/activity">
+                            {{ $t('wallet.sidebar.activity') }}
+                        </router-link>
+                        <router-link to="/wallet/keys">
+                            {{ $t('wallet.sidebar.manage') }}
+                        </router-link>
+                        <router-link to="/wallet/advanced" data-cy="wallet_advanced">
+                            {{ $t('wallet.sidebar.advanced') }}
+                        </router-link>
+
+                        <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
+                        <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
+                        <!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
+                        <!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
+                    </template>
+                    <template v-else>
+                        <router-link to="/access">{{ $t('nav.access') }}</router-link>
+                        <router-link to="/create">{{ $t('nav.create') }}</router-link>
+                    </template>
                 </div>
-                <template v-if="isAuth">
-                    <router-link to="/wallet">{{ $t('wallet.sidebar.portfolio') }}</router-link>
-                    <router-link to="/wallet/transfer">{{ $t('wallet.sidebar.send') }}</router-link>
-                    <router-link to="/wallet/cross_chain">
-                        {{ $t('wallet.sidebar.export') }}
-                    </router-link>
-                    <router-link to="/wallet/earn">{{ $t('wallet.sidebar.earn') }}</router-link>
-                    <router-link to="/wallet/studio">{{ $t('wallet.sidebar.studio') }}</router-link>
-                    <router-link to="/wallet/activity">
-                        {{ $t('wallet.sidebar.activity') }}
-                    </router-link>
-                    <router-link to="/wallet/keys">{{ $t('wallet.sidebar.manage') }}</router-link>
-                    <router-link to="/wallet/advanced" data-cy="wallet_advanced">
-                        {{ $t('wallet.sidebar.advanced') }}
-                    </router-link>
+                <div class="mobile_bottom">
+                    <AccountMenu class="mobile_account_menu"></AccountMenu>
+                    <LanguageSelect class="lang_mobile"></LanguageSelect>
                     <button class="logout" @click="logout">
                         {{ $t('logout.button') }}
                     </button>
-
-                    <!--                    <v-list-item to="/wallet/">Home</v-list-item>-->
-                    <!--                    <v-list-item to="/wallet/keys">Manage Keys</v-list-item>-->
-                    <!--                    <v-list-item to="/wallet/transfer">Transfer</v-list-item>-->
-                    <!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
-                </template>
-                <template v-else>
-                    <router-link to="/access">{{ $t('nav.access') }}</router-link>
-                    <router-link to="/create">{{ $t('nav.create') }}</router-link>
-                </template>
-                <div class="mobile_bottom">
-                    <AccountMenu></AccountMenu>
-                    <LanguageSelect class="lang_mobile"></LanguageSelect>
                 </div>
             </v-list>
         </v-navigation-drawer>
@@ -122,7 +136,6 @@ a {
     text-decoration: none;
     font-weight: normal;
     white-space: nowrap;
-    margin-right: 15px;
 }
 
 button {
@@ -131,6 +144,13 @@ button {
 
 .daynight {
     margin-right: 15px;
+}
+
+.v-list--nav {
+    height: inherit;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 }
 
 #nav {
@@ -174,11 +194,14 @@ button {
 }
 
 .mobile_bottom {
-    position: absolute;
-    bottom: 30px;
+}
 
-    > * {
-        padding: 4px 8px;
+.mobile_account_menu {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 8px;
+    button:not(last-child) {
+        margin-bottom: 16px;
     }
 }
 
@@ -219,10 +242,6 @@ button {
     .mobile_drawer {
         color: var(--primary-color) !important;
     }
-
-    .logout {
-        margin-top: 40px;
-    }
 }
 </style>
 <style lang="scss">
@@ -247,8 +266,16 @@ button {
     }
 
     .router-link-exact-active {
-        background-color: var(--bg);
+        background-color: var(--bg-wallet);
         color: var(--primary-color) !important;
+    }
+    .mobile_account_menu {
+        button:not(:last-of-type) {
+            margin-bottom: 8px;
+        }
+        button:not(:first-of-type) {
+            margin-top: 8px;
+        }
     }
 }
 </style>
