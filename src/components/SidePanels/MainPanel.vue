@@ -2,7 +2,7 @@
     <div class="main_panel">
         <ConfirmLogout ref="logout"></ConfirmLogout>
         <div class="panel_nav panel">
-            <DayNightToggle class="hover_but"></DayNightToggle>
+            <DayNightToggle></DayNightToggle>
             <network-menu class="net_menu"></network-menu>
             <button @click="logout" class="logout">
                 {{ $t('logout.button') }}
