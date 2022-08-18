@@ -32,7 +32,7 @@
         "@ledgerhq/hw-transport-webhid": "^5.51.1",
         "@ledgerhq/hw-transport-webusb": "5.22.0",
         "@obsidiansystems/hw-app-avalanche": "0.2.2",
-        "@openzeppelin/contracts": "4.6.0",
+        "@openzeppelin/contracts": "4.7.3",
         "@types/big.js": "4.0.5",
         "@types/create-hash": "1.2.2",
         "@types/crypto-js": "^4.0.2",
