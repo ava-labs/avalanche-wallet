@@ -37,7 +37,7 @@ button {
     opacity: 0.8;
     outline: none !important;
     font-weight: bold;
-    background-color: rgba(var(--bg-1), 0.5);
+    background-color: var(--bg-wallet);
     &:hover {
         opacity: 1;
         color: var(--secondary-color);
