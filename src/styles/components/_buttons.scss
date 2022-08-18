@@ -60,6 +60,14 @@
     color: #fff !important;
     text-decoration: none;
 
+    &[disabled] {
+        background: rgba(0, 0, 0, 0.12) !important;
+        border: var(--primary-border) !important;
+        color: var(--primary-color-light) !important;
+        border: var(--primary-border) !important;
+        opacity: 0.7;
+        cursor: not-allowed !important;
+    }
     &:hover {
         opacity: 0.7;
     }
