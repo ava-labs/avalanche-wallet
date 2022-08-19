@@ -429,13 +429,14 @@ h4 {
     transform: translateX(-50%);
     content: attr(tooltip);
     position: absolute;
-    background-color: #303030;
+    background-color: var(--tooltip-bg);
     bottom: 100%;
-    color: #ddd;
+    color: #fff;
     width: max-content;
     max-width: 100px;
     font-size: 14px;
     padding: 4px 8px;
+    margin-bottom: 4px;
 }
 
 .alt_info > div {
