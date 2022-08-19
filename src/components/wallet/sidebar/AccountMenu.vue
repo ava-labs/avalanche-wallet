@@ -13,6 +13,7 @@
                 {{ $t('kyc_process.verify_kyc') }}
             </button>
         </template>
+        <hr />
         <template v-if="account">
             <button class="account_but" @click="openSettings">
                 <Identicon :value="account.baseAddresses.join('')" diameter="18"></Identicon>
@@ -85,6 +86,7 @@ export default class AccountMenu extends Vue {
 }
 </script>
 <style scoped lang="scss">
+@use '../../../styles/main';
 .sidebar_account_menu {
     display: flex;
     flex-direction: row;
@@ -105,13 +107,27 @@ export default class AccountMenu extends Vue {
     flex-direction: row;
     align-items: center;
     text-transform: capitalize;
+    width: 85%;
     p {
         text-align: left;
         margin-left: 8px !important;
+        width: 80%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     &:hover {
         opacity: 0.5;
+    }
+}
+
+@include main.mobile-device {
+    .account_but {
+        width: 100% !important;
+        p {
+            width: 100% !important;
+        }
     }
 }
 
@@ -124,6 +140,17 @@ export default class AccountMenu extends Vue {
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    width: 100%;
+    justify-content: center;
+    max-width: 163px;
+}
+
+hr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    // color: var(--primary-border-color);
+    border: none;
+    border-top: var(--primary-border);
 }
 
 .warning_button {
