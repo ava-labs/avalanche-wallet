@@ -16,7 +16,6 @@ input {
 }
 
 input[type='number'] {
-
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -53,13 +52,14 @@ textarea {
     transform: translateX(-50%);
     content: attr(tooltip);
     position: absolute;
-    background-color: #303030;
+    background-color: var(--tooltip-bg);
     bottom: 100%;
-    color: #ddd;
+    color: #fff;
     width: max-content;
     max-width: 100px;
     font-size: 14px;
     padding: 4px 8px;
+    margin-bottom: 4px;
 }
 
 @include medium-device {
@@ -85,8 +85,7 @@ textarea {
 .fade-enter,
 .fade-leave-to
 
-/* .fade-leave-active below version 2.1.8 */
-    {
+/* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
 }
 
@@ -98,8 +97,7 @@ textarea {
 .float-enter,
 .float-leave-to
 
-/* .fade-leave-active below version 2.1.8 */
-    {
+/* .fade-leave-active below version 2.1.8 */ {
     transform: translateY(30px);
 }
 
@@ -111,8 +109,7 @@ textarea {
 .slide_right-enter,
 .slide_right-leave-to
 
-/* .fade-leave-active below version 2.1.8 */
-    {
+/* .fade-leave-active below version 2.1.8 */ {
     transform: translateX(30px);
     opacity: 0;
 }
@@ -125,8 +122,7 @@ textarea {
 .slide_bottom-enter,
 .slide_bottom-leave-to
 
-/* .fade-leave-active below version 2.1.8 */
-    {
+/* .fade-leave-active below version 2.1.8 */ {
     transform: translateY(100%);
     opacity: 0;
 }
@@ -139,8 +135,7 @@ textarea {
 .shrink-enter,
 .shrink-leave-to
 
-/* .fade-leave-active below version 2.1.8 */
-    {
+/* .fade-leave-active below version 2.1.8 */ {
     transform: translateX(100%);
     opacity: 0;
 }
