@@ -204,7 +204,9 @@
         "email_address": "Email Address",
         "your_phone_number": "Your Phone Number",
         "phone_number": "Phone Number",
-        "submit": "Submit"
+        "submit": "Submit",
+        "info_explanation_p1": "We need your email address and phone number to follow up with you in case your verification requires clarification and to inform you about the verification result.",
+        "info_explanation_p2": "Please enter your contact details below."
     },
     "studio": {
         "title": "Studio",

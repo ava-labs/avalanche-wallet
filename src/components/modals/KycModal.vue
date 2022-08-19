@@ -8,9 +8,9 @@
         >
             <div v-if="!userDataSubmitted" class="KYCform">
                 <div class="request-text">
-                    We need your email address and phone number to follow up with you in case your
-                    verfication requires clarification and to inform you about the verification
-                    result. Pleaser enter your contact details below.
+                    {{ $t('kyc_process.info_explanation_p1') }}
+                    <br />
+                    {{ $t('kyc_process.info_explanation_p2') }}
                 </div>
                 <form @submit.prevent="submitUserData">
                     <div>
@@ -396,7 +396,7 @@ h1 {
         padding: 1rem;
         /* border: var(--primary-border); */
         text-align: center;
-        color: var(----primary-color-light);
+        color: var(--primary-contrast-text);
         border-radius: var(--border-radius-sm);
         margin-bottom: 25px;
         box-shadow: var(--box-shadow);
@@ -408,6 +408,7 @@ h1 {
         label {
             font-size: 14px;
             margin-bottom: 10px !important;
+            color: var(--primary-contrast-text);
         }
         > div {
             display: flex;
