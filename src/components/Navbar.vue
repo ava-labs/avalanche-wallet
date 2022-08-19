@@ -36,8 +36,10 @@
             class="mobile_menu"
             v-model="isDrawer"
             fixed
-            style="z-index: 999"
-            hide-overlay
+            style="z-index: 999; height: 100vh"
+            overlay-color="var(--bg-wallet-light)"
+            overlay-opacity="0.5"
+            absolute
         >
             <v-list dense nav class="sidebar-list">
                 <div class="mobile_top">
@@ -277,5 +279,8 @@ button {
             margin-top: 8px;
         }
     }
+}
+.v-overlay__scrim {
+    height: 100vh !important;
 }
 </style>
