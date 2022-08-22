@@ -52,12 +52,16 @@ import snsWebSdk from '@sumsub/websdk'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { WalletType, WalletNameType } from '@c4tplatform/camino-wallet-sdk'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-
+const EC = require('elliptic').ec
+const { isHexStrict, toHex, toUint8Array } = require('@arcblock/forge-util')
 interface UserData {
     email: string
     phone: string
 }
 
+function strip0x(input: string) {
+    return isHexStrict(input) ? input.replace(/^0x/i, '') : input
+}
 @Component({
     components: {
         Modal,
@@ -323,7 +327,13 @@ button .arrow {\
     }
 
     async getNewAccessToken() {
-        const result = await generateToken('0x' + this.wallet.getEvmAddress(), this.privateKeyC)
+        const secp256k1 = new EC('secp256k1')
+        const compressed = false
+        const pk = secp256k1
+            .keyFromPrivate(strip0x(toHex(`0x${this.privateKeyC}`)), 'hex')
+            .getPublic(compressed, 'hex')
+        let PublicKey = `0x${pk}`
+        const result = await generateToken('0x' + this.wallet.getEvmAddress(), PublicKey)
         return result.token
     }
 

@@ -15,12 +15,12 @@ const kyc_api: AxiosInstance = axios.create({
     },
 })
 
-async function generateToken(address: string, privateKey: string | null): Promise<AccessToken> {
+async function generateToken(address: string, publicKeyByte: string): Promise<AccessToken> {
     let url = `/generate_token`
     try {
         let res = await kyc_api.post(url, {
             external_user_id: address,
-            private_key: privateKey,
+            public_key_byte: publicKeyByte,
         })
         return res.data
     } catch (e) {

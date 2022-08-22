@@ -18,6 +18,7 @@
         "test": "jest --verbose ./tests"
     },
     "dependencies": {
+        "@arcblock/forge-util": "^1.6.3",
         "@c4tplatform/camino": "0.0.2",
         "@c4tplatform/camino-wallet-sdk": "0.0.1",
         "@c4tplatform/vue_components": "0.0.3",
@@ -62,6 +63,7 @@
         "create-hash": "1.2.0",
         "crypto-js": "^4.1.1",
         "csv": "^5.5.0",
+        "elliptic": "^6.5.3",
         "ethereum-blockies-base64": "1.0.2",
         "ethereumjs-tx": "2.1.2",
         "ethereumjs-util": "^7.0.7",
