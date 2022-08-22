@@ -102,6 +102,7 @@ export default {
 
     #router_view {
         position: relative;
+        min-height: calc(100vh - 80px);
         /* padding: main.$container_padding_m; */
     }
 }
