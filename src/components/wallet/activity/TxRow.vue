@@ -191,6 +191,7 @@ export default class TxRow extends Vue {
 }
 
 .explorer_col {
+    position: relative;
     a {
         color: var(--primary-color);
         opacity: 0.4;
