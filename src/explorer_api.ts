@@ -108,5 +108,16 @@ async function getAddressChains(addrs: string[]) {
 
     return res.data.addressChains
 }
+async function getAliasChains() {
+    let res = await explorer_api.get('/v2')
+    return res.data
+}
 
-export { explorer_api, getAddressHistory, getAddressDetailX, isAddressUsedX, getAddressChains }
+export {
+    explorer_api,
+    getAddressHistory,
+    getAddressDetailX,
+    isAddressUsedX,
+    getAddressChains,
+    getAliasChains,
+}

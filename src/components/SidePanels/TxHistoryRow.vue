@@ -28,7 +28,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import moment from 'moment'
 // import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
-import { ITransactionData } from '@/store/modules/history/types'
+import { Chain, ITransactionData } from '@/store/modules/history/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
@@ -48,7 +48,11 @@ export default class TxHistoryRow extends Vue {
     get explorerUrl(): string | null {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         if (network.explorerSiteUrl) {
-            return `${network.explorerSiteUrl}/tx/${this.transaction.id}`
+            let chains = this.$store.state.History.chains
+            let alias = chains.find((elem: Chain) => elem.chainID === this.transaction.chainID)
+                .chainAlias
+            let url = `${network.explorerSiteUrl}/${alias}-chain/transactions/${this.transaction.id}`
+            return url
         }
         return null
     }

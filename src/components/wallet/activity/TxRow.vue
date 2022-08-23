@@ -33,7 +33,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ITransactionDataProcessed } from '@/store/modules/history/types'
+import { Chain, ITransactionDataProcessed } from '@/store/modules/history/types'
 import { AssetsDict, NftFamilyDict } from '@/store/modules/assets/types'
 
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
@@ -57,7 +57,11 @@ export default class TxRow extends Vue {
     get explorerUrl(): string | null {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         if (network.explorerSiteUrl) {
-            return `${network.explorerSiteUrl}/tx/${this.source.id}`
+            let chains = this.$store.state.History.chains
+            let alias = chains.find((elem: Chain) => elem.chainID === this.source.chainID)
+                .chainAlias
+            let url = `${network.explorerSiteUrl}/${alias}-chain/transactions/${this.source.id}`
+            return url
         }
         return null
     }
