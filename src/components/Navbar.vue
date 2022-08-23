@@ -244,6 +244,15 @@ button {
     .mobile_drawer {
         color: var(--primary-color) !important;
     }
+
+    .mobile_account_menu {
+        margin-bottom: 16px;
+        padding: 0px;
+    }
+
+    .logout {
+        padding: 16px 0px !important;
+    }
 }
 </style>
 <style lang="scss">
