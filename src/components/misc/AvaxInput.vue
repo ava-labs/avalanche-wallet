@@ -140,7 +140,7 @@ export default class AvaxInput extends Vue {
 }
 
 .col1 {
-    border-radius: 3px;
+    border-radius: var(--border-radius-sm);
     background-color: var(--bg-light);
     border: 1px solid transparent;
     //display: flex;
@@ -161,7 +161,7 @@ export default class AvaxInput extends Vue {
 }
 
 .ticker {
-    border-radius: 3px;
+    border-radius: var(--border-radius-sm);
     padding: 8px 14px;
 }
 

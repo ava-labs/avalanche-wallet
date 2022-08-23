@@ -179,7 +179,7 @@ select {
     color: var(--primary-color);
     background-color: var(--bg-light);
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     padding: 16px 12px;
     font-size: 14px;
     outline: none;

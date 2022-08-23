@@ -9,10 +9,15 @@ button {
 textarea,
 input {
     @include highlight-border;
+    border-radius: var(--border-radius-sm);
 
     &[disabled] {
         border-color: transparent !important;
     }
+}
+
+select {
+    border-radius: var(--border-radius-sm) !important;
 }
 
 input[type='number'] {
@@ -46,7 +51,7 @@ textarea {
 }
 
 *[tooltip]:hover:before {
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     /*left: 0;*/
     left: 0;
     transform: translateX(-50%);

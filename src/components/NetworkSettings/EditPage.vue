@@ -296,7 +296,7 @@ export default class EditPage extends Vue {
     button {
         font-size: 12px;
         padding: 3px 14px;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
     }
 }
 
@@ -316,7 +316,7 @@ input,
 select {
     background-color: var(--bg-light);
     color: var(--primary-color);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     padding: 6px 6px;
     font-size: 13px;
     outline: none;
@@ -329,7 +329,7 @@ button {
     color: #fff;
     font-size: 12px;
     padding: 3px 14px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 
 .del_button {

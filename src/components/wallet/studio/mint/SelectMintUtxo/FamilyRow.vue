@@ -120,7 +120,7 @@ export default class FamilyRow extends Vue {
     flex-shrink: 0;
     background-color: var(--bg-light);
     border: 1px solid var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
     pointer-events: none;
     user-select: none;
@@ -141,7 +141,7 @@ export default class FamilyRow extends Vue {
     cursor: pointer;
     z-index: 2;
     background-color: var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     //border: 1px solid var(--primary-color-light);
     user-select: none;
     box-shadow: 1px 0px 3px rgba(0, 0, 0, 0.4);

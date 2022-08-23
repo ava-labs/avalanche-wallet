@@ -100,7 +100,7 @@ export default class NodeCard extends Vue {
 .node_card {
     //background-color: rgba(0, 0, 0, 0.02);
     background-color: var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     //width: max-content;
     box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.2);
 

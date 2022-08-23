@@ -86,7 +86,7 @@ button {
     width: 260px;
     max-height: 0px;
     z-index: 2;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
     background-color: var(--bg);
 }

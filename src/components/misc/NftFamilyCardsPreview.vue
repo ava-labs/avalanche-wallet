@@ -61,7 +61,7 @@ export default class NftFamilyCardsPreview extends Vue {
     flex-shrink: 0;
     background-color: var(--bg-light);
     border: 1px solid var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
     pointer-events: none;
     user-select: none;

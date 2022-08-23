@@ -221,7 +221,7 @@ export default class CustomPage extends Vue {
     button {
         font-size: 12px;
         padding: 3px 14px;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
     }
 }
 
@@ -241,7 +241,7 @@ input,
 select {
     color: var(--primary-color);
     background-color: var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     padding: 6px 6px;
     font-size: 13px;
     outline: none;
@@ -250,7 +250,7 @@ button {
     margin-top: 10px;
     width: 100%;
     font-size: 12px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 
 .v-btn {

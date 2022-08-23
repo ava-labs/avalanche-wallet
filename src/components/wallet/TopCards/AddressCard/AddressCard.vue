@@ -339,6 +339,7 @@ export default class AddressCard extends Vue {
     font-weight: bold;
     text-align: center;
     padding: 12px 16px;
+    border-radius: var(--border-radius-sm);
 }
 
 $qr_width: 110px;

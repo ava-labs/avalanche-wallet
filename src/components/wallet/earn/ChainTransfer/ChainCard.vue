@@ -114,6 +114,7 @@ label {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 14px;
+    border-radius: var(--border-radius-sm) !important;
 }
 
 .input_group {

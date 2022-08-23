@@ -219,6 +219,7 @@ export default class CurrencyInputDropdown extends Vue {
     display: grid;
     grid-template-columns: max-content 1fr;
     padding: 8px 14px;
+    border-radius: var(--border-radius-sm);
 }
 
 .curr_in_drop {
@@ -233,7 +234,7 @@ export default class CurrencyInputDropdown extends Vue {
 
     > * {
         background-color: var(--bg-light);
-        border-radius: 2px;
+        border-radius: var(--border-radius-sm);
     }
 }
 

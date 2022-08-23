@@ -320,7 +320,7 @@ a {
         background-color: var(--bg-light);
         padding: 14px 24px;
         text-align: justify;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
         margin: 30px 0px !important;
     }
 

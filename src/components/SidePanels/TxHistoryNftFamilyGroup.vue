@@ -96,7 +96,7 @@ $countW: 18px;
     width: 35px !important;
     background-color: var(--bg-light);
     position: relative;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
     pointer-events: none;
 }

@@ -182,7 +182,7 @@ textarea {
     width: 100%;
     font-size: 13px;
     background-color: main.$white;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 
 .but_primary {

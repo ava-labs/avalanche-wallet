@@ -72,6 +72,7 @@
     background-color: var(--bg-light) !important;
     color: var(--primary-color) !important;
     font-size: 13px;
+    border-radius: var(--border-radius-sm);
 
     @include highlight-border;
 

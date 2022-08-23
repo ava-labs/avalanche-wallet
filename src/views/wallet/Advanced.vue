@@ -57,7 +57,7 @@ h1 {
 .grid_box {
     background-color: var(--bg-light);
     padding: 30px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: auto;
 }
 

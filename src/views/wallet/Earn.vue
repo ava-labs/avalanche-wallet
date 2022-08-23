@@ -236,7 +236,7 @@ export default class Earn extends Vue {
         align-items: flex-start;
         //max-width: 260px;
         padding: 30px;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
         background-color: var(--bg-light);
     }
 

@@ -111,7 +111,7 @@ export default class UserRewardRow extends Vue {
     border-bottom: 2px solid var(--bg-wallet-light);
 }
 .reward_row {
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
     font-size: 14px;
     //border: 2px solid var(--bg-light);

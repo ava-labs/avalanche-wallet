@@ -125,6 +125,6 @@ input {
 .selected {
     background-color: var(--secondary-color);
     color: #fff;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 </style>

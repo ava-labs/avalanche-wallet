@@ -27,7 +27,7 @@ export default class CurrencySelect extends Vue {
     display: flex;
     width: max-content;
     background-color: var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
 }
 

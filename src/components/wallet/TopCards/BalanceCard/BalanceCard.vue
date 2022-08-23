@@ -425,7 +425,7 @@ h4 {
     outline: none !important;
 }
 .buts button[tooltip]:hover:before {
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     /*left: 0;*/
     left: 0;
     transform: translateX(-50%);

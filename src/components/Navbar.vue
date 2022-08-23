@@ -188,7 +188,7 @@ button {
 .action_but {
     color: var(--primary-color) !important;
     padding: 0 12px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 
 .mobile_right {

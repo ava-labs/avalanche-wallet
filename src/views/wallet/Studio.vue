@@ -155,7 +155,7 @@ export default class Studio extends Vue {
     column-gap: 14px;
     row-gap: 14px;
     > div {
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
         border: 1px solid var(--bg-light);
         background-color: var(--bg-light);
         padding: 30px;

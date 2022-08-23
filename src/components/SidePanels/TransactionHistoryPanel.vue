@@ -151,6 +151,7 @@ export default class TransactionHistoryPanel extends Vue {
     font-size: 12px;
     font-weight: bold;
     padding: 15px;
+    border-radius: var(--border-radius-sm);
 }
 
 .history_block {

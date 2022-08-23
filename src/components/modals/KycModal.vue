@@ -403,7 +403,7 @@ h1 {
 
 .KYCform {
     padding: 20px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: auto;
     .request-text {
         padding: 1rem;

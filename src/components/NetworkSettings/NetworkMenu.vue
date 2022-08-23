@@ -239,7 +239,7 @@ export default class NetworkMenu extends Vue {
     right: 0;
     height: 100%;
     border: 1px solid var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     width: 340px;
     background-color: var(--bg);
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
@@ -256,7 +256,7 @@ export default class NetworkMenu extends Vue {
     button {
         font-size: 12px;
         padding: 3px 14px;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
     }
 }
 

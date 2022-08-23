@@ -41,7 +41,7 @@ button {
     border: 1px solid transparent;
     color: var(--primary-color-light);
     background-color: var(--bg-wallet);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     margin-right: 6px;
     margin-bottom: 6px;
     transition-duration: 0.2s;

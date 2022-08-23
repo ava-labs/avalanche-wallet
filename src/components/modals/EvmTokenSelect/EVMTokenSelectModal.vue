@@ -115,7 +115,7 @@ export default class EVMTokenSelectModal extends Vue {
 .list {
     max-height: 70vh;
     z-index: 2;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 
 $logo_w: 38px;

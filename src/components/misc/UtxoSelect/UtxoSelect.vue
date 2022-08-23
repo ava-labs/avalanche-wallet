@@ -71,7 +71,7 @@ export default class UTXOSelect extends Vue {
     }
 }
 .buts {
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
 }
 </style>

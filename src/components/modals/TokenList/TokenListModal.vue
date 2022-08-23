@@ -126,7 +126,7 @@ export default class TokenListModal extends Vue {
         height: 50px;
         padding: 12px 24px;
         color: var(--primary-color);
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
     }
 
     .v-btn {

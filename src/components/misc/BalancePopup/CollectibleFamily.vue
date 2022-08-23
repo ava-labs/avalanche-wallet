@@ -99,7 +99,7 @@ $card_w: 80px;
     width: $card_w;
     height: $card_w;
     background-color: var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     overflow: hidden;
     transition-duration: 0.2s;
     cursor: pointer;

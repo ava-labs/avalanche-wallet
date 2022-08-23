@@ -586,7 +586,7 @@ h4 {
     resize: none;
     width: 100%;
     height: 80px;
-    border-radius: 2px;
+    border-radius: var(--border-radius-sm);
     padding: 4px 12px;
 }
 

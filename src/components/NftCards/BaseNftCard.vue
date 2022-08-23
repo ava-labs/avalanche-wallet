@@ -112,7 +112,7 @@ export default class BaseNftCard extends Vue {
 
         button {
             padding: 4px 12px;
-            border-radius: 4px;
+            border-radius: var(--border-radius-sm);
         }
     }
 }

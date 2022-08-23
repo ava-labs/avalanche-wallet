@@ -117,7 +117,7 @@ img {
         display: block;
         width: max-content;
         padding: 3px 9px;
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
         color: var(--primary-color-light);
         background-color: var(--bg-light);
         text-decoration: none;

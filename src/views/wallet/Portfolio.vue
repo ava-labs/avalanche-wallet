@@ -101,7 +101,7 @@ export default {
 
 .search {
     background-color: var(--bg-light);
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     /*flex-grow: 1;*/
     height: 46px;
     padding: 5px;
@@ -115,7 +115,7 @@ export default {
     $icon_w: 36px;
 
     img {
-        border-radius: 4px;
+        border-radius: var(--border-radius-sm);
         padding: 10px 0px;
         background-color: var(--bg-wallet-light);
         /*height: 100%;*/
