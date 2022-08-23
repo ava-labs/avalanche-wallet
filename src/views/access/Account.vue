@@ -118,6 +118,7 @@ export default class Account extends Vue {
 .ava_button {
     width: 100%;
     margin-bottom: 22px;
+    height: 40px !important;
 }
 .access_card {
     /*max-width: 80vw;*/
