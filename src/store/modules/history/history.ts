@@ -1,9 +1,9 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
-import { getAddressHistory } from '@/explorer_api'
+import { getAddressHistory, getAliasChains } from '@/explorer_api'
 import moment from 'moment'
 
-import { HistoryState, ITransactionData } from '@/store/modules/history/types'
+import { Chain, HistoryState, ITransactionData } from '@/store/modules/history/types'
 import { ava } from '@/AVA'
 import { filterDuplicateTransactions } from '@/helpers/history_helper'
 
@@ -14,6 +14,7 @@ const history_module: Module<HistoryState, RootState> = {
         isUpdatingAll: false,
         transactions: [], // Used for the history sidepanel txs
         allTransactions: [], // Used for activity tab txs, paginates
+        chains: [],
     },
     mutations: {
         clear(state) {
@@ -111,6 +112,14 @@ const history_module: Module<HistoryState, RootState> = {
 
             state.allTransactions = transactions
             state.isUpdatingAll = false
+        },
+        async getAliasChains({ state }) {
+            let res = await getAliasChains()
+            let chains = Object.entries(res.chains).map(([, value]) => {
+                let v = value as Chain
+                return { chainAlias: v.chainAlias, chainID: v.chainID }
+            })
+            state.chains = chains
         },
     },
     getters: {

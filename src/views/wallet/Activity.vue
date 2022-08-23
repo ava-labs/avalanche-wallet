@@ -185,7 +185,7 @@ export default class Activity extends Vue {
 
     mounted() {
         this.updateHistory()
-
+        this.getChains()
         let now = new Date()
         this.yearNow = now.getFullYear()
         this.monthNow = now.getMonth()
@@ -197,7 +197,9 @@ export default class Activity extends Vue {
     updateHistory() {
         this.$store.dispatch('History/updateAllTransactionHistory')
     }
-
+    getChains() {
+        this.$store.dispatch('History/getAliasChains')
+    }
     get monthGroups(): any {
         let res: any = {}
         let txs = this.txs
@@ -219,6 +221,8 @@ export default class Activity extends Vue {
     }
 
     get allTxs(): ITransactionData[] {
+        // console.log(this.$store.state.History.allTransactions)
+
         return this.$store.state.History.allTransactions
     }
 

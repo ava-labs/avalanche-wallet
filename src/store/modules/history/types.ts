@@ -1,11 +1,16 @@
 import Big from 'big.js'
 import moment from 'moment'
 
+export interface Chain {
+    chainAlias: string
+    chainID: string
+}
 export interface HistoryState {
     transactions: ITransactionData[]
     allTransactions: ITransactionData[]
     isUpdating: boolean
     isUpdatingAll: boolean
+    chains: Chain[]
 }
 
 export interface ITransactionData {
