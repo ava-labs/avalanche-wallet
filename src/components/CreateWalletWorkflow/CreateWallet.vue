@@ -37,11 +37,11 @@
                                 <!-- LEFT -->
                                 <div class="mneumonic_disp_col">
                                     <div class="mnemonic_disp">
-                                        <mnemonic-display
-                                            :phrase="keyPhrase"
+                                        <!-- <mnemonic-display
+                                            :phrase="keyPhrase.getValue()"
                                             :bgColor="verificatiionColor"
                                             class="mnemonic_display"
-                                        ></mnemonic-display>
+                                        ></mnemonic-display> -->
                                         <p
                                             class="phrase_raw"
                                             v-bind:class="{
