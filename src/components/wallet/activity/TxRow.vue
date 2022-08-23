@@ -137,7 +137,7 @@ export default class TxRow extends Vue {
     column-gap: 14px;
     background-color: var(--bg-light);
     padding: 8px 14px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
 }
 
 .date {
@@ -200,6 +200,9 @@ export default class TxRow extends Vue {
         &:hover {
             opacity: 1;
         }
+    }
+    *[tooltip]:hover:before {
+        left: 60px;
     }
 }
 
