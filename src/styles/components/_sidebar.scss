@@ -27,7 +27,7 @@
     }
 
     .links {
-        padding: 0 !important;
+        padding: 0px 10px;
         display: flex;
         flex-direction: column;
 
@@ -35,6 +35,7 @@
             opacity: 0.6;
             color: var(--sidebar-links);
             text-decoration: none;
+            border-radius: var(--border-radius-lg);
 
             img {
                 opacity: 0.5;
@@ -44,8 +45,12 @@
         .wallet_link {
             display: flex;
             align-items: center;
-            padding: 14px 24px;
+            padding: 14px 10px;
             white-space: nowrap;
+            .v-icon {
+                color: var(--icon-color);
+                margin-right: 15px;
+            }
         }
 
         a.router-link-exact-active {
@@ -80,25 +85,38 @@
     padding-bottom: 30px;
 
     > * {
-        display: grid;
-        padding: 0px 24px;
+        //     display: grid;
+        //     padding: 0px 24px;
+        padding-bottom: 24px;
     }
 }
 
 .sidebar_bottom {
+    padding: 14px 24px;
     button:not(:last-of-type) {
         margin-bottom: 8px;
     }
     button:not(:first-of-type) {
-        margin-top: 8px;
+        margin-top: 16px;
     }
 }
 
 @include medium-device {
     .bottom {
-        > * {
-            display: grid;
-            padding: 8px 8px;
+        font-size: 12px;
+        //     > * {
+        //         display: grid;
+        //         padding: 8px 8px;
+        //     }
+    }
+    .success_button {
+        .v-icon {
+            font-size: 20px;
+        }
+    }
+    .wallet_link {
+        .v-icon {
+            font-size: 20px !important;
         }
     }
 }
@@ -108,6 +126,6 @@
         height: 90px;
     }
     .links {
-        font-size: 12px;
+        font-size: 15px;
     }
 }
