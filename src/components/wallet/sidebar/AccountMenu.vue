@@ -107,10 +107,10 @@ export default class AccountMenu extends Vue {
     flex-direction: row;
     align-items: center;
     text-transform: capitalize;
-    width: 85%;
+    width: 100%;
     p {
         text-align: left;
-        margin-left: 8px !important;
+        margin-left: 12px !important;
         width: 80%;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -127,6 +127,7 @@ export default class AccountMenu extends Vue {
         width: 100% !important;
         p {
             width: 100% !important;
+            margin-left: 13px !important;
         }
     }
 }
@@ -150,12 +151,15 @@ hr {
     margin-bottom: 0.5rem;
     // color: var(--primary-border-color);
     border: none;
-    border-top: var(--primary-border);
+    border-top: var(--secondary-border);
 }
 
 .warning_button {
     text-align: left;
     color: var(--warning);
+    svg {
+        margin-right: 10px;
+    }
     &:hover {
         opacity: 0.5;
     }
@@ -165,8 +169,29 @@ hr {
     text-align: left;
     color: var(--success);
     pointer-events: none;
-    i {
+    .v-icon {
         color: var(--success);
+        margin-right: 4px;
+    }
+}
+
+@include main.medium-device {
+    .warning_button {
+        svg {
+            margin-right: 14px;
+        }
+    }
+}
+@include main.mobile-device {
+    hr {
+        border-color: var(--sidebar-links);
+        opacity: 0.2;
+    }
+    .success_button {
+        .v-icon {
+            font-size: 20px;
+            padding-right: 4px;
+        }
     }
 }
 </style>

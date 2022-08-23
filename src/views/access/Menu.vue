@@ -7,24 +7,15 @@
             <div class="options">
                 <router-link to="/access/privatekey" class="menu_option button_primary">
                     {{ $t('access.but_private_key') }}
-                    <ImageDayNight
-                        day="/img/access_icons/day/privatekey.svg"
-                        night="/img/access_icons/night/privatekey.svg"
-                    ></ImageDayNight>
+                    <v-icon>mdi-shield-key-outline</v-icon>
                 </router-link>
                 <router-link to="/access/mnemonic" class="menu_option button_primary">
                     {{ $t('access.but_mnemonic') }}
-                    <ImageDayNight
-                        day="/img/access_icons/day/mnemonic.svg"
-                        night="/img/access_icons/night/mnemonic.svg"
-                    ></ImageDayNight>
+                    <v-icon>mdi-list-box-outline</v-icon>
                 </router-link>
                 <router-link to="/access/keystore" class="menu_option button_primary">
                     {{ $t('access.but_keystore') }}
-                    <ImageDayNight
-                        day="/img/access_icons/day/keystore.svg"
-                        night="/img/access_icons/night/keystore.svg"
-                    ></ImageDayNight>
+                    <v-icon>mdi-file-key-outline</v-icon>
                 </router-link>
                 <LedgerButton class="menu_option button_primary"></LedgerButton>
                 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
@@ -59,8 +50,6 @@ export default class Menu extends Vue {}
 @use '/src/components/Access/menu';
 
 .access_card {
-    //background-color: var(--bg-light) !important;
-    //padding: main.$container-padding;
     margin: 0px auto;
     display: flex;
     flex-direction: column;
@@ -87,14 +76,13 @@ hr {
 
 .accounts_menu {
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .options {
     display: flex;
     flex-direction: column;
-    //display: grid;
-    //grid-template-columns: repeat(4, 1fr);
-    //grid-gap: 30px;
 }
 
 .menu_option {
@@ -108,33 +96,14 @@ hr {
     }
 }
 
+.v-icon {
+    color: var(--icon-color-light);
+}
+
 .menus {
     width: 440px;
     margin-top: 1em;
 }
-
-//.option {
-//    position: relative;
-//    transition-duration: 0.1s;
-//    transition-timing-function: ease-in;
-//    border-radius: 6px;
-//    font-family: 'DM Sans', sans-serif;
-//    font-weight: 700 !important;
-//    text-transform: uppercase;
-//    font-size: main.$s-size;
-//    display: flex;
-//    align-items: center;
-//    //justify-content: center;
-//    padding: 12px;
-//    margin: 2px 0;
-//
-//    background-color: var(--bg-light) !important;
-//    color: var(--primary-color) !important;
-//
-//    &:hover {
-//        box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
-//    }
-//}
 
 @include main.mobile-device {
     img {

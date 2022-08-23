@@ -73,7 +73,9 @@ export default class LanguageSelect extends Vue {
 
         let messages = this.$root.$i18n.messages
         for (var langCode in messages) {
+            // @ts-ignore
             let data = langMap[langCode]
+            // @ts-ignore
 
             res.push({
                 code: langCode,
@@ -91,7 +93,7 @@ export default class LanguageSelect extends Vue {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 14px 24px;
+    // padding: 14px 24px;
     border: 1px solid transparent;
     border-radius: 3px;
     position: relative;
@@ -133,18 +135,22 @@ select {
     }
 }
 
+.small-flag {
+    transform: scale(0.35);
+}
+
+@include main.medium-device {
+    .small-flag {
+        transform: scale(0.25);
+    }
+}
+
 @media only screen and (max-width: 600px) {
     // .sel_locale {
     //     width: min-content;
     // }
     p.selected {
         display: none;
-    }
-}
-
-@media only screen and (max-width: 1300px) {
-    .sel_locale {
-        padding: 8px 8px;
     }
 }
 </style>

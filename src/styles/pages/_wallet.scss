@@ -22,6 +22,10 @@
     grid-gap: 15px;
     padding-top: 8px;
     height: 100vh;
+    padding-bottom: 8px;
+    @include mobile-device {
+        padding-bottom: 0px !important;
+    }
 }
 
 #wallet_router {

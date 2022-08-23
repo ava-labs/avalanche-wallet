@@ -4,6 +4,7 @@
     --primary-btn-border-color: #149ded;
     --secondary-color: #149ded;
     --primary-border: solid 1px var(--primary-border-color);
+    --secondary-border: solid 1px var(--secondary-border-color);
     --box-shadow: rgb(0 0 0 / 10%) 0px 0px 5px;
     --tooltip-bg: rgba(51, 65, 85, 0.92);
 }
@@ -25,9 +26,13 @@ html[data-theme='day'] {
     --warning: #f19d38;
     --bg-wallet-light: #ffffff;
     --primary-border-color: rgba(203, 213, 225, 0.12);
+    --secondary-border-color: #e2e8f0;
     --primary-contrast-text: #0f172a;
+    --secondary-contrast-text: #ffffff;
     --sidebar-links: #64748b;
     --sidebar-background: #fff;
+    --icon-color: #0f172a;
+    --icon-color-light: #334155;
 }
 
 html[data-theme='night'] {
@@ -47,9 +52,13 @@ html[data-theme='night'] {
     --warning: #f19d38;
     --bg-wallet-light: #0f172a;
     --primary-border-color: rgba(255, 255, 255, 0.12);
+    --secondary-border-color: rgba(255, 255, 255, 0.12);
     --primary-contrast-text: #ffffff;
+    --secondary-contrast-text: #0f172a;
     --sidebar-links: #64748b;
     --sidebar-background: #1e293b;
+    --icon-color: #ffffff;
+    --icon-color--light: #ffffff;
 }
 
 $mobile_width: 900px;

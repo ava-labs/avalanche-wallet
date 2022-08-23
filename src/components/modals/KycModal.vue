@@ -374,10 +374,13 @@ button .arrow {\
     .modal_body {
         width: 70%;
         max-width: 750px;
-        height: auto !important;
+        height: min-content !important;
         /* min-height: 450px !important; */
         border-radius: var(--border-radius-sm) !important;
+        overflow: auto;
+        min-height: 200px;
         @include main.mobile-device {
+            max-height: 90vh;
             max-width: none;
             width: 80%;
             min-height: fit-content;

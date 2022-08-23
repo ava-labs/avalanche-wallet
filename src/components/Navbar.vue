@@ -244,6 +244,15 @@ button {
     .mobile_drawer {
         color: var(--primary-color) !important;
     }
+
+    .mobile_account_menu {
+        margin-bottom: 16px;
+        padding: 0px;
+    }
+
+    .logout {
+        padding: 16px 0px !important;
+    }
 }
 </style>
 <style lang="scss">
@@ -270,6 +279,7 @@ button {
     .router-link-exact-active {
         background-color: var(--bg-wallet);
         color: var(--primary-color) !important;
+        border-radius: var(--border-radius-sm);
     }
     .mobile_account_menu {
         button:not(:last-of-type) {

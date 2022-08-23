@@ -1,8 +1,7 @@
 <template>
     <div class="copyBut" @click="copy">
         <!--        <fa icon="copy"></fa>-->
-        <img v-if="$root.theme === 'day'" src="/img/copy_icon.png" />
-        <img v-else src="/img/copy_night.svg" />
+        <v-icon>mdi-content-copy</v-icon>
         <p class="text">
             <slot></slot>
         </p>
@@ -61,5 +60,11 @@ button {
     height: 100%;
     background-size: contain;
     background-position: center;
+}
+.v-icon {
+    color: var(--primary-color);
+    width: 20px;
+    height: 20px;
+    font-size: 22px;
 }
 </style>

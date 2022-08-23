@@ -18,11 +18,9 @@
                     {{ activeAddress }}
                 </p>
                 <div class="buts">
-                    <button
-                        :tooltip="$t('top.hover1')"
-                        @click="viewQRModal"
-                        class="qr_but"
-                    ></button>
+                    <button :tooltip="$t('top.hover1')" @click="viewQRModal" class="qr_but">
+                        <v-icon>mdi-qrcode</v-icon>
+                    </button>
                     <button
                         v-if="walletType === 'mnemonic'"
                         :tooltip="$t('top.hover2')"
@@ -274,8 +272,8 @@ export default class AddressCard extends Vue {
         margin-left: 14px;
         position: relative;
         outline: none;
-        width: 18px;
-        height: 18px;
+        // width: 18px;
+        // height: 18px;
         opacity: 0.6;
 
         background-size: contain;
@@ -284,10 +282,19 @@ export default class AddressCard extends Vue {
             opacity: 1;
         }
     }
+    .v-icon {
+        color: var(--primary-color);
+        width: 18px;
+        height: 18px;
+        font-size: 22px;
+    }
 }
 
 .qr_but {
-    background-image: url('/img/qr_icon.png');
+    // background-image: url('/img/qr_icon.png');
+    // .v-icon {
+    // color: var(--primary-color);
+    // }
 }
 .print_but {
     background-image: url('/img/faucet_icon.png');
@@ -309,9 +316,9 @@ export default class AddressCard extends Vue {
 }
 
 @include main.night-mode {
-    .qr_but {
-        background-image: url('/img/qr_icon_night.svg');
-    }
+    // .qr_but {
+    //     background-image: url('/img/qr_icon_night.svg');
+    // }
     .print_but {
         background-image: url('/img/print_icon_night.svg');
     }

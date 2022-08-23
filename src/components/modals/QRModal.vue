@@ -38,10 +38,10 @@ export default class QRModal extends Vue {
     onthemechange(val: string) {
         if (val === 'night') {
             this.colorDark = '#E5E5E5'
-            this.colorLight = '#242729'
+            this.colorLight = '#0000'
         } else {
             this.colorDark = '#242729'
-            this.colorLight = '#FFF'
+            this.colorLight = '#0000'
         }
         this.updateQR()
     }

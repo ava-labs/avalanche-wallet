@@ -6,19 +6,19 @@
                 <div class="refresh">
                     <Spinner v-if="isUpdateBalance" class="spinner"></Spinner>
                     <button v-else @click="updateBalance">
-                        <fa icon="sync"></fa>
+                        <v-icon>mdi-refresh</v-icon>
                     </button>
                 </div>
                 <h4>{{ $t('top.title2') }}</h4>
                 <template v-if="!isBreakdown">
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye"></fa>
+                        <v-icon>mdi-eye-outline</v-icon>
                         {{ $t('top.balance.show') }}
                     </button>
                 </template>
                 <template v-else>
                     <button class="breakdown_toggle" @click="toggleBreakdown">
-                        <fa icon="eye-slash"></fa>
+                        <v-icon>mdi-eye-off-outline</v-icon>
                         {{ $t('top.balance.hide') }}
                     </button>
                 </template>
@@ -390,7 +390,9 @@ h4 {
 .refresh {
     width: 20px;
     height: 20px;
-    color: var(--primary-color);
+    .v-icon {
+        color: var(--primary-color);
+    }
 
     button {
         outline: none !important;
@@ -463,12 +465,18 @@ h4 {
 }
 
 .breakdown_toggle {
-    color: var(--primary-color-light);
     font-size: 13px;
     outline: none !important;
     margin-left: 12px;
+    .v-icon {
+        color: var(--primary-color);
+        font-size: 18px;
+    }
 
     &:hover {
+        .v-icon {
+            color: var(--secondary-color);
+        }
         color: var(--secondary-color);
     }
 }

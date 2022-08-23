@@ -44,7 +44,7 @@ button {
     }
     &[active] {
         opacity: 1;
-        background-color: var(--bg);
+        background-color: var(--bg-light);
         color: var(--primary-color);
     }
 }

@@ -1,8 +1,8 @@
-<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M0 11.25H3.75V15H3C1.34315 15 0 13.6569 0 12V11.25Z" fill="white"/>
-<rect y="5.625" width="3.75" height="3.75" fill="white"/>
-<path d="M0 3C0 1.34315 1.34315 0 3 0H3.75V3.75H0V3Z" fill="white"/>
-<path d="M5.625 0H12C13.6569 0 15 1.34315 15 3V9.375H5.625V0Z" fill="white"/>
-<rect x="5.625" y="11.25" width="3.75" height="3.75" fill="white"/>
-<path d="M11.25 11.25H15V12C15 13.6569 13.6569 15 12 15H11.25V11.25Z" fill="white"/>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M18 4H12V12H20V6C20 4.89543 19.1046 4 18 4ZM10 2V14H22V6C22 3.79086 20.2091 2 18 2H10Z" fill="#ffffff" />
+  <path d="M18 18H22C22 20.2091 20.2091 22 18 22V18Z" fill="#ffffff" />
+  <rect x="10" y="18" width="4" height="4" fill="#ffffff" />
+  <path d="M2 18H6V22C3.79086 22 2 20.2091 2 18Z" fill="#ffffff" />
+  <rect x="2" y="10" width="4" height="4" fill="#ffffff" />
+  <path d="M2 6C2 3.79086 3.79086 2 6 2V6H2Z" fill="#ffffff" />
 </svg>
