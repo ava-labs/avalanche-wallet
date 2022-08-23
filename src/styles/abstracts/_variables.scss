@@ -27,6 +27,7 @@ html[data-theme='day'] {
     --bg-wallet-light: #ffffff;
     --primary-border-color: rgba(203, 213, 225, 0.12);
     --secondary-border-color: #e2e8f0;
+    --disabled-color: #e2e8f0;
     --primary-contrast-text: #0f172a;
     --secondary-contrast-text: #ffffff;
     --sidebar-links: #64748b;
@@ -53,6 +54,7 @@ html[data-theme='night'] {
     --bg-wallet-light: #0f172a;
     --primary-border-color: rgba(255, 255, 255, 0.12);
     --secondary-border-color: rgba(255, 255, 255, 0.12);
+    --disabled-color: rgba(255, 255, 255, 0.12);
     --primary-contrast-text: #ffffff;
     --secondary-contrast-text: #0f172a;
     --sidebar-links: #64748b;
