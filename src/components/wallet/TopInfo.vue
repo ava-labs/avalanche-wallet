@@ -145,3 +145,10 @@ export default {
 //
 //}
 </style>
+<style lang="scss">
+.buts {
+    .copyBut {
+        width: 20px !important;
+    }
+}
+</style>

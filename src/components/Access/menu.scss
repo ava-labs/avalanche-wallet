@@ -1,12 +1,13 @@
 .menu_option {
     background-color: var(--bg-light) !important;
     color: var(--primary) !important;
-    padding: 12px;
-    margin: 2px 0;
+    padding: 16px;
+    margin: 5px 0;
     width: 100%;
     cursor: pointer;
     display: flex;
     align-items: center;
+    border-radius: var(--border-radius-lg);
 
     p {
         flex-grow: 1;
