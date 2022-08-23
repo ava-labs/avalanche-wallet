@@ -26,7 +26,7 @@
                     {{ $t('wallet.sidebar.earn') }}
                 </router-link>
                 <router-link to="/wallet/studio" data-cy="wallet_studio" class="wallet_link">
-                    <v-icon>mdi-view-dashboard-outline</v-icon>
+                    <v-icon>mdi-file-table-box-multiple-outline</v-icon>
                     {{ $t('wallet.sidebar.studio') }}
                 </router-link>
                 <router-link to="/wallet/activity" data-cy="wallet_activity" class="wallet_link">

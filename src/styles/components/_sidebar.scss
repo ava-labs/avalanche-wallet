@@ -37,7 +37,7 @@
             text-decoration: none;
             border-radius: var(--border-radius-lg);
 
-            img {
+            .v-icon {
                 opacity: 0.5;
             }
         }
@@ -58,16 +58,16 @@
             opacity: 1;
             background-color: var(--bg-wallet);
 
-            img {
+            .v-icon {
                 opacity: 1;
             }
         }
 
-        img {
-            width: 20px;
-            margin-right: 15px;
-            object-fit: contain;
-        }
+        // img {
+        //     width: 20px;
+        //     margin-right: 15px;
+        //     object-fit: contain;
+        // }
     }
 }
 .wallet_export {
