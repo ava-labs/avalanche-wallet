@@ -115,6 +115,7 @@ export default class Modal extends Vue {
     transform: translate(-50%, -50%);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
+    max-height: 90%;
 }
 
 @include main.mobile-device {
