@@ -28,6 +28,7 @@ export default class Modal extends Vue {
 
     public open() {
         this.isActive = true
+        document.body.style.overflow = 'hidden'
     }
 
     bgclick() {
@@ -39,6 +40,7 @@ export default class Modal extends Vue {
     public close() {
         this.$emit('beforeClose')
         this.isActive = false
+        document.body.style.overflow = 'auto'
     }
 }
 </script>
@@ -81,6 +83,7 @@ export default class Modal extends Vue {
     height: 100vh;
     overflow: auto;
     display: flex;
+    overflow-y: hidden;
 }
 
 .modal_bg {
@@ -107,6 +110,9 @@ export default class Modal extends Vue {
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
     margin: auto;
     z-index: 2;
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
 }
@@ -114,14 +120,11 @@ export default class Modal extends Vue {
 @include main.mobile-device {
     .modal_body {
         position: absolute;
-        bottom: 0;
-        width: 100%;
+        width: max-content;
         margin: 0;
         padding-bottom: 20px;
-        max-width: none;
-        border-radius: 0;
-        border-top-right-radius: 30px;
-        border-top-left-radius: 30px;
+        max-width: 100%;
+        border-radius: var(--border-radius-lg);
     }
 }
 </style>
