@@ -15,7 +15,7 @@ import {
     KeyChain as PlatformKeyChain,
     UTXOSet as PlatformUTXOSet,
 } from '@c4tplatform/camino/dist/apis/platformvm'
-import { KeyChain, KeyChain as EVMKeyChain, UTXOSet as EVMUTXOSet } from '@c4tplatform/camino/dist/apis/evm'
+import { KeyChain, KeyChain as EVMKeyChain } from '@c4tplatform/camino/dist/apis/evm'
 import { PayloadBase } from '@c4tplatform/camino/dist/utils'
 import { buildUnsignedTransaction } from '../TxHelper'
 import { AvaWalletCore, UnsafeWallet } from './types'
