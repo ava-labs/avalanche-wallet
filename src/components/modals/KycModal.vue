@@ -40,6 +40,9 @@
                 </form>
             </div>
             <div id="sumsub-websdk-container"></div>
+            <div v-if="verficationCompleted" class="kyc_action">
+                <v-btn type="cancel" @click="close" class="outlined_button">Close</v-btn>
+            </div>
         </Modal>
     </div>
 </template>
@@ -76,6 +79,7 @@ export default class KycModal extends Vue {
     modalLight: string = '#FFF'
     modalDark: string = '#242729'
     background: string = 'body {background-color: red !important;}'
+    verficationCompleted: boolean = false
     /**/
     userDataSubmitted: boolean = false
     isLoading: boolean = false
@@ -188,6 +192,9 @@ button .arrow {\
 .radio-item input:disabled~.checkmark:after {\
   background-color: #149ded;\
 }\
+.document-status {\
+    background-color: transparent !important;\
+}\
 "
             // 'body {background-color: var(--secondary-color) !important; min-height: 450px !important;} .line {background-color: black !important;}'
         } else {
@@ -293,6 +300,9 @@ button .arrow {\
 .radio-item input:disabled~.checkmark:after {\
   background-color: #149ded;\
 }\
+.document-status {\
+    background-color: transparent !important;\
+}\
 "
         }
     }
@@ -319,8 +329,11 @@ button .arrow {\
                 },
             })
             .withOptions({ addViewportTag: false, adaptIframeHeight: true })
-            .on('idCheck.applicantStatus', async () => {
+            .on('idCheck.applicantStatus', async (applicantStatus) => {
                 await this.$store.dispatch('Accounts/updateKycStatus')
+                if (applicantStatus.reviewStatus === 'completed') {
+                    this.verficationCompleted = true
+                }
             })
             .build()
         snsWebSdkInstance.launch('#sumsub-websdk-container')
@@ -356,6 +369,11 @@ button .arrow {\
 
     async open() {
         this.$refs.modal.open()
+    }
+
+    async close() {
+        await this.$store.dispatch('Accounts/updateKycStatus')
+        this.$refs.modal.close()
     }
 
     beforeClose() {
@@ -401,6 +419,26 @@ h1 {
     font-weight: normal;
 }
 
+.outlined_button {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: var(--border-radius-sm);
+    padding: 10px 24px;
+    border-color: var(--primary-btn-border-color);
+    color: var(--primary-btn-border-color);
+    background-color: var(--bg) !important;
+    height: auto;
+}
+
+.kyc_action {
+    display: flex;
+    background-color: var(--bg);
+    border-bottom: var(--bg);
+    color: var(--primary-color);
+    border-top: 2px solid var(--bg-light);
+    position: relative;
+    padding: 16px 22px;
+}
 .KYCform {
     padding: 20px;
     border-radius: var(--border-radius-sm);
@@ -437,6 +475,10 @@ h1 {
 .popup .message-content p {
     color: #f5f5f5;
 }
+
+/* .document-status {
+    background-color: transparent !important;
+} */
 /* .steps {
 }
 .step .activ {
@@ -505,4 +547,10 @@ input {
     font-size: 13px;
     outline: none;
 }
+
+/* .step.pending .bullet {
+    background-color: #0f172a;
+    background-image: none;
+    border-color: #0f172a;
+} */
 </style>
