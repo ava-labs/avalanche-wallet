@@ -17,11 +17,13 @@
 }
 
 .wallet_main {
-    display: grid;
-    grid-template-rows: max-content 1fr;
+    // display: grid;
+    // grid-template-rows: max-content 1fr;
+    display: flex;
+    flex-direction: column;
     grid-gap: 15px;
     padding-top: 8px;
-    height: 100vh;
+    height: 100%;
     padding-bottom: 8px;
     @include mobile-device {
         padding-bottom: 0px !important;
@@ -33,6 +35,7 @@
     padding: 22px 20px;
     background-color: var(--bg-wallet-light);
     overflow: scroll;
+    flex: 1;
     &::-webkit-scrollbar {
         display: none;
     }
