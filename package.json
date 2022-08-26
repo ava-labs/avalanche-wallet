@@ -73,7 +73,7 @@
         "lodash.differenceby": "4.8.0",
         "lodash.isequal": "4.5.0",
         "luxon": "1.25.0",
-        "moment": "2.29.2",
+        "moment": "2.29.4",
         "morgan": "1.9.1",
         "print-js": "1.0.63",
         "punycode": "2.1.1",
