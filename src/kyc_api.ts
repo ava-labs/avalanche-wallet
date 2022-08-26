@@ -20,7 +20,7 @@ async function generateToken(address: string, publicKeyByte: string): Promise<Ac
     try {
         let res = await kyc_api.post(url, {
             external_user_id: address,
-            public_key_byte: publicKeyByte,
+            public_key: publicKeyByte,
         })
         return res.data
     } catch (e) {
