@@ -1,15 +1,17 @@
 name: build-app
 on: [push]
 jobs:
-  npm-build:
+  yarn-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '17'
-      - run: npm i
-      - run: npm run build
+      - run: yarn install
+      - run: yarn build 
+      # this might need --frozen-lockfile but it seems to break build
+      # TODO add this when we fixed the builds in genreal
 
   bump-version:
     runs-on: ubuntu-latest
@@ -74,4 +76,4 @@ jobs:
             ${{ steps.setTagVariables.outputs.branch }}
             c4tplatform/camino-wallet:${{ needs.bump-version.outputs.version }}
             ${{ steps.setTagVariables.outputs.stable }}
-          push: ${{ github.ref == 'refs/heads/chain4travel' }}
+          push: ${{ github.ref == 'refs/heads/chain4travel' || github.ref == 'refs/heads/dev' }}
