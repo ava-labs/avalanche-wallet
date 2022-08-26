@@ -38,7 +38,7 @@
                     <RadioButtons :labels="modes" :keys="modeKey" v-model="mode"></RadioButtons>
                 </div>
             </div>
-            <div>
+            <div v-if="showList">
                 <div class="pagination">
                     <p class="date_display">{{ monthNowName }} {{ yearNow }}</p>
                     <div>
@@ -75,8 +75,16 @@
                 </div>
             </div>
             <div v-if="!showList" class="loading">
-                <Spinner class="spinner"></Spinner>
-                <p>{{ $t('activity.loading') }}</p>
+                <template v-if="!isError">
+                    <Spinner class="spinner"></Spinner>
+                    <p>{{ $t('activity.loading') }}</p>
+                </template>
+                <template v-else>
+                    <p>Error Loading Activity History</p>
+                    <v-btn @click="updateHistory" class="button_secondary" small depressed>
+                        Try Again
+                    </v-btn>
+                </template>
             </div>
         </div>
     </div>
@@ -151,7 +159,7 @@ export default class Activity extends Vue {
     }
 
     get showList(): boolean {
-        if (this.isUpdatingAll || this.isLoading) return false
+        if (this.isUpdatingAll || this.isLoading || this.isError) return false
         return true
     }
 
@@ -195,7 +203,11 @@ export default class Activity extends Vue {
     }
     deleted() {}
 
-    updateHistory() {
+    get isError() {
+        return this.$store.state.History.isError
+    }
+
+    async updateHistory() {
         this.$store.dispatch('History/updateAllTransactionHistory')
     }
 
