@@ -11,6 +11,7 @@ const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
     state: {
         isUpdating: false,
+        isError: false,
         isUpdatingAll: false,
         transactions: [], // Used for the history sidepanel txs
         allTransactions: [], // Used for activity tab txs, paginates
@@ -66,6 +67,7 @@ const history_module: Module<HistoryState, RootState> = {
         },
 
         async updateAllTransactionHistory({ state, rootState, rootGetters, dispatch }) {
+            state.isError = false
             const wallet = rootState.activeWallet
             if (!wallet) return
 
@@ -98,17 +100,21 @@ const history_module: Module<HistoryState, RootState> = {
 
             const limit = 0
 
-            const txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            const txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
+            try {
+                const txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
+                const txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
 
-            const txsXFiltered = filterDuplicateTransactions(txsX)
-            const txsPFiltered = filterDuplicateTransactions(txsP)
+                const txsXFiltered = filterDuplicateTransactions(txsX)
+                const txsPFiltered = filterDuplicateTransactions(txsP)
 
-            const transactions = txsXFiltered
-                .concat(txsPFiltered)
-                .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
+                const transactions = txsXFiltered
+                    .concat(txsPFiltered)
+                    .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
 
-            state.allTransactions = transactions
+                state.allTransactions = transactions
+            } catch (e) {
+                state.isError = true
+            }
             state.isUpdatingAll = false
         },
     },
