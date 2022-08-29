@@ -41,8 +41,8 @@ export default {
             return
         }
 
-        if (theme === 'day') {
-            this.setDay()
+        if (theme === 'night') {
+            this.setNight()
         }
     },
 }
