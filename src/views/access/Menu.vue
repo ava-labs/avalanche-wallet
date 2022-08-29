@@ -17,7 +17,7 @@
                     {{ $t('access.but_keystore') }}
                     <v-icon>mdi-file-key-outline</v-icon>
                 </router-link>
-                <LedgerButton class="menu_option button_primary"></LedgerButton>
+                <LedgerButton class="menu_option button_primary" disabled></LedgerButton>
                 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
             </div>
         </div>

@@ -10,6 +10,7 @@ textarea,
 input {
     @include highlight-border;
     border-radius: var(--border-radius-sm);
+    background-color: var(--bg-wallet);
 
     &[disabled] {
         border-color: transparent !important;
