@@ -59,7 +59,10 @@ export default {
         this.$store.dispatch('updateAvaxPrice')
 
         if (this.$store.state.Accounts.accounts.length > 0) {
-            this.$router.push('/access')
+            // Do not route for legal pages
+            if (this.$route.name !== 'legal') {
+                this.$router.push('/access')
+            }
         }
     },
     computed: {
