@@ -1,8 +1,8 @@
 <template>
     <div class="home">
-        <b-container>
-            <b-row>
-                <b-col>
+        <div class="container">
+            <div class="row">
+                <div class="col">
                     <div class="home_wrapper">
                         <h1>{{ $t('home.desc') }}</h1>
                         <div class="login_wrapper">
@@ -59,9 +59,9 @@
                         </div>
                         <ToS class="tos" style="align-self: center; margin: 30px !important"></ToS>
                     </div>
-                </b-col>
-            </b-row>
-        </b-container>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
