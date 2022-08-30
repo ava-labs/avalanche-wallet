@@ -15,6 +15,11 @@ import { Vue, Component } from 'vue-property-decorator'
 
 @Component
 export default class UrlBanner extends Vue {
+    mounted() {
+        if (this.$route.name === 'legal') {
+            this.dismiss()
+        }
+    }
     dismiss() {
         //@ts-ignore
         this.$refs.banner.toggle()
