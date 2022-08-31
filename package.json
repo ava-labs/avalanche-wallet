@@ -21,7 +21,7 @@
         "@arcblock/forge-util": "^1.6.3",
         "@c4tplatform/camino": "0.0.2",
         "@c4tplatform/camino-wallet-sdk": "0.0.1",
-        "@c4tplatform/vue_components": "0.0.3",
+        "@c4tplatform/vue_components": "0.0.4",
         "@ethereumjs/common": "2.0.0",
         "@ethereumjs/tx": "3.0.0",
         "@fortawesome/fontawesome-svg-core": "1.2.26",
