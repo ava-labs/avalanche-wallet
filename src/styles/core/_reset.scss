@@ -9,8 +9,6 @@ button {
 textarea,
 input {
     @include highlight-border;
-    border-radius: var(--border-radius-sm);
-    background-color: var(--bg-wallet);
 
     &[disabled] {
         border-color: transparent !important;
@@ -48,7 +46,8 @@ h4 {
 
 textarea {
     color: var(--primary-color);
-    background-color: var(--bg);
+    background-color: var(--bg-wallet);
+    border-radius: var(--border-radius-sm);
 }
 
 *[tooltip]:hover:before {
@@ -76,6 +75,7 @@ textarea {
 
 .hover_border {
     @include highlight-border;
+    border-radius: var(--border-radius-sm);
 
     &[disabled] {
         border-color: transparent !important;
