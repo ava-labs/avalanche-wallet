@@ -22,7 +22,9 @@
                     // paddingTop: `${100 / aspectRatio}%`,
                 }"
             ></canvas>
-            <v-btn depressed block @click="print">{{ $t('modal.print.submit') }}</v-btn>
+            <v-btn depressed block @click="print" class="print_btn">
+                {{ $t('modal.print.submit') }}
+            </v-btn>
         </div>
     </modal>
 </template>
@@ -256,5 +258,9 @@ export default class PaperWallet extends Vue {
     /*max-width: 100%;*/
     /*height: 320px;*/
     border: 1px solid #ddd;
+}
+
+.print_btn {
+    background-color: var(--secondary-color) !important;
 }
 </style>

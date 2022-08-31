@@ -26,13 +26,17 @@
                         :tooltip="$t('top.hover2')"
                         @click="viewPrintModal"
                         class="print_but"
-                    ></button>
+                    >
+                        <v-icon>mdi-water-outline</v-icon>
+                    </button>
                     <button
                         v-if="walletType === 'ledger'"
                         :tooltip="$t('create.verify')"
                         @click="verifyLedgerAddress"
                         class="ledger_but"
-                    ></button>
+                    >
+                        <v-icon>mdi-usb-flash-drive-outline</v-icon>
+                    </button>
                     <CopyText
                         :tooltip="$t('top.hover3')"
                         :value="activeAddress"
@@ -290,18 +294,18 @@ export default class AddressCard extends Vue {
     }
 }
 
-.qr_but {
-    // background-image: url('/img/qr_icon.png');
-    // .v-icon {
-    // color: var(--primary-color);
-    // }
-}
-.print_but {
-    background-image: url('/img/faucet_icon.png');
-}
-.ledger_but {
-    background-image: url('/img/ledger_icon.png');
-}
+// .qr_but {
+//     background-image: url('/img/qr_icon.png');
+//     .v-icon {
+//     color: var(--primary-color);
+//     }
+// }
+// .print_but {
+//     background-image: url('/img/faucet_icon.png');
+// }
+// .ledger_but {
+//     background-image: url('/img/ledger_icon.png');
+// }
 .copy_but {
     color: var(--primary-color);
 }
@@ -319,12 +323,12 @@ export default class AddressCard extends Vue {
     // .qr_but {
     //     background-image: url('/img/qr_icon_night.svg');
     // }
-    .print_but {
-        background-image: url('/img/print_icon_night.svg');
-    }
-    .ledger_but {
-        background-image: url('/img/ledger_night.svg');
-    }
+    // .print_but {
+    //     background-image: url('/img/print_icon_night.svg');
+    // }
+    // .ledger_but {
+    //     background-image: url('/img/ledger_night.svg');
+    // }
 
     .mainnet_but {
         background-image: url('/img/modal_icons/mainnet_addr_night.svg');
