@@ -194,7 +194,6 @@ img {
     }
     .network_row {
         grid-template-columns: 1fr max-content;
-        /*grid-template-columns: none;*/
     }
 }
 </style>
