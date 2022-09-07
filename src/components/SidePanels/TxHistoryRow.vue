@@ -119,9 +119,6 @@ export default class TxHistoryRow extends Vue {
 
 .tx_history_row {
     padding: 10px 0px;
-    /*padding-right: 0;*/
-    /*display: grid;*/
-    /*grid-template-columns: 40px 1fr;*/
 
     > div {
         align-self: center;

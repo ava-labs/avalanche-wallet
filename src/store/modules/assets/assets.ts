@@ -401,6 +401,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 const utxoOut = utxo.getOutput() as AmountOutput
 
                 const locktime = utxoOut.getLocktime()
+                const threhsold = utxoOut.getThreshold()
                 const amount = utxoOut.getAmount()
                 const assetIdBuff = utxo.getAssetID()
                 const assetId = bintools.cb58Encode(assetIdBuff)
@@ -408,13 +409,13 @@ const assets_module: Module<AssetsState, RootState> = {
                 const owners = utxoOut.getAddresses()
 
                 // Which category should the utxo fall under
-                const isMultisig = owners.length > 1
+                const isMultisig = threhsold > 1
                 const isLocked = locktime.gt(unixNox)
 
                 if (isMultisig) {
                     if (!dict[assetId]) {
                         dict[assetId] = {
-                            locked: ZERO,
+                            locked: ZERO.clone(),
                             available: ZERO.clone(),
                             multisig: amount.clone(),
                         }
@@ -425,7 +426,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 } else if (!isLocked) {
                     if (!dict[assetId]) {
                         dict[assetId] = {
-                            locked: ZERO,
+                            locked: ZERO.clone(),
                             available: amount.clone(),
                             multisig: ZERO.clone(),
                         }
@@ -439,8 +440,8 @@ const assets_module: Module<AssetsState, RootState> = {
                     if (!dict[assetId]) {
                         dict[assetId] = {
                             locked: amount.clone(),
-                            available: ZERO,
-                            multisig: ZERO,
+                            available: ZERO.clone(),
+                            multisig: ZERO.clone(),
                         }
                     } else {
                         const amt = dict[assetId].locked

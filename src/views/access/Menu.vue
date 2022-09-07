@@ -27,6 +27,10 @@
                     ></ImageDayNight>
                 </router-link>
                 <LedgerButton class="menu_option button_primary"></LedgerButton>
+                <router-link to="/access/xpub" class="menu_option button_primary">
+                    XPUB (Readonly)
+                    <span><fa icon="glasses"></fa></span>
+                </router-link>
                 <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
             </div>
         </div>
@@ -114,29 +118,6 @@ hr {
     margin-top: 1em;
 }
 
-//.option {
-//    position: relative;
-//    transition-duration: 0.1s;
-//    transition-timing-function: ease-in;
-//    border-radius: 6px;
-//    font-family: 'DM Sans', sans-serif;
-//    font-weight: 700 !important;
-//    text-transform: uppercase;
-//    font-size: main.$s-size;
-//    display: flex;
-//    align-items: center;
-//    //justify-content: center;
-//    padding: 12px;
-//    margin: 2px 0;
-//
-//    background-color: var(--bg-light) !important;
-//    color: var(--primary-color) !important;
-//
-//    &:hover {
-//        box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
-//    }
-//}
-
 @include main.mobile-device {
     img {
         width: main.$img-size-mobile;
@@ -156,11 +137,5 @@ hr {
         display: block;
         grid-template-columns: none;
     }
-
-    //.option {
-    //    width: 100%;
-    //    margin: 12px 0px;
-    //    display: block;
-    //}
 }
 </style>
