@@ -182,7 +182,7 @@ export default class CustomPage extends Vue {
         let validNetId = credNum || noCredNum
 
         if (!validNetId) {
-            this.err = 'Avalanche Network Not Found'
+            this.err = 'Camino Network Not Found'
             return
         }
 
