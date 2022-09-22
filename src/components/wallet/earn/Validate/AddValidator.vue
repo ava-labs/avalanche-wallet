@@ -204,7 +204,7 @@
                             <label>{{ $t('earn.validate.success.reason') }}</label>
                             <p>{{ txReason }}</p>
                         </div>
-                        <v-btn
+                        <!-- <v-btn
                             @click="cancel"
                             block
                             class="button_secondary"
@@ -212,7 +212,7 @@
                             v-if="txStatus"
                         >
                             Back to Earn
-                        </v-btn>
+                        </v-btn> -->
                     </div>
                 </div>
             </form>
@@ -541,7 +541,6 @@ export default class AddValidator extends Vue {
         if (endMs - startMs > MAX_STAKE_DURATION) {
             startDate = new Date(endMs - MAX_STAKE_DURATION)
         }
-
         try {
             this.isLoading = true
             this.err = ''
@@ -584,7 +583,7 @@ export default class AddValidator extends Vue {
 
     async updateTxStatus(txId: string) {
         let res = await ava.PChain().getTxStatus(txId)
-
+        console.log('mechmech mech', res)
         let status
         let reason = null
         if (typeof res === 'string') {
