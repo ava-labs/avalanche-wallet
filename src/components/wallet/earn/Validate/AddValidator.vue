@@ -583,7 +583,6 @@ export default class AddValidator extends Vue {
 
     async updateTxStatus(txId: string) {
         let res = await ava.PChain().getTxStatus(txId)
-        console.log('mechmech mech', res)
         let status
         let reason = null
         if (typeof res === 'string') {
