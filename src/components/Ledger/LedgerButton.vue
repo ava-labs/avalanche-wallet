@@ -24,6 +24,9 @@ import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 import Eth from '@ledgerhq/hw-app-eth'
 // @ts-ignore
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
+import AvalancheApp from '@zondax/ledger-avalanche-app'
+import Transport from '@ledgerhq/hw-transport'
+
 import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock.vue'
 import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
@@ -31,6 +34,7 @@ import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/Mnemonic
 import { ILedgerAppConfig } from '@/store/types'
 import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
 import ImageDayNight from '@/components/misc/ImageDayNight.vue'
+import { getLedgerProvider } from '@avalabs/avalanche-wallet-sdk'
 
 @Component({
     components: {
@@ -41,8 +45,8 @@ import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 })
 export default class LedgerButton extends Vue {
     isLoading: boolean = false
-    config?: ILedgerAppConfig = undefined
-
+    // config?: ILedgerAppConfig = undefined
+    version?: string = undefined
     destroyed() {
         this.$store.commit('Ledger/closeModal')
     }
@@ -71,23 +75,25 @@ export default class LedgerButton extends Vue {
             let transport = await this.getTransport()
             transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
 
-            let app = new AppAvax(transport, 'w0w')
+            // let app = new AppAvax(transport, 'w0w')
+            // let app2 = new AvalancheApp(transport)
+
             let eth = new Eth(transport, 'w0w')
 
             // Wait for app config
-            await this.waitForConfig(app)
+            await this.waitForConfig(transport)
 
             // Close the initial prompt modal if exists
             this.$store.commit('Ledger/setIsUpgradeRequired', false)
             this.isLoading = true
 
-            if (!this.config) {
+            if (!this.version) {
                 this.$store.commit('Ledger/setIsUpgradeRequired', true)
                 this.isLoading = false
                 throw new Error('')
             }
 
-            if (this.config.version < MIN_EVM_SUPPORT_V) {
+            if (this.version < MIN_EVM_SUPPORT_V) {
                 this.$store.commit('Ledger/setIsUpgradeRequired', true)
                 this.isLoading = false
                 return
@@ -110,11 +116,8 @@ export default class LedgerButton extends Vue {
                 messages,
             })
 
-            let wallet = await LedgerWallet.fromApp(
-                app,
-                eth,
-                (this.config as unknown) as ILedgerAppConfig
-            )
+            // let wallet = await LedgerWallet.fromApp(app, eth, this.version)
+            let wallet = await LedgerWallet.fromTransport(transport)
             try {
                 await this.loadWallet(wallet)
                 this.onsuccess()
@@ -126,15 +129,20 @@ export default class LedgerButton extends Vue {
         }
     }
 
-    async waitForConfig(app: AppAvax) {
+    async waitForConfig(t: Transport) {
+        const prov = await getLedgerProvider(t)
         // Config is found immediately if the device is connected and the app is open.
         // If no config was found that means user has not opened the Avalanche app.
         setTimeout(() => {
-            if (this.config) return
+            if (this.version) return
             this.$store.commit('Ledger/setIsUpgradeRequired', true)
         }, 1000)
 
-        this.config = await app.getAppConfiguration()
+        try {
+            this.version = await prov.getVersion(t)
+        } catch (e) {
+            // this.version = await (app as AvalancheApp).
+        }
     }
 
     async loadWallet(wallet: LedgerWallet) {
@@ -160,11 +168,11 @@ export default class LedgerButton extends Vue {
     onsuccess() {
         this.$store.commit('Ledger/setIsWalletLoading', false)
         this.isLoading = false
-        this.config = undefined
+        this.version = undefined
     }
     onerror(err: any) {
         this.isLoading = false
-        this.config = undefined
+        this.version = undefined
         this.$store.commit('Ledger/closeModal')
         console.error(err)
 

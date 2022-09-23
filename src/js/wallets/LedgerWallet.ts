@@ -7,6 +7,7 @@ import Eth from '@ledgerhq/hw-app-eth'
 import EthereumjsCommon from '@ethereumjs/common'
 import { Transaction } from '@ethereumjs/tx'
 
+import Transport from '@ledgerhq/hw-transport'
 import moment from 'moment'
 import { Buffer, BN } from 'avalanche'
 import HDKey from 'hdkey'
@@ -63,26 +64,40 @@ import { ParseableAvmTxEnum, ParseablePlatformEnum, ParseableEvmTxEnum } from '.
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
-import { bnToBig, idToChainAlias } from '@avalabs/avalanche-wallet-sdk'
+import {
+    bnToBig,
+    getAppEth,
+    getLedgerProvider,
+    idToChainAlias,
+    LedgerProvider,
+} from '@avalabs/avalanche-wallet-sdk'
 
 export const MIN_EVM_SUPPORT_V = '0.5.3'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
-    app: AppAvax
+    // app: AppAvax
+    provider: LedgerProvider
     ethApp: Eth
     type: WalletNameType
 
     ethAddress: string
     ethBalance: BN
-    config: ILedgerAppConfig
+    // config: ILedgerAppConfig
+    version: string
     ethHdNode: HDKey
 
-    constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth: HDKey, ethApp: Eth) {
+    constructor(
+        provider: LedgerProvider,
+        hdkey: HDKey,
+        version: string,
+        hdEth: HDKey,
+        ethApp: Eth
+    ) {
         super(hdkey, hdEth)
-        this.app = app
+        this.provider = provider
         this.ethApp = ethApp
         this.type = 'ledger'
-        this.config = config
+        this.version = version
         this.ethHdNode = hdEth
 
         if (hdEth) {
@@ -96,22 +111,43 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
-    static async fromApp(app: AppAvax, eth: Eth, config: ILedgerAppConfig) {
-        const res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
+    static async fromTransport(t: Transport) {
+        const prov = await getLedgerProvider(t)
+        const version = await prov.getVersion(t)
 
+        const xpub = await prov.getXPUB(t, AVA_ACCOUNT_PATH)
         const hd = new HDKey()
-        hd.publicKey = res.public_key
-        hd.chainCode = res.chain_code
+        hd.publicKey = xpub.pubKey
+        hd.chainCode = xpub.chainCode
 
-        const ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
+        const eth = new Eth(t, 'w0w')
+        const ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, false, true)
         const hdEth = new HDKey()
         // @ts-ignore
         hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
         // @ts-ignore
         hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
 
-        return new LedgerWallet(app, hd, config, hdEth, eth)
+        return new LedgerWallet(prov, hd, version, hdEth, eth)
     }
+
+    // static async fromApp(app: AppAvax, eth: Eth, version: string) {
+    //     const res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
+    //
+    //     const prov = await getLedgerProvider(eth.transport)
+    //     const hd = new HDKey()
+    //     hd.publicKey = res.public_key
+    //     hd.chainCode = res.chain_code
+    //
+    //     const ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
+    //     const hdEth = new HDKey()
+    //     // @ts-ignore
+    //     hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
+    //     // @ts-ignore
+    //     hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
+    //
+    //     return new LedgerWallet(app, hd, version, hdEth, eth)
+    // }
 
     // Returns an array of derivation paths that need to sign this transaction
     // Used with signTransactionHash and signTransactionParsable
@@ -360,7 +396,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             // Sign the msg with ledger
             const accountPathSource = chainId === 'C' ? ETH_ACCOUNT_PATH : AVA_ACCOUNT_PATH
             const accountPath = bippath.fromString(`${accountPathSource}`)
-            const sigMap = await this.app.signHash(accountPath, bip32Paths, msg)
+            const sigMap = await this.provider.signHash(this.et, accountPath, bip32Paths, msg)
             store.commit('Ledger/closeModal')
 
             const creds: Credential[] = this.getCredentials<UnsignedTx>(
@@ -422,7 +458,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 messages: messages,
                 info: null,
             })
-
+            this.app
             const ledgerSignedTx = await this.app.signTransaction(
                 accountPath,
                 bip32Paths,
@@ -667,7 +703,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const { paths, isAvaxOnly } = this.getTransactionPaths<AVMUnsignedTx>(unsignedTx, chainId)
 
         // If ledger doesnt support parsing, sign hash
-        const canLedgerParse = this.config.version >= '0.3.1'
+        const canLedgerParse = this.version >= '0.3.1'
         const isParsableType = txType in parseableTxs && isAvaxOnly
 
         let signedTx
@@ -700,7 +736,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             chainId
         )
         // If ledger doesnt support parsing, sign hash
-        let canLedgerParse = this.config.version >= '0.3.1'
+        let canLedgerParse = this.version >= '0.3.1'
         const isParsableType = txType in parseableTxs && isAvaxOnly
 
         // TODO: Remove after ledger is fixed

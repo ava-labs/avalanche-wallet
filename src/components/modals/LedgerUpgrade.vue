@@ -77,11 +77,6 @@ export default class LedgerUpgrade extends Vue {
         return this.$store.state.activeWallet as WalletType
     }
 
-    get config() {
-        if (!this.wallet) return {}
-        return (this.wallet as LedgerWallet).config
-    }
-
     @Watch('isActive', { immediate: true })
     onActive(val: boolean): void {
         if (!this.$refs.modal) return
