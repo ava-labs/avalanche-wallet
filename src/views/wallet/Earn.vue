@@ -181,7 +181,7 @@ export default class Earn extends Vue {
 .options {
     margin: 30px 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 14px;
     //display: flex;
     //justify-content: space-evenly;
