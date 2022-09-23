@@ -338,7 +338,7 @@ export default class Activity extends Vue {
 
     get txsStake(): ITransactionData[] {
         let txs: ITransactionData[] = this.allTxs
-        let stakeTypes: TransactionType[] = ['add_validator', 'add_delegator']
+        let stakeTypes: TransactionType[] = ['add_validator']
 
         return txs.filter((tx) => {
             let txType = tx.type
