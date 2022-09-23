@@ -34,27 +34,6 @@
                     </div>
                     <div>
                         <h4 class="title">
-                            {{ $t('earn.delegate_card.title') }}
-                        </h4>
-                        <p style="flex-grow: 1">
-                            {{ $t('earn.delegate_card.desc') }}
-                        </p>
-                        <p v-if="!canDelegate" class="no_balance">
-                            {{ $t('earn.warning_2', [minDelegationAmt.toLocaleString()]) }}
-                        </p>
-                        <v-btn
-                            class="button_secondary"
-                            data-cy="delegate"
-                            @click="addDelegator"
-                            depressed
-                            small
-                            :disabled="!canDelegate"
-                        >
-                            {{ $t('earn.delegate_card.submit') }}
-                        </v-btn>
-                    </div>
-                    <div>
-                        <h4 class="title">
                             {{ $t('earn.rewards_card.title') }}
                         </h4>
                         <p style="flex-grow: 1">
@@ -84,7 +63,6 @@ import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
 import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
-import AddDelegator from '@/components/wallet/earn/Delegate/AddDelegator.vue'
 import { BN } from '@c4tplatform/camino/dist'
 import UserRewards from '@/components/wallet/earn/UserRewards.vue'
 import { bnToBig } from '@/helpers/helper'
@@ -95,7 +73,6 @@ import Big from 'big.js'
     components: {
         UserRewards,
         AddValidator,
-        AddDelegator,
     },
 })
 export default class Earn extends Vue {
@@ -106,10 +83,6 @@ export default class Earn extends Vue {
     addValidator() {
         this.pageNow = AddValidator
         this.subtitle = this.$t('earn.subtitle1') as string
-    }
-    addDelegator() {
-        this.pageNow = AddDelegator
-        this.subtitle = this.$t('earn.subtitle2') as string
     }
     transfer() {
         this.$router.replace('/wallet/cross_chain')
@@ -160,14 +133,6 @@ export default class Earn extends Vue {
         return this.platformUnlocked.add(this.platformLockedStakeable).isZero()
     }
 
-    get canDelegate(): boolean {
-        let bn = this.$store.state.Platform.minStakeDelegation
-        if (this.totBal.lt(bn)) {
-            return false
-        }
-        return true
-    }
-
     get canValidate(): boolean {
         let bn = this.$store.state.Platform.minStake
         if (this.totBal.lt(bn)) {
@@ -178,11 +143,6 @@ export default class Earn extends Vue {
 
     get minStakeAmt(): Big {
         let bn = this.$store.state.Platform.minStake
-        return bnToBig(bn, 9)
-    }
-
-    get minDelegationAmt(): Big {
-        let bn = this.$store.state.Platform.minStakeDelegation
         return bnToBig(bn, 9)
     }
 }
@@ -243,7 +203,7 @@ export default class Earn extends Vue {
     h4 {
         font-size: 32px !important;
         font-weight: lighter;
-        color: var(--primary-color-light);
+        // color: var(--primary-color-light);
     }
 
     p {
