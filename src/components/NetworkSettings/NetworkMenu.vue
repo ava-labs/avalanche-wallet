@@ -169,10 +169,12 @@ export default class NetworkMenu extends Vue {
 }
 
 .toggle_but {
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
     //border: 2px solid var(--bg-light);
-    padding: 2px 10px;
+    // padding: 2px 10px;
     //font-size: 13px;
-    display: flex;
+    // display: flex;
     border-radius: 6px;
     position: relative;
     align-items: center;
@@ -192,6 +194,9 @@ export default class NetworkMenu extends Vue {
 
     p {
         user-select: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     button {
