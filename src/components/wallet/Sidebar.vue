@@ -26,7 +26,7 @@
                     {{ $t('wallet.sidebar.earn') }}
                 </router-link>
                 <router-link to="/wallet/validator" data-cy="wallet_validator" class="wallet_link">
-                    <v-icon>mdi-hand-coin-outline</v-icon>
+                    <v-icon>mdi-check-network-outline</v-icon>
                     <!-- {{ $t('wallet.sidebar.earn') }} -->
                     Validator
                 </router-link>
