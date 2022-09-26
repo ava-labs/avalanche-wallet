@@ -8,51 +8,9 @@
             </h1>
         </div>
         <transition name="fade" mode="out-in">
-            <div v-if="!pageNow">
+            <div>
                 <p>{{ $t('earn.desc') }}</p>
-                <div class="options">
-                    <div>
-                        <h4 class="title">
-                            {{ $t('earn.validate_card.title') }}
-                        </h4>
-                        <p style="flex-grow: 1">
-                            {{ $t('earn.validate_card.desc') }}
-                        </p>
-                        <p v-if="!canValidate" class="no_balance">
-                            {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
-                        </p>
-                        <v-btn
-                            class="button_secondary"
-                            data-cy="validate"
-                            @click="addValidator"
-                            depressed
-                            small
-                            :disabled="!canValidate"
-                        >
-                            {{ $t('earn.validate_card.submit') }}
-                        </v-btn>
-                    </div>
-                    <div>
-                        <h4 class="title">
-                            {{ $t('earn.delegate_card.title') }}
-                        </h4>
-                        <p style="flex-grow: 1">
-                            {{ $t('earn.delegate_card.desc') }}
-                        </p>
-                        <p v-if="!canDelegate" class="no_balance">
-                            {{ $t('earn.warning_2', [minDelegationAmt.toLocaleString()]) }}
-                        </p>
-                        <v-btn
-                            class="button_secondary"
-                            data-cy="delegate"
-                            @click="addDelegator"
-                            depressed
-                            small
-                            :disabled="!canDelegate"
-                        >
-                            {{ $t('earn.delegate_card.submit') }}
-                        </v-btn>
-                    </div>
+                <!-- <div class="options">
                     <div>
                         <h4 class="title">
                             {{ $t('earn.rewards_card.title') }}
@@ -70,12 +28,13 @@
                             {{ $t('earn.rewards_card.submit') }}
                         </v-btn>
                     </div>
-                </div>
+                </div> -->
+                <UserRewards />
                 <!--                <v-btn @click="viewRewards" depressed small>View Estimated Rewards</v-btn>-->
             </div>
-            <div v-else>
+            <!-- <div v-else>
                 <component :is="pageNow" class="comp" @cancel="cancel"></component>
-            </div>
+            </div> -->
         </transition>
     </div>
 </template>
@@ -83,8 +42,6 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
-import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
-import AddDelegator from '@/components/wallet/earn/Delegate/AddDelegator.vue'
 import { BN } from '@c4tplatform/camino/dist'
 import UserRewards from '@/components/wallet/earn/UserRewards.vue'
 import { bnToBig } from '@/helpers/helper'
@@ -94,8 +51,6 @@ import Big from 'big.js'
     name: 'earn',
     components: {
         UserRewards,
-        AddValidator,
-        AddDelegator,
     },
 })
 export default class Earn extends Vue {
@@ -103,14 +58,6 @@ export default class Earn extends Vue {
     subtitle: string = ''
     intervalID: any = null
 
-    addValidator() {
-        this.pageNow = AddValidator
-        this.subtitle = this.$t('earn.subtitle1') as string
-    }
-    addDelegator() {
-        this.pageNow = AddDelegator
-        this.subtitle = this.$t('earn.subtitle2') as string
-    }
     transfer() {
         this.$router.replace('/wallet/cross_chain')
     }
@@ -122,17 +69,6 @@ export default class Earn extends Vue {
     cancel() {
         this.pageNow = null
         this.subtitle = ''
-    }
-
-    updateValidators() {
-        this.$store.dispatch('Platform/update')
-    }
-
-    created() {
-        this.updateValidators()
-        this.intervalID = setInterval(() => {
-            this.updateValidators()
-        }, 15000)
     }
 
     deactivated() {
@@ -160,29 +96,8 @@ export default class Earn extends Vue {
         return this.platformUnlocked.add(this.platformLockedStakeable).isZero()
     }
 
-    get canDelegate(): boolean {
-        let bn = this.$store.state.Platform.minStakeDelegation
-        if (this.totBal.lt(bn)) {
-            return false
-        }
-        return true
-    }
-
-    get canValidate(): boolean {
-        let bn = this.$store.state.Platform.minStake
-        if (this.totBal.lt(bn)) {
-            return false
-        }
-        return true
-    }
-
     get minStakeAmt(): Big {
         let bn = this.$store.state.Platform.minStake
-        return bnToBig(bn, 9)
-    }
-
-    get minDelegationAmt(): Big {
-        let bn = this.$store.state.Platform.minStakeDelegation
         return bnToBig(bn, 9)
     }
 }
@@ -221,7 +136,7 @@ export default class Earn extends Vue {
 .options {
     margin: 30px 0;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    // grid-template-columns: 1fr 1fr;
     grid-gap: 14px;
     //display: flex;
     //justify-content: space-evenly;
@@ -238,12 +153,13 @@ export default class Earn extends Vue {
         padding: 30px;
         border-radius: var(--border-radius-sm);
         background-color: var(--bg-light);
+        min-height: 250px;
     }
 
     h4 {
         font-size: 32px !important;
         font-weight: lighter;
-        color: var(--primary-color-light);
+        // color: var(--primary-color-light);
     }
 
     p {
@@ -275,12 +191,6 @@ span {
 
 .comp {
     margin-top: 14px;
-}
-
-@include main.medium-device {
-    .options {
-        grid-template-columns: 1fr 1fr;
-    }
 }
 
 @include main.mobile-device {
