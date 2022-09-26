@@ -1,3 +1,8 @@
+body {
+    overflow: auto !important;
+    background-color: var(--bg) !important;
+    height: auto !important;
+}
 video {
     outline: none;
 }
