@@ -8,9 +8,9 @@
             </h1>
         </div>
         <transition name="fade" mode="out-in">
-            <div v-if="!pageNow">
+            <div>
                 <p>{{ $t('earn.desc') }}</p>
-                <div class="options">
+                <!-- <div class="options">
                     <div>
                         <h4 class="title">
                             {{ $t('earn.rewards_card.title') }}
@@ -28,12 +28,13 @@
                             {{ $t('earn.rewards_card.submit') }}
                         </v-btn>
                     </div>
-                </div>
+                </div> -->
+                <UserRewards />
                 <!--                <v-btn @click="viewRewards" depressed small>View Estimated Rewards</v-btn>-->
             </div>
-            <div v-else>
+            <!-- <div v-else>
                 <component :is="pageNow" class="comp" @cancel="cancel"></component>
-            </div>
+            </div> -->
         </transition>
     </div>
 </template>
