@@ -13,27 +13,6 @@
                 <div class="options">
                     <div>
                         <h4 class="title">
-                            {{ $t('earn.validate_card.title') }}
-                        </h4>
-                        <p style="flex-grow: 1">
-                            {{ $t('earn.validate_card.desc') }}
-                        </p>
-                        <p v-if="!canValidate" class="no_balance">
-                            {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
-                        </p>
-                        <v-btn
-                            class="button_secondary"
-                            data-cy="validate"
-                            @click="addValidator"
-                            depressed
-                            small
-                            :disabled="!canValidate"
-                        >
-                            {{ $t('earn.validate_card.submit') }}
-                        </v-btn>
-                    </div>
-                    <div>
-                        <h4 class="title">
                             {{ $t('earn.delegate_card.title') }}
                         </h4>
                         <p style="flex-grow: 1">
@@ -83,7 +62,6 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
-import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import AddDelegator from '@/components/wallet/earn/Delegate/AddDelegator.vue'
 import { BN } from '@c4tplatform/camino/dist'
 import UserRewards from '@/components/wallet/earn/UserRewards.vue'
@@ -94,7 +72,6 @@ import Big from 'big.js'
     name: 'earn',
     components: {
         UserRewards,
-        AddValidator,
         AddDelegator,
     },
 })
@@ -103,10 +80,6 @@ export default class Earn extends Vue {
     subtitle: string = ''
     intervalID: any = null
 
-    addValidator() {
-        this.pageNow = AddValidator
-        this.subtitle = this.$t('earn.subtitle1') as string
-    }
     addDelegator() {
         this.pageNow = AddDelegator
         this.subtitle = this.$t('earn.subtitle2') as string
@@ -162,14 +135,6 @@ export default class Earn extends Vue {
 
     get canDelegate(): boolean {
         let bn = this.$store.state.Platform.minStakeDelegation
-        if (this.totBal.lt(bn)) {
-            return false
-        }
-        return true
-    }
-
-    get canValidate(): boolean {
-        let bn = this.$store.state.Platform.minStake
         if (this.totBal.lt(bn)) {
             return false
         }
