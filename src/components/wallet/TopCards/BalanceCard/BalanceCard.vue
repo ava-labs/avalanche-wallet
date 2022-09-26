@@ -33,7 +33,7 @@
                     <span class="smaller">.{{ balanceTextRight }}</span>
                     {{ nativeAssetSymbol }}
                 </p>
-                <div style="display: flex; flex-direction: row">
+                <!-- <div style="display: flex; flex-direction: row">
                     <p class="balance_usd">
                         <b>$ {{ totalBalanceUSDText }}</b>
                         USD
@@ -44,7 +44,7 @@
                         <b>${{ avaxPriceText }}</b>
                         USD
                     </p>
-                </div>
+                </div> -->
             </div>
             <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
