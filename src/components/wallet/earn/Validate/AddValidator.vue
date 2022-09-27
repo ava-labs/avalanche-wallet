@@ -33,7 +33,7 @@
                                 class="amt_in"
                             ></AvaxInput>
                         </div>
-                        <div class="reward_in" style="margin: 30px 0" :type="rewardDestination">
+                        <!-- <div class="reward_in" style="margin: 30px 0" :type="rewardDestination">
                             <h4>{{ $t('earn.validate.reward.label') }}</h4>
                             <p class="desc">
                                 {{ $t('earn.validate.reward.desc') }}
@@ -52,22 +52,22 @@
                                 >
                                     {{ $t('earn.delegate.form.reward.chip_2') }}
                                 </button>
-                            </div>
-                            <!--                            <v-chip-group mandatory @change="rewardSelect">-->
-                            <!--                                <v-chip small value="local">-->
-                            <!--                                    {{ $t('earn.validate.reward.chip_1') }}-->
-                            <!--                                </v-chip>-->
-                            <!--                                <v-chip small value="custom">-->
-                            <!--                                    {{ $t('earn.validate.reward.chip_2') }}-->
-                            <!--                                </v-chip>-->
-                            <!--                            </v-chip-group>-->
-                            <QrInput
+                            </div> -->
+                        <!--                            <v-chip-group mandatory @change="rewardSelect">-->
+                        <!--                                <v-chip small value="local">-->
+                        <!--                                    {{ $t('earn.validate.reward.chip_1') }}-->
+                        <!--                                </v-chip>-->
+                        <!--                                <v-chip small value="custom">-->
+                        <!--                                    {{ $t('earn.validate.reward.chip_2') }}-->
+                        <!--                                </v-chip>-->
+                        <!--                            </v-chip-group>-->
+                        <!-- <QrInput
                                 style="height: 40px; border-radius: 2px"
                                 v-model="rewardIn"
                                 placeholder="Reward Address"
                                 class="reward_addr_in"
                             ></QrInput>
-                        </div>
+                        </div> -->
                         <Expandable>
                             <template v-slot:triggerOn>
                                 <p>
@@ -359,60 +359,65 @@ export default class AddValidator extends Vue {
     }
 
     get maxAmt(): BN {
-        // let pAmt = this.platformUnlocked.add(this.platformLockedStakeable)
-        let pAmt = this.utxosBalance
-        // let fee = this.feeAmt;
-
-        // absolute max stake
-        let mult = new BN(10).pow(new BN(6 + 9))
-        let absMaxStake = new BN(3).mul(mult)
-
-        // If above stake limit
-        if (pAmt.gt(absMaxStake)) {
-            return absMaxStake
-        }
-
-        // let res = pAmt.sub(fee);
-        const ZERO = new BN('0')
-        if (pAmt.gt(ZERO)) {
-            return pAmt
-        } else {
-            return ZERO
-        }
+        return new BN(100000000000000)
     }
 
-    get maxDelegationAmt(): BN {
-        let stakeAmt = this.stakeAmt
+    // get maxAmt(): BN {
+    //     // let pAmt = this.platformUnlocked.add(this.platformLockedStakeable)
+    //     let pAmt = this.utxosBalance
+    //     // let fee = this.feeAmt;
 
-        let maxRelative = stakeAmt.mul(new BN(5))
+    //     // absolute max stake
+    //     let mult = new BN(10).pow(new BN(6 + 9))
+    //     let absMaxStake = new BN(3).mul(mult)
+    //     console.log('absMaxStake', absMaxStake.toString())
 
-        // absolute max stake
-        let mult = new BN(10).pow(new BN(6 + 9))
-        let absMaxStake = new BN(3).mul(mult)
+    //     // If above stake limit
+    //     if (pAmt.gt(absMaxStake)) {
+    //         return absMaxStake
+    //     }
 
-        let res
-        if (maxRelative.lt(absMaxStake)) {
-            res = maxRelative.sub(stakeAmt)
-        } else {
-            res = absMaxStake.sub(stakeAmt)
-        }
+    //     // let res = pAmt.sub(fee);
+    //     const ZERO = new BN('0')
+    //     if (pAmt.gt(ZERO)) {
+    //         return pAmt
+    //     } else {
+    //         return ZERO
+    //     }
+    // }
 
-        return BN.max(res, new BN(0))
-    }
+    // get maxDelegationAmt(): BN {
+    //     let stakeAmt = this.stakeAmt
 
-    get maxDelegationText() {
-        return bnToBig(this.maxDelegationAmt, 9).toLocaleString(9)
-    }
+    //     let maxRelative = stakeAmt.mul(new BN(5))
 
-    get maxDelegationUsdText() {
-        let big = bnToBig(this.maxDelegationAmt, 9)
-        let res = big.times(this.avaxPrice)
-        return res.toLocaleString(2)
-    }
+    //     // absolute max stake
+    //     let mult = new BN(10).pow(new BN(6 + 9))
+    //     let absMaxStake = new BN(3).mul(mult)
 
-    get avaxPrice(): Big {
-        return Big(this.$store.state.prices.usd)
-    }
+    //     let res
+    //     if (maxRelative.lt(absMaxStake)) {
+    //         res = maxRelative.sub(stakeAmt)
+    //     } else {
+    //         res = absMaxStake.sub(stakeAmt)
+    //     }
+
+    //     return BN.max(res, new BN(0))
+    // }
+
+    // get maxDelegationText() {
+    //     return bnToBig(this.maxDelegationAmt, 9).toLocaleString(9)
+    // }
+
+    // get maxDelegationUsdText() {
+    //     let big = bnToBig(this.maxDelegationAmt, 9)
+    //     let res = big.times(this.avaxPrice)
+    //     return res.toLocaleString(2)
+    // }
+
+    // get avaxPrice(): Big {
+    //     return Big(this.$store.state.prices.usd)
+    // }
 
     // get estimatedReward(): Big {
     //     let start = new Date(this.startDate)
@@ -637,7 +642,7 @@ form {
 }
 .ins_col {
     max-width: 490px;
-    padding-bottom: 8vh;
+    // padding-bottom: 8vh;
 }
 .amt {
     width: 100%;
@@ -698,6 +703,7 @@ label {
 .summary {
     border-left: 2px solid var(--bg-light);
     padding-left: 30px;
+    height: 100%;
     > div {
         margin-bottom: 14px;
         p {
