@@ -456,8 +456,8 @@
                 "end": "End Date & Time"
             },
             "amount": {
-                "label": "Stake Amount",
-                "desc": "The amount of @.native:(0) to lock for staking."
+                "label": "Deposit Amount",
+                "desc": "Deposited amount is always 100.000 @.native:(0)."
             },
             "fee": {
                 "label": "Delegation Fee",
@@ -472,7 +472,7 @@
             "summary": {
                 "max_del": "Max Delegation Amount",
                 "max_del_tooltip": "Maximum amount that can be delegated to this validator.",
-                "duration": "Staking Duration",
+                "duration": "Duration",
                 "rewards": "Estimated Rewards",
                 "warn": "If it is your first time staking, start small. Staked tokens are locked until the end of the staking period."
             },
