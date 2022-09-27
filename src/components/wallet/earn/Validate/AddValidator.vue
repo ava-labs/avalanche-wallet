@@ -9,7 +9,7 @@
                             <input
                                 type="text"
                                 v-model="nodeId"
-                                style="width: 100%"
+                                style="width: 100%; border-radius: var(--border-radius-sm)"
                                 placeholder="NodeID-"
                             />
                         </div>
