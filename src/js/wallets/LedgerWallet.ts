@@ -9,7 +9,7 @@ import { Transaction } from '@ethereumjs/tx'
 
 import Transport from '@ledgerhq/hw-transport'
 import moment from 'moment'
-import { Buffer, BN } from 'avalanche'
+import { Buffer as BufferAvax, BN } from 'avalanche'
 import HDKey from 'hdkey'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 const bippath = require('bip32-path')
@@ -65,12 +65,14 @@ import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import {
+    avalanche,
     bnToBig,
     getAppEth,
     getLedgerProvider,
     idToChainAlias,
     LedgerProvider,
 } from '@avalabs/avalanche-wallet-sdk'
+import { getAccountPathAvalanche } from '../../../../avalanche-wallet-sdk-internal/dist/Wallet/helpers/derivationHelper'
 
 export const MIN_EVM_SUPPORT_V = '0.5.3'
 
@@ -111,6 +113,10 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         }
     }
 
+    getTransport() {
+        return this.ethApp.transport
+    }
+
     static async fromTransport(t: Transport) {
         const prov = await getLedgerProvider(t)
         const version = await prov.getVersion(t)
@@ -124,9 +130,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, false, true)
         const hdEth = new HDKey()
         // @ts-ignore
-        hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
+        hdEth.publicKey = BufferAvax.from(ethRes.publicKey, 'hex')
         // @ts-ignore
-        hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
+        hdEth.chainCode = BufferAvax.from(ethRes.chainCode, 'hex')
 
         return new LedgerWallet(prov, hd, version, hdEth, eth)
     }
@@ -328,7 +334,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const pathStr = paths[pathIndex]
 
                 const sigRaw = sigMap.get(pathStr)
-                const sigBuff = Buffer.from(sigRaw)
+                const sigBuff = BufferAvax.from(sigRaw)
                 const sig: Signature = new Signature()
                 sig.fromBuffer(sigBuff)
                 cred.addSignature(sig)
@@ -346,7 +352,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const pathStr = paths[pathIndex]
 
                 const sigRaw = sigMap.get(pathStr)
-                const sigBuff = Buffer.from(sigRaw)
+                const sigBuff = BufferAvax.from(sigRaw)
                 const sig: Signature = new Signature()
                 sig.fromBuffer(sigBuff)
                 cred.addSignature(sig)
@@ -364,7 +370,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const pathStr = paths[pathIndex]
 
                 const sigRaw = sigMap.get(pathStr)
-                const sigBuff = Buffer.from(sigRaw)
+                const sigBuff = BufferAvax.from(sigRaw)
                 const sig: Signature = new Signature()
                 sig.fromBuffer(sigBuff)
                 cred.addSignature(sig)
@@ -382,7 +388,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         SignedTx extends AVMTx | PlatformTx | EvmTx
     >(unsignedTx: UnsignedTx, paths: string[], chainId: ChainIdType): Promise<SignedTx> {
         const txbuff = unsignedTx.toBuffer()
-        const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
+        const msg: BufferAvax = BufferAvax.from(createHash('sha256').update(txbuff).digest())
 
         try {
             store.commit('Ledger/openModal', {
@@ -396,7 +402,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             // Sign the msg with ledger
             const accountPathSource = chainId === 'C' ? ETH_ACCOUNT_PATH : AVA_ACCOUNT_PATH
             const accountPath = bippath.fromString(`${accountPathSource}`)
-            const sigMap = await this.provider.signHash(this.et, accountPath, bip32Paths, msg)
+            const sigMap = await this.provider.signHash(
+                this.getTransport(),
+                Buffer.from(msg),
+                accountPath,
+                bip32Paths
+            )
             store.commit('Ledger/closeModal')
 
             const creds: Credential[] = this.getCredentials<UnsignedTx>(
@@ -458,11 +469,11 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 messages: messages,
                 info: null,
             })
-            this.app
-            const ledgerSignedTx = await this.app.signTransaction(
+            const ledgerSignedTx = await this.provider.signTx(
+                this.getTransport(),
+                Buffer.from(txbuff),
                 accountPath,
                 bip32Paths,
-                txbuff,
                 changePath
             )
 
@@ -958,7 +969,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     async issueBatchTx(
         orders: (ITransaction | AVMUTXO)[],
         addr: string,
-        memo: Buffer | undefined
+        memo: BufferAvax | undefined
     ): Promise<string> {
         return await WalletHelper.issueBatchTx(this, orders, addr, memo)
     }
@@ -995,7 +1006,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         )
     }
 
-    async signHashByExternalIndex(index: number, hash: Buffer) {
+    async signHashByExternalIndex(index: number, hash: BufferAvax) {
         const pathStr = `0/${index}`
         const addressPath = bippath.fromString(pathStr, false)
         const accountPath = bippath.fromString(`${AVA_ACCOUNT_PATH}`)
@@ -1006,10 +1017,16 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         })
 
         try {
-            const sigMap = await this.app.signHash(accountPath, [addressPath], hash)
+            const sigMap = await this.provider.signHash(
+                this.getTransport(),
+                Buffer.from(hash),
+                accountPath,
+                [addressPath]
+            )
             store.commit('Ledger/closeModal')
-            const signed = sigMap.get(pathStr)
-            return bintools.cb58Encode(signed)
+            const signed = sigMap.signatures.get(pathStr)
+            if (!signed) throw new Error('Unable to get signature fro the given path.')
+            return bintools.cb58Encode(BufferAvax.from(signed))
         } catch (e) {
             store.commit('Ledger/closeModal')
             throw e
@@ -1030,6 +1047,20 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     async estimateGas(to: string, amount: BN, token: Erc20Token): Promise<number> {
         return await WalletHelper.estimateGas(this, to, amount, token)
+    }
+
+    /**
+     * Verify X or P address
+     */
+    async verifyAddress(index: number, internal = false) {
+        const hrp = avalanche.getHRP()
+        const change = internal ? '1' : '0'
+        const path = `${AVA_ACCOUNT_PATH}/${change}/${index}`
+
+        return await this.provider.getAddress(this.getTransport(), bippath.fromString(path), {
+            show: true,
+            hrp: hrp,
+        })
     }
 
     async sendERC20(
