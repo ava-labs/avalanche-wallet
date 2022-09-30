@@ -12,7 +12,8 @@ import moment from 'moment'
 import { Buffer as BufferAvax, BN } from 'avalanche'
 import HDKey from 'hdkey'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
-const bippath = require('bip32-path')
+//@ts-ignore
+import bippath from 'bip32-path'
 import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
@@ -71,8 +72,9 @@ import {
     getLedgerProvider,
     idToChainAlias,
     LedgerProvider,
+    getTxOutputAddresses,
 } from '@avalabs/avalanche-wallet-sdk'
-import { getAccountPathAvalanche } from '../../../../avalanche-wallet-sdk-internal/dist/Wallet/helpers/derivationHelper'
+import { BIP32Interface } from 'bip32'
 
 export const MIN_EVM_SUPPORT_V = '0.5.3'
 
@@ -243,6 +245,35 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         })
 
         return bip32Paths
+    }
+
+    /**
+     * Given an array of addresses, get derivation paths of [change, index] for owned addresses
+     * @param addresses
+     */
+    getAddressPaths(addresses: string[]): bippath.Bip32Path[] {
+        const externalAddrs = this.externalHelper.getAllDerivedAddresses()
+        const internalAddrs = this.internalHelper.getAllDerivedAddresses()
+        const platformAddrs = this.platformHelper.getAllDerivedAddresses()
+
+        const paths: Set<string> = new Set()
+
+        addresses.forEach((address) => {
+            const extIndex = externalAddrs.indexOf(address)
+            const intIndex = internalAddrs.indexOf(address)
+            const platformIndex = platformAddrs.indexOf(address)
+
+            if (extIndex >= 0) {
+                paths.add(`0/${extIndex}`)
+            } else if (intIndex >= 0) {
+                paths.add(`1/${intIndex}`)
+            } else if (platformIndex >= 0) {
+                paths.add(`0/${platformIndex}`)
+            } else if (address[0] === 'C') {
+                paths.add('0/0')
+            }
+        })
+        return [...paths].map((path) => bippath.fromString(path))
     }
 
     getChangeBipPath<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
@@ -460,8 +491,23 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 ? bippath.fromString(`${ETH_ACCOUNT_PATH}`)
                 : bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         const txbuff = unsignedTx.toBuffer()
-        const changePath = this.getChangeBipPath(unsignedTx, chainId)
-        const messages = this.getTransactionMessages<UnsignedTx>(unsignedTx, chainId, changePath)
+
+        // const changePath = this.getChangeBipPath(unsignedTx, chainId)
+        debugger
+        // unsignedTx.getTransaction().
+        const outputAddrs = getTxOutputAddresses<UnsignedTx>(unsignedTx)
+
+        console.log(outputAddrs)
+        // Get their paths, for owned ones
+        const changePaths = this.getAddressPaths(outputAddrs)
+
+        console.log('change paths: ', changePaths)
+
+        const messages = this.getTransactionMessages<UnsignedTx>(
+            unsignedTx,
+            chainId,
+            changePaths[0]
+        )
 
         try {
             store.commit('Ledger/openModal', {
@@ -474,7 +520,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 Buffer.from(txbuff),
                 accountPath,
                 bip32Paths,
-                changePath
+                changePaths
             )
 
             const sigMap = ledgerSignedTx.signatures
@@ -504,7 +550,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getOutputMsgs<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         chainId: ChainIdType,
-        changePath: null | { toPathArray: () => number[] }
+        changePath: null | bippath.Bip32Path
     ): ILedgerBlockMessage[] {
         const messages: ILedgerBlockMessage[] = []
         const hrp = getPreferredHRP(ava.getNetworkID())
@@ -652,7 +698,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getTransactionMessages<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         chainId: ChainIdType,
-        changePath: null | { toPathArray: () => number[] }
+        changePath: null | bippath.Bip32Path
     ): ILedgerBlockMessage[] {
         const messages: ILedgerBlockMessage[] = []
 
@@ -1056,6 +1102,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const hrp = avalanche.getHRP()
         const change = internal ? '1' : '0'
         const path = `${AVA_ACCOUNT_PATH}/${change}/${index}`
+
+        console.log('verify path: ', path)
 
         return await this.provider.getAddress(this.getTransport(), bippath.fromString(path), {
             show: true,
