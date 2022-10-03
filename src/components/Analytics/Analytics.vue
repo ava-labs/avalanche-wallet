@@ -2,20 +2,23 @@
     <div class="analytics" v-show="showConsentModal">
         <div class="analytics_item">
             <p class="analytics_msg">
-                We use cookies to develop improvements and enhance your experience. To find out
-                more, read our
+                {{ $t('analytics.cookie_desc') }}
                 <a
                     href="https://www.avalabs.org/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Privacy Policy
+                    {{ $t('analytics.privacy_policy') }}
                 </a>
                 .
             </p>
             <div class="analytics_actions">
-                <button class="button_form_cancel" @click="onReject">Reject</button>
-                <button class="button_primary" @click="onAccept">Accept</button>
+                <button class="button_form_cancel" @click="onReject">
+                    {{ $t('analytics.reject') }}
+                </button>
+                <button class="button_primary" @click="onAccept">
+                    {{ $t('analytics.accept') }}
+                </button>
             </div>
         </div>
     </div>
