@@ -8,6 +8,12 @@ const POSTHOG_PROD_HOST_URL = 'https://data-posthog.avax.network'
 export default {
     install(Vue, options) {
         Vue.prototype.$posthog = posthog.init(POSTHOG_DEV_APP_ID, {
+            loaded: (ph) => {
+                if (!localStorage.getItem('consentsToAnalytics')) {
+                    // opting out if no consent
+                    ph.opt_out_capturing()
+                }
+            },
             api_host: POSTHOG_DEV_HOST_URL,
             // By default users are opted in (and we show the cookie banner)
             opt_out_capturing_by_default: false,
