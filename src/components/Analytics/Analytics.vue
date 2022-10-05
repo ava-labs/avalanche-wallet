@@ -13,7 +13,7 @@
                 .
             </p>
             <div class="analytics_actions">
-                <button class="button_form_cancel" @click="onReject">
+                <button class="button_form_cancel" @click="onReject" data-cy="reject_analytics">
                     {{ $t('analytics.reject') }}
                 </button>
                 <button class="button_primary" @click="onAccept">
