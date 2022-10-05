@@ -32,45 +32,45 @@ export function getStakeOutAddresses(tx: AVMBaseTx | PlatformBaseTx | EVMBaseTx)
     return []
 }
 
-export function getOutputAddresses(tx: AVMBaseTx | PlatformBaseTx) {
-    const chainID = tx instanceof AVMBaseTx ? 'X' : 'P'
-    const outAddrs = tx
-        .getOuts()
-        .map((out: TransferableOutput) =>
-            out
-                .getOutput()
-                .getAddresses()
-                .map((addr) => {
-                    return bintools.addressToString(avalanche.getHRP(), chainID, addr)
-                })
-        )
-        .flat()
-    return [...new Set(outAddrs)]
-}
-
-/**
- * Returns every output address for the given transaction.
- * @param unsignedTx
- */
-export function getTxOutputAddresses<
-    UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx
->(unsignedTx: UnsignedTx) {
-    if (unsignedTx instanceof EVMUnsignedTx) {
-        return []
-    }
-
-    // console.log(unsignedTx.serialize('display'));
-
-    const tx = unsignedTx.getTransaction()
-    if (unsignedTx instanceof AVMUnsignedTx) {
-        const outAddrs = getOutputAddresses(tx)
-        return outAddrs
-    } else if (unsignedTx instanceof PlatformUnsignedTx) {
-        const stakeAddrs = getStakeOutAddresses(tx)
-        const outAddrs = getOutputAddresses(tx)
-
-        return [...new Set([...stakeAddrs, ...outAddrs])]
-    }
-
-    return []
-}
+// export function getOutputAddresses(tx: AVMBaseTx | PlatformBaseTx) {
+//     const chainID = tx instanceof AVMBaseTx ? 'X' : 'P'
+//     const outAddrs = tx
+//         .getOuts()
+//         .map((out: TransferableOutput) =>
+//             out
+//                 .getOutput()
+//                 .getAddresses()
+//                 .map((addr) => {
+//                     return bintools.addressToString(avalanche.getHRP(), chainID, addr)
+//                 })
+//         )
+//         .flat()
+//     return [...new Set(outAddrs)]
+// }
+//
+// /**
+//  * Returns every output address for the given transaction.
+//  * @param unsignedTx
+//  */
+// export function getTxOutputAddresses<
+//     UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx
+// >(unsignedTx: UnsignedTx) {
+//     if (unsignedTx instanceof EVMUnsignedTx) {
+//         return []
+//     }
+//
+//     // console.log(unsignedTx.serialize('display'));
+//
+//     const tx = unsignedTx.getTransaction()
+//     if (tx instanceof AVMBaseTx) {
+//         const outAddrs = getOutputAddresses(tx)
+//         return outAddrs
+//     } else if (tx instanceof PlatformBaseTx) {
+//         const stakeAddrs = getStakeOutAddresses(tx)
+//         const outAddrs = getOutputAddresses(tx)
+//
+//         return [...new Set([...stakeAddrs, ...outAddrs])]
+//     }
+//
+//     return []
+// }
