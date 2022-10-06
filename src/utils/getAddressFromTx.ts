@@ -60,8 +60,6 @@ export function getTxOutputAddresses<
         return []
     }
 
-    // console.log(unsignedTx.serialize('display'));
-
     const tx = unsignedTx.getTransaction()
     if (tx instanceof AVMBaseTx) {
         const outAddrs = getOutputAddresses(tx)

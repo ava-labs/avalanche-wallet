@@ -46,7 +46,6 @@ import { MIN_LEDGER_V } from '@/js/wallets/constants'
 })
 export default class LedgerButton extends Vue {
     isLoading: boolean = false
-    // config?: ILedgerAppConfig = undefined
     version?: string = undefined
     destroyed() {
         this.$store.commit('Ledger/closeModal')
@@ -112,7 +111,6 @@ export default class LedgerButton extends Vue {
                 messages,
             })
 
-            // let wallet = await LedgerWallet.fromApp(app, eth, this.version)
             let wallet = await LedgerWallet.fromTransport(transport)
             try {
                 await this.loadWallet(wallet)

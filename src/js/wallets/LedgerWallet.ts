@@ -782,6 +782,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             Buffer.from([]),
         ])
 
+        console.log(tx)
         try {
             const msgs = this.getEvmTransactionMessages(tx)
 
