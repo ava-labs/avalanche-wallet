@@ -18,7 +18,7 @@ import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
 
-import { UTXO as AVMUTXO, UTXO, UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
+import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore } from '@/js/wallets/types'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
@@ -56,7 +56,6 @@ import {
 import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
-import { ILedgerAppConfig } from '@/store/types'
 import { WalletNameType } from '@/js/wallets/types'
 import { abiDecoder, web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './MnemonicWallet'
@@ -68,25 +67,18 @@ import { WalletHelper } from '@/helpers/wallet_helper'
 import {
     avalanche,
     bnToBig,
-    getAppEth,
     getLedgerProvider,
-    idToChainAlias,
     LedgerProvider,
-    getTxOutputAddresses,
 } from '@avalabs/avalanche-wallet-sdk'
-import { BIP32Interface } from 'bip32'
-
-export const MIN_EVM_SUPPORT_V = '0.5.3'
+import { getTxOutputAddresses } from '@/utils/getAddressFromTx'
 
 class LedgerWallet extends HdWalletCore implements AvaWalletCore {
-    // app: AppAvax
     provider: LedgerProvider
     ethApp: Eth
     type: WalletNameType
 
     ethAddress: string
     ethBalance: BN
-    // config: ILedgerAppConfig
     version: string
     ethHdNode: HDKey
 
@@ -138,24 +130,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         return new LedgerWallet(prov, hd, version, hdEth, eth)
     }
-
-    // static async fromApp(app: AppAvax, eth: Eth, version: string) {
-    //     const res = await app.getWalletExtendedPublicKey(AVA_ACCOUNT_PATH)
-    //
-    //     const prov = await getLedgerProvider(eth.transport)
-    //     const hd = new HDKey()
-    //     hd.publicKey = res.public_key
-    //     hd.chainCode = res.chain_code
-    //
-    //     const ethRes = await eth.getAddress(LEDGER_ETH_ACCOUNT_PATH, true, true)
-    //     const hdEth = new HDKey()
-    //     // @ts-ignore
-    //     hdEth.publicKey = Buffer.from(ethRes.publicKey, 'hex')
-    //     // @ts-ignore
-    //     hdEth.chainCode = Buffer.from(ethRes.chainCode, 'hex')
-    //
-    //     return new LedgerWallet(app, hd, version, hdEth, eth)
-    // }
 
     // Returns an array of derivation paths that need to sign this transaction
     // Used with signTransactionHash and signTransactionParsable
@@ -492,12 +466,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 : bippath.fromString(`${AVA_ACCOUNT_PATH}`)
         const txbuff = unsignedTx.toBuffer()
 
-        // const changePath = this.getChangeBipPath(unsignedTx, chainId)
-        debugger
-        // unsignedTx.getTransaction().
         const outputAddrs = getTxOutputAddresses<UnsignedTx>(unsignedTx)
 
-        console.log(outputAddrs)
         // Get their paths, for owned ones
         const changePaths = this.getAddressPaths(outputAddrs)
 
@@ -752,95 +722,29 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx> {
-        const tx = unsignedTx.getTransaction()
-        const txType = tx.getTxType()
         const chainId: ChainIdType = 'X'
+        const { paths } = this.getTransactionPaths<AVMUnsignedTx>(unsignedTx, chainId)
 
-        const parseableTxs = ParseableAvmTxEnum
-        const { paths, isAvaxOnly } = this.getTransactionPaths<AVMUnsignedTx>(unsignedTx, chainId)
-
-        // If ledger doesnt support parsing, sign hash
-        const canLedgerParse = this.version >= '0.3.1'
-        const isParsableType = txType in parseableTxs && isAvaxOnly
-
-        let signedTx
-        if (canLedgerParse && isParsableType) {
-            signedTx = await this.signTransactionParsable<AVMUnsignedTx, AVMTx>(
-                unsignedTx,
-                paths,
-                chainId
-            )
-        } else {
-            signedTx = await this.signTransactionHash<AVMUnsignedTx, AVMTx>(
-                unsignedTx,
-                paths,
-                chainId
-            )
-        }
+        const signedTx = await this.signTransactionParsable<AVMUnsignedTx, AVMTx>(
+            unsignedTx,
+            paths,
+            chainId
+        )
 
         store.commit('Ledger/closeModal')
         return signedTx
     }
 
     async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx> {
-        const tx = unsignedTx.getTransaction()
-        const txType = tx.getTxType()
         const chainId: ChainIdType = 'P'
-        const parseableTxs = ParseablePlatformEnum
 
-        const { paths, isAvaxOnly } = this.getTransactionPaths<PlatformUnsignedTx>(
+        const { paths } = this.getTransactionPaths<PlatformUnsignedTx>(unsignedTx, chainId)
+
+        const signedTx = await this.signTransactionParsable<PlatformUnsignedTx, PlatformTx>(
             unsignedTx,
+            paths,
             chainId
         )
-        // If ledger doesnt support parsing, sign hash
-        let canLedgerParse = this.version >= '0.3.1'
-        const isParsableType = txType in parseableTxs && isAvaxOnly
-
-        // TODO: Remove after ledger is fixed
-        // If UTXOS contain lockedStakeable funds always use sign hash
-        const txIns = unsignedTx.getTransaction().getIns()
-        for (let i = 0; i < txIns.length; i++) {
-            const typeID = txIns[i].getInput().getTypeID()
-            if (typeID === PlatformVMConstants.STAKEABLELOCKINID) {
-                canLedgerParse = false
-                break
-            }
-        }
-
-        // TODO: Remove after ledger update
-        // Ledger is not able to parse P/C atomic transactions
-        if (txType === PlatformVMConstants.EXPORTTX) {
-            const destChainBuff = (tx as PlatformExportTx).getDestinationChain()
-            // If destination chain is C chain, sign hash
-            const destChain = idToChainAlias(bintools.cb58Encode(destChainBuff))
-            if (destChain === 'C') {
-                canLedgerParse = false
-            }
-        }
-        // TODO: Remove after ledger update
-        if (txType === PlatformVMConstants.IMPORTTX) {
-            const sourceChainBuff = (tx as PlatformImportTx).getSourceChain()
-            // If destination chain is C chain, sign hash
-            const sourceChain = idToChainAlias(bintools.cb58Encode(sourceChainBuff))
-            if (sourceChain === 'C') {
-                canLedgerParse = false
-            }
-        }
-
-        let signedTx
-        if (canLedgerParse && isParsableType) {
-            signedTx = await this.signTransactionParsable<PlatformUnsignedTx, PlatformTx>(
-                unsignedTx,
-                paths,
-                chainId
-            )
-        } else {
-            signedTx = await this.signTransactionHash<PlatformUnsignedTx, PlatformTx>(
-                unsignedTx,
-                paths,
-                chainId
-            )
-        }
         store.commit('Ledger/closeModal')
         return signedTx
     }
@@ -851,8 +755,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const tx = unsignedTx.getTransaction()
         const typeId = tx.getTxType()
 
-        let canLedgerParse = true
-
         let paths = ['0/0']
         if (typeId === EVMConstants.EXPORTTX) {
             const ins = (tx as EVMExportTx).getInputs()
@@ -862,32 +764,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             paths = ins.map((input) => '0/0')
         }
 
-        // TODO: Remove after ledger update
-        // Ledger is not able to parse P/C atomic transactions
-        if (typeId === EVMConstants.EXPORTTX) {
-            const destChainBuff = (tx as EVMExportTx).getDestinationChain()
-            // If destination chain is C chain, sign hash
-            const destChain = idToChainAlias(bintools.cb58Encode(destChainBuff))
-            if (destChain === 'P') {
-                canLedgerParse = false
-            }
-        }
-        // TODO: Remove after ledger update
-        if (typeId === EVMConstants.IMPORTTX) {
-            const sourceChainBuff = (tx as EVMImportTx).getSourceChain()
-            // If destination chain is C chain, sign hash
-            const sourceChain = idToChainAlias(bintools.cb58Encode(sourceChainBuff))
-            if (sourceChain === 'P') {
-                canLedgerParse = false
-            }
-        }
-
-        let txSigned
-        if (canLedgerParse) {
-            txSigned = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
-        } else {
-            txSigned = (await this.signTransactionHash(unsignedTx, paths, 'C')) as EvmTx
-        }
+        const txSigned = (await this.signTransactionParsable(unsignedTx, paths, 'C')) as EvmTx
         store.commit('Ledger/closeModal')
         return txSigned
     }

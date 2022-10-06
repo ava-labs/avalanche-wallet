@@ -29,12 +29,13 @@ import Transport from '@ledgerhq/hw-transport'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock.vue'
-import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
+import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
 import { ILedgerAppConfig } from '@/store/types'
 import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
 import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 import { getLedgerProvider } from '@avalabs/avalanche-wallet-sdk'
+import { MIN_LEDGER_V } from '@/js/wallets/constants'
 
 @Component({
     components: {
@@ -88,10 +89,10 @@ export default class LedgerButton extends Vue {
                 throw new Error('')
             }
 
-            if (this.version < MIN_EVM_SUPPORT_V) {
+            if (this.version < MIN_LEDGER_V) {
                 this.$store.commit('Ledger/setIsUpgradeRequired', true)
                 this.isLoading = false
-                return
+                throw new Error('')
             }
 
             let title = 'Provide Public Keys'
