@@ -24,7 +24,7 @@ import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 import Eth from '@ledgerhq/hw-app-eth'
 // @ts-ignore
 import AppAvax from '@obsidiansystems/hw-app-avalanche'
-import AvalancheApp from '@zondax/ledger-avalanche-app'
+import AvalancheApp from '@avalabs/hw-app-avalanche'
 import Transport from '@ledgerhq/hw-transport'
 
 import Spinner from '@/components/misc/Spinner.vue'
@@ -74,11 +74,6 @@ export default class LedgerButton extends Vue {
         try {
             let transport = await this.getTransport()
             transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
-
-            // let app = new AppAvax(transport, 'w0w')
-            // let app2 = new AvalancheApp(transport)
-
-            let eth = new Eth(transport, 'w0w')
 
             // Wait for app config
             await this.waitForConfig(transport)
@@ -130,7 +125,6 @@ export default class LedgerButton extends Vue {
     }
 
     async waitForConfig(t: Transport) {
-        const prov = await getLedgerProvider(t)
         // Config is found immediately if the device is connected and the app is open.
         // If no config was found that means user has not opened the Avalanche app.
         setTimeout(() => {
@@ -139,6 +133,7 @@ export default class LedgerButton extends Vue {
         }, 1000)
 
         try {
+            const prov = await getLedgerProvider(t)
             this.version = await prov.getVersion(t)
         } catch (e) {
             // this.version = await (app as AvalancheApp).
