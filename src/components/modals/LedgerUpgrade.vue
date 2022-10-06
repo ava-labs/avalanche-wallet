@@ -6,7 +6,7 @@
                 <li>Enter your PIN and access your device.</li>
                 <li>
                     Ensure you have installed the
-                    <b>Avalanche App v0.5.3</b>
+                    <b>Avalanche App v0.5.9</b>
                     and open it on your device.
                 </li>
             </ol>
@@ -16,11 +16,11 @@
                     <a href="https://www.ledger.com/ledger-live/download" target="_blank">
                         Ledger Live
                     </a>
-                    app manager. The minimum version required to use the app is version 0.5.3, more
+                    app manager. The minimum version required to use the app is version 0.5.9, more
                     instructions can be found
                     <a
                         target="_blank"
-                        href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
+                        href="https://support.avax.network/en/articles/6150237-how-to-use-a-ledger-nano-s-or-nano-x-with-avalanche"
                     >
                         here
                     </a>
