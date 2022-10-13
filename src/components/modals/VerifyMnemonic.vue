@@ -1,9 +1,6 @@
 <template>
     <modal ref="modal" :title="title" class="modal_parent" icy>
         <div class="mnemonic_body">
-            <button @click="close" class="close_but">
-                <fa icon="times"></fa>
-            </button>
             <h3>{{ $t('create.verify_desc') }}</h3>
             <div class="words">
                 <div v-for="i in 24" :key="i" class="mnemonic_in" tabindex="-1">

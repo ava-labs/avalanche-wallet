@@ -80,10 +80,13 @@ export default class Modal extends Vue {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     overflow: auto;
     display: flex;
-    overflow-y: hidden;
+    background-color: rgba(0, 0, 0, 0.6);
+    &[icy] {
+        backdrop-filter: blur(4px);
+    }
 }
 
 .modal_bg {
@@ -97,6 +100,7 @@ export default class Modal extends Vue {
     vertical-align: center;
     align-items: center;
 
+    background-color: rgba(0, 0, 0, 0.6);
     &[icy] {
         backdrop-filter: blur(4px);
     }
@@ -111,18 +115,15 @@ export default class Modal extends Vue {
     margin: auto;
     z-index: 2;
     position: absolute;
-    inset: 50% auto auto 50%;
+    top: max(50%, 300px);
+    left: 50%;
     transform: translate(-50%, -50%);
     border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    max-height: 90%;
 }
 
 @include main.mobile-device {
     .modal_body {
-        position: absolute;
         width: max-content;
-        margin: 0;
         padding-bottom: 20px;
         max-width: 100%;
         border-radius: var(--border-radius-lg);
