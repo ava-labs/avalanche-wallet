@@ -79,10 +79,10 @@ export default {
             {
                 vmid: 'og:title',
                 name: 'og:title',
-                content: 'Secure Camino Wallet',
+                content: 'Camino Wallet',
             },
         ],
-        title: 'Secure Camino Wallet',
+        title: 'Camino Wallet',
     },
 }
 </script>
