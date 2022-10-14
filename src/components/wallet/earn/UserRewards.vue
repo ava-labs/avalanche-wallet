@@ -60,7 +60,7 @@ export default class UserRewards extends Vue {
         let delegators: DelegatorRaw[] = []
         let validators: ValidatorRaw[] = this.$store.state.Platform.validators
 
-        for (var i = 0; i < validators.length; i++) {
+        for (var i = 0; i < validators?.length; i++) {
             let v = validators[i]
             if (v.delegators === null) continue
             delegators.push(...v.delegators)
@@ -70,11 +70,11 @@ export default class UserRewards extends Vue {
     }
 
     get totLength() {
-        return this.validators.length + this.delegators.length
+        return this.validators?.length + this.delegators.length
     }
 
     get totalReward() {
-        let vals = this.validators.reduce((acc, val: ValidatorRaw) => {
+        let vals = this.validators?.reduce((acc, val: ValidatorRaw) => {
             return acc.add(new BN(val.potentialReward))
         }, new BN(0))
 
@@ -94,7 +94,7 @@ export default class UserRewards extends Vue {
     }
 
     cleanList(list: ValidatorRaw[] | DelegatorRaw[]) {
-        let res = list.filter((val) => {
+        let res = list?.filter((val) => {
             let rewardAddrs = val.rewardOwner.addresses
             let filtered = rewardAddrs.filter((addr) => {
                 return this.userAddresses.includes(addr)
@@ -102,7 +102,7 @@ export default class UserRewards extends Vue {
             return filtered.length > 0
         })
 
-        res.sort((a, b) => {
+        res?.sort((a, b) => {
             let startA = parseInt(a.startTime)
             let startB = parseInt(b.startTime)
             return startA - startB

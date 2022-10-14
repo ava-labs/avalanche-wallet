@@ -1,16 +1,21 @@
 <template>
     <div class="earn_page">
         <div class="header">
-            <h1>{{ $t('earn.title') }}</h1>
-            <h1 class="subtitle" v-if="pageNow">
-                / {{ subtitle }}
-                <span @click="cancel"><fa icon="times"></fa></span>
+            <!-- <h1>{{ $t('earn.title') }}</h1> -->
+            <!-- <h1>Validator</h1> -->
+            <h1>
+                {{ subtitle }}
             </h1>
         </div>
         <transition name="fade" mode="out-in">
             <div>
-                <p>{{ $t('earn.desc') }}</p>
-                <UserRewards />
+                <p v-if="!canValidate" class="no_balance">
+                    {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
+                </p>
+                <template v-else>
+                    <add-validator></add-validator>
+                </template>
+                <!-- <component :is="pageNow" class="comp" @cancel="cancel"></component> -->
             </div>
         </transition>
     </div>
@@ -19,37 +24,30 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
+import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import { BN } from '@c4tplatform/camino/dist'
-import UserRewards from '@/components/wallet/earn/UserRewards.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 
 @Component({
-    name: 'earn',
+    name: 'validator',
     components: {
-        UserRewards,
+        AddValidator,
     },
 })
-export default class Earn extends Vue {
-    pageNow: any = null
-    subtitle: string = ''
+export default class Validator extends Vue {
+    subtitle: string = this.$t('earn.subtitle1') as string
     intervalID: any = null
 
-    transfer() {
-        this.$router.replace('/wallet/cross_chain')
+    updateValidators() {
+        this.$store.dispatch('Platform/update')
     }
 
-    viewRewards() {
-        this.pageNow = UserRewards
-        this.subtitle = this.$t('earn.subtitle4') as string
-    }
-    cancel() {
-        this.pageNow = null
-        this.subtitle = ''
-    }
-
-    deactivated() {
-        this.cancel()
+    created() {
+        this.updateValidators()
+        this.intervalID = setInterval(() => {
+            this.updateValidators()
+        }, 15000)
     }
 
     destroyed() {
@@ -73,14 +71,39 @@ export default class Earn extends Vue {
         return this.platformUnlocked.add(this.platformLockedStakeable).isZero()
     }
 
+    get canDelegate(): boolean {
+        let bn = this.$store.state.Platform.minStakeDelegation
+        if (this.totBal.lt(bn)) {
+            return false
+        }
+        return true
+    }
+
+    get canValidate(): boolean {
+        let bn = this.$store.state.Platform.minStake
+        if (this.totBal.lt(bn)) {
+            return false
+        }
+        return true
+    }
+
     get minStakeAmt(): Big {
         let bn = this.$store.state.Platform.minStake
+        return bnToBig(bn, 9)
+    }
+
+    get minDelegationAmt(): Big {
+        let bn = this.$store.state.Platform.minStakeDelegation
         return bnToBig(bn, 9)
     }
 }
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+/* body {
+    height: auto;
+    overflow: auto !important;
+} */
 .earn_page {
     display: grid;
     grid-template-rows: max-content 1fr;
@@ -113,7 +136,7 @@ export default class Earn extends Vue {
 .options {
     margin: 30px 0;
     display: grid;
-    // grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 14px;
     //display: flex;
     //justify-content: space-evenly;
@@ -130,13 +153,12 @@ export default class Earn extends Vue {
         padding: 30px;
         border-radius: var(--border-radius-sm);
         background-color: var(--bg-light);
-        min-height: 250px;
     }
 
     h4 {
         font-size: 32px !important;
         font-weight: lighter;
-        // color: var(--primary-color-light);
+        color: var(--primary-color-light);
     }
 
     p {
@@ -168,6 +190,12 @@ span {
 
 .comp {
     margin-top: 14px;
+}
+
+@include main.medium-device {
+    .options {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 @include main.mobile-device {

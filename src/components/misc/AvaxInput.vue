@@ -10,6 +10,7 @@
                 :max="max"
                 placeholder="0.00"
                 @change="amount_in"
+                :readonly="readonly"
             ></BigNumInput>
         </div>
         <p class="ticker">{{ nativeAssetSymbol }}</p>
@@ -52,6 +53,7 @@ export default class AvaxInput extends Vue {
 
     @Prop() balance?: Big | null
     @Prop() alias?: string
+    @Prop() readonly?: boolean
 
     maxOut(ev: MouseEvent) {
         ev.preventDefault()

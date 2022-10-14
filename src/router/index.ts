@@ -13,6 +13,7 @@ import Create from '@/views/Create.vue'
 import Wallet from '@/views/Wallet.vue'
 import WalletHome from '@/views/wallet/Portfolio.vue'
 import Earn from '@/views/wallet/Earn.vue'
+import Validator from '@/views/wallet/Validator.vue'
 import Advanced from '@/views/wallet/Advanced.vue'
 import Activity from '@/views/wallet/Activity.vue'
 import Account from '@/views/access/Account.vue' // your vuex store
@@ -126,6 +127,10 @@ const routes = [
             {
                 path: 'launch',
                 component: Launch,
+            },
+            {
+                path: 'validator',
+                component: Validator,
             },
         ],
         component: Wallet,
