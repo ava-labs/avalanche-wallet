@@ -1,6 +1,9 @@
 <template>
     <modal ref="modal" :title="title" class="modal_parent" icy>
-        <div class="mnemonic_body">
+        <form class="mnemonic_body" v-on:submit.prevent="verify">
+            <!-- <button @click="close" class="close_but">
+                <fa icon="times"></fa>
+            </button> -->
             <h3>{{ $t('create.verify_desc') }}</h3>
             <div class="words">
                 <div v-for="i in 24" :key="i" class="mnemonic_in" tabindex="-1">
@@ -14,7 +17,7 @@
             </div>
             <p class="err">{{ err }}</p>
             <button class="but_primary ava_button button_primary" @click="verify">Verify</button>
-        </div>
+        </form>
     </modal>
 </template>
 
@@ -77,6 +80,7 @@ export default class VerifyMnemonic extends Vue {
     }
 
     open() {
+        this.isActive = true
         // @ts-ignore
         this.$refs.modal.open()
     }
