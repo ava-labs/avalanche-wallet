@@ -2,14 +2,16 @@
     <transition name="fade">
         <div class="modal_main" v-if="isActive" :icy="icy">
             <div class="modal_bg" @click="bgclick" :icy="icy"></div>
-            <div class="modal_body">
-                <div class="modal_topbar">
-                    <h4 class="modal_title">{{ title }}</h4>
-                    <button class="modalClose" @click="close" v-if="can_close">
-                        <fa icon="times"></fa>
-                    </button>
+            <div class="modal_container">
+                <div class="modal_body">
+                    <div class="modal_topbar">
+                        <h4 class="modal_title">{{ title }}</h4>
+                        <button class="modalClose" @click="close" v-if="can_close">
+                            <fa icon="times"></fa>
+                        </button>
+                    </div>
+                    <slot></slot>
                 </div>
-                <slot></slot>
             </div>
         </div>
     </transition>
@@ -89,6 +91,12 @@ export default class Modal extends Vue {
     }
 }
 
+.modal_container {
+    width: 100%;
+    height: 100%;
+    margin-top: max(50px, 2vh);
+    position: relative;
+}
 .modal_bg {
     position: absolute;
     top: 0;
