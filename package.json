@@ -10,7 +10,6 @@
         "cypress": "cypress run",
         "format": "prettier '**/*.{js,ts,vue}' --write",
         "lint": "vue-cli-service lint",
-        "release": "release-it",
         "serve": "vue-cli-service serve",
         "start": "node server/index.js",
         "test_watch": "jest --verbose --watch ./tests",
