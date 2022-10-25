@@ -1,11 +1,17 @@
 <template>
-    <div class="mnemonic_auth">
+    <div class="mnemonic_auth notranslate" translate="no">
         <div class="left">
             <header>
                 <h1>{{ $t('access.mnemonic.title') }}</h1>
             </header>
             <p>Your mnemonic phrase is 24 words seperated by an empty space.</p>
-            <input type="password" ref="mnemonic_in" placeholder="Type your mnemonic phrase" />
+            <input
+                type="password"
+                ref="mnemonic_in"
+                placeholder="Type your mnemonic phrase"
+                autocomplete="off"
+                autocapitalize="off"
+            />
             <div class="button_container">
                 <p class="err" v-if="err">{{ err }}</p>
                 <v-btn

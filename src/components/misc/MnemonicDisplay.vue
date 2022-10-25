@@ -1,13 +1,21 @@
 <template>
-    <div class="mnemonic_display" :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }">
+    <div
+        class="mnemonic_display notranslate"
+        :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }"
+        translate="no"
+    >
         <template v-for="(word, i) in phraseArray" class="word">
             <div v-if="i % 2 == 0" :key="i" class="word">
                 <p class="index">{{ i / 2 + 1 }}.</p>
-                <span class="phrase_word">{{ word }}</span>
+                <span class="phrase_word" translate="no">
+                    {{ word }}
+                </span>
             </div>
             <div v-else class="fake" :key="i">
                 <p class="index">{{ i }}.</p>
-                <span class="phrase_word">{{ word }}</span>
+                <span class="phrase_word" translate="no">
+                    {{ word }}
+                </span>
             </div>
         </template>
     </div>
