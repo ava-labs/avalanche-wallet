@@ -38,6 +38,7 @@ export default {
             // @ts-ignore
             this.$posthog.opt_in_capturing()
             this.showConsentModal = false
+
             return
         },
         onReject() {
@@ -45,6 +46,7 @@ export default {
             // @ts-ignore
             this.$posthog.opt_out_capturing()
             this.showConsentModal = false
+
             return
         },
     },
@@ -55,38 +57,47 @@ export default {
     position: fixed;
     display: flex;
     flex-direction: column;
-    top: 0;
+    bottom: 0;
     right: 0;
+    left: 0;
     padding: 30px 3vw;
     z-index: 9;
 }
+
 .analytics_actions {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding: 6px 14px;
 }
+
 .analytics_item {
     border-radius: 6px;
-    margin-top: 8px;
+    margin: auto;
+    margin-bottom: 8px;
     overflow: hidden;
     box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.4);
     background-color: var(--bg);
     max-width: 295px;
     font-size: 13px !important;
 }
+
 .button_form_cancel {
     margin-right: 16px !important;
 }
+
 .button_primary {
     padding: 4px 8px;
 }
+
 .analytics_msg {
     padding: 6px 14px;
 }
+
 p {
     margin: 0 !important;
 }
+
 @media only screen and (max-width: 600px) {
     .analytics {
         height: min-content;
@@ -94,6 +105,7 @@ p {
         left: 0;
         top: 0;
     }
+
     .analytics_item {
         max-width: unset;
         width: 100%;
