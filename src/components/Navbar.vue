@@ -154,6 +154,7 @@ button {
     right: 0;
     padding: 8px;
     padding-bottom: 10px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.4);
     min-width: 280px;
     border: 1px solid var(--bg-light);
     background: var(--bg);
