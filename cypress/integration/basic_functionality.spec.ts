@@ -5,6 +5,8 @@ const NETWORK_SWITCHER_BUTTON = '[data-cy="network-switcher"]'
 describe('Basic Functionality', () => {
     before(() => {
         cy.visit('/')
+        // Reject the analytics tracking
+        cy.get('[data-cy="reject_analytics"]').click()
         // Disable banner
         cy.get('[data-cy="dismiss_banner"]').click()
     })
