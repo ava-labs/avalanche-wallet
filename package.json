@@ -3,7 +3,7 @@
     "private": true,
     "version": "0.1.4",
     "engines": {
-        "node": "15.x"
+        "node": "15.x" 
     },
     "scripts": {
         "build": "vue-cli-service build",
@@ -75,6 +75,7 @@
         "luxon": "1.25.0",
         "moment": "2.29.4",
         "morgan": "1.9.1",
+        "posthog-js": "1.32.2",
         "print-js": "1.0.63",
         "punycode": "2.1.1",
         "qr-scanner": "1.1.1",
@@ -128,7 +129,6 @@
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-prettier-vue": "2.1.1",
         "eslint-plugin-vue": "^5.0.0",
-        "fibers": "^4.0.2",
         "jest": "^26.1.0",
         "jest-environment-jsdom": "25",
         "node-sass": "^6.0.0",

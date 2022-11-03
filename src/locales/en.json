@@ -4,6 +4,12 @@
     "private_key": "Private Key",
     "address": "Address",
     "add_pk": "Add Private Key",
+    "analytics": {
+        "accept": "Accept",
+        "reject": "Reject",
+        "privacy_policy": "Privacy Policy",
+        "cookie_desc": "We use cookies to develop improvements and enhance your experience. To find out more, read our"
+    },
     "home": {
         "desc": "Avalanche Wallet is a simple, secure, non-custodial wallet for storing Avalanche assets.",
         "access": {

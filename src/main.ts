@@ -9,17 +9,21 @@ import { Datetime } from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
 
 import { BootstrapVue } from 'bootstrap-vue'
+import vuetify from './plugins/vuetify'
+// @ts-ignore
+import i18n from './plugins/i18n.js'
+// @ts-ignore
+import posthogPlugin from './plugins/posthog.js'
+
+// Install Posthog
+Vue.use(posthogPlugin)
+
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 
 Vue.use(VueMeta)
 
 Vue.component('datetime', Datetime)
-
-import vuetify from './plugins/vuetify'
-
-// @ts-ignore
-import i18n from './plugins/i18n.js'
 
 Vue.config.productionTip = false
 

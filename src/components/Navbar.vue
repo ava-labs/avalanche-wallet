@@ -23,6 +23,15 @@
             </template>
             <network-menu></network-menu>
             <LanguageSelect class="lang_web"></LanguageSelect>
+
+            <button @click="togglePopup">
+                <fa icon="ellipsis-h"></fa>
+            </button>
+            <div class="popup-wrapper">
+                <div class="popup" v-if="popupOpen">
+                    <AnalyticsCheckbox></AnalyticsCheckbox>
+                </div>
+            </div>
         </div>
 
         <div class="mobile_right">
@@ -83,6 +92,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import LanguageSelect from './misc/LanguageSelect/LanguageSelect.vue'
+import AnalyticsCheckbox from '@/components/wallet/sidebar/AnalyticsCheckbox.vue'
 import DayNightToggle from '@/components/misc/DayNightToggle.vue'
 import NetworkMenu from './NetworkSettings/NetworkMenu.vue'
 import ConfirmLogout from '@/components/modals/ConfirmLogout.vue'
@@ -93,11 +103,13 @@ import AccountMenu from '@/components/wallet/sidebar/AccountMenu.vue'
         NetworkMenu,
         DayNightToggle,
         ConfirmLogout,
+        AnalyticsCheckbox,
         LanguageSelect,
     },
 })
 export default class Navbar extends Vue {
     isDrawer: boolean = false
+    popupOpen: boolean = false
 
     get isAuth(): boolean {
         return this.$store.state.isAuth
@@ -106,6 +118,10 @@ export default class Navbar extends Vue {
     logout(): void {
         // @ts-ignore
         this.$refs.logout.open()
+    }
+
+    togglePopup(): void {
+        this.popupOpen = !this.popupOpen
     }
 }
 </script>
@@ -126,6 +142,23 @@ a {
 
 button {
     font-weight: normal;
+}
+
+.popup-wrapper {
+    position: relative;
+}
+
+.popup {
+    position: absolute;
+    top: 18px;
+    right: 0;
+    padding: 8px;
+    padding-bottom: 10px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.4);
+    min-width: 280px;
+    border: 1px solid var(--bg-light);
+    background: var(--bg);
+    border-radius: 3px;
 }
 
 .daynight {
