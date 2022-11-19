@@ -104,7 +104,7 @@ abstract class WalletCore {
 
         const unsignedTxFee = await this.createImportTxC(sourceChain, utxoSet, fee)
         let tx = await this.signC(unsignedTxFee)
-        let id = await ava.CChain().issueTx(tx.toString())
+        let id = await ava.CChain().issueTx(tx)
 
         return id
     }
@@ -213,7 +213,7 @@ abstract class WalletCore {
         )
 
         let tx = await this.signC(exportTx)
-        return ava.CChain().issueTx(tx.toString())
+        return ava.CChain().issueTx(tx)
     }
 
     /**
@@ -282,7 +282,7 @@ abstract class WalletCore {
             )
         const tx = await this.signP(unsignedTx)
         // Pass in string because AJS fails to verify Tx type
-        return ava.PChain().issueTx(tx.toString())
+        return ava.PChain().issueTx(tx)
     }
 
     async importToXChain(sourceChain: AvmImportChainType) {
@@ -310,7 +310,7 @@ abstract class WalletCore {
             .buildImportTx(utxoSet, ownerAddrs, sourceChainId, [xToAddr], fromAddrs, [xToAddr])
 
         const tx = await this.signX(unsignedTx)
-        return await ava.XChain().issueTx(tx.toString())
+        return await ava.XChain().issueTx(tx)
     }
 }
 export { WalletCore }

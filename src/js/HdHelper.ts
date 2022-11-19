@@ -427,7 +427,7 @@ class HdHelper {
 
         // No need for PlatformKeypair because addressToString uses chainID to decode
         let keypair = new AVMKeyPair(hrp, chainId)
-        let addrBuf = keypair.addressFromPublicKey(pkBuff)
+        let addrBuf = AVMKeyPair.addressFromPublicKey(pkBuff)
         let addr = bintools.addressToString(hrp, chainId, addrBuf)
 
         this.addressCache[index] = addr

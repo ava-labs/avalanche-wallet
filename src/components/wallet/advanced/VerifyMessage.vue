@@ -65,7 +65,7 @@ export default class VerifyMessage extends Vue {
         let signedBuff = bintools.cb58Decode(this.signature)
 
         let pubKey = keypair.recover(digestBuff, signedBuff)
-        let addressBuff = keypair.addressFromPublicKey(pubKey)
+        let addressBuff = KeyPair.addressFromPublicKey(pubKey)
         this.addressX = bintools.addressToString(hrp, 'X', addressBuff)
         this.addressP = bintools.addressToString(hrp, 'P', addressBuff)
     }
