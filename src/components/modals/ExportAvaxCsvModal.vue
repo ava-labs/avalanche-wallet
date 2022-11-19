@@ -36,7 +36,7 @@ import {
     parseMemo,
 } from '@/store/modules/history/history_utils'
 import { ava } from '@/AVA'
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 
 @Component({
     components: {

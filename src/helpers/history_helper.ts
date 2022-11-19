@@ -5,8 +5,8 @@
 
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
 import { WalletType } from '@/js/wallets/types'
-import { BN } from '@c4tplatform/camino'
-import { AVMConstants } from '@c4tplatform/camino/dist/apis/avm'
+import { BN } from '@c4tplatform/caminojs'
+import { AVMConstants } from '@c4tplatform/caminojs/dist/apis/avm'
 
 // Summary item returned for each transaction
 export interface BaseTxSummary {

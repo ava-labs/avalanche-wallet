@@ -1,8 +1,8 @@
-import { InfoAPI } from '@c4tplatform/camino/dist/apis/info'
-import Avalanche from '@c4tplatform/camino'
+import { InfoAPI } from '@c4tplatform/caminojs/dist/apis/info'
+import Avalanche from '@c4tplatform/caminojs'
 //@ts-ignore
-import BinTools from '@c4tplatform/camino/dist/utils/bintools'
-import { TestNetworkID } from '@c4tplatform/camino/dist/utils'
+import BinTools from '@c4tplatform/caminojs/dist/utils/bintools'
+import { TestNetworkID } from '@c4tplatform/caminojs/dist/utils'
 
 // Connect to TestNet by default
 // Doesn't really matter how we initialize, it will get changed by the network module later

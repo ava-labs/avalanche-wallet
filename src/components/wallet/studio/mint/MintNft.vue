@@ -15,7 +15,7 @@ import Big from 'big.js'
 
 import SelectMintUTXO from '@/components/wallet/studio/mint/SelectMintUtxo/SelectMintUTXO.vue'
 import MintForm from '@/components/wallet/studio/mint/MintForm.vue'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 @Component({
     components: {
         SelectMintUTXO,

@@ -32,9 +32,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { KeyPair } from '@c4tplatform/camino/dist/apis/avm'
+import { KeyPair } from '@c4tplatform/caminojs/dist/apis/avm'
 import { ava, bintools } from '@/AVA'
-import { Buffer } from '@c4tplatform/camino'
+import { Buffer } from '@c4tplatform/caminojs'
 import { digestMessage } from '@/helpers/helper'
 
 @Component

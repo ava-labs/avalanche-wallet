@@ -35,7 +35,7 @@ import { Vue, Component, Prop, Model } from 'vue-property-decorator'
 import { bnToBig, Big } from '@c4tplatform/camino-wallet-sdk'
 //@ts-ignore
 import { BigNumInput } from '@c4tplatform/vue_components'
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 import { priceDict } from '../../store/types'
 
 @Component({

@@ -15,7 +15,7 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import { getPayloadFromUTXO } from '@/helpers/helper'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 @Component({

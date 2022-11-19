@@ -1,4 +1,4 @@
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 
 export interface UrlFormType {
     url: string

@@ -1,8 +1,8 @@
 import { ValidatorListFilter } from '@/components/wallet/earn/Delegate/types'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 import { DAY_MS } from '@/constants'
-import { ONEAVAX } from '@c4tplatform/camino/dist/utils'
-import { BN } from '@c4tplatform/camino'
+import { ONEAVAX } from '@c4tplatform/caminojs/dist/utils'
+import { BN } from '@c4tplatform/caminojs'
 
 function filterValidatorList(
     list: ValidatorListItem[],

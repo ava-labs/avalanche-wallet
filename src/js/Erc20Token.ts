@@ -1,6 +1,6 @@
 import { TokenListToken } from '@/store/modules/assets/types'
 import { web3 } from '@/evm'
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 

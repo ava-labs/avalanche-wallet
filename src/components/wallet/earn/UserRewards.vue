@@ -35,7 +35,7 @@ import { DelegatorRaw, ValidatorRaw } from '@/components/misc/ValidatorList/type
 import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 
 @Component({
     components: {

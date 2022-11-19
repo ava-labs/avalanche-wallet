@@ -130,7 +130,7 @@ import JsonForm from '@/components/wallet/studio/mint/forms/JsonForm.vue'
 import GenericForm from '@/components/wallet/studio/mint/forms/GenericForm.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 
-import { NFTMintOutput, NFTTransferOutput, UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { NFTMintOutput, NFTTransferOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import { NftFamilyDict } from '@/store/modules/assets/types'
 import { ava, bintools } from '@/AVA'
 import {
@@ -140,7 +140,7 @@ import {
     UrlFormType,
     UtfFormType,
 } from '@/components/wallet/studio/mint/types'
-import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from '@c4tplatform/camino/dist/utils'
+import { PayloadBase, URLPayload, UTF8Payload, JSONPayload } from '@c4tplatform/caminojs/dist/utils'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import NftFamilyCardsPreview from '@/components/misc/NftFamilyCardsPreview.vue'

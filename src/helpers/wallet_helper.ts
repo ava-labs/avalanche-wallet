@@ -2,11 +2,11 @@ import { ava } from '@/AVA'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
-} from '@c4tplatform/camino/dist/apis/platformvm/utxos'
-import { UTXO as AVMUTXO } from '@c4tplatform/camino/dist/apis/avm/utxos'
+} from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
+import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import { WalletType } from '@/js/wallets/types'
 
-import { BN, Buffer } from '@c4tplatform/camino'
+import { BN, Buffer } from '@c4tplatform/caminojs'
 import {
     buildCreateNftFamilyTx,
     buildEvmTransferErc20Tx,
@@ -14,7 +14,7 @@ import {
     buildEvmTransferNativeTx,
     buildMintNftTx,
 } from '@/js/TxHelper'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 import { ITransaction } from '@/components/wallet/transfer/types'
 
 import { web3 } from '@/evm'

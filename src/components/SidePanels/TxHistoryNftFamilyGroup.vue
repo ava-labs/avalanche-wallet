@@ -9,9 +9,9 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
-import { Buffer } from '@c4tplatform/camino'
-import { PayloadTypes } from '@c4tplatform/camino/dist/utils'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
+import { Buffer } from '@c4tplatform/caminojs'
+import { PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
 import { UTXO } from '@/store/modules/history/types'
 
 let payloadtypes = PayloadTypes.getInstance()

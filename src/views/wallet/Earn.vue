@@ -19,7 +19,7 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
-import { BN } from '@c4tplatform/camino/dist'
+import { BN } from '@c4tplatform/caminojs/dist'
 import UserRewards from '@/components/wallet/earn/UserRewards.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'

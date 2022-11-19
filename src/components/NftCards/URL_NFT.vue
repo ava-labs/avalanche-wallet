@@ -32,9 +32,9 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 import BaseNftCard from '@/components/NftCards/BaseNftCard.vue'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
 @Component({
     components: {

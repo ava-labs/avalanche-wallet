@@ -25,7 +25,7 @@ import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
 import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
-import { BN } from '@c4tplatform/camino/dist'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 

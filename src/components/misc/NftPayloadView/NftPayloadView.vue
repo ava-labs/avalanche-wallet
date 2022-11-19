@@ -16,7 +16,7 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 
 import UrlPayloadView from '@/components/misc/NftPayloadView/views/UrlPayloadView.vue'
 import UtfPayloadView from '@/components/misc/NftPayloadView/views/UtfPayloadView.vue'

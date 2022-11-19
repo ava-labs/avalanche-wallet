@@ -32,7 +32,7 @@ import BalancePopup from '@/components/misc/BalancePopup/BalancePopup.vue'
 
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { NFTTransferOutput, UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { NFTTransferOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import { getPayloadFromUTXO } from '@/helpers/helper'
 import NftListItem from '@/components/wallet/transfer/NftListItem.vue'
 import { IGroupDict, IGroupQuantity } from '@/components/wallet/studio/mint/types'

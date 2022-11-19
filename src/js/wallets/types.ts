@@ -6,23 +6,23 @@ import {
     UTXO as AVMUTXO,
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
-} from '@c4tplatform/camino/dist/apis/avm'
+} from '@c4tplatform/caminojs/dist/apis/avm'
 
 import {
     UTXOSet as PlatformUTXOSet,
     UnsignedTx as PlatformUnsignedTx,
     UTXO as PlatformUTXO,
     Tx as PlatformTx,
-} from '@c4tplatform/camino/dist/apis/platformvm'
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
 import {
     KeyChain as EVMKeyChain,
     UnsignedTx as EVMUnsignedTx,
     Tx as EVMTx,
-} from '@c4tplatform/camino/dist/apis/evm'
+} from '@c4tplatform/caminojs/dist/apis/evm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { BN, Buffer } from '@c4tplatform/camino'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { BN, Buffer } from '@c4tplatform/caminojs'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 import Erc20Token from '@/js/Erc20Token'
 
 import { Transaction } from '@ethereumjs/tx'
@@ -30,7 +30,7 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { ExportChainsC, ExportChainsP, ExportChainsX } from '@c4tplatform/camino-wallet-sdk'
-import { UTXOSet as EVMUTXOSet } from '@c4tplatform/camino/dist/apis/evm/utxos'
+import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
 
 export interface IIndexKeyCache {
     [index: number]: AVMKeyPair

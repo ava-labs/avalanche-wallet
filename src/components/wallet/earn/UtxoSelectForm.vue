@@ -29,10 +29,10 @@
 <script lang="ts">
 import { Vue, Component, Model, Watch } from 'vue-property-decorator'
 import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
-import { AmountOutput, UTXO } from '@c4tplatform/camino/dist/apis/platformvm'
+import { AmountOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { WalletType } from '@/js/wallets/types'
 
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 import { bnToBig } from '@/helpers/helper'
 @Component({
     components: {

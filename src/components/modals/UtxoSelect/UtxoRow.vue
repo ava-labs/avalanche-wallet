@@ -18,11 +18,11 @@ import {
     PlatformVMConstants,
     AmountOutput,
     StakeableLockOut,
-} from '@c4tplatform/camino/dist/apis/platformvm'
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
-import { UnixNow } from '@c4tplatform/camino/dist/utils'
-import { BN } from '@c4tplatform/camino'
+import { UnixNow } from '@c4tplatform/caminojs/dist/utils'
+import { BN } from '@c4tplatform/caminojs'
 
 @Component
 export default class UtxoRow extends Vue {

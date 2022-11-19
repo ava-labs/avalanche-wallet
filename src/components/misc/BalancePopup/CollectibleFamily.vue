@@ -22,9 +22,9 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IWalletNftDict } from '@/store/types'
-import { NFTTransferOutput, UTXO } from '@c4tplatform/camino/dist/apis/avm'
-import { Buffer } from '@c4tplatform/camino'
-import { PayloadBase, PayloadTypes } from '@c4tplatform/camino/dist/utils'
+import { NFTTransferOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
+import { Buffer } from '@c4tplatform/caminojs'
+import { PayloadBase, PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { getPayloadFromUTXO } from '@/helpers/helper'
 

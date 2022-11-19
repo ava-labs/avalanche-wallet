@@ -18,7 +18,7 @@
 import 'reflect-metadata'
 import { Vue, Prop, Component } from 'vue-property-decorator'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 
 import CollectibleFamily from '@/components/misc/BalancePopup/CollectibleFamily.vue'
 @Component({

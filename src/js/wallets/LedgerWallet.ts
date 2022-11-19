@@ -8,7 +8,7 @@ import EthereumjsCommon from '@ethereumjs/common'
 import { Transaction } from '@ethereumjs/tx'
 
 import moment from 'moment'
-import { Buffer, BN } from '@c4tplatform/camino'
+import { Buffer, BN } from '@c4tplatform/caminojs'
 import HDKey from 'hdkey'
 import { ava, bintools } from '@/AVA'
 const bippath = require('bip32-path')
@@ -16,7 +16,7 @@ import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
 
-import { UTXO as AVMUTXO } from '@c4tplatform/camino/dist/apis/avm/utxos'
+import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import { AvaWalletCore } from '@/js/wallets/types'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
@@ -27,7 +27,7 @@ import {
     Tx as AVMTx,
     UnsignedTx as AVMUnsignedTx,
     ImportTx as AVMImportTx,
-} from '@c4tplatform/camino/dist/apis/avm'
+} from '@c4tplatform/caminojs/dist/apis/avm'
 
 import {
     ImportTx as PlatformImportTx,
@@ -39,7 +39,7 @@ import {
     SelectCredentialClass as PlatformSelectCredentialClass,
     AddDelegatorTx,
     AddValidatorTx,
-} from '@c4tplatform/camino/dist/apis/platformvm'
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
 
 import {
     UnsignedTx as EVMUnsignedTx,
@@ -49,10 +49,10 @@ import {
     EVMConstants,
     EVMInput,
     SelectCredentialClass as EVMSelectCredentialClass,
-} from '@c4tplatform/camino/dist/apis/evm'
+} from '@c4tplatform/caminojs/dist/apis/evm'
 
-import { Credential, SigIdx, Signature } from '@c4tplatform/camino/dist/common'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { Credential, SigIdx, Signature } from '@c4tplatform/caminojs/dist/common'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 import { ILedgerAppConfig } from '@/store/types'
 import { WalletNameType } from '@/js/wallets/types'

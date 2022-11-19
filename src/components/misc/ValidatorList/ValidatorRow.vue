@@ -16,7 +16,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import moment from 'moment'
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 import { bnToBig } from '@/helpers/helper'
 import { ValidatorListItem } from '@/store/modules/platform/types'
 

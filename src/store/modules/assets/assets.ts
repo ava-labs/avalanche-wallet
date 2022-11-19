@@ -23,11 +23,11 @@ import {
     UTXOSet as AVMUTXOSet,
     UTXO,
     NFTMintOutput,
-} from '@c4tplatform/camino/dist/apis/avm'
-import { UnixNow } from '@c4tplatform/camino/dist/utils'
-import { BN } from '@c4tplatform/camino'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm/utxos'
-import { StakeableLockOut } from '@c4tplatform/camino/dist/apis/platformvm'
+} from '@c4tplatform/caminojs/dist/apis/avm'
+import { UnixNow } from '@c4tplatform/caminojs/dist/utils'
+import { BN } from '@c4tplatform/caminojs'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
+import { StakeableLockOut } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'

@@ -36,7 +36,7 @@ import {
 } from '@/js/Keystore'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-import { Buffer } from '@c4tplatform/camino'
+import { Buffer } from '@c4tplatform/caminojs'
 import { privateToAddress } from 'ethereumjs-util'
 import { updateFilterAddresses } from '../providers'
 import { getAvaxPriceUSD } from '@/helpers/price_helper'

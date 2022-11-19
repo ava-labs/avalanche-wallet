@@ -1,9 +1,9 @@
 /*
 The base wallet class used for common functionality
 */
-import { BN } from '@c4tplatform/camino'
-import { UTXOSet as AVMUTXOSet } from '@c4tplatform/camino/dist/apis/avm'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/camino/dist/apis/platformvm'
+import { BN } from '@c4tplatform/caminojs'
+import { UTXOSet as AVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/avm'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import {
     chainIdFromAlias,
     ExportChainsC,
@@ -14,15 +14,15 @@ import {
     GasHelper,
 } from '@c4tplatform/camino-wallet-sdk'
 import { ava, bintools } from '@/AVA'
-import { UTXOSet as EVMUTXOSet } from '@c4tplatform/camino/dist/apis/evm/utxos'
-import { Tx as EVMTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/camino/dist/apis/evm/tx'
+import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
+import { Tx as EVMTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/evm/tx'
 import {
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
-} from '@c4tplatform/camino/dist/apis/platformvm/tx'
-import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from '@c4tplatform/camino/dist/apis/avm/tx'
+} from '@c4tplatform/caminojs/dist/apis/platformvm/tx'
+import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/avm/tx'
 import { AvmImportChainType } from '@/js/wallets/types'
-import { ExportTx as PlatformExportTx } from '@c4tplatform/camino/dist/apis/platformvm'
+import { ExportTx as PlatformExportTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 
 var uniqid = require('uniqid')
 

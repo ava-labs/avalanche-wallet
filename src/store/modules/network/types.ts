@@ -1,5 +1,5 @@
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 
 export interface NetworkState {
     networks: AvaNetwork[]

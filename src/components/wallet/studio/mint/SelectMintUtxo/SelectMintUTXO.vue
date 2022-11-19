@@ -12,7 +12,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { IWalletNftMintDict } from '@/store/types'
 import { NftFamilyDict } from '@/store/modules/assets/types'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import FamilyRow from '@/components/wallet/studio/mint/SelectMintUtxo/FamilyRow.vue'
 @Component({
     components: { FamilyRow },

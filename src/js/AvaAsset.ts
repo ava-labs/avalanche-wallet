@@ -1,5 +1,5 @@
 // Manages BigNumber and Ava conversion and arithmetic
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 import Big from 'big.js'
 
 class AvaAsset {

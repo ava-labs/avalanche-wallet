@@ -33,7 +33,7 @@ import {
     UTXO,
     AVMConstants,
     NFTMintOutput,
-} from '@c4tplatform/camino/dist/apis/avm'
+} from '@c4tplatform/caminojs/dist/apis/avm'
 import { NftGroupDict } from '@/components/wallet/portfolio/types'
 import CollectibleFamilyGroup from '@/components/wallet/portfolio/CollectibleFamilyGroup.vue'
 @Component({

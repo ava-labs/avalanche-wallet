@@ -45,14 +45,14 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { PayloadTypes, PayloadBase } from '@c4tplatform/camino/dist/utils'
+import { PayloadTypes, PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 
 const payloadtypes = PayloadTypes.getInstance()
 
 import Tooltip from '@/components/misc/Tooltip.vue'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import NFTViewModal from '@/components/modals/NFTViewModal.vue'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 @Component({
     components: { NFTViewModal, NftPayloadView, Tooltip },
 })

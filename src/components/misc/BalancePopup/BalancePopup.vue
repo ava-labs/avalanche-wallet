@@ -36,7 +36,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
 import BalanceRow from './BalanceRow.vue'
 import CollectibleTab from './CollectibleTab.vue'
-import { UTXO } from '@c4tplatform/camino/dist/apis/avm'
+import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 
 @Component({
     components: {

@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 
-import { BN } from '@c4tplatform/camino'
+import { BN } from '@c4tplatform/caminojs'
 import { ava } from '@/AVA'
 
 import {
@@ -17,7 +17,7 @@ import {
     DelegatorRaw,
     ValidatorRaw,
 } from '@/components/misc/ValidatorList/types'
-import { ONEAVAX } from '@c4tplatform/camino/dist/utils'
+import { ONEAVAX } from '@c4tplatform/caminojs/dist/utils'
 
 const MINUTE_MS = 60000
 const HOUR_MS = MINUTE_MS * 60

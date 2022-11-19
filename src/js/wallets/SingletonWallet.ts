@@ -3,35 +3,35 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
 import { WalletNameType } from '@/js/wallets/types'
 
-import { Buffer as BufferAvalanche, BN } from '@c4tplatform/camino'
+import { Buffer as BufferAvalanche, BN } from '@c4tplatform/caminojs'
 import {
     KeyPair as AVMKeyPair,
     KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
     UTXO,
-} from '@c4tplatform/camino/dist/apis/avm'
+} from '@c4tplatform/caminojs/dist/apis/avm'
 import {
     KeyPair as PlatformKeyPair,
     KeyChain as PlatformKeyChain,
     UTXOSet as PlatformUTXOSet,
-} from '@c4tplatform/camino/dist/apis/platformvm'
-import { KeyChain, KeyChain as EVMKeyChain } from '@c4tplatform/camino/dist/apis/evm'
-import { PayloadBase } from '@c4tplatform/camino/dist/utils'
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
+import { KeyChain, KeyChain as EVMKeyChain } from '@c4tplatform/caminojs/dist/apis/evm'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 import { buildUnsignedTransaction } from '../TxHelper'
 import { AvaWalletCore, UnsafeWallet } from './types'
-import { UTXO as PlatformUTXO } from '@c4tplatform/camino/dist/apis/platformvm/utxos'
+import { UTXO as PlatformUTXO } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
 import { privateToAddress } from 'ethereumjs-util'
-import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from '@c4tplatform/camino/dist/apis/avm/tx'
+import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/avm/tx'
 import {
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
-} from '@c4tplatform/camino/dist/apis/platformvm/tx'
-import { Tx as EvmTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/camino/dist/apis/evm/tx'
+} from '@c4tplatform/caminojs/dist/apis/platformvm/tx'
+import { Tx as EvmTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/evm/tx'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletCore } from '@/js/wallets/WalletCore'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
-import { UTXO as AVMUTXO } from '@c4tplatform/camino/dist/apis/avm/utxos'
+import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import { Transaction } from '@ethereumjs/tx'
 
 class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
