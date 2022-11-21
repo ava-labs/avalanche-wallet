@@ -2,9 +2,9 @@ name: docker
 
 on:
   push:
-    tags:        
+    tags:
       - v*
-    branches: [chain4travel,dev]
+    branches: [chain4travel, dev]
   workflow_dispatch:
     inputs:
       wd_branch:
@@ -21,8 +21,8 @@ jobs:
           node-version: '15'
       - id: branchVars
         run: |
-          if [[ "${{ github.event_name" != "workflow_dispatch" }} ]]; then
-              echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+          if [[ ${{ github.event_name }} != 'workflow_dispatch' ]]; then
+            echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
           else
             echo "branch=${{ github.event.inputs.wd_branch }}" >> $GITHUB_OUTPUT
           fi
