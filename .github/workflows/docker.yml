@@ -1,0 +1,36 @@
+name: docker
+
+on:
+  push:
+    tags:        
+      - v*
+  pull_request:
+    branches: [chain4travel,dev]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '15'
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - uses: docker/login-action@v2
+        name: Login to DockerHub
+        with:
+          username: ${{ secrets.docker_username }}
+          password: ${{ secrets.docker_pass }}
+      - name: Set tag variables
+        id: setTagVariables
+        run: |
+          echo "version=$(git describe)" >> $GITHUB_OUTPUT
+      - name: Build image and push to Docker Hub and GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          tags: |
+            c4tplatform/camino-wallet:${{ steps.setTagVariables.outputs.version }}
+          push: ${{ github.ref == 'refs/heads/chain4travel' || github.ref == 'refs/heads/dev' }}
