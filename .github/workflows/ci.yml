@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-  pull_request:
 
 env:
   CI: true
@@ -14,10 +13,12 @@ jobs:
       matrix:
         node-version: [15]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           cache: yarn
           node-version: ${{ matrix.node-version }}
-      - run: yarn install --frozen-lockfile
-      - run: yarn build
+      - name: Prepare dev dependencies
+        run: scripts/dependencies.sh
+      - run: yarn install
+      - run: yarn lint

@@ -8,13 +8,14 @@ module.exports = {
          * For e2e testing we turn this off using vue cli --mode e2e
          * @link https://cli.vuejs.org/guide/mode-and-env.html#modes
          */
+        progress: false,
         https: !process.env.USE_HTTP,
         port: 5000,
     },
     // publicPath: '',
     configureWebpack: {
         optimization: {
-            minimize: process.env.NODE_ENV  === 'production',
+            minimize: process.env.NODE_ENV === 'production',
             minimizer: [new TerserPlugin()],
             splitChunks: {
                 chunks: 'all',

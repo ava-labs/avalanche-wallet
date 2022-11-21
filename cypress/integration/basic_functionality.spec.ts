@@ -5,8 +5,6 @@ const NETWORK_SWITCHER_BUTTON = '[data-cy="network-switcher"]'
 describe('Basic Functionality', () => {
     before(() => {
         cy.visit('/')
-        // Disable banner
-        cy.get('[data-cy="dismiss_banner"]').click()
     })
 
     it('has access/create wallet options', () => {
@@ -33,7 +31,7 @@ describe('Basic Functionality', () => {
                 cy.get('[data-cy="custom-network-name"]').clear().type(info.name)
                 cy.get('[data-cy="custom-network-url"]').clear().type(info.url)
                 cy.get('[data-cy="custom-network-add"]').click()
-                cy.get('[data-cy="network-item"]').should('have.length', 3)
+                cy.get('[data-cy="network-item"]').should('have.length', 4)
             })
         })
     })
