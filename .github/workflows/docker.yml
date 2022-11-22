@@ -20,8 +20,9 @@ jobs:
         with:
           node-version: '15'
       - id: branchVars
+        name: Evaluate branch
         run: |
-          if [[ ${{ github.event_name }} != 'workflow_dispatch' ]]; then
+          if [[ ${{ github.event_name }} != workflow_dispatch ]]; then
             echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
           else
             echo "branch=${{ github.event.inputs.wd_branch }}" >> $GITHUB_OUTPUT
