@@ -6,7 +6,7 @@ fi
 
 # Prepare caminojs
 cd ..
-git clone https://github.com/chain4travel/caminojs --depth 1 -bkopernikus
+git clone https://github.com/chain4travel/caminojs --depth 1 -bdev
 cd caminojs
 yarn
 yarn build
