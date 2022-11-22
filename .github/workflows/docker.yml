@@ -4,13 +4,7 @@ on:
   push:
     tags:
       - v*
-    branches: [chain4travel, dev]
   workflow_dispatch:
-    inputs:
-      wd_branch:
-        description: 'camino-wallet branch'
-        required: true
-        default: 'dev'
 
 jobs:
   docker-build:
@@ -23,13 +17,13 @@ jobs:
         name: Evaluate branch
         run: |
           if [[ ${{ github.event_name }} != workflow_dispatch ]]; then
-            echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+            echo "ref=${{ github.head_ref }}" >> $GITHUB_OUTPUT
           else
-            echo "branch=${{ github.event.inputs.wd_branch }}" >> $GITHUB_OUTPUT
+            echo "ref=${{ github.event.inputs.wd_branch }}" >> $GITHUB_OUTPUT
           fi
       - uses: actions/checkout@v3
         with:
-          ref: ${{ steps.branchVars.outputs.branch }}
+          ref: ${{ steps.branchVars.outputs.ref }}
           fetch-depth: 0
       - uses: docker/login-action@v2
         name: Login to DockerHub
@@ -39,11 +33,17 @@ jobs:
       - name: Set tag variables
         id: setTagVariables
         run: |
-          echo "version=$(git describe)" >> $GITHUB_OUTPUT
+          if [[ ${{ github.ref_type }} == tag ]]; then
+            echo "version=stable-${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          else
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            echo "version=unstable-${BRANCH}-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          fi
       - name: Build image and push to Docker Hub and GitHub Container Registry
         uses: docker/build-push-action@v3
         with:
           context: ./
           tags: |
             c4tplatform/camino-wallet:${{ steps.setTagVariables.outputs.version }}
-          push: ${{ github.ref == 'refs/heads/chain4travel' || github.ref == 'refs/heads/dev' }}
+          push: true
