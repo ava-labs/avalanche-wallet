@@ -32,7 +32,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Model } from 'vue-property-decorator'
-import { bnToBig, Big } from '@c4tplatform/camino-wallet-sdk'
+import { bnToBig, Big } from '@c4tplatform/camino-wallet-sdk/dist'
 //@ts-ignore
 import { BigNumInput } from '@c4tplatform/vue_components'
 import { BN } from '@c4tplatform/caminojs'

@@ -15,11 +15,12 @@
         "start": "node server/index.js",
         "test_watch": "jest --verbose --watch ./tests",
         "test_debug": "node --inspect-brk node_modules/.bin/jest ./tests --runInBand",
-        "test": "jest --verbose ./tests"
+        "test": "jest --verbose ./tests",
+        "preinstall": "git submodule update --init --recursive --remote"
     },
     "dependencies": {
         "@arcblock/forge-util": "^1.6.3",
-        "@c4tplatform/camino-wallet-sdk": "file:../camino-wallet-sdk/package",
+        "@c4tplatform/camino-wallet-sdk": "file:camino-wallet-sdk",
         "@c4tplatform/vue_components": "0.0.4",
         "@ethereumjs/common": "2.0.0",
         "@ethereumjs/tx": "3.0.0",

@@ -64,7 +64,7 @@ import { ParseableAvmTxEnum, ParseablePlatformEnum, ParseableEvmTxEnum } from '.
 import { ILedgerBlockMessage } from '../../store/modules/ledger/types'
 import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
-import { idToChainAlias } from '@c4tplatform/camino-wallet-sdk'
+import { idToChainAlias } from '@c4tplatform/camino-wallet-sdk/dist'
 
 export const MIN_EVM_SUPPORT_V = '0.5.3'
 

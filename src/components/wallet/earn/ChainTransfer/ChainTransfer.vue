@@ -133,7 +133,7 @@ import { ChainIdType } from '@/constants'
 import ChainSwapForm from '@/components/wallet/earn/ChainTransfer/Form.vue'
 
 import { WalletType } from '@/js/wallets/types'
-import * as SDK from '@c4tplatform/camino-wallet-sdk'
+import * as SDK from '@c4tplatform/camino-wallet-sdk/dist'
 
 const IMPORT_DELAY = 5000 // in ms
 const BALANCE_DELAY = 2000 // in ms

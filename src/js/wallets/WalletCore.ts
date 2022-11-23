@@ -12,7 +12,7 @@ import {
     UtxoHelper,
     TxHelper,
     GasHelper,
-} from '@c4tplatform/camino-wallet-sdk'
+} from '@c4tplatform/camino-wallet-sdk/dist'
 import { ava, bintools } from '@/AVA'
 import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
 import { Tx as EVMTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/evm/tx'

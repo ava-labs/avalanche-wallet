@@ -29,7 +29,7 @@ import { Transaction } from '@ethereumjs/tx'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
-import { ExportChainsC, ExportChainsP, ExportChainsX } from '@c4tplatform/camino-wallet-sdk'
+import { ExportChainsC, ExportChainsP, ExportChainsX } from '@c4tplatform/camino-wallet-sdk/dist'
 import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
 
 export interface IIndexKeyCache {
