@@ -16,7 +16,7 @@
         "test_watch": "jest --verbose --watch ./tests",
         "test_debug": "node --inspect-brk node_modules/.bin/jest ./tests --runInBand",
         "test": "jest --verbose ./tests",
-        "preinstall": "git submodule update --init --recursive --remote"
+        "preinstall": "git submodule update --recursive --init"
     },
     "dependencies": {
         "@arcblock/forge-util": "^1.6.3",
