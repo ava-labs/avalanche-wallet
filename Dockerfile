@@ -3,11 +3,8 @@ FROM node:15 as build-stage
 
 WORKDIR /app/camino-wallet
 
-COPY package*.json /app/camino-wallet/
-COPY yarn.lock /app/camino-wallet/
-
-RUN yarn install
 COPY ./ /app/camino-wallet/
+RUN yarn install
 RUN yarn build
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
 FROM nginx:1.15
