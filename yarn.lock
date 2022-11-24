@@ -888,11 +888,10 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@c4tplatform/camino-wallet-sdk@file:../camino-wallet-sdk/package":
+"@c4tplatform/camino-wallet-sdk@file:camino-wallet-sdk":
   version "0.0.2"
   dependencies:
-    "@c4tplatform/caminojs" "file:C:/Users/mpfau/AppData/Local/Yarn/Cache/v6/npm-@c4tplatform-camino-wallet-sdk-0.0.2-20353f48-5120-4f3c-8600-b998e4422fc8-1668891608351/node_modules/caminojs/package"
-    "@ethereumjs/common" "2.6.0"
+    "@c4tplatform/caminojs" "file:C:/Users/mpfau/AppData/Local/Yarn/Cache/v6/npm-@c4tplatform-camino-wallet-sdk-0.0.2-cc32d5c8-4692-487d-8676-9ab8597f9b19-1669277075513/node_modules/@c4tplatform/camino-wallet-sdk/caminojs"
     "@ethereumjs/tx" "3.4.0"
     "@ledgerhq/hw-app-eth" "6.12.2"
     "@ledgerhq/hw-transport" "^6.19.0"
@@ -918,37 +917,7 @@
     web3-eth-contract "1.6.0"
     xss "^1.0.10"
 
-"@c4tplatform/camino-wallet-sdk@file:../camino-wallet-sdk/package":
-  version "0.0.2"
-  dependencies:
-    "@c4tplatform/caminojs" "file:C:/Users/mpfau/AppData/Local/Yarn/Cache/v6/npm-@c4tplatform-caminojs-wallet-sdk-0.0.2-16200d23-4256-4ab2-b6c7-af03604738a6-1668891607426/node_modules/caminojs/package"
-    "@ethereumjs/common" "2.6.0"
-    "@ethereumjs/tx" "3.4.0"
-    "@ledgerhq/hw-app-eth" "6.12.2"
-    "@ledgerhq/hw-transport" "^6.19.0"
-    "@metamask/eth-sig-util" "^4.0.0"
-    "@obsidiansystems/hw-app-avalanche" "0.2.2"
-    "@openzeppelin/contracts" "4.5.0"
-    big.js "^6.1.1"
-    bip32 "^2.0.6"
-    bip32-path "^0.4.2"
-    bip39 "^3.0.4"
-    bitcoinjs-lib "5.2.0"
-    bn.js "5.1.1"
-    create-hash "1.2.0"
-    crypto-js "^4.1.1"
-    ethereumjs-util "^7.0.7"
-    ethers "^5.1.4"
-    moment "^2.29.1"
-    randomstring "^1.2.1"
-    sockette "^2.0.6"
-    typescript-transform-paths "^2.2.3"
-    url "^0.11.0"
-    web3 "1.6.0"
-    web3-eth-contract "1.6.0"
-    xss "^1.0.10"
-
-"@c4tplatform/caminojs@file:../caminojs/package":
+"@c4tplatform/caminojs@file:camino-wallet-sdk/caminojs":
   version "1.0.0"
   dependencies:
     assert "2.0.0"
@@ -969,15 +938,16 @@
     ws "8.8.1"
     xss "1.0.14"
 
-"@c4tplatform/vue_components@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@c4tplatform/vue_components/-/vue_components-0.0.4.tgz#5a7b56757c6e37d07121c9b9ec66f1ff76f735ce"
-  integrity sha512-bFlMxaBm8bwNhi6EKmSQU6mxVPW3Uo6hv2/WZnhXuE7ip0mJZyxJox/wvI5E0qUUP2/VOSL5/CsnxQroG1MPeQ==
+"@c4tplatform/vue_components@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/vue_components/-/vue_components-0.1.0.tgz#38dd83217b7c06efe1551ff81d27468262a545ff"
+  integrity sha512-qHSQhvgamWIgImTtbX5bn4VOWpRgui6vQ58sSPLSPOeQBpVex0ngMmsDUDc6fOqePxpTM39MJp5cMQL3jy4tPQ==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.27"
     "@fortawesome/free-solid-svg-icons" "^5.12.1"
     "@fortawesome/vue-fontawesome" "^0.1.9"
     "@zxing/library" "^0.15.2"
+    bn.js "5.2.1"
     core-js "^3.6.4"
     vue "^2.6.11"
 
@@ -1039,14 +1009,6 @@
   integrity sha512-yL0zA7Xwgz8IFHKW0VoXGjdZDVxUJg8BQ/muMHvYPW7zHJNNC80gQmvLH+MpvIg1TCXZkFXxrpYRAyCElSm+aw==
   dependencies:
     crc-32 "^1.2.0"
-
-"@ethereumjs/common@2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@ethereumjs/common/-/common-2.6.0.tgz#feb96fb154da41ee2cc2c5df667621a440f36348"
-  integrity sha512-Cq2qS0FTu6O2VU1sgg+WyU9Ps0M6j/BEMHN+hRaECXCV/r0aI78u4N6p52QW/BDVhwWZpCdrvG8X7NJdzlpNUA==
-  dependencies:
-    crc-32 "^1.2.0"
-    ethereumjs-util "^7.1.3"
 
 "@ethereumjs/common@^2.3.0", "@ethereumjs/common@^2.4.0", "@ethereumjs/common@^2.6.0", "@ethereumjs/common@^2.6.3":
   version "2.6.3"

@@ -134,7 +134,7 @@ import {
     bnToAvaxC,
     bnToBigAvaxC,
     bnToBigAvaxX,
-} from '@c4tplatform/camino-wallet-sdk'
+} from '@c4tplatform/camino-wallet-sdk/dist'
 
 // @ts-ignore
 import { QrInput } from '@c4tplatform/vue_components'

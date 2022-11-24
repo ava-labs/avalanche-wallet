@@ -53,7 +53,7 @@ import Modal from '@/components/modals/Modal.vue'
 import { generateToken } from '@/kyc_api'
 import snsWebSdk from '@sumsub/websdk'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import { WalletType, WalletNameType } from '@c4tplatform/camino-wallet-sdk'
+import { WalletType, WalletNameType } from '@c4tplatform/camino-wallet-sdk/dist'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 const EC = require('elliptic').ec
 const { isHexStrict, toHex, toUint8Array } = require('@arcblock/forge-util')

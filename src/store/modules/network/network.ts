@@ -9,7 +9,7 @@ import { BN } from '@c4tplatform/caminojs'
 import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
-import { setAvalanche } from '@c4tplatform/camino-wallet-sdk'
+import { setAvalanche } from '@c4tplatform/camino-wallet-sdk/dist'
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {

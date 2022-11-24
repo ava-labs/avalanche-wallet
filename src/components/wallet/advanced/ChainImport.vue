@@ -50,7 +50,7 @@ import {
     ExportChainsX,
     GasHelper,
     avaxCtoX,
-} from '@c4tplatform/camino-wallet-sdk'
+} from '@c4tplatform/camino-wallet-sdk/dist'
 
 @Component({
     components: { Spinner },

@@ -18,7 +18,5 @@ jobs:
         with:
           cache: yarn
           node-version: ${{ matrix.node-version }}
-      - name: Prepare dev dependencies
-        run: scripts/dependencies.sh
       - run: yarn install
       - run: yarn lint

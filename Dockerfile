@@ -6,10 +6,6 @@ WORKDIR /app/camino-wallet
 COPY package*.json /app/camino-wallet/
 COPY yarn.lock /app/camino-wallet/
 
-# Install file based dependencies
-COPY scripts/dependencies.sh /app/camino-wallet/
-RUN ./dependencies.sh
-
 RUN yarn install
 COPY ./ /app/camino-wallet/
 RUN yarn build

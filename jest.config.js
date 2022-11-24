@@ -1,4 +1,5 @@
 module.exports = {
+    modulePathIgnorePatterns: ['camino-wallet-sdk'],
     moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
     transform: {
         '.*\\.(vue)$': 'vue-jest',
