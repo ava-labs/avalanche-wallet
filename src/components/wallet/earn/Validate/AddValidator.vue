@@ -359,61 +359,8 @@ export default class AddValidator extends Vue {
     }
 
     get maxAmt(): BN {
-        return new BN(100000000000000)
+        return ava.getNetwork().P.minStake
     }
-
-    // get maxAmt(): BN {
-    //     // let pAmt = this.platformUnlocked.add(this.platformLockedStakeable)
-    //     let pAmt = this.utxosBalance
-    //     // let fee = this.feeAmt;
-
-    //     // absolute max stake
-    //     let mult = new BN(10).pow(new BN(6 + 9))
-    //     let absMaxStake = new BN(3).mul(mult)
-    //     console.log('absMaxStake', absMaxStake.toString())
-
-    //     // If above stake limit
-    //     if (pAmt.gt(absMaxStake)) {
-    //         return absMaxStake
-    //     }
-
-    //     // let res = pAmt.sub(fee);
-    //     const ZERO = new BN('0')
-    //     if (pAmt.gt(ZERO)) {
-    //         return pAmt
-    //     } else {
-    //         return ZERO
-    //     }
-    // }
-
-    // get maxDelegationAmt(): BN {
-    //     let stakeAmt = this.stakeAmt
-
-    //     let maxRelative = stakeAmt.mul(new BN(5))
-
-    //     // absolute max stake
-    //     let mult = new BN(10).pow(new BN(6 + 9))
-    //     let absMaxStake = new BN(3).mul(mult)
-
-    //     let res
-    //     if (maxRelative.lt(absMaxStake)) {
-    //         res = maxRelative.sub(stakeAmt)
-    //     } else {
-    //         res = absMaxStake.sub(stakeAmt)
-    //     }
-
-    //     return BN.max(res, new BN(0))
-    // }
-
-    // get maxDelegationText() {
-    //     return bnToBig(this.maxDelegationAmt, 9).toLocaleString(9)
-    // }
-
-    // get maxDelegationUsdText() {
-    //     let big = bnToBig(this.maxDelegationAmt, 9)
-    //     let res = big.times(this.avaxPrice)
-    //     return res.toLocaleString(2)
-    // }
 
     // get avaxPrice(): Big {
     //     return Big(this.$store.state.prices.usd)
@@ -440,7 +387,6 @@ export default class AddValidator extends Vue {
         this.formAmt = this.stakeAmt
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
-        // this.formFee = parseFloat(this.delegationFee)
     }
 
     confirm() {
@@ -499,12 +445,6 @@ export default class AddValidator extends Vue {
             this.err = this.$t('earn.validate.errs.id') as string
             return false
         }
-
-        // Delegation Fee
-        // if (parseFloat(this.delegationFee) < this.minFee) {
-        //     this.err = this.$t('earn.validate.errs.fee', [this.minFee]) as string
-        //     return false
-        // }
 
         // Stake amount
         if (this.stakeAmt.lt(this.minStakeAmt)) {
@@ -630,11 +570,6 @@ export default class AddValidator extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../../styles/main';
-.cols {
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 1fr;*/
-}
-
 form {
     display: grid;
     grid-template-columns: 1fr 340px;
