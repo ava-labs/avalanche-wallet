@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div class="modal_main" v-if="isActive" :icy="icy">
+        <div class="modal_main" v-if="isActive">
             <div class="modal_bg" @click="bgclick" :icy="icy"></div>
             <div class="modal_container">
                 <div class="modal_body">
@@ -82,33 +82,22 @@ export default class Modal extends Vue {
     top: 0;
     left: 0;
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     overflow: auto;
     display: flex;
-    background-color: rgba(0, 0, 0, 0.6);
-    &[icy] {
-        backdrop-filter: blur(4px);
-    }
-}
-
-.modal_container {
-    width: 100%;
-    height: 100%;
-    margin-top: max(50px, 2vh);
-    position: relative;
+    overflow-y: hidden;
 }
 .modal_bg {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     vertical-align: center;
     align-items: center;
 
-    background-color: rgba(0, 0, 0, 0.6);
     &[icy] {
         backdrop-filter: blur(4px);
     }
@@ -120,18 +109,21 @@ export default class Modal extends Vue {
     min-height: 30px;
     background-color: var(--bg);
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
-    margin: 50px auto;
+    margin: auto;
     z-index: 2;
     position: absolute;
-    top: max(50%, 300px);
-    left: 50%;
+    inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);
     border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    max-height: 90%;
 }
 
 @include main.mobile-device {
     .modal_body {
+        position: absolute;
         width: max-content;
+        margin: 0;
         padding-bottom: 20px;
         max-width: 100%;
         border-radius: var(--border-radius-lg);

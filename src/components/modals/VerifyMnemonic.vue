@@ -1,9 +1,6 @@
 <template>
     <modal ref="modal" :title="title" class="modal_parent" icy>
         <form class="mnemonic_body" v-on:submit.prevent="verify">
-            <!-- <button @click="close" class="close_but">
-                <fa icon="times"></fa>
-            </button> -->
             <h3>{{ $t('create.verify_desc') }}</h3>
             <div class="words">
                 <div v-for="i in 24" :key="i" class="mnemonic_in" tabindex="-1">
@@ -131,19 +128,19 @@ export default class VerifyMnemonic extends Vue {
     width: 450px;
 }
 
-.close_but {
-    position: absolute;
-    top: 12px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    opacity: 0.2;
+// .close_but {
+//     position: absolute;
+//     top: 12px;
+//     right: 20px;
+//     background-color: transparent;
+//     border: none;
+//     outline: none;
+//     opacity: 0.2;
 
-    &:hover {
-        opacity: 1;
-    }
-}
+//     &:hover {
+//         opacity: 1;
+//     }
+// }
 
 .verify {
     position: fixed;
@@ -229,8 +226,12 @@ h3 {
 }
 
 @include main.mobile-device {
-    .mnemonic-body {
+    .mnemonic_body {
+        padding: 15px 30px;
         width: 100%;
+        overflow-y: scroll;
+        position: relative;
+        height: 60vh;
     }
 
     .words {
