@@ -18,13 +18,7 @@ import Vue from 'vue'
 import AvaAsset from '@/js/AvaAsset'
 import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
-import {
-    AmountOutput,
-    UTXOSet as AVMUTXOSet,
-    UTXO as AVMUTXO,
-    UTXO,
-    NFTMintOutput,
-} from 'avalanche/dist/apis/avm'
+import { AmountOutput, UTXOSet as AVMUTXOSet, UTXO, NFTMintOutput } from 'avalanche/dist/apis/avm'
 import { UnixNow } from 'avalanche/dist/utils'
 import { BN } from 'avalanche'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
@@ -33,18 +27,15 @@ import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
-// import ERC721Token from '@/js/ERC721Token'
 
-const TOKEN_LISTS = [
-    'https://raw.githubusercontent.com/pangolindex/tokenlists/1896f8607efa01c82a273c0012e3f99eee25db81/43114.tokenlist.json',
-]
+const TOKEN_LISTS: string[] = []
 
 import ERC721Module from './modules/erc721'
-import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { getPayloadFromUTXO } from '@/helpers/helper'
 import { isUrlBanned } from '@/components/misc/NftPayloadView/blacklist'
+import { fetchTokenList } from '@/store/modules/assets/fetchTokenList'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -284,7 +275,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async initErc20List({ state, dispatch, commit }) {
             // Load default erc20 token contracts
-            const erc20Tokens = ERC20_TOKEN_LIST as TokenList
+            const erc20Tokens = await fetchTokenList()
             erc20Tokens.readonly = true
             erc20Tokens.url = 'Default'
             await dispatch('addTokenList', erc20Tokens)
