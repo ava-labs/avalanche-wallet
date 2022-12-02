@@ -7,7 +7,7 @@
                 <li>
                     Ensure you have installed the
                     <b>Avalanche App v{{ minV }}</b>
-                    and open it on your device.
+                    or above and open it on your device.
                 </li>
             </ol>
             <p style="margin-top: 12px !important">
