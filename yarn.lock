@@ -45,6 +45,16 @@
     bs58 "^5.0.0"
     sha3 "^2.1.4"
 
+"@avalabs/hw-app-avalanche@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@avalabs/hw-app-avalanche/-/hw-app-avalanche-0.2.0.tgz#5b27f1efdf933aec918941b77d7a202b9c2842bc"
+  integrity sha512-F8ME9ZghsR9PzzkC+0zO+Ts962jaF8/fFkeoFO88zcE5i/6VB3ed5Z/Gu5fMot6x1dMyLgdVP2VISLg+BFRQvQ==
+  dependencies:
+    "@ledgerhq/hw-app-eth" "^6.29.7"
+    "@ledgerhq/hw-transport" "^6.27.5"
+    bs58 "^5.0.0"
+    sha3 "^2.1.4"
+
 "@avalabs/vue_components@0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@avalabs/vue_components/-/vue_components-0.10.0.tgz#6dcab2079db824711410898b3afafdbc6d1d5bd4"
