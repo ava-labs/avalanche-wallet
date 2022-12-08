@@ -67,6 +67,7 @@ import { WalletHelper } from '@/helpers/wallet_helper'
 import {
     avalanche,
     bnToBig,
+    chainIdFromAlias,
     getLedgerProvider,
     LedgerProvider,
 } from '@avalabs/avalanche-wallet-sdk'
@@ -974,18 +975,17 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     /**
-     * Verify X or P address
+     * Display the given address index on the device to prove ownership.
      */
-    async verifyAddress(index: number, internal = false) {
+    async verifyAddress(index: number, internal = false, chainAlias?: ChainIdType) {
         const hrp = avalanche.getHRP()
         const change = internal ? '1' : '0'
         const path = `${AVA_ACCOUNT_PATH}/${change}/${index}`
-
-        console.log('verify path: ', path)
-
+        const chainId = chainAlias ? chainIdFromAlias(chainAlias) : undefined
         return await this.provider.getAddress(this.getTransport(), bippath.fromString(path), {
             show: true,
             hrp: hrp,
+            chainId: chainId,
         })
     }
 
