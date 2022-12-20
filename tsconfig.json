@@ -14,7 +14,7 @@
         "sourceMap": true,
         "resolveJsonModule": true,
         "baseUrl": ".",
-        "typeRoots": ["./node_modules/@types", "./node_modules/vuetify/types"],
+        "typeRoots": ["./node_modules/@types", "./node_modules/vuetify/types", "./types"],
         "types": ["webpack-env", "vuetify", "ts-jest", "cypress"],
         "paths": {
             "@/*": ["src/*"]

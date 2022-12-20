@@ -244,10 +244,10 @@ export default class AddressCard extends Vue {
         switch (this.chainNow) {
             case 'X':
             case 'P':
-                wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/0/${this.activeIdx}`, hrp)
+                wallet.verifyAddress(this.activeIdx, false, this.chainNow)
                 break
             case 'C':
-                wallet.ethApp.getAddress(`${LEDGER_ETH_ACCOUNT_PATH}`)
+                wallet.ethApp.getAddress(`${LEDGER_ETH_ACCOUNT_PATH}`, true)
         }
     }
 

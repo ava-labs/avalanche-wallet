@@ -6,8 +6,8 @@
                 <li>Enter your PIN and access your device.</li>
                 <li>
                     Ensure you have installed the
-                    <b>Avalanche App v0.5.9</b>
-                    and open it on your device.
+                    <b>Avalanche App v{{ minV }}</b>
+                    or above and open it on your device.
                 </li>
             </ol>
             <p style="margin-top: 12px !important">
@@ -16,8 +16,8 @@
                     <a href="https://www.ledger.com/ledger-live/download" target="_blank">
                         Ledger Live
                     </a>
-                    app manager. The minimum version required to use the app is version 0.5.9, more
-                    instructions can be found
+                    app manager. The minimum version required to use the app is version {{ minV }},
+                    more instructions can be found
                     <a
                         target="_blank"
                         href="https://support.avax.network/en/articles/6150237-how-to-use-a-ledger-nano-s-or-nano-x-with-avalanche"
@@ -31,13 +31,13 @@
     </modal>
 </template>
 <script lang="ts">
-import { LedgerWallet, MIN_EVM_SUPPORT_V } from '@/js/wallets/LedgerWallet'
 import { WalletType } from '@/js/wallets/types'
 
 import 'reflect-metadata'
 import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import Modal from './Modal.vue'
+import { MIN_LEDGER_V } from '@/js/wallets/constants'
 
 @Component({
     components: {
@@ -66,7 +66,7 @@ export default class LedgerUpgrade extends Vue {
     }
 
     get minV() {
-        return MIN_EVM_SUPPORT_V
+        return MIN_LEDGER_V
     }
 
     get isActive() {
@@ -75,11 +75,6 @@ export default class LedgerUpgrade extends Vue {
 
     get wallet() {
         return this.$store.state.activeWallet as WalletType
-    }
-
-    get config() {
-        if (!this.wallet) return {}
-        return (this.wallet as LedgerWallet).config
     }
 
     @Watch('isActive', { immediate: true })
