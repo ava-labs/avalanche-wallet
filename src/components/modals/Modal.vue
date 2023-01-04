@@ -101,7 +101,7 @@ export default class Modal extends Vue {
 
 .modal_body {
     width: max-content;
-    max-width: min(60vw, 600px);
+    max-width: 90%;
     min-height: 30px;
     background-color: var(--bg);
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
