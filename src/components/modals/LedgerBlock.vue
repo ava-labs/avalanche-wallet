@@ -84,6 +84,7 @@ export default class LedgerBlock extends Vue {
 .ledger_block {
     pointer-events: none;
     padding: 30px;
+    max-width: 600px;
     text-align: center;
     display: flex;
     flex-direction: column;
