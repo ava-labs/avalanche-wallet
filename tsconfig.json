@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES6",
         "module": "es2015",
         "strict": true,
         "jsx": "preserve",

@@ -287,7 +287,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getCredentials<UnsignedTx extends AVMUnsignedTx | PlatformUnsignedTx | EVMUnsignedTx>(
         unsignedTx: UnsignedTx,
         paths: string[],
-        sigMap: any,
+        sigMap: Map<string, Buffer>,
         chainId: ChainIdType
     ): Credential[] {
         const creds: Credential[] = []
@@ -340,6 +340,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const pathStr = paths[pathIndex]
 
                 const sigRaw = sigMap.get(pathStr)
+                if (!sigRaw) throw new Error('Missing signature.')
                 const sigBuff = BufferAvax.from(sigRaw)
                 const sig: Signature = new Signature()
                 sig.fromBuffer(sigBuff)
@@ -358,6 +359,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const pathStr = paths[pathIndex]
 
                 const sigRaw = sigMap.get(pathStr)
+                if (!sigRaw) throw new Error('Missing signature.')
                 const sigBuff = BufferAvax.from(sigRaw)
                 const sig: Signature = new Signature()
                 sig.fromBuffer(sigBuff)
@@ -376,6 +378,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                 const pathStr = paths[pathIndex]
 
                 const sigRaw = sigMap.get(pathStr)
+                if (!sigRaw) throw new Error('Missing signature.')
                 const sigBuff = BufferAvax.from(sigRaw)
                 const sig: Signature = new Signature()
                 sig.fromBuffer(sigBuff)
@@ -399,6 +402,8 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         try {
             store.commit('Ledger/openModal', {
                 title: 'Sign Hash',
+                warning:
+                    'Signing hashes are dangerous, continue at your own risk. Ledger is unable display this transaction because it is too large.',
                 messages: [],
                 info: msg.toString('hex').toUpperCase(),
             })
@@ -419,7 +424,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             const creds: Credential[] = this.getCredentials<UnsignedTx>(
                 unsignedTx,
                 paths,
-                sigMap,
+                sigMap.signatures,
                 chainId
             )
 
@@ -471,8 +476,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         // Get their paths, for owned ones
         const changePaths = this.getAddressPaths(outputAddrs)
-
-        console.log('change paths: ', changePaths)
 
         const messages = this.getTransactionMessages<UnsignedTx>(
             unsignedTx,
@@ -726,11 +729,27 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         const chainId: ChainIdType = 'X'
         const { paths } = this.getTransactionPaths<AVMUnsignedTx>(unsignedTx, chainId)
 
-        const signedTx = await this.signTransactionParsable<AVMUnsignedTx, AVMTx>(
-            unsignedTx,
-            paths,
-            chainId
+        // We dont know the number of change paths but can assume worst case and use number of signer paths
+        const canSign = this.provider.canParseTx(
+            unsignedTx.toBuffer().length,
+            paths.length,
+            paths.length
         )
+
+        let signedTx
+        if (canSign) {
+            signedTx = await this.signTransactionParsable<AVMUnsignedTx, AVMTx>(
+                unsignedTx,
+                paths,
+                chainId
+            )
+        } else {
+            signedTx = await this.signTransactionHash<AVMUnsignedTx, AVMTx>(
+                unsignedTx,
+                paths,
+                chainId
+            )
+        }
 
         store.commit('Ledger/closeModal')
         return signedTx
@@ -741,11 +760,28 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
         const { paths } = this.getTransactionPaths<PlatformUnsignedTx>(unsignedTx, chainId)
 
-        const signedTx = await this.signTransactionParsable<PlatformUnsignedTx, PlatformTx>(
-            unsignedTx,
-            paths,
-            chainId
+        // We dont know the number of change paths but can assume worst case and use number of signer paths
+        const canSign = this.provider.canParseTx(
+            unsignedTx.toBuffer().length,
+            paths.length,
+            paths.length
         )
+
+        let signedTx
+        if (canSign) {
+            signedTx = await this.signTransactionParsable<PlatformUnsignedTx, PlatformTx>(
+                unsignedTx,
+                paths,
+                chainId
+            )
+        } else {
+            signedTx = await this.signTransactionHash<PlatformUnsignedTx, PlatformTx>(
+                unsignedTx,
+                paths,
+                chainId
+            )
+        }
+
         store.commit('Ledger/closeModal')
         return signedTx
     }

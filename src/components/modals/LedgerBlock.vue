@@ -1,9 +1,11 @@
 <template>
-    <modal ref="modal" title="Check Your Ledger Device" :can_close="false">
+    <modal ref="modal" title="Accessing Ledger Device" :can_close="false">
         <div class="ledger_block" v-if="isActive">
-            <p v-if="!isPrompt" style="margin-bottom: 14px !important; font-size: 18px">
+            <p v-if="isPrompt" style="font-size: 18px">
                 {{ $t('modal.ledger.desc') }}
             </p>
+            <p class="alert" v-if="warning">{{ warning }}</p>
+
             <p class="message">{{ title }}</p>
             <p class="message" v-if="info">{{ info }}</p>
             <template v-else>
@@ -13,17 +15,6 @@
                 </div>
             </template>
             <Spinner class="spinner"></Spinner>
-            <div v-if="duration >= 0 && !isPrompt">
-                You have
-                <span
-                    v-bind:class="{
-                        alert: duration >= 0 && duration < 10,
-                    }"
-                >
-                    {{ duration }}
-                </span>
-                seconds remaining.
-            </div>
         </div>
     </modal>
 </template>
@@ -43,18 +34,15 @@ import { LEDGER_EXCHANGE_TIMEOUT } from '../../store/modules/ledger/types'
     },
 })
 export default class LedgerBlock extends Vue {
-    duration: number = LEDGER_EXCHANGE_TIMEOUT / 1000
     intervalId: ReturnType<typeof setTimeout> | null = null
 
     open() {
         // @ts-ignore
         this.$refs.modal.open()
-        this.startTimer()
     }
     close() {
         // @ts-ignore
         this.$refs.modal.close()
-        this.stopTimer()
     }
 
     get title(): string {
@@ -77,6 +65,10 @@ export default class LedgerBlock extends Vue {
         return this.$store.state.Ledger.isPrompt
     }
 
+    get warning() {
+        return this.$store.state.Ledger.warning
+    }
+
     @Watch('isActive', { immediate: true })
     onActive(val: boolean): void {
         if (!this.$refs.modal) return
@@ -86,20 +78,6 @@ export default class LedgerBlock extends Vue {
             this.close()
         }
     }
-
-    startTimer() {
-        this.intervalId = setInterval(() => {
-            this.duration -= 1
-            if (this.duration <= 0) {
-                this.duration = 0
-            }
-        }, 1000)
-    }
-
-    stopTimer() {
-        this.duration = LEDGER_EXCHANGE_TIMEOUT / 1000
-        clearInterval(this.intervalId!)
-    }
 }
 </script>
 <style scoped lang="scss">
@@ -107,6 +85,9 @@ export default class LedgerBlock extends Vue {
     pointer-events: none;
     padding: 30px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .message .title {
@@ -122,7 +103,9 @@ export default class LedgerBlock extends Vue {
 .message {
     padding: 12px;
     color: var(--primary-color);
+    width: 100%;
     margin: 4px 0 !important;
+    word-break: break-all;
     background-color: var(--bg-wallet);
 }
 

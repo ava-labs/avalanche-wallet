@@ -11,7 +11,6 @@ module.exports = {
         https: !process.env.USE_HTTP,
         port: 5000,
     },
-    // publicPath: '',
     configureWebpack: {
         optimization: {
             splitChunks: {

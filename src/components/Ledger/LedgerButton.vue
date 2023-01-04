@@ -14,24 +14,19 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Component, Prop, Vue } from 'vue-property-decorator'
-// @ts-ignore
 import TransportU2F from '@ledgerhq/hw-transport-u2f'
 //@ts-ignore
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-//@ts-ignore
+// @ts-ignore
 import TransportWebHID from '@ledgerhq/hw-transport-webhid'
 // @ts-ignore
 import Eth from '@ledgerhq/hw-app-eth'
-// @ts-ignore
-import AppAvax from '@obsidiansystems/hw-app-avalanche'
-import AvalancheApp from '@avalabs/hw-app-avalanche'
 import Transport from '@ledgerhq/hw-transport'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import LedgerBlock from '@/components/modals/LedgerBlock.vue'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/MnemonicWallet'
-import { ILedgerAppConfig } from '@/store/types'
 import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
 import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 import { getLedgerProvider } from '@avalabs/avalanche-wallet-sdk'
@@ -94,8 +89,7 @@ export default class LedgerButton extends Vue {
                 throw new Error('')
             }
 
-            let title = 'Provide Public Keys'
-            let messages = [
+            const messages = [
                 {
                     title: 'Derivation Path',
                     value: AVA_ACCOUNT_PATH,
@@ -107,8 +101,9 @@ export default class LedgerButton extends Vue {
             ]
 
             this.$store.commit('Ledger/openModal', {
-                title,
+                title: 'Getting Public Keys',
                 messages,
+                isPrompt: false,
             })
 
             let wallet = await LedgerWallet.fromTransport(transport)
