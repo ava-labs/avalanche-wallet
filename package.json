@@ -132,7 +132,7 @@
         "eslint-plugin-vue": "^5.0.0",
         "jest": "^26.1.0",
         "jest-environment-jsdom": "25",
-        "node-sass": "^6.0.0",
+        "node-sass": "^7.0.0",
         "prettier": "2.2.1",
         "release-it": "^14.10.0",
         "sass": "^1.24.4",
