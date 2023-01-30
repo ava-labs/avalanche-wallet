@@ -5,7 +5,7 @@
                 <transition-group name="fade" mode="out-in">
                     <div v-show="!isConfirm" key="form" class="ins_col">
                         <div style="margin-bottom: 30px">
-                            <h4>{{ $t('earn.validate.label_1') }}</h4>
+                            <h4>{{ $t('earn.validate.nodeId') }}</h4>
                             <input
                                 type="text"
                                 v-model="nodeId"
@@ -23,7 +23,11 @@
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.amount.label') }}</h4>
                             <p class="desc">
-                                {{ $t('earn.validate.amount.desc') }}
+                                {{
+                                    $t('earn.validate.amount.desc', [
+                                        displayMinStakeAmt.toLocaleString(),
+                                    ])
+                                }}
                             </p>
                             <AvaxInput
                                 v-model="stakeAmt"
@@ -33,44 +37,6 @@
                                 class="amt_in"
                             ></AvaxInput>
                         </div>
-                        <h4>{{ $t('earn.validate.reward.label') }}</h4>
-                        <p class="desc">
-                            {{ $t('earn.validate.reward.desc') }}
-                        </p>
-                        <div class="reward_tabs">
-                            <button
-                                @click="rewardSelect('local')"
-                                :selected="this.rewardDestination === 'local'"
-                            >
-                                {{ $t('earn.delegate.form.reward.chip_1') }}
-                            </button>
-                            <span>or</span>
-                            <button
-                                @click="rewardSelect('custom')"
-                                :selected="this.rewardDestination === 'custom'"
-                            >
-                                {{ $t('earn.delegate.form.reward.chip_2') }}
-                            </button>
-                        </div>
-
-                        <Expandable>
-                            <template v-slot:triggerOn>
-                                <p>
-                                    {{ $t('earn.shared.advanced.toggle_on') }}
-                                </p>
-                            </template>
-                            <template v-slot:triggerOff>
-                                <p>
-                                    {{ $t('earn.shared.advanced.toggle_off') }}
-                                </p>
-                            </template>
-                            <template v-slot:content>
-                                <UtxoSelectForm
-                                    style="margin: 10px 0"
-                                    v-model="formUtxos"
-                                ></UtxoSelectForm>
-                            </template>
-                        </Expandable>
                     </div>
                     <ConfirmPage
                         key="confirm"
@@ -88,7 +54,6 @@
                             <label>{{ $t('earn.validate.summary.duration') }} *</label>
                             <p>{{ durationText }}</p>
                         </div>
-
                         <div class="submit_box">
                             <p v-if="warnShortDuration" class="err">
                                 {{ $t('earn.validate.errs.duration_warn') }}
@@ -161,18 +126,17 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 //@ts-ignore
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import { BN } from '@c4tplatform/caminojs'
 import Big from 'big.js'
 //@ts-ignore
 import { QrInput } from '@c4tplatform/vue_components'
-import { bintools, ava } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import ConfirmPage from '@/components/wallet/earn/Validate/ConfirmPage.vue'
 import moment from 'moment'
-import { bnToBig, calculateStakingReward } from '@/helpers/helper'
 import Tooltip from '@/components/misc/Tooltip.vue'
 import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'
@@ -181,6 +145,8 @@ import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 import { AmountOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { WalletType } from '@/js/wallets/types'
+import { WalletHelper } from '@/helpers/wallet_helper'
+import { bnToBig } from '@/helpers/helper'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -234,8 +200,6 @@ export default class AddValidator extends Vue {
 
     mounted() {
         this.rewardSelect('local')
-        //@ts-ignore
-        this.$refs.avaxinput.$refs.amt_in.val = '100000'
     }
 
     setEnd(val: string) {
@@ -324,6 +288,7 @@ export default class AddValidator extends Vue {
         this.updateFormData()
         this.isConfirm = true
     }
+
     cancelConfirm() {
         this.isConfirm = false
     }
@@ -402,14 +367,14 @@ export default class AddValidator extends Vue {
         try {
             this.isLoading = true
             this.err = ''
-            let txId = await wallet.validate(
+            const startTime = startDate.getTime() / 1000
+            const endTime = this.formEnd.getTime() / 1000
+            let txId = await WalletHelper.addValidatorTx(
+                wallet,
                 this.formNodeId,
-                this.formAmt,
-                startDate,
-                this.formEnd,
-                this.formFee,
-                this.formRewardAddr,
-                this.formUtxos
+                new BN(startTime),
+                new BN(endTime),
+                new BN(this.formAmt.toString())
             )
             this.isLoading = false
             this.onTxSubmit(txId)
@@ -462,6 +427,11 @@ export default class AddValidator extends Vue {
         return this.$store.state.Platform.minStake
     }
 
+    get displayMinStakeAmt(): Big {
+        let bn = this.$store.state.Platform.minStake
+        return bnToBig(bn, 9)
+    }
+
     onerror(err: any) {
         let msg: string = err.message
         console.error(err)
@@ -488,14 +458,17 @@ export default class AddValidator extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../../styles/main';
+
 form {
     display: grid;
     grid-template-columns: 1fr 340px;
     column-gap: 90px;
 }
+
 .ins_col {
     max-width: 490px;
 }
+
 .amt {
     width: 100%;
     display: flex;
@@ -504,6 +477,7 @@ form {
     border: 1px solid #999;
     padding: 4px 14px;
 }
+
 .bigIn {
     flex-grow: 1;
 }
@@ -540,6 +514,7 @@ label {
         float: right;
         opacity: 0.4;
         cursor: pointer;
+
         &:hover {
             opacity: 1;
         }
@@ -556,8 +531,10 @@ label {
     border-left: 2px solid var(--bg-light);
     padding-left: 30px;
     height: 100%;
+
     > div {
         margin-bottom: 14px;
+
         p {
             font-size: 24px;
         }
@@ -586,6 +563,7 @@ label {
 
 .reward_in {
     transition-duration: 0.2s;
+
     &[type='local'] {
         .reward_addr_in {
             opacity: 0.3;
@@ -598,6 +576,7 @@ label {
 .reward_tabs {
     margin-bottom: 8px;
     font-size: 13px;
+
     button {
         color: var(--primary-color-light);
 

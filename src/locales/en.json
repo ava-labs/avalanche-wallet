@@ -73,6 +73,7 @@
             "send": "Send",
             "export": "Cross Chain",
             "earn": "Earn",
+            "validator": "Validator",
             "studio": "Studio",
             "advanced": "Advanced",
             "activity": "Activity",
@@ -378,12 +379,13 @@
     "earn": {
         "title": "Earn",
         "desc": "You can earn more @.native:(0) by staking your existing tokens.",
-        "subtitle1": "Validate",
+        "subtitle1": "Setting up a Validator Node",
         "subtitle2": "Delegate",
         "subtitle3": "Cross Chain Transfer",
         "subtitle4": "Estimated Rewards",
         "warning_1": "You must have at least {0} @.native:(0) on the P chain to become a validator.",
         "warning_2": "You must have at least {0} @.native:(0) on the P chain to become a delegator.",
+        "warning_3": "Setting up a validator node is not possible for your selected network. Please change your network to start running a validator node.",
         "validate_card": {
             "title": "Validate",
             "desc": "You have an @.project:(0) node that you want to stake with.",
@@ -454,16 +456,20 @@
             }
         },
         "validate": {
-            "label_1": "Node ID",
+            "requirements_introduction": "In order to set up your validator node you have to:",
+            "nodeId": "Node ID",
+            "label_1": "Validator Node's Private Key",
+            "description_1": "Please enter the Node's Static Private Key (you can receive one by calling admin.getNodeSigner on your node)",
+            "label_3": "P-chain address your validator node will be registered with",
             "duration": {
-                "label": "Staking End Date",
+                "label": "Validation End Date",
                 "desc": "Your @.native:(0) tokens will be locked until this date.",
                 "start": "Start Date & Time",
                 "end": "End Date & Time"
             },
             "amount": {
-                "label": "Deposit Amount",
-                "desc": "Deposited amount is always 100.000 @.native:(0)."
+                "label": "Bonded Amount",
+                "desc": "Bonded amount is always {0} @.native:(0)."
             },
             "fee": {
                 "label": "Delegation Fee",
@@ -493,6 +499,7 @@
                 "type_local": "This wallet",
                 "type_custom": "Custom"
             },
+            "register_validator_node": "Register Validator Node",
             "confirm": "Confirm",
             "submit": "Submit",
             "cancel": "Cancel",
@@ -501,6 +508,12 @@
                 "desc": "If the transaction is accepted your tokens will be locked for staking. You will receive your locked tokens plus the rewards once your staking period is over.",
                 "status": "Status",
                 "reason": "Reason"
+            },
+            "warns": {
+                "camino_available": "100k CAM are available on your P-chain address",
+                "kyc_verified": "KYC or KYB verified",
+                "consortium_member_verified": "Accepted to be a member of the consortium",
+                "consortium_member_address_linked_to_node": "Your consortium member address is linked to your Node ID"
             },
             "errs": {
                 "duration_warn": "WARNING: You must have at least 14 days remaining on your validation period to accept delegations.",

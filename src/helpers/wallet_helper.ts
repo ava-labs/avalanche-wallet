@@ -1,7 +1,7 @@
 import { ava } from '@/AVA'
 import {
-    UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
+    UTXOSet as PlatformUTXOSet,
 } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
 import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import { WalletType } from '@/js/wallets/types'
@@ -14,13 +14,15 @@ import {
     buildEvmTransferNativeTx,
     buildMintNftTx,
 } from '@/js/TxHelper'
-import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
+import { PayloadBase, UnixNow } from '@c4tplatform/caminojs/dist/utils'
 import { ITransaction } from '@/components/wallet/transfer/types'
 
 import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
+import { UnsignedTx, UTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
+import axios from 'axios'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -196,6 +198,10 @@ class WalletHelper {
         return await ava.PChain().issueTx(tx)
     }
 
+    static async getAddressState(address: string): Promise<BN> {
+        return await ava.PChain().getAddressStates(address)
+    }
+
     // Single sig in this first implementation
     // For MultiSig extend consortiumMemberAuthCredentials
     static async registerNodeTx(
@@ -237,6 +243,34 @@ class WalletHelper {
 
         let tx = await wallet.signP(unsignedTx, [nodePrivateKey])
         return await ava.PChain().issueTx(tx)
+    }
+
+    static async addValidatorTx(
+        wallet: WalletType,
+        nodeID: string,
+        startTime: BN,
+        endTime: BN,
+        stakeAmount: BN
+    ): Promise<string> {
+        let pAddressStrings = wallet.getAllAddressesP()
+        const pchain = ava.PChain()
+        const utxoSet: UTXOSet = (await pchain.getUTXOs(pAddressStrings)).utxos
+
+        const unsignedTx: UnsignedTx = await pchain.buildAddValidatorTx(
+            utxoSet,
+            pAddressStrings,
+            pAddressStrings,
+            pAddressStrings,
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            pAddressStrings,
+            10
+        )
+
+        let tx = await wallet.signP(unsignedTx)
+        return await pchain.issueTx(tx)
     }
 
     static async getEthBalance(wallet: WalletType) {

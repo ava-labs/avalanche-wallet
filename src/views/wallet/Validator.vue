@@ -1,21 +1,25 @@
 <template>
     <div class="earn_page">
         <div class="header">
-            <!-- <h1>{{ $t('earn.title') }}</h1> -->
-            <!-- <h1>Validator</h1> -->
-            <h1>
-                {{ subtitle }}
-            </h1>
+            <h1 :class="depositAndBond ? '' : 'wrong_network'">{{ $t('earn.subtitle1') }}</h1>
         </div>
         <transition name="fade" mode="out-in">
             <div>
-                <p v-if="!canValidate" class="no_balance">
+                <p v-if="!depositAndBond" class="wrong_network">{{ $t('earn.warning_3') }}</p>
+                <p v-else-if="!canValidate" class="no_balance">
                     {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
+                </p>
+                <p v-else-if="!isNodeRegistered" class="no_balance">
+                    <register-node
+                        :isKycVerified="isKycVerified"
+                        :isConsortiumMember="isConsortiumMember"
+                        :hasEnoughUnlockedPlatformBalance="hasEnoughUnlockedPlatformBalance"
+                        @registered="isNodeRegistered = true"
+                    ></register-node>
                 </p>
                 <template v-else>
                     <add-validator></add-validator>
                 </template>
-                <!-- <component :is="pageNow" class="comp" @cancel="cancel"></component> -->
             </div>
         </transition>
     </div>
@@ -28,22 +32,34 @@ import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
+import { WalletHelper } from '@/helpers/wallet_helper'
+import MnemonicWallet from '@/js/wallets/MnemonicWallet'
+import RegisterNode from '@/components/wallet/earn/Validate/RegisterNode.vue'
+import {
+    ADDRESSSTATECONSORTIUM,
+    ADDRESSSTATEKYCVERIFIED,
+    ADDRESSSTATEREGISTERNODE,
+} from '@c4tplatform/caminojs/dist/apis/platformvm/addressstatetx'
 
 @Component({
     name: 'validator',
     components: {
+        RegisterNode,
         AddValidator,
     },
 })
 export default class Validator extends Vue {
-    subtitle: string = this.$t('earn.subtitle1') as string
+    isKycVerified = false
+    isConsortiumMember = false
+    hasEnoughUnlockedPlatformBalance = false
+    isNodeRegistered = false
     intervalID: any = null
-    depositAndBound: Boolean =
+    depositAndBond: Boolean =
         ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
 
     @Watch('$store.state.Network.selectedNetwork.networkId')
-    SupportdepositAndBound(): void {
-        this.depositAndBound =
+    SupportDepositAndBond(): void {
+        this.depositAndBond =
             ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
     }
 
@@ -51,7 +67,8 @@ export default class Validator extends Vue {
         this.$store.dispatch('Platform/update')
     }
 
-    created() {
+    async created() {
+        await this.evaluateCanRegisterNode()
         this.updateValidators()
         this.intervalID = setInterval(() => {
             this.updateValidators()
@@ -62,8 +79,25 @@ export default class Validator extends Vue {
         clearInterval(this.intervalID)
     }
 
+    async evaluateCanRegisterNode() {
+        const result = await WalletHelper.getAddressState(this.addresses[0])
+        const BN_ONE = new BN(1)
+        this.isKycVerified = !result.and(BN_ONE.shln(ADDRESSSTATEKYCVERIFIED)).isZero()
+        this.isConsortiumMember = !result.and(BN_ONE.shln(ADDRESSSTATECONSORTIUM)).isZero()
+        this.isNodeRegistered = !result.and(BN_ONE.shln(ADDRESSSTATEREGISTERNODE)).isZero()
+        this.hasEnoughUnlockedPlatformBalance = this.platformUnlocked.gte(
+            this.$store.state.Platform.minStake
+        )
+    }
+
+    get addresses() {
+        let wallet: MnemonicWallet = this.$store.state.activeWallet
+        return wallet.getAllAddressesP()
+    }
+
     get platformUnlocked(): BN {
-        return this.$store.getters['Assets/walletPlatformBalance']
+        if (this.depositAndBond) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
+        else return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLockedStakeable(): BN {
@@ -76,13 +110,12 @@ export default class Validator extends Vue {
     }
 
     get totBal(): BN {
-        if (this.depositAndBound) return this.platformUnlocked.add(this.platformTotalLocked)
+        if (this.depositAndBond) return this.platformUnlocked.add(this.platformTotalLocked)
         return this.platformUnlocked.add(this.platformLockedStakeable)
     }
 
     get pNoBalance() {
-        if (this.depositAndBound)
-            return this.platformUnlocked.add(this.platformTotalLocked).isZero()
+        if (this.depositAndBond) return this.platformUnlocked.add(this.platformTotalLocked).isZero()
         return this.platformUnlocked.add(this.platformLockedStakeable).isZero()
     }
 
@@ -116,6 +149,7 @@ export default class Validator extends Vue {
     grid-template-rows: max-content 1fr;
 }
 .header {
+    margin-bottom: 1rem;
     h1 {
         font-weight: normal;
     }
@@ -139,6 +173,9 @@ export default class Validator extends Vue {
             cursor: pointer;
         }
     }
+}
+.wrong_network {
+    color: var(--primary-color-light);
 }
 .options {
     margin: 30px 0;
