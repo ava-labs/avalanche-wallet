@@ -1,11 +1,14 @@
 <template>
-    <button class="button_primary" @click="submit">
+    <button class="button_primary" @click="submit" :disabled="disabled">
         <template v-if="!isLoading">
             Ledger
+
+            <span v-if="disabled" class="no_firefox">{{ browserName }} is not supported</span>
             <ImageDayNight
                 day="/img/access_icons/day/ledger.svg"
                 night="/img/access_icons/night/ledger.svg"
                 class="ledger_img"
+                v-else
             ></ImageDayNight>
         </template>
         <Spinner v-else class="spinner"></Spinner>
@@ -31,6 +34,9 @@ import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
 import ImageDayNight from '@/components/misc/ImageDayNight.vue'
 import { getLedgerProvider } from '@avalabs/avalanche-wallet-sdk'
 import { MIN_LEDGER_V } from '@/js/wallets/constants'
+const { detect } = require('detect-browser')
+
+const UnsupportedBrowsers = ['firefox', 'safari']
 
 @Component({
     components: {
@@ -44,6 +50,21 @@ export default class LedgerButton extends Vue {
     version?: string = undefined
     destroyed() {
         this.$store.commit('Ledger/closeModal')
+    }
+
+    get browser() {
+        return detect()
+    }
+
+    // For display
+    get browserName() {
+        return this.browser ? this.browser.name[0].toUpperCase() + this.browser.name.slice(1) : ''
+    }
+
+    get disabled() {
+        // If unsupported return true
+        if (this.browser && UnsupportedBrowsers.includes(this.browser.name)) return true
+        return false
     }
 
     async getTransport() {
@@ -187,5 +208,10 @@ export default class LedgerButton extends Vue {
 
 .spinner::v-deep p {
     color: inherit;
+}
+
+.no_firefox {
+    font-size: 0.8em;
+    color: var(--primary-color-light);
 }
 </style>

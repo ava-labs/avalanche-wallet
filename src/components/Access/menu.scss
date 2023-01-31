@@ -9,6 +9,10 @@
   display: flex;
   align-items: center;
 
+  &[disabled]{
+    background-color: var(--bg-light) !important;
+  }
+
   p {
     flex-grow: 1;
     text-align: left;

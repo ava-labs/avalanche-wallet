@@ -62,6 +62,7 @@
         "create-hash": "1.2.0",
         "crypto-js": "^4.1.1",
         "csv": "^5.5.0",
+        "detect-browser": "5.3.0",
         "ethereum-blockies-base64": "1.0.2",
         "ethereumjs-tx": "2.1.2",
         "ethereumjs-util": "^7.0.7",
