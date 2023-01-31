@@ -63,8 +63,6 @@ export default class Menu extends Vue {}
 @use '/src/components/Access/menu';
 
 .access_card {
-    //background-color: var(--bg-light) !important;
-    //padding: main.$container-padding;
     margin: 0px auto;
     display: flex;
     flex-direction: column;
@@ -96,9 +94,6 @@ hr {
 .options {
     display: flex;
     flex-direction: column;
-    //display: grid;
-    //grid-template-columns: repeat(4, 1fr);
-    //grid-gap: 30px;
 }
 
 .menu_option {
