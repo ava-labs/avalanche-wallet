@@ -9,6 +9,8 @@ export interface NetworkState {
     status: NetworkStatus
 
     txFee: BN
+
+    depositAndBond: boolean
 }
 
 export type NetworkStatus = 'disconnected' | 'connecting' | 'connected'

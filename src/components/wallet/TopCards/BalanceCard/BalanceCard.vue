@@ -44,7 +44,7 @@
                         <label>{{ $t('top.locked') }}</label>
                         <p>{{ balanceTextLocked }} {{ nativeAssetSymbol }}</p>
                     </div>
-                    <div v-if="!depositAndBound">
+                    <div v-if="!depositAndBond">
                         <label>{{ $t('top.balance.stake') }}</label>
                         <p>{{ stakingText }} {{ nativeAssetSymbol }}</p>
                     </div>
@@ -58,7 +58,7 @@
                         <label>{{ $t('top.balance.available') }} (C)</label>
                         <p>{{ evmUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
                     </div>
-                    <div v-if="depositAndBound">
+                    <div v-if="depositAndBond">
                         <label>{{ $t('top.balance.deposited') }} (P)</label>
                         <p>{{ platformDeposited | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
                         <label>{{ $t('top.balance.bonded') }} (P)</label>
@@ -74,7 +74,7 @@
                         <label>{{ $t('top.balance.locked_stake') }} (P)</label>
                         <p>{{ platformLockedStakeable | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
                     </div>
-                    <div v-if="!depositAndBound">
+                    <div v-if="!depositAndBond">
                         <label>{{ $t('top.balance.stake') }}</label>
                         <p>{{ stakingText }} {{ nativeAssetSymbol }}</p>
                     </div>
@@ -118,26 +118,20 @@ import { ava } from '@/AVA'
 export default class BalanceCard extends Vue {
     isBreakdown = false
     intervalId: NodeJS.Timeout | number | null = null
-    depositAndBound: Boolean =
-        ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
     $refs!: {
         utxos_modal: UtxosBreakdownModal
     }
 
     mounted() {
-        if (this.depositAndBound) this.$store.dispatch('Assets/getPChainBalances')
-    }
-
-    @Watch('$store.state.Network.selectedNetwork.networkId')
-    SupportdepositAndBound(): void {
-        this.depositAndBound =
-            ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
+        if (this.depositAndBond) this.$store.dispatch('Assets/getPChainBalances')
     }
 
     updateBalance(): void {
         this.$store.dispatch('Assets/updateUTXOs')
         this.$store.dispatch('History/updateTransactionHistory')
-        if (this.depositAndBound) this.$store.dispatch('Assets/getPChainBalances')
+        if (this.depositAndBond) {
+            this.$store.dispatch('Assets/getPChainBalances')
+        }
     }
 
     showUTXOsModal() {
@@ -151,6 +145,10 @@ export default class BalanceCard extends Vue {
     get ava_asset(): AvaAsset | null {
         let ava = this.$store.getters['Assets/AssetAVA']
         return ava
+    }
+
+    get depositAndBond(): boolean {
+        return this.$store.getters['Network/depositAndBond']
     }
 
     get avmUnlocked(): BN {
@@ -244,7 +242,7 @@ export default class BalanceCard extends Vue {
         if (this.isUpdateBalance) return '--'
 
         if (this.ava_asset !== null) {
-            if (this.depositAndBound) {
+            if (this.depositAndBond) {
                 let denomination = this.ava_asset.denomination
                 let total = this.platformDeposited
                     .add(this.platformBonded)
@@ -268,7 +266,7 @@ export default class BalanceCard extends Vue {
     }
 
     get platformUnlocked(): BN {
-        if (this.depositAndBound) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
+        if (this.depositAndBond) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
         else return this.$store.getters['Assets/walletPlatformBalance']
     }
 

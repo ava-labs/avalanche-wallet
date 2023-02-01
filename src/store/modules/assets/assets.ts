@@ -43,6 +43,7 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { getPayloadFromUTXO } from '@/helpers/helper'
 import { isUrlBanned } from '@/components/misc/NftPayloadView/blacklist'
+import store from '@/store'
 
 const assets_module: Module<AssetsState, RootState> = {
     namespaced: true,
@@ -528,8 +529,7 @@ const assets_module: Module<AssetsState, RootState> = {
             // @ts-ignore
             let assetsDict: AssetsDict = state.assetsDict
             let res: IWalletAssetsDict = {}
-            let supportBond =
-                ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
+            let depositAndBond = store.getters['Network/depositAndBond']
 
             for (var assetId in assetsDict) {
                 let balanceAmt = balanceDict[assetId]
@@ -548,7 +548,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 // Add extras for Native token
                 // @ts-ignore
                 if (asset.id === state.AVA_ASSET_ID) {
-                    if (supportBond) {
+                    if (depositAndBond) {
                         asset.addExtra(getters.walletPlatformBalance)
                         asset.addExtra(getters.walletPlatformBalanceLocked)
                         asset.addExtra(getters.walletPlatformBalanceLockedStakeable)

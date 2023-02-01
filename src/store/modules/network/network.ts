@@ -18,6 +18,7 @@ const network_module: Module<NetworkState, RootState> = {
         networksCustom: [],
         selectedNetwork: null,
         txFee: new BN(0),
+        depositAndBond: false,
     },
     mutations: {
         addNetwork(state, net: AvaNetwork) {
@@ -27,6 +28,9 @@ const network_module: Module<NetworkState, RootState> = {
     getters: {
         allNetworks(state) {
             return state.networks.concat(state.networksCustom)
+        },
+        depositAndBond(state) {
+            return state.depositAndBond
         },
     },
     actions: {
@@ -120,6 +124,9 @@ const network_module: Module<NetworkState, RootState> = {
             state.selectedNetwork = net
             dispatch('saveSelectedNetwork')
 
+            state.depositAndBond =
+                ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
+
             // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl
 
@@ -143,13 +150,14 @@ const network_module: Module<NetworkState, RootState> = {
 
             await dispatch('Assets/onNetworkChange', net, { root: true })
             dispatch('Assets/updateUTXOs', null, { root: true })
+            if (state.depositAndBond) {
+                dispatch('Assets/getPChainBalances', null, { root: true })
+            }
             dispatch('Platform/update', null, { root: true })
             dispatch('Platform/updateMinStakeAmount', null, { root: true })
             dispatch('updateTxFee')
             // Update tx history
             dispatch('History/updateTransactionHistory', null, { root: true })
-            if (ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature)
-                dispatch('Assets/getPChainBalances')
 
             // Set the SDK Network
             setAvalanche(ava)

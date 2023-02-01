@@ -27,8 +27,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Watch } from 'vue-property-decorator'
-import { ava } from '@/AVA'
+import { Component, Vue } from 'vue-property-decorator'
 import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
@@ -54,14 +53,6 @@ export default class Validator extends Vue {
     isConsortiumMember = false
     isNodeRegistered = false
     intervalID: any = null
-    depositAndBond: Boolean =
-        ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
-
-    @Watch('$store.state.Network.selectedNetwork.networkId')
-    SupportDepositAndBond(): void {
-        this.depositAndBond =
-            ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
-    }
 
     updateValidators() {
         this.$store.dispatch('Platform/update')
@@ -105,6 +96,10 @@ export default class Validator extends Vue {
         return this.$store.state.Platform.minStake
     }
 
+    get depositAndBond(): boolean {
+        return this.$store.getters['Network/depositAndBond']
+    }
+
     get platformLockedStakeable(): BN {
         // return this.$store.getters.walletPlatformBalanceLockedStakeable
         return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
@@ -115,7 +110,9 @@ export default class Validator extends Vue {
     }
 
     get totBal(): BN {
-        if (this.depositAndBond) return this.platformUnlocked.add(this.platformTotalLocked)
+        if (this.depositAndBond) {
+            return this.platformUnlocked.add(this.platformTotalLocked)
+        }
         return this.platformUnlocked.add(this.platformLockedStakeable)
     }
 
@@ -145,6 +142,7 @@ export default class Validator extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+
 /* body {
     height: auto;
     overflow: auto !important;
@@ -153,11 +151,14 @@ export default class Validator extends Vue {
     display: grid;
     grid-template-rows: max-content 1fr;
 }
+
 .header {
     margin-bottom: 1rem;
+
     h1 {
         font-weight: normal;
     }
+
     display: flex;
     /*justify-content: space-between;*/
     /*align-items: center;*/
@@ -179,9 +180,11 @@ export default class Validator extends Vue {
         }
     }
 }
+
 .wrong_network {
     color: var(--primary-color-light);
 }
+
 .options {
     margin: 30px 0;
     display: grid;
