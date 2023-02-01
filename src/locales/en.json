@@ -510,7 +510,7 @@
                 "reason": "Reason"
             },
             "warns": {
-                "camino_available": "100k CAM are available on your P-chain address",
+                "camino_available": "{0} @.native:(0) are available on your P-chain address",
                 "kyc_verified": "KYC or KYB verified",
                 "consortium_member_verified": "Accepted to be a member of the consortium",
                 "consortium_member_address_linked_to_node": "Your consortium member address is linked to your Node ID"

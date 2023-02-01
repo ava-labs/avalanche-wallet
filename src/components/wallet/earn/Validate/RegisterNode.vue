@@ -36,7 +36,11 @@
                 ></fa>
                 <fa v-else class="error_status_icon" icon="times-circle"></fa>
                 <h4>
-                    {{ $t('earn.validate.warns.camino_available') }}
+                    {{
+                        $t('earn.validate.warns.camino_available', [
+                            cleanAvaxBN(minPlatformUnlocked),
+                        ])
+                    }}
                     <a href="https://docs.camino.network/to/wallet-validate-cams" target="_blank">
                         <fa icon="external-link-alt"></fa>
                     </a>
@@ -95,20 +99,32 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { ava } from '@/AVA'
 import { KeyPair } from '@c4tplatform/caminojs/dist/apis/avm'
-import { bufferToNodeIDString, privateKeyStringToBuffer } from '@c4tplatform/caminojs/dist/utils'
+import {
+    bufferToNodeIDString,
+    ONEAVAX,
+    privateKeyStringToBuffer,
+} from '@c4tplatform/caminojs/dist/utils'
+import Big from 'big.js'
 
 @Component
 export default class RegisterNode extends Vue {
     @Prop() isKycVerified!: boolean
     @Prop() isConsortiumMember!: boolean
+    @Prop() minPlatformUnlocked!: BN
     @Prop() hasEnoughUnlockedPlatformBalance!: boolean
 
     nodePrivateKey = ''
+
+    cleanAvaxBN(val: BN) {
+        let big = Big(val.toString()).div(Big(ONEAVAX.toString()))
+        return big.toLocaleString()
+    }
 
     get addresses() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet

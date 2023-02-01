@@ -13,6 +13,7 @@
                     <register-node
                         :isKycVerified="isKycVerified"
                         :isConsortiumMember="isConsortiumMember"
+                        :minPlatformUnlocked="minPlatformUnlocked"
                         :hasEnoughUnlockedPlatformBalance="hasEnoughUnlockedPlatformBalance"
                         @registered="isNodeRegistered = true"
                     ></register-node>
@@ -51,7 +52,6 @@ import {
 export default class Validator extends Vue {
     isKycVerified = false
     isConsortiumMember = false
-    hasEnoughUnlockedPlatformBalance = false
     isNodeRegistered = false
     intervalID: any = null
     depositAndBond: Boolean =
@@ -80,14 +80,15 @@ export default class Validator extends Vue {
     }
 
     async evaluateCanRegisterNode() {
-        const result = await WalletHelper.getAddressState(this.addresses[0])
         const BN_ONE = new BN(1)
+        const result = await WalletHelper.getAddressState(this.addresses[0])
         this.isKycVerified = !result.and(BN_ONE.shln(ADDRESSSTATEKYCVERIFIED)).isZero()
         this.isConsortiumMember = !result.and(BN_ONE.shln(ADDRESSSTATECONSORTIUM)).isZero()
         this.isNodeRegistered = !result.and(BN_ONE.shln(ADDRESSSTATEREGISTERNODE)).isZero()
-        this.hasEnoughUnlockedPlatformBalance = this.platformUnlocked.gte(
-            this.$store.state.Platform.minStake
-        )
+    }
+
+    get hasEnoughUnlockedPlatformBalance(): boolean {
+        return this.platformUnlocked.gte(this.minPlatformUnlocked)
     }
 
     get addresses() {
@@ -98,6 +99,10 @@ export default class Validator extends Vue {
     get platformUnlocked(): BN {
         if (this.depositAndBond) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
         else return this.$store.getters['Assets/walletPlatformBalance']
+    }
+
+    get minPlatformUnlocked(): BN {
+        return this.$store.state.Platform.minStake
     }
 
     get platformLockedStakeable(): BN {
