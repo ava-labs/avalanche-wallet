@@ -39,7 +39,6 @@ class HdHelper {
     changePath: string
     masterKey: HDKey
     ethKeyPair: AVMKeyPair | PlatformVMKeyPair | undefined
-    ethAddress: string
     hdIndex: number
     utxoSet: AVMUTXOSet | PlatformUTXOSet
     isPublic: boolean
@@ -74,11 +73,8 @@ class HdHelper {
         this.hdIndex = 0
         this.isPublic = isPublic
         this.ethKeyPair = undefined
-        this.ethAddress = ''
 
         if (ethKey) {
-            let addrBuf = AVMKeyPair.addressFromPublicKey(Buffer.from(ethKey.publicKey))
-            this.ethAddress = bintools.addressToString(hrp, chainId, addrBuf)
             this.ethKeyPair = this.keyChain.importKey(Buffer.from(ethKey.privateKey))
         }
         // this.oninit()
@@ -244,7 +240,9 @@ class HdHelper {
     }
 
     getAllDerivedAddresses(upTo = this.hdIndex, start = 0): string[] {
-        let res = this.ethKeyPair ? [this.ethAddress] : []
+        let res = this.ethKeyPair
+            ? [bintools.addressToString(ava.getHRP(), this.chainId, this.ethKeyPair.getAddress())]
+            : []
         for (var i = start; i <= upTo; i++) {
             let addr = this.getAddressForIndex(i)
             res.push(addr)
