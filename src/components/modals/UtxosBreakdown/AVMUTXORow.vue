@@ -108,14 +108,19 @@ export default class UTXORow extends Vue {
     get balanceText() {
         if (!this.asset) return '-'
 
-        if (this.typeID === 7 || this.typeID === PlatformVMConstants.STAKEABLELOCKOUTID) {
+        if (
+            this.typeID === AVMConstants.SECPMINTOUTPUTID ||
+            this.typeID === PlatformVMConstants.SECPXFEROUTPUTID ||
+            this.typeID === PlatformVMConstants.STAKEABLELOCKOUTID ||
+            this.typeID === PlatformVMConstants.LOCKEDOUTID
+        ) {
             let out = this.out as AmountOutput
             let denom = (this.asset as AvaAsset).denomination
             let bn = out.getAmount()
             return bnToBig(bn, denom).toLocaleString()
         }
 
-        if ([6, 7, 10, 11].includes(this.typeID)) {
+        if ([6, 10, 11].includes(this.typeID)) {
             return 1
         }
 
@@ -135,6 +140,8 @@ export default class UTXORow extends Vue {
                 return 'NFT Transfer Output'
             case PlatformVMConstants.STAKEABLELOCKOUTID:
                 return 'Stakeable Lock Output'
+            case PlatformVMConstants.LOCKEDOUTID:
+                return 'Locked Output'
         }
         return ''
     }
