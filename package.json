@@ -3,9 +3,9 @@
     "private": true,
     "version": "1.0.0",
     "scripts": {
-        "build": "PUBLIC_PATH=https://suite-wallet.camino.network/ webpack --config webpack.prod.js",
-        "build:dev": "PUBLIC_PATH=https://dev.suite-wallet.camino.network/ webpack --config webpack.prod.js",
-        "build:stage": "PUBLIC_PATH=https://stage.suite-wallet.camino.network/ webpack --config webpack.prod.js",
+        "build": "PUBLIC_PATH=https://suite-wallet.camino.network/ DIST=/dist_prod webpack --config webpack.prod.js",
+        "build:dev": "PUBLIC_PATH=https://dev.suite-wallet.camino.network/ DIST=/dist_div webpack --config webpack.prod.js",
+        "build:stage": "PUBLIC_PATH=https://stage.suite-wallet.camino.network/ DIST=/dist_stage webpack --config webpack.prod.js",
         "build:start": "cd dist && PORT=3003 npx serve",
         "start": "webpack-dev-server --config webpack.dev.js",
         "start:live": "webpack-dev-server --open --config webpack.dev.js --live-reload",
