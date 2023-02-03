@@ -3,15 +3,15 @@ name: update-gcs-bucket
 on:
   push:
     branches:
-        - c4t
-        - dev
-        - suite
+      - c4t
+      - dev
+      - suite
 
 env:
   node_version: 16
 
 jobs:
-  build_deploy_scrape:    
+  build_deploy_scrape:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
@@ -36,8 +36,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.node_version }}
-          
-      - name: Install yarn dependencies        
+
+      - name: Install yarn dependencies
         run: yarn install
 
       - name: Build
