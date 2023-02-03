@@ -5,7 +5,7 @@ export interface AccessToken {
     userId: string
 }
 
-const BASE_URL = 'https://kyc-poc-be.camino.foundation/api/v1'
+const BASE_URL = 'https://kyc-poc-be.camino.network/api/v1'
 
 const kyc_api: AxiosInstance = axios.create({
     baseURL: BASE_URL,

@@ -74,7 +74,7 @@ textarea {
     min-height: 140px;
     font-size: 12px !important;
     background-color: #000 !important;
-    font-family: monospace !important;
+    font-family: 'Inter' !important;
     color: #0f0 !important;
     resize: none;
     border: none !important;

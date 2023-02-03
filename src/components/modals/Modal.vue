@@ -77,7 +77,7 @@ export default class Modal extends Vue {
 }
 
 .modal_main {
-    z-index: 3;
+    z-index: 1101;
     position: fixed;
     top: 0;
     left: 0;
@@ -110,7 +110,7 @@ export default class Modal extends Vue {
     background-color: var(--bg);
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
     margin: auto;
-    z-index: 2;
+    z-index: 1103;
     position: absolute;
     inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);

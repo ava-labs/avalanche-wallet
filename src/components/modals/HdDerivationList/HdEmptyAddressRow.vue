@@ -57,7 +57,7 @@ export default class HdEmptyAddressRow extends Vue {
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-all;
-    font-family: monospace;
+    font-family: 'Inter';
     color: var(--primary-color-light);
 
     .verify {

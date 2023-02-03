@@ -22,6 +22,7 @@ import { WalletType } from '@/js/wallets/types'
 import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 
 Vue.use(Vuex)
+Vue.config.devtools = true
 
 import router from '@/router'
 
@@ -41,7 +42,7 @@ import { privateToAddress } from 'ethereumjs-util'
 import { updateFilterAddresses } from '../providers'
 import { getAvaxPriceUSD } from '@/helpers/price_helper'
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
     modules: {
         Assets,
         Notifications,
@@ -59,6 +60,7 @@ export default new Vuex.Store({
         wallets: [],
         volatileWallets: [], // will be forgotten when tab is closed
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
+        theme: 'dark',
         prices: {
             usd: 0,
         },
@@ -69,6 +71,9 @@ export default new Vuex.Store({
             if (!wallet) return []
             let addresses = wallet.getDerivedAddresses()
             return addresses
+        },
+        theme(state: RootState): string {
+            return state.theme
         },
     },
     mutations: {
@@ -139,10 +144,8 @@ export default new Vuex.Store({
 
         async onAccess(store) {
             store.state.isAuth = true
-
             store.dispatch('Assets/updateAvaAsset')
             store.dispatch('Platform/update')
-            router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
             store.dispatch('Accounts/updateKycStatus')
             store.dispatch('Launch/initialize')
@@ -171,9 +174,7 @@ export default new Vuex.Store({
             store.dispatch('Accounts/onLogout')
             store.dispatch('Assets/onLogout')
             store.dispatch('Launch/onLogout')
-
-            // Go to the base URL with GET request not router
-            router.push(store.getters['Accounts/hasAccounts'] ? '/access' : '/')
+            router.push('/login')
         },
 
         // used with logout
@@ -379,3 +380,5 @@ export default new Vuex.Store({
         },
     },
 })
+
+export default store

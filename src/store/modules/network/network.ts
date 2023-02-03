@@ -40,7 +40,7 @@ const network_module: Module<NetworkState, RootState> = {
                     return
                 }
             }
-            state.networksCustom.push(net)
+            state.networksCustom = [...state.networksCustom, net]
             dispatch('save')
         },
 
@@ -135,8 +135,6 @@ const network_module: Module<NetworkState, RootState> = {
 
             // If authenticated
             if (rootState.isAuth) {
-                // Go back to wallet page
-                router.replace('/wallet')
                 for (var i = 0; i < rootState.wallets.length; i++) {
                     let w = rootState.wallets[i]
                     w.onnetworkchange()
@@ -144,13 +142,14 @@ const network_module: Module<NetworkState, RootState> = {
             }
 
             await dispatch('Assets/onNetworkChange', net, { root: true })
-            await dispatch('Launch/onNetworkChange', net, { root: true })
             dispatch('Assets/updateUTXOs', null, { root: true })
             dispatch('Platform/update', null, { root: true })
             dispatch('Platform/updateMinStakeAmount', null, { root: true })
             dispatch('updateTxFee')
             // Update tx history
             dispatch('History/updateTransactionHistory', null, { root: true })
+            if (ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature)
+                dispatch('Assets/getPChainBalances')
 
             // Set the SDK Network
             setAvalanche(ava)
@@ -168,19 +167,19 @@ const network_module: Module<NetworkState, RootState> = {
         async init({ state, commit, dispatch }) {
             let camino = new AvaNetwork(
                 'Camino',
-                'https://mainnet.camino.foundation',
+                'https://mainnet.camino.network',
                 1000,
-                'https://magellan.camino.foundation',
-                'https://explorer.camino.foundation/mainnet',
+                'https://magellan.mainnet.camino.network',
+                'https://explorer.camino.network/mainnet',
                 true
             )
 
             let columbus = new AvaNetwork(
                 'Columbus',
-                'https://columbus.camino.foundation',
+                'https://columbus.camino.network',
                 1001,
-                'https://magellan.columbus.camino.foundation',
-                'https://explorer.camino.foundation',
+                'https://magellan.columbus.camino.network',
+                'https://suite.camino.network/explorer',
                 true
             )
 

@@ -196,6 +196,49 @@ class WalletHelper {
         return await ava.PChain().issueTx(tx)
     }
 
+    // Single sig in this first implementation
+    // For MultiSig extend consortiumMemberAuthCredentials
+    static async registerNodeTx(
+        wallet: WalletType,
+        nodePrivateKey: string,
+        oldNodeID: string | undefined,
+        newNodeID: string | undefined,
+        address: string,
+        utxos?: PlatformUTXO[]
+    ): Promise<string> {
+        let utxoSet = wallet.getPlatformUTXOSet()
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
+        let pAddressStrings = wallet.getAllAddressesP()
+        // For change address use first available on the platform chain
+        // ToDo: In case ethAddr is msig alias, return undefined
+        let changeAddress = wallet.getFirstAvailableAddressPlatform()
+        const consortiumMemberAuthCredentials: [number, Buffer | string][] = [
+            [0, pAddressStrings[0]],
+        ]
+
+        const unsignedTx = await ava.PChain().buildRegisterNodeTx(
+            utxoSet,
+            pAddressStrings, // from
+            [changeAddress], // change
+            oldNodeID,
+            newNodeID,
+            ava.PChain().parseAddress(address),
+            consortiumMemberAuthCredentials,
+            undefined, // memo
+            undefined, // asOf
+            1 // changeThreshold
+        )
+
+        let tx = await wallet.signP(unsignedTx, [nodePrivateKey])
+        return await ava.PChain().issueTx(tx)
+    }
+
     static async getEthBalance(wallet: WalletType) {
         let bal = await web3.eth.getBalance(wallet.ethAddress)
         return new BN(bal)

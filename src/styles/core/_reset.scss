@@ -1,8 +1,3 @@
-body {
-    overflow: auto;
-    background-color: var(--bg) !important;
-    height: auto;
-}
 video {
     outline: none;
 }
@@ -45,8 +40,16 @@ h1 {
 h1,
 h2,
 h3,
-h4 {
-    font-family: 'Rubik', sans-serif;
+h4,
+h5,
+h6 {
+    font-family: 'ClashDisplay', sans-serif;
+    font-weight: 600;
+}
+
+div {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
 }
 
 textarea {

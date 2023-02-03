@@ -84,7 +84,7 @@ export default class HdDerivationListRow extends Vue {
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-all;
-    font-family: monospace;
+    font-family: 'Inter';
     color: var(--primary-color-light);
 
     .verify {
@@ -109,7 +109,7 @@ export default class HdDerivationListRow extends Vue {
     text-align: right;
     padding-right: 15px;
     padding-left: 15px;
-    font-family: monospace;
+    font-family: 'Inter';
     word-break: keep-all;
     white-space: nowrap;
 }

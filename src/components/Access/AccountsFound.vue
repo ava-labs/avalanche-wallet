@@ -1,18 +1,20 @@
 <template>
-    <div v-if="accounts.length">
+    <div v-if="accounts.length" class="accounts">
+        <span class="savedAccounts">Saved Camino Wallets</span>
         <div
             class="flex_container menu_option"
             v-for="(acct, i) in accounts"
             :key="i"
             @click="selectAccount(i)"
         >
-            <Identicon :value="acct.baseAddresses.join('')" diameter="40"></Identicon>
+            <v-icon>mdi-wallet-outline</v-icon>
             <p>{{ acct.name }}</p>
+            <v-icon class="goTo">mdi-chevron-right</v-icon>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { iUserAccountEncrypted } from '@/store/types'
 import Identicon from '@/components/misc/Identicon.vue'
 
@@ -22,6 +24,8 @@ import Identicon from '@/components/misc/Identicon.vue'
     },
 })
 export default class AccountsFound extends Vue {
+    @Prop() navigate: any
+
     accounts: iUserAccountEncrypted[] = []
 
     created() {
@@ -33,13 +37,19 @@ export default class AccountsFound extends Vue {
     }
 
     selectAccount(index: number) {
-        this.$router.push(`/access/account/${index}`)
+        this.navigate(`/access/account/${index}`)
     }
 }
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
 @use './menu';
+
+.accounts {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
 
 .account {
     background-color: var(--bg-light);
@@ -57,6 +67,26 @@ export default class AccountsFound extends Vue {
     }
 }
 
+.savedAccounts {
+    margin: 0;
+    font-family: ClashDisplay;
+    font-weight: 500;
+    line-height: 1.5;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.v-icon {
+    color: var(--primary-color);
+    width: 20px;
+    height: 20px;
+    font-size: 22px;
+}
+
+.goTo {
+    margin-left: auto;
+}
+
 .access_card {
     background-color: var(--bg-light) !important;
     padding: main.$container-padding;
@@ -72,25 +102,6 @@ h3 {
     grid-gap: 30px;
 }
 
-//.option {
-//    position: relative;
-//    transition-duration: 0.1s;
-//    transition-timing-function: ease-in;
-//    border-radius: 6px;
-//    font-family: 'DM Sans', sans-serif;
-//    font-weight: 700 !important;
-//    text-transform: uppercase;
-//    padding: 8px 18px;
-//    font-size: main.$s-size;
-//    display: flex;
-//    align-items: center;
-//    justify-content: center;
-//
-//    &:hover {
-//        box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.2);
-//    }
-//}
-
 @include main.mobile-device {
     .card {
         padding: main.$container-padding-mobile;
@@ -100,11 +111,10 @@ h3 {
         display: block;
         grid-template-columns: none;
     }
-
-    //.option {
-    //    width: 100%;
-    //    margin: 12px 0px;
-    //    display: block;
-    //}
+}
+@media only screen and (max-width: main.$mobile_width) {
+    .access_card {
+        padding: main.$container-padding-mobile;
+    }
 }
 </style>

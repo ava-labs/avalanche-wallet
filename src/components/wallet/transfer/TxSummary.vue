@@ -87,7 +87,7 @@ export default class TxSummary extends Vue {
     padding: 8px 16px;
     color: var(--primary-color-light);
     font-size: 16px;
-    font-family: Helvetica, monospace;
+    font-family: 'Inter' sans-serif;
     margin-bottom: 6px !important;
 }
 .amt {

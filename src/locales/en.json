@@ -57,10 +57,12 @@
         "password_error": "Invalid Password.",
         "submit": "Access Wallet",
         "mnemonic": {
-            "title": "Enter your MNEMONIC phrase\n",
-            "subtitle": "Hit ‘SPACE’ after every successful word entry.",
+            "title": "Enter your key phrase",
+            "subtitle": "Your key phrase consists of 24 words separated by an empty space",
             "cancel": "Cancel",
-            "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space."
+            "error": "Invalid key phrase. Your phrase must be 24 words separated by a single space.",
+            "showKeyPhrase": "Show Key Phrase",
+            "hideKeyPhrase": "Hide Key Phrase"
         },
         "accounts_found": "Accounts found on your device"
     },
@@ -74,7 +76,8 @@
             "studio": "Studio",
             "advanced": "Advanced",
             "activity": "Activity",
-            "launch": "Launch"
+            "launch": "Launch",
+            "validator": "Validator"
         },
         "address_card": {},
         "collectibles": {
@@ -120,6 +123,9 @@
             "hide": "Hide Breakdown",
             "available": "Available",
             "locked": "Locked",
+            "deposited": "Deposited",
+            "bonded": "Bonded",
+            "bonded_deposited": "Bonded & Deposited",
             "locked_stake": "Locked Stakeable",
             "stake": "Staking",
             "collectibles": "Collectibles"

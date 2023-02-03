@@ -3,7 +3,7 @@ import { RootState } from '@/store/types'
 import { getAddressHistory, getAliasChains } from '@/explorer_api'
 import moment from 'moment'
 
-import { Chain, HistoryState, ITransactionData } from '@/store/modules/history/types'
+import { Chain, HistoryState } from '@/store/modules/history/types'
 import { ava } from '@/AVA'
 import { filterDuplicateTransactions } from '@/helpers/history_helper'
 
@@ -114,12 +114,18 @@ const history_module: Module<HistoryState, RootState> = {
             state.isUpdatingAll = false
         },
         async getAliasChains({ state }) {
-            let res = await getAliasChains()
-            let chains = Object.entries(res.chains).map(([, value]) => {
-                let v = value as Chain
-                return { chainAlias: v.chainAlias, chainID: v.chainID }
-            })
-            state.chains = chains
+            try {
+                let res = await getAliasChains()
+                if (res.chains) {
+                    let chains = Object.entries(res.chains).map(([, value]) => {
+                        let v = value as Chain
+                        return { chainAlias: v.chainAlias, chainID: v.chainID }
+                    })
+                    state.chains = chains
+                }
+            } catch (e) {
+                state.chains = []
+            }
         },
     },
     getters: {

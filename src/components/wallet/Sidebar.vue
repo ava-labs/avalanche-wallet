@@ -2,10 +2,10 @@
     <div class="wallet_sidebar">
         <div class="stick">
             <div class="brand">
-                <img src="@/assets/camino_logo.png" />
+                <!-- <img src="@/assets/camino_logo.png" /> -->
             </div>
             <div class="links">
-                <router-link to="/wallet" class="wallet_link">
+                <router-link to="/wallet/home" class="wallet_link">
                     <v-icon>mdi-wallet-outline</v-icon>
                     {{ $t('wallet.sidebar.portfolio') }}
                 </router-link>
@@ -24,11 +24,6 @@
                 <router-link to="/wallet/earn" data-cy="wallet_earn" class="wallet_link">
                     <v-icon>mdi-hand-coin-outline</v-icon>
                     {{ $t('wallet.sidebar.earn') }}
-                </router-link>
-                <router-link to="/wallet/validator" data-cy="wallet_validator" class="wallet_link">
-                    <v-icon>mdi-check-network-outline</v-icon>
-                    <!-- {{ $t('wallet.sidebar.earn') }} -->
-                    Validator
                 </router-link>
                 <router-link to="/wallet/studio" data-cy="wallet_studio" class="wallet_link">
                     <v-icon>mdi-file-table-box-multiple-outline</v-icon>

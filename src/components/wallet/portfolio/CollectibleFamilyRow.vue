@@ -92,7 +92,7 @@ export default class CollectibleFamilyRow extends Vue {
         if (this.mintUtxos.length === 0) return ''
         let mintUtxo = this.mintUtxos[0]
 
-        return `/wallet/studio?utxo=${mintUtxo.getUTXOID()}`
+        return `/wallet/home/studio?utxo=${mintUtxo.getUTXOID()}`
     }
 
     get groupIds(): number[] {

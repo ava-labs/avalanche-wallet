@@ -1,0 +1,51 @@
+name: update-gcs-bucket
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - chain4travel
+      - dev
+
+env:
+  node_version: 16
+
+jobs:
+  BuildAndDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.node_version }}
+
+      - name: install yarn dependencies
+        run: yarn install
+      - name: build
+        run: yarn build
+
+      - name: Set bucket names
+        id: setBucketNames
+        run: |
+          if [[ "${{ github.ref_name }}" == "chain4travel" ]]; then
+              echo "bucket=wallet.camino.network" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == "dev" ]]; then
+              echo "bucket=wallet.kopernikus.camino.network" >> $GITHUB_OUTPUT
+          fi
+      - name: 'gcloud authentication'
+        id: 'auth'
+
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: update bucket files
+        run: gsutil rsync -R -d dist gs://${{ steps.setBucketNames.outputs.bucket }}
+
+      ## TODO: this needs more discussion, to decide if we really need 3 different deployments from 2 branch for the wallet and explorer
+      - name: update bucket files for columbus
+        if: ${{ github.ref == 'refs/heads/chain4travel' }}
+        run: gsutil rsync -R -d dist gs://wallet.columbus.camino.network

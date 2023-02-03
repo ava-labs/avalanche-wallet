@@ -13,7 +13,11 @@
             <p style="margin-top: 12px !important">
                 <small>
                     If you do not have the Avalanche app on your ledger, please add it through the
-                    <a href="https://www.ledger.com/ledger-live/download" target="_blank">
+                    <a
+                        href="https://www.ledger.com/ledger-live/download"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         Ledger Live
                     </a>
                     app manager. The minimum version required to use the app is version 0.5.3, more
@@ -21,6 +25,7 @@
                     <a
                         target="_blank"
                         href="https://docs.avax.network/build/tutorials/platform/setup-your-ledger-nano-s-with-avalanche"
+                        rel="noopener noreferrer"
                     >
                         here
                     </a>

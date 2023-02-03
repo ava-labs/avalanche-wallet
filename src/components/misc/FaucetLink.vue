@@ -2,7 +2,12 @@
     <div class="faucet">
         <p class="drop"><fa icon="tint"></fa></p>
         <p>{{ $t('transfer.faucet') }}</p>
-        <a :href="faucetLink + `?address=${selectedAddress}`" target="_blank" class="but_primary">
+        <a
+            :href="faucetLink + `?address=${selectedAddress}`"
+            target="_blank"
+            class="but_primary"
+            rel="noopener noreferrer"
+        >
             Go to faucet
         </a>
     </div>

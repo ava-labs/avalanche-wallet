@@ -335,12 +335,6 @@ export default class MintNft extends Vue {
         this.isSuccess = true
         this.txId = txId
 
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Success',
-            message: 'Collectible minted and added to your wallet.',
-        })
-
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')

@@ -79,8 +79,8 @@ export default class FungibleRow extends Vue {
     }
 
     get sendLink(): string {
-        if (!this.asset) return `/wallet/transfer`
-        return `/wallet/transfer?asset=${this.asset.id}&chain=X`
+        if (!this.asset) return `/wallet/home/transfer`
+        return `/wallet/home/transfer?asset=${this.asset.id}&chain=X`
     }
 
     get avaxToken(): AvaAsset {

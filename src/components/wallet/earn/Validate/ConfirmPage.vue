@@ -16,14 +16,6 @@
             <label>{{ $t('earn.validate.confirmation.end') }}</label>
             <p>{{ end.toLocaleString() }}</p>
         </div>
-        <!-- <div>
-            <label>{{ $t('earn.validate.confirmation.fee') }}</label>
-            <p>{{ delegationFee }} %</p>
-        </div> -->
-        <!-- <div>
-            <label>{{ $t('earn.validate.confirmation.reward') }} ({{ walletType }})</label>
-            <p style="word-break: break-all">{{ rewardAddress }}</p>
-        </div> -->
     </div>
 </template>
 <script lang="ts">
@@ -40,23 +32,6 @@ export default class ConfirmPage extends Vue {
     @Prop() amount!: BN
     @Prop() rewardAddress!: string
     @Prop() rewardDestination!: string
-
-    // amountCopy: BN = new BN(0);
-
-    // @Watch('amount')
-    // onAmountChange(val: BN){
-    //     console.log(val.toString(), val);
-    //     this.amountCopy = val.clone()
-    //     this.amountCopy = val.
-    // }
-
-    // get startDate(){
-    //     return new Date(this.start);
-    // }
-    //
-    // get endDate(){
-    //     return new Date(this.end);
-    // }
 
     get amtBig(): Big {
         let stakeAmt = Big(this.amount.toString()).div(Math.pow(10, 9))

@@ -13,21 +13,6 @@
             ></span>
             <p v-if="activeNetwork">{{ activeNetwork.name }}</p>
             <p v-else>Disconnected</p>
-            <!--            <template v-if="status === 'disconnected' || status === 'connecting'">-->
-            <!--                <img v-if="$root.theme === 'day'" src="@/assets/network_off.png" />-->
-            <!--                <img v-else src="@/assets/network_off_night.svg" />-->
-            <!--            </template>-->
-            <!--            <template v-else>-->
-            <!--                <img v-if="$root.theme === 'day'" src="@/assets/network_on.png" />-->
-            <!--                <img v-else src="@/assets/network_off_night.svg" />-->
-            <!--            </template>-->
-            <!--            <button v-if="status === 'connected'">-->
-            <!--                {{ activeNetwork.name }}-->
-            <!--            </button>-->
-            <!--            <button v-else-if="status === 'connecting'">-->
-            <!--                {{ $t('network.status1') }}-->
-            <!--            </button>-->
-            <!--            <button v-else>{{ $t('network.status2') }}</button>-->
         </div>
         <transition name="fade">
             <div class="network_dispose_bg" v-if="isActive" key="bg" @click="closeMenu"></div>
@@ -171,10 +156,7 @@ export default class NetworkMenu extends Vue {
 .toggle_but {
     display: grid;
     grid-template-columns: max-content 1fr max-content;
-    //border: 2px solid var(--bg-light);
-    // padding: 2px 10px;
-    //font-size: 13px;
-    // display: flex;
+
     border-radius: 6px;
     position: relative;
     align-items: center;

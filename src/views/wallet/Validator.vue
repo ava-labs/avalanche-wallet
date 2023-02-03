@@ -22,8 +22,8 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component } from 'vue-property-decorator'
-
+import { Vue, Component, Watch } from 'vue-property-decorator'
+import { ava } from '@/AVA'
 import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
@@ -38,6 +38,14 @@ import Big from 'big.js'
 export default class Validator extends Vue {
     subtitle: string = this.$t('earn.subtitle1') as string
     intervalID: any = null
+    depositAndBound: Boolean =
+        ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
+
+    @Watch('$store.state.Network.selectedNetwork.networkId')
+    SupportdepositAndBound(): void {
+        this.depositAndBound =
+            ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
+    }
 
     updateValidators() {
         this.$store.dispatch('Platform/update')
@@ -63,20 +71,19 @@ export default class Validator extends Vue {
         return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
     }
 
+    get platformTotalLocked(): BN {
+        return this.$store.getters['Assets/walletPlatformBalanceTotalLocked']
+    }
+
     get totBal(): BN {
+        if (this.depositAndBound) return this.platformUnlocked.add(this.platformTotalLocked)
         return this.platformUnlocked.add(this.platformLockedStakeable)
     }
 
     get pNoBalance() {
+        if (this.depositAndBound)
+            return this.platformUnlocked.add(this.platformTotalLocked).isZero()
         return this.platformUnlocked.add(this.platformLockedStakeable).isZero()
-    }
-
-    get canDelegate(): boolean {
-        let bn = this.$store.state.Platform.minStakeDelegation
-        if (this.totBal.lt(bn)) {
-            return false
-        }
-        return true
     }
 
     get canValidate(): boolean {

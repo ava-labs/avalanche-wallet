@@ -84,10 +84,6 @@ export default class ExportWallet extends Vue {
                 this.isLoading = false
                 this.pass = ''
                 this.passConfirm = ''
-                this.$store.dispatch('Notifications/add', {
-                    title: 'Key File Export',
-                    message: 'Your keys are downloaded.',
-                })
                 // @ts-ignore
                 this.$emit('success')
             })

@@ -1,13 +1,6 @@
 <template>
     <div class="main_panel">
         <ConfirmLogout ref="logout"></ConfirmLogout>
-        <div class="panel_nav panel">
-            <DayNightToggle></DayNightToggle>
-            <network-menu class="net_menu"></network-menu>
-            <button @click="logout" class="logout">
-                {{ $t('logout.button') }}
-            </button>
-        </div>
         <transition name="fade" mode="out-in">
             <transaction-history-panel class="panel_content"></transaction-history-panel>
         </transition>
@@ -44,7 +37,7 @@ export default {
     row-gap: 6px;
     padding-top: 8px;
     padding-bottom: 8px;
-    height: 100vh;
+    // height: 100vh;
     min-height: 100%;
 }
 .panel_nav {

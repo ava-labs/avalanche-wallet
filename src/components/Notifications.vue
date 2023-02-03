@@ -30,10 +30,10 @@ export default {
     position: fixed;
     display: flex;
     flex-direction: column;
-    top: 0;
+    top: 100px;
     right: 0;
     padding: 30px 3vw;
-    z-index: 9;
+    z-index: 100;
 }
 
 .notif_item {

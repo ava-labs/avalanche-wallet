@@ -37,7 +37,7 @@ export default class NftListItem extends Vue {
 
     @Watch('quantity')
     onQuantitChange(val: number) {
-        if (val < 1) {
+        if (val < 0) {
             this.quantity = 1
             return
         }

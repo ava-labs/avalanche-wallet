@@ -15,7 +15,7 @@
                 <fa icon="link"></fa>
             </p>
             <p class="warn">Do NOT click links you do not trust.</p>
-            <a :href="url" target="_blank">{{ url }}</a>
+            <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
         </div>
     </div>
 </template>

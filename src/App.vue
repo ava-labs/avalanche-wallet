@@ -2,26 +2,32 @@
     <v-app>
         <v-main>
             <template>
-                <!--UrlBanner></UrlBanner-->
-                <navbar v-show="isNavbar"></navbar>
+                <!-- <UrlBanner></UrlBanner> -->
+
                 <div class="main_cols" :wallet_view="!isNavbar">
                     <UpgradeToAccountModal></UpgradeToAccountModal>
+
                     <transition name="fade" mode="out-in">
                         <router-view id="router_view" />
                     </transition>
                 </div>
             </template>
         </v-main>
+
         <LedgerBlock ref="ledger_block"></LedgerBlock>
+
         <LedgerUpgrade></LedgerUpgrade>
+
         <LedgerWalletLoading></LedgerWalletLoading>
+
         <NetworkLoadingBlock></NetworkLoadingBlock>
+
         <notifications></notifications>
     </v-app>
 </template>
+
 <script>
 import Notifications from '@/components/Notifications'
-import Navbar from './components/Navbar'
 import SaveAccountModal from '@/components/modals/SaveAccount/SaveAccountModal'
 import LedgerBlock from '@/components/modals/LedgerBlock'
 import LedgerUpgrade from '@/components/modals/LedgerUpgrade'
@@ -29,7 +35,7 @@ import NetworkLoadingBlock from '@/components/misc/NetworkLoadingBlock'
 import UpgradeToAccountModal from '@/components/modals/SaveAccount/UpgradeToAccountModal'
 import LedgerWalletLoading from '@/components/modals/LedgerWalletLoading'
 import UrlBanner from '@/components/misc/UrlBanner'
-
+import router from '@/router'
 export default {
     components: {
         UrlBanner,
@@ -39,29 +45,16 @@ export default {
         LedgerBlock,
         LedgerUpgrade,
         SaveAccountModal,
-        Navbar,
         Notifications,
     },
     async created() {
-        // Init language preference
-        let locale = localStorage.getItem('lang')
-        if (locale) {
-            this.$root.$i18n.locale = locale
-        }
+        if (router.currentRoute.path !== '/wallet/home') router.push('/wallet/home')
+    },
+    mounted() {
+        let { updateSuiteStore } = this.globalHelper()
+        updateSuiteStore(this.$store.state)
+    },
 
-        await this.$store.dispatch('Network/init')
-        this.$store.dispatch('Assets/initErc20List')
-        this.$store.dispatch('Assets/ERCNft/init')
-        this.$store.dispatch('updateAvaxPrice')
-    },
-    computed: {
-        isNavbar() {
-            if (this.$route.path.includes('/wallet')) {
-                return false
-            }
-            return true
-        },
-    },
     metaInfo: {
         meta: [
             {
@@ -92,7 +85,7 @@ export default {
 
 .main_cols {
     &[wallet_view] {
-        height: 100vh;
+        // height: 100vh;
 
         #router_view {
             padding: 0;
@@ -103,13 +96,13 @@ export default {
     #router_view {
         position: relative;
         min-height: calc(100vh - 80px);
-        /* padding: main.$container_padding_m; */
+        display: flex;
+        justify-content: center;
     }
 }
 
 #router_view {
     position: relative;
-    /* padding: main.$container_padding_m; */
 }
 </style>
 
@@ -129,15 +122,8 @@ p {
     margin: 0px !important;
 }
 
-#app {
-    min-height: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: left;
-    color: var(--primary-color);
-    background-color: var(--bg) !important;
-    font-family: 'Rubik', sans-serif;
-    transition-duration: 0.2s;
+.v-application--wrap {
+    min-height: 100% !important;
 }
 
 #nav {
@@ -149,6 +135,19 @@ p {
     z-index: 2;
     background-color: transparent;
     padding: main.$container_padding_m;
+}
+
+.v-main__wrap {
+    display: flex;
+}
+
+.main_cols {
+    flex: 1;
+    display: flex;
+}
+
+#router_view {
+    flex: 1;
 }
 
 @include main.mobile-device {

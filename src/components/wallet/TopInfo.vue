@@ -85,12 +85,12 @@ export default {
     flex-grow: 1;
     margin: 0;
     font-size: 14px;
-    font-family: Inconsolata, monospace;
+    font-family: 'Inter';
 }
 
 .balance {
     font-size: 24px !important;
-    font-family: Rubik !important;
+    font-family: 'Inter' !important;
 }
 
 .top_card .buts {

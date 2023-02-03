@@ -1,34 +1,33 @@
 <template>
     <div class="access_card">
         <h1>{{ $t('access.title') }}</h1>
-        <router-link to="/create" class="link">{{ $t('access.create') }}</router-link>
+        <div @click="click('/create')" class="link">{{ $t('access.create') }}</div>
         <div class="menus">
             <AccountsFound class="accounts_menu"></AccountsFound>
             <div class="options">
-                <router-link to="/access/privatekey" class="menu_option button_primary">
+                <div @click="click('/access/privatekey')" class="menu_option button_primary">
                     {{ $t('access.but_private_key') }}
                     <v-icon>mdi-shield-key-outline</v-icon>
-                </router-link>
-                <router-link to="/access/mnemonic" class="menu_option button_primary">
+                </div>
+                <div @click="click('/access/mnemonic')" class="menu_option button_primary">
                     {{ $t('access.but_mnemonic') }}
                     <v-icon>mdi-list-box-outline</v-icon>
-                </router-link>
-                <router-link to="/access/keystore" class="menu_option button_primary">
+                </div>
+                <div @click="click('/access/keystore')" class="menu_option button_primary">
                     {{ $t('access.but_keystore') }}
                     <v-icon>mdi-file-key-outline</v-icon>
-                </router-link>
+                </div>
                 <LedgerButton class="menu_option button_primary" disabled></LedgerButton>
-                <!--            <TorusGoogle class="option button_primary" text="Google"></TorusGoogle>-->
             </div>
         </div>
 
-        <ToS style="margin: 20px !important"></ToS>
-        <router-link to="/" class="link">{{ $t('access.cancel') }}</router-link>
+        <ToS :navigate="navigate" style="margin: 20px !important"></ToS>
+        <div @click="click('/login')" class="link">{{ $t('access.cancel') }}</div>
     </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import LedgerButton from '@/components/Ledger/LedgerButton.vue'
 import AccountsFound from '@/components/Access/AccountsFound.vue'
 import ToS from '@/components/misc/ToS.vue'
@@ -42,11 +41,16 @@ import ImageDayNight from '@/components/misc/ImageDayNight.vue'
         AccountsFound,
     },
 })
-export default class Menu extends Vue {}
+export default class Menu extends Vue {
+    @Prop() navigate: any
+    click(string: string) {
+        this.navigate(string)
+    }
+}
 </script>
 
 <style scoped lang="scss">
-@use "../../styles/main";
+@use '../../styles/main';
 @use '/src/components/Access/menu';
 
 .access_card {
@@ -127,6 +131,12 @@ hr {
 
     .menus {
         width: 100%;
+    }
+}
+
+@media only screen and (max-width: main.$mobile_width) {
+    .access_card {
+        padding: main.$container-padding-mobile;
     }
 }
 </style>

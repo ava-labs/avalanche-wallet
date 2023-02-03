@@ -130,6 +130,7 @@ export default {
         border: none !important;
         flex-grow: 1;
         color: var(--primary-color);
+        width: 100%;
 
         &::placeholder {
             color: #b3b7d3;

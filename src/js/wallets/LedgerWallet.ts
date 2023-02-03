@@ -692,7 +692,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         return signedTx
     }
 
-    async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx> {
+    async signP(unsignedTx: PlatformUnsignedTx, additionalSigners?: string[]): Promise<PlatformTx> {
+        if (additionalSigners?.length) throw 'AdditionalSigners not supported.'
+
         let tx = unsignedTx.getTransaction()
         let txType = tx.getTxType()
         let chainId: ChainIdType = 'P'

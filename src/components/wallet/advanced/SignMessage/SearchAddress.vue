@@ -93,7 +93,7 @@ $addrSize: 14px;
     padding: 2px 6px;
     cursor: pointer;
     font-size: $addrSize;
-    font-family: monospace;
+    font-family: 'Inter';
 }
 
 input {

@@ -210,7 +210,7 @@ export default class CurrencyInputDropdown extends Vue {
     width: 100%;
     border: none !important;
     font-size: 15px;
-    font-family: monospace;
+    font-family: 'Inter';
     /*background-color: #303030;*/
 }
 
@@ -283,14 +283,14 @@ input {
     }
 
     span {
-        font-family: monospace;
+        font-family: 'Inter';
         padding-left: 14px;
     }
 }
 
 .col_big_in {
     text-align: right;
-    font-family: monospace;
+    font-family: 'Inter';
     display: flex;
     flex-direction: column;
 }
@@ -300,7 +300,7 @@ input {
     padding-top: 2px !important;
     font-size: 15px;
     color: var(--primary-color-light);
-    font-family: monospace;
+    font-family: 'Inter';
     background-color: transparent;
 }
 

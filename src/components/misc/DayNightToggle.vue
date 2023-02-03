@@ -9,24 +9,27 @@ export default {
     data() {
         return {
             val: false,
+            theme: 'dark',
         }
     },
     methods: {
         setNight() {
             this.val = true
-            localStorage.setItem('theme', 'night')
+            // localStorage.setItem("theme", "night");
             document.documentElement.setAttribute('data-theme', 'night')
             this.$root.theme = 'night'
         },
         setDay() {
             this.val = false
-            localStorage.setItem('theme', 'day')
+            // localStorage.setItem("theme", "day");
             document.documentElement.setAttribute('data-theme', 'day')
             this.$root.theme = 'day'
         },
-        toggle() {
-            this.val = !this.val
-            if (this.val) {
+        toggle() {},
+    },
+    watch: {
+        theme() {
+            if (this.theme === 'light') {
                 this.setNight()
             } else {
                 this.setDay()
@@ -35,13 +38,12 @@ export default {
     },
     mounted() {
         let theme = localStorage.getItem('theme')
-
         if (!theme) {
             this.setNight()
             return
         }
 
-        if (theme === 'night') {
+        if (theme === 'dark') {
             this.setNight()
         }
     },

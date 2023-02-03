@@ -22,17 +22,9 @@ export default class DeleteAccount extends Vue {
 
     async submit() {
         this.error = ''
-        await this.$store
-            .dispatch('Accounts/deleteAccount', this.pass)
-            .then((res) => {
-                this.$store.dispatch('Notifications/add', {
-                    title: 'Account Deleted',
-                    message: 'Your wallet is no longer stored on this browser.',
-                })
-            })
-            .catch((err) => {
-                this.error = err
-            })
+        await this.$store.dispatch('Accounts/deleteAccount', this.pass).catch((err) => {
+            this.error = err
+        })
     }
 }
 </script>

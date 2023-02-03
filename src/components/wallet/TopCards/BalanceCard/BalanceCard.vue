@@ -30,23 +30,10 @@
                 </p>
                 <p class="balance" data-cy="wallet_balance" v-else>
                     <span>{{ balanceTextLeft }}</span>
-                    <span class="smaller">.{{ balanceTextRight }}</span>
+                    <small class="smaller">.{{ balanceTextRight }}</small>
                     {{ nativeAssetSymbol }}
                 </p>
-                <!-- <div style="display: flex; flex-direction: row">
-                    <p class="balance_usd">
-                        <b>$ {{ totalBalanceUSDText }}</b>
-                        USD
-                    </p>
-                    <p class="balance_usd" style="background-color: transparent">
-                        <b>1 {{ nativeAssetSymbol }}</b>
-                        =
-                        <b>${{ avaxPriceText }}</b>
-                        USD
-                    </p>
-                </div> -->
             </div>
-            <!--            <button class="expand_but">Show Breakdown<fa icon="list-ol"></fa></button>-->
             <div class="alt_info">
                 <div class="alt_non_breakdown" v-if="!isBreakdown">
                     <div>
@@ -57,7 +44,7 @@
                         <label>{{ $t('top.locked') }}</label>
                         <p>{{ balanceTextLocked }} {{ nativeAssetSymbol }}</p>
                     </div>
-                    <div>
+                    <div v-if="!depositAndBound">
                         <label>{{ $t('top.balance.stake') }}</label>
                         <p>{{ stakingText }} {{ nativeAssetSymbol }}</p>
                     </div>
@@ -71,7 +58,15 @@
                         <label>{{ $t('top.balance.available') }} (C)</label>
                         <p>{{ evmUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
                     </div>
-                    <div>
+                    <div v-if="depositAndBound">
+                        <label>{{ $t('top.balance.deposited') }} (P)</label>
+                        <p>{{ platformDeposited | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
+                        <label>{{ $t('top.balance.bonded') }} (P)</label>
+                        <p>{{ platformBonded | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
+                        <label>{{ $t('top.balance.bonded_deposited') }} (P)</label>
+                        <p>{{ platformBondedDeposited | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
+                    </div>
+                    <div v-else>
                         <label>{{ $t('top.balance.locked') }} (X)</label>
                         <p>{{ avmLocked | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
                         <label>{{ $t('top.balance.locked') }} (P)</label>
@@ -79,7 +74,7 @@
                         <label>{{ $t('top.balance.locked_stake') }} (P)</label>
                         <p>{{ platformLockedStakeable | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
                     </div>
-                    <div>
+                    <div v-if="!depositAndBound">
                         <label>{{ $t('top.balance.stake') }}</label>
                         <p>{{ stakingText }} {{ nativeAssetSymbol }}</p>
                     </div>
@@ -91,7 +86,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 import AvaAsset from '@/js/AvaAsset'
 import Spinner from '@/components/misc/Spinner.vue'
 import NftCol from './NftCol.vue'
@@ -104,6 +99,7 @@ import { bnToBig } from '@/helpers/helper'
 import { priceDict } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
 import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdownModal.vue'
+import { ava } from '@/AVA'
 
 @Component({
     components: {
@@ -121,26 +117,40 @@ import UtxosBreakdownModal from '@/components/modals/UtxosBreakdown/UtxosBreakdo
 })
 export default class BalanceCard extends Vue {
     isBreakdown = false
-
+    intervalId: NodeJS.Timeout | number | null = null
+    depositAndBound: Boolean =
+        ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
     $refs!: {
         utxos_modal: UtxosBreakdownModal
+    }
+
+    mounted() {
+        if (this.depositAndBound) this.$store.dispatch('Assets/getPChainBalances')
+    }
+
+    @Watch('$store.state.Network.selectedNetwork.networkId')
+    SupportdepositAndBound(): void {
+        this.depositAndBound =
+            ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
     }
 
     updateBalance(): void {
         this.$store.dispatch('Assets/updateUTXOs')
         this.$store.dispatch('History/updateTransactionHistory')
+        if (this.depositAndBound) this.$store.dispatch('Assets/getPChainBalances')
     }
 
     showUTXOsModal() {
         this.$refs.utxos_modal.open()
     }
-    get ava_asset(): AvaAsset | null {
-        let ava = this.$store.getters['Assets/AssetAVA']
-        return ava
-    }
 
     toggleBreakdown() {
         this.isBreakdown = !this.isBreakdown
+    }
+
+    get ava_asset(): AvaAsset | null {
+        let ava = this.$store.getters['Assets/AssetAVA']
+        return ava
     }
 
     get avmUnlocked(): BN {
@@ -227,26 +237,39 @@ export default class BalanceCard extends Vue {
         return ''
     }
 
+    // Locked balance is the sum of locked CAM tokens P chain (bonded + deposited + bondedAndDeposited)
     // Locked balance is the sum of locked AVAX tokens on X and P chain
+    @Watch('$store.state.Network.selectedNetwork.id')
     get balanceTextLocked(): string {
         if (this.isUpdateBalance) return '--'
 
         if (this.ava_asset !== null) {
-            let denom = this.ava_asset.denomination
-            let tot = this.platformLocked.add(this.platformLockedStakeable)
-            // let otherLockedAmt = this.platformLocked.add(this.platformLockedStakeable)
-            let pLocked = Big(tot.toString()).div(Math.pow(10, denom))
-            let amt = this.ava_asset.getAmount(true)
-            amt = amt.add(pLocked)
+            if (this.depositAndBound) {
+                let denomination = this.ava_asset.denomination
+                let total = this.platformDeposited
+                    .add(this.platformBonded)
+                    .add(this.platformBondedDeposited)
+                let totalDenominated = Big(total.toString()).div(Math.pow(10, denomination))
 
-            return amt.toLocaleString(denom)
+                return totalDenominated.toLocaleString(denomination)
+            } else {
+                let denom = this.ava_asset.denomination
+                let tot = this.platformLocked.add(this.platformLockedStakeable)
+                // let otherLockedAmt = this.platformLocked.add(this.platformLockedStakeable)
+                let pLocked = Big(tot.toString()).div(Math.pow(10, denom))
+                let amt = this.ava_asset.getAmount(true)
+                amt = amt.add(pLocked)
+
+                return amt.toLocaleString(denom)
+            }
         } else {
             return '--'
         }
     }
 
     get platformUnlocked(): BN {
-        return this.$store.getters['Assets/walletPlatformBalance']
+        if (this.depositAndBound) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
+        else return this.$store.getters['Assets/walletPlatformBalance']
     }
 
     get platformLocked(): BN {
@@ -255,6 +278,18 @@ export default class BalanceCard extends Vue {
 
     get platformLockedStakeable(): BN {
         return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
+    }
+
+    get platformDeposited(): BN {
+        return this.$store.getters['Assets/walletPlatformBalanceDeposited']
+    }
+
+    get platformBonded(): BN {
+        return this.$store.getters['Assets/walletPlatformBalanceBonded']
+    }
+
+    get platformBondedDeposited(): BN {
+        return this.$store.getters['Assets/walletPlatformBalanceBondedDeposited']
     }
 
     get unlockedText() {
@@ -335,9 +370,6 @@ export default class BalanceCard extends Vue {
 
 .fungible_card {
     height: 100%;
-    display: grid !important;
-    grid-template-rows: max-content 1fr max-content;
-    flex-direction: column;
 }
 
 .where_info {
@@ -369,9 +401,12 @@ h4 {
     font-size: 2.4em;
     white-space: normal;
     /*font-weight: bold;*/
-    font-family: Rubik !important;
+    font-family: 'Inter', sans-serif;
+    span {
+        float: left;
+    }
 
-    span.smaller {
+    small.smaller {
         font-size: 0.8em;
         /*color: var(--primary-color-light);*/
     }

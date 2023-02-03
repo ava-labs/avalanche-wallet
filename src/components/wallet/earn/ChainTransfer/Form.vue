@@ -170,7 +170,7 @@ label {
     color: var(--primary-color);
     font-size: 15px;
     font-weight: bold;
-    font-family: Roboto, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin-bottom: 4px !important;
 }
 

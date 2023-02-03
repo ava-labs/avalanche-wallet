@@ -1,7 +1,7 @@
 <template>
     <div id="nav">
         <ConfirmLogout ref="logout"></ConfirmLogout>
-        <router-link to="/" class="logo">
+        <router-link to="/wallet" class="logo">
             <img src="@/assets/camino_logo.png" />
         </router-link>
         <v-spacer></v-spacer>
@@ -12,10 +12,10 @@
                 <button @click="logout">{{ $t('logout.button') }}</button>
             </template>
             <template v-else>
-                <router-link to="/access" class="action_but" data-cy="access">
+                <router-link to="/wallet/access" class="action_but" data-cy="access">
                     {{ $t('nav.access') }}
                 </router-link>
-                <router-link to="/create" class="action_but" data-cy="create">
+                <router-link to="/wallet/create" class="action_but" data-cy="create">
                     {{ $t('nav.create') }}
                 </router-link>
             </template>
@@ -50,11 +50,13 @@
                             padding: 8px 8px 16px 8px;
                         "
                     >
-                        <img src="@/assets/camino_logo.png" />
+                        <!-- <img src="@/assets/camino_logo.png" /> -->
                         <DayNightToggle class="action_but"></DayNightToggle>
                     </div>
                     <template v-if="isAuth">
-                        <router-link to="/wallet">{{ $t('wallet.sidebar.portfolio') }}</router-link>
+                        <router-link to="/wallet/home">
+                            {{ $t('wallet.sidebar.portfolio') }}
+                        </router-link>
                         <router-link to="/wallet/transfer">
                             {{ $t('wallet.sidebar.send') }}
                         </router-link>
@@ -81,8 +83,8 @@
                         <!--                    <v-list-item @click="logout"><Log out/v-list-item>-->
                     </template>
                     <template v-else>
-                        <router-link to="/access">{{ $t('nav.access') }}</router-link>
-                        <router-link to="/create">{{ $t('nav.create') }}</router-link>
+                        <router-link to="/wallet/access">{{ $t('nav.access') }}</router-link>
+                        <router-link to="/wallet/create">{{ $t('nav.create') }}</router-link>
                     </template>
                 </div>
                 <div class="mobile_bottom">

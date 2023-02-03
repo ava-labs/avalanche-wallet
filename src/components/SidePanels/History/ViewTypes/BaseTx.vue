@@ -386,7 +386,7 @@ label {
     font-size: 12px;
     color: var(--primary-color-light);
     overflow: hidden;
-    font-family: monospace;
+    font-family: 'Inter' sans-serif;
     white-space: nowrap;
 
     p {

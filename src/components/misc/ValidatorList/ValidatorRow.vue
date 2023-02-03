@@ -118,7 +118,7 @@ export default class ValidatorsList extends Vue {
 
 .amount {
     text-align: right;
-    font-family: monospace;
+    font-family: 'Inter';
 }
 
 button {

@@ -29,9 +29,9 @@ abstract class HdWalletCore extends WalletCore {
         super()
         this.ethHdNode = ethHdNode
         this.chainId = ava.XChain().getBlockchainAlias() || ava.XChain().getBlockchainID()
-        this.externalHelper = new HdHelper('m/0', accountHdKey, undefined, isPublic)
-        this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, isPublic)
-        this.platformHelper = new HdHelper('m/0', accountHdKey, 'P', isPublic)
+        this.externalHelper = new HdHelper('m/0', accountHdKey, ethHdNode, undefined, isPublic)
+        this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, undefined, isPublic)
+        this.platformHelper = new HdHelper('m/0', accountHdKey, ethHdNode, 'P', isPublic)
 
         this.externalHelper.oninit().then((res) => {
             this.updateInitState()

@@ -18,7 +18,7 @@
             <div>
                 <p>
                     <b>{{ $t('misc.balance') }}:</b>
-                    {{ balance.toLocaleString() }}
+                    {{ balanceBig }}
                 </p>
                 <p>
                     <b>$</b>
@@ -66,6 +66,33 @@ export default class AvaxInput extends Vue {
         this.$emit('change', val)
     }
 
+    get balanceBig(): string {
+        if (!this.balance) return ''
+
+        let fixedStr = this.balance?.toFixed(9)
+        let split = fixedStr?.split('.')
+        let wholeStr = parseInt(split[0])
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '\u200A')
+
+        if (split.length === 1) {
+            return wholeStr
+        } else {
+            let remainderStr = split[1]
+
+            // remove trailing 0s
+            let lastChar = remainderStr.charAt(remainderStr.length - 1)
+            while (lastChar === '0') {
+                remainderStr = remainderStr.substring(0, remainderStr.length - 1)
+                lastChar = remainderStr.charAt(remainderStr.length - 1)
+            }
+
+            let trimmed = remainderStr.substring(0, 9)
+            if (!trimmed) return wholeStr
+            return `${wholeStr}.${trimmed}`
+        }
+    }
+
     get amountUSD(): Big {
         let usdPrice = this.priceDict.usd
         let amount = bnToBig(this.amount, 9)
@@ -96,7 +123,7 @@ export default class AvaxInput extends Vue {
     .amt_in {
         color: var(--primary-color);
         font-size: 15px;
-        font-family: monospace;
+        font-family: 'Inter';
         flex-grow: 1;
         flex-shrink: 1;
         display: block;
@@ -136,7 +163,7 @@ export default class AvaxInput extends Vue {
     }
 
     span {
-        font-family: monospace;
+        font-family: 'Inter';
         padding-left: 14px;
     }
 }

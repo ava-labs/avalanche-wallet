@@ -316,7 +316,7 @@ export default class AddressCard extends Vue {
     justify-content: center;
 }
 .mainnet_but {
-    background-image: url('/img/modal_icons/mainnet_addr.svg');
+    /* background-image: url('/img/modal_icons/mainnet_addr.svg'); */
 }
 
 @include main.night-mode {
@@ -331,7 +331,7 @@ export default class AddressCard extends Vue {
     // }
 
     .mainnet_but {
-        background-image: url('/img/modal_icons/mainnet_addr_night.svg');
+        /* background-image: url("/img/modal_icons/mainnet_addr_night.svg"); */
     }
 }
 

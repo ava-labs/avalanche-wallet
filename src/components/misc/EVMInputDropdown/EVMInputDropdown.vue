@@ -226,7 +226,7 @@ export default class EVMInputDropdown extends Vue {
 
 .col_big_in {
     text-align: right;
-    font-family: monospace;
+    font-family: 'Inter';
     display: flex;
     flex-direction: column;
 }
@@ -243,7 +243,7 @@ export default class EVMInputDropdown extends Vue {
 
 .bal {
     text-align: right;
-    font-family: monospace;
+    font-family: 'Inter';
     color: var(--primary-color-light);
 }
 

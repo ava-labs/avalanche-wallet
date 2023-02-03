@@ -16,7 +16,6 @@
                     hide-details
                 ></v-text-field>
                 <p class="err">{{ error }}</p>
-                <!--                <remember-key class="remember" v-model="rememberPass" v-if="file" @is-valid="isRememberValid"></remember-key>-->
                 <v-btn
                     class="ava_button button_primary"
                     @click="access"
@@ -28,15 +27,14 @@
                     {{ $t('access.submit') }}
                 </v-btn>
             </form>
-            <router-link to="/access" class="link">{{ $t('access.cancel') }}</router-link>
+            <div @click="navigate('/login')" class="link">{{ $t('access.cancel') }}</div>
         </div>
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import FileInput from '../../components/misc/FileInput.vue'
-// import RememberKey from "../../components/misc/RememberKey.vue";
 import { ImportKeyfileInput } from '@/store/types'
 import { AllKeyFileTypes } from '@/js/IKeystore'
 
@@ -47,11 +45,10 @@ import { AllKeyFileTypes } from '@/js/IKeystore'
     },
 })
 export default class Keystore extends Vue {
+    @Prop() navigate: any
     pass: string = ''
     file: File | null = null
     fileText: string | null = null
-    // rememberPass: string|null = null;
-    // rememberValid: boolean = true;
     isLoading: boolean = false
     error: string = ''
 
@@ -67,9 +64,6 @@ export default class Keystore extends Vue {
         reader.readAsText(val)
     }
 
-    // isRememberValid(val: boolean){
-    //     this.rememberValid = val;
-    // }
     access() {
         if (!this.canSubmit || this.isLoading) return
 
@@ -84,10 +78,6 @@ export default class Keystore extends Vue {
             return
         }
 
-        // console.log(this.fileText);
-        // return;
-
-        // let rememberPass = this.rememberPass;
         let data: ImportKeyfileInput = {
             password: this.pass,
             data: fileData,
@@ -100,10 +90,8 @@ export default class Keystore extends Vue {
                 .dispatch('importKeyfile', data)
                 .then((res) => {
                     parent.isLoading = false
-
-                    // if(rememberPass){
-                    //     parent.$store.dispatch('rememberWallets', rememberPass)
-                    // }
+                    let { updateSuiteStore } = this.globalHelper()
+                    updateSuiteStore(this.$store.state)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -139,12 +127,10 @@ export default class Keystore extends Vue {
     margin-bottom: 22px;
 }
 .access_card {
-    /*max-width: 80vw;*/
+    max-width: 420px;
     background-color: var(--bg-light);
     padding: main.$container-padding;
     width: 100%;
-    /*max-width: 240px;*/
-    /*max-width: 1000px;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -153,22 +139,24 @@ export default class Keystore extends Vue {
 }
 
 .content {
+    display: flex;
+    flex-direction: column;
     width: 340px;
     max-width: 100%;
     margin: 0px auto;
+    align-items: center;
 }
 
 h1 {
     font-size: main.$m-size;
     font-weight: 400;
 }
-
 .file_in {
+    width: 100%;
     margin: 30px auto 10px;
     font-size: 13px;
     border: none !important;
     background-color: var(--bg) !important;
-    /*min-width: 200px*/
 }
 
 a {
@@ -197,6 +185,11 @@ a {
 
     .but_primary {
         width: 100%;
+    }
+}
+@media only screen and (max-width: main.$mobile_width) {
+    .access_card {
+        padding: main.$container-padding-mobile;
     }
 }
 </style>

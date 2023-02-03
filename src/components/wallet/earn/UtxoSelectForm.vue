@@ -122,7 +122,6 @@ export default class UtxoSelectForm extends Vue {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    border-radius: var(--border-radius-sm);
 }
 
 label {

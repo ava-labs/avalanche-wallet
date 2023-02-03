@@ -16,10 +16,10 @@
 
         <template v-slot:deck>
             <div v-if="fileType === 'pdf'" class="pdf">
-                <a :href="url" target="_blank" class="">Open Document</a>
+                <a :href="url" target="_blank" class="" rel="noopener noreferrer">Open Document</a>
             </div>
             <div v-else-if="fileType == null" class="unknown">
-                <a :href="url" target="_blank" class="">Open URL</a>
+                <a :href="url" target="_blank" class="" rel="noopener noreferrer">Open URL</a>
             </div>
         </template>
 

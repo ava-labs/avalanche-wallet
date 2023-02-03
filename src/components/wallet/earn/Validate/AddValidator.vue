@@ -33,41 +33,26 @@
                                 class="amt_in"
                             ></AvaxInput>
                         </div>
-                        <!-- <div class="reward_in" style="margin: 30px 0" :type="rewardDestination">
-                            <h4>{{ $t('earn.validate.reward.label') }}</h4>
-                            <p class="desc">
-                                {{ $t('earn.validate.reward.desc') }}
-                            </p>
-                            <div class="reward_tabs">
-                                <button
-                                    @click="rewardSelect('local')"
-                                    :selected="this.rewardDestination === 'local'"
-                                >
-                                    {{ $t('earn.delegate.form.reward.chip_1') }}
-                                </button>
-                                <span>or</span>
-                                <button
-                                    @click="rewardSelect('custom')"
-                                    :selected="this.rewardDestination === 'custom'"
-                                >
-                                    {{ $t('earn.delegate.form.reward.chip_2') }}
-                                </button>
-                            </div> -->
-                        <!--                            <v-chip-group mandatory @change="rewardSelect">-->
-                        <!--                                <v-chip small value="local">-->
-                        <!--                                    {{ $t('earn.validate.reward.chip_1') }}-->
-                        <!--                                </v-chip>-->
-                        <!--                                <v-chip small value="custom">-->
-                        <!--                                    {{ $t('earn.validate.reward.chip_2') }}-->
-                        <!--                                </v-chip>-->
-                        <!--                            </v-chip-group>-->
-                        <!-- <QrInput
-                                style="height: 40px; border-radius: 2px"
-                                v-model="rewardIn"
-                                placeholder="Reward Address"
-                                class="reward_addr_in"
-                            ></QrInput>
-                        </div> -->
+                        <h4>{{ $t('earn.validate.reward.label') }}</h4>
+                        <p class="desc">
+                            {{ $t('earn.validate.reward.desc') }}
+                        </p>
+                        <div class="reward_tabs">
+                            <button
+                                @click="rewardSelect('local')"
+                                :selected="this.rewardDestination === 'local'"
+                            >
+                                {{ $t('earn.delegate.form.reward.chip_1') }}
+                            </button>
+                            <span>or</span>
+                            <button
+                                @click="rewardSelect('custom')"
+                                :selected="this.rewardDestination === 'custom'"
+                            >
+                                {{ $t('earn.delegate.form.reward.chip_2') }}
+                            </button>
+                        </div>
+
                         <Expandable>
                             <template v-slot:triggerOn>
                                 <p>
@@ -99,36 +84,11 @@
                 </transition-group>
                 <div>
                     <div class="summary" v-if="!isSuccess">
-                        <!-- Hidden untill Camino is listed on an exchange -->
-                        <!-- <CurrencySelect v-model="currency_type"></CurrencySelect> -->
-                        <!-- <div>
-                            <label>
-                                {{ $t('earn.validate.summary.max_del') }}
-                                <Tooltip
-                                    style="display: inline-block"
-                                    :text="$t('earn.validate.summary.max_del_tooltip')"
-                                >
-                                    <fa icon="question-circle"></fa>
-                                </Tooltip>
-                            </label>
-                            <p v-if="currency_type === 'NATIVE'">
-                                {{ maxDelegationText }} {{ nativeAssetSymbol }}
-                            </p>
-                            <p v-if="currency_type === 'USD'">${{ maxDelegationUsdText }} USD</p>
-                        </div> -->
                         <div>
                             <label>{{ $t('earn.validate.summary.duration') }} *</label>
                             <p>{{ durationText }}</p>
                         </div>
-                        <!-- <div>
-                            <label>{{ $t('earn.validate.summary.rewards') }}</label>
-                            <p v-if="currency_type === 'NATIVE'">
-                                {{ estimatedReward.toLocaleString(2) }} {{ nativeAssetSymbol }}
-                            </p>
-                            <p v-if="currency_type === 'USD'">
-                                ${{ estimatedRewardUSD.toLocaleString(2) }} USD
-                            </p>
-                        </div> -->
+
                         <div class="submit_box">
                             <p v-if="warnShortDuration" class="err">
                                 {{ $t('earn.validate.errs.duration_warn') }}
@@ -193,15 +153,6 @@
                             <label>{{ $t('earn.validate.success.reason') }}</label>
                             <p>{{ txReason }}</p>
                         </div>
-                        <!-- <v-btn
-                            @click="cancel"
-                            block
-                            class="button_secondary"
-                            depressed
-                            v-if="txStatus"
-                        >
-                            Back to Earn
-                        </v-btn> -->
                     </div>
                 </div>
             </form>
@@ -230,7 +181,6 @@ import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 import { AmountOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { WalletType } from '@/js/wallets/types'
-import ts from 'typescript'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -362,26 +312,6 @@ export default class AddValidator extends Vue {
         return ava.getNetwork().P.minStake
     }
 
-    // get avaxPrice(): Big {
-    //     return Big(this.$store.state.prices.usd)
-    // }
-
-    // get estimatedReward(): Big {
-    //     let start = new Date(this.startDate)
-    //     let end = new Date(this.endDate)
-    //     let duration = end.getTime() - start.getTime() // in ms
-
-    //     let currentSupply = this.$store.state.Platform.currentSupply
-    //     let estimation = calculateStakingReward(this.stakeAmt, duration / 1000, currentSupply)
-    //     let res = bnToBig(estimation, 9)
-
-    //     return res
-    // }
-
-    // get estimatedRewardUSD() {
-    //     return this.estimatedReward.times(this.avaxPrice)
-    // }
-
     updateFormData() {
         this.formNodeId = this.nodeId.trim()
         this.formAmt = this.stakeAmt
@@ -496,12 +426,6 @@ export default class AddValidator extends Vue {
     }
 
     onsuccess() {
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Validator Added',
-            message: 'Your tokens are now locked to stake.',
-        })
-
         // Update History
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
@@ -555,12 +479,6 @@ export default class AddValidator extends Vue {
         } else {
             this.err = err.message
         }
-
-        this.$store.dispatch('Notifications/add', {
-            type: 'error',
-            title: 'Validation Failed',
-            message: 'Failed to add validator.',
-        })
     }
 
     get nativeAssetSymbol(): string {
@@ -577,7 +495,6 @@ form {
 }
 .ins_col {
     max-width: 490px;
-    // padding-bottom: 8vh;
 }
 .amt {
     width: 100%;

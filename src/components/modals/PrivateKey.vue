@@ -33,7 +33,7 @@ export default class PrivateKey extends Vue {
 .singleton_modal_body {
     width: 520px;
     max-width: 100%;
-    padding: 10px 20px;
+    padding: 10px 0px 0px 0px;
 }
 
 .copyBut {

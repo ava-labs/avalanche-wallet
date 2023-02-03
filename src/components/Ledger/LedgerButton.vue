@@ -165,12 +165,6 @@ export default class LedgerButton extends Vue {
         this.config = undefined
         this.$store.commit('Ledger/closeModal')
         console.error(err)
-
-        this.$store.dispatch('Notifications/add', {
-            type: 'error',
-            title: 'Ledger Access Failed',
-            message: 'Failed to get public key from ledger device.',
-        })
     }
 }
 </script>

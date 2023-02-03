@@ -1,5 +1,5 @@
 .menu_option {
-    background-color: var(--bg-light) !important;
+    background-color: var(--bg-light-2) !important;
     color: var(--primary) !important;
     padding: 16px;
     margin: 5px 0;
@@ -7,7 +7,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    border-radius: var(--border-radius-lg);
+    border-radius: 16px;
 
     p {
         flex-grow: 1;

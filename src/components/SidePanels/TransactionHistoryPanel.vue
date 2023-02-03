@@ -84,7 +84,7 @@ export default class TransactionHistoryPanel extends Vue {
     }
 
     get isActivityPage() {
-        if (this.$route.fullPath.includes('/activity')) {
+        if (this.$route.fullPath.includes('/wallet/activity')) {
             return true
         }
         return false

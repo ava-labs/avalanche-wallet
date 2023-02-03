@@ -1,30 +1,28 @@
 <template>
     <div class="mnemonic_auth">
-        <div class="left">
-            <header>
-                <h1>{{ $t('access.mnemonic.title') }}</h1>
-            </header>
-            <label>{{ $t('access.mnemonic.subtitle') }}</label>
-            <textarea @input="onPhraseIn" translate="no"></textarea>
-            <div class="button_container">
-                <p class="err" v-if="err">{{ err }}</p>
-                <v-btn
-                    class="ava_button but_primary button_primary access"
-                    @click="access"
-                    depressed
-                    :loading="isLoading"
-                    :disabled="!canSubmit"
-                >
-                    {{ $t('access.submit') }}
-                </v-btn>
-                <router-link to="/access" class="link">
-                    {{ $t('access.cancel') }}
-                </router-link>
+        <header>
+            <h1 class="text-center">{{ $t('access.mnemonic.title') }}</h1>
+        </header>
+        <label class="mb-2">{{ $t('access.mnemonic.subtitle') }}</label>
+        <MnemonicInput
+            :phrase="phrase.split(' ')"
+            class="phrase_disp"
+            @update="mnemonicUpdate($event)"
+        />
+        <div class="button_container">
+            <p class="err" v-if="err">{{ err }}</p>
+            <v-btn
+                class="ava_button but_primary button_primary access"
+                @click="access"
+                depressed
+                :loading="isLoading"
+                :disabled="!canSubmit"
+            >
+                {{ $t('access.submit') }}
+            </v-btn>
+            <div @click="navigate('/login')" class="link">
+                {{ $t('access.cancel') }}
             </div>
-        </div>
-        <div class="right">
-            <label>Preview</label>
-            <mnemonic-display :phrase="phrase" class="phrase_disp" :rowSize="3"></mnemonic-display>
         </div>
     </div>
 </template>
@@ -34,28 +32,36 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import MnemonicDisplay from '@/components/misc/MnemonicDisplay.vue'
 import * as bip39 from 'bip39'
+import MnemonicInput from '@/components/misc/MnemonicInput.vue'
 
 @Component({
     components: {
+        MnemonicInput,
         MnemonicDisplay,
     },
 })
 export default class Mnemonic extends Vue {
+    @Prop() navigate: any
     phrase: string = ''
     isLoading: boolean = false
     err: string = ''
-
+    helpers = this.globalHelper()
     beforeDestroy() {
         this.phrase = ''
     }
 
-    onPhraseIn(ev: any) {
-        this.phrase = ev.currentTarget.value
+    mnemonicUpdate(ev: any) {
+        let phraseArray = this.phrase.split(' ')
+        if (ev.value?.split(' ').length === 24) {
+            phraseArray = ev.value.split(' ')
+        } else {
+            phraseArray[ev.index] = ev.value
+        }
+        this.phrase = phraseArray.join(' ')
     }
 
     errCheck() {
-        let phrase = this.phrase
-        let words = phrase.split(' ')
+        let words = this.phrase.split(' ')
 
         // not a valid key phrase
         if (words.length !== 24) {
@@ -63,12 +69,13 @@ export default class Mnemonic extends Vue {
             return false
         }
 
-        let isValid = bip39.validateMnemonic(phrase)
+        let isValid = bip39.validateMnemonic(this.phrase)
         if (!isValid) {
-            this.err = 'Invalid mnemonic phrase. Make sure your mnemonic is all lowercase.'
+            this.err = 'Invalid mnemonic phrase. Please check your phrase.'
             return false
         }
 
+        this.err = ''
         return true
     }
 
@@ -77,11 +84,7 @@ export default class Mnemonic extends Vue {
     }
 
     get canSubmit() {
-        if (this.wordCount !== 24) {
-            return false
-        }
-
-        return true
+        return this.wordCount === 24 && this.errCheck()
     }
 
     async access() {
@@ -98,6 +101,7 @@ export default class Mnemonic extends Vue {
         setTimeout(async () => {
             try {
                 await this.$store.dispatch('accessWallet', phrase)
+                this.helpers.updateSuiteStore(this.$store.state)
                 this.isLoading = false
             } catch (e) {
                 this.isLoading = false
@@ -111,24 +115,17 @@ export default class Mnemonic extends Vue {
 @use '../../styles/main';
 
 .mnemonic_auth {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 60px;
     background-color: var(--bg-light);
     padding: main.$container-padding;
-    width: 100%;
     max-width: 1200px;
 
-    .left,
-    .right {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-    }
-    > * {
-        width: 100%;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    gap: 12px;
 }
 
 h1 {
@@ -159,16 +156,17 @@ textarea {
 }
 
 .phrase_disp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    max-width: 560px;
-    margin-bottom: main.$vertical-padding;
 }
 
 .err {
     font-size: 13px;
     color: var(--error);
     text-align: center;
-    margin: 14px 0px !important;
+    margin: 14px 0 !important;
 }
 
 .remember {
@@ -186,15 +184,18 @@ textarea {
 }
 
 .but_primary {
-    margin-top: 20px;
+    // margin-top: 20px;
     margin-bottom: 15px;
 }
 
 .button_container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+}
+
+.link {
+    margin-bottom: 0px;
 }
 
 @include main.mobile_device {
@@ -206,14 +207,13 @@ textarea {
 
         padding: main.$container-padding-mobile;
 
-        .left,
-        .right {
+        .center {
             flex-direction: column;
             align-items: stretch;
             justify-content: center;
         }
 
-        .left {
+        .center {
             order: 2;
         }
 
@@ -225,6 +225,10 @@ textarea {
         > * {
             width: 100%;
         }
+    }
+
+    .link {
+        margin-bottom: 20px;
     }
 
     h1 {
@@ -240,12 +244,11 @@ textarea {
     .phrase_disp {
         width: 100%;
         max-width: 560px;
-        margin-bottom: main.$vertical-padding-mobile;
     }
 
     .err {
         font-size: 13px;
-        margin: 14px 0px !important;
+        margin: 14px 0 !important;
     }
 
     .remember {
@@ -261,7 +264,7 @@ textarea {
     }
 
     .but_primary {
-        margin: 0px auto;
+        margin: 0 auto;
         display: block;
         margin-top: 20px;
         margin-bottom: 15px;
@@ -272,6 +275,9 @@ textarea {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        > button {
+            padding: 0 16px !important;
+        }
     }
 }
 </style>

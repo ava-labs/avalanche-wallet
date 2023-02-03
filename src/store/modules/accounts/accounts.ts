@@ -49,7 +49,6 @@ const accounts_module: Module<AccountsState, RootState> = {
                 password: pass,
                 data: account.wallet,
             }
-
             await dispatch('importKeyfile', data, { root: true })
             state.accountIndex = index
         },

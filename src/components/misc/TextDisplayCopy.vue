@@ -20,10 +20,6 @@ export default {
     },
     methods: {
         oncopy(val) {
-            this.$store.dispatch('Notifications/add', {
-                title: 'Copy',
-                message: 'Copied to clipboard.',
-            })
             this.$emit('copy', this.value)
         },
     },

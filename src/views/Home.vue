@@ -46,48 +46,55 @@
             </div>
             <div class="buttons-wrapper">
                 <div>
-                    <router-link
+                    <div
+                        @click="click('/access')"
                         data-cy="access"
-                        to="/access"
                         class="ava_button button_primary submit_but"
                     >
                         {{ $t('home.access.submit') }}
-                    </router-link>
+                    </div>
                 </div>
                 <div>
-                    <router-link
+                    <div
                         data-cy="create"
-                        to="/create"
+                        @click="click('/create')"
                         class="ava_button button_secondary submit_but"
                     >
                         {{ $t('home.create.submit') }}
-                    </router-link>
+                    </div>
                 </div>
             </div>
-            <ToS class="tos" style="align-self: center; margin: 30px !important"></ToS>
+            <ToS
+                class="tos"
+                :navigate="navigate"
+                style="align-self: center; margin: 30px !important"
+            ></ToS>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import ToS from '@/components/misc/ToS.vue'
-
 @Component({
     name: 'home',
     components: { ToS },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+    @Prop() navigate: any
+    click(string: string) {
+        this.navigate(string)
+    }
+}
 </script>
 
 <style scoped lang="scss">
-@use "../styles/main";
+@use '../styles/main';
 .home {
-    padding-top: 100px;
     display: flex;
     justify-content: center;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 89px);
     background-image: url('../assets/home_background.svg');
     background-size: cover;
     background-position: center;
@@ -121,6 +128,7 @@ export default class Home extends Vue {}
             display: flex;
             align-items: center;
             gap: 15px;
+            font-family: 'ClashDisplay';
         }
         .content {
             max-width: 700px;
@@ -153,13 +161,12 @@ export default class Home extends Vue {}
     width: max-content;
 }
 /* ==========================================
-   Nav
-   ========================================== */
-
+Nav
+========================================== */
 @include main.mobile-device {
     .home {
         svg {
-            width: 300px;
+            width: 100%;
         }
         .header {
             &--title {

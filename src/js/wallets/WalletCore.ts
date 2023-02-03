@@ -46,7 +46,10 @@ abstract class WalletCore {
 
     abstract signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
     abstract signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
-    abstract signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
+    abstract signP(
+        unsignedTx: PlatformUnsignedTx,
+        additionalSigners?: string[]
+    ): Promise<PlatformTx>
 
     abstract signMessage(msg: string, address?: string): Promise<string>
     abstract getPlatformUTXOSet(): PlatformUTXOSet

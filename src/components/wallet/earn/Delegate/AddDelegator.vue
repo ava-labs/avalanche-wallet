@@ -312,12 +312,6 @@ export default class AddDelegator extends Vue {
     }
 
     onsuccess(txId: string) {
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Delegator Added',
-            message: 'Your tokens are now locked for staking.',
-        })
-
         // Update History
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
@@ -363,11 +357,6 @@ export default class AddDelegator extends Vue {
         } else {
             this.err = e.message
         }
-        this.$store.dispatch('Notifications/add', {
-            type: 'error',
-            title: 'Delegation Failed',
-            message: 'Failed to delegate tokens.',
-        })
     }
 
     get estimatedReward(): Big {

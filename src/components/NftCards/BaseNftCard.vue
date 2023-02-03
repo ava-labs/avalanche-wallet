@@ -44,7 +44,7 @@ export default class BaseNftCard extends Vue {
     transfer(ev: MouseEvent) {
         ev.stopPropagation()
         this.$router.push({
-            path: '/wallet/transfer',
+            path: '/wallet/home/transfer',
             query: { nft: this.utxoId },
         })
     }

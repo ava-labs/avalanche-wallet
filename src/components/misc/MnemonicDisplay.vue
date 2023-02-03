@@ -29,7 +29,7 @@ export default class MnemonicDisplay extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use "../../styles/main";
+@use '../../styles/main';
 
 .mnemonic_display {
     display: grid;
@@ -84,9 +84,6 @@ span {
 
     .mnemonic_display {
         grid-template-columns: 1fr 1fr 1fr !important;
-    }
-
-    .phrase_word {
     }
 }
 </style>

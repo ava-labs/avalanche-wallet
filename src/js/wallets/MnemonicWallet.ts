@@ -242,8 +242,14 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         return tx
     }
 
-    async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx> {
+    async signP(unsignedTx: PlatformUnsignedTx, additionalSigners?: string[]): Promise<PlatformTx> {
         let keychain = this.platformHelper.getKeychain() as PlatformVMKeyChain
+
+        if (additionalSigners?.length) {
+            keychain = keychain.clone()
+            additionalSigners.forEach((k) => keychain.importKey(k))
+        }
+
         const tx = unsignedTx.sign(keychain)
         return tx
     }

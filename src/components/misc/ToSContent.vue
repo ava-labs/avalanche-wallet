@@ -19,7 +19,7 @@
             ”, or “
             <b>our</b>
             ”), concerning your access to and use of the
-            <span class="s1">https://wallet.camino.foundation/</span>
+            <span class="s1">https://wallet.camino.network/</span>
             website and related features and services, including but not limited to the Camino
             wallet functionality, as well as any other media form, media channel, mobile website or
             mobile application related, linked, or otherwise connected thereto, (collectively, the
@@ -606,10 +606,15 @@
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: justify">
             We care about data privacy and security. Please review our Privacy Policy:
-            <a href="https://camino.foundation/privacy-policy" class="s7" target="_blank">
-                https://camino.foundation/privacy-policy
+            <a
+                href="https://camino.network/privacy-policy"
+                class="s7"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                https://camino.network/privacy-policy
             </a>
-            <a href="https://camino.foundation/privacy-policy" class="a" target="_blank">.</a>
+            <a href="https://camino.network/privacy-policy" class="a" target="_blank">.</a>
             By using the Site, you agree to be bound by our Privacy Policy, which is incorporated
             into these Terms of Use. Please be advised the Site is hosted in EU-West. If you access
             the Site from any other region of the world with laws or other requirements governing
@@ -731,7 +736,12 @@
         <p style="padding-top: 12pt; padding-left: 5pt; text-indent: 0pt; text-align: justify">
             You may opt out of the binding arbitration described in this section by sending us
             written notice of your desire to do so by email at
-            <a href="mailto:support@chain4travel.com" class="a" target="_blank">
+            <a
+                href="mailto:support@chain4travel.com"
+                class="a"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 support@chain4travel.com
             </a>
             (such notice, an “Arbitration Opt-out Notice”) within thirty (30) days following the
@@ -765,7 +775,9 @@
             only to the extent necessary to provide relief warranted by the claimant’s individual
             claim. The JAMS Rules and instructions for how to initiate an arbitration are available
             from JAMS at
-            <a href="http://www.jamsadr.com/" class="a" target="_blank">http://www.jamsadr.com</a>
+            <a href="http://www.jamsadr.com/" class="a" target="_blank" rel="noopener noreferrer">
+                http://www.jamsadr.com
+            </a>
             or 1-800-352-5267.
         </p>
         <p style="text-indent: 0pt; text-align: left"><br /></p>
@@ -995,13 +1007,15 @@
         <p style="text-indent: 0pt; text-align: left"><br /></p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: left">Chain4Travel AG</p>
         <p style="padding-left: 5pt; text-indent: 0pt; text-align: left">
-            Arbachstrasse 2
+            Dammstrasse 19
             <br />
-            6340 Baar
+            6300 Zug
             <br />
             Switzerland
             <br />
-            <a href="mailto:support@chain4travel.com" target="_blank">support@chain4travel.com</a>
+            <a href="mailto:support@chain4travel.com" target="_blank" rel="noopener noreferrer">
+                support@chain4travel.com
+            </a>
         </p>
     </div>
 </template>

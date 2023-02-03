@@ -73,7 +73,7 @@ export default class NftList extends Vue {
 
         for (var id in this.groupUtxos) {
             let gUtxos = this.groupUtxos[id]
-            utxos.push(...gUtxos)
+            utxos = [...utxos, ...gUtxos]
         }
 
         this.$emit('change', utxos)
@@ -120,7 +120,7 @@ export default class NftList extends Vue {
     }
 
     addNft(utxo: UTXO) {
-        this.addedNfts.push(utxo)
+        this.addedNfts = [...this.addedNfts, utxo]
     }
 
     remove(utxo: UTXO) {

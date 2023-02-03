@@ -8,10 +8,18 @@
             {{ token.data.name }} ({{ token.data.symbol }})
             <span>ERC20</span>
         </p>
-        <router-link :to="sendLink" class="send_col" v-if="isBalance">
-            <img v-if="$root.theme === 'day'" src="@/assets/sidebar/transfer_nav.png" />
-            <img v-else src="@/assets/sidebar/transfer_nav_night.svg" />
-        </router-link>
+        <component
+            :is="isBalance ? 'router-link' : 'div'"
+            :to="isBalance ? sendLink : null"
+            class="send_col"
+            :style="{
+                cursor: isBalance ? 'pointer' : 'not-allowed',
+                opacity: isBalance ? 1 : 0.4,
+            }"
+        >
+            <img v-if="$root.theme === 'day'" :src="require('@/assets/sidebar/transfer_nav.png')" />
+            <img v-else :src="require('@/assets/sidebar/transfer_nav_night.svg')" />
+        </component>
         <p class="balance_col">
             {{ balText }}
         </p>
@@ -34,7 +42,7 @@ export default class ERC20Row extends Vue {
     }
 
     get sendLink() {
-        return `/wallet/transfer?chain=C&token=${this.token.data.address}`
+        return `/wallet/home/transfer?chain=C&token=${this.token.data.address}`
     }
 }
 </script>

@@ -1,22 +1,14 @@
 import Vue from 'vue'
 import VueRouter, { Route } from 'vue-router'
-import Home from '../views/Home.vue'
-
 import Transfer from '@/views/wallet/Transfer.vue'
 import ManageKeys from '@/views/wallet/ManageKeys.vue'
-import Menu from '../views/access/Menu.vue'
-import Keystore from '../views/access/Keystore.vue'
-import Mnemonic from '@/views/access/Mnemonic.vue'
-import PrivateKey from '@/views/access/PrivateKey.vue'
-import Access from '../views/access/Access.vue'
 import Create from '@/views/Create.vue'
 import Wallet from '@/views/Wallet.vue'
 import WalletHome from '@/views/wallet/Portfolio.vue'
 import Earn from '@/views/wallet/Earn.vue'
-import Validator from '@/views/wallet/Validator.vue'
 import Advanced from '@/views/wallet/Advanced.vue'
 import Activity from '@/views/wallet/Activity.vue'
-import Account from '@/views/access/Account.vue' // your vuex store
+import Validator from '@/views/wallet/Validator.vue'
 import Launch from '@/views/wallet/Launch.vue'
 import Legal from '@/views/Legal.vue'
 import store from '../store/index'
@@ -30,7 +22,7 @@ const ifNotAuthenticated = (to: Route, from: Route, next: Function) => {
         next()
         return
     }
-    next('/wallet')
+    next('/wallet/home')
 }
 
 const ifAuthenticated = (to: Route, from: Route, next: Function) => {
@@ -38,58 +30,23 @@ const ifAuthenticated = (to: Route, from: Route, next: Function) => {
         next()
         return
     }
-    next('/')
+    next('/wallet')
 }
 
 const routes = [
     {
-        path: '/',
-        name: 'home',
-        component: Home,
-        beforeEnter: ifNotAuthenticated,
-    },
-    {
-        path: '/access',
-        children: [
-            {
-                path: '/',
-                name: 'access',
-                component: Menu,
-            },
-            {
-                path: 'keystore',
-                component: Keystore,
-            },
-            {
-                path: 'privatekey',
-                component: PrivateKey,
-            },
-            {
-                path: 'mnemonic',
-                component: Mnemonic,
-            },
-            {
-                path: 'account/:index',
-                component: Account,
-                name: 'Account',
-            },
-        ],
-        component: Access,
-        beforeEnter: ifNotAuthenticated,
-    },
-    {
-        path: '/legal',
+        path: '/wallet/legal',
         name: 'legal',
         component: Legal,
     },
     {
-        path: '/create',
+        path: '/wallet/create',
         name: 'create',
         component: Create,
         beforeEnter: ifNotAuthenticated,
     },
     {
-        path: '/wallet',
+        path: '/wallet/home',
         children: [
             {
                 path: '/',

@@ -177,6 +177,8 @@ export default class ChainTransfer extends Vue {
     importState: TxState = TxState.waiting
     importStatus: string | null = null
     importReason: string | null = null
+    depositAndBound: Boolean =
+        ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
 
     @Watch('sourceChain')
     @Watch('targetChain')
@@ -184,6 +186,12 @@ export default class ChainTransfer extends Vue {
         if (this.sourceChain === 'C' || this.targetChain === 'C') {
             this.updateBaseFee()
         }
+    }
+
+    @Watch('$store.state.Network.selectedNetwork.networkId')
+    SupportdepositAndBound(): void {
+        this.depositAndBound =
+            ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
     }
 
     created() {
@@ -196,6 +204,7 @@ export default class ChainTransfer extends Vue {
     }
 
     get platformUnlocked(): BN {
+        if (this.depositAndBound) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
         return this.$store.getters['Assets/walletPlatformBalance']
     }
 
@@ -505,11 +514,6 @@ export default class ChainTransfer extends Vue {
         console.error(err)
         this.isLoading = false
         this.err = err
-        this.$store.dispatch('Notifications/add', {
-            type: 'error',
-            title: 'Transfer Failed',
-            message: err,
-        })
     }
 
     onErrorImport(err: any) {
@@ -540,15 +544,11 @@ export default class ChainTransfer extends Vue {
     onsuccess() {
         // Clear Form
         this.isSuccess = true
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Transfer Complete',
-            message: 'Funds transferred between chains.',
-        })
 
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
+            if (this.depositAndBound) this.$store.dispatch('Assets/getPChainBalances')
         }, BALANCE_DELAY)
     }
 

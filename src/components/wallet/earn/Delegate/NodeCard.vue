@@ -11,9 +11,9 @@
             <!--            <p>{{ uptimeText }}</p>-->
             <p style="font-size: 0.8rem">
                 Please refer to
-                <a :href="vscoutURL" target="_blank">VScout</a>
+                <a :href="vscoutURL" target="_blank" rel="noopener noreferrer">VScout</a>
                 or
-                <a :href="avascanURL" target="_blank">Avascan</a>
+                <a :href="avascanURL" target="_blank" rel="noopener noreferrer">Avascan</a>
                 to get more information about a node's uptime.
             </p>
         </div>

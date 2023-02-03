@@ -29,10 +29,6 @@ export default class SaveKeys extends Vue {
         this.$store
             .dispatch('Accounts/saveKeys', this.pass)
             .then((res) => {
-                this.$store.dispatch('Notifications/add', {
-                    title: 'Keys Saved',
-                    message: 'Your account is updated with new keys.',
-                })
                 this.$parent.close()
             })
             .catch((err) => {

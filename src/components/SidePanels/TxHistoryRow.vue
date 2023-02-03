@@ -9,6 +9,7 @@
                     target="_blank"
                     tooltip="View in Explorer"
                     class="explorer_link"
+                    rel="noopener noreferrer"
                 >
                     <fa icon="search"></fa>
                 </a>
@@ -47,9 +48,9 @@ export default class TxHistoryRow extends Vue {
 
     get explorerUrl(): string | null {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
-        if (network.explorerSiteUrl) {
-            let chains = this.$store.state.History.chains
-            let alias = chains.find((elem: Chain) => elem.chainID === this.transaction.chainID)
+        let chains = this.$store.state.History.chains
+        if (network.explorerSiteUrl && chains.length > 0) {
+            let alias = chains?.find((elem: Chain) => elem.chainID === this.transaction.chainID)
                 .chainAlias
             let url = `${network.explorerSiteUrl}/${alias}-chain/transactions/${this.transaction.id}`
             return url

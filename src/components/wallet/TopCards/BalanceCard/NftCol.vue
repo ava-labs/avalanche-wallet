@@ -66,7 +66,7 @@ export default class NftCol extends Vue {
             if (ids.includes(cacheId)) {
                 return false
             } else {
-                ids.push(cacheId)
+                ids = [...ids, cacheId]
                 return true
             }
         })
@@ -105,7 +105,7 @@ export default class NftCol extends Vue {
                     id,
                 }
             })
-            res.push(...tokens)
+            res = [...res, ...tokens]
         }
         return res.slice(0, NFT_COUNT - this.nftArray.length)
     }

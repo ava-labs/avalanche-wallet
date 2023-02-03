@@ -5,6 +5,7 @@ import {
     AssetsState,
     TokenList,
     TokenListToken,
+    WalletBalance,
 } from '@/store/modules/assets/types'
 import {
     IWalletAssetsDict,
@@ -53,6 +54,14 @@ const assets_module: Module<AssetsState, RootState> = {
         // isUpdateBalance: false,
         assets: [],
         assetsDict: {}, // holds meta data of assets
+        balances: {
+            balances: {},
+            unlockedOutputs: {},
+            bondedOutputs: {},
+            depositedOutputs: {},
+            bondedDepositedOutputs: {},
+            utxoIDs: [],
+        },
         nftFams: [],
         nftFamsDict: {},
         balanceDict: {},
@@ -72,16 +81,20 @@ const assets_module: Module<AssetsState, RootState> = {
                 // console.info(`Failed to add asset. Asset already exists. (${asset.id})`)
                 return
             }
-            state.assets.push(asset)
-            Vue.set(state.assetsDict, asset.id, asset)
+            state.assets = [...state.assets, asset]
+            let obj = {}
+            obj[asset.id] = asset
+            state.assetsDict = { ...state.assetsDict, ...obj }
         },
         addNftFamily(state, family: AvaNftFamily) {
             if (state.nftFamsDict[family.id]) {
                 // console.info(`Failed to add NFT Family. Asset already exists. (${family.id})`)
                 return
             }
-            state.nftFams.push(family)
-            Vue.set(state.nftFamsDict, family.id, family)
+            state.nftFams = [...state.nftFams, family]
+            let obj = {}
+            obj[family.id] = family
+            state.nftFamsDict = { ...state.nftFamsDict, ...obj }
         },
         removeAllAssets(state) {
             state.assets = []
@@ -105,7 +118,7 @@ const assets_module: Module<AssetsState, RootState> = {
             let tokensRaw = localStorage.getItem('erc20_tokens') || '[]'
             let tokens: TokenListToken[] = JSON.parse(tokensRaw)
             for (var i = 0; i < tokens.length; i++) {
-                state.erc20TokensCustom.push(new Erc20Token(tokens[i]))
+                state.erc20TokensCustom = [...state.erc20TokensCustom, new Erc20Token(tokens[i])]
             }
         },
 
@@ -115,7 +128,7 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         whitelistNFT(state, id: string) {
-            state.nftWhitelist.push(id)
+            state.nftWhitelist = [...state.nftWhitelist, id]
         },
     },
     actions: {
@@ -165,9 +178,9 @@ const assets_module: Module<AssetsState, RootState> = {
                 let outId = utxo.getOutput().getOutputID()
 
                 if (outId === 11) {
-                    nftUtxos.push(utxo)
+                    nftUtxos = [...nftUtxos, utxo]
                 } else if (outId === 10) {
-                    nftMintUtxos.push(utxo)
+                    nftMintUtxos = [...nftMintUtxos, utxo]
                 }
             }
 
@@ -195,7 +208,7 @@ const assets_module: Module<AssetsState, RootState> = {
             }
 
             let t = new Erc20Token(token)
-            state.erc20Tokens.push(t)
+            state.erc20Tokens = [...state.erc20Tokens, t]
         },
 
         async addCustomErc20Token({ state, rootState, commit }, token: TokenListToken) {
@@ -205,13 +218,14 @@ const assets_module: Module<AssetsState, RootState> = {
             for (var i = 0; i < tokens.length; i++) {
                 let t = tokens[i]
                 if (token.address === t.data.address && token.chainId === t.data.chainId) {
+                    console.log('ERC20 Token already added.')
                     return
                 }
             }
 
             let t = new Erc20Token(token)
             // Save token state to storage
-            state.erc20TokensCustom.push(t)
+            state.erc20TokensCustom = [...state.erc20TokensCustom, t]
 
             let w = rootState.activeWallet
             if (w) {
@@ -258,16 +272,16 @@ const assets_module: Module<AssetsState, RootState> = {
 
         async addTokenList({ state, dispatch, commit }, tokenList: TokenList) {
             let tokens: TokenListToken[] = tokenList.tokens
-            state.tokenLists.push(tokenList)
+            state.tokenLists = [...state.tokenLists, tokenList]
             for (var i = 0; i < tokens.length; i++) {
                 dispatch('addErc20Token', tokens[i])
             }
 
             if (!tokenList.readonly) {
-                state.tokenListsCustom.push(tokenList.url)
+                state.tokenListsCustom = [...state.tokenListsCustom, tokenList.url]
                 commit('saveCustomTokenLists')
             } else {
-                state.tokenListUrls.push(tokenList.url)
+                state.tokenListUrls = [...state.tokenListUrls, tokenList.url]
             }
         },
 
@@ -453,6 +467,16 @@ const assets_module: Module<AssetsState, RootState> = {
             await commit('addNftFamily', newFam)
             return desc
         },
+
+        async getPChainBalances({ state, commit, rootState }) {
+            let wallet: WalletType | null = rootState.activeWallet
+            if (!wallet) return
+            let pchain = ava.PChain()
+
+            let pBalance = await pchain.getBalance({ address: wallet!.getAllAddressesP()[0] })
+            state.balances = (pBalance as unknown) as WalletBalance
+            return
+        },
     },
     getters: {
         networkErc20Tokens(state: AssetsState, getters, rootState: RootState): Erc20Token[] {
@@ -489,7 +513,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 let assetId = bintools.cb58Encode(assetIdBuff)
 
                 if (res[assetId]) {
-                    res[assetId].push(utxo)
+                    res[assetId] = [...res[assetId], utxo]
                 } else {
                     res[assetId] = [utxo]
                 }
@@ -504,6 +528,8 @@ const assets_module: Module<AssetsState, RootState> = {
             // @ts-ignore
             let assetsDict: AssetsDict = state.assetsDict
             let res: IWalletAssetsDict = {}
+            let supportBond =
+                ava.getNetwork().P.lockModeBondDeposit && ava.getNetwork().P.verifyNodeSignature
 
             for (var assetId in assetsDict) {
                 let balanceAmt = balanceDict[assetId]
@@ -522,10 +548,16 @@ const assets_module: Module<AssetsState, RootState> = {
                 // Add extras for Native token
                 // @ts-ignore
                 if (asset.id === state.AVA_ASSET_ID) {
-                    asset.addExtra(getters.walletStakingBalance)
-                    asset.addExtra(getters.walletPlatformBalance)
-                    asset.addExtra(getters.walletPlatformBalanceLocked)
-                    asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
+                    if (supportBond) {
+                        asset.addExtra(getters.walletPlatformBalance)
+                        asset.addExtra(getters.walletPlatformBalanceLocked)
+                        asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
+                    } else {
+                        asset.addExtra(getters.walletStakingBalance)
+                        asset.addExtra(getters.walletPlatformBalance)
+                        asset.addExtra(getters.walletPlatformBalanceLocked)
+                        asset.addExtra(getters.walletPlatformBalanceLockedStakeable)
+                    }
                 }
 
                 res[assetId] = asset
@@ -540,7 +572,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
             for (var id in assetsDict) {
                 let asset = assetsDict[id]
-                res.push(asset)
+                res = [...res, asset]
             }
             return res
         },
@@ -656,6 +688,32 @@ const assets_module: Module<AssetsState, RootState> = {
             return amt
         },
 
+        walletPlatformBalanceTotalLocked(state, getters, rootState): BN {
+            return new BN(state.balances.depositedOutputs[state.AVA_ASSET_ID || ''] || 0)
+                .add(new BN(state.balances.bondedOutputs[state.AVA_ASSET_ID || ''] || 0))
+                .add(new BN(state.balances.bondedDepositedOutputs[state.AVA_ASSET_ID || ''] || 0))
+        },
+
+        walletPlatformBalanceDeposited(state, getters, rootState): BN {
+            return new BN(state.balances.depositedOutputs[state.AVA_ASSET_ID || ''] || 0)
+        },
+
+        walletPlatformBalanceBonded(state, getters, rootState): BN {
+            return new BN(state.balances.bondedOutputs[state.AVA_ASSET_ID || ''] || 0)
+        },
+
+        walletPlatformBalanceBondedDeposited(state, getters, rootState): BN {
+            return new BN(state.balances.bondedDepositedOutputs[state.AVA_ASSET_ID || ''] || 0)
+        },
+
+        walletPlatformBalanceTotal(state, getters, rootState): BN {
+            return new BN(state.balances.balances[state.AVA_ASSET_ID || ''] || 0)
+        },
+
+        walletPlatformBalanceUnlocked(state, getters, rootState): BN {
+            return new BN(state.balances.unlockedOutputs[state.AVA_ASSET_ID || ''] || 0)
+        },
+
         nftMintDict(state): IWalletNftMintDict {
             let res: IWalletNftMintDict = {}
             let mintUTXOs = state.nftMintUTXOs
@@ -666,7 +724,7 @@ const assets_module: Module<AssetsState, RootState> = {
 
                 let target = res[assetId]
                 if (target) {
-                    target.push(utxo)
+                    target = [...target, utxo]
                 } else {
                     res[assetId] = [utxo]
                 }

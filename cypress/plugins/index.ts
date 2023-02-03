@@ -9,7 +9,7 @@ const CYPRESS_BASE_CONFIG = {
 
 const CYPRESS_CONFIG_PROD = {
     ...CYPRESS_BASE_CONFIG,
-    baseUrl: 'https://wallet.camino.foundation/',
+    baseUrl: 'https://wallet.camino.network/',
 }
 
 const CYPRESS_CONFIG_LOCAL = {

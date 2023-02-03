@@ -3,7 +3,7 @@
         <div class="qr_body" ref="qr_body">
             <img
                 ref="bg"
-                src="@/assets/paper_wallet/bg.png"
+                src="/assets/bg.png"
                 :style="{
                     display: 'none',
                     height: `${height}px`,
@@ -108,7 +108,8 @@ export default class PaperWallet extends Vue {
     initBg() {
         let canv: HTMLCanvasElement = this.$refs.pdf
         let cont = canv.getContext('2d') as CanvasRenderingContext2D
-        let img = this.$refs.bg
+        let image = new Image()
+        image.src = '/assets/bg.png'
 
         let w = canv.clientWidth
         let h = canv.clientHeight
@@ -119,7 +120,7 @@ export default class PaperWallet extends Vue {
         canv.height = h * sizeFactor
 
         cont.scale(sizeFactor, sizeFactor)
-        cont.drawImage(img, 0, 0, w, h)
+        cont.drawImage(image, 0, 0, w, h)
 
         this.writeInfo()
     }

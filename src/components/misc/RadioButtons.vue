@@ -45,7 +45,7 @@ button {
     margin-right: 6px;
     margin-bottom: 6px;
     transition-duration: 0.2s;
-    font-family: Inconsolata, monospace;
+    font-family: 'Inter', sans-serif;
 
     //&:hover {
     //    border-color: var(--bg-light);

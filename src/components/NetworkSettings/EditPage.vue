@@ -163,11 +163,6 @@ export default class EditPage extends Vue {
 
         await this.$store.dispatch('Network/save')
 
-        this.$store.dispatch('Notifications/add', {
-            title: 'Changes Saved',
-            message: 'Network settings updated.',
-        })
-
         this.$emit('success')
     }
 }

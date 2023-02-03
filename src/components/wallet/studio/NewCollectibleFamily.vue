@@ -153,12 +153,6 @@ export default class NewCollectibleFamily extends Vue {
         this.isSuccess = true
         this.txId = txId
 
-        this.$store.dispatch('Notifications/add', {
-            type: 'success',
-            title: 'Success',
-            message: 'Collectible family created.',
-        })
-
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')

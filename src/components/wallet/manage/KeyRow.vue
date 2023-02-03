@@ -389,7 +389,7 @@ export default class KeyRow extends Vue {
     overflow: auto;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: monospace;
+    font-family: 'Inter';
     font-size: 15px;
 
     span {

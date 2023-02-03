@@ -11,6 +11,7 @@ export interface AssetsState {
     // isUpdateBalance: boolean
     assets: AvaAsset[]
     assetsDict: AssetsDict
+    balances: WalletBalance
     AVA_ASSET_ID: string | null
     nftFams: AvaNftFamily[]
     nftFamsDict: NftFamilyDict
@@ -90,4 +91,18 @@ export interface TokenList {
 export interface AddTokenListInput {
     url: string
     readonly: boolean
+}
+
+export interface WalletBalance {
+    balances: IBalanceDict
+    unlockedOutputs: IBalanceDict
+    bondedOutputs: IBalanceDict
+    depositedOutputs: IBalanceDict
+    bondedDepositedOutputs: IBalanceDict
+    utxoIDs: utxoIDs[]
+}
+
+export interface utxoIDs {
+    outputIndex: number
+    txID: string
 }

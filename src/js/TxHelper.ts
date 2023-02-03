@@ -50,9 +50,13 @@ export async function buildUnsignedTransaction(
     const AVAX_ID_STR = AVAX_ID_BUF.toString('hex')
     const TO_BUF = bintools.stringToAddress(addr)
 
-    const aad: AssetAmountDestination = new AssetAmountDestination([TO_BUF], fromAddrs, [
-        changeAddr,
-    ])
+    const aad: AssetAmountDestination = new AssetAmountDestination(
+        [TO_BUF],
+        1,
+        fromAddrs,
+        [changeAddr],
+        1
+    )
     const ZERO = new BN(0)
     let isFeeAdded = false
 
