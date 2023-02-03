@@ -1,18 +1,11 @@
 name: update-gcs-bucket
 
 on:
-  workflow_dispatch:
-    inputs:        
-      update_production:
-        required: true
-        default: false
-        type: boolean
-        description: "flag to to push to production"
   push:
     branches:
         - c4t
-        - suite
         - dev
+        - suite
 
 env:
   node_version: 16
@@ -31,10 +24,11 @@ jobs:
           echo "prodBucket=$DOMAIN" >> $GITHUB_OUTPUT
           if [[ "${{ github.ref }}" == "refs/heads/c4t" ]]; then
               echo "bucket=stage.$DOMAIN" >> $GITHUB_OUTPUT
+              echo "build_env=stage" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-              echo "bucket=dev.$DOMAIN" >> $GITHUB_OUTPUT
+              echo "build_env=dev" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/suite" ]]; then
-              echo "bucket=dev.$DOMAIN" >> $GITHUB_OUTPUT
+              echo "build_env=dev" >> $GITHUB_OUTPUT
           fi
 
       - uses: actions/setup-node@v3
@@ -45,7 +39,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build
+        run: yarn build ${{ steps.prepareVariables.outputs.build_env }}
 
       - name: Cloud authentication
         id: auth
@@ -60,8 +54,3 @@ jobs:
         if: ${{ github.ref == 'refs/heads/c4t' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/suite' }}
         run: |
           gsutil -m rsync -J -R -d dist gs://${{ steps.prepareVariables.outputs.bucket }}
-
-      - name: Update Production Bucket
-        if: ${{ github.ref == 'refs/heads/c4t' && inputs.update_production }}
-        run: |
-          gsutil -m rsync -J -R -d dist gs://${{ steps.prepareVariables.outputs.prodBucket }}
