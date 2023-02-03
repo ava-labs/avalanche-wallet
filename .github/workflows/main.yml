@@ -2,9 +2,9 @@ name: main-commit-checks
 
 on:
   push:
-    branches: [chain4travel, dev, suite]
+    branches: [c4t, dev, suite]
   pull_request:
-    branches: [chain4travel, dev, suite]
+    branches: [c4t, dev, suite]
 
 jobs:
   build:

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches-ignore: [chain4travel, dev]
+    branches-ignore: [c4t, dev, suite]
 
 env:
   CI: true

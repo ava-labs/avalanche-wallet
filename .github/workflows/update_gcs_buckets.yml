@@ -2,50 +2,66 @@ name: update-gcs-bucket
 
 on:
   workflow_dispatch:
+    inputs:        
+      update_production:
+        required: true
+        default: false
+        type: boolean
+        description: "flag to to push to production"
   push:
     branches:
-      - chain4travel
-      - dev
+        - c4t
+        - suite
+        - dev
 
 env:
   node_version: 16
 
 jobs:
-  BuildAndDeploy:
+  build_deploy_scrape:    
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Prepare variables
+        id: prepareVariables
+        run: |
+          DOMAIN="suite-wallet.camino.network"
+          echo "prodBucket=$DOMAIN" >> $GITHUB_OUTPUT
+          if [[ "${{ github.ref }}" == "refs/heads/c4t" ]]; then
+              echo "bucket=stage.$DOMAIN" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+              echo "bucket=dev.$DOMAIN" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/suite" ]]; then
+              echo "bucket=dev.$DOMAIN" >> $GITHUB_OUTPUT
+          fi
+
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.node_version }}
-
-      - name: install yarn dependencies
+          
+      - name: Install yarn dependencies        
         run: yarn install
-      - name: build
+
+      - name: Build
         run: yarn build
 
-      - name: Set bucket names
-        id: setBucketNames
-        run: |
-          if [[ "${{ github.ref_name }}" == "chain4travel" ]]; then
-              echo "bucket=wallet.camino.network" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_name }}" == "dev" ]]; then
-              echo "bucket=wallet.kopernikus.camino.network" >> $GITHUB_OUTPUT
-          fi
-      - name: 'gcloud authentication'
-        id: 'auth'
-
+      - name: Cloud authentication
+        id: auth
         uses: 'google-github-actions/auth@v1'
         with:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
 
-      - name: update bucket files
-        run: gsutil rsync -R -d dist gs://${{ steps.setBucketNames.outputs.bucket }}
+      - name: Update Bucket
+        if: ${{ github.ref == 'refs/heads/c4t' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/suite' }}
+        run: |
+          gsutil -m rsync -J -R -d dist gs://${{ steps.prepareVariables.outputs.bucket }}
 
-      ## TODO: this needs more discussion, to decide if we really need 3 different deployments from 2 branch for the wallet and explorer
-      - name: update bucket files for columbus
-        if: ${{ github.ref == 'refs/heads/chain4travel' }}
-        run: gsutil rsync -R -d dist gs://wallet.columbus.camino.network
+      - name: Update Production Bucket
+        if: ${{ github.ref == 'refs/heads/c4t' && inputs.update_production }}
+        run: |
+          gsutil -m rsync -J -R -d dist gs://${{ steps.prepareVariables.outputs.prodBucket }}
