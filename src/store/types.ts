@@ -49,6 +49,10 @@ export interface IWalletBalanceDict {
     }
 }
 
+export interface IBalanceDict {
+    [assetId: string]: BN
+}
+
 export interface IWalletBalanceItem {
     id: string
     amount: BN
@@ -134,4 +138,14 @@ export interface iUserAccountDecrypted {
     name: string
     baseAddresses: string[]
     wallet: AllKeyFileDecryptedTypes
+}
+
+export interface PlatformBalances {
+    balances: IBalanceDict
+    unlocked: IBalanceDict
+    locked: IBalanceDict
+    lockedStakeable: IBalanceDict
+    bonded: IBalanceDict
+    deposited: IBalanceDict
+    bondedDeposited: IBalanceDict
 }

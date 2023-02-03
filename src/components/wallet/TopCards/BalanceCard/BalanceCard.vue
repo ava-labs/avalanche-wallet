@@ -122,16 +122,9 @@ export default class BalanceCard extends Vue {
         utxos_modal: UtxosBreakdownModal
     }
 
-    mounted() {
-        if (this.depositAndBond) this.$store.dispatch('Assets/getPChainBalances')
-    }
-
     updateBalance(): void {
         this.$store.dispatch('Assets/updateUTXOs')
         this.$store.dispatch('History/updateTransactionHistory')
-        if (this.depositAndBond) {
-            this.$store.dispatch('Assets/getPChainBalances')
-        }
     }
 
     showUTXOsModal() {
@@ -266,8 +259,7 @@ export default class BalanceCard extends Vue {
     }
 
     get platformUnlocked(): BN {
-        if (this.depositAndBond) return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
-        else return this.$store.getters['Assets/walletPlatformBalance']
+        return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
     }
 
     get platformLocked(): BN {

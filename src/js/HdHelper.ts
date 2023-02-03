@@ -152,11 +152,13 @@ class HdHelper {
         this.isInit = true
     }
 
+    startUTXOFetch(): void {
+        this.isFetchUtxo = true
+    }
+
     // Fetches the utxos for the current keychain
     // and increments the index if last index has a utxo
     async updateUtxos(): Promise<AVMUTXOSet | PlatformUTXOSet> {
-        this.isFetchUtxo = true
-
         if (!this.isInit) {
             console.error('HD Index not found yet.')
         }

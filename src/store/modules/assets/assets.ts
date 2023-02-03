@@ -5,13 +5,14 @@ import {
     AssetsState,
     TokenList,
     TokenListToken,
-    WalletBalance,
 } from '@/store/modules/assets/types'
 import {
+    IBalanceDict,
     IWalletAssetsDict,
     IWalletBalanceDict,
     IWalletNftDict,
     IWalletNftMintDict,
+    PlatformBalances,
     RootState,
 } from '@/store/types'
 import { ava, bintools } from '@/AVA'
@@ -20,15 +21,19 @@ import AvaAsset from '@/js/AvaAsset'
 import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import {
+    AVMConstants,
     AmountOutput,
     UTXOSet as AVMUTXOSet,
     UTXO,
     NFTMintOutput,
 } from '@c4tplatform/caminojs/dist/apis/avm'
 import { UnixNow } from '@c4tplatform/caminojs/dist/utils'
-import { BN } from '@c4tplatform/caminojs'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
-import { StakeableLockOut } from '@c4tplatform/caminojs/dist/apis/platformvm'
+import { BN } from '@c4tplatform/caminojs/dist'
+import {
+    PlatformVMConstants,
+    StakeableLockOut,
+    LockedOut,
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
 import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
@@ -36,6 +41,7 @@ import { web3 } from '@/evm'
 // import ERCNftToken from '@/js/ERCNftToken'
 
 const TOKEN_LISTS: string[] = []
+const ZeroBN = new BN(0)
 
 import ERCNftModule from './modules/ercNft'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
@@ -55,16 +61,17 @@ const assets_module: Module<AssetsState, RootState> = {
         // isUpdateBalance: false,
         assets: [],
         assetsDict: {}, // holds meta data of assets
-        balances: {
-            balances: {},
-            unlockedOutputs: {},
-            bondedOutputs: {},
-            depositedOutputs: {},
-            bondedDepositedOutputs: {},
-            utxoIDs: [],
-        },
         nftFams: [],
         nftFamsDict: {},
+        platformBalances: {
+            balances: {},
+            unlocked: {},
+            locked: {},
+            lockedStakeable: {},
+            bonded: {},
+            deposited: {},
+            bondedDeposited: {},
+        },
         balanceDict: {},
         nftUTXOs: [],
         nftMintUTXOs: [],
@@ -100,6 +107,15 @@ const assets_module: Module<AssetsState, RootState> = {
         removeAllAssets(state) {
             state.assets = []
             state.assetsDict = {}
+            state.platformBalances = {
+                balances: {},
+                unlocked: {},
+                locked: {},
+                lockedStakeable: {},
+                bonded: {},
+                deposited: {},
+                bondedDeposited: {},
+            }
             state.nftFams = []
             state.nftFamsDict = {}
             state.nftUTXOs = []
@@ -160,6 +176,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 return
             }
 
+            await dispatch('updatePlatformBalances')
             await dispatch('updateBalanceDict')
             await dispatch('updateUtxoArrays')
             await dispatch('addUnknownAssets')
@@ -178,9 +195,9 @@ const assets_module: Module<AssetsState, RootState> = {
                 let utxo = utxos[n]
                 let outId = utxo.getOutput().getOutputID()
 
-                if (outId === 11) {
+                if (outId === AVMConstants.NFTXFEROUTPUTID) {
                     nftUtxos = [...nftUtxos, utxo]
-                } else if (outId === 10) {
+                } else if (outId === AVMConstants.NFTMINTOUTPUTID) {
                     nftMintUtxos = [...nftMintUtxos, utxo]
                 }
             }
@@ -414,7 +431,7 @@ const assets_module: Module<AssetsState, RootState> = {
                 // Process only SECP256K1 Transfer Output utxos, outputid === 07
                 let outId = utxo.getOutput().getOutputID()
 
-                if (outId !== 7) continue
+                if (outId !== AVMConstants.SECPXFEROUTPUTID) continue
 
                 let utxoOut = utxo.getOutput() as AmountOutput
 
@@ -468,15 +485,69 @@ const assets_module: Module<AssetsState, RootState> = {
             await commit('addNftFamily', newFam)
             return desc
         },
-
-        async getPChainBalances({ state, commit, rootState }) {
-            let wallet: WalletType | null = rootState.activeWallet
+        updatePlatformBalances({ state, rootState, getters }) {
+            const wallet = rootState.activeWallet
             if (!wallet) return
-            let pchain = ava.PChain()
 
-            let pBalance = await pchain.getBalance({ address: wallet!.getAllAddressesP()[0] })
-            state.balances = (pBalance as unknown) as WalletBalance
-            return
+            const utxoSet = wallet.getPlatformUTXOSet()
+            const utxos = utxoSet.getAllUTXOs()
+            const now = UnixNow()
+
+            const addDictAmount = (amt: BN, assetID: string, dict: IBalanceDict) => {
+                dict[assetID] = new BN(dict[assetID] ?? ZeroBN).add(amt)
+            }
+
+            const newBalance: PlatformBalances = {
+                balances: {},
+                unlocked: {},
+                locked: {},
+                lockedStakeable: {},
+                bonded: {},
+                deposited: {},
+                bondedDeposited: {},
+            }
+
+            for (const utxo of utxos) {
+                const assetID = bintools.cb58Encode(utxo.getAssetID())
+                const utxoOut = utxo.getOutput()
+                const outId = utxoOut.getOutputID()
+                const amt = (utxoOut as AmountOutput).getAmount()
+
+                let locktime = ZeroBN
+                if (outId === PlatformVMConstants.STAKEABLELOCKOUTID) {
+                    // Avax locked
+                    locktime = (utxoOut as StakeableLockOut).getStakeableLocktime()
+                } else {
+                    locktime = (utxoOut as AmountOutput).getLocktime()
+                    if (outId === PlatformVMConstants.LOCKEDOUTID) {
+                        // Camino locked
+                        const isDeposited = !(utxoOut as LockedOut)
+                            .getLockedIDs()
+                            .getDepositTxID()
+                            .isEmpty()
+                        const isBonded = !(utxoOut as LockedOut)
+                            .getLockedIDs()
+                            .getBondTxID()
+                            .isEmpty()
+                        const dest = isDeposited
+                            ? isBonded
+                                ? newBalance.bondedDeposited
+                                : newBalance.deposited
+                            : newBalance.bonded
+                        addDictAmount(amt, assetID, dest)
+                    }
+                }
+                addDictAmount(amt, assetID, newBalance.balances)
+                if (outId !== PlatformVMConstants.LOCKEDOUTID) {
+                    const dest = locktime.lte(now)
+                        ? newBalance.unlocked
+                        : outId === PlatformVMConstants.STAKEABLELOCKOUTID
+                        ? newBalance.lockedStakeable
+                        : newBalance.locked
+                    addDictAmount(amt, assetID, dest)
+                }
+            }
+            state.platformBalances = newBalance
         },
     },
     getters: {
@@ -595,123 +666,47 @@ const assets_module: Module<AssetsState, RootState> = {
         },
 
         walletPlatformBalance(state, getters, rootState): BN {
-            let wallet = rootState.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            let now = UnixNow()
-
-            // The only type of asset is Native on the P chain
-            let amt = new BN('0')
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput()
-                let outId = utxoOut.getOutputID()
-
-                let locktime
-                if (outId === 22) {
-                    locktime = (utxoOut as StakeableLockOut).getStakeableLocktime()
-                } else {
-                    locktime = (utxoOut as AmountOutput).getLocktime()
-                }
-
-                // Filter out locked tokens and stakeable locked tokens
-                if (locktime.lte(now)) {
-                    amt.iadd((utxoOut as AmountOutput).getAmount())
-                }
-            }
-
-            return amt
-        },
-
-        walletPlatformBalanceLocked(state, getters, rootState): BN {
-            let wallet = rootState.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            let now = UnixNow()
-
-            // The only type of asset is native token on the P chain
-            let amt = new BN(0)
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as AmountOutput
-                let locktime = utxoOut.getLocktime()
-
-                // Filter unlocked tokens
-                if (locktime.gt(now)) {
-                    amt.iadd(utxoOut.getAmount())
-                }
-            }
-
-            return amt
-        },
-
-        walletPlatformBalanceLockedStakeable(state, getters, rootState): BN {
-            let wallet = rootState.activeWallet
-            if (!wallet) return new BN(0)
-
-            let utxoSet: PlatformUTXOSet
-
-            utxoSet = wallet.getPlatformUTXOSet()
-
-            // The only type of asset is native token on the P chain
-            let amt = new BN(0)
-            let unixNow = UnixNow()
-
-            let utxos = utxoSet.getAllUTXOs()
-            for (var n = 0; n < utxos.length; n++) {
-                let utxo = utxos[n]
-                let utxoOut = utxo.getOutput() as StakeableLockOut
-                let outType = utxoOut.getOutputID()
-
-                // Type ID 22 is stakeable but locked tokens
-                if (outType === 22) {
-                    let locktime = utxoOut.getStakeableLocktime()
-                    // Make sure the locktime is in the future
-                    if (locktime.gt(unixNow)) {
-                        amt.iadd(utxoOut.getAmount())
-                    }
-                }
-            }
-
-            return amt
-        },
-
-        walletPlatformBalanceTotalLocked(state, getters, rootState): BN {
-            return new BN(state.balances.depositedOutputs[state.AVA_ASSET_ID || ''] || 0)
-                .add(new BN(state.balances.bondedOutputs[state.AVA_ASSET_ID || ''] || 0))
-                .add(new BN(state.balances.bondedDepositedOutputs[state.AVA_ASSET_ID || ''] || 0))
-        },
-
-        walletPlatformBalanceDeposited(state, getters, rootState): BN {
-            return new BN(state.balances.depositedOutputs[state.AVA_ASSET_ID || ''] || 0)
-        },
-
-        walletPlatformBalanceBonded(state, getters, rootState): BN {
-            return new BN(state.balances.bondedOutputs[state.AVA_ASSET_ID || ''] || 0)
-        },
-
-        walletPlatformBalanceBondedDeposited(state, getters, rootState): BN {
-            return new BN(state.balances.bondedDepositedOutputs[state.AVA_ASSET_ID || ''] || 0)
-        },
-
-        walletPlatformBalanceTotal(state, getters, rootState): BN {
-            return new BN(state.balances.balances[state.AVA_ASSET_ID || ''] || 0)
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.balances[avaxAssetID] ?? ZeroBN
         },
 
         walletPlatformBalanceUnlocked(state, getters, rootState): BN {
-            return new BN(state.balances.unlockedOutputs[state.AVA_ASSET_ID || ''] || 0)
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.unlocked[avaxAssetID] ?? ZeroBN
+        },
+
+        walletPlatformBalanceLocked(state, getters, rootState): BN {
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.locked[avaxAssetID] ?? ZeroBN
+        },
+
+        walletPlatformBalanceLockedStakeable(state, getters, rootState): BN {
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.lockedStakeable[avaxAssetID] ?? ZeroBN
+        },
+
+        walletPlatformBalanceTotalLocked(state, getters, rootState): BN {
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return (state.platformBalances.deposited[avaxAssetID] ?? ZeroBN)
+                .add(state.platformBalances.bonded[avaxAssetID] ?? ZeroBN)
+                .add(state.platformBalances.bondedDeposited[avaxAssetID] ?? ZeroBN)
+                .add(state.platformBalances.locked[avaxAssetID] ?? ZeroBN)
+                .add(state.platformBalances.lockedStakeable[avaxAssetID] ?? ZeroBN)
+        },
+
+        walletPlatformBalanceDeposited(state, getters, rootState): BN {
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.deposited[avaxAssetID] ?? ZeroBN
+        },
+
+        walletPlatformBalanceBonded(state, getters, rootState): BN {
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.bonded[avaxAssetID] ?? ZeroBN
+        },
+
+        walletPlatformBalanceBondedDeposited(state, getters, rootState): BN {
+            const avaxAssetID = state.AVA_ASSET_ID ?? ''
+            return state.platformBalances.bondedDeposited[avaxAssetID] ?? ZeroBN
         },
 
         nftMintDict(state): IWalletNftMintDict {

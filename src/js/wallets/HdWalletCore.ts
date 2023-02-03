@@ -83,9 +83,11 @@ abstract class HdWalletCore extends WalletCore {
     }
     // Fetches the utxos
     async getUTXOs(): Promise<void> {
-        this.updateUTXOsX()
+        this.externalHelper.startUTXOFetch()
+        this.internalHelper.startUTXOFetch()
+        this.platformHelper.startUTXOFetch()
 
-        // platform utxos are updated but not returned by function
+        this.updateUTXOsX()
         this.updateUTXOsP()
 
         return
