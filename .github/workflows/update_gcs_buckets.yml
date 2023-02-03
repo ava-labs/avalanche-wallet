@@ -39,7 +39,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build ${{ steps.prepareVariables.outputs.build_env }}
+        run: yarn build:${{ steps.prepareVariables.outputs.build_env }}
 
       - name: Cloud authentication
         id: auth
