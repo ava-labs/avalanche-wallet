@@ -26,8 +26,10 @@ jobs:
               echo "bucket=stage.$DOMAIN" >> $GITHUB_OUTPUT
               echo "build_env=stage" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+              echo "bucket=dev.$DOMAIN" >> $GITHUB_OUTPUT
               echo "build_env=dev" >> $GITHUB_OUTPUT
           elif [[ "${{ github.ref }}" == "refs/heads/suite" ]]; then
+              echo "bucket=dev.$DOMAIN" >> $GITHUB_OUTPUT
               echo "build_env=dev" >> $GITHUB_OUTPUT
           fi
 
