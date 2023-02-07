@@ -211,7 +211,7 @@ const network_module: Module<NetworkState, RootState> = {
             try {
                 let isSet = await dispatch('loadSelectedNetwork')
                 if (!isSet) {
-                    await dispatch('setNetwork', state.networks[0])
+                    await dispatch('setNetwork', state.networks[1])
                 }
                 return true
             } catch (e) {
