@@ -4,5 +4,6 @@
   "semi": false,
   "singleQuote": true,
   "printWidth": 100,
-  "htmlWhitespaceSensitivity": "ignore"
+  "htmlWhitespaceSensitivity": "ignore",
+  "expandUsers": true
 }
