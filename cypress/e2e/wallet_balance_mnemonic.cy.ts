@@ -11,18 +11,18 @@ describe('Wallet Balance Mnemonic', () => {
         addLocalNetwork(cy)
         //changeNetwork(cy);
         accessWallet(cy, 'mnemonic')
-        //interceptXChainBalance();
-        //interceptPChainBalance();
-        //interceptChainBalance();
+        interceptXChainBalance()
+        interceptPChainBalance()
+        interceptChainBalance()
 
         cy.get('[data-cy="btn-show-breakdown"]', { timeout: 10000 }).should('be.visible')
         cy.get('[data-cy="btn-show-breakdown"]').click()
-    })
 
-    after(async () => {
         cy.get('[data-cy="btn-refresh-balance"]', { timeout: 10000 }).should('be.visible')
-        cy.get('[data-cy="btn-refresh-balance"]').click()
-        await validateAllBalances()
+        cy.get('[data-cy="btn-refresh-balance"]').click().then(() => {
+            cy.wait(3000);
+            validateAllBalances()
+        });
     })
 })
 
@@ -128,14 +128,15 @@ function getTotalBalanceText(): Promise<number> {
         cy.get('[data-cy="wallet_balance"]')
             .invoke('text')
             .then((data) => {
-                balanceNumber = data.toString()
-                cy.get('.smaller')
-                    .invoke('text')
-                    .then((decimals) => {
-                        balanceDecimals = decimals
-                        balanceTotal = balanceNumber + balanceDecimals
-                        resolve(parseFloat(balanceTotal))
-                    })
+                let dataSplit = data.split(" ");
+                let dataString = dataSplit.filter((str) => str != "\n" && str != '' && str != 'CAM\n');
+                let value : number = 0;
+                for(let i = 0; i < dataString.length; i++)
+                {
+                    let valueStrNumber = parseFloat(dataString[i]);
+                    value = value + valueStrNumber;
+                }
+                resolve(value);
             })
     })
 }
@@ -148,10 +149,10 @@ function getBalanceText(chain: string): Promise<number> {
                 attributeFind = '[data-cy="top-balance-available-X"]'
                 break
             case 'C':
-                attributeFind = '.alt_breakdown > :nth-child(1) > :nth-child(4)'
+                attributeFind = '[data-cy="top-balance-available-C"]'
                 break
             case 'P':
-                attributeFind = '.alt_breakdown > :nth-child(1) > :nth-child(6)'
+                attributeFind = '[data-cy="top-balance-available-P"]'
                 break
             default:
                 return 0
@@ -160,7 +161,8 @@ function getBalanceText(chain: string): Promise<number> {
             .invoke('text')
             .then((response) => {
                 let fundsSplitted = response.split(' ')
-                let funds = parseFloat(fundsSplitted[0])
+                let fundsString = fundsSplitted.filter((str) => str != "\n" && str != '' && str != 'CAM\n');
+                let funds = parseFloat(fundsString[0])
                 resolve(funds)
             })
     })
