@@ -121,7 +121,7 @@
                                 block
                                 :disabled="!canSendAgain"
                             >
-                                Start Again
+                                New Transaction
                             </v-btn>
                         </template>
                     </div>

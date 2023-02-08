@@ -77,8 +77,7 @@
             "studio": "Studio",
             "advanced": "Advanced",
             "activity": "Activity",
-            "launch": "Launch",
-            "validator": "Validator"
+            "launch": "Launch"
         },
         "address_card": {},
         "collectibles": {
@@ -178,7 +177,7 @@
                 "desc": "Transaction Sent",
                 "label1": "Transaction Hash"
             },
-            "reset": "Start Again"
+            "reset": "New Transaction"
         }
     },
     "cross_chain": {
@@ -424,7 +423,7 @@
                 "export": "Export Transaction ID:",
                 "import": "Import Transaction ID:",
                 "message": "You have successfully transferred between chains.",
-                "again": "Start Again",
+                "again": "New Transfer",
                 "back": "Back to Earn"
             }
         },
