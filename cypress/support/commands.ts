@@ -10,31 +10,26 @@
 //
 //
 
-before(() => {
-  cy.visit('/')
-
-  // header - app(left) menu aliases
-  cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(1)')
-    .as('appMenu')
-
-  // header - preference(right) menu aliases
-  cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(2)')
-    .as('preferenceMenu')
-  cy.get('@preferenceMenu')
-    .find('.MuiInputBase-root > .MuiSelect-select', { timeout: 30000 })
-    .as('btnNetworkSwitcher')
-  cy.get('@btnNetworkSwitcher')
-    .find('.MuiTypography-root')
-    .as('txtSelectedNetwork')
-  cy.get('@preferenceMenu')
-    .find('> .MuiBox-root')
-    .as('btnWallet')
-
-  cy.switchToWalletApp()
-})
-
 // -- This is a parent command --
 Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
+  const interceptNetworkInfo = (intercept) => {
+    switch (intercept.request.body.method) {
+      case 'info.getNetworkID':
+        const networkID = intercept.response?.body.result.networkID
+        // parsing rpc host
+        const urlRegex = /^(https?:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/ // $1: protocol, $2: host, $3: port, $4: path + query string
+        const urlParts = intercept.request.url.match(urlRegex) ?? []
+        const host = urlParts[2]
+        const port = urlParts[1].startsWith('https') ? 443 : 80
+        const protocol = urlParts[1]
+        cy.wrap({ protocol, host, port, networkID }).as('currentRpcHost')
+        break
+      case 'info.getTxFee':
+        const txFee = intercept.response?.body.result.txFee
+        cy.wrap(txFee).as('txFee')
+        break
+    }
+  }
   cy.get('@txtSelectedNetwork').invoke('text')
     .then(currentNetwork => {
       if (currentNetwork !== network) {
@@ -42,18 +37,12 @@ Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
         cy.get(`[data-value="${network}"]`).click(); // Select Columbus Network
 
         // intercept to find current rpc url
-        cy.intercept('POST', '**/ext/info').as('networkInfo')
-        cy.wait('@networkInfo', { timeout: 15000 })
-          .then(intercept => {
-            const networkID = intercept.response?.body.result.networkID
-            // parsing rpc host
-            const urlRegex = /^(https?:)\/\/([A-Za-z0-9\-\.]+)(:[0-9]+)?(.*)$/ // $1: protocol, $2: host, $3: port, $4: path + query string
-            const urlParts = intercept.request.url.match(urlRegex) ?? []
-            const host = urlParts[2]
-            const port = urlParts[1].startsWith('https') ? 443 : 80
-            const protocol = urlParts[1]
-            cy.wrap({ protocol, host, port, networkID }).as('currentRpcHost')
-          })
+        cy.intercept('POST', '**/ext/info').as('apiNetworkInfo')
+        // Waiting 'info.networkID', and 'info.getTxFee'
+        cy.wait('@apiNetworkInfo')
+          .then(interceptNetworkInfo)
+        cy.wait('@apiNetworkInfo')
+          .then(interceptNetworkInfo)
 
         // increasing timeout to make sure the network is selected, especially on slowly local dev env
         cy.get('@txtSelectedNetwork', { timeout: 15000 }).should('have.text', network)
@@ -64,16 +53,16 @@ Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
 })
 Cypress.Commands.add('accessWallet', (type) => {
   cy.get('@btnWallet').click();
-  cy.get('h6 + .MuiGrid-container').as('walletOptions')
-  cy.get('@walletOptions')
+  cy.get('h6 + .MuiGrid-container').as('elWalletOptions')
+  cy.get('@elWalletOptions')
     .find('> .MuiGrid-container:nth-child(1) > :nth-child(1)')
-    .as('privateKeyOption')
-  cy.get('@walletOptions')
+    .as('elPrivateKeyOption')
+  cy.get('@elWalletOptions')
     .find('> .MuiGrid-container:nth-child(1) > :nth-child(2)')
-    .as('mnemonicOption')
+    .as('elMnemonicOption')
   switch (type) {
     case 'privateKey': {
-      cy.get('@privateKeyOption').click()
+      cy.get('@elPrivateKeyOption').click()
       cy.get('@currentNetwork').then(currentNetwork => {
         cy.fixture(`${currentNetwork}/private_key_wallet`).then((privateKey) => {
           cy.get('input[type="password"]').type(privateKey.privateKey)
@@ -82,7 +71,7 @@ Cypress.Commands.add('accessWallet', (type) => {
       })
     } break
     case 'mnemonic': {
-      cy.get('@mnemonicOption').find('> .MuiButtonBase-root').click()
+      cy.get('@elMnemonicOption').find('> .MuiButtonBase-root').click()
       cy.get('@currentNetwork').then(currentNetwork => {
         cy.fixture(`${currentNetwork}/mnemonic_wallet`).then((phraseArr) => {
           const mnemonicStr = phraseArr.join(' ')
@@ -94,21 +83,56 @@ Cypress.Commands.add('accessWallet', (type) => {
     default:
       break
   }
+
+  cy.intercept('GET', '**/api/v1/verified/*').as('apiVerifiedAddress')
+  cy.wait('@apiVerifiedAddress').then(intercept => {
+    console.log('verified address: ', intercept.request.url)
+    const pathRegex = /^https?:\/\/[A-Za-z0-9\-\.]+\/api\/v1\/verified\/(.*)$/
+    const matchGroup = intercept.request.url.match(pathRegex)
+    cy.get('@elPreferenceMenu')
+      .find(':nth-child(3) > [role="button"]', { timeout: 15000 })
+      .should('have.text', matchGroup?.[1])
+  })
 })
 Cypress.Commands.add('switchToWalletApp', () => {
-  cy.get('@appMenu').click();
+  cy.get('@elAppMenu').click();
   cy.get('.MuiPopover-paper > .MuiMenu-list')
-    .as('appOptions')
+    .as('elAppOptions')
   // App option items
-  cy.get('@appOptions')
+  cy.get('@elAppOptions')
     .find('[data-value="Wallet"]')
-    .as('appOptionWallet')
-  cy.get('@appOptions')
+    .as('elAppOptionWallet')
+  cy.get('@elAppOptions')
     .find('[data-value="Explorer"]')
-    .as('appOptionExplorer')
+    .as('elAppOptionExplorer')
 
-  cy.get('@appOptionWallet').click();
+  cy.get('@elAppOptionWallet').click();
 })
+Cypress.Commands.add('loginWalletWith', (walletAccessType: string) => {
+  cy.visit('/')
+
+  // header - app(left) menu aliases
+  cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(1)')
+    .as('elAppMenu')
+
+  // header - preference(right) menu aliases
+  cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(2)')
+    .as('elPreferenceMenu')
+  cy.get('@elPreferenceMenu')
+    .find('.MuiInputBase-root > .MuiSelect-select', { timeout: 30000 })
+    .as('btnNetworkSwitcher')
+  cy.get('@btnNetworkSwitcher')
+    .find('.MuiTypography-root')
+    .as('txtSelectedNetwork')
+  cy.get('@elPreferenceMenu')
+    .find('> .MuiBox-root')
+    .as('btnWallet')
+
+  cy.switchToWalletApp()
+    .changeNetwork()
+    .accessWallet(walletAccessType)
+})
+
 Cypress.Commands.add('switchToWalletFunctionTab', (func) => {
   let funcKey
   switch (func) {

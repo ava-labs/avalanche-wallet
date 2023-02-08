@@ -4,5 +4,6 @@ declare namespace Cypress {
     accessWallet(type: string): Chainable<Element>
     switchToWalletApp(): Chainable<Element>
     switchToWalletFunctionTab(func: string): Chainable<Element>
+    loginWalletWith(walletAccessType: string): Chainable<Element>
   }
 }
