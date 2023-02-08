@@ -10,5 +10,6 @@ export default defineConfig({
             return parseEnvPlugin(on, config)
         },
         baseUrl: 'https://localhost:5000/',
-    },
+        requestTimeout: 15000,
+    }
 })
