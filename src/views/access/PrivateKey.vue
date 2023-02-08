@@ -12,6 +12,7 @@
                     type="password"
                     v-model="privatekey"
                     hide-details
+                    data-cy="field-private-key"
                 ></v-text-field>
                 <p class="err">{{ error }}</p>
                 <v-btn
@@ -20,6 +21,7 @@
                     :loading="isLoading"
                     :disabled="!canSubmit"
                     depressed
+                    data-cy="btn-submit-private-key"
                 >
                     {{ $t('access.submit') }}
                 </v-btn>

@@ -9,11 +9,18 @@
                         type="text"
                         v-model="keysIn[i - 1]"
                         :disabled="!hiddenIndices.includes(i - 1)"
+                        :data-cy="getDataCY(i)"
                     />
                 </div>
             </div>
             <p class="err">{{ err }}</p>
-            <button class="but_primary ava_button button_primary" @click="verify">Verify</button>
+            <button
+                data-cy="btn-confirm-verify-new-mnemonic-phrase"
+                class="but_primary ava_button button_primary"
+                @click="verify"
+            >
+                Verify
+            </button>
         </div>
     </modal>
 </template>
@@ -116,10 +123,14 @@ export default class VerifyMnemonic extends Vue {
         this.$refs.modal.close()
         this.$emit('complete')
     }
+
+    getDataCY(pos: number) {
+        return `mnemonic-in-${pos}`
+    }
 }
 </script>
 <style scoped lang="scss">
-@use "../../styles/main";
+@use '../../styles/main';
 
 .mnemonic_body {
     padding: 30px;

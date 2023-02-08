@@ -10,6 +10,7 @@
                     v-model.trim="phrase[i - 1]"
                     @keydown.space.prevent="onSpace()"
                     @keyup="$emit('update', { value: phrase[i - 1], index: i - 1 })"
+                    :data-cy="getDataCY(i)"
                 />
             </div>
         </div>
@@ -52,6 +53,10 @@ export default class MnemonicDisplay extends Vue {
     }
     isWordValid(word: string) {
         return wordlists.EN.includes(word) || !word
+    }
+
+    getDataCY(pos: number) {
+        return `mnemonic-field-${pos}`
     }
 }
 </script>
