@@ -6,7 +6,6 @@ import { ava, infoApi } from '@/AVA'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
 import { BN } from '@c4tplatform/caminojs'
-import router from '@/router'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '../../../providers'
 import { setAvalanche } from '@c4tplatform/camino-wallet-sdk/dist'
@@ -47,7 +46,17 @@ const network_module: Module<NetworkState, RootState> = {
             state.networksCustom = [...state.networksCustom, net]
             dispatch('save')
         },
-
+        editNetwork(
+            { state, dispatch },
+            { net, findNetwork }: { net: AvaNetwork; findNetwork: number }
+        ) {
+            if (findNetwork >= 0) {
+                let newNetworksCustom = [...state.networksCustom]
+                newNetworksCustom[findNetwork] = net
+                state.networksCustom = newNetworksCustom
+                dispatch('save')
+            }
+        },
         async removeCustomNetwork({ state, dispatch }, net: AvaNetwork) {
             let index = state.networksCustom.indexOf(net)
             state.networksCustom.splice(index, 1)
