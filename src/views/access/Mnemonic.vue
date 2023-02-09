@@ -17,6 +17,7 @@
                 depressed
                 :loading="isLoading"
                 :disabled="!canSubmit"
+                data-cy="btn-submit-mnemonic-phrase"
             >
                 {{ $t('access.submit') }}
             </v-btn>

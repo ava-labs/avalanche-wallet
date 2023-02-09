@@ -90,7 +90,7 @@
         "crypto-js": "^4.1.1",
         "css-loader": "^6.3.0",
         "csv": "^5.5.0",
-        "cypress": "^4.12.1",
+        "cypress": "^12.4.0",
         "cypress-file-upload": "^4.0.7",
         "deepmerge": "^4.2.2",
         "elliptic": "^6.5.3",
@@ -163,6 +163,7 @@
         "weekstart": "1.0.1"
     },
     "dependencies": {
+        "@cypress/xpath": "^2.0.3",
         "vue": "^2.5.18",
         "vue-cli-plugin-vuetify": "^2.0.3",
         "vuetify": "2.3.9",

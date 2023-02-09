@@ -22,6 +22,7 @@
                                 <button
                                     class="ava_button but_generate button_secondary"
                                     @click="createKey"
+                                    data-cy="btn-generate-key-phrase"
                                 >
                                     {{ $t('create.submit') }}
                                 </button>
@@ -45,6 +46,7 @@
                                             class="mnemonic_display"
                                         ></mnemonic-display> -->
                                         <p
+                                            data-cy="phrase-raw-created"
                                             class="phrase_raw"
                                             v-bind:class="{
                                                 verified: isVerified,
@@ -95,6 +97,7 @@
                                     <!-- STEP 2a - VERIFY -->
                                     <div class="verify_cont" v-if="!isVerified">
                                         <MnemonicCopied
+                                            data-cy="checkbox-wrote-key-phrase-secure-location"
                                             v-model="isSecured"
                                             :explain="$t('create.confirm')"
                                         ></MnemonicCopied>
@@ -107,6 +110,7 @@
                                             class="but_primary ava_button button_secondary"
                                             @click="verifyMnemonic"
                                             :disabled="!canVerify"
+                                            data-cy="btn-verify-mnemonic"
                                         >
                                             {{ $t('create.success_submit') }}
                                         </button>
@@ -121,6 +125,7 @@
                                                         class="button_primary ava_button access generate"
                                                         @click="access"
                                                         :disabled="!canSubmit"
+                                                        data-cy="btn-success-mnemonic"
                                                     >
                                                         {{ $t('create.success_submit') }}
                                                     </button>

@@ -4,20 +4,32 @@
         <div class="fungible_card">
             <div class="header">
                 <div class="refresh">
-                    <Spinner v-if="isUpdateBalance" class="spinner"></Spinner>
-                    <button v-else @click="updateBalance">
+                    <Spinner
+                        v-if="isUpdateBalance"
+                        class="spinner"
+                        data-cy="spinner-balance"
+                    ></Spinner>
+                    <button v-else @click="updateBalance" data-cy="btn-refresh-balance">
                         <v-icon>mdi-refresh</v-icon>
                     </button>
                 </div>
                 <h4>{{ $t('top.title2') }}</h4>
                 <template v-if="!isBreakdown">
-                    <button class="breakdown_toggle" @click="toggleBreakdown">
+                    <button
+                        class="breakdown_toggle"
+                        @click="toggleBreakdown"
+                        data-cy="btn-show-breakdown"
+                    >
                         <v-icon>mdi-eye-outline</v-icon>
                         {{ $t('top.balance.show') }}
                     </button>
                 </template>
                 <template v-else>
-                    <button class="breakdown_toggle" @click="toggleBreakdown">
+                    <button
+                        class="breakdown_toggle"
+                        @click="toggleBreakdown"
+                        data-cy="btn-show-breakdown"
+                    >
                         <v-icon>mdi-eye-off-outline</v-icon>
                         {{ $t('top.balance.hide') }}
                     </button>
@@ -52,11 +64,17 @@
                 <div class="alt_breakdown" v-else>
                     <div>
                         <label>{{ $t('top.balance.available') }} (X)</label>
-                        <p>{{ avmUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
+                        <p data-cy="top-balance-available-X">
+                            {{ avmUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}
+                        </p>
                         <label>{{ $t('top.balance.available') }} (P)</label>
-                        <p>{{ platformUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
+                        <p data-cy="top-balance-available-P">
+                            {{ platformUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}
+                        </p>
                         <label>{{ $t('top.balance.available') }} (C)</label>
-                        <p>{{ evmUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}</p>
+                        <p data-cy="top-balance-available-C">
+                            {{ evmUnlocked | cleanAvaxBN }} {{ nativeAssetSymbol }}
+                        </p>
                     </div>
                     <div v-if="depositAndBond">
                         <label>{{ $t('top.balance.deposited') }} (P)</label>
