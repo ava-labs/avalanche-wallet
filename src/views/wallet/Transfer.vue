@@ -57,10 +57,6 @@
                             {{ $t('transfer.fee_tx') }}
                             <span>{{ txFee.toLocaleString(9) }} {{ nativeAssetSymbol }}</span>
                         </p>
-                        <p>
-                            {{ $t('transfer.total_native') }}
-                            <span>{{ totalUSD.toLocaleString(2) }} USD</span>
-                        </p>
                     </div>
                     <div class="checkout">
                         <ul class="err_list" v-if="formErrors.length > 0">
@@ -430,14 +426,6 @@ export default class Transfer extends Vue {
     get txFee(): Big {
         let fee = ava.XChain().getTxFee()
         return bnToBig(fee, 9)
-    }
-
-    get totalUSD(): Big {
-        let totalAsset = this.avaxTxSize.add(ava.XChain().getTxFee())
-        let bigAmt = bnToBig(totalAsset, 9)
-        let usdPrice = this.priceDict.usd
-        let usdBig = bigAmt.times(usdPrice)
-        return usdBig
     }
 
     get addresses() {

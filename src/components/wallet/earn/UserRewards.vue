@@ -13,7 +13,7 @@
                 class="reward_row"
             ></UserRewardRow>
         </div>
-        <div v-if="delegators.length > 0">
+        <div v-if="delegators.length > 0" class="header">
             <h3>{{ $t('earn.rewards.delegation') }}</h3>
             <UserRewardRow
                 v-for="(d, i) in delegators"
@@ -124,8 +124,8 @@ h3 {
     margin: 12px 0;
     margin-top: 32px;
     font-size: 2em;
-    color: var(--primary-color-light);
-    font-weight: lighter;
+    color: var(--primary-color);
+    font-weight: normal;
 }
 
 label {

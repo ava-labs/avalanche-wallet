@@ -15,7 +15,6 @@
                         :placeholder="placeholder"
                         :disabled="disabled"
                     ></big-num-input>
-                    <p class="usd_val" :active="isAvax">${{ amountUSD.toLocaleString(2) }}</p>
                 </div>
             </div>
             <BalanceDropdown
@@ -114,13 +113,6 @@ export default class CurrencyInputDropdown extends Vue {
 
     onfocus() {
         console.log('focus')
-    }
-
-    get amountUSD(): Big {
-        let usdPrice = this.priceDict.usd
-        let bigAmt = bnToBig(this.amount, this.denomination)
-        let usdBig = bigAmt.times(usdPrice)
-        return usdBig
     }
 
     get isEmpty(): boolean {
@@ -302,18 +294,6 @@ input {
     color: var(--primary-color-light);
     font-family: 'Inter';
     background-color: transparent;
-}
-
-.usd_val {
-    color: var(--primary-color-light);
-    font-size: 13px;
-    max-height: 0px;
-    overflow: hidden;
-    transition-duration: 0.2s;
-
-    &[active] {
-        max-height: 20px;
-    }
 }
 
 @include main.medium-device {

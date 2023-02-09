@@ -22,12 +22,6 @@
                             Import Fee
                             <span>{{ importFee.toLocaleString() }} {{ nativeAssetSymbol }}</span>
                         </p>
-                        <p>
-                            <b>
-                                Total
-                                <span>{{ fee.toLocaleString() }} {{ nativeAssetSymbol }}</span>
-                            </b>
-                        </p>
                     </div>
                     <div>
                         <p class="err">{{ err }}</p>

@@ -138,7 +138,6 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import ConfirmPage from '@/components/wallet/earn/Validate/ConfirmPage.vue'
 import moment from 'moment'
 import Tooltip from '@/components/misc/Tooltip.vue'
-import CurrencySelect from '@/components/misc/CurrencySelect/CurrencySelect.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 import DateForm from '@/components/wallet/earn/DateForm.vue'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
@@ -162,7 +161,6 @@ const MAX_STAKE_DURATION = DAY_MS * 365
         AvaxInput,
         QrInput,
         ConfirmPage,
-        CurrencySelect,
         Spinner,
         DateForm,
         Expandable,

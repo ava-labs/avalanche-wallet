@@ -20,10 +20,6 @@
                     <b>{{ $t('misc.balance') }}:</b>
                     {{ balanceBig }}
                 </p>
-                <p>
-                    <b>$</b>
-                    {{ amountUSD.toLocaleString(2) }}
-                </p>
             </div>
             <div></div>
         </div>
@@ -95,13 +91,6 @@ export default class AvaxInput extends Vue {
             if (!trimmed) return wholeStr
             return `${wholeStr}.${trimmed}`
         }
-    }
-
-    get amountUSD(): Big {
-        let usdPrice = this.priceDict.usd
-        let amount = bnToBig(this.amount, 9)
-        let usdBig = amount.times(usdPrice)
-        return usdBig
     }
 
     get priceDict(): priceDict {

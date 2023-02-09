@@ -14,9 +14,6 @@
                         class="bigIn"
                         :disabled="disabled"
                     ></BigNumInput>
-                    <p class="usd_val" :active="token === 'native'">
-                        ${{ usd_val.toLocaleString(2) }}
-                    </p>
                 </div>
             </template>
             <template v-else>
@@ -83,14 +80,6 @@ export default class EVMInputDropdown extends Vue {
 
     clear() {
         if (this.$refs.dropdown) this.$refs.dropdown.clear()
-    }
-
-    get usd_val(): Big {
-        if (this.token != 'native') return Big(0)
-
-        let price = this.$store.state.prices.usd
-        let big = bnToBig(this.amt, 18)
-        return big.mul(Big(price))
     }
 
     get max_amount(): BN {
@@ -247,17 +236,6 @@ export default class EVMInputDropdown extends Vue {
     color: var(--primary-color-light);
 }
 
-.usd_val {
-    color: var(--primary-color-light);
-    font-size: 13px;
-    max-height: 0px;
-    overflow: hidden;
-    transition-duration: 0.2s;
-
-    &[active] {
-        max-height: 20px;
-    }
-}
 .max_but {
     opacity: 0.4;
     font-size: 13px;
