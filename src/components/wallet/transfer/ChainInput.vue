@@ -1,6 +1,6 @@
 <template>
-    <div v-if="isEVMSupported">
-        <label>{{ $t('transfer.source_chain.title') }}</label>
+    <div v-if="isEVMSupported" class="header">
+        <h1>{{ $t('transfer.source_chain.title') }}</h1>
         <div class="chain_select">
             <button :active="formType === 'X'" @click="set('X')">X</button>
             <button :active="formType === 'C'" @click="set('C')">C</button>
@@ -35,6 +35,11 @@ export default class ChainInput extends Vue {
 @use '../../../styles/main';
 label {
     color: var(--primary-color-light);
+}
+.header {
+    h1 {
+        font-weight: normal;
+    }
 }
 .chain_select {
     display: flex;

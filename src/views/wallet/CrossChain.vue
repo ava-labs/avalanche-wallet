@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="head">
+        <div class="header">
             <h1>{{ $t('cross_chain.title') }}</h1>
             <p>
                 {{ $t('cross_chain.desc') }}
@@ -22,13 +22,10 @@ import ChainTransfer from '@/components/wallet/earn/ChainTransfer/ChainTransfer.
 export default class CrossChain extends Vue {}
 </script>
 <style scoped lang="scss">
-h1 {
-    font-weight: normal;
-}
-.head {
+.header {
     margin-bottom: 14px;
-    //display: flex;
-    //align-items: center;
-    //justify-content: space-between;
+    h1 {
+        font-weight: normal;
+    }
 }
 </style>

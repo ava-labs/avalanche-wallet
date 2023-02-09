@@ -212,7 +212,7 @@ export default class EVMInputDropdown extends Vue {
     font-size: 15px;
 
     > div {
-        border-radius: 3px;
+        border-radius: var(--border-radius-sm);
         background-color: var(--bg-light);
         padding: 8px 14px;
     }

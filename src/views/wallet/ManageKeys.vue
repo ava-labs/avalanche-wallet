@@ -121,7 +121,7 @@ header {
 }
 
 h1 {
-    font-weight: lighter;
+    font-weight: normal;
 }
 
 .save_account {

@@ -66,6 +66,10 @@ export default class AvaxInput extends Vue {
         this.$emit('change', val)
     }
 
+    mounted() {
+        this.maxOut(new MouseEvent('click'))
+    }
+
     get balanceBig(): string {
         if (!this.balance) return ''
 
@@ -131,6 +135,11 @@ export default class AvaxInput extends Vue {
         outline: none !important;
         border: none !important;
         //padding: 0 12px !important;
+        // read-only style
+        &[readonly] {
+            color: var(--primary-color-light);
+            cursor: pointer;
+        }
     }
 
     .ticker,

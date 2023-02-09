@@ -8,7 +8,14 @@
                     :zero="asset.amount.isZero()"
                     :disabled="isDisabled(asset)"
                     @click="select(asset)"
+                    class="token_row"
                 >
+                    <img
+                        v-if="asset.symbol === 'CAM'"
+                        src="/img/native_token.png"
+                        class="col_img"
+                    />
+                    <p v-else class="col_img">?</p>
                     <div class="col_name">
                         <p>{{ asset.symbol }}</p>
                         <p>{{ asset.name }}</p>
@@ -79,22 +86,47 @@ export default class PrivateKey extends Vue {
     display: flex;
     flex-direction: column;
     max-height: 60vh;
+}
 
-    > div {
-        display: grid;
-        grid-template-columns: max-content 1fr;
-        padding: 10px 20px;
-        cursor: pointer;
-        user-select: none;
+$logo_w: 38px;
 
-        &:hover {
-            background-color: var(--bg-light);
-        }
+.token_row {
+    padding: 10px 20px;
+}
 
-        &[disabled] {
-            opacity: 0.3;
+.token_row {
+    font-size: 15px;
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    column-gap: 12px;
+    cursor: pointer;
+    user-select: none;
+
+    > * {
+        align-self: center;
+    }
+
+    img {
+        object-fit: contain;
+    }
+
+    &:hover {
+        background-color: var(--bg-light);
+
+        .col_img {
+            background-color: var(--primary-color);
+            color: var(--bg-wallet);
         }
     }
+}
+
+.col_img {
+    width: $logo_w;
+    height: $logo_w;
+    border-radius: $logo_w;
+    background-color: var(--bg-light);
+    text-align: center;
+    line-height: $logo_w;
 }
 
 .col_name {
@@ -107,7 +139,7 @@ export default class PrivateKey extends Vue {
 }
 
 .col_balance {
-    align-self: center;
+    text-align: right;
 }
 
 @include main.mobile-device {

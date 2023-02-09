@@ -114,14 +114,13 @@ export default class Studio extends Vue {
 </script>
 <style scoped lang="scss">
 .header {
+    h1 {
+        font-weight: normal;
+    }
     display: flex;
     /*justify-content: space-between;*/
     /*align-items: center;*/
     align-items: center;
-
-    h1 {
-        font-weight: lighter;
-    }
 
     .subtitle {
         margin-left: 0.5em;

@@ -38,6 +38,7 @@
     transition-duration: 0.1s;
     border: 1px solid transparent;
     outline: none !important;
+    border-radius: var(--border-radius-sm);
 
     &:hover {
         border-color: var(--primary-color-light);

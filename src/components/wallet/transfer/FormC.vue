@@ -526,6 +526,9 @@ input,
     column-gap: 14px;
     input {
         width: 100%;
+        &:disabled {
+            color: var(--primary-color-light);
+        }
     }
 }
 
