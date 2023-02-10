@@ -141,17 +141,6 @@ export default class Earn extends Vue {
         this.subtitle = ''
     }
 
-    updateValidators() {
-        this.$store.dispatch('Platform/update')
-    }
-
-    created() {
-        this.updateValidators()
-        this.intervalID = setInterval(() => {
-            this.updateValidators()
-        }, 15000)
-    }
-
     deactivated() {
         this.cancel()
     }

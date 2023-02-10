@@ -1,6 +1,5 @@
 import {
     DelegatorPendingRaw,
-    DelegatorRaw,
     ValidatorPendingRaw,
     ValidatorRaw,
 } from '@/components/misc/ValidatorList/types'
@@ -26,11 +25,6 @@ export interface GetPendingValidatorsResponse {
 
 export interface ValidatorGroup {
     data: ValidatorRaw
-    // delegators: DelegatorRaw[]
-}
-
-export interface ValidatorDelegatorDict {
-    [key: string]: DelegatorRaw[]
 }
 
 export interface ValidatorDelegatorPendingDict {

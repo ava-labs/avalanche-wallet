@@ -139,7 +139,6 @@ export default new Vuex.Store({
             store.state.isAuth = true
 
             store.dispatch('Assets/updateAvaAsset')
-            store.dispatch('Platform/update')
             router.push('/wallet')
             store.dispatch('Assets/updateUTXOs')
         },
