@@ -51,7 +51,7 @@ Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
       cy.wrap((network ?? currentNetwork).toLowerCase()).as('currentNetwork')
     })
 })
-Cypress.Commands.add('accessWallet', (type) => {
+Cypress.Commands.add('accessWallet', (type, keyName) => {
   cy.get('@btnWallet').click();
   cy.get('h6 + .MuiGrid-container').as('elWalletOptions')
   cy.get('@elWalletOptions')
@@ -64,8 +64,8 @@ Cypress.Commands.add('accessWallet', (type) => {
     case 'privateKey': {
       cy.get('@elPrivateKeyOption').click()
       cy.get('@currentNetwork').then(currentNetwork => {
-        cy.fixture(`${currentNetwork}/private_key_wallet`).then((privateKey) => {
-          cy.get('input[type="password"]').type(privateKey.privateKey)
+        cy.fixture(`${currentNetwork}/private_key_wallet`).then((privateKeys) => {
+          cy.get('input[type="password"]').type(privateKeys[keyName || 'privateKey'])
         })
         cy.get('button[type="button"]').contains('Access Wallet').click()
       })
@@ -108,7 +108,7 @@ Cypress.Commands.add('switchToWalletApp', () => {
 
   cy.get('@elAppOptionWallet').click();
 })
-Cypress.Commands.add('loginWalletWith', (walletAccessType: string) => {
+Cypress.Commands.add('loginWalletWith', (walletAccessType: string, keyName: string) => {
   cy.visit('/')
 
   // header - app(left) menu aliases
@@ -130,7 +130,7 @@ Cypress.Commands.add('loginWalletWith', (walletAccessType: string) => {
 
   cy.switchToWalletApp()
     .changeNetwork()
-    .accessWallet(walletAccessType)
+    .accessWallet(walletAccessType, keyName)
 })
 
 Cypress.Commands.add('switchToWalletFunctionTab', (func) => {
