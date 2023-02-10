@@ -10,11 +10,11 @@ export default defineConfig({
         setupNodeEvents(on, config) {
             return cypressGrepPlugin(parseEnvPlugin(on, config)) as Cypress.PluginConfigOptions
         },
-        baseUrl: 'https://localhost:5000/',
+        baseUrl: 'http://localhost:3000/',
         requestTimeout: 15000,
     },
     env: {
-        grepTags: '@cross-chain',
-        grepFilterSpecs: false
+        grepTags: '',
+        grepFilterSpecs: true
     }
 })
