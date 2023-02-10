@@ -28,14 +28,18 @@
                 <button @click="deleteAccount" class="ava_button">Delete Account</button>
             </div>
             <template v-else>
-                <component v-if="subComponent" :is="subComponent"></component>
+                <component
+                    v-if="subComponent"
+                    :setAccount="setAccount"
+                    :is="subComponent"
+                ></component>
                 <button @click="clear">{{ $t('access.cancel') }}</button>
             </template>
         </div>
     </modal>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
 import Identicon from '@/components/misc/Identicon.vue'
@@ -51,6 +55,7 @@ import SaveKeys from '@/components/modals/AccountSettings/SaveKeys.vue'
     },
 })
 export default class AccountSettingsModal extends Vue {
+    @Prop() setAccount: any
     $refs!: {
         modal: Modal
     }

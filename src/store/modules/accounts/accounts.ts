@@ -99,12 +99,12 @@ const accounts_module: Module<AccountsState, RootState> = {
         // If there is an active account, will remove it from local storage
         async deleteAccount({ state, dispatch, getters, commit }, password) {
             let acct = getters.account
-
             let passCorrect = await verifyAccountPassword(acct, password)
             if (!passCorrect) throw new Error('Invalid password.')
-            let index = state.accountIndex
-
-            if (!acct || !index) return
+            let index = state.accounts.indexOf(acct)
+            if (!acct || index === -1) {
+                return
+            }
 
             removeAccountByIndex(index)
             state.accountIndex = null
@@ -114,10 +114,10 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
 
         async changePassword({ state, getters, dispatch }, input: ChangePasswordInput) {
-            let index = state.accountIndex
             let account: iUserAccountEncrypted = getters.account
+            let index = state.accounts.indexOf(account)
 
-            if (!account || !index) return
+            if (!account || index === -1) return
 
             let oldPassCorrect = await verifyAccountPassword(account, input.passOld)
             if (!oldPassCorrect) throw new Error('Previous password invalid.')

@@ -8,13 +8,13 @@
     </form>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 
 @Component
 export default class DeleteAccount extends Vue {
+    @Prop() setAccount: any
     pass = ''
     error = ''
-
     get canSubmit() {
         if (this.pass.length < 1) return false
         return true
@@ -22,9 +22,13 @@ export default class DeleteAccount extends Vue {
 
     async submit() {
         this.error = ''
-        await this.$store.dispatch('Accounts/deleteAccount', this.pass).catch((err) => {
-            this.error = err
-        })
+        try {
+            await this.$store.dispatch('Accounts/deleteAccount', this.pass)
+            this.setAccount(null)
+        } catch (err) {
+            let error = err as Error
+            this.error = error.message
+        }
     }
 }
 </script>
