@@ -20,7 +20,7 @@ jobs:
       - name: Prepare variables
         id: prepareVariables
         run: |
-          DOMAIN="suite-wallet.camino.network"
+          DOMAIN="suite.camino.network/wallet"
           echo "prodBucket=$DOMAIN" >> $GITHUB_OUTPUT
           if [[ "${{ github.ref }}" == "refs/heads/c4t" ]]; then
               echo "bucket=stage.$DOMAIN" >> $GITHUB_OUTPUT
