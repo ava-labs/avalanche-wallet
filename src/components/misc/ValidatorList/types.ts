@@ -5,20 +5,11 @@ export interface ValidatorRaw {
     stakeAmount: string
     startTime: string
     uptime: string
+    delegatorWeight: string
+    delegatorCount: string
     delegationFee: string
-    delegators: DelegatorRaw[] | null
     potentialReward: string
     rewardOwner: ValidatorRewardOwner
-    txID: string
-}
-
-export interface DelegatorRaw {
-    endTime: string
-    nodeID: string
-    potentialReward: string
-    rewardOwner: ValidatorRewardOwner
-    stakeAmount: string
-    startTime: string
     txID: string
 }
 

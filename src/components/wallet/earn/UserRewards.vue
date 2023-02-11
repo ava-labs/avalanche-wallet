@@ -1,42 +1,31 @@
 <template>
-    <div v-if="totLength > 0" class="user_rewards">
-        <div>
-            <label>{{ $t('earn.rewards.total') }}</label>
-            <p class="amt">{{ totalRewardBig.toLocaleString(9) }} AVAX</p>
-        </div>
-        <div v-if="validators.length > 0">
-            <h3>{{ $t('earn.rewards.validation') }}</h3>
-            <UserRewardRow
-                v-for="(v, i) in validators"
-                :key="i"
-                :staker="v"
-                class="reward_row"
-            ></UserRewardRow>
-        </div>
-        <div v-if="delegators.length > 0">
-            <h3>{{ $t('earn.rewards.delegation') }}</h3>
-            <UserRewardRow
-                v-for="(d, i) in delegators"
-                :key="i"
-                :staker="d"
-                class="reward_row"
-            ></UserRewardRow>
-        </div>
-    </div>
-    <div v-else class="empty">
-        <p>{{ $t('earn.rewards.empty') }}</p>
+    <div>
+        <template v-if="totLength > 0">
+            <div>
+                <label>{{ $t('earn.rewards.total') }}</label>
+                <p class="amt">{{ totalRewardBig.toLocaleString(9) }} AVAX</p>
+            </div>
+            <div v-if="validators.length > 0">
+                <h3>{{ $t('earn.rewards.validation') }}</h3>
+                <UserRewardRow
+                    v-for="(v, i) in validators"
+                    :key="i"
+                    :staker="v"
+                    class="reward_row"
+                ></UserRewardRow>
+            </div>
+        </template>
+        <template v-else>
+            <p style="text-align: center">{{ $t('earn.rewards.empty') }}</p>
+        </template>
+        <p class="no_delegator">Delegation rewards are not shown.</p>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AvaWalletCore } from '../../../js/wallets/types'
-import {
-    DelegatorPendingRaw,
-    DelegatorRaw,
-    ValidatorPendingRaw,
-    ValidatorRaw,
-} from '@/components/misc/ValidatorList/types'
+import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
@@ -61,21 +50,8 @@ export default class UserRewards extends Vue {
         return this.cleanList(validators) as ValidatorRaw[]
     }
 
-    get delegators(): DelegatorRaw[] {
-        let delegators: DelegatorRaw[] = []
-        let validators: ValidatorRaw[] = this.$store.state.Platform.validators
-
-        for (var i = 0; i < validators.length; i++) {
-            let v = validators[i]
-            if (v.delegators === null) continue
-            delegators.push(...v.delegators)
-        }
-
-        return this.cleanList(delegators) as DelegatorRaw[]
-    }
-
     get totLength() {
-        return this.validators.length + this.delegators.length
+        return this.validators.length
     }
 
     get totalReward() {
@@ -83,18 +59,14 @@ export default class UserRewards extends Vue {
             return acc.add(new BN(val.potentialReward))
         }, new BN(0))
 
-        let dels = this.delegators.reduce((acc, val: DelegatorRaw) => {
-            return acc.add(new BN(val.potentialReward))
-        }, new BN(0))
-
-        return vals.add(dels)
+        return vals
     }
 
     get totalRewardBig(): Big {
         return bnToBig(this.totalReward, 9)
     }
 
-    cleanList(list: ValidatorRaw[] | DelegatorRaw[]) {
+    cleanList(list: ValidatorRaw[]) {
         let res = list.filter((val) => {
             let rewardAddrs = val.rewardOwner.addresses
             let filtered = rewardAddrs.filter((addr) => {
@@ -117,6 +89,16 @@ export default class UserRewards extends Vue {
     padding-bottom: 5vh;
 }
 
+.no_delegator {
+    text-align: center;
+    color: var(--error);
+    border: 1px solid var(--error);
+    width: max-content;
+    margin: 1em auto !important;
+    padding: 0.3em;
+    border-radius: 10px;
+    font-size: 0.8em;
+}
 .reward_row {
     margin-bottom: 12px;
 }

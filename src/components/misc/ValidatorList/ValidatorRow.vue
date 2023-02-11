@@ -5,7 +5,6 @@
         <td class="amount">{{ remainingAmtText }}</td>
         <td style="text-align: center">{{ numDelegators }}</td>
         <td>{{ remainingTimeText }}</td>
-        <!--        <td>{{ uptimeText }}</td>-->
         <td>{{ feeText }}%</td>
         <td>
             <button class="button_secondary" @click="select">Select</button>
@@ -15,10 +14,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ava, pChain } from '@/AVA'
-import { DelegatorRaw, ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import moment from 'moment'
-import Big from 'big.js'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { ValidatorListItem } from '@/store/modules/platform/types'
@@ -35,8 +31,6 @@ export default class ValidatorsList extends Vue {
 
     get remainingTimeText() {
         let ms = this.remainingMs
-        let sec = ms / 1000
-
         let duration = moment.duration(ms, 'milliseconds')
         return duration.humanize(true)
     }
@@ -51,65 +45,26 @@ export default class ValidatorsList extends Vue {
         return big.toLocaleString(0)
     }
 
-    get uptimeText(): string {
-        let uptime = this.validator.uptime * 100
-
-        // if(!uptime) return '?';
-
-        return uptime.toFixed(2) + ' %'
-    }
-
     get feeText() {
         return this.validator.fee
     }
 
-    // TODO :HEAVY
-    // get delegators(): DelegatorRaw[]{
-    //     return [];
-    // let map = this.$store.getters["Platform/nodeDelegatorMap"];
-    // return map[this.validator.nodeID];
-    // }
-
-    // TODO :HEAVY
     get numDelegators() {
         return this.validator.numDelegators
-        // if(!this.delegators) return 0;
-        // return this.delegators.length;
     }
 
-    // TODO :HEAVY
     get totalDelegated(): BN {
         return this.validator.delegatedStake
-        // return new BN(0)
-        // return this.$store.getters["Platform/validatorTotalDelegated"](this.validator.nodeID);
     }
 
-    // TODO :HEAVY
-    // get maxStake(): BN{
-    //     return new BN(300000000000000)
-    // return this.$store.getters["Platform/validatorMaxStake"](this.validator);
-    // }
-
-    // TODO :HEAVY
     get remainingStake(): BN {
-        // return new BN(1000000000000)
         return this.validator.remainingStake
-        // return this.maxStake.sub(this.totalDelegated.add(this.stakeAmt));
     }
 
     get remainingAmtText(): string {
         let big = bnToBig(this.remainingStake, 9)
         return big.toLocaleString(0)
     }
-
-    // TODO: Move this to
-    // get isVisible(){
-    //
-    //     If remaining amount is less than the minimum delegation amount
-    // let minDelAmt = this.$store.state.Platform.minStakeDelegation;
-    // if(this.remainingStake.lt(minDelAmt)) return false;
-    // return true;
-    // }
 
     select() {
         this.$emit('select', this.validator)

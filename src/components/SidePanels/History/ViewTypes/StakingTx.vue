@@ -70,7 +70,7 @@
                         {{ endDate.toLocaleTimeString() }}
                     </p>
                 </div>
-                <div class="data_row reward_row">
+                <div class="data_row reward_row" v-if="isValidator">
                     <p>{{ $t('transactions.reward_pending') }}</p>
                     <p class="amt">{{ rewardText }} AVAX</p>
                 </div>
@@ -249,15 +249,6 @@ export default class StakingTx extends Vue {
         if (v) {
             if (this.isValidator) {
                 return v.potentialReward
-            } else {
-                let delegators = v.delegators
-                if (!delegators) return null
-                for (var i = 0; i < delegators.length; i++) {
-                    let d = delegators[i]
-                    if (d.txID === this.transaction.id) {
-                        return d.potentialReward
-                    }
-                }
             }
         }
         return null

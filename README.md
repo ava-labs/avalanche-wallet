@@ -30,12 +30,6 @@ When you go to the website on your browser, you might get a warning saying
 1.  Compile and minify to have a production ready application with `yarn build`.
 2.  Serve from the `/dist` directory.
 
-## Releases
-
-1.  Generate a [personal access token](https://github.com/settings/tokens/new?scopes=repo&description=release-it)
-2.  Save it in your local env as RELEASE_IT_GITHUB_TOKEN
-3.  Run `yarn release`
-
 ## Changing the Network
 
 By default the wallet will connect to the Avalanche tmainnet. You can change to another network by clicking the button labeled `TestNet` on the navigation bar and selecting another network, or add a custom network.

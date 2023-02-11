@@ -31,7 +31,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { DelegatorRaw, ValidatorRaw } from '../../misc/ValidatorList/types'
+import { ValidatorRaw } from '../../misc/ValidatorList/types'
 import { BN } from 'avalanche'
 import Big from 'big.js'
 
@@ -40,7 +40,7 @@ export default class UserRewardRow extends Vue {
     now: number = Date.now()
     intervalID: any = null
 
-    @Prop() staker!: ValidatorRaw | DelegatorRaw
+    @Prop() staker!: ValidatorRaw
 
     updateNow() {
         this.now = Date.now()
