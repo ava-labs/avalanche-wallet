@@ -12,6 +12,7 @@ import vuetify from '@/plugins/vuetify'
 import AccountUserItem from './AccountUserItem.vue'
 import AccountKycItem from './AccountKycItem.vue'
 import AccountCard from './AccountCard.vue'
+import AliasPicker from '../manage/AliasPicker.vue'
 
 Vue.use(VueMeta)
 Vue.use(BootstrapVue)
@@ -19,6 +20,8 @@ Vue.component('datetime', Datetime)
 
 function selectAccountMenuItem(type: string) {
     switch (type) {
+        case 'alias':
+            return AliasPicker
         case 'kyc':
             return AccountKycItem
         case 'user':
