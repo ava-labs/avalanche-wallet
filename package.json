@@ -6,7 +6,7 @@
         "build": "PUBLIC_PATH=https://suite.camino.network/wallet/ webpack --config webpack.prod.js",
         "build:dev": "PUBLIC_PATH=https://dev.suite.camino.network/wallet/ webpack --config webpack.prod.js",
         "build:stage": "PUBLIC_PATH=https://stage.suite.camino.network/wallet/ webpack --config webpack.prod.js",
-        "build:start": "cd dist && PORT=3003 npx serve",
+        "build:start": "cd dist && PORT=5003 npx serve",
         "start": "webpack-dev-server --config webpack.dev.js",
         "start:live": "webpack-dev-server --open --config webpack.dev.js --live-reload",
         "dev": "webpack-dev-server --mode development --open",
