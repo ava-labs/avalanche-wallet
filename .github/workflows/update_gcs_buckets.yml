@@ -56,3 +56,4 @@ jobs:
         if: ${{ github.ref == 'refs/heads/c4t' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/suite' }}
         run: |
           gsutil -m rsync -J -R -d dist gs://${{ steps.prepareVariables.outputs.bucket }}
+          gsutil -m setmeta -r -h "Cache-Control:no-cache, max-age=1" gs://${{ steps.prepareVariables.outputs.bucket }}/*

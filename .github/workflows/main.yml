@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [c4t, dev, suite]
 
+env:
+  suite_branch: 'suite'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,19 +37,33 @@ jobs:
         run: yarn run lint
       - name: prettier
         run: yarn run format-check
+
+      - name: start suite
+        run: |
+          git clone -b ${{ env.suite_branch }} https://github.com/chain4travel/camino-suite.git
+          git clone -b ${{ env.suite_branch }} https://github.com/chain4travel/camino-block-explorer.git
+          cd camino-suite
+          yarn install
+          (yarn start&)
+          cd ../camino-block-explorer
+          yarn install
+          (yarn start&)
+
       - name: jest-run
         run: yarn test
+
       - name: cypress-run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         env:
           USE_HTTP: true
         with:
-          start: yarn serve --mode e2e
-          wait-on: 'http://localhost:5000/'
+          wait-on: 'http://localhost:5003/'
+          start: yarn start
           # wait for 3 minutes for the server to respond
           wait-on-timeout: 180
           browser: chrome
           headless: true
+          config-file: ./cypress.config.ts
       # These extract all artifacts out from the container to git so they can be previewed
       - name: extract screenshots to git
         uses: actions/upload-artifact@v3

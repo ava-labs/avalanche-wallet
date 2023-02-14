@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import '@cypress/xpath'
-import { changeNetwork, accessWallet, addLocalNetwork } from '../utils/utils'
+import { changeNetwork, accessWallet, addKopernikusNetwork } from '../utils/utils'
 
 describe('Wallet Balance Mnemonic', () => {
     before(() => {
@@ -8,7 +8,7 @@ describe('Wallet Balance Mnemonic', () => {
     })
 
     it('open suite/open wallet using mnemonic', () => {
-        addLocalNetwork(cy)
+        addKopernikusNetwork(cy)
         //changeNetwork(cy);
         accessWallet(cy, 'mnemonic')
         interceptXChainBalance()

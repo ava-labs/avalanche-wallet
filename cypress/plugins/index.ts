@@ -14,7 +14,7 @@ const CYPRESS_CONFIG_PROD = {
 
 const CYPRESS_CONFIG_LOCAL = {
     ...CYPRESS_BASE_CONFIG,
-    baseUrl: `http://localhost:3000/`,
+    baseUrl: `http://localhost:5001/`,
 }
 
 /**

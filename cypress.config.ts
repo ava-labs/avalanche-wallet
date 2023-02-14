@@ -8,6 +8,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.ts')(on, config)
     },
-    baseUrl: 'https://localhost:5000/',
+    baseUrl: 'https://localhost:5001/',
   },
 })
