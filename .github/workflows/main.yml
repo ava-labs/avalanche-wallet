@@ -27,8 +27,8 @@ jobs:
       - name: cache modules
         uses: actions/cache@v3
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          path: './node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('./yarn.lock') }}
       - run: sudo npm install -g yarn
       - run: yarn install --network-timeout 1000000
         env:
