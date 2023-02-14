@@ -24,6 +24,11 @@ export default class DeleteAccount extends Vue {
         this.error = ''
         try {
             await this.$store.dispatch('Accounts/deleteAccount', this.pass)
+            let { dispatchNotification } = this.globalHelper()
+            dispatchNotification({
+                message: this.$t('notifications.delete_account'),
+                type: 'success',
+            })
             this.setAccount(null)
         } catch (err) {
             let error = err as Error

@@ -52,6 +52,11 @@ export default class MyKeys extends Vue {
         if (isConfirm) {
             await this.$store.dispatch('Accounts/deleteKey', wallet)
             await this.$store.dispatch('removeWallet', wallet)
+            let { dispatchNotification } = this.globalHelper()
+            dispatchNotification({
+                message: this.$t('keys.remove_success_msg'),
+                type: 'success',
+            })
         }
     }
 

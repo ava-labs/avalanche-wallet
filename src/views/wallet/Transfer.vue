@@ -296,7 +296,11 @@ export default class Transfer extends Vue {
     async onsuccess(txId: string) {
         this.isAjax = false
         this.isSuccess = true
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('transfer.success_msg'),
+            type: 'success',
+        })
         // Update the user's balance
         this.$store.dispatch('Assets/updateUTXOs').then(() => {
             this.updateSendAgainLock()
@@ -317,6 +321,11 @@ export default class Transfer extends Vue {
     onerror(err: any) {
         this.err = err
         this.isAjax = false
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('transfer.error_msg'),
+            type: 'error',
+        })
     }
 
     submit() {

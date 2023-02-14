@@ -152,7 +152,11 @@ export default class NewCollectibleFamily extends Vue {
         this.isLoading = false
         this.isSuccess = true
         this.txId = txId
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('notifications.new_collectible'),
+            type: 'success',
+        })
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')

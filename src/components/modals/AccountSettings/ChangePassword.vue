@@ -76,6 +76,11 @@ export default class ChangePassword extends Vue {
         this.$store
             .dispatch('Accounts/changePassword', input)
             .then(() => {
+                let { dispatchNotification } = this.globalHelper()
+                dispatchNotification({
+                    message: this.$t('notifications.change_password'),
+                    type: 'success',
+                })
                 this.$parent.close()
             })
             .catch((err) => {

@@ -71,6 +71,8 @@ export default class ImportKeys extends Vue {
 
     handleImportSuccess() {
         this.$refs.modal.close()
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({ message: this.$t('keys.import_key_success_msg'), type: 'success' })
     }
 }
 </script>

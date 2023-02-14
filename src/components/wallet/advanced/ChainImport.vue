@@ -143,7 +143,11 @@ export default class ChainImport extends Vue {
         this.err = ''
         this.isSuccess = true
         this.txId = txId
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('notifications.chain_import'),
+            type: 'success',
+        })
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
