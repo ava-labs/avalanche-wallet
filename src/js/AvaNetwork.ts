@@ -13,6 +13,7 @@ class AvaNetwork {
     url: string
     explorerUrl: string | undefined
     explorerSiteUrl: string | undefined
+    signavaultUrl: string | undefined
     readonly: boolean
     withCredentials = false
     // fee: BN
@@ -23,12 +24,14 @@ class AvaNetwork {
         networkId: number,
         explorerUrl?: string,
         explorerSiteUrl?: string,
+        signavaultUrl?: string,
         readonly = false
     ) {
         this.id = network_id++
         this.name = name
         this.explorerUrl = explorerUrl
         this.explorerSiteUrl = explorerSiteUrl
+        this.signavaultUrl = signavaultUrl
         this.protocol = 'http'
         this.port = 9650
         this.ip = 'localhost'

@@ -7,8 +7,9 @@ import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
 import { BN } from '@c4tplatform/caminojs'
 import { web3 } from '@/evm'
-import { setSocketNetwork } from '../../../providers'
+import { setSocketNetwork } from '@/providers'
 import { setAvalanche } from '@c4tplatform/camino-wallet-sdk/dist'
+import { signavault_api } from '@/signavault_api'
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
@@ -106,6 +107,7 @@ const network_module: Module<NetworkState, RootState> = {
                         parseInt(n.networkId),
                         n.explorerUrl,
                         n.explorerSiteUrl,
+                        n.signavaultUrl,
                         n.readonly
                     )
                     dispatch('addCustomNetwork', newCustom)
@@ -138,6 +140,9 @@ const network_module: Module<NetworkState, RootState> = {
 
             // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl
+
+            // Update signavault api
+            signavault_api.defaults.baseURL = net.signavaultUrl
 
             // Set web3 Network Settings
             let web3Provider = `${net.protocol}://${net.ip}:${net.port}/ext/bc/C/rpc`
@@ -186,6 +191,7 @@ const network_module: Module<NetworkState, RootState> = {
                 1000,
                 'https://magellan.mainnet.camino.network',
                 'https://explorer.camino.network/mainnet',
+                '',
                 true
             )
 
@@ -195,6 +201,7 @@ const network_module: Module<NetworkState, RootState> = {
                 1001,
                 'https://magellan.columbus.camino.network',
                 'https://suite.camino.network/explorer',
+                '',
                 true
             )
 
@@ -204,6 +211,7 @@ const network_module: Module<NetworkState, RootState> = {
                 1,
                 'https://explorerapi.avax.network',
                 'https://explorer.avax.network',
+                '',
                 true
             )
 
