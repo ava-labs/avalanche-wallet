@@ -1,21 +1,21 @@
 import {
-  BN,
-  bnToAvaxC,
-  bnToAvaxX,
-  bnToBigAvaxC,
-  bnToBigAvaxX,
-  GasHelper,
-  Big,
+    BN,
+    bnToAvaxC,
+    bnToAvaxX,
+    bnToBigAvaxC,
+    bnToBigAvaxX,
+    GasHelper,
+    Big,
 } from '@c4tplatform/camino-wallet-sdk'
 
 describe('Cross chain: X to C', { tags: ['@cross-chain'] }, () => {
-  context('normal cases: ', () => {
-    beforeEach(() => {
-      cy.loginWalletWith('privateKey', 'privateKeyCrossChain')
-      // Switch to cross chain
-      cy.switchToWalletFunctionTab('Cross Chain')
-      // Make sure successfully switched to the Cross Chain tab
-      cy.get('.wallet_main .head > h1', { timeout: 15000 }).should('have.text', 'Cross Chain')
+    context('normal cases: ', () => {
+        beforeEach(() => {
+            cy.loginWalletWith('privateKey', 'privateKeyCrossChain')
+            // Switch to cross chain
+            cy.switchToWalletFunctionTab('Cross Chain')
+            // Make sure successfully switched to the Cross Chain tab
+            cy.get('.wallet_main .head > h1', { timeout: 15000 }).should('have.text', 'Cross Chain')
 
       // RPC aliases
       cy.intercept('**/ext/bc/C/rpc', (request) => {

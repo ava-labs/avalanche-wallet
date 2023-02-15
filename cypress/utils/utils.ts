@@ -7,13 +7,13 @@ export function addLocalNetwork(cy: Cypress.cy & CyEventEmitter) {
     const localNetworkName = 'Localhost'
 
     cy.get('[data-cy="network-selector"]').click()
-    cy.get('[data-cy="add-custom-network"]').click();
-    cy.wait(2000);
+    cy.get('[data-cy="add-custom-network"]').click()
+    cy.wait(2000)
     cy.get('[data-cy="add-network-field-network-name"]').type(localNetworkName)
     cy.get('[data-cy="add-network-field-protocol"]').clear()
     cy.get('[data-cy="add-network-field-protocol"]').type('http')
     cy.get('[data-cy="add-network-field-host"]').type('localhost')
-    cy.get('[data-cy="add-network-field-port"]').clear();
+    cy.get('[data-cy="add-network-field-port"]').clear()
     cy.get('[data-cy="add-network-field-port"]').type('9650')
     cy.get('[data-cy="add-network-field-magellan-address"]').type('http://localhost:8080/v2/')
     cy.get('[data-cy="btn-add-network"]').click()
