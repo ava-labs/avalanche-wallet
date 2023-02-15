@@ -1,6 +1,6 @@
 <template>
     <div class="main_panel">
-        <ConfirmLogout ref="logout"></ConfirmLogout>
+        <ConfirmLogout ref="logout" />
         <transition name="fade" mode="out-in">
             <transaction-history-panel class="panel_content"></transaction-history-panel>
         </transition>

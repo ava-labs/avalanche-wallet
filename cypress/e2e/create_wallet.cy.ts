@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import '@cypress/xpath'
-import { changeNetwork, addLocalNetwork } from '../utils/utils'
+import { changeNetwork, addKopernikusNetwork } from '../utils/utils'
 import moment from 'moment'
 
 describe('Wallet Creation', () => {
@@ -9,7 +9,7 @@ describe('Wallet Creation', () => {
     })
 
     it('open suite/create wallet', () => {
-        //addLocalNetwork(cy);
+        //addKopernikusNetwork(cy);
         changeNetwork(cy)
         cy.wait(2000)
         cy.get('[data-cy="app-selector-menu"]').click()

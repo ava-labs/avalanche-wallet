@@ -136,7 +136,11 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     getCurrentAddressPlatform(): string {
-        return this.platformKeyPair.getAddressString()
+        if (this.selectedAlias) {
+            return this.selectedAlias
+        } else {
+            return this.platformKeyPair.getAddressString()
+        }
     }
 
     getBaseAddress(): string {

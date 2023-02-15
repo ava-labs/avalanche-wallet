@@ -29,6 +29,11 @@ export default class SaveKeys extends Vue {
         this.$store
             .dispatch('Accounts/saveKeys', this.pass)
             .then((res) => {
+                let { dispatchNotification } = this.globalHelper()
+                dispatchNotification({
+                    message: this.$t('notifications.save_keys'),
+                    type: 'success',
+                })
                 this.$parent.close()
             })
             .catch((err) => {

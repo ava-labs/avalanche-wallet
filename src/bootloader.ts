@@ -14,17 +14,15 @@ Vue.use(BootstrapVue)
 Vue.component('datetime', Datetime)
 
 export const mount = (el: string, appSuiteStore: any) => {
-    const { setUpdateStore, setLogOut } = appSuiteStore
+    const { setUpdateStore, setLogOut, setAccount, dispatchNotification } = appSuiteStore
     const MyPlugin = {
-        install(Vue, options) {
+        install(Vue) {
             Vue.prototype.globalHelper = () => {
                 return {
-                    updateSuiteStore: (s) => {
-                        setUpdateStore(s)
-                    },
-                    logout: () => {
-                        setLogOut(true)
-                    },
+                    updateSuiteStore: (s) => setUpdateStore(s),
+                    logout: () => setLogOut(true),
+                    setAccount: (acc) => setAccount(acc),
+                    dispatchNotification: (params) => dispatchNotification(params),
                 }
             }
         },
@@ -78,7 +76,7 @@ Big.prototype.toLocaleString = function (toFixed: number = 9) {
     let split = fixedStr.split('.')
     let wholeStr = parseInt(split[0])
         .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, '\u200A')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '\u2005')
 
     if (split.length === 1) {
         return wholeStr

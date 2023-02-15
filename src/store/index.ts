@@ -148,6 +148,7 @@ const store = new Vuex.Store({
             store.dispatch('Platform/update')
             store.dispatch('Assets/updateUTXOs')
             store.dispatch('Accounts/updateKycStatus')
+            store.dispatch('Accounts/updateMultisigAliases')
             store.dispatch('Launch/initialize')
         },
 

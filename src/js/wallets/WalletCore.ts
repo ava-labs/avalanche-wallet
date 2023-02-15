@@ -36,6 +36,8 @@ abstract class WalletCore {
     isFetchUtxos: boolean
     isInit: boolean
 
+    selectedAlias?: string
+
     abstract getEvmAddressBech(): string
     abstract getEvmAddress(): string
     abstract getCurrentAddressAvm(): string

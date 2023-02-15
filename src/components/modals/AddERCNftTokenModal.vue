@@ -111,6 +111,11 @@ export default class AddERCNftTokenModal extends Vue {
             }
 
             // let token: ERCNftToken = await this.$store.dispatch('Assets/ERCNft/addCustom', data)
+            let { dispatchNotification } = this.globalHelper()
+            dispatchNotification({
+                message: this.$t('notifications.ERCNft_token_added'),
+                type: 'success',
+            })
             this.close()
         } catch (e) {
             this.err = (e as Error).message

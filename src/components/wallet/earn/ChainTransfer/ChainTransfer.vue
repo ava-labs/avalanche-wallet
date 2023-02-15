@@ -501,6 +501,11 @@ export default class ChainTransfer extends Vue {
 
     onerror(err: any) {
         console.error(err)
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('notifications.chain_transfer_failed'),
+            type: 'error',
+        })
         this.isLoading = false
         this.err = err
     }
@@ -533,7 +538,11 @@ export default class ChainTransfer extends Vue {
     onsuccess() {
         // Clear Form
         this.isSuccess = true
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('notifications.chain_transfer_success'),
+            type: 'success',
+        })
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')

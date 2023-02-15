@@ -84,6 +84,11 @@ export default class ExportWallet extends Vue {
                 this.isLoading = false
                 this.pass = ''
                 this.passConfirm = ''
+                let { dispatchNotification } = this.globalHelper()
+                dispatchNotification({
+                    message: this.$t('notifications.chain_export_wallet'),
+                    type: 'success',
+                })
                 // @ts-ignore
                 this.$emit('success')
             })

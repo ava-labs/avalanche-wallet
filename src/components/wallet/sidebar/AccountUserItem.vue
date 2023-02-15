@@ -4,7 +4,10 @@
             <button class="account_but" @click="openSettings">
                 <p>Manage Account</p>
             </button>
-            <AccountSettingsModal ref="settings_modal"></AccountSettingsModal>
+            <AccountSettingsModal
+                :setAccount="setAccount"
+                ref="settings_modal"
+            ></AccountSettingsModal>
         </template>
         <template v-else>
             <SaveAccountModal :setAccount="setAccount" ref="save_modal"></SaveAccountModal>

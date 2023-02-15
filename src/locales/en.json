@@ -771,5 +771,20 @@
     "misc": {
         "balance": "Balance",
         "cancel": "Cancel"
+    },
+    "notifications": {
+        "copy_to_clipboard": "Copied to clipboard",
+        "ERC20_token_added": "ERC20 Token Added",
+        "ERCNft_token_added": "ERCNft Token Added",
+        "change_password": "You can now use your account with your new password.",
+        "delete_account": "Your wallet is no longer stored on this browser.",
+        "save_keys": "Your account is updated with new keys.",
+        "save_account": "Your keys are now stored under a new local account.",
+        "chain_import": "Import Success",
+        "chain_transfer_success": "Funds transferred between chains.",
+        "chain_transfer_failed": "Transfer Failed.",
+        "chain_export_wallet": "Your keys are downloaded.",
+        "new_collectible": "Collectible family created.",
+        "mint_form": "Collectible minted and added to your wallet."
     }
 }

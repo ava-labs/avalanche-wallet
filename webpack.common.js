@@ -33,7 +33,7 @@ module.exports = {
             },
         ],
     },
-
+    cache: false,
     resolve: {
         extensions: ['.tsx', '.ts', '.vue', '.jsx', '.js', '.json'],
         alias: {

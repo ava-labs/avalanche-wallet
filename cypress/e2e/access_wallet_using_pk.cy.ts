@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { accessWallet, changeNetwork, addLocalNetwork } from '../utils/utils'
+import { accessWallet, changeNetwork, addKopernikusNetwork } from '../utils/utils'
 
 describe('access wallet', () => {
     before(() => {
@@ -7,7 +7,7 @@ describe('access wallet', () => {
     })
     it('Wallet access private key ', () => {
         //changeNetwork(cy);
-        addLocalNetwork(cy)
+        addKopernikusNetwork(cy)
         accessWallet(cy, 'privateKey')
     })
 })

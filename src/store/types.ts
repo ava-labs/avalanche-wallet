@@ -132,6 +132,7 @@ export interface iUserAccountEncrypted {
     name: string
     baseAddresses: string[]
     wallet: AllKeyFileTypes
+    defaultAddress?: string
 }
 
 export interface iUserAccountDecrypted {

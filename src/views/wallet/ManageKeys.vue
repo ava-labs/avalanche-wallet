@@ -25,8 +25,14 @@
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}
                         </button>
-                        <SaveAccountModal ref="account_modal"></SaveAccountModal>
-                        <AccountSettingsModal ref="account_settings"></AccountSettingsModal>
+                        <SaveAccountModal
+                            :setAccount="helpers.setAccount"
+                            ref="account_modal"
+                        ></SaveAccountModal>
+                        <AccountSettingsModal
+                            :setAccount="helpers.setAccount"
+                            ref="account_settings"
+                        ></AccountSettingsModal>
                         <ExportKeys ref="export" :wallets="allWallets"></ExportKeys>
                     </div>
                 </header>
@@ -58,6 +64,7 @@ import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSet
     },
 })
 export default class ManageKeys extends Vue {
+    helpers = this.globalHelper()
     $refs!: {
         import: ImportKeys
         export: ExportKeys

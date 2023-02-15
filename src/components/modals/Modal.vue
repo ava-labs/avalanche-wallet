@@ -10,7 +10,9 @@
                             <fa icon="times"></fa>
                         </button>
                     </div>
-                    <slot></slot>
+                    <div class="modal_slot">
+                        <slot></slot>
+                    </div>
                 </div>
             </div>
         </div>
@@ -57,6 +59,10 @@ export default class Modal extends Vue {
     position: relative;
     padding: 10px 22px;
     display: flex;
+    z-index: 1102;
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
 .modal_title {
@@ -117,6 +123,14 @@ export default class Modal extends Vue {
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     max-height: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal_slot {
+    overflow-y: auto;
+    height: 100%;
+    flex: 1;
 }
 
 @include main.mobile-device {

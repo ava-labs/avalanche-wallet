@@ -334,7 +334,11 @@ export default class MintNft extends Vue {
         this.isLoading = false
         this.isSuccess = true
         this.txId = txId
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('notifications.mint_form'),
+            type: 'success',
+        })
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')

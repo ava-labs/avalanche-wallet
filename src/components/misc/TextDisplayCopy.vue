@@ -20,6 +20,11 @@ export default {
     },
     methods: {
         oncopy(val) {
+            let { dispatchNotification } = this.globalHelper()
+            dispatchNotification({
+                message: this.$t('notifications.copy_to_clipboard'),
+                type: 'success',
+            })
             this.$emit('copy', this.value)
         },
     },

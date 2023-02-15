@@ -196,7 +196,11 @@ abstract class HdWalletCore extends WalletCore {
     }
 
     getCurrentAddressPlatform(): string {
-        return this.platformHelper.getCurrentAddress()
+        if (this.selectedAlias) {
+            return this.selectedAlias
+        } else {
+            return this.platformHelper.getCurrentAddress()
+        }
     }
 
     getPlatformUTXOSet() {

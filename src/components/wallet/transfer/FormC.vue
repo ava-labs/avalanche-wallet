@@ -440,7 +440,11 @@ export default class FormC extends Vue {
         this.isLoading = false
         this.isSuccess = true
         this.txHash = txId
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('transfer.success_msg'),
+            type: 'success',
+        })
         // Refresh UTXOs
         this.canSendAgain = false
         setTimeout(() => {
@@ -453,7 +457,11 @@ export default class FormC extends Vue {
     onError(err: any) {
         this.err = err
         this.isLoading = false
-
+        let { dispatchNotification } = this.globalHelper()
+        dispatchNotification({
+            message: this.$t('transfer.error_msg'),
+            type: 'error',
+        })
         console.error(err)
     }
 }
