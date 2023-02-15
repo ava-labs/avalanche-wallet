@@ -13,7 +13,7 @@
 import { Interception } from 'cypress/types/net-stubbing'
 
 // -- This is a parent command --
-Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
+Cypress.Commands.add('changeNetwork', (network: string = 'Columbus') => {
     const interceptNetworkInfo = (intercept) => {
         switch (intercept.request.body.method) {
             case 'info.getNetworkID':

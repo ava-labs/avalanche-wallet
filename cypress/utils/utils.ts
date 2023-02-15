@@ -13,9 +13,11 @@ export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter) {
     cy.get('[data-cy="add-network-field-protocol"]').clear()
     cy.get('[data-cy="add-network-field-protocol"]').type('https')
     cy.get('[data-cy="add-network-field-host"]').type('kopernikus.camino.network')
-    cy.get('[data-cy="add-network-field-port"]').clear();
+    cy.get('[data-cy="add-network-field-port"]').clear()
     cy.get('[data-cy="add-network-field-port"]').type('443')
-    cy.get('[data-cy="add-network-field-magellan-address"]').type('https://magellan.kopernikus.camino.network/')
+    cy.get('[data-cy="add-network-field-magellan-address"]').type(
+        'https://magellan.kopernikus.camino.network/'
+    )
     cy.get('[data-cy="btn-add-network"]').click()
     cy.get(`[data-cy="network-name-${localNetworkName}"]`).click()
 }
