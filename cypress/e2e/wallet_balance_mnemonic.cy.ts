@@ -19,10 +19,12 @@ describe('Wallet Balance Mnemonic', () => {
         cy.get('[data-cy="btn-show-breakdown"]').click()
 
         cy.get('[data-cy="btn-refresh-balance"]', { timeout: 10000 }).should('be.visible')
-        cy.get('[data-cy="btn-refresh-balance"]').click().then(() => {
-            cy.wait(3000);
-            validateAllBalances()
-        });
+        cy.get('[data-cy="btn-refresh-balance"]')
+            .click()
+            .then(() => {
+                cy.wait(3000)
+                validateAllBalances()
+            })
     })
 })
 
@@ -128,15 +130,16 @@ function getTotalBalanceText(): Promise<number> {
         cy.get('[data-cy="wallet_balance"]')
             .invoke('text')
             .then((data) => {
-                let dataSplit = data.split(" ");
-                let dataString = dataSplit.filter((str) => str != "\n" && str != '' && str != 'CAM\n');
-                let value : number = 0;
-                for(let i = 0; i < dataString.length; i++)
-                {
-                    let valueStrNumber = parseFloat(dataString[i]);
-                    value = value + valueStrNumber;
+                let dataSplit = data.split(' ')
+                let dataString = dataSplit.filter(
+                    (str) => str != '\n' && str != '' && str != 'CAM\n'
+                )
+                let value: number = 0
+                for (let i = 0; i < dataString.length; i++) {
+                    let valueStrNumber = parseFloat(dataString[i])
+                    value = value + valueStrNumber
                 }
-                resolve(value);
+                resolve(value)
             })
     })
 }
@@ -161,7 +164,9 @@ function getBalanceText(chain: string): Promise<number> {
             .invoke('text')
             .then((response) => {
                 let fundsSplitted = response.split(' ')
-                let fundsString = fundsSplitted.filter((str) => str != "\n" && str != '' && str != 'CAM\n');
+                let fundsString = fundsSplitted.filter(
+                    (str) => str != '\n' && str != '' && str != 'CAM\n'
+                )
                 let funds = parseFloat(fundsString[0])
                 resolve(funds)
             })
