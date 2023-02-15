@@ -1,7 +1,7 @@
 name: build-app
-on: 
+on:
   push:
-    branches-ignore: ["**"]
+    branches-ignore: ['**']
 
 jobs:
   yarn-build:
@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: '15'
       - run: yarn install
-      - run: yarn build 
+      - run: yarn build
       # this might need --frozen-lockfile but it seems to break build
       # TODO add this when we fixed the builds in genreal
 
@@ -23,8 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}   # checkout the correct branch name
-          fetch-depth: 0                # fetch the whole repo history
+          ref: ${{ github.head_ref }} # checkout the correct branch name
+          fetch-depth: 0 # fetch the whole repo history
       - id: setversion
         uses: codacy/git-version@2.4.0
         name: Git Version

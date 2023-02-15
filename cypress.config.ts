@@ -15,6 +15,6 @@ export default defineConfig({
     },
     env: {
         grepTags: '',
-        grepFilterSpecs: true
-    }
+        grepFilterSpecs: true,
+    },
 })
