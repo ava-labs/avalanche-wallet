@@ -10,6 +10,8 @@
 //
 //
 
+import { Interception } from "cypress/types/net-stubbing"
+
 // -- This is a parent command --
 Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
   const interceptNetworkInfo = (intercept) => {
@@ -38,11 +40,22 @@ Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
 
         // intercept to find current rpc url
         cy.intercept('POST', '**/ext/info').as('apiNetworkInfo')
+        // intercept to get default asset symbol
+        cy.intercept('POST', '**/ext/bc/X', (request) => {
+          if (request.body.method === 'avm.getAssetDescription') {
+            request.alias = 'assetDesc'
+          }
+        })
+
         // Waiting 'info.networkID', and 'info.getTxFee'
         cy.wait('@apiNetworkInfo')
           .then(interceptNetworkInfo)
         cy.wait('@apiNetworkInfo')
           .then(interceptNetworkInfo)
+        // Waiting 'avm.getAssetDescription'
+        cy.wait('@assetDesc')
+          .then(intercept => intercept.response?.body.result.symbol)
+          .as('assetSymbol')
 
         // increasing timeout to make sure the network is selected, especially on slowly local dev env
         cy.get('@txtSelectedNetwork', { timeout: 15000 }).should('have.text', network)
@@ -108,7 +121,7 @@ Cypress.Commands.add('switchToWalletApp', () => {
 
   cy.get('@elAppOptionWallet').click();
 })
-Cypress.Commands.add('loginWalletWith', (walletAccessType: string, keyName: string) => {
+Cypress.Commands.add('loginWalletWith', (walletAccessType: WalletAccessType, keyName?: string, network: string = 'Columbus') => {
   cy.visit('/')
 
   // header - app(left) menu aliases
@@ -129,7 +142,7 @@ Cypress.Commands.add('loginWalletWith', (walletAccessType: string, keyName: stri
     .as('btnWallet')
 
   cy.switchToWalletApp()
-    .changeNetwork()
+    .changeNetwork(network)
     .accessWallet(walletAccessType, keyName)
 })
 
@@ -171,6 +184,16 @@ Cypress.Commands.add('switchToWalletFunctionTab', (func) => {
   } else {
     cy.get(`[data-cy="${funcKey}"]`, { timeout: 15000 }).click()
   }
+})
+
+Cypress.Commands.add('waitUntil', (alias: string, untilFunc: (intercept: Interception) => boolean) => {
+  cy.wait(alias)
+    .then(intercept => {
+      const success = untilFunc(intercept)
+      if (!success) {
+        cy.waitUntil(alias, untilFunc)
+      }
+    })
 })
 
 //
