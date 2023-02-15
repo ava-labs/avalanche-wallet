@@ -8,7 +8,7 @@ describe('Send transaction with x-chain balance', () => {
     beforeEach(() => {
 
         // access wallet with private key
-        cy.loginWalletWith('privateKey', 'xHasBalance')
+        cy.loginWalletWith('privateKey', 'walletHasXBalance')
 
         // click Send tab
         cy.get('[data-cy="wallet_transfer"]').click();
