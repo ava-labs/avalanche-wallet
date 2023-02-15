@@ -18,7 +18,25 @@ describe('Cross chain: X to C', { tags: ['@cross-chain'] }, () => {
             cy.get('.wallet_main .head > h1', { timeout: 15000 }).should('have.text', 'Cross Chain')
 
             // RPC aliases
-            cy.intercept('**/ext/bc/C/rpc').as('apiBaseFee')
+            cy.intercept('**/ext/bc/C/rpc', (request) => {
+                if (request.body.method === 'eth_baseFee') {
+                    request.alias = 'apiBaseFee'
+                }
+            })
+            cy.intercept('POST', '**/ext/bc/X', (request) => {
+                if (request.body.method === 'avm.issueTx') {
+                    request.alias = 'apiExportX'
+                } else if (request.body.method === 'avm.getTxStatus') {
+                    request.alias = 'apiExportXStatus'
+                }
+            })
+            cy.intercept('POST', '**/ext/bc/C/avax', (request) => {
+                if (request.body.method === 'avax.issueTx') {
+                    request.alias = 'apiImportC'
+                } else if (request.body.method === 'avax.getAtomicTxStatus') {
+                    request.alias = 'apiImportCStatus'
+                }
+            })
         })
 
         it('export CAM from X to C', () => {
@@ -110,58 +128,51 @@ describe('Cross chain: X to C', { tags: ['@cross-chain'] }, () => {
                 cy.get('div.fees:has(> h4) + div button').click()
                 // click TRANSFER button
                 cy.get('[data-cy="submit"]').click()
-                // listening rpcs
-                cy.intercept('POST', '**/ext/bc/X').as('apiExportX')
-                cy.intercept('POST', '**/ext/bc/C/avax').as('apiImportC')
+
                 // wait `avm.issueTx` to get txID
                 cy.wait('@apiExportX').then((intercept) => {
-                    if (intercept.request.body.method === 'avm.issueTx') {
-                        const txID = intercept.response?.body.result.txID
-                        cy.get('.tx_state_card')
-                            .first()
-                            .get('.data_row > p')
-                            .first()
-                            .should('have.text', txID)
-                    }
+                    const txID = intercept.response?.body.result.txID
+                    cy.get('.tx_state_card')
+                        .first()
+                        .find('.data_row > p')
+                        .first()
+                        .should('have.text', txID)
                 })
                 // wait `avm.getTxStatus` to get the tx status
-                // it might return twice with statuses 'Processing' and 'Accepted
-                cy.wait('@apiExportX').then((intercept) => {
-                    if (intercept.request.body.method === 'avm.getTxStatus') {
-                        const txStatus = intercept.response?.body.result.status
-                        // UI won't display 'Processing', only 'Waiting'
-                        let expectedStatus = txStatus
-                        if (txStatus === 'Processing') {
-                            expectedStatus = 'Waiting'
-                        }
+                // looks like client polling to get tx status until 'Accepted'
+                cy.waitUntil('@apiExportXStatus', (intercept) => {
+                    const txStatus = intercept.response?.body.result.status
+                    if (txStatus === 'Accepted') {
                         cy.get('.tx_state_card')
                             .first()
-                            .get('.data_row > p')
+                            .find('.data_row > p')
                             .last()
-                            .should('have.text', expectedStatus)
+                            .should('have.text', txStatus)
+                        return true
                     }
+                    return false
                 })
                 // wait `avax.issueTx` to get txID
                 cy.wait('@apiImportC').then((intercept) => {
-                    if (intercept.request.body.method === 'avax.issueTx') {
-                        const txID = intercept.response?.body.result.txID
-                        cy.get('.tx_state_card')
-                            .last()
-                            .get('.data_row > p')
-                            .first()
-                            .should('have.text', txID)
-                    }
+                    const txID = intercept.response?.body.result.txID
+                    cy.get('.tx_state_card')
+                        .last()
+                        .find('.data_row > p')
+                        .first()
+                        .should('have.text', txID)
                 })
                 // wait `avax.getAtomicTxStatus` to get the tx status
-                cy.wait('@apiImportC').then((intercept) => {
-                    if (intercept.request.body.method === 'avax.getAtomicTxStatus') {
-                        const txStatus = intercept.response?.body.result.status
+                cy.waitUntil('@apiImportCStatus', (intercept) => {
+                    const txStatus = intercept.response?.body.result.status
+                    if (txStatus === 'Accepted') {
                         cy.get('.tx_state_card')
                             .last()
-                            .get('.data_row > p')
+                            .find('.data_row > p')
                             .last()
                             .should('have.text', txStatus)
+                        return true
                     }
+                    return false
                 })
 
                 // check 'Transfer Completed' message
