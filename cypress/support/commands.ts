@@ -10,7 +10,7 @@
 //
 //
 
-import { Interception } from "cypress/types/net-stubbing"
+import { Interception } from 'cypress/types/net-stubbing'
 
 // -- This is a parent command --
 Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
@@ -39,24 +39,22 @@ Cypress.Commands.add('changeNetwork', (network = 'Columbus') => {
                 cy.get('@btnNetworkSwitcher').click() // Network Switcher
                 cy.get(`[data-value="${network}"]`).click() // Select Columbus Network
 
-        // intercept to find current rpc url
-        cy.intercept('POST', '**/ext/info').as('apiNetworkInfo')
-        // intercept to get default asset symbol
-        cy.intercept('POST', '**/ext/bc/X', (request) => {
-          if (request.body.method === 'avm.getAssetDescription') {
-            request.alias = 'assetDesc'
-          }
-        })
+                // intercept to find current rpc url
+                cy.intercept('POST', '**/ext/info').as('apiNetworkInfo')
+                // intercept to get default asset symbol
+                cy.intercept('POST', '**/ext/bc/X', (request) => {
+                    if (request.body.method === 'avm.getAssetDescription') {
+                        request.alias = 'assetDesc'
+                    }
+                })
 
-        // Waiting 'info.networkID', and 'info.getTxFee'
-        cy.wait('@apiNetworkInfo')
-          .then(interceptNetworkInfo)
-        cy.wait('@apiNetworkInfo')
-          .then(interceptNetworkInfo)
-        // Waiting 'avm.getAssetDescription'
-        cy.wait('@assetDesc')
-          .then(intercept => intercept.response?.body.result.symbol)
-          .as('assetSymbol')
+                // Waiting 'info.networkID', and 'info.getTxFee'
+                cy.wait('@apiNetworkInfo').then(interceptNetworkInfo)
+                cy.wait('@apiNetworkInfo').then(interceptNetworkInfo)
+                // Waiting 'avm.getAssetDescription'
+                cy.wait('@assetDesc')
+                    .then((intercept) => intercept.response?.body.result.symbol)
+                    .as('assetSymbol')
 
                 // increasing timeout to make sure the network is selected, especially on slowly local dev env
                 cy.get('@txtSelectedNetwork', { timeout: 15000 }).should('have.text', network)
@@ -121,24 +119,25 @@ Cypress.Commands.add('switchToWalletApp', () => {
 
     cy.get('@elAppOptionWallet').click()
 })
-Cypress.Commands.add('loginWalletWith', (walletAccessType: WalletAccessType, keyName?: string, network: string = 'Columbus') => {
-  cy.visit('/')
+Cypress.Commands.add(
+    'loginWalletWith',
+    (walletAccessType: WalletAccessType, keyName?: string, network: string = 'Columbus') => {
+        cy.visit('/')
 
-    // header - app(left) menu aliases
-    cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(1)').as('elAppMenu')
+        // header - app(left) menu aliases
+        cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(1)').as('elAppMenu')
 
-    // header - preference(right) menu aliases
-    cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(2)').as('elPreferenceMenu')
-    cy.get('@elPreferenceMenu')
-        .find('.MuiInputBase-root > .MuiSelect-select', { timeout: 30000 })
-        .as('btnNetworkSwitcher')
-    cy.get('@btnNetworkSwitcher').find('.MuiTypography-root').as('txtSelectedNetwork')
-    cy.get('@elPreferenceMenu').find('> .MuiBox-root').as('btnWallet')
+        // header - preference(right) menu aliases
+        cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(2)').as('elPreferenceMenu')
+        cy.get('@elPreferenceMenu')
+            .find('.MuiInputBase-root > .MuiSelect-select', { timeout: 30000 })
+            .as('btnNetworkSwitcher')
+        cy.get('@btnNetworkSwitcher').find('.MuiTypography-root').as('txtSelectedNetwork')
+        cy.get('@elPreferenceMenu').find('> .MuiBox-root').as('btnWallet')
 
-  cy.switchToWalletApp()
-    .changeNetwork(network)
-    .accessWallet(walletAccessType, keyName)
-})
+        cy.switchToWalletApp().changeNetwork(network).accessWallet(walletAccessType, keyName)
+    }
+)
 
 Cypress.Commands.add('switchToWalletFunctionTab', (func) => {
     let funcKey
@@ -180,15 +179,17 @@ Cypress.Commands.add('switchToWalletFunctionTab', (func) => {
     }
 })
 
-Cypress.Commands.add('waitUntil', (alias: string, untilFunc: (intercept: Interception) => boolean) => {
-  cy.wait(alias)
-    .then(intercept => {
-      const success = untilFunc(intercept)
-      if (!success) {
-        cy.waitUntil(alias, untilFunc)
-      }
-    })
-})
+Cypress.Commands.add(
+    'waitUntil',
+    (alias: string, untilFunc: (intercept: Interception) => boolean) => {
+        cy.wait(alias).then((intercept) => {
+            const success = untilFunc(intercept)
+            if (!success) {
+                cy.waitUntil(alias, untilFunc)
+            }
+        })
+    }
+)
 
 //
 //
