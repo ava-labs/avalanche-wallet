@@ -36,7 +36,7 @@ describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, 
             })
         })
 
-        it('as an error message is shown for inputing x-chain wallet address', () => {
+        it('as an error message is shown for inputting x-chain wallet address', () => {
             // Input C Chain Addr
             cy.get('.bottom_tabs > .chain_select > button:nth-child(1)').click()
             cy.get('[data-cy="wallet_address"]').invoke('text').as('chainAddress')
@@ -55,7 +55,7 @@ describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, 
                 )
         })
 
-        it('as an error message is shown for inputing p-chain wallet address', () => {
+        it('as an error message is shown for inputting p-chain wallet address', () => {
             // Input C Chain Addr
             cy.get('.bottom_tabs > .chain_select > button:nth-child(1)').click()
             cy.get('[data-cy="wallet_address"]').invoke('text').as('chainAddress')
@@ -84,10 +84,12 @@ describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, 
 
             // Detect Gas Price PRC
             cy.wait('@apiBaseFee').then((intercept) => {
-                const hexGasPrice = intercept.response?.body.result
-                const bnGasPrice = new BN(hexGasPrice.substring(2), 'hex')
-                cy.wrap(bnGasPrice).as('bnGasPrice')
-                console.debug('gasPrice: ', bnGasPrice)
+                if (intercept.request.body.method === 'eth_gasPrice') {
+                    const hexGasPrice = intercept.response?.body.result
+                    const bnGasPrice = new BN(hexGasPrice.substring(2), 'hex')
+                    cy.wrap(bnGasPrice).as('bnGasPrice')
+                    console.debug('gasPrice: ', bnGasPrice)
+                }
             })
 
             // Click Confirm Btn
@@ -95,17 +97,19 @@ describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, 
 
             // Detect Estimate Gas Limit RPC
             cy.wait('@apiBaseFee').then((intercept) => {
-                const hexGasLimit = intercept.response?.body?.result
-                const bnGasLimit = new BN(hexGasLimit.substring(2), 'hex')
-                cy.get('.gas_cont')
-                    .last()
-                    .find('p')
-                    .invoke('text')
-                    .then((limit) => {
-                        expect(limit).to.eq(bnGasLimit.toString())
-                    })
-                cy.wrap(bnGasLimit).as('bnGasLimit')
-                console.debug('bnGasLimit: ', bnGasLimit)
+                if (intercept.request.body.method === 'eth_estimateGas') {
+                    const hexGasLimit = intercept.response?.body?.result
+                    const bnGasLimit = new BN(hexGasLimit.substring(2), 'hex')
+                    cy.get('.gas_cont')
+                        .last()
+                        .find('p')
+                        .invoke('text')
+                        .then((limit) => {
+                            expect(limit).to.eq(bnGasLimit.toString())
+                        })
+                    cy.wrap(bnGasLimit).as('bnGasLimit')
+                    console.debug('bnGasLimit: ', bnGasLimit)
+                }
             })
 
             // Verity TransactionFee in screen
@@ -128,12 +132,12 @@ describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, 
             // Click Send Transaction Btn
             cy.get('.button_primary').eq(0).click()
 
-            cy.intercept('POST', '**/ext/bc/C/rpc', (intercept) => {
+            cy.intercept('POST', '**/ext/bc/C/rpc', (request) => {
                 if (
-                    intercept.body.hasOwnProperty('method') &&
-                    intercept.body.method.includes('eth_sendRawTransaction')
+                    request.body.hasOwnProperty('method') &&
+                    request.body.method.includes('eth_sendRawTransaction')
                 ) {
-                    intercept.alias = 'eth_sendRawTransaction'
+                    request.alias = 'eth_sendRawTransaction'
                 }
             })
             cy.wait('@eth_sendRawTransaction').then((intercept) => {
@@ -194,10 +198,12 @@ describe('Send: C to C transfer by not balance', () => {
 
             // Detect Gas Price PRC
             cy.wait('@apiBaseFee').then((intercept) => {
-                const hexGasPrice = intercept.response?.body.result
-                const bnGasPrice = new BN(hexGasPrice.substring(2), 'hex')
-                cy.wrap(bnGasPrice).as('bnGasPrice')
-                console.debug('gasPrice: ', bnGasPrice)
+                if (intercept.request.body.method === 'eth_gasPrice') {
+                    const hexGasPrice = intercept.response?.body.result
+                    const bnGasPrice = new BN(hexGasPrice.substring(2), 'hex')
+                    cy.wrap(bnGasPrice).as('bnGasPrice')
+                    console.debug('gasPrice: ', bnGasPrice)
+                }
             })
 
             // Click Confirm Btn
