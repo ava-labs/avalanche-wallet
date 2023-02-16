@@ -4,14 +4,11 @@
             <form @submit.prevent="">
                 <transition-group name="fade" mode="out-in">
                     <div v-show="!isConfirm" key="form" class="ins_col">
-                        <div style="margin-bottom: 30px">
-                            <h4>{{ $t('earn.validate.nodeId') }}</h4>
-                            <input
-                                type="text"
-                                v-model="nodeId"
-                                style="width: 100%; border-radius: var(--border-radius-sm)"
-                                placeholder="NodeID-"
-                            />
+                        <div>
+                            <h4 class="input_label">{{ $t('earn.validate.nodeId') }}</h4>
+                            <span class="disabled_input" role="textbox">
+                                {{ nodeId }}
+                            </span>
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.duration.label') }}</h4>
@@ -126,7 +123,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 //@ts-ignore
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import { BN } from '@c4tplatform/caminojs'
@@ -168,10 +165,10 @@ const MAX_STAKE_DURATION = DAY_MS * 365
     },
 })
 export default class AddValidator extends Vue {
+    @Prop() nodeId!: string
     startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
     // delegationFee: string = '2.0'
-    nodeId = ''
     rewardIn: string = ''
     rewardDestination = 'local' // local || custom
     isLoading = false
@@ -181,7 +178,6 @@ export default class AddValidator extends Vue {
 
     minFee = 2
 
-    formNodeId = ''
     formAmt: BN = new BN(0)
     formEnd: Date = new Date()
     formFee: number = 0
@@ -275,7 +271,6 @@ export default class AddValidator extends Vue {
     }
 
     updateFormData() {
-        this.formNodeId = this.nodeId.trim()
         this.formAmt = this.stakeAmt
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
@@ -333,12 +328,6 @@ export default class AddValidator extends Vue {
             }
         }
 
-        // Not a valid Node ID
-        if (!this.nodeId.includes('NodeID-')) {
-            this.err = this.$t('earn.validate.errs.id') as string
-            return false
-        }
-
         // Stake amount
         if (this.stakeAmt.lt(this.minStakeAmt)) {
             let big = Big(this.minStakeAmt.toString()).div(Math.pow(10, 9))
@@ -369,7 +358,7 @@ export default class AddValidator extends Vue {
             const endTime = this.formEnd.getTime() / 1000
             let txId = await WalletHelper.addValidatorTx(
                 wallet,
-                this.formNodeId,
+                this.nodeId,
                 new BN(startTime),
                 new BN(endTime),
                 new BN(this.formAmt.toString())
@@ -440,8 +429,6 @@ export default class AddValidator extends Vue {
             let minAmt = this.minStakeAmt
             let big = Big(minAmt.toString()).div(Math.pow(10, 9))
             this.err = this.$t('earn.validate.errs.amount', [big.toLocaleString()]) as string
-        } else if (msg.includes('nodeID')) {
-            this.err = this.$t('earn.validate.errs.id') as string
         } else if (msg.includes('address format')) {
             this.err = this.$t('earn.validate.errs.address') as string
         } else {
@@ -460,7 +447,7 @@ export default class AddValidator extends Vue {
 form {
     display: grid;
     grid-template-columns: 1fr 340px;
-    column-gap: 90px;
+    column-gap: 1rem;
 }
 
 .ins_col {
@@ -608,6 +595,23 @@ label {
     background-color: var(--bg-light);
     padding: 4px 12px;
     margin-bottom: 6px;
+}
+
+.disabled_input {
+    display: inline-block;
+    border-radius: var(--border-radius-sm);
+    color: gray;
+    background-color: var(--bg-light);
+    padding: 6px 14px;
+    white-space: nowrap;
+}
+
+.disabled_input:focus-visible {
+    outline: 0;
+}
+
+.input_label {
+    margin-bottom: 0.5rem;
 }
 
 @include main.mobile-device {

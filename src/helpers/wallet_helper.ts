@@ -202,6 +202,10 @@ class WalletHelper {
         return await ava.PChain().getAddressStates(address)
     }
 
+    static async getRegisteredShortIDLink(address: string): Promise<string> {
+        return await ava.PChain().getRegisteredShortIDLink(address)
+    }
+
     // Single sig in this first implementation
     // For MultiSig extend consortiumMemberAuthCredentials
     static async registerNodeTx(
