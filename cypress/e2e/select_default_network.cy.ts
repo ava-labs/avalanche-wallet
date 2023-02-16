@@ -16,7 +16,7 @@ describe('Basic Functionality', () => {
 async function processSelectNetwork() {
     let stableNetwork = false
     while (!stableNetwork) {
-        cy.wait(4000)
+        cy.wait(8000)
         stableNetwork = await verifyNetwork()
         cy.log(networkTesteds)
     }
