@@ -185,6 +185,7 @@ const network_module: Module<NetworkState, RootState> = {
         },
 
         async init({ state, commit, dispatch }) {
+            const columbusExplorerUrl = `${window.location.protocol}//${window.location.host}/explorer`
             let camino = new AvaNetwork(
                 'Camino',
                 'https://mainnet.camino.network',
@@ -200,7 +201,7 @@ const network_module: Module<NetworkState, RootState> = {
                 'https://columbus.camino.network',
                 1001,
                 'https://magellan.columbus.camino.network',
-                'https://suite.camino.network/explorer',
+                columbusExplorerUrl,
                 '',
                 true
             )
