@@ -85,8 +85,12 @@ export default class Validator extends Vue {
     }
 
     async onNodeRegistered() {
-        this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
-        this.isNodeRegistered = !!this.nodeId
+        try {
+            this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
+            this.isNodeRegistered = !!this.nodeId
+        } catch (e) {
+            this.isNodeRegistered = false
+        }
     }
 
     get hasEnoughUnlockedPlatformBalance(): boolean {
