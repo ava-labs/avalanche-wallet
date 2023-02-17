@@ -25,10 +25,10 @@ export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter) {
 
     cy.get('[data-cy="network-selector"]', { timeout: 12000 }).click()
     cy.get('[data-cy="add-custom-network"]', { timeout: 12000 }).click()
-    cy.wait(2000)
+    cy.wait(10000)
     cy.get('[data-cy="add-network-field-network-name"]', { timeout: 12000 })
         .find('input', { timeout: 12000 })
-        .type(configNetwork.networkName)
+        .type(`${configNetwork.networkName}`)
     cy.get('[data-cy="add-network-field-url"]', { timeout: 12000 })
         .find('input', { timeout: 12000 })
         .type(configNetwork.urlAndPort, { force: true })

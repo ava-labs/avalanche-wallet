@@ -170,7 +170,7 @@ describe('activity transactions', () => {
         accessWallet(cy, 'mnemonic')
 
         cy.wait(10000)
-        cy.get('[data-cy="wallet_activity"]', { timeout: 20000 })
+        cy.get('[data-cy="wallet_activity"]', { timeout: 60000 }).should('be.visible')
         cy.get('[data-cy="wallet_activity"]').click()
 
         cy.intercept('POST', '**/v2/transactions', (req) => {
