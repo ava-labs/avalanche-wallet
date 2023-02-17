@@ -95,7 +95,7 @@ Saved into local storage as a 2 letter code.
 
 To get utxos and to send transactions.
 
-#### Explorer API Node (*TBC*)
+#### Explorer API Node (_TBC_)
 
 To check if an address was used before, and to get activity history.
 
@@ -109,4 +109,3 @@ By default, there is one network option to connect to: `Columbus`.
 
 -   Camino API: `https://columbus.camino.network`
 -   Explorer API: `tbd`
-

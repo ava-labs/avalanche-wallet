@@ -5,7 +5,7 @@
             <p>?</p>
         </div>
         <p class="col_name">
-            {{ token.data.name }} ({{ token.data.symbol }})
+            <span data-cy="token-erc20-name">{{ token.data.name }}</span> <span data-cy="token-erc20-symbol">({{ token.data.symbol }})</span>
             <span>ERC20</span>
         </p>
         <component

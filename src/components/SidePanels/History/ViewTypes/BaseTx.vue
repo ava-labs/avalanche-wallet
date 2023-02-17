@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="infoTx">
         <div class="utxos">
             <div v-if="hasSent">
                 <label>Sent</label>

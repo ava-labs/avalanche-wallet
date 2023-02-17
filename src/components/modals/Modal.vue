@@ -6,7 +6,7 @@
                 <div class="modal_body">
                     <div class="modal_topbar">
                         <h4 class="modal_title">{{ title }}</h4>
-                        <button class="modalClose" @click="close" v-if="can_close">
+                        <button class="modalClose" @click="close" v-if="can_close" data-cy="btn-modal-close">
                             <fa icon="times"></fa>
                         </button>
                     </div>

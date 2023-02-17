@@ -1,6 +1,6 @@
 <template>
     <div class="tx_row" :day_change="source.isDayChange">
-        <div class="tx_cols">
+        <div class="tx_cols" data-cy="">
             <div class="explorer_col">
                 <a
                     v-if="explorerUrl"
@@ -26,7 +26,7 @@
                     <p>{{ memo }}</p>
                 </div>
             </div>
-            <div class="tx_detail">
+            <div class="tx_detail" :data-cy="getDataCYTxDetail">
                 <component :is="tx_comp" :transaction="source"></component>
             </div>
         </div>
@@ -116,6 +116,11 @@ export default class TxRow extends Vue {
 
     get yearLabel(): string {
         return this.mom.format('Y')
+    }
+
+    get getDataCYTxDetail() 
+    {
+        return `tx-detail-${this.index}`;
     }
 }
 </script>
