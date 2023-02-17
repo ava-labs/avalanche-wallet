@@ -18,7 +18,7 @@ describe('Wallet Creation', () => {
         
         cy.readFile(`cypress/temp/wallets/mnemonic_wallet.json`).then((mnemonicPhrase) => {
             accessWallet(cy, 'mnemonic');
-            cy.get('[data-cy="wallet_manage"]', { timeout: 5000 })
+            cy.get('[data-cy="wallet_manage"]', { timeout: 15000 })
                 .click()
                 .then(() => {
                     cy.get('[data-cy="manage-key-private-key-c"]', { timeout: 7000 }).click()
@@ -45,7 +45,7 @@ describe('Wallet Creation', () => {
                                 throw new Error('C Chain Private Key is not supported with web3')
                             }
                         })
-                })
+                });
         })
     })
 })

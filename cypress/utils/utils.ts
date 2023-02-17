@@ -7,7 +7,8 @@ export function acceptCookies() {
     cy.get('.cc-nb-okagree').click()
 }
 
-export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter, local: boolean) {
+export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter) {
+    acceptCookies();
     let configNetwork = {
         networkName: 'Localhost',
         urlAndPort: 'http://localhost:9650',
@@ -60,6 +61,6 @@ export async function accessWallet(cy: Cypress.cy & CyEventEmitter, type: string
             const privateKeyCChain = privateKey.privateKey
             cy.get('[data-cy="field-private-key"]').type(privateKeyCChain)
         })
-        cy.get('[data-cy="btn-submit-private-key"]').click()
+        cy.get('[data-cy="btn-submit-private-key"]').click();
     }
 }
