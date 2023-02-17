@@ -341,6 +341,7 @@
         "tooltip": "This key will be forgotten when you refresh the browser.",
         "view_priv_key": "View Private Key",
         "view_priv_key_c": "View C Chain Private Key",
+        "view_public_key": "View Public Key",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -725,6 +726,9 @@
         "priv_key": {
             "title": "Private Key"
         },
+        "pub_key": {
+            "title": "Public Key"
+        },
         "activateWallet": {
             "title": "Activate Wallet",
             "desc": "There is an active wallet. Enter your password to access it.",
@@ -785,6 +789,7 @@
         "chain_transfer_failed": "Transfer Failed.",
         "chain_export_wallet": "Your keys are downloaded.",
         "new_collectible": "Collectible family created.",
-        "mint_form": "Collectible minted and added to your wallet."
+        "mint_form": "Collectible minted and added to your wallet.",
+        "copy_public_key": "Public Key added to clipboard"
     }
 }
