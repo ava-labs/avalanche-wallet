@@ -120,7 +120,7 @@ export default class RegisterNode extends Vue {
     @Prop() minPlatformUnlocked!: BN
     @Prop() hasEnoughUnlockedPlatformBalance!: boolean
     @Prop() isNodeRegistered!: boolean
-
+    helpers = this.globalHelper()
     nodePrivateKey = ''
 
     cleanAvaxBN(val: BN) {
@@ -158,17 +158,15 @@ export default class RegisterNode extends Vue {
             )
             console.log(result)
             this.$emit('registered')
-            await this.$store.dispatch('Notifications/add', {
+            this.helpers.dispatchNotification({
+                message: this.$t('notifications.register_node_success'),
                 type: 'success',
-                title: 'Node Registered',
-                message: 'Your node registered successfully.',
             })
         } catch (error) {
             console.error(error)
-            await this.$store.dispatch('Notifications/add', {
+            this.helpers.dispatchNotification({
+                message: this.$t('notifications.register_node_failed'),
                 type: 'error',
-                title: 'Registering Node Failed',
-                message: error,
             })
         }
     }

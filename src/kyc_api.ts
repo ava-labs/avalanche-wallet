@@ -24,6 +24,12 @@ async function getNonce(): Promise<GetNonceType> {
     return res.data
 }
 
+export function getPublicKey(privateKey: string): string | null {
+    let keyPair = ec.keyFromPrivate(privateKey)
+    let pubKey = keyPair.getPublic()
+    return pubKey.encode('hex', false)
+}
+
 async function generateToken(privateKey: string): Promise<AccessToken> {
     let keyPair = ec.keyFromPrivate(privateKey)
     let privKey = keyPair.getPrivate('hex')

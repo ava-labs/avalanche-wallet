@@ -790,6 +790,8 @@
         "chain_export_wallet": "Your keys are downloaded.",
         "new_collectible": "Collectible family created.",
         "mint_form": "Collectible minted and added to your wallet.",
-        "copy_public_key": "Public Key added to clipboard"
+        "copy_public_key": "Public Key added to clipboard",
+        "register_node_success": "Your node registered successfully.",
+        "register_node_failed": "Registering Node Failed"
     }
 }
