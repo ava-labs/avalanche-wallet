@@ -1,4 +1,5 @@
 export function changeNetwork(cy: Cypress.cy & CyEventEmitter, network = 'Columbus') {
+    acceptCookies();
     cy.get('[data-cy="network-selector"]').click() //Network Switcher
     cy.get(`[data-cy="network-name-${network}"]`).click() //Select Columbus Network
 }
