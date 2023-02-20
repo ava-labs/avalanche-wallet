@@ -17,4 +17,5 @@ export default defineConfig({
         grepTags: '',
         grepFilterSpecs: true,
     },
+    defaultCommandTimeout: 10000,
 })

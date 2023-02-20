@@ -12,6 +12,7 @@
 export default {
     props: {
         value: String,
+        notificationMessage: String,
     },
     methods: {
         copy() {
@@ -20,7 +21,9 @@ export default {
             copytext.setSelectionRange(0, 99999)
             let { dispatchNotification } = this.globalHelper()
             dispatchNotification({
-                message: this.$t('notifications.copy_to_clipboard'),
+                message: this.notificationMessage
+                    ? this.notificationMessage
+                    : this.$t('notifications.copy_to_clipboard'),
                 type: 'success',
             })
             document.execCommand('copy')

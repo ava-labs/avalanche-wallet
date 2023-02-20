@@ -25,19 +25,26 @@
             :privateKey="privateKeyC"
             ref="modal_priv_key_c"
         ></PrivateKey>
+        <PublicKey
+            v-if="walletType !== 'ledger'"
+            :publicKey="publicKey"
+            ref="modal_public_key"
+        ></PublicKey>
         <div class="rows">
             <div class="header">
-                <template v-if="is_default">
-                    <img src="@/assets/key_active.svg" class="key_logo" />
-                </template>
-                <template v-else>
-                    <img
-                        v-if="$root.theme === 'day'"
-                        src="@/assets/key_inactive.svg"
-                        class="key_logo"
-                    />
-                    <img v-else src="@/assets/key_inactive_night.png" class="key_logo" />
-                </template>
+                <div class="img_container">
+                    <template v-if="is_default">
+                        <img src="@/assets/key_active.svg" class="key_logo" />
+                    </template>
+                    <template v-else>
+                        <img
+                            v-if="$root.theme === 'day'"
+                            src="@/assets/key_inactive.svg"
+                            class="key_logo"
+                        />
+                        <img v-else src="@/assets/key_inactive_night.png" class="key_logo" />
+                    </template>
+                </div>
                 <div class="header_cols">
                     <div class="detail">
                         <p class="addressVal">
@@ -85,6 +92,9 @@
                             <button v-if="walletType !== 'ledger'" @click="showPrivateKeyCModal">
                                 {{ $t('keys.view_priv_key_c') }}
                             </button>
+                            <button v-if="walletType !== 'ledger'" @click="showPublicKeyModal">
+                                {{ $t('keys.view_public_key') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -125,10 +135,12 @@ import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
+import PublicKey from '@/components/modals/PublicKey.vue'
 import { WalletNameType, WalletType } from '@/js/wallets/types'
 
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
+import { getPublicKey } from '@/kyc_api'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -141,17 +153,20 @@ interface IKeyBalanceDict {
         Tooltip,
         ExportKeys,
         PrivateKey,
+        PublicKey,
     },
 })
 export default class KeyRow extends Vue {
     @Prop() wallet!: WalletType
     @Prop({ default: false }) is_default?: boolean
+    publicKey: string | null = ''
 
     $refs!: {
         export_wallet: ExportKeys
         modal: MnemonicPhraseModal
         modal_hd: HdDerivationListModal
         modal_priv_key: PrivateKey
+        modal_public_key: PublicKey
     }
 
     get isVolatile() {
@@ -221,7 +236,6 @@ export default class KeyRow extends Vue {
     get walletType(): WalletNameType {
         return this.wallet.type
     }
-
     get isHDWallet() {
         return ['mnemonic', 'ledger'].includes(this.walletType)
     }
@@ -242,7 +256,9 @@ export default class KeyRow extends Vue {
         let wallet = this.wallet as SingletonWallet | MnemonicWallet
         return wallet.ethKey
     }
-
+    mounted() {
+        if (this.privateKeyC) this.publicKey = getPublicKey(this.privateKeyC)
+    }
     remove() {
         this.$emit('remove', this.wallet)
     }
@@ -270,6 +286,10 @@ export default class KeyRow extends Vue {
     showPrivateKeyModal() {
         //@ts-ignore
         this.$refs.modal_priv_key.open()
+    }
+    showPublicKeyModal() {
+        //@ts-ignore
+        this.$refs.modal_public_key.open()
     }
 
     showPrivateKeyCModal() {
@@ -368,6 +388,11 @@ export default class KeyRow extends Vue {
     display: grid;
     grid-template-columns: 32px 1fr;
     grid-gap: 14px;
+    .img_container {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
 }
 
 .header_cols {

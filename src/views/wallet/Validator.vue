@@ -15,11 +15,12 @@
                         :isConsortiumMember="isConsortiumMember"
                         :minPlatformUnlocked="minPlatformUnlocked"
                         :hasEnoughUnlockedPlatformBalance="hasEnoughUnlockedPlatformBalance"
-                        @registered="isNodeRegistered = true"
+                        :isNodeRegistered="isNodeRegistered"
+                        @registered="onNodeRegistered"
                     ></register-node>
                 </p>
                 <template v-else>
-                    <add-validator></add-validator>
+                    <add-validator :nodeId="nodeId"></add-validator>
                 </template>
             </div>
         </transition>
@@ -38,7 +39,6 @@ import RegisterNode from '@/components/wallet/earn/Validate/RegisterNode.vue'
 import {
     ADDRESSSTATECONSORTIUM,
     ADDRESSSTATEKYCVERIFIED,
-    ADDRESSSTATEREGISTERNODE,
 } from '@c4tplatform/caminojs/dist/apis/platformvm/addressstatetx'
 
 @Component({
@@ -53,6 +53,7 @@ export default class Validator extends Vue {
     isConsortiumMember = false
     isNodeRegistered = false
     intervalID: any = null
+    nodeId = ''
 
     updateValidators() {
         this.$store.dispatch('Platform/update')
@@ -75,7 +76,21 @@ export default class Validator extends Vue {
         const result = await WalletHelper.getAddressState(this.addresses[0])
         this.isKycVerified = !result.and(BN_ONE.shln(ADDRESSSTATEKYCVERIFIED)).isZero()
         this.isConsortiumMember = !result.and(BN_ONE.shln(ADDRESSSTATECONSORTIUM)).isZero()
-        this.isNodeRegistered = !result.and(BN_ONE.shln(ADDRESSSTATEREGISTERNODE)).isZero()
+        try {
+            this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
+            this.isNodeRegistered = !!this.nodeId
+        } catch (e) {
+            this.isNodeRegistered = false
+        }
+    }
+
+    async onNodeRegistered() {
+        try {
+            this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
+            this.isNodeRegistered = !!this.nodeId
+        } catch (e) {
+            this.isNodeRegistered = false
+        }
     }
 
     get hasEnoughUnlockedPlatformBalance(): boolean {

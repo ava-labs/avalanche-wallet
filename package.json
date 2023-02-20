@@ -12,8 +12,8 @@
         "dev": "webpack-dev-server --mode development --open",
         "cypress": "cypress run",
         "cypress:columbus": "TEST_ENV=columbus cypress run",
-        "format": "prettier src/**/*.{js,ts,vue} .github/workflows/*.yml --write",
-        "format-check": "prettier src/**/*.{js,ts,vue} .github/workflows/*.yml --check",
+        "format": "prettier src/**/*.{js,ts,vue} .github/workflows/*.{yml,yaml} --write",
+        "format-check": "prettier src/**/*.{js,ts,vue} .github/workflows/*.{yml,yaml} --check",
         "lint": "vue-cli-service lint",
         "release": "release-it",
         "test_watch": "jest --verbose --watch ./tests",
@@ -22,7 +22,6 @@
         "preinstall": "git submodule update --recursive --init"
     },
     "devDependencies": {
-        "@arcblock/forge-util": "^1.6.3",
         "@babel/core": "^7.15.8",
         "@babel/plugin-proposal-class-properties": "^7.10.1",
         "@babel/plugin-proposal-decorators": "^7.10.3",

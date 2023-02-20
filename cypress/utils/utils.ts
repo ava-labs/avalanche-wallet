@@ -10,16 +10,13 @@ export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter) {
     cy.get('[data-cy="add-custom-network"]').click()
     cy.wait(2000)
     cy.get('[data-cy="add-network-field-network-name"]').type(localNetworkName)
-    cy.get('[data-cy="add-network-field-protocol"]').clear()
-    cy.get('[data-cy="add-network-field-protocol"]').type('https')
-    cy.get('[data-cy="add-network-field-host"]').type('kopernikus.camino.network')
-    cy.get('[data-cy="add-network-field-port"]').clear()
-    cy.get('[data-cy="add-network-field-port"]').type('443')
+    cy.get('[data-cy="add-network-field-url"]').type('https://kopernikus.camino.network:443')
     cy.get('[data-cy="add-network-field-magellan-address"]').type(
         'https://magellan.kopernikus.camino.network/'
     )
-    cy.get('[data-cy="btn-add-network"]').click()
-    cy.get(`[data-cy="network-name-${localNetworkName}"]`).click()
+    cy.get('[data-cy="btn-add-network"]').click();
+    cy.wait(5000);
+    cy.get(`[data-cy="network-name-${localNetworkName}"]`,{timeout: 12000}).click()
 }
 
 export async function accessWallet(cy: Cypress.cy & CyEventEmitter, type: string) {

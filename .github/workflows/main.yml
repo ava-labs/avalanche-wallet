@@ -23,6 +23,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+
+      - name: get branch name
+        id: setBranch
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "branch=${{ github.base_ref }}" >> $GITHUB_OUTPUT
+          else
+            echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
       # This should be caching node modules, hashing the cache key with the yarn lock code and busting that when yarn lock changes
       - name: cache modules
         uses: actions/cache@v3
@@ -40,8 +50,8 @@ jobs:
 
       - name: start suite
         run: |
-          git clone -b ${{ env.suite_branch }} https://github.com/chain4travel/camino-suite.git
-          git clone -b ${{ env.suite_branch }} https://github.com/chain4travel/camino-block-explorer.git
+          git clone -b ${{ steps.setBranch.outputs.branch }} https://github.com/chain4travel/camino-suite.git
+          git clone -b ${{ steps.setBranch.outputs.branch }} https://github.com/chain4travel/camino-block-explorer.git
           cd camino-suite
           yarn install
           (yarn start&)

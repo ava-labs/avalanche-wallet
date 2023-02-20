@@ -47,7 +47,8 @@
                 </h4>
             </div>
             <div class="requirement_title">
-                <fa icon="question-circle"></fa>
+                <fa v-if="isNodeRegistered" class="success_status_icon" icon="check-circle"></fa>
+                <fa v-else class="error_status_icon" icon="times-circle"></fa>
                 <h4>
                     {{ $t('earn.validate.warns.consortium_member_address_linked_to_node') }}
                     <a
@@ -118,7 +119,8 @@ export default class RegisterNode extends Vue {
     @Prop() isConsortiumMember!: boolean
     @Prop() minPlatformUnlocked!: BN
     @Prop() hasEnoughUnlockedPlatformBalance!: boolean
-
+    @Prop() isNodeRegistered!: boolean
+    helpers = this.globalHelper()
     nodePrivateKey = ''
 
     cleanAvaxBN(val: BN) {
@@ -156,17 +158,15 @@ export default class RegisterNode extends Vue {
             )
             console.log(result)
             this.$emit('registered')
-            await this.$store.dispatch('Notifications/add', {
+            this.helpers.dispatchNotification({
+                message: this.$t('notifications.register_node_success'),
                 type: 'success',
-                title: 'Node Registered',
-                message: 'Your node registered successfully.',
             })
         } catch (error) {
             console.error(error)
-            await this.$store.dispatch('Notifications/add', {
+            this.helpers.dispatchNotification({
+                message: this.$t('notifications.register_node_failed'),
                 type: 'error',
-                title: 'Registering Node Failed',
-                message: error,
             })
         }
     }

@@ -8,8 +8,8 @@ describe('Wallet Access Mnemonic', () => {
     })
 
     it('open suite/open wallet using mnemonic', () => {
-        addKopernikusNetwork(cy)
-        //changeNetwork(cy);
+        //addKopernikusNetwork(cy)
+        changeNetwork(cy);
         accessWallet(cy, 'mnemonic')
     })
 })
