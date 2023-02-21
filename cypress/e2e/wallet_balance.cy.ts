@@ -7,7 +7,7 @@ describe('Wallet Balance Mnemonic', () => {
         cy.visit('/')
     })
 
-    it('open suite/open wallet using mnemonic', () => {
+    it('wallet balance', () => {
         addKopernikusNetwork(cy)
         //changeNetwork(cy);
         accessWallet(cy, 'mnemonic')

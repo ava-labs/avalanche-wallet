@@ -12,7 +12,7 @@ const name = hex2a(hexName)
 const symbol = hex2a(hexSymbol)
 var amount = 0
 
-describe('activity transactions', () => {
+describe('Add ERC20 Token', () => {
     before(() => {
         cy.visit('/')
     })

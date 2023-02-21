@@ -131,7 +131,7 @@ let dataBody = {
     endTime: '2023-02-20T15:53:08Z',
 }
 
-describe('activity transactions', () => {
+describe('Activity Transactions', () => {
     Cypress.on('uncaught:exception', (err, runnable) => {
         // returning false here prevents Cypress from failing the test
         return false

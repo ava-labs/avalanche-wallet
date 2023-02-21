@@ -511,7 +511,7 @@ describe('Wallet Access Mnemonic', () => {
         
     })
 
-    it('open suite/open wallet using mnemonic', () => {
+    it('create collectibles family', () => {
         addKopernikusNetwork(cy)
         accessWallet(cy, 'mnemonic')
 

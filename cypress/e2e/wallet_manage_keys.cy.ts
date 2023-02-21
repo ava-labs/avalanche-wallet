@@ -6,12 +6,12 @@ import Web3 from 'web3'
 
 const path: string = '/ext/bc/C/rpc'
 
-describe('Wallet Creation', () => {
+describe('Wallet Manage Keys', () => {
     before(() => {
         cy.visit('/')
     })
 
-    it('open suite/create wallet', () => {
+    it('wallet manage keys', () => {
         
         //changeNetwork(cy)
         addKopernikusNetwork(cy);
