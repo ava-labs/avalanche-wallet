@@ -146,7 +146,8 @@ describe('Activity Transactions', () => {
         //changeNetwork(cy);
 
         accessWallet(cy, 'mnemonic')
-        cy.wait(10000)
+        cy.wait(10000);
+        cy.get('[data-cy="wallet_address"]',{ timeout: 12000 }).should('be.visible');
         cy.get('[data-cy="wallet_address"]', { timeout: 12000 })
             .invoke('text')
             .then((textAddress) => {
