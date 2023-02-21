@@ -10,19 +10,19 @@ export function acceptCookies() {
 
 export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter) {
     acceptCookies();
-    let configNetwork = {
-        networkName: 'Localhost',
-        urlAndPort: 'http://localhost:9650',
-        magellandUrl: 'http://localhost:8080',
-        sigavaultAddress: '',
-    }
-
     // let configNetwork = {
-    //     networkName: 'Kopernikus',
-    //     urlAndPort: 'https://kopernikus.camino.network:443',
-    //     magellandUrl: 'https://magellan.kopernikus.camino.network',
-    //     sigavaultAddress: ''
+    //     networkName: 'Localhost',
+    //     urlAndPort: 'http://localhost:9650',
+    //     magellandUrl: 'http://localhost:8080',
+    //     sigavaultAddress: '',
     // }
+
+    let configNetwork = {
+        networkName: 'Kopernikus',
+        urlAndPort: 'https://kopernikus.camino.network:443',
+        magellandUrl: 'https://magellan.kopernikus.camino.network',
+        sigavaultAddress: ''
+    }
 
     cy.get('[data-cy="network-selector"]', { timeout: 12000 }).click()
     cy.get('[data-cy="add-custom-network"]', { timeout: 12000 }).click()
@@ -57,10 +57,10 @@ export async function accessWallet(cy: Cypress.cy & CyEventEmitter, type: string
         })
     }
     if (type === 'privateKey') {
-        cy.get('[data-cy="btn-wallet-access-private-key"]').click({ force: true })
+        cy.get('[data-cy="btn-wallet-access-private-key"]',{timeout: 10000}).click();
         cy.readFile('cypress/temp/wallets/private_key_wallet.json').then((privateKey) => {
             const privateKeyCChain = privateKey.privateKey
-            cy.get('[data-cy="field-private-key"]').type(privateKeyCChain)
+            cy.get('[data-cy="field-private-key"]',{timeout: 10000}).type(privateKeyCChain)
         })
         cy.get('[data-cy="btn-submit-private-key"]').click();
     }
