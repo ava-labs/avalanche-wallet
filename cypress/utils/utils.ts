@@ -10,13 +10,6 @@ export function acceptCookies() {
 
 export function addKopernikusNetwork(cy: Cypress.cy & CyEventEmitter) {
     acceptCookies();
-    // let configNetwork = {
-    //     networkName: 'Localhost',
-    //     urlAndPort: 'http://localhost:9650',
-    //     magellandUrl: 'http://localhost:8080',
-    //     sigavaultAddress: '',
-    // }
-
     let configNetwork = {
         networkName: 'Kopernikus',
         urlAndPort: 'https://kopernikus.camino.network:443',
