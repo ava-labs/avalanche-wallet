@@ -27,7 +27,7 @@
         ></PrivateKey>
         <PublicKey
             v-if="walletType !== 'ledger'"
-            :privateKey="privateKeyC"
+            :publicKey="publicKey"
             ref="modal_public_key"
         ></PublicKey>
         <div class="rows">
@@ -140,6 +140,7 @@ import { WalletNameType, WalletType } from '@/js/wallets/types'
 
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
+import { getPublicKey } from '@/kyc_api'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -158,6 +159,7 @@ interface IKeyBalanceDict {
 export default class KeyRow extends Vue {
     @Prop() wallet!: WalletType
     @Prop({ default: false }) is_default?: boolean
+    publicKey: string | null = ''
 
     $refs!: {
         export_wallet: ExportKeys
@@ -234,7 +236,6 @@ export default class KeyRow extends Vue {
     get walletType(): WalletNameType {
         return this.wallet.type
     }
-
     get isHDWallet() {
         return ['mnemonic', 'ledger'].includes(this.walletType)
     }
@@ -255,7 +256,9 @@ export default class KeyRow extends Vue {
         let wallet = this.wallet as SingletonWallet | MnemonicWallet
         return wallet.ethKey
     }
-
+    mounted() {
+        if (this.privateKeyC) this.publicKey = getPublicKey(this.privateKeyC)
+    }
     remove() {
         this.$emit('remove', this.wallet)
     }

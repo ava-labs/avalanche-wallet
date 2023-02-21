@@ -19,9 +19,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
 import CopyText from '@/components/misc/CopyText.vue'
 
-let elliptic = require('elliptic')
-let ec = new elliptic.ec('secp256k1')
-
 @Component({
     components: {
         Modal,
@@ -29,16 +26,11 @@ let ec = new elliptic.ec('secp256k1')
     },
 })
 export default class PublicKey extends Vue {
-    @Prop({ default: '' }) privateKey!: string
+    @Prop({ default: '' }) publicKey!: string
 
     open(): void {
         let modal = this.$refs.modal as Modal
         modal.open()
-    }
-    get publicKey(): string | null {
-        let keyPair = ec.keyFromPrivate(this.privateKey)
-        let pubKey = keyPair.getPublic()
-        return pubKey.encode('hex', false)
     }
 }
 </script>

@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div style="width: 100%">
         <v-btn
             v-if="multisigAliases.length > 0"
             @click="openModal"
-            class="button_secondary"
+            class="button_secondary sidebar_button"
             small
             depressed
         >
@@ -163,6 +163,20 @@ export default class AliasPicker extends Vue {
         padding: 4px 8px;
         border-radius: var(--border-radius-sm);
     }
+}
+
+.sidebar_button {
+    width: max-content;
+    border-radius: var(--border-radius-sm);
+    height: 40px;
+    text-align: center;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    justify-content: center;
+    min-height: 40px;
 }
 
 .label {
