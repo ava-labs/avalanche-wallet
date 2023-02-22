@@ -141,19 +141,19 @@ describe('Activity Transactions', () => {
         cy.visit('/')
     })
 
-    it.skip('access activity transactions', () => {
+    it('access activity transactions', () => {
         addKopernikusNetwork(cy)
         //changeNetwork(cy);
 
         accessWallet(cy, 'mnemonic')
-        cy.wait(10000);
-        cy.get('[data-cy="wallet_address"]',{ timeout: 12000 }).should('be.visible');
+        cy.wait(10000)
+        cy.get('[data-cy="wallet_address"]', { timeout: 12000 }).should('be.visible')
         cy.get('[data-cy="wallet_address"]', { timeout: 12000 })
             .invoke('text')
             .then((textAddress) => {
-                let addressValidate = textAddress.replace('\n','').replace(" ",'').split("X-");
-                let address = addressValidate[1].split("\n")[0];
-                dataBody.transactions[0].outputs[0].addresses[0] = address;
+                let addressValidate = textAddress.replace('\n', '').replace(' ', '').split('X-')
+                let address = addressValidate[1].split('\n')[0]
+                dataBody.transactions[0].outputs[0].addresses[0] = address
                 cy.intercept('POST', '**/v2/transactions', (req) => {
                     if (req.body.chainID[0] == '11111111111111111111111111111111LpoYY') {
                         req.reply({
@@ -187,29 +187,29 @@ describe('Activity Transactions', () => {
                     .then((textAddress) => {
                         addressFrom = textAddress.replace('from ', '')
                         cy.log(addressFrom)
-                    });
+                    })
 
-                cy.log('Table Ok');
+                cy.log('Table Ok')
                 cy.get('.time', { timeout: 7000 })
                     .invoke('text')
                     .then((text) => {
                         cy.log('Continue Process')
-
                         let splittedDate = text.split(' ')
-                        let dateMap = splittedDate.map((text) => text.trim())
-                        let strDateArr = dateMap.filter((text) => text)
-                        var textDate = strDateArr.slice(1, 7)
-                        let arrStrTextDate = textDate.toString().split(',')
-                        let aHourFormat = arrStrTextDate[4].split('.')
-                        let hourMorningOrAfternoon = `${aHourFormat[0]}${aHourFormat[1].replace(
-                            ' ',
-                            ''
-                        )}`
-                        let str4lformatDate = `${arrStrTextDate[1]}/${arrStrTextDate[0]}/${arrStrTextDate[2]} ${arrStrTextDate[3]} ${hourMorningOrAfternoon}`
+                        let dateMap = splittedDate.filter((text) => text != '' && text != '\n')
+
+                        //let dayStr = dateMap[0];
+                        let monthStr = dateMap[1]
+                        let dayNumberStr = dateMap[2]
+                        let yearStr = dateMap[3].replace('\n', '')
+                        let hourStr = dateMap[4]
+                        var rxHour = /\w/g
+                        let arrHour: any = rxHour.exec(dateMap[5])
+                        let timeInputComplete = `${dayNumberStr}/${monthStr}/${yearStr} ${hourStr} ${arrHour[0]}m`
                         let dateUTC = moment(
-                            str4lformatDate,
+                            timeInputComplete,
                             'DD/MMM/YYYY hh:mm:ss a'
                         ).toISOString()
+
                         cy.get(
                             '[data-cy="tx-detail-0"] > .infoTx > .utxos > :nth-child(1) > .tx_out > .amount'
                         )
@@ -238,8 +238,8 @@ describe('Activity Transactions', () => {
                                 } else {
                                     cy.log('failed')
                                 }
-                            });
-                    });
-            });
+                            })
+                    })
+            })
     })
 })
