@@ -103,7 +103,6 @@ export default class AccountUserItem extends Vue {
         width: 100% !important;
         p {
             width: 100% !important;
-            margin-left: 13px !important;
         }
     }
 }
