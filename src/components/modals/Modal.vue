@@ -44,7 +44,7 @@ export default class Modal extends Vue {
     public close() {
         this.$emit('beforeClose')
         this.isActive = false
-        document.body.style.overflow = 'auto'
+        document.body.style.overflow = 'initial'
     }
 }
 </script>
