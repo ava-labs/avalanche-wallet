@@ -189,8 +189,8 @@ describe('Activity Transactions', () => {
                         cy.log(addressFrom)
                     });
 
-                cy.log('Table Ok')
-                cy.get('.meta_col > div > .time', { timeout: 7000 })
+                cy.log('Table Ok');
+                cy.get('.time', { timeout: 7000 })
                     .invoke('text')
                     .then((text) => {
                         cy.log('Continue Process')
@@ -238,8 +238,8 @@ describe('Activity Transactions', () => {
                                 } else {
                                     cy.log('failed')
                                 }
-                            })
-                    })
+                            });
+                    });
             });
     })
 })
