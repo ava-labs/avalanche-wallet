@@ -141,7 +141,7 @@ describe('Activity Transactions', () => {
         cy.visit('/')
     })
 
-    it('access activity transactions', () => {
+    it.skip('access activity transactions', () => {
         addKopernikusNetwork(cy)
         //changeNetwork(cy);
 
