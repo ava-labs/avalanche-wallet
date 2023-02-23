@@ -1,19 +1,12 @@
 <template>
     <div class="tx_history_row">
         <div>
-            <p class="time">
-                {{ timeText }}
-                <a
-                    v-if="explorerUrl"
-                    :href="explorerUrl"
-                    target="_blank"
-                    tooltip="View in Explorer"
-                    class="explorer_link"
-                    rel="noopener noreferrer"
-                >
+            <div class="time">
+                <p>{{ timeText }}</p>
+                <v-btn icon v-if="explorerUrl" @click="navigate(explorerUrl)">
                     <fa icon="search"></fa>
-                </a>
-            </p>
+                </v-btn>
+            </div>
             <div v-if="memo" class="memo">
                 <p>Memo</p>
                 <p>{{ memo }}</p>
@@ -45,17 +38,20 @@ import getMemoFromByteString from '@/services/history/utils'
 })
 export default class TxHistoryRow extends Vue {
     @Prop() transaction!: ITransactionData
+    helpers = this.globalHelper()
+    navigate(to: string) {
+        this.helpers.navigate(to)
+    }
 
-    get explorerUrl(): string | null {
+    get explorerUrl(): string {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         let chains = this.$store.state.History.chains
-        if (network.explorerSiteUrl && chains.length > 0) {
+        if (network.explorerUrl && chains.length > 0) {
             let alias = chains?.find((elem: Chain) => elem.chainID === this.transaction.chainID)
                 .chainAlias
-            let url = `${network.explorerSiteUrl}/${alias}-chain/transactions/${this.transaction.id}`
+            let url = `/explorer/${alias}-chain/tx/${this.transaction.id}`
             return url
-        }
-        return null
+        } else return ''
     }
 
     get memo(): string | null {
@@ -126,12 +122,19 @@ export default class TxHistoryRow extends Vue {
 }
 
 .time {
-    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+        font-size: 15px;
+    }
 
-    a {
+    .v-btn {
         float: right;
         opacity: 0.4;
-        font-size: 12px;
+        font-size: 14px;
+        padding: 0px !important;
+        width: auto;
 
         &:hover {
             opacity: 0.8;
