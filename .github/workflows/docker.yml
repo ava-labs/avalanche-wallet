@@ -40,12 +40,6 @@ jobs:
               echo "build_env=dev" >> $GITHUB_OUTPUT   
           fi
 
-      - name: Cloud authentication
-        id: auth
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-
       - name: create docker image
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
@@ -53,6 +47,13 @@ jobs:
           else
             docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.ref_name }} --build-arg EXPLORER_BRANCH=${{ github.ref_name }}
           fi
+
+      - name: Cloud authentication
+        if: github.event_name == 'push'
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - name: push and deploy docker
         if: github.event_name == 'push'
