@@ -13,7 +13,7 @@ const CYPRESS_CONFIG_COLUMBUS = {
 }
 
 const CYPRESS_CONFIG_LOCAL = {
-    baseUrl: `http://localhost:3000/`,
+    baseUrl: `http://localhost:5001/`,
 }
 
 const mergeConfig = (config, override) => ({
