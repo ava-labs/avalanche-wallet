@@ -155,12 +155,6 @@ const store = new Vuex.Store({
         // TODO: Parts can be shared with the logout function below
         // Similar to logout but keeps the Remembered keys.
         async timeoutLogout(store) {
-            await store.dispatch('Notifications/add', {
-                title: 'Session Timeout',
-                message: 'You are logged out due to inactivity.',
-                type: 'warning',
-            })
-
             store.dispatch('logout')
         },
 
@@ -175,7 +169,7 @@ const store = new Vuex.Store({
             store.dispatch('Accounts/onLogout')
             store.dispatch('Assets/onLogout')
             store.dispatch('Launch/onLogout')
-            router.push('/login')
+            if (router.currentRoute.path !== '/login') router.push('/login')
         },
 
         // used with logout
