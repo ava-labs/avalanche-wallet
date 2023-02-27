@@ -3,7 +3,7 @@
         <div>
             <div class="time">
                 <p>{{ timeText }}</p>
-                <v-btn icon v-if="explorerUrl" @click="navigate(explorerUrl)">
+                <v-btn icon v-if="explorerUrl" @click="navigate()">
                     <fa icon="search"></fa>
                 </v-btn>
             </div>
@@ -38,9 +38,8 @@ import getMemoFromByteString from '@/services/history/utils'
 })
 export default class TxHistoryRow extends Vue {
     @Prop() transaction!: ITransactionData
-    helpers = this.globalHelper()
-    navigate(to: string) {
-        this.helpers.navigate(to)
+    navigate() {
+        window.open(this.explorerUrl, '_blank', 'noreferrer')
     }
 
     get explorerUrl(): string {
