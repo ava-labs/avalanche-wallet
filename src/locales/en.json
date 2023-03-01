@@ -792,6 +792,10 @@
         "mint_form": "Collectible minted and added to your wallet.",
         "copy_public_key": "Public Key added to clipboard",
         "register_node_success": "Your node registered successfully.",
-        "register_node_failed": "Registering Node Failed"
+        "register_node_failed": "Registering Node Failed",
+        "import_key_success": "Private key and assets added to the wallet.",
+        "keys_remove_success": "Private key and assets removed from the wallet.",
+        "transfer_success_msg": "You have succesfully sent your transaction.",
+        "transfer_error_msg": "Failed to send transaction."
     }
 }

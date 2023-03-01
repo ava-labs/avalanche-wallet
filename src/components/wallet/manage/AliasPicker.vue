@@ -19,18 +19,18 @@
                     <div class="row panel_nav">
                         <div class="address_info_container">
                             <h3 class="label">Personal</h3>
-                            <span class="label">{{ 'P-' + personalAddress.split('-')[1] }}</span>
+                            <span class="label">{{ 'P-' + personalAddress }}</span>
                         </div>
                         <v-radio
                             :disabled="!account"
-                            :value="personalAddress.split('-')[1]"
+                            :value="personalAddress"
                             class="default_radio_button"
                         >
                             <span slot="label" class="label">Default</span>
                         </v-radio>
                         <v-btn
-                            @click="chooseAlias(personalAddress.split('-')[1])"
-                            :disabled="selectedAlias === personalAddress.split('-')[1]"
+                            @click="chooseAlias(personalAddress)"
+                            :disabled="defaultAlias === personalAddress"
                             class="button_primary"
                             small
                             depressed
@@ -56,7 +56,7 @@
                         </v-radio>
                         <v-btn
                             @click="chooseAlias(multisigAlias)"
-                            :disabled="selectedAlias === multisigAlias"
+                            :disabled="defaultAlias === multisigAlias"
                             class="button_primary"
                             small
                             depressed
@@ -70,30 +70,30 @@
     </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import Modal from '@/components/modals/Modal.vue'
-import {
-    checkIfSavedLocally,
-    getAccountByIndex,
-    overwriteAccountAtIndex,
-} from '@/helpers/account_helper'
+import { overwriteAccountAtIndex } from '@/helpers/account_helper'
 import { iUserAccountEncrypted } from '@/store/types'
 
 @Component({
     components: { Modal },
 })
 export default class AliasPicker extends Vue {
-    selectedAlias: string = ''
-    defaultAlias: string = ''
+    @Prop() updateAlias: any
+    @Prop() selectedAlias?: string
+    defaultAlias?: string = ''
     $refs!: {
         modal: Modal
     }
 
-    mounted() {
-        this.defaultAlias = this.account?.defaultAddress || this.personalAddress.split('-')[1]
-        this.chooseAlias(this.defaultAlias)
+    created() {
+        this.defaultAlias = this.account?.defaultAddress || this.selectedAlias
+        if (!this.defaultAlias) {
+            this.updateAlias(this.personalAddress)
+            this.defaultAlias = this.personalAddress
+        } else if (this.defaultAlias && this.account?.defaultAddress && !this.selectedAlias)
+            this.chooseAlias(this.defaultAlias)
     }
-
     openModal() {
         this.$refs.modal.open()
     }
@@ -113,13 +113,14 @@ export default class AliasPicker extends Vue {
     }
 
     get accountIndex(): number {
-        return this.$store.getters['Accounts/accountIndex']
+        return this.$store.state.accounts.indexOf(this.account)
     }
 
     chooseAlias(alias: string) {
-        this.selectedAlias = alias
-        if (alias !== this.personalAddress.split('-')[1]) {
+        if (alias !== this.defaultAlias) {
             this.$store.state.activeWallet.selectedAlias = 'P-' + alias
+            this.updateAlias(alias)
+            this.defaultAlias = alias
         } else {
             this.$store.state.activeWallet.selectedAlias = undefined
         }
@@ -132,7 +133,7 @@ export default class AliasPicker extends Vue {
     }
 
     get personalAddress(): string {
-        return this.$store.state.activeWallet.getCurrentAddressAvm()
+        return this.$store.state.activeWallet.getCurrentAddressAvm().split('-')[1]
     }
 }
 </script>

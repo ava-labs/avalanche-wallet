@@ -32,6 +32,18 @@ function selectAccountMenuItem(type: string) {
 }
 
 export const mountAccountMenu = (el: string, props: any) => {
+    const { setAccount, dispatchNotification } = props
+    const MyPlugin = {
+        install(Vue) {
+            Vue.prototype.globalHelper = () => {
+                return {
+                    setAccount: (acc) => setAccount(acc),
+                    dispatchNotification: (params) => dispatchNotification(params),
+                }
+            }
+        },
+    }
+    Vue.use(MyPlugin)
     const app = new Vue({
         router,
         store,

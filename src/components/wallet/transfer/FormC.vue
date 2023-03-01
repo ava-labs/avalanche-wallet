@@ -442,7 +442,7 @@ export default class FormC extends Vue {
         this.txHash = txId
         let { dispatchNotification } = this.globalHelper()
         dispatchNotification({
-            message: this.$t('transfer.success_msg'),
+            message: this.$t('notifications.transfer_success_msg'),
             type: 'success',
         })
         // Refresh UTXOs
@@ -459,7 +459,7 @@ export default class FormC extends Vue {
         this.isLoading = false
         let { dispatchNotification } = this.globalHelper()
         dispatchNotification({
-            message: this.$t('transfer.error_msg'),
+            message: this.$t('notifications.transfer_error_msg'),
             type: 'error',
         })
         console.error(err)
