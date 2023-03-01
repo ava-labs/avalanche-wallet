@@ -1,7 +1,7 @@
 import { BN, bnToAvaxC } from '@c4tplatform/camino-wallet-sdk'
 
 describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, () => {
-    context('normal cases: ', () => {
+    context('normal cases: ', { tags: ['@columbus', '@kopernikus'] }, () => {
         beforeEach(() => {
             cy.loginWalletWith('privateKey')
 
@@ -154,8 +154,8 @@ describe('Send: C to C transfer by already owned balance', { tags: ['@send'] }, 
     })
 })
 
-describe('Send: C to C transfer by not balance', () => {
-    context('normal cases: ', () => {
+describe('Send: C to C transfer by not balance', { tags: ['@send'] }, () => {
+    context('normal cases: ', { tags: ['@columbus', '@kopernikus'] }, () => {
         beforeEach(() => {
             cy.loginWalletWith('privateKey', 'privateKeyZeroBalance')
 

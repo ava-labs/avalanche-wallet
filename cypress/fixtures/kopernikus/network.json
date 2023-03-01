@@ -1,0 +1,6 @@
+{
+  "networkName": "Kopernikus",
+  "rpcUrl": "https://kopernikus.camino.network:443",
+  "magellanUrl": "https://magellan.kopernikus.camino.network",
+  "explorerUrl": "https://dev.explorer.camino.nertwork/"
+}
