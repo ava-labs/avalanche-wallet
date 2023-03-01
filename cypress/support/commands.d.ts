@@ -3,8 +3,15 @@ import { Interception } from 'cypress/types/net-stubbing'
 
 declare global {
     type WalletAccessType = 'privateKey' | 'mnemonic'
+    type NetworkConfig = {
+        networkName: string
+        rpcUrl: string
+        magellanUrl?: string
+        explorerUrl?: string
+    }
     namespace Cypress {
         interface Chainable {
+            addCustomNetwork(networkConfig: NetworkConfig): Chainable<Element>
             changeNetwork(network?: string): Chainable<Element>
             accessWallet(type: WalletAccessType, keyName?: string): Chainable<Element>
             switchToWalletApp(): Chainable<Element>

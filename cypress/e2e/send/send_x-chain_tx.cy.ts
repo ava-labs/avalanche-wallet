@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { BN, bnToBigAvaxX } from '@c4tplatform/camino-wallet-sdk'
 
-describe('Send transaction with x-chain balance', () => {
+describe('Send transaction with x-chain balance', { tags: ['@send'] }, () => {
     beforeEach(() => {
         // access wallet with private key
         cy.loginWalletWith('privateKey', 'walletHasXBalance')

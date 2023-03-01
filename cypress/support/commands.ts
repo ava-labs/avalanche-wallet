@@ -13,7 +13,23 @@
 import { Interception } from 'cypress/types/net-stubbing'
 
 // -- This is a parent command --
-Cypress.Commands.add('changeNetwork', (network: string = 'Columbus') => {
+Cypress.Commands.add('addCustomNetwork', (networkConfig: NetworkConfig) => {
+    const { networkName, rpcUrl, magellanUrl, explorerUrl } = networkConfig
+    cy.get('[data-cy="network-selector"]').click()
+    cy.get('[data-cy="add-custom-network"]').click()
+    // Wait for re-rendering ??
+    cy.wait(2000)
+    cy.get('[data-cy="add-network-field-network-name"]', { timeout: 15000 }).type(networkName)
+    cy.get('[data-cy="add-network-field-url"]').type(rpcUrl)
+    cy.get('[data-cy="add-network-field-magellan-address"]').type(magellanUrl || '')
+    cy.get('[data-cy="add-network-field-explorerSiteUrl-address"]').type(explorerUrl || '')
+    cy.get('[data-cy="btn-add-network"]').click()
+    // Wait to connecting network
+    cy.wait(5000)
+    // Click backdrop to close menu
+    cy.get(`body > div[role="presentation"].MuiDialog-root`, {timeout: 12000}).click()
+})
+Cypress.Commands.add('changeNetwork', (network: string = 'Kopernikus') => {
     const interceptNetworkInfo = (intercept) => {
         switch (intercept.request.body.method) {
             case 'info.getNetworkID':
@@ -100,7 +116,7 @@ Cypress.Commands.add('accessWallet', (type, keyName) => {
             break
     }
 
-    cy.intercept('GET', '**/api/v1/verified/*').as('apiVerifiedAddress')
+    cy.intercept('GET', '**/api/v2/verified/*').as('apiVerifiedAddress')
     cy.wait('@apiVerifiedAddress').then((intercept) => {
         console.log('verified address: ', intercept.request.url)
         const pathRegex = /^https?:\/\/[A-Za-z0-9\-\.]+\/api\/v1\/verified\/(.*)$/
@@ -111,7 +127,7 @@ Cypress.Commands.add('accessWallet', (type, keyName) => {
     })
 })
 Cypress.Commands.add('switchToWalletApp', () => {
-    cy.get('@elAppMenu').click()
+    cy.get('@elAppMenu').click({ force: true }) // force to click regardless of overlay
     cy.get('.MuiPopover-paper > .MuiMenu-list').as('elAppOptions')
     // App option items
     cy.get('@elAppOptions').find('[data-value="Wallet"]').as('elAppOptionWallet')
@@ -121,8 +137,21 @@ Cypress.Commands.add('switchToWalletApp', () => {
 })
 Cypress.Commands.add(
     'loginWalletWith',
-    (walletAccessType: WalletAccessType, keyName?: string, network: string = 'Columbus') => {
+    (walletAccessType: WalletAccessType, keyName?: string, network: string = 'Kopernikus') => {
         cy.visit('/')
+
+        // Close cookie dialog
+        cy.get('[aria-labelledby="cc-nb-title"] button.cc-nb-okagree').click()
+
+        // Only add non-default networks
+        if (network === 'Kopernikus') {
+            cy.fixture(`${network.toLowerCase()}/network`)
+                .then((networkConfig: NetworkConfig) => {
+                    if (networkConfig) {
+                        cy.addCustomNetwork(networkConfig)
+                    }
+                })
+        }
 
         // header - app(left) menu aliases
         cy.get('header > .MuiToolbar-root > .MuiBox-root:nth-child(1)').as('elAppMenu')
