@@ -14,7 +14,7 @@ Vue.use(BootstrapVue)
 Vue.component('datetime', Datetime)
 
 export const mount = (el: string, appSuiteStore: any) => {
-    const { setUpdateStore, setLogOut, setAccount, dispatchNotification } = appSuiteStore
+    const { setUpdateStore, setLogOut, setAccount, dispatchNotification, navigate } = appSuiteStore
     const MyPlugin = {
         install(Vue) {
             Vue.prototype.globalHelper = () => {
@@ -23,6 +23,9 @@ export const mount = (el: string, appSuiteStore: any) => {
                     logout: () => setLogOut(true),
                     setAccount: (acc) => setAccount(acc),
                     dispatchNotification: (params) => dispatchNotification(params),
+                    navigate: (to: string) => {
+                        navigate(to)
+                    },
                 }
             }
         },

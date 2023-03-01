@@ -206,16 +206,6 @@ const network_module: Module<NetworkState, RootState> = {
                 true
             )
 
-            let avaxMain = new AvaNetwork(
-                'Avalanche',
-                'https://api.avax.network',
-                1,
-                'https://explorerapi.avax.network',
-                'https://explorer.avax.network',
-                '',
-                true
-            )
-
             // Load custom networks if any
             try {
                 await dispatch('load')
@@ -225,7 +215,6 @@ const network_module: Module<NetworkState, RootState> = {
 
             commit('addNetwork', camino)
             commit('addNetwork', columbus)
-            commit('addNetwork', avaxMain)
 
             try {
                 let isSet = await dispatch('loadSelectedNetwork')

@@ -100,11 +100,12 @@ export default class SaveAccountModal extends Vue {
             accountName: accountName,
             password: pass,
         }
+        let notificationMessage = this.$t('notifications.save_account')
         await this.$store.dispatch('Accounts/saveAccount', input)
         this.setAccount(this.$store.getters['Accounts/account'])
         let { dispatchNotification } = this.globalHelper()
         dispatchNotification({
-            message: this.$t('notifications.save_account'),
+            message: notificationMessage,
             type: 'success',
         })
         this.isLoading = false

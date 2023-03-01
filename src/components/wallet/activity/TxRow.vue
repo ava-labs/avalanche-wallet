@@ -2,16 +2,16 @@
     <div class="tx_row" :day_change="source.isDayChange">
         <div class="tx_cols" data-cy="">
             <div class="explorer_col">
-                <a
-                    v-if="explorerUrl"
-                    :href="explorerUrl"
-                    target="_blank"
-                    tooltip="View in Explorer"
-                    class="explorer_link"
-                    rel="noopener noreferrer"
+                <v-btn
+                    icon
+                    v-if="explorerUrl?.includes('https://')"
+                    @click="openInNewTab(explorerUrl)"
                 >
-                    <fa icon="search"></fa>
-                </a>
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
+                <v-btn icon v-else-if="explorerUrl" @click="navigate(explorerUrl)">
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
             </div>
             <div class="meta_col">
                 <div>
@@ -54,17 +54,23 @@ import getMemoFromByteString from '@/services/history/utils'
 export default class TxRow extends Vue {
     @Prop() index!: number
     @Prop() source!: ITransactionDataProcessed
+    helpers = this.globalHelper()
+    navigate(to: string) {
+        this.helpers.navigate(to)
+    }
+    openInNewTab(url: string) {
+        window.open(url, '_blank', 'noreferrer')
+    }
 
-    get explorerUrl(): string | null {
+    get explorerUrl(): string {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
-        if (network.explorerSiteUrl) {
-            let chains = this.$store.state.History.chains
-            let alias = chains.find((elem: Chain) => elem.chainID === this.source.chainID)
+        let chains = this.$store.state.History.chains
+        if (network.explorerUrl && chains.length > 0) {
+            let alias = chains?.find((elem: Chain) => elem.chainID === this.source.chainID)
                 .chainAlias
-            let url = `${network.explorerSiteUrl}/${alias}-chain/transactions/${this.source.id}`
+            let url = `/explorer/${alias}-chain/tx/${this.source.id}`
             return url
-        }
-        return null
+        } else return ''
     }
 
     get date() {
@@ -202,10 +208,14 @@ export default class TxRow extends Vue {
 
 .explorer_col {
     position: relative;
-    a {
+    .v-btn {
         color: var(--primary-color);
         opacity: 0.4;
         font-size: 12px;
+        padding: 0px !important;
+        & .v-icon {
+            font-size: 20px;
+        }
 
         &:hover {
             opacity: 1;
