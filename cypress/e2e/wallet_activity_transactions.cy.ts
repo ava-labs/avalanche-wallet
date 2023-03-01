@@ -8,14 +8,14 @@ const NETWORK_SWITCHER_BUTTON = '[data-cy="network-switcher"]'
 let dataBody = {
     transactions: [
         {
-            id: 'rKnyjNaApqGErenfMhcjPstr3khEgJEzaqQvi3mgvKvzDPk85',
+            id: 'EBNhsdSkjzjW5jDKbDrix83ab4F1aTW3attRuM4Afv1FSKXa5',
             chainID: '2mvrUCxfWijcFkj64Swh3eMdpefqs9MgFBddjBFbQ2Abtfugtn',
             type: 'base',
             inputs: [
                 {
                     output: {
-                        id: 'spsenDtEzfMjbH7mN2LHUrowm7fK2pMVNJHKzDEziyNNELYo2',
-                        transactionID: '25ZrczjZL3rd97hc2fMaamvq7SZPZqwypNqvCMv5LdtZvUY5zR',
+                        id: 'B5NHjtPuQ1xRbVDvQtdZLCnabN6muptkkqaC3FmomrbJzDXRN',
+                        transactionID: 'BKFLodQvoF7aL2oZHQdwqARJ9Pv6YjFK4zjWixxjiJhfndyNK',
                         outputIndex: 1,
                         assetID: '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9',
                         stake: false,
@@ -23,14 +23,14 @@ let dataBody = {
                         stakeableout: false,
                         genesisutxo: false,
                         outputType: 7,
-                        amount: '988989304987000000',
+                        amount: '988989811991894750',
                         locktime: 0,
                         stakeLocktime: 0,
                         threshold: 1,
                         addresses: ['kopernikus1g65uqn6t77p656w64023nh8nd9updzmxh8ttv3'],
                         caddresses: null,
-                        timestamp: '2023-02-20T15:23:37Z',
-                        redeemingTransactionID: 'rKnyjNaApqGErenfMhcjPstr3khEgJEzaqQvi3mgvKvzDPk85',
+                        timestamp: '2023-03-01T21:39:05Z',
+                        redeemingTransactionID: 'EBNhsdSkjzjW5jDKbDrix83ab4F1aTW3attRuM4Afv1FSKXa5',
                         chainID: '2mvrUCxfWijcFkj64Swh3eMdpefqs9MgFBddjBFbQ2Abtfugtn',
                         inChainID: '2mvrUCxfWijcFkj64Swh3eMdpefqs9MgFBddjBFbQ2Abtfugtn',
                         outChainID: '2mvrUCxfWijcFkj64Swh3eMdpefqs9MgFBddjBFbQ2Abtfugtn',
@@ -42,18 +42,18 @@ let dataBody = {
                     },
                     credentials: [
                         {
-                            address: 'kopernikus1jzw8lvqa3tj7gwgvsmevpm86qfkjhu48r4u950',
+                            address: 'kopernikus1g65uqn6t77p656w64023nh8nd9updzmxh8ttv3',
                             public_key: 'AtViX1NBqCTfY88owlAuDUvTSX+frSGcAslKhxX1G6fs',
                             signature:
-                                'gnY9tagPF0vln0Dhd+eqqWLMZT7rz6S3fsmizaGRb8FBu5NsAmUBPY+035QeqmjNzgfy0iMFyaa6aWDhdC97VAE=',
+                                's0MgM3Zc9PxY2ZMnLumHb4EaT6Xfmab9MNnRlL0ST29jPtzldom7I8VR5jnBDkkJHjLUpWlBqNyaXemGsdFeqAA=',
                         },
                     ],
                 },
             ],
             outputs: [
                 {
-                    id: '2QKpi6cgf4dJXTXSH2UKeyCxMDYqcQVT6FB1NSYiCFB76JXZYV',
-                    transactionID: 'rKnyjNaApqGErenfMhcjPstr3khEgJEzaqQvi3mgvKvzDPk85',
+                    id: 'kAY1gHrHayDmm6i6eEmhDVtGbLudpZUxs5DiSmkqxiN8L65kM',
+                    transactionID: 'EBNhsdSkjzjW5jDKbDrix83ab4F1aTW3attRuM4Afv1FSKXa5',
                     outputIndex: 0,
                     assetID: '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9',
                     stake: false,
@@ -65,9 +65,9 @@ let dataBody = {
                     locktime: 0,
                     stakeLocktime: 0,
                     threshold: 1,
-                    addresses: ['kopernikus1z572smffhgnuccrl7qknrg8flh26w3c94ev0wx'],
+                    addresses: ['kopernikus1ndnwhf6q6awh8fwv2q2czjg4ykwtnczgkdyak8'],
                     caddresses: null,
-                    timestamp: '2023-02-20T15:52:52Z',
+                    timestamp: '2023-03-01T21:41:31Z',
                     redeemingTransactionID: '',
                     chainID: '2mvrUCxfWijcFkj64Swh3eMdpefqs9MgFBddjBFbQ2Abtfugtn',
                     inChainID: '',
@@ -79,8 +79,8 @@ let dataBody = {
                     rewardUtxo: false,
                 },
                 {
-                    id: '2GXPVUUxNBgUmW4s4mxKwv6GaMwpRNu7xWcBSvwDzwTcNNuNuq',
-                    transactionID: 'rKnyjNaApqGErenfMhcjPstr3khEgJEzaqQvi3mgvKvzDPk85',
+                    id: '2ndn17w2fRodXufNiRLheSJqpV2zbWxhZ8etbQrxuoeicQ2y7E',
+                    transactionID: 'EBNhsdSkjzjW5jDKbDrix83ab4F1aTW3attRuM4Afv1FSKXa5',
                     outputIndex: 1,
                     assetID: '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9',
                     stake: false,
@@ -88,13 +88,13 @@ let dataBody = {
                     stakeableout: false,
                     genesisutxo: false,
                     outputType: 7,
-                    amount: '988989289986000000',
+                    amount: '988989796990894750',
                     locktime: 0,
                     stakeLocktime: 0,
                     threshold: 1,
                     addresses: ['kopernikus1g65uqn6t77p656w64023nh8nd9updzmxh8ttv3'],
                     caddresses: null,
-                    timestamp: '2023-02-20T15:52:52Z',
+                    timestamp: '2023-03-01T21:41:31Z',
                     redeemingTransactionID: '',
                     chainID: '2mvrUCxfWijcFkj64Swh3eMdpefqs9MgFBddjBFbQ2Abtfugtn',
                     inChainID: '',
@@ -106,21 +106,21 @@ let dataBody = {
                     rewardUtxo: false,
                 },
             ],
-            memo: 'VGVzdCBDWQ==',
+            memo: 'VGVzdA==',
             inputTotals: {
-                '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9': '988989304987000000',
+                '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9': '988989811991894750',
             },
             outputTotals: {
-                '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9': '988989304986000000',
+                '2Q4U5CR7YVtkm12CrTjg4kcfZvu2ckET34VrxbZeEz7183yXW9': '988989811990894750',
             },
             reusedAddressTotals: null,
-            timestamp: '2023-02-20T15:52:52Z',
+            timestamp: '2023-03-01T21:41:31Z',
             txFee: 1000000,
             genesis: false,
             rewarded: false,
             rewardedTime: null,
             epoch: 0,
-            vertexId: 'h319EJ9FNhM7D7i3sLu2ohsDQoNQuszyzv8kjezSmyZRuTjfK',
+            vertexId: '2CDhTMVBKfHQkGCd99dRAGaFG9S2GsfsXFGEW5tWQgNybbMzjo',
             validatorNodeID: '',
             validatorStart: 0,
             validatorEnd: 0,
@@ -128,7 +128,7 @@ let dataBody = {
         },
     ],
     startTime: '0001-01-01T00:00:00Z',
-    endTime: '2023-02-20T15:53:08Z',
+    endTime: '2023-03-01T21:41:43Z',
 }
 
 describe('Activity Transactions', () => {
@@ -154,6 +154,7 @@ describe('Activity Transactions', () => {
                 let addressValidate = textAddress.replace('\n', '').replace(' ', '').split('X-')
                 let address = addressValidate[1].split('\n')[0]
                 dataBody.transactions[0].outputs[0].addresses[0] = address
+
                 cy.intercept('POST', '**/v2/transactions', (req) => {
                     if (req.body.chainID[0] == '11111111111111111111111111111111LpoYY') {
                         req.reply({
@@ -165,6 +166,11 @@ describe('Activity Transactions', () => {
                             },
                         })
                     } else {
+                        let chainID = req.body.chainID[0]
+                        dataBody.transactions[0].chainID = chainID
+                        dataBody.transactions[0].inputs[0].output.chainID = chainID
+                        dataBody.transactions[0].outputs[0].chainID = chainID
+                        dataBody.transactions[0].outputs[1].chainID = chainID
                         req.reply({
                             statusCode: 200,
                             body: dataBody,
