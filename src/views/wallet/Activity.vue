@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="tx_table" ref="list">
+        <div class="tx_table" ref="list" data-cy="tx-table-activity">
             <div class="tx_list" v-show="showList">
                 <virtual-list
                     v-show="txs.length > 0"
@@ -68,6 +68,10 @@
                     :keeps="20"
                     ref="vlist"
                     :estimate-size="txsProcessed.length"
+                    :extra-props="{ 
+                        //@ts-ignore
+                        indexData: getIndexData(this)
+                    }"
                 ></virtual-list>
                 <div v-if="txs.length === 0" class="empty">
                     <p>{{ $t('activity.empty') }}</p>
@@ -181,6 +185,11 @@ export default class Activity extends Vue {
             return false
         }
         return true
+    }
+
+    getIndexData(virtualList: any) 
+    {
+        console.log("virtualIndex",virtualList.index)
     }
 
     mounted() {
