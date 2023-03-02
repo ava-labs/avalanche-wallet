@@ -305,11 +305,11 @@ export default class Transfer extends Vue {
         this.$store.dispatch('Assets/updateUTXOs').then(() => {
             this.updateSendAgainLock()
         })
-        this.$store.dispatch('History/updateTransactionHistory')
     }
 
     updateSendAgainLock() {
         if (!this.wallet.isFetchUtxos) {
+            this.$store.dispatch('History/updateTransactionHistory')
             this.canSendAgain = true
         } else {
             setTimeout(() => {
