@@ -2,7 +2,7 @@
     <div class="mnemonic_display" :style="{ gridTemplateColumns: `repeat(${rowSize}, 1fr)` }">
         <div v-for="i in wordNum" :key="i" class="word">
             <p class="index">{{ i }}.</p>
-            <p class="phrase_word">{{ phraseArray[i - 1] }}</p>
+            <p class="phrase_word" :data-cy="getDataCY(i)">{{ phraseArray[i - 1] }}</p>
         </div>
     </div>
 </template>
@@ -25,6 +25,10 @@ export default class MnemonicDisplay extends Vue {
         } else {
             return this.phrase.getValue().split(' ')
         }
+    }
+
+    getDataCY(pos: number) {
+        return `mnemonic-keyphrase-${pos}`
     }
 }
 </script>
