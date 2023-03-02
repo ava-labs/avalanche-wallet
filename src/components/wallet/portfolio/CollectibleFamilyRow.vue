@@ -121,7 +121,7 @@ export default class CollectibleFamilyRow extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../styles/main';
-@use "tokens";
+@use 'tokens';
 
 .mint_card {
     font-size: 13px;
