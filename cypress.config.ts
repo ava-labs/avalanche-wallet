@@ -12,10 +12,12 @@ export default defineConfig({
         },
         baseUrl: 'http://localhost:5001/',
         requestTimeout: 15000,
-        //chromeWebSecurity: false,
+        // chromeWebSecurity: false,
     },
     env: {
         grepTags: '',
         grepFilterSpecs: true,
+        grepOmitFiltered: true,
+        grepUntagged: true
     },
 })
