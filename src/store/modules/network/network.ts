@@ -60,8 +60,10 @@ const network_module: Module<NetworkState, RootState> = {
         },
         async removeCustomNetwork({ state, dispatch }, net: AvaNetwork) {
             let index = state.networksCustom.indexOf(net)
-            state.networksCustom.splice(index, 1)
-            await dispatch('save')
+            if (index !== -1) {
+                state.networksCustom.splice(index, 1)
+                await dispatch('save')
+            }
         },
         saveSelectedNetwork({ state }) {
             let data = JSON.stringify(state.selectedNetwork?.url)
