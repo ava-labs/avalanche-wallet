@@ -1,7 +1,15 @@
 <template>
     <div class="earn_page">
         <div class="header">
-            <h1 :class="depositAndBond ? '' : 'wrong_network'">{{ $t('earn.subtitle1') }}</h1>
+            <h1
+                v-if="nodeInfo == undefined || nodeInfo == null"
+                :class="depositAndBond ? '' : 'wrong_network'"
+            >
+                {{ $t('earn.subtitle1') }}
+            </h1>
+            <h1 v-else :class="depositAndBond ? '' : 'wrong_network'">
+                Your validator node is running
+            </h1>
         </div>
         <transition name="fade" mode="out-in">
             <div>
@@ -19,9 +27,20 @@
                         @registered="onNodeRegistered"
                     ></register-node>
                 </p>
-                <template v-else>
-                    <add-validator :nodeId="nodeId"></add-validator>
+                <template
+                    v-else-if="(nodeInfo == undefined || nodeInfo == null) && !validatorIsSuspended"
+                >
+                    <add-validator
+                        :nodeId="nodeId"
+                        @validatorReady="verifyValidatorIsReady"
+                    ></add-validator>
                 </template>
+                <div v-else-if="validatorIsSuspended">
+                    <validator-suspended :nodeId="nodeId"></validator-suspended>
+                </div>
+                <div v-else>
+                    <validator-info :nodeId="nodeId" :nodeInfo="nodeInfo"></validator-info>
+                </div>
             </div>
         </transition>
     </div>
@@ -39,13 +58,18 @@ import RegisterNode from '@/components/wallet/earn/Validate/RegisterNode.vue'
 import {
     ADDRESSSTATECONSORTIUM,
     ADDRESSSTATEKYCVERIFIED,
+    ADDRESSSTATEDEFERRED,
 } from '@c4tplatform/caminojs/dist/apis/platformvm/addressstatetx'
+import ValidatorInfo from '@/components/wallet/earn/Validate/ValidatorInfo.vue'
+import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspended.vue'
 
 @Component({
     name: 'validator',
     components: {
         RegisterNode,
         AddValidator,
+        ValidatorInfo,
+        ValidatorSuspended,
     },
 })
 export default class Validator extends Vue {
@@ -54,6 +78,12 @@ export default class Validator extends Vue {
     isNodeRegistered = false
     intervalID: any = null
     nodeId = ''
+    nodeInfo = null
+    validatorIsSuspended: boolean = false
+
+    verifyValidatorIsReady(val: any) {
+        this.nodeInfo = val
+    }
 
     updateValidators() {
         this.$store.dispatch('Platform/update')
@@ -76,6 +106,7 @@ export default class Validator extends Vue {
         const result = await WalletHelper.getAddressState(this.addresses[0])
         this.isKycVerified = !result.and(BN_ONE.shln(ADDRESSSTATEKYCVERIFIED)).isZero()
         this.isConsortiumMember = !result.and(BN_ONE.shln(ADDRESSSTATECONSORTIUM)).isZero()
+        this.validatorIsSuspended = !result.and(BN_ONE.shln(ADDRESSSTATEDEFERRED)).isZero()
         try {
             this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
