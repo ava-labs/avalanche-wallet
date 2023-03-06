@@ -43,9 +43,9 @@ jobs:
       - name: create docker image
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.base_ref }} --build-arg EXPLORER_BRANCH=${{ github.base_ref }}
+            docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.base_ref }} --build-arg EXPLORER_BRANCH=${{ github.base_ref }}
           else
-            docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.ref_name }} --build-arg EXPLORER_BRANCH=${{ github.ref_name }}
+            docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.ref_name }} --build-arg EXPLORER_BRANCH=${{ github.ref_name }}
           fi
 
       - name: Cloud authentication
