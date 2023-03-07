@@ -12,9 +12,6 @@
         <div class="empty" v-else-if="isEmpty && !isUpdating">
             <p>{{ $t('transactions.notx') }}</p>
         </div>
-        <!--        <div v-else-if="isUpdating">-->
-        <!--            <p class="empty">{{ $t('transactions.loading') }}</p>-->
-        <!--        </div>-->
         <div class="list no_scroll_bar" v-else>
             <tx-history-row
                 v-for="tx in transactions"
@@ -22,7 +19,6 @@
                 :transaction="tx"
                 class="tx_row"
             ></tx-history-row>
-            <p class="warn">{{ $t('transactions.warn_loading') }}</p>
         </div>
     </div>
 </template>
