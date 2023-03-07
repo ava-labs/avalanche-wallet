@@ -6,14 +6,13 @@
             <div class="validator_info">
                 <div class="alt_validator_info">
                     <div>
-                        <!--Stacking Start Date-->
-                        <Tooltip style="display: inline-block" text="Stacking Start Date">
+                        <Tooltip style="display: inline-block" text="Staking Start Date">
                             <v-icon class="icon-mdi-camino">mdi-calendar-blank</v-icon>
                             <label>{{ startTime }}</label>
                         </Tooltip>
                     </div>
                     <div>
-                        <Tooltip style="display: inline-block" text="Stacking End Date">
+                        <Tooltip style="display: inline-block" text="Staking End Date">
                             <v-icon class="icon-mdi-camino">mdi-calendar-remove-outline</v-icon>
                             <label>{{ endTime }}</label>
                         </Tooltip>

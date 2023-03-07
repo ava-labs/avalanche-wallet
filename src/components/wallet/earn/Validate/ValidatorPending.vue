@@ -23,8 +23,6 @@ import Spinner from '@/components/misc/Spinner.vue'
 })
 export default class ValidatorPending extends Vue {
     link = '#'
-
-    mounted() {}
 }
 </script>
 <style scoped lang="scss">
