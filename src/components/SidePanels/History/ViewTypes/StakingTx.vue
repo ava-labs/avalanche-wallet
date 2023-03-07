@@ -235,8 +235,7 @@ export default class StakingTx extends Vue {
         if (nodeId) {
             for (var i = 0; i < this.validators.length; i++) {
                 let v = this.validators[i]
-                let nodeIdRaw = v.nodeID.split('-')[1]
-                if (nodeIdRaw === nodeId) {
+                if (v.nodeID === nodeId) {
                     return v
                 }
             }
