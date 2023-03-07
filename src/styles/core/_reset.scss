@@ -9,7 +9,7 @@ button {
 textarea,
 input {
     @include highlight-border;
-
+    border-radius: 0;
     &[disabled] {
         border-color: transparent !important;
     }

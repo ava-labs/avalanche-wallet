@@ -16,6 +16,7 @@ export interface RootState {
     address: String | null
     volatileWallets: WalletType[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
+    theme: 'night' | 'day'
     prices: priceDict // USD value of 1 native token
 }
 
