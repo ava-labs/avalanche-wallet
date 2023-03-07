@@ -75,7 +75,7 @@ export async function listStakingForAddresses(addrs: string[]) {
     const network = isMainnetNetworkID(netID) ? 'mainnet' : 'fuji'
 
     // Cannot use glacier for other networks
-    if (!isTestnetNetworkID(netID)) return []
+    if (!isMainnetNetworkID(netID) && !isTestnetNetworkID(netID)) return []
 
     const addressLimit = 64
     const addrParts = splitToParts<string>(addrs, addressLimit)
