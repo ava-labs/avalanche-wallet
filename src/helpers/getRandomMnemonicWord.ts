@@ -5,6 +5,6 @@ import { generateMnemonic } from 'bip39'
  */
 export function getRandomMnemonicWord() {
     const words = generateMnemonic(256).split(' ')
-    const rand = Math.round(Math.random() * words.length)
+    const rand = Math.floor(Math.random() * words.length)
     return words[rand]
 }

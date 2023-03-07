@@ -1,6 +1,6 @@
 import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import { avm, cChain, pChain } from '@/AVA'
+import { avm, pChain } from '@/AVA'
 import { BN } from 'avalanche'
 
 export async function getStakeForAddresses(addrs: string[]): Promise<BN> {

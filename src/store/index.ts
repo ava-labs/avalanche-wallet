@@ -8,6 +8,7 @@ import History from './modules/history/history'
 import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
 import Accounts from './modules/accounts/accounts'
+import Earn from './modules/earn/earn'
 
 import {
     RootState,
@@ -49,6 +50,7 @@ export default new Vuex.Store({
         Platform,
         Ledger,
         Accounts,
+        Earn,
     },
     state: {
         isAuth: false,
@@ -158,6 +160,7 @@ export default new Vuex.Store({
         async logout(store) {
             localStorage.removeItem('w')
             // Go to the base URL with GET request not router
+            // This clears all state and resets the app
             window.location.href = '/'
         },
 

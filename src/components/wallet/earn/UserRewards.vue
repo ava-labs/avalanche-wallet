@@ -5,12 +5,22 @@
                 <label>{{ $t('earn.rewards.total') }}</label>
                 <p class="amt">{{ totalRewardBig.toLocaleString(9) }} AVAX</p>
             </div>
-            <div v-if="validators.length > 0">
+            <div v-if="validatorTxs.length > 0">
                 <h3>{{ $t('earn.rewards.validation') }}</h3>
                 <UserRewardRow
-                    v-for="(v, i) in validators"
-                    :key="i"
-                    :staker="v"
+                    v-for="v in validatorTxs"
+                    :key="v.txHash"
+                    :tx="v"
+                    class="reward_row"
+                ></UserRewardRow>
+            </div>
+
+            <div v-if="delegatorTxs.length > 0">
+                <h3>{{ $t('earn.rewards.delegation') }}</h3>
+                <UserRewardRow
+                    v-for="v in delegatorTxs"
+                    :key="v.txHash"
+                    :tx="v"
                     class="reward_row"
                 ></UserRewardRow>
             </div>
@@ -18,18 +28,17 @@
         <template v-else>
             <p style="text-align: center">{{ $t('earn.rewards.empty') }}</p>
         </template>
-        <p class="no_delegator">Delegation rewards are not shown.</p>
     </div>
 </template>
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AvaWalletCore } from '../../../js/wallets/types'
-import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 import { BN } from 'avalanche'
+import { EarnState } from '@/store/modules/earn/types'
 
 @Component({
     components: {
@@ -37,6 +46,8 @@ import { BN } from 'avalanche'
     },
 })
 export default class UserRewards extends Vue {
+    updateInterval: ReturnType<typeof setInterval> | undefined = undefined
+
     get userAddresses() {
         let wallet: AvaWalletCore = this.$store.state.activeWallet
         if (!wallet) return []
@@ -44,43 +55,45 @@ export default class UserRewards extends Vue {
         return wallet.getAllAddressesP()
     }
 
-    get validators(): ValidatorRaw[] {
-        let validators: ValidatorRaw[] = this.$store.state.Platform.validators
+    created() {
+        this.$store.dispatch('Earn/refreshRewards')
 
-        return this.cleanList(validators) as ValidatorRaw[]
+        // Update every 5 minutes
+        this.updateInterval = setInterval(() => {
+            this.$store.dispatch('Earn/refreshRewards')
+        }, 5 * 60 * 1000)
+    }
+
+    destroyed() {
+        // Clear interval if exists
+        this.updateInterval && clearInterval(this.updateInterval)
+    }
+
+    get stakingTxs() {
+        return this.$store.state.Earn.stakingTxs as EarnState['stakingTxs']
+    }
+
+    get validatorTxs() {
+        return this.stakingTxs.filter((tx) => tx.txType === 'AddValidatorTx')
+    }
+
+    get delegatorTxs() {
+        return this.stakingTxs.filter((tx) => tx.txType === 'AddDelegatorTx')
     }
 
     get totLength() {
-        return this.validators.length
+        return this.validatorTxs.length + this.delegatorTxs.length
     }
 
     get totalReward() {
-        let vals = this.validators.reduce((acc, val: ValidatorRaw) => {
-            return acc.add(new BN(val.potentialReward))
+        let tot = this.stakingTxs.reduce((acc, val) => {
+            return acc.add(new BN(val.estimatedReward ?? 0))
         }, new BN(0))
-
-        return vals
+        return tot
     }
 
     get totalRewardBig(): Big {
         return bnToBig(this.totalReward, 9)
-    }
-
-    cleanList(list: ValidatorRaw[]) {
-        let res = list.filter((val) => {
-            let rewardAddrs = val.rewardOwner.addresses
-            let filtered = rewardAddrs.filter((addr) => {
-                return this.userAddresses.includes(addr)
-            })
-            return filtered.length > 0
-        })
-
-        res.sort((a, b) => {
-            let startA = parseInt(a.startTime)
-            let startB = parseInt(b.startTime)
-            return startA - startB
-        })
-        return res
     }
 }
 </script>
@@ -89,23 +102,12 @@ export default class UserRewards extends Vue {
     padding-bottom: 5vh;
 }
 
-.no_delegator {
-    text-align: center;
-    color: var(--error);
-    border: 1px solid var(--error);
-    width: max-content;
-    margin: 1em auto !important;
-    padding: 0.3em;
-    border-radius: 10px;
-    font-size: 0.8em;
-}
 .reward_row {
     margin-bottom: 12px;
 }
 
 h3 {
-    margin: 12px 0;
-    margin-top: 32px;
+    margin-top: 0.3em;
     font-size: 2em;
     color: var(--primary-color-light);
     font-weight: lighter;
