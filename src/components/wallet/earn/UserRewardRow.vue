@@ -15,7 +15,7 @@
         <div class="data_row stake_info">
             <div>
                 <label>NodeID</label>
-                <p class="reward node_id">{{ staker.nodeID }}</p>
+                <p class="reward node_id">{{ tx.nodeId }}</p>
             </div>
             <div>
                 <label>{{ $t('earn.rewards.row.stake') }}</label>
@@ -31,16 +31,17 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ValidatorRaw } from '../../misc/ValidatorList/types'
 import { BN } from 'avalanche'
 import Big from 'big.js'
+import { ListStakingTx } from '@/js/Glacier/models'
+import { bnToBigAvaxP } from '@avalabs/avalanche-wallet-sdk'
 
 @Component
 export default class UserRewardRow extends Vue {
     now: number = Date.now()
     intervalID: any = null
 
-    @Prop() staker!: ValidatorRaw
+    @Prop() tx!: ListStakingTx
 
     updateNow() {
         this.now = Date.now()
@@ -55,11 +56,11 @@ export default class UserRewardRow extends Vue {
         clearInterval(this.intervalID)
     }
     get startTime() {
-        return parseInt(this.staker.startTime) * 1000
+        return this.tx.startTimestamp * 1000
     }
 
     get endtime() {
-        return parseInt(this.staker.endTime) * 1000
+        return this.tx.endTimestamp * 1000
     }
 
     get startDate() {
@@ -71,11 +72,11 @@ export default class UserRewardRow extends Vue {
     }
 
     get rewardAmt(): BN {
-        return new BN(this.staker.potentialReward)
+        return new BN(this.tx.estimatedReward)
     }
 
     get stakingAmt(): BN {
-        return new BN(this.staker.stakeAmount)
+        return new BN(this.tx.amountStaked[0].amount)
     }
 
     get rewardBig(): Big {
@@ -83,7 +84,7 @@ export default class UserRewardRow extends Vue {
     }
 
     get stakeBig(): Big {
-        return Big(this.stakingAmt.toString()).div(Math.pow(10, 9))
+        return bnToBigAvaxP(this.stakingAmt)
     }
 
     get percFull(): number {
