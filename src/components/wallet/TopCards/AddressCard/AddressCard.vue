@@ -94,7 +94,7 @@ export default class AddressCard extends Vue {
         this.updateQR()
     }
 
-    @Watch('$root.theme', { immediate: true })
+    @Watch('themeSelected', { immediate: true })
     onthemechange(val: string) {
         if (val === 'night') {
             this.colorDark = '#E5E5E5'
@@ -116,7 +116,9 @@ export default class AddressCard extends Vue {
                 return this.$t('top.address.title_c') as string
         }
     }
-
+    get themeSelected(): string {
+        return this.$store.state.theme
+    }
     get addressMsg(): string {
         switch (this.chainNow) {
             default:
