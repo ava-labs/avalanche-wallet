@@ -138,6 +138,10 @@ const assets_module: Module<AssetsState, RootState> = {
             await dispatch('addUnknownAssets')
         },
 
+        /**
+         * Updates X-Chain NFT utxos in 2 categories, nftUTXOs
+         * and nftMintUTXOs
+         */
         updateUtxoArrays({ state, rootState, getters }) {
             const utxoSet = getters.walletAvmUtxoSet
             if (utxoSet === null) return {}
@@ -361,7 +365,7 @@ const assets_module: Module<AssetsState, RootState> = {
             })
         },
 
-        // What is the AVA coin in the network
+        // What is the AVAX coin in the network
         async updateAvaAsset({ state, commit }) {
             const res = await avm.getAssetDescription('AVAX')
             const id = bintools.cb58Encode(res.assetID)
@@ -370,6 +374,10 @@ const assets_module: Module<AssetsState, RootState> = {
             commit('addAsset', asset)
         },
 
+        /**
+         * Update the X-Chain asset dictionary, split balances into categories.
+         * (locked, available, multisig)
+         */
         updateBalanceDict({ state, rootState, getters }): IWalletBalanceDict {
             const utxoSet = getters.walletAvmUtxoSet
             if (utxoSet === null) return {}
@@ -444,7 +452,9 @@ const assets_module: Module<AssetsState, RootState> = {
             return dict
         },
 
-        // Adds an unknown asset id to the assets dictionary
+        /**
+         * Adds an unknown asset id to the assets dictionary
+         */
         async addUnknownAsset({ state, commit }, assetId: string) {
             // get info about the asset
             const desc = await ava.XChain().getAssetDescription(assetId)
@@ -553,6 +563,9 @@ const assets_module: Module<AssetsState, RootState> = {
             return res
         },
 
+        /**
+         * Get the X-Chain (AVM) UTXO Set currently loaded in the wallet
+         */
         walletAvmUtxoSet(state, getters, rootState): AVMUTXOSet | null {
             const wallet = rootState.activeWallet
             if (!wallet) return null

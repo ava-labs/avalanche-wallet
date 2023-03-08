@@ -1,4 +1,4 @@
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { pChain } from '@/AVA'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
@@ -22,6 +22,7 @@ import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERC721Token from '@/js/ERC721Token'
 import { issueP, issueX } from '@/helpers/issueTx'
+import { sortUTxoSetP } from '@/helpers/sortUTXOs'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -112,6 +113,9 @@ class WalletHelper {
             utxoSet.addArray(utxos)
         }
 
+        // Sort utxos high to low
+        const sortedSet = sortUTxoSetP(utxoSet, false)
+
         const pAddressStrings = wallet.getAllAddressesP()
 
         const stakeAmount = amt
@@ -131,7 +135,7 @@ class WalletHelper {
         const endTime = new BN(Math.round(end.getTime() / 1000))
 
         const unsignedTx = await pChain.buildAddValidatorTx(
-            utxoSet,
+            sortedSet,
             [stakeReturnAddr],
             pAddressStrings, // from
             [changeAddress], // change
@@ -167,6 +171,9 @@ class WalletHelper {
             utxoSet.addArray(utxos)
         }
 
+        // Sort utxos high to low
+        const sortedSet = sortUTxoSetP(utxoSet, false)
+
         // If reward address isn't given use index 0 address
         if (!rewardAddress) {
             rewardAddress = wallet.getPlatformRewardAddress()
@@ -182,7 +189,7 @@ class WalletHelper {
         const endTime = new BN(Math.round(end.getTime() / 1000))
 
         const unsignedTx = await pChain.buildAddDelegatorTx(
-            utxoSet,
+            sortedSet,
             [stakeReturnAddr],
             pAddressStrings,
             [changeAddress],

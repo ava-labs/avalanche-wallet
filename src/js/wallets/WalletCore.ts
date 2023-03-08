@@ -12,7 +12,6 @@ import {
     TxHelper,
     GasHelper,
     chainIdFromAlias,
-    xChain,
 } from '@avalabs/avalanche-wallet-sdk'
 import { ava, avm, bintools, cChain, pChain } from '@/AVA'
 import { UTXOSet as EVMUTXOSet } from 'avalanche/dist/apis/evm/utxos'
@@ -22,8 +21,9 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
-import { AvmImportChainType, WalletType } from '@/js/wallets/types'
+import { AvmImportChainType } from '@/js/wallets/types'
 import { issueC, issueP, issueX } from '@/helpers/issueTx'
+import { sortUTXOsByAmount, sortUTxoSetP } from '@/helpers/sortUTXOs'
 const uniqid = require('uniqid')
 
 abstract class WalletCore {
@@ -161,6 +161,8 @@ abstract class WalletCore {
 
     async exportFromPChain(amt: BN, destinationChain: ExportChainsP, importFee?: BN) {
         const utxoSet = this.getPlatformUTXOSet()
+        // Sort by amount
+        const sortedSet = sortUTxoSetP(utxoSet, false)
 
         const pChangeAddr = this.getCurrentAddressPlatform()
         const fromAddrs = this.getAllAddressesP()
@@ -183,7 +185,7 @@ abstract class WalletCore {
             destinationChain === 'C' ? this.getEvmAddressBech() : this.getCurrentAddressAvm()
 
         const exportTx = await TxHelper.buildPlatformExportTransaction(
-            utxoSet,
+            sortedSet,
             fromAddrs,
             destinationAddr,
             amtFee,
