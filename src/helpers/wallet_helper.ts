@@ -22,6 +22,9 @@ import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
 import { UnsignedTx, UTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
+
+import { GetValidatorsResponse } from '@/store/modules/platform/types'
+
 import axios from 'axios'
 
 class WalletHelper {
@@ -347,6 +350,15 @@ class WalletHelper {
         })
         // Return 10% more
         return Math.round(estGas * 1.1)
+    }
+
+    static async findNodeIDInCurrentValidators(nodeID: string): Promise<any> {
+        let subnets = await ava.PChain().getSubnets()
+        let res = (await ava
+            .PChain()
+            .getCurrentValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
+        let validator = res.validators[0]
+        return validator
     }
 }
 

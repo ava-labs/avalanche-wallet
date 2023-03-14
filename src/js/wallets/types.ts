@@ -137,3 +137,24 @@ export interface IAvaHdWallet extends AvaWalletCore, UnsafeWallet {
     getCurrentKey(): AVMKeyPair
     getKeyChain(): AVMKeyChain
 }
+
+export type RewardOwner = {
+    locktime: string
+    threshold: string
+    addresses: string[]
+}
+
+export type NodeInfo = {
+    txID: string
+    startTime: string
+    endTime: string
+    stakeAmount: string
+    nodeID: string
+    rewardOwner: RewardOwner
+    validationRewardOwner: RewardOwner
+    delegationRewardOwner: RewardOwner
+    potentialReward: string
+    delegationFee: string
+    uptime: string
+    connected: boolean
+}
