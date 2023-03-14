@@ -400,7 +400,7 @@ export default class AddValidator extends Vue {
     async onValidatorIsConfirmed() {
         this.validatorIsLoading = true
         let dataValidator = await this.verifyIfexistNodeInCurrentValidator()
-        if (dataValidator == undefined || dataValidator == null) {
+        if (dataValidator === undefined || dataValidator === null) {
             setTimeout(() => {
                 this.onValidatorIsConfirmed()
             }, 5000)
