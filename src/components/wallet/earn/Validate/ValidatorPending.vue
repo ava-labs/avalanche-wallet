@@ -3,7 +3,7 @@
         <Spinner class="pending-validator" style="color: var(--primary-color)"></Spinner>
         <br />
         <p class="text-pending-validator">
-            Your validator is being set up. Please wait. For more information click the link.
+            {{ $t('validator.pending.validator_pending') }}
             <a :href="link" target="_blank">
                 <v-icon class="v-icon-color">mdi-arrow-top-right-thick</v-icon>
             </a>

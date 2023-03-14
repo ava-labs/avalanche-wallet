@@ -353,11 +353,10 @@ class WalletHelper {
     }
 
     static async findNodeIDInCurrentValidators(nodeID: string): Promise<any> {
+        let subnets = await ava.PChain().getSubnets()
         let res = (await ava
             .PChain()
-            .getCurrentValidators('11111111111111111111111111111111LpoYY', [
-                nodeID,
-            ])) as GetValidatorsResponse
+            .getCurrentValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
         let validator = res.validators[0]
         return validator
     }

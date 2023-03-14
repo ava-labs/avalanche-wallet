@@ -1,14 +1,17 @@
 <template>
     <div class="earn_page">
         <div class="header">
+            <h1 :class="depositAndBond ? '' : 'wrong_network'" v-if="validatorIsSuspended">
+                {{ $t('validator.suspended.title') }}
+            </h1>
             <h1
-                v-if="nodeInfo == undefined || nodeInfo == null"
+                v-else-if="(nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended"
                 :class="depositAndBond ? '' : 'wrong_network'"
             >
                 {{ $t('earn.subtitle1') }}
             </h1>
             <h1 v-else :class="depositAndBond ? '' : 'wrong_network'">
-                Your validator node is running
+                {{ $t('validator.info.validator_running') }}
             </h1>
         </div>
         <transition name="fade" mode="out-in">
@@ -28,7 +31,9 @@
                     ></register-node>
                 </p>
                 <template
-                    v-else-if="(nodeInfo == undefined || nodeInfo == null) && !validatorIsSuspended"
+                    v-else-if="
+                        (nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended
+                    "
                 >
                     <add-validator
                         :nodeId="nodeId"
@@ -62,6 +67,7 @@ import {
 } from '@c4tplatform/caminojs/dist/apis/platformvm/addressstatetx'
 import ValidatorInfo from '@/components/wallet/earn/Validate/ValidatorInfo.vue'
 import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspended.vue'
+import { NodeInfo } from '@/js/wallets/types'
 
 @Component({
     name: 'validator',
@@ -78,10 +84,10 @@ export default class Validator extends Vue {
     isNodeRegistered = false
     intervalID: any = null
     nodeId = ''
-    nodeInfo = null
+    nodeInfo: NodeInfo | null = null
     validatorIsSuspended: boolean = false
 
-    verifyValidatorIsReady(val: any) {
+    verifyValidatorIsReady(val: NodeInfo) {
         this.nodeInfo = val
     }
 

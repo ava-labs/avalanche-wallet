@@ -1,30 +1,40 @@
 <template>
     <div class="validator_card">
-        <Spinner v-if="loading" style="color: var(--primary-color)"></Spinner>
+        <Spinner v-if="loading" class="spinner-color"></Spinner>
 
         <div v-if="!loading" class="validator_child_card">
             <div class="validator_info">
                 <div class="alt_validator_info">
+                    <div class="space-div"></div>
                     <div>
-                        <Tooltip style="display: inline-block" text="Staking Start Date">
+                        <Tooltip
+                            style="display: inline-block"
+                            :text="$t('validator.info.staking_start_date')"
+                        >
                             <v-icon class="icon-mdi-camino">mdi-calendar-blank</v-icon>
                             <label>{{ startTime }}</label>
                         </Tooltip>
                     </div>
                     <div>
-                        <Tooltip style="display: inline-block" text="Staking End Date">
+                        <Tooltip
+                            style="display: inline-block"
+                            :text="$t('validator.info.staking_end_date')"
+                        >
                             <v-icon class="icon-mdi-camino">mdi-calendar-remove-outline</v-icon>
                             <label>{{ endTime }}</label>
                         </Tooltip>
                     </div>
                     <div>
-                        <Tooltip style="display: inline-block" text="Up Time">
+                        <Tooltip style="display: inline-block" :text="$t('validator.info.up_time')">
                             <v-icon class="icon-mdi-camino">mdi-arrow-up-bold</v-icon>
                             <label>{{ upTime }} %</label>
                         </Tooltip>
                     </div>
                     <div>
-                        <Tooltip style="display: inline-block" text="Remaining Validation Period">
+                        <Tooltip
+                            style="display: inline-block"
+                            :text="$t('validator.info.remaining_validation_period')"
+                        >
                             <v-icon class="icon-mdi-camino">mdi-clock-time-five-outline</v-icon>
                             <label>{{ reaminingValidation }}</label>
                         </Tooltip>
@@ -39,7 +49,7 @@
                 </span>
             </div>
             <div>
-                <h4 class="input_label">Deposit Amount</h4>
+                <h4 class="input_label">{{ $t('validator.info.deposit_amount') }}</h4>
                 <AvaxInput
                     v-model="depositAmount"
                     :max="maxAmt"
@@ -49,7 +59,7 @@
                 ></AvaxInput>
             </div>
             <div>
-                <h4 class="input_label">Tx ID</h4>
+                <h4 class="input_label">{{ $t('validator.info.tx_id') }}</h4>
                 <span class="disabled_input" role="textbox">
                     {{ txID }}
                 </span>
@@ -66,6 +76,7 @@ import { ava } from '@/AVA'
 import { BN } from '@c4tplatform/caminojs'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Tooltip from '@/components/misc/Tooltip.vue'
+import { NodeInfo } from '@/js/wallets/types'
 
 @Component({
     name: 'validator_info',
@@ -77,14 +88,14 @@ import Tooltip from '@/components/misc/Tooltip.vue'
 })
 export default class ValidatorInfo extends Vue {
     @Prop() nodeId!: string
-    @Prop() nodeInfo!: any
+    @Prop() nodeInfo!: NodeInfo
 
-    startTime: any
-    endTime: any
-    upTime: any
-    reaminingValidation: any
-    depositAmount: any
-    txID: any
+    startTime: string = ''
+    endTime: string = ''
+    upTime: number = 0
+    reaminingValidation: string = ''
+    depositAmount: number = 0
+    txID: string = ''
 
     loading: boolean = true
 
@@ -133,9 +144,10 @@ export default class ValidatorInfo extends Vue {
             this.reaminingValidation = strRemainingValidation
             this.depositAmount = parseFloat(this.nodeInfo.stakeAmount) / 1000000000
             this.txID = this.nodeInfo.txID
-            this.loading = false
         } catch (e) {
-            console.error('EROR', e)
+            console.error(e)
+        } finally {
+            this.loading = false
         }
     }
 }
@@ -155,30 +167,34 @@ export default class ValidatorInfo extends Vue {
 h4 {
     font-weight: normal;
 }
+
 .validator_info > div {
     display: grid;
     grid-template-columns: repeat(5, max-content);
     column-gap: 0px;
     margin-top: 12px;
+
     > div {
         position: relative;
         padding: 0 24px;
         border-right: 2px solid var(--bg-light);
+
         &:first-of-type {
             padding-left: 0;
         }
+
         &:last-of-type {
             border: none;
         }
     }
 
     label {
-        font-size: 20px;
+        font-size: 18px;
         color: var(--primary-color);
     }
 
     .icon-mdi-camino {
-        font-size: 30px;
+        font-size: 24px;
         color: var(--primary-color);
     }
 }
@@ -203,5 +219,66 @@ h4 {
 
 .amt_in {
     width: 70%;
+}
+
+.space-div {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    .validator_info > div {
+        grid-template-columns: repeat(1, minmax(auto, auto));
+        border-right: transparent;
+    }
+
+    .space-div {
+        display: block;
+    }
+
+    .disabled_input {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .validator_info > div {
+        grid-template-columns: repeat(1, minmax(auto, auto));
+        border-right: transparent;
+    }
+
+    .space-div {
+        display: block;
+    }
+
+    .disabled_input {
+        width: 100%;
+    }
+
+    .amt_in {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 720px) and (max-width: 1440px) {
+    .validator_info > div {
+        grid-template-columns: repeat(2, minmax(auto, auto));
+        border-right: transparent;
+    }
+
+    .space-div {
+        display: none;
+    }
+
+    .disabled_input {
+        width: 100%;
+    }
+
+    .amt_in {
+        width: 100%;
+    }
+}
+
+.spinner-color {
+    color: var(--primary-color);
 }
 </style>
