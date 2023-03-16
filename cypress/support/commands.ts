@@ -22,12 +22,12 @@ Cypress.Commands.add('addCustomNetwork', (networkConfig: NetworkConfig) => {
     cy.get('[data-cy="add-network-field-network-name"]', { timeout: 15000 }).type(networkName)
     cy.get('[data-cy="add-network-field-url"]').type(rpcUrl)
     cy.get('[data-cy="add-network-field-magellan-address"]').type(magellanUrl || '')
-    cy.get('[data-cy="add-network-field-explorerSiteUrl-address"]').type(explorerUrl || '')
+    // cy.get('[data-cy="add-network-field-explorerSiteUrl-address"]').type(explorerUrl || '')
     cy.get('[data-cy="btn-add-network"]').click()
     // Wait to connecting network
     cy.wait(5000)
     // Click backdrop to close menu
-    cy.get(`body > div[role="presentation"].MuiPopover-root`, {timeout: 12000}).click()
+    cy.get(`body > div[role="presentation"].MuiPopover-root`, { timeout: 12000 }).click()
 })
 Cypress.Commands.add('changeNetwork', (network: string = 'Kopernikus') => {
     const interceptNetworkInfo = (intercept) => {
@@ -128,13 +128,16 @@ Cypress.Commands.add('accessWallet', (type, keyName) => {
     // })
 })
 Cypress.Commands.add('switchToWalletApp', () => {
-    cy.get('@elAppMenu').find('input').click({ force: true }) // force to click regardless of overlay
-    cy.get('.MuiPopover-paper > .MuiMenu-list').as('elAppOptions')
+    // cy.get('@elAppMenu').find('input').click({ force: true }) // force to click regardless of overlay
+    // cy.get('.MuiPopover-paper > .MuiMenu-list').as('elAppOptions')
     // App option items
-    cy.get('@elAppOptions').find('[data-value="Wallet"]').as('elAppOptionWallet')
-    cy.get('@elAppOptions').find('[data-value="Explorer"]').as('elAppOptionExplorer')
+    // cy.get('@elAppOptions').find('[data-value="Wallet"]').as('elAppOptionWallet')
+    // cy.get('@elAppOptions').find('[data-value="Explorer"]').as('elAppOptionExplorer')
 
-    cy.get('@elAppOptionWallet').click()
+    // cy.get('@elAppOptionWallet').click()
+
+    cy.get('[data-cy="app-selector-menu"]').click()
+    cy.get('[data-cy="app-selector-Wallet"]').click()
 })
 Cypress.Commands.add(
     'loginWalletWith',
@@ -217,6 +220,53 @@ Cypress.Commands.add(
             if (!success) {
                 cy.waitUntil(alias, untilFunc)
             }
+        })
+    }
+)
+
+Cypress.Commands.add(
+    'getMockResponseData',
+    (
+        payloadMethod: string,
+        requestUrl: string = '**/ext/bc/C/rpc',
+        mockPath?: string,
+        aliasName?: string
+    ) => {
+        if (!mockPath) {
+            const transferUnderLinePayloadMethod = payloadMethod
+                .replace(/\B([A-Z])/g, '_$1')
+                .toLowerCase()
+            mockPath = `mocks/${transferUnderLinePayloadMethod}.json`
+        }
+        if (!aliasName) {
+            aliasName = payloadMethod
+        }
+        cy.fixture(mockPath).then((mockData) => {
+            cy.intercept({ method: 'GET', url: requestUrl }, (request) => {
+                if (
+                    request.body.hasOwnProperty('method') &&
+                    request.body.method.includes(payloadMethod)
+                ) {
+                    request.reply({
+                        statusCode: 200,
+                        body: mockData,
+                    })
+                    request.alias = `get_${aliasName}`
+                }
+            })
+
+            cy.intercept({ method: 'POST', url: requestUrl }, (request) => {
+                if (
+                    request.body.hasOwnProperty('method') &&
+                    request.body.method.includes(payloadMethod)
+                ) {
+                    request.reply({
+                        statusCode: 200,
+                        body: mockData,
+                    })
+                    request.alias = `post_${aliasName}`
+                }
+            })
         })
     }
 )
