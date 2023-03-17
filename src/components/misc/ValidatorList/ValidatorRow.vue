@@ -1,5 +1,5 @@
 <template>
-    <tr class="validator_row">
+    <tr :class="[!isSelected ? 'validator_row unselected' : 'validator_row selected']">
         <td class="id">{{ validator.nodeID }}</td>
         <td class="amount">{{ amtText }}</td>
         <td class="amount">{{ remainingAmtText }}</td>
@@ -8,7 +8,9 @@
         <!--        <td>{{ uptimeText }}</td>-->
         <td>{{ feeText }}%</td>
         <td>
-            <button class="button_secondary" @click="select">Select</button>
+            <button class="button_secondary" @click="select">
+                {{ !isSelected ? '  Select  ' : 'Unselected' }}
+            </button>
         </td>
     </tr>
 </template>
@@ -26,6 +28,7 @@ import { ValidatorListItem } from '@/store/modules/platform/types'
 @Component
 export default class ValidatorsList extends Vue {
     @Prop() validator!: ValidatorListItem
+    isSelected: boolean = false
 
     get remainingMs(): number {
         let end = this.validator.endTime
@@ -113,6 +116,7 @@ export default class ValidatorsList extends Vue {
 
     select() {
         this.$emit('select', this.validator)
+        this.isSelected = !this.isSelected
     }
 }
 </script>
@@ -133,11 +137,19 @@ button {
 .id {
     word-break: break-all;
 }
+
 td {
     padding: 4px 14px;
-    background-color: var(--bg-light);
     border: 1px solid var(--bg);
     font-size: 13px;
+}
+
+.selected {
+    background-color: var(--success);
+}
+
+.unselected {
+    background-color: var(--bg-light);
 }
 
 @include main.medium-device {

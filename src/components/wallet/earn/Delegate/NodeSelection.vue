@@ -24,6 +24,15 @@
             @select="onselect"
             ref="val_list"
         ></ValidatorsList>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+            <div style="display: flex; align-items: center"></div>
+            <div class="rigt_but">
+                <button @click="onfinish">
+                    {{ $t('earn.delegate.list.finish') }}
+                    <fa icon="arrow-right"></fa>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -40,6 +49,7 @@ import { ValidatorListItem } from '@/store/modules/platform/types'
 })
 export default class NodeSelection extends Vue {
     search: string = ''
+    selectedValidators: ValidatorListItem[] = []
 
     openFilters() {
         //@ts-ignore
@@ -47,7 +57,18 @@ export default class NodeSelection extends Vue {
     }
 
     onselect(val: ValidatorListItem) {
+        if (this.selectedValidators.indexOf(val) >= 0) {
+            this.selectedValidators = this.selectedValidators.filter(function (item) {
+                return item !== val
+            })
+        } else {
+            this.selectedValidators.push(val)
+        }
         this.$emit('select', val)
+    }
+
+    onfinish() {
+        this.$emit('finish', this.selectedValidators)
     }
 }
 </script>

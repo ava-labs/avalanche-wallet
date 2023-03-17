@@ -1,13 +1,24 @@
 <template>
     <div class="add_delegator">
-        <NodeSelection v-if="!selected" @select="onselect" class="node_selection"></NodeSelection>
+        <NodeSelection v-if="!hasSelectedNode" @finish="onfinish"></NodeSelection>
         <div class="cols" v-else>
             <div class="node_col">
-                <button @click="selected = null" class="close_but button_secondary">
-                    <fa icon="sync"></fa>
-                    Change Node
-                </button>
-                <NodeCard :node="selected"></NodeCard>
+                <div class="card_headers">
+                    <button @click="selected = []" class="close_but button_secondary">
+                        <fa icon="sync"></fa>
+                        Change Node
+                    </button>
+                    <div class="card_navigator">
+                        <button @click="selectPreviousNode" style="margin-right: 3px">
+                            <fa icon="arrow-left"></fa>
+                        </button>
+                        {{ index + 1 }}/{{ selected.length }}
+                        <button @click="selectNextNode" style="margin-left: 3px">
+                            <fa icon="arrow-right"></fa>
+                        </button>
+                    </div>
+                </div>
+                <NodeCard :node="selectedNode"></NodeCard>
             </div>
             <transition-group name="fade" mode="out-in">
                 <div class="ins_col" key="form" v-show="!isConfirm">
@@ -186,9 +197,26 @@
                         <label>{{ $t('earn.delegate.success.reason') }}</label>
                         <p>{{ txReason }}</p>
                     </div>
-                    <v-btn @click="cancel" block class="button_secondary" depressed v-if="txStatus">
-                        Back to Earn
-                    </v-btn>
+                    <div v-if="txStatus">
+                        <v-btn
+                            v-if="!hasNextSelectedNode"
+                            @click="cancel"
+                            block
+                            class="button_secondary"
+                            depressed
+                        >
+                            Back to Earn
+                        </v-btn>
+                        <v-btn
+                            v-if="hasNextSelectedNode"
+                            @click="resetAndSelectNextNode"
+                            block
+                            class="button_secondary"
+                            depressed
+                        >
+                            Delegate Next
+                        </v-btn>
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,6 +252,7 @@ import { WalletType } from '@/js/wallets/types'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 import NodeCard from '@/components/wallet/earn/Delegate/NodeCard.vue'
+import { HdWalletCore } from '@/js/wallets/HdWalletCore'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -247,12 +276,12 @@ const DAY_MS = HOUR_MS * 24
 })
 export default class AddDelegator extends Vue {
     search: string = ''
-    selected: ValidatorListItem | null = null
+    selected: ValidatorListItem[] = []
     stakeAmt: BN = new BN(0)
     startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
     rewardIn: string = ''
-    rewardDestination = 'local' // local || custom
+    rewardDestination: 'local' | 'custom' = 'local' // local || custom
     err: string = ''
     isLoading = false
     isConfirm = false
@@ -268,6 +297,7 @@ export default class AddDelegator extends Vue {
     formRewardAddr = ''
 
     currency_type = 'AVAX'
+    index = 0
 
     mounted() {
         this.rewardSelect('local')
@@ -276,9 +306,12 @@ export default class AddDelegator extends Vue {
         this.endDate = val
     }
 
-    onselect(val: ValidatorListItem) {
+    onfinish(vals: ValidatorListItem[]) {
+        if (!vals) return
+        if (vals.length <= 0) return
         this.search = ''
-        this.selected = val
+        this.index = 0
+        this.selected = vals
     }
 
     async submit() {
@@ -304,6 +337,12 @@ export default class AddDelegator extends Vue {
                 this.formRewardAddr,
                 this.formUtxos
             )
+            // increases security and privacy by guaranteeing that
+            // P-CHAIN address will be regenerated according to BIP32
+            if (wallet instanceof HdWalletCore) {
+                await wallet.platformHelper.findHdIndex()
+                wallet.updateAvmUTXOSet()
+            }
             this.isSuccess = true
             this.txId = txId
             this.updateTxStatus(txId)
@@ -321,7 +360,7 @@ export default class AddDelegator extends Vue {
         })
 
         // Update History
-        setTimeout(() => {
+        setTimeout(async () => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
         }, 3000)
@@ -372,6 +411,54 @@ export default class AddDelegator extends Vue {
         })
     }
 
+    get selectedNode(): ValidatorListItem {
+        return this.selected[this.index]
+    }
+
+    get hasSelectedNode(): boolean {
+        return this.selected.length > 0
+    }
+
+    get hasNextSelectedNode(): boolean {
+        return this.selected.length > this.index + 1
+    }
+
+    get hasPreviousSelectedNode(): boolean {
+        return this.index >= 0 && this.hasSelectedNode
+    }
+
+    reset() {
+        this.isLoading = false
+        this.isConfirm = false
+        this.isSuccess = false
+        this.txId = ''
+        this.txStatus = ''
+        this.txReason = null
+
+        this.formNodeID = ''
+        this.formUtxos = []
+        this.formAmt = new BN(0)
+        this.formEnd = new Date()
+        this.rewardSelect(this.rewardDestination)
+    }
+
+    selectNextNode() {
+        if (!this.hasNextSelectedNode) return
+        this.index++
+    }
+
+    resetAndSelectNextNode() {
+        if (!this.hasSelectedNode) return
+        if (!this.hasNextSelectedNode) return
+        this.reset()
+        this.selectNextNode()
+    }
+
+    selectPreviousNode() {
+        if (!this.hasPreviousSelectedNode) return
+        this.index--
+    }
+
     get estimatedReward(): Big {
         let start = new Date(this.startDate)
         let end = new Date(this.endDate)
@@ -409,7 +496,7 @@ export default class AddDelegator extends Vue {
     formCheck(): boolean {
         this.err = ''
 
-        if (!this.selected) {
+        if (!this.hasSelectedNode) {
             this.err = this.$t('earn.delegate.errs.no_node') as string
             // this.err = "You must specify a validator."
             return false
@@ -436,7 +523,7 @@ export default class AddDelegator extends Vue {
             return false
         }
 
-        let validatorEndtime = this.selected.endTime.getTime()
+        let validatorEndtime = this.selectedNode.endTime.getTime()
 
         if (endTime > validatorEndtime) {
             this.err = this.$t('earn.delegate.errs.val_end') as string
@@ -469,7 +556,7 @@ export default class AddDelegator extends Vue {
     }
 
     updateFormData() {
-        this.formNodeID = this.selected!.nodeID
+        this.formNodeID = this.selectedNode.nodeID
         this.formAmt = this.stakeAmt
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
@@ -494,9 +581,9 @@ export default class AddDelegator extends Vue {
 
     // Maximum end date is end of validator's staking duration
     get endMaxDate(): string | undefined {
-        if (!this.selected) return undefined
+        if (!this.hasSelectedNode) return undefined
 
-        return this.selected.endTime.toISOString()
+        return this.selectedNode.endTime.toISOString()
     }
 
     get stakingDuration(): number {
@@ -519,8 +606,8 @@ export default class AddDelegator extends Vue {
     }
 
     get delegationFee(): number {
-        if (!this.selected) return 0
-        return this.selected.fee
+        if (!this.hasSelectedNode) return 0
+        return this.selectedNode.fee
     }
 
     get totalFee(): BN {
@@ -559,12 +646,12 @@ export default class AddDelegator extends Vue {
     }
 
     get remainingAmt(): BN {
-        if (!this.selected) return new BN(0)
+        if (!this.hasSelectedNode) return new BN(0)
         // let totDel: BN = this.$store.getters["Platform/validatorTotalDelegated"](this.selected.nodeID);
-        let nodeMaxStake: BN = this.$store.getters['Platform/validatorMaxStake'](this.selected)
+        let nodeMaxStake: BN = this.$store.getters['Platform/validatorMaxStake'](this.selectedNode)
 
-        let totDel = this.selected.delegatedStake
-        let valAmt = this.selected.validatorStake
+        let totDel = this.selectedNode.delegatedStake
+        let valAmt = this.selectedNode.validatorStake
         return nodeMaxStake.sub(totDel).sub(valAmt)
     }
 
@@ -626,10 +713,6 @@ export default class AddDelegator extends Vue {
 .add_delegator {
     height: 100%;
     padding-bottom: 5vh;
-}
-
-.node_selection {
-    height: 100%;
 }
 
 .cols {
@@ -727,6 +810,20 @@ label {
 /*    padding: 8px 14px;*/
 /*    width: 100%;*/
 /*}*/
+
+.card_headers {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card_navigator {
+    background-color: var(--secondary-color);
+    color: var(--bg);
+    padding: 2px 14px;
+    font-size: 13px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+}
 
 .reward_in {
     width: 100%;
@@ -868,12 +965,28 @@ label {
     }
 
     .close_but {
-        width: 100%;
+        width: 40%;
         padding: 12px;
     }
 
     .node_col {
         margin-bottom: 24px;
+    }
+
+    .card_navigator {
+        background-color: var(--secondary-color);
+        color: var(--bg);
+        padding: 12px;
+        font-size: 100%;
+        border-radius: 6px;
+        margin-bottom: 14px;
+        justify-content: space-between;
+        text-align: center;
+        width: 40%;
+        button {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
     }
 }
 </style>
