@@ -17,9 +17,6 @@
         <transition name="fade" mode="out-in">
             <div>
                 <p v-if="!depositAndBond" class="wrong_network">{{ $t('earn.warning_3') }}</p>
-                <p v-else-if="!canValidate" class="no_balance">
-                    {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
-                </p>
                 <p v-else-if="!isNodeRegistered" class="no_balance">
                     <register-node
                         :isKycVerified="isKycVerified"
@@ -28,6 +25,8 @@
                         :hasEnoughUnlockedPlatformBalance="hasEnoughUnlockedPlatformBalance"
                         :isNodeRegistered="isNodeRegistered"
                         @registered="onNodeRegistered"
+                        :loadingRefreshRegisterNode="loadingRefreshRegisterNode"
+                        @refresh="refresh()"
                     ></register-node>
                 </p>
                 <template
@@ -86,6 +85,7 @@ export default class Validator extends Vue {
     nodeId = ''
     nodeInfo: NodeInfo | null = null
     validatorIsSuspended: boolean = false
+    loadingRefreshRegisterNode: boolean = false
 
     verifyValidatorIsReady(val: NodeInfo) {
         this.nodeInfo = val
@@ -113,6 +113,7 @@ export default class Validator extends Vue {
         this.isKycVerified = !result.and(BN_ONE.shln(ADDRESSSTATEKYCVERIFIED)).isZero()
         this.isConsortiumMember = !result.and(BN_ONE.shln(ADDRESSSTATECONSORTIUM)).isZero()
         this.validatorIsSuspended = !result.and(BN_ONE.shln(ADDRESSSTATEDEFERRED)).isZero()
+
         try {
             this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
@@ -126,6 +127,7 @@ export default class Validator extends Vue {
             this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
         } catch (e) {
+            console.log('ERROR:', e)
             this.isNodeRegistered = false
         }
     }
@@ -189,6 +191,13 @@ export default class Validator extends Vue {
     get minDelegationAmt(): Big {
         let bn = this.$store.state.Platform.minStakeDelegation
         return bnToBig(bn, 9)
+    }
+
+    async refresh() {
+        console.log('refreshing')
+        this.loadingRefreshRegisterNode = true
+        await this.evaluateCanRegisterNode()
+        this.loadingRefreshRegisterNode = false
     }
 }
 </script>
