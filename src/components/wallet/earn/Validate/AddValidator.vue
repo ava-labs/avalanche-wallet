@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="!validatorIsLoading">
         <div class="cols">
             <form @submit.prevent="">
                 <transition-group name="fade" mode="out-in">
@@ -92,6 +92,7 @@
                         <h2>{{ $t('earn.validate.success.title') }}</h2>
                         <p>{{ $t('earn.validate.success.desc') }}</p>
                         <p class="tx_id">Tx ID: {{ txId }}</p>
+
                         <div class="tx_status">
                             <div>
                                 <label>{{ $t('earn.validate.success.status') }}</label>
@@ -111,6 +112,7 @@
                                 </p>
                             </div>
                         </div>
+
                         <div class="reason_cont" v-if="txReason">
                             <label>{{ $t('earn.validate.success.reason') }}</label>
                             <p>{{ txReason }}</p>
@@ -119,6 +121,10 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    <div v-else>
+        <validator-pending></validator-pending>
     </div>
 </template>
 <script lang="ts">
@@ -143,6 +149,7 @@ import { AmountOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { WalletType } from '@/js/wallets/types'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { bnToBig } from '@/helpers/helper'
+import ValidatorPending from './ValidatorPending.vue'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
@@ -162,6 +169,7 @@ const MAX_STAKE_DURATION = DAY_MS * 365
         DateForm,
         Expandable,
         UtxoSelectForm,
+        ValidatorPending,
     },
 })
 export default class AddValidator extends Vue {
@@ -191,9 +199,21 @@ export default class AddValidator extends Vue {
     isSuccess = false
 
     currency_type = 'NATIVE'
+    validatorIsLoading = false
 
     mounted() {
         this.rewardSelect('local')
+        this.validateReadyValidator()
+    }
+
+    async validateReadyValidator() {
+        let dataValidator = await this.verifyIfexistNodeInCurrentValidator()
+        this.$emit('validatorReady', dataValidator)
+    }
+
+    async verifyIfexistNodeInCurrentValidator() {
+        let validator = await WalletHelper.findNodeIDInCurrentValidators(this.nodeId)
+        return validator
     }
 
     setEnd(val: string) {
@@ -377,11 +397,25 @@ export default class AddValidator extends Vue {
         this.updateTxStatus(txId)
     }
 
-    onsuccess() {
+    async onValidatorIsConfirmed() {
+        this.validatorIsLoading = true
+        let dataValidator = await this.verifyIfexistNodeInCurrentValidator()
+        if (dataValidator === undefined || dataValidator === null) {
+            setTimeout(() => {
+                this.onValidatorIsConfirmed()
+            }, 5000)
+        } else {
+            this.onsuccess(dataValidator)
+        }
+    }
+
+    onsuccess(dataValidator: any) {
         // Update History
         setTimeout(() => {
             this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
+            this.validatorIsLoading = false
+            this.$emit('validatorReady', dataValidator)
         }, 3000)
     }
 
@@ -405,7 +439,7 @@ export default class AddValidator extends Vue {
             this.txReason = reason
 
             if (status === 'Committed') {
-                this.onsuccess()
+                this.onValidatorIsConfirmed()
             }
         }
     }
@@ -438,6 +472,17 @@ export default class AddValidator extends Vue {
 
     get nativeAssetSymbol(): string {
         return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
+    }
+
+    async validateNodeIDActivation(): Promise<boolean> {
+        let isReady = false
+        let validator = await WalletHelper.findNodeIDInCurrentValidators(this.nodeId)
+        if (validator != null && validator != undefined) {
+            isReady = false
+        } else {
+            isReady = true
+        }
+        return isReady
     }
 }
 </script>

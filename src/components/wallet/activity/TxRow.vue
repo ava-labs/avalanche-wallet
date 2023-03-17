@@ -66,8 +66,9 @@ export default class TxRow extends Vue {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         let chains = this.$store.state.History.chains
         if (network.explorerUrl && chains.length > 0) {
-            let alias = chains?.find((elem: Chain) => elem.chainID === this.source.chainID)
-                .chainAlias
+            let alias = chains?.find(
+                (elem: Chain) => elem.chainID === this.source.chainID
+            ).chainAlias
             let url = `/explorer/${alias}-chain/tx/${this.source.id}`
             return url
         } else return ''
@@ -124,9 +125,8 @@ export default class TxRow extends Vue {
         return this.mom.format('Y')
     }
 
-    get getDataCYTxDetail() 
-    {
-        return `tx-detail-${this.index}`;
+    get getDataCYTxDetail() {
+        return `tx-detail-${this.index}`
     }
 }
 </script>

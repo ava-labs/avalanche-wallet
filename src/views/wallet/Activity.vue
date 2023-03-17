@@ -68,9 +68,9 @@
                     :keeps="20"
                     ref="vlist"
                     :estimate-size="txsProcessed.length"
-                    :extra-props="{ 
+                    :extra-props="{
                         //@ts-ignore
-                        indexData: getIndexData(this)
+                        indexData: getIndexData(this),
                     }"
                 ></virtual-list>
                 <div v-if="txs.length === 0" class="empty">
@@ -187,9 +187,8 @@ export default class Activity extends Vue {
         return true
     }
 
-    getIndexData(virtualList: any) 
-    {
-        console.log("virtualIndex",virtualList.index)
+    getIndexData(virtualList: any) {
+        console.log('virtualIndex', virtualList.index)
     }
 
     mounted() {

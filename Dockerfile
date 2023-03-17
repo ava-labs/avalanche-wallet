@@ -1,4 +1,4 @@
-ARG BUILD_ENV="stage"
+ARG BUILD_ENV="build:dev"
 
 FROM node:16 as build-stage-wallet
 ARG BUILD_ENV
@@ -6,7 +6,7 @@ WORKDIR /app/camino-wallet
 
 COPY ./ /app/camino-wallet/
 RUN yarn install
-RUN yarn build:$BUILD_ENV
+RUN yarn $BUILD_ENV
 
 FROM node:16 as build-stage-explorer
 ARG BUILD_ENV
@@ -15,7 +15,7 @@ ARG EXPLORER_BRANCH=suite
 RUN git clone -b $EXPLORER_BRANCH https://github.com/chain4travel/camino-block-explorer.git
 WORKDIR /app/camino-block-explorer
 RUN yarn install
-RUN yarn build:$BUILD_ENV
+RUN yarn $BUILD_ENV
 
 
 FROM node:16 as build-stage-suite
@@ -25,7 +25,7 @@ ARG SUITE_BRANCH=suite
 RUN git clone -b $SUITE_BRANCH https://github.com/chain4travel/camino-suite.git
 WORKDIR /app/camino-suite
 RUN yarn install
-RUN yarn build:$BUILD_ENV
+RUN yarn $BUILD_ENV
 
 
 FROM nginx:1.18

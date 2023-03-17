@@ -797,5 +797,25 @@
         "keys_remove_success": "Private key and assets removed from the wallet.",
         "transfer_success_msg": "You have succesfully sent your transaction.",
         "transfer_error_msg": "Failed to send transaction."
+    },
+    "validator": {
+        "pending": {
+            "validator_pending" : "Your validator is being set up. Please wait. For more information click the link."
+        },
+        "info" : {
+            "staking_start_date": "Staking Start Date",
+            "staking_end_date": "Staking End Date",
+            "up_time": "Up Time",
+            "remaining_validation_period" : "Remaining Validation Period",
+            "deposit_amount": "Deposit Amount",
+            "tx_id": "Tx ID",
+            "validator_running": "Your validator node is running"
+        },
+        "suspended": {
+            "validator_suspended": "Your validator node has been suspended.",
+            "to_activate": "To activate your validator node please get in touch and email us to {email}",
+            "title": "Validator Node is Suspended"
+        }
+        
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "Camino Wallet ERC20 Tokens",
-    "logoURI": "",
+    "logoURI": "/img/native_token.png",
     "keywords": ["camino", "defi", "ethereum"],
     "version": {
         "major": 0,

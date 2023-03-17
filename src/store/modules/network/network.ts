@@ -60,8 +60,10 @@ const network_module: Module<NetworkState, RootState> = {
         },
         async removeCustomNetwork({ state, dispatch }, net: AvaNetwork) {
             let index = state.networksCustom.indexOf(net)
-            state.networksCustom.splice(index, 1)
-            await dispatch('save')
+            if (index !== -1) {
+                state.networksCustom.splice(index, 1)
+                await dispatch('save')
+            }
         },
         saveSelectedNetwork({ state }) {
             let data = JSON.stringify(state.selectedNetwork?.url)
@@ -167,6 +169,7 @@ const network_module: Module<NetworkState, RootState> = {
             dispatch('Platform/update', null, { root: true })
             dispatch('Platform/updateMinStakeAmount', null, { root: true })
             dispatch('updateTxFee')
+            dispatch('Accounts/updateKycStatus', null, { root: true })
             dispatch('Accounts/updateMultisigAliases', null, { root: true })
             // Update tx history
             dispatch('History/updateTransactionHistory', null, { root: true })

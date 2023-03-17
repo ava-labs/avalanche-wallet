@@ -83,13 +83,25 @@
                             <fa icon="upload"></fa>
                         </Tooltip>
                         <div class="text_buts">
-                            <button v-if="walletType == 'mnemonic'" @click="showModal" data-cy="manage-key-mnemonic">
+                            <button
+                                v-if="walletType == 'mnemonic'"
+                                @click="showModal"
+                                data-cy="manage-key-mnemonic"
+                            >
                                 {{ $t('keys.view_key') }}
                             </button>
-                            <button v-if="walletType == 'singleton'" @click="showPrivateKeyModal" data-cy="manage-key-singleton">
+                            <button
+                                v-if="walletType == 'singleton'"
+                                @click="showPrivateKeyModal"
+                                data-cy="manage-key-singleton"
+                            >
                                 {{ $t('keys.view_priv_key') }}
                             </button>
-                            <button v-if="walletType !== 'ledger'" @click="showPrivateKeyCModal" data-cy="manage-key-private-key-c">
+                            <button
+                                v-if="walletType !== 'ledger'"
+                                @click="showPrivateKeyCModal"
+                                data-cy="manage-key-private-key-c"
+                            >
                                 {{ $t('keys.view_priv_key_c') }}
                             </button>
                             <button v-if="walletType !== 'ledger'" @click="showPublicKeyModal">
