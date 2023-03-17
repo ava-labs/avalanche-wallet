@@ -168,7 +168,6 @@ export default class RegisterNode extends Vue {
             let keypair = new KeyPair(hrp, 'P')
             keypair.importKey(privateKeyStringToBuffer(this.nodePrivateKey.trim()))
             let nodeId = bufferToNodeIDString(keypair.getAddress())
-            console.log(nodeId)
             const result = await WalletHelper.registerNodeTx(
                 this.wallet,
                 this.nodePrivateKey.trim(),
@@ -187,7 +186,6 @@ export default class RegisterNode extends Vue {
                 this.loadingRegisterNode = false
             }, 2000)
         } catch (error) {
-            console.log('ERROR IN REGISTER NODE')
             console.error(error)
             this.helpers.dispatchNotification({
                 message: this.$t('notifications.register_node_failed'),

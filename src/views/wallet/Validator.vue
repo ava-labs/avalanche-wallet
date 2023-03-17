@@ -127,7 +127,6 @@ export default class Validator extends Vue {
             this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
         } catch (e) {
-            console.log('ERROR:', e)
             this.isNodeRegistered = false
         }
     }
@@ -194,7 +193,6 @@ export default class Validator extends Vue {
     }
 
     async refresh() {
-        console.log('refreshing')
         this.loadingRefreshRegisterNode = true
         await this.evaluateCanRegisterNode()
         this.loadingRefreshRegisterNode = false
