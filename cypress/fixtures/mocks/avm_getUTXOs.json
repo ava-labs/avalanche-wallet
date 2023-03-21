@@ -1,0 +1,15 @@
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "numFetched": "1",
+        "utxos": [
+            "0x000042ba93666df05f03b44b0e11dd109304d104522b872b3e86ee12cf6f31cbb5d8000000005e21ded8a9e53a62f6c48ef045b37c938c5c5e9b25a14b4987db93682ca30f7600000007000000012a05f200000000000000000000000001000000017203e9a07319b5109dd818209215e875503bc09dd14578e2"
+        ],
+        "endIndex": {
+            "address": "X-kopernikus1wgp7ngrnrx63p8wcrqsfy90gw4grhsya8vaqad",
+            "utxo": "23xrpgFvPVfnSAJQpRky19bPnp1UvaRHBGVPCFajhCLTFhMzAt"
+        },
+        "encoding": "hex"
+    },
+    "id": 1
+}
