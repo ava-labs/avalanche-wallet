@@ -151,13 +151,14 @@ Cypress.Commands.add(
         cy.get('@btnNetworkSwitcher').find('.MuiTypography-root').as('txtSelectedNetwork')
         cy.get('@elPreferenceMenu').find('> .MuiBox-root').as('btnWallet')
 
+        cy.switchToWalletApp()
         // Only add non-default networks
         if (network === 'Kopernikus') {
             cy.addCustomNetworkByName(network)
         }
 
         cy.changeNetwork(network)
-        cy.switchToWalletApp().accessWallet(walletAccessType, keyName)
+        cy.accessWallet(walletAccessType, keyName)
     }
 )
 
