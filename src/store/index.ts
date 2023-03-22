@@ -24,8 +24,6 @@ import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 Vue.use(Vuex)
 Vue.config.devtools = true
 
-import router from '@/router'
-
 import { bintools } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 
@@ -173,7 +171,6 @@ const store = new Vuex.Store({
             store.dispatch('Accounts/onLogout')
             store.dispatch('Assets/onLogout')
             store.dispatch('Launch/onLogout')
-            if (router.currentRoute.path !== '/login') router.push('/login')
         },
 
         // used with logout

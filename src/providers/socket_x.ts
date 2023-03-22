@@ -2,13 +2,15 @@ import Sockette from 'sockette'
 import { WalletType } from '@/js/wallets/types'
 import store from '@/store'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { PubSub } from '@c4tplatform/caminojs'
+import { PubSub } from '@c4tplatform/caminojs/dist'
 
 const FILTER_ADDRESS_SIZE = 1000
 
-export let socketX: Sockette
+let socketX: Sockette
+let socketOpen = false
 
 export function connectSocketX(network: AvaNetwork) {
+    socketOpen = false
     if (socketX) {
         socketX.close()
     }
@@ -25,9 +27,7 @@ export function connectSocketX(network: AvaNetwork) {
 
 export function updateFilterAddresses(): void {
     let wallet: null | WalletType = store.state.activeWallet
-    if (!socketX || !wallet) {
-        return
-    }
+    if (!socketOpen || !wallet) return
 
     let externalAddrs = wallet.getAllDerivedExternalAddresses()
     let addrsLen = externalAddrs.length
@@ -52,6 +52,8 @@ export function updateFilterAddresses(): void {
 
 // Clears the filter listening to X chain transactions
 function clearFilter() {
+    if (!socketOpen) return
+
     let pubsub = new PubSub()
     let bloom = pubsub.newBloom(FILTER_ADDRESS_SIZE)
     socketX.send(bloom)
@@ -59,7 +61,8 @@ function clearFilter() {
 
 function updateWalletBalanceX() {
     let wallet: null | WalletType = store.state.activeWallet
-    if (!wallet) return
+    if (!socketOpen || !wallet) return
+
     // Refresh the wallet balance
     store.dispatch('Assets/updateUTXOsExternal').then(() => {
         store.dispatch('History/updateTransactionHistory')
@@ -69,6 +72,7 @@ function updateWalletBalanceX() {
 // AVM Socket Listeners
 
 function xOnOpen() {
+    socketOpen = true
     updateFilterAddresses()
 }
 
