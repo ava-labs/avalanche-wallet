@@ -22,7 +22,6 @@ Cypress.Commands.add('addCustomNetwork', (networkConfig: NetworkConfig) => {
     cy.get('[data-cy="add-network-field-network-name"]', { timeout: 15000 }).find('input', { timeout: 12000 }).type(networkName)
     cy.get('[data-cy="add-network-field-url"]').type(rpcUrl)
     cy.get('[data-cy="add-network-field-magellan-address"]').type(magellanUrl || '')
-    // cy.get('[data-cy="add-network-field-explorerSiteUrl-address"]').type(explorerUrl || '')
     cy.get('[data-cy="btn-add-network"]').click()
     // Wait to connecting network
     cy.wait(5000)
@@ -75,7 +74,7 @@ Cypress.Commands.add('changeNetwork', (network: string = 'Kopernikus') => {
     cy.get('@txtSelectedNetwork')
         .invoke('text')
         .then((currentNetwork) => {
-            cy.get('@btnNetworkSwitcher').click() // Network Switcher
+            cy.get('@btnNetworkSwitcher').click({ force: true }) // Network Switcher
             cy.get(`[data-value="${network}"]`).click() // Select Network
 
             // Waiting 'info.networkID', and 'info.getTxFee'
@@ -90,7 +89,7 @@ Cypress.Commands.add('changeNetwork', (network: string = 'Kopernikus') => {
 })
 
 Cypress.Commands.add('accessWallet', (type, keyName) => {
-    cy.get('@btnWallet').click()
+    cy.get('@btnWallet').click({ force: true })
     cy.get('h6 + .MuiGrid-container').as('elWalletOptions')
     cy.get('@elWalletOptions')
         .find('> .MuiGrid-container:nth-child(1) > :nth-child(1)')
