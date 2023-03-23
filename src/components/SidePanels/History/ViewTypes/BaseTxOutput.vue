@@ -16,7 +16,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { BaseTxAssetSummary } from '@/helpers/history_helper'
 import AvaAsset from '@/js/AvaAsset'
 import { bnToBig } from '@/helpers/helper'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 
 @Component
 export default class BaseTxOutput extends Vue {
@@ -60,7 +60,8 @@ export default class BaseTxOutput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/mixins';
+
 .tx_out {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -101,7 +102,7 @@ label {
     color: var(--primary-color-light);
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .amount {
         font-size: 13px;
     }

@@ -152,13 +152,6 @@ label {
     margin: 4px 0px;
     font-size: 12px;
 }
-
-.formIn {
-    height: 40px;
-    font-size: 12px;
-    background-color: var(--bg-light) !important;
-    border-radius: 2px;
-}
 </style>
 <style lang="scss">
 .add_key_file {

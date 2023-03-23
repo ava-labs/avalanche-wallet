@@ -241,10 +241,14 @@ class HdHelper {
         return set
     }
 
+    getStaticAddress(): string {
+        return this.ethKeyPair
+            ? bintools.addressToString(ava.getHRP(), this.chainId, this.ethKeyPair.getAddress())
+            : ''
+    }
+
     getAllDerivedAddresses(upTo = this.hdIndex, start = 0): string[] {
-        let res = this.ethKeyPair
-            ? [bintools.addressToString(ava.getHRP(), this.chainId, this.ethKeyPair.getAddress())]
-            : []
+        let res = this.ethKeyPair ? [this.getStaticAddress()] : []
         for (var i = start; i <= upTo; i++) {
             let addr = this.getAddressForIndex(i)
             res.push(addr)

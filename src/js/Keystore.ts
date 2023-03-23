@@ -7,41 +7,46 @@ import {
     KeyFileDecryptedV4,
     KeyFileDecryptedV5,
     KeyFileDecryptedV6,
+    KeyFileDecryptedV7,
     KeyFileKeyDecryptedV2,
     KeyFileKeyDecryptedV3,
     KeyFileKeyDecryptedV4,
     KeyFileKeyDecryptedV5,
     KeyFileKeyDecryptedV6,
+    KeyFileKeyDecryptedV7,
     KeyFileKeyV2,
     KeyFileKeyV3,
     KeyFileKeyV4,
     KeyFileKeyV5,
     KeyFileKeyV6,
+    KeyFileKeyV7,
     KeyFileV2,
     KeyFileV3,
     KeyFileV4,
     KeyFileV5,
     KeyFileV6,
+    KeyFileV7,
     KeystoreFileKeyType,
 } from './IKeystore'
 import { ava, bintools } from '@/AVA'
 import { Buffer } from 'buffer/'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import Crypto from '@/js/Crypto'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { MultisigWallet } from '@/js/wallets/MultisigWallet'
+import Crypto from '@/js/Crypto'
 import { AccessWalletMultipleInput } from '@/store/types'
 import { keyToKeypair } from '@/helpers/helper'
 import * as bip39 from 'bip39'
-import { Buffer as AjsBuffer } from '@c4tplatform/caminojs'
+import { Buffer as AjsBuffer } from '@c4tplatform/caminojs/dist'
 
 const cryptoHelpers = new Crypto()
 
-const KEYSTORE_VERSION: string = '6.0'
+const KEYSTORE_VERSION: string = '7.0'
 
 const ITERATIONS_V2 = 100000
 const ITERATIONS_V3 = 200000 // and any version above
 
-const SUPPORTED_VERSION = ['2.0', '3.0', '4.0', '5.0', '6.0']
+const SUPPORTED_VERSION = ['2.0', '3.0', '4.0', '5.0', '6.0', '7.0']
 
 interface IHash {
     salt: Buffer
@@ -247,8 +252,50 @@ async function readV6(data: KeyFileV6, pass: string): Promise<KeyFileDecryptedV6
     }
 }
 
+async function readV7(data: KeyFileV7, pass: string): Promise<KeyFileDecryptedV7> {
+    const version: string = data.version
+    const activeIndex = data.activeIndex
+    cryptoHelpers.keygenIterations = ITERATIONS_V3
+
+    let salt: Buffer = bintools.cb58Decode(data.salt)
+
+    let keys: KeyFileKeyV7[] = data.keys
+    let keysDecrypt: KeyFileKeyDecryptedV7[] = []
+
+    for (let i: number = 0; i < keys.length; i++) {
+        let key_data: KeyFileKeyV7 = keys[i]
+
+        let key: Buffer = bintools.cb58Decode(key_data.key)
+        let type: KeystoreFileKeyType = key_data.type
+        let nonce: Buffer = bintools.cb58Decode(key_data.iv)
+
+        let key_decrypt: Buffer
+        try {
+            key_decrypt = await cryptoHelpers.decrypt(pass, key, salt, nonce)
+        } catch (e) {
+            throw 'INVALID_PASS'
+        }
+
+        const key_string = key_decrypt.toString()
+
+        keysDecrypt.push({
+            name: key_data.name,
+            key: key_string,
+            type: type,
+        })
+    }
+
+    return {
+        version,
+        activeIndex: activeIndex || 0,
+        keys: keysDecrypt,
+    }
+}
+
 async function readKeyFile(data: AllKeyFileTypes, pass: string): Promise<AllKeyFileDecryptedTypes> {
     switch (data.version) {
+        case '7.0':
+            return await readV7(data as KeyFileV7, pass)
         case '6.0':
             return await readV6(data as KeyFileV6, pass)
         case '5.0':
@@ -281,6 +328,7 @@ function extractKeysV2(
         let mnemonic: string = bip39.entropyToMnemonic(paddedKeyHex)
 
         return {
+            name: '',
             key: mnemonic,
             type: 'mnemonic',
         }
@@ -289,6 +337,7 @@ function extractKeysV2(
 
 function extractKeysV5(file: KeyFileDecryptedV5): AccessWalletMultipleInput[] {
     return file.keys.map((key) => ({
+        name: '',
         key: key.key,
         type: 'mnemonic',
     }))
@@ -296,6 +345,15 @@ function extractKeysV5(file: KeyFileDecryptedV5): AccessWalletMultipleInput[] {
 
 function extractKeysV6(file: KeyFileDecryptedV6): AccessWalletMultipleInput[] {
     return file.keys.map((key) => ({
+        name: '',
+        type: key.type,
+        key: key.key,
+    }))
+}
+
+function extractKeysV7(file: KeyFileDecryptedV7): AccessWalletMultipleInput[] {
+    return file.keys.map((key) => ({
+        name: key.name,
         type: key.type,
         key: key.key,
     }))
@@ -303,6 +361,8 @@ function extractKeysV6(file: KeyFileDecryptedV6): AccessWalletMultipleInput[] {
 
 function extractKeysFromDecryptedFile(file: AllKeyFileDecryptedTypes): AccessWalletMultipleInput[] {
     switch (file.version) {
+        case '7.0':
+            return extractKeysV7(file as KeyFileDecryptedV7)
         case '6.0':
             return extractKeysV6(file as KeyFileDecryptedV6)
         case '5.0':
@@ -320,41 +380,43 @@ function extractKeysFromDecryptedFile(file: AllKeyFileDecryptedTypes): AccessWal
 
 // Given an array of wallets and a password, return an encrypted JSON object that is the keystore file
 async function makeKeyfile(
-    wallets: (MnemonicWallet | SingletonWallet)[],
+    wallets: (MnemonicWallet | SingletonWallet | MultisigWallet)[],
     pass: string,
     activeIndex: number
-): Promise<KeyFileV6> {
+): Promise<KeyFileV7> {
     // 3.0 and above uses 200,000
     cryptoHelpers.keygenIterations = ITERATIONS_V3
 
     let salt: Buffer = await cryptoHelpers.makeSalt()
 
-    let keys: KeyFileKeyV6[] = []
+    let keys: KeyFileKeyV7[] = []
 
     for (let i: number = 0; i < wallets.length; i++) {
         let wallet = wallets[i]
         let key
-        let type: KeystoreFileKeyType
         if (wallet.type === 'singleton') {
             key = (wallet as SingletonWallet).key
-            type = 'singleton'
-        } else {
+        } else if (wallet.type === 'mnemonic') {
             key = (wallet as MnemonicWallet)
                 .getMnemonic()
                 .concat('\n', (wallet as MnemonicWallet).getSeed())
-            type = 'mnemonic'
+        } else if (wallet.type === 'multisig') {
+            key = (wallet as MultisigWallet).getKey()
+        } else {
+            continue
         }
         let pk_crypt: PKCrypt = await cryptoHelpers.encrypt(pass, key, salt)
 
-        let key_data: KeyFileKeyV6 = {
+        let key_data: KeyFileKeyV7 = {
+            name: wallet.name,
             key: bintools.cb58Encode(AjsBuffer.from(pk_crypt.ciphertext)),
             iv: bintools.cb58Encode(AjsBuffer.from(pk_crypt.iv)),
-            type: type,
+            type: wallet.type,
         }
         keys.push(key_data)
     }
 
-    let file_data: KeyFileV6 = {
+    let file_data: KeyFileV7 = {
         version: KEYSTORE_VERSION,
         salt: bintools.cb58Encode(AjsBuffer.from(salt)),
         activeIndex,

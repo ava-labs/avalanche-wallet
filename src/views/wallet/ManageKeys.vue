@@ -21,6 +21,11 @@
                             <fa icon="exclamation-triangle"></fa>
                             {{ $t('keys.button1') }}
                         </button>
+                        <button class="but_primary ava_button_secondary" @click="importKeys">
+                            <fa icon="download"></fa>
+                            {{ $t('keys.button2') }}
+                        </button>
+                        <ImportKeys ref="import"></ImportKeys>
                         <button class="but_primary ava_button_secondary" @click="exportKeys">
                             <fa icon="upload"></fa>
                             {{ $t('keys.button3') }}
@@ -93,7 +98,7 @@ export default class ManageKeys extends Vue {
     }
 
     get canEncryptWallet() {
-        return ['mnemonic', 'singleton'].includes(this.walletType)
+        return ['mnemonic', 'singleton', 'multisig'].includes(this.walletType)
     }
 
     get walletType(): WalletNameType {
@@ -101,7 +106,7 @@ export default class ManageKeys extends Vue {
     }
 
     get hasVolatile() {
-        return this.$store.state.volatileWallets.length > 0
+        return this.$store.getters.accountChanged
     }
 
     get allWallets(): MnemonicWallet[] {

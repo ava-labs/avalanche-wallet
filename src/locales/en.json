@@ -3,8 +3,10 @@
     "password": "Password",
     "password_confirm": "Confirm Password",
     "private_key": "Private Key",
+    "multisig_alias": "Multisig Alias",
     "address": "Address",
     "add_pk": "Add Private Key",
+    "add_multisig_alias": "Add Multisig Alias",
     "home": {
         "header": "@.project:(0) Wallet",
         "desc": "@.project:(0) Wallet is a simple, secure, non-custodial wallet for storing @.project:(0) assets.",
@@ -307,6 +309,7 @@
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
         "subtitle": "Active Key",
+        "del_check": "Are you sure you want to delete this key?",
         "save_account": {
             "title": "Save Account",
             "desc": "Encode your wallet with a password and store securely on this browser.",
@@ -339,20 +342,24 @@
         "import_mnemonic_duplicate_err": "This mnemonic has already been added to this wallet.",
         "import_mnemonic_err": "Invalid key phrase.",
         "tooltip": "This key will be forgotten when you refresh the browser.",
+        "edit_wallet_name_tooltip": "Edit wallet name",
         "view_priv_key": "View Private Key",
+        "view_static_keys": "View Static Keys",
         "view_priv_key_c": "View C Chain Private Key",
         "view_public_key": "View Public Key",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
         "remove_key": "Remove Key",
+        "remove_key_disabled": "Cannot remove key that is an owner of imported multisig wallet",
         "active_wallet": "Active Key",
         "activate_key": "Activate Key",
         "remove_success_title": "Key Removed",
         "remove_success_msg": "Private key and assets removed from the wallet.",
         "password_validation": "Password must be at least 9 characters long.",
         "password_validation2": "Password do not match.",
-        "account_name_required": "Account Name Required."
+        "account_name_required": "Account Name Required.",
+        "view_multisig_owners": "View Multisig Owners"
     },
     "portfolio": {
         "assets": "Assets",
@@ -723,6 +730,9 @@
         "mnemonic": {
             "title": "Key Phrase"
         },
+        "multisig": {
+            "title": "Multisignature owners"
+        },
         "priv_key": {
             "title": "Private Key"
         },
@@ -816,6 +826,6 @@
             "to_activate": "To activate your validator node please get in touch and email us to {email}",
             "title": "Validator Node is Suspended"
         }
-        
+
     }
 }

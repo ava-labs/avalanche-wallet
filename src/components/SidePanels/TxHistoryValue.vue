@@ -70,6 +70,8 @@ export default class TxHistoryValue extends Vue {
                 return 'Sent'
             case 'operation':
                 return this.operationDirection
+            case 'deposit':
+                return 'Deposit'
             default:
                 // Capitalize first letter
                 return this.type

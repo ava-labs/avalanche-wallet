@@ -4,24 +4,24 @@
             <div class="remember_modal">
                 <form @submit.prevent="submit">
                     <div class="flex-row" style="justify-content: center">
-                        <Identicon :value="baseAddresses.join('')"></Identicon>
+                        <Identicon :value="name"></Identicon>
                     </div>
                     <p>{{ $t('keys.save_account.desc') }}</p>
 
                     <input
                         v-model="accountName"
-                        :name="$t('keys.save_account.placeholder_1')"
+                        :name="$t('keys.save_account.placeholder_1').toString()"
                         placeholder="Account Name"
                         :disabled="existsInLocalStorage"
                     />
                     <input
                         type="password"
-                        :placeholder="$t('keys.save_account.placeholder_2')"
+                        :placeholder="$t('keys.save_account.placeholder_2').toString()"
                         v-model="password"
                     />
                     <input
                         type="password"
-                        :placeholder="$t('keys.save_account.placeholder_3')"
+                        :placeholder="$t('keys.save_account.placeholder_3').toString()"
                         v-model="password_confirm"
                     />
                     <p class="err">{{ err }}</p>
@@ -135,14 +135,12 @@ export default class SaveAccountModal extends Vue {
         this.$refs.modal.open()
     }
 
-    get baseAddresses(): string[] {
-        return this.$store.getters['Accounts/baseAddresses']
+    get name(): string[] {
+        return this.$store.getters['Accounts/name']
     }
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
-
 .remember_modal {
     width: 320px;
     max-width: 100%;

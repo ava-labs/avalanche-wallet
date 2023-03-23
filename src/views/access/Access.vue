@@ -43,6 +43,7 @@ export default class Access extends Vue {}
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/variables';
 
 .access_view {
     display: flex;
@@ -53,7 +54,7 @@ export default class Access extends Vue {}
 .access_card {
     text-align: center;
 }
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .access_card {
         padding: main.$container-padding-mobile;
     }

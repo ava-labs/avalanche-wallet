@@ -1,8 +1,8 @@
 <template>
     <modal ref="modal" title="Account Settings" class="modal_main" @beforeClose="clear">
         <div class="modal_body">
-            <div class="header">
-                <Identicon :value="account.baseAddresses.join('')"></Identicon>
+            <div class="header" v-if="account">
+                <Identicon :value="account.name"></Identicon>
                 <p style="text-align: center">{{ account.name }}</p>
 
                 <p class="err small" style="text-align: center">
@@ -30,8 +30,8 @@
             <template v-else>
                 <component
                     v-if="subComponent"
-                    :setAccount="setAccount"
                     :is="subComponent"
+                    v-bind="[{ accountName: account?.name }]"
                 ></component>
                 <button @click="clear">{{ $t('access.cancel') }}</button>
             </template>
@@ -39,7 +39,7 @@
     </modal>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import Modal from '@/components/modals/Modal.vue'
 import Identicon from '@/components/misc/Identicon.vue'
@@ -55,7 +55,6 @@ import SaveKeys from '@/components/modals/AccountSettings/SaveKeys.vue'
     },
 })
 export default class AccountSettingsModal extends Vue {
-    @Prop() setAccount: any
     $refs!: {
         modal: Modal
     }
@@ -90,7 +89,7 @@ export default class AccountSettingsModal extends Vue {
     }
 
     get hasVolatile() {
-        return this.$store.state.volatileWallets.length > 0
+        return this.$store.getters.accountChanged
     }
 }
 </script>

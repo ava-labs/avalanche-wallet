@@ -200,7 +200,7 @@ export default class RegisterNode extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/variables';
 
 .success_status_icon {
     color: var(--success);
@@ -262,7 +262,7 @@ input::placeholder {
     transform: translateY(-50%);
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .high_input {
         line-height: 4;
     }

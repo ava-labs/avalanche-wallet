@@ -150,7 +150,6 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-@use '../../styles/main';
 .passwords {
     display: flex;
     flex-direction: column;

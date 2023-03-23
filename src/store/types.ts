@@ -1,6 +1,6 @@
 import Big from 'big.js'
 
-import { Buffer, BN } from '@c4tplatform/caminojs'
+import { Buffer, BN } from '@c4tplatform/caminojs/dist'
 import AvaAsset from '@/js/AvaAsset'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { ITransaction } from '@/components/wallet/transfer/types'
@@ -8,14 +8,17 @@ import { AllKeyFileTypes, AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import { UTXO as TxUTXO } from './modules/history/types'
 import { WalletNameType, WalletType } from '@/js/wallets/types'
+import { KeystoreFileKeyType } from '@/js/IKeystore'
 
 export interface RootState {
     isAuth: boolean
+    storedActiveWallet: null | WalletType
     activeWallet: null | WalletType
     wallets: WalletType[]
     address: String | null
     volatileWallets: WalletType[] // will be forgotten when tab is closed
     warnUpdateKeyfile: boolean
+    walletsDeleted: boolean
     theme: 'night' | 'day'
     prices: priceDict // USD value of 1 native token
 }
@@ -115,8 +118,14 @@ export interface SessionPersistKey {
 }
 
 export interface AccessWalletMultipleInput {
-    type: Extract<'mnemonic' | 'singleton', WalletNameType>
+    name: string
+    type: Extract<KeystoreFileKeyType, WalletNameType>
     key: string
+}
+
+export interface AccessWalletMultipleInputParams {
+    keys: AccessWalletMultipleInput[]
+    activeIndex: number
 }
 
 export interface SaveAccountInput {

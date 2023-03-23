@@ -111,9 +111,6 @@ export default {
     object-fit: contain;
 }
 
-@media only screen and (max-width: main.$mobile_width) {
-}
-
 @include main.medium-device {
     .top_cards {
         grid-template-columns: 1fr 320px;

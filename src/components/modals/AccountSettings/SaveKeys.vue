@@ -1,6 +1,7 @@
 <template>
     <form @submit.prevent="submit">
         <p>You have unsaved keys on your account.</p>
+        <input class="pass_name" :value="accountName" />
         <input type="password" class="single_line_input" placeholder="Password" v-model="pass" />
         <p class="err">{{ error }}</p>
         <v-btn class="button_secondary" small block depressed :disabled="!canSubmit" type="submit">
@@ -9,11 +10,12 @@
     </form>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSettingsModal.vue'
 
 @Component
 export default class SaveKeys extends Vue {
+    @Prop() accountName!: string
     pass = ''
     error = ''
 

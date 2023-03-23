@@ -61,7 +61,7 @@ export default class AddMnemonic extends Vue {
 
         setTimeout(async () => {
             try {
-                await this.$store.dispatch('addWalletMnemonic', phrase)
+                await this.$store.dispatch('addWalletMnemonic', { key: phrase })
                 this.isLoading = false
                 this.handleImportSuccess()
             } catch (e) {

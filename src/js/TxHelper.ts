@@ -1,6 +1,6 @@
 import { ava, bintools } from '@/AVA'
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { BN, Buffer } from '@c4tplatform/caminojs'
+import { BN, Buffer } from '@c4tplatform/caminojs/dist'
 import {
     AssetAmountDestination,
     BaseTx,
@@ -24,7 +24,7 @@ import { EVMConstants } from '@c4tplatform/caminojs/dist/apis/evm'
 import { web3 } from '@/evm'
 import ERCNftToken from '@/js/ERCNftToken'
 import { Transaction } from '@ethereumjs/tx'
-import EthereumjsCommon from '@ethereumjs/common'
+import { Chain, Common, Hardfork } from '@ethereumjs/common'
 import Erc20Token from '@/js/Erc20Token'
 
 export async function buildUnsignedTransaction(
@@ -226,16 +226,25 @@ export async function buildEvmTransferNativeTx(
     const chainId = await web3.eth.getChainId()
     const networkId = await web3.eth.net.getId()
     const chainParams = {
-        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+        common: Common.custom(
+            {
+                networkId,
+                chainId,
+            },
+            {
+                baseChain: Chain.Mainnet,
+                hardfork: Hardfork.Istanbul,
+            }
+        ),
     }
 
     let tx = new Transaction(
         {
             nonce: nonce,
-            gasPrice: gasPrice,
+            gasPrice: prefixHex(gasPrice.toString('hex')),
             gasLimit: gasLimit,
             to: to,
-            value: amount,
+            value: prefixHex(amount.toString('hex')),
             data: '0x',
         },
         chainParams
@@ -255,7 +264,16 @@ export async function buildEvmTransferErc20Tx(
     const chainId = await web3.eth.getChainId()
     const networkId = await web3.eth.net.getId()
     const chainParams = {
-        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+        common: Common.custom(
+            {
+                networkId,
+                chainId,
+            },
+            {
+                baseChain: Chain.Mainnet,
+                hardfork: Hardfork.Istanbul,
+            }
+        ),
     }
 
     let tokenTx = token.createTransferTx(to, amount)
@@ -263,7 +281,7 @@ export async function buildEvmTransferErc20Tx(
     let tx = new Transaction(
         {
             nonce: nonce,
-            gasPrice: gasPrice,
+            gasPrice: prefixHex(gasPrice.toString('hex')),
             gasLimit: gasLimit,
             value: '0x0',
             to: token.data.address,
@@ -286,7 +304,16 @@ export async function buildEvmTransferERCNftTx(
     const chainId = await web3.eth.getChainId()
     const networkId = await web3.eth.net.getId()
     const chainParams = {
-        common: EthereumjsCommon.forCustomChain('mainnet', { networkId, chainId }, 'istanbul'),
+        common: Common.custom(
+            {
+                networkId,
+                chainId,
+            },
+            {
+                baseChain: Chain.Mainnet,
+                hardfork: Hardfork.Istanbul,
+            }
+        ),
     }
 
     let tokenTx = token.createTransferTx(from, to, tokenId)
@@ -294,7 +321,7 @@ export async function buildEvmTransferERCNftTx(
     let tx = new Transaction(
         {
             nonce: nonce,
-            gasPrice: gasPrice,
+            gasPrice: prefixHex(gasPrice.toString('hex')),
             gasLimit: gasLimit,
             value: '0x0',
             to: token.data.address,
@@ -304,6 +331,8 @@ export async function buildEvmTransferERCNftTx(
     )
     return tx
 }
+
+const prefixHex = (s: string): string => '0x' + s
 
 export enum AvmTxNameEnum {
     'Transaction' = AVMConstants.BASETX,

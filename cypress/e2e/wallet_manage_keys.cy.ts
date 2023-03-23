@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import '@cypress/xpath'
-import { changeNetwork, accessWallet,addKopernikusNetwork } from '../utils/utils'
+import { changeNetwork, accessWallet, addKopernikusNetwork } from '../utils/utils'
 import moment from 'moment'
 import Web3 from 'web3'
 
@@ -12,17 +12,16 @@ describe('Wallet Manage Keys', () => {
     })
 
     it('wallet manage keys', () => {
-        
         //changeNetwork(cy)
-        addKopernikusNetwork(cy);
-        
+        addKopernikusNetwork(cy)
+
         cy.readFile(`cypress/temp/wallets/mnemonic_wallet.json`).then((mnemonicPhrase) => {
-            accessWallet(cy, 'mnemonic');
+            accessWallet(cy, 'mnemonic')
             cy.get('[data-cy="wallet_manage"]', { timeout: 15000 })
                 .click()
                 .then(() => {
                     cy.get('[data-cy="manage-key-private-key-c"]', { timeout: 7000 }).click()
-                    cy.get('.key_raw')
+                    cy.get('[data-cy="private-key-display"]')
                         .invoke('text')
                         .then((privateKey) => {
                             let web3Validated: boolean = validateWeb3Account(privateKey)
@@ -45,7 +44,7 @@ describe('Wallet Manage Keys', () => {
                                 throw new Error('C Chain Private Key is not supported with web3')
                             }
                         })
-                });
+                })
         })
     })
 })

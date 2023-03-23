@@ -4,20 +4,21 @@ import AppAvax from '@obsidiansystems/hw-app-avalanche'
 //@ts-ignore
 import Eth from '@ledgerhq/hw-app-eth'
 
-import EthereumjsCommon from '@ethereumjs/common'
-import { Transaction } from '@ethereumjs/tx'
+import { Chain, Common, Hardfork } from '@ethereumjs/common'
+import { Transaction, TxData } from '@ethereumjs/tx'
 
 import moment from 'moment'
-import { Buffer, BN } from '@c4tplatform/caminojs'
+import { Buffer, BN } from '@c4tplatform/caminojs/dist'
 import HDKey from 'hdkey'
 import { ava, bintools } from '@/AVA'
 const bippath = require('bip32-path')
 import createHash from 'create-hash'
 import store from '@/store'
-import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
+import { importPublic, publicToAddress } from '@ethereumjs/util'
+import { RLP } from '@ethereumjs/rlp'
 
 import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
-import { AvaWalletCore } from '@/js/wallets/types'
+import { AvaWalletCore } from './types'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import {
     AVMConstants,
@@ -53,7 +54,7 @@ import {
 
 import { Credential, SigIdx, Signature } from '@c4tplatform/caminojs/dist/common'
 import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
-import { HdWalletCore } from '@/js/wallets/HdWalletCore'
+import { HdWalletCore } from './HdWalletCore'
 import { ILedgerAppConfig } from '@/store/types'
 import { WalletNameType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
@@ -81,6 +82,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     constructor(app: AppAvax, hdkey: HDKey, config: ILedgerAppConfig, hdEth: HDKey, ethApp: Eth) {
         super(hdkey, hdEth)
+        this.name = 'Ledger Wallet'
         this.app = app
         this.ethApp = ethApp
         this.type = 'ledger'
@@ -526,9 +528,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         chainId: ChainIdType
     ): ILedgerBlockMessage[] {
         let tx =
-            ((
-                unsignedTx as AVMUnsignedTx | PlatformUnsignedTx
-            ).getTransaction() as AddValidatorTx) || AddDelegatorTx
+            ((unsignedTx as
+                | AVMUnsignedTx
+                | PlatformUnsignedTx).getTransaction() as AddValidatorTx) || AddDelegatorTx
         let txType = tx.getTxType()
         let messages: ILedgerBlockMessage[] = []
 
@@ -630,7 +632,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     getEvmTransactionMessages(tx: Transaction): ILedgerBlockMessage[] {
         let gasPrice = tx.gasPrice
         let gasLimit = tx.gasLimit
-        let totFee = gasPrice.mul(new BN(gasLimit.toString()))
+        let totFee = gasPrice * gasLimit
         let feeNano = bnToBig(new BN(totFee.toString()), 9)
 
         let msgs: ILedgerBlockMessage[] = []
@@ -805,14 +807,14 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async signEvm(tx: Transaction) {
-        const rawUnsignedTx = rlp.encode([
-            bnToRlp(tx.nonce),
-            bnToRlp(tx.gasPrice),
-            bnToRlp(tx.gasLimit),
+        const rawUnsignedTx = RLP.encode([
+            tx.nonce,
+            tx.gasPrice,
+            tx.gasLimit,
             tx.to !== undefined ? tx.to.buf : Buffer.from([]),
-            bnToRlp(tx.value),
+            tx.value,
             tx.data,
-            bnToRlp(new BN(tx.getChainId())),
+            tx.common.chainId(),
             Buffer.from([]),
             Buffer.from([]),
         ])
@@ -828,23 +830,28 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
             })
             const signature = await this.ethApp.signTransaction(
                 LEDGER_ETH_ACCOUNT_PATH,
-                rawUnsignedTx.toString('hex')
+                Buffer.from(rawUnsignedTx).toString('hex')
             )
             store.commit('Ledger/closeModal')
 
             const signatureBN = {
-                v: new BN(signature.v, 16),
-                r: new BN(signature.r, 16),
-                s: new BN(signature.s, 16),
+                v: BigInt(signature.v),
+                r: BigInt(signature.r),
+                s: BigInt(signature.s),
             }
 
             const chainId = await web3.eth.getChainId()
             const networkId = await web3.eth.net.getId()
             const chainParams = {
-                common: EthereumjsCommon.forCustomChain(
-                    'mainnet',
-                    { networkId, chainId },
-                    'istanbul'
+                common: Common.custom(
+                    {
+                        networkId,
+                        chainId,
+                    },
+                    {
+                        baseChain: Chain.Mainnet,
+                        hardfork: Hardfork.Istanbul,
+                    }
                 ),
             }
 
@@ -857,7 +864,7 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
                     value: tx.value,
                     data: tx.data,
                     ...signatureBN,
-                },
+                } as TxData,
                 chainParams
             )
             return signedTx

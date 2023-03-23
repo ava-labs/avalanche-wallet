@@ -118,8 +118,8 @@ body {
     height: 100%;
 }
 
-p {
-    margin: 0px !important;
+.v-application.v-application p {
+    margin-bottom: 0px;
 }
 
 .v-application--wrap {

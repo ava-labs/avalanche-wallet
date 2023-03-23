@@ -66,9 +66,8 @@ export default class TxRow extends Vue {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         let chains = this.$store.state.History.chains
         if (network.explorerUrl && chains.length > 0) {
-            let alias = chains?.find(
-                (elem: Chain) => elem.chainID === this.source.chainID
-            ).chainAlias
+            let alias = chains?.find((elem: Chain) => elem.chainID === this.source.chainID)
+                .chainAlias
             let url = `/explorer/${alias}-chain/tx/${this.source.id}`
             return url
         } else return ''
@@ -131,7 +130,8 @@ export default class TxRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
+
 .tx_row {
     //display: grid;
     //grid-template-columns: 1fr 1fr;
@@ -231,7 +231,7 @@ label {
     color: var(--primary-color-light);
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .tx_cols {
         grid-template-columns: max-content 1fr;
     }

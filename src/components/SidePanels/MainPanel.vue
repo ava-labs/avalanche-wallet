@@ -29,7 +29,7 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@import '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .main_panel {
     display: flex;
@@ -41,7 +41,7 @@ export default {
     min-height: 100%;
 }
 .panel_nav {
-    @include component-wrapper;
+    @include mixins.component-wrapper;
     background-color: var(--bg-wallet-light);
     display: grid;
     grid-template-columns: max-content 1fr max-content;
@@ -73,7 +73,14 @@ export default {
     margin-left: auto;
 }
 
-@include medium-device {
+.alias {
+    padding: 0px;
+    text-align: center;
+    grid-column: 1/4;
+    grid-row: 2;
+}
+
+@include mixins.medium-device {
     .panel_nav {
         padding: 12px 16px;
     }

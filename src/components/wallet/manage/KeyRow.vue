@@ -1,73 +1,77 @@
 <template>
     <div class="addressItem" :selected="is_default">
-        <ExportKeys
-            v-if="walletType === 'mnemonic'"
-            :wallets="[wallet]"
-            ref="export_wallet"
-        ></ExportKeys>
+        <ExportKeys v-if="walletType === 'mnemonic'" :wallets="[wallet]" ref="export_wallet" />
         <MnemonicPhraseModal
             v-if="walletType === 'mnemonic'"
             :phrase="mnemonicPhrase"
             ref="modal"
-        ></MnemonicPhraseModal>
-        <HdDerivationListModal
+        />
+        <HdDerivationListModal :wallet="wallet" ref="modal_hd" v-if="isHDWallet" />
+        <MultisigOwnersModal
             :wallet="wallet"
-            ref="modal_hd"
-            v-if="isHDWallet"
-        ></HdDerivationListModal>
+            ref="modal_multisig"
+            v-if="walletType === 'multisig'"
+        />
         <PrivateKey
             v-if="walletType === 'singleton'"
             :privateKey="privateKey"
             ref="modal_priv_key"
-        ></PrivateKey>
+        />
         <PrivateKey
-            v-if="walletType !== 'ledger'"
+            v-if="walletType !== 'ledger' && walletType !== 'multisig'"
             :privateKey="privateKeyC"
+            :publicKey="publicKeyC"
             ref="modal_priv_key_c"
-        ></PrivateKey>
-        <PublicKey
-            v-if="walletType !== 'ledger'"
-            :publicKey="publicKey"
-            ref="modal_public_key"
-        ></PublicKey>
+        />
         <div class="rows">
             <div class="header">
-                <div class="img_container">
-                    <template v-if="is_default">
-                        <img src="@/assets/key_active.svg" class="key_logo" />
-                    </template>
-                    <template v-else>
-                        <img
-                            v-if="$root.theme === 'day'"
-                            src="@/assets/key_inactive.svg"
-                            class="key_logo"
-                        />
-                        <img v-else src="@/assets/key_inactive_night.png" class="key_logo" />
-                    </template>
-                </div>
+                <v-icon :class="is_default ? 'active' : ''">{{ icon }}</v-icon>
                 <div class="header_cols">
                     <div class="detail">
-                        <p class="addressVal">
-                            <b>{{ walletTitle }}</b>
-                        </p>
+                        <div class="edit-wallet-name-container">
+                            <h3 v-show="!isEditable" class="addressVal">
+                                {{ walletName }}
+                            </h3>
+                            <input
+                                ref="editNameInput"
+                                v-show="isEditable"
+                                v-model="customWalletName"
+                                class="wallet-name-edit"
+                                @keydown.enter.prevent="onClickEdit"
+                                @keydown.esc.prevent="onCancel"
+                            />
+                            <Tooltip :text="$t('keys.edit_wallet_name_tooltip')">
+                                <button @click.prevent="onClickEdit">
+                                    <fa icon="pen"></fa>
+                                </button>
+                            </Tooltip>
+                        </div>
+                        <span class="addressVal">
+                            {{ walletTitle }}
+                        </span>
+                    </div>
+                    <div class="buts">
                         <Tooltip :text="$t('keys.tooltip')" v-if="isVolatile">
                             <fa icon="exclamation-triangle" class="volatile_alert"></fa>
                         </Tooltip>
-                    </div>
-                    <div class="buts">
                         <button class="selBut" @click="select" v-if="!is_default">
                             <span>{{ $t('keys.activate_key') }}</span>
                         </button>
                         <Tooltip
                             :text="$t('keys.remove_key')"
                             class="row_but circle"
-                            @click.native="remove"
                             v-if="!is_default"
                         >
-                            <img src="@/assets/trash_can_dark.svg" style="height: 16px" />
+                            <button @click.prevent="remove">
+                                <img
+                                    src="@/assets/trash_can_dark.svg"
+                                    style="height: 16px"
+                                    alt="Trashcan"
+                                />
+                            </button>
                         </Tooltip>
                         <Tooltip
-                            v-if="walletType !== 'singleton'"
+                            v-if="walletType !== 'singleton' && walletType !== 'multisig'"
                             :text="$t('keys.hd_addresses')"
                             class="row_but circle"
                             @click.native="showPastAddresses"
@@ -84,47 +88,33 @@
                         </Tooltip>
                         <div class="text_buts">
                             <button
-                                v-if="walletType == 'mnemonic'"
+                                v-if="walletType === 'mnemonic'"
                                 @click="showModal"
                                 data-cy="manage-key-mnemonic"
                             >
                                 {{ $t('keys.view_key') }}
                             </button>
                             <button
-                                v-if="walletType == 'singleton'"
+                                v-if="walletType === 'singleton'"
                                 @click="showPrivateKeyModal"
                                 data-cy="manage-key-singleton"
                             >
                                 {{ $t('keys.view_priv_key') }}
                             </button>
                             <button
-                                v-if="walletType !== 'ledger'"
+                                v-if="walletType === 'multisig'"
+                                @click="showMultisigOwnerModal"
+                                data-cy="manage-key-multisig"
+                            >
+                                {{ $t('keys.view_multisig_owners') }}
+                            </button>
+                            <button
+                                v-else-if="walletType !== 'ledger'"
                                 @click="showPrivateKeyCModal"
                                 data-cy="manage-key-private-key-c"
                             >
-                                {{ $t('keys.view_priv_key_c') }}
+                                {{ $t('keys.view_static_keys') }}
                             </button>
-                            <button v-if="walletType !== 'ledger'" @click="showPublicKeyModal">
-                                {{ $t('keys.view_public_key') }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="header">
-                <div></div>
-                <div>
-                    <p v-if="Object.keys(balances).length === 0" class="balance_empty">
-                        {{ $t('keys.empty') }}
-                    </p>
-                    <div class="addressBalance bal_cols" v-else>
-                        <p>This key has:</p>
-                        <div class="bal_rows">
-                            <p v-for="bal in balances" :key="bal.id">
-                                {{ bal.toString() }}
-                                <b>{{ bal.symbol }}</b>
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -134,12 +124,8 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
-import { bintools } from '@/AVA'
-import AvaAsset from '@/js/AvaAsset'
-import { AssetsDict } from '@/store/modules/assets/types'
-import { AmountOutput } from '@c4tplatform/caminojs/dist/apis/avm'
 import MnemonicPhraseModal from '@/components/modals/MnemonicPhraseModal.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
@@ -147,38 +133,43 @@ import Tooltip from '@/components/misc/Tooltip.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
-import PublicKey from '@/components/modals/PublicKey.vue'
 import { WalletNameType, WalletType } from '@/js/wallets/types'
-
-import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
+import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
-import { getPublicKey } from '@/kyc_api'
-
-interface IKeyBalanceDict {
-    [key: string]: AvaAsset
-}
+import { privateToPublic } from '@ethereumjs/util'
+import MultisigOwnersModal from '@/components/modals/MultisigOwnersModal.vue'
+import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 
 @Component({
     components: {
         MnemonicPhraseModal,
         HdDerivationListModal,
+        MultisigOwnersModal,
         Tooltip,
         ExportKeys,
         PrivateKey,
-        PublicKey,
     },
 })
 export default class KeyRow extends Vue {
     @Prop() wallet!: WalletType
     @Prop({ default: false }) is_default?: boolean
-    publicKey: string | null = ''
+
+    isEditable = false
+    customWalletName = this.walletName
 
     $refs!: {
         export_wallet: ExportKeys
         modal: MnemonicPhraseModal
         modal_hd: HdDerivationListModal
         modal_priv_key: PrivateKey
-        modal_public_key: PublicKey
+        editNameInput: HTMLInputElement
+    }
+
+    get allMultisigWalletsOwners() {
+        return this.$store.state.wallets
+            .filter((wallet: WalletType) => wallet.type === 'multisig')
+            .flatMap((wallet: MultisigWallet) => wallet.keyData.owner.addresses)
+            .map((address: string) => address.split('-')[1])
     }
 
     get isVolatile() {
@@ -189,60 +180,8 @@ export default class KeyRow extends Vue {
         return this.wallet.getBaseAddress()
     }
 
-    get assetsDict(): AssetsDict {
-        return this.$store.state.Assets.assetsDict
-    }
-
-    get balances(): IKeyBalanceDict {
-        if (!this.wallet.getUTXOSet()) return {}
-
-        let res: IKeyBalanceDict = {}
-
-        let addrUtxos = this.wallet.getUTXOSet().getAllUTXOs()
-        for (var n = 0; n < addrUtxos.length; n++) {
-            let utxo = addrUtxos[n]
-
-            // ignore NFTS and mint outputs
-            //TODO: support nfts
-            let outId = utxo.getOutput().getOutputID()
-            if (outId === 11 || outId === 6 || outId === 10) continue
-
-            let utxoOut = utxo.getOutput() as AmountOutput
-
-            let amount = utxoOut.getAmount()
-            let assetIdBuff = utxo.getAssetID()
-            let assetId = bintools.cb58Encode(assetIdBuff)
-
-            let assetObj: AvaAsset | undefined = this.assetsDict[assetId]
-
-            if (!assetObj) {
-                let name = '?'
-                let symbol = '?'
-                let denomination = 0
-
-                let newAsset = new AvaAsset(assetId, name, symbol, denomination)
-                newAsset.addBalance(amount)
-
-                res[assetId] = newAsset
-                continue
-            }
-
-            let asset = res[assetId]
-            if (!asset) {
-                let name = assetObj.name
-                let symbol = assetObj.symbol
-                let denomination = assetObj.denomination
-
-                let newAsset = new AvaAsset(assetId, name, symbol, denomination)
-                newAsset.addBalance(amount)
-
-                res[assetId] = newAsset
-            } else {
-                asset.addBalance(amount)
-            }
-        }
-
-        return res
+    get walletName() {
+        return this.wallet.name
     }
 
     get walletType(): WalletNameType {
@@ -251,6 +190,7 @@ export default class KeyRow extends Vue {
     get isHDWallet() {
         return ['mnemonic', 'ledger'].includes(this.walletType)
     }
+
     get mnemonicPhrase(): MnemonicPhrase | null {
         if (this.walletType !== 'mnemonic') return null
         let wallet = this.wallet as MnemonicWallet
@@ -268,12 +208,49 @@ export default class KeyRow extends Vue {
         let wallet = this.wallet as SingletonWallet | MnemonicWallet
         return wallet.ethKey
     }
-    mounted() {
-        if (this.privateKeyC) this.publicKey = getPublicKey(this.privateKeyC)
+
+    get publicKeyC(): string | null {
+        if (this.walletType === 'ledger') return null
+        let wallet = this.wallet as SingletonWallet | MnemonicWallet
+        return '04' + privateToPublic(Buffer.from(wallet.ethKey, 'hex')).toString('hex')
     }
+
+    get icon(): string {
+        switch (this.walletType) {
+            case 'mnemonic':
+                return 'mdi-list-box-outline'
+            case 'multisig':
+                return 'mdi-account-group-outline'
+            default:
+                return 'mdi-shield-key-outline'
+        }
+    }
+
+    onClickEdit() {
+        this.isEditable = !this.isEditable
+        if (!this.isEditable) {
+            if (this.customWalletName === '') {
+                this.customWalletName = this.walletName
+                return
+            } else if (this.customWalletName !== this.walletName) {
+                this.wallet.name = this.customWalletName
+                this.$store.state.volatileWallets.push(this.wallet)
+            }
+        } else {
+            this.customWalletName = this.walletName
+            this.$nextTick(() => this.$refs.editNameInput.focus())
+        }
+    }
+
+    onCancel() {
+        this.isEditable = false
+        this.customWalletName = this.walletName
+    }
+
     remove() {
         this.$emit('remove', this.wallet)
     }
+
     select() {
         this.$emit('select', this.wallet)
     }
@@ -299,19 +276,20 @@ export default class KeyRow extends Vue {
         //@ts-ignore
         this.$refs.modal_priv_key.open()
     }
-    showPublicKeyModal() {
-        //@ts-ignore
-        this.$refs.modal_public_key.open()
-    }
 
     showPrivateKeyCModal() {
         //@ts-ignore
         this.$refs.modal_priv_key_c.open()
     }
+
+    showMultisigOwnerModal() {
+        //@ts-ignore
+        this.$refs.modal_multisig.open()
+    }
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .addressItem {
     font-size: 12px;
@@ -344,11 +322,8 @@ export default class KeyRow extends Vue {
         margin: 0px 8px !important;
     }
 
-    button {
-        font-size: 16px;
-    }
-
     $but_w: 32px;
+
     .circle {
         width: $but_w;
         height: $but_w;
@@ -366,6 +341,7 @@ export default class KeyRow extends Vue {
     .text_buts {
         display: flex;
         flex-direction: column;
+
         > button {
             text-align: right;
             font-size: 13px;
@@ -384,9 +360,8 @@ export default class KeyRow extends Vue {
 .rows {
     overflow: auto;
 }
+
 .addressItem .selBut {
-    flex-shrink: 0;
-    flex-grow: 1;
     color: #867e89;
     padding: 4px 8px;
 
@@ -413,26 +388,43 @@ export default class KeyRow extends Vue {
     justify-content: space-between;
 }
 
+.v-icon.v-icon::after {
+    transform: unset;
+    --webkit-transform: unset;
+}
+
+.v-icon.active {
+    color: rgb(216, 69, 69);
+}
+
 .detail {
-    overflow: auto;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
 }
 
 .label {
     font-weight: bold;
 }
+
 .addressVal {
     overflow: auto;
-    text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: 'Inter';
-    font-size: 15px;
+}
 
-    span {
-        font-weight: normal;
-        margin-right: 8px;
-    }
+.edit-wallet-name-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.wallet-name-edit {
+    color: var(--primary-color);
+    font-size: 1.17em;
+    background-color: var(--bg-wallet-light);
+    border-style: none;
+    outline: none;
+    text-align: center;
+    height: 25px;
 }
 
 .del {
@@ -475,15 +467,17 @@ export default class KeyRow extends Vue {
     color: var(--warning);
     font-size: 15px;
     margin-left: 6px;
+    margin-right: 6px;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .header_cols {
         display: block;
     }
 
     .detail {
         text-align: right;
+        overflow: auto;
     }
 
     .bal_cols {

@@ -53,7 +53,7 @@ import Modal from '@/components/modals/Modal.vue'
 import { generateToken } from '@/kyc_api'
 import snsWebSdk from '@sumsub/websdk'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
-import { WalletType, WalletNameType } from '@c4tplatform/camino-wallet-sdk/dist'
+import { WalletType, WalletNameType } from '@/js/wallets/types'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { kycStyleDay, kycStyleNight } from '@/constants'
 interface UserData {

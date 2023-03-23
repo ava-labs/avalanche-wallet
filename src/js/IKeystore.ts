@@ -1,11 +1,12 @@
-export type KeystoreFileKeyType = 'mnemonic' | 'singleton'
-export type AllKeyFileTypes = KeyFileV2 | KeyFileV3 | KeyFileV4 | KeyFileV5 | KeyFileV6
+export type KeystoreFileKeyType = 'mnemonic' | 'singleton' | 'multisig'
+export type AllKeyFileTypes = KeyFileV2 | KeyFileV3 | KeyFileV4 | KeyFileV5 | KeyFileV6 | KeyFileV7
 export type AllKeyFileDecryptedTypes =
     | KeyFileDecryptedV2
     | KeyFileDecryptedV3
     | KeyFileDecryptedV4
     | KeyFileDecryptedV5
     | KeyFileDecryptedV6
+    | KeyFileDecryptedV7
 
 // V2 #################################
 export interface KeyFileV2 {
@@ -130,3 +131,33 @@ export interface KeyFileKeyDecryptedV6 {
     key: string
     type: KeystoreFileKeyType
 }
+
+// V7 #################################
+// Add name to key
+export interface KeyFileV7 {
+    salt: string
+    keys: KeyFileKeyV7[]
+    version: string
+    activeIndex: number
+}
+
+export interface KeyFileKeyV7 {
+    name: string
+    key: string
+    iv: string
+    type: KeystoreFileKeyType
+}
+
+export interface KeyFileDecryptedV7 {
+    activeIndex: number
+    version: string
+    keys: KeyFileKeyDecryptedV7[]
+}
+
+export interface KeyFileKeyDecryptedV7 {
+    name: string
+    key: string
+    type: KeystoreFileKeyType
+}
+
+export type KeyFile = KeyFileV7

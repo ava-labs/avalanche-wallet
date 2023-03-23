@@ -3,35 +3,39 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { digestMessage } from '@/helpers/helper'
 import { WalletNameType } from '@/js/wallets/types'
 
-import { Buffer as BufferAvalanche, BN } from '@c4tplatform/caminojs'
+import { Buffer as BufferAvalanche, BN } from '@c4tplatform/caminojs/dist'
+import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
+import { buildUnsignedTransaction } from '../TxHelper'
+import { AvaWalletCore, UnsafeWallet } from './types'
+import { privateToAddress } from '@ethereumjs/util'
+
 import {
+    Tx as AVMTx,
+    UnsignedTx as AVMUnsignedTx,
+    UTXO as AVMUTXO,
     KeyPair as AVMKeyPair,
     KeyChain as AVMKeyChain,
     UTXOSet as AVMUTXOSet,
-    UTXO,
 } from '@c4tplatform/caminojs/dist/apis/avm'
 import {
     KeyPair as PlatformKeyPair,
     KeyChain as PlatformKeyChain,
-    UTXOSet as PlatformUTXOSet,
-} from '@c4tplatform/caminojs/dist/apis/platformvm'
-import { KeyChain, KeyChain as EVMKeyChain } from '@c4tplatform/caminojs/dist/apis/evm'
-import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
-import { buildUnsignedTransaction } from '../TxHelper'
-import { AvaWalletCore, UnsafeWallet } from './types'
-import { UTXO as PlatformUTXO } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
-import { privateToAddress } from 'ethereumjs-util'
-import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/avm/tx'
-import {
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
-} from '@c4tplatform/caminojs/dist/apis/platformvm/tx'
-import { Tx as EvmTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/evm/tx'
+    UTXO as PlatformUTXO,
+    UTXOSet as PlatformUTXOSet,
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
+import {
+    KeyChain as EVMKeyChain,
+    Tx as EvmTx,
+    UnsignedTx as EVMUnsignedTx,
+} from '@c4tplatform/caminojs/dist/apis/evm'
+import { SECP256k1KeyPair } from '@c4tplatform/caminojs/dist/common'
+
 import Erc20Token from '@/js/Erc20Token'
 import { WalletCore } from '@/js/wallets/WalletCore'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
-import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import { Transaction } from '@ethereumjs/tx'
 
 class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
@@ -59,6 +63,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
     constructor(pk: string) {
         super()
+        this.name = 'Singleton Wallet'
 
         this.key = pk
 
@@ -86,7 +91,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
         let cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(pkBuf))
         this.ethKeyBech = cPrivKey
-        let cKeyChain = new KeyChain(ava.getHRP(), 'C')
+        let cKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
         this.ethKeyChain = cKeyChain
 
         let cKeypair = cKeyChain.importKey(cPrivKey)
@@ -94,6 +99,10 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
         this.type = 'singleton'
         this.isInit = true
+    }
+
+    getStaticKeyPair(): SECP256k1KeyPair | undefined {
+        return this.keyPair
     }
 
     getChangeAddressAvm(): string {
@@ -136,11 +145,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     getCurrentAddressPlatform(): string {
-        if (this.selectedAlias) {
-            return this.selectedAlias
-        } else {
-            return this.platformKeyPair.getAddressString()
-        }
+        return this.platformKeyPair.getAddressString()
     }
 
     getBaseAddress(): string {
@@ -197,7 +202,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     async buildUnsignedTransaction(
-        orders: (ITransaction | UTXO)[],
+        orders: (ITransaction | AVMUTXO)[],
         addr: string,
         memo?: BufferAvalanche
     ) {

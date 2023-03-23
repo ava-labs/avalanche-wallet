@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div v-if="hasReceived">
-                <label>Received</label>
+                <label>{{ type === 'deposit' ? 'Deposit' : 'Received' }}</label>
                 <BaseTxOutput
                     v-for="(asset, assetId) in tokensReceived"
                     :key="assetId"
