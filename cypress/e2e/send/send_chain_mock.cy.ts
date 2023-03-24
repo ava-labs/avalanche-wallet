@@ -149,7 +149,12 @@ describe('Send: C to C transfer by already owned balance', () => {
                     ) {
                         request.reply({
                             statusCode: 200,
-                            fixture: 'mocks/eth_send_raw_transaction.json',
+                            body: {
+                                id: request.body.id,
+                                jsonrpc: '2.0',
+                                result:
+                                    '0xc0e0a035b2984de34222b035bda2552c388ff8f7b1b748f967d3abb4ee03320b',
+                            },
                         })
                         request.alias = 'eth_sendRawTransaction'
                     }
@@ -170,6 +175,7 @@ describe('Send: C to C transfer by already owned balance', () => {
 
                 cy.wait('@eth_sendRawTransaction').then((intercept) => {
                     const txHash = intercept.response?.body.result
+                    console.log('@txHash: ', txHash)
                     cy.contains('Transaction Hash')
                         .siblings('p')
                         .invoke('text')
