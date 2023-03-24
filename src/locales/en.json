@@ -335,7 +335,6 @@
         "import_key_option1": "MNEMONIC PHRASE",
         "import_key_option2": "KEYSTORE FILE",
         "import_key_option3": "PRIVATE KEY",
-        "import_key_success_title": "Key Added",
         "import_key_success_msg": "Private key and assets added to the wallet.",
         "import_key_duplicate_err": "This private key has already been added to this wallet.",
         "import_key_err": "Invalid Private Key",

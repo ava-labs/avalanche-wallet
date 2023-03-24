@@ -297,7 +297,7 @@ export default new Vuex.Store({
             }
 
             const wallets: MultisigWallet[] = []
-            const staticAddresses = getters.staticAddresses('P') as string[]
+            const staticAddresses = getters.staticAddresses
             for (const alias of keys as string[]) {
                 var response: MultisigAliasReply
                 try {

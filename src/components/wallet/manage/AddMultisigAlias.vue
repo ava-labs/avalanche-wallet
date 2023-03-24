@@ -60,7 +60,7 @@ export default class AddMultisigAlias extends Vue {
                     this.error = 'No address intersection with signing wallets found!'
                 } else {
                     this.$emit('success', {
-                        title: `New multisig wallets added`,
+                        type: `success`,
                         message: `Added ${multisigWallets.length} multisig ${
                             multisigWallets.length > 1 ? 'wallets' : 'wallet'
                         } from ${multisigAliases.length} multisig ${
@@ -87,7 +87,7 @@ export default class AddMultisigAlias extends Vue {
         this.error = ''
 
         try {
-            const staticAddresses = this.$store.getters['staticAddresses']('P')
+            const staticAddresses = this.$store.getters['staticAddresses']
             const multisigAliases = await getMultisigAliases(staticAddresses)
             if (!multisigAliases || multisigAliases.length === 0) {
                 this.error = 'No multisig alias found'
