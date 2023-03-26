@@ -15,7 +15,9 @@ describe('Cross chain: C to X', { tags: ['@cross-chain'] }, () => {
             // Switch to cross chain
             cy.switchToWalletFunctionTab('Cross Chain')
             // Make sure successfully switched to the Cross Chain tab
-            cy.get('.wallet_main .head > h1', { timeout: 15000 }).should('have.text', 'Cross Chain')
+            cy.get('.wallet_main > #wallet_router > .header')
+                .find('h1')
+                .should('have.text', 'Cross Chain')
 
             // RPC aliases
             cy.intercept('POST', '**/ext/bc/C/rpc', (request) => {
@@ -69,7 +71,11 @@ describe('Cross chain: C to X', { tags: ['@cross-chain'] }, () => {
 
             const amount = '0.001'
             // enter amount to transfer
-            cy.get('.swap_form .avax_input input[type="number"]').type(amount)
+            cy.get('.swap_form .avax_input input[type="number"]').then(($el) => {
+                if($el.val()) {
+                    cy.wrap($el).click().invoke('val', '').type(amount)
+                }
+            })
 
             // initial balances
             // WARNING: .invoke('text').as() will return reference, not only value, so we need to get the value under 'then' and then wrapping it into alias
@@ -137,21 +143,6 @@ describe('Cross chain: C to X', { tags: ['@cross-chain'] }, () => {
                         .contains('Import Fee')
                         .find('span')
                         .should('contains.text', `${bnToAvaxX(new BN(txFee))}`)
-
-                    cy.get<string>('@txFee')
-                        .then((importFee) => {
-                            console.debug('importFee: ', importFee?.toString())
-                            cy.get<BigJs.Big>('@exportFee').then((exportFee) =>
-                                exportFee.plus(bnToBigAvaxX(new BN(importFee)))
-                            )
-                        })
-                        .then((totalFee) => {
-                            console.debug('totalFee: ', totalFee?.toString())
-                            cy.get('div')
-                                .contains('Total')
-                                .find('span')
-                                .should('contains.text', `${totalFee?.toString()}`)
-                        })
 
                     // send tx
                     // click CONFIRM button

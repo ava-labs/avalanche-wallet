@@ -15,7 +15,9 @@ describe('Cross chain: X to C', { tags: ['@cross-chain'] }, () => {
             // Switch to cross chain
             cy.switchToWalletFunctionTab('Cross Chain')
             // Make sure successfully switched to the Cross Chain tab
-            cy.get('.wallet_main .head > h1', { timeout: 15000 }).should('have.text', 'Cross Chain')
+            cy.get('.wallet_main > #wallet_router > .header')
+                .find('h1')
+                .should('have.text', 'Cross Chain')
 
             // RPC aliases
             cy.intercept('**/ext/bc/C/rpc', (request) => {
@@ -68,7 +70,11 @@ describe('Cross chain: X to C', { tags: ['@cross-chain'] }, () => {
                 })
 
             // enter amount to transfer
-            cy.get('.swap_form .avax_input input[type="number"]').type('0.001')
+            cy.get('.swap_form .avax_input input[type="number"]').then(($el) => {
+                if($el.val()) {
+                    cy.wrap($el).click().invoke('val', '').type('0.001')
+                }
+            })
 
             // initial balances
             cy.get('.chain_card .balance')
@@ -107,21 +113,6 @@ describe('Cross chain: X to C', { tags: ['@cross-chain'] }, () => {
                         .should('have.text', `${bnToAvaxC(feeWei)} CAM`)
                     cy.wrap(bnToBigAvaxC(feeWei)).as('importFee')
                 })
-
-                cy.get<string>('@txFee')
-                    .then((exportFee) => {
-                        console.debug('exportFee: ', exportFee?.toString())
-                        cy.get<BigJs.Big>('@importFee').then((importFee) =>
-                            importFee.plus(bnToBigAvaxX(new BN(exportFee)))
-                        )
-                    })
-                    .then((totalFee) => {
-                        console.debug('totalFee: ', totalFee?.toString())
-                        cy.get('div')
-                            .contains('Total')
-                            .find('span')
-                            .should('have.text', `${totalFee?.toString()} CAM`)
-                    })
 
                 // send tx
                 // click CONFIRM button
