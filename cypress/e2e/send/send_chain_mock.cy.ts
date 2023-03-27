@@ -4,10 +4,9 @@ describe('Send: C to C transfer by already owned balance', () => {
     beforeEach(() => {
         cy.loginWalletWith('privateKey')
 
-        cy.get('[data-cy="wallet_transfer"]').click().should('have.class', 'router-link-active')
-
-        // RPC aliases
-        cy.intercept('**/ext/bc/C/rpc').as('apiBaseFee')
+        cy.get('[data-cy="wallet_transfer"]', { timeout: 15000 })
+            .click()
+            .should('have.class', 'router-link-active')
 
         // Hidden Show Breakdown
         cy.get('.breakdown_toggle').first().click()
@@ -38,7 +37,7 @@ describe('Send: C to C transfer by already owned balance', () => {
     it('as an error message is shown for inputting x-chain wallet address', () => {
         cy.get<string>('@ownChainBalance').then((balance) => {
             if (balance > 0) {
-                // Input C Chain Addr
+                // Input X Chain Addr
                 cy.get('.bottom_tabs > .chain_select > button:nth-child(1)').click()
                 cy.get('[data-cy="wallet_address"]').invoke('text').as('chainAddress')
                 cy.get<string>('@chainAddress').then((chainAddr) => {
@@ -62,8 +61,8 @@ describe('Send: C to C transfer by already owned balance', () => {
 
         cy.get<string>('@ownChainBalance').then((balance) => {
             if (balance > 0) {
-                // Input C Chain Addr
-                cy.get('.bottom_tabs > .chain_select > button:nth-child(1)').click()
+                // Input P Chain Addr
+                cy.get('.bottom_tabs > .chain_select > button:nth-child(2)').click()
                 cy.get('[data-cy="wallet_address"]').invoke('text').as('chainAddress')
                 cy.get<string>('@chainAddress').then((chainAddr) => {
                     cy.get('input[class="pk_in"]').eq(0).type(chainAddr)
@@ -143,9 +142,26 @@ describe('Send: C to C transfer by already owned balance', () => {
                 // Click Send Transaction Btn
                 cy.get('.button_primary').eq(0).click()
 
-                cy.getMockResponseData('eth_sendRawTransaction')
-                cy.wait('@post_eth_sendRawTransaction').then((intercept) => {
-                    const txHash = intercept.response.body.result
+                cy.intercept('POST', '**/ext/bc/C/rpc', (request) => {
+                    if (
+                        request.body.hasOwnProperty('method') &&
+                        request.body.method.includes('eth_sendRawTransaction')
+                    ) {
+                        request.reply({
+                            statusCode: 200,
+                            body: {
+                                id: request.body.id,
+                                jsonrpc: '2.0',
+                                result:
+                                    '0xc0e0a035b2984de34222b035bda2552c388ff8f7b1b748f967d3abb4ee03320b',
+                            },
+                        })
+                        request.alias = 'eth_sendRawTransaction'
+                    }
+                })
+
+                cy.wait('@eth_sendRawTransaction').then((intercept) => {
+                    const txHash = intercept.response?.body.result
                     cy.contains('Transaction Hash')
                         .siblings('p')
                         .invoke('text')
@@ -162,9 +178,6 @@ describe('Send: C to C transfer by not balance', () => {
         cy.loginWalletWith('privateKey', 'privateKeyZeroBalance')
 
         cy.get('[data-cy="wallet_transfer"]').click().should('have.class', 'router-link-active')
-
-        // RPC aliases
-        cy.intercept('**/ext/bc/C/rpc').as('apiBaseFee')
 
         // Hidden Show Breakdown
         cy.get('.breakdown_toggle').first().click()
