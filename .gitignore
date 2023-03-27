@@ -1,6 +1,5 @@
 .DS_Store
 node_modules
-camino-wallet-sdk
 /dist
 
 # Manually importing AVAJS
