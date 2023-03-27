@@ -809,7 +809,7 @@
     },
     "validator": {
         "pending": {
-            "validator_pending" : "Your validator is being set up. Please wait. For more information click the link."
+            "validator_pending" : "Your validator node is waiting for the transaction to be committed. For more information click here."
         },
         "info" : {
             "staking_start_date": "Staking Start Date",
