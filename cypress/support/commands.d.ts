@@ -17,11 +17,10 @@ declare global {
             switchToWalletApp(): Chainable<Element>
             switchToWalletFunctionTab(func: string): Chainable<Element>
             getMockResponseData(
-                requestMethod: string,
-                requestUrl: string,
                 payloadMethod: string,
-                aliasName: string,
-                mockPath: string
+                requestUrl: string,
+                mockPath: string,
+                aliasName: string
             ): Chainable<Element>
             /**
              * combo of commands in sequence:
