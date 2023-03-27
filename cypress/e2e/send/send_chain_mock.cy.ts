@@ -160,22 +160,8 @@ describe('Send: C to C transfer by already owned balance', () => {
                     }
                 })
 
-                cy.intercept('POST', '**/ext/bc/C/rpc', (request) => {
-                    if (
-                        request.body.hasOwnProperty('method') &&
-                        request.body.method.includes('eth_getTransactionReceipt')
-                    ) {
-                        request.reply({
-                            statusCode: 200,
-                            fixture: 'mocks/eth_get_transaction_receipt.json',
-                        })
-                        request.alias = 'eth_getTransactionReceipt'
-                    }
-                })
-
                 cy.wait('@eth_sendRawTransaction').then((intercept) => {
                     const txHash = intercept.response?.body.result
-                    console.log('@txHash: ', txHash)
                     cy.contains('Transaction Hash')
                         .siblings('p')
                         .invoke('text')
