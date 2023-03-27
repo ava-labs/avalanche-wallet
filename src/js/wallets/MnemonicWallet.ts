@@ -37,7 +37,7 @@ import { AvmExportChainType, AvmImportChainType, IAvaHdWallet } from '@/js/walle
 import HDKey from 'hdkey'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { KeyPair as PlatformVMKeyPair } from 'avalanche/dist/apis/platformvm'
-import { HdWalletCore } from '@/js/wallets/HdWalletCore'
+import { AbstractHdWallet } from '@/js/wallets/AbstractHdWallet'
 import { WalletNameType } from '@/js/wallets/types'
 import { digestMessage } from '@/helpers/helper'
 import { KeyChain } from 'avalanche/dist/apis/evm'
@@ -63,7 +63,7 @@ const SCAN_RANGE: number = SCAN_SIZE - INDEX_RANGE // How many items are actuall
 // Possible indexes for each request is
 // SCAN_SIZE - INDEX_RANGE
 
-export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet {
+export default class MnemonicWallet extends AbstractHdWallet implements IAvaHdWallet {
     seed: string
     hdKey: HDKey
     private mnemonic: MnemonicPhrase
@@ -208,11 +208,6 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
         utxos?: PlatformUTXO[]
     ): Promise<string> {
         return await WalletHelper.delegate(this, nodeID, amt, start, end, rewardAddress, utxos)
-    }
-
-    async getStake(): Promise<BN> {
-        this.stakeAmount = await WalletHelper.getStake(this)
-        return this.stakeAmount
     }
 
     async issueBatchTx(

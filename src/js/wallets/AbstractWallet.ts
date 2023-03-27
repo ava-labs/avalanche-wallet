@@ -23,10 +23,11 @@ import {
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
 import { AvmImportChainType } from '@/js/wallets/types'
 import { issueC, issueP, issueX } from '@/helpers/issueTx'
-import { sortUTXOsByAmount, sortUTxoSetP } from '@/helpers/sortUTXOs'
+import { sortUTxoSetP } from '@/helpers/sortUTXOs'
+import { getStakeForAddresses } from '@/helpers/utxo_helper'
 const uniqid = require('uniqid')
 
-abstract class WalletCore {
+abstract class AbstractWallet {
     id: string
 
     utxoset: AVMUTXOSet
@@ -122,6 +123,12 @@ abstract class WalletCore {
 
     protected async issueC(tx: EVMTx) {
         return issueC(tx)
+    }
+
+    async getStake() {
+        const addrs = this.getAllAddressesP()
+        this.stakeAmount = await getStakeForAddresses(addrs)
+        return this.stakeAmount
     }
 
     async exportFromXChain(amt: BN, destinationChain: ExportChainsX, importFee?: BN) {
@@ -332,4 +339,4 @@ abstract class WalletCore {
         return this.issueX(tx)
     }
 }
-export { WalletCore }
+export { AbstractWallet }

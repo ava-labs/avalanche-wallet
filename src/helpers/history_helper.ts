@@ -293,10 +293,6 @@ function getTransactionSummary(tx: ITransactionData, wallet: WalletType) {
 
     const nftSummary = getNFTsSummary(tx, wallet)
 
-    // let nftLoss = getLossNFT(tx, wallet)
-    // let nftGain = getGainNFT()NFT(tx, wallet)
-    // console.log(nftLoss)
-
     const sum: BaseTxSummary = {
         tokens: {},
         collectibles: {

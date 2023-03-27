@@ -19,17 +19,11 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 
 import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
-import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERC721Token from '@/js/ERC721Token'
 import { issueP, issueX } from '@/helpers/issueTx'
 import { sortUTxoSetP } from '@/helpers/sortUTXOs'
 
 class WalletHelper {
-    static async getStake(wallet: WalletType): Promise<BN> {
-        const addrs = wallet.getAllAddressesP()
-        return await getStakeForAddresses(addrs)
-    }
-
     static async createNftFamily(
         wallet: WalletType,
         name: string,

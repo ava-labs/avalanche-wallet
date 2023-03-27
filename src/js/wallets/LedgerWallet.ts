@@ -55,7 +55,7 @@ import {
 
 import { Credential, SigIdx, Signature, UTXOResponse, Address } from 'avalanche/dist/common'
 import { getPreferredHRP, PayloadBase } from 'avalanche/dist/utils'
-import { HdWalletCore } from '@/js/wallets/HdWalletCore'
+import { AbstractHdWallet } from '@/js/wallets/AbstractHdWallet'
 import { WalletNameType } from '@/js/wallets/types'
 import { abiDecoder, web3 } from '@/evm'
 import { AVA_ACCOUNT_PATH, ETH_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from './MnemonicWallet'
@@ -73,7 +73,7 @@ import {
 } from '@avalabs/avalanche-wallet-sdk'
 import { getTxOutputAddresses } from '@/utils/getAddressFromTx'
 
-class LedgerWallet extends HdWalletCore implements AvaWalletCore {
+class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
     provider: LedgerProvider
     ethApp: Eth
     type: WalletNameType
@@ -873,11 +873,6 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
 
     getEvmAddress(): string {
         return this.ethAddress
-    }
-
-    async getStake(): Promise<BN> {
-        this.stakeAmount = await WalletHelper.getStake(this)
-        return this.stakeAmount
     }
 
     async getEthBalance() {
