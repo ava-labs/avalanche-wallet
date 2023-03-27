@@ -5,7 +5,7 @@ import { NetworkState } from '@/store/modules/network/types'
 import { ava, infoApi } from '@/AVA'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { explorer_api } from '@/explorer_api'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '@/providers'
 import { setAvalanche } from '@c4tplatform/camino-wallet-sdk/dist'
@@ -165,14 +165,15 @@ const network_module: Module<NetworkState, RootState> = {
             }
 
             await dispatch('Assets/onNetworkChange', net, { root: true })
+            await dispatch('Launch/onNetworkChange', net, { root: true })
             dispatch('Assets/updateUTXOs', null, { root: true })
             dispatch('Platform/update', null, { root: true })
             dispatch('Platform/updateMinStakeAmount', null, { root: true })
             dispatch('updateTxFee')
             dispatch('Accounts/updateKycStatus', null, { root: true })
-            dispatch('Accounts/updateMultisigAliases', null, { root: true })
             // Update tx history
-            dispatch('History/updateTransactionHistory', null, { root: true })
+            this.dispatch('History/getAliasChains')
+            this.dispatch('History/updateTransactionHistory', null, { root: true })
 
             // Set the SDK Network
             setAvalanche(ava)

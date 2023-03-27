@@ -1,3 +1,4 @@
+import { expect } from '@jest/globals';
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 
 const TEST_KEY = 'PrivateKey-r6yxM4MiGc93hZ4QxSHhixLEH5RtPjGw6Y85gzg8mgaia6HT3'

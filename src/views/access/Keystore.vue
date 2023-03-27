@@ -118,6 +118,7 @@ export default class Keystore extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/variables';
 
 .pass {
     background-color: var(--bg) !important;
@@ -178,7 +179,7 @@ a {
     margin: 14px 0px !important;
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     h1 {
         font-size: main.$m-size-mobile;
     }
@@ -187,7 +188,7 @@ a {
         width: 100%;
     }
 }
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .access_card {
         padding: main.$container-padding-mobile;
     }

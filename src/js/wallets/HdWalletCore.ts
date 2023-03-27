@@ -1,17 +1,18 @@
-import { ChainAlias } from '@/js/wallets/types'
-import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
-
-import { BN, Buffer } from '@c4tplatform/caminojs'
-import { ITransaction } from '@/components/wallet/transfer/types'
-import { ava, bintools } from '@/AVA'
-import { UTXOSet as AVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import HDKey from 'hdkey'
-import { HdHelper } from '@/js/HdHelper'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
+
+import { ava, bintools } from '@/AVA'
+import { ChainAlias } from '@/js/wallets/types'
+import { ITransaction } from '@/components/wallet/transfer/types'
 import { buildUnsignedTransaction } from '../TxHelper'
 import { WalletCore } from '@/js/wallets/WalletCore'
 import { updateFilterAddresses } from '../../providers'
 import { digestMessage } from '@/helpers/helper'
+import { HdHelper } from '@/js/HdHelper'
+
+import { KeyPair, UTXO, UTXOSet as AVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/avm'
+import { BN, Buffer } from '@c4tplatform/caminojs/dist'
+import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
+import { SECP256k1KeyPair } from '@c4tplatform/caminojs/dist/common'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
@@ -24,10 +25,14 @@ abstract class HdWalletCore extends WalletCore {
     platformHelper: HdHelper
 
     ethHdNode: HDKey
+    ethKeyPair: SECP256k1KeyPair
 
     constructor(accountHdKey: HDKey, ethHdNode: HDKey, isPublic = true) {
         super()
         this.ethHdNode = ethHdNode
+        this.ethKeyPair = new KeyPair('', '')
+        this.ethKeyPair.importKey(Buffer.from(ethHdNode.privateKey))
+
         this.chainId = ava.XChain().getBlockchainAlias() || ava.XChain().getBlockchainID()
         this.externalHelper = new HdHelper('m/0', accountHdKey, ethHdNode, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, undefined, isPublic)
@@ -196,11 +201,11 @@ abstract class HdWalletCore extends WalletCore {
     }
 
     getCurrentAddressPlatform(): string {
-        if (this.selectedAlias) {
-            return this.selectedAlias
-        } else {
-            return this.platformHelper.getCurrentAddress()
-        }
+        return this.platformHelper.getCurrentAddress()
+    }
+
+    getStaticKeyPair(): SECP256k1KeyPair | undefined {
+        return this.ethKeyPair
     }
 
     getPlatformUTXOSet() {

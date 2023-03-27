@@ -7,7 +7,7 @@
             :key="i"
             @click="selectAccount(i)"
         >
-            <v-icon>mdi-wallet-outline</v-icon>
+            <Identicon :value="acct.name" diameter="40"></Identicon>
             <p>{{ acct.name }}</p>
             <v-icon class="goTo">mdi-chevron-right</v-icon>
         </div>
@@ -43,6 +43,7 @@ export default class AccountsFound extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/variables';
 @use './menu';
 
 .accounts {
@@ -112,7 +113,7 @@ h3 {
         grid-template-columns: none;
     }
 }
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .access_card {
         padding: main.$container-padding-mobile;
     }

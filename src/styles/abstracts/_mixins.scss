@@ -1,11 +1,12 @@
+@use "variables";
 @mixin mobile-device {
-    @media only screen and (max-width: $mobile_width) {
+    @media only screen and (max-width: variables.$mobile_width) {
         @content;
     }
 }
 
 @mixin medium-device {
-    @media only screen and (min-width: $mobile_width) and (max-width: $width_m) {
+    @media only screen and (min-width: variables.$mobile_width) and (max-width: variables.$width_m) {
         @content;
     }
 }

@@ -109,6 +109,7 @@ export default class NetworkRow extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/variables';
 .stat_col {
     font-size: 14px;
     color: var(--primary-color);
@@ -187,7 +188,7 @@ img {
     }
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     img {
         display: none;
     }

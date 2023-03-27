@@ -88,12 +88,12 @@ export default class NftCol extends Vue {
     }
 
     get ercNftBalance(): ERCNftWalletBalance {
-        return this.$store.state.Assets.ERCNft.walletBalance
+        return this.$store.state.Assets?.ERCNft?.walletBalance
     }
 
     get ercNftBalanceArray() {
         // TODO: Remove after ledger support
-        if (this.$store.state.activeWallet.type === 'ledger') return []
+        if (this.$store.state.activeWallet?.type === 'ledger') return []
 
         let res: iERCNftSelectInput[] = []
         for (var tokenAddr in this.ercNftBalance) {

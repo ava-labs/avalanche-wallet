@@ -20,7 +20,7 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { makeKeyfile } from '@/js/Keystore'
 import { checkVerificationStatus } from '@/kyc_api'
-import { getMultisigAliases } from '@/explorer_api'
+import { createHash } from 'crypto'
 
 const accounts_module: Module<AccountsState, RootState> = {
     namespaced: true,
@@ -28,11 +28,22 @@ const accounts_module: Module<AccountsState, RootState> = {
         accounts: [],
         accountIndex: null,
         kycStatus: false,
-        multisigAliases: [],
     },
     mutations: {
         loadAccounts(state) {
             state.accounts = getLocalStorageAccounts()
+        },
+        deleteKey(state, wallet: WalletType) {
+            if (state.accountIndex === null || !wallet.accountHash) return
+            const acct = state.accounts[state.accountIndex]
+            const delIndex = acct.wallet.keys.findIndex((w) => {
+                const hash = createHash('sha256').update(w.key).digest()
+                return hash.compare(wallet.accountHash ?? Buffer.alloc(0))
+            })
+            if (delIndex >= 0) {
+                acct.baseAddresses.splice(delIndex, 1)
+                acct.wallet.keys.splice(delIndex, 1)
+            }
         },
     },
     actions: {
@@ -51,6 +62,7 @@ const accounts_module: Module<AccountsState, RootState> = {
                 password: pass,
                 data: account.wallet,
             }
+
             await dispatch('importKeyfile', data, { root: true })
             state.accountIndex = index
         },
@@ -69,6 +81,7 @@ const accounts_module: Module<AccountsState, RootState> = {
 
                 if (!wallet) throw new Error('No active wallet.')
                 let activeIndex = wallets.findIndex((w) => w.id == wallet!.id)
+                if (activeIndex >= wallets.length) activeIndex = 0
 
                 let file = await makeKeyfile(wallets, pass, activeIndex)
                 let baseAddresses = getters.baseAddresses
@@ -83,14 +96,18 @@ const accounts_module: Module<AccountsState, RootState> = {
                     overwriteAccountAtIndex(encryptedWallet, accountIndex)
                 } else {
                     addAccountToStorage(encryptedWallet)
+                    state.accountIndex = state.accounts.length
                 }
 
                 // No more volatile wallets
                 rootState.volatileWallets = []
+                rootState.warnUpdateKeyfile = false
+                rootState.storedActiveWallet = rootState.activeWallet
+                rootState.walletsDeleted = false
                 commit('loadAccounts')
-                state.accountIndex = state.accounts.length - 1
             } catch (e) {
-                dispatch('Notifications/add', {
+                let { dispatchNotification } = this.globalHelper()
+                dispatchNotification({
                     title: 'Account Save',
                     message: 'Error Saving Account.',
                     type: 'error',
@@ -101,12 +118,12 @@ const accounts_module: Module<AccountsState, RootState> = {
         // If there is an active account, will remove it from local storage
         async deleteAccount({ state, dispatch, getters, commit }, password) {
             let acct = getters.account
+
             let passCorrect = await verifyAccountPassword(acct, password)
             if (!passCorrect) throw new Error('Invalid password.')
-            let index = state.accounts.indexOf(acct)
-            if (!acct || index === -1) {
-                return
-            }
+            let index = state.accountIndex
+
+            if (!acct || index === null || index === undefined) return
 
             removeAccountByIndex(index)
             state.accountIndex = null
@@ -116,16 +133,16 @@ const accounts_module: Module<AccountsState, RootState> = {
         },
 
         async changePassword({ state, getters, dispatch }, input: ChangePasswordInput) {
+            let index = state.accountIndex
             let account: iUserAccountEncrypted = getters.account
-            let index = state.accounts.indexOf(account)
 
-            if (!account || index === -1) return
+            if (!account || !index) return
 
             let oldPassCorrect = await verifyAccountPassword(account, input.passOld)
             if (!oldPassCorrect) throw new Error('Previous password invalid.')
 
             // Remove current wallet file
-            removeAccountByIndex(index)
+            if (!index) removeAccountByIndex(index)
             // Save with new password
             dispatch('saveAccount', {
                 password: input.passNew,
@@ -138,34 +155,16 @@ const accounts_module: Module<AccountsState, RootState> = {
             let index = state.accountIndex
             let account: iUserAccountEncrypted = getters.account
 
-            if (!index) return
+            if (index === null || index === undefined) return
 
             let passCorrect = await verifyAccountPassword(account, pass)
             if (!passCorrect) throw new Error('Invalid password.')
 
-            // Remove current wallet file
-            removeAccountByIndex(index)
             // Save with volatile keys
             dispatch('saveAccount', {
                 password: pass,
                 accountName: account.name,
             })
-        },
-
-        // Remove the selected key from account and update local storage
-        async deleteKey({ state, getters, rootState, commit }, wallet: WalletType) {
-            if (!getters.account) return
-            let delIndex = rootState.wallets.indexOf(wallet)
-            let acctIndex = state.accountIndex
-            let acct: iUserAccountEncrypted = getters.account
-
-            if (!acctIndex) throw new Error('Account not found.')
-
-            acct.baseAddresses.splice(delIndex, 1)
-            acct.wallet.keys.splice(delIndex, 1)
-
-            overwriteAccountAtIndex(acct, acctIndex)
-            commit('loadAccounts')
         },
 
         async updateKycStatus({ state, rootState, dispatch }) {
@@ -177,33 +176,29 @@ const accounts_module: Module<AccountsState, RootState> = {
                     //@ts-ignore
                     rootState.Network.selectedNetwork.name.toLowerCase()
                 )
-            } catch (e) {
-                let error = e as Error
-                console.log(error.message)
+            } catch (error) {
+                console.log(error)
                 state.kycStatus = false
             }
         },
-
-        async updateMultisigAliases({ state, rootState }) {
-            const wallet = rootState.activeWallet
-            if (!wallet) return
-            const addressP = wallet.getCurrentAddressPlatform()
-            state.multisigAliases = await getMultisigAliases(addressP)
-        },
     },
     getters: {
-        hasAccounts(state: AccountsState, getters) {
+        name(state, getters) {
+            return getters.account?.name ?? 'Account'
+        },
+
+        hasAccounts(state) {
             return state.accounts.length > 0
         },
 
-        baseAddresses(state: AccountsState, getters, rootState: RootState) {
+        baseAddresses(state, getters, rootState: RootState) {
             let wallets = rootState.wallets
             return wallets.map((w: WalletType) => {
                 return w.getEvmAddress()
             })
         },
 
-        baseAddressesNonVolatile(state: AccountsState, getters, rootState: RootState) {
+        baseAddressesNonVolatile(state, getters, rootState: RootState) {
             let wallets = rootState.wallets.filter((w) => {
                 return !rootState.volatileWallets.includes(w)
             })
@@ -213,7 +208,7 @@ const accounts_module: Module<AccountsState, RootState> = {
             })
         },
 
-        account(state: AccountsState, getters): iUserAccountEncrypted | null {
+        account(state): iUserAccountEncrypted | null {
             if (state.accountIndex === null) return null
             return state.accounts[state.accountIndex]
         },
@@ -224,10 +219,6 @@ const accounts_module: Module<AccountsState, RootState> = {
 
         kycStatus(state: AccountsState): boolean {
             return state.kycStatus
-        },
-
-        multisigAliases(state: AccountsState): string[] {
-            return state.multisigAliases
         },
     },
 }

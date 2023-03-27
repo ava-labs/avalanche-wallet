@@ -9,13 +9,14 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSettingsModal.vue'
 
 @Component
 export default class DeleteAccount extends Vue {
     @Prop() setAccount: any
-    helpers = this.globalHelper()
     pass = ''
     error = ''
+    $parent!: AccountSettingsModal
 
     get canSubmit() {
         if (this.pass.length < 1) return false
@@ -27,14 +28,16 @@ export default class DeleteAccount extends Vue {
         try {
             let notificationMessage = this.$t('notifications.delete_account')
             await this.$store.dispatch('Accounts/deleteAccount', this.pass)
-            this.helpers.setAccount(null)
-            this.helpers.dispatchNotification({
+            let { dispatchNotification, setAccount } = this.globalHelper()
+            setAccount(null)
+            dispatchNotification({
                 message: notificationMessage,
                 type: 'success',
             })
-        } catch (err) {
-            let error = err as Error
-            this.error = error.message
+            this.$parent.close()
+        } catch (err: any) {
+            console.error(err)
+            this.error = err.message
         }
     }
 }

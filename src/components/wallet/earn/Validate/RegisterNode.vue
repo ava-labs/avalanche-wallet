@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div class="refresh_div">
+            <div class="refresh">
+                <Spinner v-if="loadingRefreshRegisterNode" class="spinner"></Spinner>
+                <button v-else @click="refresh">
+                    <v-icon>mdi-refresh</v-icon>
+                </button>
+            </div>
+        </div>
+        <br />
         <div class="requirements_list">
             <h4>{{ $t('earn.validate.requirements_introduction') }}</h4>
             <div class="requirement_title">
@@ -92,7 +101,10 @@
                 "
                 block
             >
-                {{ $t('earn.validate.register_validator_node') }}
+                <Spinner v-if="loadingRegisterNode" class="spinner"></Spinner>
+                <span v-else>
+                    {{ $t('earn.validate.register_validator_node') }}
+                </span>
             </v-btn>
         </div>
     </div>
@@ -112,16 +124,24 @@ import {
     privateKeyStringToBuffer,
 } from '@c4tplatform/caminojs/dist/utils'
 import Big from 'big.js'
+import Spinner from '@/components/misc/Spinner.vue'
 
-@Component
+@Component({
+    components: {
+        Spinner,
+    },
+})
 export default class RegisterNode extends Vue {
     @Prop() isKycVerified!: boolean
     @Prop() isConsortiumMember!: boolean
     @Prop() minPlatformUnlocked!: BN
     @Prop() hasEnoughUnlockedPlatformBalance!: boolean
     @Prop() isNodeRegistered!: boolean
+    @Prop() loadingRefreshRegisterNode!: boolean
+
     helpers = this.globalHelper()
     nodePrivateKey = ''
+    loadingRegisterNode: boolean = false
 
     cleanAvaxBN(val: BN) {
         let big = Big(val.toString()).div(Big(ONEAVAX.toString()))
@@ -148,7 +168,6 @@ export default class RegisterNode extends Vue {
             let keypair = new KeyPair(hrp, 'P')
             keypair.importKey(privateKeyStringToBuffer(this.nodePrivateKey.trim()))
             let nodeId = bufferToNodeIDString(keypair.getAddress())
-            console.log(nodeId)
             const result = await WalletHelper.registerNodeTx(
                 this.wallet,
                 this.nodePrivateKey.trim(),
@@ -157,11 +176,15 @@ export default class RegisterNode extends Vue {
                 this.addresses[0]
             )
             console.log(result)
-            this.$emit('registered')
-            this.helpers.dispatchNotification({
-                message: this.$t('notifications.register_node_success'),
-                type: 'success',
-            })
+            this.loadingRegisterNode = true
+            setTimeout(() => {
+                this.$emit('registered')
+                this.helpers.dispatchNotification({
+                    message: this.$t('notifications.register_node_success'),
+                    type: 'success',
+                })
+                this.loadingRegisterNode = false
+            }, 2000)
         } catch (error) {
             console.error(error)
             this.helpers.dispatchNotification({
@@ -170,10 +193,14 @@ export default class RegisterNode extends Vue {
             })
         }
     }
+
+    refresh() {
+        this.$emit('refresh')
+    }
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/variables';
 
 .success_status_icon {
     color: var(--success);
@@ -235,9 +262,35 @@ input::placeholder {
     transform: translateY(-50%);
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .high_input {
         line-height: 4;
     }
+}
+
+.refresh {
+    width: 20px;
+    height: 20px;
+    .v-icon {
+        color: var(--primary-color);
+    }
+
+    button {
+        outline: none !important;
+    }
+    img {
+        object-fit: contain;
+        width: 100%;
+    }
+
+    .spinner {
+        color: var(--primary-color) !important;
+    }
+}
+
+.refresh_div {
+    position: relative;
+    float: right;
+    margin-top: -5%;
 }
 </style>

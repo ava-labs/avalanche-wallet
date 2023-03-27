@@ -74,6 +74,7 @@ export default class PrivateKey extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/variables';
 .pass {
     background-color: var(--bg) !important;
 }
@@ -130,7 +131,7 @@ a {
     color: var(--error);
     margin: 14px 0px !important;
 }
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     h1 {
         font-size: main.$m-size-mobile;
     }

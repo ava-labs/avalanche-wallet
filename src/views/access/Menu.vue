@@ -50,6 +50,8 @@ export default class Menu extends Vue {
 </script>
 
 <style scoped lang="scss">
+@use '../../styles/abstracts/variables';
+@use '../../styles/abstracts/mixins';
 @use '../../styles/main';
 @use '/src/components/Access/menu';
 
@@ -63,7 +65,7 @@ export default class Menu extends Vue {
 img {
     width: main.$img-size;
     height: main.$img-size;
-    margin-bottom: main.$vertical-padding;
+    margin-bottom: variables.$vertical-padding;
 }
 
 h1 {
@@ -73,8 +75,8 @@ h1 {
 
 hr {
     max-width: 67% !important;
-    margin: main.$vertical-padding auto 0;
-    color: main.$primary-color-light;
+    margin: variables.$vertical-padding auto 0;
+    color: variables.$primary-color-light;
     opacity: 0.2;
 }
 
@@ -109,7 +111,7 @@ hr {
     margin-top: 1em;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     img {
         width: main.$img-size-mobile;
         height: main.$img-size-mobile;
@@ -121,7 +123,7 @@ hr {
     }
 
     .card {
-        padding: main.$container-padding-mobile;
+        padding: variables.$container-padding-mobile;
     }
 
     .options {
@@ -134,9 +136,9 @@ hr {
     }
 }
 
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .access_card {
-        padding: main.$container-padding-mobile;
+        padding: variables.$container-padding-mobile;
     }
 }
 </style>

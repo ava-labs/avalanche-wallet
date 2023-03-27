@@ -168,7 +168,7 @@ export default class PaperWallet extends Vue {
         )
 
         // Mnemonic
-        let mnemonicWords: string[] = this.wallet.getMnemonic().split(' ')
+        let mnemonicWords: string[] = this.wallet?.getMnemonic()?.split(' ')
         let row1 = mnemonicWords.slice(0, 8).join(' ')
         let row2 = mnemonicWords.slice(8, 16).join(' ')
         let row3 = mnemonicWords.slice(16).join(' ')
@@ -184,8 +184,8 @@ export default class PaperWallet extends Vue {
         )
     }
 
-    @Watch('address')
-    @Watch('mnemonic')
+    @Watch('address', { immediate: true })
+    //@Watch('mnemonic')
     buildQr() {
         let parent = this
         QRCode.toDataURL(

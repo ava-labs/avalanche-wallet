@@ -130,7 +130,8 @@ export default class VerifyMnemonic extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/variables';
+@use '../../styles/abstracts/mixins';
 
 .mnemonic_body {
     padding: 30px;
@@ -184,12 +185,12 @@ h3 {
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-bottom: 1px solid main.$primary-color-light;
+    border-bottom: 1px solid variables.$primary-color-light;
     outline: none;
 
     p {
         margin: 0 5px 0 0 !important;
-        color: main.$primary-color-light;
+        color: variables.$primary-color-light;
     }
 
     input {
@@ -222,7 +223,7 @@ h3 {
     color: var(--error);
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .mnemonic_body {
         padding: 15px 30px;
         width: 100%;

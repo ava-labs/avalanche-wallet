@@ -1,9 +1,10 @@
 /*
 The base wallet class used for common functionality
 */
-import { BN } from '@c4tplatform/caminojs'
-import { UTXOSet as AVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/avm'
-import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
+import { ava, bintools } from '@/AVA'
+import { AvmImportChainType, ChainAlias } from '@/js/wallets/types'
+
+import { BN } from '@c4tplatform/caminojs/dist'
 import {
     chainIdFromAlias,
     ExportChainsC,
@@ -13,21 +14,32 @@ import {
     TxHelper,
     GasHelper,
 } from '@c4tplatform/camino-wallet-sdk/dist'
-import { ava, bintools } from '@/AVA'
-import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
-import { Tx as EVMTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/evm/tx'
 import {
+    Tx as EVMTx,
+    UnsignedTx as EVMUnsignedTx,
+    UTXOSet as EVMUTXOSet,
+} from '@c4tplatform/caminojs/dist/apis/evm'
+import {
+    ExportTx as PlatformExportTx,
     Tx as PlatformTx,
     UnsignedTx as PlatformUnsignedTx,
-} from '@c4tplatform/caminojs/dist/apis/platformvm/tx'
-import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/avm/tx'
-import { AvmImportChainType } from '@/js/wallets/types'
-import { ExportTx as PlatformExportTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
+    UTXOSet as PlatformUTXOSet,
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
+import {
+    Tx as AVMTx,
+    UnsignedTx as AVMUnsignedTx,
+    UTXOSet as AVMUTXOSet,
+} from '@c4tplatform/caminojs/dist/apis/avm'
+import { SECP256k1KeyPair } from '@c4tplatform/caminojs/dist/common'
+import { WalletNameType } from '@/js/wallets/types'
 
 var uniqid = require('uniqid')
 
 abstract class WalletCore {
     id: string
+    name: string = ''
+    type?: WalletNameType
+    accountHash?: Buffer
 
     utxoset: AVMUTXOSet
     platformUtxoset: PlatformUTXOSet
@@ -36,8 +48,6 @@ abstract class WalletCore {
     isFetchUtxos: boolean
     isInit: boolean
 
-    selectedAlias?: string
-
     abstract getEvmAddressBech(): string
     abstract getEvmAddress(): string
     abstract getCurrentAddressAvm(): string
@@ -45,6 +55,7 @@ abstract class WalletCore {
     abstract getCurrentAddressPlatform(): string
     abstract getAllAddressesP(): string[]
     abstract getAllAddressesX(): string[]
+    abstract getStaticKeyPair(): SECP256k1KeyPair | undefined
 
     abstract signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
     abstract signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
@@ -56,10 +67,6 @@ abstract class WalletCore {
     abstract signMessage(msg: string, address?: string): Promise<string>
     abstract getPlatformUTXOSet(): PlatformUTXOSet
 
-    getUTXOSet(): AVMUTXOSet {
-        return this.utxoset
-    }
-
     protected constructor() {
         this.id = uniqid()
         this.utxoset = new AVMUTXOSet()
@@ -68,6 +75,20 @@ abstract class WalletCore {
 
         this.isInit = false
         this.isFetchUtxos = false
+    }
+
+    getUTXOSet(): AVMUTXOSet {
+        return this.utxoset
+    }
+
+    prepareSignP(tx: PlatformUnsignedTx): void {}
+
+    getStaticAddress(chainID: ChainAlias): string {
+        const kp = this.getStaticKeyPair()
+        if (kp) {
+            return bintools.addressToString(ava.getHRP(), chainID, kp.getAddress())
+        }
+        return ''
     }
 
     async evmGetAtomicUTXOs(sourceChain: ExportChainsC) {
@@ -144,7 +165,7 @@ abstract class WalletCore {
             changeAddress
         )
 
-        const eTx = exportTx.getTransaction() as unknown as PlatformExportTx
+        const eTx = (exportTx.getTransaction() as unknown) as PlatformExportTx
         let tx = await this.signX(exportTx)
 
         return ava.XChain().issueTx(tx)

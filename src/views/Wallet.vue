@@ -216,14 +216,11 @@ export default class Wallet extends Vue {
     }
 
     get isManageWarning(): boolean {
-        if (this.$store.state.warnUpdateKeyfile) {
-            return true
-        }
-        return false
+        return this.$store.state.warnUpdateKeyfile
     }
 
     get hasVolatileWallets() {
-        return this.$store.state.volatileWallets.length > 0
+        return this.$store.getters.accountChanged
     }
 }
 </script>

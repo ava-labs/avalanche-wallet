@@ -33,7 +33,7 @@ export default class MnemonicDisplay extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .mnemonic_display {
     display: grid;
@@ -79,7 +79,7 @@ span {
     text-align: center;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .word {
         * {
             padding: 4px 2px;

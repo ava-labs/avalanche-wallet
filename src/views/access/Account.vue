@@ -1,7 +1,7 @@
 <template>
     <div class="access_card">
         <div class="content">
-            <Identicon :value="account.baseAddresses.join('')"></Identicon>
+            <Identicon :value="account.name"></Identicon>
             <h1>{{ account.name }}</h1>
             <form @submit.prevent="access">
                 <input
@@ -117,6 +117,7 @@ export default class Account extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/variables';
 .pass {
     text-align: center;
     background-color: var(--bg-light) !important;
@@ -172,7 +173,7 @@ a {
     color: var(--error);
     margin: 14px 0px !important;
 }
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     h1 {
         font-size: main.$m-size-mobile;
     }
@@ -180,7 +181,7 @@ a {
         width: 100%;
     }
 }
-@media only screen and (max-width: main.$mobile_width) {
+@media only screen and (max-width: variables.$mobile_width) {
     .access_card {
         padding: main.$container-padding-mobile;
     }

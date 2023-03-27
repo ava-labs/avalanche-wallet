@@ -1,5 +1,5 @@
 <template>
-    <modal ref="modal" :title="$t('modal.keystore.title')" class="modal_main" :can_close="false">
+    <modal ref="modal" :title="$t('modal.keystore.title')" class="modal_main" :can_close="true">
         <div class="update_keystore_modal_body">
             <p>{{ $t('modal.keystore.desc') }}</p>
             <ExportWallet
@@ -30,7 +30,7 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
         ExportWallet,
     },
 })
-export default class MnemonicPhrase extends Vue {
+export default class UpdateKeystoreModal extends Vue {
     isSuccess: boolean = false
 
     $refs!: {

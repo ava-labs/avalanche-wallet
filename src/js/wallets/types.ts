@@ -21,7 +21,7 @@ import {
 } from '@c4tplatform/caminojs/dist/apis/evm'
 
 import { ITransaction } from '@/components/wallet/transfer/types'
-import { BN, Buffer } from '@c4tplatform/caminojs'
+import { BN, Buffer } from '@c4tplatform/caminojs/dist'
 import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
 import Erc20Token from '@/js/Erc20Token'
 
@@ -29,6 +29,7 @@ import { Transaction } from '@ethereumjs/tx'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
+import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 import { ExportChainsC, ExportChainsP, ExportChainsX } from '@c4tplatform/camino-wallet-sdk/dist'
 import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
 
@@ -40,8 +41,8 @@ export type ChainAlias = 'X' | 'P'
 export type AvmImportChainType = 'P' | 'C'
 export type AvmExportChainType = 'P' | 'C'
 
-export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton'
-export type WalletType = MnemonicWallet | LedgerWallet | SingletonWallet
+export type WalletNameType = 'mnemonic' | 'ledger' | 'singleton' | 'multisig'
+export type WalletType = MnemonicWallet | LedgerWallet | SingletonWallet | MultisigWallet
 
 interface IAddressManager {
     getCurrentAddressAvm(): string
@@ -136,25 +137,4 @@ export interface IAvaHdWallet extends AvaWalletCore, UnsafeWallet {
     getMnemonic(): string
     getCurrentKey(): AVMKeyPair
     getKeyChain(): AVMKeyChain
-}
-
-export type RewardOwner = {
-    locktime: string
-    threshold: string
-    addresses: string[]
-}
-
-export type NodeInfo = {
-    txID: string
-    startTime: string
-    endTime: string
-    stakeAmount: string
-    nodeID: string
-    rewardOwner: RewardOwner
-    validationRewardOwner: RewardOwner
-    delegationRewardOwner: RewardOwner
-    potentialReward: string
-    delegationFee: string
-    uptime: string
-    connected: boolean
 }

@@ -90,7 +90,10 @@ export default class Home extends Vue {
 </script>
 
 <style scoped lang="scss">
+@use '../styles/abstracts/variables';
+@use '../styles/abstracts/mixins';
 @use '../styles/main';
+
 .home {
     display: flex;
     justify-content: center;
@@ -163,7 +166,7 @@ export default class Home extends Vue {
 /* ==========================================
 Nav
 ========================================== */
-@include main.mobile-device {
+@include mixins.mobile-device {
     .home {
         svg {
             width: 100%;

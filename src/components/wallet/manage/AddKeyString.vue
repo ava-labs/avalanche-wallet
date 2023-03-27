@@ -53,7 +53,7 @@ export default class AddKeyString extends Vue {
 
         setTimeout(async () => {
             try {
-                await this.$store.dispatch('addWalletSingleton', this.privateKeyInput)
+                await this.$store.dispatch('addWalletSingleton', { key: this.privateKeyInput })
                 // @ts-ignore
                 this.$emit('success')
                 this.clear()
@@ -65,6 +65,7 @@ export default class AddKeyString extends Vue {
                 } else {
                     this.error = this.$t('keys.import_key_err') as string
                 }
+                console.error(e)
             }
         }, 200)
     }
