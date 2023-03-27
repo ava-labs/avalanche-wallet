@@ -30,14 +30,13 @@ import {
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as EvmTx, UnsignedTx as EVMUnsignedTx } from 'avalanche/dist/apis/evm/tx'
 import Erc20Token from '@/js/Erc20Token'
-import { WalletCore } from '@/js/wallets/WalletCore'
+import { AbstractWallet } from '@/js/wallets/AbstractWallet'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { Transaction } from '@ethereumjs/tx'
-import { ExportChainsC, ExportChainsP, ExportChainsX } from '@avalabs/avalanche-wallet-sdk'
 
-class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
+class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWallet {
     keyChain: AVMKeyChain
     keyPair: AVMKeyPair
 
@@ -144,11 +143,6 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
 
     getBaseAddress(): string {
         return this.getCurrentAddressAvm()
-    }
-
-    async getStake(): Promise<BN> {
-        this.stakeAmount = await WalletHelper.getStake(this)
-        return this.stakeAmount
     }
 
     getPlatformUTXOSet(): PlatformUTXOSet {

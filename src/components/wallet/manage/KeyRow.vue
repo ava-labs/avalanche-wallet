@@ -132,7 +132,7 @@ import { WalletNameType, WalletType } from '@/js/wallets/types'
 import { SingletonWallet } from '../../../js/wallets/SingletonWallet'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 import XpubModal from '@/components/modals/XpubModal.vue'
-import { HdWalletCore } from '@/js/wallets/HdWalletCore'
+import { AbstractHdWallet } from '@/js/wallets/AbstractHdWallet'
 
 interface IKeyBalanceDict {
     [key: string]: AvaAsset
@@ -254,7 +254,7 @@ export default class KeyRow extends Vue {
      */
     get xpubXP() {
         if (this.isHDWallet) {
-            return (this.wallet as HdWalletCore).getXpubXP()
+            return (this.wallet as AbstractHdWallet).getXpubXP()
         }
         return null
     }

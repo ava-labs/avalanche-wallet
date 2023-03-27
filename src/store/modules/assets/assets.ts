@@ -607,17 +607,19 @@ const assets_module: Module<AssetsState, RootState> = {
                 multisig: new BN(0),
             }
 
-            if (!wallet) return balances
+            if (!wallet || !state.AVA_ASSET_ID) return balances
 
             const utxoSet: PlatformUTXOSet = wallet.getPlatformUTXOSet()
 
             const now = UnixNow()
 
-            // The only type of asset is AVAX on the P chain
-
             const utxos = utxoSet.getAllUTXOs()
-            for (let n = 0; n < utxos.length; n++) {
-                const utxo = utxos[n]
+            // Only use AVAX UTXOs
+            const avaxID = bintools.cb58Decode(state.AVA_ASSET_ID)
+            const avaxUTXOs = utxos.filter((utxo) => utxo.getAssetID().equals(avaxID))
+
+            for (let n = 0; n < avaxUTXOs.length; n++) {
+                const utxo = avaxUTXOs[n]
                 const utxoOut = utxo.getOutput()
                 const outId = utxoOut.getOutputID()
                 const threshold = utxoOut.getThreshold()

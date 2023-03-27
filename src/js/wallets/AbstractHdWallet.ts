@@ -9,14 +9,14 @@ import HDKey from 'hdkey'
 import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
 import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
-import { WalletCore } from '@/js/wallets/WalletCore'
+import { AbstractWallet } from '@/js/wallets/AbstractWallet'
 import { updateFilterAddresses } from '../../providers'
 import { digestMessage } from '@/helpers/helper'
 
 // A base class other HD wallets are based on.
 // Mnemonic Wallet and LedgerWallet uses this
 
-abstract class HdWalletCore extends WalletCore {
+abstract class AbstractHdWallet extends AbstractWallet {
     chainId: string
 
     internalHelper: HdHelper
@@ -284,4 +284,4 @@ abstract class HdWalletCore extends WalletCore {
 
     abstract async signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
 }
-export { HdWalletCore }
+export { AbstractHdWallet }
