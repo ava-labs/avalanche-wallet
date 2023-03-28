@@ -12,7 +12,7 @@ describe('Send transaction with x-chain balance', () => {
             if (request.body.method == 'avm.getUTXOs') {
                 request.reply({
                     statusCode: 200,
-                    fixture: 'mocks/avm_getUTXOs.json'
+                    fixture: 'mocks/send_avm_getUTXOs.json'
                 })
             }
             else if (request.body.method == 'avm.issueTx') {
