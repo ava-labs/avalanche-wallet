@@ -121,7 +121,7 @@ export default class ValidatorInfo extends Vue {
             this.upTime = parseFloat(this.nodeInfo.uptime) * 100
 
             var reaminingValidationDuration = moment.duration(
-                today.diff(moment(new Date(parseInt(this.nodeInfo.startTime) * 1000)))
+                moment(new Date(parseInt(this.nodeInfo.endTime) * 1000)).diff(today)
             )
 
             let dataReaminingValdiationDuration = {
