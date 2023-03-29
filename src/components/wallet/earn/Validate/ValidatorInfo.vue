@@ -124,7 +124,12 @@ export default class ValidatorInfo extends Vue {
                 moment(new Date(parseInt(this.nodeInfo.endTime) * 1000)).diff(today)
             )
 
+            console.log('reaminingValidationDurationYears', reaminingValidationDuration.years())
+            console.log('reaminingValidationDurationMonths', reaminingValidationDuration.months())
+
             let dataReaminingValdiationDuration = {
+                years: reaminingValidationDuration.years(),
+                months: reaminingValidationDuration.months(),
                 days: reaminingValidationDuration.days().toString(),
                 hours:
                     reaminingValidationDuration.hours() > 9
@@ -141,6 +146,15 @@ export default class ValidatorInfo extends Vue {
             }
 
             let strRemainingValidation = `${dataReaminingValdiationDuration.days} Days ${dataReaminingValdiationDuration.hours}h ${dataReaminingValdiationDuration.minutes}m ${dataReaminingValdiationDuration.seconds}s`
+
+            if (dataReaminingValdiationDuration.months > 0) {
+                strRemainingValidation = `${dataReaminingValdiationDuration.months} Months ${strRemainingValidation}`
+            }
+
+            if (dataReaminingValdiationDuration.years > 0) {
+                strRemainingValidation = `${dataReaminingValdiationDuration.years} Years ${strRemainingValidation}`
+            }
+
             this.reaminingValidation = strRemainingValidation
             this.depositAmount = parseFloat(this.nodeInfo.stakeAmount) / 1000000000
             this.txID = this.nodeInfo.txID
@@ -219,6 +233,7 @@ h4 {
 
 .amt_in {
     width: 70%;
+    pointer-events: none;
 }
 
 .space-div {

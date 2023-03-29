@@ -679,7 +679,11 @@ label {
     margin-bottom: 0.5rem;
 }
 
-@include mixins.mobile-device {
+.amt_in {
+    pointer-events: none;
+}
+
+@include main.mobile-device {
     form {
         grid-template-columns: 1fr;
     }
