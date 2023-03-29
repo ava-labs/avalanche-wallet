@@ -2,9 +2,6 @@
     <div>
         <div class="validator_card">
             <p>{{ $t('validator.suspended.validator_suspended') }}</p>
-            <p>
-                {{ $t('validator.suspended.to_activate', { email: 'node@camino.foundation' }) }}
-            </p>
         </div>
     </div>
 </template>

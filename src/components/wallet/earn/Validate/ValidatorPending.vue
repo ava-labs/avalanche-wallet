@@ -22,7 +22,7 @@ import Spinner from '@/components/misc/Spinner.vue'
     },
 })
 export default class ValidatorPending extends Vue {
-    link = '#'
+    link = 'https://docs.camino.network/guides/reasons-for-validator-pending'
 }
 </script>
 <style scoped lang="scss">
