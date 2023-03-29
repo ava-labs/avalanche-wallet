@@ -11,12 +11,6 @@ import {
 describe('Cross chain: X to C', () => {
     beforeEach(() => {
         cy.loginWalletWith('privateKey')
-        // Switch to cross chain
-        cy.switchToWalletFunctionTab('Cross Chain')
-        // Make sure successfully switched to the Cross Chain tab
-        cy.get('.wallet_main > #wallet_router > .header')
-            .find('h1')
-            .should('have.text', 'Cross Chain')
 
         // RPC aliases
         cy.intercept('**/ext/bc/C/rpc', (request) => {
@@ -29,7 +23,12 @@ describe('Cross chain: X to C', () => {
             }
         })
         cy.intercept('POST', '**/ext/bc/X', (request) => {
-            if (request.body.method === 'avm.issueTx') {
+            if (request.body.method == 'avm.getUTXOs') {
+                request.reply({
+                    statusCode: 200,
+                    fixture: 'mocks/avm_getUTXOs.json'
+                })
+            } else if (request.body.method === 'avm.issueTx') {
                 request.reply({
                     statusCode: 200,
                     fixture: 'mocks/avm_issue_tx.json'
@@ -67,6 +66,13 @@ describe('Cross chain: X to C', () => {
                 })
             }
         })
+
+        // Switch to cross chain
+        cy.switchToWalletFunctionTab('Cross Chain')
+        // Make sure successfully switched to the Cross Chain tab
+        cy.get('.wallet_main > #wallet_router > .header')
+            .find('h1')
+            .should('have.text', 'Cross Chain')
     })
 
     it('export CAM from X to C', () => {
