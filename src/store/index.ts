@@ -19,7 +19,7 @@ import {
     AccessWalletMultipleInputParams,
 } from '@/store/types'
 
-import { WalletType } from '@/js/wallets/types'
+import { INetwork, WalletType } from '@/js/wallets/types'
 import { AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 
 Vue.use(Vuex)
@@ -58,6 +58,7 @@ export default new Vuex.Store({
         Launch,
     },
     state: {
+        network: { name: '' },
         isAuth: false,
         activeWallet: null,
         storedActiveWallet: null,
@@ -78,7 +79,7 @@ export default new Vuex.Store({
             let addresses = wallet.getDerivedAddresses()
             return addresses
         },
-        staticAddresses: (state: RootState): string[] => {
+        staticAddresses: (state: RootState) => (chain: ChainAlias): string[] => {
             return state.wallets.map((w) => w.getStaticAddress('P')).filter((e) => e != '')
         },
         accountChanged(state: RootState): boolean {
@@ -110,13 +111,16 @@ export default new Vuex.Store({
             state.activeWallet = wallet
             if (!state.storedActiveWallet) state.storedActiveWallet = wallet
         },
+        setNetwork(state, net: INetwork) {
+            state.network = net
+        },
     },
     actions: {
         // Used in home page to access a user's wallet
         // Used to access wallet with a single key
         // TODO rename to accessWalletMenmonic
-        async accessWallet({ state, dispatch, commit }, mnemonic: string): Promise<MnemonicWallet> {
-            let wallet: MnemonicWallet = await dispatch('addWalletMnemonic', { key: mnemonic })
+        async accessWallet({ dispatch, commit }, mnemonic: string): Promise<MnemonicWallet> {
+            const wallet: MnemonicWallet = await dispatch('addWalletMnemonic', { key: mnemonic })
 
             commit('setActiveWallet', wallet)
             dispatch('onAccess')
@@ -142,6 +146,7 @@ export default new Vuex.Store({
                     continue
                 }
             }
+            if (activeIndex >= keyList.length) activeIndex = 0
             commit('setActiveWallet', state.wallets[activeIndex])
             dispatch('onAccess', state.wallets[activeIndex])
             dispatch('updateMultisigWallets')
@@ -297,7 +302,7 @@ export default new Vuex.Store({
             }
 
             const wallets: MultisigWallet[] = []
-            const staticAddresses = getters.staticAddresses
+            const staticAddresses = getters.staticAddresses('P') as string[]
             for (const alias of keys as string[]) {
                 var response: MultisigAliasReply
                 try {
@@ -321,7 +326,7 @@ export default new Vuex.Store({
                 if (!response.addresses.some((address) => staticAddresses.includes(address)))
                     continue
 
-                const wallet = new MultisigWallet(aliasBuffer, response.Memo, response)
+                const wallet = new MultisigWallet(aliasBuffer, (response as any).memo, response)
                 wallet.accountHash = createHash('sha256').update(wallet.getKey()).digest()
                 wallets.push(wallet)
                 state.wallets = [...state.wallets, wallet]
@@ -359,19 +364,21 @@ export default new Vuex.Store({
             return txId
         },
 
-        async activateWallet({ state, dispatch, commit }, wallet: MnemonicWallet | LedgerWallet) {
+        activateWallet({ dispatch, commit }, wallet: MnemonicWallet | LedgerWallet) {
             if (wallet) {
+                wallet.initialize()
                 commit('setActiveWallet', wallet)
                 commit('updateActiveAddress')
             }
 
-            await dispatch('Assets/updateWallet')
-            dispatch('Assets/updateAvaAsset')
-            dispatch('Assets/updateUTXOs')
-            dispatch('Platform/update')
-            dispatch('Accounts/updateKycStatus')
-            dispatch('History/updateTransactionHistory')
-            updateFilterAddresses()
+            dispatch('Assets/updateWallet').then(() => {
+                dispatch('Assets/updateAvaAsset')
+                dispatch('Assets/updateUTXOs')
+                dispatch('Platform/update')
+                dispatch('Accounts/updateKycStatus')
+                dispatch('History/updateTransactionHistory')
+                updateFilterAddresses()
+            })
         },
 
         async exportWallets({ state, dispatch }, input: ExportWalletsInput) {

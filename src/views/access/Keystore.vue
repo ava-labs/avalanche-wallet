@@ -88,7 +88,7 @@ export default class Keystore extends Vue {
         setTimeout(() => {
             this.$store
                 .dispatch('importKeyfile', data)
-                .then((res) => {
+                .then((/*res*/) => {
                     parent.isLoading = false
                     let { updateSuiteStore } = this.globalHelper()
                     updateSuiteStore(this.$store.state)
@@ -130,7 +130,7 @@ export default class Keystore extends Vue {
 .access_card {
     max-width: 420px;
     background-color: var(--bg-light);
-    padding: main.$container-padding;
+    padding: variables.$container-padding;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -149,7 +149,7 @@ export default class Keystore extends Vue {
 }
 
 h1 {
-    font-size: main.$m-size;
+    font-size: variables.$m-size;
     font-weight: 400;
 }
 .file_in {
@@ -161,7 +161,7 @@ h1 {
 }
 
 a {
-    color: main.$primary-color-light !important;
+    color: variables.$primary-color-light !important;
     text-decoration: underline !important;
     margin: 10px 0 20px;
 }
@@ -181,7 +181,7 @@ a {
 
 @media only screen and (max-width: variables.$mobile_width) {
     h1 {
-        font-size: main.$m-size-mobile;
+        font-size: variables.$m-size-mobile;
     }
 
     .but_primary {

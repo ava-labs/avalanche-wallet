@@ -71,26 +71,18 @@ async function getAddressHistory(
 async function isAddressUsedX(addr: string) {
     let addrRaw = addr.split('-')[1]
     let url = `/x/transactions?address=${addrRaw}&limit=1&disableCount=1`
-    try {
-        let res = await explorer_api.get(url)
-        // console.log(res);
-        if (res.data.transactions.length > 0) return true
-        else return false
-    } catch (e) {
-        throw e
-    }
+    let res = await explorer_api.get(url)
+    // console.log(res);
+    if (res.data.transactions.length > 0) return true
+    else return false
 }
 
 async function getAddressDetailX(addr: string) {
     let addrRaw = addr.split('-')[1]
     let url = `/x/addresses/${addrRaw}`
 
-    try {
-        let res = await explorer_api.get(url)
-        return res.data
-    } catch (e) {
-        throw e
-    }
+    let res = await explorer_api.get(url)
+    return res.data
 }
 
 async function getAddressChains(addrs: string[]) {

@@ -33,7 +33,7 @@ import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 
 const uuidv1 = require('uuid/v1')
 
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import CurrencyInputDropdown from '@/components/misc/CurrencyInputDropdown.vue'
 import AvaAsset from '@/js/AvaAsset'
 import { AssetsDict } from '@/store/modules/assets/types'
@@ -176,7 +176,7 @@ export default class TxList extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 $right_pad: 60px;
 
@@ -291,7 +291,7 @@ $right_pad: 60px;
     pointer-events: none;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .list_item {
         column-gap: 12px;
         grid-template-columns: 1fr max-content;

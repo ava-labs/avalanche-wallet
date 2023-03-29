@@ -97,7 +97,7 @@ export default class BalancePopup extends Vue {
 }
 </style>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 .bg {
     position: fixed;
     z-index: 2;
@@ -178,7 +178,7 @@ export default class BalancePopup extends Vue {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .bg {
         background-color: rgba(0, 0, 0, 0.4);
     }

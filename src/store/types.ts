@@ -7,10 +7,11 @@ import { ITransaction } from '@/components/wallet/transfer/types'
 import { AllKeyFileTypes, AllKeyFileDecryptedTypes } from '@/js/IKeystore'
 import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import { UTXO as TxUTXO } from './modules/history/types'
-import { WalletNameType, WalletType } from '@/js/wallets/types'
+import { INetwork, WalletNameType, WalletType } from '@/js/wallets/types'
 import { KeystoreFileKeyType } from '@/js/IKeystore'
 
 export interface RootState {
+    network: INetwork
     isAuth: boolean
     storedActiveWallet: null | WalletType
     activeWallet: null | WalletType

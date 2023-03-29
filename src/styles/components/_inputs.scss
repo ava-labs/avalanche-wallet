@@ -91,3 +91,17 @@
     padding: 12px;
     border-radius: var(--border-radius-lg);
 }
+
+.pass {
+    -webkit-text-security: disc;
+    -moz-text-security: disc;
+}
+
+.pass input {
+    text-align: center;
+}
+
+.pass_name {
+    width: 0px;
+    opacity: 0;
+}

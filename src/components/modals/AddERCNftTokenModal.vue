@@ -147,7 +147,8 @@ export default class AddERCNftTokenModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
+
 .add_token_body {
     padding: 30px 22px;
     text-align: center;
@@ -237,7 +238,7 @@ export default class AddERCNftTokenModal extends Vue {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .add_token_body {
         width: 100%;
     }

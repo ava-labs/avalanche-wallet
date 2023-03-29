@@ -9,7 +9,7 @@
                     dense
                     solo
                     flat
-                    type="password"
+                    :type="inputType"
                     v-model="privatekey"
                     hide-details
                     data-cy="field-private-key"
@@ -38,17 +38,22 @@ export default class PrivateKey extends Vue {
     @Prop() navigate: any
     privatekey: string = ''
     isLoading: boolean = false
+    inputType = 'input'
     error: string = ''
+    async mounted() {
+        if (!(window.getComputedStyle(this.$el) as any).webkitTextSecurity) {
+            this.inputType = 'password'
+        }
+    }
     async access() {
         if (!this.canSubmit || this.isLoading) return
-        let parent = this
         this.error = ''
         this.isLoading = true
         let key = this.privatekey
 
         try {
             await this.$store.dispatch('accessWalletSingleton', key)
-            let { updateSuiteStore } = parent.globalHelper()
+            let { updateSuiteStore } = this.globalHelper()
             updateSuiteStore(this.$store.state)
             this.onsuccess()
         } catch (e) {
@@ -85,7 +90,7 @@ export default class PrivateKey extends Vue {
 .access_card {
     max-width: 420px;
     background-color: var(--bg-light);
-    padding: main.$container-padding;
+    padding: variables.$container-padding;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -102,7 +107,7 @@ export default class PrivateKey extends Vue {
     align-items: center;
 }
 h1 {
-    font-size: main.$m-size;
+    font-size: variables.$m-size;
     font-weight: 400;
     margin-bottom: 30px;
 }
@@ -116,7 +121,7 @@ form {
     background-color: var(--bg) !important;
 }
 a {
-    color: main.$primary-color-light !important;
+    color: variables.$primary-color-light !important;
     text-decoration: underline !important;
     margin: 10px 0 20px;
 }
@@ -133,7 +138,7 @@ a {
 }
 @media only screen and (max-width: variables.$mobile_width) {
     h1 {
-        font-size: main.$m-size-mobile;
+        font-size: variables.$m-size-mobile;
     }
     .but_primary {
         width: 100%;

@@ -154,7 +154,7 @@ export default class NftList extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 $nft_w: 90px;
 
@@ -201,7 +201,7 @@ $nft_w: 90px;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .added_list {
         display: grid;
         grid-gap: 12px;

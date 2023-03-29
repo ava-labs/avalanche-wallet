@@ -28,10 +28,10 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Model } from 'vue-property-decorator'
-import { bnToBig, Big } from '@c4tplatform/camino-wallet-sdk/dist'
+import { bnToBig, Big } from '@/helpers/helper'
 //@ts-ignore
 import { BigNumInput } from '@c4tplatform/vue_components'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { priceDict } from '../../store/types'
 
 @Component({
@@ -103,7 +103,7 @@ export default class AvaxInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .avax_input {
     display: grid;
@@ -203,7 +203,7 @@ p {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .balance {
         font-size: 12px;
     }

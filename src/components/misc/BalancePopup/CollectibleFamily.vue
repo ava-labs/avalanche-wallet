@@ -23,7 +23,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
 import { IWalletNftDict } from '@/store/types'
 import { NFTTransferOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
-import { Buffer } from '@c4tplatform/caminojs'
+import { Buffer } from '@c4tplatform/caminojs/dist'
 import { PayloadBase, PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { getPayloadFromUTXO } from '@/helpers/helper'
@@ -77,7 +77,7 @@ export default class CollectibleFamily extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .collectible_family {
     display: grid;
@@ -120,7 +120,7 @@ $card_w: 80px;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     $card_w: 60px;
 
     .collectible_family {

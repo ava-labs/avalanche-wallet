@@ -52,7 +52,7 @@ export default class SignMessage extends Vue {
             } else {
                 this.signed = await this.wallet.signMessage(this.message, this.sourceAddress!)
             }
-        } catch (e) {
+        } catch (e: any) {
             this.error = e
         }
     }

@@ -128,7 +128,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component, Ref } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 
 import TxList from '@/components/wallet/transfer/TxList.vue'
 import Big from 'big.js'
@@ -141,7 +141,7 @@ import { ava, isValidAddress } from '../../AVA'
 import FaucetLink from '@/components/misc/FaucetLink.vue'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
-import { Buffer, BN } from '@c4tplatform/caminojs'
+import { Buffer, BN } from '@c4tplatform/caminojs/dist'
 import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
 import { priceDict, IssueBatchTxInput } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
@@ -293,9 +293,10 @@ export default class Transfer extends Vue {
         }
     }
 
-    async onsuccess(txId: string) {
+    async onsuccess(tx: string) {
         this.isAjax = false
         this.isSuccess = true
+        this.txId = tx
         let { dispatchNotification } = this.globalHelper()
         dispatchNotification({
             message: this.$t('notifications.transfer_success_msg'),
@@ -503,7 +504,7 @@ export default class Transfer extends Vue {
 }
 </style>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 $padLeft: 24px;
 $padTop: 8px;
@@ -674,14 +675,14 @@ label {
 //    }
 //}
 
-@include main.medium-device {
+@include mixins.medium-device {
     .new_order_Form {
         grid-template-columns: 1fr 1fr 220px;
         column-gap: 25px;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .transfer_card {
         display: block;
         grid-template-columns: none;

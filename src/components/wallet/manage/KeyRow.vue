@@ -54,24 +54,12 @@
                         <Tooltip :text="$t('keys.tooltip')" v-if="isVolatile">
                             <fa icon="exclamation-triangle" class="volatile_alert"></fa>
                         </Tooltip>
-                        <button class="selBut" @click="select" v-if="!is_default">
-                            <span>{{ $t('keys.activate_key') }}</span>
-                        </button>
                         <Tooltip
-                            :text="$t('keys.remove_key')"
-                            class="row_but circle"
-                            v-if="!is_default"
-                        >
-                            <button @click.prevent="remove">
-                                <img
-                                    src="@/assets/trash_can_dark.svg"
-                                    style="height: 16px"
-                                    alt="Trashcan"
-                                />
-                            </button>
-                        </Tooltip>
-                        <Tooltip
-                            v-if="walletType !== 'singleton' && walletType !== 'multisig'"
+                            v-if="
+                                is_default &&
+                                walletType !== 'singleton' &&
+                                walletType !== 'multisig'
+                            "
                             :text="$t('keys.hd_addresses')"
                             class="row_but circle"
                             @click.native="showPastAddresses"
@@ -79,16 +67,16 @@
                             <fa icon="list-ol"></fa>
                         </Tooltip>
                         <Tooltip
-                            v-if="walletType === 'mnemonic'"
+                            v-if="walletType === 'singleton' || walletType === 'mnemonic'"
                             :text="$t('keys.export_key')"
                             class="row_but circle"
                             @click.native="showExportModal"
                         >
-                            <fa icon="upload"></fa>
+                            <fa class="fa-regular" icon="upload"></fa>
                         </Tooltip>
                         <div class="text_buts">
                             <button
-                                v-if="walletType === 'mnemonic'"
+                                v-if="walletType === 'mnemonic' && is_default"
                                 @click="showModal"
                                 data-cy="manage-key-mnemonic"
                             >
@@ -119,6 +107,26 @@
                     </div>
                 </div>
             </div>
+            <div v-if="!is_default" class="text_buts">
+                <Tooltip
+                    :text="$t('keys.activate_key')"
+                    class="row_but circle"
+                    :disabled="activating"
+                    @click.native="select"
+                >
+                    <Spinner v-if="activating" class="spinner"></Spinner>
+                    <fa v-else icon="star"></fa>
+                </Tooltip>
+                <Tooltip :text="$t('keys.remove_key')" class="row_but circle">
+                    <button @click.prevent="remove">
+                        <img
+                            src="@/assets/trash_can_dark.svg"
+                            style="height: 16px"
+                            alt="Trashcan"
+                        />
+                    </button>
+                </Tooltip>
+            </div>
         </div>
     </div>
 </template>
@@ -130,6 +138,7 @@ import MnemonicPhraseModal from '@/components/modals/MnemonicPhraseModal.vue'
 import HdDerivationListModal from '@/components/modals/HdDerivationList/HdDerivationListModal.vue'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Tooltip from '@/components/misc/Tooltip.vue'
+import Spinner from '@/components/misc/Spinner.vue'
 
 import ExportKeys from '@/components/modals/ExportKeys.vue'
 import PrivateKey from '@/components/modals/PrivateKey.vue'
@@ -145,6 +154,7 @@ import { MultisigWallet } from '@/js/wallets/MultisigWallet'
         MnemonicPhraseModal,
         HdDerivationListModal,
         MultisigOwnersModal,
+        Spinner,
         Tooltip,
         ExportKeys,
         PrivateKey,
@@ -156,6 +166,7 @@ export default class KeyRow extends Vue {
 
     isEditable = false
     customWalletName = this.walletName
+    activating = false
 
     $refs!: {
         export_wallet: ExportKeys
@@ -252,7 +263,8 @@ export default class KeyRow extends Vue {
     }
 
     select() {
-        this.$emit('select', this.wallet)
+        this.activating = true
+        setTimeout(() => this.$emit('select', this.wallet), 100)
     }
 
     showModal() {
@@ -319,23 +331,7 @@ export default class KeyRow extends Vue {
     flex-wrap: wrap;
 
     > * {
-        margin: 0px 8px !important;
-    }
-
-    $but_w: 32px;
-
-    .circle {
-        width: $but_w;
-        height: $but_w;
-        border-radius: $but_w;
-        background-color: rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: center;
-        align-self: center;
-
-        &:hover {
-            background-color: var(--bg);
-        }
+        margin: 0px 4px !important;
     }
 
     .text_buts {
@@ -354,11 +350,30 @@ export default class KeyRow extends Vue {
 }
 
 .row_but {
-    margin: 0 12px;
+    margin: 0 8px;
+    font-size: 16px;
+}
+
+.row_but.circle {
+    $but_w: 32px;
+
+    width: $but_w;
+    height: $but_w;
+    border-radius: $but_w;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-self: center;
+
+    &:hover {
+        background-color: var(--bg);
+    }
 }
 
 .rows {
     overflow: auto;
+    display: flex;
+    flex-direction: row;
 }
 
 .addressItem .selBut {
@@ -371,10 +386,16 @@ export default class KeyRow extends Vue {
     }
 }
 
+.spinner {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .header {
     display: grid;
     grid-template-columns: 32px 1fr;
     grid-gap: 14px;
+    width: 100%;
     .img_container {
         height: 100%;
         display: flex;
@@ -434,33 +455,6 @@ export default class KeyRow extends Vue {
     &:hover {
         opacity: 1;
     }
-}
-
-.addressBalance {
-    display: flex;
-    white-space: nowrap;
-    color: var(--primary-color);
-    .bal_rows p {
-        font-weight: bold;
-        padding: 0px 8px;
-        margin-bottom: 4px;
-    }
-    p {
-        border-radius: 3px;
-    }
-}
-
-.bal_cols {
-    display: flex;
-}
-
-.bal_rows {
-    display: flex;
-    flex-direction: column;
-}
-
-.balance_empty {
-    color: var(--primary-color);
 }
 
 .volatile_alert {

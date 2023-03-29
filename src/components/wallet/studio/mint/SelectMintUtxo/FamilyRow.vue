@@ -94,9 +94,8 @@ export default class FamilyRow extends Vue {
     }
 }
 </script>
-<style scoped lang="scss">
-@use '../../../../../styles/main';
 
+<style scoped lang="scss">
 .family {
     margin-top: 24px;
     //border: 1px solid var(--bg-light);

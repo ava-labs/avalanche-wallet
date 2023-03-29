@@ -26,7 +26,7 @@ import { IWalletNftDict } from '@/store/types'
 import { NFTTransferOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
-import { Buffer } from '@c4tplatform/caminojs'
+import { Buffer } from '@c4tplatform/caminojs/dist'
 import { PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
 import { bintools } from '@/AVA'
 import { ERCNftWalletBalance } from '@/store/modules/assets/modules/types'
@@ -132,9 +132,8 @@ export default class NftCol extends Vue {
     }
 }
 </script>
-<style scoped lang="scss">
-@use '../../../../styles/main';
 
+<style scoped lang="scss">
 .nft_col {
     margin-top: 10px;
     p {

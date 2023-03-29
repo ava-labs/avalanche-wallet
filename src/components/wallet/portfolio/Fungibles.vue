@@ -148,7 +148,7 @@ export default class Fungibles extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .fungibles_view {
     display: flex;
@@ -209,7 +209,7 @@ export default class Fungibles extends Vue {
     white-space: nowrap;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .headers,
     .asset {
         grid-template-columns: 50px 1fr 1fr 50px;
@@ -238,14 +238,15 @@ export default class Fungibles extends Vue {
     }
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .headers {
         padding: 12px 0;
     }
 }
 </style>
 <style lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
+
 .fungibles_view {
     .balance_col {
         text-align: right;
@@ -268,7 +269,7 @@ export default class Fungibles extends Vue {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .add_token_row {
         flex-direction: column;
     }

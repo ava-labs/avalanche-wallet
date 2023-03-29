@@ -1,4 +1,5 @@
-@use "variables";
+@use './variables';
+
 @mixin mobile-device {
     @media only screen and (max-width: variables.$mobile_width) {
         @content;

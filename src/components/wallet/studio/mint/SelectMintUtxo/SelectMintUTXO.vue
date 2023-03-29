@@ -33,7 +33,7 @@ export default class SelectMintUTXO extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../../styles/main';
+@use '../../../../../styles/abstracts/mixins';
 
 .families {
     grid-template-columns: repeat(5, 1fr);
@@ -47,13 +47,13 @@ export default class SelectMintUTXO extends Vue {
     }
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .families {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .families {
         grid-template-columns: repeat(2, 1fr);
     }

@@ -34,7 +34,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { KeyPair } from '@c4tplatform/caminojs/dist/apis/avm'
 import { ava, bintools } from '@/AVA'
-import { Buffer } from '@c4tplatform/caminojs'
+import { Buffer } from '@c4tplatform/caminojs/dist'
 import { digestMessage } from '@/helpers/helper'
 
 @Component

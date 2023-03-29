@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
 
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { ava } from '@/AVA'
 
 import {
@@ -210,35 +210,13 @@ const platform_module: Module<PlatformState, RootState> = {
             }
         },
 
-        // Returns total active and pending delegation amount for the given node id
-        // validatorTotalDelegated: (state, getters) => (nodeId: string) => {
-        //     // let validator: ValidatorRaw = getters.validatorsDict[nodeId];
-        //
-        //     let delegators: DelegatorRaw[]|undefined = getters.nodeDelegatorMap[nodeId];
-        //     let delegatorsPending: DelegatorPendingRaw[]|undefined = getters.nodeDelegatorPendingMap[nodeId];
-        //
-        //     // let stakeTotal = new BN(validator.stakeAmount);
-        //
-        //     let activeTotal = new BN(0);
-        //     let pendingTotal = new BN(0);
-        //
-        //     if(delegators){
-        //         activeTotal = delegators.reduce((acc: BN, val: DelegatorRaw) => {
-        //             let valBn = new BN(val.stakeAmount);
-        //             return acc.add(valBn);
-        //         }, new BN(0));
-        //     }
-        //
-        //     if(delegatorsPending){
-        //         pendingTotal = delegatorsPending.reduce((acc: BN, val: DelegatorPendingRaw) => {
-        //             let valBn = new BN(val.stakeAmount);
-        //             return acc.add(valBn);
-        //         }, new BN(0));
-        //     }
-        //
-        //     let totDel = activeTotal.add(pendingTotal);
-        //     return totDel;
-        // },
+        // Return if a given nodeID is either current or pending validator
+        isValidator: (state) => (nodeID: string) => {
+            return (
+                state.validators.findIndex((v) => v.nodeID === nodeID) >= 0 ||
+                state.validatorsPending.findIndex((v) => v.nodeID === nodeID) >= 0
+            )
+        },
     },
 }
 

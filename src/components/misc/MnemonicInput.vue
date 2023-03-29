@@ -31,9 +31,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { wordlists } from 'bip39'
+
 @Component
 export default class MnemonicDisplay extends Vue {
     @Prop() phrase!: string[]
+
     isHidden: boolean = true
     wordNum: number = 24
     password: boolean = false
@@ -82,15 +84,19 @@ export default class MnemonicDisplay extends Vue {
     row-gap: 6px;
     font-size: 12px;
 }
+
 .word {
     display: flex;
     overflow: hidden;
     font-weight: 700;
+
     background-color: var(--bg);
+
     > * {
         padding: 16px 6px;
     }
 }
+
 .index {
     width: 22px;
     box-sizing: content-box;
@@ -100,13 +106,28 @@ export default class MnemonicDisplay extends Vue {
     font-weight: 400;
     border-right: 2px solid var(--bg-light);
 }
+
 .phrase_word {
     text-align: center;
     overflow: scroll;
     white-space: nowrap;
     flex-grow: 1;
     color: var(--primary-color);
+    max-width: 125px;
 }
+
+.invalid_input {
+    border: #ff2115 1px solid;
+}
+
+p {
+    text-align: left;
+}
+
+span {
+    text-align: center;
+}
+
 .invalid_input {
     border: #ff2115 1px solid;
 }
@@ -122,12 +143,14 @@ label {
     font-size: 12px;
     margin-bottom: 20px;
 }
+
 .hidden-toggle {
     display: flex;
     align-items: flex-start;
     max-height: 1.25em;
     min-width: 1.25em;
 }
+
 .show-hide-wrapper {
     display: flex;
     gap: 4px;
@@ -140,6 +163,7 @@ label {
             padding: 4px 2px;
         }
     }
+
     .mnemonic_input {
         grid-template-columns: repeat(1, 1fr);
     }

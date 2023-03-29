@@ -203,7 +203,7 @@ export default class CustomPage extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/variables';
 
 .custom_network {
     padding: 0px 15px;
@@ -211,7 +211,7 @@ export default class CustomPage extends Vue {
 }
 
 .header {
-    border-bottom: 1px solid main.$background-color;
+    border-bottom: 1px solid variables.$background-color;
     padding: 10px 15px;
     display: flex;
     h4 {

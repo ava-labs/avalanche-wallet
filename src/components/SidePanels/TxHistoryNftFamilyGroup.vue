@@ -10,7 +10,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 import { PayloadBase } from '@c4tplatform/caminojs/dist/utils'
-import { Buffer } from '@c4tplatform/caminojs'
+import { Buffer } from '@c4tplatform/caminojs/dist'
 import { PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
 import { UTXO } from '@/store/modules/history/types'
 
@@ -68,7 +68,7 @@ export default class TxHistoryNftFamilyGroup extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 $countW: 18px;
 .count {
@@ -104,6 +104,6 @@ $countW: 18px;
 .payload_view {
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
 }
 </style>

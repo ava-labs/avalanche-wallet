@@ -358,7 +358,7 @@
         "password_validation": "Password must be at least 9 characters long.",
         "password_validation2": "Password do not match.",
         "account_name_required": "Account Name Required.",
-        "view_multisig_owners": "View Multisig Owners"
+        "view_multisig_owners": "Multisig Owners"
     },
     "portfolio": {
         "assets": "Assets",
@@ -466,7 +466,7 @@
             "nodeId": "Node ID",
             "label_1": "Validator Node's Private Key",
             "description_1": "Please enter the Node's Static Private Key (you can receive one by calling admin.getNodeSigner on your node)",
-            "label_3": "P-chain address your validator node will be registered with",
+            "label_3": "P-Chain address your validator node will be assigned to",
             "duration": {
                 "label": "Validation End Date",
                 "desc": "Your @.native:(0) tokens will be locked until this date.",
@@ -527,7 +527,9 @@
                 "amount": "Stake amount must be at least {0} @.native:(0)",
                 "id": "Invalid Node ID.",
                 "fee": "Delegation fee must be at least {0}%",
-                "address": "Invalid address. Reward address must be a valid P chain address."
+                "address": "Invalid address. Reward address must be a valid P chain address.",
+                "validating": "Your registered node: {nodeID} is already validating.",
+                "suspended": "Your registered node: {nodeID} is suspended."
             }
         },
         "delegate": {
@@ -730,7 +732,8 @@
             "title": "Key Phrase"
         },
         "multisig": {
-            "title": "Multisignature owners"
+            "title": "Multisignature owners",
+            "subtitle": "{n}, Threshold: {t}"
         },
         "priv_key": {
             "title": "Private Key"

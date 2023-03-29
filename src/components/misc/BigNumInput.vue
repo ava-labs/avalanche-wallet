@@ -13,7 +13,7 @@
 </template>
 <script>
 import Big from 'big.js'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 
 export default {
     data() {

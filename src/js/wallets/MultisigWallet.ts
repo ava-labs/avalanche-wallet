@@ -64,18 +64,21 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
 
     keyData: KeyData
     wallets: WalletCore[] = []
-    unlinkedOwners: string[] = []
+    unlinkedOwners: Buffer[] = []
+    hrp: string = ''
 
     constructor(alias?: Buffer, memo?: string, owner?: Owner) {
         super()
-        this.name = 'Multisig Wallet'
+        const parsedMemo = memo ? Buffer.from(memo.slice(2), 'hex').toString() : ''
+        this.name = 'Multisig Wallet' + (memo ? ` (${parsedMemo})` : '')
         this.keyData = {
             alias: alias ?? Buffer.alloc(0),
-            memo: memo ?? '',
+            memo: parsedMemo,
             owner: owner ?? ({ addresses: [], threshold: 0, locktime: '0' } as Owner),
         }
         this.ethAddress = this.keyData.alias.toString('hex')
         this.isInit = true
+        this.hrp = ava.getHRP()
     }
 
     getKey(): string {
@@ -89,9 +92,13 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         this.ethAddress = this.keyData.alias.toString('hex')
     }
 
+    ownerAddresses(): Buffer[] {
+        return this.keyData.owner.addresses.map((a) => bintools.stringToAddress(a))
+    }
+
     outputOwners(): OutputOwners {
         return new OutputOwners(
-            this.keyData.owner.addresses.map((a) => bintools.stringToAddress(a)),
+            this.ownerAddresses(),
             new BN(this.keyData.owner.locktime),
             this.keyData.owner.threshold
         )
@@ -105,21 +112,29 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         this.wallets = []
         this.unlinkedOwners = []
         const lookup = new Set()
+        const addrs = this.ownerAddresses()
+
         for (const wallet of wallets) {
-            const staticKey = wallet.getStaticAddress('P')
-            if (this.keyData.owner.addresses.includes(staticKey)) {
+            const addr = wallet.getStaticKeyPair()?.getAddress()
+            if (addr && addrs.find((a) => a.compare(addr) == 0)) {
                 this.wallets.push(wallet)
-                lookup.add(staticKey)
+                lookup.add(addr.toString('hex'))
             }
         }
-        for (const key of this.keyData.owner.addresses) {
-            if (!lookup.has(key)) this.unlinkedOwners.push(key)
+
+        for (const addr of addrs) {
+            if (!lookup.has(addr.toString('hex'))) this.unlinkedOwners.push(addr)
         }
     }
 
-    onnetworkchange(): void {
+    getUnlinkedOwners(): string[] {
+        return this.unlinkedOwners.map((o) => bintools.addressToString(this.hrp, 'X', o))
+    }
+
+    onNetworkChange(): void {
         this.chainId = ava.XChain().getBlockchainAlias()
         this.pchainId = ava.PChain().getBlockchainAlias()
+        this.hrp = ava.getHRP()
     }
 
     async updateUTXOsX(): Promise<AVMUTXOSet> {
@@ -331,8 +346,7 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
     /******************** INTERNAL *******************************/
 
     _aliasAddress(chainID: string) {
-        const hrp = ava.getHRP()
-        return bintools.addressToString(hrp, chainID, this.keyData.alias)
+        return bintools.addressToString(this.hrp, chainID, this.keyData.alias)
     }
 
     _sign(utx: AbstractUnsignedTx, additionalSigners?: string[]): AbstractTx {
@@ -344,7 +358,7 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
 
         // Crreate Multisig KeyChain
         const msKeyChain = new MultisigKeyChain(
-            ava.getHRP(),
+            this.hrp,
             ava.getNetwork().P.alias,
             msg,
             PlatformVMConstants.SECPMULTISIGCREDENTIAL,

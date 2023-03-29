@@ -16,10 +16,11 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/variables';
+@use '../../styles/abstracts/mixins';
 
 .top_cards {
-    @include main.component-wrapper;
+    @include mixins.component-wrapper;
     background-color: var(--bg-wallet-light);
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -75,7 +76,7 @@ export default {
 }
 
 .top_card h4 {
-    color: main.$primary-color;
+    color: variables.$primary-color;
     font-weight: bold;
     text-align: left;
 }
@@ -90,7 +91,7 @@ export default {
 
 .balance {
     font-size: 24px !important;
-    font-family: 'Inter' !important;
+    font-family: Inter !important;
 }
 
 .top_card .buts {
@@ -111,14 +112,14 @@ export default {
     object-fit: contain;
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .top_cards {
         grid-template-columns: 1fr 320px;
         // grid-gap: 9px;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .top_cards {
         grid-template-columns: none;
         grid-template-rows: min-content;
@@ -138,7 +139,7 @@ export default {
     }
 }
 
-//@media only screen and (max-width: main.$width_m) {
+//@media only screen and (max-width: variables.$width_m) {
 //
 //}
 </style>

@@ -31,7 +31,7 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransaction } from './types'
 import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig, getPayloadFromUTXO } from '@/helpers/helper'
 import NftPayloadView from '@/components/misc/NftPayloadView/NftPayloadView.vue'
 @Component({

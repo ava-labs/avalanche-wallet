@@ -85,19 +85,17 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import {
     ITransactionData,
     ITransactionDataProcessed,
     TransactionType,
 } from '@/store/modules/history/types'
-import moment from 'moment'
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import RadioButtons from '@/components/misc/RadioButtons.vue'
 import Spinner from '@/components/misc/Spinner.vue'
 
-type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
 type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 
 //@ts-ignore
@@ -193,7 +191,6 @@ export default class Activity extends Vue {
 
     mounted() {
         this.updateHistory()
-        this.getChains()
         let now = new Date()
         this.yearNow = now.getFullYear()
         this.monthNow = now.getMonth()
@@ -204,9 +201,6 @@ export default class Activity extends Vue {
 
     updateHistory() {
         this.$store.dispatch('History/updateAllTransactionHistory')
-    }
-    getChains() {
-        this.$store.dispatch('History/getAliasChains')
     }
     get monthGroups(): any {
         let res: any = {}
@@ -368,7 +362,7 @@ export default class Activity extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .activity_page {
     position: relative;
@@ -538,7 +532,7 @@ export default class Activity extends Vue {
         margin-right: 1em;
     }
 }
-@include main.medium-device {
+@include mixins.medium-device {
     .pagination {
         p {
             font-size: 18px;
@@ -546,7 +540,7 @@ export default class Activity extends Vue {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .settings {
         display: grid;
         grid-template-columns: none;

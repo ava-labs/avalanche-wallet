@@ -32,7 +32,7 @@ import UtxoSelectModal from '@/components/modals/UtxoSelect/UtxoSelect.vue'
 import { AmountOutput, UTXO } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { WalletType } from '@/js/wallets/types'
 
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
 @Component({
     components: {

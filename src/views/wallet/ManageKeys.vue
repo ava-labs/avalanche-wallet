@@ -119,7 +119,7 @@ export default class ManageKeys extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .button_container {
     display: flex;
@@ -140,7 +140,7 @@ h1 {
     color: var(--warning);
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     header {
         display: block;
     }

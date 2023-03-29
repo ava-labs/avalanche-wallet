@@ -1,6 +1,7 @@
 // @import "./theme";
 @import './abstracts/variables';
 @import './abstracts/mixins';
+@import './abstracts/root';
 
 // core
 @import './core/typography';
@@ -20,3 +21,6 @@
 
 // pages
 @import './pages/wallet';
+
+// vuetify
+@import './vuetify/reset';

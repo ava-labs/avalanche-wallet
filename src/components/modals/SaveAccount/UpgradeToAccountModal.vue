@@ -119,8 +119,8 @@ export default class UpgradeToAccountModal extends Vue {
     }
 }
 </script>
+
 <style scoped lang="scss">
-@use '../../../styles/main';
 .remember_modal {
     padding: 30px;
 }

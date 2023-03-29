@@ -15,7 +15,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import * as bip39 from 'bip39'
 
 @Component
@@ -64,7 +64,7 @@ export default class AddMnemonic extends Vue {
                 await this.$store.dispatch('addWalletMnemonic', { key: phrase })
                 this.isLoading = false
                 this.handleImportSuccess()
-            } catch (e) {
+            } catch (e: any) {
                 this.isLoading = false
                 if (e.message.includes('already')) {
                     this.err = this.$t('keys.import_mnemonic_duplicate_err') as string

@@ -84,8 +84,8 @@ class AvaNetwork {
     }
 
     updateURL(url: string) {
+        this.url = url
         let split: string[] = url.split('://')
-
         this.protocol = split[0]
 
         // port is set

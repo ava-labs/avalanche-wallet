@@ -2,3 +2,4 @@ node_modules/
 dist/
 tests/
 camino-wallet-sdk/
+patches

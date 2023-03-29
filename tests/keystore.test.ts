@@ -1,3 +1,4 @@
+import { expect } from '@jest/globals';
 import { readKeyFile } from '../src/js/Keystore'
 
 // A 2.0 and 3.0 Keystore version of the same keys

@@ -46,7 +46,7 @@ import AvaAsset from '@/js/AvaAsset'
 import { DerivationListBalanceDict } from '@/components/modals/HdDerivationList/types'
 import { LedgerWallet } from '../../../js/wallets/LedgerWallet'
 import { bnToBig } from '@/helpers/helper'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import HdChainTable from '@/components/modals/HdDerivationList/HdChainTable.vue'
 
 @Component({

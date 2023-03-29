@@ -4,7 +4,7 @@ import {
     ValidatorPendingRaw,
     ValidatorRaw,
 } from '@/components/misc/ValidatorList/types'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 
 export interface PlatformState {
     validators: ValidatorRaw[]

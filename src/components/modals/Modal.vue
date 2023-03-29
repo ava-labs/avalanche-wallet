@@ -5,7 +5,10 @@
             <div class="modal_container">
                 <div class="modal_body">
                     <div class="modal_topbar">
-                        <h4 class="modal_title">{{ title }}</h4>
+                        <div class="modal_title">
+                            <h4>{{ title }}</h4>
+                            <p v-if="subtitle" class="modal_subtitle">{{ subtitle }}</p>
+                        </div>
                         <button
                             class="modalClose"
                             @click="close"
@@ -15,9 +18,7 @@
                             <fa icon="times"></fa>
                         </button>
                     </div>
-                    <div class="modal_slot">
-                        <slot></slot>
-                    </div>
+                    <slot></slot>
                 </div>
             </div>
         </div>
@@ -30,10 +31,15 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component
 export default class Modal extends Vue {
     @Prop({ default: 'Modal Title' }) title!: string
+    @Prop({ default: '' }) subtitle!: string
     @Prop({ default: true }) can_close!: boolean
     @Prop({ default: false }) icy!: boolean
 
     isActive: boolean = false
+
+    destroyed() {
+        setTimeout(() => (document.body.style.overflow = 'auto'), 1000)
+    }
 
     public open() {
         this.isActive = true
@@ -49,12 +55,12 @@ export default class Modal extends Vue {
     public close() {
         this.$emit('beforeClose')
         this.isActive = false
-        document.body.style.overflow = 'initial'
+        document.body.style.overflow = 'auto'
     }
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .modal_topbar {
     background-color: var(--bg);
@@ -75,7 +81,11 @@ export default class Modal extends Vue {
     text-align: left;
     flex-grow: 1;
     margin: 0;
-    font-weight: normal;
+    font-weight: lighter;
+}
+
+.modal_subtitle {
+    font-size: 14px;
 }
 
 .modalClose {
@@ -128,17 +138,9 @@ export default class Modal extends Vue {
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     max-height: 90%;
-    display: flex;
-    flex-direction: column;
 }
 
-.modal_slot {
-    overflow-y: auto;
-    height: 100%;
-    flex: 1;
-}
-
-@include main.mobile-device {
+@include mixins.mobile-device {
     .modal_body {
         position: absolute;
         width: max-content;

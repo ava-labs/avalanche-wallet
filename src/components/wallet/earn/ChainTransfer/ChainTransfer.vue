@@ -115,7 +115,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import Dropdown from '@/components/misc/Dropdown.vue'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import AvaAsset from '@/js/AvaAsset'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { ava } from '@/AVA'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import Spinner from '@/components/misc/Spinner.vue'
@@ -339,32 +339,28 @@ export default class ChainTransfer extends Vue {
         let exportTxId
         this.exportState = TxState.started
 
-        try {
-            switch (sourceChain) {
-                case 'X':
-                    exportTxId = await wallet.exportFromXChain(
-                        amt,
-                        destinationChain as SDK.ExportChainsX,
-                        this.importFeeBN
-                    )
-                    break
-                case 'P':
-                    exportTxId = await wallet.exportFromPChain(
-                        amt,
-                        destinationChain as SDK.ExportChainsP,
-                        this.importFeeBN
-                    )
-                    break
-                case 'C':
-                    exportTxId = await wallet.exportFromCChain(
-                        amt,
-                        destinationChain as SDK.ExportChainsC,
-                        this.exportFeeBN
-                    )
-                    break
-            }
-        } catch (e) {
-            throw e
+        switch (sourceChain) {
+            case 'X':
+                exportTxId = await wallet.exportFromXChain(
+                    amt,
+                    destinationChain as SDK.ExportChainsX,
+                    this.importFeeBN
+                )
+                break
+            case 'P':
+                exportTxId = await wallet.exportFromPChain(
+                    amt,
+                    destinationChain as SDK.ExportChainsP,
+                    this.importFeeBN
+                )
+                break
+            case 'C':
+                exportTxId = await wallet.exportFromCChain(
+                    amt,
+                    destinationChain as SDK.ExportChainsC,
+                    this.exportFeeBN
+                )
+                break
         }
 
         this.exportId = exportTxId
@@ -563,7 +559,7 @@ export default class ChainTransfer extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/mixins';
 
 .cols {
     display: grid;
@@ -741,7 +737,7 @@ h2 {
     }
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .cols {
         //display: grid;
         //grid-template-columns: 1fr 2fr;
@@ -757,7 +753,7 @@ h2 {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .cols {
         display: block;
         padding-bottom: 3vh;

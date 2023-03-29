@@ -62,19 +62,19 @@ export default class FileInput extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/variables';
 
 .file_input {
     position: relative;
     padding: 8px 18px;
     cursor: pointer;
-    /* color: main.$primary-color; */
+    /* color: variables.$primary-color; */
     color: rgb(118, 118, 118);
-    background-color: main.$background-color !important;
+    background-color: variables.$background-color !important;
     border: 1px solid;
     border-radius: 6px;
     max-width: 100%;
-    border-color: main.$primary-color;
+    border-color: variables.$primary-color;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     text-transform: uppercase !important;

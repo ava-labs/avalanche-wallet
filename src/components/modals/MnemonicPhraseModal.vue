@@ -34,7 +34,7 @@ export default class MnemonicPhraseModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .mnemonic_modal_body {
     /*width: 600px;*/
@@ -58,7 +58,7 @@ export default class MnemonicPhraseModal extends Vue {
     border-radius: 3px;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .mnemonic_modal_body {
         max-width: 100%;
     }

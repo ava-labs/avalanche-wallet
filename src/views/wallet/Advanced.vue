@@ -42,7 +42,7 @@ export default class Advanced extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 h1 {
     font-weight: normal;
@@ -61,13 +61,13 @@ h1 {
     overflow: auto;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .grids {
         grid-template-columns: none;
     }
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .grids {
         grid-template-columns: none;
     }

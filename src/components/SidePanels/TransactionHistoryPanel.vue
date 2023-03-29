@@ -101,10 +101,10 @@ export default class TransactionHistoryPanel extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .tx_history_panel {
-    @include main.component-wrapper;
+    @include mixins.component-wrapper;
     display: grid;
     grid-template-rows: max-content 1fr;
     overflow: auto;
@@ -180,6 +180,6 @@ export default class TransactionHistoryPanel extends Vue {
         opacity: 0;
     }
 }
-@include main.medium-device {
+@include mixins.medium-device {
 }
 </style>

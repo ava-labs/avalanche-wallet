@@ -167,7 +167,7 @@ class ERCNftToken {
                                         ? 1
                                         : 0,
                             })
-                        } catch (err) {
+                        } catch (err: any) {
                             if (
                                 err.message.includes(
                                     'Returned error: execution reverted: ERC721: invalid token ID'

@@ -31,7 +31,7 @@ export default class MultisigOwnerRow extends Vue {
     }
 
     get address(): string {
-        return this.wallet ? this.wallet.getStaticAddress('P') : this.unlinkedAddress
+        return this.wallet ? this.wallet.getStaticAddress('X') : this.unlinkedAddress
     }
 
     get icon(): string {

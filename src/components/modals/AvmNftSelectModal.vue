@@ -55,7 +55,8 @@ export default class AvmNftSelectModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
+
 .nft_sel_body {
     width: 650px;
     max-width: 100%;
@@ -71,7 +72,7 @@ export default class AvmNftSelectModal extends Vue {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .nft_sel_body {
         width: 100%;
     }

@@ -79,7 +79,7 @@ export default class BalanceDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 button {
     padding: 4px 12px;
@@ -114,7 +114,7 @@ button {
     position: absolute;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     button {
         font-size: 13px;
     }

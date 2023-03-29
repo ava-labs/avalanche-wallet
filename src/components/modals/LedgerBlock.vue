@@ -44,7 +44,7 @@ import { LEDGER_EXCHANGE_TIMEOUT } from '../../store/modules/ledger/types'
 })
 export default class LedgerBlock extends Vue {
     duration: number = LEDGER_EXCHANGE_TIMEOUT / 1000
-    intervalId: NodeJS.Timeout | null = null
+    intervalId: number | null = null
 
     open() {
         // @ts-ignore
@@ -88,7 +88,7 @@ export default class LedgerBlock extends Vue {
     }
 
     startTimer() {
-        this.intervalId = setInterval(() => {
+        this.intervalId = window.setInterval(() => {
             this.duration -= 1
             if (this.duration <= 0) {
                 this.duration = 0

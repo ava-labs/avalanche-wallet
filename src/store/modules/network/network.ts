@@ -24,6 +24,9 @@ const network_module: Module<NetworkState, RootState> = {
         addNetwork(state, net: AvaNetwork) {
             state.networks.push(net)
         },
+        selectNetwork(state, net: AvaNetwork) {
+            state.selectedNetwork = net
+        },
     },
     getters: {
         allNetworks(state) {
@@ -134,7 +137,7 @@ const network_module: Module<NetworkState, RootState> = {
             ava.PChain().getAVAXAssetID(true)
             ava.CChain().getAVAXAssetID(true)
 
-            state.selectedNetwork = net
+            commit('selectNetwork', net)
             dispatch('saveSelectedNetwork')
 
             state.depositAndBond =
@@ -158,9 +161,11 @@ const network_module: Module<NetworkState, RootState> = {
 
             // If authenticated
             if (rootState.isAuth) {
-                for (var i = 0; i < rootState.wallets.length; i++) {
-                    let w = rootState.wallets[i]
-                    w.onnetworkchange()
+                for (const w of rootState.wallets) {
+                    w.onNetworkChange()
+                }
+                if (rootState.activeWallet) {
+                    rootState.activeWallet.initialize()
                 }
             }
 
@@ -177,7 +182,8 @@ const network_module: Module<NetworkState, RootState> = {
 
             // Set the SDK Network
             setAvalanche(ava)
-            // state.isConnected = true;
+
+            commit('setNetwork', net, { root: true })
             state.status = 'connected'
             return true
         },

@@ -42,8 +42,6 @@ export default class Create extends Vue {}
 </script>
 
 <style scoped lang="scss">
-@use '../styles/main';
-
 .access_view {
     display: flex;
     justify-content: center;

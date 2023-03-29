@@ -7,7 +7,7 @@ import {
 import { UTXOSet as PlatformUTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { ava, bintools } from '@/AVA'
 import HDKey from 'hdkey'
-import { Buffer } from '@c4tplatform/caminojs'
+import { Buffer } from '@c4tplatform/caminojs/dist'
 import {
     KeyChain as PlatformVMKeyChain,
     KeyPair as PlatformVMKeyPair,
@@ -72,6 +72,7 @@ class HdHelper {
         this.masterKey = masterKey
         this.hdIndex = 0
         this.isPublic = isPublic
+        this.ethKeyPair = undefined
         this.ethKeyPair = undefined
 
         if (ethKey) {

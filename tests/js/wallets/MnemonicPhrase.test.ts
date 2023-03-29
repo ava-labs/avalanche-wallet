@@ -1,3 +1,4 @@
+import { expect } from '@jest/globals';
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
 import * as bip39 from 'bip39'
 

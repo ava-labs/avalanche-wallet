@@ -57,7 +57,7 @@ export default class AddKeyString extends Vue {
                 // @ts-ignore
                 this.$emit('success')
                 this.clear()
-            } catch (e) {
+            } catch (e: any) {
                 this.isLoading = false
 
                 if (e.message.includes('already')) {
@@ -79,8 +79,6 @@ export default class AddKeyString extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
-
 label {
     color: #909090;
     font-size: 12px;

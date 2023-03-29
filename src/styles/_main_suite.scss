@@ -1,0 +1,29 @@
+// @import "./theme";
+@import './abstracts/variables';
+@import './abstracts/mixins';
+
+// core
+@import './core/typography';
+@import './core/reset';
+
+// components
+@import './components/buttons';
+@import './components/inputs';
+@import './components/link';
+@import './components/tabs';
+@import './components/portfolio';
+@import './components/sidebar';
+
+// layout
+@import './layout/grid';
+@import './layout/container';
+
+// pages
+@import './pages/wallet';
+
+// vuetify
+@import './vuetify/reset';
+
+// css styles only / fonts are load separately
+@import '~@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '~@mdi/font/css/materialdesignicons.css';

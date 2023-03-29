@@ -80,7 +80,8 @@ export default class Earn extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
+
 .earn_page {
     display: grid;
     grid-template-rows: max-content 1fr;
@@ -170,7 +171,7 @@ span {
     margin-top: 14px;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .options {
         grid-template-columns: none;
         grid-row-gap: 15px;
