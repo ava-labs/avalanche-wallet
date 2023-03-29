@@ -76,7 +76,7 @@ import { ava } from '@/AVA'
 import { BN } from '@c4tplatform/caminojs'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Tooltip from '@/components/misc/Tooltip.vue'
-import { NodeInfo } from '@/js/wallets/types'
+import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 
 @Component({
     name: 'validator_info',
@@ -88,7 +88,7 @@ import { NodeInfo } from '@/js/wallets/types'
 })
 export default class ValidatorInfo extends Vue {
     @Prop() nodeId!: string
-    @Prop() nodeInfo!: NodeInfo
+    @Prop() nodeInfo!: ValidatorRaw
 
     startTime: string = ''
     endTime: string = ''
@@ -123,9 +123,6 @@ export default class ValidatorInfo extends Vue {
             var reaminingValidationDuration = moment.duration(
                 moment(new Date(parseInt(this.nodeInfo.endTime) * 1000)).diff(today)
             )
-
-            console.log('reaminingValidationDurationYears', reaminingValidationDuration.years())
-            console.log('reaminingValidationDurationMonths', reaminingValidationDuration.months())
 
             let dataReaminingValdiationDuration = {
                 years: reaminingValidationDuration.years(),
