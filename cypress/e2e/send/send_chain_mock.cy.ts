@@ -1,4 +1,4 @@
-import { BN, bnToAvaxC } from '@c4tplatform/camino-wallet-sdk'
+import { BN, bnToAvaxC } from '@c4tplatform/camino-wallet-sdk/dist'
 
 describe('Send: C to C transfer by already owned balance', () => {
     beforeEach(() => {

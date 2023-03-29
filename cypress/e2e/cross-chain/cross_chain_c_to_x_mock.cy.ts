@@ -6,7 +6,7 @@ import {
     GasHelper,
     Big,
     numberToBNAvaxC,
-} from '@c4tplatform/camino-wallet-sdk'
+} from '@c4tplatform/camino-wallet-sdk/dist'
 
 describe('Cross chain: C to X', () => {
     beforeEach(() => {

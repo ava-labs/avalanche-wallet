@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { BN, bnToBigAvaxX } from '@c4tplatform/camino-wallet-sdk'
+import { BN, bnToBigAvaxX } from '@c4tplatform/camino-wallet-sdk/dist'
 
 describe('Send transaction with x-chain balance', () => {
     beforeEach(() => {

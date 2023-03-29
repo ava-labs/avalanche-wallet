@@ -1,7 +1,7 @@
 import {
     BN,
     bnToAvaxX
-} from '@c4tplatform/camino-wallet-sdk'
+} from '@c4tplatform/camino-wallet-sdk/dist'
 
 describe('Cross chain: X to P', () => {
     beforeEach(() => {
