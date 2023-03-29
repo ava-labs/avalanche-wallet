@@ -4,6 +4,54 @@ describe('Send: C to C transfer by already owned balance', () => {
     beforeEach(() => {
         cy.loginWalletWith('privateKey')
 
+        cy.intercept('**/ext/bc/C/rpc', (request) => {
+            if (request.body.method === 'eth_getBalance') {
+                request.reply({
+                    statusCode: 200,
+                    body: {
+                        id: request.body.id,
+                        jsonrpc: '2.0',
+                        result: '0x1b0cf699489af08800',
+                    },
+                })
+            }
+        })
+
+
+        cy.intercept('POST', '**/ext/bc/C/rpc', (request) => {
+            if (
+                request.body.hasOwnProperty('method') &&
+                request.body.method.includes('eth_getTransactionReceipt')
+            ) {
+                request.reply({
+                    statusCode: 200,
+                    body: {
+                        id: request.body.id,
+                        jsonrpc: '2.0',
+                        result: {
+                            blockHash:
+                                '0x91550148a2a68068f7d5aa44d6cbff9cf328fde5f791dbd24475d5012141a276',
+                            blockNumber: '0xc',
+                            contractAddress: null,
+                            cumulativeGasUsed: '0x5208',
+                            effectiveGasPrice: '0x3a35294400',
+                            from: '0x50decb4c73d57109c7fb586d9d83185a0d1b841c',
+                            gasUsed: '0x5208',
+                            logs: [],
+                            logsBloom:
+                                '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+                            status: '0x1',
+                            to: '0x50decb4c73d57109c7fb586d9d83185a0d1b841c',
+                            transactionHash:
+                                '0xc0e0a035b2984de34222b035bda2552c388ff8f7b1b748f967d3abb4ee03320b',
+                            transactionIndex: '0x0',
+                            type: '0x0',
+                        },
+                    },
+                })
+            }
+        })
+
         cy.get('[data-cy="wallet_transfer"]', { timeout: 15000 })
             .click()
             .should('have.class', 'router-link-active')

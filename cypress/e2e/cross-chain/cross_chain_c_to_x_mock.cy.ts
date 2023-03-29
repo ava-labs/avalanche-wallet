@@ -11,12 +11,6 @@ import {
 describe('Cross chain: C to X', () => {
     beforeEach(() => {
         cy.loginWalletWith('privateKey')
-        // Switch to cross chain
-        cy.switchToWalletFunctionTab('Cross Chain')
-        // Make sure successfully switched to the Cross Chain tab
-        cy.get('.wallet_main > #wallet_router > .header')
-            .find('h1')
-            .should('have.text', 'Cross Chain')
 
         // RPC aliases
         cy.intercept('**/ext/bc/C/rpc', (request) => {
@@ -26,6 +20,15 @@ describe('Cross chain: C to X', () => {
                     fixture: 'mocks/eth_base_fee.json'
                 })
                 request.alias = 'apiBaseFee'
+            } else if (request.body.method === 'eth_getBalance') {
+                request.reply({
+                    statusCode: 200,
+                    body: {
+                        id: request.body.id,
+                        jsonrpc: '2.0',
+                        result: '0x1b0cf699489af08800',
+                    },
+                })
             }
         })
 
@@ -55,7 +58,12 @@ describe('Cross chain: C to X', () => {
             
         })
         cy.intercept('POST', '**/ext/bc/C/avax', (request) => {
-            if (request.body.method === 'avax.issueTx') {
+            if (request.body.method === 'avax.getUTXOs') {
+                request.reply({
+                    statusCode: 200,
+                    fixture: 'mocks/avax_getUTXOs.json'
+                })
+            } else if (request.body.method === 'avax.issueTx') {
                 request.reply({
                     statusCode: 200,
                     fixture: 'mocks/avax_issue_tx.json'
@@ -69,7 +77,12 @@ describe('Cross chain: C to X', () => {
                 request.alias = 'apiExportCStatus'
             }
         })
-
+        // Switch to cross chain
+        cy.switchToWalletFunctionTab('Cross Chain')
+        // Make sure successfully switched to the Cross Chain tab
+        cy.get('.wallet_main > #wallet_router > .header')
+            .find('h1')
+            .should('have.text', 'Cross Chain')
     })
 
     it('export CAM from C to X', () => {
