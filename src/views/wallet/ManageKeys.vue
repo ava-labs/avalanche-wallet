@@ -69,7 +69,7 @@ import AccountSettingsModal from '@/components/modals/AccountSettings/AccountSet
     },
 })
 export default class ManageKeys extends Vue {
-    helpers = this.globalHelper()
+    helpers? = this.globalHelper()
     $refs!: {
         import: ImportKeys
         export: ExportKeys
@@ -150,7 +150,7 @@ h1 {
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        /*flex-wrap: wrap;*/
+        flex-wrap: wrap;
 
         button {
             padding: 8px 0;

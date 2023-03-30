@@ -79,7 +79,7 @@ export default new Vuex.Store({
             let addresses = wallet.getDerivedAddresses()
             return addresses
         },
-        staticAddresses: (state: RootState) => (chain: ChainAlias): string[] => {
+        staticAddresses: (state: RootState) => (): string[] => {
             return state.wallets.map((w) => w.getStaticAddress('P')).filter((e) => e != '')
         },
         accountChanged(state: RootState): boolean {
@@ -171,19 +171,6 @@ export default new Vuex.Store({
 
             await dispatch('Launch/initialize')
             dispatch('activateWallet', state.activeWallet)
-        },
-
-        // TODO: Parts can be shared with the logout function below
-        // Similar to logout but keeps the Remembered keys.
-        async timeoutLogout(store) {
-            let { dispatchNotification } = this.globalHelper()
-            dispatchNotification({
-                title: 'Session Timeout',
-                message: 'You are logged out due to inactivity.',
-                type: 'warning',
-            })
-
-            store.dispatch('logout')
         },
 
         async logout(store) {
@@ -338,10 +325,16 @@ export default new Vuex.Store({
 
         removeWallet({ state, dispatch, commit }, wallet: WalletType) {
             let index = state.wallets.indexOf(wallet)
-            state.wallets.splice(index, 1)
+            let wallets = [...state.wallets]
+            wallets.splice(index, 1)
+            state.wallets = wallets
             state.walletsDeleted = true
             index = state.volatileWallets.indexOf(wallet)
-            if (index >= 0) state.volatileWallets.splice(index, 1)
+            if (index >= 0) {
+                let volatileWallets = [...state.volatileWallets]
+                volatileWallets.splice(index, 1)
+                state.volatileWallets = volatileWallets
+            }
             commit('Accounts/deleteKey', wallet)
             dispatch('updateMultisigWallets')
         },
