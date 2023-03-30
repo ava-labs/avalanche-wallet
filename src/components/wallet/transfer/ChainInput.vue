@@ -27,7 +27,7 @@ export default class ChainInput extends Vue {
     }
 
     get isEVMSupported() {
-        return this.wallet.ethAddress
+        return this.wallet?.ethAddress
     }
 }
 </script>

@@ -63,14 +63,6 @@ module.exports = {
                 './mountKyesComponent': './src/components/wallet/manage/mountKyesComponent.ts',
                 './mountsaveKyesButton': './src/views/wallet/mountSaveKeysButton.ts',
             },
-            shared: {
-                ...deps,
-                vue: {
-                    singleton: true,
-                    eager: true,
-                    version: deps.vue,
-                },
-            },
         }),
         new HtmlWebPackPlugin({
             template: path.resolve(__dirname, 'public/index.html'),
