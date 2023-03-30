@@ -69,12 +69,8 @@ import {
 } from '@c4tplatform/caminojs/dist/apis/platformvm/addressstatetx'
 import ValidatorInfo from '@/components/wallet/earn/Validate/ValidatorInfo.vue'
 import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspended.vue'
-<<<<<<< HEAD
-import { NodeInfo } from '@/js/wallets/types'
 import { WalletCore } from '@/js/wallets/WalletCore'
-=======
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
->>>>>>> ffc4785e (replace NodeInfo with ValidatorRaw)
 
 @Component({
     name: 'validator',
@@ -127,7 +123,7 @@ export default class Validator extends Vue {
         this.validatorIsSuspended = !result.and(BN_ONE.shln(ADDRESSSTATEDEFERRED)).isZero()
 
         try {
-            this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
+            this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
         } catch (e) {
             this.isNodeRegistered = false
@@ -136,7 +132,7 @@ export default class Validator extends Vue {
 
     async onNodeRegistered() {
         try {
-            this.nodeId = await WalletHelper.getRegisteredShortIDLink(this.addresses[0])
+            this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
         } catch (e) {
             this.isNodeRegistered = false
