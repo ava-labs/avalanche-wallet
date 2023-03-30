@@ -58,7 +58,7 @@ export default class ExportKeys extends Vue {
 </script>
 
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .export_body {
     padding: 30px;
@@ -79,7 +79,7 @@ export default class ExportKeys extends Vue {
     text-align: center;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .export_body {
         max-width: 100%;
     }
@@ -87,15 +87,15 @@ export default class ExportKeys extends Vue {
 </style>
 
 <style lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/variables';
 
 .v-tab.v-tab {
     font-weight: 700;
 }
 
 .v-tabs-slider-wrapper {
-    color: main.$secondary-color;
-    caret-color: main.$secondary-color;
+    color: variables.$secondary-color;
+    caret-color: variables.$secondary-color;
     height: 3px !important;
 }
 </style>

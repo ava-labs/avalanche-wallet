@@ -3,7 +3,7 @@
         <div class="addresses">
             <p v-for="addr in summary.addresses" :key="addr">{{ direction }} {{ 'X-' + addr }}</p>
         </div>
-        <p class="amount" :profit="isProfit">
+        <p :class="'amount ' + colorClass">
             {{ amtText }}
             <template v-if="assetDetail">
                 {{ assetDetail.symbol }}
@@ -22,6 +22,7 @@ import { BN } from '@c4tplatform/caminojs/dist'
 export default class BaseTxOutput extends Vue {
     @Prop() assetID!: string
     @Prop() summary!: BaseTxAssetSummary
+    @Prop() isDeposit!: string
 
     get assetDetail(): AvaAsset {
         return (
@@ -35,7 +36,7 @@ export default class BaseTxOutput extends Vue {
     }
 
     get isProfit() {
-        return this.summary.amount.gte(new BN(0))
+        return this.isDeposit || this.summary.amount.gte(new BN(0))
     }
 
     get actionText() {
@@ -46,6 +47,10 @@ export default class BaseTxOutput extends Vue {
         }
     }
 
+    get colorClass(): string {
+        return this.isDeposit ? 'deposit' : this.isProfit ? 'profit' : ''
+    }
+
     get direction() {
         if (this.isProfit) {
             return 'from'
@@ -54,7 +59,10 @@ export default class BaseTxOutput extends Vue {
         }
     }
     get amtText() {
-        let big = bnToBig(this.summary.amount, this.assetDetail?.denomination || 0)
+        let big = bnToBig(
+            this.isDeposit ? this.summary.deposited : this.summary.amount,
+            this.assetDetail?.denomination || 0
+        )
         return big.toLocaleString()
     }
 }
@@ -73,8 +81,12 @@ export default class BaseTxOutput extends Vue {
     font-size: 15px;
     color: #d04c4c;
 
-    &[profit] {
+    &.profit {
         color: var(--success);
+    }
+
+    &.deposit {
+        color: var(--info);
     }
 }
 

@@ -43,6 +43,7 @@ export default class AccountsFound extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 @use '../../styles/abstracts/variables';
 @use './menu';
 
@@ -90,7 +91,7 @@ export default class AccountsFound extends Vue {
 
 .access_card {
     background-color: var(--bg-light) !important;
-    padding: main.$container-padding;
+    padding: variables.$container-padding;
 }
 h3 {
     margin-top: 1rem;
@@ -103,9 +104,9 @@ h3 {
     grid-gap: 30px;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .card {
-        padding: main.$container-padding-mobile;
+        padding: variables.$container-padding-mobile;
     }
 
     .options {

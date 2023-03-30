@@ -232,7 +232,7 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
         return this.getCurrentAddressPlatform()
     }
 
-    onnetworkchange(): void {
+    onNetworkChange(): void {
         let hrp = ava.getHRP()
 
         this.keyChain = new AVMKeyChain(hrp, this.chainId)

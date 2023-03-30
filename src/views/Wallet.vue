@@ -1,9 +1,6 @@
 <template>
     <div class="wallet_view" ref="wallet_view">
         <UpdateKeystoreModal v-if="isManageWarning"></UpdateKeystoreModal>
-        <!-- <transition name="fade" mode="out-in">
-            <sidebar class="panel sidenav"></sidebar>
-        </transition> -->
         <div class="top-bar">
             <div class="container">
                 <div class="links">
@@ -89,7 +86,6 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import TopInfo from '@/components/wallet/TopInfo.vue'
-import Sidebar from '@/components/wallet/Sidebar.vue'
 import MainPanel from '@/components/SidePanels/MainPanel.vue'
 import UpdateKeystoreModal from '@/components/modals/UpdateKeystore/UpdateKeystoreModal.vue'
 
@@ -98,14 +94,13 @@ const TIMEOUT_DUR_MS = TIMEOUT_DURATION * 1000
 
 @Component({
     components: {
-        Sidebar,
         MainPanel,
         TopInfo,
         UpdateKeystoreModal,
     },
 })
 export default class Wallet extends Vue {
-    intervalId: NodeJS.Timeout | null = null
+    intervalId: number | null = null
     logoutTimestamp = Date.now() + TIMEOUT_DUR_MS
     isLogOut = false
     helper = this.globalHelper()
@@ -178,7 +173,7 @@ export default class Wallet extends Vue {
     created() {
         this.resetTimer()
         if (document.domain !== 'localhost')
-            this.intervalId = setInterval(() => {
+            this.intervalId = window.setInterval(() => {
                 this.checkLogout()
             }, 1000)
     }
@@ -213,10 +208,6 @@ export default class Wallet extends Vue {
 
     destroyed() {
         clearInterval(this.intervalId!)
-    }
-
-    get isManageWarning(): boolean {
-        return this.$store.state.warnUpdateKeyfile
     }
 
     get hasVolatileWallets() {

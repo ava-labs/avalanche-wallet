@@ -259,7 +259,8 @@ export default class AddressCard extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/variables';
+@use '../../../../styles/abstracts/mixins';
 
 .addr_card {
     display: flex;
@@ -321,7 +322,7 @@ export default class AddressCard extends Vue {
     /* background-image: url('/img/modal_icons/mainnet_addr.svg'); */
 }
 
-@include main.night-mode {
+@include mixins.night-mode {
     // .qr_but {
     //     background-image: url('/img/qr_icon_night.svg');
     // }
@@ -378,7 +379,7 @@ $qr_width: 110px;
     margin: 0px 10px !important;
     text-align: center;
     font-size: 0.7rem;
-    background-color: main.$secondary-color;
+    background-color: variables.$secondary-color;
     color: #fff;
     padding: 3px 6px;
     border-radius: 3px;

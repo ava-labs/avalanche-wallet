@@ -113,11 +113,12 @@ export default class Mnemonic extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/variables';
+@use '../../styles/abstracts/mixins';
 
 .mnemonic_auth {
     background-color: var(--bg-light);
-    padding: main.$container-padding;
+    padding: variables.$container-padding;
     max-width: 1200px;
 
     display: flex;
@@ -131,7 +132,7 @@ export default class Mnemonic extends Vue {
 
 h1 {
     text-align: left;
-    font-size: main.$m-size;
+    font-size: variables.$m-size;
 }
 
 textarea {
@@ -139,14 +140,14 @@ textarea {
 
 label {
     text-align: left;
-    color: main.$primary-color-light;
+    color: variables.$primary-color-light;
     font-size: 12px;
     margin-bottom: 20px;
 }
 
 textarea {
     margin: 20px 0;
-    margin-bottom: main.$vertical-padding;
+    margin-bottom: variables.$vertical-padding;
     width: 100%;
     background-color: var(--bg) !important;
     resize: none;
@@ -180,7 +181,7 @@ textarea {
     margin-bottom: 6px;
     width: 100%;
     font-size: 13px;
-    background-color: main.$white;
+    background-color: variables.$white;
     border-radius: var(--border-radius-sm);
 }
 
@@ -192,21 +193,20 @@ textarea {
 .button_container {
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 .link {
     margin-bottom: 0px;
 }
 
-@include main.mobile_device {
+@include mixins.mobile_device {
     .mnemonic_auth {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
 
-        padding: main.$container-padding-mobile;
+        padding: variables.$container-padding-mobile;
 
         .center {
             flex-direction: column;
@@ -220,7 +220,7 @@ textarea {
 
         .right {
             order: 1;
-            margin-bottom: main.$vertical-padding-mobile;
+            margin-bottom: variables.$vertical-padding-mobile;
         }
 
         > * {
@@ -234,7 +234,7 @@ textarea {
 
     h1 {
         text-align: center;
-        font-size: main.$m-size-mobile;
+        font-size: variables.$m-size-mobile;
     }
 
     label {
@@ -245,6 +245,7 @@ textarea {
     .phrase_disp {
         width: 100%;
         max-width: 560px;
+        margin-bottom: variables.$vertical-padding-mobile;
     }
 
     .err {

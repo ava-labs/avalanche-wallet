@@ -1,0 +1,12 @@
+diff --git a/node_modules/vuetify/src/styles/main.sass b/node_modules/vuetify/src/styles/main.sass
+index ce1d0cc..99752e3 100644
+--- a/node_modules/vuetify/src/styles/main.sass
++++ b/node_modules/vuetify/src/styles/main.sass
+@@ -2,6 +2,6 @@
+ 
+ @import './tools/_index'
+ @import './settings/_index'
+-@import './generic/_index'
++//@import './generic/_index'
+ @import './elements/_index'
+ @import './utilities/_index'

@@ -126,7 +126,7 @@ export default class Home extends Vue {
         gap: 30px;
         align-items: center;
         .header {
-            font-size: main.$l-size;
+            font-size: variables.$l-size;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -138,11 +138,11 @@ export default class Home extends Vue {
             text-align: center;
             &--desc {
                 margin-bottom: 30px;
-                font-size: main.$xl-size;
+                font-size: variables.$xl-size;
             }
             &--access-create {
                 margin-bottom: 30px;
-                font-size: main.$m-size;
+                font-size: variables.$m-size;
                 color: var(--primary-color-light);
             }
         }
@@ -173,15 +173,15 @@ Nav
         }
         .header {
             &--title {
-                font-size: main.$l-size-mobile;
+                font-size: variables.$l-size-mobile;
             }
         }
         .content {
             &--desc {
-                font-size: main.$xl-size-mobile;
+                font-size: variables.$xl-size-mobile;
             }
             &--access-create {
-                font-size: main.$m-size-mobile;
+                font-size: variables.$m-size-mobile;
             }
         }
     }

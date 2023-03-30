@@ -49,12 +49,12 @@ export default class LanguageSelect extends Vue {
     locale = 'en'
 
     mounted() {
-        this.locale = this.$root.$i18n.locale
+        this.locale = this.$i18n.locale
     }
 
     @Watch('locale')
     onSelectedChange(val: string) {
-        this.$root.$i18n.locale = val
+        this.$i18n.locale = val
         localStorage.setItem('lang', val)
     }
 
@@ -71,7 +71,7 @@ export default class LanguageSelect extends Vue {
     get items(): LanguageItem[] {
         let res = []
 
-        let messages = this.$root.$i18n.messages
+        let messages = this.$i18n.messages
         for (var langCode in messages) {
             // @ts-ignore
             let data = langMap[langCode]
@@ -88,7 +88,8 @@ export default class LanguageSelect extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
+
 .sel_locale {
     display: flex;
     flex-direction: row;
@@ -111,6 +112,7 @@ export default class LanguageSelect extends Vue {
     margin: 0;
     padding-left: 8px;
     color: var(--primary-color);
+    background-color: var(--bg);
 }
 
 .sel_outlined {
@@ -118,28 +120,27 @@ export default class LanguageSelect extends Vue {
     color: #1d82bb !important;
 }
 
-.selected {
-    //font-size: 13px;
-}
-
-select {
+.sel_locale select {
     outline: none;
     flex-grow: 1;
-    margin-left: 10px;
+    padding: 12px;
     color: var(--primary-color);
     cursor: pointer;
-    //font-size: 13px;
 
     &:hover {
         color: var(--primary-color);
     }
 }
 
+.sel_locale select > option {
+    background-color: var(--bg);
+}
+
 .small-flag {
     transform: scale(0.35);
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .small-flag {
         transform: scale(0.25);
     }
@@ -153,8 +154,6 @@ select {
         display: none;
     }
 }
-</style>
-<style lang="scss">
 .sel_locale {
     .vs__dropdown-toggle {
         border-color: var(--primary-color-light) !important;

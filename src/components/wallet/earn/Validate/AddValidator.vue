@@ -132,7 +132,7 @@ import 'reflect-metadata'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 //@ts-ignore
 import AvaxInput from '@/components/misc/AvaxInput.vue'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import Big from 'big.js'
 //@ts-ignore
 import { QrInput } from '@c4tplatform/vue_components'
@@ -488,6 +488,11 @@ export default class AddValidator extends Vue {
 </script>
 <style scoped lang="scss">
 @use '../../../../styles/main';
+@use '../../../../styles/abstracts/mixins';
+.cols {
+    /*display: grid;*/
+    /*grid-template-columns: 1fr 1fr;*/
+}
 
 form {
     display: grid;
@@ -659,7 +664,7 @@ label {
     margin-bottom: 0.5rem;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     form {
         grid-template-columns: 1fr;
     }

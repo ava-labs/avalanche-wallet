@@ -218,7 +218,8 @@ export default class CreateWallet extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
+@use '../../styles/abstracts/variables';
 
 .create_wallet {
     display: flex;
@@ -236,22 +237,22 @@ export default class CreateWallet extends Vue {
     align-items: center;
     justify-content: space-between;
     background-color: var(--bg-light);
-    padding: main.$container-padding;
+    padding: variables.$container-padding;
     border-radius: 1rem;
     text-align: center;
     /*min-width: 1000px;*/
 
     img {
-        margin-top: main.$vertical-padding;
+        margin-top: variables.$vertical-padding;
         width: 89px;
         height: 89px;
         max-height: none;
     }
 
     h1 {
-        margin-top: main.$vertical-padding;
+        margin-top: variables.$vertical-padding;
         text-align: left;
-        font-size: main.$m-size;
+        font-size: variables.$m-size;
         font-weight: 400;
     }
 }
@@ -283,7 +284,7 @@ export default class CreateWallet extends Vue {
 .but_generate {
     display: block;
     height: max-content;
-    background-color: main.$secondary-color;
+    background-color: variables.$secondary-color;
 }
 
 .key_disp {
@@ -292,7 +293,7 @@ export default class CreateWallet extends Vue {
 }
 
 a {
-    color: main.$primary-color-light !important;
+    color: variables.$primary-color-light !important;
     text-decoration: underline !important;
     margin-top: 10px;
 }
@@ -336,7 +337,7 @@ a {
     }
 
     .verified {
-        background-color: main.$green-light;
+        background-color: variables.$green-light;
         color: #222;
     }
 
@@ -362,40 +363,40 @@ a {
     }
 
     img {
-        width: main.$img-size;
-        height: main.$img-size;
+        width: variables.$img-size;
+        height: variables.$img-size;
         max-height: none;
     }
 
     header {
         h1 {
             margin-top: 10px;
-            font-size: main.$xl-size;
+            font-size: variables.$xl-size;
             line-height: 1.25em;
             font-weight: 400;
         }
 
         p {
-            color: main.$primary-color-light;
+            color: variables.$primary-color-light;
         }
     }
 
     .warn {
-        margin-top: main.$vertical-padding !important;
+        margin-top: variables.$vertical-padding !important;
 
         span {
             display: block;
-            font-size: main.$s-size;
+            font-size: variables.$s-size;
             font-weight: 700;
             text-transform: uppercase;
 
             &.label {
-                color: main.$secondary-color;
+                color: variables.$secondary-color;
                 text-transform: uppercase;
             }
 
             &.description {
-                color: main.$primary-color-light !important;
+                color: variables.$primary-color-light !important;
             }
         }
     }
@@ -432,13 +433,13 @@ a {
     margin: 20px 0;
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .stage_1 {
         min-width: unset;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .stage_1 {
         min-width: unset;
     }
@@ -499,18 +500,18 @@ a {
         align-items: center;
 
         img {
-            width: main.$img-size-mobile;
-            height: main.$img-size-mobile;
+            width: variables.$img-size-mobile;
+            height: variables.$img-size-mobile;
         }
 
         header {
             h1 {
-                font-size: main.$xl-size-mobile;
+                font-size: variables.$xl-size-mobile;
             }
         }
 
         .warn {
-            margin-top: main.$vertical-padding-mobile !important;
+            margin-top: variables.$vertical-padding-mobile !important;
         }
 
         .access_cont {

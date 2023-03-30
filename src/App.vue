@@ -82,6 +82,7 @@ export default {
 
 <style scoped lang="scss">
 @use './styles/main';
+@use './styles/abstracts/variables';
 
 .main_cols {
     &[wallet_view] {

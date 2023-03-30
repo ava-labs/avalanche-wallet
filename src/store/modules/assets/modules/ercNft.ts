@@ -179,14 +179,23 @@ const ercNft_module: Module<ERCNftModuleState, RootState> = {
 
             // Step 2 Update existing contracts
             if (knownContracts.length > 0) {
-                if (
-                    await ERCNftToken.updateNftActivity(
-                        state.evmAddress,
-                        knownContracts,
-                        state.lastScannedBlock
-                    )
-                )
-                    changed = true
+                for (var i = 0; i < 2; ++i) {
+                    try {
+                        if (
+                            await ERCNftToken.updateNftActivity(
+                                state.evmAddress,
+                                knownContracts,
+                                state.lastScannedBlock
+                            )
+                        )
+                            changed = true
+                        break
+                    } catch (e: any) {
+                        if (e.message.indexOf('after last accepted block') >= 0) {
+                            state.lastScannedBlock = 0
+                        } else throw e
+                    }
+                }
             }
             state.lastScannedBlock = await web3.eth.getBlockNumber()
             commit('saveLastScannedBlock')

@@ -26,12 +26,14 @@ abstract class HdWalletCore extends WalletCore {
 
     ethHdNode: HDKey
     ethKeyPair: SECP256k1KeyPair
+    hdKeysLoaded: boolean
 
     constructor(accountHdKey: HDKey, ethHdNode: HDKey, isPublic = true) {
         super()
         this.ethHdNode = ethHdNode
         this.ethKeyPair = new KeyPair('', '')
         this.ethKeyPair.importKey(Buffer.from(ethHdNode.privateKey))
+        this.hdKeysLoaded = false
 
         this.chainId = ava.XChain().getBlockchainAlias() || ava.XChain().getBlockchainID()
         this.externalHelper = new HdHelper('m/0', accountHdKey, ethHdNode, undefined, isPublic)
@@ -224,17 +226,28 @@ abstract class HdWalletCore extends WalletCore {
         return this.externalHelper.getAddressForIndex(0)
     }
 
-    onnetworkchange(): void {
+    onNetworkChange(): void {
+        this.hdKeysLoaded = false
+
+        this.externalHelper.onNetworkChange()
+        this.internalHelper.onNetworkChange()
+        this.platformHelper.onNetworkChange()
+    }
+
+    async initialize() {
+        if (this.hdKeysLoaded) return
+        this.hdKeysLoaded = true
+
         this.isInit = false
         this.stakeAmount = new BN(0)
 
-        this.externalHelper.onNetworkChange().then(() => {
+        this.externalHelper.findHdIndex().then(() => {
             this.updateInitState()
         })
-        this.internalHelper.onNetworkChange().then(() => {
+        this.internalHelper.findHdIndex().then(() => {
             this.updateInitState()
         })
-        this.platformHelper.onNetworkChange().then(() => {
+        this.platformHelper.findHdIndex().then(() => {
             this.updateInitState()
         })
 

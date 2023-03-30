@@ -66,10 +66,7 @@ export default class HdDerivationListRow extends Vue {
 
     async verifyLedgerAddress() {
         const wallet = this.wallet as LedgerWallet
-
-        let networkId = ava.getNetworkID()
         let hrp = ava.getHRP()
-
         wallet.app.getWalletAddress(`${AVA_ACCOUNT_PATH}/${this.path}/${this.index}`, hrp)
     }
 }

@@ -40,7 +40,7 @@ export function connectSocketC(network: AvaNetwork) {
     }
 }
 
-let evmSubscriptionTimeout: NodeJS.Timeout
+let evmSubscriptionTimeout: number
 const SUBSCRIBE_TIMEOUT = 500
 
 export function updateEVMSubscriptions() {
@@ -49,7 +49,7 @@ export function updateEVMSubscriptions() {
         if (evmSubscriptionTimeout) {
             clearTimeout(evmSubscriptionTimeout)
         }
-        evmSubscriptionTimeout = setTimeout(() => {
+        evmSubscriptionTimeout = window.setTimeout(() => {
             updateEVMSubscriptions()
         }, SUBSCRIBE_TIMEOUT)
         return

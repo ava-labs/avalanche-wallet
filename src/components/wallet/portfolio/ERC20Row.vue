@@ -48,7 +48,7 @@ export default class ERC20Row extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .erc_row {
     > * {
@@ -111,7 +111,7 @@ img {
     color: var(--primary-color-light);
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .erc_row {
         padding: 6px 0;
     }
@@ -125,6 +125,6 @@ img {
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
 }
 </style>

@@ -108,7 +108,6 @@ export default class NetworkRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
 @use '../../styles/abstracts/variables';
 .stat_col {
     font-size: 14px;
@@ -174,17 +173,17 @@ img {
 
 .url,
 .credentials {
-    color: main.$primary-color-light;
+    color: variables.$primary-color-light;
     font-size: 12px;
     word-break: break-all;
 }
 
 @keyframes connecting {
     from {
-        color: main.$primary-color;
+        color: variables.$primary-color;
     }
     to {
-        color: main.$green;
+        color: variables.$green;
     }
 }
 

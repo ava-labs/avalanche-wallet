@@ -17,6 +17,7 @@ import {
 } from '@/store/types'
 import { ava, bintools } from '@/AVA'
 import Vue from 'vue'
+import { ZeroBN } from '@/constants'
 import AvaAsset from '@/js/AvaAsset'
 import { WalletType } from '@/js/wallets/types'
 import { AvaNftFamily } from '@/js/AvaNftFamily'
@@ -38,10 +39,8 @@ import axios from 'axios'
 import Erc20Token from '@/js/Erc20Token'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { web3 } from '@/evm'
-// import ERCNftToken from '@/js/ERCNftToken'
 
 const TOKEN_LISTS: string[] = []
-const ZeroBN = new BN(0)
 
 import ERCNftModule from './modules/ercNft'
 import ERC20_TOKEN_LIST from '@/ERC20Tokenlist.json'
@@ -149,9 +148,12 @@ const assets_module: Module<AssetsState, RootState> = {
         },
     },
     actions: {
-        async onNetworkChange({ state }, network: AvaNetwork) {
+        async onNetworkChange({ state, rootState, dispatch }, network: AvaNetwork) {
             let id = await web3.eth.getChainId()
             state.evmChainId = id
+
+            let wallet: WalletType | null = rootState.activeWallet
+            if (wallet) dispatch('updateWallet')
         },
         // Called everytime a new wallet is selected
         updateWallet({ dispatch }) {

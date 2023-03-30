@@ -1,6 +1,12 @@
 <template>
     <div class="display_copy">
-        <input class="disp" type="text" disabled v-model="value" />
+        <input
+            class="disp"
+            type="text"
+            disabled
+            :value="value"
+            @input="$emit('input', $event.target.value)"
+        />
         <copy-text :value="value" class="copy" @copy="oncopy">
             <fa icon="copy"></fa>
         </copy-text>

@@ -1,5 +1,5 @@
 import { InfoAPI } from '@c4tplatform/caminojs/dist/apis/info'
-import Avalanche from '@c4tplatform/caminojs'
+import Avalanche from '@c4tplatform/caminojs/dist'
 //@ts-ignore
 import BinTools from '@c4tplatform/caminojs/dist/utils/bintools'
 import { TestNetworkID } from '@c4tplatform/caminojs/dist/utils'

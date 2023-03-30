@@ -1,4 +1,4 @@
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 export interface TransactionValueDict {
     [address: string]: number
 }

@@ -13,7 +13,7 @@
                         <v-icon>mdi-refresh</v-icon>
                     </button>
                 </div>
-                <h4>{{ $t('top.title2') }}</h4>
+                <h4>{{ $t('top.title2') }} ({{ wallet ? wallet.name : 'Unknown' }})</h4>
                 <template v-if="!isBreakdown">
                     <button
                         class="breakdown_toggle"
@@ -369,8 +369,8 @@ export default class BalanceCard extends Vue {
     }
 }
 </script>
+
 <style scoped lang="scss">
-@use '../../../../styles/main';
 .balance_card {
     display: grid;
     column-gap: 20px;
@@ -409,7 +409,7 @@ h4 {
     font-size: 2.4em;
     white-space: normal;
     /*font-weight: bold;*/
-    font-family: 'Inter', sans-serif;
+    font-family: Inter !important;
     span {
         float: left;
     }

@@ -14,8 +14,6 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Component, Vue } from 'vue-property-decorator'
-// @ts-ignore
-import TransportU2F from '@ledgerhq/hw-transport-u2f'
 //@ts-ignore
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
 //@ts-ignore
@@ -30,6 +28,8 @@ import { AVA_ACCOUNT_PATH, LEDGER_ETH_ACCOUNT_PATH } from '@/js/wallets/Mnemonic
 import { ILedgerAppConfig } from '@/store/types'
 import { LEDGER_EXCHANGE_TIMEOUT } from '@/store/modules/ledger/types'
 import ImageDayNight from '@/components/misc/ImageDayNight.vue'
+
+const ErrNoTransport = 'Transport protocol not found.'
 
 @Component({
     components: {
@@ -58,8 +58,6 @@ export default class LedgerButton extends Vue {
         //@ts-ignore
         if (window.USB) {
             transport = await TransportWebUSB.create()
-        } else {
-            transport = await TransportU2F.create()
         }
         return transport
     }
@@ -67,6 +65,8 @@ export default class LedgerButton extends Vue {
     async submit() {
         try {
             let transport = await this.getTransport()
+            if (!transport) throw ErrNoTransport
+
             transport.setExchangeTimeout(LEDGER_EXCHANGE_TIMEOUT)
 
             let app = new AppAvax(transport, 'w0w')

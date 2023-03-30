@@ -9,8 +9,8 @@
 <script>
 import NetworkMenu from '../NetworkSettings/NetworkMenu'
 import TransactionHistoryPanel from './TransactionHistoryPanel'
-import DayNightToggle from '@/components/misc/DayNightToggle'
-import ConfirmLogout from '@/components/modals/ConfirmLogout.vue'
+import DayNightToggle from '../misc/DayNightToggle'
+import ConfirmLogout from '../modals/ConfirmLogout'
 
 export default {
     components: {
@@ -28,6 +28,7 @@ export default {
     },
 }
 </script>
+
 <style scoped lang="scss">
 @use '../../styles/abstracts/mixins';
 

@@ -37,6 +37,10 @@ export interface IIndexKeyCache {
     [index: number]: AVMKeyPair
 }
 
+export interface INetwork {
+    name: string
+}
+
 export type ChainAlias = 'X' | 'P'
 export type AvmImportChainType = 'P' | 'C'
 export type AvmExportChainType = 'P' | 'C'
@@ -74,7 +78,7 @@ export interface AvaWalletCore extends IAddressManager {
     ethBalance: BN
     isFetchUtxos: boolean // true if fetching utxos
     isInit: boolean // True once the wallet can be used (ex. when HD index is found)
-    onnetworkchange(): void
+    onNetworkChange(network: INetwork): void
     getUTXOs(): Promise<void>
     getUTXOSet(): UTXOSet
     getStake(): Promise<BN>

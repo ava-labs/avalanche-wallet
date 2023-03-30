@@ -65,7 +65,8 @@ export default class EVMAssetDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
+
 .evm_dropdown {
     position: relative;
 }
@@ -125,7 +126,7 @@ button {
     text-align: right;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .list {
         border-top-right-radius: 14px;
         border-top-left-radius: 14px;

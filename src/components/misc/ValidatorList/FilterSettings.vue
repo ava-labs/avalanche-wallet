@@ -115,7 +115,7 @@ export default class FilterSettings extends Vue {
     availableSpace = 25
     activeFilter: null | ValidatorListFilter = null
     count = 0
-    timeout: NodeJS.Timeout | null = null
+    timeout: number | null = null
 
     @Prop() validators!: ValidatorListItem[]
     @Watch('validators')
@@ -139,7 +139,7 @@ export default class FilterSettings extends Vue {
             clearTimeout(this.timeout)
         }
 
-        let timeout = setTimeout(() => {
+        let timeout = window.setTimeout(() => {
             this.updateCount()
         }, 700)
         this.timeout = timeout

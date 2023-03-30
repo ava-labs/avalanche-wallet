@@ -10,6 +10,7 @@
         "experimentalDecorators": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
+        "isolatedModules": true,
         "skipLibCheck": true,
         "sourceMap": true,
         "resolveJsonModule": true,
@@ -17,7 +18,7 @@
         "typeRoots": ["./node_modules/@types", "./node_modules/vuetify/types"],
         "types": ["webpack-env", "vuetify", "ts-jest", "cypress", "@cypress/grep"],
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["./src/*"]
         },
         "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
     },

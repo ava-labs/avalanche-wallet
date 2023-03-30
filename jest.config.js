@@ -2,7 +2,7 @@ module.exports = {
     modulePathIgnorePatterns: ['camino-wallet-sdk'],
     moduleFileExtensions: ['js', 'ts', 'json', 'vue'],
     transform: {
-        '.*\\.(vue)$': 'vue-jest',
+        '.*\\.(vue)$': '@vue/vue2-jest',
         '^.+\\.ts?$': 'ts-jest',
         '^.+\\.js?$': 'babel-jest',
     },
@@ -10,7 +10,9 @@ module.exports = {
         '@/(.*)$': '<rootDir>/src/$1',
     },
     setupFilesAfterEnv: ['./jest.setup.js'],
-    testURL: 'https://localhost/',
-    testEnvironment: 'jsdom',
+    testEnvironmentOptions: {
+        url: 'https://localhost/',
+    },
+    testEnvironment: '<rootDir>/jest.environment.jsdom.js',
     testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
 }

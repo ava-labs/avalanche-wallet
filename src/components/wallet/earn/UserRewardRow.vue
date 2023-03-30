@@ -32,7 +32,7 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { DelegatorRaw, ValidatorRaw } from '../../misc/ValidatorList/types'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import Big from 'big.js'
 
 @Component
@@ -98,7 +98,7 @@ export default class UserRewardRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .node_id {
     word-break: break-all;
@@ -156,7 +156,7 @@ label {
     color: var(--primary-color-light) !important;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .stake_info {
         grid-column: 1/3;
         border-left: none;

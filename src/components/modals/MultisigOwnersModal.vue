@@ -1,5 +1,10 @@
 <template>
-    <modal ref="modal" :title="$t('modal.multisig.title')" class="modal_main">
+    <modal
+        ref="modal"
+        :title="$t('modal.multisig.title')"
+        :subtitle="$t('modal.multisig.subtitle', { n: name, t: threshold })"
+        class="modal_main"
+    >
         <div class="modal-body">
             <h3 class="label">Linked Owners</h3>
             <multisig-owner-row
@@ -48,17 +53,30 @@ export default class MultisigOwnersModal extends Vue {
     }
 
     get unlinkedOwners() {
-        return this.wallet.unlinkedOwners
+        return this.wallet.getUnlinkedOwners()
+    }
+
+    get threshold() {
+        return this.wallet.keyData.owner.threshold
+    }
+
+    get name() {
+        return this.wallet.name
     }
 }
 </script>
 <style scoped lang="scss">
 @use '../../styles/abstracts/mixins';
 
+.label {
+    color: #9999;
+}
+
 .modal-body {
     background-color: var(--bg);
     max-width: fit-content;
     width: 100%;
+    max-height: 90%;
     padding: 0px 15px;
 
     h3 {

@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { ChainIdType } from '@/constants'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import AvaAsset from '@/js/AvaAsset'
 import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { WalletType } from '@/js/wallets/types'
@@ -101,7 +101,7 @@ export default class ChainCard extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/mixins';
 
 label {
     text-align: left;
@@ -128,7 +128,7 @@ p {
     word-break: break-all;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .chain_card {
         display: block;
     }

@@ -105,7 +105,7 @@ export default class EVMTokenSelectModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .token_select_body {
     width: 520px;
@@ -174,7 +174,7 @@ $logo_w: 38px;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .token_select_body {
         width: 100%;
         max-height: 40vh;

@@ -2,6 +2,7 @@
 The base wallet class used for common functionality
 */
 import { ava, bintools } from '@/AVA'
+import { ChainIdType } from '@/constants'
 import { AvmImportChainType, ChainAlias } from '@/js/wallets/types'
 
 import { BN } from '@c4tplatform/caminojs/dist'
@@ -91,6 +92,13 @@ abstract class WalletCore {
         return ''
     }
 
+    getSignerAddresses(chainID: ChainIdType): string[] {
+        return []
+    }
+
+    onNetworkChange(): void {}
+    async initialize() {}
+
     async evmGetAtomicUTXOs(sourceChain: ExportChainsC) {
         let addrs = [this.getEvmAddressBech()]
         return await UtxoHelper.evmGetAtomicUTXOs(addrs, sourceChain)
@@ -102,12 +110,11 @@ abstract class WalletCore {
 
         let toAddress = '0x' + hexAddr
         let ownerAddresses = [bechAddr]
-        let fromAddresses = ownerAddresses
         const sourceChainId = chainIdFromAlias(sourceChain)
 
         return await ava
             .CChain()
-            .buildImportTx(utxoSet, toAddress, ownerAddresses, sourceChainId, fromAddresses, fee)
+            .buildImportTx(utxoSet, toAddress, ownerAddresses, sourceChainId, fee)
     }
 
     /**

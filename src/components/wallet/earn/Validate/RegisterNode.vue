@@ -39,7 +39,7 @@
             </div>
             <div class="requirement_title">
                 <fa
-                    v-if="hasEnoughUnlockedPlatformBalance"
+                    v-if="hasEnoughLockablePlatformBalance"
                     class="success_status_icon"
                     icon="check-circle"
                 ></fa>
@@ -70,23 +70,22 @@
             </div>
         </div>
         <div
-            v-if="isKycVerified && isConsortiumMember && hasEnoughUnlockedPlatformBalance"
+            v-if="isKycVerified && isConsortiumMember && hasEnoughLockablePlatformBalance"
             class="input_section"
         >
             <div>
                 <h4 class="input_label">{{ $t('earn.validate.label_3') }}</h4>
                 <span class="disabled_input" role="textbox">
-                    {{ pChainAddress }}
+                    {{ staticAddress }}
                 </span>
             </div>
             <div>
                 <h4 class="input_label">{{ $t('earn.validate.label_1') }}</h4>
                 <input
                     class="high_input"
-                    type="password"
                     v-model="nodePrivateKey"
                     style="width: 100%; border-radius: var(--border-radius-sm)"
-                    :placeholder="$t('earn.validate.description_1')"
+                    :placeholder="$t('earn.validate.description_1').toString()"
                 />
             </div>
             <v-btn
@@ -96,7 +95,7 @@
                 :disabled="
                     !isKycVerified ||
                     !isConsortiumMember ||
-                    !hasEnoughUnlockedPlatformBalance ||
+                    !hasEnoughLockablePlatformBalance ||
                     !nodePrivateKey
                 "
                 block
@@ -135,7 +134,7 @@ export default class RegisterNode extends Vue {
     @Prop() isKycVerified!: boolean
     @Prop() isConsortiumMember!: boolean
     @Prop() minPlatformUnlocked!: BN
-    @Prop() hasEnoughUnlockedPlatformBalance!: boolean
+    @Prop() hasEnoughLockablePlatformBalance!: boolean
     @Prop() isNodeRegistered!: boolean
     @Prop() loadingRefreshRegisterNode!: boolean
 
@@ -158,8 +157,8 @@ export default class RegisterNode extends Vue {
         return wallet
     }
 
-    get pChainAddress() {
-        return this.wallet.getCurrentAddressPlatform()
+    get staticAddress() {
+        return this.wallet.getStaticAddress('P')
     }
 
     async registerNode() {
@@ -173,7 +172,7 @@ export default class RegisterNode extends Vue {
                 this.nodePrivateKey.trim(),
                 undefined,
                 nodeId,
-                this.addresses[0]
+                this.staticAddress
             )
             console.log(result)
             this.loadingRegisterNode = true

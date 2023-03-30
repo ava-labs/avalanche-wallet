@@ -19,5 +19,9 @@ module.exports = {
         'vue/multiline-html-element-content-newline': 'off',
         'no-unreachable': 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+        'prefer-const': 'off',
+        'no-unused-vars': 'off',
+        'no-var': 'off',
+        'vue/multi-word-component-names': 'off',
     },
 }

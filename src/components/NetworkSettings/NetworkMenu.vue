@@ -62,7 +62,6 @@
 import 'reflect-metadata'
 import { Vue, Component } from 'vue-property-decorator'
 
-import NetworkRow from './NetworkRow.vue'
 import CustomPage from './CustomPage.vue'
 import ListPage from './ListPage.vue'
 import EditPage from '@/components/NetworkSettings/EditPage.vue'
@@ -72,7 +71,6 @@ import { NetworkStatus } from '@/store/modules/network/types'
 @Component({
     components: {
         ListPage,
-        NetworkRow,
         CustomPage,
         EditPage,
     },
@@ -142,7 +140,7 @@ export default class NetworkMenu extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 @use '../../styles/abstracts/variables';
 
 .network_menu {
@@ -264,7 +262,7 @@ export default class NetworkMenu extends Vue {
     }
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .toggle_but {
         min-width: auto;
     }

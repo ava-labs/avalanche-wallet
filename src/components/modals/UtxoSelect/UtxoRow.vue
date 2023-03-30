@@ -22,7 +22,7 @@ import {
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 import { UnixNow } from '@c4tplatform/caminojs/dist/utils'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 
 @Component
 export default class UtxoRow extends Vue {

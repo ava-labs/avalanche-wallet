@@ -17,12 +17,15 @@
         <transition name="fade" mode="out-in">
             <div>
                 <p v-if="!depositAndBond" class="wrong_network">{{ $t('earn.warning_3') }}</p>
+                <p v-else-if="!canValidate" class="no_balance">
+                    {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
+                </p>
                 <p v-else-if="!isNodeRegistered" class="no_balance">
                     <register-node
                         :isKycVerified="isKycVerified"
                         :isConsortiumMember="isConsortiumMember"
                         :minPlatformUnlocked="minPlatformUnlocked"
-                        :hasEnoughUnlockedPlatformBalance="hasEnoughUnlockedPlatformBalance"
+                        :hasEnoughLockablePlatformBalance="hasEnoughUnlockedPlatformBalance"
                         :isNodeRegistered="isNodeRegistered"
                         @registered="onNodeRegistered"
                         :loadingRefreshRegisterNode="loadingRefreshRegisterNode"
@@ -51,7 +54,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import AddValidator from '@/components/wallet/earn/Validate/AddValidator.vue'
 import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
@@ -67,6 +70,7 @@ import {
 import ValidatorInfo from '@/components/wallet/earn/Validate/ValidatorInfo.vue'
 import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspended.vue'
 import { NodeInfo } from '@/js/wallets/types'
+import { WalletCore } from '@/js/wallets/WalletCore'
 
 @Component({
     name: 'validator',
@@ -81,6 +85,8 @@ export default class Validator extends Vue {
     isKycVerified = false
     isConsortiumMember = false
     isNodeRegistered = false
+    isSuspended = false
+    registeredNodeID = ''
     intervalID: any = null
     nodeId = ''
     nodeInfo: NodeInfo | null = null
@@ -107,6 +113,8 @@ export default class Validator extends Vue {
         clearInterval(this.intervalID)
     }
 
+    @Watch('$store.state.networkName')
+    @Watch('$store.state.activeWallet')
     async evaluateCanRegisterNode() {
         const BN_ONE = new BN(1)
         const result = await WalletHelper.getAddressState(this.addresses[0])
@@ -135,6 +143,10 @@ export default class Validator extends Vue {
         return this.platformUnlocked.gte(this.minPlatformUnlocked)
     }
 
+    get staticAddress() {
+        return (this.$store.state.activeWallet as WalletCore).getStaticAddress('P')
+    }
+
     get addresses() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getAllAddressesP()
@@ -154,7 +166,7 @@ export default class Validator extends Vue {
     }
 
     get platformLockedStakeable(): BN {
-        // return this.$store.getters.walletPlatformBalanceLockedStakeable
+        if (this.depositAndBond) return this.$store.getters['Assets/walletPlatformBalanceDeposited']
         return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
     }
 
@@ -197,10 +209,14 @@ export default class Validator extends Vue {
         await this.evaluateCanRegisterNode()
         this.loadingRefreshRegisterNode = false
     }
+
+    get hasValidator(): boolean {
+        return this.$store.getters['Platform/isValidator'](this.registeredNodeID)
+    }
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 /* body {
     height: auto;
@@ -303,13 +319,13 @@ span {
     margin-top: 14px;
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .options {
         grid-template-columns: 1fr 1fr;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .options {
         grid-template-columns: none;
         grid-row-gap: 15px;

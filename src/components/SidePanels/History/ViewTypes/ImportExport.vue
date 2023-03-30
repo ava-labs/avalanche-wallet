@@ -14,7 +14,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { ITransactionData } from '@/store/modules/history/types'
 import { ava } from '@/AVA'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 import { bnToBig } from '@/helpers/helper'
 
 @Component

@@ -66,10 +66,8 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     ethAddress: string
     ethBalance: BN
 
-    // TODO : Move to hd core class
-    onnetworkchange() {
-        super.onnetworkchange()
-
+    onNetworkChange(): void {
+        super.onNetworkChange()
         // Update EVM values
         this.ethKeyChain = new EVMKeyChain(ava.getHRP(), 'C')
         this.ethBalance = new BN(0)

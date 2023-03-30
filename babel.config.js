@@ -1,7 +1,4 @@
 module.exports = {
-    presets: ['@vue/cli-plugin-babel/preset'],
-    plugins: [
-        ['@babel/proposal-decorators', { legacy: true }],
-        ['@babel/proposal-class-properties', { loose: true }],
-    ],
+    presets: [['@babel/preset-env', { useBuiltIns: 'entry', corejs: 3 }]],
+    plugins: [['@babel/proposal-decorators', { legacy: true }]],
 }

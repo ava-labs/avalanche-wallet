@@ -26,7 +26,7 @@ export default class BalanceRow extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../styles/main';
+@use '../../../styles/abstracts/mixins';
 
 .symbol {
     background-color: var(--bg-light);
@@ -49,6 +49,6 @@ export default class BalanceRow extends Vue {
     text-align: right;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
 }
 </style>

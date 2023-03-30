@@ -86,7 +86,7 @@ export default class UtfPayloadView extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../../../styles/main';
+@use '../../../../styles/abstracts/mixins';
 
 .generic_payload_view {
     position: relative;
@@ -138,6 +138,6 @@ video {
     font-size: 13px;
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
 }
 </style>

@@ -171,7 +171,7 @@ export default class KycModal extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .modal_main::v-deep {
     .modal_body {
@@ -182,7 +182,7 @@ export default class KycModal extends Vue {
         border-radius: var(--border-radius-sm) !important;
         overflow: auto;
         min-height: 200px;
-        @include main.mobile-device {
+        @include mixins.mobile-device {
             max-height: 90vh;
             max-width: none;
             width: 80%;

@@ -36,7 +36,7 @@ import {
     parseMemo,
 } from '@/store/modules/history/history_utils'
 import { ava } from '@/AVA'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 
 @Component({
     components: {
@@ -89,7 +89,7 @@ export default class ExportAvaxCsvModal extends Vue {
 
             if (!avaxOutAmt) return false
 
-            return tx.type === 'base' || tx.type === 'operation'
+            return ['base', 'operation', 'deposit', 'unlock_deposit'].includes(tx.type)
         })
 
         let txFee = ava.XChain().getTxFee()
@@ -156,7 +156,7 @@ export default class ExportAvaxCsvModal extends Vue {
         let allRows = [headers, ...csvRows]
 
         let csvContent = createCSVContent(allRows)
-        downloadCSVFile(csvContent, 'avax_transfers')
+        downloadCSVFile(csvContent, 'camino_transfers')
     }
 
     submit() {

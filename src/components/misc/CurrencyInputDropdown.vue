@@ -34,7 +34,7 @@
 <script lang="ts">
 import 'reflect-metadata'
 import { Vue, Component, Prop, Emit, Watch } from 'vue-property-decorator'
-import { BN } from '@c4tplatform/caminojs'
+import { BN } from '@c4tplatform/caminojs/dist'
 
 // @ts-ignore
 import { BigNumInput } from '@c4tplatform/vue_components'
@@ -196,7 +196,7 @@ export default class CurrencyInputDropdown extends Vue {
 }
 </script>
 <style scoped lang="scss">
-@use '../../styles/main';
+@use '../../styles/abstracts/mixins';
 
 .bigIn {
     width: 100%;
@@ -296,13 +296,13 @@ input {
     background-color: transparent;
 }
 
-@include main.medium-device {
+@include mixins.medium-device {
     .balance {
         grid-template-columns: 1fr;
     }
 }
 
-@include main.mobile-device {
+@include mixins.mobile-device {
     .balance,
     .curr_in_drop {
         grid-template-columns: 1fr 80px;
