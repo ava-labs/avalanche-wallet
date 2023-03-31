@@ -165,17 +165,8 @@ export default class Wallet extends Vue {
         // Logout if current time is passed the logout timestamp
         if (now >= this.logoutTimestamp && !this.isLogOut) {
             this.isLogOut = true
-            this.$store.dispatch('timeoutLogout')
             this.helper.updateSuiteStore(this.$store.state)
         }
-    }
-
-    created() {
-        this.resetTimer()
-        if (document.domain !== 'localhost')
-            this.intervalId = window.setInterval(() => {
-                this.checkLogout()
-            }, 1000)
     }
 
     unload(event: BeforeUnloadEvent) {

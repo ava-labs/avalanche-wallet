@@ -9,7 +9,7 @@ const CYPRESS_CONFIG_PROD = {
 }
 
 const CYPRESS_CONFIG_COLUMBUS = {
-    baseUrl: 'https://playground.suite.camino.foundation/',
+    baseUrl: 'https://dev.suite.camino.network/',
 }
 
 const CYPRESS_CONFIG_LOCAL = {

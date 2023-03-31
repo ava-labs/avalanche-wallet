@@ -170,7 +170,6 @@ const network_module: Module<NetworkState, RootState> = {
             }
 
             await dispatch('Assets/onNetworkChange', net, { root: true })
-            await dispatch('Launch/onNetworkChange', net, { root: true })
             dispatch('Assets/updateUTXOs', null, { root: true })
             dispatch('Platform/update', null, { root: true })
             dispatch('Platform/updateMinStakeAmount', null, { root: true })
@@ -198,10 +197,10 @@ const network_module: Module<NetworkState, RootState> = {
             const columbusExplorerUrl = `${window.location.protocol}//${window.location.host}/explorer`
             let camino = new AvaNetwork(
                 'Camino',
-                'https://mainnet.camino.network',
+                'https://api.camino.network',
                 1000,
-                'https://magellan.mainnet.camino.network',
-                'https://explorer.camino.network/mainnet',
+                'https://magellan.camino.network',
+                'https://explorer.camino.network',
                 '',
                 true
             )

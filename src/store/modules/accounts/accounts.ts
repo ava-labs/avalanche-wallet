@@ -106,12 +106,7 @@ const accounts_module: Module<AccountsState, RootState> = {
                 rootState.walletsDeleted = false
                 commit('loadAccounts')
             } catch (e) {
-                let { dispatchNotification } = this.globalHelper()
-                dispatchNotification({
-                    title: 'Account Save',
-                    message: 'Error Saving Account.',
-                    type: 'error',
-                })
+                throw (<Error>e).message
             }
         },
 
@@ -180,12 +175,6 @@ const accounts_module: Module<AccountsState, RootState> = {
                 )
             } catch (e) {
                 console.log((e as Error).message)
-                let { dispatchNotification } = this.globalHelper()
-                dispatchNotification({
-                    title: 'KYC Status',
-                    message: 'Error Updating KYC Status.',
-                    type: 'error',
-                })
                 state.kycStatus = false
             }
         },

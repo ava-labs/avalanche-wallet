@@ -55,6 +55,8 @@ export default class UpdateKeystoreModal extends Vue {
     }
 
     logout() {
+        let { updateSuiteStore } = this.globalHelper()
+        updateSuiteStore(null)
         this.$store.dispatch('logout')
     }
 
