@@ -16,6 +16,12 @@ declare global {
             accessWallet(type: WalletAccessType, keyName?: string): Chainable<Element>
             switchToWalletApp(): Chainable<Element>
             switchToWalletFunctionTab(func: string): Chainable<Element>
+            getMockResponseData(
+                payloadMethod: string,
+                requestUrl: string,
+                mockPath: string,
+                aliasName: string
+            ): Chainable<Element>
             /**
              * combo of commands in sequence:
              * - cy.visit('/')

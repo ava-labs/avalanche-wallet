@@ -19,16 +19,26 @@ Cypress.Commands.add('addCustomNetwork', (networkConfig: NetworkConfig) => {
     cy.get('[data-cy="add-custom-network"]').click()
     // Wait for re-rendering ??
     cy.wait(2000)
-    cy.get('[data-cy="add-network-field-network-name"]', { timeout: 15000 }).type(networkName)
+    cy.get('[data-cy="add-network-field-network-name"]', { timeout: 15000 }).find('input', { timeout: 12000 }).type(networkName)
     cy.get('[data-cy="add-network-field-url"]').type(rpcUrl)
     cy.get('[data-cy="add-network-field-magellan-address"]').type(magellanUrl || '')
-    cy.get('[data-cy="add-network-field-explorerSiteUrl-address"]').type(explorerUrl || '')
     cy.get('[data-cy="btn-add-network"]').click()
     // Wait to connecting network
     cy.wait(5000)
     // Click backdrop to close menu
-    cy.get(`body > div[role="presentation"].MuiPopover-root`, {timeout: 12000}).click()
+    cy.get(`body > div[role="presentation"].MuiPopover-root`, { timeout: 12000 }).click()
 })
+
+Cypress.Commands.add('addCustomNetworkByName', (network: string) => {
+
+    cy.fixture(`${network.toLowerCase()}/network`)
+        .then((networkConfig: NetworkConfig) => {
+            if (networkConfig) {
+                cy.addCustomNetwork(networkConfig)
+            }
+        })
+})
+
 Cypress.Commands.add('changeNetwork', (network: string = 'Kopernikus') => {
     const interceptNetworkInfo = (intercept) => {
         switch (intercept.request.body.method) {
@@ -48,39 +58,38 @@ Cypress.Commands.add('changeNetwork', (network: string = 'Kopernikus') => {
                 break
         }
     }
+
+    // intercept to get default info
+    cy.intercept('POST', '**/ext/info', (request) => {
+        if (request.body.method === 'info.getNetworkID') {
+            request.alias = 'getNetworkID'
+        } else if (request.body.method === 'info.getTxFee') {
+            request.alias = 'getTxFee'
+        }
+        else {
+            console.log('Other Info Query')
+        }
+    })
+
     cy.get('@txtSelectedNetwork')
         .invoke('text')
         .then((currentNetwork) => {
-            if (currentNetwork !== network) {
-                cy.get('@btnNetworkSwitcher').click() // Network Switcher
-                cy.get(`[data-value="${network}"]`).click() // Select Columbus Network
+            cy.get('@btnNetworkSwitcher').click({ force: true }) // Network Switcher
+            cy.get(`[data-value="${network}"]`).click() // Select Network
 
-                // intercept to find current rpc url
-                cy.intercept('POST', '**/ext/info').as('apiNetworkInfo')
-                // intercept to get default asset symbol
-                cy.intercept('POST', '**/ext/bc/X', (request) => {
-                    if (request.body.method === 'avm.getAssetDescription') {
-                        request.alias = 'assetDesc'
-                    }
-                })
+            // Waiting 'info.networkID', and 'info.getTxFee'
+            cy.wait('@getNetworkID').then(interceptNetworkInfo)
+            cy.wait('@getTxFee').then(interceptNetworkInfo)
 
-                // Waiting 'info.networkID', and 'info.getTxFee'
-                cy.wait('@apiNetworkInfo').then(interceptNetworkInfo)
-                // cy.wait('@apiNetworkInfo').then(interceptNetworkInfo)
-                // // Waiting 'avm.getAssetDescription'
-                // cy.wait('@assetDesc')
-                //     .then((intercept) => intercept.response?.body.result.symbol)
-                //     .as('assetSymbol')
-
-                // increasing timeout to make sure the network is selected, especially on slowly local dev env
-                cy.get('@txtSelectedNetwork', { timeout: 15000 }).should('have.text', network)
-            }
+            // increasing timeout to make sure the network is selected, especially on slowly local dev env
+            cy.get('@txtSelectedNetwork', { timeout: 15000 }).should('have.text', network)
             // set context variable
             cy.wrap((network ?? currentNetwork).toLowerCase()).as('currentNetwork')
         })
 })
+
 Cypress.Commands.add('accessWallet', (type, keyName) => {
-    cy.get('@btnWallet').click()
+    cy.get('@btnWallet').click({ force: true })
     cy.get('h6 + .MuiGrid-container').as('elWalletOptions')
     cy.get('@elWalletOptions')
         .find('> .MuiGrid-container:nth-child(1) > :nth-child(1)')
@@ -94,7 +103,7 @@ Cypress.Commands.add('accessWallet', (type, keyName) => {
                 cy.get('@elPrivateKeyOption').click()
                 cy.get('@currentNetwork').then((currentNetwork) => {
                     cy.fixture(`${currentNetwork}/private_key_wallet`).then((privateKeys) => {
-                        cy.get('input[type="password"]').type(privateKeys[keyName || 'privateKey'])
+                        cy.get('[data-cy="field-private-key"]').type(privateKeys[keyName || 'privateKey'])
                     })
                     cy.get('button[type="button"]').contains('Access Wallet').click()
                 })
@@ -115,27 +124,13 @@ Cypress.Commands.add('accessWallet', (type, keyName) => {
         default:
             break
     }
-
-    // Not in Kopernikus
-    // cy.intercept('GET', '**/v*/verified/*').as('apiVerifiedAddress')
-    // cy.wait('@apiVerifiedAddress').then((intercept) => {
-    //     console.log('verified address: ', intercept.request.url)
-    //     const pathRegex = /^https?:\/\/[A-Za-z0-9\-\.]+\/v[1-9]\/verified\/(.*)$/
-    //     const matchGroup = intercept.request.url.match(pathRegex)
-    //     cy.get('@elPreferenceMenu')
-    //         .find(':nth-child(3) > [role="button"]', { timeout: 15000 })
-    //         .should('have.text', matchGroup?.[1])
-    // })
 })
+
 Cypress.Commands.add('switchToWalletApp', () => {
-    cy.get('@elAppMenu').find('input').click({ force: true }) // force to click regardless of overlay
-    cy.get('.MuiPopover-paper > .MuiMenu-list').as('elAppOptions')
-    // App option items
-    cy.get('@elAppOptions').find('[data-value="Wallet"]').as('elAppOptionWallet')
-    cy.get('@elAppOptions').find('[data-value="Explorer"]').as('elAppOptionExplorer')
-
-    cy.get('@elAppOptionWallet').click()
+    cy.get('[data-cy="app-selector-menu"]').click()
+    cy.get('[data-cy="app-selector-Wallet"]').click()
 })
+
 Cypress.Commands.add(
     'loginWalletWith',
     (walletAccessType: WalletAccessType, keyName?: string, network: string = 'Kopernikus') => {
@@ -155,17 +150,14 @@ Cypress.Commands.add(
         cy.get('@btnNetworkSwitcher').find('.MuiTypography-root').as('txtSelectedNetwork')
         cy.get('@elPreferenceMenu').find('> .MuiBox-root').as('btnWallet')
 
+        cy.switchToWalletApp()
         // Only add non-default networks
         if (network === 'Kopernikus') {
-            cy.fixture(`${network.toLowerCase()}/network`)
-                .then((networkConfig: NetworkConfig) => {
-                    if (networkConfig) {
-                        cy.addCustomNetwork(networkConfig)
-                    }
-                })
+            cy.addCustomNetworkByName(network)
         }
 
-        cy.changeNetwork(network).accessWallet(walletAccessType, keyName).switchToWalletApp()
+        cy.changeNetwork(network)
+        cy.accessWallet(walletAccessType, keyName)
     }
 )
 
@@ -217,6 +209,69 @@ Cypress.Commands.add(
             if (!success) {
                 cy.waitUntil(alias, untilFunc)
             }
+        })
+    }
+)
+
+Cypress.Commands.add(
+    'getMockResponseData',
+    (
+        payloadMethod: string,
+        requestUrl: string = '**/ext/bc/C/rpc',
+        mockPath?: string,
+        aliasName?: string
+    ) => {
+        if (!mockPath) {
+            const transferUnderLinePayloadMethod = payloadMethod
+                .replace(/\B([A-Z])/g, '_$1')
+                .replace('.', '_')
+                .toLowerCase()
+            mockPath = `mocks/${transferUnderLinePayloadMethod}.json`
+        }
+        if (!aliasName) {
+            const getFileName = mockPath.replace('mocks/', '')
+            aliasName = payloadMethod ? payloadMethod : getFileName.replace('.json', '')
+        }
+        cy.fixture(mockPath).then((mockData) => {
+            cy.intercept({ method: 'GET', url: requestUrl }, (request) => {
+                if (!payloadMethod) {
+                    request.reply({
+                        statusCode: 200,
+                        body: mockData,
+                    })
+                    request.alias = `get_${aliasName}`
+                }
+                if (
+                    request.body.hasOwnProperty('method') &&
+                    request.body.method.includes(payloadMethod)
+                ) {
+                    request.reply({
+                        statusCode: 200,
+                        body: mockData,
+                    })
+                    request.alias = `get_${aliasName}`
+                }
+            })
+
+            cy.intercept({ method: 'POST', url: requestUrl }, (request) => {
+                if (!payloadMethod) {
+                    request.reply({
+                        statusCode: 200,
+                        body: mockData,
+                    })
+                    request.alias = `post_${aliasName}`
+                }
+                if (
+                    request.body.hasOwnProperty('method') &&
+                    request.body.method.includes(payloadMethod)
+                ) {
+                    request.reply({
+                        statusCode: 200,
+                        body: mockData,
+                    })
+                    request.alias = `post_${aliasName}`
+                }
+            })
         })
     }
 )
