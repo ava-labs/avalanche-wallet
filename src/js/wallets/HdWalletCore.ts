@@ -39,16 +39,6 @@ abstract class HdWalletCore extends WalletCore {
         this.externalHelper = new HdHelper('m/0', accountHdKey, ethHdNode, undefined, isPublic)
         this.internalHelper = new HdHelper('m/1', accountHdKey, undefined, undefined, isPublic)
         this.platformHelper = new HdHelper('m/0', accountHdKey, ethHdNode, 'P', isPublic)
-
-        this.externalHelper.oninit().then((res) => {
-            this.updateInitState()
-        })
-        this.internalHelper.oninit().then((res) => {
-            this.updateInitState()
-        })
-        this.platformHelper.oninit().then((res) => {
-            this.updateInitState()
-        })
     }
 
     getEvmAddressBech(): string {
