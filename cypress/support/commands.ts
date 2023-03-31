@@ -103,7 +103,7 @@ Cypress.Commands.add('accessWallet', (type, keyName) => {
                 cy.get('@elPrivateKeyOption').click()
                 cy.get('@currentNetwork').then((currentNetwork) => {
                     cy.fixture(`${currentNetwork}/private_key_wallet`).then((privateKeys) => {
-                        cy.get('input[type="password"]').type(privateKeys[keyName || 'privateKey'])
+                        cy.get('[data-cy="field-private-key"]').type(privateKeys[keyName || 'privateKey'])
                     })
                     cy.get('button[type="button"]').contains('Access Wallet').click()
                 })
