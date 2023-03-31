@@ -704,7 +704,7 @@
         "error_api": "Explorer API Not Found",
         "error_api_desc": "You must provide an @.project:(0) Explorer API for this network to view transaction history.",
         "start": "Stake Start Date",
-        "end": "Stake End Date",
+        "end": "Validation Period End Date",
         "date_reward": "Reward Date",
         "reward_amount": "Reward Received",
         "fee_amount": "Fee Received",
