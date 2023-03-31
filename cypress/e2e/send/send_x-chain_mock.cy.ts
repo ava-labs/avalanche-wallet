@@ -61,9 +61,7 @@ describe('Send transaction with x-chain balance', () => {
 
         cy.get('div.new_order_Form > div:nth-child(2) > div.checkout > button').as('btnConfirm')
 
-        cy.get(
-            'div.checkout > button.button_primary.v-btn.v-btn--block.v-btn--depressed.theme--light.v-size--default'
-        ).as('btnSend')
+        cy.get('div.checkout > button:eq(0)').as('btnSend')
 
         // cy.intercept('POST', '**/ext/bc/X').as('xEndpoints')
 
