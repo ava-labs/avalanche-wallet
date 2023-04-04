@@ -10,6 +10,7 @@
             >
                 {{ $t('earn.subtitle1') }}
             </h1>
+
             <h1 v-else :class="depositAndBond ? '' : 'wrong_network'">
                 {{ $t('validator.info.validator_running') }}
             </h1>
@@ -17,9 +18,6 @@
         <transition name="fade" mode="out-in">
             <div>
                 <p v-if="!depositAndBond" class="wrong_network">{{ $t('earn.warning_3') }}</p>
-                <p v-else-if="!canValidate" class="no_balance">
-                    {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
-                </p>
                 <p v-else-if="!isNodeRegistered" class="no_balance">
                     <register-node
                         :isKycVerified="isKycVerified"
@@ -46,7 +44,26 @@
                     <validator-suspended :nodeId="nodeId"></validator-suspended>
                 </div>
                 <div v-else>
-                    <validator-info :nodeId="nodeId" :nodeInfo="nodeInfo"></validator-info>
+                    <div class="tab-nav">
+                        <div>
+                            <button
+                                @click="tab = 'opt-validator'"
+                                :active="tab === `opt-validator`"
+                            >
+                                {{ $t('validator.rewards.tab.node') }}
+                            </button>
+                            <button @click="tab = 'opt-rewards'" :active="tab === `opt-rewards`">
+                                {{ $t('validator.rewards.tab.rewards') }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="tab == 'opt-validator'">
+                        <validator-info :nodeId="nodeId" :nodeInfo="nodeInfo"></validator-info>
+                    </div>
+                    <div v-if="tab == 'opt-rewards'">
+                        <ClaimRewards :nodeId="nodeId" :nodeInfo="nodeInfo" />
+                    </div>
                 </div>
             </div>
         </transition>
@@ -69,8 +86,9 @@ import {
 } from '@c4tplatform/caminojs/dist/apis/platformvm/addressstatetx'
 import ValidatorInfo from '@/components/wallet/earn/Validate/ValidatorInfo.vue'
 import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspended.vue'
-import { WalletCore } from '@/js/wallets/WalletCore'
+import ClaimRewards from '@/components/wallet/earn/Validate/ClaimRewards.vue'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
+import { WalletCore } from '@/js/wallets/WalletCore'
 
 @Component({
     name: 'validator',
@@ -79,6 +97,7 @@ import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
         AddValidator,
         ValidatorInfo,
         ValidatorSuspended,
+        ClaimRewards,
     },
 })
 export default class Validator extends Vue {
@@ -92,6 +111,7 @@ export default class Validator extends Vue {
     nodeInfo: ValidatorRaw | null = null
     validatorIsSuspended: boolean = false
     loadingRefreshRegisterNode: boolean = false
+    tab: string = 'opt-validator'
 
     verifyValidatorIsReady(val: ValidatorRaw) {
         this.nodeInfo = val
@@ -323,12 +343,65 @@ span {
     .options {
         grid-template-columns: 1fr 1fr;
     }
+
+    .tab-nav {
+        button {
+            font-size: 13px;
+
+            &[active] {
+                border-bottom-width: 2px;
+            }
+        }
+    }
 }
 
 @include mixins.mobile-device {
     .options {
         grid-template-columns: none;
         grid-row-gap: 15px;
+    }
+
+    .tab-nav {
+        display: block;
+
+        > div {
+            overflow: hidden;
+            display: flex;
+        }
+        button {
+            flex-grow: 1;
+            border-radius: 0px;
+            margin: 0;
+            font-size: 12px;
+        }
+    }
+}
+
+.tab-nav {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+
+    h1 {
+        font-weight: normal;
+        margin-right: 30px;
+    }
+
+    button {
+        padding: 8px 24px;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0px 5px;
+        text-transform: uppercase;
+        outline: none !important;
+        color: var(--primary-color-light);
+
+        &[active] {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
+        }
     }
 }
 </style>

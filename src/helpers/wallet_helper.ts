@@ -23,6 +23,7 @@ import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
 import { UnsignedTx, UTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
+import axios from 'axios'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -354,6 +355,16 @@ class WalletHelper {
             .getCurrentValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
         let validator = res.validators[0]
         return validator
+    }
+
+    static async getClaimables(address: string, txID?: string) {
+        try {
+            let txIds: string[] = []
+            let responseClaimable = await ava.PChain().getClaimables([address], txIds)
+            return responseClaimable
+        } catch (e) {
+            console.error(e)
+        }
     }
 }
 
