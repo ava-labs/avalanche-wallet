@@ -111,18 +111,18 @@ export default class Validator extends Vue {
     }
 
     updateValidators() {
-        this.$store.dispatch('Platform/update')
+        this.$store.dispatch('Platform/updateValidators')
     }
 
-    async created() {
-        await this.evaluateCanRegisterNode()
+    activated() {
+        this.evaluateCanRegisterNode()
         this.updateValidators()
         this.intervalID = setInterval(() => {
             this.updateValidators()
         }, 15000)
     }
 
-    destroyed() {
+    deactivated() {
         clearInterval(this.intervalID)
     }
 

@@ -78,16 +78,11 @@ class HdHelper {
         if (ethKey) {
             this.ethKeyPair = this.keyChain.importKey(Buffer.from(ethKey.privateKey))
         }
-        // this.oninit()
-    }
-
-    async oninit() {
-        await this.findHdIndex()
     }
 
     // When the wallet connects to a different network
     // Clear internal data and scan again
-    async onNetworkChange() {
+    onNetworkChange() {
         this.clearCache()
         this.isInit = false
         let hrp = ava.getHRP()
@@ -101,7 +96,6 @@ class HdHelper {
         this.hdIndex = 0
         this.addressCache = {}
         this.keyCache = {}
-        await this.oninit()
     }
 
     // Increments the hd index by one and adds the key

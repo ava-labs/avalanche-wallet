@@ -44,22 +44,23 @@ const platform_module: Module<PlatformState, RootState> = {
             state.currentSupply = await ava.PChain().getCurrentSupply()
         },
 
-        async updateMinStakeAmount({ state }) {
-            let res = await ava.PChain().getMinStake(true)
-            state.minStake = res.minValidatorStake
-            state.minStakeDelegation = res.minDelegatorStake
-
-            // console.log(state.minStake.toString())
-            // console.log(state.minStakeDelegation.toString())
+        updateMinStakeAmount({ state }) {
+            state.minStake = ava.getNetwork().P.minStake
+            state.minStakeDelegation = ava.getNetwork().P.minDelegationStake
         },
 
         async update({ dispatch }) {
             dispatch('updateValidators')
-            dispatch('updateValidatorsPending')
             dispatch('updateCurrentSupply')
+            dispatch('updateMinStakeAmount')
         },
 
-        async updateValidators({ state, commit }) {
+        async updateValidators({ dispatch }) {
+            dispatch('updateValidatorsCurrent')
+            dispatch('updateValidatorsPending')
+        },
+
+        async updateValidatorsCurrent({ state, commit }) {
             let res = (await ava.PChain().getCurrentValidators()) as GetValidatorsResponse
             let validators = res.validators
 

@@ -94,6 +94,10 @@ export default class ImportKeys extends Vue {
 <style scoped lang="scss">
 @use '../../styles/abstracts/mixins';
 
+.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-icon {
+    color: var(--primary-color);
+    opacity: 0.6;
+}
 .add_key_body {
     padding: 30px;
     max-width: 450px;

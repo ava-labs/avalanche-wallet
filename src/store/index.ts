@@ -315,7 +315,7 @@ export default new Vuex.Store({
                 if (!response.addresses.some((address) => staticAddresses.includes(address)))
                     continue
 
-                const wallet = new MultisigWallet(aliasBuffer, (response as any).memo, response)
+                const wallet = new MultisigWallet(aliasBuffer, response.memo, response)
                 wallet.accountHash = createHash('sha256').update(wallet.getKey()).digest()
                 wallets.push(wallet)
                 state.wallets = [...state.wallets, wallet]
@@ -369,7 +369,6 @@ export default new Vuex.Store({
             dispatch('Assets/updateWallet').then(() => {
                 dispatch('Assets/updateAvaAsset')
                 dispatch('Assets/updateUTXOs')
-                dispatch('Platform/update')
                 dispatch('Accounts/updateKycStatus')
                 dispatch('Signavault/updateTransaction', undefined, { root: true }).then(() => {
                     dispatch('History/updateTransactionHistory')
