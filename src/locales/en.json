@@ -389,6 +389,7 @@
         "subtitle2": "Delegate",
         "subtitle3": "Cross Chain Transfer",
         "subtitle4": "Estimated Rewards",
+        "subtitle5": "Multisig Confirmations Pending to register validator node",
         "warning_1": "You must have at least {0} @.native:(0) on the P chain to become a validator.",
         "warning_2": "You must have at least {0} @.native:(0) on the P chain to become a delegator.",
         "warning_3": "Setting up a validator node is not possible for your selected network. Please change your network to start running a validator node.",
@@ -467,6 +468,8 @@
             "label_1": "Validator Node's Private Key",
             "description_1": "Please enter the Node's Static Private Key (you can receive one by calling admin.getNodeSigner on your node)",
             "label_3": "P-Chain address your validator node will be assigned to",
+            "label_4": "Are you sure you want to initiate a transaction? This requires signatures from other wallets in the multisignature wallet and cannot be undone",
+            "label_5": "Tx Details",
             "duration": {
                 "label": "Validation End Date",
                 "desc": "Your @.native:(0) tokens will be locked until this date.",
@@ -506,6 +509,7 @@
                 "type_custom": "Custom"
             },
             "register_validator_node": "Register Validator Node",
+            "initiate_transaction": "Initiate transaction",
             "confirm": "Confirm",
             "submit": "Submit",
             "cancel": "Cancel",
@@ -530,6 +534,13 @@
                 "address": "Invalid address. Reward address must be a valid P chain address.",
                 "validating": "Your registered node: {nodeID} is already validating.",
                 "suspended": "Your registered node: {nodeID} is suspended."
+            },
+            "pending_multisig": {
+                "signed": "Signed",
+                "pending": "Pending",
+                "threshold": "{value}  out of  {threshold}  co-owners in your Multisig must sign the transaction that your validator node can be succesfully registered.",
+                "execute_transaction": "Execute transaction",
+                "sign": "Sign"
             }
         },
         "delegate": {
@@ -804,11 +815,13 @@
         "mint_form": "Collectible minted and added to your wallet.",
         "copy_public_key": "Public Key added to clipboard",
         "register_node_success": "Your node registered successfully.",
+        "register_node_initiated": "Your node registration transaction has initiated successfully.", 
         "register_node_failed": "Registering Node Failed",
         "import_key_success": "Private key and assets added to the wallet.",
         "keys_remove_success": "Private key and assets removed from the wallet.",
         "transfer_success_msg": "You have succesfully sent your transaction.",
-        "transfer_error_msg": "Failed to send transaction."
+        "transfer_error_msg": "Failed to send transaction.",
+        "execute_multisig_transaction_error": "Transaction execution failed"
     },
     "validator": {
         "pending": {

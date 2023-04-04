@@ -4,12 +4,10 @@
             <h1 :class="depositAndBond ? '' : 'wrong_network'" v-if="validatorIsSuspended">
                 {{ $t('validator.suspended.title') }}
             </h1>
-            <h1
-                v-else-if="(nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended"
-                :class="depositAndBond ? '' : 'wrong_network'"
-            >
-                {{ $t('earn.subtitle1') }}
-            </h1>
+            <div v-else-if="(nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended">
+                <h1 v-if="!!multisigPendingNodeTx">{{ $t('earn.subtitle5') }}</h1>
+                <h1 v-else>{{ $t('earn.subtitle1') }}</h1>
+            </div>
             <h1 v-else :class="depositAndBond ? '' : 'wrong_network'">
                 {{ $t('validator.info.validator_running') }}
             </h1>
@@ -21,7 +19,13 @@
                     {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
                 </p>
                 <p v-else-if="!isNodeRegistered" class="no_balance">
+                    <pending-multisig
+                        v-if="!!multisigPendingNodeTx"
+                        :multisigTx="multisigPendingNodeTx"
+                        @issued="onNodeRegistered"
+                    ></pending-multisig>
                     <register-node
+                        v-else
                         :isKycVerified="isKycVerified"
                         :isConsortiumMember="isConsortiumMember"
                         :minPlatformUnlocked="minPlatformUnlocked"
@@ -71,6 +75,8 @@ import ValidatorInfo from '@/components/wallet/earn/Validate/ValidatorInfo.vue'
 import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspended.vue'
 import { WalletCore } from '@/js/wallets/WalletCore'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
+import PendingMultisig from '@/components/wallet/earn/Validate/PendingMultisig.vue'
+import { MultisigTx as SignavaultTx } from '@/store/modules/signavault/types'
 
 @Component({
     name: 'validator',
@@ -79,6 +85,7 @@ import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
         AddValidator,
         ValidatorInfo,
         ValidatorSuspended,
+        PendingMultisig,
     },
 })
 export default class Validator extends Vue {
@@ -92,6 +99,12 @@ export default class Validator extends Vue {
     nodeInfo: ValidatorRaw | null = null
     validatorIsSuspended: boolean = false
     loadingRefreshRegisterNode: boolean = false
+
+    get multisigPendingNodeTx(): SignavaultTx | undefined {
+        return this.$store.getters['Signavault/transactions'].find(
+            (item: any) => item?.tx?.alias === this.addresses[0]
+        )
+    }
 
     verifyValidatorIsReady(val: ValidatorRaw) {
         this.nodeInfo = val
@@ -130,12 +143,17 @@ export default class Validator extends Vue {
         }
     }
 
-    async onNodeRegistered() {
-        try {
-            this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
-            this.isNodeRegistered = !!this.nodeId
-        } catch (e) {
-            this.isNodeRegistered = false
+    async onNodeRegistered(status: 'issued' | 'pending') {
+        if (status === 'issued') {
+            try {
+                this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
+                this.isNodeRegistered = !!this.nodeId
+            } catch (e) {
+                this.isNodeRegistered = false
+            }
+        } else {
+            await this.$store.dispatch('Signavault/updateTransaction')
+            this.evaluateCanRegisterNode()
         }
     }
 

@@ -23,6 +23,7 @@ import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
 import { UnsignedTx, UTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
+import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -211,8 +212,9 @@ class WalletHelper {
         oldNodeID: string | undefined,
         newNodeID: string | undefined,
         address: string,
+        nodeAddress?: string,
         utxos?: PlatformUTXO[]
-    ): Promise<string> {
+    ): Promise<string | undefined> {
         let utxoSet = wallet.getPlatformUTXOSet()
 
         // If given custom UTXO set use that
@@ -222,13 +224,24 @@ class WalletHelper {
         }
 
         const pAddressStrings = wallet.getAllAddressesP()
+        if (nodeAddress) {
+            // Multisig case, put node address as signer in UTx
+            pAddressStrings.push(nodeAddress)
+        }
+
         const signerAddresses = wallet.getSignerAddresses('P')
+        if (wallet?.type === 'multisig') {
+            signerAddresses?.push()
+        }
 
         // For change address use first available on the platform chain
         const changeAddress = wallet.getChangeAddressPlatform()
         const consortiumMemberAuthCredentials: [number, Buffer | string][] = [
             [0, pAddressStrings[0]],
         ]
+
+        const threshold =
+            wallet.type === 'multisig' ? (wallet as MultisigWallet)?.keyData?.owner?.threshold : 1
 
         const unsignedTx = await ava.PChain().buildRegisterNodeTx(
             utxoSet,
@@ -240,11 +253,15 @@ class WalletHelper {
             consortiumMemberAuthCredentials,
             undefined, // memo
             undefined, // asOf
-            1 // changeThreshold
+            Number(threshold)
         )
 
-        let tx = await wallet.signP(unsignedTx, [nodePrivateKey])
-        return await ava.PChain().issueTx(tx)
+        try {
+            const tx = await wallet.signP(unsignedTx, [nodePrivateKey])
+            return await ava.PChain().issueTx(tx)
+        } catch (err) {
+            return
+        }
     }
 
     static async addValidatorTx(

@@ -9,7 +9,7 @@ import { BN } from '@c4tplatform/caminojs/dist'
 import { web3 } from '@/evm'
 import { setSocketNetwork } from '@/providers'
 import { setAvalanche } from '@c4tplatform/camino-wallet-sdk/dist'
-import { signavault_api } from '@/signavault_api'
+
 const network_module: Module<NetworkState, RootState> = {
     namespaced: true,
     state: {
@@ -34,6 +34,9 @@ const network_module: Module<NetworkState, RootState> = {
         },
         depositAndBond(state) {
             return state.depositAndBond
+        },
+        selectedNetwork(state) {
+            return state.selectedNetwork
         },
     },
     actions: {
@@ -146,9 +149,6 @@ const network_module: Module<NetworkState, RootState> = {
             // Update explorer api
             explorer_api.defaults.baseURL = net.explorerUrl
 
-            // Update signavault api
-            signavault_api.defaults.baseURL = net.signavaultUrl
-
             // Set web3 Network Settings
             let web3Provider = `${net.protocol}://${net.ip}:${net.port}/ext/bc/C/rpc`
             web3.setProvider(web3Provider)
@@ -177,6 +177,7 @@ const network_module: Module<NetworkState, RootState> = {
             dispatch('Accounts/updateKycStatus', null, { root: true })
             // Update tx history
             this.dispatch('History/getAliasChains')
+            await dispatch('Signavault/updateTransaction', undefined, { root: true })
             this.dispatch('History/updateTransactionHistory', null, { root: true })
 
             // Set the SDK Network
