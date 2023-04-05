@@ -133,9 +133,6 @@ export default class PendingMultisig extends Vue {
     isMyWallet(pAddress: string): boolean {
         return !!this.activeWallet.wallets.find((w) => w?.getAllAddressesP()?.[0] === pAddress)
     }
-    created() {
-        console.log(this.activeWallet.wallets)
-    }
 
     refresh() {
         this.$emit('refresh')
