@@ -457,7 +457,11 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         return bintools.addressToString(this.hrp, chainID, this.keyData.alias)
     }
 
-    async _sign(utx: AbstractUnsignedTx, additionalSigners?: string[]): Promise<AbstractTx> {
+    async _sign(
+        utx: AbstractUnsignedTx,
+        additionalSigners?: string[],
+        expirationTime?: Date // TODO @Achraf
+    ): Promise<AbstractTx> {
         // Create the hash from the tx
         const txbuff = utx.toBuffer()
         const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())

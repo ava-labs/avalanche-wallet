@@ -1004,7 +1004,7 @@
 "@c4tplatform/camino-wallet-sdk@file:camino-wallet-sdk":
   version "0.0.2"
   dependencies:
-    "@c4tplatform/caminojs" "file:../../../Library/Caches/Yarn/v6/npm-@c4tplatform-camino-wallet-sdk-0.0.2-b0396480-6452-4daf-980e-d461c46fdc09-1680175649881/node_modules/@c4tplatform/camino-wallet-sdk/caminojs"
+    "@c4tplatform/caminojs" "file:../../../Library/Caches/Yarn/v6/npm-@c4tplatform-camino-wallet-sdk-0.0.2-925756a9-df0d-4ab6-a291-791f1292899a-1680772525461/node_modules/@c4tplatform/camino-wallet-sdk/caminojs"
     "@ethereumjs/tx" "^4.0.2"
     "@ledgerhq/hw-app-eth" "^6.12.2"
     "@ledgerhq/hw-transport" "^6.19.0"
@@ -1049,10 +1049,10 @@
     ws "8.8.1"
     xss "1.0.14"
 
-"@c4tplatform/signavaultjs@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@c4tplatform/signavaultjs/-/signavaultjs-1.0.4.tgz#3948cb4dd9092726dfcbe29384cc6cdd106928ea"
-  integrity sha512-O+QK2CNZ2SoF7MZdbU1KTwFeipDxX6RlhVdneRiZIhQNHjzcunlHFO6aqnEG2nWqf8B3etTyOg1c2wXf0qP4OQ==
+"@c4tplatform/signavaultjs@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@c4tplatform/signavaultjs/-/signavaultjs-1.0.5.tgz#b96cdba29477c1cc0642951e7c9e12dd6804f12e"
+  integrity sha512-trpRGgkjAifsZ5xdqqusCbwqZmXD2gv+TX629n8b82GXjszOZCuzmQABFeU8PimT8fM1JpHtO4fsUbO2Ns6YXA==
   dependencies:
     axios "^1.3.4"
     create-hash "^1.2.0"

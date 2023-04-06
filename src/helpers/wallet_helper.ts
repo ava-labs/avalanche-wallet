@@ -21,9 +21,9 @@ import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
-import { UnsignedTx, UTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
+import { UnsignedTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -230,9 +230,6 @@ class WalletHelper {
         }
 
         const signerAddresses = wallet.getSignerAddresses('P')
-        if (wallet?.type === 'multisig') {
-            signerAddresses?.push()
-        }
 
         // For change address use first available on the platform chain
         const changeAddress = wallet.getChangeAddressPlatform()
@@ -270,26 +267,41 @@ class WalletHelper {
         startTime: BN,
         endTime: BN,
         stakeAmount: BN
-    ): Promise<string> {
-        let pAddressStrings = wallet.getAllAddressesP()
-        const pchain = ava.PChain()
-        const utxoSet: UTXOSet = (await pchain.getUTXOs(pAddressStrings)).utxos
+    ): Promise<string | undefined> {
+        const pAddressStrings = wallet.getAllAddressesP()
+        const utxoSet = wallet.getPlatformUTXOSet()
+        const signerAddresses = wallet.getSignerAddresses('P')
+        const threshold =
+            wallet.type === 'multisig' ? (wallet as MultisigWallet)?.keyData?.owner?.threshold : 1
 
-        const unsignedTx: UnsignedTx = await pchain.buildAddValidatorTx(
-            utxoSet,
-            pAddressStrings,
-            pAddressStrings,
-            pAddressStrings,
-            nodeID,
-            startTime,
-            endTime,
-            stakeAmount,
-            pAddressStrings,
-            10
-        )
+        const unsignedTx = await ava
+            .PChain()
+            .buildAddValidatorTx(
+                utxoSet,
+                pAddressStrings,
+                [pAddressStrings, signerAddresses],
+                pAddressStrings,
+                nodeID,
+                startTime,
+                endTime,
+                stakeAmount,
+                pAddressStrings,
+                0,
+                undefined,
+                1,
+                undefined,
+                undefined,
+                threshold,
+                threshold
+            )
 
-        let tx = await wallet.signP(unsignedTx)
-        return await pchain.issueTx(tx)
+        try {
+            const tx = await wallet.signP(unsignedTx)
+            return await ava.PChain().issueTx(tx)
+        } catch (err) {
+            console.error(err)
+            return
+        }
     }
 
     static async getEthBalance(wallet: WalletType) {
@@ -371,6 +383,12 @@ class WalletHelper {
             .getCurrentValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
         let validator = res.validators[0]
         return validator
+    }
+
+    static deserializeUnsignedTx(utx: string) {
+        const tx = new UnsignedTx()
+        tx.fromBuffer(Buffer.from(utx, 'hex'))
+        return tx
     }
 }
 
