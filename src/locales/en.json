@@ -308,7 +308,11 @@
         "button1": "Save Keys",
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
+        "button4": "Import wallets",
+        "button5": "Dismiss",
+        "multisig_aliases": "you have {0} multisignature wallets available.",
         "subtitle": "Active Key",
+        "other_keys": "Other Keys",
         "del_check": "Are you sure you want to delete this key?",
         "save_account": {
             "title": "Save Account",
@@ -812,13 +816,13 @@
     },
     "validator": {
         "pending": {
-            "validator_pending" : "Your validator node is waiting for the transaction to be committed. For more information click here."
+            "validator_pending": "Your validator node is waiting for the transaction to be committed. For more information click here."
         },
-        "info" : {
+        "info": {
             "staking_start_date": "Staking Start Date",
             "staking_end_date": "Staking End Date",
             "up_time": "Up Time",
-            "remaining_validation_period" : "Remaining Validation Period",
+            "remaining_validation_period": "Remaining Validation Period",
             "deposit_amount": "Deposit Amount",
             "tx_id": "Tx ID",
             "validator_running": "Your validator node is running"
@@ -828,6 +832,5 @@
             "to_activate": "To activate your validator node please get in touch and email us to {email}",
             "title": "Validator Node is Suspended"
         }
-
     }
 }
