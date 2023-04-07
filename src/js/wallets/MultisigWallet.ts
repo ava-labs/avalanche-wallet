@@ -222,8 +222,12 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         throw NotImplementedError
     }
 
-    async signP(unsignedTx: PlatformUnsignedTx, additionalSigners?: string[]): Promise<PlatformTx> {
-        return (await this._sign(unsignedTx, additionalSigners)) as PlatformTx
+    async signP(
+        unsignedTx: PlatformUnsignedTx,
+        additionalSigners?: string[],
+        expirationTime?: number
+    ): Promise<PlatformTx> {
+        return (await this._sign(unsignedTx, additionalSigners, expirationTime)) as PlatformTx
     }
 
     async signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx> {
@@ -460,7 +464,7 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
     async _sign(
         utx: AbstractUnsignedTx,
         additionalSigners?: string[],
-        expirationTime?: Date // TODO @Achraf
+        expirationTime?: number
     ): Promise<AbstractTx> {
         // Create the hash from the tx
         const txbuff = utx.toBuffer()
@@ -541,6 +545,7 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
                 ).toString('hex'),
                 // we send node's signature as metadata so it can be used form the issuer
                 metadata: metadata,
+                expiration: expirationTime,
             })
 
             walletSigs.splice(0, 1)

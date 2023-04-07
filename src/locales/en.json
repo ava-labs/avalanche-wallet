@@ -476,6 +476,10 @@
                 "start": "Start Date & Time",
                 "end": "End Date & Time"
             },
+            "transaction_duration": {
+                "label": "Transaction End Date",
+                "desc": "If your transaction reaches this date, it will be considered expired."
+            },
             "amount": {
                 "label": "Bonded Amount",
                 "desc": "Bonded amount is always {0} @.native:(0)."
@@ -506,7 +510,8 @@
                 "fee": "Delegation Fee",
                 "reward": "Reward Address",
                 "type_local": "This wallet",
-                "type_custom": "Custom"
+                "type_custom": "Custom",
+                "transaction_end": "Transaction End Date"
             },
             "register_validator_node": "Register Validator Node",
             "initiate_transaction": "Initiate transaction",
@@ -815,7 +820,7 @@
         "mint_form": "Collectible minted and added to your wallet.",
         "copy_public_key": "Public Key added to clipboard",
         "register_node_success": "Your node registered successfully.",
-        "register_node_initiated": "Your node registration transaction has initiated successfully.", 
+        "register_node_initiated": "Your node registration transaction has initiated successfully.",
         "register_node_failed": "Registering Node Failed",
         "import_key_success": "Private key and assets added to the wallet.",
         "keys_remove_success": "Private key and assets removed from the wallet.",
@@ -825,13 +830,13 @@
     },
     "validator": {
         "pending": {
-            "validator_pending" : "Your validator node is waiting for the transaction to be committed. For more information click here."
+            "validator_pending": "Your validator node is waiting for the transaction to be committed. For more information click here."
         },
-        "info" : {
+        "info": {
             "staking_start_date": "Staking Start Date",
             "staking_end_date": "Staking End Date",
             "up_time": "Up Time",
-            "remaining_validation_period" : "Remaining Validation Period",
+            "remaining_validation_period": "Remaining Validation Period",
             "deposit_amount": "Deposit Amount",
             "tx_id": "Tx ID",
             "validator_running": "Your validator node is running"
@@ -841,6 +846,5 @@
             "to_activate": "To activate your validator node please get in touch and email us to {email}",
             "title": "Validator Node is Suspended"
         }
-
     }
 }

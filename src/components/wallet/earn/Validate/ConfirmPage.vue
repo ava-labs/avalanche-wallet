@@ -16,6 +16,10 @@
             <label>{{ $t('earn.validate.confirmation.end') }}</label>
             <p>{{ end.toLocaleString() }}</p>
         </div>
+        <div v-if="txEnd">
+            <label>{{ $t('earn.validate.confirmation.transaction_end') }}e</label>
+            <p>{{ txEnd.toLocaleString() }}</p>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -28,6 +32,7 @@ import Big from 'big.js'
 export default class ConfirmPage extends Vue {
     @Prop() nodeID!: string
     @Prop() end!: Date
+    @Prop() txEnd?: Date
     // @Prop() delegationFee!: number
     @Prop() amount!: BN
     @Prop() rewardAddress!: string

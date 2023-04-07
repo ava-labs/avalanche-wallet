@@ -17,6 +17,13 @@
                             </p>
                             <DateForm @change_end="setEnd"></DateForm>
                         </div>
+                        <div v-if="isMultiSig" style="margin: 30px 0">
+                            <h4>{{ $t('earn.validate.transaction_duration.label') }}</h4>
+                            <p class="desc">
+                                {{ $t('earn.validate.transaction_duration.desc') }}
+                            </p>
+                            <DateForm @change_end="setTransactionEnd" tx="true"></DateForm>
+                        </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.amount.label') }}</h4>
                             <p class="desc">
@@ -40,6 +47,7 @@
                         v-show="isConfirm"
                         :node-i-d="nodeId"
                         :end="formEnd"
+                        :txEnd="transactionEndDate"
                         :amount="formAmt"
                         :reward-address="rewardIn"
                         :reward-destination="rewardDestination"
@@ -176,7 +184,7 @@ export default class AddValidator extends Vue {
     @Prop() nodeId!: string
     startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
-    // delegationFee: string = '2.0'
+    transactionEndDate: string = new Date().toISOString()
     rewardIn: string = ''
     rewardDestination = 'local' // local || custom
     isLoading = false
@@ -219,12 +227,18 @@ export default class AddValidator extends Vue {
     setEnd(val: string) {
         this.endDate = val
     }
+    setTransactionEnd(val: string) {
+        this.transactionEndDate = val
+    }
 
     get rewardAddressLocal() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getPlatformRewardAddress()
     }
-
+    get isMultiSig() {
+        let wallet: WalletType = this.$store.state.activeWallet
+        return wallet.type === 'multisig'
+    }
     rewardSelect(val: 'local' | 'custom') {
         if (val === 'local') {
             this.rewardIn = this.rewardAddressLocal
@@ -396,7 +410,8 @@ export default class AddValidator extends Vue {
                 this.nodeId,
                 new BN(startTime),
                 new BN(endTime),
-                new BN(this.formAmt.toString())
+                new BN(this.formAmt.toString()),
+                new Date(this.transactionEndDate).getTime() / 1000
             )
             this.isLoading = false
             this.onTxSubmit(txId)

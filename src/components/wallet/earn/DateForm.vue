@@ -26,7 +26,7 @@ const MIN_STAKE_DURATION = DAY_MS * 14
 })
 export default class DateForm extends Vue {
     // timeNow = 0
-
+    @Prop() tx?: boolean
     localStart = this.startDateMin
     localEnd = this.endDateMin
 
@@ -91,7 +91,7 @@ export default class DateForm extends Vue {
         let start = this.localStart
         let startDate = new Date(start)
 
-        let end = startDate.getTime() + MIN_STAKE_DURATION
+        let end = this.tx ? startDate.getTime() : startDate.getTime() + MIN_STAKE_DURATION
         let endDate = new Date(end)
         return endDate.toISOString()
     }

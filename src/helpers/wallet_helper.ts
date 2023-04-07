@@ -266,7 +266,8 @@ class WalletHelper {
         nodeID: string,
         startTime: BN,
         endTime: BN,
-        stakeAmount: BN
+        stakeAmount: BN,
+        endTxTime?: number
     ): Promise<string | undefined> {
         const pAddressStrings = wallet.getAllAddressesP()
         const utxoSet = wallet.getPlatformUTXOSet()
@@ -296,7 +297,7 @@ class WalletHelper {
             )
 
         try {
-            const tx = await wallet.signP(unsignedTx)
+            const tx = await wallet.signP(unsignedTx, undefined, endTxTime)
             return await ava.PChain().issueTx(tx)
         } catch (err) {
             console.error(err)
