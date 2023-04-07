@@ -76,7 +76,7 @@ import { ava } from '@/AVA'
 import { BN } from '@c4tplatform/caminojs'
 import AvaxInput from '@/components/misc/AvaxInput.vue'
 import Tooltip from '@/components/misc/Tooltip.vue'
-import { NodeInfo } from '@/js/wallets/types'
+import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 
 @Component({
     name: 'validator_info',
@@ -88,7 +88,7 @@ import { NodeInfo } from '@/js/wallets/types'
 })
 export default class ValidatorInfo extends Vue {
     @Prop() nodeId!: string
-    @Prop() nodeInfo!: NodeInfo
+    @Prop() nodeInfo!: ValidatorRaw
 
     startTime: string = ''
     endTime: string = ''
@@ -125,6 +125,8 @@ export default class ValidatorInfo extends Vue {
             )
 
             let dataReaminingValdiationDuration = {
+                years: reaminingValidationDuration.years(),
+                months: reaminingValidationDuration.months(),
                 days: reaminingValidationDuration.days().toString(),
                 hours:
                     reaminingValidationDuration.hours() > 9
@@ -141,6 +143,15 @@ export default class ValidatorInfo extends Vue {
             }
 
             let strRemainingValidation = `${dataReaminingValdiationDuration.days} Days ${dataReaminingValdiationDuration.hours}h ${dataReaminingValdiationDuration.minutes}m ${dataReaminingValdiationDuration.seconds}s`
+
+            if (dataReaminingValdiationDuration.months > 0) {
+                strRemainingValidation = `${dataReaminingValdiationDuration.months} Months ${strRemainingValidation}`
+            }
+
+            if (dataReaminingValdiationDuration.years > 0) {
+                strRemainingValidation = `${dataReaminingValdiationDuration.years} Years ${strRemainingValidation}`
+            }
+
             this.reaminingValidation = strRemainingValidation
             this.depositAmount = parseFloat(this.nodeInfo.stakeAmount) / 1000000000
             this.txID = this.nodeInfo.txID
@@ -219,6 +230,7 @@ h4 {
 
 .amt_in {
     width: 70%;
+    pointer-events: none;
 }
 
 .space-div {
