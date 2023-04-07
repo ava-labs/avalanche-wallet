@@ -17,12 +17,12 @@
             </p>
             <p class="">{{ error }}</p>
             <div class="aliases__content">
-                <p>would you like to import these wallets ?</p>
+                <p>{{ $t('keys.import_wallets') }}</p>
                 <div class="aliases__content--buttons">
                     <button
                         @click="addAlias"
                         :loading="isLoading"
-                        class="button_primary ava_button addAliasButton"
+                        class="button_secondary ava_button addAliasButton"
                         depressed
                         block
                     >
@@ -190,12 +190,14 @@ export default class MyKeys extends Vue {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
+            flex-wrap: wrap;
         }
     }
 }
 .addAliasButton {
-    padding: 5px 15px;
+    padding: 7px 15px;
     font-size: 14px;
+    margin-top: 10px;
 }
 hr {
     border-top: 1px solid var(--bg-light);
