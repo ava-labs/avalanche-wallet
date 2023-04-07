@@ -21,6 +21,7 @@ export interface RootState {
     warnUpdateKeyfile: boolean
     walletsDeleted: boolean
     theme: 'night' | 'day'
+    multiSigAliases: string[]
     prices: priceDict // USD value of 1 native token
 }
 
