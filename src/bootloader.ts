@@ -14,12 +14,20 @@ Vue.use(BootstrapVue)
 Vue.component('datetime', Datetime)
 
 export const mount = (el: string, appSuiteStore: any) => {
-    const { setUpdateStore, setLogOut, setAccount, dispatchNotification, navigate } = appSuiteStore
+    const {
+        setUpdateStore,
+        setLogOut,
+        setAccount,
+        dispatchNotification,
+        navigate,
+        updateShowAlias,
+    } = appSuiteStore
     const MyPlugin = {
         install(Vue) {
             Vue.prototype.globalHelper = () => {
                 return {
                     updateSuiteStore: (s) => setUpdateStore(s),
+                    updateShowAlias: () => updateShowAlias(),
                     logout: () => setLogOut(true),
                     setAccount: (acc) => setAccount(acc),
                     dispatchNotification: (params) => dispatchNotification(params),

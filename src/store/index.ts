@@ -30,7 +30,6 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
-import { ChainAlias } from '@/js/wallets/types'
 import {
     extractKeysFromDecryptedFile,
     KEYSTORE_VERSION,
@@ -46,6 +45,7 @@ import { updateFilterAddresses } from '../providers'
 import { getAvaxPriceUSD } from '@/helpers/price_helper'
 import createHash from 'create-hash'
 import router from '@/router'
+import { getMultisigAliases } from '@/explorer_api'
 
 export default new Vuex.Store({
     modules: {
@@ -68,6 +68,7 @@ export default new Vuex.Store({
         wallets: [],
         volatileWallets: [], // will be forgotten when tab is closed
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
+        multiSigAliases: [],
         theme: 'night',
         walletsDeleted: false,
         prices: {
@@ -91,6 +92,9 @@ export default new Vuex.Store({
                 state.walletsDeleted ||
                 state.activeWallet !== state.storedActiveWallet
             )
+        },
+        multiSigAliases(state: RootState): string[] {
+            return state.multiSigAliases
         },
     },
     mutations: {
@@ -170,8 +174,6 @@ export default new Vuex.Store({
 
         async onAccess({ state, dispatch }) {
             state.isAuth = true
-
-            await dispatch('Launch/initialize')
             dispatch('activateWallet', state.activeWallet)
         },
 
@@ -183,10 +185,11 @@ export default new Vuex.Store({
             store.state.storedActiveWallet = null
             store.state.address = null
             store.state.isAuth = false
-            router.push('/login')
+            store.state.multiSigAliases = []
             store.dispatch('Accounts/onLogout')
             store.dispatch('Assets/onLogout')
             store.dispatch('Launch/onLogout')
+            router.push('/login')
         },
 
         // used with logout
@@ -272,6 +275,29 @@ export default new Vuex.Store({
             return wallet
         },
 
+        async fetchMultiSigAliases(
+            { state, getters },
+            { disable }: { disable: boolean }
+        ): Promise<string[] | null> {
+            try {
+                if (!disable) {
+                    const staticAddresses = getters['staticAddresses']('P')
+                    const multisigAliases = await getMultisigAliases(staticAddresses)
+                    if (!multisigAliases || multisigAliases.length === 0) {
+                        return null
+                    }
+                    multisigAliases.forEach((alias: string) => {
+                        bintools.parseAddress(`P-${alias}`, 'P', ava.getHRP())
+                    })
+                    state.multiSigAliases = multisigAliases
+                    return multisigAliases
+                }
+                state.multiSigAliases = []
+                return []
+            } catch (e) {
+                return null
+            }
+        },
         // Add a multisig wallet from multisig alias
         async addWalletsMultisig(
             { state, getters },
@@ -365,8 +391,8 @@ export default new Vuex.Store({
                 commit('setActiveWallet', wallet)
                 commit('updateActiveAddress')
             }
-
             dispatch('Assets/updateWallet').then(() => {
+                dispatch('fetchMultiSigAliases', { disable: false })
                 dispatch('Assets/updateAvaAsset')
                 dispatch('Assets/updateUTXOs')
                 dispatch('Accounts/updateKycStatus')
