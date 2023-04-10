@@ -120,7 +120,7 @@ describe('multisig: switch wellet', () => {
         cy.get('.button_container').find('button').eq(1).click()
         cy.get('.v-slide-group__content').find('div').eq(5).click()
         cy.get('.fetch_button').click()
-        cy.get('.addAliasButton').click()
+        cy.contains('Add Multisig Alias').click()
 
         cy.contains('Switch Wallet').click({ force: true })
         cy.contains('Other Keys')
