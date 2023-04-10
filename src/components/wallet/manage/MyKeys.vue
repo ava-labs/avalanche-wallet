@@ -51,7 +51,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import KeyRow from '@/components/wallet/manage/KeyRow.vue'
 import RememberKey from '@/components/misc/RememberKey.vue'
@@ -161,7 +161,11 @@ export default class MyKeys extends Vue {
     get activeWallet(): WalletType {
         return this.$store.state.activeWallet
     }
-
+    @Watch('wallets.length')
+    async onWalletsChange() {
+        if (this.wallets.length > 1)
+            await this.$store.dispatch('fetchMultiSigAliases', { disable: false })
+    }
     get multiSigAliases(): string[] {
         return this.$store.getters.multiSigAliases
     }
