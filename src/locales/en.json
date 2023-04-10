@@ -511,7 +511,7 @@
                 "reward": "Reward Address",
                 "type_local": "This wallet",
                 "type_custom": "Custom",
-                "transaction_end": "Transaction End Date"
+                "transaction_end": "Transaction Expiration Date"
             },
             "register_validator_node": "Register Validator Node",
             "initiate_transaction": "Initiate transaction",
@@ -830,7 +830,8 @@
     },
     "validator": {
         "pending": {
-            "validator_pending": "Your validator node is waiting for the transaction to be committed. For more information click here."
+            "validator_pending": "Your validator node is waiting for the transaction to be committed. For more information click here.",
+            "validator_pending_with_start_date": "Your node validator transaction will be committed at {startDate}. For more information click here."
         },
         "info": {
             "staking_start_date": "Staking Start Date",

@@ -47,10 +47,11 @@
                         v-show="isConfirm"
                         :node-i-d="nodeId"
                         :end="formEnd"
-                        :txEnd="transactionEndDate"
+                        :txEnd="formTxExpirationDate"
                         :amount="formAmt"
                         :reward-address="rewardIn"
                         :reward-destination="rewardDestination"
+                        :isMultisig="isMultiSig"
                     ></ConfirmPage>
                 </transition-group>
                 <div>
@@ -76,6 +77,9 @@
                                 {{ $t('earn.validate.confirm') }}
                             </v-btn>
                             <template v-else>
+                                <p v-if="isMultiSig" class="err">
+                                    {{ $t('earn.validate.label_4') }}
+                                </p>
                                 <v-btn
                                     @click="submit"
                                     class="button_secondary"
@@ -199,6 +203,7 @@ export default class AddValidator extends Vue {
     formFee: number = 0
     formRewardAddr = ''
     formUtxos: UTXO[] = []
+    formTxExpirationDate = new Date()
 
     txId = ''
     txStatus: string | null = null
@@ -319,6 +324,7 @@ export default class AddValidator extends Vue {
         this.formAmt = this.stakeAmt
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
+        this.formTxExpirationDate = new Date(this.transactionEndDate)
     }
 
     confirm() {
@@ -391,8 +397,12 @@ export default class AddValidator extends Vue {
         if (!this.formCheck()) return
         let wallet: WalletType = this.$store.state.activeWallet
 
-        // Start validation in 25 seconds
-        let startDate = new Date(Date.now() + 25000)
+        /* If multisig flow we set the start date of the validator
+         * same as the expiration date of the TX in signavault
+         * In single sig flow, set the start date of validation
+         * after 25 seconds
+         */
+        let startDate = this.isMultiSig ? this.formTxExpirationDate : new Date(Date.now() + 25000)
         let endMs = this.formEnd.getTime()
         let startMs = startDate.getTime()
 
@@ -411,11 +421,17 @@ export default class AddValidator extends Vue {
                 new BN(startTime),
                 new BN(endTime),
                 new BN(this.formAmt.toString()),
-                new Date(this.transactionEndDate).getTime() / 1000
+                Math.trunc(new Date(this.transactionEndDate).getTime() / 1000)
             )
             this.isLoading = false
-            this.onTxSubmit(txId)
+
+            if (txId) {
+                this.onTxSubmit(txId)
+            } else {
+                this.$emit('initiated')
+            }
         } catch (err) {
+            console.error(err)
             this.isLoading = false
             this.onerror(err)
         }
@@ -519,10 +535,6 @@ export default class AddValidator extends Vue {
 <style scoped lang="scss">
 @use '../../../../styles/main';
 @use '../../../../styles/abstracts/mixins';
-.cols {
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 1fr;*/
-}
 
 form {
     display: grid;
