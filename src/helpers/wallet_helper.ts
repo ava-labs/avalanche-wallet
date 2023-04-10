@@ -23,7 +23,8 @@ import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
-import { UnsignedTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
+import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
+import { SignatureError } from '@c4tplatform/caminojs/dist/common'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -257,7 +258,11 @@ class WalletHelper {
             const tx = await wallet.signP(unsignedTx, [nodePrivateKey])
             return await ava.PChain().issueTx(tx)
         } catch (err) {
-            return
+            if (err instanceof SignatureError) {
+                return undefined
+            } else {
+                throw err
+            }
         }
     }
 
@@ -386,10 +391,13 @@ class WalletHelper {
         return validator
     }
 
-    static deserializeUnsignedTx(utx: string) {
-        const tx = new UnsignedTx()
-        tx.fromBuffer(Buffer.from(utx, 'hex'))
-        return tx
+    static async findPendingValidator(nodeID: string): Promise<ValidatorRaw> {
+        let subnets = await ava.PChain().getSubnets()
+        let res = (await ava
+            .PChain()
+            .getPendingValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
+        let validator = res.validators[0]
+        return validator
     }
 }
 
