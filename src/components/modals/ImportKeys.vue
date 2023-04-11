@@ -43,6 +43,7 @@ import AddKeyFile from '@/components/wallet/manage/AddKeyFile.vue'
 import AddKeyString from '@/components/wallet/manage/AddKeyString.vue'
 import AddMnemonic from '@/components/wallet/manage/AddMnemonic.vue'
 import AddMultisigAlias from '@/components/wallet/manage/AddMultisigAlias.vue'
+import { getMultisigAliases } from '@/explorer_api'
 
 @Component({
     components: {
@@ -85,7 +86,9 @@ export default class ImportKeys extends Vue {
             message: this.$t('keys.import_key_success_msg'),
             type: 'success',
         }
-        let { dispatchNotification } = this.globalHelper()
+        let { dispatchNotification, updateShowAlias } = this.globalHelper()
+        this.$store.dispatch('fetchMultiSigAliases', { disable: false })
+        updateShowAlias()
         dispatchNotification(payload)
     }
 }

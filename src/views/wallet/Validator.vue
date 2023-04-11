@@ -4,13 +4,12 @@
             <h1 :class="depositAndBond ? '' : 'wrong_network'" v-if="validatorIsSuspended">
                 {{ $t('validator.suspended.title') }}
             </h1>
-            <h1
-                v-else-if="(nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended"
-                :class="depositAndBond ? '' : 'wrong_network'"
-            >
-                {{ $t('earn.subtitle1') }}
-            </h1>
-
+            <div v-else-if="(nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended">
+                <h1 v-if="!!multisigPendingNodeTx && !isNodeRegistered">
+                    {{ $t('earn.subtitle5') }}
+                </h1>
+                <h1 v-else>{{ $t('earn.subtitle1') }}</h1>
+            </div>
             <h1 v-else :class="depositAndBond ? '' : 'wrong_network'">
                 {{ $t('validator.info.validator_running') }}
             </h1>
@@ -18,8 +17,15 @@
         <transition name="fade" mode="out-in">
             <div>
                 <p v-if="!depositAndBond" class="wrong_network">{{ $t('earn.warning_3') }}</p>
-                <p v-else-if="!isNodeRegistered" class="no_balance">
+                <div v-else-if="!isNodeRegistered" class="no_balance">
+                    <pending-multisig
+                        v-if="!!multisigPendingNodeTx"
+                        :multisigTx="multisigPendingNodeTx"
+                        @issued="onNodeRegistered"
+                        @refresh="handlePendingMultisigRefresh"
+                    ></pending-multisig>
                     <register-node
+                        v-else
                         :isKycVerified="isKycVerified"
                         :isConsortiumMember="isConsortiumMember"
                         :minPlatformUnlocked="minPlatformUnlocked"
@@ -29,15 +35,29 @@
                         :loadingRefreshRegisterNode="loadingRefreshRegisterNode"
                         @refresh="refresh()"
                     ></register-node>
-                </p>
+                </div>
+                <template v-else-if="!!pendingValidator">
+                    <validator-pending :startDate="pendingValidator.startTime"></validator-pending>
+                </template>
                 <template
                     v-else-if="
-                        (nodeInfo === undefined || nodeInfo === null) && !validatorIsSuspended
+                        (nodeInfo === undefined || nodeInfo === null) &&
+                        !validatorIsSuspended &&
+                        !pendingValidator
                     "
                 >
+                    <pending-multisig
+                        v-if="!!multisigPendingNodeTx"
+                        :nodeId="nodeId"
+                        :multisigTx="multisigPendingNodeTx"
+                        @issued="onAddValidatorIssued"
+                        @refresh="handlePendingMultisigRefresh"
+                    ></pending-multisig>
                     <add-validator
+                        v-else
                         :nodeId="nodeId"
                         @validatorReady="verifyValidatorIsReady"
+                        @initiated="onAddValidatorInitiated"
                     ></add-validator>
                 </template>
                 <div v-else-if="validatorIsSuspended">
@@ -89,6 +109,9 @@ import ValidatorSuspended from '@/components/wallet/earn/Validate/ValidatorSuspe
 import ClaimRewards from '@/components/wallet/earn/Validate/ClaimRewards.vue'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { WalletCore } from '@/js/wallets/WalletCore'
+import PendingMultisig from '@/components/wallet/earn/Validate/PendingMultisig.vue'
+import { MultisigTx as SignavaultTx } from '@/store/modules/signavault/types'
+import ValidatorPending from '@/components/wallet/earn/Validate/ValidatorPending.vue'
 
 @Component({
     name: 'validator',
@@ -98,6 +121,8 @@ import { WalletCore } from '@/js/wallets/WalletCore'
         ValidatorInfo,
         ValidatorSuspended,
         ClaimRewards,
+        PendingMultisig,
+        ValidatorPending,
     },
 })
 export default class Validator extends Vue {
@@ -112,6 +137,13 @@ export default class Validator extends Vue {
     validatorIsSuspended: boolean = false
     loadingRefreshRegisterNode: boolean = false
     tab: string = 'opt-validator'
+    pendingValidator: ValidatorRaw | null = null
+
+    get multisigPendingNodeTx(): SignavaultTx | undefined {
+        return this.$store.getters['Signavault/transactions'].find(
+            (item: any) => item?.tx?.alias === this.addresses[0]
+        )
+    }
 
     verifyValidatorIsReady(val: ValidatorRaw) {
         this.nodeInfo = val
@@ -127,6 +159,11 @@ export default class Validator extends Vue {
         this.intervalID = setInterval(() => {
             this.updateValidators()
         }, 15000)
+    }
+
+    async handlePendingMultisigRefresh() {
+        await this.$store.dispatch('Signavault/updateTransaction')
+        this.evaluateCanRegisterNode()
     }
 
     deactivated() {
@@ -145,18 +182,42 @@ export default class Validator extends Vue {
         try {
             this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
             this.isNodeRegistered = !!this.nodeId
+
+            if (this.nodeId) {
+                // node is registered, check if is pending
+                const val = await WalletHelper.findPendingValidator(this.nodeId)
+                this.pendingValidator = val
+            }
         } catch (e) {
             this.isNodeRegistered = false
+            this.pendingValidator = null
         }
     }
 
-    async onNodeRegistered() {
-        try {
-            this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
-            this.isNodeRegistered = !!this.nodeId
-        } catch (e) {
-            this.isNodeRegistered = false
+    async onNodeRegistered(status: 'issued' | 'pending') {
+        if (status === 'issued') {
+            try {
+                this.nodeId = await WalletHelper.getRegisteredNode(this.addresses[0])
+                this.isNodeRegistered = !!this.nodeId
+            } catch (e) {
+                this.isNodeRegistered = false
+            }
+        } else {
+            await this.$store.dispatch('Signavault/updateTransaction')
+            this.evaluateCanRegisterNode()
         }
+    }
+
+    async onAddValidatorInitiated() {
+        //  Multisig flow, tx is saved to signavault
+        await this.$store.dispatch('Signavault/updateTransaction')
+        this.evaluateCanRegisterNode()
+    }
+
+    async onAddValidatorIssued() {
+        //  Multisig flow, tx handled by signavault
+        await this.$store.dispatch('Signavault/updateTransaction')
+        this.evaluateCanRegisterNode()
     }
 
     get hasEnoughUnlockedPlatformBalance(): boolean {

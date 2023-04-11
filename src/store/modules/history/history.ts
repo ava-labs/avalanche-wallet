@@ -114,17 +114,20 @@ const history_module: Module<HistoryState, RootState> = {
             state.allTransactions = transactions
             state.isUpdatingAll = false
         },
-        getAliasChains({ state, rootState }) {
+        async getAliasChains({ state, rootState }) {
             //@ts-ignore
             let network = rootState.Network.selectedNetwork
             if (!network.explorerUrl) {
                 return
             }
-            const res = ava.getChains()
-            const chains = res.map((r) => {
-                return { chainAlias: r.alias, chainID: r.id }
-            })
-            state.chains = chains
+            let res = await getAliasChains()
+            if (res.chains) {
+                let chains = Object.entries(res.chains).map(([, value]) => {
+                    let v = value as Chain
+                    return { chainAlias: v.chainAlias, chainID: v.chainID }
+                })
+                state.chains = chains
+            }
         },
     },
     getters: {
