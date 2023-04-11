@@ -25,6 +25,7 @@
                         v-if="!!multisigPendingNodeTx"
                         :multisigTx="multisigPendingNodeTx"
                         @issued="onNodeRegistered"
+                        @refresh="handlePendingMultisigRefresh"
                     ></pending-multisig>
                     <register-node
                         v-else
@@ -53,6 +54,7 @@
                         :nodeId="nodeId"
                         :multisigTx="multisigPendingNodeTx"
                         @issued="onAddValidatorIssued"
+                        @refresh="handlePendingMultisigRefresh"
                     ></pending-multisig>
                     <add-validator
                         v-else
@@ -138,6 +140,11 @@ export default class Validator extends Vue {
         this.intervalID = setInterval(() => {
             this.updateValidators()
         }, 15000)
+    }
+
+    async handlePendingMultisigRefresh() {
+        await this.$store.dispatch('Signavault/updateTransaction')
+        this.evaluateCanRegisterNode()
     }
 
     deactivated() {
