@@ -528,9 +528,9 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
         chainId: ChainIdType
     ): ILedgerBlockMessage[] {
         let tx =
-            ((unsignedTx as
-                | AVMUnsignedTx
-                | PlatformUnsignedTx).getTransaction() as AddValidatorTx) || AddDelegatorTx
+            ((
+                unsignedTx as AVMUnsignedTx | PlatformUnsignedTx
+            ).getTransaction() as AddValidatorTx) || AddDelegatorTx
         let txType = tx.getTxType()
         let messages: ILedgerBlockMessage[] = []
 

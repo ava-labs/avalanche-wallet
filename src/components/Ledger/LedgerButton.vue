@@ -111,7 +111,7 @@ export default class LedgerButton extends Vue {
             let wallet = await LedgerWallet.fromApp(
                 app,
                 eth,
-                (this.config as unknown) as ILedgerAppConfig
+                this.config as unknown as ILedgerAppConfig
             )
             try {
                 await this.loadWallet(wallet)
