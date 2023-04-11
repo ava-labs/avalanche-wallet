@@ -819,7 +819,7 @@
             "staking_end_date": "Staking End Date",
             "up_time": "Up Time",
             "remaining_validation_period": "Remaining Validation Period",
-            "deposit_amount": "Deposit Amount",
+            "bonded_amount": "Bonded Amount",
             "tx_id": "Tx ID",
             "validator_running": "Your validator node is running"
         },

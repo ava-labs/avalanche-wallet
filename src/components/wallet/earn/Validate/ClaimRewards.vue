@@ -29,6 +29,7 @@
             :amountText="pRewardAmountText"
             :symbol="symbol"
             :amount="rewardAmount"
+            @beforeCloseModal="beforeCloseModal"
         ></ModalClaimReward>
     </div>
 </template>
@@ -64,6 +65,14 @@ export default class ClaimRewards extends Vue {
 
     mounted() {
         this.getClaimableReward()
+    }
+
+    beforeCloseModal(claimed: boolean) {
+        if (claimed) {
+            this.getClaimableReward()
+            this.$store.dispatch('Assets/updateUTXOs')
+            this.$store.dispatch('History/updateTransactionHistory')
+        }
     }
 
     get rewardOwner() {

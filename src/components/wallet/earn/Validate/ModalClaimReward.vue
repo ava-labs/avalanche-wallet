@@ -30,7 +30,7 @@
                 <h2>
                     {{
                         $t('validator.rewards.modal_claim.confirmed_claimed', {
-                            amount: amountText,
+                            amount: confirmedClaimedAmountText,
                             symbol: symbol,
                         })
                     }}
@@ -47,7 +47,6 @@ import Modal from '../../../modals/Modal.vue'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { BN } from '@c4tplatform/caminojs'
 import { WalletHelper } from '../../../../helpers/wallet_helper'
-import { WalletType } from '@c4tplatform/camino-wallet-sdk'
 
 @Component({
     components: {
@@ -62,6 +61,7 @@ export default class ModalClaimReward extends Vue {
     @Prop() amount!: BN
 
     claimed: boolean = false
+    confirmedClaimedAmountText: string = ''
 
     open() {
         // @ts-ignore
@@ -74,17 +74,19 @@ export default class ModalClaimReward extends Vue {
     }
 
     beforeClose() {
+        this.confirmedClaimedAmountText = ''
+        this.$emit('beforeCloseModal', this.claimed)
         this.claimed = false
     }
 
     async confirmClaim() {
         try {
-            let claimedTx = await WalletHelper.buildClaimTx(
+            await WalletHelper.buildClaimTx(
                 this.nodeInfo.rewardOwner.addresses[0],
                 new BN(this.amount),
                 this.$store.state.activeWallet
             )
-
+            this.confirmedClaimedAmountText = new BN(this.amount).toString()
             this.claimed = true
         } catch (e) {
             console.error(e)
