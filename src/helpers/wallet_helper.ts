@@ -1,4 +1,4 @@
-import { ava } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import {
     UTXO as PlatformUTXO,
     UTXOSet as PlatformUTXOSet,
@@ -21,9 +21,10 @@ import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
-import { UnsignedTx, UTXOSet } from '@c4tplatform/caminojs/dist/apis/platformvm'
+import { UnsignedTx, UTXOSet, Tx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
-import axios from 'axios'
+import { OutputOwners } from '@c4tplatform/caminojs/dist/common'
+import { SingletonWallet } from '@c4tplatform/camino-wallet-sdk'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -359,12 +360,34 @@ class WalletHelper {
 
     static async getClaimables(address: string, txID?: string) {
         try {
-            let txIds: string[] = []
-            let responseClaimable = await ava.PChain().getClaimables([address], txIds)
+            let responseClaimable = await ava.PChain().getClaimables([address])
             return responseClaimable
         } catch (e) {
             console.error(e)
         }
+    }
+
+    static async buildClaimTx(address: string, amount: BN, activeWallet: WalletType) {
+        let addressBufferTest = ava.PChain().parseAddress(address)
+        const claimableSigners: [number, Buffer][] = [[0, addressBufferTest]]
+        let rewardsOwner = new OutputOwners([addressBufferTest])
+        const unsignedTx = await ava.PChain().buildClaimTx(
+            //@ts-ignore
+            undefined,
+            [address],
+            [address],
+            undefined,
+            new BN(0),
+            1,
+            [],
+            [rewardsOwner],
+            [amount],
+            rewardsOwner,
+            new BN(1),
+            claimableSigners
+        )
+        let tx = await activeWallet.signP(unsignedTx)
+        return await ava.PChain().issueTx(tx)
     }
 }
 

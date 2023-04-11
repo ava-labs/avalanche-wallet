@@ -46,6 +46,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import Modal from '../../../modals/Modal.vue'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { BN } from '@c4tplatform/caminojs'
+import { WalletHelper } from '../../../../helpers/wallet_helper'
+import { WalletType } from '@c4tplatform/camino-wallet-sdk'
 
 @Component({
     components: {
@@ -55,8 +57,9 @@ import { BN } from '@c4tplatform/caminojs'
 export default class ModalClaimReward extends Vue {
     @Prop() nodeId!: string
     @Prop() nodeInfo!: ValidatorRaw
-    @Prop() amountText!: BN
+    @Prop() amountText!: string
     @Prop() symbol!: string
+    @Prop() amount!: BN
 
     claimed: boolean = false
 
@@ -75,7 +78,18 @@ export default class ModalClaimReward extends Vue {
     }
 
     async confirmClaim() {
-        this.claimed = true
+        try {
+            let claimedTx = await WalletHelper.buildClaimTx(
+                this.nodeInfo.rewardOwner.addresses[0],
+                new BN(this.amount),
+                this.$store.state.activeWallet
+            )
+
+            this.claimed = true
+        } catch (e) {
+            console.error(e)
+            this.claimed = false
+        }
     }
 }
 </script>

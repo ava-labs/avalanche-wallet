@@ -28,6 +28,7 @@
             ref="modal_claim_reward"
             :amountText="pRewardAmountText"
             :symbol="symbol"
+            :amount="rewardAmount"
         ></ModalClaimReward>
     </div>
 </template>
