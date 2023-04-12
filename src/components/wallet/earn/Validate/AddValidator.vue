@@ -167,7 +167,6 @@ const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
 const DAY_MS = HOUR_MS * 24
 
-const MIN_STAKE_DURATION = DAY_MS * 14
 const MAX_STAKE_DURATION = DAY_MS * 365
 
 @Component({
