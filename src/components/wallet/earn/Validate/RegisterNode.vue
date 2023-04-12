@@ -96,13 +96,32 @@
                     !isKycVerified ||
                     !isConsortiumMember ||
                     !hasEnoughLockablePlatformBalance ||
-                    !nodePrivateKey
+                    !nodePrivateKey ||
+                    showMultisigTransactionDisclaimer
                 "
                 block
             >
-                <Spinner v-if="loadingRegisterNode" class="spinner"></Spinner>
+                <Spinner
+                    v-if="loadingRegisterNode && !showMultisigTransactionDisclaimer"
+                    class="spinner"
+                ></Spinner>
                 <span v-else>
                     {{ $t('earn.validate.register_validator_node') }}
+                </span>
+            </v-btn>
+        </div>
+        <div v-if="showMultisigTransactionDisclaimer" class="input_section mt2">
+            <div>
+                <h4 class="input_label">{{ $t('earn.validate.label_4') }}</h4>
+                <h4 class="mt2">{{ $t('earn.validate.label_5') }}</h4>
+                <span class="disabled_input" role="textbox">
+                    {{ nodeId }}
+                </span>
+            </div>
+            <v-btn @click="registerNode($event, true)" class="button_secondary" depressed block>
+                <Spinner v-if="loadingRegisterNode" class="spinner"></Spinner>
+                <span v-else>
+                    {{ $t('earn.validate.initiate_transaction') }}
                 </span>
             </v-btn>
         </div>
@@ -141,6 +160,8 @@ export default class RegisterNode extends Vue {
     helpers = this.globalHelper()
     nodePrivateKey = ''
     loadingRegisterNode: boolean = false
+    nodeId = ''
+    showMultisigTransactionDisclaimer = false
 
     cleanAvaxBN(val: BN) {
         let big = Big(val.toString()).div(Big(ONEAVAX.toString()))
@@ -161,35 +182,44 @@ export default class RegisterNode extends Vue {
         return this.wallet.getStaticAddress('P')
     }
 
-    async registerNode() {
+    async registerNode(ev: PointerEvent, bypassMultisig = false) {
+        this.loadingRegisterNode = true
         try {
             let hrp = ava.getHRP()
             let keypair = new KeyPair(hrp, 'P')
             keypair.importKey(privateKeyStringToBuffer(this.nodePrivateKey.trim()))
-            let nodeId = bufferToNodeIDString(keypair.getAddress())
+            const nodeId = bufferToNodeIDString(keypair.getAddress())
+            const nodeAddress = keypair.getAddressString()
+            this.nodeId = nodeId
+
+            if (this.wallet?.type === 'multisig' && !bypassMultisig) {
+                // Multisig wallet active, show disaclaimer
+                this.showMultisigTransactionDisclaimer = true
+                return
+            }
             const result = await WalletHelper.registerNodeTx(
                 this.wallet,
                 this.nodePrivateKey.trim(),
                 undefined,
                 nodeId,
-                this.staticAddress
+                this.staticAddress,
+                nodeAddress
             )
-            console.log(result)
-            this.loadingRegisterNode = true
-            setTimeout(() => {
-                this.$emit('registered')
-                this.helpers.dispatchNotification({
-                    message: this.$t('notifications.register_node_success'),
-                    type: 'success',
-                })
-                this.loadingRegisterNode = false
-            }, 2000)
+            this.$emit('registered', result ? 'issued' : 'pending')
+            this.helpers.dispatchNotification({
+                message: result
+                    ? this.$t('notifications.register_node_success')
+                    : this.$t('notifications.register_node_initiated'),
+                type: 'success',
+            })
         } catch (error) {
             console.error(error)
             this.helpers.dispatchNotification({
                 message: this.$t('notifications.register_node_failed'),
                 type: 'error',
             })
+        } finally {
+            this.loadingRegisterNode = false
         }
     }
 
@@ -291,5 +321,9 @@ input::placeholder {
     position: relative;
     float: right;
     margin-top: -5%;
+}
+
+.mt2 {
+    margin-top: 1rem;
 }
 </style>

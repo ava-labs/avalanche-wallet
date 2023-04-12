@@ -1,3 +1,4 @@
+import { ava, bintools } from '@/AVA'
 import {
     CsvRowAvaxTransferData,
     CsvRowStakingData,
@@ -5,7 +6,19 @@ import {
     UTXO,
 } from '@/store/modules/history/types'
 import { BN, Buffer } from '@c4tplatform/caminojs/dist'
+import {
+    AddValidatorTx,
+    PlatformVMConstants,
+    UnsignedTx as PlatformUnsignedTx,
+} from '@c4tplatform/caminojs/dist/apis/platformvm'
+import { bufferToNodeIDString } from '@c4tplatform/caminojs/dist/utils'
 import moment from 'moment'
+
+type HistoryTx = {
+    timestamp: string
+    txID: string
+    tx: PlatformUnsignedTx
+}
 
 export function isArraysOverlap(arr1: any[], arr2: any[]): boolean {
     let overlaps = arr1.filter((item) => arr2.includes(item))
@@ -166,4 +179,49 @@ export function parseMemo(memoRaw: string): string {
     if (!memoText.length || memoRaw === 'AAAAAA==') return ''
 
     return memoText
+}
+
+export function fromTx(utxs: HistoryTx[]): ITransactionData[] {
+    const result: ITransactionData[] = []
+    const asset = ava.getNetwork().X.avaxAssetID
+    const assetBuf = bintools.cb58Decode(asset)
+    utxs.forEach((utx) => {
+        const tx = utx.tx.getTransaction()
+        const itd: ITransactionData = {
+            chainID: bintools.cb58Encode(tx.getBlockchainID()),
+            id: utx.txID,
+            inputTotals: { [asset]: utx.tx.getInputTotal(assetBuf).toString('hex') },
+            inputs: null,
+            memo: tx.getMemo().toString(),
+            outputTotals: { [asset]: utx.tx.getOutputTotal(assetBuf).toString('hex') },
+            outputs: [],
+            reusedAddressTotals: null,
+            rewarded: false,
+            rewardedTime: '',
+            timestamp: utx.timestamp,
+            txFee: utx.tx.getBurn(assetBuf).toNumber(),
+            type: 'base',
+            validatorStart: 0,
+            validatorEnd: 0,
+            validatorNodeID: '',
+        }
+        switch (tx.getTypeID()) {
+            case PlatformVMConstants.ADDVALIDATORTX:
+            case PlatformVMConstants.CAMINOADDVALIDATORTX: {
+                itd.type = 'add_validator'
+                const typedTx = tx as AddValidatorTx
+                itd.validatorStart = typedTx.getStartTime().toNumber()
+                itd.validatorEnd = typedTx.getEndTime().toNumber()
+                itd.validatorNodeID = bufferToNodeIDString(typedTx.getNodeID())
+                break
+            }
+            case PlatformVMConstants.REGISTERNODETX:
+                itd.type = 'register_node'
+                break
+            default:
+                break
+        }
+        result.push(itd)
+    })
+    return result
 }

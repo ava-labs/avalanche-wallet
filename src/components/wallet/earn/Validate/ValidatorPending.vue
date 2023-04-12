@@ -3,7 +3,14 @@
         <Spinner class="pending-validator" style="color: var(--primary-color)"></Spinner>
         <br />
         <p class="text-pending-validator">
-            {{ $t('validator.pending.validator_pending') }}
+            <span v-if="!startDate">{{ $t('validator.pending.validator_pending') }}</span>
+            <span v-else>
+                {{
+                    $t('validator.pending.validator_pending_with_start_date', {
+                        startDate: startDateFormatted,
+                    })
+                }}
+            </span>
             <a :href="link" target="_blank">
                 <v-icon class="v-icon-color">mdi-arrow-top-right-thick</v-icon>
             </a>
@@ -22,7 +29,12 @@ import Spinner from '@/components/misc/Spinner.vue'
     },
 })
 export default class ValidatorPending extends Vue {
+    @Prop() startDate!: number
     link = 'https://docs.camino.network/guides/reasons-for-validator-pending'
+
+    get startDateFormatted() {
+        return new Date(this.startDate * 1000).toLocaleString()
+    }
 }
 </script>
 <style scoped lang="scss">

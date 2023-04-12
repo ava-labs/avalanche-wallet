@@ -223,8 +223,6 @@ export default class Activity extends Vue {
     }
 
     get allTxs(): ITransactionData[] {
-        // console.log(this.$store.state.History.allTransactions)
-
         return this.$store.state.History.allTransactions
     }
 
