@@ -17,9 +17,6 @@
         <transition name="fade" mode="out-in">
             <div>
                 <p v-if="!depositAndBond" class="wrong_network">{{ $t('earn.warning_3') }}</p>
-                <p v-else-if="!canValidate" class="no_balance">
-                    {{ $t('earn.warning_1', [minStakeAmt.toLocaleString()]) }}
-                </p>
                 <div v-else-if="!isNodeRegistered" class="no_balance">
                     <pending-multisig
                         v-if="!!multisigPendingNodeTx"
@@ -32,7 +29,7 @@
                         :isKycVerified="isKycVerified"
                         :isConsortiumMember="isConsortiumMember"
                         :minPlatformUnlocked="minPlatformUnlocked"
-                        :hasEnoughLockablePlatformBalance="hasEnoughUnlockedPlatformBalance"
+                        :hasEnoughLockablePlatformBalance="hasEnoughLockablePlatformBalance"
                         :isNodeRegistered="isNodeRegistered"
                         @registered="onNodeRegistered"
                         :loadingRefreshRegisterNode="loadingRefreshRegisterNode"
@@ -201,8 +198,12 @@ export default class Validator extends Vue {
         this.evaluateCanRegisterNode()
     }
 
-    get hasEnoughUnlockedPlatformBalance(): boolean {
-        return this.platformUnlocked.gte(this.minPlatformUnlocked)
+    get hasEnoughLockablePlatformBalance(): boolean {
+        return this.platformStakeable.gte(this.minPlatformUnlocked)
+    }
+
+    get platformStakeable(): BN {
+        return this.platformUnlocked.add(this.platformLockedStakeable)
     }
 
     get staticAddress() {
