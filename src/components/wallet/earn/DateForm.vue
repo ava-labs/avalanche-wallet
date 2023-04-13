@@ -16,6 +16,7 @@
 import { DAY_MS, MINUTE_MS } from '../../../constants'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Datetime } from 'vue-datetime'
+import { ava } from '@/AVA'
 
 const MIN_STAKE_DURATION = DAY_MS * 183
 
@@ -91,7 +92,9 @@ export default class DateForm extends Vue {
         let start = this.localStart
         let startDate = new Date(start)
 
-        let end = this.tx ? startDate.getTime() : startDate.getTime() + MIN_STAKE_DURATION
+        let milisecondsMinStakeDuration = ava.getNetwork().P.minStakeDuration * 10000
+
+        let end = this.tx ? startDate.getTime() : startDate.getTime() + milisecondsMinStakeDuration
         let endDate = new Date(end)
         return endDate.toISOString()
     }
