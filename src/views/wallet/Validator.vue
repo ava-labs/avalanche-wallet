@@ -29,7 +29,7 @@
                         :isKycVerified="isKycVerified"
                         :isConsortiumMember="isConsortiumMember"
                         :minPlatformUnlocked="minPlatformUnlocked"
-                        :hasEnoughLockablePlatformBalance="hasEnoughUnlockedPlatformBalance"
+                        :hasEnoughLockablePlatformBalance="hasEnoughLockablePlatformBalance"
                         :isNodeRegistered="isNodeRegistered"
                         @registered="onNodeRegistered"
                         :loadingRefreshRegisterNode="loadingRefreshRegisterNode"
@@ -220,8 +220,12 @@ export default class Validator extends Vue {
         this.evaluateCanRegisterNode()
     }
 
-    get hasEnoughUnlockedPlatformBalance(): boolean {
-        return this.platformUnlocked.gte(this.minPlatformUnlocked)
+    get hasEnoughLockablePlatformBalance(): boolean {
+        return this.platformStakeable.gte(this.minPlatformUnlocked)
+    }
+
+    get platformStakeable(): BN {
+        return this.platformUnlocked.add(this.platformLockedStakeable)
     }
 
     get staticAddress() {
