@@ -20,6 +20,12 @@
                 <p>{{ $t('keys.import_wallets') }}</p>
                 <div class="aliases__content--buttons">
                     <button
+                        @click="dismiss"
+                        class="addAliasButton button_primary ava_button_secondary"
+                    >
+                        {{ $t('keys.button5') }}
+                    </button>
+                    <button
                         @click="addAlias"
                         :loading="isLoading"
                         class="button_secondary ava_button addAliasButton"
@@ -27,12 +33,6 @@
                         block
                     >
                         {{ $t('keys.button4') }}
-                    </button>
-                    <button
-                        @click="dismiss"
-                        class="addAliasButton button_primary ava_button_secondary"
-                    >
-                        {{ $t('keys.button5') }}
                     </button>
                 </div>
             </div>
