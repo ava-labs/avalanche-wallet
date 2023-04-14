@@ -7,7 +7,8 @@ on:
     branches: [c4t, dev, suite]
 
 env:
-  suite_branch: 'suite'
+  suite_image: 'europe-west3-docker.pkg.dev/pwk-c4t-dev/camino-suite-apps/camino-suite-host'
+  explorer_image: 'europe-west3-docker.pkg.dev/pwk-c4t-dev/camino-suite-apps/camino-suite-explorer'
 
 jobs:
   build:
@@ -33,43 +34,28 @@ jobs:
             echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
 
-      # This should be caching node modules, hashing the cache key with the yarn lock code and busting that when yarn lock changes
-      - name: cache modules
-        uses: actions/cache@v3
-        with:
-          path: './node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('./yarn.lock') }}
-      - run: sudo npm install -g yarn
-      - run: yarn install --network-timeout 1000000
-        env:
-          CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
-
-      - name: start suite
+      - name: build local image
         run: |
-          git clone -b ${{ steps.setBranch.outputs.branch }} https://github.com/chain4travel/camino-suite.git
-          git clone -b ${{ steps.setBranch.outputs.branch }} https://github.com/chain4travel/camino-block-explorer.git
-          cd camino-suite
-          yarn install
-          (yarn start&)
-          cd ../camino-block-explorer
-          yarn install
-          (yarn start&)
-
-      - name: jest-run
-        run: yarn test
+          docker-compose build --build-arg SUITE_IMAGE=${{ env.suite_image }}:${{ steps.setBranch.outputs.branch }} --build-arg EXPLORER_IMAGE=${{ env.explorer_image }}:${{ steps.setBranch.outputs.branch }}
+          export SUITE_IMAGE=${{ env.suite_image }}:${{ steps.setBranch.outputs.branch }}
+          export EXPLORER_IMAGE=${{ env.explorer_image }}:${{ steps.setBranch.outputs.branch }}
+          docker-compose up -d
+          docker cp camino-suite-wallet-container:/app/camino-wallet ./
+          mkdir -p /home/runner/.cache
+          docker cp camino-suite-wallet-container:/root/.cache/Cypress  /home/runner/.cache/
 
       - name: cypress-run
         uses: cypress-io/github-action@v5
         env:
           USE_HTTP: true
         with:
-          wait-on: 'http://localhost:5003/'
-          start: yarn start
+          wait-on: 'http://localhost:5001/, http://localhost:5002/, http://localhost:5003/'
+          working-directory: camino-wallet
           # wait for 3 minutes for the server to respond
           wait-on-timeout: 180
           browser: chrome
           headless: true
-          config-file: ./cypress.config.ts
+          config-file: cypress.config.ts
       # These extract all artifacts out from the container to git so they can be previewed
       - name: extract screenshots to git
         uses: actions/upload-artifact@v3
