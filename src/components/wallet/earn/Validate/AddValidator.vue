@@ -167,9 +167,6 @@ const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
 const DAY_MS = HOUR_MS * 24
 
-const MIN_STAKE_DURATION = DAY_MS * 14
-const MAX_STAKE_DURATION = DAY_MS * 365
-
 @Component({
     name: 'add_validator',
     components: {
@@ -282,17 +279,6 @@ export default class AddValidator extends Vue {
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`
     }
 
-    //6 Months is the minimum time
-    meetMinimumTime(): boolean {
-        let d = moment.duration(this.stakeDuration, 'milliseconds')
-        let days = Math.floor(d.asDays())
-        if (days < 183) {
-            return false
-        } else {
-            return true
-        }
-    }
-
     get denomination() {
         return 9
     }
@@ -354,10 +340,6 @@ export default class AddValidator extends Vue {
             return false
         }
 
-        if (!this.meetMinimumTime()) {
-            return false
-        }
-
         return true
     }
 
@@ -406,9 +388,11 @@ export default class AddValidator extends Vue {
         let endMs = this.formEnd.getTime()
         let startMs = startDate.getTime()
 
+        let milisecondsMaxStakeDuration = ava.getNetwork().P.maxStakeDuration * 10000
+
         // If End date - start date is greater than max stake duration, adjust start date
-        if (endMs - startMs > MAX_STAKE_DURATION) {
-            startDate = new Date(endMs - MAX_STAKE_DURATION)
+        if (endMs - startMs > milisecondsMaxStakeDuration) {
+            startDate = new Date(endMs - milisecondsMaxStakeDuration)
         }
         try {
             this.isLoading = true

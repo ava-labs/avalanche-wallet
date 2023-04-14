@@ -27,7 +27,7 @@
                     <div>
                         <Tooltip style="display: inline-block" :text="$t('validator.info.up_time')">
                             <v-icon class="icon-mdi-camino">mdi-arrow-up-bold</v-icon>
-                            <label>{{ upTime }} %</label>
+                            <label>{{ upTime.toFixed() }} %</label>
                         </Tooltip>
                     </div>
                     <div>
@@ -49,7 +49,7 @@
                 </span>
             </div>
             <div>
-                <h4 class="input_label">{{ $t('validator.info.deposit_amount') }}</h4>
+                <h4 class="input_label">{{ $t('validator.info.bonded_amount') }}</h4>
                 <AvaxInput
                     v-model="depositAmount"
                     :max="maxAmt"
