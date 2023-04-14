@@ -1,4 +1,4 @@
-import { ava, bintools } from '@/AVA'
+import { ava } from '@/AVA'
 import {
     UTXO as PlatformUTXO,
     UTXOSet as PlatformUTXOSet,
@@ -21,9 +21,7 @@ import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
-import { UnsignedTx, UTXOSet, Tx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { OutputOwners } from '@c4tplatform/caminojs/dist/common'
-import { SingletonWallet } from '@c4tplatform/camino-wallet-sdk'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
@@ -433,6 +431,35 @@ class WalletHelper {
             .getPendingValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
         let validator = res.validators[0]
         return validator
+    }
+
+    static async buildDepositClaimTx(
+        addresses: string[],
+        activeWallet: WalletType,
+        depositTxID: string
+    ) {
+        let addressBuffer = ava.PChain().parseAddress(addresses[0])
+        const claimableSigners: [number, Buffer][] = [[0, addressBuffer]]
+        let rewardsOwner = new OutputOwners([addressBuffer])
+        let utxoSet = activeWallet.utxoset
+
+        const unsignedTx = await ava.PChain().buildClaimTx(
+            // @ts-ignore
+            utxoSet,
+            addresses,
+            addresses,
+            undefined,
+            new BN(0),
+            1,
+            [depositTxID],
+            [],
+            [],
+            rewardsOwner,
+            new BN(2),
+            claimableSigners
+        )
+        let tx = await activeWallet.signP(unsignedTx)
+        return await ava.PChain().issueTx(tx)
     }
 }
 

@@ -1,21 +1,19 @@
 const merge = require('webpack-merge')
 const common = require('./webpack.common.js')
 
-let timestamp = Date.now()
 const publicPath = process.env.PUBLIC_PATH
 
 module.exports = merge(common, {
     mode: 'production',
-    devtool: 'source-map',
 
     output: {
         publicPath: publicPath,
-        filename: 'js/[name].[fullhash:8].' + timestamp + '.js',
-        chunkFilename: 'js/[name].[fullhash:8].' + timestamp + '.js',
+        filename: 'js/[name].[fullhash:8].js',
+        chunkFilename: 'js/[name].[fullhash:8].js',
     },
 
     performance: {
-        hints: false,
+        hints: 'warning',
         maxEntrypointSize: 512000,
         maxAssetSize: 512000,
     },
