@@ -34,6 +34,17 @@ jobs:
             echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           fi
 
+        # This should be caching node modules, hashing the cache key with the yarn lock code and busting that when yarn lock changes
+      - name: cache modules
+        uses: actions/cache@v3
+        with:
+          path: './node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('./yarn.lock') }}
+      - run: sudo npm install -g yarn
+      - run: yarn install --network-timeout 1000000
+        env:
+          CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
+
       - name: build local image
         run: |
           docker-compose build --build-arg SUITE_IMAGE=${{ env.suite_image }}:${{ steps.setBranch.outputs.branch }} --build-arg EXPLORER_IMAGE=${{ env.explorer_image }}:${{ steps.setBranch.outputs.branch }}
