@@ -279,17 +279,6 @@ export default class AddValidator extends Vue {
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`
     }
 
-    //6 Months is the minimum time
-    meetMinimumTime(): boolean {
-        let d = moment.duration(this.stakeDuration, 'milliseconds')
-        let days = Math.floor(d.asDays())
-        if (days < 183) {
-            return false
-        } else {
-            return true
-        }
-    }
-
     get denomination() {
         return 9
     }
@@ -348,10 +337,6 @@ export default class AddValidator extends Vue {
         }
 
         if (!this.rewardIn) {
-            return false
-        }
-
-        if (!this.meetMinimumTime()) {
             return false
         }
 
