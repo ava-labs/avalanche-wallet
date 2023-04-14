@@ -113,7 +113,11 @@ describe('Cross chain: C to X', () => {
                 }
             })
         const amount = '0.001'
-        cy.get('.swap_form .avax_input input[type="number"]').invoke('val', '').type(amount)
+        cy.get('.swap_form .avax_input input[type="number"]').then(($el) => {
+            if($el.val()) {
+                cy.wrap($el).click().invoke('val', '').type(amount)
+            }
+        })
 
         // initial balances
         // WARNING: .invoke('text').as() will return reference, not only value, so we need to get the value under 'then' and then wrapping it into alias
