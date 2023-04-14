@@ -105,11 +105,7 @@ describe('Cross chain: X to C', () => {
             })
 
         // enter amount to transfer
-        cy.get('.swap_form .avax_input input[type="number"]').then(($el) => {
-            if($el.val()) {
-                cy.wrap($el).click().invoke('val', '').type('0.001')
-            }
-        })
+        cy.get('.swap_form .avax_input input[type="number"]').invoke('val', '').type('0.001')
 
         // initial balances
         cy.get('.chain_card .balance')

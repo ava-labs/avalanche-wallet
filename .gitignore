@@ -1,12 +1,12 @@
 .DS_Store
 node_modules
 /dist
+camino-wallet
 
 # Manually importing AVAJS
 avajs
 
 # local env files
-.env
 .env.local
 .env.*.local
 
