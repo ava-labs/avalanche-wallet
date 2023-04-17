@@ -64,4 +64,4 @@ jobs:
           gcloud auth configure-docker --quiet europe-west3-docker.pkg.dev
           docker push ${{ steps.setDefaults.outputs.docker_image }}
           docker push ${{ env.module_docker_image }}:${{ github.ref_name }}
-          # gcloud run deploy camino-suite-${{ steps.setDefaults.outputs.build_env }} --image ${{ steps.setDefaults.outputs.docker_image }} --region=europe-west1
+          gcloud run deploy camino-suite-${{ steps.setDefaults.outputs.build_env }} --image ${{ steps.setDefaults.outputs.docker_image }} --region=europe-west1
