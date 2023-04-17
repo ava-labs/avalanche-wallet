@@ -21,6 +21,7 @@ import { web3 } from '@/evm'
 import Erc20Token from '@/js/Erc20Token'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
 import ERCNftToken from '@/js/ERCNftToken'
+import { OutputOwners } from '@c4tplatform/caminojs/dist/common'
 import { GetValidatorsResponse } from '@/store/modules/platform/types'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
@@ -391,6 +392,38 @@ class WalletHelper {
         return validator
     }
 
+    static async getClaimables(address: string, txID?: string) {
+        try {
+            let responseClaimable = await ava.PChain().getClaimables([address])
+            return responseClaimable
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    static async buildClaimTx(address: string, amount: BN, activeWallet: WalletType) {
+        let addressBufferTest = ava.PChain().parseAddress(address)
+        const claimableSigners: [number, Buffer][] = [[0, addressBufferTest]]
+        let rewardsOwner = new OutputOwners([addressBufferTest])
+        const unsignedTx = await ava.PChain().buildClaimTx(
+            //@ts-ignore
+            undefined,
+            [address],
+            [address],
+            undefined,
+            new BN(0),
+            1,
+            [],
+            [rewardsOwner],
+            [amount],
+            rewardsOwner,
+            new BN(1),
+            claimableSigners
+        )
+        let tx = await activeWallet.signP(unsignedTx)
+        return await ava.PChain().issueTx(tx)
+    }
+
     static async findPendingValidator(nodeID: string): Promise<ValidatorRaw> {
         let subnets = await ava.PChain().getSubnets()
         let res = (await ava
@@ -398,6 +431,35 @@ class WalletHelper {
             .getPendingValidators(subnets[0].ids, [nodeID])) as GetValidatorsResponse
         let validator = res.validators[0]
         return validator
+    }
+
+    static async buildDepositClaimTx(
+        addresses: string[],
+        activeWallet: WalletType,
+        depositTxID: string
+    ) {
+        let addressBuffer = ava.PChain().parseAddress(addresses[0])
+        const claimableSigners: [number, Buffer][] = [[0, addressBuffer]]
+        let rewardsOwner = new OutputOwners([addressBuffer])
+        let utxoSet = activeWallet.utxoset
+
+        const unsignedTx = await ava.PChain().buildClaimTx(
+            // @ts-ignore
+            utxoSet,
+            addresses,
+            addresses,
+            undefined,
+            new BN(0),
+            1,
+            [depositTxID],
+            [],
+            [],
+            rewardsOwner,
+            new BN(2),
+            claimableSigners
+        )
+        let tx = await activeWallet.signP(unsignedTx)
+        return await ava.PChain().issueTx(tx)
     }
 }
 

@@ -445,6 +445,28 @@
             "validation": "Validation",
             "delegation": "Delegation",
             "empty": "You do not have any pending rewards.",
+            "earn_now": {
+                "title": "Earn Now"
+            },
+            "active_earning": {
+                "title": "Active Earning",
+                "lock_start": "Lock Start",
+                "lock_end": "Lock End",
+                "min_lock": "Minimum Lock",
+                "reward": "Reward",
+                "locked_amount": "Locked Amount",
+                "pending_reward": "Pending Reward",
+                "already_claimed": "Already Claimed",
+                "claim": "Claim"
+            },
+            "claim_modal": {
+                "are_you_sure": "Are you sure you want to claim {amount} {symbol} rewards?",
+                "note_message": "Kindly be aware that confirming this reward claim will require you to pay a transaction fee of {fee} {symbol}. Do you wish to proceed with the claim?",
+                "confirmation_message": "{amount} {symbol} have been claimed.",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "no_saving_pool": "At the moment, there are no rewards available in the saving pools.",
             "row": {
                 "start": "Start",
                 "end": "End",
@@ -843,7 +865,7 @@
             "staking_end_date": "Staking End Date",
             "up_time": "Up Time",
             "remaining_validation_period": "Remaining Validation Period",
-            "deposit_amount": "Deposit Amount",
+            "bonded_amount": "Bonded Amount",
             "tx_id": "Tx ID",
             "validator_running": "Your validator node is running"
         },
@@ -851,6 +873,26 @@
             "validator_suspended": "Your validator node has been suspended.",
             "to_activate": "To activate your validator node please get in touch and email us to {email}",
             "title": "Validator Node is Suspended"
+        },
+        "rewards": {
+            "tab": {
+                "node": "Node",
+                "rewards": "Rewards"
+            },
+            "claim": {
+                "reward_owner": "Reward Owner",
+                "claimable_validation": "Claimable Validation Rewards",
+                "claim_rewards": "Claim Rewards",
+                "have_already": "{camAmount} {symbol} CAM have already been claimed",
+                "view_full": "View full history"
+            },
+            "modal_claim": {
+                "are_you_sure": "Are you sure you want to claim {amountClaim} {symbol} rewards?",
+                "we_accepting": "When claiming the rewards, please be aware that the proposal of claiming the rewards will be forwarded to the wallets connected to your multisig and have to be accepted from treshold. Only when the treshold has signed the proposal to claime the CAM, the rewards will be paid to the reward owner.",
+                "cancel": "Cancel",
+                "claim": "Claim",
+                "confirmed_claimed": "{amount} {symbol} have been claimed."
+            }
         }
     }
 }

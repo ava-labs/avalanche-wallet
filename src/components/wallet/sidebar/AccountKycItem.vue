@@ -78,12 +78,15 @@ export default class AccountKycItem extends Vue {
 }
 
 .success_button {
-    text-align: left;
     color: var(--success);
     pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
     .v-icon {
         color: var(--success);
-        margin-right: 4px;
+        margin-right: 10px;
     }
 }
 

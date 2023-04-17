@@ -1,0 +1,26 @@
+ARG BUILD_ENV="build:dev"
+ARG SUITE_BRANCH=suite
+ARG EXPLORER_BRANCH=suite
+
+FROM node:16 as stage-wallet
+ARG BUILD_ENV
+WORKDIR /app/camino-wallet
+
+COPY ./ /app/camino-wallet/
+RUN yarn install
+RUN yarn $BUILD_ENV
+
+
+FROM europe-west3-docker.pkg.dev/pwk-c4t-dev/camino-suite-apps/camino-suite-host:$SUITE_BRANCH as stage-suite
+
+
+FROM europe-west3-docker.pkg.dev/pwk-c4t-dev/camino-suite-apps/camino-suite-explorer:$EXPLORER_BRANCH  as stage-explorer
+
+
+
+FROM nginx:1.18
+COPY --from=stage-suite /app/camino-suite/dist/ /usr/share/nginx/html
+COPY --from=stage-explorer /app/camino-block-explorer/dist/ /usr/share/nginx/html/explorer
+COPY --from=stage-wallet /app/camino-wallet/dist/ /usr/share/nginx/html/wallet
+# Copy the default nginx.conf provided by tiangolo/node-frontend
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf

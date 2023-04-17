@@ -169,7 +169,7 @@ export default class UtxosBreakdownModal extends Vue {
 
 .scrollable {
     height: 100%;
-    overflow: scroll;
+    overflow: auto;
     position: relative;
 }
 table {
