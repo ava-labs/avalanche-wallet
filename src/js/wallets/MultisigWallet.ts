@@ -43,6 +43,7 @@ import { Transaction } from '@ethereumjs/tx'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { buildUnsignedTransaction } from '../TxHelper'
 import createHash from 'create-hash'
+import { WalletHelper } from '@/helpers/wallet_helper'
 
 const NotImplementedError = new Error('Not implemented in MultisigWwallet')
 
@@ -262,11 +263,12 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
     }
 
     async issueBatchTx(
+        chainId: ChainIdType,
         orders: (AVMUTXO | ITransaction)[],
         addr: string,
         memo?: Buffer
     ): Promise<string> {
-        throw NotImplementedError
+        return await WalletHelper.issueBatchTx(this, chainId, orders, addr, memo)
     }
 
     async buildUnsignedTransaction(
@@ -452,6 +454,25 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         await sv.issueMultisigTx({
             signature: signature.toString('hex'),
             signedTx: signedTxBytes.toString('hex'),
+        })
+    }
+
+    async cancelExternal(tx: ModelMultisigTx) {
+        const sv = SignaVault()
+        const timestamp = Math.floor(Date.now() / 1000).toString()
+        const signingKeyPair = this.wallets?.[0]?.getStaticKeyPair()
+
+        if (!signingKeyPair) {
+            console.log('wallet returned undefined staticKeyPair')
+            return
+        }
+        const signatureAliasTimestamp = signingKeyPair
+            .sign(Buffer.from(createHash('sha256').update(Buffer.from(timestamp)).digest()))
+            ?.toString('hex')
+        return sv.cancelMultisigTx(tx.id, {
+            timestamp: timestamp,
+            signature: signatureAliasTimestamp,
+            id: tx?.id,
         })
     }
 

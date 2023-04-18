@@ -33,7 +33,6 @@ export default class BalanceDropdown extends Vue {
     @Model('change', { type: AvaAsset }) readonly asset!: AvaAsset
 
     get assetArray(): AvaAsset[] {
-        // return this.$store.getters.walletAssetsArray
         return this.$store.getters['Assets/walletAssetsArray']
     }
 
@@ -52,28 +51,13 @@ export default class BalanceDropdown extends Vue {
         return sym
     }
 
-    // get isPopup(){
-    //     if(this.balancePopup){
-    //         return this.balancePopup.isActive;
-    //     }
-    //     return false;
-    // }
-
     showPopup() {
         this.$refs.token_modal.open()
-        // this.balancePopup.isActive = true
-        // this.isPopup = true
     }
 
-    onclose() {
-        // this.isPopup = false
-    }
+    onclose() {}
 
     onselect(asset: AvaAsset) {
-        // this.selected = asset;
-        // this.balancePopup.isActive = false
-        // this.isPopup = false
-
         this.$emit('change', asset)
     }
 }

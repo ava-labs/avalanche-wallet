@@ -167,6 +167,11 @@
             "amount": "Amount",
             "token": "Token"
         },
+        "multisig": {
+            "execute_transaction": "Execute transaction",
+            "sign_transaction": "Sign transaction",
+            "abort_transaction": "Abort transaction"
+        },
         "source_chain": {
             "title": "Source Chain"
         },
@@ -493,7 +498,7 @@
             "requirements_introduction": "In order to set up your validator node you have to:",
             "nodeId": "Node ID",
             "label_1": "Validator Node's Private Key",
-            "description_1": "Please enter the Node's Static Private Key (you can receive one by calling admin.getNodeSigner on your node)",
+            "description_1": "Node Private Key",
             "label_3": "P-Chain address your validator node will be assigned to",
             "label_4": "Are you sure you want to initiate a transaction? This requires signatures from other wallets in the multisignature wallet and cannot be undone",
             "label_5": "Tx Details",

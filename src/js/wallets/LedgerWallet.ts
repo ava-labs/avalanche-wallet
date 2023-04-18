@@ -932,11 +932,12 @@ class LedgerWallet extends HdWalletCore implements AvaWalletCore {
     }
 
     async issueBatchTx(
+        chainId: ChainIdType,
         orders: (ITransaction | AVMUTXO)[],
         addr: string,
         memo: Buffer | undefined
     ): Promise<string> {
-        return await WalletHelper.issueBatchTx(this, orders, addr, memo)
+        return await WalletHelper.issueBatchTx(this, chainId, orders, addr, memo)
     }
 
     async delegate(
