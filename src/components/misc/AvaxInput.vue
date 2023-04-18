@@ -52,18 +52,14 @@ export default class AvaxInput extends Vue {
     @Prop() readonly?: boolean
 
     maxOut(ev: MouseEvent) {
-        ev.preventDefault()
-        ev.stopPropagation()
+        ev?.preventDefault()
+        ev?.stopPropagation()
         //@ts-ignore
         this.$refs.amt_in.maxout()
     }
 
     amount_in(val: BN) {
         this.$emit('change', val)
-    }
-
-    mounted() {
-        this.maxOut(new MouseEvent('click'))
     }
 
     get balanceBig(): string {
