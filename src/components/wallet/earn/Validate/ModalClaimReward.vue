@@ -13,7 +13,12 @@
                     </h3>
                     <br />
                     <p class="text-modal">
-                        {{ $t('validator.rewards.modal_claim.kindy_be_aware', { fee: feeTx }) }}
+                        {{
+                            $t('validator.rewards.modal_claim.kindy_be_aware', {
+                                fee: feeTx,
+                                symbol: nativeAssetSymbol,
+                            })
+                        }}
                     </p>
                     <br />
                 </div>
@@ -99,6 +104,10 @@ export default class ModalClaimReward extends Vue {
 
     get feeTx() {
         return SDK.bnToBigAvaxX(ava.PChain().getTxFee())
+    }
+
+    get nativeAssetSymbol(): string {
+        return this.$store.getters['Assets/AssetAVA']?.symbol ?? ''
     }
 }
 </script>
