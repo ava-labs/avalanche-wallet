@@ -356,6 +356,8 @@
         "view_static_keys": "View Static Keys",
         "view_priv_key_c": "View C Chain Private Key",
         "view_public_key": "View Public Key",
+        "keys_info": "Key Info",
+        "static_keys_info": "Static Key Info",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -784,6 +786,7 @@
             "subtitle": "{n}, Threshold: {t}"
         },
         "priv_key": {
+            "info": "Key Info",
             "title": "Private Key"
         },
         "pub_key": {

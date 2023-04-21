@@ -7,6 +7,7 @@
             <v-tab-item>
                 <HdChainTable
                     :addresses="addrsInternal"
+                    :hasStatic="false"
                     :balance-dict="keyBalancesInternal"
                     :wallet="wallet"
                     :path="1"
@@ -16,6 +17,7 @@
             <v-tab-item>
                 <HdChainTable
                     :addresses="addrsExternal"
+                    :hasStatic="true"
                     :balance-dict="keyBalancesExternal"
                     :wallet="wallet"
                     :path="0"
@@ -25,6 +27,7 @@
             <v-tab-item>
                 <HdChainTable
                     :addresses="addrsPlatform"
+                    :hasStatic="true"
                     :balance-dict="keyBalancesPlatform"
                     :wallet="wallet"
                     :path="0"

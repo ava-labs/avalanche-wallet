@@ -1,7 +1,9 @@
 <template>
     <div class="tx_out">
         <div class="addresses">
-            <p v-for="addr in summary.addresses" :key="addr">{{ direction }} {{ 'X-' + addr }}</p>
+            <p v-for="addr in summary.addresses" :key="addr">
+                {{ direction }} {{ chainPrefix + addr }}
+            </p>
         </div>
         <p :class="'amount ' + colorClass">
             {{ amtText }}
@@ -23,6 +25,7 @@ export default class BaseTxOutput extends Vue {
     @Prop() assetID!: string
     @Prop() summary!: BaseTxAssetSummary
     @Prop() isDeposit!: string
+    @Prop() chainPrefix!: string
 
     get assetDetail(): AvaAsset {
         return (
@@ -41,9 +44,9 @@ export default class BaseTxOutput extends Vue {
 
     get actionText() {
         if (this.isProfit) {
-            return 'Received'
+            return 'Receive'
         } else {
-            return 'Sent'
+            return 'Send'
         }
     }
 

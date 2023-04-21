@@ -15,17 +15,20 @@
 import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 
-import Big from 'big.js'
+import { ZeroBN } from '@/constants'
+import { bnToBig } from '@/helpers/helper'
 import AvaAsset from '@/js/AvaAsset'
 import { TransactionType } from '@/store/modules/history/types'
 
+import { BN } from '@c4tplatform/caminojs/dist'
+
 @Component
 export default class TxHistoryValue extends Vue {
-    @Prop() amount!: number | string
+    @Prop() amount!: BN
     @Prop() assetId!: string
     @Prop() type!: TransactionType
     // @Prop() operationColor!: string
-    @Prop() operationDirection!: 'Sent' | 'Received'
+    @Prop() operationDirection!: 'Send' | 'Receive'
 
     get asset() {
         return (
@@ -38,9 +41,9 @@ export default class TxHistoryValue extends Vue {
         if (this.type === 'add_validator') return '#008dc5'
         if (this.type === 'add_delegator') return '#008dc5'
 
-        if (this.amount > 0) {
+        if (this.amount.gt(ZeroBN)) {
             return '#6BC688'
-        } else if (this.amount === 0) {
+        } else if (this.amount.isZero()) {
             return '#999'
         } else {
             return '#d04c4c'
@@ -48,7 +51,7 @@ export default class TxHistoryValue extends Vue {
     }
 
     get isIncome(): boolean {
-        if (this.amount > 0) {
+        if (this.amount.gte(ZeroBN)) {
             return true
         }
         return false
@@ -65,9 +68,9 @@ export default class TxHistoryValue extends Vue {
                 return 'Export (X)'
             case 'base':
                 if (this.isIncome) {
-                    return 'Received'
+                    return 'Receive'
                 }
-                return 'Sent'
+                return 'Send'
             case 'operation':
                 return this.operationDirection
             case 'deposit':
@@ -88,7 +91,7 @@ export default class TxHistoryValue extends Vue {
         if (!asset) return this.amount.toString()
 
         try {
-            let val = Big(this.amount).div(Math.pow(10, asset.denomination))
+            let val = bnToBig(this.amount).div(Math.pow(10, asset.denomination))
             return val.toLocaleString()
         } catch (e) {
             return ''

@@ -5,6 +5,7 @@ import {
 } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
 import { UnsignedTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
+import { AmountOutput } from '@c4tplatform/caminojs/dist/apis/avm'
 import { WalletType } from '@/js/wallets/types'
 
 import { BN, Buffer } from '@c4tplatform/caminojs/dist'
@@ -28,6 +29,7 @@ import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { SignatureError } from '@c4tplatform/caminojs/dist/common'
 import { ChainIdType } from '@/constants'
+import { bnToBig } from '@/helpers/helper'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -533,15 +535,38 @@ class WalletHelper {
         })
 
         if (el) {
-            const toAddress =
-                'P' +
-                bintools.addressToString(
-                    ava.getHRP(),
-                    tx?.getBlockchainID().toString(),
-                    el?.getAddresses()?.[0]
-                )
+            const toAddress = bintools.addressToString(
+                ava.getHRP(),
+                tx?.getBlockchainID().toString(),
+                el?.getAddresses()?.[0]
+            )
+
             return toAddress
         }
+    }
+
+    static getTotalAmountFromUtx(utx: UnsignedTx, toAddress: string): number {
+        let amount = 0
+        const hrp = ava.getHRP()
+        const tx = utx.getTransaction()
+
+        for (const out of tx.getOuts()) {
+            const output = out?.getOutput() as AmountOutput
+
+            for (const addr of output?.getAddresses()) {
+                const hrAddress = bintools.addressToString(
+                    hrp,
+                    tx?.getBlockchainID().toString(),
+                    addr
+                )
+
+                if (hrAddress === toAddress) {
+                    amount += Number(bnToBig(output?.getAmount(), 9)?.toString())
+                }
+            }
+        }
+
+        return amount
     }
 }
 

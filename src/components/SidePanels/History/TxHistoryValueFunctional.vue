@@ -43,9 +43,9 @@ export default {
         switch (type) {
             case 'base':
                 if (isIncome) {
-                    return 'Received'
+                    return 'Receive'
                 }
-                return 'Sent'
+                return 'Send'
             case 'operation':
                 return operationDirection
             default:

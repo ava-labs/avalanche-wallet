@@ -54,9 +54,8 @@ import getMemoFromByteString from '@/services/history/utils'
 export default class TxRow extends Vue {
     @Prop() index!: number
     @Prop() source!: ITransactionDataProcessed
-    helpers = this.globalHelper()
     navigate(to: string) {
-        this.helpers.navigate(to)
+        window.open(to, '_blank', 'noreferrer')
     }
     openInNewTab(url: string) {
         window.open(url, '_blank', 'noreferrer')
