@@ -893,7 +893,7 @@
             },
             "modal_claim": {
                 "are_you_sure": "Are you sure you want to claim {amountClaim} {symbol} rewards?",
-                "we_accepting": "When claiming the rewards, please be aware that the proposal of claiming the rewards will be forwarded to the wallets connected to your multisig and have to be accepted from treshold. Only when the treshold has signed the proposal to claime the CAM, the rewards will be paid to the reward owner.",
+                "kindy_be_aware": "Kindy be aware that confirming this reward claim will require you to pay a transaction fee of {fee} {symbol}. Do you wish to proceed with the claim?",
                 "cancel": "Cancel",
                 "claim": "Claim",
                 "confirmed_claimed": "{amount} {symbol} have been claimed."
