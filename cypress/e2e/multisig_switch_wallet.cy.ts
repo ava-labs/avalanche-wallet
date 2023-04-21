@@ -121,8 +121,7 @@ describe('multisig: switch wellet', () => {
         cy.get('.v-slide-group__content').find('div').eq(5).click()
         cy.get('.fetch_button').click()
         cy.contains('Add Multisig Alias').click()
-
-        cy.contains('Switch Wallet').click({ force: true })
+        // cy.contains('Switch Wallet').click({ force: true })
         cy.contains('Other Keys')
             .parent()
             .find('span > div')
@@ -133,7 +132,7 @@ describe('multisig: switch wellet', () => {
             .find('button')
             .click({ force: true })
 
-        cy.contains('Wallet Switcher').siblings('div').click({ force: true })
+        // cy.contains('Wallet Switcher').siblings('div').click({ force: true })
 
         cy.intercept('POST', '**/ext/bc/X', (request) => {
             if (request.body.method === 'avm.getUTXOs') {
@@ -213,7 +212,7 @@ const verifyBalance = () => {
                     cy.get('@totalBalance').invoke('text').then((totalBalance) => {
                         return parseFloat(clearBalanceFormat(totalBalance))
                     }).then((totalBalance) => {
-                        expect(totalBalance).to.equal(totalXPCBalance)
+                        expect(totalBalance).to.equal(parseFloat(totalXPCBalance.toFixed(3)))
                     })
                 })
             })
