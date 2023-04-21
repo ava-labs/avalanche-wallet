@@ -223,15 +223,16 @@ export default class Wallet extends Vue {
     position: fixed;
     width: 100%;
     height: 60px;
-    z-index: 999;
+    z-index: 9;
     display: flex;
     align-items: center;
-    background-color: var(--bg);
+    background-color: var(--bg-wallet-light);
     border-bottom: 1px solid rgba(145, 158, 171, 0.24);
     left: 0;
     justify-content: center;
     padding-left: 24px;
     padding-right: 24px;
+    min-width: 100vw;
     .links {
         display: flex;
         flex-direction: row;

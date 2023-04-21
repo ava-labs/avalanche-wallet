@@ -2,17 +2,23 @@
     <div class="earn_page">
         <div class="header">
             <h1>{{ $t('earn.title') }}</h1>
-            <h1 class="subtitle" v-if="pageNow">
-                / {{ subtitle }}
-                <span @click="cancel"><fa icon="times"></fa></span>
-            </h1>
-        </div>
-        <transition name="fade" mode="out-in">
             <div>
-                <p>{{ $t('earn.desc') }}</p>
-                <UserRewards />
+                <button @click="tab = 'earn_now'" :active="tab === `earn_now`">
+                    {{ $t('earn.rewards.earn_now.title') }}
+                </button>
+                <button @click="tab = 'actine_earning'" :active="tab === `actine_earning`">
+                    {{ $t('earn.rewards.active_earning.title') }}
+                </button>
             </div>
-        </transition>
+        </div>
+        <div class="pages">
+            <transition-group name="fade" mode="out-in">
+                <div v-show="tab === `earn_now`" key="earn_now">
+                    {{ $t('earn.rewards.no_saving_pool') }}
+                </div>
+                <UserRewards v-show="tab === `actine_earning`" key="actine_earning"></UserRewards>
+            </transition-group>
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -34,6 +40,7 @@ export default class Earn extends Vue {
     pageNow: any = null
     subtitle: string = ''
     intervalID: any = null
+    tab: string = 'actine_earning'
 
     transfer() {
         this.$router.replace('/wallet/cross_chain')
@@ -86,95 +93,65 @@ export default class Earn extends Vue {
     display: grid;
     grid-template-rows: max-content 1fr;
 }
+
 .header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+
     h1 {
         font-weight: normal;
+        margin-right: 30px;
     }
-    display: flex;
-    /*justify-content: space-between;*/
-    /*align-items: center;*/
-    align-items: center;
 
-    .subtitle {
-        margin-left: 0.5em;
-        /*font-size: 20px;*/
+    button {
+        padding: 8px 24px;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 0px 5px;
+        text-transform: uppercase;
+        outline: none !important;
         color: var(--primary-color-light);
-        font-weight: lighter;
-    }
 
-    span {
-        margin-left: 1em;
-
-        &:hover {
-            color: var(--primary-color);
-            cursor: pointer;
+        &[active] {
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--secondary-color);
         }
     }
 }
-.options {
-    margin: 30px 0;
-    display: grid;
-    // grid-template-columns: 1fr 1fr;
-    grid-gap: 14px;
-    //display: flex;
-    //justify-content: space-evenly;
-    //padding: 60px;
 
-    > div {
-        width: 100%;
-        justify-self: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        //max-width: 260px;
-        padding: 30px;
-        border-radius: var(--border-radius-sm);
-        background-color: var(--bg-light);
-        min-height: 250px;
-    }
-
-    h4 {
-        font-size: 32px !important;
-        font-weight: lighter;
-        // color: var(--primary-color-light);
-    }
-
-    p {
-        /*color: var(--primary-color-light);*/
-        margin: 14px 0 !important;
-    }
-
-    .no_balance {
-        color: var(--secondary-color);
-    }
-
-    .v-btn {
-        margin-top: 14px;
-    }
-}
-
-span {
-    color: var(--primary-color-light);
-    opacity: 0.5;
-    float: right;
-    font-weight: lighter;
-}
-
-.cancel {
-    font-size: 13px;
-    color: var(--secondary-color);
-    justify-self: flex-end;
-}
-
-.comp {
-    margin-top: 14px;
+.pages {
+    margin-top: 1rem;
 }
 
 @include mixins.mobile-device {
-    .options {
-        grid-template-columns: none;
-        grid-row-gap: 15px;
+    .header {
+        display: block;
+
+        > div {
+            overflow: hidden;
+            display: flex;
+        }
+        button {
+            flex-grow: 1;
+            border-radius: 0px;
+            margin: 0;
+            font-size: 12px;
+        }
+    }
+}
+
+@include mixins.medium-device {
+    .header {
+        button {
+            font-size: 13px;
+
+            &[active] {
+                border-bottom-width: 2px;
+            }
+        }
     }
 }
 </style>

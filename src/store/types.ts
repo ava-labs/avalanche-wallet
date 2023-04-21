@@ -9,6 +9,7 @@ import { UTXO } from '@c4tplatform/caminojs/dist/apis/avm'
 import { UTXO as TxUTXO } from './modules/history/types'
 import { INetwork, WalletNameType, WalletType } from '@/js/wallets/types'
 import { KeystoreFileKeyType } from '@/js/IKeystore'
+import { ChainIdType } from '@/constants'
 
 export interface RootState {
     network: INetwork
@@ -21,6 +22,7 @@ export interface RootState {
     warnUpdateKeyfile: boolean
     walletsDeleted: boolean
     theme: 'night' | 'day'
+    multiSigAliases: string[]
     prices: priceDict // USD value of 1 native token
 }
 
@@ -83,6 +85,7 @@ export interface AssetType {
 }
 
 export interface IssueBatchTxInput {
+    chainId: ChainIdType
     toAddress: string
     memo?: Buffer
     orders: (ITransaction | UTXO)[]

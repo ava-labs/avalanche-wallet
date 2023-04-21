@@ -8,15 +8,21 @@
             <FormC v-show="formType === 'C'">
                 <ChainInput v-model="formType" :disabled="isConfirm"></ChainInput>
             </FormC>
-            <div class="new_order_Form" v-show="formType === 'X'">
+            <div class="new_order_Form" v-show="formType !== 'C'">
                 <div class="lists">
-                    <ChainInput v-model="formType" :disabled="isConfirm"></ChainInput>
+                    <ChainInput
+                        @refresh="refresh"
+                        v-model="formType"
+                        :disabled="isConfirm"
+                    ></ChainInput>
                     <div>
                         <tx-list
                             class="tx_list"
                             ref="txList"
                             @change="updateTxList"
                             :disabled="isConfirm"
+                            :totalAmount="totalAmount"
+                            :chainId="formType"
                         ></tx-list>
                         <template v-if="hasNFT">
                             <NftList
@@ -34,14 +40,14 @@
                             v-model="addressIn"
                             class="qrIn hover_border"
                             placeholder="xxx"
-                            :disabled="isConfirm"
+                            :disabled="isConfirm || (!!pendingSendMultisigTX && formType === 'P')"
                         ></qr-input>
                     </div>
                     <div>
-                        <!--                        <template v-if="isConfirm && formMemo.length > 0">-->
-                        <!--                            <h4>Memo (Optional)</h4>-->
-                        <!--                            <p class="confirm_val">{{ formMemo }}</p>-->
-                        <!--                        </template>-->
+                        <!-- <template v-if="isConfirm && formMemo.length > 0">
+                            <h4>Memo (Optional)</h4>
+                            <p class="confirm_val">{{ formMemo }}</p>
+                        </template> -->
                         <h4 v-if="memo || !isConfirm">{{ $t('transfer.memo') }}</h4>
                         <textarea
                             class="memo"
@@ -49,13 +55,13 @@
                             placeholder="Memo"
                             v-model="memo"
                             v-if="memo || !isConfirm"
-                            :disabled="isConfirm"
+                            :disabled="isConfirm || (!!pendingSendMultisigTX && formType === 'P')"
                         ></textarea>
                     </div>
                     <div class="fees">
                         <p>
                             {{ $t('transfer.fee_tx') }}
-                            <span>{{ txFee.toLocaleString(9) }} {{ nativeAssetSymbol }}</span>
+                            <span>{{ txFeeBig.toLocaleString(9) }} {{ nativeAssetSymbol }}</span>
                         </p>
                     </div>
                     <div class="checkout">
@@ -64,7 +70,40 @@
                                 {{ err }}
                             </li>
                         </ul>
-                        <template v-if="!isConfirm">
+                        <template v-if="!!pendingSendMultisigTX && formType === 'P'">
+                            <div class="multi-sig__container">
+                                <v-btn
+                                    v-if="canExecuteMultisigTx"
+                                    depressed
+                                    class="button_secondary"
+                                    :loading="isAjax"
+                                    @click="issueMultisigTx"
+                                >
+                                    {{ $t('transfer.multisig.execute_transaction') }}
+                                </v-btn>
+                                <v-btn
+                                    v-else
+                                    class="button_secondary"
+                                    @click="signMultisigTx"
+                                    depressed
+                                    :loading="isAjax"
+                                    :disabled="disableSignButton"
+                                >
+                                    {{ $t('transfer.multisig.sign_transaction') }}
+                                </v-btn>
+                                <v-btn
+                                    depressed
+                                    class="button_primary"
+                                    :loading="isAjax"
+                                    :ripple="false"
+                                    @click="cancelMultisigTx"
+                                    block
+                                >
+                                    {{ $t('transfer.multisig.abort_transaction') }}
+                                </v-btn>
+                            </div>
+                        </template>
+                        <template v-else-if="!isConfirm">
                             <v-btn
                                 depressed
                                 class="button_primary"
@@ -104,7 +143,7 @@
                                 <fa icon="check-circle"></fa>
                                 Transaction Sent
                             </p>
-                            <label style="word-break: break-all">
+                            <label v-if="pendingSendMultisigTX" style="word-break: break-all">
                                 <b>ID:</b>
                                 {{ txId }}
                             </label>
@@ -128,7 +167,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Watch } from 'vue-property-decorator'
 
 import TxList from '@/components/wallet/transfer/TxList.vue'
 import Big from 'big.js'
@@ -146,6 +185,7 @@ import TxSummary from '@/components/wallet/transfer/TxSummary.vue'
 import { priceDict, IssueBatchTxInput } from '@/store/types'
 import { WalletType } from '@/js/wallets/types'
 import { bnToBig } from '@/helpers/helper'
+import { WalletHelper } from '@/helpers/wallet_helper'
 import * as bip39 from 'bip39'
 import FormC from '@/components/wallet/transfer/FormC.vue'
 import { ChainIdType } from '@/constants'
@@ -153,6 +193,10 @@ import { ChainIdType } from '@/constants'
 import ChainInput from '@/components/wallet/transfer/ChainInput.vue'
 import AvaAsset from '../../js/AvaAsset'
 import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
+import { SignatureError } from '@c4tplatform/caminojs/dist/common'
+import { MultisigTx as SignavaultTx } from '@/store/modules/signavault/types'
+import { MultisigWallet } from '@/js/wallets/MultisigWallet'
+import { UnsignedTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 @Component({
     components: {
         FaucetLink,
@@ -165,7 +209,7 @@ import { TxState } from '@/components/wallet/earn/ChainTransfer/types'
     },
 })
 export default class Transfer extends Vue {
-    formType: ChainIdType = 'X'
+    formType: ChainIdType = 'P'
     showAdvanced: boolean = false
     isAjax: boolean = false
     addressIn: string = ''
@@ -174,6 +218,7 @@ export default class Transfer extends Vue {
     nftOrders: UTXO[] = []
     formErrors: string[] = []
     err = ''
+    totalAmount? = 0
 
     formAddress: string = ''
     formOrders: ITransaction[] = []
@@ -186,6 +231,8 @@ export default class Transfer extends Vue {
 
     canSendAgain = false
     txState: TxState | null = null
+
+    helpers = this.globalHelper()
 
     $refs!: {
         txList: TxList
@@ -229,8 +276,8 @@ export default class Transfer extends Vue {
 
         let chain = addr.split('-')
 
-        if (chain[0] !== 'X') {
-            err.push('Invalid address. You can only send to other X addresses.')
+        if (chain[0] !== this.formType[0]) {
+            err.push(`Invalid address. You can only send to other ${this.formType} addresses.`)
         }
 
         if (!isValidAddress(addr)) {
@@ -281,8 +328,10 @@ export default class Transfer extends Vue {
     }
 
     clearForm() {
-        this.addressIn = ''
-        this.memo = ''
+        if (!this.pendingSendMultisigTX || this.formType !== 'P') {
+            this.addressIn = ''
+            this.memo = ''
+        }
 
         // Clear transactions list
         this.$refs.txList.reset()
@@ -293,12 +342,11 @@ export default class Transfer extends Vue {
         }
     }
 
-    async onsuccess(tx: string) {
+    async onSuccess(tx: string) {
         this.isAjax = false
         this.isSuccess = true
         this.txId = tx
-        let { dispatchNotification } = this.globalHelper()
-        dispatchNotification({
+        this.helpers.dispatchNotification({
             message: this.$t('notifications.transfer_success_msg'),
             type: 'success',
         })
@@ -306,6 +354,7 @@ export default class Transfer extends Vue {
         this.$store.dispatch('Assets/updateUTXOs').then(() => {
             this.updateSendAgainLock()
         })
+        setTimeout(() => this.$store.dispatch('History/updateTransactionHistory'), 3000)
     }
 
     updateSendAgainLock() {
@@ -319,16 +368,148 @@ export default class Transfer extends Vue {
         }
     }
 
-    onerror(err: any) {
+    onError(err: any) {
         this.err = err
         this.isAjax = false
-        let { dispatchNotification } = this.globalHelper()
-        dispatchNotification({
+        this.helpers.dispatchNotification({
             message: this.$t('notifications.transfer_error_msg'),
             type: 'error',
         })
     }
+    @Watch('formType', { immediate: true })
+    updateDetails() {
+        if (this.formType === 'P') this.updateMultisigTxDetails()
+        else {
+            this.memo = ''
+            this.addressIn = ''
+        }
+    }
+    async refresh() {
+        await this.$store.dispatch('Signavault/updateTransaction')
+        this.updateMultisigTxDetails()
+        if (!this.pendingSendMultisigTX) {
+            this.memo = ''
+            this.addressIn = ''
+        }
+    }
+    get pendingSendMultisigTX(): SignavaultTx | undefined {
+        return this.$store.getters['Signavault/transactions'].find(
+            (item: any) =>
+                item?.tx?.alias === this.wallet.getStaticAddress('P') &&
+                WalletHelper.getUnsignedTxType(item?.tx?.unsignedTx) === 'BaseTx'
+        )
+    }
 
+    get txOwners() {
+        return this.pendingSendMultisigTX?.tx?.owners ?? []
+    }
+
+    get activeWallet(): MultisigWallet {
+        return this.$store.state.activeWallet
+    }
+
+    async signMultisigTx() {
+        const wallet = this.activeWallet
+        if (!wallet || !(wallet instanceof MultisigWallet))
+            return console.debug('MultiSigTx::sign: Invalid wallet')
+        if (!this.pendingSendMultisigTX) return console.debug('MultiSigTx::sign: Invalid Tx')
+        try {
+            await wallet.addSignatures(this.pendingSendMultisigTX?.tx)
+            this.helpers.dispatchNotification({
+                message: 'Your signature saved successfully!',
+                type: 'success',
+            })
+            this.$store.dispatch('Signavault/updateTransaction')
+        } catch (e: any) {
+            this.helpers.dispatchNotification({
+                message: 'Your signature is not saved.',
+                type: 'error',
+            })
+        }
+    }
+
+    async issueMultisigTx() {
+        const wallet = this.activeWallet
+        if (!wallet || !(wallet instanceof MultisigWallet))
+            return console.log('MultiSigTx::sign: Invalid wallet')
+        if (!this.pendingSendMultisigTX) return console.log('MultiSigTx::sign: Invalid Tx')
+        try {
+            await wallet.issueExternal(this.pendingSendMultisigTX?.tx)
+            this.helpers.dispatchNotification({
+                message: 'Your Transaction sent successfully.',
+                type: 'success',
+            })
+            this.updateMultisigTxDetails()
+            this.clearForm()
+        } catch (e: any) {
+            this.helpers.dispatchNotification({
+                message: this.$t('notifications.execute_multisig_transaction_error'),
+                type: 'error',
+            })
+        }
+    }
+
+    async cancelMultisigTx() {
+        try {
+            const wallet = this.wallet as MultisigWallet
+            if (this.pendingSendMultisigTX) {
+                // cancel from the wallet
+                await wallet.cancelExternal(this.pendingSendMultisigTX?.tx)
+                await this.$store.dispatch('Signavault/updateTransaction')
+                this.helpers.dispatchNotification({
+                    message: 'Transaction has been cancelled',
+                    type: 'success',
+                })
+            }
+        } catch (err) {
+            console.log(err)
+            this.helpers.dispatchNotification({
+                message: 'Cancelling the transaction failed',
+                type: 'error',
+            })
+        }
+    }
+
+    get disableSignButton(): boolean {
+        let isSigned = false
+        this.txOwners.forEach((owner) => {
+            if (
+                this.activeWallet.wallets.find((w) => w?.getAllAddressesP()?.[0] === owner.address)
+            ) {
+                if (owner.signature) isSigned = true
+            }
+        })
+        return isSigned
+    }
+    get canExecuteMultisigTx(): boolean {
+        let signers = 0
+        let threshold = this.pendingSendMultisigTX?.tx?.threshold
+        this.txOwners.forEach((owner) => {
+            if (owner.signature) signers++
+        })
+        if (threshold) return signers >= threshold
+        return false
+    }
+    async updateMultisigTxDetails() {
+        await this.$store.dispatch('Signavault/updateTransaction')
+        if (this.pendingSendMultisigTX) {
+            let unsignedTx = new UnsignedTx()
+            unsignedTx.fromBuffer(Buffer.from(this.pendingSendMultisigTX.tx?.unsignedTx, 'hex'))
+            const utx = unsignedTx.getTransaction()
+            this.memo = utx.getMemo().toString()
+            const toAddress = WalletHelper.getToAddressFromUtx(
+                unsignedTx,
+                this.wallet.getStaticAddress('P')
+            )
+            // eslint-disable-next-line no-control-regex
+            if (toAddress) this.addressIn = 'P' + toAddress?.replace(/\x00/g, '')
+            this.totalAmount = toAddress
+                ? WalletHelper.getTotalAmountFromUtx(unsignedTx, toAddress)
+                : undefined
+        } else {
+            this.canSendAgain = true
+        }
+    }
     submit() {
         this.isAjax = true
         this.err = ''
@@ -336,6 +517,7 @@ export default class Transfer extends Vue {
         let sumArray: (ITransaction | UTXO)[] = [...this.formOrders, ...this.formNftOrders]
 
         let txList: IssueBatchTxInput = {
+            chainId: this.formType,
             toAddress: this.formAddress,
             memo: Buffer.from(this.formMemo),
             orders: sumArray,
@@ -349,12 +531,33 @@ export default class Transfer extends Vue {
                 this.txId = res
             })
             .catch((err) => {
-                this.onerror(err)
+                if (err instanceof SignatureError) {
+                    let { dispatchNotification } = this.globalHelper()
+                    dispatchNotification({
+                        message: this.$t('notifications.transfer_success_msg'),
+                        type: 'success',
+                    })
+                    setTimeout(() => {
+                        this.$store.dispatch('Assets/updateUTXOs')
+                        this.$store.dispatch('Signavault/updateTransaction').then(() => {
+                            this.$store.dispatch('History/updateMultisigTransactionHistory')
+                        })
+                    }, 1000)
+                    this.canSendAgain = false
+                    this.isAjax = false
+                    this.isSuccess = true
+                    this.txState = TxState.success
+                }
+                this.onError(err)
             })
     }
 
     async waitTxConfirm(txId: string) {
-        let status = await ava.XChain().getTxStatus(txId)
+        let status =
+            this.formType === 'P'
+                ? await ava.PChain().getTxStatus(txId)
+                : await ava.XChain().getTxStatus(txId)
+
         if (status === 'Unknown' || status === 'Processing') {
             // if not confirmed ask again
             setTimeout(() => {
@@ -368,7 +571,7 @@ export default class Transfer extends Vue {
         } else {
             // If success display success page
             this.txState = TxState.success
-            this.onsuccess(txId)
+            this.onSuccess(txId)
         }
     }
 
@@ -378,8 +581,7 @@ export default class Transfer extends Vue {
     }
 
     get hasNFT(): boolean {
-        // return this.$store.getters.walletNftUTXOs.length > 0
-        return this.$store.state.Assets.nftUTXOs.length > 0
+        return this.formType === 'X' && this.$store.state.Assets.nftUTXOs.length > 0
     }
 
     get faucetLink() {
@@ -433,9 +635,20 @@ export default class Transfer extends Vue {
         return this.$store.state.activeWallet
     }
 
-    get txFee(): Big {
-        let fee = ava.XChain().getTxFee()
-        return bnToBig(fee, 9)
+    get txFee(): BN {
+        return this.formType === 'P' ? ava.PChain().getTxFee() : ava.XChain().getTxFee()
+    }
+
+    get txFeeBig(): Big {
+        return bnToBig(this.txFee, 9)
+    }
+
+    get totalUSD(): Big {
+        let totalAsset = this.avaxTxSize.add(this.txFee)
+        let bigAmt = bnToBig(totalAsset, 9)
+        let usdPrice = this.priceDict.usd
+        let usdBig = bigAmt.times(usdPrice)
+        return usdBig
     }
 
     get addresses() {
@@ -462,12 +675,8 @@ export default class Transfer extends Vue {
         this.clearForm()
 
         if (this.$route.query.chain) {
-            let chain = this.$route.query.chain as string
-            if (chain === 'X') {
-                this.formType = 'X'
-            } else {
-                this.formType = 'C'
-            }
+            let chain = this.$route.query.chain as ChainIdType
+            if (['P', 'X', 'C'].includes(chain)) this.formType = chain
         }
 
         if (this.$route.query.nft) {
@@ -485,6 +694,11 @@ export default class Transfer extends Vue {
 </script>
 
 <style lang="scss">
+.multi-sig__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 .advanced_panel {
     .v-expansion-panel-header {
         padding: 0;
@@ -555,7 +769,6 @@ h4 {
     margin-top: 4px;
     display: flex;
     background-color: #404040;
-    /*cursor: pointer;*/
 }
 .readerBut button {
     opacity: 0.6;
@@ -593,17 +806,12 @@ h4 {
 }
 
 .new_order_Form > div {
-    /*padding: 10px 0;*/
     margin-bottom: 15px;
 }
+
 .lists {
-    /*padding-right: 45px;*/
     border-right: 1px solid var(--bg-light);
     grid-column: 1/3;
-
-    /*> div{*/
-    /*    margin: 14px 0;*/
-    /*}*/
 }
 
 .tx_list {
@@ -624,9 +832,6 @@ h4 {
 
 .fees span {
     float: right;
-}
-
-.to_address {
 }
 
 label {
@@ -664,16 +869,6 @@ label {
     word-break: break-all;
     padding: 8px 16px;
 }
-
-//@media only screen and (max-width: 600px) {
-//    .order_form {
-//        display: block;
-//    }
-//    .asset_select button {
-//        flex-grow: 1;
-//        word-break: break-word;
-//    }
-//}
 
 @include mixins.medium-device {
     .new_order_Form {

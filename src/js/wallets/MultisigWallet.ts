@@ -1,4 +1,5 @@
 import { ava, bintools } from '@/AVA'
+import { AxiosError } from 'axios'
 import { AvaWalletCore, ChainAlias, WalletNameType } from './types'
 import { ChainIdType } from '../../constants'
 import { WalletCore } from './WalletCore'
@@ -15,9 +16,11 @@ import {
     Owner,
     PlatformVMConstants,
     Tx as PlatformTx,
+    BaseTx as PlatformBaseTx,
     UnsignedTx as PlatformUnsignedTx,
     UTXO as PlatformUTXO,
     UTXOSet as PlatformUTXOSet,
+    KeyChain,
 } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import {
     MultisigKeyChain,
@@ -31,13 +34,16 @@ import {
     StandardTx,
     StandardUnsignedTx,
 } from '@c4tplatform/caminojs/dist/common'
-
 import { Tx as EVMTx, UnsignedTx as EVMUnsignedTx } from '@c4tplatform/caminojs/dist/apis/evm'
+
+import { ModelMultisigTx, SignaVault } from '@/signavault_api'
+
 import Erc20Token from '@/js/Erc20Token'
 import { Transaction } from '@ethereumjs/tx'
 import { ITransaction } from '@/components/wallet/transfer/types'
 import { buildUnsignedTransaction } from '../TxHelper'
 import createHash from 'create-hash'
+import { WalletHelper } from '@/helpers/wallet_helper'
 
 const NotImplementedError = new Error('Not implemented in MultisigWwallet')
 
@@ -45,6 +51,18 @@ interface KeyData {
     alias: Buffer
     memo: string
     owner: Owner
+}
+
+interface KeyChainResult {
+    kc: MultisigKeyChain
+    signers: Set<string>
+}
+
+// BitMask of current tx signatures
+enum SignatureStatus {
+    AlreadySigned = 0,
+    NeedSignature = 1,
+    CanExecute = 2,
 }
 
 type AbstractUnsignedTx = StandardUnsignedTx<
@@ -205,8 +223,12 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         throw NotImplementedError
     }
 
-    async signP(unsignedTx: PlatformUnsignedTx, additionalSigners?: string[]): Promise<PlatformTx> {
-        return this._sign(unsignedTx, additionalSigners) as PlatformTx
+    async signP(
+        unsignedTx: PlatformUnsignedTx,
+        additionalSigners?: string[],
+        expirationTime?: number
+    ): Promise<PlatformTx> {
+        return (await this._sign(unsignedTx, additionalSigners, expirationTime)) as PlatformTx
     }
 
     async signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx> {
@@ -241,11 +263,12 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
     }
 
     async issueBatchTx(
+        chainId: ChainIdType,
         orders: (AVMUTXO | ITransaction)[],
         addr: string,
         memo?: Buffer
     ): Promise<string> {
-        throw NotImplementedError
+        return await WalletHelper.issueBatchTx(this, chainId, orders, addr, memo)
     }
 
     async buildUnsignedTransaction(
@@ -343,13 +366,127 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         return this.keyData.owner.addresses
     }
 
+    getSignatureStatus(tx: ModelMultisigTx): SignatureStatus {
+        const kcData = this._buildMultisigKeychain(tx)
+
+        var signerFound = false
+        const emptyBuffer = new Buffer(0)
+        this.wallets.forEach((w) => {
+            const key = w.getStaticKeyPair()
+            if (key) {
+                const address = key.getAddress()
+                if (!kcData.signers.has(address.toString('hex'))) {
+                    signerFound = true
+                    kcData.kc.addKey(new MultisigKeyPair(kcData.kc, address, emptyBuffer))
+                }
+            }
+        })
+
+        // If no new signer found, we can exit early
+        if (!signerFound) return SignatureStatus.AlreadySigned
+
+        // Try to build the TX without this wallet
+        try {
+            kcData.kc.buildSignatureIndices()
+            // success -> executable without outr sigs
+            return SignatureStatus.CanExecute | SignatureStatus.NeedSignature
+        } catch (e: any) {
+            if (!(e instanceof SignatureError)) throw e
+        }
+
+        // Default: not executable, even with our signature(s)
+        return SignatureStatus.NeedSignature
+    }
+
+    async addSignatures(tx: ModelMultisigTx): Promise<void> {
+        const sv = SignaVault()
+        const msg = Buffer.from(tx.id, 'hex')
+        for (const w of this.wallets) {
+            const staticKey = w.getStaticKeyPair()
+            const privKey = staticKey?.getPrivateKeyString()
+            const keychain = new KeyChain(
+                ava.getHRP(),
+                ava.PChain().getBlockchainAlias() || ava.PChain().getBlockchainID()
+            )
+            const key = keychain.importKey(privKey ?? '')
+
+            if (key) {
+                const addrStr = bintools.addressToString(this.hrp, 'P', key.getAddress())
+                const owner = tx.owners.find((o) => o.address === addrStr)
+                if (owner && !owner.signature) {
+                    const signature = key.sign(msg)
+                    await sv.signMultisigTx(tx.id, {
+                        signature: signature.toString('hex'),
+                    })
+                }
+            }
+        }
+    }
+
+    async issueExternal(tx: ModelMultisigTx): Promise<void> {
+        // Recover data from tx
+        const kcData = this._buildMultisigKeychain(tx)
+        // Add our own signatures. we usw the last for signing external rq
+        const msg = Buffer.from(tx.id, 'hex')
+        // This wallet signs the signed TX for verification
+        var signer: SECP256k1KeyPair | undefined = undefined
+        for (const w of this.wallets) {
+            const key = w.getStaticKeyPair()
+            if (key) {
+                signer = key
+                kcData.kc.addKey(new MultisigKeyPair(kcData.kc, key.getAddress(), key.sign(msg)))
+            }
+        }
+        if (!signer) throw Error('No signing wallets available')
+        // This prepares signatureIndices in kexChain for signing.
+        // Sign will provide them in a MultisigCredential structure to the node
+        kcData.kc.buildSignatureIndices()
+
+        const utx = new PlatformUnsignedTx()
+        utx.fromBuffer(Buffer.from(tx.unsignedTx, 'hex'))
+        const signedTx = utx.sign(kcData.kc)
+        const signedTxBytes = signedTx.toBuffer()
+
+        const signedTxHash = Buffer.from(createHash('sha256').update(signedTxBytes).digest())
+        const signature = signer.sign(signedTxHash)
+
+        const sv = SignaVault()
+        await sv.issueMultisigTx({
+            signature: signature.toString('hex'),
+            signedTx: signedTxBytes.toString('hex'),
+        })
+    }
+
+    async cancelExternal(tx: ModelMultisigTx) {
+        const sv = SignaVault()
+        const timestamp = Math.floor(Date.now() / 1000).toString()
+        const signingKeyPair = this.wallets?.[0]?.getStaticKeyPair()
+
+        if (!signingKeyPair) {
+            console.log('wallet returned undefined staticKeyPair')
+            return
+        }
+        const signatureAliasTimestamp = signingKeyPair
+            .sign(Buffer.from(createHash('sha256').update(Buffer.from(timestamp)).digest()))
+            ?.toString('hex')
+        return sv.cancelMultisigTx(tx.id, {
+            timestamp: timestamp,
+            signature: signatureAliasTimestamp,
+            id: tx?.id,
+        })
+    }
+
     /******************** INTERNAL *******************************/
 
     _aliasAddress(chainID: string) {
         return bintools.addressToString(this.hrp, chainID, this.keyData.alias)
     }
 
-    _sign(utx: AbstractUnsignedTx, additionalSigners?: string[]): AbstractTx {
+    async _sign(
+        utx: AbstractUnsignedTx,
+        additionalSigners?: string[],
+        expirationTime?: number
+    ): Promise<AbstractTx> {
         // Create the hash from the tx
         const txbuff = utx.toBuffer()
         const msg: Buffer = Buffer.from(createHash('sha256').update(txbuff).digest())
@@ -367,20 +504,29 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         )
 
         // Insert all signatures
+        const walletSigs: Buffer[] = []
         this.wallets.forEach((w) => {
             const key = w.getStaticKeyPair()
             if (key) {
                 const signature = key.sign(msg)
+                walletSigs.push(signature)
                 msKeyChain.addKey(new MultisigKeyPair(msKeyChain, key.getAddress(), signature))
             }
         })
 
         // Additional signers
+        var metadata = ''
         if (additionalSigners) {
             const key = new KeyPair('', '')
             additionalSigners.forEach((pk) => {
                 key.importKey(privateKeyStringToBuffer(pk))
                 const signature = key.sign(msg)
+                metadata = metadata.concat(
+                    key.getAddress().toString('hex'),
+                    '#',
+                    signature.toString('hex'),
+                    '|'
+                )
                 msKeyChain.addKey(new MultisigKeyPair(msKeyChain, key.getAddress(), signature))
             })
         }
@@ -389,7 +535,7 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         try {
             msKeyChain.buildSignatureIndices()
             // No exception, we can sign directly and issue tx
-            return utx.sign(msKeyChain)
+            utx.sign(msKeyChain)
         } catch (e) {
             // Signmature errors are thrown if not enough signers are present
             if (!(e instanceof SignatureError)) throw e
@@ -407,12 +553,84 @@ class MultisigWallet extends WalletCore implements AvaWalletCore {
         // -- send hexbytes, transaction.outputowners, txID to signavault
         // -- for every wallet here send the signature (loop)
 
-        // txbuff <- the unsigned transac
-        // msg <- the hash of unsigned tx (key in signavault)
-        // OutputOwners.toArray((utx.getTransaction() as PlatformBaseTx).getOutputOwners())
+        // ToDo: On init time there should be set if this is an existing
+        // or new TX, for this little test we assume new TX
+        const sv = SignaVault()
+        try {
+            await sv.createMultisigTx({
+                alias: this._aliasAddress('P'),
+                unsignedTx: txbuff.toString('hex'),
+                signature: walletSigs[0].toString('hex'),
+                outputOwners: OutputOwners.toArray(
+                    (utx.getTransaction() as PlatformBaseTx).getOutputOwners()
+                ).toString('hex'),
+                // we send node's signature as metadata so it can be used form the issuer
+                metadata: metadata,
+                expiration: expirationTime,
+            })
 
+            walletSigs.splice(0, 1)
+            for (const s of walletSigs) {
+                await sv.signMultisigTx(msg.toString('hex'), {
+                    signature: s.toString('hex'),
+                })
+            }
+        } catch (e: unknown) {
+            const data = (e as AxiosError).response?.data
+            if (data) {
+                throw new Error(data.message + ` (${data.error})`)
+            }
+            throw e
+        }
         // Throw to supress issueTx
-        throw new SignatureError('Transaction added into signavault')
+        throw new SignatureError('Transaction recorded for signing')
+    }
+
+    _buildMultisigKeychain(tx: ModelMultisigTx): KeyChainResult {
+        // The SECP256k1 OutputOwners to sign (in general 1 msig alias)
+        const outputOwners = OutputOwners.fromArray(Buffer.from(tx.outputOwners, 'hex'))
+        // Msig Alias converted into OutputOwner
+        const outputOwner = this.outputOwners()
+
+        // Crreate Multisig KeyChain
+        const msKeyChain = new MultisigKeyChain(
+            this.hrp,
+            ava.getNetwork().P.alias,
+            Buffer.from(tx.unsignedTx, 'hex'),
+            PlatformVMConstants.SECPMULTISIGCREDENTIAL,
+            outputOwners,
+            new Map([[this.keyData.alias.toString('hex'), outputOwner]])
+        )
+
+        // Read all existing signatures and add them into the new keychain
+        const signedLookup = new Set<string>()
+        tx.owners.forEach((o) => {
+            if (o.signature) {
+                const address = bintools.stringToAddress(o.address)
+                signedLookup.add(address.toString('hex'))
+                msKeyChain.addKey(
+                    new MultisigKeyPair(msKeyChain, address, Buffer.from(o.signature, 'hex'))
+                )
+            }
+        })
+
+        // Add potential additional signatures
+        const addSigs = (tx.metadata ?? '').split('|')
+        addSigs.forEach((item) => {
+            const addrSig = item.split('#')
+            if (addrSig.length == 2)
+                msKeyChain.addKey(
+                    new MultisigKeyPair(
+                        msKeyChain,
+                        Buffer.from(addrSig[0], 'hex'),
+                        Buffer.from(addrSig[1], 'hex')
+                    )
+                )
+        })
+        return {
+            kc: msKeyChain,
+            signers: signedLookup,
+        }
     }
 }
 

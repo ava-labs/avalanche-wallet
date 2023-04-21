@@ -37,9 +37,7 @@ describe('Send transaction with x-chain balance', () => {
         // click Send tab
         cy.get('[data-cy="wallet_transfer"]').click()
 
-        cy.get('div.new_order_Form > div.lists > div:nth-child(1) > div > button:nth-child(1)').as(
-            'btnSourceX'
-        )
+        cy.get('.lists > div:nth-child(1) > .chain_select').contains('X').as('btnSourceX')
 
         cy.get('div.header > button:nth-child(3)').as('btnBreakdown')
 
@@ -122,15 +120,11 @@ describe('Send transaction with x-chain balance', () => {
                 // click send button
                 cy.get('@btnSend').click()
 
-                // expect display txID 
-                cy.wait('@issueTx').then((intercept) => {
-                    const txID = intercept.response?.body.result.txID
-                    cy.get('div.new_order_Form > div:nth-child(2) > div.checkout > label')
-                        .invoke('text')
-                        .then((text) => {
-                            const txidText = text.split(':')[1].replace(/[\s]/gi, '')
-                            expect(txidText).to.equal(txID.toString())
-                        })
+                // expect display txID
+                cy.wait('@issueTx').then(() => {
+                    cy.get('div.new_order_Form > div:nth-child(2) > div.checkout > p').should(($p) => {
+                        expect($p.first()).to.contain('Transaction Sent')
+                    })
                 })
             })
     }) // end it

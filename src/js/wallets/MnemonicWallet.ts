@@ -37,6 +37,7 @@ import Erc20Token from '@/js/Erc20Token'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { Transaction } from '@ethereumjs/tx'
 import MnemonicPhrase from '@/js/wallets/MnemonicPhrase'
+import { ChainIdType } from '@/constants'
 
 // HD WALLET
 // Accounts are not used and the account index is fixed to 0
@@ -212,11 +213,12 @@ export default class MnemonicWallet extends HdWalletCore implements IAvaHdWallet
     }
 
     async issueBatchTx(
+        chainId: ChainIdType,
         orders: (ITransaction | AVMUTXO)[],
         addr: string,
         memo: BufferAvalanche | undefined
     ): Promise<string> {
-        return await WalletHelper.issueBatchTx(this, orders, addr, memo)
+        return await WalletHelper.issueBatchTx(this, chainId, orders, addr, memo)
     }
 
     // returns a keychain that has all the derived private/public keys for X chain

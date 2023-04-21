@@ -9,6 +9,7 @@ import Platform from './modules/platform/platform'
 import Ledger from './modules/ledger/ledger'
 import Accounts from './modules/accounts/accounts'
 import Launch from './modules/launch/launch'
+import Signavault from './modules/signavault/signavault'
 
 import {
     RootState,
@@ -29,7 +30,6 @@ import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { LedgerWallet } from '@/js/wallets/LedgerWallet'
 import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
-import { ChainAlias } from '@/js/wallets/types'
 import {
     extractKeysFromDecryptedFile,
     KEYSTORE_VERSION,
@@ -45,6 +45,7 @@ import { updateFilterAddresses } from '../providers'
 import { getAvaxPriceUSD } from '@/helpers/price_helper'
 import createHash from 'create-hash'
 import router from '@/router'
+import { getMultisigAliases } from '@/explorer_api'
 
 export default new Vuex.Store({
     modules: {
@@ -56,6 +57,7 @@ export default new Vuex.Store({
         Ledger,
         Accounts,
         Launch,
+        Signavault,
     },
     state: {
         network: { name: '' },
@@ -66,6 +68,7 @@ export default new Vuex.Store({
         wallets: [],
         volatileWallets: [], // will be forgotten when tab is closed
         warnUpdateKeyfile: false, // If true will promt the user the export a new keyfile
+        multiSigAliases: [],
         theme: 'night',
         walletsDeleted: false,
         prices: {
@@ -89,6 +92,9 @@ export default new Vuex.Store({
                 state.walletsDeleted ||
                 state.activeWallet !== state.storedActiveWallet
             )
+        },
+        multiSigAliases(state: RootState): string[] {
+            return state.multiSigAliases
         },
     },
     mutations: {
@@ -168,8 +174,6 @@ export default new Vuex.Store({
 
         async onAccess({ state, dispatch }) {
             state.isAuth = true
-
-            await dispatch('Launch/initialize')
             dispatch('activateWallet', state.activeWallet)
         },
 
@@ -181,10 +185,11 @@ export default new Vuex.Store({
             store.state.storedActiveWallet = null
             store.state.address = null
             store.state.isAuth = false
-            router.push('/login')
+            store.state.multiSigAliases = []
             store.dispatch('Accounts/onLogout')
             store.dispatch('Assets/onLogout')
             store.dispatch('Launch/onLogout')
+            router.push('/login')
         },
 
         // used with logout
@@ -270,6 +275,29 @@ export default new Vuex.Store({
             return wallet
         },
 
+        async fetchMultiSigAliases(
+            { state, getters },
+            { disable }: { disable: boolean }
+        ): Promise<string[] | null> {
+            try {
+                if (!disable) {
+                    const staticAddresses = getters['staticAddresses']('P')
+                    const multisigAliases = await getMultisigAliases(staticAddresses)
+                    if (!multisigAliases || multisigAliases.length === 0) {
+                        return null
+                    }
+                    multisigAliases.forEach((alias: string) => {
+                        bintools.parseAddress(`P-${alias}`, 'P', ava.getHRP())
+                    })
+                    state.multiSigAliases = multisigAliases
+                    return multisigAliases
+                }
+                state.multiSigAliases = []
+                return []
+            } catch (e) {
+                return null
+            }
+        },
         // Add a multisig wallet from multisig alias
         async addWalletsMultisig(
             { state, getters },
@@ -349,11 +377,12 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return 'error'
 
-            let toAddr = data.toAddress
-            let orders = data.orders
-            let memo = data.memo
-
-            let txId: string = await wallet.issueBatchTx(orders, toAddr, memo)
+            let txId: string = await wallet.issueBatchTx(
+                data.chainId,
+                data.orders,
+                data.toAddress,
+                data.memo
+            )
             return txId
         },
 
@@ -366,9 +395,8 @@ export default new Vuex.Store({
 
             dispatch('Assets/updateWallet').then(() => {
                 dispatch('Assets/updateAvaAsset')
-                dispatch('Assets/updateUTXOs')
                 dispatch('Accounts/updateKycStatus')
-                dispatch('History/updateTransactionHistory')
+                dispatch('updateBalances')
                 updateFilterAddresses()
             })
         },
@@ -465,6 +493,56 @@ export default new Vuex.Store({
             store.state.prices = {
                 usd,
             }
+        },
+
+        updateTransaction(
+            { dispatch },
+            options: {
+                fullHistory: boolean
+                onlyMultisig: boolean
+                withMultisig: boolean
+                msgType: 'success'
+                msgTitle: 'Validator Added'
+                msgText: 'Your tokens are now locked to stake.'
+            }
+        ) {
+            if (options.onlyMultisig) {
+                setTimeout(() => {
+                    dispatch('Signavault/updateTransaction').then(() => {
+                        dispatch('History/updateMultisigTransactionHistory')
+                    })
+                }, 3000)
+            } else if (options.withMultisig) {
+                setTimeout(() => {
+                    dispatch('Assets/updateUTXOs')
+                    dispatch('Signavault/updateTransaction').then(() => {
+                        dispatch(
+                            options.fullHistory
+                                ? 'History/updateAllTransactionHistory'
+                                : 'History/updateTransactionHistory'
+                        )
+                    })
+                }, 3000)
+            } else {
+                setTimeout(() => {
+                    dispatch('Assets/updateUTXOs')
+                    dispatch('History/updateTransactionHistory')
+                }, 3000)
+            }
+            if (options.msgType) {
+                dispatch('Notifications/add', {
+                    type: options.msgType,
+                    title: options.msgTitle,
+                    message: options.msgText,
+                })
+            }
+        },
+        updateBalances({ dispatch }) {
+            dispatch('Assets/updateUTXOs').then(() =>
+                dispatch('Signavault/updateTransaction', undefined, { root: true }).then(() => {
+                    dispatch('History/updateTransactionHistory')
+                })
+            )
         },
     },
 })

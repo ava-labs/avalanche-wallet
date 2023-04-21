@@ -32,6 +32,7 @@ import { SingletonWallet } from '@/js/wallets/SingletonWallet'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 import { ExportChainsC, ExportChainsP, ExportChainsX } from '@c4tplatform/camino-wallet-sdk/dist'
 import { UTXOSet as EVMUTXOSet } from '@c4tplatform/caminojs/dist/apis/evm/utxos'
+import { ChainIdType } from '@/constants'
 
 export interface IIndexKeyCache {
     [index: number]: AVMKeyPair
@@ -125,7 +126,12 @@ export interface AvaWalletCore extends IAddressManager {
     importToPlatformChain(sourceChain: ExportChainsP): Promise<string>
     importToXChain(sourceChain: ExportChainsX): Promise<string>
     importToCChain(sourceChain: ExportChainsC, baseFee: BN, utxoSet?: EVMUTXOSet): Promise<string>
-    issueBatchTx(orders: (AVMUTXO | ITransaction)[], addr: string, memo?: Buffer): Promise<string>
+    issueBatchTx(
+        chainId: ChainIdType,
+        orders: (AVMUTXO | ITransaction)[],
+        addr: string,
+        memo?: Buffer
+    ): Promise<string>
     signMessage(msg: string, address: string): Promise<string>
 }
 

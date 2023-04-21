@@ -13,7 +13,7 @@
                         :denomination="denomination"
                         :step="stepSize"
                         :placeholder="placeholder"
-                        :disabled="disabled"
+                        :disabled="disabled || pendingSendMultisigTX"
                     ></big-num-input>
                 </div>
             </div>
@@ -46,6 +46,10 @@ import BalanceDropdown from '@/components/misc/BalancePopup/BalanceDropdown.vue'
 import { ava } from '@/AVA'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
+import { ChainIdType } from '@/constants'
+import { WalletHelper } from '@/helpers/wallet_helper'
+import { MultisigTx as SignavaultTx } from '@/store/modules/signavault/types'
+import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {
@@ -60,6 +64,8 @@ export default class CurrencyInputDropdown extends Vue {
     @Prop({ default: () => [] }) disabled_assets!: AvaAsset[]
     @Prop({ default: '' }) initial!: string
     @Prop({ default: false }) disabled!: boolean
+    @Prop() chainId!: ChainIdType
+    @Prop() totalAmount?: number
 
     $refs!: {
         bigIn: BigNumInput
@@ -73,6 +79,10 @@ export default class CurrencyInputDropdown extends Vue {
         } else {
             this.drop_change(this.walletAssetsArray[0])
         }
+    }
+
+    get wallet(): WalletType {
+        return this.$store.state.activeWallet
     }
 
     @Watch('asset_now')
@@ -111,6 +121,14 @@ export default class CurrencyInputDropdown extends Vue {
         }
     }
 
+    get pendingSendMultisigTX(): SignavaultTx | undefined {
+        return this.$store.getters['Signavault/transactions'].find(
+            (item: any) =>
+                item?.tx?.alias === this.wallet.getStaticAddress('P') &&
+                WalletHelper.getUnsignedTxType(item?.tx?.unsignedTx) === 'BaseTx'
+        )
+    }
+
     onfocus() {
         console.log('focus')
     }
@@ -133,6 +151,7 @@ export default class CurrencyInputDropdown extends Vue {
     }
 
     get placeholder(): string {
+        if (this.chainId === 'P' && this.totalAmount) return this.totalAmount?.toString()
         if (this.isEmpty || !this.asset_now) return '0.00'
         let deno = this.asset_now.denomination
         let res = '0'
@@ -148,12 +167,10 @@ export default class CurrencyInputDropdown extends Vue {
     }
 
     get walletAssetsArray(): AvaAsset[] {
-        // return this.$store.getters.walletAssetsArray
         return this.$store.getters['Assets/walletAssetsArray']
     }
 
     get walletAssetsDict(): IWalletAssetsDict {
-        // return this.$store.getters['walletAssetsDict']
         return this.$store.getters['Assets/walletAssetsDict']
     }
 
@@ -161,12 +178,16 @@ export default class CurrencyInputDropdown extends Vue {
         return this.$store.getters['Assets/AssetAVA']
     }
 
+    get platformUnlocked(): BN {
+        return this.$store.getters['Assets/walletPlatformBalanceUnlocked']
+    }
     get max_amount(): null | BN {
         if (!this.asset_now) return null
         if (!this.avaxAsset) return null
 
         let assetId = this.asset_now.id
         let balance = this.walletAssetsDict[assetId]
+        const amount = this.chainId === 'P' ? this.platformUnlocked : balance.amount
 
         let avaxId = this.avaxAsset.id
 
@@ -174,15 +195,15 @@ export default class CurrencyInputDropdown extends Vue {
         if (assetId === avaxId) {
             let fee = ava.XChain().getTxFee()
             // console.log(fee);
-            if (fee.gte(balance.amount)) {
+            if (fee.gte(amount)) {
                 return new BN(0)
             } else {
-                return balance.amount.sub(fee)
+                return amount.sub(fee)
             }
         }
 
-        if (balance.amount.isZero()) return null
-        return balance.amount
+        if (amount.isZero()) return null
+        return amount
     }
 
     get maxAmountBig(): Big {

@@ -53,8 +53,9 @@ import { BN } from '@c4tplatform/caminojs/dist'
 import Big from 'big.js'
 import { bnToBig } from '@/helpers/helper'
 import { ChainIdType } from '@/constants'
-import MnemonicWallet from '@/js/wallets/MnemonicWallet'
 import { ChainSwapFormData } from '@/components/wallet/earn/ChainTransfer/types'
+import { MultisigWallet } from '@/js/wallets/MultisigWallet'
+import { AvaWalletCore } from '@/js/wallets/types'
 
 const chainTypes: ChainIdType[] = ['X', 'P', 'C']
 const chainNames = {
@@ -91,6 +92,9 @@ export default class Form extends Vue {
     }
 
     get sourceOptions(): ChainIdType[] {
+        if (this.isMultisigWallet) {
+            return ['P']
+        }
         if (!this.isEVMSupported) {
             return ['X', 'P']
         }
@@ -100,6 +104,9 @@ export default class Form extends Vue {
     }
 
     get destinationOptions(): ChainIdType[] {
+        if (this.isMultisigWallet) {
+            return ['C']
+        }
         return {
             X: ['P', 'C'],
             P: ['X', 'C'],
@@ -113,9 +120,12 @@ export default class Form extends Vue {
         this.onChange()
     }
 
-    get wallet() {
-        let wallet: MnemonicWallet = this.$store.state.activeWallet
-        return wallet
+    get wallet(): AvaWalletCore {
+        return this.$store.state.activeWallet
+    }
+
+    get isMultisigWallet() {
+        return this.wallet instanceof MultisigWallet
     }
 
     get isEVMSupported() {
@@ -143,6 +153,10 @@ export default class Form extends Vue {
     }
 
     onChange() {
+        if (!this.sourceOptions.includes(this.sourceChain)) this.sourceChain = this.sourceOptions[0]
+        if (!this.destinationOptions.includes(this.targetChain))
+            this.targetChain = this.destinationOptions[0]
+
         let data: ChainSwapFormData = {
             sourceChain: this.sourceChain,
             destinationChain: this.targetChain,

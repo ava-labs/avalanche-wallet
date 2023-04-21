@@ -14,6 +14,7 @@ on:
 
 env:
   node_version: 16
+  module_docker_image: 'europe-west3-docker.pkg.dev/pwk-c4t-dev/camino-suite-apps/camino-suite-wallet'
 
 jobs:
   build_docker:
@@ -26,6 +27,7 @@ jobs:
         id: setDefaults
         run: |
           DOCKER_IMAGE_NAME="europe-west3-docker.pkg.dev/pwk-c4t-dev/internal-camino-dev/camino-suite"
+
           if [[ "${{ github.ref }}" == "refs/heads/c4t" ]]; then
               echo "docker_image=$DOCKER_IMAGE_NAME:stage" >> $GITHUB_OUTPUT
               echo "build_env=stage" >> $GITHUB_OUTPUT
@@ -40,14 +42,6 @@ jobs:
               echo "build_env=dev" >> $GITHUB_OUTPUT   
           fi
 
-      - name: create docker image
-        run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.base_ref }} --build-arg EXPLORER_BRANCH=${{ github.base_ref }}
-          else
-            docker build . -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.ref_name }} --build-arg EXPLORER_BRANCH=${{ github.ref_name }}
-          fi
-
       - name: Cloud authentication
         if: github.event_name == 'push'
         id: auth
@@ -55,9 +49,19 @@ jobs:
         with:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
+      - name: create docker image
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            docker build . -f Dockerfile_SUITE -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.base_ref }} --build-arg EXPLORER_BRANCH=${{ github.base_ref }}
+          else
+            docker build . -f Dockerfile_SUITE -t ${{ steps.setDefaults.outputs.docker_image }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }} --build-arg SUITE_BRANCH=${{ github.ref_name }} --build-arg EXPLORER_BRANCH=${{ github.ref_name }}
+            docker build . -t ${{ env.module_docker_image }}:${{ github.ref_name }} --build-arg BUILD_ENV=build:${{ steps.setDefaults.outputs.build_env }}
+          fi
+
       - name: push and deploy docker
         if: github.event_name == 'push'
         run: |
           gcloud auth configure-docker --quiet europe-west3-docker.pkg.dev
           docker push ${{ steps.setDefaults.outputs.docker_image }}
+          docker push ${{ env.module_docker_image }}:${{ github.ref_name }}
           gcloud run deploy camino-suite-${{ steps.setDefaults.outputs.build_env }} --image ${{ steps.setDefaults.outputs.docker_image }} --region=europe-west1

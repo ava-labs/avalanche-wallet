@@ -60,7 +60,6 @@ textarea {
 
 *[tooltip]:hover:before {
     border-radius: var(--border-radius-sm);
-    /*left: 0;*/
     left: 0;
     transform: translateX(-50%);
     content: attr(tooltip);
@@ -69,9 +68,9 @@ textarea {
     bottom: 100%;
     color: #fff;
     width: max-content;
-    max-width: 100px;
+    max-width: 180px;
     font-size: 14px;
-    padding: 4px 8px;
+    padding: 4px 6px;
     margin-bottom: 4px;
 }
 

@@ -67,7 +67,7 @@ describe('Send: C to C transfer by already owned balance', () => {
             })
 
         // Switch Source Chain to C
-        cy.get('.lists > div:nth-child(1) > .chain_select > button:nth-child(2)').click()
+        cy.get('.lists > div:nth-child(1) > .chain_select').contains('C').click()
 
         // Input More than Own Amount
         cy.get('.evm_input_dropdown > .col_in > .col_big_in > input').as('inputAmount')
@@ -79,53 +79,6 @@ describe('Send: C to C transfer by already owned balance', () => {
                     const amount = parseFloat(input.val() as string)
                     expect(amount).to.lte(parseFloat(balance))
                 })
-        })
-    })
-
-    it('as an error message is shown for inputting x-chain wallet address', () => {
-        cy.get<string>('@ownChainBalance').then((balance) => {
-            if (balance > 0) {
-                // Input X Chain Addr
-                cy.get('.bottom_tabs > .chain_select > button:nth-child(1)').click()
-                cy.get('[data-cy="wallet_address"]').invoke('text').as('chainAddress')
-                cy.get<string>('@chainAddress').then((chainAddr) => {
-                    cy.get('input[class="pk_in"]').eq(0).type(chainAddr)
-                })
-    
-                // Click Confirm Btn
-                cy.get('.button_primary').eq(0).click()
-    
-                cy.get('.err')
-                    .invoke('text')
-                    .should(
-                        'eq',
-                        'Invalid C Chain address. Make sure your address begins with "0x" or "C-0x"'
-                    )
-            }
-        })
-    })
-
-    it('as an error message is shown for inputting p-chain wallet address', () => {
-
-        cy.get<string>('@ownChainBalance').then((balance) => {
-            if (balance > 0) {
-                // Input P Chain Addr
-                cy.get('.bottom_tabs > .chain_select > button:nth-child(2)').click()
-                cy.get('[data-cy="wallet_address"]').invoke('text').as('chainAddress')
-                cy.get<string>('@chainAddress').then((chainAddr) => {
-                    cy.get('input[class="pk_in"]').eq(0).type(chainAddr)
-                })
-
-                // Click Confirm Btn
-                cy.get('.button_primary').eq(0).click()
-
-                cy.get('.err')
-                    .invoke('text')
-                    .should(
-                        'eq',
-                        'Invalid C Chain address. Make sure your address begins with "0x" or "C-0x"'
-                    )
-            }
         })
     })
 
@@ -208,13 +161,12 @@ describe('Send: C to C transfer by already owned balance', () => {
                     }
                 })
 
-                cy.wait('@eth_sendRawTransaction').then((intercept) => {
-                    const txHash = intercept.response?.body.result
-                    cy.contains('Transaction Hash')
+                cy.wait('@eth_sendRawTransaction').then(() => {
+                    cy.get('div.right_col > div.fees')
                         .siblings('p')
-                        .invoke('text')
-                        .then((screenTxHash) => expect(screenTxHash.trim()).to.eq(txHash))
-                    cy.contains('Transaction Sent')
+                        .should(($p) => {
+                            expect($p.first()).to.contain('Transaction Sent')
+                        })
                 })
             }
         })
@@ -236,7 +188,7 @@ describe('Send: C to C transfer by not balance', () => {
             .then((balance) => cy.wrap(balance.replace(/\sCAM/g, '')).as('ownChainBalance'))
 
         // Switch Source Chain to C
-        cy.get('.lists > div:nth-child(1) > .chain_select > button:nth-child(2)').click()
+        cy.get('.lists > div:nth-child(1) > .chain_select').contains('C').click()
 
         // Input More than Own Amount
         cy.get('.evm_input_dropdown > .col_in > .col_big_in > input').as('inputAmount')

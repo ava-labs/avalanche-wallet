@@ -37,6 +37,7 @@ import { WalletCore } from '@/js/wallets/WalletCore'
 import { WalletHelper } from '@/helpers/wallet_helper'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { Transaction } from '@ethereumjs/tx'
+import { ChainIdType } from '@/constants'
 
 class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet {
     keyChain: AVMKeyChain
@@ -221,11 +222,12 @@ class SingletonWallet extends WalletCore implements AvaWalletCore, UnsafeWallet 
     }
 
     async issueBatchTx(
+        chainId: ChainIdType,
         orders: (ITransaction | AVMUTXO)[],
         addr: string,
         memo: BufferAvalanche | undefined
     ): Promise<string> {
-        return await WalletHelper.issueBatchTx(this, orders, addr, memo)
+        return await WalletHelper.issueBatchTx(this, chainId, orders, addr, memo)
     }
 
     getFirstAvailableAddressPlatform(): string {

@@ -17,6 +17,13 @@
                             </p>
                             <DateForm @change_end="setEnd"></DateForm>
                         </div>
+                        <div v-if="isMultiSig" style="margin: 30px 0">
+                            <h4>{{ $t('earn.validate.transaction_duration.label') }}</h4>
+                            <p class="desc">
+                                {{ $t('earn.validate.transaction_duration.desc') }}
+                            </p>
+                            <DateForm @change_end="setTransactionEnd" tx="true"></DateForm>
+                        </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.amount.label') }}</h4>
                             <p class="desc">
@@ -40,9 +47,11 @@
                         v-show="isConfirm"
                         :node-i-d="nodeId"
                         :end="formEnd"
+                        :txEnd="formTxExpirationDate"
                         :amount="formAmt"
                         :reward-address="rewardIn"
                         :reward-destination="rewardDestination"
+                        :isMultisig="isMultiSig"
                     ></ConfirmPage>
                 </transition-group>
                 <div>
@@ -68,6 +77,9 @@
                                 {{ $t('earn.validate.confirm') }}
                             </v-btn>
                             <template v-else>
+                                <p v-if="isMultiSig" class="err">
+                                    {{ $t('earn.validate.label_4') }}
+                                </p>
                                 <v-btn
                                     @click="submit"
                                     class="button_secondary"
@@ -155,9 +167,6 @@ const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
 const DAY_MS = HOUR_MS * 24
 
-const MIN_STAKE_DURATION = DAY_MS * 14
-const MAX_STAKE_DURATION = DAY_MS * 365
-
 @Component({
     name: 'add_validator',
     components: {
@@ -176,7 +185,7 @@ export default class AddValidator extends Vue {
     @Prop() nodeId!: string
     startDate: string = new Date(Date.now() + MIN_MS * 15).toISOString()
     endDate: string = new Date().toISOString()
-    // delegationFee: string = '2.0'
+    transactionEndDate: string = new Date().toISOString()
     rewardIn: string = ''
     rewardDestination = 'local' // local || custom
     isLoading = false
@@ -191,6 +200,7 @@ export default class AddValidator extends Vue {
     formFee: number = 0
     formRewardAddr = ''
     formUtxos: UTXO[] = []
+    formTxExpirationDate = new Date()
 
     txId = ''
     txStatus: string | null = null
@@ -204,6 +214,8 @@ export default class AddValidator extends Vue {
     mounted() {
         this.rewardSelect('local')
         this.validateReadyValidator()
+        //@ts-ignore
+        this.$refs.avaxinput.maxOut()
     }
 
     async validateReadyValidator() {
@@ -219,12 +231,18 @@ export default class AddValidator extends Vue {
     setEnd(val: string) {
         this.endDate = val
     }
+    setTransactionEnd(val: string) {
+        this.transactionEndDate = val
+    }
 
     get rewardAddressLocal() {
         let wallet: MnemonicWallet = this.$store.state.activeWallet
         return wallet.getPlatformRewardAddress()
     }
-
+    get isMultiSig() {
+        let wallet: WalletType = this.$store.state.activeWallet
+        return wallet.type === 'multisig'
+    }
     rewardSelect(val: 'local' | 'custom') {
         if (val === 'local') {
             this.rewardIn = this.rewardAddressLocal
@@ -263,17 +281,6 @@ export default class AddValidator extends Vue {
         return `${days} days ${d.hours()} hours ${d.minutes()} minutes`
     }
 
-    //6 Months is the minimum time
-    meetMinimumTime(): boolean {
-        let d = moment.duration(this.stakeDuration, 'milliseconds')
-        let days = Math.floor(d.asDays())
-        if (days < 183) {
-            return false
-        } else {
-            return true
-        }
-    }
-
     get denomination() {
         return 9
     }
@@ -305,6 +312,7 @@ export default class AddValidator extends Vue {
         this.formAmt = this.stakeAmt
         this.formEnd = new Date(this.endDate)
         this.formRewardAddr = this.rewardIn
+        this.formTxExpirationDate = new Date(this.transactionEndDate)
     }
 
     confirm() {
@@ -331,10 +339,6 @@ export default class AddValidator extends Vue {
         }
 
         if (!this.rewardIn) {
-            return false
-        }
-
-        if (!this.meetMinimumTime()) {
             return false
         }
 
@@ -377,14 +381,20 @@ export default class AddValidator extends Vue {
         if (!this.formCheck()) return
         let wallet: WalletType = this.$store.state.activeWallet
 
-        // Start validation in 25 seconds
-        let startDate = new Date(Date.now() + 25000)
+        /* If multisig flow we set the start date of the validator
+         * same as the expiration date of the TX in signavault
+         * In single sig flow, set the start date of validation
+         * after 25 seconds
+         */
+        let startDate = this.isMultiSig ? this.formTxExpirationDate : new Date(Date.now() + 25000)
         let endMs = this.formEnd.getTime()
         let startMs = startDate.getTime()
 
+        let milisecondsMaxStakeDuration = ava.getNetwork().P.maxStakeDuration * 10000
+
         // If End date - start date is greater than max stake duration, adjust start date
-        if (endMs - startMs > MAX_STAKE_DURATION) {
-            startDate = new Date(endMs - MAX_STAKE_DURATION)
+        if (endMs - startMs > milisecondsMaxStakeDuration) {
+            startDate = new Date(endMs - milisecondsMaxStakeDuration)
         }
         try {
             this.isLoading = true
@@ -396,11 +406,18 @@ export default class AddValidator extends Vue {
                 this.nodeId,
                 new BN(startTime),
                 new BN(endTime),
-                new BN(this.formAmt.toString())
+                new BN(this.formAmt.toString()),
+                Math.trunc(new Date(this.transactionEndDate).getTime() / 1000)
             )
             this.isLoading = false
-            this.onTxSubmit(txId)
+
+            if (txId) {
+                this.onTxSubmit(txId)
+            } else {
+                this.$emit('initiated')
+            }
         } catch (err) {
+            console.error(err)
             this.isLoading = false
             this.onerror(err)
         }
@@ -504,10 +521,6 @@ export default class AddValidator extends Vue {
 <style scoped lang="scss">
 @use '../../../../styles/main';
 @use '../../../../styles/abstracts/mixins';
-.cols {
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 1fr;*/
-}
 
 form {
     display: grid;

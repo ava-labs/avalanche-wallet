@@ -2,10 +2,19 @@
     <div>
         <Spinner class="pending-validator" style="color: var(--primary-color)"></Spinner>
         <br />
-        <p class="text-pending-validator">
-            {{ $t('validator.pending.validator_pending') }}
-            <a :href="link" target="_blank">
-                <v-icon class="v-icon-color">mdi-arrow-top-right-thick</v-icon>
+        <p>
+            <span class="text-pending-validator" v-if="!startDate">
+                {{ $t('validator.pending.validator_pending') }}
+            </span>
+            <span class="text-pending-validator" v-else>
+                {{
+                    $t('validator.pending.validator_pending_with_start_date', {
+                        startDate: startDateFormatted,
+                    })
+                }}
+            </span>
+            <a class="link-color" :href="link" target="_blank">
+                <fa icon="external-link-alt"></fa>
             </a>
         </p>
     </div>
@@ -22,7 +31,12 @@ import Spinner from '@/components/misc/Spinner.vue'
     },
 })
 export default class ValidatorPending extends Vue {
-    link = 'https://docs.camino.network/guides/reasons-for-validator-pending'
+    @Prop() startDate!: number
+    link = 'https://docs.camino.network/to/wallet-validate-pending'
+
+    get startDateFormatted() {
+        return new Date(this.startDate * 1000).toLocaleString()
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -38,7 +52,7 @@ export default class ValidatorPending extends Vue {
     color: var(--primary-color);
 }
 
-.v-icon-color {
-    color: var(--primary-color);
+.link-color {
+    color: #0085ff;
 }
 </style>

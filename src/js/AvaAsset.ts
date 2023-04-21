@@ -11,6 +11,7 @@ class AvaAsset {
     amountLocked: BN
     // Native asset P chain, Wallet Staking
     amountExtra: BN
+    amountExtraLocked: BN
     private readonly pow: Big
     constructor(id: string, name: string, symbol: string, denomination: number) {
         this.id = id
@@ -20,6 +21,7 @@ class AvaAsset {
         this.amount = new BN(0, 10)
         this.amountLocked = new BN(0, 10)
         this.amountExtra = new BN(0, 10)
+        this.amountExtraLocked = new BN(0, 10)
         this.pow = Big(10).pow(denomination)
     }
 
@@ -35,10 +37,15 @@ class AvaAsset {
         this.amountExtra = this.amountExtra.add(val)
     }
 
+    addExtraLocked(val: BN): void {
+        this.amountExtraLocked = this.amountExtraLocked.add(val)
+    }
+
     resetBalance() {
         this.amount = new BN(0, 10)
         this.amountLocked = new BN(0, 10)
         this.amountExtra = new BN(0, 10)
+        this.amountExtraLocked = new BN(0, 10)
     }
 
     getAmount(locked: boolean = false): Big {
@@ -58,7 +65,7 @@ class AvaAsset {
     }
 
     getTotalAmount(): BN {
-        return this.amount.add(this.amountLocked).add(this.amountExtra)
+        return this.amount.add(this.amountLocked).add(this.amountExtra).add(this.amountExtraLocked)
     }
 
     toStringTotal(): string {
@@ -69,12 +76,6 @@ class AvaAsset {
     toString() {
         let big: Big = Big(this.amount.toString(10)).div(this.pow)
         return big.toLocaleString(this.denomination)
-        // if(big.lt(Big('0.001'))){
-        //     return big.toLocaleString(this.denomination);
-        // }else{
-        //     let min = Math.min(this.denomination, 2);
-        //     return big.toLocaleString(min);
-        // }
     }
 }
 

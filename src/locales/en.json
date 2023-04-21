@@ -167,6 +167,11 @@
             "amount": "Amount",
             "token": "Token"
         },
+        "multisig": {
+            "execute_transaction": "Execute transaction",
+            "sign_transaction": "Sign transaction",
+            "abort_transaction": "Abort transaction"
+        },
         "source_chain": {
             "title": "Source Chain"
         },
@@ -308,7 +313,12 @@
         "button1": "Save Keys",
         "button2": "IMPORT KEYS",
         "button3": "EXPORT KEYS",
+        "button4": "Import wallets",
+        "button5": "Dismiss",
+        "multisig_aliases": "You have {0} multisignature wallets available.",
+        "import_wallets": "Would you like to import these wallets ?",
         "subtitle": "Active Key",
+        "other_keys": "Other Keys",
         "del_check": "Are you sure you want to delete this key?",
         "save_account": {
             "title": "Save Account",
@@ -346,6 +356,8 @@
         "view_static_keys": "View Static Keys",
         "view_priv_key_c": "View C Chain Private Key",
         "view_public_key": "View Public Key",
+        "keys_info": "Key Info",
+        "static_keys_info": "Static Key Info",
         "view_key": "View Key Phrase",
         "export_key": "Export Key",
         "hd_addresses": "HD Addresses",
@@ -389,6 +401,7 @@
         "subtitle2": "Delegate",
         "subtitle3": "Cross Chain Transfer",
         "subtitle4": "Estimated Rewards",
+        "subtitle5": "Multisig Confirmations Pending to register validator node",
         "warning_1": "You must have at least {0} @.native:(0) on the P chain to become a validator.",
         "warning_2": "You must have at least {0} @.native:(0) on the P chain to become a delegator.",
         "warning_3": "Setting up a validator node is not possible for your selected network. Please change your network to start running a validator node.",
@@ -439,6 +452,35 @@
             "validation": "Validation",
             "delegation": "Delegation",
             "empty": "You do not have any pending rewards.",
+            "earn_now": {
+                "title": "Earn Now"
+            },
+            "active_earning": {
+                "title": "Active Earning",
+                "lock_start": "Lock Start",
+                "lock_end": "Lock End",
+                "min_lock": "Minimum Lock",
+                "reward": "Reward",
+                "locked_amount": "Locked Amount",
+                "pending_reward": "Pending Reward",
+                "already_claimed": "Already Claimed",
+                "claim": "Claim Rewards",
+                "initiate_transaction": "Initiate Transaction",
+                "are_you_sure": "Are you sure you want to initiate the transaction? this requires signatures from other wallets in the multisignature wallet and cannot be undone for 2-weeks?",
+                "sign": "Sign",
+                "signed": "Signed {nbSigners}/{threshold}",
+                "confirm_claim": "Confirm claim",
+                "pending_claim": "Confirm claiming rewards {nbSigners}/{threshold}",
+                "execute_claim": "Execute claim"
+            },
+            "claim_modal": {
+                "are_you_sure": "Are you sure you want to claim {amount} {symbol} rewards?",
+                "note_message": "Kindly be aware that confirming this reward claim will require you to pay a transaction fee of {fee} {symbol}. Do you wish to proceed with the claim?",
+                "confirmation_message": "{amount} {symbol} have been claimed.",
+                "confirm": "Confirm",
+                "cancel": "Cancel"
+            },
+            "no_saving_pool": "At the moment, there are no rewards available in the saving pools.",
             "row": {
                 "start": "Start",
                 "end": "End",
@@ -465,13 +507,19 @@
             "requirements_introduction": "In order to set up your validator node you have to:",
             "nodeId": "Node ID",
             "label_1": "Validator Node's Private Key",
-            "description_1": "Please enter the Node's Static Private Key (you can receive one by calling admin.getNodeSigner on your node)",
+            "description_1": "Node Private Key",
             "label_3": "P-Chain address your validator node will be assigned to",
+            "label_4": "Are you sure you want to initiate a transaction? This requires signatures from other wallets in the multisignature wallet and cannot be undone",
+            "label_5": "Tx Details",
             "duration": {
                 "label": "Validation End Date",
                 "desc": "Your @.native:(0) tokens will be locked until this date.",
                 "start": "Start Date & Time",
                 "end": "End Date & Time"
+            },
+            "transaction_duration": {
+                "label": "Transaction End Date",
+                "desc": "If your transaction reaches this date, it will be considered expired."
             },
             "amount": {
                 "label": "Bonded Amount",
@@ -503,9 +551,11 @@
                 "fee": "Delegation Fee",
                 "reward": "Reward Address",
                 "type_local": "This wallet",
-                "type_custom": "Custom"
+                "type_custom": "Custom",
+                "transaction_end": "Transaction Expiration Date"
             },
             "register_validator_node": "Register Validator Node",
+            "initiate_transaction": "Initiate transaction",
             "confirm": "Confirm",
             "submit": "Submit",
             "cancel": "Cancel",
@@ -530,6 +580,13 @@
                 "address": "Invalid address. Reward address must be a valid P chain address.",
                 "validating": "Your registered node: {nodeID} is already validating.",
                 "suspended": "Your registered node: {nodeID} is suspended."
+            },
+            "pending_multisig": {
+                "signed": "Signed",
+                "pending": "Pending",
+                "threshold": "{value}  out of  {threshold}  co-owners in your Multisig must sign the transaction that your validator node can be succesfully registered.",
+                "execute_transaction": "Execute transaction",
+                "sign": "Sign"
             }
         },
         "delegate": {
@@ -736,6 +793,7 @@
             "subtitle": "{n}, Threshold: {t}"
         },
         "priv_key": {
+            "info": "Key Info",
             "title": "Private Key"
         },
         "pub_key": {
@@ -804,22 +862,27 @@
         "mint_form": "Collectible minted and added to your wallet.",
         "copy_public_key": "Public Key added to clipboard",
         "register_node_success": "Your node registered successfully.",
+        "register_node_initiated": "Your node registration transaction has initiated successfully.",
         "register_node_failed": "Registering Node Failed",
         "import_key_success": "Private key and assets added to the wallet.",
         "keys_remove_success": "Private key and assets removed from the wallet.",
         "transfer_success_msg": "You have succesfully sent your transaction.",
-        "transfer_error_msg": "Failed to send transaction."
+        "transfer_error_msg": "Failed to send transaction.",
+        "execute_multisig_transaction_error": "Transaction execution failed",
+        "multisig_transaction_saved": "Your signature saved successfully!",
+        "multisig_transaction_not_saved": "Your signature saved successfully!"
     },
     "validator": {
         "pending": {
-            "validator_pending" : "Your validator node is waiting for the transaction to be committed. For more information click here."
+            "validator_pending": "Your validator node is waiting for the transaction to be committed. For more information click here.",
+            "validator_pending_with_start_date": "Your node validator transaction will be committed at {startDate}. For more information click here."
         },
-        "info" : {
+        "info": {
             "staking_start_date": "Staking Start Date",
             "staking_end_date": "Staking End Date",
             "up_time": "Up Time",
-            "remaining_validation_period" : "Remaining Validation Period",
-            "deposit_amount": "Deposit Amount",
+            "remaining_validation_period": "Remaining Validation Period",
+            "bonded_amount": "Bonded Amount",
             "tx_id": "Tx ID",
             "validator_running": "Your validator node is running"
         },
@@ -827,7 +890,26 @@
             "validator_suspended": "Your validator node has been suspended.",
             "to_activate": "To activate your validator node please get in touch and email us to {email}",
             "title": "Validator Node is Suspended"
+        },
+        "rewards": {
+            "tab": {
+                "node": "Node",
+                "rewards": "Rewards"
+            },
+            "claim": {
+                "reward_owner": "Reward Owner",
+                "claimable_validation": "Claimable Validation Rewards",
+                "claim_rewards": "Claim Rewards",
+                "have_already": "{camAmount} {symbol} CAM have already been claimed",
+                "view_full": "View full history"
+            },
+            "modal_claim": {
+                "are_you_sure": "Are you sure you want to claim {amountClaim} {symbol} rewards?",
+                "kindy_be_aware": "Kindy be aware that confirming this reward claim will require you to pay a transaction fee of {fee} {symbol}. Do you wish to proceed with the claim?",
+                "cancel": "Cancel",
+                "claim": "Claim",
+                "confirmed_claimed": "{amount} {symbol} have been claimed."
+            }
         }
-
     }
 }
