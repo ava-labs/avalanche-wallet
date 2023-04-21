@@ -1,5 +1,6 @@
 import Big from 'big.js'
 import moment from 'moment'
+import { Buffer } from '@c4tplatform/caminojs/dist'
 
 export interface Chain {
     chainAlias: string
@@ -13,7 +14,13 @@ export interface HistoryState {
     chains: Chain[]
 }
 
+export interface RawTx {
+    getBlockchainID: () => Buffer
+}
+
 export interface ITransactionData {
+    multisigStatus?: number
+    rawTx?: RawTx
     chainID: string
     id: string
     inputTotals: {

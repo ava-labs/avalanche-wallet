@@ -2,17 +2,18 @@
     <div class="infoTx">
         <div class="utxos">
             <div v-if="hasReceived">
-                <label>Received</label>
+                <label>Receive</label>
                 <BaseTxOutput
                     v-for="(asset, assetId) in tokensReceived"
                     :key="assetId"
                     :asset-i-d="assetId"
                     :summary="asset"
+                    :chainPrefix="chainPrefix"
                 ></BaseTxOutput>
                 <div class="nft_cols">
                     <div class="nft_addr">
                         <p v-for="addr in summary.collectibles.received.addresses" :key="addr">
-                            from {{ 'X-' + addr }}
+                            from {{ chainPrefix + addr }}
                         </p>
                     </div>
                     <div class="nft_fams">
@@ -27,27 +28,29 @@
                 </div>
             </div>
             <div v-if="['deposit', 'unlock_deposit'].includes(type)">
-                <label>{{ type == 'deposit' ? 'Deposited' : 'Undeposited' }}</label>
+                <label>{{ type == 'deposit' ? 'Deposit' : 'Undeposit' }}</label>
                 <BaseTxOutput
                     v-for="(asset, assetId) in tokensDeposited"
                     :key="assetId"
                     :asset-i-d="assetId"
                     :summary="asset"
                     :isDeposit="true"
+                    :chainPrefix="chainPrefix"
                 ></BaseTxOutput>
             </div>
             <div v-if="hasSent">
-                <label>Sent</label>
+                <label>Send</label>
                 <BaseTxOutput
                     v-for="(asset, assetId) in tokensSent"
                     :key="assetId"
                     :asset-i-d="assetId"
                     :summary="asset"
+                    :chainPrefix="chainPrefix"
                 ></BaseTxOutput>
                 <div class="nft_cols">
                     <div class="nft_addr">
                         <p v-for="addr in summary.collectibles.sent.addresses" :key="addr">
-                            to {{ 'X-' + addr }}
+                            to {{ chainPrefix + addr }}
                         </p>
                     </div>
                     <div class="nft_fams">
@@ -66,21 +69,21 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ITransactionData, UTXO } from '@/store/modules/history/types'
-import { TransactionValueDict } from '@/components/SidePanels/types'
-import { PayloadBase, PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
-import { Buffer } from '@c4tplatform/caminojs/dist'
-import { WalletType } from '@/js/wallets/types'
 
 import { ava } from '@/AVA'
-
+import { ZeroBN } from '@/constants'
+import { getTransactionSummary } from '@/helpers/history_helper'
+import { WalletType } from '@/js/wallets/types'
 import TxHistoryValue from '@/components/SidePanels/TxHistoryValue.vue'
+import { TransactionValueDict } from '@/components/SidePanels/types'
 import TxHistoryValueFunctional from '@/components/SidePanels/History/TxHistoryValueFunctional.vue'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
-import { getTransactionSummary } from '@/helpers/history_helper'
 import BaseTxOutput from '@/components/SidePanels/History/ViewTypes/BaseTxOutput.vue'
 import BaseTxNFTOutput from '@/components/SidePanels/History/ViewTypes/BaseTxNFTOutput.vue'
-import { ZeroBN } from '@/constants'
+import { ITransactionData, UTXO } from '@/store/modules/history/types'
+
+import { Buffer } from '@c4tplatform/caminojs/dist'
+import { DefaultPlatformChainID, PayloadBase, PayloadTypes } from '@c4tplatform/caminojs/dist/utils'
 
 let payloadtypes = PayloadTypes.getInstance()
 
@@ -127,6 +130,10 @@ export default class BaseTx extends Vue {
 
     get type() {
         return this.transaction.type
+    }
+
+    get chainPrefix() {
+        return this.transaction.chainID === DefaultPlatformChainID ? 'P-' : 'X-'
     }
 
     // What did I lose?
@@ -345,11 +352,11 @@ export default class BaseTx extends Vue {
             })
         })
 
-        return isFromWallet ? 'Sent' : 'Received'
+        return isFromWallet ? 'Send' : 'Receive'
     }
 
     get operationColor() {
-        return this.operationDirection === 'Received' ? 'success' : 'sent'
+        return this.operationDirection === 'Receive' ? 'success' : 'sent'
     }
 }
 </script>

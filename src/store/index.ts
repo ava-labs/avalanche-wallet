@@ -392,15 +392,11 @@ export default new Vuex.Store({
                 commit('setActiveWallet', wallet)
                 commit('updateActiveAddress')
             }
+
             dispatch('Assets/updateWallet').then(() => {
-                dispatch('fetchMultiSigAliases', { disable: false })
                 dispatch('Assets/updateAvaAsset')
-                dispatch('Assets/updateUTXOs')
                 dispatch('Accounts/updateKycStatus')
-                dispatch('Signavault/updateTransaction', undefined, { root: true }).then(() => {
-                    dispatch('History/updateTransactionHistory')
-                })
-                dispatch('History/updateTransactionHistory')
+                dispatch('updateBalances')
                 updateFilterAddresses()
             })
         },
@@ -497,6 +493,56 @@ export default new Vuex.Store({
             store.state.prices = {
                 usd,
             }
+        },
+
+        updateTransaction(
+            { dispatch },
+            options: {
+                fullHistory: boolean
+                onlyMultisig: boolean
+                withMultisig: boolean
+                msgType: 'success'
+                msgTitle: 'Validator Added'
+                msgText: 'Your tokens are now locked to stake.'
+            }
+        ) {
+            if (options.onlyMultisig) {
+                setTimeout(() => {
+                    dispatch('Signavault/updateTransaction').then(() => {
+                        dispatch('History/updateMultisigTransactionHistory')
+                    })
+                }, 3000)
+            } else if (options.withMultisig) {
+                setTimeout(() => {
+                    dispatch('Assets/updateUTXOs')
+                    dispatch('Signavault/updateTransaction').then(() => {
+                        dispatch(
+                            options.fullHistory
+                                ? 'History/updateAllTransactionHistory'
+                                : 'History/updateTransactionHistory'
+                        )
+                    })
+                }, 3000)
+            } else {
+                setTimeout(() => {
+                    dispatch('Assets/updateUTXOs')
+                    dispatch('History/updateTransactionHistory')
+                }, 3000)
+            }
+            if (options.msgType) {
+                dispatch('Notifications/add', {
+                    type: options.msgType,
+                    title: options.msgTitle,
+                    message: options.msgText,
+                })
+            }
+        },
+        updateBalances({ dispatch }) {
+            dispatch('Assets/updateUTXOs').then(() =>
+                dispatch('Signavault/updateTransaction', undefined, { root: true }).then(() => {
+                    dispatch('History/updateTransactionHistory')
+                })
+            )
         },
     },
 })

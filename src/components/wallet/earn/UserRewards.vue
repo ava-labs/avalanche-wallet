@@ -15,7 +15,7 @@
                 :depositTxID="v.depositTxID"
                 :title="v.memo"
                 :start="v.start"
-                :end="v.end"
+                :duration="v.unlockPeriodDuration"
                 :minLock="v.minAmount"
                 :rewards="v.interestRateNominator"
                 :lockedAmount="v.amount"
@@ -29,7 +29,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { AvaWalletCore } from '../../../js/wallets/types'
 import { DelegatorRaw, ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
@@ -37,6 +37,10 @@ import UserRewardCard from '@/components/wallet/earn/UserRewardCard.vue'
 import { bnToBig } from '@/helpers/helper'
 import Big from 'big.js'
 import { BN } from '@c4tplatform/caminojs/dist'
+
+import { WalletType } from '@/js/wallets/types'
+import { MultisigTx as SignavaultTx } from '@/store/modules/signavault/types'
+import { WalletHelper } from '@/helpers/wallet_helper'
 
 @Component({
     components: {
@@ -46,6 +50,7 @@ import { BN } from '@c4tplatform/caminojs/dist'
 })
 export default class UserRewards extends Vue {
     @Prop() loadingRefreshDepositRewards!: boolean
+
     get activeOffers() {
         return this.$store.state.Platform.activeDepositOffer
     }
@@ -100,8 +105,21 @@ export default class UserRewards extends Vue {
         return res
     }
 
+    get activeWallet(): WalletType {
+        return this.$store.state.activeWallet
+    }
+
+    get pendingSendMultisigTX(): SignavaultTx | undefined {
+        return this.$store.getters['Signavault/transactions'].find(
+            (item: any) =>
+                item?.tx?.alias === this.activeWallet.getAllAddressesP()[0] &&
+                WalletHelper.getUnsignedTxType(item?.tx?.unsignedTx) === 'ClaimTx'
+        )
+    }
+
     refresh() {
         this.$store.dispatch('Platform/updateActiveDepositOffer')
+        this.$store.dispatch('Signavault/updateTransaction')
     }
 }
 </script>

@@ -9,7 +9,7 @@
             <HdDerivationListRow
                 v-for="(addr, i) in addresses"
                 :key="addr"
-                :index="i"
+                :index="hasStatic ? (i === 0 ? 'S' : i - 1) : i"
                 :address="addr"
                 :balance="balanceDict[i]"
                 :path="path"
@@ -50,6 +50,7 @@ import { HdHelper } from '@/js/HdHelper'
 export default class HdChainTable extends Vue {
     @Prop() wallet!: MnemonicWallet | LedgerWallet
     @Prop() addresses!: string[]
+    @Prop() hasStatic!: boolean
     @Prop() balanceDict!: DerivationListBalanceDict[]
     @Prop() path!: number
     @Prop() helper!: HdHelper

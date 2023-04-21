@@ -96,28 +96,34 @@ const platform_module: Module<PlatformState, RootState> = {
             state.depositOffers = res
         },
         async updateActiveDepositOffer({ state, commit, rootState }) {
-            const wallet = rootState.activeWallet
-            const pAddressStrings = wallet?.getAllAddressesP() as string[] | string
-            const utxos = await ava.PChain().getUTXOs(pAddressStrings)
-            const lockedTxIDs = await utxos.utxos.getLockedTxIDs()
-            const activeDepositOffers = await ava.PChain().getDeposits(lockedTxIDs.depositIDs)
-            const activeOffers = []
+            try {
+                const wallet = rootState.activeWallet
+                const pAddressStrings = wallet?.getAllAddressesP() as string[] | string
+                const utxos = await ava.PChain().getUTXOs(pAddressStrings)
+                const lockedTxIDs = await utxos.utxos.getLockedTxIDs()
+                const activeDepositOffers = await ava.PChain().getDeposits(lockedTxIDs.depositIDs)
 
-            for (const depositOffer of activeDepositOffers.deposits) {
-                const matchingOffer = state.depositOffers.find(
-                    (o) => o.id === depositOffer.depositOfferID
-                )
-                if (matchingOffer) {
-                    const index = activeDepositOffers.deposits.indexOf(depositOffer)
-                    activeOffers.push({
-                        ...matchingOffer,
-                        ...depositOffer,
-                        pendingRewards: activeDepositOffers.availableRewards[index],
-                    })
+                const activeOffers = []
+
+                for (const depositOffer of activeDepositOffers.deposits) {
+                    const matchingOffer = state.depositOffers.find(
+                        (o) => o.id === depositOffer.depositOfferID
+                    )
+                    if (matchingOffer) {
+                        const index = activeDepositOffers.deposits.indexOf(depositOffer)
+                        activeOffers.push({
+                            ...matchingOffer,
+                            ...depositOffer,
+                            pendingRewards: activeDepositOffers.availableRewards[index],
+                        })
+                    }
                 }
-            }
 
-            state.activeDepositOffer = activeOffers
+                state.activeDepositOffer = activeOffers
+            } catch (error) {
+                state.activeDepositOffer = []
+                console.log(error)
+            }
         },
     },
     getters: {
