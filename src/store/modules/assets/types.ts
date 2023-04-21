@@ -11,7 +11,7 @@ export interface AssetsState {
     assets: AvaAsset[]
     assetsDict: AssetsDict
     platformBalances: PlatformBalances
-    AVA_ASSET_ID: string | null
+    AVA_ASSET_ID: string
     nftFams: AvaNftFamily[]
     nftFamsDict: NftFamilyDict
     balanceDict: IWalletBalanceDict

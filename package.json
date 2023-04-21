@@ -172,7 +172,7 @@
         "weekstart": "1.0.1"
     },
     "dependencies": {
-        "@c4tplatform/signavaultjs": "^1.0.5",
+        "@c4tplatform/signavaultjs": "^1.0.11",
         "@cypress/xpath": "^2.0.3",
         "vue": "^2.6.11",
         "vue-cli-plugin-vuetify": "^2.0.3",

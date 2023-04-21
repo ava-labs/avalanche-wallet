@@ -377,11 +377,12 @@ export default new Vuex.Store({
             let wallet = state.activeWallet
             if (!wallet) return 'error'
 
-            let toAddr = data.toAddress
-            let orders = data.orders
-            let memo = data.memo
-
-            let txId: string = await wallet.issueBatchTx(orders, toAddr, memo)
+            let txId: string = await wallet.issueBatchTx(
+                data.chainId,
+                data.orders,
+                data.toAddress,
+                data.memo
+            )
             return txId
         },
 

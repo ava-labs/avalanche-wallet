@@ -141,7 +141,11 @@ export default class Validator extends Vue {
 
     get multisigPendingNodeTx(): SignavaultTx | undefined {
         return this.$store.getters['Signavault/transactions'].find(
-            (item: any) => item?.tx?.alias === this.addresses[0]
+            (item: any) =>
+                item?.tx?.alias === this.addresses[0] &&
+                ['CaminoAddValidatorTx', 'RegisterNodeTx'].includes(
+                    WalletHelper.getUnsignedTxType(item?.tx?.unsignedTx)
+                )
         )
     }
 

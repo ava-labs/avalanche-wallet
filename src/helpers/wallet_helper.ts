@@ -1,8 +1,9 @@
-import { ava } from '@/AVA'
+import { ava, bintools } from '@/AVA'
 import {
     UTXO as PlatformUTXO,
     UTXOSet as PlatformUTXOSet,
 } from '@c4tplatform/caminojs/dist/apis/platformvm/utxos'
+import { UnsignedTx } from '@c4tplatform/caminojs/dist/apis/platformvm'
 import { UTXO as AVMUTXO } from '@c4tplatform/caminojs/dist/apis/avm/utxos'
 import { WalletType } from '@/js/wallets/types'
 
@@ -26,6 +27,7 @@ import { GetValidatorsResponse } from '@/store/modules/platform/types'
 import { MultisigWallet } from '@/js/wallets/MultisigWallet'
 import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { SignatureError } from '@c4tplatform/caminojs/dist/common'
+import { ChainIdType } from '@/constants'
 
 class WalletHelper {
     static async getStake(wallet: WalletType): Promise<BN> {
@@ -87,10 +89,18 @@ class WalletHelper {
 
     static async issueBatchTx(
         wallet: WalletType,
+        chainId: ChainIdType,
         orders: (ITransaction | AVMUTXO)[],
         addr: string,
         memo: Buffer | undefined
     ): Promise<string> {
+        if (chainId === 'P') {
+            if (orders.length !== 1 || !(orders[0] as ITransaction).asset)
+                throw new Error('Can only process 1 fungible order')
+            const order = orders[0] as ITransaction
+            return await this.platformBaseTx(wallet, order.amount, addr, memo ?? Buffer.alloc(0))
+        }
+
         let unsignedTx = await wallet.buildUnsignedTransaction(orders, addr, memo)
         const tx = await wallet.signX(unsignedTx)
         const txId: string = await ava.XChain().issueTx(tx)
@@ -311,6 +321,47 @@ class WalletHelper {
         }
     }
 
+    static async platformBaseTx(
+        wallet: WalletType,
+        amount: BN,
+        toAddress: string,
+        memo: Buffer,
+        utxos?: PlatformUTXO[]
+    ): Promise<string> {
+        let utxoSet = wallet.getPlatformUTXOSet()
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
+        const pAddressStrings = wallet.getAllAddressesP()
+        const signerAddresses = wallet.getSignerAddresses('P')
+
+        // For change address use first available on the platform chain
+        const changeAddress = wallet.getChangeAddressPlatform()
+
+        const threshold =
+            wallet.type === 'multisig' ? (wallet as MultisigWallet)?.keyData?.owner?.threshold : 1
+
+        const unsignedTx = await ava.PChain().buildBaseTx(
+            utxoSet,
+            amount,
+            [toAddress],
+            [pAddressStrings, signerAddresses], // from + possible signers
+            [changeAddress], // change
+            memo,
+            undefined, // asOf
+            undefined, // lockTime
+            1, // toThreshold
+            threshold // changeThreshold
+        )
+
+        let tx = await wallet.signP(unsignedTx)
+        return await ava.PChain().issueTx(tx)
+    }
+
     static async getEthBalance(wallet: WalletType) {
         let bal = await web3.eth.getBalance(wallet.ethAddress)
         return new BN(bal)
@@ -460,6 +511,37 @@ class WalletHelper {
         )
         let tx = await activeWallet.signP(unsignedTx)
         return await ava.PChain().issueTx(tx)
+    }
+    static getUnsignedTxType(utx: string): string {
+        let unsignedTx = new UnsignedTx()
+        unsignedTx.fromBuffer(Buffer.from(utx, 'hex'))
+        return unsignedTx.getTransaction().getTypeName()
+    }
+
+    static getToAddressFromUtx(utx: UnsignedTx, msigAlias?: string) {
+        const tx = utx.getTransaction()
+
+        const el = tx?.getOuts()?.find((o) => {
+            const _address =
+                'P' +
+                bintools.addressToString(
+                    ava.getHRP(),
+                    tx?.getBlockchainID().toString(),
+                    o?.getAddresses()?.[0]
+                )
+            return _address !== msigAlias
+        })
+
+        if (el) {
+            const toAddress =
+                'P' +
+                bintools.addressToString(
+                    ava.getHRP(),
+                    tx?.getBlockchainID().toString(),
+                    el?.getAddresses()?.[0]
+                )
+            return toAddress
+        }
     }
 }
 
