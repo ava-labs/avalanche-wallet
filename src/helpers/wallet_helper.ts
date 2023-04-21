@@ -486,34 +486,51 @@ class WalletHelper {
         return validator
     }
 
-    static async buildDepositClaimTx(
-        addresses: string[],
-        activeWallet: WalletType,
-        depositTxID: string
-    ) {
+    static async buildDepositClaimTx(addresses: string[], wallet: WalletType, depositTxID: string) {
+        let utxoSet = wallet.utxoset
+
+        const signerAddresses = wallet.getSignerAddresses('P')
+
+        // For change address use first available on the platform chain
+        const changeAddress = wallet.getChangeAddressPlatform()
+
         let addressBuffer = ava.PChain().parseAddress(addresses[0])
+
         const claimableSigners: [number, Buffer][] = [[0, addressBuffer]]
+
         let rewardsOwner = new OutputOwners([addressBuffer])
-        let utxoSet = activeWallet.utxoset
+
+        const threshold =
+            wallet.type === 'multisig' ? (wallet as MultisigWallet)?.keyData?.owner?.threshold : 1
 
         const unsignedTx = await ava.PChain().buildClaimTx(
             // @ts-ignore
             utxoSet,
-            addresses,
-            addresses,
-            undefined,
-            new BN(0),
-            1,
+            [addresses, signerAddresses],
+            [changeAddress],
+            undefined, // memo
+            new BN(0), // asOf
+            Number(threshold),
             [depositTxID],
             [],
             [],
             rewardsOwner,
-            new BN(2),
-            claimableSigners
+            [addressBuffer],
+            new BN(3)
         )
-        let tx = await activeWallet.signP(unsignedTx)
-        return await ava.PChain().issueTx(tx)
+
+        try {
+            const tx = await wallet.signP(unsignedTx)
+            return await ava.PChain().issueTx(tx)
+        } catch (err) {
+            if (err instanceof SignatureError) {
+                return undefined
+            } else {
+                throw err
+            }
+        }
     }
+
     static getUnsignedTxType(utx: string): string {
         let unsignedTx = new UnsignedTx()
         unsignedTx.fromBuffer(Buffer.from(utx, 'hex'))
