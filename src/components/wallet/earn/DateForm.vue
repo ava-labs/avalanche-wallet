@@ -16,8 +16,9 @@
 import { DAY_MS, MINUTE_MS } from '../../../constants'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import { Datetime } from 'vue-datetime'
+import { ava } from '@/AVA'
 
-const MIN_STAKE_DURATION = DAY_MS * 14
+const MIN_STAKE_DURATION = DAY_MS * 183
 
 @Component({
     components: {
@@ -26,7 +27,7 @@ const MIN_STAKE_DURATION = DAY_MS * 14
 })
 export default class DateForm extends Vue {
     // timeNow = 0
-
+    @Prop() tx?: boolean
     localStart = this.startDateMin
     localEnd = this.endDateMin
 
@@ -88,11 +89,21 @@ export default class DateForm extends Vue {
 
     // now + 15 minutes + 2 weeks (Min Staking Duration)
     get endDateMin() {
-        let start = this.localStart
-        let startDate = new Date(start)
+        let now = new Date()
+        now.setMonth(now.getMonth() + 6)
 
-        let end = startDate.getTime() + MIN_STAKE_DURATION
-        let endDate = new Date(end)
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        const day = String(now.getDate()).padStart(2, '0')
+        const hour = String(now.getHours()).padStart(2, '0')
+        const minute = String(now.getMinutes()).padStart(2, '0')
+        const second = String(now.getSeconds()).padStart(2, '0')
+
+        const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+
+        let minDate = new Date(`${formattedDate}`)
+        let minDateParsed = new Date(minDate).toISOString()
+        let endDate = new Date(minDateParsed)
         return endDate.toISOString()
     }
 
@@ -112,7 +123,7 @@ export default class DateForm extends Vue {
         let start = this.localStart
         let startDate = new Date(start)
 
-        let end = startDate.getTime() + DAY_MS * 21
+        let end = startDate.getTime() + DAY_MS * 183
         let endDate = new Date(end)
         return endDate.toISOString()
     }
