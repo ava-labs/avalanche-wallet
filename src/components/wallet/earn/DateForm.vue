@@ -32,6 +32,7 @@ export default class DateForm extends Vue {
     localEnd = this.endDateMin
 
     @Prop() maxEndDate?: string
+    @Prop() typeDateForm?: string
 
     // @Watch('localStart')
     // startChange(val: string) {
@@ -122,8 +123,18 @@ export default class DateForm extends Vue {
     get defaultEndDate() {
         let start = this.localStart
         let startDate = new Date(start)
+        let end = startDate.getTime() + DAY_MS * 21
 
-        let end = startDate.getTime() + DAY_MS * 183
+        //If the DateForm have typeDateForm, the end is different days
+        switch (this.typeDateForm) {
+            case 'validatorDateForm':
+                end = startDate.getTime() + DAY_MS * 183
+                break
+            case 'transactionDateForm':
+                end = startDate.getTime() + DAY_MS * 5
+                break
+        }
+
         let endDate = new Date(end)
         return endDate.toISOString()
     }
