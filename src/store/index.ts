@@ -398,6 +398,7 @@ export default new Vuex.Store({
                 dispatch('Accounts/updateKycStatus')
                 dispatch('updateBalances')
                 updateFilterAddresses()
+                dispatch('fetchMultiSigAliases', { disable: false })
             })
         },
 
