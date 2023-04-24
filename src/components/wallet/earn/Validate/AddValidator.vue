@@ -15,14 +15,21 @@
                             <p class="desc">
                                 {{ $t('earn.validate.duration.desc') }}
                             </p>
-                            <DateForm @change_end="setEnd" :typeDateForm="'validatorDateForm'"></DateForm>
+                            <DateForm
+                                @change_end="setEnd"
+                                :typeDateForm="'validatorDateForm'"
+                            ></DateForm>
                         </div>
                         <div v-if="isMultiSig" style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.transaction_duration.label') }}</h4>
                             <p class="desc">
                                 {{ $t('earn.validate.transaction_duration.desc') }}
                             </p>
-                            <DateForm @change_end="setTransactionEnd" :typeDateForm="'transactionDateForm'" tx="true"></DateForm>
+                            <DateForm
+                                @change_end="setTransactionEnd"
+                                :typeDateForm="'transactionDateForm'"
+                                tx="true"
+                            ></DateForm>
                         </div>
                         <div style="margin: 30px 0">
                             <h4>{{ $t('earn.validate.amount.label') }}</h4>
