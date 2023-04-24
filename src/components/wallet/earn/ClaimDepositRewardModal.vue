@@ -137,7 +137,12 @@ export default class ModalClaimDepositReward extends Vue {
 
         if (!this.pendingSendMultisigTX) {
             // Initiate multisig transaction
-            WalletHelper.buildDepositClaimTx(addresses, this.activeWallet, this.depositTxID)
+            WalletHelper.buildDepositClaimTx(
+                addresses,
+                this.activeWallet,
+                this.amount,
+                this.depositTxID
+            )
                 .then(() => {
                     this.confiremedClaimedAmount = this.formattedAmount(this.amount)
                     setTimeout(() => this.updateBalance(), 500)
