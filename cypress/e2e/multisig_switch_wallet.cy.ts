@@ -212,7 +212,7 @@ const verifyBalance = () => {
                     cy.get('@totalBalance').invoke('text').then((totalBalance) => {
                         return parseFloat(clearBalanceFormat(totalBalance))
                     }).then((totalBalance) => {
-                        expect(totalBalance).to.equal(parseFloat(totalXPCBalance.toFixed(3)))
+                        expect(parseFloat(totalBalance.toFixed(3))).to.equal(parseFloat(totalXPCBalance.toFixed(3)))
                     })
                 })
             })

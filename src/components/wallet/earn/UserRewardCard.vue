@@ -40,9 +40,9 @@
             </div>
         </div>
         <template v-if="!isMultiSig">
-            <button class="claim_button button_primary" @click="openModal" :disabled="!canClaim">
+            <v-btn class="claim_button button_primary" @click="openModal" :disabled="!canClaim">
                 {{ $t('earn.rewards.active_earning.claim') }}
-            </button>
+            </v-btn>
         </template>
         <template v-else>
             <v-btn
@@ -53,14 +53,18 @@
             >
                 {{ $t('earn.rewards.active_earning.claim') }}
             </v-btn>
-            <v-btn
-                v-if="signatureStatus === -1 && disclamer"
-                class="claim_button button_primary"
-                @click="confirmClaim"
-                :disabled="!canClaim"
-            >
-                {{ $t('earn.rewards.active_earning.initiate_transaction') }}
-            </v-btn>
+            <div v-if="signatureStatus === -1 && disclamer" class="initiate_button_group">
+                <v-btn class="claim_button button_primary" @click="disclamer = false">
+                    {{ $t('earn.rewards.active_earning.cancel') }}
+                </v-btn>
+                <v-btn
+                    class="claim_button button_secondary"
+                    @click="confirmClaim"
+                    :disabled="!canClaim"
+                >
+                    {{ $t('earn.rewards.active_earning.initiate_transaction') }}
+                </v-btn>
+            </div>
             <v-btn
                 v-else-if="signatureStatus === 1"
                 class="claim_button button_primary"
@@ -82,7 +86,7 @@
                 @click="openModal"
                 :disabled="!canClaim"
             >
-                {{ $t('earn.rewards.active_earning.claim') }}
+                {{ $t('earn.rewards.active_earning.execute_claim') }}
             </v-btn>
             <div v-if="disclamer && !alreadySigned" class="err">
                 {{ $t('earn.rewards.active_earning.are_you_sure') }}
@@ -134,8 +138,7 @@ export default class UserRewardCard extends Vue {
     // @ts-ignore
     helpers = this.globalHelper()
 
-    @Prop()
-    depositTxID!: string
+    @Prop() depositTxID!: string
     @Prop() title!: string
     @Prop() start!: BN
     @Prop() duration!: BN
@@ -316,7 +319,12 @@ export default class UserRewardCard extends Vue {
         let { dispatchNotification } = this.globalHelper()
 
         if (!this.pendingSendMultisigTX) {
-            WalletHelper.buildDepositClaimTx(addresses, wallet, this.depositTxID)
+            WalletHelper.buildDepositClaimTx(
+                addresses,
+                wallet,
+                this.pendingRewards,
+                this.depositTxID
+            )
                 .then(() => {
                     this.confiremedClaimedAmount = this.formattedAmount(this.pendingRewards)
                     setTimeout(() => this.updateBalance(), 500)
@@ -485,6 +493,11 @@ label {
     &[disabled] {
         background-color: var(--primary-color) !important;
     }
+}
+
+.initiate_button_group {
+    margin-left: auto;
+    gap: 0.5rem;
 }
 
 .err {

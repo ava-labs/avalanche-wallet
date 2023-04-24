@@ -117,7 +117,7 @@
                     <Spinner v-if="activating" class="spinner"></Spinner>
                     <fa v-else icon="star"></fa>
                 </Tooltip>
-                <Tooltip :text="$t('keys.remove_key')" class="row_but circle">
+                <Tooltip v-if="canRemove()" :text="$t('keys.remove_key')" class="row_but circle">
                     <button @click.prevent="remove">
                         <img
                             src="@/assets/trash_can_dark.svg"
@@ -257,7 +257,29 @@ export default class KeyRow extends Vue {
         this.isEditable = false
         this.customWalletName = this.walletName
     }
-
+    get wallets(): WalletType[] {
+        return this.$store.state.wallets
+    }
+    canRemove(): boolean {
+        if (this.wallet instanceof MultisigWallet) return true
+        else {
+            let multiSigWallets = this.wallets.filter((wallet) => wallet instanceof MultisigWallet)
+            let rest = this.wallets.filter((wallet) => !(wallet instanceof MultisigWallet))
+            if (rest.length === 1) return false
+            else {
+                let linkedWallets = multiSigWallets.filter((w) => {
+                    let res = (w as MultisigWallet).wallets.find(
+                        (item) => (item as WalletType).ethAddress === this.wallet.ethAddress
+                    )
+                    if (res) return true
+                    return false
+                })
+                let res = linkedWallets.find((w) => (w as MultisigWallet).wallets.length === 1)
+                if (res) return false
+            }
+        }
+        return true
+    }
     remove() {
         this.$emit('remove', this.wallet)
     }

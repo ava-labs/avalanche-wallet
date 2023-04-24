@@ -466,6 +466,7 @@
                 "already_claimed": "Already Claimed",
                 "claim": "Claim Rewards",
                 "initiate_transaction": "Initiate Transaction",
+                "cancel": "Cancel",
                 "are_you_sure": "Are you sure you want to initiate the transaction? this requires signatures from other wallets in the multisignature wallet and cannot be undone for 2-weeks?",
                 "sign": "Sign",
                 "signed": "Signed {nbSigners}/{threshold}",
