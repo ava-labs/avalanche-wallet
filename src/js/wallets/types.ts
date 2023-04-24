@@ -40,6 +40,17 @@ export interface IIndexKeyCache {
 
 export interface INetwork {
     name: string
+    id: string
+    protocol: string
+    port: number
+    ip: string
+    url: string
+    networkId: number
+    explorerUrl?: string | undefined
+    explorerSiteUrl?: string | undefined
+    signavaultUrl?: string | undefined
+    readonly?: boolean
+    withCredentials?: boolean
 }
 
 export type ChainAlias = 'X' | 'P'
