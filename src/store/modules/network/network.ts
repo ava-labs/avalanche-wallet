@@ -201,7 +201,7 @@ const network_module: Module<NetworkState, RootState> = {
                 1000,
                 'https://magellan.camino.network',
                 'https://explorer.camino.network',
-                '',
+                'https://signavault.camino.network/v1',
                 true
             )
 
@@ -211,7 +211,7 @@ const network_module: Module<NetworkState, RootState> = {
                 1001,
                 'https://magellan.columbus.camino.network',
                 columbusExplorerUrl,
-                '',
+                'https://signavault.columbus.camino.network/v1',
                 true
             )
 
