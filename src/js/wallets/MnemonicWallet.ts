@@ -73,7 +73,6 @@ export default class MnemonicWallet extends AbstractHdWallet implements IAvaHdWa
     ethKeyBech: string
     ethKeyChain: EVMKeyChain
     ethAddress: string
-    ethBalance: BN
 
     // TODO : Move to hd core class
     onnetworkchange() {
@@ -98,7 +97,6 @@ export default class MnemonicWallet extends AbstractHdWallet implements IAvaHdWa
         const ethPrivateKey = ethAccountKey.privateKey
         this.ethKey = ethPrivateKey.toString('hex')
         this.ethAddress = privateToAddress(ethPrivateKey).toString('hex')
-        this.ethBalance = new BN(0)
 
         const cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(ethPrivateKey))
         this.ethKeyBech = cPrivKey
@@ -117,12 +115,6 @@ export default class MnemonicWallet extends AbstractHdWallet implements IAvaHdWa
 
     getEvmAddress(): string {
         return this.ethAddress
-    }
-
-    async getEthBalance() {
-        const bal = await WalletHelper.getEthBalance(this)
-        this.ethBalance = bal
-        return bal
     }
 
     async sendEth(to: string, amount: BN, gasPrice: BN, gasLimit: number) {

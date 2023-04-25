@@ -15,7 +15,7 @@
         <div class="list no_scroll_bar" v-else>
             <tx-history-row
                 v-for="tx in transactions"
-                :key="tx.id"
+                :key="tx.txHash"
                 :transaction="tx"
                 class="tx_row"
             ></tx-history-row>
@@ -28,9 +28,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import Spinner from '@/components/misc/Spinner.vue'
 import TxHistoryRow from '@/components/SidePanels/TxHistoryRow.vue'
-import { ITransactionData } from '@/store/modules/history/types'
 import { AvaNetwork } from '@/js/AvaNetwork'
-import { ITransaction } from '@/components/wallet/transfer/types'
+import { TransactionType } from '@/js/Glacier/models'
 
 @Component({
     components: {
@@ -57,21 +56,8 @@ export default class TransactionHistoryPanel extends Vue {
     get isUpdating(): boolean {
         return this.$store.state.History.isUpdating
     }
-    get transactions(): ITransactionData[] {
-        let res: ITransactionData[] = this.$store.state.History.transactions
-
-        if (!res) return []
-
-        let seenId: string[] = []
-        let r: ITransactionData[] = res.filter((tx) => {
-            if (seenId.includes(tx.id)) {
-                return false
-            }
-            seenId.push(tx.id)
-            return true
-        })
-        // A simple filter to ignore duplicate transactions (can happen if you send to self)
-        return r
+    get transactions(): TransactionType[] {
+        return this.$store.state.History.recentTransactions
     }
 
     get isActivityPage() {

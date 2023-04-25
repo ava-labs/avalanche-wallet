@@ -3,6 +3,8 @@ on: [push]
 
 jobs:
     build:
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         runs-on: macos-latest
 
         strategy:
@@ -26,7 +28,8 @@ jobs:
                   key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
             - run: sudo npm install -g yarn
-
+            - name: Create .npmrc
+              run: echo '//registry.npmjs.org/:_authToken= ${{ secrets.NPM_TOKEN }}' >> .npmrc
             - run: yarn install --network-timeout 1000000
               env:
                   CYPRESS_CACHE_FOLDER: ~/.cache/Cypress

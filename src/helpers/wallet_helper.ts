@@ -1,4 +1,4 @@
-import { pChain } from '@/AVA'
+import { ava, cChain, pChain } from '@/AVA'
 import {
     UTXOSet as PlatformUTXOSet,
     UTXO as PlatformUTXO,
@@ -22,6 +22,7 @@ import Erc20Token from '@/js/Erc20Token'
 import ERC721Token from '@/js/ERC721Token'
 import { issueP, issueX } from '@/helpers/issueTx'
 import { sortUTxoSetP } from '@/helpers/sortUTXOs'
+import glacier from '@/js/Glacier/Glacier'
 
 class WalletHelper {
     static async createNftFamily(
@@ -196,11 +197,6 @@ class WalletHelper {
 
         const tx = await wallet.signP(unsignedTx)
         return issueP(tx)
-    }
-
-    static async getEthBalance(wallet: WalletType) {
-        const bal = await web3.eth.getBalance(wallet.ethAddress)
-        return new BN(bal)
     }
 
     static async sendEth(

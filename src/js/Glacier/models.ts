@@ -1,64 +1,103 @@
+import {
+    BlockchainId,
+    Network,
+    PChainId,
+    PChainTransaction,
+    XChainLinearTransaction,
+    XChainNonLinearTransaction,
+    CChainExportTransaction,
+    CChainImportTransaction,
+    SortOrder,
+    Utxo,
+    PChainConsumedUtxo,
+    PChainEmittedUtxo,
+} from '@avalabs/glacier-sdk'
+
+export type XChainTransaction = XChainLinearTransaction | XChainNonLinearTransaction
 export interface GetBalancesParams {
     addresses: string[]
-    blockchainId: string
-    network: 'mainnet' | 'fuji'
-}
-
-interface AssetAmount {
-    assetId: string
-    amount: string
-}
-
-export interface GetBalancesResponse {
-    balances: {
-        unlockedUnstaked?: AssetAmount[]
-        unlockedStaked?: AssetAmount[]
-        lockedPlatform?: AssetAmount[]
-        lockedStakeable?: AssetAmount[]
-        lockedUnstaked?: AssetAmount[]
-        lockedStaked?: AssetAmount[]
-        locked?: AssetAmount[]
-        unlocked?: AssetAmount[]
-    }
+    blockchainId: BlockchainId
+    network: Network
 }
 
 export interface ListStakingParams {
     addresses: string[]
     pageSize: number // Default = 10
     pageToken?: string // A page token, received from a previous list call. Provide this to retrieve the subsequent page.
-    sortOrder: 'asc' | 'desc'
-    blockchainId: string
-    network: 'mainnet' | 'fuji'
+    sortOrder: SortOrder
+    blockchainId: PChainId
+    network: Network
 }
 
-export interface ListStakingResponse {
-    nextPageToken?: string
-    transactions: ListStakingTx[]
+export type TransactionTypeName =
+    | 'AddDelegatorTx'
+    | `AddPermissionlessValidatorTx`
+    | `AddSubnetValidatorTx`
+    | `AddValidatorTx`
+    | 'AdvanceTimeTx'
+    | 'BaseTx'
+    | 'CreateAssetTx'
+    | 'CreateChainTx'
+    | 'CreateSubnetTx'
+    | 'ExportTx'
+    | 'ImportTx'
+    | 'OperationTx'
+    | 'RemoveSubnetValidatorTx'
+    | 'RewardValidatorTx'
+    | string
+
+export type TransactionType =
+    | XChainTransaction
+    | PChainTransaction
+    | CChainImportTransaction
+    | CChainExportTransaction
+
+export type UtxoType = Utxo | PChainEmittedUtxo | PChainConsumedUtxo
+
+export function isTransactionX(tx: TransactionType): tx is XChainTransaction {
+    return (
+        (tx as XChainTransaction).amountUnlocked !== undefined &&
+        (tx as XChainTransaction).memo !== undefined
+    )
 }
 
-export interface ListStakingTx {
-    txHash: string
-    txType: 'AddDelegatorTx' | 'AddValidatorTx' | string
-    blockTimestamp: number
-    blockNumber: string
-    blockHash: string
-    consumedUtxos: UTXO[]
-    emittedUtxos: UTXO[]
-    value: AssetAmount[]
-    amountBurned: AssetAmount[]
-    amountStaked: AssetAmount[]
-    startTimestamp: number
-    endTimestamp: number
-    delegationFeePercent: string
-    nodeId: string
-    subnetId: string
-    estimatedReward: string
+export function isTransactionP(tx: TransactionType): tx is PChainTransaction {
+    return (tx as PChainTransaction).blockTimestamp !== undefined
 }
 
-interface UTXO {
-    fromTx: string
+export function isCChainImportTransaction(tx: TransactionType): tx is CChainImportTransaction {
+    return (tx as CChainImportTransaction).evmOutputs !== undefined
+}
+
+export function isCChainExportTransaction(tx: TransactionType): tx is CChainExportTransaction {
+    return (tx as CChainExportTransaction).evmInputs !== undefined
+}
+
+export function isTransactionC(
+    tx: TransactionType
+): tx is CChainExportTransaction | CChainImportTransaction {
+    return isCChainImportTransaction(tx) || isCChainExportTransaction(tx)
+}
+
+export type CChainTransaction = CChainImportTransaction | CChainExportTransaction
+
+export interface GetTransactionsParams {
     addresses: string[]
-    amount: string
-    assetId: string
-    utxoId: string
+    blockchainId: BlockchainId
+    network: Network
+    pageSize?: number
+    pageToken?: string
+    sortOrder?: SortOrder
+}
+
+export function isPChainEmittedUTXO(utxo: UtxoType): utxo is PChainEmittedUtxo {
+    return (utxo as PChainEmittedUtxo).assetId !== undefined
+}
+
+export function isPChainConsumedUTXO(utxo: UtxoType): utxo is PChainConsumedUtxo {
+    return (utxo as PChainConsumedUtxo).fromTx !== undefined
+}
+
+export function isUtxo(utxo: UtxoType): utxo is Utxo {
+    return (utxo as Utxo).asset !== undefined
 }

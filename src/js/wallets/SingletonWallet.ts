@@ -57,7 +57,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
     ethKeyChain: EVMKeyChain
     ethAddress: string
     ethAddressBech: string
-    ethBalance: BN
 
     constructor(pk: string) {
         super()
@@ -84,7 +83,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
 
         this.ethKey = pkHex
         this.ethAddress = privateToAddress(pkBuffNative).toString('hex')
-        this.ethBalance = new BN(0)
 
         const cPrivKey = `PrivateKey-` + bintools.cb58Encode(BufferAvalanche.from(pkBuf))
         this.ethKeyBech = cPrivKey
@@ -100,6 +98,14 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
 
     getChangeAddressAvm(): string {
         return this.getCurrentAddressAvm()
+    }
+
+    getAllExternalAddressesX(): string[] {
+        return [this.getCurrentAddressAvm()]
+    }
+
+    getAllChangeAddressesX(): string[] {
+        return [this.getChangeAddressAvm()]
     }
 
     getCurrentAddressAvm(): string {
@@ -155,12 +161,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
 
     getEvmAddressBech(): string {
         return this.ethAddressBech
-    }
-
-    async getEthBalance() {
-        const bal = await WalletHelper.getEthBalance(this)
-        this.ethBalance = bal
-        return bal
     }
 
     async updateUTXOsX(): Promise<AVMUTXOSet> {

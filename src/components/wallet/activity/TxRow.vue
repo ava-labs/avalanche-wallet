@@ -20,10 +20,10 @@
                         <span>{{ date.toLocaleTimeString() }}</span>
                     </p>
                 </div>
-                <div v-if="memo" class="memo">
-                    <label>MEMO</label>
-                    <p>{{ memo }}</p>
-                </div>
+                <!--                <div v-if="memo" class="memo">-->
+                <!--                    <label>MEMO</label>-->
+                <!--                    <p>{{ memo }}</p>-->
+                <!--                </div>-->
             </div>
             <div class="tx_detail">
                 <component :is="tx_comp" :transaction="source"></component>
@@ -37,8 +37,8 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ITransactionData, ITransactionDataProcessed } from '@/store/modules/history/types'
 import { AssetsDict, NftFamilyDict } from '@/store/modules/assets/types'
+import { PChainEmittedUtxo, Utxo, PChainTransaction } from '@avalabs/glacier-sdk'
 import { bnToBig } from '@/helpers/helper'
 import { BN, Buffer } from 'avalanche'
 
@@ -48,6 +48,13 @@ import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport
 import moment from 'moment'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import getMemoFromByteString from '@/services/history/utils'
+import {
+    TransactionType,
+    isCChainImportTransaction,
+    isTransactionX,
+    isTransactionC,
+    TransactionTypeName,
+} from '@/js/Glacier/models'
 
 @Component({
     components: {
@@ -58,36 +65,52 @@ import getMemoFromByteString from '@/services/history/utils'
 })
 export default class TxRow extends Vue {
     @Prop() index!: number
-    @Prop() source!: ITransactionDataProcessed
+    @Prop() source!: TransactionType
 
     get explorerUrl(): string | null {
         let network: AvaNetwork = this.$store.state.Network.selectedNetwork
         if (network.explorerSiteUrl) {
-            return `${network.explorerSiteUrl}/tx/${this.source.id}`
+            return `${network.explorerSiteUrl}/tx/${this.source.txHash}`
         }
         return null
     }
 
     get hasMultisig() {
-        return this.source.outputs?.filter((utxo) => utxo.addresses.length > 1).length > 0 || false
+        if (!isCChainImportTransaction(this.source)) {
+            if (!this.source.emittedUtxos) return false
+            let totMultiSig = 0
+            this.source.emittedUtxos.forEach((utxo: Utxo | PChainEmittedUtxo) => {
+                if (utxo.addresses.length > 1) {
+                    totMultiSig++
+                }
+            })
+            return totMultiSig > 0
+        }
+        return false
+    }
+
+    get timestamp() {
+        if (isTransactionX(this.source) || isTransactionC(this.source)) {
+            return this.source.timestamp * 1000
+        } else {
+            return this.source.blockTimestamp * 1000
+        }
     }
 
     get date() {
-        return new Date(this.source.timestamp)
+        return new Date(this.timestamp)
     }
-    get type() {
-        return this.source.type
+    get type(): TransactionTypeName {
+        return this.source.txType
     }
 
     get tx_comp() {
         switch (this.type) {
-            case 'export':
-            case 'import':
-            case 'pvm_export':
-            case 'pvm_import':
+            case 'ExportTx':
+            case 'ImportTx':
                 return ImportExport
-            case 'add_delegator':
-            case 'add_validator':
+            case 'AddDelegatorTx':
+            case 'AddValidatorTx':
                 return StakingTx
             default:
                 return BaseTx
@@ -102,13 +125,13 @@ export default class TxRow extends Vue {
         return this.$store.state.Assets.nftFamsDict
     }
 
-    get memo(): string | null {
-        const memo = this.source.memo
-        return getMemoFromByteString(memo)
-    }
+    // get memo(): string | null {
+    //     const memo = this.source.memo
+    //     return getMemoFromByteString(memo)
+    // }
 
     get mom() {
-        return moment(this.source.timestamp)
+        return moment(this.timestamp)
     }
     get dayLabel() {
         return this.mom.format('dddd Do')

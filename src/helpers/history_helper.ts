@@ -1,8 +1,3 @@
-// interface IHistoryParsedBaseTx{
-//     sent:
-//     received:
-// }
-
 import { ITransactionData, UTXO } from '@/store/modules/history/types'
 import { WalletType } from '@/js/wallets/types'
 import { BN } from 'avalanche'

@@ -123,6 +123,14 @@ abstract class AbstractHdWallet extends AbstractWallet {
         return this.externalHelper.getAllDerivedAddresses()
     }
 
+    getAllChangeAddressesX(): string[] {
+        return this.internalHelper.getAllDerivedAddresses()
+    }
+
+    getAllExternalAddressesX(): string[] {
+        return this.externalHelper.getAllDerivedAddresses()
+    }
+
     getDerivedAddresses(): string[] {
         const internal = this.internalHelper.getAllDerivedAddresses()
         const external = this.externalHelper.getAllDerivedAddresses()

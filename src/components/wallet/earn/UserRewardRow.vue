@@ -33,15 +33,15 @@ import 'reflect-metadata'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { BN } from 'avalanche'
 import Big from 'big.js'
-import { ListStakingTx } from '@/js/Glacier/models'
 import { bnToBigAvaxP } from '@avalabs/avalanche-wallet-sdk'
+import { PChainTransaction } from '@avalabs/glacier-sdk'
 
 @Component
 export default class UserRewardRow extends Vue {
     now: number = Date.now()
     intervalID: any = null
 
-    @Prop() tx!: ListStakingTx
+    @Prop() tx!: PChainTransaction
 
     updateNow() {
         this.now = Date.now()
@@ -56,11 +56,11 @@ export default class UserRewardRow extends Vue {
         clearInterval(this.intervalID)
     }
     get startTime() {
-        return this.tx.startTimestamp * 1000
+        return (this.tx.startTimestamp ?? 0) * 1000
     }
 
     get endtime() {
-        return this.tx.endTimestamp * 1000
+        return (this.tx.endTimestamp ?? 0) * 1000
     }
 
     get startDate() {
@@ -72,11 +72,14 @@ export default class UserRewardRow extends Vue {
     }
 
     get rewardAmt(): BN {
-        return new BN(this.tx.estimatedReward)
+        return new BN(this.tx.estimatedReward || 0)
     }
 
     get stakingAmt(): BN {
-        return new BN(this.tx.amountStaked[0].amount)
+        if (this.tx.amountStaked !== undefined) {
+            return new BN(this.tx.amountStaked[0].amount || 0)
+        }
+        return new BN(0)
     }
 
     get rewardBig(): Big {
