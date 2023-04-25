@@ -1,11 +1,9 @@
 import { Module } from 'vuex'
 import { RootState } from '@/store/types'
-import { getAddressHistory } from '@/explorer_api'
-import moment from 'moment'
-
-import { HistoryState, ITransactionData } from '@/store/modules/history/types'
-import { avm, pChain } from '@/AVA'
-import { filterDuplicateTransactions } from '@/helpers/history_helper'
+import { HistoryState } from '@/store/modules/history/types'
+import { isMainnetNetworkID } from '@/store/modules/network/isMainnetNetworkID'
+import { isTestnetNetworkID } from '@/store/modules/network/isTestnetNetworkID'
+import { getGlacierHistory } from '@/store/modules/history/getGlacierHistory'
 
 const history_module: Module<HistoryState, RootState> = {
     namespaced: true,
@@ -13,16 +11,19 @@ const history_module: Module<HistoryState, RootState> = {
         isUpdating: false,
         isError: false,
         isUpdatingAll: false,
-        transactions: [], // Used for the history sidepanel txs
+        recentTransactions: [], // Used for the history sidepanel txs
         allTransactions: [], // Used for activity tab txs, paginates
     },
     mutations: {
         clear(state) {
-            state.transactions = []
+            state.recentTransactions = []
             state.allTransactions = []
         },
     },
     actions: {
+        /**
+         * Updates Recent transactions history
+         */
         async updateTransactionHistory({ state, rootState, rootGetters, dispatch }) {
             const wallet = rootState.activeWallet
             if (!wallet) return
@@ -38,31 +39,18 @@ const history_module: Module<HistoryState, RootState> = {
                 return false
             }
 
-            // can't update if there is no explorer or no wallet
-            if (!network || !network.explorerUrl || rootState.address === null) {
+            // If not mainnet/testnet can not use explorer
+            const isMainnet = isMainnetNetworkID(network.networkId)
+            const isTestnet = isTestnetNetworkID(network.networkId)
+
+            if (!isMainnet && !isTestnet) {
                 return false
             }
 
             state.isUpdating = true
+            const txs = await getGlacierHistory(wallet, network.networkId, isMainnet, 30)
 
-            const avmAddrs: string[] = wallet.getAllAddressesX()
-            const pvmAddrs: string[] = wallet.getAllAddressesP()
-
-            // this shouldnt ever happen, but to avoid getting every transaction...
-            if (avmAddrs.length === 0) {
-                state.isUpdating = false
-                return
-            }
-
-            const limit = 20
-            const txs = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-            const txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
-
-            const transactions = txs
-                .concat(txsP)
-                .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
-
-            state.transactions = transactions
+            state.recentTransactions = txs
             state.isUpdating = false
         },
 
@@ -82,37 +70,20 @@ const history_module: Module<HistoryState, RootState> = {
                 return false
             }
 
-            // can't update if there is no explorer or no wallet
-            if (!network.explorerUrl || rootState.address === null) {
+            // If not mainnet/testnet can not use explorer
+            const isMainnet = isMainnetNetworkID(network.networkId)
+            const isTestnet = isTestnetNetworkID(network.networkId)
+
+            if (!isMainnet && !isTestnet) {
                 return false
             }
 
             state.isUpdatingAll = true
-
-            const avmAddrs: string[] = wallet.getAllAddressesX()
-            const pvmAddrs: string[] = wallet.getAllAddressesP()
-
-            // this shouldnt ever happen, but to avoid getting every transaction...
-            if (avmAddrs.length === 0) {
-                state.isUpdatingAll = false
-                return
-            }
-
-            const limit = 0
-
             try {
-                const txsX = await getAddressHistory(avmAddrs, limit, avm.getBlockchainID())
-                const txsP = await getAddressHistory(pvmAddrs, limit, pChain.getBlockchainID())
-
-                const txsXFiltered = filterDuplicateTransactions(txsX)
-                const txsPFiltered = filterDuplicateTransactions(txsP)
-
-                const transactions = txsXFiltered
-                    .concat(txsPFiltered)
-                    .sort((x, y) => (moment(x.timestamp).isBefore(moment(y.timestamp)) ? 1 : -1))
-
-                state.allTransactions = transactions
+                const txs = await getGlacierHistory(wallet, network.networkId, isMainnet)
+                state.allTransactions = txs
             } catch (e) {
+                console.log(e)
                 state.isError = true
             }
             state.isUpdatingAll = false
@@ -121,8 +92,8 @@ const history_module: Module<HistoryState, RootState> = {
     getters: {
         stakingTxs(state) {
             return state.allTransactions.filter((tx) => {
-                const types = ['add_validator', 'add_delegator']
-                if (types.includes(tx.type)) {
+                const types = ['AddValidatorTx', 'AddDelegatorTx']
+                if (types.includes(tx.txType)) {
                     return true
                 }
                 return false

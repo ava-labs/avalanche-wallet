@@ -19,6 +19,9 @@ module.exports = {
                 maxSize: 2000 * 1000,
             },
         },
+        resolve: {
+            symlinks: false,
+        },
     },
     pwa: {
         name: 'AVAX Wallet',

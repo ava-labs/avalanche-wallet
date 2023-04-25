@@ -25,6 +25,10 @@ import { AvmImportChainType } from '@/js/wallets/types'
 import { issueC, issueP, issueX } from '@/helpers/issueTx'
 import { sortUTxoSetP } from '@/helpers/sortUTXOs'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
+import glacier from '@/js/Glacier/Glacier'
+import { isMainnetNetworkID } from '@/store/modules/network/isMainnetNetworkID'
+import { isTestnetNetworkID } from '@/store/modules/network/isTestnetNetworkID'
+import { web3 } from '@/evm'
 const uniqid = require('uniqid')
 
 abstract class AbstractWallet {
@@ -33,6 +37,7 @@ abstract class AbstractWallet {
     utxoset: AVMUTXOSet
     platformUtxoset: PlatformUTXOSet
     stakeAmount: BN
+    ethBalance: BN
 
     isFetchUtxos: boolean
     isInit: boolean
@@ -44,6 +49,8 @@ abstract class AbstractWallet {
     abstract getCurrentAddressPlatform(): string
     abstract getAllAddressesP(): string[]
     abstract getAllAddressesX(): string[]
+    abstract getAllChangeAddressesX(): string[]
+    abstract getAllExternalAddressesX(): string[]
 
     abstract async signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
     abstract async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
@@ -61,6 +68,7 @@ abstract class AbstractWallet {
         this.utxoset = new AVMUTXOSet()
         this.platformUtxoset = new PlatformUTXOSet()
         this.stakeAmount = new BN(0)
+        this.ethBalance = new BN(0)
 
         this.isInit = false
         this.isFetchUtxos = false
@@ -69,6 +77,28 @@ abstract class AbstractWallet {
     async evmGetAtomicUTXOs(sourceChain: ExportChainsC) {
         const addrs = [this.getEvmAddressBech()]
         return await UtxoHelper.evmGetAtomicUTXOs(addrs, sourceChain)
+    }
+
+    async getEthBalance() {
+        const netID = ava.getNetworkID()
+        const isMainnet = isMainnetNetworkID(netID)
+        const isFuji = isTestnetNetworkID(netID)
+
+        let bal
+        // Can't use glacier if not mainnet/fuji
+        if (!isMainnet && !isFuji) {
+            bal = new BN(await web3.eth.getBalance(this.getEvmAddress()))
+        } else {
+            const chainId = isMainnet ? '43114' : '43113'
+            const res = await glacier.evm.getNativeBalance({
+                chainId: chainId,
+                address: '0x' + this.getEvmAddress(),
+            })
+            bal = new BN(res.nativeTokenBalance.balance)
+        }
+
+        this.ethBalance = bal
+        return bal
     }
 
     async createImportTxC(sourceChain: ExportChainsC, utxoSet: EVMUTXOSet, fee: BN) {

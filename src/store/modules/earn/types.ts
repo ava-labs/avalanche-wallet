@@ -1,4 +1,5 @@
-import { ListStakingTx } from '@/js/Glacier/models'
+import { PChainTransaction } from '@avalabs/glacier-sdk'
+
 export interface EarnState {
-    stakingTxs: ListStakingTx[]
+    stakingTxs: PChainTransaction[]
 }

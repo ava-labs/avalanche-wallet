@@ -35,6 +35,11 @@
     web3-eth-contract "1.7.1"
     xss "1.0.11"
 
+"@avalabs/glacier-sdk@2.8.0-alpha.92":
+  version "2.8.0-alpha.92"
+  resolved "https://registry.yarnpkg.com/@avalabs/glacier-sdk/-/glacier-sdk-2.8.0-alpha.92.tgz#91f63d893432ceed46d701813ad67acf9d6b912d"
+  integrity sha512-Kkj69Exk3WY1nVpmrcyvEM7F28jimgmhYDY2rs4SanyNM5j4A0KaVBKLtVqFe6wsXOxYihqXlAG0qS/VNTsTOg==
+
 "@avalabs/hw-app-avalanche@0.6.6":
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/@avalabs/hw-app-avalanche/-/hw-app-avalanche-0.6.6.tgz#4d7675e1a712fd8a82142fbe9b800fdb7742b119"

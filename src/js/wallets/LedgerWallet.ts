@@ -79,7 +79,6 @@ class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
     type: WalletNameType
 
     ethAddress: string
-    ethBalance: BN
     version: string
     ethHdNode: HDKey
 
@@ -101,10 +100,8 @@ class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
             const ethKey = hdEth
             const ethPublic = importPublic(ethKey.publicKey)
             this.ethAddress = publicToAddress(ethPublic).toString('hex')
-            this.ethBalance = new BN(0)
         } else {
             this.ethAddress = ''
-            this.ethBalance = new BN(0)
         }
     }
 
@@ -873,12 +870,6 @@ class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
 
     getEvmAddress(): string {
         return this.ethAddress
-    }
-
-    async getEthBalance() {
-        const bal = await WalletHelper.getEthBalance(this)
-        this.ethBalance = bal
-        return bal
     }
 
     async getUTXOs(): Promise<void> {

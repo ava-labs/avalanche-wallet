@@ -11,14 +11,17 @@
         <div class="settings">
             <div class="filter_col">
                 <div class="filter_cont">
-                    <label>Export CSV File (BETA)</label>
+                    <label>
+                        Export CSV File (BETA)
+                        <span style="font-size: 0.8em; opacity: 0.8">Temporarily Disabled</span>
+                    </label>
                     <div class="csv_buttons">
                         <v-btn
                             x-small
                             @click="openCsvModal"
                             class="button_secondary"
                             depressed
-                            :disabled="!showList"
+                            disabled
                         >
                             Export Rewards
                         </v-btn>
@@ -27,7 +30,7 @@
                             @click="openAvaxCsvModal"
                             class="button_secondary"
                             depressed
-                            :disabled="!showList"
+                            disabled
                         >
                             Export AVAX Transfers
                         </v-btn>
@@ -63,7 +66,7 @@
                 <virtual-list
                     v-show="txs.length > 0"
                     :style="{ height: `${listH}px`, overflowY: 'auto' }"
-                    :data-key="'id'"
+                    :data-key="'txHash'"
                     :data-sources="txsProcessed"
                     :data-component="RowComponent"
                     :keeps="20"
@@ -92,11 +95,11 @@
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import {
-    ITransactionData,
-    ITransactionDataProcessed,
+    isTransactionC,
+    isTransactionX,
     TransactionType,
-} from '@/store/modules/history/types'
-import moment from 'moment'
+    TransactionTypeName,
+} from '@/js/Glacier/models'
 
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import RadioButtons from '@/components/misc/RadioButtons.vue'
@@ -217,7 +220,7 @@ export default class Activity extends Vue {
 
         for (var i = 0; i < txs.length; i++) {
             let tx = txs[i]
-            let date = new Date(tx.timestamp)
+            let date = new Date(this.getTxTimestamp(tx))
             // let mom = moment(tx.timestamp)
             let month = date.getMonth()
             let year = date.getFullYear()
@@ -231,11 +234,30 @@ export default class Activity extends Vue {
         return res
     }
 
-    get allTxs(): ITransactionData[] {
-        return this.$store.state.History.allTransactions
+    get allTxs(): TransactionType[] {
+        const supportedTypes: TransactionTypeName[] = [
+            'BaseTx',
+            'ImportTx',
+            'ExportTx',
+            'OperationTx',
+            'AddValidatorTx',
+            'AddDelegatorTx',
+            'CreateAssetTx',
+        ]
+        return this.$store.state.History.allTransactions.filter((tx: TransactionType) => {
+            return supportedTypes.includes(tx.txType)
+        })
     }
 
-    get txs(): ITransactionData[] {
+    getTxTimestamp(tx: TransactionType) {
+        if (isTransactionX(tx) || isTransactionC(tx)) {
+            return tx.timestamp * 1000
+        } else {
+            return tx.blockTimestamp * 1000
+        }
+    }
+
+    get txs(): TransactionType[] {
         let txs
         switch (this.mode) {
             case 'transfer':
@@ -253,7 +275,7 @@ export default class Activity extends Vue {
         }
 
         let filtered = txs.filter((tx) => {
-            let date = new Date(tx.timestamp)
+            let date = new Date(this.getTxTimestamp(tx))
 
             if (date.getMonth() === this.monthNow && date.getFullYear() === this.yearNow) {
                 return true
@@ -263,7 +285,7 @@ export default class Activity extends Vue {
         return filtered
     }
 
-    get txsProcessed(): ITransactionDataProcessed[] {
+    get txsProcessed() {
         let txs = this.txs
 
         let res = txs.map((tx, index) => {
@@ -276,8 +298,8 @@ export default class Activity extends Vue {
             } else {
                 let txBefore = txs[index - 1]
 
-                let date = new Date(tx.timestamp)
-                let dateBefore = new Date(txBefore.timestamp)
+                let date = new Date(this.getTxTimestamp(tx))
+                let dateBefore = new Date(this.getTxTimestamp(txBefore))
 
                 if (dateBefore.getMonth() !== date.getMonth()) {
                     showMonth = true
@@ -322,37 +344,25 @@ export default class Activity extends Vue {
         this.setScrollHeight()
     }
 
-    get txsTransfer(): ITransactionData[] {
-        let txs: ITransactionData[] = this.allTxs
-        let transferTypes: TransactionType[] = ['base', 'create_asset', 'operation']
+    get txsTransfer(): TransactionType[] {
+        let transferTypes: TransactionTypeName[] = ['BaseTx', 'CreateAssetTx', 'OperationTx']
 
-        return txs.filter((tx) => {
-            let txType = tx.type
-            if (transferTypes.includes(txType)) return true
-
-            return false
+        return this.allTxs.filter((tx) => {
+            return transferTypes.includes(tx.txType)
         })
     }
 
-    get txsSwap(): ITransactionData[] {
-        let txs: ITransactionData[] = this.allTxs
-        let exportTypes: TransactionType[] = ['import', 'export', 'pvm_import', 'pvm_export']
-
-        return txs.filter((tx) => {
-            let txType = tx.type
-            if (exportTypes.includes(txType)) return true
-            return false
+    get txsSwap(): TransactionType[] {
+        let exportTypes: TransactionTypeName[] = ['ExportTx', 'ImportTx']
+        return this.allTxs.filter((tx) => {
+            return exportTypes.includes(tx.txType)
         })
     }
 
-    get txsStake(): ITransactionData[] {
-        let txs: ITransactionData[] = this.allTxs
-        let stakeTypes: TransactionType[] = ['add_validator', 'add_delegator']
-
-        return txs.filter((tx) => {
-            let txType = tx.type
-            if (stakeTypes.includes(txType)) return true
-            return false
+    get txsStake(): TransactionType[] {
+        let stakeTypes: TransactionTypeName[] = ['AddValidatorTx', 'AddDelegatorTx']
+        return this.allTxs.filter((tx) => {
+            return stakeTypes.includes(tx.txType)
         })
     }
 

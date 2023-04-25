@@ -1,91 +1,37 @@
 <template>
     <div class="staking_tx">
-        <template v-if="isRewarded">
-            <div class="data_row" v-if="!isDelegatorReward">
-                <p class="rewarded">
-                    <span><fa icon="check-square"></fa></span>
-                    {{ $t('transactions.rewarded') }}
-                </p>
-            </div>
-
-            <div class="data_row reward_row">
-                <p>{{ $t('transactions.date_reward') }}</p>
-                <p>
-                    {{ endDate.toLocaleDateString() }}
-                    {{ endDate.toLocaleTimeString() }}
-                </p>
-            </div>
-            <div class="data_row reward_row">
-                <p>AVAX Price at reward date</p>
-                <p v-if="rewardDateAvaxPrice">{{ rewardDateAvaxPrice.toFixed(2) }} USD</p>
-                <p v-else>Unknown</p>
-            </div>
-            <div class="data_row reward_row">
-                <p>Total reward in USD</p>
-                <p v-if="totalRewardUSD">{{ totalRewardUSD.toLocaleString(2) }} USD</p>
-                <p v-else>-</p>
-            </div>
-            <div class="data_row">
-                <p v-if="!isDelegatorReward">{{ $t('transactions.reward_amount') }}</p>
-                <p v-else>{{ $t('transactions.fee_amount') }}</p>
-                <p class="amt">{{ rewardAmtText.toLocaleString() }} AVAX</p>
-            </div>
-        </template>
-        <template v-else-if="!isRewarded && !!rewardTime">
-            <div class="data_row">
-                <p class="not_rewarded">
-                    <span><fa icon="times"></fa></span>
-                    {{ $t('transactions.not_rewarded') }}
-                </p>
-            </div>
-            <div class="data_row reward_row">
-                <p>{{ $t('transactions.end') }}</p>
-                <p>
-                    {{ endDate.toLocaleDateString() }}
-                    {{ endDate.toLocaleTimeString() }}
-                </p>
-            </div>
-        </template>
-        <div v-else>
-            <div class="time_bar" v-if="isStarted">
-                <div
-                    class="bar_row"
-                    :style="{
-                        width: `${timeBarPerc}%`,
-                    }"
-                ></div>
-            </div>
-            <div v-if="!isStarted" class="data_row date_row">
-                <p>{{ $t('transactions.start') }}</p>
-                <p>
-                    {{ startDate.toLocaleDateString() }}
-                    {{ startDate.toLocaleTimeString() }}
-                </p>
-            </div>
-            <template v-else>
-                <div class="data_row reward_row">
-                    <p>{{ $t('transactions.end') }}</p>
-                    <p>
-                        {{ endDate.toLocaleDateString() }}
-                        {{ endDate.toLocaleTimeString() }}
-                    </p>
-                </div>
-                <div class="data_row reward_row" v-if="isValidator">
-                    <p>{{ $t('transactions.reward_pending') }}</p>
-                    <p class="amt">{{ rewardText }} AVAX</p>
-                </div>
-            </template>
-        </div>
-
-        <div class="data_row" v-if="!isDelegatorReward">
+        <div class="data_row">
             <p>{{ actionText }}</p>
             <p class="amt">{{ amtText }} AVAX</p>
+        </div>
+        <!--If received validator reward and validator tx-->
+        <div class="data_row" v-if="isValidator && receivedValidatorReward">
+            <p>
+                <span class="rewarded"><fa icon="check-square"></fa></span>
+                {{ $t('transactions.reward_amount') }}
+            </p>
+            <p class="amt">{{ formatRewardAmount(validatorRewardAmount) }} AVAX</p>
+        </div>
+        <!--If received validator reward and delegator tx-->
+        <div class="data_row" v-if="!isValidator && receivedValidatorReward">
+            <p>
+                <span class="rewarded"><fa icon="check-square"></fa></span>
+                {{ $t('transactions.fee_amount') }}
+            </p>
+            <p class="amt">{{ formatRewardAmount(validatorRewardAmount) }} AVAX</p>
+        </div>
+        <!--If received delegator reward and delegator tx-->
+        <div class="data_row" v-if="!isValidator && receivedDelegatorReward">
+            <p>
+                <span class="rewarded"><fa icon="check-square"></fa></span>
+                {{ $t('transactions.reward_amount') }}
+            </p>
+            <p class="amt">{{ formatRewardAmount(delegatorRewardAmount) }} AVAX</p>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ITransactionData } from '@/store/modules/history/types'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
 import { UnixNow } from 'avalanche/dist/utils'
@@ -93,48 +39,16 @@ import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { WalletType } from '@/js/wallets/types'
 import { getPriceAtUnixTime } from '@/helpers/price_helper'
 import Big from 'big.js'
+import { PChainTransaction, PChainEmittedUtxo } from '@avalabs/glacier-sdk'
+import { filterOwnedAddresses } from './filterOwnedAddresses'
 
 @Component
 export default class StakingTx extends Vue {
-    @Prop() transaction!: ITransactionData
+    @Prop() transaction!: PChainTransaction
     isStarted = false
-    mounted() {
-        this.updateStartStatus()
-    }
-
-    updateStartStatus() {
-        let now = UnixNow()
-        this.isStarted = now.toNumber() > this.startTime
-
-        if (!this.isStarted) {
-            setTimeout(() => {
-                this.updateStartStatus()
-            }, 5000)
-        }
-    }
 
     get isValidator() {
-        return this.transaction.type === 'add_validator'
-    }
-
-    get isDelegatorReward() {
-        if (this.isValidator) return false
-
-        // If its a delegation, and the wallet does not own any of the inputs
-        let ins = this.transaction.inputs || []
-        let inUtxos = ins.map((input) => input.output)
-
-        let inAddrs = []
-        for (var i = 0; i < inUtxos.length; i++) {
-            let utxo = inUtxos[i]
-            inAddrs.push(...utxo.addresses)
-        }
-
-        let inWalletAddrs = inAddrs.filter((addr) => {
-            return this.pAddrsClean.includes(addr)
-        })
-
-        return inWalletAddrs.length === 0
+        return this.transaction.txType === 'AddValidatorTx'
     }
 
     get actionText() {
@@ -146,11 +60,8 @@ export default class StakingTx extends Vue {
     }
 
     get stakeAmt(): BN {
-        let tot = this.transaction.outputs.reduce((acc, out) => {
-            if (out.stake) {
-                return acc.add(new BN(out.amount))
-            }
-            return acc
+        let tot = (this.transaction.emittedUtxos ?? []).reduce((acc, out) => {
+            return out.staked ? acc.add(new BN(out.amount)) : acc
         }, new BN(0))
         return tot
     }
@@ -164,42 +75,8 @@ export default class StakingTx extends Vue {
         return pAddrs.map((addr) => addr.split('-')[1])
     }
 
-    // Reward received after a successful staking transaction
-    get rewardAmt(): BN {
-        if (!this.isRewarded) return new BN(0)
-
-        let pAddrsClean = this.pAddrsClean
-
-        let myRewardUTXOs = this.transaction.outputs.filter((utxo) => {
-            let isReward = utxo.rewardUtxo
-            let myReward = pAddrsClean.includes(utxo.addresses[0])
-            return isReward && myReward
-        })
-
-        let tot = myRewardUTXOs.reduce((acc, out) => {
-            return acc.add(new BN(out.amount))
-        }, new BN(0))
-        return tot
-    }
-
-    get rewardAmtBig(): Big {
-        return bnToBig(this.rewardAmt, 9)
-    }
-
-    get rewardDateAvaxPrice(): number | undefined {
-        if (!this.endDate) return undefined
-        let unixTime = this.endDate.getTime()
-        let price = getPriceAtUnixTime(unixTime)
-        return price
-    }
-
-    get totalRewardUSD(): Big | undefined {
-        if (!this.rewardDateAvaxPrice) return undefined
-        return this.rewardAmtBig.times(this.rewardDateAvaxPrice)
-    }
-
-    get rewardAmtText() {
-        return bnToBig(this.rewardAmt, 9)
+    formatRewardAmount(amount: BN) {
+        return bnToBig(amount, 9)
     }
 
     get amtText() {
@@ -207,77 +84,53 @@ export default class StakingTx extends Vue {
         return big.toLocaleString()
     }
 
-    get isRewarded() {
-        return this.transaction.rewarded
+    /**
+     * The validator reward UTXO of this tx
+     */
+    get validatorReward(): PChainEmittedUtxo | undefined {
+        return (this.transaction.emittedUtxos || []).filter((utxo) => {
+            return utxo.rewardType === 'validator'
+        })[0]
     }
 
-    // DO NOT use this as the date reward received. Use validator end time instead.
-    get rewardTime() {
-        return this.transaction.rewardedTime
+    /**
+     * The delegator reward UTXO of this tx
+     */
+    get delegatorReward(): PChainEmittedUtxo | undefined {
+        return (this.transaction.emittedUtxos || []).filter((utxo) => {
+            return utxo.rewardType === 'delegator'
+        })[0]
     }
 
-    get startTime() {
-        return this.transaction.validatorStart
-    }
-    get endtime() {
-        return this.transaction.validatorEnd
+    get validatorRewardAmount() {
+        return this.validatorReward?.amount
     }
 
-    get startDate() {
-        return new Date(this.startTime * 1000)
+    get delegatorRewardAmount() {
+        return this.validatorReward?.amount
     }
 
-    get endDate() {
-        return new Date(this.endtime * 1000)
-    }
-    get validator(): ValidatorRaw | null {
-        let nodeId = this.transaction.validatorNodeID
-        if (nodeId) {
-            for (var i = 0; i < this.validators.length; i++) {
-                let v = this.validators[i]
-                if (v.nodeID === nodeId) {
-                    return v
-                }
-            }
-        }
-        return null
+    /**
+     * Returns true if this wallet received delegator reward
+     */
+    get receivedDelegatorReward() {
+        if (this.isValidator || !this.delegatorReward) return false
+
+        const addrs = filterOwnedAddresses(this.pAddrsClean, this.delegatorReward.addresses)
+        return addrs.length
     }
 
-    get potentialReward() {
-        let v = this.validator
-        if (v) {
-            if (this.isValidator) {
-                return v.potentialReward
-            }
-        }
-        return null
+    /**
+     * Returns true if this wallet received validator reward
+     */
+    get receivedValidatorReward() {
+        if (this.isValidator || !this.validatorReward) return false
+
+        const addrs = filterOwnedAddresses(this.pAddrsClean, this.validatorReward.addresses)
+        return addrs.length
     }
 
-    get rewardBig() {
-        let reward = this.potentialReward
-        if (!reward) return null
-
-        let bn = new BN(reward)
-        return bnToBig(bn, 9)
-    }
-
-    get rewardText() {
-        if (!this.rewardBig) return '?'
-        return this.rewardBig.toLocaleString()
-    }
-
-    get validators(): ValidatorRaw[] {
-        return this.$store.state.Platform.validators
-    }
-
-    get timeBarPerc() {
-        if (!this.isStarted) return 0
-        let now = UnixNow()
-        // if (this.endtime) {
-        let dur = this.endtime - this.startTime
-        return ((now.toNumber() - this.startTime) / dur) * 100
-        // }
-    }
+    // TODO: Add missing stake info for staking transactions, start/end date, potential reward, reward date, reward USD price
 }
 </script>
 <style scoped lang="scss">
@@ -329,11 +182,8 @@ export default class StakingTx extends Vue {
         color: var(--primary-color);
     }
 }
-.rewarded {
-    span {
-        margin-right: 6px;
-        color: var(--success);
-    }
+span.rewarded {
+    color: var(--success);
 }
 .not_rewarded span {
     color: var(--error);

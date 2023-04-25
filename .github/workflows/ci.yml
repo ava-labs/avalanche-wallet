@@ -10,6 +10,8 @@ env:
 jobs:
   Build:
     runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     strategy:
       matrix:
         node-version: [15]
@@ -19,5 +21,7 @@ jobs:
         with:
           cache: yarn
           node-version: ${{ matrix.node-version }}
+      - name: Create .npmrc
+        run: echo '//registry.npmjs.org/:_authToken= ${{ secrets.NPM_TOKEN }}' >> .npmrc
       - run: yarn install --frozen-lockfile
       - run: yarn build
