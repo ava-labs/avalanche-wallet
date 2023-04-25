@@ -6,7 +6,7 @@ import {
 
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm'
 import { getPreferredHRP } from 'avalanche/dist/utils'
-import { ava, avm, bintools, cChain, pChain } from '@/AVA'
+import { ava, avm, bintools, pChain } from '@/AVA'
 import HDKey from 'hdkey'
 import { Buffer } from 'avalanche'
 import {
@@ -15,11 +15,11 @@ import {
 } from 'avalanche/dist/apis/platformvm'
 import store from '@/store'
 
-import { getAddressChains } from '@/explorer_api'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import { ChainAlias } from './wallets/types'
 import { avmGetAllUTXOs, platformGetAllUTXOs } from '@/helpers/utxo_helper'
 import { updateFilterAddresses } from '../providers'
+import { listChainsForAddresses } from '@/js/Glacier/listChainsForAddresses'
 
 const INDEX_RANGE: number = 20 // a gap of at least 20 indexes is needed to claim an index unused
 
@@ -242,17 +242,12 @@ class HdHelper {
     // Scans the address space of this hd path and finds the last used index using the
     // explorer API.
     async findAvailableIndexExplorer(startIndex = 0): Promise<number> {
+        // The number of addresses to process and request from the explorer at a time
         const upTo = 512
 
         const addrs = this.getAllDerivedAddresses(startIndex + upTo, startIndex)
-        const addrChains = await getAddressChains(addrs)
-
-        let chainID
-        if (this.chainId === 'X') {
-            chainID = avm.getBlockchainID()
-        } else {
-            chainID = pChain.getBlockchainID()
-        }
+        const addrChainsGlacier = await listChainsForAddresses(addrs)
+        const seenAddrs = addrChainsGlacier.map((addrData) => addrData.address)
 
         for (let i = 0; i < addrs.length - INDEX_RANGE; i++) {
             let gapSize: number = 0
@@ -262,12 +257,10 @@ class HdHelper {
                 const scanAddr = addrs[scanIndex]
 
                 const rawAddr = scanAddr.split('-')[1]
-                const chains: string[] = addrChains[rawAddr]
-                if (!chains) {
-                    // If doesnt exist on any chain
-                    gapSize++
-                } else if (!chains.includes(chainID)) {
-                    // If doesnt exist on this chain
+
+                const isSeen = seenAddrs.includes(rawAddr)
+                if (!isSeen) {
+                    // If doesn't exist on any chain
                     gapSize++
                 } else {
                     i = i + n
