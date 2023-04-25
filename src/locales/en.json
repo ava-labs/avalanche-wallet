@@ -545,7 +545,7 @@
             },
             "confirmation": {
                 "id": "Node ID",
-                "amount": "Staking Amount",
+                "amount": "Bonded Amount",
                 "start": "Start Date",
                 "start_desc": "Your validation will start at least 5 minutes after you submit this form.",
                 "end": "End Date",
