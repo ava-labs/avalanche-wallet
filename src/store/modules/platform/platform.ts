@@ -112,8 +112,15 @@ const platform_module: Module<PlatformState, RootState> = {
                     if (matchingOffer) {
                         const index = activeDepositOffers.deposits.indexOf(depositOffer)
                         activeOffers.push({
-                            ...matchingOffer,
-                            ...depositOffer,
+                            depositTxID: activeDepositOffers.deposits[index].depositTxID,
+                            memo: matchingOffer.memo,
+                            start: activeDepositOffers.deposits[index].start,
+                            lockDuration: activeDepositOffers.deposits[index].duration,
+                            minAmount: matchingOffer.minAmount,
+                            interestRateNominator: matchingOffer.interestRateNominator,
+                            amount: activeDepositOffers.deposits[index].amount,
+                            claimedRewardAmount:
+                                activeDepositOffers.deposits[index].claimedRewardAmount,
                             pendingRewards: activeDepositOffers.availableRewards[index],
                         })
                     }

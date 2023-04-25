@@ -12,12 +12,17 @@
             </div>
         </div>
         <div class="pages">
-            <transition-group name="fade" mode="out-in">
-                <div v-show="tab === `earn_now`" key="earn_now">
-                    {{ $t('earn.rewards.no_saving_pool') }}
+            <transition name="fade" mode="out-in">
+                <div>
+                    <div v-show="tab === `earn_now`" key="earn_now">
+                        {{ $t('earn.rewards.no_saving_pool') }}
+                    </div>
+                    <UserRewards
+                        v-show="tab === `actine_earning`"
+                        key="actine_earning"
+                    ></UserRewards>
                 </div>
-                <UserRewards v-show="tab === `actine_earning`" key="actine_earning"></UserRewards>
-            </transition-group>
+            </transition>
         </div>
     </div>
 </template>

@@ -15,7 +15,7 @@
                 :depositTxID="v.depositTxID"
                 :title="v.memo"
                 :start="v.start"
-                :duration="v.unlockPeriodDuration"
+                :duration="v.lockDuration"
                 :minLock="v.minAmount"
                 :rewards="v.interestRateNominator"
                 :lockedAmount="v.amount"
@@ -29,7 +29,7 @@
 </template>
 <script lang="ts">
 import 'reflect-metadata'
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import { AvaWalletCore } from '../../../js/wallets/types'
 import { DelegatorRaw, ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import UserRewardRow from '@/components/wallet/earn/UserRewardRow.vue'
@@ -41,6 +41,7 @@ import { BN } from '@c4tplatform/caminojs/dist'
 import { WalletType } from '@/js/wallets/types'
 import { MultisigTx as SignavaultTx } from '@/store/modules/signavault/types'
 import { WalletHelper } from '@/helpers/wallet_helper'
+import { SignaVault } from '@/signavault_api'
 
 @Component({
     components: {
