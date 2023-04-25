@@ -32,6 +32,7 @@ export default class DateForm extends Vue {
     localEnd = this.endDateMin
 
     @Prop() maxEndDate?: string
+    @Prop() typeDateForm?: string
 
     // @Watch('localStart')
     // startChange(val: string) {
@@ -89,13 +90,21 @@ export default class DateForm extends Vue {
 
     // now + 15 minutes + 2 weeks (Min Staking Duration)
     get endDateMin() {
-        let start = this.localStart
-        let startDate = new Date(start)
+        let now = new Date()
+        now.setMonth(now.getMonth() + 6)
 
-        let milisecondsMinStakeDuration = ava.getNetwork().P.minStakeDuration * 10000
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        const day = String(now.getDate()).padStart(2, '0')
+        const hour = String(now.getHours()).padStart(2, '0')
+        const minute = String(now.getMinutes()).padStart(2, '0')
+        const second = String(now.getSeconds()).padStart(2, '0')
 
-        let end = this.tx ? startDate.getTime() : startDate.getTime() + milisecondsMinStakeDuration
-        let endDate = new Date(end)
+        const formattedDate = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+
+        let minDate = new Date(`${formattedDate}`)
+        let minDateParsed = new Date(minDate).toISOString()
+        let endDate = new Date(minDateParsed)
         return endDate.toISOString()
     }
 
@@ -114,8 +123,18 @@ export default class DateForm extends Vue {
     get defaultEndDate() {
         let start = this.localStart
         let startDate = new Date(start)
-
         let end = startDate.getTime() + DAY_MS * 21
+
+        //If the DateForm have typeDateForm, the end is different days
+        switch (this.typeDateForm) {
+            case 'validatorDateForm':
+                end = startDate.getTime() + DAY_MS * 183
+                break
+            case 'transactionDateForm':
+                end = startDate.getTime() + DAY_MS * 5
+                break
+        }
+
         let endDate = new Date(end)
         return endDate.toISOString()
     }
