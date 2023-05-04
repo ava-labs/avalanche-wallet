@@ -17,6 +17,7 @@
                     small
                     @click="downloadRewardsHistory"
                     :loading="isStakeDownloading"
+                    disabled
                 >
                     Download Staking History
                 </v-btn>
