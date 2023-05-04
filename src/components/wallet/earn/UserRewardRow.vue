@@ -86,10 +86,9 @@ export default class UserRewardRow extends Vue {
         return Big(this.rewardAmt.toString()).div(Math.pow(10, 9))
     }
 
-    get stakeBig(): Big {
+    get stakeBig() {
         return bnToBigAvaxP(this.stakingAmt)
     }
-
     get percFull(): number {
         let range = this.endtime - this.startTime
         let res = (this.now - this.startTime) / range

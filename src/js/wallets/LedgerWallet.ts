@@ -17,7 +17,6 @@ import bippath from 'bip32-path'
 import createHash from 'create-hash'
 import store from '@/store'
 import { importPublic, publicToAddress, bnToRlp, rlp } from 'ethereumjs-util'
-
 import { UTXO as AVMUTXO } from 'avalanche/dist/apis/avm/utxos'
 import { AvaWalletCore } from '@/js/wallets/types'
 import { ITransaction } from '@/components/wallet/transfer/types'
@@ -691,8 +690,8 @@ class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
     getEvmTransactionMessages(tx: Transaction): ILedgerBlockMessage[] {
         const gasPrice = tx.gasPrice
         const gasLimit = tx.gasLimit
-        const totFee = gasPrice.mul(new BN(gasLimit))
-        const feeNano = bnToBig(totFee, 9)
+        const totFee = gasPrice.mul(gasLimit)
+        const feeNano = bnToBig(new BN(totFee.toString()), 9)
 
         let msgs: ILedgerBlockMessage[] = []
         try {
