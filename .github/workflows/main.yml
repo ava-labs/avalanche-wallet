@@ -10,7 +10,7 @@ jobs:
         strategy:
             matrix:
                 # The node version, you can put one or many versions in here to test with
-                node: [15.6.0]
+                node: [16.x]
         steps:
             - name: Checkout
               uses: actions/checkout@v1
