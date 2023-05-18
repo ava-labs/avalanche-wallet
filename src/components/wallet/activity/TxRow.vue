@@ -20,10 +20,6 @@
                         <span>{{ date.toLocaleTimeString() }}</span>
                     </p>
                 </div>
-                <!--                <div v-if="memo" class="memo">-->
-                <!--                    <label>MEMO</label>-->
-                <!--                    <p>{{ memo }}</p>-->
-                <!--                </div>-->
             </div>
             <div class="tx_detail">
                 <component :is="tx_comp" :transaction="source"></component>
@@ -38,16 +34,13 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AssetsDict, NftFamilyDict } from '@/store/modules/assets/types'
-import { PChainEmittedUtxo, Utxo, PChainTransaction } from '@avalabs/glacier-sdk'
-import { bnToBig } from '@/helpers/helper'
-import { BN, Buffer } from 'avalanche'
+import { PChainEmittedUtxo, Utxo } from '@avalabs/glacier-sdk'
 
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
 import moment from 'moment'
-import { AvaNetwork } from '@/js/AvaNetwork'
-import getMemoFromByteString from '@/services/history/utils'
+import { getUrlFromTransaction } from '@/js/Glacier/getUrlFromTransaction'
 import {
     TransactionType,
     isCChainImportTransaction,
@@ -55,6 +48,7 @@ import {
     isTransactionC,
     TransactionTypeName,
 } from '@/js/Glacier/models'
+import { ava } from '@/AVA'
 
 @Component({
     components: {
@@ -68,11 +62,8 @@ export default class TxRow extends Vue {
     @Prop() source!: TransactionType
 
     get explorerUrl(): string | null {
-        let network: AvaNetwork = this.$store.state.Network.selectedNetwork
-        if (network.explorerSiteUrl) {
-            return `${network.explorerSiteUrl}/tx/${this.source.txHash}`
-        }
-        return null
+        const netID = ava.getNetworkID()
+        return getUrlFromTransaction(netID, this.source)
     }
 
     get hasMultisig() {
