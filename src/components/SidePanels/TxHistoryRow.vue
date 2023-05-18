@@ -32,11 +32,9 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 
 import moment from 'moment'
 import TxHistoryNftFamilyGroup from '@/components/SidePanels/TxHistoryNftFamilyGroup.vue'
-import { AvaNetwork } from '@/js/AvaNetwork'
 import {
     isTransactionX,
     isTransactionC,
-    TransactionType,
     TransactionTypeName,
     XChainTransaction,
 } from '@/js/Glacier/models'
@@ -44,25 +42,20 @@ import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import { PChainEmittedUtxo, Utxo, PChainTransaction } from '@avalabs/glacier-sdk'
-import getMemoFromByteString from '@/services/history/utils'
+import { getUrlFromTransaction } from '@/js/Glacier/getUrlFromTransaction'
+import { ava } from '@/AVA'
 
 @Component({
     components: {
-        // TxHistoryValue,
         TxHistoryNftFamilyGroup,
-        // TxHistoryValueFunctional,
     },
 })
 export default class TxHistoryRow extends Vue {
     @Prop() transaction!: XChainTransaction | PChainTransaction
 
     get explorerUrl(): string | null {
-        //TODO: Use a constant based on network id instead of the network config
-        let network: AvaNetwork = this.$store.state.Network.selectedNetwork
-        if (network.explorerSiteUrl) {
-            return `${network.explorerSiteUrl}/tx/${this.transaction.txHash}`
-        }
-        return null
+        const netID = ava.getNetworkID()
+        return getUrlFromTransaction(netID, this.transaction)
     }
 
     /**
