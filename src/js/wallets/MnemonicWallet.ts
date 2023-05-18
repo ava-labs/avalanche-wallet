@@ -169,39 +169,6 @@ export default class MnemonicWallet extends AbstractHdWallet implements IAvaHdWa
         return this.mnemonic
     }
 
-    async validate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        delegationFee: number = 0,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        return await WalletHelper.validate(
-            this,
-            nodeID,
-            amt,
-            start,
-            end,
-            delegationFee,
-            rewardAddress,
-            utxos
-        )
-    }
-
-    // Delegates AVAX to the given node ID
-    async delegate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        return await WalletHelper.delegate(this, nodeID, amt, start, end, rewardAddress, utxos)
-    }
-
     async issueBatchTx(
         orders: (ITransaction | AVMUTXO)[],
         addr: string,

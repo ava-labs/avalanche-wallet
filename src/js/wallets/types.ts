@@ -60,7 +60,6 @@ interface IAddressManager {
     getBaseAddress(): string
     getEvmAddress(): string
     getEvmAddressBech(): string
-    getFirstAvailableAddressPlatform(): string
 }
 
 // Every AVA Wallet must implement this.
