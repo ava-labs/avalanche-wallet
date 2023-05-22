@@ -44,6 +44,8 @@ import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import { PChainEmittedUtxo, Utxo, PChainTransaction } from '@avalabs/glacier-sdk'
 import { getUrlFromTransaction } from '@/js/Glacier/getUrlFromTransaction'
 import { ava } from '@/AVA'
+import { isOwnedUTXO } from '@/js/Glacier/isOwnedUtxo'
+import { WalletType } from '@/js/wallets/types'
 
 @Component({
     components: {
@@ -62,9 +64,9 @@ export default class TxHistoryRow extends Vue {
      * True if this tx contains a multi owner output
      */
     get hasMultisig() {
-        if (!this.transaction.emittedUtxos) return false
+        if (!this.ownedOutputs) return false
         let totMultiSig = 0
-        this.transaction.emittedUtxos.forEach((utxo: Utxo | PChainEmittedUtxo) => {
+        this.ownedOutputs.forEach((utxo: Utxo | PChainEmittedUtxo) => {
             if (utxo.addresses.length > 1) {
                 totMultiSig++
             }
@@ -72,11 +74,28 @@ export default class TxHistoryRow extends Vue {
         return totMultiSig > 0
     }
 
+    get outputUTXOs(): (Utxo | PChainEmittedUtxo)[] {
+        return this.transaction.emittedUtxos || []
+    }
+
+    get addresses() {
+        let wallet: WalletType | null = this.$store.state.activeWallet
+        if (!wallet) return []
+        return wallet.getHistoryAddresses()
+    }
+
+    /**
+     * Outputs owned by this wallet
+     */
+    get ownedOutputs() {
+        return this.outputUTXOs.filter((utxo: Utxo | PChainEmittedUtxo) => {
+            return isOwnedUTXO(utxo, this.addresses)
+        })
+    }
+
     get memo(): string | null {
         // TODO: Is Memo supported
         return ''
-        // const memo = this.transaction.memo
-        // return getMemoFromByteString(memo)
     }
 
     get timestamp() {
