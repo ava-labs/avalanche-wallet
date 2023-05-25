@@ -56,19 +56,16 @@ export async function getGlacierHistory(
 
     const externalAddrs = xExternal.length > pvmAddrs.length ? xExternal.reverse() : pvmAddrs
 
-    // TODO: Remove check when it's working on fuji
-    const txsGlacierC = isMainnet
-        ? await getTransactionsForAddresses(
-              {
-                  addresses: [wallet.getEvmAddressBech(), ...externalAddrs],
-                  blockchainId: BlockchainId.C_CHAIN,
-                  network: isMainnet ? Network.MAINNET : Network.FUJI,
-                  pageSize: PAGE_SIZE,
-                  sortOrder: SORT,
-              },
-              limit
-          )
-        : []
+    const txsGlacierC = await getTransactionsForAddresses(
+        {
+            addresses: [wallet.getEvmAddressBech(), ...externalAddrs],
+            blockchainId: BlockchainId.C_CHAIN,
+            network: isMainnet ? Network.MAINNET : Network.FUJI,
+            pageSize: PAGE_SIZE,
+            sortOrder: SORT,
+        },
+        limit
+    )
 
     // Join X and P chain transactions
     const joined = [...txsGlacierX, ...txsGlacierP, ...txsGlacierC]
