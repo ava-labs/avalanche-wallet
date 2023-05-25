@@ -48,7 +48,7 @@
         "hdkey": "2.0.1",
         "lodash.differenceby": "4.8.0",
         "lodash.isequal": "4.5.0",
-        "luxon": "1.25.0",
+        "luxon": "1.28.1",
         "moment": "2.29.4",
         "posthog-js": "1.32.2",
         "print-js": "1.0.63",
