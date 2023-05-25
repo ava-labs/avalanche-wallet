@@ -21,7 +21,7 @@ import {
     UnsignedTx as PlatformUnsignedTx,
 } from 'avalanche/dist/apis/platformvm/tx'
 import { Tx as AVMTx, UnsignedTx as AVMUnsignedTx } from 'avalanche/dist/apis/avm/tx'
-import { AvmImportChainType } from '@/js/wallets/types'
+import { AvmImportChainType, WalletType } from '@/js/wallets/types'
 import { issueC, issueP, issueX } from '@/helpers/issueTx'
 import { sortUTxoSetP } from '@/helpers/sortUTXOs'
 import { getStakeForAddresses } from '@/helpers/utxo_helper'
@@ -29,6 +29,7 @@ import glacier from '@/js/Glacier/Glacier'
 import { isMainnetNetworkID } from '@/store/modules/network/isMainnetNetworkID'
 import { isTestnetNetworkID } from '@/store/modules/network/isTestnetNetworkID'
 import { web3 } from '@/evm'
+import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
 const uniqid = require('uniqid')
 
 abstract class AbstractWallet {
@@ -72,6 +73,20 @@ abstract class AbstractWallet {
 
         this.isInit = false
         this.isFetchUtxos = false
+    }
+
+    /**
+     * Get change address to use with P Chain transactions. Uses current address.
+     */
+    getChangeAddressPlatform() {
+        return this.getCurrentAddressPlatform()
+    }
+
+    /**
+     * Address to use for staking rewards. Uses current P chain address.
+     */
+    getPlatformRewardAddress() {
+        return this.getCurrentAddressPlatform()
     }
 
     async evmGetAtomicUTXOs(sourceChain: ExportChainsC) {
@@ -367,6 +382,132 @@ abstract class AbstractWallet {
 
         const tx = await this.signX(unsignedTx)
         return this.issueX(tx)
+    }
+
+    /**
+     * Create and issue an AddValidatorTx
+     * @param nodeID Node ID to add as a valdiator
+     * @param amt Stake amount in nAVAX
+     * @param start Stake Start Date
+     * @param end Stake End Date
+     * @param delegationFee
+     * @param rewardAddress Address which will receive the rewards
+     * @param utxos UTXOs to use for the transaction
+     */
+    async validate(
+        nodeID: string,
+        amt: BN,
+        start: Date,
+        end: Date,
+        delegationFee: number,
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
+    ): Promise<string> {
+        let utxoSet = this.getPlatformUTXOSet()
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
+        // Sort utxos high to low
+        const sortedSet = sortUTxoSetP(utxoSet, false)
+
+        const pAddressStrings = this.getAllAddressesP()
+
+        const stakeAmount = amt
+
+        // If reward address isn't given use index 0 address
+        if (!rewardAddress) {
+            rewardAddress = this.getPlatformRewardAddress()
+        }
+
+        // For change address use first available on the platform chain
+        const changeAddress = this.getChangeAddressPlatform()
+
+        const stakeReturnAddr = this.getCurrentAddressPlatform()
+
+        // Convert dates to unix time
+        const startTime = new BN(Math.round(start.getTime() / 1000))
+        const endTime = new BN(Math.round(end.getTime() / 1000))
+
+        const unsignedTx = await pChain.buildAddValidatorTx(
+            sortedSet,
+            [stakeReturnAddr],
+            pAddressStrings, // from
+            [changeAddress], // change
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress],
+            delegationFee
+        )
+
+        const tx = await this.signP(unsignedTx)
+        return issueP(tx)
+    }
+
+    /**
+     * Create and issue an AddDelegatorTx
+     * @param nodeID
+     * @param amt
+     * @param start
+     * @param end
+     * @param rewardAddress
+     * @param utxos
+     */
+    async delegate(
+        nodeID: string,
+        amt: BN,
+        start: Date,
+        end: Date,
+        rewardAddress?: string,
+        utxos?: PlatformUTXO[]
+    ): Promise<string> {
+        let utxoSet = this.getPlatformUTXOSet()
+        const pAddressStrings = this.getAllAddressesP()
+
+        const stakeAmount = amt
+
+        // If given custom UTXO set use that
+        if (utxos) {
+            utxoSet = new PlatformUTXOSet()
+            utxoSet.addArray(utxos)
+        }
+
+        // Sort utxos high to low
+        const sortedSet = sortUTxoSetP(utxoSet, false)
+
+        // If reward address isn't given use index 0 address
+        if (!rewardAddress) {
+            rewardAddress = this.getPlatformRewardAddress()
+        }
+
+        const stakeReturnAddr = this.getPlatformRewardAddress()
+
+        // For change address use first available on the platform chain
+        const changeAddress = this.getChangeAddressPlatform()
+
+        // Convert dates to unix time
+        const startTime = new BN(Math.round(start.getTime() / 1000))
+        const endTime = new BN(Math.round(end.getTime() / 1000))
+
+        const unsignedTx = await pChain.buildAddDelegatorTx(
+            sortedSet,
+            [stakeReturnAddr],
+            pAddressStrings,
+            [changeAddress],
+            nodeID,
+            startTime,
+            endTime,
+            stakeAmount,
+            [rewardAddress] // reward address
+        )
+
+        const tx = await this.signP(unsignedTx)
+        return issueP(tx)
     }
 }
 export { AbstractWallet }

@@ -920,38 +920,6 @@ class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
         return await WalletHelper.issueBatchTx(this, orders, addr, memo)
     }
 
-    async delegate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        return await WalletHelper.delegate(this, nodeID, amt, start, end, rewardAddress, utxos)
-    }
-
-    async validate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        delegationFee: number,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        return await WalletHelper.validate(
-            this,
-            nodeID,
-            amt,
-            start,
-            end,
-            delegationFee,
-            rewardAddress,
-            utxos
-        )
-    }
-
     async signHashByExternalIndex(index: number, hash: BufferAvax) {
         const pathStr = `0/${index}`
         const addressPath = bippath.fromString(pathStr, false)

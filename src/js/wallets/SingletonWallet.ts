@@ -112,10 +112,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
         return this.keyPair.getAddressString()
     }
 
-    getChangeAddressPlatform(): string {
-        return this.getCurrentAddressPlatform()
-    }
-
     getDerivedAddresses(): string[] {
         const addr = this.getCurrentAddressAvm()
         return [addr]
@@ -137,10 +133,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
     getHistoryAddresses(): string[] {
         const addr = this.getCurrentAddressAvm()
         return [addr]
-    }
-
-    getPlatformRewardAddress(): string {
-        return this.getCurrentAddressPlatform()
     }
 
     getCurrentAddressPlatform(): string {
@@ -216,10 +208,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
         return await WalletHelper.issueBatchTx(this, orders, addr, memo)
     }
 
-    getFirstAvailableAddressPlatform(): string {
-        return this.getCurrentAddressPlatform()
-    }
-
     onnetworkchange(): void {
         const hrp = ava.getHRP()
 
@@ -271,38 +259,6 @@ class SingletonWallet extends AbstractWallet implements AvaWalletCore, UnsafeWal
         const signed = this.keyPair.sign(digestBuff)
 
         return bintools.cb58Encode(signed)
-    }
-
-    async delegate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        return await WalletHelper.delegate(this, nodeID, amt, start, end, rewardAddress, utxos)
-    }
-
-    async validate(
-        nodeID: string,
-        amt: BN,
-        start: Date,
-        end: Date,
-        delegationFee: number = 0,
-        rewardAddress?: string,
-        utxos?: PlatformUTXO[]
-    ): Promise<string> {
-        return await WalletHelper.validate(
-            this,
-            nodeID,
-            amt,
-            start,
-            end,
-            delegationFee,
-            rewardAddress,
-            utxos
-        )
     }
 
     async createNftFamily(name: string, symbol: string, groupNum: number) {

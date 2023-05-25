@@ -110,11 +110,6 @@ let payloadtypes = PayloadTypes.getInstance()
 export default class BaseTx extends Vue {
     @Prop() transaction!: XChainTransaction
 
-    // get summary() {
-    //     let w = this.$store.state.activeWallet
-    //     return getTransactionSummary(this.transaction, w)
-    // }
-
     get inputUTXOs() {
         return this.transaction.consumedUtxos || []
     }

@@ -8,14 +8,15 @@ import { UTXOSet as AVMUTXOSet } from 'avalanche/dist/apis/avm/utxos'
 import HDKey from 'hdkey'
 import { HdHelper } from '@/js/HdHelper'
 import { UTXOSet as PlatformUTXOSet } from 'avalanche/dist/apis/platformvm/utxos'
-import { buildCreateNftFamilyTx, buildMintNftTx, buildUnsignedTransaction } from '../TxHelper'
+import { buildUnsignedTransaction } from '../TxHelper'
 import { AbstractWallet } from '@/js/wallets/AbstractWallet'
 import { updateFilterAddresses } from '../../providers'
 import { digestMessage } from '@/helpers/helper'
 
-// A base class other HD wallets are based on.
-// Mnemonic Wallet and LedgerWallet uses this
-
+/**
+ * A base class other HD wallets are based on.
+ * Mnemonic Wallet and LedgerWallet uses this
+ */
 abstract class AbstractHdWallet extends AbstractWallet {
     chainId: string
 
@@ -66,10 +67,6 @@ abstract class AbstractHdWallet extends AbstractWallet {
 
         const joined = setInternal.merge(setExternal)
         this.utxoset = joined
-    }
-
-    getFirstAvailableAddressPlatform(): string {
-        return this.platformHelper.getFirstAvailableAddress()
     }
 
     updateFetchState() {
@@ -167,10 +164,6 @@ abstract class AbstractHdWallet extends AbstractWallet {
         return this.internalHelper.getCurrentAddress()
     }
 
-    getChangeAddressPlatform() {
-        return this.platformHelper.getCurrentAddress()
-    }
-
     getChangePath(chainId?: ChainAlias): string {
         switch (chainId) {
             case 'P':
@@ -201,10 +194,6 @@ abstract class AbstractHdWallet extends AbstractWallet {
             default:
                 return this.internalHelper.getAddressForIndex(idx)
         }
-    }
-
-    getPlatformRewardAddress(): string {
-        return this.platformHelper.getCurrentAddress()
     }
 
     getCurrentAddressPlatform(): string {
