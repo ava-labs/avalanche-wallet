@@ -60,7 +60,7 @@ export function getExportBalances(tx: TransactionType, destinationChainId: strin
         }
 
         if (balances[assetId]) {
-            balances[assetId].amount.add(new BN(amount))
+            balances[assetId].amount.iadd(new BN(amount))
         } else {
             balances[assetId] = {
                 id: assetId,

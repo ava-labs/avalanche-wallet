@@ -23,12 +23,13 @@
                         <p class="desc">
                             {{ $t('earn.delegate.form.amount.desc') }}
                         </p>
-                        <!--                        <p class="desc">-->
-                        <!--                            {{ $t('earn.delegate.form.amount.desc2', [remainingAmtText]) }}-->
-                        <!--                        </p>-->
+                        <p v-if="showMaxTxSizeWarning" class="desc amount_warning">
+                            The maximum amount that fits into this transaction is
+                            <b>{{ maxTxSizeString }} AVAX</b>
+                        </p>
                         <AvaxInput
                             v-model="stakeAmt"
-                            :max="maxAmt"
+                            :max="maxFormAmount"
                             class="amt_in"
                             :balance="utxosBalanceBig"
                         ></AvaxInput>
@@ -41,26 +42,18 @@
                         <div class="reward_tabs">
                             <button
                                 @click="rewardSelect('local')"
-                                :selected="this.rewardDestination === 'local'"
+                                :selected="rewardDestination === 'local'"
                             >
                                 {{ $t('earn.delegate.form.reward.chip_1') }}
                             </button>
                             <span>or</span>
                             <button
                                 @click="rewardSelect('custom')"
-                                :selected="this.rewardDestination === 'custom'"
+                                :selected="rewardDestination === 'custom'"
                             >
                                 {{ $t('earn.delegate.form.reward.chip_2') }}
                             </button>
                         </div>
-                        <!--                        <v-chip-group mandatory @change="rewardSelect">-->
-                        <!--                            <v-chip small value="local">-->
-                        <!--                                {{ $t('earn.delegate.form.reward.chip_1') }}-->
-                        <!--                            </v-chip>-->
-                        <!--                            <v-chip small value="custom">-->
-                        <!--                                {{ $t('earn.delegate.form.reward.chip_2') }}-->
-                        <!--                            </v-chip>-->
-                        <!--                        </v-chip-group>-->
                         <QrInput
                             v-model="rewardIn"
                             placeholder="Reward Address"
@@ -224,13 +217,19 @@ import { WalletType } from '@/js/wallets/types'
 import UtxoSelectForm from '@/components/wallet/earn/UtxoSelectForm.vue'
 import Expandable from '@/components/misc/Expandable.vue'
 import NodeCard from '@/components/wallet/earn/Delegate/NodeCard.vue'
+import { sortUTxoSetP } from '@/helpers/sortUTXOs'
+import { selectMaxUtxoForStaking } from '@/helpers/utxoSelection/selectMaxUtxoForStaking'
+import Tooltip from '@/components/misc/Tooltip.vue'
+import { bnToAvaxP } from '@avalabs/avalanche-wallet-sdk'
 
 const MIN_MS = 60000
 const HOUR_MS = MIN_MS * 60
 const DAY_MS = HOUR_MS * 24
 
 @Component({
+    methods: { bnToAvaxP },
     components: {
+        Tooltip,
         NodeCard,
         UtxoSelectForm,
         DateForm,
@@ -269,6 +268,8 @@ export default class AddDelegator extends Vue {
 
     currency_type = 'AVAX'
 
+    maxTxSizeAmount: BN | null = null
+
     mounted() {
         this.rewardSelect('local')
     }
@@ -281,11 +282,14 @@ export default class AddDelegator extends Vue {
         this.selected = val
     }
 
+    get wallet(): WalletType {
+        return this.$store.state.activeWallet
+    }
+
     async submit() {
         if (!this.formCheck()) {
             return
         }
-
         this.isLoading = true
         this.err = ''
 
@@ -584,6 +588,37 @@ export default class AddDelegator extends Vue {
         return bnToBig(this.utxosBalance, 9)
     }
 
+    @Watch('formUtxos')
+    @Watch('maxAmt')
+    onFormUtxosChange() {
+        // Amount of the biggest transaction that can be created with the selected UTXOs
+        const set = new UTXOSet()
+        set.addArray(this.formUtxos)
+
+        const fromAddresses = this.wallet.getAllAddressesP()
+        const changeAddress = this.wallet.getChangeAddressPlatform()
+        const sorted = sortUTxoSetP(set, false)
+        selectMaxUtxoForStaking(
+            sorted,
+            this.maxAmt,
+            fromAddresses,
+            changeAddress,
+            changeAddress,
+            changeAddress,
+            false
+        )
+            .then((res) => {
+                this.maxTxSizeAmount = res.amount
+            })
+            .catch((e) => {
+                this.maxTxSizeAmount = null
+            })
+    }
+
+    get maxTxSizeString() {
+        return this.maxTxSizeAmount ? bnToAvaxP(this.maxTxSizeAmount) : false
+    }
+
     get maxAmt(): BN {
         let zero = new BN(0)
 
@@ -596,27 +631,17 @@ export default class AddDelegator extends Vue {
         return totAvailable
     }
 
+    get showMaxTxSizeWarning() {
+        return this.maxTxSizeAmount && this.maxTxSizeAmount.lt(this.maxAmt)
+    }
+
+    get maxFormAmount() {
+        return this.showMaxTxSizeWarning ? this.maxTxSizeAmount : this.maxAmt
+    }
+
     // Go Back to earn
     cancel() {
         this.$emit('cancel')
-    }
-
-    // get stakeAmtText() {
-    //     let amt = this.stakeAmt
-    //     let big = Big(amt.toString()).div(Math.pow(10, 9))
-    //
-    //     if (big.lte(Big('0.0001'))) {
-    //         return big.toLocaleString(9)
-    //     }
-    //     return big.toLocaleString(2)
-    // }
-    //
-    // get platformUnlocked(): BN {
-    //     return this.$store.getters.walletPlatformBalance
-    // }
-
-    get platformLockedStakeable(): BN {
-        return this.$store.getters['Assets/walletPlatformBalanceLockedStakeable']
     }
 }
 </script>
@@ -702,9 +727,6 @@ label {
 }
 
 .dates {
-    //display: grid;
-    //grid-template-columns: 1fr 1fr;
-    //grid-gap: 15px;
     display: flex;
     > div {
         flex-grow: 1;
@@ -720,13 +742,6 @@ label {
         }
     }
 }
-
-/*.amt_in{*/
-/*    background-color: var(--bg-light);*/
-/*    color: var(--primary-color);*/
-/*    padding: 8px 14px;*/
-/*    width: 100%;*/
-/*}*/
 
 .reward_in {
     width: 100%;
@@ -770,6 +785,10 @@ label {
     color: var(--primary-color-light);
 }
 
+.amount_warning {
+    color: var(--warning);
+}
+
 .summary {
     border-left: 2px solid var(--bg-light);
     padding-left: 30px;
@@ -789,10 +808,6 @@ label {
         margin-top: 14px;
     }
 }
-
-//.currency_sel {
-//    margin-top: 0 !important;
-//}
 
 .tx_status {
     display: flex;

@@ -53,11 +53,11 @@ abstract class AbstractWallet {
     abstract getAllChangeAddressesX(): string[]
     abstract getAllExternalAddressesX(): string[]
 
-    abstract async signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
-    abstract async signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
-    abstract async signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
+    abstract signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
+    abstract signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
+    abstract signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
 
-    abstract async signMessage(msg: string, address?: string): Promise<string>
+    abstract signMessage(msg: string, address?: string): Promise<string>
     abstract getPlatformUTXOSet(): PlatformUTXOSet
 
     getUTXOSet(): AVMUTXOSet {
@@ -246,6 +246,7 @@ abstract class AbstractWallet {
         )
 
         const tx = await this.signP(exportTx)
+
         return await this.issueP(tx)
     }
 
@@ -386,7 +387,7 @@ abstract class AbstractWallet {
 
     /**
      * Create and issue an AddValidatorTx
-     * @param nodeID Node ID to add as a valdiator
+     * @param nodeID Node ID to add as a validator
      * @param amt Stake amount in nAVAX
      * @param start Stake Start Date
      * @param end Stake End Date
