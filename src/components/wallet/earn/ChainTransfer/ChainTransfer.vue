@@ -7,7 +7,7 @@
                     @change="onFormChange"
                     :is-confirm="isConfirm"
                     :balance="balanceBig"
-                    :max-amt="maxAmt"
+                    :max-amt="formMaxAmt"
                 ></ChainSwapForm>
 
                 <div v-if="!isSuccess && !isLoading">
@@ -145,7 +145,10 @@ import {
     bnToBigAvaxC,
     bigToBN,
     avaxCtoX,
+    bnToAvaxP,
 } from '@avalabs/avalanche-wallet-sdk'
+import { sortUTxoSetP } from '@/helpers/sortUTXOs'
+import { selectMaxUtxoForExportP } from '@/helpers/utxoSelection/selectMaxUtxoForExportP'
 
 const IMPORT_DELAY = 5000 // in ms
 const BALANCE_DELAY = 2000 // in ms
@@ -189,6 +192,8 @@ export default class ChainTransfer extends Vue {
     importState: TxState = TxState.waiting
     importStatus: string | null = null
     importReason: string | null = null
+
+    txMaxAmount: BN | undefined = undefined
 
     @Watch('sourceChain')
     @Watch('targetChain')
@@ -291,7 +296,7 @@ export default class ChainTransfer extends Vue {
     }
 
     /**
-     * The maximum amount that can be transferred in nAVAX
+     * User's spendable balance minus total fees
      */
     get maxAmt(): BN {
         let max = this.balanceBN.sub(this.feeBN)
@@ -301,6 +306,41 @@ export default class ChainTransfer extends Vue {
         } else {
             return max
         }
+    }
+
+    /**
+     * Maximum amount that fits into a valid transaction (excluding export fee)
+     */
+    get formMaxAmt() {
+        const amt = this.txMaxAmount ? BN.min(this.maxAmt, this.txMaxAmount) : this.maxAmt
+        return BN.max(amt, new BN(0))
+    }
+
+    @Watch('sourceChain')
+    @Watch('targetChain')
+    @Watch('balanceBN')
+    @Watch('feeBN')
+    @Watch('wallet')
+    updateMaxTxSize() {
+        if (this.sourceChain !== 'P' || this.targetChain === 'P') {
+            this.txMaxAmount = undefined
+            return
+        }
+
+        const utxoSet = this.wallet.getPlatformUTXOSet()
+        const sortedSet = sortUTxoSetP(utxoSet, false)
+
+        const pChangeAddr = this.wallet.getCurrentAddressPlatform()
+        const fromAddrs = this.wallet.getAllAddressesP()
+
+        const destinationAddr =
+            this.targetChain === 'C'
+                ? this.wallet.getEvmAddressBech()
+                : this.wallet.getCurrentAddressAvm()
+
+        const res = selectMaxUtxoForExportP(sortedSet.getAllUTXOs())
+        // The maximum form amount is = max possible export amount - export and import fees
+        this.txMaxAmount = res.amount.sub(this.feeBN)
     }
 
     onFormChange(data: ChainSwapFormData) {
@@ -320,7 +360,7 @@ export default class ChainTransfer extends Vue {
     }
 
     get wallet() {
-        let wallet: MnemonicWallet = this.$store.state.activeWallet
+        let wallet: WalletType = this.$store.state.activeWallet
         return wallet
     }
 
@@ -563,7 +603,7 @@ export default class ChainTransfer extends Vue {
             return false
         }
 
-        if (this.amt.gt(this.maxAmt)) {
+        if (this.amt.gt(this.formMaxAmt)) {
             return false
         }
 

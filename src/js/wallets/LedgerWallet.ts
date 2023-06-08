@@ -400,7 +400,7 @@ class LedgerWallet extends AbstractHdWallet implements AvaWalletCore {
             store.commit('Ledger/openModal', {
                 title: 'Sign Hash',
                 warning:
-                    'Signing hashes are dangerous, continue at your own risk. Ledger is unable display this transaction because it is too large.',
+                    'Ledger is unable display this transaction because it is too large. Try entering a lower amount.',
                 messages: [],
                 info: msg.toString('hex').toUpperCase(),
             })
