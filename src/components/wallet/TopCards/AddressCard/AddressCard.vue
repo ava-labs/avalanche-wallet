@@ -196,7 +196,7 @@ export default class AddressCard extends Vue {
             return '-'
         }
 
-        return '0x' + wallet.getEvmAddress()
+        return wallet.getEvmChecksumAddress()
     }
 
     get addressEVMBech32() {

@@ -30,6 +30,13 @@ import { isMainnetNetworkID } from '@/store/modules/network/isMainnetNetworkID'
 import { isTestnetNetworkID } from '@/store/modules/network/isTestnetNetworkID'
 import { web3 } from '@/evm'
 import { UTXO as PlatformUTXO } from 'avalanche/dist/apis/platformvm/utxos'
+import {
+    BlockchainId,
+    CreatePrimaryNetworkTransactionExportRequest,
+    PrimaryNetworkOptions,
+} from '@avalabs/glacier-sdk'
+import { toChecksumAddress } from 'ethereumjs-util'
+
 const uniqid = require('uniqid')
 
 abstract class AbstractWallet {
@@ -52,13 +59,21 @@ abstract class AbstractWallet {
     abstract getAllAddressesX(): string[]
     abstract getAllChangeAddressesX(): string[]
     abstract getAllExternalAddressesX(): string[]
-
+    abstract getHistoryAddresses(): string[]
     abstract signC(unsignedTx: EVMUnsignedTx): Promise<EVMTx>
     abstract signX(unsignedTx: AVMUnsignedTx): Promise<AVMTx>
     abstract signP(unsignedTx: PlatformUnsignedTx): Promise<PlatformTx>
 
     abstract signMessage(msg: string, address?: string): Promise<string>
     abstract getPlatformUTXOSet(): PlatformUTXOSet
+
+    /**
+     *
+     * @returns Returns the checksum encoded EVM hex address per ERC-55.
+     */
+    getEvmChecksumAddress() {
+        return toChecksumAddress('0x' + this.getEvmAddress())
+    }
 
     getUTXOSet(): AVMUTXOSet {
         return this.utxoset
@@ -448,6 +463,31 @@ abstract class AbstractWallet {
 
         const tx = await this.signP(unsignedTx)
         return issueP(tx)
+    }
+
+    /**
+     * Use Glacier to start a transaction history export job.
+     * Excluding EVM for now.
+     */
+    async startTxExportJob(startDate: Date, endDate: Date, chains: BlockchainId[]) {
+        const addresses = this.getHistoryAddresses()
+        const stripped = addresses.map((addr) => addr.split('-')[1] || addr)
+
+        const res = await glacier.operations.postTransactionExportJob({
+            requestBody: {
+                type:
+                    CreatePrimaryNetworkTransactionExportRequest.type
+                        .TRANSACTION_EXPORT_PRIMARY_NETWORK,
+                startDate: startDate.toISOString().split('T')[0],
+                endDate: endDate.toISOString().split('T')[0],
+                options: {
+                    // X/P/C and EVM addresses
+                    addresses: [...stripped, this.getEvmChecksumAddress()],
+                    includeChains: chains,
+                },
+            },
+        })
+        return res
     }
 
     /**

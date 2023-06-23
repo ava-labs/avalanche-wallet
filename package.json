@@ -15,7 +15,7 @@
     },
     "dependencies": {
         "@avalabs/avalanche-wallet-sdk": "0.20.0-alpha.11",
-        "@avalabs/glacier-sdk": "2.8.0-alpha.92",
+        "@avalabs/glacier-sdk": "2.8.0-alpha.108",
         "@avalabs/vue_components": "0.10.0",
         "@ethereumjs/common": "2.0.0",
         "@ethereumjs/tx": "3.0.0",

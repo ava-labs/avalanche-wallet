@@ -46,6 +46,11 @@
     web3-eth-contract "1.8.1"
     xss "1.0.11"
 
+"@avalabs/glacier-sdk@2.8.0-alpha.108":
+  version "2.8.0-alpha.108"
+  resolved "https://registry.yarnpkg.com/@avalabs/glacier-sdk/-/glacier-sdk-2.8.0-alpha.108.tgz#8d22cbb292773a12763382e5657e739fd8222505"
+  integrity sha512-BMG8yfp6YyHbTQuOpN8xOqzShO0DSgL0wlZxX736+NVtWEgOZdG/PRqFxI82ISpP12w0JLUYeWwtOYLAP2E/sQ==
+
 "@avalabs/glacier-sdk@2.8.0-alpha.92":
   version "2.8.0-alpha.92"
   resolved "https://registry.yarnpkg.com/@avalabs/glacier-sdk/-/glacier-sdk-2.8.0-alpha.92.tgz#91f63d893432ceed46d701813ad67acf9d6b912d"

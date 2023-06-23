@@ -1,7 +1,6 @@
 <template>
     <div class="activity_page">
-        <ExportCsvModal ref="csv_modal"></ExportCsvModal>
-        <ExportAvaxCsvModal ref="avax_csv_modal"></ExportAvaxCsvModal>
+        <ExportGlacierHistoryModal ref="glacier_csv_modal"></ExportGlacierHistoryModal>
         <div class="explorer_warning" v-if="!hasExplorer">
             <div class="warning_body">
                 <h1>{{ $t('activity.no_explorer.title') }}</h1>
@@ -13,26 +12,19 @@
                 <div class="filter_cont">
                     <label>
                         Export CSV File (BETA)
-                        <span style="font-size: 0.8em; opacity: 0.8">Temporarily Disabled</span>
+                        <span style="font-size: 0.8em; opacity: 0.8" v-if="isCsvDisabled">
+                            Not Supported For This Network
+                        </span>
                     </label>
                     <div class="csv_buttons">
                         <v-btn
                             x-small
-                            @click="openCsvModal"
-                            class="button_secondary"
                             depressed
-                            disabled
-                        >
-                            Export Rewards
-                        </v-btn>
-                        <v-btn
-                            x-small
-                            @click="openAvaxCsvModal"
                             class="button_secondary"
-                            depressed
-                            disabled
+                            @click="openGlacierCsvModal"
+                            :disabled="isCsvDisabled"
                         >
-                            Export AVAX Transfers
+                            Export History
                         </v-btn>
                     </div>
                 </div>
@@ -93,7 +85,7 @@
     </div>
 </template>
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import {
     isTransactionC,
     isTransactionX,
@@ -104,15 +96,19 @@ import {
 import TxRow from '@/components/wallet/activity/TxRow.vue'
 import RadioButtons from '@/components/misc/RadioButtons.vue'
 import Spinner from '@/components/misc/Spinner.vue'
-
-type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
-type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
-
 //@ts-ignore
 import VirtualList from 'vue-virtual-scroll-list'
 import { AvaNetwork } from '@/js/AvaNetwork'
 import ExportCsvModal from '@/components/modals/ExportCsvModal.vue'
 import ExportAvaxCsvModal from '@/components/modals/ExportAvaxCsvModal.vue'
+import { WalletType } from '@/js/wallets/types'
+import { BlockchainId } from '@avalabs/glacier-sdk'
+import ExportGlacierHistoryModal from '@/components/modals/ExportGlacierHistoryModal.vue'
+import { isMainnetNetworkID } from '@/store/modules/network/isMainnetNetworkID'
+import { isTestnetNetworkID } from '@/store/modules/network/isTestnetNetworkID'
+
+type FilterModeType = 'all' | 'transfer' | 'export_import' | 'stake'
+type ModeKeyType = 'all' | 'transfer' | 'swap' | 'stake'
 
 const PAGE_LIMIT = 100
 
@@ -124,6 +120,7 @@ const MONTH_MIN = 8
     components: {
         ExportAvaxCsvModal,
         ExportCsvModal,
+        ExportGlacierHistoryModal,
         Spinner,
         TxRow,
         RadioButtons,
@@ -151,6 +148,7 @@ export default class Activity extends Vue {
     $refs!: {
         csv_modal: ExportCsvModal
         avax_csv_modal: ExportAvaxCsvModal
+        glacier_csv_modal: ExportGlacierHistoryModal
     }
 
     openCsvModal() {
@@ -159,6 +157,14 @@ export default class Activity extends Vue {
 
     openAvaxCsvModal() {
         this.$refs.avax_csv_modal.open()
+    }
+
+    openGlacierCsvModal() {
+        this.$refs.glacier_csv_modal.open()
+    }
+
+    get isCsvDisabled() {
+        return !this.hasExplorer || this.isFuji
     }
 
     get showList(): boolean {
@@ -187,12 +193,24 @@ export default class Activity extends Vue {
         return this.$t(`activity.months.${this.monthNow}`)
     }
 
+    get activeNetwork(): AvaNetwork | null {
+        return this.$store.state.Network.selectedNetwork
+    }
+
+    get isMainnet() {
+        return this.activeNetwork && isMainnetNetworkID(this.activeNetwork.networkId)
+    }
+
+    get isFuji() {
+        return this.activeNetwork && isTestnetNetworkID(this.activeNetwork.networkId)
+    }
+
+    /**
+     * Returns true if conencted to mainnet or fuji
+     */
     get hasExplorer() {
-        let network: AvaNetwork | null = this.$store.state.Network.selectedNetwork
-        if (!network?.explorerUrl) {
-            return false
-        }
-        return true
+        if (!this.activeNetwork) return false
+        return this.isMainnet || this.isFuji
     }
 
     mounted() {

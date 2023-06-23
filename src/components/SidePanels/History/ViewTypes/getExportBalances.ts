@@ -1,13 +1,13 @@
 import {
     isCChainExportTransaction,
     isCChainImportTransaction,
-    isPChainEmittedUTXO,
+    isPChainUtxo,
     isTransactionP,
     isTransactionX,
     TransactionType,
 } from '@/js/Glacier/models'
 import { BN } from 'avalanche'
-import { Utxo, PChainConsumedUtxo, PChainEmittedUtxo } from '@avalabs/glacier-sdk'
+import { Utxo, PChainUtxo, UtxoType } from '@avalabs/glacier-sdk'
 import AvaAsset from '@/js/AvaAsset'
 export function getExportBalances(tx: TransactionType, destinationChainId: string, getAsset: any) {
     const balances: {
@@ -20,10 +20,10 @@ export function getExportBalances(tx: TransactionType, destinationChainId: strin
     } = {}
 
     // For exported utxo, createdOnChainId is source chain, and consumedOnChainId is destination chain.
-    let exportedUTXOs: Array<Utxo | PChainEmittedUtxo> = []
+    let exportedUTXOs: Array<Utxo | PChainUtxo> = []
 
     if (isTransactionP(tx) || isTransactionX(tx) || isCChainExportTransaction(tx)) {
-        const utxosOut: Array<Utxo | PChainEmittedUtxo> = tx.emittedUtxos || []
+        const utxosOut: Array<Utxo | PChainUtxo> = tx.emittedUtxos || []
         exportedUTXOs = utxosOut.filter((utxo) => {
             return utxo.consumedOnChainId === destinationChainId
         })
@@ -39,14 +39,19 @@ export function getExportBalances(tx: TransactionType, destinationChainId: strin
                 createdOnChainId: '',
                 consumedOnChainId: '',
                 staked: false,
-            } as PChainEmittedUtxo
+                txHash: tx.txHash,
+                outputIndex: 0,
+                blockTimestamp: 0,
+                blockNumber: '0',
+                utxoType: UtxoType.TRANSFER,
+            } as PChainUtxo
         })
     }
 
     exportedUTXOs.forEach((utxo) => {
         let assetId, amount, decimals, symbol
 
-        if (isPChainEmittedUTXO(utxo)) {
+        if (isPChainUtxo(utxo)) {
             const asset = getAsset(utxo.assetId) as AvaAsset
             assetId = utxo.assetId
             amount = utxo.amount

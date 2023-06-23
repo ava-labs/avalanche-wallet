@@ -41,7 +41,7 @@ import {
 import ImportExport from '@/components/SidePanels/History/ViewTypes/ImportExport.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
-import { PChainEmittedUtxo, Utxo, PChainTransaction } from '@avalabs/glacier-sdk'
+import { Utxo, PChainTransaction, PChainUtxo } from '@avalabs/glacier-sdk'
 import { getUrlFromTransaction } from '@/js/Glacier/getUrlFromTransaction'
 import { ava } from '@/AVA'
 import { isOwnedUTXO } from '@/js/Glacier/isOwnedUtxo'
@@ -66,7 +66,7 @@ export default class TxHistoryRow extends Vue {
     get hasMultisig() {
         if (!this.ownedOutputs) return false
         let totMultiSig = 0
-        this.ownedOutputs.forEach((utxo: Utxo | PChainEmittedUtxo) => {
+        this.ownedOutputs.forEach((utxo: Utxo | PChainUtxo) => {
             if (utxo.addresses.length > 1) {
                 totMultiSig++
             }
@@ -74,7 +74,7 @@ export default class TxHistoryRow extends Vue {
         return totMultiSig > 0
     }
 
-    get outputUTXOs(): (Utxo | PChainEmittedUtxo)[] {
+    get outputUTXOs(): Utxo[] | PChainUtxo[] {
         return this.transaction.emittedUtxos || []
     }
 
@@ -88,7 +88,7 @@ export default class TxHistoryRow extends Vue {
      * Outputs owned by this wallet
      */
     get ownedOutputs() {
-        return this.outputUTXOs.filter((utxo: Utxo | PChainEmittedUtxo) => {
+        return (this.outputUTXOs as (Utxo | PChainUtxo)[]).filter((utxo: Utxo | PChainUtxo) => {
             return isOwnedUTXO(utxo, this.addresses)
         })
     }

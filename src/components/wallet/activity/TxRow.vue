@@ -34,7 +34,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { AssetsDict, NftFamilyDict } from '@/store/modules/assets/types'
-import { PChainEmittedUtxo, Utxo } from '@avalabs/glacier-sdk'
+import { PChainUtxo, Utxo } from '@avalabs/glacier-sdk'
 
 import StakingTx from '@/components/SidePanels/History/ViewTypes/StakingTx.vue'
 import BaseTx from '@/components/SidePanels/History/ViewTypes/BaseTx.vue'
@@ -70,7 +70,7 @@ export default class TxRow extends Vue {
         if (!isCChainImportTransaction(this.source)) {
             if (!this.source.emittedUtxos) return false
             let totMultiSig = 0
-            this.source.emittedUtxos.forEach((utxo: Utxo | PChainEmittedUtxo) => {
+            this.source.emittedUtxos.forEach((utxo: Utxo | PChainUtxo) => {
                 if (utxo.addresses.length > 1) {
                     totMultiSig++
                 }
