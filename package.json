@@ -28,7 +28,7 @@
         "@ledgerhq/hw-transport-u2f": "5.36.0-deprecated",
         "@ledgerhq/hw-transport-webhid": "5.51.1",
         "@ledgerhq/hw-transport-webusb": "5.51.1",
-        "@openzeppelin/contracts": "4.9.0",
+        "@openzeppelin/contracts": "4.9.2",
         "avalanche": "3.15.2",
         "axios": "0.21.2",
         "big.js": "5.2.2",
