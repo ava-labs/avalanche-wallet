@@ -9,8 +9,7 @@ import {
     CChainImportTransaction,
     SortOrder,
     Utxo,
-    PChainConsumedUtxo,
-    PChainEmittedUtxo,
+    PChainUtxo,
 } from '@avalabs/glacier-sdk'
 
 export type XChainTransaction = XChainLinearTransaction | XChainNonLinearTransaction
@@ -52,12 +51,13 @@ export type TransactionType =
     | CChainImportTransaction
     | CChainExportTransaction
 
-export type UtxoType = Utxo | PChainEmittedUtxo | PChainConsumedUtxo
+export type UtxoType = Utxo | PChainUtxo
 
 export function isTransactionX(tx: TransactionType): tx is XChainTransaction {
     return (
         (tx as XChainTransaction).amountUnlocked !== undefined &&
-        (tx as XChainTransaction).memo !== undefined
+        (tx as XChainTransaction).memo !== undefined &&
+        (tx as CChainImportTransaction).evmOutputs == undefined
     )
 }
 
@@ -90,12 +90,8 @@ export interface GetTransactionsParams {
     sortOrder?: SortOrder
 }
 
-export function isPChainEmittedUTXO(utxo: UtxoType): utxo is PChainEmittedUtxo {
-    return (utxo as PChainEmittedUtxo).assetId !== undefined
-}
-
-export function isPChainConsumedUTXO(utxo: UtxoType): utxo is PChainConsumedUtxo {
-    return (utxo as PChainConsumedUtxo).fromTx !== undefined
+export function isPChainUtxo(utxo: UtxoType): utxo is PChainUtxo {
+    return (utxo as PChainUtxo).staked !== undefined
 }
 
 export function isUtxo(utxo: UtxoType): utxo is Utxo {

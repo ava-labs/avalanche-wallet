@@ -148,12 +148,14 @@ abstract class AbstractHdWallet extends AbstractWallet {
     // Returns addresses to check for history
     getHistoryAddresses(): string[] {
         const internalIndex = this.internalHelper.hdIndex
+
+        const evmBech32 = this.getEvmAddressBech()
         // They share the same address space, so whatever has the highest index
         const externalIndex = Math.max(this.externalHelper.hdIndex, this.platformHelper.hdIndex)
 
         const internal = this.internalHelper.getAllDerivedAddresses(internalIndex)
         const external = this.externalHelper.getAllDerivedAddresses(externalIndex)
-        return internal.concat(external)
+        return [...internal, ...external, evmBech32]
     }
 
     getCurrentAddressAvm(): string {
@@ -279,6 +281,6 @@ abstract class AbstractHdWallet extends AbstractWallet {
         return await this.signMessageByExternalAddress(msg, address)
     }
 
-    abstract async signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
+    abstract signHashByExternalIndex(index: number, hash: Buffer): Promise<string>
 }
 export { AbstractHdWallet }

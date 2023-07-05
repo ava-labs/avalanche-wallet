@@ -39,7 +39,7 @@ import { ValidatorRaw } from '@/components/misc/ValidatorList/types'
 import { WalletType } from '@/js/wallets/types'
 import { getPriceAtUnixTime } from '@/helpers/price_helper'
 import Big from 'big.js'
-import { PChainTransaction, PChainEmittedUtxo } from '@avalabs/glacier-sdk'
+import { PChainTransaction, PChainUtxo, RewardType } from '@avalabs/glacier-sdk'
 import { filterOwnedAddresses } from './filterOwnedAddresses'
 
 @Component
@@ -87,18 +87,18 @@ export default class StakingTx extends Vue {
     /**
      * The validator reward UTXO of this tx
      */
-    get validatorReward(): PChainEmittedUtxo | undefined {
+    get validatorReward(): PChainUtxo | undefined {
         return (this.transaction.emittedUtxos || []).filter((utxo) => {
-            return utxo.rewardType === 'validator'
+            return utxo.rewardType === RewardType.VALIDATOR
         })[0]
     }
 
     /**
      * The delegator reward UTXO of this tx
      */
-    get delegatorReward(): PChainEmittedUtxo | undefined {
+    get delegatorReward(): PChainUtxo | undefined {
         return (this.transaction.emittedUtxos || []).filter((utxo) => {
-            return utxo.rewardType === 'delegator'
+            return utxo.rewardType === RewardType.DELEGATOR
         })[0]
     }
 

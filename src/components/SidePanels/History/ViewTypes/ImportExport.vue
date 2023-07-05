@@ -1,11 +1,16 @@
 <template>
-    <div class="import_row" :export="isExport">
+    <div class="import_row" :export="isExport && !isExportReceiver">
         <p class="actionTitle">{{ actionTitle }} ({{ chainAlias }})</p>
         <div class="flex-column">
-            <p class="amt" v-for="(bal, key) in balances" :key="key">
-                {{ isExport ? '-' : '' }}{{ toLocaleString(bal.amount, bal.decimals) }}
-                {{ bal.symbol }}
+            <p v-if="isExportReceiver" class="amt">
+                {{ toLocaleString(outputReceivedBalances, 9) }} AVAX
             </p>
+            <template v-else>
+                <p class="amt" v-for="(bal, key) in balances" :key="key">
+                    {{ isExport ? '-' : '' }}{{ toLocaleString(bal.amount, bal.decimals) }}
+                    {{ bal.symbol }}
+                </p>
+            </template>
         </div>
     </div>
 </template>
@@ -14,8 +19,27 @@ import { avm, cChain, pChain } from '@/AVA'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { BN } from 'avalanche'
 import { bnToBig } from '@/helpers/helper'
-import { TransactionType, XChainTransaction } from '@/js/Glacier/models'
+import {
+    isTransactionP,
+    isTransactionX,
+    TransactionType,
+    XChainTransaction,
+} from '@/js/Glacier/models'
 import { getExportBalances } from '@/components/SidePanels/History/ViewTypes/getExportBalances'
+import { WalletType } from '@/js/wallets/types'
+import { isOwnedUTXO } from '@/js/Glacier/isOwnedUtxo'
+
+function idToAlias(chainId: string | undefined) {
+    if (chainId === pChain.getBlockchainID()) {
+        return 'P'
+    } else if (chainId === avm.getBlockchainID()) {
+        return 'X'
+    } else if (chainId === cChain.getBlockchainID()) {
+        return 'C'
+    }
+    return chainId
+}
+
 @Component
 export default class ImportExport extends Vue {
     @Prop() transaction!: TransactionType
@@ -33,7 +57,15 @@ export default class ImportExport extends Vue {
     }
 
     get actionTitle() {
-        return this.isExport ? 'Export' : 'Import'
+        if (this.isExport) {
+            if (this.isExportReceiver) {
+                return 'Received'
+            } else {
+                return 'Export'
+            }
+        } else {
+            return 'Import'
+        }
     }
 
     /**
@@ -51,19 +83,62 @@ export default class ImportExport extends Vue {
 
     get chainAlias() {
         let chainId = this.isExport ? this.sourceChainId : this.destinationChainId
+        return idToAlias(chainId)
+    }
 
-        if (chainId === pChain.getBlockchainID()) {
-            return 'P'
-        } else if (chainId === avm.getBlockchainID()) {
-            return 'X'
-        } else if (chainId === cChain.getBlockchainID()) {
-            return 'C'
+    /**
+     * All X/P addresses used by the wallet
+     */
+    get addresses() {
+        let wallet: WalletType | null = this.$store.state.activeWallet
+        if (!wallet) return []
+        return wallet.getHistoryAddresses()
+    }
+
+    get ownedInputs() {
+        const tx = this.transaction
+        if (isTransactionP(tx)) {
+            return tx.consumedUtxos.filter((utxo) => {
+                return isOwnedUTXO(utxo, this.addresses)
+            })
+        } else {
+            return []
         }
-        return chainId
+    }
+
+    get ownedOutputs() {
+        const tx = this.transaction
+        if (isTransactionP(tx)) {
+            return tx.emittedUtxos.filter((utxo) => {
+                return isOwnedUTXO(utxo, this.addresses)
+            })
+        } else {
+            return []
+        }
+    }
+
+    get sourceChainAlias() {
+        return idToAlias(this.sourceChainId)
+    }
+
+    get wallet(): WalletType {
+        return this.$store.state.activeWallet
     }
 
     get balances() {
         return getExportBalances(this.transaction, this.destinationChainId, this.getAssetFromID)
+    }
+
+    // If user received tokens from the export, but didnt consume any of their utxos
+    // Essentially, the P chain sending hack
+    get isExportReceiver() {
+        return this.isExport && this.ownedInputs.length === 0 && this.ownedOutputs.length > 0
+    }
+
+    get outputReceivedBalances() {
+        return this.ownedOutputs.reduce((agg, utxo) => {
+            return agg.add(new BN(utxo.amount))
+        }, new BN(0))
     }
 }
 </script>

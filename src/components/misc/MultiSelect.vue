@@ -4,7 +4,7 @@
             v-for="(key, i) in keys"
             :key="key"
             @click="select(key)"
-            :active="selection === key"
+            :active="selectionSet.has(key)"
             class="hover_border"
             :disabled="disabled"
         >
@@ -14,17 +14,28 @@
 </template>
 <script lang="ts">
 import { Vue, Component, Prop, Model } from 'vue-property-decorator'
+import RadioButtons from './RadioButtons.vue'
 
 @Component
-export default class RadioButtons extends Vue {
+export default class MultiSelect extends Vue {
     @Prop() labels!: string[]
     @Prop() keys!: string[]
     @Prop({ default: false }) disabled!: boolean
 
-    @Model('change', { type: String }) readonly selection!: string
+    @Model('change', { type: Array }) readonly selection!: string[]
+
+    get selectionSet() {
+        return new Set(this.selection)
+    }
 
     select(val: string) {
-        this.$emit('change', val)
+        const now: Set<string> = new Set(this.selection)
+        if (now.has(val)) {
+            now.delete(val)
+        } else {
+            now.add(val)
+        }
+        this.$emit('change', Array.from(now))
     }
 }
 </script>
@@ -49,13 +60,8 @@ button {
     transition-duration: 0.2s;
     font-family: Inconsolata, monospace;
 
-    //&:hover {
-    //    border-color: var(--bg-light);
-    //}
-
     &[active] {
         color: var(--bg-wallet);
-        //border-color: #285599;
         background-color: var(--primary-color);
     }
 
