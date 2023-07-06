@@ -8,7 +8,7 @@
   ],
   "version": {
     "major": 1,
-    "minor": 0,
+    "minor": 1,
     "patch": 0
   },
   "tokens": [
@@ -139,6 +139,14 @@
       "name": "Dai Stablecoin",
       "symbol": "DAI",
       "logoURI": "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a/logo.png"
+    },
+    {
+      "chainId": 43114,
+      "address": "0xE9D00cBC5f02614d7281D742E6E815A47ce31107",
+      "decimals": 9,
+      "name": "Crack.Fi",
+      "symbol": "CRACK",
+      "logoURI": "https://raw.githubusercontent.com/ava-labs/bridge-tokens/main/avalanche-tokens/0xE9D00cBC5f02614d7281D742E6E815A47ce31107/logo.png"
     }
   ],
   "timestamp": "2021-04-15T00:21:05+00:00"
