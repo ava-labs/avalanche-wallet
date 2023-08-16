@@ -2,8 +2,8 @@
     <div id="nav">
         <ConfirmLogout ref="logout"></ConfirmLogout>
         <router-link to="/" class="logo">
-            <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.png" />
-            <img v-else src="@/assets/wallet_logo_dark.png" />
+            <img v-if="$root.theme === 'day'" src="@/assets/flare_logo.png" />
+            <img v-else src="@/assets/flare_logo_dark.png" />
             <!--            <span class="slogan">by Avalanche</span>-->
         </router-link>
         <v-spacer></v-spacer>
@@ -51,8 +51,8 @@
         >
             <v-list dense nav>
                 <div style="display: flex; justify-content: space-between; padding: 4px 8px">
-                    <img v-if="$root.theme === 'day'" src="@/assets/wallet_logo.svg" />
-                    <img v-else src="@/assets/wallet_logo_dark.svg" />
+                    <img v-if="$root.theme === 'day'" src="@/assets/flare_logo.svg" />
+                    <img v-else src="@/assets/flare_logo_dark.svg" />
                     <DayNightToggle class="action_but"></DayNightToggle>
                 </div>
                 <template v-if="isAuth">

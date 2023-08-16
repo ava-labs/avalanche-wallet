@@ -9,7 +9,7 @@ const CYPRESS_BASE_CONFIG = {
 
 const CYPRESS_CONFIG_PROD = {
     ...CYPRESS_BASE_CONFIG,
-    baseUrl: 'https://wallet.avax.network/',
+    baseUrl: 'https://staking.flare.network/',
 }
 
 const CYPRESS_CONFIG_LOCAL = {

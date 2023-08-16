@@ -10,13 +10,13 @@
                 >
                     {{ $t('portfolio.assets1') }}
                 </button>
-                <button
+                <!-- <button
                     @click="tab = 'collectibles'"
                     :active="tab === `collectibles`"
                     data-cy="wallet_nft"
                 >
                     {{ $t('portfolio.assets2') }}
-                </button>
+                </button> -->
             </div>
             <div style="flex-grow: 1"></div>
             <div class="search hover_border">
@@ -32,11 +32,11 @@
                     key="fungibles"
                     :search="search"
                 ></fungibles>
-                <collectibles
+                <!-- <collectibles
                     v-show="tab === `collectibles`"
                     key="collectibles"
                     :search="search"
-                ></collectibles>
+                ></collectibles> -->
             </transition-group>
         </div>
     </div>
