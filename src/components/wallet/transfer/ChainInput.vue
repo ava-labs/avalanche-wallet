@@ -3,7 +3,7 @@
         <label>{{ $t('transfer.source_chain.title') }}</label>
         <div class="chain_select">
             <button :active="formType === 'X'" @click="set('X')">X</button>
-            <button :active="formType === 'C'" @click="set('C')">C</button>
+            <!-- <button :active="formType === 'C'" @click="set('C')">C</button> -->
         </div>
     </div>
 </template>
