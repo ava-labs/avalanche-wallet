@@ -92,8 +92,8 @@
         "hover3": "复制",
         "hover4": "查看主网地址",
         "balance": {
-            "show": "显示故障",
-            "hide": "隐藏故障",
+            "show": "显示详情",
+            "hide": "隐藏详情",
             "available": "可用",
             "locked": "锁定",
             "locked_stake": "锁定可质押的代币",
