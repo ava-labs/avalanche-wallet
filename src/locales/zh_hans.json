@@ -25,7 +25,22 @@
         "title3": "编辑网络",
         "custom": "添加自定义",
         "cancel": "取消",
-        "add": "添加网络"
+        "add": "添加网络",
+        "blocker": {
+            "desc": "正在连接到新网络，请稍候。"
+        },
+        "custom_page": {
+            "label1": "网络名称",
+            "label2": "区块浏览器 API（可选）",
+            "label3": "区块浏览器站点（可选）"
+        },
+        "not_mainnet": "此钱包未连接到主网。",
+        "row": {
+            "delete": "删除",
+            "edit": "编辑",
+            "select": "选择"
+        },
+        "status3": "已连接"
     },
     "access": {
         "title": "你想如何访问你的钱包？",
@@ -42,7 +57,9 @@
             "submit": "访问钱包",
             "cancel": "取消",
             "error": "无效的助记词。你的助记词必须是24个单词，每个单词之间用一个空格隔开。"
-        }
+        },
+        "accounts_found": "在您的设备上找到的账户",
+        "but_private_key": "私钥"
     },
     "wallet": {
         "sidebar": {
@@ -50,7 +67,10 @@
             "manage": "管理",
             "send": "发送",
             "earn": "收益",
-            "advanced": "高级选项"
+            "advanced": "高级选项",
+            "activity": "活动",
+            "export": "跨链",
+            "studio": "工作室"
         },
         "address_card": {},
         "collectibles": {
@@ -102,7 +122,14 @@
         },
         "address": {
             "derived": "派生Avalanche钱包地址",
-            "desc": "这是你接收资金的地址。每次存款后你的地址都会改变。"
+            "desc": "这是你接收资金的地址。每次存款后你的地址都会改变。",
+            "desc_c": "这是您的 C 链地址。使用它与以太坊虚拟机交互。",
+            "desc_p": "这是您的 P 链地址，用于接收质押奖励和跨链转账。",
+            "desc_x_1": "这是您的 X 链地址，用于接收资金。",
+            "desc_x_2": "您的地址将在每次存款后更改。您可以继续使用以前的地址。",
+            "title_c": "派生的 EVM 钱包地址",
+            "title_p": "派生的平台钱包地址",
+            "title_x": "派生的钱包地址"
         }
     },
     "transfer": {
@@ -120,7 +147,29 @@
         "success_title": "交易已发送",
         "success_msg": "你已经成功发送你的交易。",
         "error_title": "发送交易错误",
-        "error_msg": "发送交易失败。"
+        "error_msg": "发送交易失败。",
+        "c_chain": {
+            "cancel": "取消",
+            "confirm": "确认",
+            "gasLimit": "Gas 限制",
+            "gasPrice": "Gas 价格 (GWEI)",
+            "reset": "重新开始",
+            "success": {
+                "desc": "交易已发送",
+                "label1": "交易哈希"
+            }
+        },
+        "chain_warn": "您只能在 X 链上发送代币。",
+        "memo": "备注（可选）",
+        "source_chain": {
+            "title": "源链"
+        },
+        "total": "总计",
+        "total_avax": "AVAX 总计",
+        "tx_list": {
+            "amount": "金额",
+            "token": "代币"
+        }
     },
     "keys": {
         "title": "我的密钥",
@@ -155,7 +204,25 @@
         "remove_success_title": "密钥已移除",
         "remove_success_msg": "私钥和资产已从钱包移除。",
         "password_validation": "密码长度必须至少9个字符。",
-        "password_validation2": "密码不匹配。"
+        "password_validation2": "密码不匹配。",
+        "account_name_required": "账户名称为必填项。",
+        "account_slow_warning": "包含多个密钥的账户可能需要较长时间加载。",
+        "active_wallet": "活跃密钥",
+        "import_key_duplicate_err": "此私钥已添加到此钱包中。",
+        "import_key_err": "无效的私钥",
+        "import_key_option3": "私钥",
+        "import_mnemonic_duplicate_err": "此助记词已添加到此钱包中。",
+        "import_mnemonic_err": "无效的密钥短语。",
+        "save_account": {
+            "desc": "使用密码编码您的钱包并安全存储在此浏览器中。",
+            "placeholder_1": "账户名称",
+            "placeholder_2": "密码",
+            "placeholder_3": "确认密码",
+            "submit": "保存",
+            "title": "保存账户"
+        },
+        "view_priv_key": "查看私钥",
+        "view_priv_key_c": "查看 C 链私钥"
     },
     "portfolio": {
         "assets": "资产",
@@ -168,7 +235,16 @@
         "error_network": "无法显示资产。与网络断开连接。",
         "nobalance": "你没有任何资产",
         "nobalance_nft": "你没有任何收藏品。",
-        "noaddresses": "你没有任何过去的地址。"
+        "noaddresses": "你没有任何过去的地址。",
+        "address": "地址",
+        "collectibles": {
+            "expand": "展开",
+            "group": "组",
+            "mint_more": "在工作室中铸造更多此收藏品系列。",
+            "mint_submit": "铸造",
+            "quantity": "数量",
+            "send": "发送"
+        }
     },
     "earn": {
         "title": "赚钱",
@@ -216,8 +292,10 @@
                 "export": "导出交易ID：",
                 "import": "导入交易ID：",
                 "message": "你已经成功地在链之间转账。",
-                "back": "返回“赚钱”页面"
-            }
+                "back": "返回“赚钱”页面",
+                "again": "重新开始"
+            },
+            "fee_name": "导出 + 导入费用"
         },
         "rewards": {
             "total": "总奖励",
@@ -269,7 +347,8 @@
                 "fee": "委托费用",
                 "reward": "奖励地址",
                 "type_local": "此钱包",
-                "type_custom": "自定义"
+                "type_custom": "自定义",
+                "start_desc": "提交此表单后，您的验证将在至少 5 分钟后开始。"
             },
             "confirm": "确认",
             "submit": "提交",
@@ -277,13 +356,16 @@
             "success": {
                 "title": "你的验证交易已发送。",
                 "desc": "如果交易被接受，你的代币将被锁定用于质押。质押期结束后，你将收到你锁定的代币加上奖励。",
-                "status": "状态"
+                "status": "状态",
+                "reason": "原因"
             },
             "errs": {
                 "date": "开始日期必须在将来，结束日期必须在开始日期之后。",
                 "amount": "质押数量必须至少为{0}AVAX",
                 "id": "无效的节点ID。必须以“NodeID-”开头",
-                "address": "无效的奖励地址。"
+                "address": "无效的奖励地址。",
+                "duration_warn": "警告：您的验证期必须剩余至少 14 天，才能接受委托。",
+                "fee": "委托费率必须至少为 {0}%"
             }
         },
         "delegate": {
@@ -334,7 +416,8 @@
                 "amount": "质押数量",
                 "start": "开始日期",
                 "end": "结束日期",
-                "reward": "奖励地址"
+                "reward": "奖励地址",
+                "start_desc": "提交此表单后，您的委托将在 5 分钟后开始。"
             },
             "errs": {
                 "start_now": "开始时间必须在当前时间之后。",
@@ -359,7 +442,34 @@
             "success": {
                 "title": "委托交易已发送。",
                 "desc": "如果交易被接受，你的代币将被锁定用于质押。质押期结束后，你将收到你锁定的代币加上奖励。",
-                "status": "状态"
+                "status": "状态",
+                "reason": "原因"
+            },
+            "filter": {
+                "apply": "应用筛选",
+                "cancel": "取消",
+                "clear": "清除筛选",
+                "label1": "最低可用委托",
+                "label2": "最短剩余时间",
+                "label3": "最大费用",
+                "label4": "最低在线率",
+                "preview": "找到符合条件的 {0} 个验证者。",
+                "title": "筛选",
+                "title2": "筛选设置"
+            }
+        },
+        "shared": {
+            "advanced": {
+                "toggle_off": "隐藏高级选项",
+                "toggle_on": "显示高级选项"
+            },
+            "utxo_select": {
+                "all": "全部",
+                "available": "可用余额 (P)",
+                "custom": "自定义",
+                "desc": "选择要花费的代币。",
+                "label": "余额来源",
+                "select": "选择 UTXO"
             }
         }
     },
@@ -369,7 +479,26 @@
             "title": "链导入",
             "desc": "如果你有资金卡在一个失败的链转移中，你可以在这里完成导入。",
             "submit_x": "导入X链",
-            "submit_p": "导入P链"
+            "submit_p": "导入P链",
+            "submit_c": "导入 C",
+            "submit_c_x": "导入 X（从 C 链）"
+        },
+        "sign": {
+            "desc": "使用您的私钥签署一条消息，以证明您对地址的所有权。",
+            "label1": "地址",
+            "label2": "消息",
+            "label3": "签名",
+            "submit": "签署消息",
+            "title": "签署消息",
+            "warn": "不要签署您不信任的消息。"
+        },
+        "verify": {
+            "desc": "根据消息及其签名，检索签署该消息的地址。",
+            "label1": "消息",
+            "label2": "签名",
+            "label3": "来源地址",
+            "submit": "检查来源",
+            "title": "检查消息来源"
         }
     },
     "logout": {
@@ -388,7 +517,15 @@
         "loading": "正在加载交易历史…",
         "warn_loading": "该列表可能不完整且无序。",
         "error_api": "未找到区块链浏览器 API。",
-        "error_api_desc": "你必须为此网络提供一个AVA 浏览器 API来查看交易历史。"
+        "error_api_desc": "你必须为此网络提供一个AVA 浏览器 API来查看交易历史。",
+        "date_reward": "奖励日期",
+        "end": "质押结束日期",
+        "fee_amount": "收到的费用",
+        "not_rewarded": "未奖励",
+        "reward_amount": "收到的奖励",
+        "reward_pending": "奖励待处理",
+        "rewarded": "已奖励",
+        "start": "质押开始日期"
     },
     "modal": {
         "qr": {
@@ -419,10 +556,187 @@
             "cancel2": "（之前的钱包会被忘记。）",
             "err1": "无效密码。",
             "err2": "无法读取钱包数据。"
+        },
+        "hd": {
+            "future_warn_desc": "这些由钱包管理，可能导致资金损失。",
+            "future_warn_title": "不要使用以下地址",
+            "no_use": "不要使用",
+            "show_more": "显示未来的地址"
+        },
+        "ledger": {
+            "desc": "请在您的 Ledger 设备上确认这些操作。"
+        },
+        "ledger_upgrade": {
+            "desc": "我们在连接您的设备时遇到问题。请确保您已打开 Avalanche 应用程序并将其升级到最新版本。",
+            "done": "完成",
+            "title": "连接有问题？",
+            "upgrade": "升级"
+        },
+        "nft": {
+            "title": "NFT 预览"
+        },
+        "priv_key": {
+            "title": "私钥"
+        },
+        "tokenlist": {
+            "title": "代币列表"
+        },
+        "utxo_select": {
+            "available": "可用余额",
+            "col1": "解锁日期",
+            "col2": "金额",
+            "desc": "选择您要在此次交易中使用的资金来源。",
+            "submit": "选择",
+            "title": "选择代币"
         }
     },
     "nav": {
         "access": "访问钱包",
         "create": "创建新钱包"
+    },
+    "activity": {
+        "empty": "未找到交易记录",
+        "found": "找到 {0} 条交易记录",
+        "label1": "按类型筛选",
+        "loading": "正在加载交易记录",
+        "mode1": "全部",
+        "mode2": "转账",
+        "mode3": "导出与导入",
+        "mode4": "验证与委托",
+        "months": {
+            "0": "一月",
+            "1": "二月",
+            "2": "三月",
+            "3": "四月",
+            "4": "五月",
+            "5": "六月",
+            "6": "七月",
+            "7": "八月",
+            "8": "九月",
+            "9": "十月",
+            "10": "十一月",
+            "11": "十二月"
+        },
+        "no_explorer": {
+            "desc": "当前网络设置未提供区块浏览器 API 端点。",
+            "title": "未找到区块浏览器"
+        }
+    },
+    "analytics": {
+        "accept": "接受",
+        "cookie_desc": "我们使用 cookies 来开发改进并提升您的体验。了解更多信息，请阅读我们的",
+        "privacy_policy": "隐私政策",
+        "reject": "拒绝"
+    },
+    "cross_chain": {
+        "card": {
+            "balance": "余额",
+            "destination": "目标",
+            "name": "名称",
+            "source": "来源"
+        },
+        "desc": "在交易所链（X）、平台链（P）和合约链（C）之间转移代币。",
+        "form": {
+            "destination": "目标链",
+            "source": "来源链"
+        },
+        "state": {
+            "export": "导出",
+            "import": "导入",
+            "not_started": "未开始",
+            "reason": "原因",
+            "status": "状态"
+        },
+        "title": "跨链"
+    },
+    "misc": {
+        "balance": "余额"
+    },
+    "studio": {
+        "collectibles": "收藏品",
+        "desc": "创建和管理资产。",
+        "family": {
+            "back": "返回工作室",
+            "desc": "创建一个新的收藏品系列。",
+            "fee": "费用",
+            "label1": "名称",
+            "label2": "符号",
+            "label3": "组数量",
+            "submit": "创建",
+            "success": {
+                "desc": "收藏品系列创建成功",
+                "label1": "交易 ID",
+                "label2": "系列名称",
+                "label3": "符号",
+                "label4": "组数量"
+            }
+        },
+        "menu1": {
+            "desc": "创建一个带有名称和符号的新收藏品系列。",
+            "submit": "新建系列",
+            "title": "新系列"
+        },
+        "menu2": {
+            "desc": "为您创建的系列发行收藏品。",
+            "empty": "您没有可铸造的系列。",
+            "submit": "铸造",
+            "title": "铸造收藏品"
+        },
+        "mint": {
+            "desc": "选择一个系列来发行收藏品。",
+            "form_col": {
+                "fee": "费用",
+                "label1": "数量",
+                "submit": "铸造"
+            },
+            "forms": {
+                "generic": {
+                    "err1": "不是有效的图片 URL。",
+                    "err2": "您必须设置图片。",
+                    "err3": "图片 URL 过长。",
+                    "label1": "标题",
+                    "label2": "图片 URL*",
+                    "label3": "描述"
+                },
+                "json": {
+                    "label1": "JSON 负载（最多 1024 个字符）"
+                },
+                "utf8": {
+                    "label1": "负载（最多 1024 个字符）"
+                }
+            },
+            "preview": {
+                "info1": "填写表格以查看预览。",
+                "label1": "预览",
+                "success": {
+                    "back": "返回工作室",
+                    "label1": "交易 ID",
+                    "text1": "成功。",
+                    "text2": "新的收藏品已添加到您的钱包。"
+                }
+            },
+            "type_col": {
+                "desc": "选择一个收藏品类型。",
+                "label1": "类型",
+                "label2": "负载类型",
+                "typeDesc": {
+                    "generic": "通用收藏品包括图片、标题和描述。钱包可以很好地显示它们。",
+                    "json": "JSON 负载适用于自定义数据结构，可用于开发去中心化应用。",
+                    "url": "如果给定的 URL 是图片，钱包将尽力将其显示得很好。否则，它将显示为链接。",
+                    "utf8": "UTF8 负载只是编码为收藏品的文本。"
+                },
+                "types": {
+                    "custom": "自定义",
+                    "generic": "通用"
+                }
+            },
+            "utxo_col": {
+                "change": "更改系列",
+                "label1": "系列名称",
+                "label2": "系列符号",
+                "label3": "组"
+            }
+        },
+        "title": "工作室"
     }
 }
