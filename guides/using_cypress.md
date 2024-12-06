@@ -22,7 +22,7 @@ We use Cypress for end-to-end testing.
 ## Actions and Logging
 
 -   You can see actions and there logs and running [here](https://github.com/ava-labs/avalanche-wallet-internal/actions)
-    -   git action logging doesnt do well live, as of this you have to refresh the logs to see them as they run
+    -   git action logging doesn't do well live, as of this you have to refresh the logs to see them as they run
 
 ## Cypress config
 
@@ -31,4 +31,4 @@ Rather than creating a config for each environment at the root of the app, we hi
 ## Ideas for later
 
 -   run cypress as a [git cron job](https://jasonet.co/posts/scheduled-actions/) so it runs on scheduled intervals against prod
--   include linting so things like .only dont get left inside tests, info can be found [here](https://www.npmjs.com/package/eslint-plugin-no-only-tests)
+-   include linting so things like .only don't get left inside tests, info can be found [here](https://www.npmjs.com/package/eslint-plugin-no-only-tests)

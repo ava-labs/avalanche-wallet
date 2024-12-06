@@ -77,7 +77,7 @@ The wallet can encrypt your private keys into a secure file encrypted by a passw
 
 # Language Setting
 
-Saved into local storage as a 2 letter code.
+Saved into local storage as a 2-letter code.
 
 ```
 "lang": "en"
