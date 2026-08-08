@@ -13,16 +13,16 @@ jobs:
                 node: [16.x]
         steps:
             - name: Checkout
-              uses: actions/checkout@v1
+              uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e # v1
 
             - name: Use Node.js ${{ matrix.node }}
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@f1f314fca9dfce2769ece7d933488f076716723e # v1
               with:
                   node-version: ${{ matrix.node }}
 
             # This should be caching node modules, hashing the cache key with the yarn lock code and busting that when yarn lock changes
             - name: cache modules
-              uses: actions/cache@v2
+              uses: actions/cache@8492260343ad570701412c2f464a5877dc76bace # v2
               with:
                   path: '**/node_modules'
                   key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -41,7 +41,7 @@ jobs:
               run: yarn test
 
             - name: cypress-run
-              uses: cypress-io/github-action@v2
+              uses: cypress-io/github-action@f5bea478b80a774068179089247f13d60abc5010 # v2
               env:
                   USE_HTTP: true
               with:
@@ -54,14 +54,14 @@ jobs:
 
             # These extract all artifacts out from the container to git so they can be previewed
             - name: extract screenshots to git
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # v2
               if: failure()
               with:
                   name: cypress-screenshots
                   path: cypress/screenshots
             # Test run video was always captured, so this action uses "always()" condition
             - name: extract videos to git
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # v2
               if: always()
               with:
                   name: cypress-videos
