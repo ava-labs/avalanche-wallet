@@ -25,7 +25,22 @@
         "title3": "編輯網路",
         "custom": "添加自訂",
         "cancel": "取消",
-        "add": "添加網路"
+        "add": "添加網路",
+        "blocker": {
+            "desc": "正在連接到新網路，請稍候。"
+        },
+        "custom_page": {
+            "label1": "網路名稱",
+            "label2": "探索器 API（可選）",
+            "label3": "探索器網站（可選）"
+        },
+        "not_mainnet": "此錢包未連接到主網。",
+        "row": {
+            "delete": "刪除",
+            "edit": "編輯",
+            "select": "選擇"
+        },
+        "status3": "已連接"
     },
     "access": {
         "title": "你想如何訪問你的錢包？",
@@ -42,7 +57,9 @@
             "submit": "訪問錢包",
             "cancel": "取消",
             "error": "無效的密鑰短語。你的短語必須是24個單詞，之間用一個空格隔開。"
-        }
+        },
+        "accounts_found": "在您的裝置上找到的帳戶",
+        "but_private_key": "私鑰"
     },
     "wallet": {
         "sidebar": {
@@ -50,7 +67,10 @@
             "manage": "管理",
             "send": "發送",
             "earn": "賺錢",
-            "advanced": "高級"
+            "advanced": "高級",
+            "activity": "活動",
+            "export": "跨鏈",
+            "studio": "工作室"
         },
         "address_card": {},
         "collectibles": {
@@ -102,7 +122,14 @@
         },
         "address": {
             "derived": "派生Avalanche錢包地址",
-            "desc": "這是你接收資金的地址。每次存款後你的地址都會改變。"
+            "desc": "這是你接收資金的地址。每次存款後你的地址都會改變。",
+            "desc_c": "這是您的 C 鏈地址。用於與以太坊虛擬機互動。",
+            "desc_p": "這是您的 P 鏈地址，用於接收質押獎勳和跨鏈轉帳。",
+            "desc_x_1": "這是您的 X 鏈地址，用於接收資金。",
+            "desc_x_2": "您的地址會在每次存款後更改。您可以繼續使用以前的地址。",
+            "title_c": "派生的 EVM 錢包地址",
+            "title_p": "派生的平台錢包地址",
+            "title_x": "派生的錢包地址"
         }
     },
     "transfer": {
@@ -120,7 +147,29 @@
         "success_title": "交易已發送",
         "success_msg": "你已經成功發送你的交易。",
         "error_title": "發送交易錯誤",
-        "error_msg": "發送交易失敗。"
+        "error_msg": "發送交易失敗。",
+        "c_chain": {
+            "cancel": "取消",
+            "confirm": "確認",
+            "gasLimit": "燃料限制",
+            "gasPrice": "燃料價格 (GWEI)",
+            "reset": "重新開始",
+            "success": {
+                "desc": "交易已發送",
+                "label1": "交易哈希"
+            }
+        },
+        "chain_warn": "您只能在 X 鏈上發送代幣。",
+        "memo": "備註（可選）",
+        "source_chain": {
+            "title": "來源鏈"
+        },
+        "total": "總計",
+        "total_avax": "總計 AVAX",
+        "tx_list": {
+            "amount": "數量",
+            "token": "代幣"
+        }
     },
     "keys": {
         "title": "我的密鑰",
@@ -155,7 +204,25 @@
         "remove_success_title": "密鑰已移除",
         "remove_success_msg": "密鑰和資產已從錢包移除。",
         "password_validation": "密碼長度必須至少9個字元。",
-        "password_validation2": "密碼不匹配。"
+        "password_validation2": "密碼不匹配。",
+        "account_name_required": "帳戶名稱為必填項。",
+        "account_slow_warning": "具有多個密鑰的帳戶可能需要很長時間才能加載。",
+        "active_wallet": "活躍密鑰",
+        "import_key_duplicate_err": "此私鑰已經添加到此錢包中。",
+        "import_key_err": "無效的私鑰",
+        "import_key_option3": "私鑰",
+        "import_mnemonic_duplicate_err": "此助記詞已經添加到此錢包中。",
+        "import_mnemonic_err": "無效的密鑰短語。",
+        "save_account": {
+            "desc": "用密碼編碼您的錢包並在此瀏覽器上安全存儲。",
+            "placeholder_1": "帳戶名稱",
+            "placeholder_2": "密碼",
+            "placeholder_3": "確認密碼",
+            "submit": "保存",
+            "title": "保存帳戶"
+        },
+        "view_priv_key": "查看私鑰",
+        "view_priv_key_c": "查看 C 鏈私鑰"
     },
     "portfolio": {
         "assets": "資產",
@@ -168,7 +235,16 @@
         "error_network": "無法顯示資產。與網路斷開連接。",
         "nobalance": "你沒有任何資產",
         "nobalance_nft": "你沒有任何收藏品。",
-        "noaddresses": "你沒有任何過去的地址。"
+        "noaddresses": "你沒有任何過去的地址。",
+        "address": "地址",
+        "collectibles": {
+            "expand": "展開",
+            "group": "分組",
+            "mint_more": "在工作室中鑄造更多此收藏品系列。",
+            "mint_submit": "鑄造",
+            "quantity": "數量",
+            "send": "發送"
+        }
     },
     "earn": {
         "title": "賺錢",
@@ -216,8 +292,10 @@
                 "export": "匯出交易ID：",
                 "import": "匯入交易ID：",
                 "message": "你已經成功地在鏈之間轉賬。",
-                "back": "返回賺錢"
-            }
+                "back": "返回賺錢",
+                "again": "重新開始"
+            },
+            "fee_name": "匯出 + 匯入費用"
         },
         "rewards": {
             "total": "縂獎勵",
@@ -269,7 +347,8 @@
                 "fee": "委託費用",
                 "reward": "獎勵地址",
                 "type_local": "此錢包",
-                "type_custom": "自訂"
+                "type_custom": "自訂",
+                "start_desc": "您的驗證將在您提交此表單後至少 5 分鐘開始。"
             },
             "confirm": "確認",
             "submit": "提交",
@@ -277,13 +356,16 @@
             "success": {
                 "title": "你的驗證交易已發送。",
                 "desc": "如果交易被接受，你的代幣將被鎖定用於質押。質押期結束後，你將收到你鎖定的代幣加上獎勵。",
-                "status": "狀態"
+                "status": "狀態",
+                "reason": "原因"
             },
             "errs": {
                 "date": "開始日期必須在將來，結束日期必須在開始日期之後。",
                 "amount": "質押數量必須至少為{0}AVAX",
                 "id": "無效的節點ID。必須以“NodeID-”開頭",
-                "address": "無效的獎勵地址。"
+                "address": "無效的獎勵地址。",
+                "duration_warn": "警告：您必須在驗證期內剩餘至少 14 天才能接受委託。",
+                "fee": "委託費用必須至少為 {0}%"
             }
         },
         "delegate": {
@@ -334,7 +416,8 @@
                 "amount": "質押數量",
                 "start": "開始日期",
                 "end": "結束日期",
-                "reward": "獎勵地址"
+                "reward": "獎勵地址",
+                "start_desc": "您的委託將在您提交此表單後 5 分鐘內開始。"
             },
             "errs": {
                 "start_now": "開始時間必須在當前時間之後。",
@@ -359,7 +442,34 @@
             "success": {
                 "title": "委託交易已發送。",
                 "desc": "如果交易被接受，你的代幣將被鎖定用於質押。質押期結束後，你將收到你鎖定的代幣加上獎勵。",
-                "status": "狀態"
+                "status": "狀態",
+                "reason": "原因"
+            },
+            "filter": {
+                "apply": "應用過濾器",
+                "cancel": "取消",
+                "clear": "清除過濾器",
+                "label1": "最低可用委託",
+                "label2": "剩餘時間最少",
+                "label3": "最高費用",
+                "label4": "最低正常運行時間",
+                "preview": "找到 {0} 位符合條件的驗證者。",
+                "title": "過濾器",
+                "title2": "過濾器設置"
+            }
+        },
+        "shared": {
+            "advanced": {
+                "toggle_off": "隱藏高級選項",
+                "toggle_on": "顯示高級選項"
+            },
+            "utxo_select": {
+                "all": "全部",
+                "available": "可用餘額 (P)",
+                "custom": "自定義",
+                "desc": "選擇要花費的代幣。",
+                "label": "餘額來源",
+                "select": "選擇 UTXO"
             }
         }
     },
@@ -369,7 +479,26 @@
             "title": "鏈匯入",
             "desc": "如果你有資金卡在一個失敗的鏈轉移中，你可以在這裏完成匯入。",
             "submit_x": "匯入X鏈",
-            "submit_p": "匯入P"
+            "submit_p": "匯入P",
+            "submit_c": "導入 C",
+            "submit_c_x": "導入 X (來自 C 鏈)"
+        },
+        "sign": {
+            "desc": "使用您的私鑰簽署一條消息，以證明您對某個地址的所有權。",
+            "label1": "地址",
+            "label2": "消息",
+            "label3": "簽名",
+            "submit": "簽署消息",
+            "title": "簽署消息",
+            "warn": "請勿簽署您不信任的消息。"
+        },
+        "verify": {
+            "desc": "給定一條消息及其簽名，檢索簽署該消息的地址。",
+            "label1": "消息",
+            "label2": "簽名",
+            "label3": "來源地址",
+            "submit": "檢查來源",
+            "title": "檢查消息來源"
         }
     },
     "logout": {
@@ -388,7 +517,15 @@
         "loading": "正在載入交易歷史…",
         "warn_loading": "該列表可能不完整且無序。",
         "error_api": "未找到資源管理器API。",
-        "error_api_desc": "你必須為此網路提供一個AVA資源管理器API來查看交易歷史。"
+        "error_api_desc": "你必須為此網路提供一個AVA資源管理器API來查看交易歷史。",
+        "date_reward": "獎勳日期",
+        "end": "質押結束日期",
+        "fee_amount": "收到的費用",
+        "not_rewarded": "未獲得獎勳",
+        "reward_amount": "收到的獎勳",
+        "reward_pending": "獎勳待處理",
+        "rewarded": "已獲得獎勳",
+        "start": "質押開始日期"
     },
     "modal": {
         "qr": {
@@ -419,10 +556,187 @@
             "cancel2": "（之前的錢包會被忘記。）",
             "err1": "無效密碼。",
             "err2": "無法讀取錢包資料。"
+        },
+        "hd": {
+            "future_warn_desc": "這些由錢包管理，可能會導致資金損失。",
+            "future_warn_title": "請勿使用以下地址",
+            "no_use": "請勿使用",
+            "show_more": "顯示未來地址"
+        },
+        "ledger": {
+            "desc": "請在您的 Ledger 設備上確認這些操作。"
+        },
+        "ledger_upgrade": {
+            "desc": "我們無法連接到您的設備。請確保您已打開 Avalanche 應用並升級到最新版本。",
+            "done": "完成",
+            "title": "連接故障？",
+            "upgrade": "升級"
+        },
+        "nft": {
+            "title": "NFT 預覽"
+        },
+        "priv_key": {
+            "title": "私鑰"
+        },
+        "tokenlist": {
+            "title": "代幣列表"
+        },
+        "utxo_select": {
+            "available": "可用餘額",
+            "col1": "解鎖日期",
+            "col2": "數量",
+            "desc": "選擇您在此交易中使用的資金來源。",
+            "submit": "選擇",
+            "title": "選擇代幣"
         }
     },
     "nav": {
         "access": "訪問錢包",
         "create": "創建新錢包"
+    },
+    "activity": {
+        "empty": "未找到交易",
+        "found": "{0} 筆交易找到",
+        "label1": "按類型過濾",
+        "loading": "載入交易中",
+        "mode1": "全部",
+        "mode2": "轉帳",
+        "mode3": "匯出與匯入",
+        "mode4": "驗證與委託",
+        "months": {
+            "0": "一月",
+            "1": "二月",
+            "2": "三月",
+            "3": "四月",
+            "4": "五月",
+            "5": "六月",
+            "6": "七月",
+            "7": "八月",
+            "8": "九月",
+            "9": "十月",
+            "10": "十一月",
+            "11": "十二月"
+        },
+        "no_explorer": {
+            "desc": "當前網路設定未提供探索器 API 端點。",
+            "title": "未找到探索器"
+        }
+    },
+    "analytics": {
+        "accept": "接受",
+        "cookie_desc": "我們使用 Cookie 來開發改進並提升您的體驗。了解更多，請閱讀我們的",
+        "privacy_policy": "隱私政策",
+        "reject": "拒絕"
+    },
+    "cross_chain": {
+        "card": {
+            "balance": "餘額",
+            "destination": "目的地",
+            "name": "名稱",
+            "source": "來源"
+        },
+        "desc": "在交易所 (X)、平台 (P) 和合約 (C) 鏈之間轉移代幣。",
+        "form": {
+            "destination": "目的鏈",
+            "source": "來源鏈"
+        },
+        "state": {
+            "export": "匯出",
+            "import": "匯入",
+            "not_started": "尚未開始",
+            "reason": "原因",
+            "status": "狀態"
+        },
+        "title": "跨鏈"
+    },
+    "misc": {
+        "balance": "餘額"
+    },
+    "studio": {
+        "collectibles": "收藏品",
+        "desc": "創建和管理資產。",
+        "family": {
+            "back": "返回工作室",
+            "desc": "創建新的收藏品系列。",
+            "fee": "費用",
+            "label1": "名稱",
+            "label2": "符號",
+            "label3": "分組數量",
+            "submit": "創建",
+            "success": {
+                "desc": "收藏品系列已創建",
+                "label1": "交易 ID",
+                "label2": "系列名稱",
+                "label3": "符號",
+                "label4": "分組數量"
+            }
+        },
+        "menu1": {
+            "desc": "創建一個具有名稱和符號的新收藏品系列。",
+            "submit": "新系列",
+            "title": "新系列"
+        },
+        "menu2": {
+            "desc": "為您創建的系列發行收藏品。",
+            "empty": "您沒有任何可以鑄造的系列。",
+            "submit": "鑄造",
+            "title": "鑄造收藏品"
+        },
+        "mint": {
+            "desc": "選擇一個系列來發行收藏品。",
+            "form_col": {
+                "fee": "費用",
+                "label1": "數量",
+                "submit": "鑄造"
+            },
+            "forms": {
+                "generic": {
+                    "err1": "不是有效的圖片 URL。",
+                    "err2": "您必須設置圖片。",
+                    "err3": "圖片 URL 太長。",
+                    "label1": "標題",
+                    "label2": "圖片 URL*",
+                    "label3": "描述"
+                },
+                "json": {
+                    "label1": "JSON 負載（最多 1024 個字符）"
+                },
+                "utf8": {
+                    "label1": "負載（最多 1024 個字符）"
+                }
+            },
+            "preview": {
+                "info1": "完成表單以查看預覽。",
+                "label1": "預覽",
+                "success": {
+                    "back": "返回工作室",
+                    "label1": "交易 ID",
+                    "text1": "成功。",
+                    "text2": "新的收藏品已添加到您的錢包。"
+                }
+            },
+            "type_col": {
+                "desc": "選擇一種收藏品類型。",
+                "label1": "類型",
+                "label2": "負載類型",
+                "typeDesc": {
+                    "generic": "通用收藏品由圖片、標題和描述組成。錢包可以美觀地顯示它們。",
+                    "json": "JSON 負載適合自定義數據結構，可用於開發去中心化應用程序。",
+                    "url": "如果給定的 URL 是圖片，錢包會盡力美觀地顯示它。否則，它會顯示為鏈接。",
+                    "utf8": "UTF8 負載只是編碼為收藏品的文本。"
+                },
+                "types": {
+                    "custom": "自定義",
+                    "generic": "通用"
+                }
+            },
+            "utxo_col": {
+                "change": "更改系列",
+                "label1": "系列名稱",
+                "label2": "系列符號",
+                "label3": "分組"
+            }
+        },
+        "title": "工作室"
     }
 }
