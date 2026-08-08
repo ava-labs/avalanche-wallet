@@ -25,7 +25,22 @@
         "title3": "Éditer le réseau",
         "custom": "Ajouter réseau personnalisé",
         "cancel": "Annuler",
-        "add": "Ajouter un réseau"
+        "add": "Ajouter un réseau",
+        "blocker": {
+            "desc": "Connexion à un nouveau réseau, veuillez patienter."
+        },
+        "custom_page": {
+            "label1": "Nom du réseau",
+            "label2": "API Explorateur (optionnel)",
+            "label3": "Site de l'explorateur (optionnel)"
+        },
+        "not_mainnet": "Ce portefeuille n'est pas connecté au réseau principal.",
+        "row": {
+            "delete": "Supprimer",
+            "edit": "Modifier",
+            "select": "Sélectionner"
+        },
+        "status3": "Connecté"
     },
     "access": {
         "title": "Comment souhaitez-vous accéder à votre portefeuille ?",
@@ -42,7 +57,9 @@
             "submit": "Accéder au portefeuille",
             "cancel": "Annuler",
             "error": "Phrase de sécurité invalide. Votre liste doit comporter 24 mots séparés par un espace."
-        }
+        },
+        "accounts_found": "Comptes trouvés sur votre appareil",
+        "but_private_key": "Clé privée"
     },
     "wallet": {
         "sidebar": {
@@ -50,7 +67,10 @@
             "manage": "Gérer",
             "send": "Envoyer",
             "earn": "Gagner",
-            "advanced": "Avancé"
+            "advanced": "Avancé",
+            "activity": "Activité",
+            "export": "Inter-chaînes",
+            "studio": "Studio"
         },
         "address_card": {},
         "collectibles": {
@@ -102,7 +122,14 @@
         },
         "address": {
             "derived": "Adresse de portefeuille Avalanche dérivée",
-            "desc": "Il s'agit de votre adresse pour recevoir des fonds. Elle changera après chaque dépôt."
+            "desc": "Il s'agit de votre adresse pour recevoir des fonds. Elle changera après chaque dépôt.",
+            "desc_c": "Ceci est votre adresse de la chaîne C. Utilisez-la pour interagir avec la machine virtuelle Ethereum.",
+            "desc_p": "Ceci est votre adresse de la chaîne P pour recevoir des récompenses de staking et des transferts inter-chaînes.",
+            "desc_x_1": "Ceci est votre adresse de la chaîne X pour recevoir des fonds.",
+            "desc_x_2": "Votre adresse changera après chaque dépôt. Vous pouvez continuer à utiliser les adresses précédentes.",
+            "title_c": "Adresse du portefeuille EVM dérivée",
+            "title_p": "Adresse du portefeuille de la plateforme dérivée",
+            "title_x": "Adresse du portefeuille dérivée"
         }
     },
     "transfer": {
@@ -120,7 +147,29 @@
         "success_title": "Transaction envoyée",
         "success_msg": "Vous avez effectué votre transaction avec succès.",
         "error_title": "Erreur d'envoi de la transaction",
-        "error_msg": "L'envoi de la transaction a échoué."
+        "error_msg": "L'envoi de la transaction a échoué.",
+        "c_chain": {
+            "cancel": "Annuler",
+            "confirm": "Confirmer",
+            "gasLimit": "Limite de gaz",
+            "gasPrice": "Prix du gaz (GWEI)",
+            "reset": "Recommencer",
+            "success": {
+                "desc": "Transaction envoyée",
+                "label1": "Hash de la transaction"
+            }
+        },
+        "chain_warn": "Vous ne pouvez envoyer des jetons que sur la chaîne X.",
+        "memo": "Mémo (Optionnel)",
+        "source_chain": {
+            "title": "Chaîne source"
+        },
+        "total": "Total",
+        "total_avax": "Total AVAX",
+        "tx_list": {
+            "amount": "Montant",
+            "token": "Jeton"
+        }
     },
     "keys": {
         "title": "Mes clés",
@@ -155,7 +204,25 @@
         "remove_success_title": "Clé supprimée",
         "remove_success_msg": "Clé privée et actifs supprimés du portefeuille.",
         "password_validation": "Le mot de passe doit comporter 9 caractères au minimum.",
-        "password_validation2": "Le mot de passe ne correspond pas."
+        "password_validation2": "Le mot de passe ne correspond pas.",
+        "account_name_required": "Nom de compte requis.",
+        "account_slow_warning": "Les comptes avec plusieurs clés peuvent prendre du temps à charger.",
+        "active_wallet": "Clé active",
+        "import_key_duplicate_err": "Cette clé privée a déjà été ajoutée à ce portefeuille.",
+        "import_key_err": "Clé privée invalide",
+        "import_key_option3": "CLÉ PRIVÉE",
+        "import_mnemonic_duplicate_err": "Ce mnémonique a déjà été ajouté à ce portefeuille.",
+        "import_mnemonic_err": "Phrase secrète invalide.",
+        "save_account": {
+            "desc": "Encodez votre portefeuille avec un mot de passe et stockez-le en toute sécurité sur ce navigateur.",
+            "placeholder_1": "Nom de compte",
+            "placeholder_2": "Mot de passe",
+            "placeholder_3": "Confirmer le mot de passe",
+            "submit": "Enregistrer",
+            "title": "Enregistrer le compte"
+        },
+        "view_priv_key": "Voir la clé privée",
+        "view_priv_key_c": "Voir la clé privée de la chaîne C"
     },
     "portfolio": {
         "assets": "Actifs",
@@ -168,7 +235,16 @@
         "error_network": "Impossible d'afficher les actifs. Déconnecté du réseau.",
         "nobalance": "Vous n'avez aucun actif",
         "nobalance_nft": "Vous n'avez aucun jeton non fongible.",
-        "noaddresses": "Vous n'avez aucune ancienne adresse."
+        "noaddresses": "Vous n'avez aucune ancienne adresse.",
+        "address": "Adresse",
+        "collectibles": {
+            "expand": "Développer",
+            "group": "Groupe",
+            "mint_more": "Faites frapper plus de cette famille de collectibles dans le Studio.",
+            "mint_submit": "Frapper",
+            "quantity": "Quantité",
+            "send": "Envoyer"
+        }
     },
     "earn": {
         "title": "Gagner",
@@ -216,8 +292,10 @@
                 "export": "Exporter l'ID de transaction :",
                 "import": "Importer l'ID de transaction :",
                 "message": "Vous avez réussi à transférer d'une chaîne à l'autre.",
-                "back": "Retour à Gagner"
-            }
+                "back": "Retour à Gagner",
+                "again": "Recommencer"
+            },
+            "fee_name": "Frais d'exportation + d'importation"
         },
         "rewards": {
             "total": "Total des récompenses",
@@ -269,7 +347,8 @@
                 "fee": "Frais de délégation",
                 "reward": "Adresse de la récompense",
                 "type_local": "Ce portefeuille",
-                "type_custom": "Personnalisé"
+                "type_custom": "Personnalisé",
+                "start_desc": "Votre validation commencera au moins 5 minutes après avoir soumis ce formulaire."
             },
             "confirm": "Confirmer",
             "submit": "Soumettre",
@@ -277,13 +356,16 @@
             "success": {
                 "title": "Votre transaction de validation est envoyée.",
                 "desc": "Si la transaction est acceptée, vos jetons seront bloqués pendant la mise en jeu. Vous recevrez vos jetons verrouillés ainsi que les récompenses une fois votre période de mise en jeu est terminée.",
-                "status": "Statut"
+                "status": "Statut",
+                "reason": "Raison"
             },
             "errs": {
                 "date": "La date de début doit se situer dans le futur et la date de fin doit être postérieure à la date de début.",
                 "amount": "Le montant de l'enjeu doit être au moins de {0} AVAX",
                 "id": "l'ID du nœud est invalide. Il doit commencer par « NodeID- »",
-                "address": "Adresse de récompense non valable."
+                "address": "Adresse de récompense non valable.",
+                "duration_warn": "AVERTISSEMENT : Vous devez avoir au moins 14 jours restants dans votre période de validation pour accepter des délégations.",
+                "fee": "Les frais de délégation doivent être d'au moins {0}%"
             }
         },
         "delegate": {
@@ -334,7 +416,8 @@
                 "amount": "Montant da la mise en jeu",
                 "start": "Date de commencement",
                 "end": "Date de fin",
-                "reward": "Adresse de récompense"
+                "reward": "Adresse de récompense",
+                "start_desc": "Votre délégation commencera 5 minutes après avoir soumis ce formulaire."
             },
             "errs": {
                 "start_now": "L'heure de départ doit être postérieure à l'heure actuelle.",
@@ -359,7 +442,34 @@
             "success": {
                 "title": "Transaction de délégation envoyée.",
                 "desc": "Si la transaction est acceptée, vos jetons seront bloqués pour la mise en jeu. Vous recevrez vos jetons verrouillés ainsi que les récompenses une fois votre période de mise en jeu terminée.",
-                "status": "Statut"
+                "status": "Statut",
+                "reason": "Raison"
+            },
+            "filter": {
+                "apply": "Appliquer le filtre",
+                "cancel": "Annuler",
+                "clear": "Effacer le filtre",
+                "label1": "Délégation minimale disponible",
+                "label2": "Temps restant minimum",
+                "label3": "Frais maximum",
+                "label4": "Temps de disponibilité minimum",
+                "preview": "{0} validateurs trouvés correspondant aux critères.",
+                "title": "Filtre",
+                "title2": "Paramètres du filtre"
+            }
+        },
+        "shared": {
+            "advanced": {
+                "toggle_off": "Cacher les options avancées",
+                "toggle_on": "Afficher les options avancées"
+            },
+            "utxo_select": {
+                "all": "Tout",
+                "available": "Solde disponible (P)",
+                "custom": "Personnalisé",
+                "desc": "Sélectionnez les jetons à dépenser.",
+                "label": "Source du solde",
+                "select": "Sélectionner les UTXOs"
             }
         }
     },
@@ -369,7 +479,26 @@
             "title": "Importation d'une chaîne",
             "desc": "Si vous avez des fonds bloqués dans un transfert entre chaînes qui a échoué, vous pouvez finir de les importer ici.",
             "submit_x": "Importation X",
-            "submit_p": "Importation P"
+            "submit_p": "Importation P",
+            "submit_c": "Importer C",
+            "submit_c_x": "Importer X (Depuis la chaîne C)"
+        },
+        "sign": {
+            "desc": "Signez un message avec votre clé privée et prouvez la propriété d'une adresse.",
+            "label1": "Adresse",
+            "label2": "Message",
+            "label3": "Signature",
+            "submit": "Signer le message",
+            "title": "Signer le message",
+            "warn": "Ne signez pas des messages en lesquels vous n'avez pas confiance."
+        },
+        "verify": {
+            "desc": "Étant donné un message et sa signature, récupérez l'adresse qui l'a signé.",
+            "label1": "Message",
+            "label2": "Signature",
+            "label3": "Adresses sources",
+            "submit": "Vérifier la source",
+            "title": "Vérifier la source du message"
         }
     },
     "logout": {
@@ -388,7 +517,15 @@
         "loading": "Chargement de l'historique de transaction..",
         "warn_loading": "Cette liste peut être incomplète et hors d'usage.",
         "error_api": "API de l'explorateur non trouvée",
-        "error_api_desc": "Vous devez fournir une API de l'explorateur AVAX pour ce réseau afin de voir l'historique de transaction."
+        "error_api_desc": "Vous devez fournir une API de l'explorateur AVAX pour ce réseau afin de voir l'historique de transaction.",
+        "date_reward": "Date de la récompense",
+        "end": "Date de fin de mise",
+        "fee_amount": "Frais reçus",
+        "not_rewarded": "Non récompensé",
+        "reward_amount": "Récompense reçue",
+        "reward_pending": "Récompense en attente",
+        "rewarded": "Récompensé",
+        "start": "Date de début de mise"
     },
     "modal": {
         "qr": {
@@ -419,10 +556,187 @@
             "cancel2": "(le portefeuille précédent sera oublié)",
             "err1": "Mot de passe incorrect.",
             "err2": "Impossible de lire les données du portefeuille."
+        },
+        "hd": {
+            "future_warn_desc": "Celles-ci sont gérées par le portefeuille et peuvent entraîner une perte de fonds.",
+            "future_warn_title": "N'UTILISEZ PAS LES ADRESSES CI-DESSOUS",
+            "no_use": "Ne pas utiliser",
+            "show_more": "Afficher les adresses futures"
+        },
+        "ledger": {
+            "desc": "Veuillez confirmer ces actions sur votre appareil Ledger."
+        },
+        "ledger_upgrade": {
+            "desc": "Nous avons des difficultés à nous connecter à votre appareil. Veuillez vous assurer que vous avez ouvert l'application Avalanche et qu'elle est mise à jour avec la dernière version.",
+            "done": "Terminé",
+            "title": "Problème de connexion ?",
+            "upgrade": "Mettre à jour"
+        },
+        "nft": {
+            "title": "Aperçu NFT"
+        },
+        "priv_key": {
+            "title": "Clé privée"
+        },
+        "tokenlist": {
+            "title": "Listes de tokens"
+        },
+        "utxo_select": {
+            "available": "Solde disponible",
+            "col1": "Date de déverrouillage",
+            "col2": "Montant",
+            "desc": "Sélectionnez la source de vos fonds à utiliser dans cette transaction.",
+            "submit": "Sélectionner",
+            "title": "Sélectionner des tokens"
         }
     },
     "nav": {
         "access": "Accéder au portefeuille",
         "create": "Créer un nouveau portefeuille"
+    },
+    "activity": {
+        "empty": "Aucune transaction trouvée",
+        "found": "{0} transactions trouvées",
+        "label1": "Filtrer par type",
+        "loading": "Chargement des transactions",
+        "mode1": "Tout",
+        "mode2": "Transfert",
+        "mode3": "Exportation & Importation",
+        "mode4": "Validation & Délégation",
+        "months": {
+            "0": "Janvier",
+            "1": "Février",
+            "2": "Mars",
+            "3": "Avril",
+            "4": "Mai",
+            "5": "Juin",
+            "6": "Juillet",
+            "7": "Août",
+            "8": "Septembre",
+            "9": "Octobre",
+            "10": "Novembre",
+            "11": "Décembre"
+        },
+        "no_explorer": {
+            "desc": "Les paramètres du réseau actif n'ont pas fourni de point de terminaison API pour l'explorateur.",
+            "title": "Explorateur non trouvé"
+        }
+    },
+    "analytics": {
+        "accept": "Accepter",
+        "cookie_desc": "Nous utilisons des cookies pour améliorer et enrichir votre expérience. Pour en savoir plus, lisez notre",
+        "privacy_policy": "Politique de confidentialité",
+        "reject": "Rejeter"
+    },
+    "cross_chain": {
+        "card": {
+            "balance": "Solde",
+            "destination": "Destination",
+            "name": "Nom",
+            "source": "Source"
+        },
+        "desc": "Transférez des jetons entre les chaînes Exchange (X), Platform (P) et Contract (C).",
+        "form": {
+            "destination": "Chaîne de destination",
+            "source": "Chaîne source"
+        },
+        "state": {
+            "export": "Exporter",
+            "import": "Importer",
+            "not_started": "Non démarré",
+            "reason": "Raison",
+            "status": "Statut"
+        },
+        "title": "Chaîne croisée"
+    },
+    "misc": {
+        "balance": "Solde"
+    },
+    "studio": {
+        "collectibles": "Collectibles",
+        "desc": "Créer et gérer des actifs.",
+        "family": {
+            "back": "Retour au Studio",
+            "desc": "Créer une nouvelle famille de collectibles.",
+            "fee": "Frais",
+            "label1": "Nom",
+            "label2": "Symbole",
+            "label3": "Nombre de groupes",
+            "submit": "Créer",
+            "success": {
+                "desc": "Famille de collectibles créée",
+                "label1": "ID Tx",
+                "label2": "Nom de la famille",
+                "label3": "Symbole",
+                "label4": "Nombre de groupes"
+            }
+        },
+        "menu1": {
+            "desc": "Créez un nouvel ensemble de collectibles avec un nom et un symbole.",
+            "submit": "Nouvelle famille",
+            "title": "Nouvelle famille"
+        },
+        "menu2": {
+            "desc": "Émettez des collectibles pour les familles que vous avez créées.",
+            "empty": "Vous ne possédez aucune famille que vous pouvez frapper.",
+            "submit": "Frapper",
+            "title": "Frapper un Collectible"
+        },
+        "mint": {
+            "desc": "Sélectionnez une famille pour émettre des collectibles.",
+            "form_col": {
+                "fee": "Frais",
+                "label1": "Quantité",
+                "submit": "Frapper"
+            },
+            "forms": {
+                "generic": {
+                    "err1": "URL d'image non valide.",
+                    "err2": "Vous devez définir l'image.",
+                    "err3": "URL d'image trop longue.",
+                    "label1": "Titre",
+                    "label2": "URL de l'image*",
+                    "label3": "Description"
+                },
+                "json": {
+                    "label1": "Charge utile JSON (MAX 1024 caractères)"
+                },
+                "utf8": {
+                    "label1": "Charge utile (MAX 1024 caractères)"
+                }
+            },
+            "preview": {
+                "info1": "Complétez le formulaire pour voir l'aperçu.",
+                "label1": "Aperçu",
+                "success": {
+                    "back": "Retour au Studio",
+                    "label1": "ID de transaction",
+                    "text1": "Succès.",
+                    "text2": "Les nouveaux collectibles ont été ajoutés à votre portefeuille."
+                }
+            },
+            "type_col": {
+                "desc": "Sélectionnez un type de collectible.",
+                "label1": "Type",
+                "label2": "Type de charge utile",
+                "typeDesc": {
+                    "generic": "Les collectibles génériques comprennent une image, un titre et une description. Le portefeuille peut les afficher joliment.",
+                    "json": "Les charges utiles JSON sont idéales pour des structures de données personnalisées et peuvent être utilisées pour développer des applications décentralisées.",
+                    "url": "Si l'URL donnée est une image, le portefeuille fera de son mieux pour l'afficher joliment. Sinon, elle apparaîtra comme un lien.",
+                    "utf8": "Les charges utiles UTF8 sont simplement du texte encodé dans un collectible."
+                },
+                "types": {
+                    "custom": "Personnalisé",
+                    "generic": "Générique"
+                }
+            },
+            "utxo_col": {
+                "change": "Changer de famille",
+                "label1": "Nom de la famille",
+                "label2": "Symbole de la famille",
+                "label3": "Groupe"
+            }
+        },
+        "title": "Studio"
     }
 }
