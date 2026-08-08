@@ -112,9 +112,11 @@
                             <label>{{ $t('studio.mint.preview.success.label1') }}</label>
                             <p style="word-break: break-all">{{ txId }}</p>
                         </div>
-                        <v-btn @click="clearUtxo" class="button_secondary" small depressed>
-                            {{ $t('studio.mint.preview.success.back') }}
-                        </v-btn>
+                        <template v-if="canMintAgain">
+                            <v-btn @click="clearUtxo" class="button_secondary" small depressed>
+                                {{ $t('studio.mint.preview.success.back') }}
+                            </v-btn>
+                        </template>
                     </div>
                 </template>
             </div>
@@ -171,6 +173,7 @@ export default class MintNft extends Vue {
     canSubmit = false
     isSuccess = false
     isLoading = false
+    canMintAgain = false
     txId = ''
 
     maxPreviewUtxoLen = 18
@@ -322,9 +325,10 @@ export default class MintNft extends Vue {
 
         try {
             let txId = await wallet.mintNft(this.mintUtxo, this.payloadPreview, this.quantity)
-            this.onSuccess(txId)
+            this.waitTxConfirm(txId)
         } catch (e) {
             console.error(e)
+            this.onError(e)
         }
     }
 
@@ -332,9 +336,27 @@ export default class MintNft extends Vue {
         this.$emit('cancel')
     }
 
+    async waitTxConfirm(txId: string) {
+        let status = await avm.getTxStatus(txId)
+        if (status === 'Unknown' || status === 'Processing') {
+            // if not confirmed ask again
+            setTimeout(() => {
+                this.waitTxConfirm(txId)
+            }, 500)
+            return
+        } else if (status === 'Dropped') {
+            // If dropped stop the process
+            this.isSuccess = false
+            return
+        } else {
+            // If success display success page
+            this.isSuccess = true
+            this.onSuccess(txId)
+        }
+    }
+
     onSuccess(txId: string) {
         this.isLoading = false
-        this.isSuccess = true
         this.txId = txId
 
         this.$store.dispatch('Notifications/add', {
@@ -343,10 +365,24 @@ export default class MintNft extends Vue {
             message: 'Collectible minted and added to your wallet.',
         })
 
+        this.$store.dispatch('Assets/updateUTXOs').then(() => {
+            this.updateMintAgainLock()
+        })
+
         setTimeout(() => {
-            this.$store.dispatch('Assets/updateUTXOs')
             this.$store.dispatch('History/updateTransactionHistory')
         }, 2000)
+    }
+
+    updateMintAgainLock() {
+        let wallet = this.$store.state.activeWallet
+        if (wallet && !wallet.isFetchUtxos) {
+            this.canMintAgain = true
+        } else {
+            setTimeout(() => {
+                this.updateMintAgainLock()
+            }, 1000)
+        }
     }
 
     onError(err: any) {
